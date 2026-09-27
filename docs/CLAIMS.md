@@ -19,8 +19,8 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1025 |
-| measured | 1477 |
-| decided | 1186 |
+| measured | 1479 |
+| decided | 1184 |
 | unbacked | 0 |
 | **total** | **3688** |
 
@@ -1018,7 +1018,6 @@ one that matters.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## Hit probability How likely a shot is to land inside a target of a given size at a given distance, worked out from the group's spread, the rifle's predicted path and the errors you cannot measure.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 yards it covers about 1.047 inches, and it grows in proportion to the distance, so it lets groups shot at different distances be compared.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 meters it covers 10 centimeters, and at 100 yards about 3.6 inches.
-- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): *Precisely:* The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): ## SMOA An inch at 100 yards, two inches at 200: the way many shooters think of a minute of angle.
@@ -3057,7 +3056,6 @@ one that matters.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Hit probability How likely a shot is to land inside a target of a given size at a given distance, worked out from the group&#x27;s spread, the rifle&#x27;s predicted path and the errors you cannot measure.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 meters it covers 10 centimeters, and at 100 yards about 3.6 inches.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): At 100 yards it covers about 1.047 inches, and it grows in proportion to the distance, so it lets groups shot at different distances be compared.
-- *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): GroupLab reads it so it knows where every bull is without being told.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): Precisely: The per-axis standard deviation of the shots about their own center, in mrad; for circular dispersion it is the Rayleigh sigma, and a radial figure such as the mean radius is about 1.25 times it.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): SMOA An inch at 100 yards, two inches at 200: the way many shooters think of a minute of angle.
@@ -3648,6 +3646,8 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): Their photos do not (0.90 and 1.45).
 - *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): The 15-shot sheet was photographed later in the afternoon, with the sun lower.
 - *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): What GroupLab does about it Because of this finding, GroupLab no longer judges hole size in a photo against a fixed factor.
+- *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): There are three ways, and on three of the developer's phone photos of 2026-09-26 they were measured against the answer the markers give, on the same sheets.
+- *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): At a real angle a single length for the whole sheet gets much worse, which is the reason to draw a scale at each bull; photographs at 40 to 60 degrees (request 18) will say how much.
 - *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): For hole sizes, for caliber, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference.
 - *measured* (the article's own evidence: 2 sources and its data files, data from 2026-09-20): Sources GroupLab measurements of the developer's range sheets, 2026-09-20: question 38 in docs/QUESTIONS-FOR-PLANNING.md and the commit 'Question 38 answered by measuring'.
 

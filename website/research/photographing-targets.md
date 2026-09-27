@@ -58,6 +58,22 @@ The scans of the three centerfire sheets agree within a few percent. The photos 
 
 Because of this finding, GroupLab no longer judges hole size in a photo against a fixed factor. Where a sheet has enough clean single holes, it uses the sheet's own holes as the reference for what one hole looks like on that image, so shadow that enlarges every hole equally stops mattering. The stated caliber is the fallback. On all thirteen images from this range day, that approach flagged at most one hole, including the photo where the old method flagged all fifteen. The caliber guess from a photo is shown as rough and is never preselected with more confidence than the image allows.
 
+## A target GroupLab did not print
+
+A commercial target has no printed markers, so the scale has to come from something you tell GroupLab. There are three ways, and on three of the developer's phone photos of 2026-09-26 they were measured against the answer the markers give, on the same sheets. Every length was placed exactly where the markers put it, so these numbers are what each method gets wrong by itself, before any error in where you tap.
+
+| method | where each shot lands, compared with the markers | group size (sigma) |
+|---|---|---|
+| a scale at each bull, two lengths at right angles | 0.001 to 0.003 in on average, 0.012 in at worst | within 0.1 percent |
+| four corners of the paper | 0.007 to 0.010 in on average, 0.018 in at worst | 1.1 to 1.3 percent small |
+| one length for the whole sheet | 0.007 to 0.026 in on average, 0.087 in at worst | 0.5 to 0.8 percent small |
+
+**Four corners remove the angle exactly and still read small here**, the same way on all three photographs. The corners of the paper are at the edge of the phone's picture, where its lens bends straight lines most, and a four-corner fit cannot model that bend; the markers can, and do. A scale drawn at each bull only has to be right near that bull, where the bend is small.
+
+**These three photographs were nearly straight down.** At a real angle a single length for the whole sheet gets much worse, which is the reason to draw a scale at each bull; photographs at 40 to 60 degrees (request 18) will say how much.
+
+**So, on a target GroupLab did not print:** draw a scale at each bull, two lengths at right angles, from a ring's width or a grid square; or tap four corners when you have them. GroupLab says when the scales disagree, which means the photograph was taken at an angle, and carries that uncertainty into the group size.
+
 ## A checklist for a good photo
 
 1. **Even, soft light.** Open shade, an overcast sky or indoor light from above. Avoid low sun across the paper, and avoid flash, which leaves a hot spot.

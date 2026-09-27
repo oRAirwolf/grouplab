@@ -357,6 +357,98 @@ public sealed class MarkingSession
         })!.Index;
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 228 section 1: bulls placed by hand on a target GroupLab did not print. Each tap is a bull's aim point,
+    /// numbered in the order placed; shots nobody assigned by hand go to their nearest bull again whenever a bull is placed, moved or taken
+    /// away. Returns the new bull's index.
+    /// </summary>
+    public int AddBull(PointD image)
+    {
+        int index = State.Bulls.Count == 0 ? 0 : State.Bulls.Max(b => b.Index) + 1;
+        string label = (State.Bulls.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        Apply(Reassigned(State with { Bulls = State.Bulls.Add(new BullAim(index, label, image)) }));
+        return index;
+    }
+
+    public void MoveBull(int index, PointD image)
+    {
+        if (State.Bulls.FirstOrDefault(b => b.Index == index) is not { } bull)
+        {
+            return;
+        }
+
+        Apply(Reassigned(State with { Bulls = State.Bulls.Replace(bull, bull with { Image = image }) }));
+    }
+
+    /// <summary>Takes a placed bull away; its shots go to the nearest bull left, and the bulls are numbered again in order.</summary>
+    public void DeleteBull(int index)
+    {
+        if (State.Bulls.FirstOrDefault(b => b.Index == index) is not { } bull)
+        {
+            return;
+        }
+
+        var bulls = State.Bulls.Remove(bull);
+        bulls = [.. bulls.Select((b, i) => b with { Label = (i + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) })];
+        var shots = State.Shots.Select(s => s.Bull == index ? s with { Bull = null, BullChosen = false } : s).ToImmutableList();
+        var scale = State.Scale is PerBullReference pb
+            ? pb.Scales.Where(s => s.Bull != index).ToList() is { Count: > 0 } kept ? new PerBullReference(kept, pb.Bulls.Where(b => b.Key != index).ToDictionary()) : null
+            : State.Scale;
+        Apply(Reassigned(State with { Bulls = bulls, Shots = shots, Scale = scale }));
+    }
+
+    /// <summary>
+    /// Entry 228 section 2.2: the scale at one bull, one length across and, best, one up and down. Every bull's scale lives in one
+    /// <see cref="PerBullReference"/>; setting one replaces any other kind of scale.
+    /// </summary>
+    public void SetBullScale(int bull, DrawnLength across, DrawnLength? upDown)
+    {
+        var scales = (State.Scale as PerBullReference)?.Scales.Where(s => s.Bull != bull).ToList() ?? [];
+        scales.Add(new BullScale(bull, across, upDown));
+        Apply(Reassigned(State with { Scale = new PerBullReference(scales, State.Bulls.ToDictionary(b => b.Index, b => b.Image)) }));
+    }
+
+    /// <summary>
+    /// Entry 228 section 1.4: with the first two bulls placed, places the rest of a template's bulls; they are then nudged like any other.
+    /// Returns how many were placed; none unless exactly the first two are down.
+    /// </summary>
+    public int ApplyTemplate(BullTemplate template)
+    {
+        ArgumentNullException.ThrowIfNull(template);
+        if (State.Bulls.Count != 2 || template.BullsInches.Count <= 2)
+        {
+            return 0;
+        }
+
+        var places = template.Place(State.Bulls[0].Image, State.Bulls[1].Image);
+        var bulls = State.Bulls;
+        int next = bulls.Max(b => b.Index) + 1;
+        foreach (var place in places.Skip(2))
+        {
+            bulls = bulls.Add(new BullAim(next++, (bulls.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture), place));
+        }
+
+        Apply(Reassigned(State with { Bulls = bulls }));
+        return places.Count - 2;
+    }
+
+    /// <summary>Shots not assigned by hand go to their nearest bull, and a per-bull scale follows the bulls where they now are.</summary>
+    private static MarkingState Reassigned(MarkingState state)
+    {
+        if (state.Scale is PerBullReference pb)
+        {
+            state = state with { Scale = new PerBullReference(pb.Scales.Where(s => state.Bulls.Any(b => b.Index == s.Bull)).ToList() is { Count: > 0 } kept ? kept : pb.Scales, state.Bulls.ToDictionary(b => b.Index, b => b.Image)) };
+        }
+
+        if (state.Bulls.Count == 0 || state.Scale is SheetReference)
+        {
+            return state;
+        }
+
+        var shots = state.Shots.Select(s => s.BullChosen ? s : s with { Bull = NearestBull(state, s.Image) }).ToImmutableList();
+        return state with { Shots = shots };
+    }
+
     public void DeleteShot(int id)
     {
         if (State.Find(id) is { } shot)

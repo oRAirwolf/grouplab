@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7; nothing to do for either.
+**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, and **42** says GroupLab is back on it; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -21,6 +21,14 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 42. GroupLab is back on your Fold 7
+
+**Answered 2026-09-27 (entry 235 section 4).** Nothing to do. The nightly 110 app (the APK signed with the upload key) is installed over
+wireless debugging and started once; it is waiting on its first-run sharing questions for your answers. It is the side-loaded copy, so a
+later nightly APK installs over it, and the Play copy cannot until this one is uninstalled.
 
 ---
 

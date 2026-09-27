@@ -265,6 +265,12 @@ public static class MarkingFile
     {
         LengthReference length => new { kind = "length", a = length.A, b = length.B, inches = length.Inches },
         RectangleReference rectangle => new { kind = "rectangle", corners = rectangle.Corners, widthInches = rectangle.WidthInches, heightInches = rectangle.HeightInches },
+        PerBullReference perBull => new
+        {
+            kind = "perBull",
+            scales = perBull.Scales.Select(s => new { bull = s.Bull, across = new { a = s.Across.A, b = s.Across.B, inches = s.Across.Inches }, upDown = s.UpDown is { } u ? new { a = u.A, b = u.B, inches = u.Inches } : null }),
+            bulls = perBull.Bulls.Select(b => new { bull = b.Key, at = b.Value }),
+        },
         SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, inches = sheet.RealInches ? "real" : "sheet", printScale = sheet.PrintScale, mapping = MappingDocument(sheet.Mapping) },
         _ => null,
     };
@@ -351,6 +357,11 @@ public static class MarkingFile
                 return new LengthReference(Point(node!["a"])!.Value, Point(node["b"])!.Value, (double)node["inches"]!);
             case "rectangle":
                 return new RectangleReference([.. node!["corners"]!.AsArray().Select(c => Point(c)!.Value)], (double)node["widthInches"]!, (double)node["heightInches"]!);
+            case "perBull":
+                static DrawnLength Length(JsonNode l) => new(Point(l["a"])!.Value, Point(l["b"])!.Value, (double)l["inches"]!);
+                return new PerBullReference(
+                    [.. node!["scales"]!.AsArray().Select(s => new BullScale((int)s!["bull"]!, Length(s["across"]!), s["upDown"] is JsonObject u ? Length(u) : null))],
+                    node["bulls"]!.AsArray().ToDictionary(b => (int)b!["bull"]!, b => Point(b!["at"])!.Value));
             case "sheet" when ReadMapping(node!["mapping"]) is { } mapping:
                 return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"], PrintScale = (double?)node["printScale"] };
             case "sheet":

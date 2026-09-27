@@ -305,6 +305,12 @@ public static class GroupAnalysis
         PointD? aim = state.PointOfAim is { } poa ? scale.ToTarget(poa) : null;
         return [.. shots.Select(s =>
         {
+            // Entry 228 section 2.2: with a scale at each bull, a shot is measured from its own bull with that bull's scale.
+            if (scale is PerBullReference perBull && s.Bull is { } own && bulls.TryGetValue(own, out var itsBull))
+            {
+                return perBull.Offset(own, itsBull.Image, s.Image);
+            }
+
             var at = scale.ToTarget(s.Image);
             PointD? origin = s.Bull is { } b && bulls.TryGetValue(b, out var bull) ? scale.ToTarget(bull.Image) : aim;
             return origin is { } o ? new PointD(at.X - o.X, at.Y - o.Y) : at;

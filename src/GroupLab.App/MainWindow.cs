@@ -229,6 +229,9 @@ public sealed partial class MainWindow : Window
     /// <summary>Entry 227 section 3: CEP 99 beside the others, and a percent of one's own under Advanced.</summary>
     private readonly CheckBox cep99Box = new() { Content = "CEP 99", MinHeight = 44 };
 
+    /// <summary>Entry 228 section 1.4: saving the bulls placed by hand as a template, and placing a saved one, shown with the bulls tool.</summary>
+    private readonly StackPanel templatePanel = new() { Spacing = Tokens.Space8 };
+
     private readonly TextBox cepPercentBox = new() { Width = 90, PlaceholderText = "e.g. 97.5" };
 
     private readonly TextBlock cepPercentSaid = new() { TextWrapping = TextWrapping.Wrap };
@@ -621,6 +624,8 @@ public sealed partial class MainWindow : Window
             (MarkingTool.Aim, Icons.Aim, "Point of aim", "A"),
             (MarkingTool.Impact, Icons.Impact, "Impact", "I"),
             (MarkingTool.Select, Icons.Select, "Select", "V"),
+            (MarkingTool.Bulls, Icons.Bulls, "Place bulls, on a target GroupLab did not print", "B"),
+            (MarkingTool.Lasso, Icons.Lasso, "Lasso shots onto a bull", "O"),
         })
         {
             var button = new ToggleButton { Content = Icons.Draw(icon), Classes = { AppStyles.IconButton } };
@@ -673,6 +678,7 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(selection);
         panel.Children.Add(Ruled("Scale"));
         panel.Children.Add(scaleInputs);
+        panel.Children.Add(templatePanel);
         // Entry 97 section 2: which rifle, barrel and load, from a record book kept deliberately small.
         // Entry 112 section 1: the records live in the database now; the old file is read in on the first open and kept as a backup.
         try
@@ -2069,6 +2075,7 @@ public sealed partial class MainWindow : Window
     private void SetTool(MarkingTool tool)
     {
         canvas.Tool = tool;
+        FillTemplatePanel();
         foreach (var (t, button) in toolButtons)
         {
             button.IsChecked = t == tool;
@@ -2149,6 +2156,8 @@ public sealed partial class MainWindow : Window
         MarkingTool.Aim => "Tap the point of aim.",
         MarkingTool.Impact => "Press on each impact, drag it to where it belongs, and let go to set it. It snaps to the hole under it, never onto a detected sheet's printed target, and on a sheet of bulls it is assigned to its nearest bull.",
         MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it. Drag an end of the scale to adjust it.",
+        MarkingTool.Bulls => "Tap each bull's aim point to place it; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest bull and are drawn in its color. With a scale set, a length drawn near a bull can be its own scale.",
+        MarkingTool.Lasso => "Draw round the shots that belong together, then tap the bull they were fired at.",
         _ => status.Text ?? "",
     };
 
@@ -2172,6 +2181,92 @@ public sealed partial class MainWindow : Window
                 SetTool(MarkingTool.Aim);
             }
         })));
+
+        // Entry 228 section 2.2: with bulls placed by hand, a length drawn near one can be that bull's own scale instead: a ring's width or a
+        // grid square across, and a second up and down.
+        if (MarkingCanvas.PlacedByHand(session.State) && canvas.AwaitingTaps is { Count: 2 } near)
+        {
+            var middle = new PointD((near[0].X + near[1].X) / 2, (near[0].Y + near[1].Y) / 2);
+            var bull = session.State.Bulls.MinBy(b => Math.Pow(b.Image.X - middle.X, 2) + Math.Pow(b.Image.Y - middle.Y, 2))!;
+            scaleInputs.Children.Add(Button($"Use it as bull {bull.Label}'s own scale", () =>
+            {
+                if (canvas.AwaitingTaps is { Count: 2 } ends && double.TryParse(length.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0)
+                {
+                    AddBullLength(bull.Index, new DrawnLength(ends[0], ends[1], UnitSettings.ToInches(d, unit)));
+                    canvas.ClearAwaiting();
+                }
+            }));
+        }
+    }
+
+    /// <summary>
+    /// Entry 228 section 1.4: with the bulls tool in hand, keep the bulls as a template for this commercial target, or place a kept one once
+    /// its first two bulls are tapped.
+    /// </summary>
+    internal void FillTemplatePanel()
+    {
+        templatePanel.Children.Clear();
+        if (canvas.Tool != MarkingTool.Bulls)
+        {
+            return;
+        }
+
+        var name = new TextBox { Width = 200, PlaceholderText = "the target's name" };
+        templatePanel.Children.Add(FieldLabel("Templates"));
+        templatePanel.Children.Add(Row(name, Button("Save these bulls", () =>
+        {
+            if (string.IsNullOrWhiteSpace(name.Text) || BullTemplate.From(name.Text.Trim(), session.State) is not { } made)
+            {
+                status.Text = "A template needs a name, a scale and at least two bulls.";
+                return;
+            }
+
+            settingsStore.SaveBullTemplate(made);
+            DiagnosticLog.Info("marking.template.save", ("bulls", made.BullsInches.Count));
+            status.Text = $"Kept as {made.Name}. On the next sheet of it, tap its first two bulls and place the rest from here.";
+            FillTemplatePanel();
+        })));
+        var kept = settingsStore.LoadBullTemplates();
+        if (kept.Count > 0)
+        {
+            var choice = new ComboBox { ItemsSource = kept.Select(k => $"{k.Name}, {k.BullsInches.Count} bulls").ToList(), SelectedIndex = 0, MinWidth = 200 };
+            templatePanel.Children.Add(Row(choice, Button("Place the rest", () => PlaceTemplate(kept[Math.Max(0, choice.SelectedIndex)]))));
+        }
+    }
+
+    /// <summary>Places a kept template's bulls from the first two, or says why it cannot.</summary>
+    internal void PlaceTemplate(BullTemplate template)
+    {
+        int placed = session.ApplyTemplate(template);
+        status.Text = placed > 0
+            ? $"{placed} bulls placed from {template.Name}. Drag any that are not on their aim point."
+            : "Tap the target's first two bulls, in the template's order, then place the rest.";
+    }
+
+    /// <summary>
+    /// Entry 228 section 2.2: a length drawn at a bull. The first is its scale; a second, drawn more the other way, makes the pair across and
+    /// up and down; a later one replaces the one it runs most like.
+    /// </summary>
+    internal void AddBullLength(int bull, DrawnLength drawn)
+    {
+        bool acrossLike = Math.Abs(drawn.B.X - drawn.A.X) >= Math.Abs(drawn.B.Y - drawn.A.Y);
+        var existing = (session.State.Scale as PerBullReference)?.Scales.FirstOrDefault(s => s.Bull == bull);
+        if (existing is null)
+        {
+            session.SetBullScale(bull, drawn, null);
+        }
+        else
+        {
+            bool firstAcross = Math.Abs(existing.Across.B.X - existing.Across.A.X) >= Math.Abs(existing.Across.B.Y - existing.Across.A.Y);
+            var (across, upDown) = existing.UpDown is null
+                ? (acrossLike == firstAcross ? (drawn, (DrawnLength?)null) : acrossLike ? (drawn, existing.Across) : (existing.Across, drawn))
+                : acrossLike ? (drawn, existing.UpDown) : (existing.Across, drawn);
+            session.SetBullScale(bull, across, upDown);
+        }
+
+        status.Text = session.State.Scale is PerBullReference pb && pb.For(bull).UpDown is null
+            ? "That bull has one length. Draw a second at right angles to it, so an angled photograph is measured right both ways."
+            : "That bull has its scale both ways.";
     }
 
     /// <summary>
@@ -2319,6 +2414,26 @@ public sealed partial class MainWindow : Window
         ShowAimedAt(state);
         ShowSameSetup(state);
         ShowZero(state);
+        // Entry 228 section 2: what the scale behind the figures can and cannot be trusted for, said before the figures.
+        if (state.Scale is PerBullReference perBull)
+        {
+            foreach (string said in perBull.Checks(BullLabel))
+            {
+                statistics.Children.Add(Note(said));
+            }
+
+            if (perBull.RelativeUncertainty >= 0.005)
+            {
+                statistics.Children.Add(Note(string.Create(CultureInfo.CurrentCulture,
+                    $"The scale is uncertain by about {100 * perBull.RelativeUncertainty:0.#} percent from bull to bull, and so is every size here: a 2 percent scale error is a 2 percent error in the group.")));
+            }
+        }
+
+        if (PerBullReference.SingleScaleOnAPhoto(state.Scale, metadata) is { } oneScale)
+        {
+            statistics.Children.Add(Note(oneScale));
+        }
+
         if (report.AllShots is { } all)
         {
             var reduced = report.WithoutExclusions!;
@@ -2406,6 +2521,7 @@ public sealed partial class MainWindow : Window
                 }
 
                 advancedFigures.Children.Add(Rowed(Figure("Sigma", all.Sigma!, reducedOrNull, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
+                AddBullByBull(state);
                 if (all is { SdX: not null, SdY: not null } && SizeValue(all) is not null)
                 {
 
@@ -4245,11 +4361,22 @@ public sealed partial class MainWindow : Window
             case Key.V:
                 SetTool(MarkingTool.Select);
                 break;
+            case Key.B:
+                SetTool(MarkingTool.Bulls);
+                break;
+            case Key.O:
+                SetTool(MarkingTool.Lasso);
+                break;
             case Key.OemOpenBrackets:
                 session.Rotate(-1);
                 break;
             case Key.OemCloseBrackets:
                 session.Rotate(1);
+                break;
+            case Key.Delete when canvas.Tool == MarkingTool.Bulls && canvas.ChosenBull is { } bull:
+                // Entry 228 section 1.1: the chosen bull placed by hand goes, and its shots go to the nearest bull left.
+                session.DeleteBull(bull);
+                canvas.ChosenBull = null;
                 break;
             case Key.Delete when canvas.Selected is { } id:
                 session.DeleteShot(id);
@@ -4448,6 +4575,39 @@ public sealed partial class MainWindow : Window
     }
 
     private const string CepWhy = "from sigma under the circular normal model";
+
+    /// <summary>
+    /// Entry 228 section 1.3: on a target with bulls placed by hand, each bull as its own group beside the pooled one above: its shots, where
+    /// their center is from its aim point, and their extreme spread, each measured from that bull with its own scale.
+    /// </summary>
+    private void AddBullByBull(MarkingState state)
+    {
+        if (!MarkingCanvas.PlacedByHand(state) || state.Bulls.Count < 2)
+        {
+            return;
+        }
+
+        advancedFigures.Children.Add(Ruled("Bull by bull"));
+        foreach (var bull in state.Bulls)
+        {
+            var shots = state.Shots.Where(s => s.IsShot && s.Exclusion is null && s.Bull == bull.Index).ToList();
+            var offsets = GroupAnalysis.CompositeOffsets(state, shots);
+            string line;
+            if (offsets.Count == 0)
+            {
+                line = $"Bull {bull.Label}: no shots";
+            }
+            else
+            {
+                double cx = offsets.Average(o => o.X), cy = offsets.Average(o => o.Y);
+                double spread = offsets.SelectMany(a => offsets.Select(b => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y))))).Max();
+                line = $"Bull {bull.Label}: {offsets.Count} shot{(offsets.Count == 1 ? "" : "s")}, center {units.Length(Math.Abs(cx))} {(cx >= 0 ? "right" : "left")} and {units.Length(Math.Abs(cy))} {(cy > 0 ? "low" : "high")}"
+                    + (offsets.Count > 1 ? $", extreme spread {units.Length(spread)}" : "");
+            }
+
+            advancedFigures.Children.Add(new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap, Foreground = MarkingCanvas.BullColours[state.Bulls.IndexOf(bull) % MarkingCanvas.BullColours.Length] });
+        }
+    }
 
     /// <summary>A CEP's details: its 95 percent range, how it is reckoned, and the tail note where the shots cannot reach it (entry 227).</summary>
     private List<string> CepRange(double? lower, double? upper, int shots, double percent)

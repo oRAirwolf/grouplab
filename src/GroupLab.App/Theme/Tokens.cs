@@ -314,6 +314,12 @@ public static class Tokens
     public static Color MarkAlert { get; } = Hex(0xe0604a);
 
     /// <summary>
+    /// Entry 228 section 1.1: the colours of the bulls placed by hand on a target GroupLab did not print, in order, so a shot on the wrong
+    /// bull shows up as the wrong colour. The chart palette's three first, then five more that stay apart from them on a photograph.
+    /// </summary>
+    public static IReadOnlyList<Color> BullMarks { get; } = [Hex(0x2a78d6), Hex(0xeb6834), Hex(0x1baf7a), Hex(0xb24bd6), Hex(0xd6a02a), Hex(0xd62a5b), Hex(0x2ab8d6), Hex(0x8a9a2a)];
+
+    /// <summary>
     /// A shot a person placed or corrected, NOTES-FROM-PLANNING.md entry 97 section 1: neither teal, which is what the software found on its
     /// own, nor amber, which is what still needs a person. The concept's "corrected" and "manual" chips are neutral, and so is the mark.
     /// </summary>

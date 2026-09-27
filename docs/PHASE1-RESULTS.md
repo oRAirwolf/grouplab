@@ -59,6 +59,31 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 228: several bulls and a scale at each on a target GroupLab did not print (Unholy's suggestion)
+
+**Bulls by hand.** `MarkingSession.AddBull`, `MoveBull`, `DeleteBull` (numbering again) with shots nobody assigned going to their
+nearest bull every time; the editor's **Place bulls** (B) taps, drags and deletes them, each bull and its shots in one of eight colors;
+**Lasso** (O) holds the shots inside a drawn loop and puts them on the bull tapped next. Under Advanced, **Bull by bull** gives each
+bull's shots, center and extreme spread beside the pooled group, which the existing pooling code measures as on a GroupLab sheet.
+**Templates** (`BullTemplate`, kept in settings): the bulls in inches from the first; on the next sheet the first two bulls are tapped
+and the rest placed by the similarity that carries the template onto them.
+
+**A scale that is right everywhere.** Four corners (`RectangleReference`, with the paper's own size offered) already removed the angle.
+New: `PerBullReference`, a length across and one up and down at each bull, each shot measured with its own bull's linear map, all bulls in
+one frame taken from the first. It says when a bull's two directions or the bulls' scales differ by more than 3 percent (the photograph
+was taken at an angle), when a bull has one length or none, and gives the relative uncertainty, which the figures carry ("a 2 percent
+scale error is a 2 percent error in the group"). A single length on an image with camera fields is warned about. Saved in the marking
+file. **Tests** (`OtherTargetsTests`, 13): a 3 by 3 target through known perspective transforms, where four corners recover every offset
+within 0.002 in, a scale at each bull beats one scale for the sheet by more than three times, a quarter-turned photograph keeps one frame
+(it did not at first: the up and down length's sign flipped between bulls on a pixel's tilt, 0.75 in wrong on two real photographs), the
+angle is said, a template places the rest, and the file round trip; `Entry228Tests` the screen.
+
+**Measured on real photographs** (entry 233's three load sheets, Fold 7, near straight down, taps placed through the marker registration
+so only each method's own error shows): a scale at each bull 0.001 to 0.003 in rms from the markers, sigma within 0.1 percent; four
+corners 0.007 to 0.010 in rms, sigma 1.1 to 1.3 percent small on all three (lens distortion at the paper's edge that a planar fit cannot
+remove); one length 0.007 to 0.026 in rms, worst 0.087 in. In `photographing-targets`. Glossary: perspective correction extended,
+per-bull scale new; the tour's marking page and the user guide credit Unholy (also TNA).
+
 ## Entry 232: the Play build driven on the Fold 7 over wireless debugging
 
 `adb mdns services` found nothing with its default backend and found the Fold at once with `ADB_MDNS_OPENSCREEN=0`; `adb connect` then

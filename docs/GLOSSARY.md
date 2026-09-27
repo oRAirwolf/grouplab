@@ -227,11 +227,17 @@ How fast the bullet leaves the barrel, usually measured with a chronograph a few
 
 Whether an error changes from one shot to the next or stays the same for a whole string. The rifle's own spread and the muzzle velocity change every shot. A wind call, a range estimate and the zero are the same for every shot fired on them, so they make a string miss together.
 
+## Per-bull scale
+
+<a id="per-bull-scale"></a>
+
+A scale drawn at each bull of a target GroupLab did not print, from a known length near it: a ring's width, a grid square or a ruler. Two lengths at right angles are best, because an angled photograph shrinks one direction more than the other. Each shot is then measured from its own bull with that bull's scale, and if the bulls' scales disagree, GroupLab says the photograph was taken at an angle.
+
 ## Perspective correction
 
 <a id="perspective-correction"></a>
 
-Undoing the way a photograph taken at an angle makes the near side of a target look bigger than the far side. GroupLab does it from the printed markers, so every part of the sheet is measured at the same scale.
+Undoing the way a photograph taken at an angle makes the near side of a target look bigger than the far side. On a GroupLab sheet it is done from the printed markers. On any other target, tap four corners of something rectangular whose size you know, such as the paper's edge, and GroupLab removes the angle from the whole sheet. It cannot flatten paper that is curled.
 
 ## Point of aim
 

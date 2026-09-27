@@ -407,6 +407,24 @@ public sealed class AppSettingsStore(string path)
         ["sent"] = sent,
     });
 
+    /// <summary>Entry 228 section 1.4: the bull templates kept for commercial targets, by name.</summary>
+    public IReadOnlyList<BullTemplate> LoadBullTemplates() => Read(file => file["bullTemplates"] is JsonArray all
+        ? [.. all.OfType<JsonObject>().Select(t => new BullTemplate((string?)t["name"] ?? "", [.. (t["bulls"] as JsonArray ?? []).OfType<JsonArray>().Select(p => new GroupLab.Core.Imaging.PointD((double)p[0]!, (double)p[1]!))]))]
+        : (IReadOnlyList<BullTemplate>?)null) ?? [];
+
+    /// <summary>Keeps a template, replacing one of the same name.</summary>
+    public bool SaveBullTemplate(BullTemplate template) => Save(file =>
+    {
+        var all = file["bullTemplates"] as JsonArray ?? [];
+        foreach (var same in all.OfType<JsonObject>().Where(t => (string?)t["name"] == template.Name).ToList())
+        {
+            all.Remove(same);
+        }
+
+        all.Add(new JsonObject { ["name"] = template.Name, ["bulls"] = new JsonArray([.. template.BullsInches.Select(p => (JsonNode)new JsonArray(p.X, p.Y))]) });
+        file["bullTemplates"] = all;
+    });
+
     /// <summary>When the kept benchmark ran, or null when none has or it was kept before entry 227 recorded the time.</summary>
     public DateTimeOffset? LoadBenchmarkRanAt() => Read(file =>
         (string?)(file["survey"]?["benchmark"] as JsonObject)?["ranAt"] is { } at

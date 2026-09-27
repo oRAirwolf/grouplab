@@ -34,6 +34,15 @@ public enum MarkingTool
 
     /// <summary>Tap a shot to select it, drag it to move it, then tap a bull to assign it there (DESIGN.md section 13); drag an end of the scale to adjust it.</summary>
     Select,
+
+    /// <summary>
+    /// Entry 228 section 1: on a target GroupLab did not print, tap each bull's aim point to place it, drag one to move it, and Delete takes
+    /// the chosen one away. Shots go to their nearest bull.
+    /// </summary>
+    Bulls,
+
+    /// <summary>Entry 228 section 1.2: draw round several shots, then tap a bull, and they all go to it.</summary>
+    Lasso,
 }
 
 /// <summary>
@@ -88,6 +97,29 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     private Point? panFrom;
     private int? dragging;
     private PointD dragAt;
+
+    // Entry 228: a bull being dragged, and a lasso being drawn.
+    private int? draggingBull;
+    private PointD bullDragAt;
+    private readonly List<PointD> lasso = [];
+
+    /// <summary>The colours of the bulls placed by hand, one after another, so a shot on the wrong bull shows up as the wrong colour.</summary>
+    internal static readonly IBrush[] BullColours = [.. Tokens.BullMarks.Select(c => (IBrush)new SolidColorBrush(c))];
+
+    /// <summary>The bull placed by hand that is chosen, which Delete takes away.</summary>
+    public int? ChosenBull { get; set; }
+
+    /// <summary>The shots the lasso holds, waiting for a bull to be tapped.</summary>
+    public IReadOnlySet<int> Lassoed { get; private set; } = new HashSet<int>();
+
+    /// <summary>Whether a marking's bulls were placed by hand rather than read from a GroupLab sheet.</summary>
+    internal static bool PlacedByHand(MarkingState state) => state.Bulls.Count > 0 && state.Scale is not SheetReference && state.Bulls.All(b => b.Declared is null);
+
+    private static IBrush ColourOf(MarkingState state, int bull)
+    {
+        int at = state.Bulls.FindIndex(b => b.Index == bull);
+        return BullColours[Math.Max(0, at) % BullColours.Length];
+    }
     private readonly List<PointD> pending = [];
     private readonly List<PointD> awaiting = [];
     private PointD? hover;
@@ -442,7 +474,26 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             Marks.Saltire(context, Marks.Alert, ToControl(marker), 9, 2);
         }
 
-        foreach (var bull in state.Bulls)
+        bool byHand = PlacedByHand(state);
+        if (lasso.Count > 1)
+        {
+            for (int i = 1; i < lasso.Count; i++)
+            {
+                Marks.Line(context, Marks.Selected, ToControl(lasso[i - 1]), ToControl(lasso[i]), 1.5, Marks.Dashed);
+            }
+        }
+
+        foreach (var bull in state.Bulls.Where(_ => byHand))
+        {
+            // Entry 228 section 1.1: a bull placed by hand is a ring and its number in its own colour, drawn where it is being dragged to.
+            var c = ToControl(draggingBull == bull.Index ? bullDragAt : bull.Image);
+            var colour = ColourOf(state, bull.Index);
+            Marks.Ring(context, colour, c, 16, ChosenBull == bull.Index ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth);
+            Marks.Cross(context, colour, c, 6);
+            Marks.Label(context, bull.Label, colour, c + new Vector(18, -18));
+        }
+
+        foreach (var bull in state.Bulls.Where(_ => !byHand))
         {
             var c = ToControl(bull.Image);
             // Entry 115 section 2: a chosen bull is ringed, so a row picked for a load can be seen as one.
@@ -497,9 +548,10 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             bool selected = shot.Id == Selected;
-            IBrush colour = selected ? Marks.Selected
+            IBrush colour = selected || Lassoed.Contains(shot.Id) ? Marks.Selected
                 : shot.Exclusion is not null ? Marks.Excluded
                 : NeedsPerson.Contains(shot.Id) ? Marks.NeedsPerson
+                : byHand && shot.Bull is { } own ? ColourOf(state, own)
                 : shot.Provenance == ShotProvenance.Automatic ? Marks.Found
                 : Marks.Placed;
             double radius = ImpactRadius(state, at, shot.MeasuredDiameterInches);
@@ -708,6 +760,38 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 session.SetPointOfAim(image);
                 break;
 
+            case MarkingTool.Bulls:
+                if (session.State.Bulls.Where(b => Distance(ToControl(b.Image), point.Position) <= 2 * HitRadius).MinBy(b => Distance(ToControl(b.Image), point.Position)) is { } grabbedBull)
+                {
+                    draggingBull = grabbedBull.Index;
+                    bullDragAt = grabbedBull.Image;
+                    ChosenBull = grabbedBull.Index;
+                    e.Pointer.Capture(this);
+                }
+                else
+                {
+                    ChosenBull = session.AddBull(image);
+                }
+
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
+                break;
+
+            case MarkingTool.Lasso:
+                if (Lassoed.Count > 0 && BullAt(session.State, point.Position) is { } target)
+                {
+                    int moved = Lassoed.Count;
+                    session.AssignBulls([.. Lassoed], target.Index);
+                    Lassoed = new HashSet<int>();
+                    Notice?.Invoke(this, $"{moved} shot{(moved == 1 ? "" : "s")} put on bull {target.Label}.");
+                    SelectionChanged?.Invoke(this, EventArgs.Empty);
+                    break;
+                }
+
+                lasso.Clear();
+                lasso.Add(image);
+                e.Pointer.Capture(this);
+                break;
+
             case MarkingTool.Impact:
                 // Placed when let go, so a press that missed is dragged onto the hole rather than tapped again blind (entry 39 section 4).
                 placing = image;
@@ -784,6 +868,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         {
             dragAt = ToImage(position);
         }
+        else if (draggingBull is not null)
+        {
+            bullDragAt = ToImage(position);
+        }
+        else if (lasso.Count > 0)
+        {
+            lasso.Add(ToImage(position));
+        }
         else if (handle is not null)
         {
             handleAt = ToImage(position);
@@ -820,6 +912,20 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 ReleaseHandle(session, grabbed);
             }
 
+            if (draggingBull is { } bullIndex && session.State.Bulls.FirstOrDefault(b => b.Index == bullIndex) is { } movedBull
+                && Distance(ToControl(movedBull.Image), ToControl(bullDragAt)) > 3)
+            {
+                session.MoveBull(bullIndex, bullDragAt);
+            }
+
+            if (lasso.Count > 2)
+            {
+                var loop = lasso.ToList();
+                Lassoed = session.State.Shots.Where(s => s.IsShot && Inside(loop, s.Image)).Select(s => s.Id).ToHashSet();
+                Notice?.Invoke(this, Lassoed.Count == 0 ? "No shot inside that loop." : $"{Lassoed.Count} shot{(Lassoed.Count == 1 ? "" : "s")} held: tap the bull they belong to.");
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
+
             if (placing is { } placed)
             {
                 placing = null;
@@ -842,12 +948,31 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
 
         dragging = null;
+        draggingBull = null;
+        lasso.Clear();
         handle = null;
         placing = null;
         panFrom = null;
         panPressedAt = null;
         e.Pointer.Capture(null);
         InvalidateVisual();
+    }
+
+    /// <summary>Whether a point is inside a closed loop, by counting the edges a ray from it crosses.</summary>
+    internal static bool Inside(IReadOnlyList<PointD> loop, PointD p)
+    {
+        bool inside = false;
+        for (int i = 0, j = loop.Count - 1; i < loop.Count; j = i++)
+        {
+            var a = loop[i];
+            var b = loop[j];
+            if ((a.Y > p.Y) != (b.Y > p.Y) && p.X < ((b.X - a.X) * (p.Y - a.Y) / (b.Y - a.Y)) + a.X)
+            {
+                inside = !inside;
+            }
+        }
+
+        return inside;
     }
 
     /// <summary>How far, in screen pixels, a press may move and still be a click rather than a pan.</summary>

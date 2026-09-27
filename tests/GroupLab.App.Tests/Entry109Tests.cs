@@ -131,10 +131,11 @@ public class Entry109Tests
             Assert.Contains("Detect on a GroupLab sheet", words);
             Assert.Contains("Accept and analyze", words);
             var tools = window.GetLogicalDescendants().OfType<Avalonia.Controls.Primitives.ToggleButton>().Where(t => t.Classes.Contains(AppStyles.IconButton)).ToList();
-            Assert.Equal(6, tools.Count);
+            // Entry 228 added the bulls tool and the lasso, for targets GroupLab did not print.
+            Assert.Equal(8, tools.Count);
             // Entry 169 section 7.2: the icon, with the tool's key beneath it that Alt shows.
             Assert.All(tools, t => Assert.IsType<PathIcon>(Assert.IsType<StackPanel>(t.Content).Children[0]));
-            Assert.Equal(["Pan, and click a mark to select it (C or P)", "Scale: length (L)", "Scale: rectangle (R)", "Point of aim (A)", "Impact (I)", "Select (V)"], tools.Select(t => ToolTip.GetTip(t) as string));
+            Assert.Equal(["Pan, and click a mark to select it (C or P)", "Scale: length (L)", "Scale: rectangle (R)", "Point of aim (A)", "Impact (I)", "Select (V)", "Place bulls, on a target GroupLab did not print (B)", "Lasso shots onto a bull (O)"], tools.Select(t => ToolTip.GetTip(t) as string));
             window.Close();
         }
         finally

@@ -24,6 +24,60 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 228: other people's targets with several bulls, and a scale for each bull (Unholy's suggestion)
+
+**Status: done 2026-09-27 on the desktop, apart from two parts.** **Not done:** 1.5 on Android, which has no way to mark a target by hand at all yet, so the phone half waits for that screen; and 2's measurement at 40 to 60 degrees, which waits on request 18's photographs. It was measured on the three near-straight phone photographs of entry 233 instead. The four-corner method (the rectangle) already existed and was extended rather than replaced.
+
+Credit: suggested by Unholy (also TNA). Credit him by that name in the release notes and the tour, as with his earlier feedback.
+
+When someone analyzes a target GroupLab did not print (a commercial target, a hand-drawn one), there are no markers or codes, so today the
+user sets one scale and one aim point. Unholy suggests letting the user place several bulls and assign each shot to its bull. Alan adds that
+a photographed target needs a scale near each bull, because a phone photo is taken at an angle and has some distortion, so one scale for the
+whole sheet is wrong away from where it was set.
+
+## 1. Several bulls on a non-GroupLab target
+
+1. The user taps to place each bull's aim point, and can move or delete it. Bulls are numbered and color coded.
+2. Detected shots are assigned to the nearest bull automatically. The user can reassign any shot by tapping it and choosing a bull, or by
+   drawing a lasso around several shots. Shots are drawn in their bull's color, so a wrong assignment is easy to see.
+3. Analysis offers the same two views as a GroupLab multi-bull sheet: each bull as its own group, and all bulls pooled as one composite
+   group, each shot measured from its own bull's aim point. Reuse the existing pooling code and `docs/STATISTICS.md`'s pooling rule; do not
+   write a second one.
+4. The layout (bull positions, assignments, scales) is saved with the analysis, and can be saved as a reusable template for that commercial
+   target, so the next sheet of the same target only needs the bulls nudged into place.
+5. Works the same on desktop and Android, with touch targets big enough for a finger.
+
+## 2. Scale that is right everywhere on a photo
+
+A single scale is only correct for a flat scan. For a photo, offer these, best first, and say in the application which one the analysis
+used:
+
+1. **Flatten the whole sheet from four known points (preferred).** The user marks the four corners of something rectangular of known size
+   on the target: the paper edge (Letter, A4 or a size they type), the printed border, or four grid intersections. GroupLab computes the
+   perspective transform (homography) and removes the angle from the whole sheet, so every bull is measured correctly. This handles the
+   angle exactly for flat paper; say so, and say it does not fix curled paper.
+2. **A scale at each bull.** Where four points are not available, the user draws a known length near each bull: a ring diameter, a grid
+   square, or a ruler lying in the photo. Ask for two lengths at right angles (horizontal and vertical), because an angled photo shrinks one
+   direction more than the other; a single length is accepted with a warning. Each shot is measured with its own bull's scale.
+3. **One scale for the whole sheet.** Only for flatbed scans; if the image looks like a photo (EXIF camera fields present, or the per-bull
+   scales disagree), warn.
+
+Checks the user can see:
+- If per-bull scales differ from each other by more than a few percent, or horizontal and vertical differ at one bull, say the photo was
+  taken at an angle and suggest the four-point method or a rescan.
+- Show the estimated scale uncertainty in the numbers, and carry it into the group size result (a 2 percent scale error is a 2 percent size
+  error).
+- Lens distortion: modern phone cameras correct most of it in the saved image; measure the remaining error on a GroupLab sheet photographed
+  at an angle and at a slant (Code's own test images, and request 18's angle photos when Alan sends them), comparing the four-point and
+  per-bull methods against the marker-based result as ground truth. Put the result in the photographing-targets research article.
+
+## 3. Order and tests
+
+1. Do this after entry 227. It builds on the existing manual scale from Unholy's earlier feedback; extend that rather than replacing it.
+2. Tests: synthetic images of a known multi-bull target warped by known perspective transforms, checking that the four-point method
+   recovers true distances within a stated tolerance and that per-bull scales do better than one global scale.
+3. Tour and glossary entries for "perspective correction" and "per-bull scale".
+
 ## 2026-09-27, entry 232: drive the Play Store build on the Fold 7 over wireless debugging (do this first if Alan asks)
 
 **Status: done 2026-09-27, ahead of 228 to 231 as Alan asked.** Section 3's first run could not be watched: it had been answered before the run began, so the choices were checked and set in Settings instead. Section 4's Targets screen does not exist on the phone, which is recorded for the plan. The report is request 41.

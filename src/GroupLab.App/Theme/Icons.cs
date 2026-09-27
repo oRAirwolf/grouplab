@@ -22,6 +22,12 @@ public static class Icons
 
     public const string Select = "M3,1 L13,9 L8.6,9.6 L11.2,14.6 L9.2,15.6 L6.6,10.6 L3,13.6 Z";
 
+    /// <summary>Entry 228: four small bulls, for placing bulls by hand.</summary>
+    public const string Bulls = "F1 M4,1 A3,3 0 1 1 3.99,1 Z M4,2.5 A1.5,1.5 0 1 0 4.01,2.5 Z M12,1 A3,3 0 1 1 11.99,1 Z M12,2.5 A1.5,1.5 0 1 0 12.01,2.5 Z M4,9 A3,3 0 1 1 3.99,9 Z M4,10.5 A1.5,1.5 0 1 0 4.01,10.5 Z M12,9 A3,3 0 1 1 11.99,9 Z M12,10.5 A1.5,1.5 0 1 0 12.01,10.5 Z";
+
+    /// <summary>Entry 228: a loop with a tail, for the lasso.</summary>
+    public const string Lasso = "F1 M9,1 A6,4.5 0 1 1 8.99,1 Z M9,2.5 A4.5,3 0 1 0 9.01,2.5 Z M4.2,8.6 L5.5,9.4 L2.4,15.6 L1,14.9 Z";
+
     public const string Undo = "M5,2 L0,6.5 L5,11 V8 H10 A3,3 0 0 1 10,14 H7 V16 H10 A5,5 0 0 0 10,6 H5 Z";
 
     public const string Redo = "M11,2 L16,6.5 L11,11 V8 H6 A3,3 0 0 0 6,14 H9 V16 H6 A5,5 0 0 1 6,6 H11 Z";
