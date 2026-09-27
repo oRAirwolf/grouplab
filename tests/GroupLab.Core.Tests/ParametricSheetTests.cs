@@ -12,6 +12,13 @@ namespace GroupLab.Core.Tests;
 public class ParametricSheetTests
 {
     /// <summary>Four built-in sheets of different pages, rings, sighter rows and load blocks, rebuilt from their parameters alone.</summary>
+    private static readonly Dictionary<string, string> Frozen = new(StringComparer.Ordinal)
+    {
+        ["GL-LR25-TAB"] = "GL-025B-Y7FF-VX15-JKXE",
+        ["GL-LR25-A3"] = "GL-NG21-1WWR-55A5-T7Q0",
+        ["GL-LR30-TAB"] = "GL-JNR9-FXK1-P17X-JQF1",
+    };
+
     [Theory]
     [InlineData("GL-CF25-LTR", "letter", 5, 5, 1.4961, 254, 3, false)]
     [InlineData("GL-CF25-LTR-D", "letter", 5, 5, 1.4961, 254, 0, true)]
@@ -25,7 +32,9 @@ public class ParametricSheetTests
     [InlineData("GL-LR30-TAB", "tabloid", 5, 6, 2.0, 356, 3, false)]
     public void ABuiltInSheetsParametersGiveBackThatSheet(string file, string page, int columns, int rows, double pitch, int ring, int sighters, bool loadBlock)
     {
-        var builtIn = GltdJsonReader.ReadFile(Repo.PathTo("targets", file + ".gltd.json")).Definition!;
+        // Entry 243 section 1.4: the three large format sheets were redrawn as 2 by 2 sets, and the ones printed are frozen by identifier.
+        string path = Frozen.TryGetValue(file, out string? id) ? Repo.PathTo("targets", "frozen", "large-format-1", id + ".gltd.json") : Repo.PathTo("targets", file + ".gltd.json");
+        var builtIn = GltdJsonReader.ReadFile(path).Definition!;
 
         var design = ParametricSheet.Design(new SheetSpec(file, page, columns, rows, pitch, ring, sighters, loadBlock));
 

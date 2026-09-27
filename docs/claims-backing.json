@@ -2444,6 +2444,22 @@
   "**And three with the C bull**: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a white diamond center and a small dot.": {
    "kind": "code",
    "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs CBullSheets and CDiscs, targets/GL-CF25-*-C.gltd.json; src/GroupLab.App/PrintPanel.cs BullChoices and genShape; src/GroupLab.Cli/Library/TargetGenerator.cs Diamond; held by DiamondBullTests and TargetGeneratorTests (entry 243 section 4)"
+  },
+  "And three with the C bull : the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a white diamond center and a small dot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs CBullSheets and CDiscs, targets/GL-CF25-*-C.gltd.json; src/GroupLab.App/PrintPanel.cs BullChoices and genShape; src/GroupLab.Cli/Library/TargetGenerator.cs Diamond; held by DiamondBullTests and TargetGeneratorTests (entry 243 section 4)"
+  },
+  "The roll sheets are for a plotter, and a photograph of a whole one needs a phone of about 50 MP.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs RedrawnLarge and Tiles, targets/GL-LR25-T*.gltd.json and GL-LR30-T.gltd.json, the originals in targets/frozen/large-format-1; src/GroupLab.Core/Capture/PhotographLimit.cs for the 50 MP photograph (entry 243 section 1.4)"
+  },
+  "**The large format sheets print on Letter or A4.** Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs RedrawnLarge and Tiles, targets/GL-LR25-T*.gltd.json and GL-LR30-T.gltd.json, the originals in targets/frozen/large-format-1; src/GroupLab.Core/Capture/PhotographLimit.cs for the 50 MP photograph (entry 243 section 1.4)"
+  },
+  "Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs RedrawnLarge and Tiles, targets/GL-LR25-T*.gltd.json and GL-LR30-T.gltd.json, the originals in targets/frozen/large-format-1 (entry 243 section 1.4)"
   }
  },
  "rules": [

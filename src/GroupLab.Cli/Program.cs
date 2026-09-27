@@ -439,7 +439,7 @@ static int Decode(string[] hexFrames)
 static int LibraryBuild(string layouts, string directory)
 {
     Directory.CreateDirectory(directory);
-    foreach (var target in LibraryBuilder.Build(layouts).Concat(LibraryBuilder.Additions(layouts)))
+    foreach (var target in LibraryBuilder.Library(layouts))
     {
         File.WriteAllBytes(Path.Combine(directory, target.FileName), CanonicalJsonWriter.Write(target.Definition));
         Console.WriteLine($"{target.Definition.Id}  {target.FileName}");
@@ -451,7 +451,7 @@ static int LibraryBuild(string layouts, string directory)
 static int LibraryVerify(string layouts, string directory)
 {
     int errors = 0, warnings = 0, stale = 0;
-    var targets = LibraryBuilder.Build(layouts).Concat(LibraryBuilder.Additions(layouts)).ToList();
+    var targets = LibraryBuilder.Library(layouts).ToList();
     foreach (var target in targets)
     {
         string path = Path.Combine(directory, target.FileName);

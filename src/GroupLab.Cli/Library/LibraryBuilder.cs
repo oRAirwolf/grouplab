@@ -288,7 +288,88 @@ public static class LibraryBuilder
             added.Add(Finish(name, stem + "-C", definition));
         }
 
+        foreach (var (source, stem, name, page) in RedrawnLarge)
+        {
+            added.Add(Tiles(built.Single(t => t.FileName == source + ".gltd.json"), stem, name, page));
+        }
+
         return added;
+    }
+
+    /// <summary>
+    /// The whole library as it is written to <c>targets/</c>: the reference build less the sheets redrawn since, then the additions. The
+    /// reference build itself is left as <c>check.py</c> makes it, so the parity tests still hold the printed originals, which are frozen.
+    /// </summary>
+    public static IReadOnlyList<BuiltInTarget> Library(string layoutsJsonPath) =>
+        [.. Build(layoutsJsonPath).Where(t => !RedrawnLarge.Any(r => t.FileName == r.Source + ".gltd.json")), .. Additions(layoutsJsonPath)];
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 1.4, answering question 62 (a): the three large format sheets redrawn as 2 by 2 sets of
+    /// Letter or A4 sheets, so a home printer prints them and each piece carries its own markers and codes. The tabloid sheets become Letter
+    /// sets and the A3 one an A4 set; the printed originals are frozen in <c>targets/frozen/large-format-1</c> and still read. The roll sheets
+    /// stay as they are.
+    /// </summary>
+    public static readonly (string Source, string Stem, string Name, string Page)[] RedrawnLarge =
+    [
+        ("GL-LR25-TAB", "GL-LR25-T", "GroupLab Large Format 1.5 in Bulls, 2x2 Letter Sheets", "letter"),
+        ("GL-LR25-A3", "GL-LR25-TA4", "GroupLab Large Format 1.5 in Bulls, 2x2 A4 Sheets", "a4"),
+        ("GL-LR30-TAB", "GL-LR30-T", "GroupLab Large Format 1.4 in Bulls, 2x2 Letter Sheets", "letter"),
+    ];
+
+    internal const string RedrawnCreated = "2026-09-27";
+
+    /// <summary>
+    /// A large sheet as a 2 by 2 set: the same bull and the same spacing, and on each sheet the smallest grid that gives the set at least
+    /// the original's bulls, laid out by the designer's own rule and checked by it. Question 63 asks whether that is the right number.
+    /// </summary>
+    private static BuiltInTarget Tiles(BuiltInTarget original, string stem, string name, string page)
+    {
+        var source = original.Definition;
+        int ring = source.RingSets.Single().Discs.Max(d => d.Diameter);
+        var scoring = source.Bulls.Where(b => b.Scoring).ToList();
+        var xs = scoring.Select(b => b.X).Distinct().Order().ToList();
+        double pitch = (xs[1] - xs[0]) / 254.0;
+        int needed = (int)Math.Ceiling(scoring.Count / 4.0);
+        var options = new List<(int Columns, int Rows)>();
+        for (int columns = 2; columns <= 5; columns++)
+        {
+            for (int rows = 2; rows <= 6; rows++)
+            {
+                if (columns * rows >= needed)
+                {
+                    options.Add((columns, rows));
+                }
+            }
+        }
+
+        foreach (var (columns, rows) in options.OrderBy(o => o.Columns * o.Rows).ThenBy(o => o.Columns))
+        {
+            foreach (bool half in (bool[])[false, true])
+            {
+                var design = ParametricSheet.Design(new SheetSpec(name, page, columns, rows, pitch, ring, 0, false, null, 4, half));
+                if (design is not { Printable: true, Definition: { } drawn })
+                {
+                    continue;
+                }
+
+                var (_, width, height) = Pages[page];
+                var definition = drawn with
+                {
+                    Id = null,
+                    Name = name,
+                    Description = string.Create(CultureInfo.InvariantCulture,
+                        $"One sheet of a 2 by 2 set: {columns * rows} scoring bulls per sheet, {columns * rows * 4} in the set, the {ring / 254.0:0.##} in bull and {pitch:0.##} in spacing of {original.Name}, which it replaces."),
+                    Author = source.Author,
+                    Licence = source.Licence,
+                    Print = source.Print,
+                    Created = RedrawnCreated,
+                    Tiling = new Tiling(2, 2, width, height, 0),
+                };
+                return Finish(name, stem, definition);
+            }
+        }
+
+        throw new InvalidOperationException($"{original.Name} does not fit a 2 by 2 set of {page} sheets.");
     }
 
     /// <summary>The sheets drawn with the C bull, and their names.</summary>

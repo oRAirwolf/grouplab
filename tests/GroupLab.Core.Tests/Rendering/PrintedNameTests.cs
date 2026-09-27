@@ -43,9 +43,10 @@ public class PrintedNameTests
         foreach (var page in SceneBuilder.Build(definition).Pages)
         {
             var names = page.Items.OfType<TextRun>().Where(t => t.Layer == SceneLayer.Name).ToList();
-            if (definition.Tiling is not null)
+            // A tile of the 300 yd sets has no room for its name; the large format sets of entry 243 section 1.4 do, and theirs is held to
+            // the same clearances as any other sheet's.
+            if (definition.Tiling is not null && names.Count == 0)
             {
-                Assert.Empty(names);
                 continue;
             }
 

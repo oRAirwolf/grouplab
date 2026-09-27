@@ -529,6 +529,23 @@
       "article": "can-you-see-the-bull"
     },
     {
+      "key": "large-on-letter",
+      "group": "Sheets and printing",
+      "name": "Large format on a home printer",
+      "sentence": "The large format sheets print as sets of four Letter or A4 sheets, the same bulls and spacing, each sheet with its own markers and codes.",
+      "shot": "targets",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "sets of four Letter or A4 sheets",
+      "tour": "targets",
+      "guide": "1-print-a-sheet"
+    },
+    {
       "key": "dev-build",
       "group": "Updates and platforms",
       "name": "GroupLab Dev for testers",

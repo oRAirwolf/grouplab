@@ -44,7 +44,7 @@ public class LargeFormatTests
     [Fact]
     public void ASingleSheetIsNotCutAndSaysWhy()
     {
-        var d = BuiltIns.Load("GL-LR25-TAB.gltd.json");
+        var d = BuiltIns.Load("GL-LR300-R24.gltd.json");
         Assert.NotNull(CutSheet.Refusal(d));
         Assert.Equal(TargetRenderer.Render(d).Pages.Count, TargetRenderer.Render(d, new RenderOptions(OneSheet: true)).Pages.Count);
     }

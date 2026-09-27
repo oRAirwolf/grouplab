@@ -1,4 +1,5 @@
 using System.Text.Json;
+using GroupLab.Cli.Imaging;
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd;
 using GroupLab.Core.Gltd.Binary;
@@ -6,7 +7,10 @@ using GroupLab.Core.Gltd.Derivation;
 using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Gltd.Validation;
+using GroupLab.Core.Registration;
+using GroupLab.Core.Rendering;
 using GroupLab.Core.Tests.Support;
+using GroupLab.Core.Trace;
 
 namespace GroupLab.Core.Tests.Library;
 
@@ -55,7 +59,7 @@ public class BuiltInLibraryTests
     public void CommittedFileIsTheCanonicalBuild(string name)
     {
         var target = Target(name);
-        string path = Repo.PathTo("targets", target.FileName);
+        string path = Committed(target);
 
         Assert.True(File.Exists(path), $"{path} is missing; run grouplab library build.");
         Assert.Equal(CanonicalJsonWriter.Write(target.Definition), File.ReadAllBytes(path));
@@ -130,7 +134,7 @@ public class BuiltInLibraryTests
     [MemberData(nameof(Names))]
     public void Test1SheetRoundTripsToItsProjection(string name)
     {
-        var source = GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", Target(name).FileName))).Definition!;
+        var source = GltdJsonReader.Read(File.ReadAllBytes(Committed(Target(name)))).Definition!;
         var encoding = GltdBinary.Encode(source).Encoding!;
 
         var decoded = GltdBinary.Decode([GltdBinary.ReplicatedFrame(encoding)]);
@@ -251,10 +255,49 @@ public class BuiltInLibraryTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 1.4: the three large format sheets are 2 by 2 sets of Letter or A4 sheets with the same bull
+    /// and spacing and at least as many bulls in the set, and a sheet printed from one of the originals still names itself.
+    /// </summary>
+    [Fact]
+    public void TheLargeFormatSheetsAreTwoByTwoSetsAndThePrintedOnesStillRead()
+    {
+        var library = LibraryBuilder.Library(LayoutsPath);
+        var candidates = SheetIdentification.Candidates([Repo.PathTo("targets")]);
+        foreach (var (source, stem, _, page) in LibraryBuilder.RedrawnLarge)
+        {
+            var original = Targets.Value.Single(t => t.FileName == source + ".gltd.json").Definition;
+            Assert.DoesNotContain(library, t => t.FileName == source + ".gltd.json");
+            var redrawn = library.Single(t => t.FileName == stem + ".gltd.json").Definition;
+
+            Assert.Equal((2, 2), (redrawn.Tiling!.Cols, redrawn.Tiling.Rows));
+            Assert.Equal(page, redrawn.Page.Size.ToString().ToLowerInvariant());
+            Assert.Equal(original.RingSets.Single().Discs, redrawn.RingSets.Single().Discs);
+            int Pitch(TargetDefinition d) => d.Bulls.Where(b => b.Scoring).Select(b => b.X).Distinct().Order().Take(2).Aggregate((a, b) => b - a);
+            Assert.Equal(Pitch(original), Pitch(redrawn));
+            Assert.True(4 * redrawn.Bulls.Count(b => b.Scoring) >= original.Bulls.Count(b => b.Scoring));
+            Assert.DoesNotContain(GltdValidator.Validate(redrawn), d => d.Severity == Severity.Error);
+
+            var render = SceneRasterizer.Rasterize(SceneBuilder.Build(original).Pages[0], 150);
+            var identity = SheetIdentification.Identify(render, candidates, new OpenCvSharpBackend(), new TraceRecorder());
+            Assert.True(identity.Failure is null, $"{source}: {identity.Failure}");
+            Assert.Equal(original.Id, identity.DefinitionId);
+        }
+    }
+
     private static bool IsZero(string name) => name.StartsWith("GL-ZERO-", StringComparison.Ordinal);
 
     private static TargetDefinition Frozen(JsonElement fixture) =>
         GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "frozen", "zero-grid-1", fixture.GetProperty("id").GetString() + ".gltd.json"))).Definition!;
 
     private static BuiltInTarget Target(string name) => Targets.Value.Single(t => t.Name == name);
+
+    /// <summary>
+    /// Where the committed file of a reference sheet is: in <c>targets/</c>, or for the large format sheets entry 243 section 1.4 redrew as
+    /// 2 by 2 sets, frozen under the identifier printed on them.
+    /// </summary>
+    private static string Committed(BuiltInTarget target) =>
+        LibraryBuilder.RedrawnLarge.Any(r => target.FileName == r.Source + ".gltd.json")
+            ? Repo.PathTo("targets", "frozen", "large-format-1", target.Definition.Id + ".gltd.json")
+            : Repo.PathTo("targets", target.FileName);
 }

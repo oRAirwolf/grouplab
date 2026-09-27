@@ -241,6 +241,12 @@ Thirty-six shots is where the statistics start to be genuinely informative: it t
 
 ### 4.3 Large format, 100 to 200 yards
 
+**Redrawn on 2026-09-27** (NOTES-FROM-PLANNING.md entry 243 section 1.4, question 62 (a)). The three sheets below are now 2 by 2 sets of
+Letter or A4 sheets, so a home printer prints them and each piece carries its own markers and codes: **GL-LR25-T** (Letter) and
+**GL-LR25-TA4** (A4) with the 38.1 mm bull, and **GL-LR30-T** (Letter) with the 35.6 mm bull, each at the 50.8 mm pitch, eight bulls a
+sheet in 2 columns and 4 rows, 32 in the set. They carry no sighters and no load block. The sheets printed from the layouts below are
+frozen in `targets/frozen/large-format-1` and still read. The geometry below is kept as the record of what was printed.
+
 **GL-LR25-TAB** and **GL-LR25-A3**, twenty-five bulls at a 2.0 inch pitch, both with sighters and a load block.
 
 ```
@@ -317,6 +323,9 @@ assembly  2 x 2 tiles, 16.5 x 23.4 in, 24 scoring bulls   (default)
 **Why the fiducial scheme changes here.** At a 101.6 mm pitch the `grid-boundary-1` lattice offers only twelve candidate positions on a 2 by 3 tile, and the 38.1 mm rings knock out all but **two** of them. Two markers is not a registration. Subdividing the lattice to half-pitch steps raises the candidates to 35 and leaves **nine** surviving markers, well spread across the sheet. This is the reason `grid-boundary-half-1` exists, and it is a case where a rule that works everywhere else degenerates quietly rather than failing loudly, which is exactly what the validator is for.
 
 ### 4.5 Long range, roll media
+
+These stay as they are (entry 243 section 1.4): no flatbed takes them, and a photograph of a whole sheet needs a phone of about 50 MP with
+its full resolution mode on, which the Targets screen says for each.
 
 Three sheets, one per plotter roll width. The width is fixed by the media and the length is chosen so that one sheet is one session.
 

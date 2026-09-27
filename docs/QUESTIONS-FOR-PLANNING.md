@@ -12,6 +12,21 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-27, question 63: how many bulls each sheet of the redrawn large format sets carries
+
+Status: open. Nothing waits on it; what is built can be changed without touching anything printed.
+
+Entry 243 section 1.4 (question 62 (a)) says: "Redraw the three large format 5x5 and 5x6 sheets as 2 by 2 Letter and A4 tiles; freeze the
+printed ones so they still read." A set's four sheets are identical in this format (TARGET-SCHEMA.md section 3.12: every tile encodes to
+one body), so a 5 by 5 grid cannot be split across them. **Built:** GL-LR25-T (Letter), GL-LR25-TA4 (A4) and GL-LR30-T (Letter) keep
+the original bull (38.1 mm, or 35.6 mm for the 5x6) and the 50.8 mm pitch, and each sheet carries the smallest grid that gives the set at
+least the original's bulls: 2 columns by 4 rows, 8 a sheet, 32 a set, for the 25 and the 30 alike. No sighters and no load block, because
+every sheet of a set would carry them (`LibraryBuilder.Tiles`). The printed originals are in `targets/frozen/large-format-1`.
+
+**The alternatives.** (a) As built, 32 a set. (b) The most a sheet holds at that pitch: more shots a session than the originals were
+for. (c) Keep a load block on every sheet, which costs about a row, so each sheet holds fewer bulls. (d) Three sighters on each sheet, 12 a set. **What I would choose:** (a), because the set then matches
+what the originals were for, a 25 or 30 shot session, with a few bulls to spare, and a load block belongs on a sheet, not on four copies.
+
 ## 2026-09-27, question 62: the large sheets that are not tiles, and the generator on the website
 
 Status: open. Nothing waits on it.

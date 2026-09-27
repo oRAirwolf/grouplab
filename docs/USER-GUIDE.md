@@ -29,6 +29,10 @@ white diamond center and a small dot. Its points lie on the vertical and horizon
 shape. **Design your own sheet** offers the rings, E or C for its bull, and **Made for your optic** a disc or a diamond, sized by the same
 rule. None of them replaces the usual bull.
 
+**The large format sheets print on Letter or A4.** Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls
+and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time. A tabloid or
+A3 sheet you printed before still reads. The roll sheets are for a plotter, and a photograph of a whole one needs a phone of about 50 MP.
+
 **The zeroing grids are for sighting in by eye.** Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again. The sheet says what a small square and each heavier line are, in your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you shoot. The heaviest lines are whole mils or whole MOA, and every heavier line is labeled. For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead. GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
 
 **Made for your optic.** Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet. GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover. It makes as many sheets as the shots need, and each sheet's codes say which of the set it is. Analyze each sheet by itself for now; putting a set together into one group is still to come.

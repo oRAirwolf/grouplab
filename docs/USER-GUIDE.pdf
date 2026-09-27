@@ -66,7 +66,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 7125 >>
+<< /Length 7205 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -74,62 +74,54 @@ q
 BT /F1 71 Tf 1 0 0 -1 381 452 Tm (and A4, each with every bull a black disc with a 0.36 in white center and a small dot. The aim point test of) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 540 Tm (2026-09-26 found it could be centered on through every high power scope at 10x, where the usual bull could not.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 628 Tm (They sit beside the usual ones in the list, with their own identifiers.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 751 Tm (The zeroing grids are for sighting in by eye. Each prints at exact scale, so at the bench you fire, read the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 839 Tm (correction off the grid, dial it and fire again. The sheet says what a small square and each heavier line are, in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 927 Tm (your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1015 Tm (shoot. The heaviest lines are whole mils or whole MOA, and every heavier line is labeled. For a zero worked out) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1103 Tm (from a group, and the group figures, shoot a 5x5 sheet instead. GroupLab still reads a scanned zeroing grid, but) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1191 Tm (it cannot know the order of the shots or the dialing between them, which is what the grid was for.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1314 Tm (Made for your optic. Under Design your own sheet, give the distance, the lowest magnification you will shoot at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1402 Tm (\(1 for a red dot, with the dot's size in MOA\) and the number of shots, and press Make the sheet. GroupLab sizes) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1490 Tm (a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1578 Tm (that magnification, the size the aim point test found people can center on, with nothing small at the middle for a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1666 Tm (crosshair to cover. It makes as many sheets as the shots need, and each sheet's codes say which of the set it is.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1754 Tm (Analyze each sheet by itself for now; putting a set together into one group is still to come.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1877 Tm (A target GroupLab did not print, with several bulls \(suggested by Unholy, also TNA\). Choose Place bulls \(B\) and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1965 Tm (tap each bull's aim point; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2053 Tm (bull and are drawn in its color, so a shot on the wrong bull shows. Lasso \(O\): draw round several shots, then tap) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2141 Tm (the bull they belong to. For the scale, tap four corners of something rectangular whose size you know, such as) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2229 Tm (the paper's edge, which removes the photograph's angle; or draw a length near a bull, a ring's width or a grid) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2317 Tm (square, and choose Use it as bull N's own scale, then a second at right angles to it. GroupLab says when the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2405 Tm (bulls' scales disagree, which means the photograph was taken at an angle, and how uncertain the sizes are) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2493 Tm (because of it. Under Advanced, Bull by bull gives each bull as its own group beside the pooled one. With the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2581 Tm (bulls tool in hand, Save these bulls keeps them as a template; on the next sheet of the same target, tap its first) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2669 Tm (two bulls and Place the rest.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2792 Tm (Large targets. A sheet larger than Letter or A4 does not fit a flatbed scanner. For each one the Targets screen) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2880 Tm (works out how many pixels an inch a phone photograph of the whole sheet gives and says whether that is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2968 Tm (enough. Tiled Letter or A4 pages are the better choice for a large target: each page scans by itself, and a plotter) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3056 Tm (can print them all on one large page with cut lines between them.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3179 Tm (Check the size before you shoot. Measure from the center of bull 1 to the center of bull 5 with a ruler. On the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3267 Tm (Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the printer scaled the sheet, and it should be printed again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3390 Tm (Your own sheet. Design your own sheet, at the top of Targets, lays out a grid of bulls:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3513 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3513 Tm (you choose the page, the rows and columns, the spacing, the ring, the sighters and a load block;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3615 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3615 Tm (a layout that cannot register or fit is refused;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3717 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3717 Tm (if you give your five-shot group, a spacing tight for it is warned about.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3819 Tm (Save to your own sheets keeps a design in the list. There you can rename it, duplicate it, or delete it after) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3907 Tm (GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3995 Tm (makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4118 Tm (A volunteer pack. Print a volunteer pack, beside the chosen sheet, gives the sheet and one page of instructions) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4206 Tm (together, for someone shooting a sheet for the project.) Tj ET
-0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 4413 Tm (2. Shoot it) Tj ET
-0.745098 0.745098 0.745098 rg
-381 4443 3556 3 re
-f
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 395 4543 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4543 Tm (Mount the sheet flat, supported all over.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4645 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4645 Tm (For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4733 Tm (sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4835 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4835 Tm (Write only in the load block.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4937 Tm (Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5025 Tm (accept the marking: Shots per bull, in the marking screen's side panel, reads the sheet by nearest bull, or as two) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5113 Tm (shots on the bulls you name.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 751 Tm (And three with the C bull: the same three sheets with every bull a black diamond standing on a point, 1.25 in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 839 Tm (point to point, with a white diamond center and a small dot. Its points lie on the vertical and horizontal lines) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 927 Tm (through the aim, so a crosshair lines up with the shape. Design your own sheet offers the rings, E or C for its bull,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1015 Tm (and Made for your optic a disc or a diamond, sized by the same rule. None of them replaces the usual bull.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1138 Tm (The large format sheets print on Letter or A4. Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1226 Tm (the same bulls and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1314 Tm (or photograph them one at a time. A tabloid or A3 sheet you printed before still reads. The roll sheets are for a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1402 Tm (plotter, and a photograph of a whole one needs a phone of about 50 MP.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1525 Tm (The zeroing grids are for sighting in by eye. Each prints at exact scale, so at the bench you fire, read the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1613 Tm (correction off the grid, dial it and fire again. The sheet says what a small square and each heavier line are, in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1701 Tm (your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1789 Tm (shoot. The heaviest lines are whole mils or whole MOA, and every heavier line is labeled. For a zero worked out) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1877 Tm (from a group, and the group figures, shoot a 5x5 sheet instead. GroupLab still reads a scanned zeroing grid, but) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1965 Tm (it cannot know the order of the shots or the dialing between them, which is what the grid was for.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2088 Tm (Made for your optic. Under Design your own sheet, give the distance, the lowest magnification you will shoot at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2176 Tm (\(1 for a red dot, with the dot's size in MOA\) and the number of shots, and press Make the sheet. GroupLab sizes) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2264 Tm (a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2352 Tm (that magnification, the size the aim point test found people can center on, with nothing small at the middle for a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2440 Tm (crosshair to cover. It makes as many sheets as the shots need, and each sheet's codes say which of the set it is.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2528 Tm (Analyze each sheet by itself for now; putting a set together into one group is still to come.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2651 Tm (A target GroupLab did not print, with several bulls \(suggested by Unholy, also TNA\). Choose Place bulls \(B\) and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2739 Tm (tap each bull's aim point; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2827 Tm (bull and are drawn in its color, so a shot on the wrong bull shows. Lasso \(O\): draw round several shots, then tap) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2915 Tm (the bull they belong to. For the scale, tap four corners of something rectangular whose size you know, such as) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3003 Tm (the paper's edge, which removes the photograph's angle; or draw a length near a bull, a ring's width or a grid) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3091 Tm (square, and choose Use it as bull N's own scale, then a second at right angles to it. GroupLab says when the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3179 Tm (bulls' scales disagree, which means the photograph was taken at an angle, and how uncertain the sizes are) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3267 Tm (because of it. Under Advanced, Bull by bull gives each bull as its own group beside the pooled one. With the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3355 Tm (bulls tool in hand, Save these bulls keeps them as a template; on the next sheet of the same target, tap its first) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3443 Tm (two bulls and Place the rest.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3566 Tm (Large targets. A sheet larger than Letter or A4 does not fit a flatbed scanner. For each one the Targets screen) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3654 Tm (works out how many pixels an inch a phone photograph of the whole sheet gives and says whether that is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3742 Tm (enough. Tiled Letter or A4 pages are the better choice for a large target: each page scans by itself, and a plotter) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3830 Tm (can print them all on one large page with cut lines between them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3953 Tm (Check the size before you shoot. Measure from the center of bull 1 to the center of bull 5 with a ruler. On the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4041 Tm (Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the printer scaled the sheet, and it should be printed again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4164 Tm (Your own sheet. Design your own sheet, at the top of Targets, lays out a grid of bulls:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4287 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4287 Tm (you choose the page, the rows and columns, the spacing, the ring, the sighters and a load block;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4389 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4389 Tm (a layout that cannot register or fit is refused;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4491 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4491 Tm (if you give your five-shot group, a spacing tight for it is warned about.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4593 Tm (Save to your own sheets keeps a design in the list. There you can rename it, duplicate it, or delete it after) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4681 Tm (GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4769 Tm (makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4892 Tm (A volunteer pack. Print a volunteer pack, beside the chosen sheet, gives the sheet and one page of instructions) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4980 Tm (together, for someone shooting a sheet for the project.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 2 of 12) Tj ET
 Q
 endstream
@@ -138,59 +130,74 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
 endobj
 9 0 obj
-<< /Length 4259 >>
+<< /Length 5344 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (A sheet with one scoring bull takes a group. Every shot on it goes to that bull, however far out, and the review) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (asks nothing about how many there are; say how many you fired, in Rounds fired, and a count that disagrees) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (names the mark most likely to hold two.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 835 Tm (3. Photograph or scan it) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 536 Tm (2. Shoot it) Tj ET
 0.745098 0.745098 0.745098 rg
-381 865 3556 3 re
+381 566 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 965 Tm (A flat scan at 600 dpi is the best record of a sheet.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1088 Tm (GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1176 Tm (real resolution from the sheet's own printed markers and tells you both. Where the two disagree, the markers) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1264 Tm (win, because they were printed at a known size and the file's number is only what the scanner meant to do.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1387 Tm (For photographs:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1510 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1510 Tm (stand about 2.5 ft \(75 cm\) from the sheet;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1612 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1612 Tm (use the phone's main camera, not its wide or zoom lens;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1714 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1714 Tm (keep the whole sheet and all its corner squares in the frame;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1816 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1816 Tm (do not crop the pictures, and do not send them through a messaging app, which shrinks them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 666 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 666 Tm (Mount the sheet flat, supported all over.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 768 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 768 Tm (For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 856 Tm (sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 958 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 958 Tm (Write only in the load block.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1060 Tm (Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1148 Tm (accept the marking: Shots per bull, in the marking screen's side panel, reads the sheet by nearest bull, or as two) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1236 Tm (shots on the bulls you name.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1359 Tm (A sheet with one scoring bull takes a group. Every shot on it goes to that bull, however far out, and the review) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1447 Tm (asks nothing about how many there are; say how many you fired, in Rounds fired, and a count that disagrees) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1535 Tm (names the mark most likely to hold two.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 2002 Tm (4. Mark it and settle the review queue) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 1742 Tm (3. Photograph or scan it) Tj ET
 0.745098 0.745098 0.745098 rg
-381 2032 3556 3 re
+381 1772 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2132 Tm (Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sheet the rest happens on its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2220 Tm (own:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 2343 Tm (1.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 2343 Tm (GroupLab reads the sheet's printed codes to name its definition.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 2445 Tm (2.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 2445 Tm (It registers the page from the corner and edge markers.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 2547 Tm (3.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 2547 Tm (It finds the holes by comparing the image with the sheet as printed.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 2649 Tm (4.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 2649 Tm (It gives each hole to a bull.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2751 Tm (Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2839 Tm (by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2927 Tm (again and enter the new size, or choose the length or rectangle tool and Change the length of the scale in use;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3015 Tm (every figure follows. Typing a caliber offers the cartridges that match, and choosing one from the list, with a click) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3103 Tm (or with Enter, sets it at once.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3226 Tm (With the rectangle tool, Find the paper's edges places the four corners on the paper itself when the sheet stands) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3314 Tm (out from what is behind it, still draggable, and offers a standard paper size when the photograph's shape) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3402 Tm (matches one. On a white board it cannot tell the paper from the board, and you tap the corners. A photograph) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3490 Tm (taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3578 Tm (open keeps how far off square it was and how good it is: good, usable or poor.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1872 Tm (A flat scan at 600 dpi is the best record of a sheet.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1995 Tm (GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2083 Tm (real resolution from the sheet's own printed markers and tells you both. Where the two disagree, the markers) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2171 Tm (win, because they were printed at a known size and the file's number is only what the scanner meant to do.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2294 Tm (For photographs:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2417 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2417 Tm (stand about 2.5 ft \(75 cm\) from the sheet;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2519 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2519 Tm (use the phone's main camera, not its wide or zoom lens;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2621 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2621 Tm (keep the whole sheet and all its corner squares in the frame;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2723 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2723 Tm (do not crop the pictures, and do not send them through a messaging app, which shrinks them.) Tj ET
+0.078431 0.078431 0.078431 rg
+BT /F1 99 Tf 1 0 0 -1 381 2909 Tm (4. Mark it and settle the review queue) Tj ET
+0.745098 0.745098 0.745098 rg
+381 2939 3556 3 re
+f
+0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 3039 Tm (Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sheet the rest happens on its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3127 Tm (own:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 3250 Tm (1.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3250 Tm (GroupLab reads the sheet's printed codes to name its definition.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 3352 Tm (2.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3352 Tm (It registers the page from the corner and edge markers.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 3454 Tm (3.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3454 Tm (It finds the holes by comparing the image with the sheet as printed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 3556 Tm (4.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3556 Tm (It gives each hole to a bull.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3658 Tm (Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3746 Tm (by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3834 Tm (again and enter the new size, or choose the length or rectangle tool and Change the length of the scale in use;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3922 Tm (every figure follows. Typing a caliber offers the cartridges that match, and choosing one from the list, with a click) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4010 Tm (or with Enter, sets it at once.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4133 Tm (With the rectangle tool, Find the paper's edges places the four corners on the paper itself when the sheet stands) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4221 Tm (out from what is behind it, still draggable, and offers a standard paper size when the photograph's shape) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4309 Tm (matches one. On a white board it cannot tell the paper from the board, and you tap the corners. A photograph) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4397 Tm (taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4485 Tm (open keeps how far off square it was and how good it is: good, usable or poor.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3625 5398 Tm (page 3 of 12) Tj ET
 Q
 endstream
@@ -6032,35 +6039,35 @@ xref
 0000000492 00000 n 
 0000003733 00000 n 
 0000003859 00000 n 
-0000011036 00000 n 
-0000011162 00000 n 
-0000015473 00000 n 
-0000015628 00000 n 
-0000019202 00000 n 
-0000019330 00000 n 
-0000024194 00000 n 
-0000024349 00000 n 
-0000028231 00000 n 
-0000028359 00000 n 
-0000035072 00000 n 
-0000035227 00000 n 
-0000036655 00000 n 
-0000036810 00000 n 
-0000038639 00000 n 
-0000038794 00000 n 
-0000042052 00000 n 
-0000042180 00000 n 
-0000048196 00000 n 
-0000048351 00000 n 
-0000050630 00000 n 
-0000308309 00000 n 
-0000504098 00000 n 
-0000776470 00000 n 
-0000853375 00000 n 
-0000982463 00000 n 
-0001080390 00000 n 
+0000011116 00000 n 
+0000011242 00000 n 
+0000016638 00000 n 
+0000016793 00000 n 
+0000020367 00000 n 
+0000020495 00000 n 
+0000025359 00000 n 
+0000025514 00000 n 
+0000029396 00000 n 
+0000029524 00000 n 
+0000036237 00000 n 
+0000036392 00000 n 
+0000037820 00000 n 
+0000037975 00000 n 
+0000039804 00000 n 
+0000039959 00000 n 
+0000043217 00000 n 
+0000043345 00000 n 
+0000049361 00000 n 
+0000049516 00000 n 
+0000051795 00000 n 
+0000309474 00000 n 
+0000505263 00000 n 
+0000777635 00000 n 
+0000854540 00000 n 
+0000983628 00000 n 
+0001081555 00000 n 
 trailer
 << /Size 35 /Root 1 0 R >>
 startxref
-1165416
+1166581
 %%EOF
