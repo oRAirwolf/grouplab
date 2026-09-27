@@ -81,7 +81,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 62 were answered by entry 24
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.113; the next carries entry 243's work.
+- **Last nightly:** 0.2.0-nightly.114, from 08dca80: entries 243 and 244, the C bull, and the phone's close report (error issue 6, closed).
 - **The site serves the newest commit that touched it.** Notes commits do not start the site workflow; a publish is started by hand.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
