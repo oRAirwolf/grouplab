@@ -24,6 +24,72 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 241: repeated benchmarks, one vote per device, and the survey page now (Alan's questions)
+
+**Status: done 2026-09-27 at Alan's request ahead of 233 to 240, apart from two parts.** **Not done yet:** the server side (the new survey worker, its unit and the site sync that keeps the aggregate in place) is committed and waits to be installed with sudo in the same sitting as request 21, so until then the page's everyone-else half shows nothing; and the Fold 7's result, which request 44 asks Alan to read off the phone, because it was locked. The page and the three devices' section are published.
+
+Alan ran the benchmark on his desktop (nightly 111) as well as the Fold 7 and the Tab S8 Ultra. He asks: how the same device can benchmark
+several times and have every run sent; whether every run should be shown or only the best counted; whether each device needs an ID, how
+it survives a reinstall, whether that breaks trust, how Steam does it; and he wants the survey page built now with the three results.
+The planning session's answers below are the design. Update `docs/SURVEY.md`, the survey question's text (`SurveyReport.WhatIsSent`) and
+the article `what-grouplab-sends` to match, and tell Alan in for-alan.md when it is live.
+
+## 1. Every run is sent; the median counts, never the best
+
+1. Every benchmark run is sent (the existing limit of three reports a day per installation stays, and a run the limit holds back is sent
+   the next day). A run records the app version, whether it was the sample or the synthetic sheet, and the stage times, as now.
+2. On the device: Settings, Sharing shows the device's own runs as a short history (date, version, time), all of them.
+3. In the published numbers each device counts **once per app version**, by the **median** of its runs on that version. Not the best run:
+   picking the best is the same cherry-picking as quoting a shooter's best group, and it would make every machine look faster than it is.
+   Not the mean: one run slowed by something else in the background should not move it much. Show how many runs each median rests on in
+   aggregate (for example "median of 1 to 5 runs per device").
+
+## 2. A random installation number, not a device fingerprint
+
+1. Counting a device once needs a stable number. Use a **random number made on the device the first time the survey is switched on**,
+   with nothing derived from the hardware, the account, the phone number or the network. It lives in the application's own settings.
+2. The server never stores it as sent: it stores a keyed hash of it (HMAC with a secret kept only on the server), so the stored value
+   cannot be matched to anything outside GroupLab's survey. Replace today's "salted hash of the installation number and the day", which
+   cannot tell that Monday's run and Tuesday's came from the same machine.
+3. **It does not try to survive an uninstall.** An update keeps it (the settings are kept); an uninstall and reinstall makes a new one. Making
+   it survive would mean fingerprinting the hardware, which is exactly what would break trust, and the cost of not doing so is small: a
+   reinstalled machine counts twice, and the medians barely move. On Windows, say in `docs/SURVEY.md` whether the settings folder survives
+   the uninstaller, and leave it as it falls.
+4. Settings, Sharing gets two buttons: **Reset my survey number** (starts fresh; old runs stay counted under the old number) and **Delete my
+   survey reports** (the server removes everything stored under this number from the per-device store; the aggregate is recomputed at the
+   next run of the worker). A stable number is what makes a real delete possible; say so in the article.
+5. **Trust:** this changes what is sent, so the survey question must say it before anyone sends it: "a random number made by GroupLab for
+   this installation, so that repeated runs count once; it is not tied to your device, account or network, and you can reset it or delete
+   your reports in Settings." Everyone who already said yes sees the changed text once and confirms, or the survey switches off for them.
+
+## 3. What the server keeps
+
+1. Per device (keyed hash) and app version: the hardware class fields the report already has, the run count, the median and the stage
+   medians, and the month of the latest run. No time of day, no address, no individual runs once the median is updated.
+2. Per-device records with no run for twelve months are deleted. The thirty-day limit on raw reports stays.
+3. The public aggregate is computed from the per-device medians, never from runs, and the "merge any group under 10 into other" rule stays for
+   everyone else's devices.
+
+## 4. How Steam does it, for `docs/SURVEY.md`
+
+Valve's own page says the Steam Hardware & Software Survey is monthly, optional and anonymous. In practice a random sample of users is asked
+each month, and a user cannot choose to take it; it reports shares of hardware and software, not benchmarks. GroupLab differs on purpose: it
+asks once and remembers the answer, lets people rerun the benchmark when they like, and publishes speed, which Steam does not.
+Source: https://store.steampowered.com/hwsurvey/En
+
+## 5. The page now, with three results
+
+Alan wants to see the page now even with three results. Build `grouplab.org/survey/` from the aggregate:
+1. A section **"The project's own test devices"**, shown by name with Alan's permission because they are his: his desktop (the CPU and memory
+   the report holds), the Galaxy Z Fold 7, and the Galaxy Tab S8 Ultra, each with its benchmark median, runs, app version, and the stage
+   times. Mark them clearly as the developer's machines, not users.
+2. A section for everyone else, which says "not enough reports yet; groups of fewer than 10 are not shown" until there are.
+3. Operating system and memory shares, from all reports, obeying the same rule of 10.
+4. The date range and the number of reports and devices at the top; a link to what is sent and to Settings, Sharing.
+5. Charts in the site's existing chart style, readable on a phone. Linked from the footer and from the first run question's "what is sent".
+If Alan's three results are not yet in the aggregate (the old hash scheme may have split them), take them from the devices' own screens
+over adb and from the desktop's local survey log, and say which. Publish, and put the link in for-alan.md.
+
 ## 2026-09-27, entry 231: the first Play internal testing release, and its two warnings (low priority)
 
 **Status: done 2026-09-27, apart from one part.** **Not done yet:** the request for the Play service account, which the entry puts after the Store work; request 38 is still open, so the plan is in `docs/ANDROID.md` section 12 and the request is written when 38 is done. No mapping file exists to produce (no R8); the symbols zip covers GroupLab's own OpenCV library only.

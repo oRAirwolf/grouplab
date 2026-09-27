@@ -48,7 +48,8 @@ def report(installation: int, os_text: str, memory: int, cores: int, bench: int 
 
 
 def run(root: Path) -> subprocess.CompletedProcess:
-    env = dict(os.environ, GROUPLAB_SURVEY_ROOT=str(root), GROUPLAB_SURVEY_LOG=str(root / "worker.log"))
+    env = dict(os.environ, GROUPLAB_SURVEY_ROOT=str(root), GROUPLAB_SURVEY_LOG=str(root / "worker.log"),
+               GROUPLAB_SURVEY_SITE=str(root / "site" / "survey" / "aggregate.json"))
     return subprocess.run([sys.executable, str(WORKER)], env=env, capture_output=True, text=True, timeout=60)
 
 
@@ -57,6 +58,9 @@ def main() -> int:
     try:
         incoming = root / "incoming"
         incoming.mkdir(parents=True)
+        (root / "site" / "survey").mkdir(parents=True)
+        # A first version state, keyed by the old hash: set aside, and counting begins again (entry 241).
+        (root / "state.json").write_text(json.dumps({"machines": {"0" * 64: {"platform": "Windows 11", "last": "2026-09-26"}}}), encoding="utf-8")
         n = 0
 
         def put(r: dict | str) -> None:
@@ -89,11 +93,35 @@ def main() -> int:
               and "macOS 15" not in public["platforms"] and "Android 15" not in public["platforms"], str(public["platforms"]))
         check("a phone model seen fewer than ten times is never named", "SM-F966U" not in json.dumps(public), json.dumps(public["phones"]))
         bench = public["benchmark"]
-        check("the benchmark's median is published by class once there are ten runs", len(bench) == 1 and bench[0]["runs"] == 13
-              and bench[0]["platform"] == "Windows 11" and 1750 <= bench[0]["medianMilliseconds"] <= 1900, json.dumps(bench))
+        check("the benchmark is published by class once ten machines have run it, each machine once", len(bench) == 1
+              and bench[0]["machines"] == 12 and bench[0]["runsPerMachine"] == [1, 2]
+              and bench[0]["platform"] == "Windows 11" and 1800 <= bench[0]["medianMilliseconds"] <= 1900, json.dumps(bench))
+        check("the old state is set aside and counting began again", (root / "state-1.json").is_file() and public["machines"] == 17)
+        check("the site's copy is the published aggregate", json.loads((root / "site" / "survey" / "aggregate.json").read_text(encoding="utf-8")) == public)
 
         state = (root / "state.json").read_text(encoding="utf-8")
-        check("the state keeps classes, not reports", "0.2.0" not in state and "X64" not in state)
+        check("the state keeps classes and counts, not reports, days or runs", "X64" not in state and "2026-09-25" not in state
+              and '"day"' not in state, state[:300])
+
+        # Entry 241 section 1: the median, not the best. One machine's five runs, one slowed by something else, count as their median.
+        for ms in (1200, 1210, 1190, 1205, 9000):
+            put(report(300, "Microsoft Windows 10.0.26200", 16000, 12, bench=ms))
+        run(root)
+        machine = json.loads((root / "state.json").read_text(encoding="utf-8"))["machines"][f"{300:064x}"]
+        runs = machine["versions"]["0.2.0"]["GL-CF25-LTR-300dpi-25-holes-1"]
+        check("five runs are counted as five, and kept as quarter second counts", runs["runs"] == 5 and sum(runs["total"].values()) == 5)
+        worker = __import__("importlib.util").util
+        spec = worker.spec_from_file_location("w", WORKER)
+        w = worker.module_from_spec(spec)
+        spec.loader.exec_module(w)
+        check("its median ignores the slowed run", w.median(runs["total"], w.BUCKET_MS) == 1125)
+
+        # Entry 241 section 2.4: a delete request removes the machine at once and the aggregate is counted again without it.
+        put({"schema": "grouplab-survey-delete-1", "installation": f"{300:064x}", "day": "2026-09-27"})
+        run(root)
+        after = json.loads((root / "state.json").read_text(encoding="utf-8"))
+        check("a delete request removes everything kept under the number", f"{300:064x}" not in after["machines"] and after.get("deleted") == 1)
+        public = json.loads((root / "public.json").read_text(encoding="utf-8"))
 
         result = run(root)
         again = json.loads((root / "public.json").read_text(encoding="utf-8"))

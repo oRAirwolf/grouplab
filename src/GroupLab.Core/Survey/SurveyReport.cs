@@ -24,6 +24,9 @@ public sealed record MachineFacts(
     string? Device,
     double? CameraMegapixels);
 
+/// <summary>One benchmark run as it goes in a report: the result and the version of GroupLab that ran it, NOTES-FROM-PLANNING.md entry 241.</summary>
+public sealed record BenchmarkRun(string Version, BenchmarkResult Result);
+
 /// <summary>One analysis: the image's size, the size it was analyzed at, each stage's time and the peak memory.</summary>
 public sealed record AnalysisFacts(int Width, int Height, int WorkingWidth, int WorkingHeight, IReadOnlyList<StageTime> Stages, long PeakMegabytes);
 
@@ -35,17 +38,33 @@ public sealed record AnalysisFacts(int Width, int Height, int WorkingWidth, int 
 /// </summary>
 public static class SurveyReport
 {
-    public const string Schema = "grouplab-survey-1";
+    /// <summary>
+    /// Entry 241: a report carries every benchmark run not yet sent, each with the version that ran it, where the first schema carried the
+    /// last run only. The receiver still reads the first, which the builds already published send.
+    /// </summary>
+    public const string Schema = "grouplab-survey-2";
+
+    /// <summary>A request to delete everything the server keeps under an installation number, entry 241 section 2.4.</summary>
+    public const string DeleteSchema = "grouplab-survey-delete-1";
+
+    /// <summary>
+    /// Which wording of <see cref="WhatIsSent"/> a yes was given to, entry 241 section 2.5. What is sent changed with version 2, so a yes
+    /// given to version 1 no longer counts: the question is asked again, and nothing is sent until it is answered.
+    /// </summary>
+    public const int WordingVersion = 2;
 
     /// <summary>Only the analyses since the last report go, and never more than this many.</summary>
     public const int MostAnalyses = 50;
+
+    /// <summary>The most benchmark runs one report carries; any more wait for the next.</summary>
+    public const int MostBenchmarks = 10;
 
     private const int LongestText = 120;
 
     /// <summary>Every name a report can hold, at every level. The receiver refuses a report with any other.</summary>
     public static IReadOnlyList<string> Keys { get; } =
     [
-        "schema", "installation", "version", "machine", "benchmark", "analyses",
+        "schema", "installation", "version", "machine", "benchmarks", "analyses",
         "os", "architecture", "processor", "cores", "memoryMegabytes", "screen", "screenScale", "device", "cameraMegapixels",
         "workload", "width", "height", "totalMilliseconds", "stages", "peakMegabytes", "holesPlaced", "holesFound",
         "workingWidth", "workingHeight", "stage", "milliseconds",
@@ -58,8 +77,8 @@ public static class SurveyReport
         "Your screen's size and scale; on a phone, its model and the camera's resolution.",
         "GroupLab's version.",
         "For each analysis: the image's size, the size it was analyzed at, how long each step took, and the most memory it used.",
-        "The benchmark's times, when you run it.",
-        "A random number standing for this copy of GroupLab, so one machine is counted once. You can replace it in Settings at any time.",
+        "The benchmark's times each time you run it, with the version of GroupLab that ran it.",
+        "A random number made by GroupLab for this installation, so that repeated runs count once. It is not tied to your device, account or network, and you can reset it or delete your reports in Settings.",
         "Never your name, an account, a file name, a photograph, a location, or anything else that identifies you or the device.",
     ];
 
@@ -67,9 +86,10 @@ public static class SurveyReport
     public static string NewInstallation() => Guid.NewGuid().ToString("N");
 
     /// <summary>The report's JSON. Analyses beyond <see cref="MostAnalyses"/> are dropped, oldest first.</summary>
-    public static string Build(string installation, string version, MachineFacts machine, BenchmarkResult? benchmark, IReadOnlyList<AnalysisFacts> analyses)
+    public static string Build(string installation, string version, MachineFacts machine, IReadOnlyList<BenchmarkRun> benchmarks, IReadOnlyList<AnalysisFacts> analyses)
     {
         ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(benchmarks);
         ArgumentNullException.ThrowIfNull(analyses);
         var facts = new JsonObject
         {
@@ -90,10 +110,12 @@ public static class SurveyReport
             ["version"] = Cut(version),
             ["machine"] = facts,
         };
-        if (benchmark is { } b)
+        var runs = new JsonArray();
+        foreach (var (runVersion, b) in benchmarks.Take(MostBenchmarks))
         {
-            report["benchmark"] = new JsonObject
+            runs.Add(new JsonObject
             {
+                ["version"] = Cut(runVersion),
                 ["workload"] = b.Workload,
                 ["width"] = b.Width,
                 ["height"] = b.Height,
@@ -102,8 +124,10 @@ public static class SurveyReport
                 ["peakMegabytes"] = b.PeakMegabytes,
                 ["holesPlaced"] = b.HolesPlaced,
                 ["holesFound"] = b.HolesFound,
-            };
+            });
         }
+
+        report["benchmarks"] = runs;
 
         var kept = new JsonArray();
         foreach (var a in analyses.Skip(Math.Max(0, analyses.Count - MostAnalyses)))
@@ -122,6 +146,13 @@ public static class SurveyReport
         report["analyses"] = kept;
         return report.ToJsonString(new JsonSerializerOptions { WriteIndented = false });
     }
+
+    /// <summary>
+    /// The request to delete what the server keeps under <paramref name="installation"/>, entry 241 section 2.4: the number and nothing else.
+    /// The server removes the machine's record at the worker's next run and recounts the aggregate without it.
+    /// </summary>
+    public static string Delete(string installation) =>
+        new JsonObject { ["schema"] = DeleteSchema, ["installation"] = installation }.ToJsonString();
 
     /// <summary>This machine as .NET sees it; the application adds the screen, and a phone its model and camera.</summary>
     public static MachineFacts ThisMachine(string? processor = null, string? screen = null, double? screenScale = null, string? device = null, double? cameraMegapixels = null)

@@ -4920,6 +4920,11 @@ public sealed partial class MainWindow : Window
         {
             FillCompare();
         }
+        else if (to == Destination.Settings)
+        {
+            // Entry 241 section 1.2: the benchmark history as it is now, whichever screen the last run was started from.
+            FillSurveyHistory();
+        }
 
         // Entry 125 section 2: every screen says its own words. The settings page was showing "Drag to move the image", which belongs to the
         // marking screen and names a tool this screen does not have. Entry 120 section 10.3 fixed this for the library alone; a screen added

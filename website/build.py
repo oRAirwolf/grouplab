@@ -455,6 +455,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">License, GPL-3.0</a>
 <a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
 <a href="/support/">Support</a><a href="{DISCORD}">Community</a>
+<a href="/survey/">Hardware survey</a>
 </nav>
 </div>
 <div class="wrap footer-base">GroupLab is a working name and may change. &#169; {year} the GroupLab contributors.</div>
@@ -1709,6 +1710,72 @@ def page_tour_moved(old: str) -> str:
     return shell(f"/tour/{old}/", "Targets", "The target library and printing are one screen now, Targets.", body, "Tour")
 
 
+SURVEY_PATH = "/survey/"
+
+
+def survey_devices() -> dict:
+    return json.loads(need(REPO / "website" / "survey-devices.json").read_text(encoding="utf-8"))
+
+
+def page_survey() -> str:
+    """The hardware survey's published figures, NOTES-FROM-PLANNING.md entry 241 section 5.
+
+    Two halves, and they come from different places on purpose. The project's own test devices are Alan's, shown by name with his
+    permission, and their numbers are what each device showed on its own screen, from `website/survey-devices.json`: the server keeps no
+    individual record to take them from. Everybody else's figures come from the aggregate the survey worker publishes beside this page,
+    counts and medians only, read by a small script; until a group has ten machines it says so rather than showing it.
+    """
+    data = survey_devices()
+    shown = [d for d in data["devices"] if d.get("milliseconds")]
+    slowest = max(d["milliseconds"] for d in shown) if shown else 1
+    cards = []
+    for d in data["devices"]:
+        if d.get("milliseconds"):
+            share = max(4, round(100 * d["milliseconds"] / slowest))
+            stages = d.get("stages") or {}
+            stage_rows = "".join(f'<tr><td>{esc(k)}</td><td class="mono num">{v / 1000:.2f} s</td></tr>' for k, v in stages.items())
+            stage_part = (f'<table class="survey-stages"><caption class="small faint">Stage by stage</caption>{stage_rows}</table>'
+                          if stage_rows else '<p class="small faint">Its screen gives the whole time, not the stages.</p>')
+            result = (f'<p class="survey-time"><span class="mono">{d["milliseconds"] / 1000:.1f} s</span> '
+                      f'<span class="small faint">median of {d["runs"]} run{"s" if d["runs"] != 1 else ""}, GroupLab {esc(d["version"])}</span></p>'
+                      f'<div class="survey-bar" role="img" aria-label="{d["milliseconds"] / 1000:.1f} seconds"><span style="width:{share}%"></span></div>'
+                      f'<p class="small">At most {d["peakMegabytes"]} MB of memory; {d["holesFound"]} of its {d["holesPlaced"]} holes found.</p>'
+                      + stage_part)
+        else:
+            result = '<p class="small">Not read yet.</p>'
+        cards.append(f'<div class="panel pad stack tight"><h3 class="h4">{esc(d["name"])}</h3><p class="small">{esc(d["hardware"])}</p>'
+                     f'{result}<p class="small faint">Source: {esc(d["source"])}.</p></div>')
+    body = f"""
+<section class="wrap page-head stack">
+<p class="eyebrow">Hardware survey</p>
+<h1>What GroupLab runs on, and how fast</h1>
+<p class="lead">GroupLab asks once whether it may tell the project what it runs on and how long the built-in benchmark takes. These are the published figures: counts and medians, never one person's record.</p>
+<p class="small" id="survey-range">The figures from everybody's reports load from the survey's own count, updated every hour.</p>
+<p class="small"><a href="/research/what-grouplab-sends/">What a report holds, and what is never in it</a>. In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, under Sharing.</p>
+</section>
+
+<section class="wrap stack">
+<h2>The project's own test devices</h2>
+<p>These three are the developer's own machines, not users, shown by name with his permission. Each ran the same benchmark every copy of GroupLab runs: one analysis of a built-in 25 bull sheet with a hole in every bull. The bars are to the same scale.</p>
+<div class="grid-3">{"".join(cards)}</div>
+</section>
+
+<section class="wrap stack">
+<h2>Everybody else</h2>
+<p>Each machine counts once for each version of GroupLab, by the median of its own runs: not its best, which would make every machine look faster than it is, and not its average, which one run slowed by something else would move. A group of fewer than {10} machines is not shown.</p>
+<div id="survey-benchmark"><p class="small">Not enough reports yet: a group of fewer than 10 machines is not shown.</p></div>
+</section>
+
+<section class="wrap stack last">
+<h2>Operating systems and memory</h2>
+<p>From every report, each machine once. Anything seen on fewer than 10 machines is counted under "other".</p>
+<div class="grid-2"><div id="survey-platforms"><p class="small">Not enough reports yet.</p></div><div id="survey-memory"><p class="small">Not enough reports yet.</p></div></div>
+</section>
+<script src="/assets/js/survey.js" defer></script>
+"""
+    return shell(SURVEY_PATH, "Hardware survey", "What GroupLab runs on and how fast the benchmark runs, from the hardware survey: counts and medians, never one person's record.", body)
+
+
 def page_discord() -> str:
     """The community page, NOTES-FROM-PLANNING.md entry 151.
 
@@ -2090,6 +2157,17 @@ p.text,.text p,.text{color:var(--text)}
 .guide-fig{margin:8px 0;display:flex;flex-direction:column;gap:10px}
 a.plain{color:var(--text)}
 
+/* the survey page, entry 241 */
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.survey-time{margin:0;font-size:22px}
+.survey-bar{height:10px;background:var(--sunk);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.survey-bar span{display:block;height:100%;background:var(--amber)}
+.survey-row{display:flex;justify-content:space-between;margin:8px 0 4px}
+.survey-stages{width:100%;border-collapse:collapse;font-size:14px}
+.survey-stages td,.survey-stages th{padding:4px 0;border-bottom:1px solid var(--line);text-align:left}
+.survey-stages .num{text-align:right}
+@media (max-width:900px){.grid-3{grid-template-columns:1fr}}
+
 /* footer */
 .site-footer{border-top:1px solid var(--line);padding:40px 0 48px}
 .footer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:48px}
@@ -2274,6 +2352,44 @@ def link_problems() -> list[str]:
 # Entry 129 section 1.3: the page reads without JavaScript and says plainly that sending needs it, because the
 # check that proves you are a person does. This posts the form rather than letting the browser navigate, so the
 # result can be said on the page instead of as a page of JSON.
+SURVEY_JS = """// NOTES-FROM-PLANNING.md entry 241 section 5: the survey page's figures, from the aggregate the survey worker publishes beside the page.
+// Counts and medians only. A group the worker has not published is left saying so.
+(function () {
+  function bars(id, title, counts) {
+    var box = document.getElementById(id), names = Object.keys(counts || {});
+    if (!box || names.length === 0) { return; }
+    var most = Math.max.apply(null, names.map(function (n) { return counts[n]; }));
+    var html = '<h3 class="h4">' + title + '</h3>';
+    names.sort(function (a, b) { return counts[b] - counts[a]; }).forEach(function (n) {
+      var w = Math.max(4, Math.round(100 * counts[n] / most));
+      html += '<p class="small survey-row"><span>' + n.replace(/[<>&]/g, '') + '</span><span class="mono">' + counts[n] + '</span></p>'
+        + '<div class="survey-bar"><span style="width:' + w + '%"></span></div>';
+    });
+    box.innerHTML = html;
+  }
+  fetch('/survey/aggregate.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (a) {
+    if (!a) { return; }
+    var range = document.getElementById('survey-range');
+    if (range && a.from) {
+      range.textContent = a.reports + ' reports from ' + a.machines + ' machines, ' + a.from + ' to ' + a.to + '. Updated every hour.';
+    }
+    bars('survey-platforms', 'Operating systems', a.platforms);
+    bars('survey-memory', 'Memory', a.memory);
+    var box = document.getElementById('survey-benchmark');
+    if (box && a.benchmark && a.benchmark.length) {
+      var html = '<table class="survey-stages"><tr><th>Platform</th><th>Cores</th><th>Machines</th><th>Median</th></tr>';
+      a.benchmark.forEach(function (b) {
+        html += '<tr><td>' + b.platform + '</td><td>' + b.cores + '</td><td class="mono num">' + b.machines + '</td><td class="mono num">'
+          + (b.medianMilliseconds / 1000).toFixed(1) + ' s</td></tr>';
+      });
+      var lo = Math.min.apply(null, a.benchmark.map(function (b) { return b.runsPerMachine[0]; }));
+      var hi = Math.max.apply(null, a.benchmark.map(function (b) { return b.runsPerMachine[1]; }));
+      box.innerHTML = html + '</table><p class="small faint">Each machine\\'s median rests on ' + lo + ' to ' + hi + ' runs.</p>';
+    }
+  }).catch(function () {});
+})();
+"""
+
 SEND_JS = """(function () {
   var form = document.getElementById('send');
   if (!form) { return; }
@@ -2407,9 +2523,11 @@ def main() -> None:
     for old in TOUR_MOVED:
         write(f"tour/{old}/index.html", page_tour_moved(old))
     write("discord/index.html", page_discord())
+    write("survey/index.html", page_survey())
+    write("assets/js/survey.js", SURVEY_JS)
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/"]
+    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH]
     pages += [f"/tour/{key}/" for key in tour()["order"]]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)

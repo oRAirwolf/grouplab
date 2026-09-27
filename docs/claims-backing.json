@@ -2108,6 +2108,94 @@
   "Alan's request with the exact steps is written after the Store work of request 38 is done.": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
+  },
+  "In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, under Sharing.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Survey.cs FillSurveySettings and android/GroupLab.Android/SettingsView.cs (entry 241)"
+  },
+  "Each ran the same benchmark every copy of GroupLab runs: one analysis of a built-in 25 bull sheet with a hole in every bull.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Survey/Benchmark.cs Benchmark.Sheet and Benchmark.Run"
+  },
+  "The developer&#x27;s desktop AMD Ryzen 7 9800X3D, 16 threads, 64 GB of memory, Windows 11 1.8 s median of 1 run, GroupLab 0.2.0-nightly.111 At most 482 MB of memory; 25 of its 25 holes found.": {
+   "kind": "measured",
+   "where": "website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)"
+  },
+  "Stage by stage Finding the markers 0.21 s Registering the sheet 0.01 s Locating the bulls 0.39 s Finding the holes 1.15 s Assigning the shots 0.01 s Source: the benchmark result the desktop application keeps in its own settings, read on 2026-09-27; that build kept only the last run.": {
+   "kind": "measured",
+   "where": "website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)"
+  },
+  "Galaxy Tab S8 Ultra Samsung SM-X900, 16 GB of memory, Android 16 4.6 s median of 1 run, GroupLab 0.2.0-nightly.111 At most 446 MB of memory; 25 of its 25 holes found.": {
+   "kind": "measured",
+   "where": "website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)"
+  },
+  "Source: read from the tablet&#x27;s own Settings screen on 2026-09-27, which gives the time to a tenth of a second and not the stages.": {
+   "kind": "measured",
+   "where": "website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)"
+  },
+  "Galaxy Z Fold 7 Samsung SM-F966U1, 12 GB of memory, Android 16 Not read yet.": {
+   "kind": "measured",
+   "where": "website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)"
+  },
+  "A group of fewer than 10 machines is not shown.": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py SMALLEST_GROUP, merged() and publish()"
+  },
+  "Not enough reports yet: a group of fewer than 10 machines is not shown.": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py SMALLEST_GROUP, merged() and publish()"
+  },
+  "Anything seen on fewer than 10 machines is counted under \"other\".": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py SMALLEST_GROUP, merged() and publish()"
+  },
+  "- A random installation number, so one machine is counted once, which the person can reset in Settings at any time (section 7).": {
+   "kind": "code",
+   "where": "src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)"
+  },
+  "**Every run is sent, and the median counts** (entry 241 section 1).": {
+   "kind": "code",
+   "where": "src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)"
+  },
+  "Every run made while the survey is on goes with the next report, each with its own version (`grouplab-survey-2`); a run the receiver's three reports a day held back goes with the next one.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)"
+  },
+  "**As built**: `website/api/survey.php` takes the named fields only, stores the installation number only as a keyed hash (HMAC-SHA256, with a key made on the server and kept only there, entry 241 section 2.2) and the day, never the time or the address, and limits each installation to three reports a day.": {
+   "kind": "code",
+   "where": "website/api/survey.php installation_hash() (entry 241 section 2.2); the old ip_hash('installation|'...) in git history"
+  },
+  "Until entry 241 this section said the hash was of the number and the day; it never was, the code hashed the number alone, with the salt the rate limit uses.": {
+   "kind": "code",
+   "where": "website/api/survey.php installation_hash() (entry 241 section 2.2); the old ip_hash('installation|'...) in git history"
+  },
+  "**As built** (entry 241 section 5), at [grouplab.org/survey/](https://grouplab.org/survey/): the worker writes the aggregate to `private/survey/public.json` and a copy to `public_html/survey/aggregate.json`, which the site sync leaves in place and the page reads.": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()"
+  },
+  "Any group smaller than 10 machines is merged into \"other\" or not shown, so no one machine can be picked out.": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()"
+  },
+  "**What the server keeps** (entry 241 section 3): for each machine's keyed hash, the hardware classes, the month of its latest report, and for each version and workload the run count and how the times fall in quarter seconds (each stage in twentieths of a second), from which its median is read.": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()"
+  },
+  "The worker's first version kept machines under the old hash; on the first run of the second it sets that state aside and counts again, so the figures started over on the day entry 241 was installed.": {
+   "kind": "code",
+   "where": "website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()"
+  },
+  "The installation number, and why it is not a fingerprint Entry 241 section 2.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)"
+  },
+  "**On Windows the uninstaller leaves `%APPDATA%\\GroupLab` alone** (`packaging/windows/grouplab.iss`), so the number survives an uninstall there, and that is left as it falls.": {
+   "kind": "code",
+   "where": "packaging/windows/grouplab.iss, the header comment and FinishedLabel"
+  },
+  "- **The question says it before anything is sent**: \"a random number made by GroupLab for this installation, so that repeated runs count once; it is not tied to your device, account or network, and you can reset it or delete your reports in Settings.\" Everyone who said yes to the earlier wording is asked again, once, and nothing is sent until they answer (`SurveyReport.WordingVersion`).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Survey/SurveyReport.cs WhatIsSent and WordingVersion; src/GroupLab.App/AppSettings.cs LoadSurveyChoice"
   }
  },
  "rules": [

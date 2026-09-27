@@ -18,6 +18,8 @@ public sealed partial class MainWindow
 {
     private readonly StackPanel surveySettings = new() { Spacing = Tokens.Space8 };
 
+    private readonly StackPanel surveyHistory = new() { Spacing = Tokens.Space4 };
+
     private SurveyQueue? surveyQueue;
 
     /// <summary>What a new window starts with in place of limits.json's switch; the test assembly sets it off, as it does for the others.</summary>
@@ -64,6 +66,8 @@ public sealed partial class MainWindow
             {
                 settings.Say(BenchmarkSaid());
             }
+
+            FillSurveyHistory();
         };
         return panel;
     }
@@ -99,6 +103,11 @@ public sealed partial class MainWindow
         if (earlierKept)
         {
             part.Children.Add(Line(SharingWords.EarlierKept));
+        }
+
+        if (settingsStore.SurveyWordingChanged())
+        {
+            part.Children.Add(Line(SharingWords.SurveyWordingChanged));
         }
 
         part.Children.Add(new TextBlock { Text = SharingWords.SurveyQuestion, Classes = { AppStyles.Title } });
@@ -204,13 +213,40 @@ public sealed partial class MainWindow
 
         (SettingsBenchmark.Parent as Panel)?.Children.Remove(SettingsBenchmark);
         surveySettings.Children.Add(SettingsBenchmark);
+
+        // Entry 241 sections 1.2 and 2.4: every run this copy has made, and the two things a person can do with their number.
+        surveySettings.Children.Add(FieldLabel(SharingWords.BenchmarkHistory));
+        surveySettings.Children.Add(surveyHistory);
+        FillSurveyHistory();
         surveySettings.Children.Add(Row(
-            Button("Replace the installation number", () =>
+            Button(SharingWords.ResetNumber, () =>
             {
                 settingsStore.ReplaceInstallation();
                 DiagnosticLog.Info("survey.installation", ("replaced", true));
-                toaster.Say("This copy of GroupLab has a new installation number.");
+                toaster.Say(SharingWords.ResetNumberSaid);
+            }),
+            Button(SharingWords.DeleteReports, async () =>
+            {
+                bool taken = await Survey.DeleteAsync(SurveyOpen, CancellationToken.None);
+                toaster.Say(taken ? SharingWords.DeleteReportsSaid : SharingWords.DeleteReportsFailed);
             })));
+    }
+
+    /// <summary>The device's own runs, newest first, entry 241 section 1.2.</summary>
+    private void FillSurveyHistory()
+    {
+        surveyHistory.Children.Clear();
+        var runs = settingsStore.LoadBenchmarkRuns();
+        if (runs.Count == 0)
+        {
+            surveyHistory.Children.Add(Line(SharingWords.BenchmarkNever));
+            return;
+        }
+
+        foreach (var run in runs.Reverse())
+        {
+            surveyHistory.Children.Add(Line(SharingWords.BenchmarkRunLine(run)));
+        }
     }
 
     /// <summary>Saying no forgets every kept analysis; saying yes sends the first report when one is due.</summary>

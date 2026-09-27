@@ -1,0 +1,42 @@
+{
+  "note": "NOTES-FROM-PLANNING.md entry 241 section 5: the project's own test devices, shown by name with Alan's permission because they are his. Each result is what the device itself showed, read on the date given; none comes from the server, which keeps no individual record.",
+  "workload": "GL-CF25-LTR-300dpi-25-holes-1",
+  "devices": [
+    {
+      "name": "The developer's desktop",
+      "hardware": "AMD Ryzen 7 9800X3D, 16 threads, 64 GB of memory, Windows 11",
+      "version": "0.2.0-nightly.111",
+      "runs": 1,
+      "milliseconds": 1789,
+      "peakMegabytes": 482,
+      "holesFound": 25,
+      "holesPlaced": 25,
+      "stages": {"Finding the markers": 215, "Registering the sheet": 11, "Locating the bulls": 392, "Finding the holes": 1149, "Assigning the shots": 9},
+      "source": "the benchmark result the desktop application keeps in its own settings, read on 2026-09-27; that build kept only the last run"
+    },
+    {
+      "name": "Galaxy Tab S8 Ultra",
+      "hardware": "Samsung SM-X900, 16 GB of memory, Android 16",
+      "version": "0.2.0-nightly.111",
+      "runs": 1,
+      "milliseconds": 4600,
+      "peakMegabytes": 446,
+      "holesFound": 25,
+      "holesPlaced": 25,
+      "stages": null,
+      "source": "read from the tablet's own Settings screen on 2026-09-27, which gives the time to a tenth of a second and not the stages"
+    },
+    {
+      "name": "Galaxy Z Fold 7",
+      "hardware": "Samsung SM-F966U1, 12 GB of memory, Android 16",
+      "version": "0.2.0-nightly.111",
+      "runs": null,
+      "milliseconds": null,
+      "peakMegabytes": null,
+      "holesFound": null,
+      "holesPlaced": null,
+      "stages": null,
+      "source": "its result is to be read from the phone's own Settings screen; the phone was locked when the others were read"
+    }
+  ]
+}

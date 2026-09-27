@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Count GroupLab's hardware survey reports into an aggregate, NOTES-FROM-PLANNING.md entries 207 and 208 and docs/SURVEY.md.
+"""Count GroupLab's hardware survey reports into an aggregate, NOTES-FROM-PLANNING.md entries 207, 208 and 241 and docs/SURVEY.md.
 
 The receiver, website/api/survey.php, writes each report it accepts into private/survey/incoming, already cut down to its
-schema, with the installation number replaced by a salted hash and the time by the day. This counts each one and deletes it.
+schema, with the installation number replaced by a keyed hash and the time by the day. This counts each one and deletes it.
 
-**Counts, not records** (docs/SURVEY.md section 5). What is kept is, for each installation hash, the classes its machine falls
-in and the day it was last seen, so one machine is counted once and a machine that changes is counted where it is now; and,
-for each class of machine, how many benchmark runs fell in each quarter second. No report is kept once counted, and none is
-kept longer than thirty days whatever happens (entries 215 and 216). A machine not seen for 180 days is dropped.
+**One machine, one vote a version** (entry 241). What is kept, for each installation hash, is the classes its machine falls in,
+the month it was last seen, and for each version of GroupLab and each benchmark workload, how many runs it has sent and how its
+times fall in quarter seconds (each stage in twentieths of a second), from which its median is read. The runs themselves, their
+days and their order are not kept once counted. A machine not seen for twelve months is dropped, and a request to delete, which
+the receiver stores as the hash alone, drops it at once. No report is kept once counted, and none longer than thirty days
+whatever happens (entries 215 and 216).
 
-**What is published** is written to public.json beside the state: shares of platforms, memory, cores and phone models, and
-the benchmark's median by class, with the date range and the number of machines. Any group smaller than ten is merged into
-"other", so no one machine can be picked out.
+**What is published** is written to public.json beside the state, and copied into the site where the survey page reads it:
+shares of platforms, memory, cores and phone models, and the benchmark by class, as the median of the machines' own medians,
+never of runs, with how many runs each median rests on. Any group smaller than ten machines is merged into "other" or not
+shown, so no one machine can be picked out.
 
 **Every report is untrusted.** Anybody can send one. Nothing in it is acted on; its strings are only ever sorted into classes.
 
@@ -25,7 +28,7 @@ import os
 import re
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(os.environ.get("GROUPLAB_SURVEY_ROOT", "/home/airwolf/web/grouplab.org/private/survey"))
@@ -33,14 +36,20 @@ INCOMING = ROOT / "incoming"
 REFUSED = ROOT / "refused"
 STATE = ROOT / "state.json"
 PUBLIC = ROOT / "public.json"
+# Entry 241 section 5: the page at grouplab.org/survey/ reads this copy. The site sync leaves it in place.
+SITE_COPY = Path(os.environ.get("GROUPLAB_SURVEY_SITE", "/home/airwolf/web/grouplab.org/public_html/survey/aggregate.json"))
 LOG = Path(os.environ.get("GROUPLAB_SURVEY_LOG", "/home/airwolf/logs/grouplab-survey-worker.log"))
 
+STATE_VERSION = 2
 MOST_A_RUN = 2000
 INCOMING_DAYS = 30
 REFUSED_DAYS = 7
-MACHINE_DAYS = 180
+MACHINE_MONTHS = 12
 SMALLEST_GROUP = 10
 BUCKET_MS = 250
+STAGE_BUCKET_MS = 50
+REPORTS = ("grouplab-survey-1", "grouplab-survey-2")
+DELETE = "grouplab-survey-delete-1"
 
 
 def log(message: str) -> None:
@@ -103,6 +112,47 @@ def classes(report: dict) -> dict:
     return out
 
 
+def runs_of(report: dict) -> list[dict]:
+    """The benchmark runs a report carries: the second schema's list, or the first schema's one run under the report's version."""
+    version = report.get("version") if isinstance(report.get("version"), str) else "unknown"
+    sent = report.get("benchmarks")
+    if not isinstance(sent, list):
+        sent = [report["benchmark"]] if isinstance(report.get("benchmark"), dict) else []
+    out = []
+    for b in sent[:10]:
+        if isinstance(b, dict) and isinstance(b.get("totalMilliseconds"), int) and isinstance(b.get("workload"), str):
+            ran = b.get("version") if isinstance(b.get("version"), str) and b.get("version") else version
+            out.append({"version": ran[:64], "workload": b["workload"][:60], "total": b["totalMilliseconds"],
+                        "stages": [(s["stage"][:60], s["milliseconds"]) for s in b.get("stages", []) if isinstance(s, dict)
+                                   and isinstance(s.get("stage"), str) and isinstance(s.get("milliseconds"), int)]})
+    return out
+
+
+def add(buckets: dict, value: int, width: int) -> None:
+    key = str(value // width * width)
+    buckets[key] = buckets.get(key, 0) + 1
+
+
+def median(buckets: dict[str, int], width: int) -> int | None:
+    total = sum(buckets.values())
+    if total == 0:
+        return None
+    seen = 0
+    for start in sorted(buckets, key=int):
+        seen += buckets[start]
+        if seen * 2 >= total:
+            return int(start) + width // 2
+    return None
+
+
+def middle(values: list[int]) -> int | None:
+    if not values:
+        return None
+    s = sorted(values)
+    n = len(s)
+    return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) // 2
+
+
 def count(report: dict, state: dict) -> None:
     installation = report.get("installation")
     day = report.get("day")
@@ -110,18 +160,27 @@ def count(report: dict, state: dict) -> None:
         raise ValueError("no installation hash")
     if not isinstance(day, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
         raise ValueError("no day")
-    seen = classes(report)
-    seen["last"] = day
-    state.setdefault("machines", {})[installation] = seen
+    machines = state.setdefault("machines", {})
+    if report.get("schema") == DELETE:
+        if machines.pop(installation, None) is not None:
+            state["deleted"] = state.get("deleted", 0) + 1
+        return
+    machine = machines.get(installation, {})
+    versions = machine.get("versions", {})
+    machine = classes(report)
+    machine["month"] = day[:7]
+    for run in runs_of(report):
+        kept = versions.setdefault(run["version"], {}).setdefault(run["workload"], {"runs": 0, "total": {}, "stages": {}})
+        kept["runs"] += 1
+        add(kept["total"], run["total"], BUCKET_MS)
+        for stage, ms in run["stages"]:
+            add(kept["stages"].setdefault(stage, {}), ms, STAGE_BUCKET_MS)
+    if versions:
+        machine["versions"] = versions
+    machines[installation] = machine
     state["first"] = min(state.get("first", day), day)
     state["last"] = max(state.get("last", day), day)
     state["reports"] = state.get("reports", 0) + 1
-    bench = report.get("benchmark")
-    if isinstance(bench, dict) and isinstance(bench.get("totalMilliseconds"), int) and isinstance(bench.get("workload"), str):
-        key = f"{bench['workload']}|{seen['platform']}|{seen['cores']}"
-        bucket = str(bench["totalMilliseconds"] // BUCKET_MS * BUCKET_MS)
-        buckets = state.setdefault("benchmarks", {}).setdefault(key, {})
-        buckets[bucket] = buckets.get(bucket, 0) + 1
 
 
 def merged(counts: dict[str, int]) -> dict[str, int]:
@@ -138,18 +197,6 @@ def merged(counts: dict[str, int]) -> dict[str, int]:
     return out
 
 
-def median(buckets: dict[str, int]) -> int | None:
-    total = sum(buckets.values())
-    if total == 0:
-        return None
-    seen = 0
-    for start in sorted(buckets, key=int):
-        seen += buckets[start]
-        if seen * 2 >= total:
-            return int(start) + BUCKET_MS // 2
-    return None
-
-
 def publish(state: dict) -> dict:
     machines = list(state.get("machines", {}).values())
     tally: dict[str, dict[str, int]] = {"platform": {}, "memory": {}, "cores": {}, "device": {}}
@@ -157,14 +204,31 @@ def publish(state: dict) -> dict:
         for field in tally:
             if field in m:
                 tally[field][m[field]] = tally[field].get(m[field], 0) + 1
+
+    # Each machine once a version, by the median of its own runs; a class is published from ten such medians or more.
+    groups: dict[tuple, list[tuple[int, int, dict]]] = {}
+    for m in machines:
+        for version, workloads in m.get("versions", {}).items():
+            for workload, kept in workloads.items():
+                own = median(kept["total"], BUCKET_MS)
+                if own is not None:
+                    stages = {s: median(b, STAGE_BUCKET_MS) for s, b in kept["stages"].items()}
+                    groups.setdefault((workload, m["platform"], m["cores"]), []).append((own, kept["runs"], stages))
     benchmarks = []
-    for key, buckets in sorted(state.get("benchmarks", {}).items()):
-        runs = sum(buckets.values())
-        if runs >= SMALLEST_GROUP:
-            workload, plat, core = key.split("|", 2)
-            benchmarks.append({"workload": workload, "platform": plat, "cores": core, "runs": runs, "medianMilliseconds": median(buckets)})
+    for (workload, plat, core), votes in sorted(groups.items()):
+        if len(votes) < SMALLEST_GROUP:
+            continue
+        names = sorted({s for _, _, st in votes for s in st})
+        benchmarks.append({
+            "workload": workload, "platform": plat, "cores": core, "machines": len(votes),
+            "medianMilliseconds": middle([v for v, _, _ in votes]),
+            "runsPerMachine": [min(r for _, r, _ in votes), max(r for _, r, _ in votes)],
+            "stageMedians": {s: middle([st[s] for _, _, st in votes if st.get(s) is not None]) for s in names},
+        })
+    counted = sum(len(v) for v in groups.values())
     return {
         "machines": len(machines),
+        "reports": state.get("reports", 0),
         "from": state.get("first"),
         "to": state.get("last"),
         "platforms": merged(tally["platform"]),
@@ -172,13 +236,16 @@ def publish(state: dict) -> dict:
         "cores": merged(tally["cores"]),
         "phones": merged(tally["device"]),
         "benchmark": benchmarks,
+        "benchmarkMachines": counted,
+        "smallestGroup": SMALLEST_GROUP,
     }
 
 
 def forget_old_machines(state: dict, today: datetime) -> None:
-    cutoff = (today - timedelta(days=MACHINE_DAYS)).strftime("%Y-%m-%d")
+    month = today.year * 12 + today.month - 1 - MACHINE_MONTHS
+    cutoff = f"{month // 12:04d}-{month % 12 + 1:02d}"
     machines = state.get("machines", {})
-    for key in [k for k, m in machines.items() if m.get("last", "") < cutoff]:
+    for key in [k for k, m in machines.items() if m.get("month", "") < cutoff]:
         del machines[key]
 
 
@@ -198,20 +265,33 @@ def sweep() -> None:
                 log(f"{path.name}: deleted after {days} days, {what}")
 
 
+def load_state() -> dict:
+    """The state, begun again when it is the first version's: its machines were keyed by a hash the receiver no longer makes (entry 241)."""
+    if not STATE.is_file():
+        return {"version": STATE_VERSION}
+    state = json.loads(STATE.read_text(encoding="utf-8"))
+    if state.get("version") != STATE_VERSION:
+        old = ROOT / "state-1.json"
+        STATE.replace(old)
+        log(f"the first version's state was set aside as {old.name}; counting begins again under the keyed hash")
+        return {"version": STATE_VERSION}
+    return state
+
+
 def main() -> int:
     sweep()
     if not INCOMING.is_dir():
         log("nothing to do: there is no incoming folder yet")
         return 0
-    state = json.loads(STATE.read_text(encoding="utf-8")) if STATE.is_file() else {}
+    state = load_state()
     done = 0
     for path in sorted(p for p in INCOMING.glob("*.json") if not p.name.startswith("."))[:MOST_A_RUN]:
         try:
             report = json.loads(path.read_text(encoding="utf-8"))
-            if not isinstance(report, dict) or report.get("schema") != "grouplab-survey-1":
+            if not isinstance(report, dict) or report.get("schema") not in (*REPORTS, DELETE):
                 raise ValueError("not a report")
             count(report, state)
-        except (OSError, ValueError) as e:
+        except (OSError, ValueError, KeyError, TypeError) as e:
             REFUSED.mkdir(parents=True, exist_ok=True)
             path.replace(REFUSED / path.name)
             log(f"{path.name}: refused, {type(e).__name__}")
@@ -221,7 +301,13 @@ def main() -> int:
         done += 1
     forget_old_machines(state, datetime.now(timezone.utc))
     write(STATE, state)
-    write(PUBLIC, publish(state))
+    public = publish(state)
+    write(PUBLIC, public)
+    if SITE_COPY.parent.is_dir():
+        try:
+            write(SITE_COPY, public)
+        except OSError as e:
+            log(f"the site's copy could not be written: {type(e).__name__}")
     if done:
         log(f"{done} reports counted; {len(state.get('machines', {}))} machines")
     return 0

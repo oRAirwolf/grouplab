@@ -1,14 +1,13 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
-**This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
+**This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->
 
-**The phones are no longer needed: the Fold 7's Wireless debugging can be turned off and its screen timeout put back, and the
-Essential PH-1 can be unplugged.** Nothing is running on either. The next time the Fold 7 is needed, the whole list comes here
-first, in one request (entry 212).
+**The Fold 7 and the Tab S8 Ultra stay connected for testing** (entries 234 to 236): leave Wireless debugging on. The Essential PH-1
+can be unplugged. When a phone needs you, the whole list comes here first, in one request (entry 212).
 
 Newest first. Each request says what is needed, why it is needed, and what a good answer looks like.
 An answered request is marked **answered** with the date and left here, because the reason something was
@@ -23,6 +22,21 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 44. The survey page: one line from the Fold 7's screen
+
+**Opened 2026-09-27 (entry 241).** The page is at https://grouplab.org/survey/ once the site has published this entry (about eight
+minutes after the push). It shows your three machines by name as the project's own test devices: the desktop (1.8 s, from the desktop's
+own settings) and the Tab S8 Ultra (4.6 s, from its Settings screen). **The Fold 7's result is missing** because the phone was locked
+when the others were read, and I do not unlock your phone.
+
+**What to do, about a minute:** on the Fold 7, open GroupLab, then Settings, and scroll to **The benchmark**. Tell the planning session the
+line that begins "Last run", for example "Last run 27 September 2026, 04:15. The benchmark took 5.1 seconds and at most 450 MB of memory,
+and found 25 of its 25 holes." That line is all that is needed; it goes on the page as the Fold's result.
+
+**Also on the page, and nothing for you to do:** everybody else's figures appear there once the server side of entry 241 is installed
+(the new survey worker and the site sync that keeps its figures in place), which I do with sudo in the same sitting as request 21. Until
+then that half says "not enough reports yet", which is also true: a group needs ten machines before it is shown.
 
 ## 43. The Tab S8 Ultra: GroupLab on it, what the big screen showed
 

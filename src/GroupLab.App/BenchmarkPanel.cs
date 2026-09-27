@@ -116,7 +116,7 @@ public sealed class BenchmarkPanel : StackPanel
                     bar.Value = Math.Min(0.95, stagesDone / (double)expected);
                 })), token);
                 bool goes = store.LoadSurveyChoice() == SurveyChoice.Yes;
-                store.SaveBenchmark(result, sent: false, ranAt: DateTimeOffset.UtcNow);
+                store.SaveBenchmark(result, sent: false, ranAt: DateTimeOffset.UtcNow, toSend: goes);
                 DiagnosticLog.Info("survey.benchmark", ("ms", result.TotalMilliseconds), ("peak", result.PeakMegabytes), ("found", result.HolesFound));
                 ending = SharingWords.BenchmarkDone(result, goes)
                     + string.Create(CultureInfo.CurrentCulture, $" Finished at {DateTime.Now:HH:mm}.");

@@ -338,11 +338,28 @@ public sealed class AppSettingsStore(string path)
         ["distanceInches"] = distanceInches,
     });
 
-    /// <summary>NOTES-FROM-PLANNING.md entry 208: whether the hardware survey may send. Unset until the person answers.</summary>
-    public GroupLab.Core.Survey.SurveyChoice LoadSurveyChoice() =>
-        Read(file => Enum.TryParse<GroupLab.Core.Survey.SurveyChoice>((string?)file["survey"]?["choice"], out var choice) ? choice : GroupLab.Core.Survey.SurveyChoice.Unset);
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 208: whether the hardware survey may send. Unset until the person answers. Entry 241 section 2.5: a yes
+    /// given to an earlier wording of what is sent reads as unset, so the question is asked again and nothing goes until it is answered.
+    /// </summary>
+    public GroupLab.Core.Survey.SurveyChoice LoadSurveyChoice() => Read(file =>
+    {
+        var choice = Enum.TryParse<GroupLab.Core.Survey.SurveyChoice>((string?)file["survey"]?["choice"], out var kept) ? kept : GroupLab.Core.Survey.SurveyChoice.Unset;
+        return choice == GroupLab.Core.Survey.SurveyChoice.Yes && ((int?)file["survey"]?["wording"] ?? 1) < GroupLab.Core.Survey.SurveyReport.WordingVersion
+            ? GroupLab.Core.Survey.SurveyChoice.Unset
+            : choice;
+    });
 
-    public bool SaveSurveyChoice(GroupLab.Core.Survey.SurveyChoice choice) => Save(file => Survey(file)["choice"] = choice.ToString());
+    /// <summary>Whether the person said yes to an earlier wording of what the survey sends, and so is being asked again, entry 241.</summary>
+    public bool SurveyWordingChanged() => Read(file =>
+        (string?)file["survey"]?["choice"] == nameof(GroupLab.Core.Survey.SurveyChoice.Yes)
+        && ((int?)file["survey"]?["wording"] ?? 1) < GroupLab.Core.Survey.SurveyReport.WordingVersion);
+
+    public bool SaveSurveyChoice(GroupLab.Core.Survey.SurveyChoice choice) => Save(file =>
+    {
+        Survey(file)["choice"] = choice.ToString();
+        Survey(file)["wording"] = GroupLab.Core.Survey.SurveyReport.WordingVersion;
+    });
 
     /// <summary>
     /// docs/SURVEY.md section 2: the random number that stands for this copy of GroupLab, made the first time it is needed and kept until
@@ -393,9 +410,71 @@ public sealed class AppSettingsStore(string path)
     /// Keeps the benchmark's result. <paramref name="ranAt"/> is when it ran, entry 227 section 2, for Settings to say; marking a kept result
     /// sent passes none and keeps the time it already has.
     /// </summary>
-    public bool SaveBenchmark(GroupLab.Core.Survey.BenchmarkResult result, bool sent, DateTimeOffset? ranAt = null) => Save(file => Survey(file)["benchmark"] = new JsonObject
+    /// <remarks>
+    /// Entry 241 section 1: a new run, one with <paramref name="ranAt"/>, is also added to the history Settings shows, with the version that
+    /// ran it and whether it is to go with a report; <paramref name="toSend"/> is false for a run made while the survey is off, which is
+    /// shown here and never sent.
+    /// </remarks>
+    public bool SaveBenchmark(GroupLab.Core.Survey.BenchmarkResult result, bool sent, DateTimeOffset? ranAt = null, bool toSend = true) => Save(file =>
     {
-        ["ranAt"] = ranAt?.ToString("o", CultureInfo.InvariantCulture) ?? (string?)(Survey(file)["benchmark"] as JsonObject)?["ranAt"],
+        string? kept = ranAt?.ToString("o", CultureInfo.InvariantCulture) ?? (string?)(Survey(file)["benchmark"] as JsonObject)?["ranAt"];
+        var last = RunNode(result, sent);
+        last["ranAt"] = kept;
+        Survey(file)["benchmark"] = last;
+        if (ranAt is { } at)
+        {
+            var runs = Survey(file)["runs"] as JsonArray ?? [];
+            var run = RunNode(result, sent);
+            run["ranAt"] = at.ToString("o", CultureInfo.InvariantCulture);
+            run["version"] = AppInfo.Version;
+            run["toSend"] = toSend;
+            runs.Add(run);
+
+            // The oldest that has gone, or was never to go, makes room first; a run still waiting is kept.
+            while (runs.Count > MostRuns && runs.OfType<JsonObject>().FirstOrDefault(r => (bool?)r["sent"] == true || (bool?)r["toSend"] == false) is { } done)
+            {
+                runs.Remove(done);
+            }
+
+            Survey(file)["runs"] = runs;
+        }
+    });
+
+    /// <summary>How many benchmark runs Settings keeps and shows.</summary>
+    public const int MostRuns = 30;
+
+    /// <summary>
+    /// Every benchmark run kept here, oldest first, entry 241 section 1: when it ran, the version that ran it, the result, whether it has gone
+    /// with a report and whether it is to go at all. A result kept before the history existed is its one run, its version not known.
+    /// </summary>
+    public IReadOnlyList<BenchmarkRunRecord> LoadBenchmarkRuns() => Read(file =>
+    {
+        if (file["survey"]?["runs"] is JsonArray runs)
+        {
+            return (IReadOnlyList<BenchmarkRunRecord>)[.. runs.OfType<JsonObject>().Select(r => new BenchmarkRunRecord(
+                When((string?)r["ranAt"]), (string?)r["version"], ResultOf(r), (bool?)r["sent"] ?? false, (bool?)r["toSend"] ?? true))];
+        }
+
+        return file["survey"]?["benchmark"] is JsonObject b
+            ? [new BenchmarkRunRecord(When((string?)b["ranAt"]), null, ResultOf(b), (bool?)b["sent"] ?? false, true)]
+            : null;
+    }) ?? [];
+
+    /// <summary>Marks the runs that went with a report, by when they ran.</summary>
+    public bool MarkBenchmarkRunsSent(IReadOnlyCollection<DateTimeOffset> ranAt) => Save(file =>
+    {
+        var went = ranAt.Select(a => a.ToString("o", CultureInfo.InvariantCulture)).ToHashSet(StringComparer.Ordinal);
+        foreach (var run in (Survey(file)["runs"] as JsonArray ?? []).OfType<JsonObject>().Where(r => went.Contains((string?)r["ranAt"] ?? "")))
+        {
+            run["sent"] = true;
+        }
+    });
+
+    private static DateTimeOffset? When(string? at) =>
+        DateTimeOffset.TryParse(at, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var when) ? when : null;
+
+    private static JsonObject RunNode(GroupLab.Core.Survey.BenchmarkResult result, bool sent) => new()
+    {
         ["workload"] = result.Workload,
         ["width"] = result.Width,
         ["height"] = result.Height,
@@ -405,7 +484,12 @@ public sealed class AppSettingsStore(string path)
         ["holesPlaced"] = result.HolesPlaced,
         ["holesFound"] = result.HolesFound,
         ["sent"] = sent,
-    });
+    };
+
+    private static GroupLab.Core.Survey.BenchmarkResult ResultOf(JsonObject b) => new(
+        (string?)b["workload"] ?? "", (int?)b["width"] ?? 0, (int?)b["height"] ?? 0, (long?)b["totalMilliseconds"] ?? 0,
+        [.. (b["stages"] as JsonArray ?? []).OfType<JsonObject>().Select(s => new GroupLab.Core.Survey.StageTime((string?)s["stage"] ?? "", (long?)s["milliseconds"] ?? 0))],
+        (long?)b["peakMegabytes"] ?? 0, (int?)b["holesPlaced"] ?? 0, (int?)b["holesFound"] ?? 0);
 
     /// <summary>Entry 228 section 1.4: the bull templates kept for commercial targets, by name.</summary>
     public IReadOnlyList<BullTemplate> LoadBullTemplates() => Read(file => file["bullTemplates"] is JsonArray all
@@ -547,3 +631,6 @@ public enum ThemeChoice
     /// <summary>NOTES-FROM-PLANNING.md entry 93 section 3's fourth theme, derived from the dark tokens at WCAG's AAA ratio.</summary>
     HighContrast,
 }
+
+/// <summary>One benchmark run as Settings keeps it, NOTES-FROM-PLANNING.md entry 241 section 1.</summary>
+public sealed record BenchmarkRunRecord(DateTimeOffset? RanAt, string? Version, GroupLab.Core.Survey.BenchmarkResult Result, bool Sent, bool ToSend);

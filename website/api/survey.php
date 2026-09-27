@@ -13,8 +13,14 @@
  * **Anyone can post a fake report, and nothing in one is believed.** The report is JSON in the form field
  * `report`. It is decoded, checked against its schema, and written again from the named fields alone, each
  * checked for its type and cut to its length; anything else is dropped unread. Neither the sender's
- * address nor the installation number is stored: only salted hashes of them, the address's for the rate
- * limit and the installation's so one machine is counted once. The time is kept only as the day.
+ * address nor the installation number is stored: the address only as a salted hash, for the rate limit, and
+ * the installation number only as a keyed hash (HMAC-SHA256 with a key that exists only on this server,
+ * NOTES-FROM-PLANNING.md entry 241 section 2.2), so one machine is counted once and what is stored cannot be
+ * matched to anything outside the survey. The time is kept only as the day.
+ *
+ * Entry 241: a report of the second schema carries every benchmark run not yet sent, each with the version
+ * that ran it; the first schema, which published builds send, carries one. And a request of the delete schema,
+ * the number and nothing else, asks the worker to remove everything kept under it.
  *
  * The worker, website/server/grouplab-survey-worker.py, counts each report into the aggregate and deletes
  * it; nothing here is kept longer than thirty days whatever happens (entries 215 and 216).
@@ -27,6 +33,7 @@ const SURVEY       = SITE_PRIVATE . '/survey';
 const INCOMING     = SURVEY . '/incoming';
 const DB_PATH      = SITE_PRIVATE . '/survey.db';
 const SALT_PATH    = SITE_PRIVATE . '/submissions_salt.txt';
+const KEY_PATH     = SITE_PRIVATE . '/survey_key.txt';
 
 /** While this file exists every report is refused, and the application keeps its report to try again. */
 const CLOSED_PATH = SITE_PRIVATE . '/survey-closed';
@@ -37,7 +44,10 @@ const CLOSED_PATH = SITE_PRIVATE . '/survey-closed';
  */
 const OPEN = true;
 
-const SCHEMA           = 'grouplab-survey-1';
+const SCHEMAS          = ['grouplab-survey-1', 'grouplab-survey-2'];
+const STORED_SCHEMA    = 'grouplab-survey-2';
+const DELETE_SCHEMA    = 'grouplab-survey-delete-1';
+const MAX_BENCHMARKS   = 10;
 const MAX_BYTES        = 64 * 1024;
 const RATE_PER_DAY     = 10;
 const INSTALLATION_DAY = 3;
@@ -126,6 +136,23 @@ function ip_hash(string $ip): string
     return hash('sha256', $salt . '|' . $ip);
 }
 
+/**
+ * The installation number's keyed hash, entry 241 section 2.2. The key is made the first time and never leaves this server, so the stored
+ * value cannot be matched to anything, and the same number always gives the same value, so a machine's runs on different days count as one.
+ */
+function installation_hash(string $installation): string
+{
+    if (is_readable(KEY_PATH)) {
+        $key = trim((string) file_get_contents(KEY_PATH));
+    } else {
+        $key = bin2hex(random_bytes(32));
+        $tmp = KEY_PATH . '.tmp';
+        file_put_contents($tmp, $key, LOCK_EX);
+        @chmod($tmp, 0600);
+        rename($tmp, KEY_PATH);
+    }
+    return hash_hmac('sha256', $installation, $key);
+}
 
 function db(): PDO
 {
@@ -183,6 +210,31 @@ function stages($in): array
     return $out;
 }
 
+/** One benchmark run as the schema allows it, or null. */
+function benchmark_run($b, string $version): ?array
+{
+    if (!is_array($b)) {
+        return null;
+    }
+    $workload = text($b['workload'] ?? null, 60);
+    $total = whole($b['totalMilliseconds'] ?? null, 1, 3600000);
+    if ($workload === null || $workload === '' || $total === null) {
+        return null;
+    }
+    $ran = text($b['version'] ?? null, 64);
+    return [
+        'version'           => $ran !== null && $ran !== '' ? $ran : $version,
+        'workload'          => $workload,
+        'width'             => whole($b['width'] ?? null, 1, 100000) ?? 0,
+        'height'            => whole($b['height'] ?? null, 1, 100000) ?? 0,
+        'totalMilliseconds' => $total,
+        'stages'            => stages($b['stages'] ?? null),
+        'peakMegabytes'     => whole($b['peakMegabytes'] ?? null, 0, 16 * 1024 * 1024) ?? 0,
+        'holesPlaced'       => whole($b['holesPlaced'] ?? null, 0, 1000) ?? 0,
+        'holesFound'        => whole($b['holesFound'] ?? null, 0, 1000) ?? 0,
+    ];
+}
+
 /**
  * The report as the schema allows it, built from the named fields only, or the reason it cannot be.
  * The installation number is returned beside it, not in it: only its hash is ever written.
@@ -190,7 +242,7 @@ function stages($in): array
  */
 function clean(array $in): array
 {
-    if (($in['schema'] ?? null) !== SCHEMA) {
+    if (!in_array($in['schema'] ?? null, SCHEMAS, true)) {
         return [null, null, 'the report is not one this receiver reads'];
     }
     $installation = $in['installation'] ?? null;
@@ -221,24 +273,17 @@ function clean(array $in): array
             $machine[$k] = $v;
         }
     }
-    $out = ['schema' => SCHEMA, 'version' => $version, 'machine' => $machine];
-    if (is_array($in['benchmark'] ?? null)) {
-        $b = $in['benchmark'];
-        $workload = text($b['workload'] ?? null, 60);
-        $total = whole($b['totalMilliseconds'] ?? null, 1, 3600000);
-        if ($workload !== null && $workload !== '' && $total !== null) {
-            $out['benchmark'] = [
-                'workload'          => $workload,
-                'width'             => whole($b['width'] ?? null, 1, 100000) ?? 0,
-                'height'            => whole($b['height'] ?? null, 1, 100000) ?? 0,
-                'totalMilliseconds' => $total,
-                'stages'            => stages($b['stages'] ?? null),
-                'peakMegabytes'     => whole($b['peakMegabytes'] ?? null, 0, 16 * 1024 * 1024) ?? 0,
-                'holesPlaced'       => whole($b['holesPlaced'] ?? null, 0, 1000) ?? 0,
-                'holesFound'        => whole($b['holesFound'] ?? null, 0, 1000) ?? 0,
-            ];
+    $out = ['schema' => STORED_SCHEMA, 'version' => $version, 'machine' => $machine];
+    // The first schema's one run and the second's list are stored alike, each run with the version that ran it.
+    $sent = is_array($in['benchmarks'] ?? null) ? $in['benchmarks'] : (isset($in['benchmark']) ? [$in['benchmark']] : []);
+    $runs = [];
+    foreach (array_slice($sent, 0, MAX_BENCHMARKS) as $b) {
+        $run = benchmark_run($b, $version);
+        if ($run !== null) {
+            $runs[] = $run;
         }
     }
+    $out['benchmarks'] = $runs;
     $analyses = [];
     foreach (array_slice(is_array($in['analyses'] ?? null) ? $in['analyses'] : [], 0, MAX_ANALYSES) as $a) {
         if (!is_array($a) || whole($a['width'] ?? null, 1, 100000) === null || whole($a['height'] ?? null, 1, 100000) === null) {
@@ -283,9 +328,21 @@ $decoded = json_decode($raw, true, 8);
 if (!is_array($decoded)) {
     fail(400, 'The report could not be read.', 'bad_report');
 }
-[$report, $installation, $problem] = clean($decoded);
-if ($report === null) {
-    fail(400, 'The report was refused: ' . $problem . '.', 'bad_report');
+
+// Entry 241 section 2.4: a request to delete is the number and nothing else. It is stored like a report, as the keyed hash alone, for the
+// worker to act on, and it counts against the same limits.
+$deleting = ($decoded['schema'] ?? null) === DELETE_SCHEMA;
+if ($deleting) {
+    $installation = $decoded['installation'] ?? null;
+    if (!is_string($installation) || preg_match('/^[0-9a-f]{32}$/', $installation) !== 1) {
+        fail(400, 'The request was refused: it has no installation number.', 'bad_report');
+    }
+    $report = ['schema' => DELETE_SCHEMA];
+} else {
+    [$report, $installation, $problem] = clean($decoded);
+    if ($report === null) {
+        fail(400, 'The report was refused: ' . $problem . '.', 'bad_report');
+    }
 }
 
 if (!is_dir(INCOMING) && !@mkdir(INCOMING, 0750, true) && !is_dir(INCOMING)) {
@@ -300,7 +357,7 @@ try {
 }
 
 $ipHash      = ip_hash(client_ip());
-$installHash = ip_hash('installation|' . $installation);
+$installHash = installation_hash($installation);
 $now         = time();
 
 $stmt = $pdo->prepare('SELECT COUNT(*) FROM reports WHERE ip_hash = ? AND created_ts > ?');

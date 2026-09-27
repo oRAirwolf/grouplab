@@ -59,6 +59,28 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 241: every benchmark run sent, one vote a machine, and the survey page
+
+**On the device.** Every benchmark run is kept with its date and version (`AppSettingsStore.LoadBenchmarkRuns`, thirty kept), Settings
+under Sharing lists them newest first, on the desktop and on Android, and every run made while the survey is on goes with the next
+report, each with its own version (`grouplab-survey-2`, `SurveyReport.MostBenchmarks` a report); a run the receiver's three reports a
+day holds back waits for the next. **Reset my survey number** and **Delete my survey reports** sit under the history; the delete sends
+the number with its own schema. The question's wording says what the number is, and a yes given to the earlier wording reads as not
+answered (`SurveyReport.WordingVersion`), so the question is asked again once and nothing goes until it is.
+
+**On the server.** `survey.php` stores the number as HMAC-SHA256 with a key made on the server and kept only there; the old code hashed
+the number alone with the rate limit's salt, not with the day as `docs/SURVEY.md` said, so Monday's and Tuesday's runs were already one
+machine, but the hash was the same salt as the addresses'. The worker keeps per machine and version the run count and quarter second
+counts of the times, reads each machine's median, and publishes the median of machines' medians by class from ten machines up, with the
+range of runs they rest on; a delete removes the machine at once; twelve months without a report removes it. It writes a copy into the
+site, which the site sync now leaves in place. Its first run sets the old state aside, because it is keyed by the old hash.
+
+**The page**, grouplab.org/survey/, linked from the footer and from the article: the three test devices by name, from what each showed
+on its own screen (`website/survey-devices.json`): the desktop (Ryzen 7 9800X3D, 64 GB) 1.789 s, peak 482 MB, 25 of 25; the Tab S8
+Ultra 4.6 s, 446 MB, 25 of 25; the Fold 7 not read, locked (request 44). Everybody else's half reads the aggregate and says "not enough
+reports yet" until a group has ten machines. On Windows the uninstaller leaves the settings, so the number survives an uninstall there;
+on Android it does not. Steam's survey is described in `docs/SURVEY.md` section 8.
+
 ## Entry 231: the first Play internal testing release, and its two warnings
 
 `docs/ANDROID.md` section 12 records the release as Play read it (version code 110, API 29 and up, target SDK 36, arm64-v8a only, 2

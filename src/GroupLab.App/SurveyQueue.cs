@@ -60,10 +60,16 @@ public sealed class SurveyQueue(AppSettingsStore settings, Func<MachineFacts> ma
         }
     }
 
-    /// <summary>Whether a report is due: yes said, and a week since the last, or a benchmark not yet sent.</summary>
+    /// <summary>Whether a report is due: yes said, and a week since the last, or a benchmark run not yet sent.</summary>
     public bool Due(DateTimeOffset now) =>
         settings.LoadSurveyChoice() == SurveyChoice.Yes
-        && (settings.LoadSurveySent() is not { } last || now - last >= Every || settings.LoadBenchmark() is { Sent: false });
+        && (settings.LoadSurveySent() is not { } last || now - last >= Every || Unsent().Count > 0);
+
+    /// <summary>
+    /// The runs waiting to go, oldest first, NOTES-FROM-PLANNING.md entry 241 section 1: every run made while the survey was on, until a
+    /// report has taken it. The receiver takes three reports a day from one installation; a run it held back goes with the next.
+    /// </summary>
+    public IReadOnlyList<BenchmarkRunRecord> Unsent() => [.. settings.LoadBenchmarkRuns().Where(r => r.ToSend && !r.Sent)];
 
     /// <summary>
     /// Sends the report when one is due and the receiver is open. A report the receiver took empties the file and marks the benchmark sent;
@@ -76,9 +82,10 @@ public sealed class SurveyQueue(AppSettingsStore settings, Func<MachineFacts> ma
             return false;
         }
 
-        var benchmark = settings.LoadBenchmark();
+        var runs = Unsent().Take(SurveyReport.MostBenchmarks).ToList();
         var analyses = Waiting();
-        string report = SurveyReport.Build(settings.LoadInstallation(), AppInfo.Version, machine(), benchmark?.Result, analyses);
+        string report = SurveyReport.Build(settings.LoadInstallation(), AppInfo.Version, machine(),
+            [.. runs.Select(r => new BenchmarkRun(r.Version ?? "earlier", r.Result))], analyses);
         var answer = await TheOutsideWorld.Current.PostSurveyAsync(ReceiverTerms.Current.SurveyReceiver, report, token).ConfigureAwait(true);
         if (answer is not { Status: >= 200 and < 300 })
         {
@@ -93,13 +100,31 @@ public sealed class SurveyQueue(AppSettingsStore settings, Func<MachineFacts> ma
         }
 
         settings.SaveSurveySent(now);
-        if (benchmark is { } b)
+        settings.MarkBenchmarkRunsSent([.. runs.Where(r => r.RanAt is not null).Select(r => r.RanAt!.Value)]);
+        if (runs.Count > 0 && settings.LoadBenchmark() is { Sent: false } last)
         {
-            settings.SaveBenchmark(b.Result, sent: true);
+            settings.SaveBenchmark(last.Result, sent: true);
         }
 
-        DiagnosticLog.Info("survey.sent", ("analyses", analyses.Count), ("benchmark", benchmark is not null));
+        DiagnosticLog.Info("survey.sent", ("analyses", analyses.Count), ("benchmarks", runs.Count));
         return true;
+    }
+
+    /// <summary>
+    /// Asks the server to delete everything it keeps under this installation's number, NOTES-FROM-PLANNING.md entry 241 section 2.4. The
+    /// number is kept, so the person can see it worked and carry on; resetting it is a separate choice. Returns whether the receiver took it.
+    /// </summary>
+    public async Task<bool> DeleteAsync(bool open, CancellationToken token)
+    {
+        if (!open)
+        {
+            return false;
+        }
+
+        var answer = await TheOutsideWorld.Current.PostSurveyAsync(ReceiverTerms.Current.SurveyReceiver, SurveyReport.Delete(settings.LoadInstallation()), token).ConfigureAwait(true);
+        bool taken = answer is { Status: >= 200 and < 300 };
+        DiagnosticLog.Info("survey.delete", ("taken", taken), ("status", answer?.Status));
+        return taken;
     }
 
     /// <summary>Forgets every kept analysis, as saying no does.</summary>

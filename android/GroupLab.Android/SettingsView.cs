@@ -125,6 +125,43 @@ public sealed class SettingsView : UserControl
                 ? SharingWords.BenchmarkLast(settings.LoadBenchmarkRanAt(), last.Result, last.Sent)
                 : SharingWords.BenchmarkNever);
             column.Children.Add(benchmark);
+
+            // Entry 241 sections 1.2 and 2.4: every run this copy has made, newest first, and the two things a person can do with their number.
+            column.Children.Add(Screens.Heading(SharingWords.BenchmarkHistory));
+            var history = new StackPanel { Spacing = 4 };
+            void FillHistory()
+            {
+                history.Children.Clear();
+                var runs = settings.LoadBenchmarkRuns();
+                if (runs.Count == 0)
+                {
+                    history.Children.Add(Screens.Line(SharingWords.BenchmarkNever));
+                }
+
+                foreach (var run in runs.Reverse())
+                {
+                    history.Children.Add(Screens.Line(SharingWords.BenchmarkRunLine(run)));
+                }
+            }
+
+            FillHistory();
+            benchmark.Ended += FillHistory;
+            column.Children.Add(history);
+            var said = Screens.Line("");
+            column.Children.Add(Screens.Choice(SharingWords.ResetNumber, () =>
+            {
+                settings.ReplaceInstallation();
+                DiagnosticLog.Info("survey.installation", ("replaced", true));
+                said.Text = SharingWords.ResetNumberSaid;
+            }));
+            async Task Delete()
+            {
+                bool taken = App.Survey is { } queue && await queue.DeleteAsync(Shell.SurveyOpen, CancellationToken.None);
+                said.Text = taken ? SharingWords.DeleteReportsSaid : SharingWords.DeleteReportsFailed;
+            }
+
+            column.Children.Add(Screens.Choice(SharingWords.DeleteReports, () => _ = Delete()));
+            column.Children.Add(said);
         }
 
         column.Children.Add(Screens.Heading("About"));

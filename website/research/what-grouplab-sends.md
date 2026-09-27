@@ -23,8 +23,11 @@ sources:
 4. **A target**, if you choose to send one to the project: from the page at `grouplab.org/targets/`, or from GroupLab itself after you analyze it.
 
 5. **A hardware survey report**, only if you said yes when GroupLab asked, on the same screen as the questions above: what your machine
-   is and how fast GroupLab ran on it, at most once a week. What a report holds is listed on that screen and in `docs/SURVEY.md`, and it
-   never holds your name, a file name, a photograph or a location.
+   is and how fast GroupLab ran on it, at most once a week, and sooner after you run the benchmark, whose every run goes with the version
+   that ran it. What a report holds is listed on that screen and in `docs/SURVEY.md`, and it never holds your name, a file name, a
+   photograph or a location. It does hold a random number GroupLab made for this installation, so that your repeated runs count once:
+   it is not taken from your device, your account or your network, and Settings, under Sharing, can reset it or delete your reports.
+   The published figures are at [grouplab.org/survey/](/survey/).
 
 That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking
 a target, and nothing is sent because you opened the program, except what you chose to have sent by itself: error reports, and the
@@ -82,8 +85,12 @@ can wait has a limit.
   the issue is opened or updated. One that cannot be sent is deleted after thirty days.
 - **On your own machine**, a target you agreed to send and could not is tried again for seven days, then deleted, as above.
 - **A hardware survey report** is counted into totals within the hour and deleted. None is kept on the server
-  longer than thirty days whatever happens. What stays is counts: for each installation, only a hash of its random number, the classes
-  its machine falls in and the day it was last seen, dropped after 180 days. Nothing smaller than ten machines is ever published.
+  longer than thirty days whatever happens. What stays is counts: for each installation, only a keyed hash of its random number (the key
+  exists only on the server, so the stored value cannot be matched to anything else), the classes its machine falls in, the month it was
+  last seen, and for each version of GroupLab how many benchmark runs it sent and how their times fall, from which its median is read.
+  The runs themselves are not kept. A machine not seen for twelve months is dropped. **Delete my survey reports**, in Settings, removes
+  everything kept under your number at the next hourly count; that is possible only because the number stays the same, which is why it
+  is a number GroupLab made rather than nothing at all. Nothing smaller than ten machines is ever published.
 
 ## The rule that stops a sixth thing appearing
 

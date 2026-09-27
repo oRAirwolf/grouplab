@@ -486,9 +486,52 @@ if (count($stored) === 1) {
         && preg_match('/^[0-9a-f]{64}$/', (string) ($kept['installation'] ?? '')) === 1);
     check('the sender\'s address is not in it', !str_contains($text, '203.0.113.7'));
     check('the day is kept and not the time', preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($kept['day'] ?? '')) === 1);
-    check('the machine and the benchmark are kept as sent', ($kept['machine']['cores'] ?? 0) === 16
-        && ($kept['benchmark']['totalMilliseconds'] ?? 0) === 1900 && count($kept['analyses'] ?? []) === 1);
+    check('the machine and the benchmark are kept as sent, the first schema\'s one run with the report\'s version',
+        ($kept['machine']['cores'] ?? 0) === 16 && ($kept['benchmarks'][0]['totalMilliseconds'] ?? 0) === 1900
+        && ($kept['benchmarks'][0]['version'] ?? '') === '0.2.0-nightly.107' && count($kept['analyses'] ?? []) === 1);
+    unlink($stored[0]);
 }
+
+// Entry 241: the second schema carries every run not yet sent, each with the version that ran it.
+$two = survey_report(['schema' => 'grouplab-survey-2', 'benchmark' => null, 'benchmarks' => [
+    ['version' => '0.2.0-nightly.111', 'workload' => 'GL-CF25-LTR-300dpi-25-holes-1', 'totalMilliseconds' => 1789, 'stages' => []],
+    ['version' => '0.2.0-nightly.112', 'workload' => 'GL-CF25-LTR-300dpi-25-holes-1', 'totalMilliseconds' => 1750, 'stages' => [], 'planted' => 'x'],
+]]);
+$r = request($root, $surveySource, ['report' => json_encode($two)], [], ['remote' => '198.51.100.40']);
+check('a report of the second schema is accepted', ($r['json']['ok'] ?? false) === true, $r['raw']);
+$stored = glob($surveyIncoming . '/*.json') ?: [];
+$kept = count($stored) === 1 ? json_decode((string) file_get_contents($stored[0]), true) : [];
+check('each run keeps the version that ran it, and nothing unnamed', count($kept['benchmarks'] ?? []) === 2
+    && ($kept['benchmarks'][0]['version'] ?? '') === '0.2.0-nightly.111' && ($kept['benchmarks'][1]['version'] ?? '') === '0.2.0-nightly.112'
+    && !array_key_exists('planted', $kept['benchmarks'][1] ?? []));
+$firstHash = $kept['installation'] ?? '';
+foreach ($stored as $f) {
+    unlink($f);
+}
+
+// Entry 241 section 2.2: the number is stored as a keyed hash, the same every time, from a key only the server has.
+$r = request($root, $surveySource, ['report' => json_encode($two)], [], ['remote' => '198.51.100.41']);
+$stored = glob($surveyIncoming . '/*.json') ?: [];
+$again = count($stored) === 1 ? (json_decode((string) file_get_contents($stored[0]), true)['installation'] ?? '') : '';
+$key = is_readable($root . '/private/survey_key.txt') ? trim((string) file_get_contents($root . '/private/survey_key.txt')) : '';
+check('one number gives the same stored value on another day and from another address', $firstHash !== '' && $again === $firstHash);
+check('and that value is the keyed hash of the number, with the server\'s own key', $key !== '' && $again === hash_hmac('sha256', $two['installation'], $key));
+foreach ($stored as $f) {
+    unlink($f);
+}
+
+// Entry 241 section 2.4: a delete request is stored as the keyed hash and its schema, nothing else.
+$r = request($root, $surveySource, ['report' => json_encode(['schema' => 'grouplab-survey-delete-1', 'installation' => $two['installation'], 'machine' => ['os' => 'x']])], [], ['remote' => '198.51.100.42']);
+check('a delete request is accepted', ($r['json']['ok'] ?? false) === true, $r['raw']);
+$stored = glob($surveyIncoming . '/*.json') ?: [];
+$kept = count($stored) === 1 ? json_decode((string) file_get_contents($stored[0]), true) : [];
+check('and stored as the schema, the keyed hash and the day alone', ($kept['schema'] ?? '') === 'grouplab-survey-delete-1'
+    && ($kept['installation'] ?? '') === $firstHash && array_keys($kept) === ['schema', 'installation', 'day']);
+foreach ($stored as $f) {
+    unlink($f);
+}
+$r = request($root, $surveySource, ['report' => json_encode(['schema' => 'grouplab-survey-delete-1', 'installation' => 'nope'])], [], ['remote' => '198.51.100.43']);
+check('a delete request with no number is refused', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
 
 foreach ([
     'a survey report of another schema' => survey_report(['schema' => 'something-else']),

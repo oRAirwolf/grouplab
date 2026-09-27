@@ -96,6 +96,30 @@ internal static class SharingWords
 
     public const string EarlierKept = "Your earlier answers about sending targets and error reports are kept. You can change them in Settings, under Sharing.";
 
+    /// <summary>NOTES-FROM-PLANNING.md entry 241 section 2.5: said above the question to somebody who said yes to its earlier wording.</summary>
+    public const string SurveyWordingChanged = "What the hardware survey sends has changed since you said yes: every benchmark run now goes, and the random number is explained below. Nothing more is sent until you answer again.";
+
+    /// <summary>Entry 241 section 1.2: the heading over the device's own runs in Settings.</summary>
+    public const string BenchmarkHistory = "Your benchmark runs";
+
+    /// <summary>One run in Settings' history: the date, the version and the time, and whether it has gone.</summary>
+    public static string BenchmarkRunLine(BenchmarkRunRecord run) =>
+        (run.RanAt is { } at ? string.Create(CultureInfo.CurrentCulture, $"{at.ToLocalTime():d MMM yyyy}") : "Earlier")
+        + ", " + (run.Version is { } v ? $"GroupLab {v}" : "an earlier GroupLab")
+        + string.Create(CultureInfo.CurrentCulture, $", {run.Result.TotalMilliseconds / 1000.0:0.0} s")
+        + (run.Sent ? ", sent" : run.ToSend ? ", waiting to go" : ", not sent (the survey was off)");
+
+    /// <summary>Entry 241 section 2.4: the two buttons under the history, and what each says when pressed.</summary>
+    public const string ResetNumber = "Reset my survey number";
+
+    public const string ResetNumberSaid = "This copy of GroupLab has a new survey number. Runs sent before stay counted under the old one.";
+
+    public const string DeleteReports = "Delete my survey reports";
+
+    public const string DeleteReportsSaid = "The project's server will delete everything it keeps under this copy's survey number at its next hourly run, and count the published figures again without it.";
+
+    public const string DeleteReportsFailed = "The request to delete your survey reports could not reach the project just now. Nothing was changed; try again later.";
+
     /// <summary>What the benchmark found, in one sentence, and whether it goes with the next report.</summary>
     public static string BenchmarkDone(BenchmarkResult result, bool goes)
     {

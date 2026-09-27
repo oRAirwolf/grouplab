@@ -104,6 +104,12 @@ public sealed class FirstRunView : UserControl
             survey.Children.Add(Screens.Line(SharingWords.EarlierKept));
         }
 
+        // Entry 241 section 2.5: a yes given to the earlier wording is asked again, and says why.
+        if (settings.SurveyWordingChanged())
+        {
+            survey.Children.Add(Screens.Line(SharingWords.SurveyWordingChanged));
+        }
+
         survey.Children.Add(Screens.Heading(SharingWords.SurveyQuestion));
         survey.Children.Add(Screens.Line(SharingWords.SurveyIntro));
         foreach (string line in SurveyReport.WhatIsSent)

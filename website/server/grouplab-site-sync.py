@@ -179,7 +179,9 @@ def back_up() -> Path | None:
 # remove it on the first sync after the installer put it there, and the only symptom would be every
 # real photograph failing to upload with nothing saying why. It is excluded here rather than shipped
 # in the site, because it is server configuration and the site archive is public.
-KEEP_IN_PLACE = [".user.ini"]
+# NOTES-FROM-PLANNING.md entry 241 section 5: the survey worker writes the published aggregate into the site, where the survey page
+# reads it, and the next sync must not delete it. It holds counts and medians only, the same as private/survey/public.json.
+KEEP_IN_PLACE = [".user.ini", "survey/aggregate.json"]
 
 
 def install(folder: Path) -> None:

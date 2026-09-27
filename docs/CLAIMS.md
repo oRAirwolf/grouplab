@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1036 |
-| measured | 1487 |
-| decided | 1195 |
+| code | 1053 |
+| measured | 1491 |
+| decided | 1194 |
 | unbacked | 0 |
-| **total** | **3718** |
+| **total** | **3738** |
 
-**575** of them were read one sentence at a time and their backing written against the sentence. The other **3143** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**596** of them were read one sentence at a time and their backing written against the sentence. The other **3142** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2277,11 +2277,22 @@ one that matters.
 - *code* (NOTES-FROM-PLANNING.md entry 223; website/api/limits.json surveyOpen; website/api/survey.php OPEN; src/GroupLab.Core/Updates/OutsideWorld.cs PostSurveyAsync): **Built, and open since 2026-09-25** (entry 219 item D1, opened by entry 223 once Alan had installed the worker): `surveyOpen` in `website/api/limits.json` is true, and the receiver takes reports.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Asking **One first run screen, three choices** (entry 208): sending targets, error reports, and the hardware survey with its benchmark, one after another on the window that asks today, each with its own plain description of what is sent and its own answer.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): **Nothing is chosen for the person** on any of the three, the rule entry 203 section 3 set and `Entry203Tests` holds.
+- *code* (src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)): - A random installation number, so one machine is counted once, which the person can reset in Settings at any time (section 7).
 - *measured* (measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width): The desktop's reference today is `SpikeRun` in the Android spike: the sample at 600 dpi takes 7.9 s on Alan's desktop and 17 s on the Fold 7.
 - *code* (src/GroupLab.Core/Survey/Benchmark.cs Benchmark; src/GroupLab.Core/Survey/SurveyReport.cs Keys, WhatIsSent; website/api/limits.json surveyOpen; website/server/install.py survey; tests/GroupLab.Core.Tests/Survey/SurveyReportTests.cs): **As built.** `GroupLab.Core.Survey.Benchmark`: GL-CF25-LTR rendered at 300 dpi with one hole in each of its 25 bulls from a fixed seed, analyzed as a photograph is, only the analysis timed.
+- *code* (src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)): **Every run is sent, and the median counts** (entry 241 section 1).
+- *code* (src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)): Every run made while the survey is on goes with the next report, each with its own version (`grouplab-survey-2`); a run the receiver's three reports a day held back goes with the next one.
+- *code* (website/api/survey.php installation_hash() (entry 241 section 2.2); the old ip_hash('installation|'...) in git history): **As built**: `website/api/survey.php` takes the named fields only, stores the installation number only as a keyed hash (HMAC-SHA256, with a key made on the server and kept only there, entry 241 section 2.2) and the day, never the time or the address, and limits each installation to three reports a day.
+- *code* (website/api/survey.php installation_hash() (entry 241 section 2.2); the old ip_hash('installation|'...) in git history): Until entry 241 this section said the hash was of the number and the day; it never was, the code hashed the number alone, with the salt the rate limit uses.
 - *code* (src/GroupLab.Core/Survey/Benchmark.cs Benchmark; src/GroupLab.Core/Survey/SurveyReport.cs Keys, WhatIsSent; website/api/limits.json surveyOpen; website/server/install.py survey; tests/GroupLab.Core.Tests/Survey/SurveyReportTests.cs): `install.py --survey` installs the worker, in the same sitting as request 31.
-- *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Any group smaller than 10 reports is merged into "other", so no one machine can be picked out.
+- *code* (website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()): **As built** (entry 241 section 5), at [grouplab.org/survey/](https://grouplab.org/survey/): the worker writes the aggregate to `private/survey/public.json` and a copy to `public_html/survey/aggregate.json`, which the site sync leaves in place and the page reads.
+- *code* (website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()): Any group smaller than 10 machines is merged into "other" or not shown, so no one machine can be picked out.
+- *code* (website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()): **What the server keeps** (entry 241 section 3): for each machine's keyed hash, the hardware classes, the month of its latest report, and for each version and workload the run count and how the times fall in quarter seconds (each stage in twentieths of a second), from which its median is read.
+- *code* (website/server/grouplab-survey-worker.py count(), publish(), load_state() and forget_old_machines()): The worker's first version kept machines under the old hash; on the first run of the second it sets that state aside and counts again, so the figures started over on the day entry 241 was installed.
 - *decided* (NOTES-FROM-PLANNING.md entries 215 and 216; docs/SURVEY.md, to be built with the survey): **How long a report is kept** (entries 215 and 216): on the server, only until the worker has counted it into the aggregate, and never longer than thirty days whatever happens; the aggregate keeps counts, not records.
+- *code* (src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)): The installation number, and why it is not a fingerprint Entry 241 section 2.
+- *code* (packaging/windows/grouplab.iss, the header comment and FinishedLabel): **On Windows the uninstaller leaves `%APPDATA%\GroupLab` alone** (`packaging/windows/grouplab.iss`), so the number survives an uninstall there, and that is left as it falls.
+- *code* (src/GroupLab.Core/Survey/SurveyReport.cs WhatIsSent and WordingVersion; src/GroupLab.App/AppSettings.cs LoadSurveyChoice): - **The question says it before anything is sent**: "a random number made by GroupLab for this installation, so that repeated runs count once; it is not tied to your device, account or network, and you can reset it or delete your reports in Settings." Everyone who said yes to the earlier wording is asked again, once, and nothing is sent until they answer (`SurveyReport.WordingVersion`).
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Use Once there are 200 reports from one platform, the minimums in `docs/PLATFORM-SUPPORT.md` are reviewed against it, and `docs/notes/STATE.md` says when that happened.
 
 ### docs/TARGET-LIBRARY.md
@@ -3895,7 +3906,6 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If it cannot go at that moment it is kept on your machine and tried when GroupLab next starts, for seven days, then deleted.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Where it cannot do that without changing a pixel it saves the picture again without loss, and where even that would be too large it does not send it and tells you why.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Where it is kept, and for how long NOTES-FROM-PLANNING.md entries 215 to 217.
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What stays is counts: for each installation, only a hash of its random number, the classes its machine falls in and the day it was last seen, dropped after 180 days.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Reading the clipboard GroupLab can open an image you paste with Ctrl+V.
 
 ### site:research/when-to-adjust-zero/index.html
@@ -3969,6 +3979,19 @@ one that matters.
 - *code* (the Report a problem window, src/GroupLab.App (entry 164); website/build.py page_support()): What is not done yet 02 Make a report package In GroupLab, open the settings from the gear at the bottom left and choose Report a problem .
 - *code* (the Report a problem window, src/GroupLab.App (entry 164); website/build.py page_support()): 03 Send it Open an issue on GitHub, attach the zip, and add a line about what you were doing.
 - *code* (LICENSE, and the footer in website/build.py shell()): Shoot a target Free and open source under GPL-3.0.
+
+### site:survey/index.html
+
+- *code* (src/GroupLab.App/MainWindow.Survey.cs FillSurveySettings and android/GroupLab.Android/SettingsView.cs (entry 241)): In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, under Sharing.
+- *code* (src/GroupLab.Core/Survey/Benchmark.cs Benchmark.Sheet and Benchmark.Run): Each ran the same benchmark every copy of GroupLab runs: one analysis of a built-in 25 bull sheet with a hole in every bull.
+- *measured* (website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)): The developer&#x27;s desktop AMD Ryzen 7 9800X3D, 16 threads, 64 GB of memory, Windows 11 1.8 s median of 1 run, GroupLab 0.2.0-nightly.111 At most 482 MB of memory; 25 of its 25 holes found.
+- *measured* (website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)): Stage by stage Finding the markers 0.21 s Registering the sheet 0.01 s Locating the bulls 0.39 s Finding the holes 1.15 s Assigning the shots 0.01 s Source: the benchmark result the desktop application keeps in its own settings, read on 2026-09-27; that build kept only the last run.
+- *measured* (website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)): Galaxy Tab S8 Ultra Samsung SM-X900, 16 GB of memory, Android 16 4.6 s median of 1 run, GroupLab 0.2.0-nightly.111 At most 446 MB of memory; 25 of its 25 holes found.
+- *measured* (website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)): Source: read from the tablet&#x27;s own Settings screen on 2026-09-27, which gives the time to a tenth of a second and not the stages.
+- *measured* (website/survey-devices.json: each device's own result, read 2026-09-27 (entry 241 section 5)): Galaxy Z Fold 7 Samsung SM-F966U1, 12 GB of memory, Android 16 Not read yet.
+- *code* (website/server/grouplab-survey-worker.py SMALLEST_GROUP, merged() and publish()): A group of fewer than 10 machines is not shown.
+- *code* (website/server/grouplab-survey-worker.py SMALLEST_GROUP, merged() and publish()): Not enough reports yet: a group of fewer than 10 machines is not shown.
+- *code* (website/server/grouplab-survey-worker.py SMALLEST_GROUP, merged() and publish()): Anything seen on fewer than 10 machines is counted under "other".
 
 ### site:targets/index.html
 

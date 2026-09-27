@@ -221,7 +221,7 @@ public class Entry208Tests
             Settle();
             Assert.StartsWith("The benchmark took ", opened.Window.SettingsBenchmark.StatusText, StringComparison.Ordinal);
             var sent = JsonNode.Parse(Outside.Surveys.Single().Report)!;
-            Assert.Equal(Benchmark.Workload, (string?)sent["benchmark"]!["workload"]);
+            Assert.Equal(Benchmark.Workload, (string?)sent["benchmarks"]![0]!["workload"]);
             Assert.Equal(true, store.LoadBenchmark()?.Sent);
         }
         finally
