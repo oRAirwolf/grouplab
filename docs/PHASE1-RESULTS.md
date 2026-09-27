@@ -59,6 +59,49 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 243: questions 57 to 62 answered, and the night's work: pooled sets, progress, the phone, and the C bull
+
+**Answers built** (e3f24a5, 9df40da). Q57: on a sheet of two to four marks, one at least twice the median area of the others is flagged
+tentatively with the "judged from too few marks" sentence (`TightGroupTests`). Q58: below the default width the outer columns shrink and
+below about 893 units the right column moves under the image (`NarrowWindowTests`, 960 and 683). Q59: grid style 2 is written into
+TARGET-SCHEMA.md as built. Q60: the screenshot walk analyzes Alan's two 6ARC scans from the test data release; the rule is now "no
+photograph or scan of anybody else's target". Q61: E as discs on three sheets beside the usual ones (GL-CF25-LTR-E, -LTR-D-E, -A4-E).
+Found on the way: opening a second picture did not start a new session, so saving overwrote the previous one; fixed and tested.
+
+**Section 3.1, pooling a set** (8685aaf). A sheet from "Made for your optic" carries its place in the set in its codes; Session records'
+"Pool the chosen" reads the ticked sheets as one group by `docs/STATISTICS.md`'s pooling rule and says which sheets are missing
+(`SetPoolTests`, `PoolSetTests` with three of a seven sheet set). **3.2, progress and Cancel** (83c2fd5): every analysis on the desktop
+and on the phone says what it is doing a step at a time, from the trace's own stages (`StageWords`), and Cancel leaves nothing saved.
+**3.3, big screens** (803ebb2): on the phone, a window at least 840 dp wide puts the sheet beside its numbers; narrower is unchanged. The
+tablet screenshots wait on request 45. **3.4, Targets on the phone** (70419ed): the library and "Made for your optic", printed through
+Android's print dialog or shared as the desktop's PDF. That commit also fixed what three earlier commits had left red unseen, because each
+push canceled the last CI run: the E sheets' artwork recorded, and two classes given bench lines.
+
+**Section 3.5, the phone's look** (0d1f069). DESIGN.md section 19 now records the desktop's design language as built. Three concepts,
+A the desktop carried over, B cards for the thumb, C readout first, are drawn beside today's screens on a private page and in
+`C:\Dev\grouplab-local\design-concepts\`; request 49 asks Alan. The one plain mismatch, Fluent's blue accent on the phone, is now the
+desktop's amber.
+
+**Section 4, the C bull** (89a39ac). The format has a square: a disc's `shape` and `rotation`, its diameter the diagonal, turned 0 or
+45 degrees, in bits 4 and 5 of the disc's ink byte on the wire, which older builds reject, as their JSON reader rejects the keys. Rules 20a
+and 20b in the validator. The renderer, raster, PDF, Windows printer, plot and report draw it; the edge fit measures each ray to the
+square's side. **Section 4.5's question, answered:** on the 1.5 in grid the diamond leaves 0.24 in between points, and nothing needs to
+sit there. The markers sit on the diagonals, where the diamond leaves more than 100 dmm of paper, but the drop test measured the box
+round the circle through the points, which left no markers at all on two of the three sheets; it now measures a square to itself, and the
+C sheets keep 34 to 40 markers, as the E sheets do. A hole on a point is 159 dmm from its own bull's center and 221 from the next, and
+`DiamondBullTests` finds and assigns every one: holes on the dot, in the black, across both diamonds' sides and on the points, every bull
+within the 0.001 in gate. The pitch stays. The one warning left is real: on the Letter sheet the top two diamonds' points come within 1 dmm
+of the codes' footprint, quiet zone included. Holes placed across an ink edge come back up to 13.6 dmm off center; the round E bull under
+the same test loses one outright and puts two 12 and 14 dmm off, so that is the synthetic holes, drawn wholly on ink or paper by their
+center, not the diamond. The generator offers a diamond sized by the same rule, and the designer rings, E or C.
+**Found on the way:** OpenCV keeps a code whose bytes happen to be valid UTF-8 as UTF-8, and the reader turned every code back as Latin-1,
+so one of the C sheets could not name itself; its CRC was CE 95. The reader now takes the reading that can be right, and in the one truly
+ambiguous case the one whose frame decodes (`QrPayloadTests`). Corpus counts: 55 of 55 images unchanged through all of it.
+
+**Section 1.4, the large format sheets** (c25609c). GL-LR25-T, GL-LR25-TA4 and GL-LR30-T: 2 by 2 sets of Letter or A4 sheets, the same
+bull and pitch, 8 a sheet and 32 a set; the printed tabloid and A3 sheets are frozen and still name themselves. Question 63 asks whether 8
+is right.
+
 ## Entry 242: "Made for your optic" on the tour, and a Features page from one file
 
 **The tour stop** `optic`, after Targets: the render walk fills in the generator for 100 yd at 10x and at 4x and photographs the Targets

@@ -29,7 +29,7 @@ what the originals were for, a 25 or 30 shot session, with a few bulls to spare,
 
 ## 2026-09-27, question 62: the large sheets that are not tiles, and the generator on the website
 
-Status: open. Nothing waits on it.
+Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 sections 1.4 and 2.3: (a) yes, built; (b) after the generator has been used in the application. Was: open. Nothing waits on it.
 
 Entry 226 section 5.1 asks for cut lines on "any sheet larger than the flatbed sizes the library supports", with markers and a code on
 every piece. **Built:** a tiled target (GL-LR300-T, GL-LR300-TA4 and their 3x2 presets) can now be printed on one large page with dashed
@@ -49,7 +49,7 @@ doing now, or after the generator has been used in the application?
 
 ## 2026-09-27, question 61: the ring set decision, with the aim point test's results
 
-Status: open. The result is in `website/research/can-you-see-the-bull.md`, "Results".
+Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 sections 1.1 and 4: E as discs and C as a diamond, both beside the usual bull. Was: open. The result is in `website/research/can-you-see-the-bull.md`, "Results".
 
 Entry 226 section 3 asks that the crosshair finding go "into the ring set decision". The evidence: at 10x, through three high power
 scopes, the current bull (A) could not be centered by either shooter; E was centered by both on every scope; C by all but one. Through the
@@ -64,7 +64,7 @@ library now (every sheet's identifier changes and the printed ones are frozen), 
 
 ## 2026-09-27, question 60: may the tour's screenshots show Alan's own range scans now?
 
-Status: open.
+Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 1.3: yes, Alan's own scans.
 
 Entry 226 section 2.1 asks to feature the suppressor comparison "on the tour and the research pages with these scans as the example".
 `docs/figures/screens/current/SOURCES.md` says, from entry 126 section 3.2, that "a photograph of somebody's target must never appear here,
@@ -76,7 +76,7 @@ else's target"; Unholy's and other friends' would still be excluded unless entry
 
 ## 2026-09-27, question 59: the redrawn zeroing grids needed three changes to the format, and two readings of the visibility rule
 
-Status: open. Built to the proposal below; nothing waits on the answer, and the sheets can be redrawn if it goes otherwise.
+Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 2.2: style 2 into the specification, and the line reading stands. Was: open. Built to the proposal below; nothing waits on the answer, and the sheets can be redrawn if it goes otherwise.
 
 Entries 226 and 227 section 1 ask for the zeroing grids to be redrawn: plus or minus 1.0 mil at 100 yd "or as much as the page allows",
 coarser fine lines, the whole unit boldest, every bold line labeled, the scale and a ruler printed, and lines and labels sized by the
@@ -115,7 +115,7 @@ the line reading of the visibility rule stands.
 
 ## 2026-09-25, question 58: the analysis screen needs about 1060 units of width, and a 1920 screen at 200 percent gives 960
 
-**Status: open. Nothing is changed; entry 203 fixed the consent text and found this.** CLAUDE.md: "Never: change the look without
+**Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 1.2: option A, built.** Was: open. Nothing is changed; entry 203 fixed the consent text and found this. CLAUDE.md: "Never: change the look without
 Alan." The analysis screen's grid has three columns beside the rail: 300 wide (at least 260), the image (at least 320), and 372 wide (at
 least 260), with two 6 wide splitters. The two outer columns are fixed widths, so they do not shrink toward their minimums as the window
 narrows: the columns need 1004 units, 1057 with the rail, and the window sets no minimum width.
@@ -132,7 +132,7 @@ gets a minimum width of 1060 and a smaller screen scrolls. C: leave it.
 
 ## 2026-09-25, question 57: may a sheet of two to four marks flag one mark against the others?
 
-**Status: open. Nothing is changed; the behaviour below stands until it is answered.** Entry 161 section 3: "Too few marks to measure
+**Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 2.1: yes, the tentative flag, built.** Was: open. Nothing is changed; the behaviour below stands until it is answered. Entry 161 section 3: "Too few marks to measure
 a reference from. A calibre keeps a single hole from being split, and flags nothing". Below five round marks
 (`MarksForTentativeSize`), `RenderDifferenceHoleDetector.SizeReference` returns the caliber source with no flag size.
 

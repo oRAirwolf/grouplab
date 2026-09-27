@@ -2,6 +2,13 @@
 
 **Open: 10.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **49** is a choice you can make from your chair: how GroupLab should look on the phone, A, B or C. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print) and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
+**The night of 27 September, in five lines** (entry 243 asked for it; not a request):
+1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.
+2. Finished: the C bull (a diamond standing on a point, with a dot) and the E bull sit beside the usual one on three sheets each, and the designer and Made for your optic can draw them.
+3. Finished: the tabloid and A3 sheets now print as sets of four Letter or A4 sheets; your old printouts still read.
+4. Waits on you: **49**, pick the phone's look (A, B or C) from the page it links; **45**, reconnect the Fold 7 and the tablet so the screenshots and measurements can run.
+5. Still to do, needing nobody: entry 244 (the README kept current), then the server sitting (receiver timeouts and the survey worker), which asks you to approve each sudo.
+
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->

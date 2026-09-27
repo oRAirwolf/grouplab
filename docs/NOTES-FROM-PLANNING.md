@@ -24,6 +24,82 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 243: answers to questions 57 to 62, and work for the night after the queue
+
+**Status: done 2026-09-27, apart from two parts that wait on Alan.** **Not done:** section 3.3's before and after screenshots from the Tab S8 Ultra, because both devices are off adb (request 45); the side by side layout itself is built. Section 3.5 builds only what needs no choice: the design language is written down, three concepts are drawn and request 49 asks Alan to choose, and only the chosen one is built. Section 1.4 asks question 63 about the number of bulls a sheet; what is built can change without touching anything printed.
+
+Alan approved the decisions in section 1 before going to bed; section 2 is the planning session's own answers to the technical questions;
+section 3 is new work, in the order given, after entries 233 to 242. Carry on through the night without waiting for anyone; put anything
+that needs Alan into for-alan.md.
+
+## 1. Alan's decisions
+
+1. **Question 61, the ring set:** yes to E in discs (black disc, white center of 0.36 in, small dot) as the library's new bull. (b) Offer it
+   **alongside** the current bull first, with its own identifiers; it becomes the default only after Alan has shot it and says so. Do not
+   teach the format squares for this.
+2. **Question 58, the narrow window:** option A. The two outer columns shrink toward their minimums below the default width, and below
+   about 893 units the right column moves under the image. The look at the default size and above is unchanged. Test at 960 and 683.
+3. **Question 60, screenshots:** yes. The screenshot job may use Alan's own scans under entry 171's standing consent, so the Compare loads
+   picture can show the two suppressor sheets. The rule becomes "no photograph or scan of anybody else's target"; Unholy's and other
+   friends' stay out of screenshots unless Alan says otherwise.
+4. **Question 62 (a), large sheets:** yes. Redraw the three large format 5x5 and 5x6 sheets as 2 by 2 Letter and A4 tiles; freeze the
+   printed ones so they still read; leave the roll sheets as they are and say they suit a 50 MP phone.
+
+## 2. The planning session's answers
+
+1. **Question 57:** yes, the option: with two to four round marks, a tentative flag on a mark whose area is at least twice the median of
+   the others', with the existing "judged from too few marks to be sure" sentence.
+2. **Question 59:** (a) yes, grid style 2 goes into the specification as built, including the tight-edge side band and two codes; (b) the
+   line reading of the visibility rule stands (the rule in full for labels and the aiming ring; lines sized to be seen).
+3. **Question 62 (b), the generator on the website:** after the generator has been used in the application. Not now.
+
+## 3. New work, in this order
+
+1. **Pool a generated set.** A set of sheets from "Made for your optic" analyzed as one composite group: scan or photograph the sheets in
+   any order, GroupLab knows from each sheet's codes which of the set it is and how many shots to expect in all, and says which sheets
+   are still missing. Same pooling rule as `docs/STATISTICS.md`. Tests with a rendered set.
+2. **Progress and cancel** for every analysis that can take more than a couple of seconds, desktop and Android: stage by stage (loading,
+   finding the sheet, reading the codes, finding holes, measuring), a Cancel that stops promptly and leaves nothing half-saved.
+3. **Big screens side by side.** On the Tab S8 Ultra in landscape (and any expanded-width window), the sheet and the plot side by side,
+   with the numbers beside or under them, instead of a phone-width column. Portrait and phones unchanged. Screenshots from the tablet over
+   adb, before and after.
+4. **The Targets screen on Android:** the library, printing or sharing a PDF, and "Made for your optic", laid out for touch.
+5. **The phone's look to match the desktop's.** Alan: "Work on refining the mobile interface so it more closely matches the design
+   language, colors, and themes of the desktop application. If needed, make concepts and I can say which ones I like." CLAUDE.md says the
+   look is not changed without Alan, so: first write down the desktop's design language as it is (the tokens, colors, type, spacing,
+   light and dark themes, controls) in `docs/DESIGN.md` if it is not there, then make **two or three concepts** for the phone and tablet
+   (real screens of the Android app rendered with each concept: the first run, the analysis, Settings, the Targets screen, light and dark),
+   put them side by side on one page in `C:\Dev\grouplab-local\design-concepts\` and as a private preview (not published on grouplab.org),
+   and ask Alan in for-alan.md which he likes, with a one-line description of each. Only the chosen one is built. Anything that is plainly
+   a mismatch rather than a choice (a color not in the desktop's palette, a font size off the scale) may be fixed without waiting.
+
+At the end of the night, a five-line summary at the top of for-alan.md of what was finished and what waits on Alan.
+
+## 4. Addition from Alan, same night: C as well
+
+Alan: "I really like C on the aim point page and want that to be an option as well." So question 61 (a) becomes both, not either:
+1. **E in discs** as section 1.1 says.
+2. **C as tested**: a black diamond 1.25 in point to point with a white diamond center of 0.36 in (the aim point card's C, which scored 2
+   at 10x in four of five cells and is Alan's favorite). This needs the format to draw a square, and a square turned 45 degrees: add a
+   square shape with a rotation to the target schema (a new field or style value, versioned so older builds refuse cleanly rather than
+   misread, as grid style 2 did), to the renderer, the PDF writer, the parametric designer and the validator. Check that bull finding,
+   hole finding (holes in the black and across the diamond's edges) and scoring work on it as they do on discs, with rendered tests.
+3. Both offered **alongside** the current bull, each as its own ring set with its own identifiers, selectable in the Targets screen and in
+   "Design your own sheet". Neither becomes the default until Alan has shot them and chooses.
+4. Keep C's proportions when it is scaled (diamond 3.47 times the center), so "Made for your optic" can later offer "disc" or "diamond"
+   as the shape, sized by the same visibility rule. Add that choice to the generator once C exists.
+5. On a 1.5 in grid a 1.25 in diamond leaves 0.25 in between points; say whether that is enough room for markers and for holes near the
+   points to be assigned to the right bull, and widen the pitch for C sheets if it is not.
+
+**And a refinement from Alan:** "we should also use C with a center dot. The most useful part of C is the fact that you can line up a
+crosshair with the diamond shape very easily even if you can't make out a dot in the center." So:
+1. C gets a **small black dot at the center of its white diamond**, sized as E's (0.10 in on the 0.36 in center, the same ratio when
+   scaled). It is an extra for high power and for the measuring software, not the aim: the aim is still the white diamond and its points.
+2. **The diamond always stands on a point**, its four points exactly on the vertical and horizontal lines through the aim point, in every
+   sheet, preset and generated size, so a crosshair's vertical and horizontal lines run through the points and the eye aligns the reticle
+   with the shape even when neither the dot nor the center can be made out. Make that a validator rule for the diamond shape, not a habit.
+3. Offer C with the dot as the C ring set. Record in the aim point article that the card's C had no dot and why the library's has one.
+
 ## 2026-09-27, entry 242: "Made for your optic" on the tour, and a Features page that lists everything
 
 **Status: done 2026-09-27, apart from one part.** **Not done:** section 2.3's phone screenshots over adb; the devices are off adb (request 45) and entry 243 section 5 decides the phone's look first, so the phone-only features say why they have no picture. The check on release notes of kind new works from what the notes file keeps, which is not the kind: from nightly 113 on, every note under What you will notice belongs to a feature or is listed as not one.

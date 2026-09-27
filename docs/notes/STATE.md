@@ -9,19 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 242.
+**Last rewritten:** 2026-09-27, after entry 243.
 
 ---
 
 ## In flight
 
-- Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233, 234 235 (its section 3 in the closing server sitting), 237, 238 to 240 (device measurements wait on request 45) and 242. Next 243, 244; 233's aim card waits with 228 on Android.
+- Done: everything through entry 243, apart from what the status lines name: 235 section 3 and 241's server half in the closing server
+  sitting, device measurements and tablet screenshots on request 45 (238 to 240, 242, 243 section 3.3), the phone's look on request 49
+  (243 section 3.5), the website generator (question 62 (b), later). Next 244 (the README kept current), then the server sitting.
+- **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
+  E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
+  format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
-- **The target generator** is on the Targets screen ("Made for your optic"); a set of sheets is a tiled assembly. Pooling a set that was
-  scanned sheet by sheet is not built.
+- **The target generator** is on the Targets screen ("Made for your optic"), on the phone too, disc or diamond; a set of sheets is a
+  tiled assembly, and Session records pools its sheets ("Pool the chosen").
 - **A target GroupLab did not print** can have bulls placed by hand, a lasso, templates, and a scale at each bull (entry 228,
   Unholy's); Android has no hand marking yet.
 - **A sheet whose shots all landed off by the same amount** is assigned by that amount when the solver is certain (entry 229): the
@@ -33,10 +37,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
   definitions too. **A public Play listing waits on the attorney's review of the GPL app store permission.**
 - **Both devices are off adb until request 45**; GroupLab Dev (`org.grouplab.app.dev`) is built by the nightly from entry 234.
-- **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work. Its
-  landscape analysis wants two panes (plan).
-- **The Play internal test ran on the Fold 7** (entry 232): driven over wireless debugging; the phone needs a Targets screen and a
-  progress line for a long analysis, both for the plan. Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
+- **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work.
+- **The Play internal test ran on the Fold 7** (entry 232). Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
   has the link, the uninstall-first rule and the symbols zip each nightly now makes. Automatic Play upload waits on request 38.
 - **The survey page is live** (entry 241): grouplab.org/survey/; the server side of entry 241 (worker, unit, site sync) waits to be
   installed with sudo alongside request 21.
@@ -63,19 +65,14 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **9** (45 reconnect the Fold 7 and the tablet; 46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's
-camera; then 9, 16, 20 and 21, optional). Request 40 answers Alan's benchmark question; 35 is closed.
+Open requests in `docs/notes/for-alan.md`: **10** (45 reconnect the Fold 7 and the tablet; 49 choose the phone's look, A, B or C;
+46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's camera; then 9, 16, 20 and 21).
 
 ## Open questions
 
-Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 62 were answered by entry 243.
 
-- **62** the six single large sheets and cut lines; the generator on the website and what it would take
-- **61** the ring set: E's idea in discs, and whether it replaces the current bull
-- **60** may the tour's screenshots show Alan's own range scans
-- **59** grid style 2 and the reading of the visibility rule for lines
-- **58** the analysis screen needs about 1060 units wide; at 200 percent on a 1920 screen its right column is cut
-- **57** may a sheet of two to four marks flag one mark against the others
+- **63** how many bulls each sheet of the redrawn large format sets carries (built: 8, 32 a set)
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
@@ -84,7 +81,7 @@ Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.110, from 51a2058, the first carrying the signed Android app.
+- **Last nightly:** 0.2.0-nightly.113; the next carries entry 243's work.
 - **The site serves the newest commit that touched it.** Notes commits do not start the site workflow; a publish is started by hand.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
@@ -94,10 +91,13 @@ Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 they differ. The planning session's files are not committed, so while a run is working through them the
 line reads what the repository holds, and the test fails locally until the last is done.
 
-**Holds:** none
+**Holds:** 244
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself, not as the
+  circle through its points, by the marker drop test, the validator and the edge fit. Older builds refuse a C sheet rather than misread it.
+- **A QR code's bytes can arrive as UTF-8** from OpenCV; the reader now takes the reading that can be right (entry 243 section 4).
 - **A zeroing grid is now drawn by its style**: style 2's strokes, labels, statement and ruler are fixed by `GridStyle2`, and a
   label breaks the line behind it on purpose.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted, since the backup rule of entry 222.
