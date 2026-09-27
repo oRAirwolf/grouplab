@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 229.
+**Last rewritten:** 2026-09-27, after entry 236.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229 and 235 section 4. Next 230, 231, 233, 234, 235.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236 and 235 section 4. Next 230, 231, 233, 234, 235.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
@@ -32,7 +32,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
   definitions too. **A public Play listing waits on the attorney's review of the GPL app store permission.**
-- **The Play internal test runs on the Fold 7** (entry 232): driven over wireless debugging; the phone needs a Targets screen and a
+- **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work. Its
+  landscape analysis wants two panes (plan).
+- **The Play internal test ran on the Fold 7** (entry 232): driven over wireless debugging; the phone needs a Targets screen and a
   progress line for a long analysis, both for the plan.
 - **Sending targets, error reports and the survey are on** (entries 195, 200, 223); crash issues are read at every start.
 - **A receiver counts as live only when an empty POST to it returns its own error from the live site** (entry 195).

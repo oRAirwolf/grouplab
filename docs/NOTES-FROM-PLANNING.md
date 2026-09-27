@@ -24,6 +24,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 236: the Galaxy Tab S8 Ultra, one check of the large-screen layout
+
+**Status: done 2026-09-27, at Alan's request ahead of 230, 231, 233 to 235 (with 235 section 4).** DeX was not tried: it is off on the tablet and turning it on is setup. Split screen was checked as a resizable window at half and a third of the width, which is what split screen gives an app. The report is request 43. The addresses the entry names are in no committed file.
+
+Alan offered his Samsung Galaxy Tab S8 Ultra (14.6 in, 16 GB). It is the "expanded" width class in `docs/ANDROID.md` section 7, which
+nothing has been checked on yet. Alan is pairing it with adb now (the planning session gave him the adb pair and connect lines in
+PowerShell), so it should appear in `adb devices` next to the Fold 7.
+
+Once, in the same sitting as entry 235 section 4 (putting GroupLab back on the Fold 7):
+1. Install the newest nightly APK on the tablet over wireless debugging.
+2. Check, with screenshots in `C:\Dev\grouplab-local\android-tabs8u-<build>\`: portrait and landscape; the first-run window; the analysis
+   screen with the sample scan (the plot should use the space, not sit as a phone-sized column in the middle); Settings; split-screen with
+   another app (half and a third of the screen); Samsung DeX if it is on, only if it takes no setup from Alan. Note analysis time and peak
+   memory against the Fold 7.
+3. Fix what is plainly broken; put layout improvements into the plan rather than doing them now.
+4. Report in for-alan.md in five lines or fewer. After this the tablet is used only when a layout change needs it, and the request list
+   says so, as for the older phones.
+
+**Update:** paired. `adb devices -l` shows the Fold 7 as `(a LAN address, not recorded)` (SM_F966U1) and the Tab S8 Ultra twice, as
+`(a LAN address, not recorded)` and as `(its mDNS name)` (SM_X900): the same tablet over the direct connection and over
+mDNS. Always pass `-s` with one serial, and prefer the mDNS name, which survives the port changing. Do not write these addresses into any
+committed file.
+
 ## 2026-09-27, entry 229: what the planning session saw in the 2026-09-26 scans (read with entry 226)
 
 **Status: done 2026-09-27, apart from one part.** **Not done:** 1.2's reading of the handwritten serial box letter; a person types it as the sheet's label instead. Sections 2, 3 and 5 were done with entry 226 (load blocks, the suppressor test, the transcriptions and the card).

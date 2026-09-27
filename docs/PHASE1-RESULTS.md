@@ -59,6 +59,19 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 236, with entry 235 section 4: the Tab S8 Ultra, and GroupLab back on the Fold 7
+
+Nightly 110, then 111 when it was published during the sitting, installed on both over adb and started once. **The tablet** (SM-X900,
+1848 by 2960 at 320 dpi, Android 16): the first run is a readable column; the sample scan analyzed as on the Fold 7 (25 shots, extreme
+spread 2.16 cm) in about 58 s, peak PSS sampled at about 555 MB (the Fold 7, entry 232: about 50 s); landscape keeps the result;
+Settings is fine; a resizable window at half and a third of the width works, the tabs clipped only when the window covered the
+navigation bar. **Broken, fixed:** an activity recreated before the old one had gone (a cleared task, a window mode change) found the
+single Shell still parented and the app stopped, "already has a visual parent"; `MainActivity.OnCreate` now lets go of it first, and the
+activity also keeps through keyboard and navigation changes. Four clear-task restarts and a mode change on the tablet with the fixed
+build: no stop. **For the plan:** a two-pane analysis on expanded widths (in landscape it is a phone-width column), and a progress line for
+a long analysis. A stray tap during the check opened another app on the tablet's home screen at its permission screen; it was backed out
+of untouched.
+
 ## Entry 229: copies of one design, the whole-sheet wrong-bull case, and spelling
 
 **1. Three sheets, one printed code.** `GL-R0T0-384Z-HRBE-M0EW` is the design's identifier (GL-CF25-LTR-D), which every copy printed from

@@ -18,7 +18,7 @@ namespace GroupLab.Android;
     MainLauncher = true,
     ScreenOrientation = ScreenOrientation.FullUser,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize
-        | ConfigChanges.UiMode | ConfigChanges.Density)]
+        | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
 public class MainActivity : AvaloniaMainActivity
 {
     internal static MainActivity? Current { get; private set; }
@@ -45,6 +45,23 @@ public class MainActivity : AvaloniaMainActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         Current = this;
+
+        // Entry 236: a new activity that starts before the old one has gone, as a task cleared and restarted, or a change of window mode on
+        // a tablet does, found the one Shell still inside the old activity's view, and the application stopped with "already has a visual
+        // parent". The Shell is let go of first, so it moves to the new activity with everything the person was doing.
+        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime { MainView: { } shell })
+        {
+            switch (shell.Parent)
+            {
+                case Avalonia.Controls.Presenters.ContentPresenter presenter:
+                    presenter.Content = null;
+                    break;
+                case Avalonia.Controls.ContentControl holder:
+                    holder.Content = null;
+                    break;
+            }
+        }
+
         base.OnCreate(savedInstanceState);
     }
 }

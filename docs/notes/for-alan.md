@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, and **42** says GroupLab is back on it; nothing to do for any of them.
+**Open: 10.** Most urgent: **39**, one look at the Oracle console after Sunday 2026-09-27 09:00 UTC for a backup of type Full. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. **36** is one try of the Play Store install on the Fold 7. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20, 18, 32 and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 26 September (433 MB, backup-2026-09-25); the restore test passed on 26 September; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-25; the off-machine boot volume backup is checked in the Oracle console.
@@ -24,10 +24,22 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 43. The Tab S8 Ultra: GroupLab on it, what the big screen showed
+
+**Answered 2026-09-27 (entry 236).** Nothing to do. From now on the tablet is used only when a layout change needs it, like the older phones.
+
+1. Nightly 111 is on the tablet and the Fold 7, and each has been started once; the Fold's first-run questions wait for you. The tablet's were answered with your choices during the check, and it was put back to 111 afterwards, so answer them again when you open it.
+2. Portrait, landscape, Settings and a window at half and a third of the screen all work. The published sample analyzed the same as on the Fold (25 shots), in about 58 s against the Fold's 50 s, and about 555 MB at most.
+3. **Plainly broken, fixed:** when the tablet restarted GroupLab's window while the old one was still closing (a change of window mode does it), GroupLab stopped. Fixed from the next nightly, and tried four times on the tablet without a stop.
+4. **For the plan:** in landscape the analysis is a phone-width column in the middle of the screen; a big screen should show the plot and the sheet side by side. DeX was not tried (it is off).
+5. Screenshots and logs are in `C:\Dev\grouplab-local\android-tabs8u-110\`.
+
+---
+
 ## 42. GroupLab is back on your Fold 7
 
-**Answered 2026-09-27 (entry 235 section 4).** Nothing to do. The nightly 110 app (the APK signed with the upload key) is installed over
-wireless debugging and started once; it is waiting on its first-run sharing questions for your answers. It is the side-loaded copy, so a
+**Answered 2026-09-27 (entry 235 section 4).** Nothing to do. The nightly app (the APK signed with the upload key, now nightly 111) is installed
+over wireless debugging and started once; it is waiting on its first-run sharing questions for your answers. It is the side-loaded copy, so a
 later nightly APK installs over it, and the Play copy cannot until this one is uninstalled.
 
 ---
