@@ -24,6 +24,62 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 242: "Made for your optic" on the tour, and a Features page that lists everything
+
+**Status: done 2026-09-27, apart from one part.** **Not done:** section 2.3's phone screenshots over adb; the devices are off adb (request 45) and entry 243 section 5 decides the phone's look first, so the phone-only features say why they have no picture. The check on release notes of kind new works from what the notes file keeps, which is not the kind: from nightly 113 on, every note under What you will notice belongs to a feature or is listed as not one.
+
+Alan read the release note for the target generator and wants it shown as a feature on the tour. He also suggests a feature spotlight, or a
+page that documents every feature with links to explanations and screenshots. Do both, from one source so they never drift apart.
+
+## 1. The tour: a stop for "Made for your optic"
+
+Add a stop to `website/tour.json` after the Targets screen stop, with a real screenshot of the Targets screen's "Made for your optic" filled
+in (100 yd, 10x, 25 shots) and the sheet it makes, and a second pair for 4x (the set of several sheets) or for a red dot. Words, plain:
+what you enter, what GroupLab does (a black disc with a white center sized to about 3.5 arcminutes at your lowest magnification, or 1.5
+times a red dot; nothing small at the center for a crosshair to cover), where the rule comes from (a link to the "Can you see the bull?"
+article with the aim point test), and what it cannot do yet (a set of sheets is analyzed one sheet at a time for now). Every number on the
+stop comes from the generator, not typed by hand, and the claims register backs it.
+
+## 2. A Features page
+
+`grouplab.org/features/`, linked from the top navigation next to the tour:
+1. **Every feature the application has, grouped** (for example: reading a target, the numbers, sheets and printing, photos and the phone,
+   sharing and privacy, updates). Each feature: a name, one plain sentence, one screenshot or small figure, the platforms it is on (Windows,
+   macOS, Linux, Android), the version it arrived in, and links to where it is explained: the tour stop, the user guide section, the
+   research article behind it.
+2. **Generated, not hand-kept.** One file (for example `website/features.json`) is the source; the build checks that every feature links to
+   a claim in `docs/CLAIMS.md` with its backing, that every screenshot exists and is current, and that every release note of kind "new"
+   either has a feature or is marked as belonging to an existing one. A feature cannot be listed that the claims register does not back.
+3. **Screenshots made by the build**, as the tour's are (or by the same tool), so they are redone when a screen changes rather than going
+   stale; the phone's taken over adb when a phone is attached, otherwise the last good one with its version shown.
+4. **A spotlight**, small: the three newest features at the top of the Features page and on the home page, each linking to its entry,
+   taken from the release notes, so it updates by itself with each nightly or release.
+5. The tour stays a guided walk through the main path (print, shoot, scan or photograph, read the numbers); the Features page is the
+   complete list. Each links to the other.
+6. Mobile first: readable on a phone, screenshots sized for it, no horizontal scrolling.
+
+Write the first version, publish it, and put the link in for-alan.md. The planning session will look it over for anything missing.
+
+## 3. Alan's standard for the Features page (added the same day)
+
+Alan: "The features should be detailed and thorough. Screenshots should be used whenever possible." So the one-sentence entries in section
+2.1 are the summary line only. Each feature gets its own section (or its own page, linked from the list, if that reads better), with:
+1. **What it does and why it matters**, in plain words, several paragraphs where the feature needs them.
+2. **How to use it, step by step**, with a screenshot at each step that changes the screen (desktop and phone where both have it), each
+   screenshot captioned with what to look at. Where a step has options, say what each option does.
+3. **What it shows you**: an annotated screenshot of the result, with every number, line, color and toggle on it explained or linked to the
+   glossary.
+4. **How it works underneath**, briefly, for people who want it: the rule or method, with the research article that backs it linked.
+5. **Limits and what is not done yet**, stated plainly (for example, a set of generated sheets is analyzed one sheet at a time for now).
+6. **Worked examples** with real inputs and real outputs where the feature takes input (for "Made for your optic": 100 yd at 10x, 100 yd at
+   4x, a 2 MOA red dot at 25 and at 50 yd, each with the sheet it made).
+7. Platforms, the version it arrived in, and links to the tour stop, the user guide and the research.
+A screenshot is expected wherever the feature has anything on screen; a feature with no screenshot is listed by the build as a gap to fill,
+not published silently without one. Screenshots are made by the build from real runs of the application on the sample data and Alan's
+publishable scans, never mocked up, never showing personal data, file paths or anything from a friend's scan that may not be published.
+Write the whole page before publishing it rather than a thin first version; the list of features is complete when every release note of
+kind "new" and every screen of the application is covered.
+
 ## 2026-09-27, entry 240: a memory budget scaled to the device, and the two benchmarks Alan ran
 
 **Status: done 2026-09-27, apart from two parts.** **Not done yet:** section 2.1, the aggregate's counts by platform, which need the server and are read in the closing server sitting; and the Fold 7's own benchmark line (request 44). Section 1.1's Android 17 per-app limit is not read: no API for it exists in the SDK this builds against, and the rule does not need it. Section 1.3 measured no gain above 8 megapixels, so every phone stays at 8, as the entry asks when that is the result.

@@ -304,7 +304,7 @@ public sealed class PrintPanel : UserControl
         designLoadBlock.IsCheckedChanged += (_, _) => Redesign();
     }
 
-    private void ShowDesigner(bool on)
+    internal void ShowDesigner(bool on)
     {
         if (designing == on)
         {

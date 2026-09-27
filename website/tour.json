@@ -24,6 +24,7 @@
  ],
  "order": [
   "targets",
+  "optic",
   "marking",
   "analysis",
   "analysis-open",
@@ -562,6 +563,53 @@
     [
      "The user guide",
      "/guides/user-guide/"
+    ]
+   ]
+  },
+  "optic": {
+   "name": "Made for your optic",
+   "blurb": "Say how far, the lowest magnification you shoot at, or a red dot's size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.",
+   "purpose": "A bull you cannot see the middle of is a bull you cannot aim at the same way twice, and that is what spreads a group before the rifle does. The aim point test of 2026-09-26 found that a feature needs about {optic:arcminutes} arcminutes at the lowest magnification a sheet is shot at before it can be centered on. So GroupLab draws a black disc with a white center of that size at the distance you give, and a small dot in the middle, nothing thinner, because a crosshair covered the thin cross and the open gap in that test. Through a red dot, whose dot hides whatever is under it, the white center is {optic:dotMargin} times the dot. At 100 yards through 10x the white center comes out {optic:at10x.centerInches} inches across in a disc of {optic:at10x.discInches}, {optic:at10x.bullsPerSheet} bulls {optic:at10x.pitchInches} inches apart on one Letter sheet for 25 shots. Through 4x it is {optic:at4x.centerInches} inches in a disc of {optic:at4x.discInches}, so only {optic:at4x.bullsPerSheet} bulls fit a sheet and 25 shots take {optic:at4x.sheets} sheets, each of which names itself by its codes.",
+   "withoutASheet": "Nothing here reads a target. It draws a GroupLab sheet to print, which then reads itself like every other.",
+   "parts": [
+    [
+     "What you enter",
+     "The distance in yards; the lowest magnification you will shoot at, 1 for a red dot, with the dot's size in MOA; and how many shots. Make the sheet draws it."
+    ],
+    [
+     "Why it is that size",
+     "Under the button GroupLab says what it drew and why, in the sentences the picture shows: the feature size at your magnification, the disc and its center, and how many bulls fit how many sheets."
+    ],
+    [
+     "The sheet",
+     "On the right, the sheet itself, as it will print. The column in the middle still names the sheet chosen in the list; the preview is the one just made."
+    ],
+    [
+     "Printing it",
+     "It prints like any sheet, at its true size, and Save as my own keeps it in Your own sheets beside the built-in ones."
+    ]
+   ],
+   "steps": [
+    "Open Targets and choose Design your own sheet.",
+    "Enter the distance, the lowest magnification or the red dot's size, and the number of shots, and choose Make the sheet.",
+    "Read why it is the size it is, then print it, or save it as your own."
+   ],
+   "fits": "Between choosing a sheet and shooting it. What it cannot do yet: a set of several sheets is analyzed one sheet at a time, not pooled into one group; that is next on the list. Where the {optic:arcminutes} arcminute rule comes from is <a href='/research/can-you-see-the-bull/'>Can you see the bull?</a>",
+   "links": [
+    [
+     "Can you see the bull? The aim point test",
+     "/research/can-you-see-the-bull/"
+    ],
+    [
+     "The Targets screen",
+     "/tour/targets/"
+    ]
+   ],
+   "moreShots": [
+    [
+     "optic-4x",
+     "Made for your optic through 4x at 100 yards: a bigger bull, four to a sheet, and a set of sheets",
+     "Through 4x the same 25 shots need a bigger bull, so they take a set of sheets."
     ]
    ]
   }

@@ -1,0 +1,465 @@
+{
+  "_": "NOTES-FROM-PLANNING.md entry 242: every feature GroupLab has, the one source for grouplab.org/features/ and its spotlight. Each feature names the build it arrived in and a phrase from that build's release note, which the site's build finds in docs/RELEASE-NOTES.md or fails. From checkedFrom on, every note under What you will notice either belongs to a feature here or is listed in notFeatures.",
+  "groups": [
+    "Reading a target",
+    "The numbers",
+    "Sheets and printing",
+    "Photos and the phone",
+    "Sharing and privacy",
+    "Updates and platforms"
+  ],
+  "checkedFrom": "0.2.0-nightly.113",
+  "notFeatures": [],
+  "features": [
+    {
+      "key": "reads-itself",
+      "group": "Reading a target",
+      "name": "A GroupLab sheet reads itself",
+      "sentence": "A printed GroupLab sheet names itself from its codes and is measured from its own markers, so nothing is set by hand.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.12",
+      "note": "A real scanned sheet is included in the download",
+      "tour": "marking",
+      "guide": "3-photograph-or-scan-it",
+      "article": "how-grouplab-reads-a-target"
+    },
+    {
+      "key": "every-hole",
+      "group": "Reading a target",
+      "name": "Every hole found, and every one yours to change",
+      "sentence": "Holes are found for you, and any one can be moved, added, removed, called a flyer or given a note.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.28",
+      "note": "You can now click a hole to edit it",
+      "tour": "marking",
+      "guide": "4-mark-it-and-settle-the-review-queue",
+      "article": "one-hole-or-two"
+    },
+    {
+      "key": "aimed-bulls",
+      "group": "Reading a target",
+      "name": "The bulls you aimed at",
+      "sentence": "Say which bulls you fired at, by rows, columns or a list, and each shot is measured from the bull it was aimed at.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.66",
+      "note": "You can now tell GroupLab which bulls you aimed at",
+      "tour": "marking",
+      "guide": "4-mark-it-and-settle-the-review-queue",
+      "article": "wrong-bull"
+    },
+    {
+      "key": "whole-sheet",
+      "group": "Reading a target",
+      "name": "A sheet shot off by the same amount",
+      "sentence": "When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.112",
+      "note": "When every shot on a sheet of one shot per bull landed off by the same amount",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "article": "wrong-bull"
+    },
+    {
+      "key": "other-targets",
+      "group": "Reading a target",
+      "name": "Targets GroupLab did not print",
+      "sentence": "On any other target you place the bulls by hand, draw a scale at each one, and keep the layout as a template for the next sheet.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "On a target GroupLab did not print, you can now place each bull by hand",
+      "tour": "marking",
+      "guide": "3-photograph-or-scan-it",
+      "article": "photographing-targets"
+    },
+    {
+      "key": "open-anyhow",
+      "group": "Reading a target",
+      "name": "Open by dropping or pasting",
+      "sentence": "A target opens by dropping its picture on the window or pasting it, a screenshot or an image copied from a browser included.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.71",
+      "note": "You can now open a target by dropping the image on the GroupLab window",
+      "tour": "marking",
+      "guide": "3-photograph-or-scan-it"
+    },
+    {
+      "key": "six-figures",
+      "group": "The numbers",
+      "name": "The figures you read off a target",
+      "sentence": "The analysis leads with the figures a shooter reads off a target and the zero correction in inches, MOA and mil with the clicks to dial.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.95",
+      "note": "The analysis screen shows the six figures you read off a target",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "article": "mean-radius-or-extreme-spread"
+    },
+    {
+      "key": "cep",
+      "group": "The numbers",
+      "name": "CEP circles, any percent",
+      "sentence": "CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.",
+      "shot": "analysis-open",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "The analysis screen can now draw and list CEP 99",
+      "tour": "analysis-open",
+      "guide": "5-read-the-analysis",
+      "article": "cep-explained"
+    },
+    {
+      "key": "why",
+      "group": "The numbers",
+      "name": "Every figure explained",
+      "sentence": "Every figure can say what it means in a few plain sentences, including what having only a few shots does to it.",
+      "shot": "analysis-open",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.28",
+      "note": "Every figure on the analysis page can now tell you what it means",
+      "tour": "analysis-open",
+      "guide": "5-read-the-analysis",
+      "article": "how-many-shots"
+    },
+    {
+      "key": "compare",
+      "group": "The numbers",
+      "name": "Compare loads honestly",
+      "sentence": "Compare loads draws each load's figures with the range they could really be, so you can see whether the shots can tell two loads apart.",
+      "shot": "compare",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.42",
+      "note": "Compare loads now draws each load's mean radius and sigma",
+      "tour": "compare",
+      "guide": "7-comparing-loads",
+      "article": "pooling-groups"
+    },
+    {
+      "key": "sessions",
+      "group": "The numbers",
+      "name": "Sessions over time",
+      "sentence": "Every analysis is kept as a session, and one load's sessions are drawn over time with whether they really show it getting better.",
+      "shot": "sessions",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.71",
+      "note": "The Session records screen now draws one load's sessions over time",
+      "tour": "sessions",
+      "guide": "6-sessions-and-the-report"
+    },
+    {
+      "key": "ballistics",
+      "group": "The numbers",
+      "name": "Ballistics and hit chances",
+      "sentence": "The Ballistics screen draws the trajectory and works out your chance of a hit from your own measured group.",
+      "shot": "ballistics",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.96",
+      "note": "The Ballistics screen now works out your chance of a hit",
+      "tour": "ballistics",
+      "guide": "8-the-zero-correction-at-another-distance-and-the-dope-table"
+    },
+    {
+      "key": "csv",
+      "group": "The numbers",
+      "name": "Shots in and out as CSV",
+      "sentence": "Shot coordinates export as a CSV file for a spreadsheet, and import from other target software's CSV.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.95",
+      "note": "Shot coordinates can be exported as a CSV file",
+      "tour": "analysis",
+      "guide": "6-sessions-and-the-report"
+    },
+    {
+      "key": "targets",
+      "group": "Sheets and printing",
+      "name": "The Targets screen",
+      "sentence": "Choose a sheet from the library and everything it takes to print it at its true size is beside the list.",
+      "shot": "targets",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.96",
+      "note": "The target library and printing are now one screen, Targets",
+      "tour": "targets",
+      "guide": "1-print-a-sheet",
+      "article": "printer-true-size"
+    },
+    {
+      "key": "optic",
+      "group": "Sheets and printing",
+      "name": "Made for your optic",
+      "sentence": "Give the distance, your lowest magnification or a red dot's size and the number of shots, and GroupLab draws bulls you can center on through that optic.",
+      "shot": "optic",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "Design your own sheet can now make a sheet for your optic",
+      "tour": "optic",
+      "guide": "1-print-a-sheet",
+      "article": "can-you-see-the-bull"
+    },
+    {
+      "key": "zero-grids",
+      "group": "Sheets and printing",
+      "name": "Zeroing grids read through a scope",
+      "sentence": "The zeroing grids are drawn to be read through a scope, with heavier lines at every half and whole unit and the scale printed on the sheet.",
+      "shot": "targets",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "The four zeroing grids are redrawn to be read through a scope",
+      "tour": "targets",
+      "guide": "1-print-a-sheet"
+    },
+    {
+      "key": "large-sheets",
+      "group": "Sheets and printing",
+      "name": "Large sheets",
+      "sentence": "For a target larger than a scanner takes, the Targets screen says whether a phone photograph of it has enough detail, and a tiled target prints on one large page with cut lines.",
+      "shot": "targets",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "For a target larger than a scanner takes",
+      "tour": "targets",
+      "guide": "1-print-a-sheet"
+    },
+    {
+      "key": "true-size",
+      "group": "Sheets and printing",
+      "name": "Real inches from a scan",
+      "sentence": "A scan measures how large the sheet was really printed and corrects every size, so a sheet your printer shrank still measures right.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.95",
+      "note": "A scanned target now reports real inches",
+      "tour": "analysis",
+      "guide": "1-print-a-sheet",
+      "article": "printer-true-size"
+    },
+    {
+      "key": "angle",
+      "group": "Photos and the phone",
+      "name": "Photographs at an angle",
+      "sentence": "A photograph is measured at the angle it was taken, up to a limit GroupLab measured, and refused past it with the angle named.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.97",
+      "note": "A photograph taken more than 40 degrees off square to the sheet is now refused",
+      "tour": "marking",
+      "guide": "3-photograph-or-scan-it",
+      "article": "curled-angled-paper"
+    },
+    {
+      "key": "share-session",
+      "group": "Photos and the phone",
+      "name": "Sessions between phone and computer",
+      "sentence": "A session is shared as one file and opened on the phone or another computer, picture and marking together.",
+      "shot": null,
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.108",
+      "note": "You can share a session with the new Share a session file",
+      "guide": "6-sessions-and-the-report",
+      "noPicture": "it happens between two devices, and the phone's screens come with its look (entry 243)"
+    },
+    {
+      "key": "phone-region",
+      "group": "Photos and the phone",
+      "name": "The phone follows your region",
+      "sentence": "On the phone, units follow the phone's region, yards and inches in the United States.",
+      "shot": null,
+      "platforms": [
+        "Android"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "On the phone, units now follow the phone's region",
+      "noPicture": "a phone screen, which comes with the phone's look (entry 243)"
+    },
+    {
+      "key": "send-targets",
+      "group": "Sharing and privacy",
+      "name": "Send a target to the project",
+      "sentence": "After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.",
+      "shot": "settings",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.102",
+      "note": "After you analyze a target, GroupLab now offers to send it to the project",
+      "tour": "settings",
+      "guide": "12-settings",
+      "article": "what-grouplab-sends"
+    },
+    {
+      "key": "error-reports",
+      "group": "Sharing and privacy",
+      "name": "Error reports",
+      "sentence": "When GroupLab hits an error it can send a report so the problem can be fixed, automatically, after asking, or never.",
+      "shot": "settings",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.103",
+      "note": "GroupLab can now send a report when it hits an error",
+      "tour": "settings",
+      "guide": "12-settings",
+      "article": "what-grouplab-sends"
+    },
+    {
+      "key": "survey",
+      "group": "Sharing and privacy",
+      "name": "The hardware survey",
+      "sentence": "If you say yes, GroupLab reports what it runs on and how fast, and the published figures count every computer once.",
+      "shot": "settings",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "0.2.0-nightly.109",
+      "note": "GroupLab now asks once whether you would like to take part in the hardware survey",
+      "tour": "settings",
+      "guide": "12-settings",
+      "article": "what-grouplab-sends"
+    },
+    {
+      "key": "explain-words",
+      "group": "Sharing and privacy",
+      "name": "Words explained where they appear",
+      "sentence": "Words like sigma, CEP, MOA and bull are underlined with dots in GroupLab and on the website; point at one for a plain explanation.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.96",
+      "note": "Words like sigma, CEP, MOA and bull are underlined with dots"
+    },
+    {
+      "key": "updates",
+      "group": "Updates and platforms",
+      "name": "Updates that list what you skipped",
+      "sentence": "GroupLab updates itself, and the update bar lists every build you skipped, newest first, with what each changed.",
+      "shot": null,
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.49",
+      "note": "the update bar now lists every build you skipped",
+      "guide": "9-keeping-grouplab-up-to-date",
+      "noPicture": "the update bar appears only when a newer build exists, which the screenshot walk never has"
+    },
+    {
+      "key": "mac",
+      "group": "Updates and platforms",
+      "name": "Builds for the Mac",
+      "sentence": "Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.",
+      "shot": null,
+      "platforms": [
+        "macOS"
+      ],
+      "since": "0.2.0-nightly.91",
+      "note": "GroupLab now publishes Mac builds",
+      "noPicture": "the Mac builds look like the others; it is a platform, not a screen"
+    }
+  ]
+}

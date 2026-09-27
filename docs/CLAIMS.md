@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1061 |
+| code | 1083 |
 | measured | 1511 |
 | decided | 1217 |
 | unbacked | 0 |
-| **total** | **3789** |
+| **total** | **3811** |
 
-**613** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**635** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3043,7 +3043,7 @@ one that matters.
 
 ### site:404.html
 
-- *code* (website/build.py shell(): the page frame and navigation): Page not found | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.
+- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Page not found | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.
 - *code* (website/build.py shell(): the footer; LICENSE): &#169; 2026 the GroupLab contributors.
 
 ### site:discord/index.html
@@ -3105,6 +3105,19 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request.
 - *code* (LICENSE, and the footer in website/build.py shell()): What changed in each build Every build on GitHub Free and open source under GPL-3.0.
 
+### site:features/index.html
+
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest New in nightly.112 A sheet shot off by the same amount When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): New in nightly.111 Targets GroupLab did not print On any other target you place the bulls by hand, draw a scale at each one, and keep the layout as a template for the next sheet.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): New in nightly.111 CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): In the user guide Builds for the Mac Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.
+
 ### site:guides/glossary/index.html
 
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A load development sheet has many, one shot fired at each, and GroupLab measures every shot from its own bull.
@@ -3127,7 +3140,7 @@ one that matters.
 
 ### site:guides/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation): Guides | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build.
+- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build.
 
 ### site:guides/testing-guide/index.html
 
@@ -3151,7 +3164,7 @@ one that matters.
 
 ### site:guides/user-guide/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation): User guide | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page 1.
+- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page 1.
 - *code* (website/build.py: the guide's contents, generated from its headings): Mark it and settle the review queue 5.
 - *code* (website/build.py: the guide's contents, generated from its headings): Sessions and the report 7.
 - *code* (website/build.py: the guide's contents, generated from its headings): The zero correction at another distance, and the dope table 9.
@@ -3201,8 +3214,9 @@ one that matters.
 
 ### site:index.html
 
-- *code* (website/build.py shell(): the page frame and navigation): GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.
+- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.
 - *code* (AutomaticMarking.Run and GroupAnalysis): GroupLab reads a photograph or a scan of a target you have shot, finds every hole, and gives you the group's statistics.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): New in GroupLab New in nightly.112 A sheet shot off by the same amount When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
@@ -3212,7 +3226,7 @@ one that matters.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.
-- *decided* (the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the nine screens: what it is for, what you are looking at, and what you would do there.
+- *decided* (the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the ten screens: what it is for, what you are looking at, and what you would do there.
 - *code* (LICENSE, and the footer in website/build.py shell()): Get the donor pack Instructions and two targets · PDF Free and open source under GPL-3.0.
 
 ### site:releases/index.html
@@ -3376,7 +3390,7 @@ one that matters.
 
 ### site:research/aim-points-by-optic-class/index.html
 
-- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Aim points for 1x to high power optics | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Aim points for 1x to high power optics GroupLab project.
+- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Aim points for 1x to high power optics | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Aim points for 1x to high power optics GroupLab project.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Written 2026-09-22; the data is from Planned; results pending.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): 1x optics: centering a dot A red dot has a fixed angular size.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): A 2 MOA dot covers about 0.5 inch at 25 yards, 1 inch at 50 and 2 inches at 100.
@@ -3407,7 +3421,7 @@ one that matters.
 
 ### site:research/can-you-see-the-bull/index.html
 
-- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Can you see the bull?
+- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Can you see the bull?
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards GroupLab project.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Written 2026-09-22; the data is from 2026-09-20 observations; the test shot 2026-09-26.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): They agree with the 3 to 4 arcminute rule at every magnification tested.
@@ -3450,7 +3464,7 @@ one that matters.
 
 ### site:research/cep-explained/index.html
 
-- *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): CEP 50 and 90 explained | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.
+- *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): CEP 50 and 90 explained | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.
 - *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): Written 2026-09-22; the data is from Simulation, seed 2026.
 - *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): What we found for a round group, CEP 50, mean radius and CEP 90 are fixed multiples of the same underlying spread: 1.18, 1.25 and 2.15 sigma.
 - *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): When a group stretches to twice as wide as it is tall, the round-group CEP 50 circle holds about 54 percent of shots instead of 50, and the CEP 90 circle about 89 percent instead of 90.
@@ -3481,7 +3495,7 @@ one that matters.
 
 ### site:research/choosing-the-markers/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Choosing the markers | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Choosing the markers GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Choosing the markers | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Choosing the markers GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Written 2026-09-22; the data is from 2026-09-22.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What we found Dictionaries with a minimum Hamming distance of 4 or less produced false marker detections on ordinary target artwork.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every dictionary at Hamming 11 or above produced none.
@@ -3527,7 +3541,7 @@ one that matters.
 
 ### site:research/designing-a-readable-target/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Any detector good enough to find a .22 hole in a printed ring will find all of those too.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): They need a quiet zone around them, 1.0 mm on a 4.0 mm marker.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centerfire at 300, and the built-in library is twenty sheets rather than one because those are genuinely different problems.
@@ -3552,7 +3566,7 @@ one that matters.
 
 ### site:research/how-grouplab-reads-a-target/index.html
 
-- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): How GroupLab reads a target | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Reading targets How GroupLab reads a target GroupLab project.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): How GroupLab reads a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Reading targets How GroupLab reads a target GroupLab project.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): GroupLab prints the ruler on the target , and everything below follows from that.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): Work out where the page is Knowing the number and the position of each marker, and knowing where those markers were printed, GroupLab can work out the exact mapping between the photograph and the page.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): On the 2026-09-20 scans it was 0.0023 to 0.0026 in.
@@ -3651,7 +3665,7 @@ one that matters.
 
 ### site:research/nightly-builds/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Nightly builds, from commit to installer | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Nightly builds, from commit to installer GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Nightly builds, from commit to installer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Nightly builds, from commit to installer GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Tests run on Windows, macOS and Linux.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If they all pass, a nightly build starts: it packages a Windows installer, signs a manifest saying what is in it, tags the commit, and publishes a release.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That produced entries like: Entry 130 item 3.3: doubt travels with the number That is written for the project's own log.
@@ -3827,7 +3841,7 @@ one that matters.
 
 ### site:research/safe-updates/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): How GroupLab updates itself safely | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built How GroupLab updates itself safely GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): How GroupLab updates itself safely | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built How GroupLab updates itself safely GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Each build publishes a small file saying what the newest version is, and for every file its name, size and SHA-256.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That file carries a signature, and GroupLab refuses a manifest whose signature does not verify.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): A file whose SHA-256 does not match the manifest is refused, whatever the manifest said.
@@ -3876,7 +3890,7 @@ one that matters.
 
 ### site:research/smaller-installer/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Cutting the installer from 97 MB to 81 MB | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Cutting the installer from 97 MB to 81 MB GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Cutting the installer from 97 MB to 81 MB | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Cutting the installer from 97 MB to 81 MB GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What we found 100.7 MB of a 332.6 MB install was debug symbols, 100 MB of it in two files.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Removing them took the install to 204.3 MB, a 39 percent cut, and made the self-contained build smaller than the framework-dependent one had been.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): And in the middle of the table was something nobody had asked about: 100.7 MB of the 332.6 MB install was debug symbols.
@@ -3922,7 +3936,7 @@ one that matters.
 
 ### site:research/uploads-rebuilt-from-pixels/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every upload is rebuilt from pixels | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Every upload is rebuilt from pixels GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every upload is rebuilt from pixels | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Every upload is rebuilt from pixels GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab does with it Before a photograph is published, the metadata is thrown away and rebuilt .
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The keep list, in full Kept, because they describe the camera and the exposure and are what makes a photograph useful as evidence about photographs: Make, Model, Orientation Exposure time, f-number, ISO Focal length and its 35 mm equivalent Pixel dimensions Digital zoom ratio Lens model Removed, which is everything else: Every GPS field.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Separately from all of the above, no part of GroupLab reads GPS or location values from any photograph at any point, including the diagnostic log, which has its own whitelist following the same rule.
@@ -3930,7 +3944,7 @@ one that matters.
 
 ### site:research/velocity-sd-small-samples/index.html
 
-- *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.
+- *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): What we found if you chronograph five shots and measure an SD of 10 ft/s, the true SD of that ammunition is, with 95 percent confidence, somewhere between 6.0 and 28.7 ft/s.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): With 20 shots the same reading narrows to 7.6 to 14.6.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): The interval, string by string Suppose your chronograph says SD 10 ft/s.
@@ -3949,7 +3963,7 @@ one that matters.
 
 ### site:research/what-grouplab-sends/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab sends from your computer | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What GroupLab sends from your computer GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab sends from your computer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What GroupLab sends from your computer GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): There is no analytics, no usage reporting, no license check and no phoning home.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): It does not send your machine name, your account, your screen, your Windows version or a unique identifier of any kind.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The same error several times goes as one report with a count, and a day's reports are capped at 20.
@@ -4014,7 +4028,7 @@ one that matters.
 
 ### site:shoot-a-target/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation): Shoot a target | GroupLab Skip to content Download Tour Send a target Guides Research Community Release notes Support GitHub Download Tour Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.
+- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.
 - *code* (website/build.py page_shoot(): size and page count read from each file): grouplab-donor-pack.pdf &#183; 4 pages, Letter &#183; 215 KB Download PDF Instructions only The two pages of steps, without the targets.
 - *code* (website/build.py page_shoot(): size and page count read from each file): grouplab-donor-instructions.pdf &#183; 2 pages, Letter &#183; 51 KB Download PDF Target with load block 25 bulls and a block for your load details.
 - *code* (website/build.py page_shoot(): size and page count read from each file): GL-CF25-LTR-D.pdf &#183; 1 page, Letter &#183; 65 KB Download PDF Target with sighters 25 bulls and a row of three sighter bulls.
@@ -4083,12 +4097,26 @@ one that matters.
 
 ### site:tour/index.html
 
-- *code* (scripts/counts.py tour-screens, from website/tour.json): Nine pages, one per screen, so you can see what using GroupLab is like before you download it.
+- *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Ten pages, one per screen, so you can see what using GroupLab is like before you download it.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.
 
 ### site:tour/marking/index.html
 
 - *code* (the review pill, ReviewQueue in src/GroupLab.Core/Marking): How many shots are marked and how many need review, so you know how much is left before you can trust the result.
 - *code* (the tour's marking screenshot, rendered by the screenshot tests from a sample): Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it.
+
+### site:tour/optic/index.html
+
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through 4x the same 25 shots need a bigger bull, so they take a set of sheets.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): What this screen is for A bull you cannot see the middle of is a bull you cannot aim at the same way twice, and that is what spreads a group before the rifle does.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The aim point test of 2026-09-26 found that a feature needs about 3.5 arcminutes at the lowest magnification a sheet is shot at before it can be centered on.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through a red dot, whose dot hides whatever is under it, the white center is 1.5 times the dot.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): At 100 yards through 10x the white center comes out 0.37 inches across in a disc of 1.11, 25 bulls 1.51 inches apart on one Letter sheet for 25 shots.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through 4x it is 0.92 inches in a disc of 2.74, so only 4 bulls fit a sheet and 25 shots take 7 sheets, each of which names itself by its codes.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The distance in yards; the lowest magnification you will shoot at, 1 for a red dot, with the dot's size in MOA; and how many shots.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): What it cannot do yet: a set of several sheets is analyzed one sheet at a time, not pooled into one group; that is next on the list.
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Where the 3.5 arcminute rule comes from is Can you see the bull?
+- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The aim point test The Targets screen &lsaquo; Targets All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/sessions/index.html
 

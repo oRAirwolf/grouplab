@@ -1,0 +1,29 @@
+{
+  "arcminutes": 3.5,
+  "dotMargin": 1.5,
+  "at10x": {
+    "said": [
+      "At 10x a feature has to subtend about 3.5 arcminutes to be centered on, so at 100 yd the white center is 0.37 in across.",
+      "The bull is a black disc 1.11 in across with that white center and a small dot in the middle: the aim is the white center, which a crosshair cannot cover, as it covered the thin cross and the open gap in the aim point test.",
+      "25 bulls on one letter sheet, 1.51 in apart: one shot per bull."
+    ],
+    "centerInches": 0.37,
+    "discInches": 1.11,
+    "pitchInches": 1.51,
+    "bullsPerSheet": 25,
+    "sheets": 1
+  },
+  "at4x": {
+    "said": [
+      "At 4x a feature has to subtend about 3.5 arcminutes to be centered on, so at 100 yd the white center is 0.92 in across.",
+      "The bull is a black disc 2.74 in across with that white center and a small dot in the middle: the aim is the white center, which a crosshair cannot cover, as it covered the thin cross and the open gap in the aim point test.",
+      "4 bulls a sheet, 3.70 in apart, on 7 sheets: one shot per bull. Each sheet\u0027s codes say which of the 7 it is.",
+      "That is 28 bulls for 25 shots; leave 3 empty and enter the rounds fired, so GroupLab expects 25."
+    ],
+    "centerInches": 0.92,
+    "discInches": 2.74,
+    "pitchInches": 3.7,
+    "bullsPerSheet": 4,
+    "sheets": 7
+  }
+}

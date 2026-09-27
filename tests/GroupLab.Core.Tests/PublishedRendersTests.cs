@@ -33,6 +33,7 @@ public partial class PublishedRendersTests
         "built-in library sheet",
         "no sheet at all",
         "scan 3",
+        "sheet made by the generator",
     ];
 
     /// <summary>

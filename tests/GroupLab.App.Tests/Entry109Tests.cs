@@ -314,6 +314,35 @@ public class Entry109Tests
                         window.ShowLibrary();
                         window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-CF25-LTR.gltd.json").Definition.Name);
                         Save(window, $"targets-{name}-{size}");
+
+                        // Entry 242 section 1: "Made for your optic" filled in, for its tour stop: 100 yd through 10x, and through 4x, the set.
+                        var ten = window.TargetsPanel.Generate("100", "10", "", 25)!;
+                        Save(window, $"optic-{name}-{size}");
+                        var four = window.TargetsPanel.Generate("100", "4", "", 25)!;
+                        Save(window, $"optic-4x-{name}-{size}");
+                        window.TargetsPanel.ShowDesigner(false);
+
+                        // The tour stop's numbers, from the generator itself rather than typed (entry 242 section 1): the site reads this file.
+                        static object Numbers(GroupLab.Cli.Library.GeneratedTargets made) => new
+                        {
+                            said = made.Explanation,
+                            centerInches = Math.Round(GroupLab.Cli.Library.TargetGenerator.ArcminutesSeen / made.Request.LowestMagnification * 1.0472 * made.Request.DistanceYards / 100, 2, MidpointRounding.AwayFromZero),
+                            discInches = Math.Round(made.OuterDmm / 254.0, 2),
+                            pitchInches = Math.Round(made.PitchInches, 2),
+                            bullsPerSheet = made.Columns * made.Rows,
+                            sheets = made.Sheets,
+                        };
+                        string numbers = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            arcminutes = GroupLab.Cli.Library.TargetGenerator.ArcminutesSeen,
+                            dotMargin = GroupLab.Cli.Library.TargetGenerator.DotMargin,
+                            at10x = Numbers(ten),
+                            at4x = Numbers(four),
+                        }, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+                        foreach (string output in outputs)
+                        {
+                            File.WriteAllText(Path.Combine(output, "optic-numbers.json"), numbers + "\n");
+                        }
                         window.ShowLibrary(false);
                         window.ShowBallistics();
                         window.ProjectGroup("600", 0, "4", "4", "2");

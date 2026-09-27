@@ -23,6 +23,13 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 48. The Features page and the optic tour stop are up
+
+**Answered 2026-09-27 (entry 242). Nothing to do; look when you like.** https://grouplab.org/features/ lists every feature by group, each
+with the build it arrived in, its platforms and links to the tour, the user guide and the research behind it, and the three newest at the
+top and on the home page. https://grouplab.org/tour/optic/ is the "Made for your optic" stop, with the Targets screen filled in for 100
+yards at 10x and at 4x; every number on it is the generator's own. The planning session will look it over for anything missing.
+
 ## 47. Your benchmark questions: what has run, and what the survey page shows
 
 **Answered 2026-09-27 (entry 240). Nothing to do.**

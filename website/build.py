@@ -211,6 +211,7 @@ SEND_BEFORE = "/shoot-a-target/send/"
 NAV = [
     ("Download", "/download/"),
     ("Tour", "/tour/"),
+    ("Features", "/features/"),
     ("Shoot a target", "/shoot-a-target/"),
     ("Guides", "/guides/"),
     ("Research", "/research/"),
@@ -504,6 +505,8 @@ def page_home() -> str:
 <figcaption class="fine mono">The analysis screen, rendered from the current build. The sheet is a synthetic test sheet, not anybody's target.</figcaption>
 </figure>
 </section>
+
+{spotlight_section("New in GroupLab")}
 
 <section class="wrap section two-col">
 <div class="stack">
@@ -1577,12 +1580,23 @@ def tour() -> dict:
     text = need(REPO / "website" / "tour.json").read_text(encoding="utf-8")
     # Entry 159 section 5.2: a count in the tour is a token, filled from the repository, never typed.
     text = re.sub(r"\{count:([a-z-]+)\}", lambda m: count_words(m.group(1)), text)
+    # Entry 242 section 1: the optic stop's numbers are the generator's own, written by the render walk beside its screenshots.
+    text = re.sub(r"\{optic:([a-zA-Z0-9.]+)\}", lambda m: optic_number(m.group(1)), text)
     return json.loads(text)
 
 
+def optic_number(path: str) -> str:
+    value = json.loads(need(SCREENS / "optic-numbers.json").read_text(encoding="utf-8"))
+    for part in path.split("."):
+        value = value[part]
+    return f"{value:g}" if isinstance(value, float) else str(value)
+
+
 def rendered_screens() -> set:
-    """Every screen the render walk actually produced, by the name the tour uses."""
-    return {p.name[: -len("-light-1400x900.png")] for p in SCREENS.glob("*-light-1400x900.png")}
+    """Every screen the render walk actually produced, by the name the tour uses, less the second pictures a stop shows (entry 242)."""
+    extra = {shot[0] for item in json.loads(need(REPO / "website" / "tour.json").read_text(encoding="utf-8"))["screens"].values()
+             for shot in item.get("moreShots", [])}
+    return {p.name[: -len("-light-1400x900.png")] for p in SCREENS.glob("*-light-1400x900.png")} - extra
 
 
 def tour_problems() -> list:
@@ -1674,6 +1688,7 @@ def page_tour_screen(key: str) -> str:
 {f'<p class="note note-teal">{esc(item["merged"])}</p>' if item.get("merged") else ""}
 {tour_shot(key, item["name"] + " in GroupLab: " + item["blurb"], eager=True)}
 <p class="small faint">From the newest build of GroupLab, regenerated every week. Tap the picture for it full size.</p>
+{"".join(f'{tour_shot(shot, alt)}<p class="small faint">{esc(caption)}</p>' for shot, alt, caption in item.get("moreShots", []))}
 <h2>What this screen is for</h2>
 <p>{esc(item["purpose"])}</p>
 <h2>Without a GroupLab sheet</h2>
@@ -1708,6 +1723,127 @@ def page_tour_moved(old: str) -> str:
 </section>
 """
     return shell(f"/tour/{old}/", "Targets", "The target library and printing are one screen now, Targets.", body, "Tour")
+
+
+FEATURES_PATH = "/features/"
+PLATFORMS = ["Windows", "macOS", "Linux", "Android"]
+
+
+def features() -> dict:
+    return json.loads(need(REPO / "website" / "features.json").read_text(encoding="utf-8"))
+
+
+def build_number(version: str) -> int:
+    m = re.search(r"nightly\.(\d+)", version)
+    return int(m.group(1)) if m else 0
+
+
+def release_sections() -> dict[str, str]:
+    """Each build's section of docs/RELEASE-NOTES.md, by version."""
+    text = need(REPO / "docs" / "RELEASE-NOTES.md").read_text(encoding="utf-8")
+    return {s.split("\n", 1)[0].strip(): s for s in re.split(r"\n## ", text)[1:]}
+
+
+def noticed(section: str) -> list[str]:
+    m = re.search(r"\*\*What you will notice\*\*\n\n(.*?)(?:\n\n\*\*|\n\n\[|\Z)", section, re.S)
+    return re.findall(r"^- (.*)$", m.group(1), re.M) if m else []
+
+
+def spotlight(count: int = 3) -> list[dict]:
+    """The newest features, entry 242 section 2.4: by the build they arrived in, and within a build as the file lists them."""
+    items = features()["features"]
+    return sorted(items, key=lambda f: -build_number(f["since"]))[:count]
+
+
+def feature_problems() -> list[str]:
+    """Entry 242 section 2.2, as a build failure: nothing is listed that is not what it says."""
+    found = []
+    data = features()
+    sections = release_sections()
+    tours = set(tour()["screens"])
+    shots = {p.name[: -len("-light-1400x900.png")] for p in SCREENS.glob("*-light-1400x900.png")}
+    articles = {m["slug"] for m in research_articles()} if "research_articles" in globals() else set()
+    guide = need(REPO / "docs" / "USER-GUIDE.md").read_text(encoding="utf-8")
+    anchors = {slug(h) for h in re.findall(r"^## (.+)$", guide, re.M)}
+    keys = set()
+    for f in data["features"]:
+        where = f"website/features.json: {f.get('key')}"
+        if f["key"] in keys:
+            found.append(f"{where} is listed twice")
+        keys.add(f["key"])
+        for field in ("group", "name", "sentence", "platforms", "since", "note"):
+            if not f.get(field):
+                found.append(f"{where} has no {field}")
+        if f.get("group") not in data["groups"]:
+            found.append(f"{where}: {f.get('group')!r} is not one of the groups")
+        if not set(f.get("platforms", [])) <= set(PLATFORMS):
+            found.append(f"{where}: a platform is not one of {PLATFORMS}")
+        section = sections.get(f.get("since", ""))
+        if section is None:
+            found.append(f"{where}: no build {f.get('since')} in docs/RELEASE-NOTES.md")
+        elif f.get("note") and f["note"] not in section:
+            found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
+        if f.get("shot") is not None and f["shot"] not in shots:
+            found.append(f"{where}: there is no screenshot {f['shot']!r}")
+        if f.get("shot") is None and not f.get("noPicture"):
+            found.append(f"{where} has no picture and does not say why")
+        if f.get("tour") and f["tour"] not in tours:
+            found.append(f"{where}: no tour stop {f['tour']!r}")
+        if f.get("guide") and f["guide"] not in anchors:
+            found.append(f"{where}: the user guide has no section {f['guide']!r}")
+        if f.get("article") and articles and f["article"] not in articles:
+            found.append(f"{where}: no published article {f['article']!r}")
+    # From checkedFrom on, every note a reader will notice belongs to a feature or is said not to be one.
+    claimed = [f["note"] for f in data["features"] if f.get("note")] + data.get("notFeatures", [])
+    for version, section in sections.items():
+        if build_number(version) < build_number(data["checkedFrom"]):
+            continue
+        for note in noticed(section):
+            if not any(c in note for c in claimed):
+                found.append(f"website/features.json: {version}'s note {note[:80]!r} belongs to no feature and is not in notFeatures")
+    return found
+
+
+def feature_card(f: dict, compact: bool = False) -> str:
+    links = []
+    if f.get("tour"):
+        links.append(f'<a href="/tour/{f["tour"]}/">On the tour</a>')
+    if f.get("guide"):
+        links.append(f'<a href="/guides/user-guide/#{f["guide"]}">In the user guide</a>')
+    if f.get("article"):
+        links.append(f'<a href="/research/{f["article"]}/">The research behind it</a>')
+    picture = "" if compact or not f.get("shot") else f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
+    platforms = " · ".join(f["platforms"])
+    return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'
+            f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. Since {esc(f["since"].replace("0.2.0-", ""))}.</p>'
+            + (f'<p class="small">{" · ".join(links)}</p>' if links else "") + "</article>")
+
+
+def spotlight_section(heading: str) -> str:
+    cards = "".join(f'<a class="panel pad stack tight plain spot" href="{FEATURES_PATH}#{f["key"]}"><p class="eyebrow">New in {esc(f["since"].replace("0.2.0-", ""))}</p>'
+                    f'<h3 class="h4">{esc(f["name"])}</h3><p class="small">{esc(f["sentence"])}</p></a>' for f in spotlight())
+    return f'<section class="wrap stack"><h2>{esc(heading)}</h2><div class="grid-3">{cards}</div></section>'
+
+
+def page_features() -> str:
+    """Every feature GroupLab has, entry 242 section 2, from website/features.json; the tour is the walk, this is the list."""
+    data = features()
+    groups = []
+    for group in data["groups"]:
+        items = [f for f in data["features"] if f["group"] == group]
+        groups.append(f'<section class="wrap stack"><h2 id="{slug(group)}">{esc(group)}</h2><div class="grid-2 features">{"".join(feature_card(f) for f in items)}</div></section>')
+    body = f"""
+<section class="wrap page-head stack">
+<p class="eyebrow">Features</p>
+<h1>Everything GroupLab does</h1>
+<p class="lead">Every feature, grouped, with where it is explained. The <a href="/tour/">tour</a> walks the main path, print, shoot, scan or photograph, read the numbers; this is the whole list.</p>
+<p class="small">{" · ".join(f'<a href="#{slug(g)}">{esc(g)}</a>' for g in data["groups"])}</p>
+</section>
+{spotlight_section("Newest")}
+{"".join(groups)}
+<section class="wrap stack last"><p class="small faint">The pictures are the desktop application's, from the newest build. Phone screens come once the phone's look is settled.</p></section>
+"""
+    return shell(FEATURES_PATH, "Features", "Every feature GroupLab has, grouped, each with the build it arrived in and where it is explained.", body, "Features")
 
 
 SURVEY_PATH = "/survey/"
@@ -2157,6 +2293,11 @@ p.text,.text p,.text{color:var(--text)}
 .guide-fig{margin:8px 0;display:flex;flex-direction:column;gap:10px}
 a.plain{color:var(--text)}
 
+/* the features page and its spotlight, entry 242 */
+.feature img.shot{border-radius:6px;border:1px solid var(--line)}
+a.spot{color:inherit}
+a.spot:hover{border-color:var(--amber);text-decoration:none}
+
 /* the survey page, entry 241 */
 .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .survey-time{margin:0;font-size:22px}
@@ -2524,10 +2665,11 @@ def main() -> None:
         write(f"tour/{old}/index.html", page_tour_moved(old))
     write("discord/index.html", page_discord())
     write("survey/index.html", page_survey())
+    write("features/index.html", page_features())
     write("assets/js/survey.js", SURVEY_JS)
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH]
+    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH]
     pages += [f"/tour/{key}/" for key in tour()["order"]]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)
@@ -2551,7 +2693,7 @@ def main() -> None:
                 for m in ip.findall(re.sub(r'\s(?:d|points|viewBox)="[^"]*"', "", text)):
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
-    problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems() + limit_problems()
+    problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems() + limit_problems() + feature_problems()
     problems += link_problems()
     problems += php_problems()
     problems += send_problems()

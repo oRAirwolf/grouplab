@@ -28,12 +28,20 @@ public class TourTests
     }
 
     /// <summary>The screens the render walk actually produced, by the name the tour uses.</summary>
-    private static HashSet<string> Rendered() =>
-    [
-        .. Directory.EnumerateFiles(Repo.PathTo("docs", "figures", "screens", "current"), "*-light" + Size)
-            .Select(f => Path.GetFileName(f)!)
-            .Select(f => f[..^("-light" + Size).Length]),
-    ];
+    /// <summary>Every rendered screen, less the second pictures a stop shows beside its own (entry 242: the optic stop's 4x set).</summary>
+    private static HashSet<string> Rendered()
+    {
+        var more = Tour().GetProperty("screens").EnumerateObject()
+            .SelectMany(s => s.Value.TryGetProperty("moreShots", out var shots) ? shots.EnumerateArray().Select(x => x[0].GetString()!) : [])
+            .ToHashSet(StringComparer.Ordinal);
+        return
+        [
+            .. Directory.EnumerateFiles(Repo.PathTo("docs", "figures", "screens", "current"), "*-light" + Size)
+                .Select(f => Path.GetFileName(f)!)
+                .Select(f => f[..^("-light" + Size).Length])
+                .Where(k => !more.Contains(k)),
+        ];
+    }
 
     private static List<string> Order() =>
         [.. Tour().GetProperty("order").EnumerateArray().Select(e => e.GetString()!)];

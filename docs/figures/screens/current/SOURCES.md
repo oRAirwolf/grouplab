@@ -16,6 +16,7 @@ source that is not on the list below, or if any test writing into this folder co
 | `built-in library sheet` | One of the twenty built-in sheet definitions, rendered by GroupLab for the preview. |
 | `no sheet at all` | A screen with no image on it. |
 | `scan 3` | The published sample under its consent record in `samples/PROVENANCE.md`. Nothing here uses it yet; it is listed because entry 126 allows it. |
+| `sheet made by the generator` | A sheet GroupLab's "Made for your optic" drew from numbers typed into it (entry 242). Nobody's target. |
 
 ## What is here
 
@@ -89,3 +90,15 @@ source that is not on the list below, or if any test writing into this folder co
 | `settings-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `settings-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `settings-light-2560x1440.png` | no sheet at all |
+| `optic-dark-1280x720.png` | sheet made by the generator |
+| `optic-dark-1400x900.png` | sheet made by the generator |
+| `optic-dark-2560x1440.png` | sheet made by the generator |
+| `optic-light-1280x720.png` | sheet made by the generator |
+| `optic-light-1400x900.png` | sheet made by the generator |
+| `optic-light-2560x1440.png` | sheet made by the generator |
+| `optic-4x-dark-1280x720.png` | sheet made by the generator |
+| `optic-4x-dark-1400x900.png` | sheet made by the generator |
+| `optic-4x-dark-2560x1440.png` | sheet made by the generator |
+| `optic-4x-light-1280x720.png` | sheet made by the generator |
+| `optic-4x-light-1400x900.png` | sheet made by the generator |
+| `optic-4x-light-2560x1440.png` | sheet made by the generator |

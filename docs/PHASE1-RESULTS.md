@@ -59,6 +59,23 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 242: "Made for your optic" on the tour, and a Features page from one file
+
+**The tour stop** `optic`, after Targets: the render walk fills in the generator for 100 yd at 10x and at 4x and photographs the Targets
+screen in both themes at every size, and writes the generator's own numbers and sentences to `optic-numbers.json` beside the pictures;
+the tour's text takes every number from there with `{optic:...}` tokens, so nothing is typed. At 10x: a 0.37 in white center in a 1.11 in
+disc, 25 bulls 1.51 in apart on one sheet; at 4x: 0.92 in in 2.74 in, four a sheet, seven sheets. The second picture is a stop's
+`moreShots`, which the build and `TourTests` leave out of the screen list. A new allowed source for published renders, a sheet the
+generator made, is recorded in `SOURCES.md` and `PublishedRendersTests`. The middle column still names the list's chosen sheet while the
+preview shows the generated one, and the stop says so.
+
+**The Features page**, `/features/`, beside the tour in the top bar: 27 features in six groups from `website/features.json`, each with a
+sentence, a screenshot from the walk (four say why they have none), its platforms, the build it arrived in and links to the tour, the
+guide section and the article. The build fails when a feature's note is not in its build's section of the release notes, a picture, tour
+stop, guide section or published article it names does not exist, or, from nightly 113 on, a note under What you will notice belongs to
+no feature and is not listed as not one; tried with a false note and a missing section, both caught. The three newest features are at
+the top of the page and under the home page's first section. Every sentence on both pages is in the claims register.
+
 ## Entry 240: a memory budget scaled to the device, and the benchmarks Alan ran
 
 **The rule** (`MemoryBudget`): a quarter of what the device says is available above its low memory threshold, never under 400 MB and

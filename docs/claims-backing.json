@@ -2272,6 +2272,118 @@
   "How much time the phone's 50 s spends where waits on the devices (entry 239).": {
    "kind": "code",
    "where": "src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)"
+  },
+  "Page not found | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.": {
+   "kind": "code",
+   "where": "website/build.py NAV, the top bar with Features beside the tour (entry 242)"
+  },
+  "Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest New in nightly.112 A sheet shot off by the same amount When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "New in nightly.111 Targets GroupLab did not print On any other target you place the bulls by hand, draw a scale at each one, and keep the layout as a template for the next sheet.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "New in nightly.111 CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "Windows · macOS · Linux · Android.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "On the tour · In the user guide · The research behind it Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "In the user guide Builds for the Mac Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build.": {
+   "kind": "code",
+   "where": "website/build.py NAV, the top bar with Features beside the tour (entry 242)"
+  },
+  "User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page 1.": {
+   "kind": "code",
+   "where": "website/build.py NAV, the top bar with Features beside the tour (entry 242)"
+  },
+  "GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.": {
+   "kind": "code",
+   "where": "website/build.py NAV, the top bar with Features beside the tour (entry 242)"
+  },
+  "New in GroupLab New in nightly.112 A sheet shot off by the same amount When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.": {
+   "kind": "code",
+   "where": "website/build.py NAV, the top bar with Features beside the tour (entry 242)"
+  },
+  "Ten pages, one per screen, so you can see what using GroupLab is like before you download it.": {
+   "kind": "code",
+   "where": "website/tour.json order, counted by scripts/counts.py tour-screens"
+  },
+  "Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "Through 4x the same 25 shots need a bigger bull, so they take a set of sheets.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "What this screen is for A bull you cannot see the middle of is a bull you cannot aim at the same way twice, and that is what spreads a group before the rifle does.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "The aim point test of 2026-09-26 found that a feature needs about 3.5 arcminutes at the lowest magnification a sheet is shot at before it can be centered on.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "Through a red dot, whose dot hides whatever is under it, the white center is 1.5 times the dot.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "At 100 yards through 10x the white center comes out 0.37 inches across in a disc of 1.11, 25 bulls 1.51 inches apart on one Letter sheet for 25 shots.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "Through 4x it is 0.92 inches in a disc of 2.74, so only 4 bulls fit a sheet and 25 shots take 7 sheets, each of which names itself by its codes.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "The distance in yards; the lowest magnification you will shoot at, 1 for a red dot, with the dot's size in MOA; and how many shots.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "What it cannot do yet: a set of several sheets is analyzed one sheet at a time, not pooled into one group; that is next on the list.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "Where the 3.5 arcminute rule comes from is Can you see the bull?": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
+  },
+  "The aim point test The Targets screen &lsaquo; Targets All screens Marking and review &rsaquo; Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)"
   }
  },
  "rules": [
