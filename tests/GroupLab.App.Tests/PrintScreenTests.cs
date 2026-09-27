@@ -105,7 +105,7 @@ public class PrintScreenTests
     {
         var window = TargetsScreen.Open(1200, 800);
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(22, window.Sheets.Count);
+        Assert.Equal(25, window.Sheets.Count); // entry 243 added the three E bull sheets
         Assert.NotNull(window.PreviewSource);
 
         window.Select("GL-LR300-T.gltd.json");

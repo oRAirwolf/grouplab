@@ -245,6 +245,48 @@ public static class LibraryBuilder
         new(count, Projection.CodeVersion, EcLevel.H, 4, Projection.CodeQuietZone, CodePlacement.Corners1, true,
             Corners1.Positions(width, height, dataBlockHeight, count, 4));
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 243 section 1.1, answering question 61: the E bull, offered beside the current one and not in place of it.
+    /// A black disc the size of the sheet's own bull, a white center of 0.36 in and a 0.10 in dot: design E of the aim point test of
+    /// 2026-09-26 drawn as discs, the one design both shooters could center on through every high power scope at 10x. It becomes the default
+    /// only once Alan has shot it and says so, so these sheets carry identifiers of their own and nothing already printed changes.
+    /// </summary>
+    public static IReadOnlyList<BuiltInTarget> Additions(string layoutsJsonPath)
+    {
+        var built = Build(layoutsJsonPath);
+        var added = new List<BuiltInTarget>();
+        foreach (var (stem, name) in EBullSheets)
+        {
+            var source = built.Single(t => t.FileName == stem + ".gltd.json").Definition;
+            int outer = source.RingSets.Single().Discs.Max(d => d.Diameter);
+            var definition = source with
+            {
+                Id = null,
+                Name = name,
+                Description = source.Description + " Each bull is a black disc with a 0.36 in white center and a small dot, the E bull of the aim point test.",
+                Created = EBullCreated,
+                RingSets = [new RingSet("e", EDiscs(outer))],
+                Bulls = [.. source.Bulls.Select(b => b with { RingSet = "e" })],
+            };
+            added.Add(Finish(name, stem + "-E", definition));
+        }
+
+        return added;
+    }
+
+    /// <summary>The sheets drawn with the E bull, and their names.</summary>
+    internal static readonly (string Stem, string Name)[] EBullSheets =
+    [
+        ("GL-CF25-LTR", "GroupLab 5x5 Load Development, E Bull, Letter"),
+        ("GL-CF25-LTR-D", "GroupLab 5x5 Load Development with Load Block, E Bull, Letter"),
+        ("GL-CF25-A4", "GroupLab 5x5 Load Development, E Bull, A4"),
+    ];
+
+    internal const string EBullCreated = "2026-09-27";
+
+    /// <summary>The E bull's stack: the disc, a 0.36 in white center (91 dmm) and a 0.10 in dot (25 dmm).</summary>
+    internal static List<Disc> EDiscs(int outer) => [new Disc(outer, "black"), new Disc(91, "paper"), new Disc(25, "black")];
+
     internal static List<Disc> Discs(int outer) =>
         Stacks.TryGetValue(outer, out var stack)
             ? [.. stack.Select((diameter, i) => new Disc(diameter, i % 2 == 0 ? "black" : "paper"))]

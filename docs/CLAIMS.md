@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1085 |
-| measured | 1511 |
+| code | 1087 |
+| measured | 1513 |
 | decided | 1217 |
 | unbacked | 0 |
-| **total** | **3813** |
+| **total** | **3817** |
 
-**636** of them were read one sentence at a time and their backing written against the sentence. The other **3177** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**640** of them were read one sentence at a time and their backing written against the sentence. The other **3177** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -405,7 +405,7 @@ one that matters.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Synchronization** | **Not started** | cloud provider adapters over three-tier storage | | **8.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): iOS** | **Not started** | built and signed on CI | | **9.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | ### What each phase holds **Phase 0a.
-- *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): - **Done.** A validator, and 20 built-in target sheets.
+- *code* (targets/*.gltd.json, counted by scripts/counts.py sheets): - **Done.** A validator, and 23 built-in target sheets.
 - *code* (the compare-photos command, src/GroupLab.Cli/Measurement/PhotoVerb.cs): For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Done.** The caliber entered as a cartridge name, such as 6.5 Creedmoor, or as the bullet's diameter in inches or in millimeters marked mm.
@@ -2866,6 +2866,8 @@ one that matters.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): - **Print** (on Windows) prints from inside GroupLab at actual size.
+- *code* (src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)): **Three sheets come with the E bull as well**: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.
+- *measured* (website/research/can-you-see-the-bull.md, Results, and its scores-2026-09-26.csv (entries 226 and 237)): The aim point test of 2026-09-26 found it could be centered on through every high power scope at 10x, where the usual bull could not.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): The sheet says what a small square and each heavier line are, in your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you shoot.
 - *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead.
 - *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
@@ -3175,6 +3177,8 @@ one that matters.
 - *decided* (what GroupLab is, DESIGN.md section 1): Settings GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
+- *code* (src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)): Three sheets come with the E bull as well : the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.
+- *measured* (website/research/can-you-see-the-bull.md, Results, and its scores-2026-09-26.csv (entries 226 and 237)): The aim point test of 2026-09-26 found it could be centered on through every high power scope at 10x, where the usual bull could not.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): The sheet says what a small square and each heavier line are, in your unit and in inches or centimeters at its distance, and carries a 4 in or 10 cm bar: measure it before you shoot.
 - *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): For a zero worked out from a group, and the group figures, shoot a 5x5 sheet instead.
 - *decided* (NOTES-FROM-PLANNING.md entry 197 section 3: the zeroing grids are for sighting in by eye; a zero from a group is shot on a 5x5 sheet): GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
@@ -3222,7 +3226,7 @@ one that matters.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
 - *code* (GroupAnalysis.SmallGroupShots = 20 and the intervals' real coverage, STATISTICS.md section 9): 5 to 20 Prints each figure with its interval's real coverage, not a comfortable 95 percent.
-- *code* (scripts/counts.py counts targets/; the library, src/GroupLab.App/MainWindow.Library.cs): 01 Print a GroupLab sheet Twenty built-in sheets, printed at actual size.
+- *code* (src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)): 01 Print a GroupLab sheet Twenty-three built-in sheets, printed at actual size.
 - *decided* (how the sheets are designed to be shot, docs/TARGET-LIBRARY.md): 02 Shoot it One shot per bull, in order.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.
@@ -3545,7 +3549,7 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Any detector good enough to find a .22 hole in a printed ring will find all of those too.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): They need a quiet zone around them, 1.0 mm on a 4.0 mm marker.
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centerfire at 300, and the built-in library is twenty sheets rather than one because those are genuinely different problems.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centerfire at 300, and the built-in library is twenty-three sheets rather than one because those are genuinely different problems.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Sources The sheet format and its zones: DESIGN.md , sections 9 and 13.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Why sighters are a separate pool: docs/NOTES-FROM-PLANNING.md , entry 73 section 1.
 
