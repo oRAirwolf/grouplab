@@ -15,9 +15,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- Done: everything through entry 243, apart from what the status lines name: 235 section 3 and 241's server half in the closing server
-  sitting, device measurements and tablet screenshots on request 45 (238 to 240, 242, 243 section 3.3), the phone's look on request 49
-  (243 section 3.5), the website generator (question 62 (b), later). 244: the README is generated in part and held by CI. Next: the server.
+- Done: everything through entry 244, the server sitting included, apart from what the status lines name: device measurements and
+  tablet screenshots on request 45 (238 to 240, 242, 243 section 3.3), the phone's look on request 49
+  (243 section 3.5), the website generator (question 62 (b), later). 244: the README is generated in part and held by CI.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -40,8 +40,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work.
 - **The Play internal test ran on the Fold 7** (entry 232). Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
   has the link, the uninstall-first rule and the symbols zip each nightly now makes. Automatic Play upload waits on request 38.
-- **The survey page is live** (entry 241): grouplab.org/survey/; the server side of entry 241 (worker, unit, site sync) waits to be
-  installed with sudo alongside request 21.
+- **The survey page is live** (entry 241): grouplab.org/survey/, its worker installed on 2026-09-27; counting restarted under the
+  keyed hash, so the everyone-else half is empty until reports arrive. The workers' time limits are in force (TimeoutStartSec).
 - **Sending targets, error reports and the survey are on** (entries 195, 200, 223); crash issues are read at every start.
 - **A receiver counts as live only when an empty POST to it returns its own error from the live site** (entry 195).
 
@@ -65,8 +65,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **10** (45 reconnect the Fold 7 and the tablet; 49 choose the phone's look, A, B or C;
-46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's camera; then 9, 16, 20 and 21).
+Open requests in `docs/notes/for-alan.md`: **9** (45 reconnect the Fold 7 and the tablet; 49 choose the phone's look, A, B or C;
+46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's camera; then 9, 16 and 20).
 
 ## Open questions
 

@@ -51,7 +51,8 @@ RestrictAddressFamilies=AF_UNIX
 # web server down with it.
 MemoryMax=1600M
 CPUQuota=80%
-RuntimeMaxSec=900
+# A oneshot service's time limit is TimeoutStartSec; systemd ignores RuntimeMaxSec on one (entry 244's server sitting).
+TimeoutStartSec=900
 TasksMax=64
 
 [Install]

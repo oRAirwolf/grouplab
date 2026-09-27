@@ -1,13 +1,13 @@
 # Requests for Alan
 
-**Open: 10.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **49** is a choice you can make from your chair: how GroupLab should look on the phone, A, B or C. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16, 20 (rewritten: eight sheets, and a page to print) and 21, optional. **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 9.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **49** is a choice you can make from your chair: how GroupLab should look on the phone, A, B or C. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print). **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.
 2. Finished: the C bull (a diamond standing on a point, with a dot) and the E bull sit beside the usual one on three sheets each, and the designer and Made for your optic can draw them.
 3. Finished: the tabloid and A3 sheets now print as sets of four Letter or A4 sheets; your old printouts still read.
 4. Waits on you: **49**, pick the phone's look (A, B or C) from the page it links; **45**, reconnect the Fold 7 and the tablet so the screenshots and measurements can run.
-5. Still to do, needing nobody: entry 244 (the README kept current), then the server sitting (receiver timeouts and the survey worker), which asks you to approve each sudo.
+5. Also done: entry 244 (the README now keeps itself current) and the server sitting (the survey worker installed, request 21 closed).
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
@@ -641,6 +641,11 @@ test is added to request 12's list for removal.
 ---
 
 ## 21. Optional: longer timeouts for the application's receiver
+
+**Answered 2026-09-27 (entry 235 section 3). Nothing to do.** Done without you, as you said to: the server's copy of the include was
+already the repository's, so the five minute block was in and nothing needed reloading. The checks: the receiver answers an empty post
+with 400, grouplab.org/targets/ 200 and pissinhot.com 200. The survey worker of entry 241 went in at the same sitting, and the four
+workers' time limits, which systemd had been ignoring, are now in force.
 
 **Opened 2026-09-24. Entry 165. Optional, and nothing waits on it.** After this was first written, the new receiver on the live site replied to an empty post
 with its own 400 through the nginx include already installed, so the receiver is reachable without this. What the

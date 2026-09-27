@@ -356,7 +356,7 @@ What the planning session reads from it (the article should test these, not assu
 
 ## 2026-09-27, entry 235: the first Full backup, requests 32 and 21 closed by Alan's answers, the Fold 7 needs GroupLab back, angled photos coming
 
-**Status: done 2026-09-27, apart from one part; section 4 was done first, with entry 236.** **Not done yet:** section 3, the upload timeouts with sudo, which waits for one server sitting at the end of this run together with entry 241's server half, so that an approval nobody is awake to give holds up nothing else; request 21 stays open until then. Section 5's angled photographs arrived as entry 238 and are compared there.
+**Status: done 2026-09-27, apart from one part; section 4 was done first, with entry 236.** **Not done yet:** section 3, the upload timeouts with sudo, which waits for one server sitting at the end of this run together with entry 241's server half, so that an approval nobody is awake to give holds up nothing else; request 21 stays open until then. Section 5's angled photographs arrived as entry 238 and are compared there. **Section 3 done 2026-09-27** in the closing server sitting: the include was already current; receiver 400, site 200, pissinhot.com 200; request 21 closed.
 
 ## 1. The first Full Oracle backup exists (closes request 39)
 
@@ -509,7 +509,7 @@ Do this after entry 232 and before the target generator work in entry 226 sectio
 
 ## 2026-09-27, entry 241: repeated benchmarks, one vote per device, and the survey page now (Alan's questions)
 
-**Status: done 2026-09-27 at Alan's request ahead of 233 to 240, apart from two parts.** **Not done yet:** the server side (the new survey worker, its unit and the site sync that keeps the aggregate in place) is committed and waits to be installed with sudo in the same sitting as request 21, so until then the page's everyone-else half shows nothing; and the Fold 7's result, which request 44 asks Alan to read off the phone, because it was locked. The page and the three devices' section are published.
+**Status: done 2026-09-27 at Alan's request ahead of 233 to 240, apart from two parts.** **Not done yet:** the server side (the new survey worker, its unit and the site sync that keeps the aggregate in place) is committed and waits to be installed with sudo in the same sitting as request 21, so until then the page's everyone-else half shows nothing; and the Fold 7's result, which request 44 asks Alan to read off the phone, because it was locked. The page and the three devices' section are published. **Server side installed 2026-09-27** in the closing server sitting: the worker runs and publishes its aggregate.
 
 Alan ran the benchmark on his desktop (nightly 111) as well as the Fold 7 and the Tab S8 Ultra. He asks: how the same device can benchmark
 several times and have every run sent; whether every run should be shown or only the best counted; whether each device needs an ID, how

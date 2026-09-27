@@ -282,6 +282,27 @@ with tempfile.TemporaryDirectory() as tmp:
     /// time so that a decompression bomb cannot take the web server down with it.
     /// </para>
     /// </summary>
+    /// <summary>
+    /// A oneshot service is limited in time by TimeoutStartSec; systemd ignores RuntimeMaxSec on one, and says so in the journal, which is how
+    /// it was found: four workers carried a cap that was never in force, the intake worker's among them, whose cap is what stops a
+    /// decompression bomb holding the machine. Every worker that is a oneshot carries the limit that applies, and none the one that does not.
+    /// </summary>
+    [Fact]
+    public void EveryOneshotWorkerHasATimeLimitSystemdEnforces()
+    {
+        foreach (string path in Directory.EnumerateFiles(Repo.PathTo("website", "server"), "*.service"))
+        {
+            string unit = File.ReadAllText(path);
+            if (!unit.Contains("Type=oneshot", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            Assert.Contains("TimeoutStartSec=", unit, StringComparison.Ordinal);
+            Assert.DoesNotContain(unit.Split('\n'), line => line.StartsWith("RuntimeMaxSec=", StringComparison.Ordinal));
+        }
+    }
+
     [Fact]
     public void TheRebuildWorkerHasNoNetworkAndCannotWriteOutsideItsOwnFolders()
     {
@@ -290,7 +311,7 @@ with tempfile.TemporaryDirectory() as tmp:
         foreach (string wanted in new[]
         {
             "PrivateNetwork=yes", "IPAddressDeny=any", "ProtectSystem=strict", "NoNewPrivileges=yes",
-            "MemoryMax=", "RuntimeMaxSec=", "CPUQuota=",
+            "MemoryMax=", "TimeoutStartSec=", "CPUQuota=",
         })
         {
             Assert.Contains(wanted, unit, StringComparison.Ordinal);

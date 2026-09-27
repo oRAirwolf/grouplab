@@ -59,6 +59,17 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## The server sitting of 2026-09-27: entry 235 section 3 and entry 241's server half
+
+Every command was written into the panel mirror first. The dry runs were clean. **Request 21:** the server's copy of the grouplab.org
+include was already the repository's, so the receiver's five minute block was in and nothing needed reloading; the receiver answers an
+empty post with 400, grouplab.org/targets/ 200 and pissinhot.com 200. **Entry 241:** the survey worker and its service replaced and the
+site sync script replaced, each with the old copy kept beside it; the worker ran, set the first version's state aside and published an
+empty aggregate, counting again under the keyed hash; `survey/aggregate.json` is served and `api/survey.php` refuses an empty post.
+**Found:** systemd warned that `RuntimeMaxSec=` does nothing on a oneshot service, and four workers relied on it, the intake worker's cap
+on a decompression bomb among them. Each now says `TimeoutStartSec=` with the same seconds, systemd reports 15, 5, 30 and 5 minutes in
+force, and `SiteSyncTests` holds every oneshot unit to the limit that applies. Nothing of pissinhot.com was touched.
+
 ## Entry 244: the README kept current with every build
 
 **The pass.** Download names the newest build and carries the Android APK, what it does and does not do, and how Play's internal test and
