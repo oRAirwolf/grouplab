@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 238.
+**Last rewritten:** 2026-09-27, after entry 239.
 
 ---
 
 ## In flight
 
 - Done: everything through entry 227, apart from what 226's status line names (the website generator, pooling a generated set, cut
-  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233, 234 235 (its section 3 in the closing server sitting), 237 and 238. Next 239, 240, 242 to 244; 233's aim card waits with 228 on Android.
+  lines for the six single large sheets), 232, 228 (not on Android yet), 229, 236, 235 section 4, 230, 231, 241, 233, 234 235 (its section 3 in the closing server sitting), 237, 238 and 239 (its device measurements wait on request 45). Next 240, 242 to 244; 233's aim card waits with 228 on Android.
 - **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
   0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
   **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.

@@ -24,6 +24,23 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 239: a picked file still costs about 555 MB on the phone and tablet
+
+**Status: done 2026-09-27 in the code, apart from the measurements on the devices.** **Not done yet:** the peak memory and time on the Fold 7 and the tablet before and after, where the 50 s goes on the phone, and a test that fails over 400 MB on Android. All three need the devices, which request 45 asks Alan to reconnect; the development build's log now says each preparation's size and sample and each analysis's time in logcat, which is how they will be read.
+
+Request 43 reports the published sample (a 600 dpi Letter scan) at about 555 MB peak on the Tab S8 Ultra, and about 50 to 58 s. Entry 206's
+approved budget is under about 400 MB, aimed at 300, on any image, and `docs/ANDROID.md` section 5 already says decoding the full file
+costs about 530 MB whatever the working size, and says a reduced decode handles scans. Either that reduced decode is not happening for a
+file chosen in the picker, or the extra memory is something else (the tablet's much larger screen, the plot at that size). Find out which,
+and measure the same file on the Fold 7 for comparison.
+
+1. If it is the decode: decode picked files straight to the working size (a subsampled decode, then a resize to exactly 8 MP), so the full-resolution bitmap
+   never exists in memory. Measure peak memory and time for the sample on the Fold 7 and the tablet before and after, and keep a test that
+   fails if the sample's peak on Android goes over 400 MB.
+2. If the time also falls well below 50 s, say so; if it does not, find where the 50 s goes (decode, marker search, holes) and put the
+   biggest part in the plan, with the progress line already planned.
+3. Do this before the older phones' milestone: a 4 GB phone is where 555 MB would hurt.
+
 ## 2026-09-27, entry 238: the angled photographs for request 18 have arrived
 
 **Status: done 2026-09-27.** The measured tilts leave no gap where the results change (36.2 degrees clean, 38.5 not), so no more photographs are asked for; the limit is now 37 degrees; the dim light did no harm. The photographs are not published.

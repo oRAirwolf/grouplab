@@ -128,7 +128,9 @@ same bulls, mean shifts of 3.6 and 7.9 thousandths (13.3 and 38.4 at most), mean
 budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few
 thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest. Loading at full size and shrinking
 afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a
-photograph and a reduced decode does for a scan.
+photograph and a reduced decode does for a scan. **Until entry 239 the application did not:** a picked file was decoded whole by
+OpenCV and only then shrunk, which is the 555 MB request 43 measured on the tablet. It is now decoded by Android at a power of two
+fraction (`WorkingSize.SampleFor`), a 600 dpi Letter scan at a half, 8 megapixels from the start.
 
 The phone is a little over twice the desktop's time**, all of it in the marking;
 loading and naming are close to the desktop's. The peak is the whole process's highest so far, so it is read from the first run in a

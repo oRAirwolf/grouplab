@@ -59,6 +59,18 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 239: a picked file decoded at the working size, as the design already said
+
+**It was the decode.** `PhoneAnalysis.Prepare` read a picked file whole with OpenCV, so the published 600 dpi scan existed at its full
+32 megapixels in colour before being shrunk to 8, although `WorkingSize` and `docs/ANDROID.md` section 5 both said the phone decodes at
+the working size. Now Android decodes it at the largest power of two fraction that still holds 8 megapixels (`WorkingSize.SampleFor`:
+a half for that scan, whole for a 12 megapixel photograph, a quarter for 192 megapixels), the pixels go straight into OpenCV from the
+bitmap without a managed copy, and only the remainder is resized. Tested for the rule on the desktop; the Android build passes. **Time:**
+the desktop reads the sample at 8 megapixels in about 2.4 s, of which finding holes is 1.1 s, decoding 0.37 s and locating the bulls
+0.35 s; the phones' 50 s is far more than the speed of their processors explains, so the dev build's logcat lines (`phone.prepare`,
+`phone.detect` with its milliseconds) are what will find it, once request 45 has the devices back. The progress line is in entry 243's
+work list.
+
 ## Entry 238: nineteen angled photographs, and the refusal angle from 40 to 37 degrees
 
 The nineteen photographs of the Dominus K sheet were read by the build with entry 233's detector and each matched against the sheet's

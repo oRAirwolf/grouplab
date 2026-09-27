@@ -77,24 +77,53 @@ internal static class PhoneAnalysis
     }
 
     /// <summary>The photograph reduced to the working size and written as the session's own image; null where it is not an image.</summary>
+    /// <remarks>
+    /// Entry 239: the picture is decoded by Android at a power of two fraction of its size (<see cref="WorkingSize.SampleFor"/>), so a 600 dpi
+    /// scan of 32 megapixels is 8 from the start and never exists in memory at full size; only what is left over is then resized, to 8
+    /// megapixels at most. Like the OpenCV decode it replaces, it leaves the orientation flag to the marking, which reads it.
+    /// </remarks>
     public static WorkingImage? Prepare(string photo)
     {
-        byte[] bytes = File.ReadAllBytes(photo);
-        var original = ImageMetadataReader.Read(bytes);
-        using var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
-        if (colour.Empty())
+        var original = ImageMetadataReader.Read(File.ReadAllBytes(photo));
+        var bounds = new global::Android.Graphics.BitmapFactory.Options { InJustDecodeBounds = true };
+        global::Android.Graphics.BitmapFactory.DecodeFile(photo, bounds);
+        if (bounds.OutWidth <= 0 || bounds.OutHeight <= 0)
         {
             return null;
+        }
+
+        int sample = WorkingSize.SampleFor(bounds.OutWidth, bounds.OutHeight, WorkingSize.PhoneMegapixels);
+        using var colour = new Mat();
+        using (var bitmap = global::Android.Graphics.BitmapFactory.DecodeFile(photo, new global::Android.Graphics.BitmapFactory.Options { InSampleSize = sample, InPreferredConfig = global::Android.Graphics.Bitmap.Config.Argb8888, InScaled = false }))
+        {
+            if (bitmap is null)
+            {
+                return null;
+            }
+
+            IntPtr pixels = bitmap.LockPixels();
+            try
+            {
+                using var rgba = Mat.FromPixelData(bitmap.Height, bitmap.Width, MatType.CV_8UC4, pixels, bitmap.RowBytes);
+                Cv2.CvtColor(rgba, colour, ColorConversionCodes.RGBA2BGR);
+            }
+            finally
+            {
+                bitmap.UnlockPixels();
+                bitmap.Recycle();
+            }
         }
 
         string folder = System.IO.Path.Combine(SessionsFolder, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
         Directory.CreateDirectory(folder);
         string image = System.IO.Path.Combine(folder, "target.jpg");
-        double scale = WorkingSize.Scale(colour.Width, colour.Height, WorkingSize.PhoneMegapixels);
+        double rest = WorkingSize.Scale(colour.Width, colour.Height, WorkingSize.PhoneMegapixels);
         using var working = new Mat();
-        Cv2.Resize(colour, working, new OpenCvSharp.Size(0, 0), scale, scale, scale < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
+        Cv2.Resize(colour, working, new OpenCvSharp.Size(0, 0), rest, rest, rest < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
         Cv2.ImWrite(image, working, new ImageEncodingParam(ImwriteFlags.JpegQuality, 92));
-        return new WorkingImage(image, WorkingSize.Scaled(original, working.Width, working.Height, scale), colour.Width, colour.Height);
+        double scale = (double)working.Width / bounds.OutWidth;
+        DiagnosticLog.Info("phone.prepare", ("width", bounds.OutWidth), ("height", bounds.OutHeight), ("sample", sample), ("working", $"{working.Width}x{working.Height}"));
+        return new WorkingImage(image, WorkingSize.Scaled(original, working.Width, working.Height, scale), bounds.OutWidth, bounds.OutHeight);
     }
 
     /// <summary>A photograph, prepared and analyzed.</summary>

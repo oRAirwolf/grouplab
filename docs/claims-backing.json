@@ -2244,6 +2244,14 @@
   "A photograph taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit.Degrees and Refusal; CaptureTests.TheRefusalNamesTheAngleAndTheLimit (entry 238)"
+  },
+  "**Until entry 239 the application did not:** a picked file was decoded whole by OpenCV and only then shrunk, which is the 555 MB request 43 measured on the tablet.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/PhoneAnalysis.cs Prepare; src/GroupLab.Core/Imaging/WorkingSize.cs SampleFor; WorkingSizeSampleTests (entry 239)"
+  },
+  "It is now decoded by Android at a power of two fraction (`WorkingSize.SampleFor`), a 600 dpi Letter scan at a half, 8 megapixels from the start.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/PhoneAnalysis.cs Prepare; src/GroupLab.Core/Imaging/WorkingSize.cs SampleFor; WorkingSizeSampleTests (entry 239)"
   }
  },
  "rules": [

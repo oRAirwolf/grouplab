@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1055 |
+| code | 1057 |
 | measured | 1510 |
 | decided | 1217 |
 | unbacked | 0 |
-| **total** | **3782** |
+| **total** | **3784** |
 
-**606** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**608** of them were read one sentence at a time and their backing written against the sentence. The other **3176** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -511,6 +511,8 @@ one that matters.
 - *measured* (src/GroupLab.Core/Imaging/WorkingSize.cs and ImageLoader.Load(path, most); grouplab analyze with and without --working-megapixels 8 on the sample and two range photographs, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entry 219 A1): `grouplab analyze --working-megapixels 8` does the same on the desktop.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): **What it says for the budget**: a working size of 8 MP, 300 dpi for a Letter sheet, is under entry 206's 400 MB with every hole found and a mean shift of a few thousandths of an inch; the 300 MB aim is reached only near 200 dpi, most of it the application at rest.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeScaled.cs, SpikeCameras.cs) on the Fold 7 over adb, 2026-09-25; docs/PHASE1-RESULTS.md entry 209): Loading at full size and shrinking afterwards costs about 530 MB whatever the working size, so the real application decodes at the working size, which the camera does for a photograph and a reduced decode does for a scan.
+- *code* (android/GroupLab.Android/PhoneAnalysis.cs Prepare; src/GroupLab.Core/Imaging/WorkingSize.cs SampleFor; WorkingSizeSampleTests (entry 239)): **Until entry 239 the application did not:** a picked file was decoded whole by OpenCV and only then shrunk, which is the 555 MB request 43 measured on the tablet.
+- *code* (android/GroupLab.Android/PhoneAnalysis.cs Prepare; src/GroupLab.Core/Imaging/WorkingSize.cs SampleFor; WorkingSizeSampleTests (entry 239)): It is now decoded by Android at a power of two fraction (`WorkingSize.SampleFor`), a 600 dpi Letter scan at a half, 8 megapixels from the start.
 - *measured* (the spike (android/GroupLab.Android.Spike/SpikeRun.cs) on the Fold 7 over adb, 2026-09-25, recorded in docs/PHASE1-RESULTS.md entries 201 and 202): **Memory held**: 714 MB, and 901 MB after three runs, and Android did not stop the application.
 - *decided* (NOTES-FROM-PLANNING.md entry 202; docs/notes/for-alan.md request 27; docs/MOBILE-CAPTURE.md section 5): It is still more than a phone application should hold, so the real application processes a capture at a capped resolution, as MOBILE-CAPTURE.md section 5 already does for the quality score, and marks a 600 dpi scan in one pass without keeping earlier images.
 - *measured* (NOTES-FROM-PLANNING.md entry 206 sections 1 and 5: the planning session's study of 2026-09-25 and the sources it lists): The lowest Android version: 10 (API 29) **Android 10 is GroupLab's minimum** (entry 207, approving entry 206 section 2.1): about 91 percent of Android devices in use; the phones it leaves out are from 2019 or before with 2 or 3 GB, which could not hold the engine anyway.
