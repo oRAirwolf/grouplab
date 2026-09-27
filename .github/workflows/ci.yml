@@ -355,6 +355,8 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -413,6 +415,11 @@ jobs:
       # is the real one. This says so at the time rather than months later.
       - name: The README carries the current platform statement
         run: python3 scripts/platform-support.py --check
+
+      # Entry 244: the README's generated sections match their sources, and a feature of kind "new" that has landed since the prose last
+      # changed is named somewhere, or the prose is due a visit. The nudge reads the history, hence the full checkout above.
+      - name: The README is current
+        run: python3 scripts/readme.py --check
 
       - name: Say what it made
         run: |

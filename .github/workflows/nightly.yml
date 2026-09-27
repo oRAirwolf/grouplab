@@ -634,6 +634,22 @@ jobs:
           git push origin main
           echo "appended $VERSION and pushed it; website.yml's paths filter picks it up"
 
+      # NOTES-FROM-PLANNING.md entry 244: the README's generated sections, the newest build, what is new, the feature list and the plan,
+      # rewritten from the notes just written and committed as a [notes] commit, only when something changed. The marker in the subject
+      # keeps the loop closed, as for the release notes above.
+      - name: Bring the README up to date
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --quiet origin main
+          git checkout --quiet -B main origin/main
+          python3 scripts/readme.py --write
+          if [ -n "$(git status --porcelain -- README.md)" ]; then
+            git add README.md
+            git commit -m "[notes] README for $VERSION" -m "Its generated sections, rewritten by the nightly, NOTES-FROM-PLANNING.md entry 244."
+            git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
+          fi
+
       # NOTES-FROM-PLANNING.md entry 184: the build announces itself in #builds, only now that it is published, with the same notes as
       # the release body from the same generator, less the platform line. The webhook is a repository secret Alan added; without it the
       # step says so and posts nothing, and nothing here can fail the build. .github/announced-builds.txt records the version once it

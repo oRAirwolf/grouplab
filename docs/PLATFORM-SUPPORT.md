@@ -31,7 +31,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
-| **Android** | Android 10 or later, planned | not published yet | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
+| **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's internal test by invitation | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
 
@@ -50,7 +50,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is planned and is a high priority**, because that is the mobile platform in daily use here. Its first stage started on 2026-09-25; the plan and what it found are in `docs/ANDROID.md`. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet, reads it with the same engine as the desktop, prints targets and keeps sessions; marking a target by hand is not on the phone yet. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
 
 ## Running the macOS build
 

@@ -2460,6 +2460,46 @@
   "Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time.": {
    "kind": "code",
    "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs RedrawnLarge and Tiles, targets/GL-LR25-T*.gltd.json and GL-LR30-T.gltd.json, the originals in targets/frozen/large-format-1 (entry 243 section 1.4)"
+  },
+  "**Untested on a real Mac.** | | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml signs and publishes grouplab-android.apk and grouplab-android-dev.apk; docs/ANDROID.md sections 11 to 14; the Play internal test of entries 231 and 232; the phones of entries 235 and 236"
+  },
+  "| **Every desktop build here is unsigned**, so Windows will say \"Windows protected your PC\": click **More info**, then **Run anyway**.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml signs only the Android packages; docs/RELEASE-PLAN.md, signing Windows builds on hold (entry 224)"
+  },
+  "[docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.": {
+   "kind": "code",
+   "where": "docs/ANDROID.md section 12, the uninstall-first rule and GroupLab Dev (entries 231 and 234)"
+  },
+  "| | [![Session records](docs/figures/screens/current/sessions-dark-1400x900.png)](docs/figures/screens/current/sessions-dark-1400x900.png) | [![Compare loads](docs/figures/screens/current/compare-dark-1400x900.png)](docs/figures/screens/current/compare-dark-1400x900.png) | | **Session records.** Every analyzed sheet, by rifle and load, to open again, compare or pool.": {
+   "kind": "code",
+   "where": "docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146"
+  },
+  "| | | |---| | [![The analysis screen, light theme](docs/figures/screens/current/analysis-light-1400x900.png)](docs/figures/screens/current/analysis-light-1400x900.png) | | **Light theme.** Dark, light, high contrast, or following the system.": {
+   "kind": "code",
+   "where": "docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146"
+  },
+  "## What is supported, and what is not --- ## Status **Where the work stands is in Planned below, phase by phase, with the state of every feature and the gate each phase is measured against.** The newest build is named under [Download](#download), and what it changed under [What is new](#what-is-new).": {
+   "kind": "code",
+   "where": "README.md Planned, held to DESIGN.md section 21 by ReadmeTests; the generated sections by scripts/readme.py (entry 244)"
+  },
+  "Each of these is checked first, from [docs/RELEASE-PLAN.md](docs/RELEASE-PLAN.md): ## Planned Every phase below is `DESIGN.md` section 21's, with its gate.": {
+   "kind": "decided",
+   "where": "docs/RELEASE-PLAN.md, What must be true first (entry 219 item D4), copied by scripts/readme.py"
+  },
+  "Android** | **In progress** | camera capture and lens distortion fitted on the device | | **7.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android, the Phase 6 features listed under it with their states (entries 219 to 243)"
+  },
+  "**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on.": {
+   "kind": "code",
+   "where": "docs/PLATFORM-SUPPORT.md, generated into the README by scripts/platform-support.py"
+  },
+  "Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml signs and publishes grouplab-android.apk and grouplab-android-dev.apk; docs/ANDROID.md sections 11 to 14; the Play internal test of entries 231 and 232; the phones of entries 235 and 236"
   }
  },
  "rules": [

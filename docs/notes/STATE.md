@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 243.
+**Last rewritten:** 2026-09-27, after entry 244.
 
 ---
 
@@ -17,7 +17,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - Done: everything through entry 243, apart from what the status lines name: 235 section 3 and 241's server half in the closing server
   sitting, device measurements and tablet screenshots on request 45 (238 to 240, 242, 243 section 3.3), the phone's look on request 49
-  (243 section 3.5), the website generator (question 62 (b), later). Next 244 (the README kept current), then the server sitting.
+  (243 section 3.5), the website generator (question 62 (b), later). 244: the README is generated in part and held by CI. Next: the server.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -91,7 +91,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 62 were answered by entry 24
 they differ. The planning session's files are not committed, so while a run is working through them the
 line reads what the repository holds, and the test fails locally until the last is done.
 
-**Holds:** 244
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 

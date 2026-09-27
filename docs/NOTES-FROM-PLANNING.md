@@ -24,6 +24,34 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-27, entry 244: the README kept current with every build
+
+**Status: done 2026-09-27, with one reading.** Section 2's Status and near-term plan come from `docs/RELEASE-PLAN.md` and the release notes, not from `docs/notes/STATE.md`, which is written for the two sessions in their own shorthand and would read as jargon to a visitor; the hand-written Status list was brought up to date instead.
+
+Alan: "Please make sure the readme gets updated with each build." Today `README.md` was last changed on 2026-09-25 (entries 224 and 225).
+Since then: nightlies 110 and 111, the signed Android app and its Play internal test, the target generator, the redrawn zeroing grids,
+several bulls on other people's targets, CEP 99 and a custom percent, the survey's benchmark, the tablet check, and more, and the README
+says none of it. Only the platform statement and the download links are generated today.
+
+1. **A full pass now:** bring every section up to date with the application as it is (Download, How it works, Status, Planned, Platforms,
+   Minimums, the concept screens), including the Android app: how to get it (the nightly APK, the Play internal test by invitation, the
+   closed test to come), its minimums, and what it can and cannot do yet. Screenshots in the README are the build's own, current ones.
+2. **Generated sections, rebuilt with every nightly and every release**, between markers, from the sources that already exist, so they
+   cannot drift:
+   - the newest build: version, date, and links (Windows installer and zip, Linux, macOS, Android APK), from the release;
+   - "What is new": the release notes of the newest few builds, from `docs/RELEASE-NOTES.md`, each linked to its Features page entry once
+     entry 242's page exists;
+   - the feature list, a short version generated from entry 242's `website/features.json`, linking to the Features page;
+   - Status and the near-term plan, from `docs/notes/STATE.md` and `docs/RELEASE-PLAN.md`;
+   - the minimums table (already from `docs/PLATFORM-SUPPORT.md`) and the platform statement.
+3. **The nightly workflow regenerates the README and commits it** as a `[notes]` commit, the way the release notes and announcements are
+   committed today, only when something changed. The release workflow does the same.
+4. **CI fails** when a generated section does not match its sources, and when a release note of kind "new" has landed since the README's
+   last hand-written change without the Status or feature sections mentioning it (a nudge to revisit the prose, listing what is missing).
+5. The hand-written parts stay hand-written, and are reviewed at every entry that changes what GroupLab does: add "README checked" to the
+   end-of-entry report, the way the claims register is.
+6. The claims register covers the README as it covers the site: nothing in it that is not backed.
+
 ## 2026-09-27, entry 243: answers to questions 57 to 62, and work for the night after the queue
 
 **Status: done 2026-09-27, apart from two parts that wait on Alan.** **Not done:** section 3.3's before and after screenshots from the Tab S8 Ultra, because both devices are off adb (request 45); the side by side layout itself is built. Section 3.5 builds only what needs no choice: the design language is written down, three concepts are drawn and request 49 asks Alan to choose, and only the chosen one is built. Section 1.4 asks question 63 about the number of bulls a sheet; what is built can change without touching anything printed.

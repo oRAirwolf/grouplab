@@ -22,7 +22,7 @@ public partial class ReleaseAssetTests
     private static readonly string[] Stable =
     [
         "grouplab-setup-win-x64.exe", "grouplab-win-x64.zip", "grouplab-linux-x64.tar.gz",
-        "grouplab-macos-arm64.tar.gz", "grouplab-macos-x64.tar.gz",
+        "grouplab-macos-arm64.tar.gz", "grouplab-macos-x64.tar.gz", "grouplab-android.apk",
     ];
 
     [Fact]
@@ -36,10 +36,11 @@ public partial class ReleaseAssetTests
 
         // Entry 119 section 7 and entry 121 section 2.4: one table, the latest build, and nothing pointing at a numbered release until Alan
         // asks for one. v0.1.0 exists and is deliberately outside every train, so a link to it would offer older code than any nightly.
-        Assert.Equal(Stable, NightlyDownload().Matches(readme).Select(m => m.Groups["asset"].Value));
+        // Entry 244: the table's rows, and the newest build's line above it, which scripts/readme.py writes from the same names.
+        Assert.Equal(Stable.Order(), NightlyDownload().Matches(readme).Select(m => m.Groups["asset"].Value).Distinct().Order());
         Assert.DoesNotContain("releases/latest", readme, StringComparison.Ordinal);
         Assert.DoesNotContain("v0.1.0", readme, StringComparison.Ordinal);
-        Assert.Equal(1, DownloadTableRow().Matches(readme).Count / 3);
+        Assert.Equal(Stable.Length, DownloadTableRow().Matches(readme).Count);
 
         // Entry 128 section 1.2 found this held for the README alone. The guides ship in the package and are published on the website, and
         // docs/TESTING-GUIDE.md had been sending testers to releases/latest, which returns nothing because no numbered release exists.

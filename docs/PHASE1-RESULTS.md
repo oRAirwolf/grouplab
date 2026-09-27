@@ -59,6 +59,23 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 244: the README kept current with every build
+
+**The pass.** Download names the newest build and carries the Android APK, what it does and does not do, and how Play's internal test and
+GroupLab Dev fit; "What is new" and "What it does" are new sections; the concept mockups are replaced by the build's own screenshots
+from `docs/figures/screens/current/`; Status lists what exists today, load comparison, the solver and the Android app among it, and what
+does not; Phase 6 is in progress with its features; the architecture diagram says Android is in testing. The platform statement's
+Android row and paragraph, in `docs/PLATFORM-SUPPORT.md`, said "planned" and "not published yet"; both are corrected at the source.
+
+**Generated** by `scripts/readme.py` between `readme:` markers: the newest build and its downloads, and what the newest three builds changed,
+from `docs/RELEASE-NOTES.md`, each change linked to its Features page entry where one owns it; the feature list from
+`website/features.json`; and the checks before the first beta or stable release from `docs/RELEASE-PLAN.md`. The nightly and the release
+workflows rewrite them and commit a `[notes]` commit when they changed. **CI** (`website builds`) fails when a section is stale, or when a
+release note of kind "new" has landed since the README's prose last changed and neither the feature list nor the prose names it; a change
+only between the markers does not count as a change to the prose, so regenerating cannot silence it. Tried against the history twelve
+commits back: it names the one new note no feature owns. The claims register reads the README less its generated copies, whose sources
+it reads in their own right. The end-of-entry report now says "README checked" (CLAUDE.md).
+
 ## Entry 243: questions 57 to 62 answered, and the night's work: pooled sets, progress, the phone, and the C bull
 
 **Answers built** (e3f24a5, 9df40da). Q57: on a sheet of two to four marks, one at least twice the median area of the others is flagged

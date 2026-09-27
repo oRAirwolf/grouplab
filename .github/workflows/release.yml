@@ -172,6 +172,22 @@ jobs:
             git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
           fi
 
+      # NOTES-FROM-PLANNING.md entry 244: the README's generated sections, rewritten and committed as a [notes] commit when they changed.
+      - name: Bring the README up to date
+        env:
+          VERSION: ${{ needs.work-out-the-version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --quiet origin main
+          git checkout --quiet -B main origin/main
+          python3 scripts/readme.py --write
+          if [ -n "$(git status --porcelain -- README.md)" ]; then
+            git add README.md
+            git commit -m "[notes] README for $VERSION" -m "Its generated sections, rewritten by the release workflow, NOTES-FROM-PLANNING.md entry 244."
+            git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
+          fi
+
   # NOTES-FROM-PLANNING.md entry 224 section 3.2: a tagged stable release goes to the Store's public listing by itself. The Store's own
   # tooling, authenticated as the Entra application Partner Center trusts as a Manager; the four values are repository secrets Alan sets.
   # It needs the app already live in the Store, which the first, hand-made submission does. Nightlies never come here.

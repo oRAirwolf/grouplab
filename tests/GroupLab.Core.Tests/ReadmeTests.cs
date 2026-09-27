@@ -213,9 +213,9 @@ public partial class ReadmeTests
     [Fact]
     public void WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone()
     {
-        string paragraph = string.Join(" ", Section("## Concept screens", "## Built with"));
+        string paragraph = string.Join(" ", Section("## Screens", "## Built with"));
         var match = NotBuiltYet().Match(paragraph);
-        Assert.True(match.Success, "the Concept screens section no longer says what is not built in one sentence beginning \"Not built yet:\", so this test cannot check it.");
+        Assert.True(match.Success, "the Screens section no longer says what is not built in one sentence beginning \"Not built yet:\", so this test cannot check it.");
         var absent = match.Groups["list"].Value.Split([", and ", ", ", " and "], StringSplitOptions.RemoveEmptyEntries)
             .Select(item => item.Trim())
             .Select(item => item.StartsWith("the ", StringComparison.Ordinal) ? item[4..] : item)
@@ -227,7 +227,7 @@ public partial class ReadmeTests
         {
             Assert.True(
                 features.Any(f => f.Contains(item, StringComparison.OrdinalIgnoreCase) && !f.StartsWith("- **Done.**", StringComparison.Ordinal)),
-                $"the Concept screens section says \"{item}\" is not built, and no feature in the Planned section that is not Done names it. Correct whichever is out of date.");
+                $"the Screens section says \"{item}\" is not built, and no feature in the Planned section that is not Done names it. Correct whichever is out of date.");
         }
     }
 

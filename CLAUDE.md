@@ -81,7 +81,7 @@ session cannot see the panel, so everything in it for Alan exists in a file too.
 
 1. The entry number.
 2. What changed.
-3. The test result.
+3. The test result, and "README checked": its prose still describes what GroupLab does (entry 244; `scripts/readme.py --check` writes the rest).
 4. The commit.
 5. Whether the site has published it yet.
 

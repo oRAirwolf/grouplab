@@ -97,6 +97,14 @@ def surfaces() -> list[tuple[str, Path]]:
     return [(name, path) for name, path in out if path.exists()]
 
 
+def without_copies(text: str) -> str:
+    """The README less what it copies from elsewhere, NOTES-FROM-PLANNING.md entry 244: the sections scripts/readme.py writes from the
+    release notes, features.json and the release plan, and the platform statement scripts/platform-support.py writes from
+    docs/PLATFORM-SUPPORT.md. Each source is read here in its own right, and a copy changes with every build."""
+    text = re.sub(r"<!-- readme:(?P<name>[a-z-]+):.*?<!-- /readme:(?P=name) -->", "", text, flags=re.S)
+    return re.sub(r"<!-- platform-support:.*?<!-- end platform-support -->", "", text, flags=re.S)
+
+
 def claims() -> list[tuple[str, int, str]]:
     """Every candidate claim: where it is published, which sentence of that surface, and the sentence."""
     found = []
@@ -106,6 +114,8 @@ def claims() -> list[tuple[str, int, str]]:
             text = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
+        if name == "README.md":
+            text = without_copies(text)
         for i, s in enumerate(sentences(text), start=1):
             if len(s) < 25 or len(s) > 400 or NOT_A_CLAIM.match(s):
                 continue
