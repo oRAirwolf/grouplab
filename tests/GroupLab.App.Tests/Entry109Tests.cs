@@ -352,6 +352,17 @@ public class Entry109Tests
                         window.SetEveryWhy(true);
                         Save(window, $"analysis-open-{name}-{size}");
                         window.SetEveryWhy(null);
+
+                        // Entry 253 section 2: Shots Needed to Zero open, worked out from the test rifle's quarter-MOA clicks.
+                        window.AdvancedPanel.IsExpanded = true;
+                        window.FullFiguresPanel.IsExpanded = true;
+                        Dispatcher.UIThread.RunJobs();
+                        Assert.True(window.ShotsToZeroWork.Wait(TimeSpan.FromSeconds(60)), "Shots Needed to Zero did not finish");
+                        Dispatcher.UIThread.RunJobs();
+                        window.BringShotsToZeroIntoView();
+                        Save(window, $"shots-to-zero-{name}-{size}");
+                        window.FullFiguresPanel.IsExpanded = false;
+                        window.AdvancedPanel.IsExpanded = false;
                         window.ShowSettings();
                         Save(window, $"settings-{name}-{size}");
                         window.ShowSettings(false);
@@ -362,6 +373,10 @@ public class Entry109Tests
                         window.ShowLibrary();
                         window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-CF25-LTR.gltd.json").Definition.Name);
                         Save(window, $"targets-{name}-{size}");
+
+                        // Entry 253 section 2: a C3 zeroing grid in the preview, its words drawn.
+                        window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-ZERO-MOA-100Y.gltd.json").Definition.Name);
+                        Save(window, $"targets-zero-{name}-{size}");
 
                         // Entry 242 section 1: "Made for your optic" filled in, for its tour stop: 100 yd through 10x, and through 4x, the set.
                         var ten = window.TargetsPanel.Generate("100", "10", "", 25)!;
@@ -395,6 +410,11 @@ public class Entry109Tests
                         window.ShowBallistics();
                         window.ProjectGroup("600", 0, "4", "4", "2");
                         Save(window, $"ballistics-{name}-{size}");
+                        // Entry 253 section 2: the other view, the chance of a hit on a 30 in square at 600 yd.
+                        window.ShowBallisticView(MainWindow.BallisticView.Hit);
+                        window.WorkOutHit("600", 0, "30", "30");
+                        Save(window, $"ballistics-hit-{name}-{size}");
+                        window.ShowBallisticView(MainWindow.BallisticView.Trajectory);
                         window.ShowBallistics(false);
 
                         // Entry 131 section 7: the Equipment screen, with a rifle and a load on it so the lists are not empty.
@@ -428,6 +448,31 @@ public class Entry109Tests
                 finally
                 {
                     GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
+                }
+
+                // Entry 253 section 2: the first run, as a new install opens, with the benchmark offered.
+                foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
+                {
+                    TestDefaults.Outside.Forget();
+                    string fresh = Path.Combine(Path.GetTempPath(), $"grouplab-entry253-{Guid.NewGuid():N}");
+                    var first = new MainWindow(new AppSettingsStore(Path.Combine(fresh, "settings.json")))
+                    {
+                        Width = width, Height = height, ReceiverOpen = true, ErrorsOpen = true, SurveyOpen = true,
+                    };
+                    try
+                    {
+                        first.Show();
+                        first.SetTheme(theme);
+                        first.ShowFirstRunIfDue();
+                        Assert.True(first.FirstRunShown);
+                        Save(first, $"firstrun-{name}-{width}x{height}");
+                    }
+                    finally
+                    {
+                        first.Close();
+                        TestDefaults.Outside.Forget();
+                        GroupLab.Tests.Support.Temp.Delete(fresh);
+                    }
                 }
             }
         }

@@ -111,3 +111,35 @@ source that is not on the list below, or if any test writing into this folder co
 | `optic-4x-light-1400x900.png` | sheet made by the generator |
 | `optic-4x-light-1920x1080.png` | sheet made by the generator |
 | `optic-4x-light-2560x1440.png` | sheet made by the generator |
+| `ballistics-hit-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `ballistics-hit-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `firstrun-dark-1280x720.png` | no sheet at all |
+| `firstrun-dark-1400x900.png` | no sheet at all |
+| `firstrun-dark-1920x1080.png` | no sheet at all |
+| `firstrun-dark-2560x1440.png` | no sheet at all |
+| `firstrun-light-1280x720.png` | no sheet at all |
+| `firstrun-light-1400x900.png` | no sheet at all |
+| `firstrun-light-1920x1080.png` | no sheet at all |
+| `firstrun-light-2560x1440.png` | no sheet at all |
+| `shots-to-zero-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `shots-to-zero-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `targets-zero-dark-1280x720.png` | built-in library sheet |
+| `targets-zero-dark-1400x900.png` | built-in library sheet |
+| `targets-zero-dark-1920x1080.png` | built-in library sheet |
+| `targets-zero-dark-2560x1440.png` | built-in library sheet |
+| `targets-zero-light-1280x720.png` | built-in library sheet |
+| `targets-zero-light-1400x900.png` | built-in library sheet |
+| `targets-zero-light-1920x1080.png` | built-in library sheet |
+| `targets-zero-light-2560x1440.png` | built-in library sheet |

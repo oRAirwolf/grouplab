@@ -1,0 +1,28 @@
+{
+  "about": "NOTES-FROM-PLANNING.md entry 253 section 5. Each published desktop screen and the source files that draw it; shared is added to every screen. scripts/screens-stamp.py hashes these into current/made-from.json when the pictures are rendered, and the site build fails when a screen's files have changed and a whole nightly has shipped since without a new picture, or when the pictures are more than maxNightlies behind the newest nightly. The phone's pictures can only be retaken with Alan's devices, so they are held to their age alone, phoneMaxNightlies.",
+  "maxNightlies": 30,
+  "phoneMaxNightlies": 60,
+  "shared": [
+    "src/GroupLab.App/MainWindow.cs",
+    "src/GroupLab.App/Theme/AppStyles.cs",
+    "src/GroupLab.App/Theme/Icons.cs",
+    "src/GroupLab.App/Theme/Tokens.cs"
+  ],
+  "screens": {
+    "marking": ["src/GroupLab.App/MarkingCanvas.cs", "src/GroupLab.App/SheetGestures.cs"],
+    "analysis": ["src/GroupLab.App/MainWindow.Figures.cs", "src/GroupLab.App/MainWindow.ShotsPerBull.cs", "src/GroupLab.App/CompositePlot.cs", "src/GroupLab.App/IntervalChart.cs", "src/GroupLab.App/SpreadStrips.cs", "src/GroupLab.App/ShotOrderChart.cs"],
+    "analysis-open": ["src/GroupLab.App/MainWindow.Figures.cs", "src/GroupLab.App/MainWindow.ShotsPerBull.cs", "src/GroupLab.App/CompositePlot.cs", "src/GroupLab.App/IntervalChart.cs", "src/GroupLab.App/SpreadStrips.cs", "src/GroupLab.App/ShotOrderChart.cs", "src/GroupLab.App/TermHelp.cs"],
+    "shots-to-zero": ["src/GroupLab.App/MainWindow.Figures.cs", "src/GroupLab.App/MainWindow.ShotsToZero.cs"],
+    "settings": ["src/GroupLab.App/AppSettings.cs"],
+    "sessions": ["src/GroupLab.App/MainWindow.SessionFiles.cs", "src/GroupLab.App/SessionsOverTime.cs", "src/GroupLab.App/SheetThumbnail.cs"],
+    "targets": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs", "src/GroupLab.App/SheetThumbnail.cs"],
+    "targets-zero": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs", "src/GroupLab.App/SheetThumbnail.cs", "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs", "targets/GL-ZERO-MOA-100Y.gltd.json"],
+    "optic": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs"],
+    "optic-4x": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs"],
+    "ballistics": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/TrajectoryGraph.cs", "src/GroupLab.App/BallisticMeasures.cs"],
+    "ballistics-hit": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/MainWindow.Hit.cs", "src/GroupLab.App/HitGraphs.cs"],
+    "equipment": ["src/GroupLab.App/MainWindow.Equipment.cs", "src/GroupLab.App/MainWindow.Loads.cs"],
+    "compare": ["src/GroupLab.App/MainWindow.Compare.cs"],
+    "firstrun": ["src/GroupLab.App/MainWindow.Sending.cs", "src/GroupLab.App/MainWindow.Survey.cs", "src/GroupLab.App/BenchmarkPanel.cs", "src/GroupLab.App/SharingWords.cs"]
+  }
+}

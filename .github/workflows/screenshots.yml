@@ -5,8 +5,9 @@
 # visible to anybody reading the site. Nothing had gone wrong. Nobody had run the walk, because running it was a thing a person remembered.
 #
 # **What it does.** Renders every screen from the code on main, in both themes at the three sizes the site and the reports use, and commits
-# them when they differ. That commit touches docs/figures/screens, which is inside website.yml's paths filter, so the site follows on its
-# own within a couple of minutes.
+# them when they differ. A push made with this job's token starts no workflow, and nothing but a push touching the site or a person may
+# start website.yml (WebsiteWorkflowTests), so the new pictures are published by the next push that touches the site, or by
+# a publish started by hand. Entry 253 corrected this paragraph, which said the site followed by itself.
 #
 # **What it never does.** No real printer, no paper, no network: every render is headless and everything that reaches outside the process
 # goes through IOutsideWorld, which the tests replace with a recorder. Every sheet and every figure in these screenshots is generated, never
@@ -18,6 +19,16 @@ on:
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
+  # Entry 253 section 5: and whenever the code that draws a published screen reaches main, so the site build's stale check
+  # (scripts/screens-stamp.py) never has to wait for Monday. The files are docs/figures/screens/screens.json's.
+  push:
+    branches: [main]
+    paths:
+      - "src/GroupLab.App/**"
+      - "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs"
+      - "targets/GL-ZERO-*.gltd.json"
+      - "docs/figures/screens/screens.json"
+      - "tests/GroupLab.App.Tests/Entry109Tests.cs"
 
 permissions:
   contents: write
@@ -67,6 +78,10 @@ jobs:
           --filter "FullyQualifiedName~PublishedRendersTests"
           --logger "console;verbosity=minimal"
 
+      # Entry 253 section 5: the newest nightly and each screen's source files' hash, which the site build checks against.
+      - name: Stamp what the pictures show
+        run: python scripts/screens-stamp.py --write
+
       - name: Commit them if they changed
         shell: bash
         run: |
@@ -82,5 +97,6 @@ jobs:
           count=$(git diff --name-only -- docs/figures/screens | wc -l)
           git add docs/figures/screens
           git commit -m "[screens] the website's screenshots catch up with the application" -m "Rendered from main by the weekly job, NOTES-FROM-PLANNING.md entry 144 section 4. $count images changed. The marker keeps this out of the test suite and the nightly: no C# has changed, PublishedRendersTests has already run above, and a build of the application from an image-only commit would be a release of nothing."
+          git pull --rebase origin main
           git push origin main
-          echo "committed $count changed images; website.yml's paths filter publishes them"
+          echo "committed $count changed images; the next push that touches the site publishes them"

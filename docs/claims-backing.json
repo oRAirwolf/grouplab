@@ -2704,6 +2704,14 @@
   "A 4 in or 10 cm bar at the bottom checks the print: measure it before you shoot.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs and src/GroupLab.Cli/Library/LibraryBuilder.cs Zero; held by BuiltInLibraryTests.TheZeroingGridsAreC3AndSayTheirScale; chosen by Alan with Jylee and Unholy, entry 251"
+  },
+  "Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.": {
+   "kind": "decided",
+   "where": "README.md, What does not exist yet; the build plan, DESIGN.md section 21 and README's Planned"
+  },
+  "Twelve pages, one per screen, so you can see what using GroupLab is like before you download it.": {
+   "kind": "code",
+   "where": "website/tour.json order, counted by scripts/counts.py tour-screens"
   }
  },
  "rules": [

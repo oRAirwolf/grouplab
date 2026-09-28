@@ -176,7 +176,7 @@
       "group": "The numbers",
       "name": "Shots Needed to Zero",
       "sentence": "How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope's click value. Suggested by Jylee.",
-      "noPicture": "it sits in the analysis screen's Advanced figures, which the weekly screenshots show closed",
+      "shot": "shots-to-zero",
       "platforms": [
         "Windows",
         "macOS",
@@ -264,7 +264,7 @@
       "group": "The numbers",
       "name": "Ballistics and hit chances",
       "sentence": "The Ballistics screen draws the trajectory and works out your chance of a hit from your own measured group.",
-      "shot": "ballistics",
+      "shot": "ballistics-hit",
       "platforms": [
         "Windows",
         "macOS",
@@ -330,7 +330,7 @@
       "group": "Sheets and printing",
       "name": "Zeroing grids read through a scope",
       "sentence": "Design C3, chosen by Alan with Jylee and Unholy: squares of a scope's own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.",
-      "shot": "targets",
+      "shot": "targets-zero",
       "platforms": [
         "Windows",
         "macOS",

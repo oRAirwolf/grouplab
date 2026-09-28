@@ -1,0 +1,21 @@
+{
+  "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
+  "afterNightly": 117,
+  "screens": {
+    "analysis": "7b69c4deabc7081fc54bbba0f2bf19b9d6df8c4cef906e3320bb3c171de69698",
+    "analysis-open": "d5131f5de776619f3dd6f278939e71a0851ec96717992bb4dd2d48de0bb3e436",
+    "ballistics": "5562a37d0d3d763e70fb8be21538765cd00574abaf353d0ca0b6edadb2aa83f3",
+    "ballistics-hit": "8cf8187a09c0f99eaf8e723b4fde49faff03902ff9d1c5cc9bb76dea0940b629",
+    "compare": "1ef0ed06837381d2dc223664cca34bd50cf1f9412072416c7bc2e03db7a47d90",
+    "equipment": "24b2fdd7440bc2e4f484ee43822aa2d784eca8260b0c182ebb97a707db4c079b",
+    "firstrun": "2321c78950727567374168c4ae1d428f26a175aed1417d185612cbf53d32a9ac",
+    "marking": "70c2fbf79c4e448a97a273d3b39ce0af8e56bf8f371f2f4c3bc84e65d69da8d9",
+    "optic": "1488f998fdfb6fb3e2548eca0ce77d9bab3a3947b61efd67f1fb7080506705c7",
+    "optic-4x": "1488f998fdfb6fb3e2548eca0ce77d9bab3a3947b61efd67f1fb7080506705c7",
+    "sessions": "efff5e655192573f822bbab895e1713cef8c5ad086eb68ceda8535c89d3cc3ef",
+    "settings": "a03e69f710be55b03d1df8cc00a794ebc6c958d28e680359189b5e5f7df5083b",
+    "shots-to-zero": "48fb1339c3312a93530c504b116ee57556500fe615b46cfa340aa7b7f206cbe9",
+    "targets": "a62f7bd1f59b0ab6487be0b9d6a6e2c78a2ddae99673cd0ff02cd73efb01aa5a",
+    "targets-zero": "efe5276689dd3b45f29b5155af3c43fbfbb29b8a7998396993d25e5d09880a77"
+  }
+}

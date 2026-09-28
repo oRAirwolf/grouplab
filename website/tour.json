@@ -23,6 +23,7 @@
   "/tour/print/ are each a plain page with one link to /tour/targets/, since entry 151 bans a meta refresh, so a link to either still arrives."
  ],
  "order": [
+  "firstrun",
   "targets",
   "optic",
   "capture",
@@ -36,6 +37,60 @@
   "settings"
  ],
  "screens": {
+  "firstrun": {
+   "name": "The first run",
+   "blurb": "The first time GroupLab opens it asks three questions: whether to send your targets, whether to send error reports, and whether to take part in the hardware survey.",
+   "purpose": "Nothing leaves your computer until you have said it may. Each question says exactly what would be sent before you answer it, and each has a way to say no. The answers are kept and can be changed at any time in Settings, under Sharing.",
+   "withoutASheet": "No difference. It appears before any sheet is opened.",
+   "parts": [
+    [
+     "Send your targets",
+     "What goes with each target, then the two consents, testing only or may be published, and three answers: send every target automatically, ask me each time, or never."
+    ],
+    [
+     "Error reports",
+     "What a report holds and what it never holds, a photograph, a file name, a location or anything you wrote, then send them automatically, ask each time, or never."
+    ],
+    [
+     "The hardware survey",
+     "A weekly report of what the computer is and how fast GroupLab ran. Below it, the benchmark is offered: Yes does not run it, and it runs only when you start it."
+    ]
+   ],
+   "steps": [
+    "Open GroupLab for the first time.",
+    "Read each question and answer it; No is always one of the answers.",
+    "Change any answer later in Settings, under Sharing."
+   ],
+   "fits": "Shown once, over the marking screen, before anything else.",
+   "links": [
+    [
+     "What GroupLab sends from your computer",
+     "/research/what-grouplab-sends/"
+    ]
+   ],
+   "mobile": {
+    "shot": "fold-firstrun",
+    "caption": "Before you start, on the phone.",
+    "parts": [
+     [
+      "Send your targets",
+      "What goes with each target, and the two consents to choose between."
+     ],
+     [
+      "Error reports",
+      "What a report holds, and whether to send them."
+     ],
+     [
+      "The hardware survey",
+      "Yes or no; the benchmark runs only when you tap it."
+     ]
+    ],
+    "steps": [
+     "Open GroupLab on the phone for the first time.",
+     "Answer each question; they are kept, and Settings changes them."
+    ]
+   }
+  },
   "marking": {
    "name": "Marking and review",
    "blurb": "Every hole found and numbered to its bull, with anything uncertain raised for you to settle.",
@@ -275,6 +330,13 @@
     [
      "How many shots",
      "/research/how-many-shots/"
+    ]
+   ],
+   "moreShots": [
+    [
+     "shots-to-zero",
+     "Shots Needed to Zero in the analysis's Advanced figures: the shots for each goal and the curve beneath them",
+     "Further down the Advanced figures, Shots Needed to Zero: how many shots a zeroing group needs to land on the closest click, or within one click, from the rifle's click value."
     ]
    ],
    "mobile": {
@@ -532,6 +594,13 @@
      "/research/when-to-adjust-zero/"
     ]
    ],
+   "moreShots": [
+    [
+     "ballistics-hit",
+     "The Ballistics screen's Hit probability view: the first round's chance on a 30 inch circle at 600 yards",
+     "The other view, Hit probability: the first round's chance on a target at a distance, the second round's after a correction, and what costs the most."
+    ]
+   ],
    "mobile": {
     "only": "desktop",
     "words": "On the desktop only, for now."
@@ -688,6 +757,13 @@
     [
      "The user guide",
      "/guides/user-guide/"
+    ]
+   ],
+   "moreShots": [
+    [
+     "targets-zero",
+     "Targets with the MOA zeroing grid for 100 yards chosen: design C3, its legend and numbers drawn in the preview",
+     "A zeroing grid, design C3: squares the size of a scope's clicks, every line's distance from the aim written outside the grid, and a legend above it to read through the scope."
     ]
    ],
    "mobile": {
