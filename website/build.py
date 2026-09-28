@@ -702,6 +702,15 @@ def page_download() -> str:
 <p class="small faint">Taking the wrong one gives you an application that will not open, with no useful message about why.</p>
 </div>
 </section>
+<section class="wrap grid-3">
+{card("Android", "grouplab-android.apk", "For an arm64 phone or tablet with Android 10 or later and 4 GB of memory. An early test build: it photographs or opens a sheet and reads it with the same engine as the desktop.", ["Open the file on the phone; allow your browser to install apps when Android asks", "Remove the Google Play copy first, if you have it: the two are signed with different keys", "Builds up to nightly 118 showed only the camera on the capture screen; the next build shows its words, shutter and Back"], label="Download for Android")}
+{card("GroupLab Dev", "grouplab-android-dev.apk", "For testers: installs beside GroupLab, with the hooks a test sitting uses.", ["The same app under its own name, so both can be on one phone", "Nobody needs it to use GroupLab"], label="Download GroupLab Dev")}
+<div class="panel pad stack tight">
+<h2 class="h3">Google Play, by invitation</h2>
+<p class="small">GroupLab's internal test on Google Play updates itself like any Play app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test's page</a>.</p>
+<p class="small faint">Take either the Play copy or the APK, not both: remove one before installing the other.</p>
+</div>
+</section>
 <section class="wrap section-sm grid-2">
 <div class="panel pad">
 <h2 class="h3">When Windows says "Windows protected your PC"</h2>
@@ -746,7 +755,7 @@ def page_download() -> str:
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
 """
-    return shell("/download/", "Download", "Download the latest GroupLab test build for Windows, Linux or macOS: the installer, the zip, the Linux tarball or an untested Mac build.", body, "Download")
+    return shell("/download/", "Download", "Download the latest GroupLab test build for Windows, Linux, macOS or Android: the installer, the zip, the Linux tarball or an untested Mac build.", body, "Download")
 
 
 def donor() -> dict:
@@ -1961,6 +1970,23 @@ def feature_problems() -> list[str]:
     return found
 
 
+# Entry 265: which download on /download/ stands for each platform the platform statement says is built and published.
+PLATFORM_DOWNLOADS = {"Windows": "grouplab-setup-win-x64.exe", "macOS": "grouplab-macos-", "Linux": "grouplab-linux-x64", "Android": "grouplab-android.apk"}
+
+
+def download_problems() -> list:
+    """Entry 265: every platform in docs/PLATFORM-SUPPORT.md's table has a download on /download/, so none can go missing again."""
+    found = []
+    page = (OUT / "download" / "index.html").read_text(encoding="utf-8")
+    for name in re.findall(r"^\| \*\*([A-Za-z]+)\*\* \|", need(PLATFORM_SUPPORT).read_text(encoding="utf-8"), re.M):
+        asset = PLATFORM_DOWNLOADS.get(name)
+        if asset is None:
+            found.append(f"docs/PLATFORM-SUPPORT.md names {name}, and the site build does not know which download stands for it (PLATFORM_DOWNLOADS)")
+        elif asset not in page:
+            found.append(f"/download/ has no download for {name}, which docs/PLATFORM-SUPPORT.md says is built and published")
+    return found
+
+
 def parity_problems() -> list:
     """Entry 258: every feature says whether it is on the phone, coming, or left out, in docs/PHONE-PARITY.md, and agrees with features.json."""
     found = []
@@ -2956,6 +2982,7 @@ def main() -> None:
     problems += term_problems()
     problems += _screens_stamp.problems()
     problems += parity_problems()
+    problems += download_problems()
     if problems:
         print("\n".join(problems))
         sys.exit("build: checks failed")

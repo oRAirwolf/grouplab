@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1182 |
 | measured | 1550 |
-| decided | 1218 |
+| decided | 1219 |
 | unbacked | 0 |
-| **total** | **3950** |
+| **total** | **3951** |
 
-**693** of them were read one sentence at a time and their backing written against the sentence. The other **3257** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**694** of them were read one sentence at a time and their backing written against the sentence. The other **3257** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3150,6 +3150,7 @@ one that matters.
 - *code* (.github/workflows/package.yml builds on macos; ci.yml runs the suite on macos-latest): Self-contained, built on macOS, and tested by the suite on every change.
 - *decided* (entry 166 section 4, the tester's answers): One tester, an M5 Max, nightly 93 Unsigned: see the Terminal command below M1, M2, M3, M4.
 - *code* (website/build.py page_download(): the two macOS cards and their assets): Not an Intel Mac Download for Apple silicon macOS, Intel grouplab-macos-x64.tar.gz For a Mac with an Intel processor.
+- *decided* (docs/PLATFORM-SUPPORT.md's Android row (Android 10, arm64, 4 GB), entries 207 and 265; the APK is on the rolling nightly release): Android grouplab-android.apk For an arm64 phone or tablet with Android 10 or later and 4 GB of memory.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): When Windows says "Windows protected your PC" Every build is unsigned, because signing costs money the project has not spent.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows says this about any program nobody has paid to sign.
 - *decided* (entries 147 and 166: the command, confirmed on a Mac by the first tester): When macOS refuses to open it macOS puts a quarantine flag on anything downloaded from the internet, and Gatekeeper refuses to open an unsigned application that carries it.

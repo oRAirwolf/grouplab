@@ -2908,6 +2908,10 @@
   "Without GroupLab, two photographs on the main camera at 1x.": {
    "kind": "code",
    "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Android grouplab-android.apk For an arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md's Android row (Android 10, arm64, 4 GB), entries 207 and 265; the APK is on the rolling nightly release"
   }
  },
  "rules": [
