@@ -1,8 +1,8 @@
-DONE WITH THE PHONE AND TABLET (2026-09-28 04:35 UTC, 22:35 MDT on the 27th): you can put the Fold 7 and the Tab S8 Ultra away and turn Stay awake off. Both have nightly 115 and its GroupLab Dev, and every setting the sitting changed is back as it was.
+READY FOR THE PHONE AND TABLET: nightly 118 carries the C3 zeroing grids, Shots Needed to Zero and the camera's new log. On both the Fold 7 and the Tab S8 Ultra: unlock it, turn Wireless debugging off and on again, check Stay awake is on, and leave it on the charger, unlocked, on the same Wi-Fi as the PC. Have a printed GroupLab 5x5 sheet on a table in ordinary room light for the camera test. About thirty minutes, most of it needing nobody; the few steps with the Fold 7 over the sheet will appear here, and this line will say when you can put them away.
 
 # Requests for Alan
 
-**Open: 7.** Most urgent: none today; **50** is a device sitting later, announced by a READY line. **The devices are done with** (both sittings of 2026-09-28); put them away. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 7.** Most urgent: **50**, the device sitting now, with the camera test of 33 inside it (the READY line above). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.

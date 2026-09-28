@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 254.
+**Last rewritten:** 2026-09-28, after entry 254, with 253 and 255 in part.
 
 ---
 
@@ -19,7 +19,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile. 250: the Targets preview draws the words
   (`SheetGlyphs`), Letter first, the one-shot zero note. 251 and 252: the C3 grids (grid style 3), mil and MOA, and Shots Needed to
   Zero (Jylee's), with its article. 254: **C3 released**; the aim point card's real hole in black is found, so the floor is unchanged
-  and request 51 closed. **Next: entry 253** (every screenshot redone, the phone's in request 50's sitting), then 255.
+  and request 51 closed. 253 in part: every desktop screenshot redone, `docs/figures/SCREENSHOTS.md`, and the site build's stale
+  check (`scripts/screens-stamp.py`). **Waiting on request 50's sitting** (READY line posted for nightly 118): 253's phone
+  retakes and 255's camera test (request 33), which the phone now logs.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -33,7 +35,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **A sheet whose shots all landed off by the same amount** is assigned by that amount when the solver is certain (entry 229): the
   6.5 sheet's shots all go to their own bulls. Copies of one design stay separate sessions with labels of their own.
 - **The suppressor article is published** (`suppressor-shift`): Magnus S 0.28 in lower than Dominus K, p = 0.049.
-- **Where a hole's centre is**, question 51: waits on request 9's hand markings.
 - **Storage on GitHub**: `docs/notes/STORAGE.md`. Submissions leave the server only once archived and proven (entries 215 to 217).
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
@@ -45,7 +46,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The survey page is live** (entry 241): grouplab.org/survey/, its worker installed on 2026-09-27; counting restarted under the
   keyed hash, so the everyone-else half is empty until reports arrive. The workers' time limits are in force (TimeoutStartSec).
 - **Sending targets, error reports and the survey are on** (entries 195, 200, 223); crash issues are read at every start.
-- **A receiver counts as live only when an empty POST to it returns its own error from the live site** (entry 195).
 
 ## Next
 
