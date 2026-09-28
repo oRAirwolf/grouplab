@@ -46,7 +46,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Send a target to the project | `send-targets` | on the phone | |
 | Error reports | `error-reports` | on the phone | |
 | The hardware survey | `survey` | on the phone | |
-| Words explained where they appear | `explain-words` | coming | a figure's name opens its explanation by a tap since entry 259 screen 1; glossary words inside sentences do not yet |
+| Words explained where they appear | `explain-words` | on the phone | a figure's name opens its explanation by a tap (entry 259 screen 1), and a secondary line naming a glossary word explains it by a tap (entry 258) |
 | Updates that list what you skipped | `updates` | left out | Google Play updates the phone's application; the desktop's own updater has nothing to do there |
 | Builds for the Mac | `mac` | left out | a platform, not something a phone can do |
 | Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist: the saved sheets of the set's design shot the same day |

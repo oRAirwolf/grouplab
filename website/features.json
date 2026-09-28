@@ -49,7 +49,9 @@
     "On the phone, a picture shared into GroupLab",
     "On the phone, the shots can be shared as a CSV file",
     "On the phone, a set of tiled sheets can be shared",
-    "On the phone, a picture copied in another app can be pasted"
+    "On the phone, a picture copied in another app can be pasted",
+    "On the phone, a line that names a word",
+    "The printed volunteer pack's ruler check"
   ],
   "features": [
     {
@@ -613,9 +615,13 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.96",
+      "mobile": {
+        "noPicture": "a word explained by a tap on the phone is photographed at the next sitting with the phone"
+      },
       "note": "Words like sigma, CEP, MOA and bull are underlined with dots"
     },
     {

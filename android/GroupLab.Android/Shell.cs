@@ -238,7 +238,8 @@ internal static class Screens
     public static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap };
 
     /// <summary>Words that explain rather than say: smaller and dim.</summary>
-    public static TextBlock Dim(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } };
+    // Entry 258: a secondary line that names a glossary word explains it when tapped, as on the desktop.
+    public static TextBlock Dim(string text) => PhoneTerms.Explain(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } });
 
     public static Button Choice(string words, Action chosen) => Pill(words, chosen, primary: false);
 
