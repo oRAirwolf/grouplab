@@ -1,9 +1,9 @@
 GOOD MORNING (the night of 28 September, in five lines):
-1. Out in nightly 120 (17:22 UTC): the printer check (print the check page from Targets, then a card photo, caliper, ruler or scanner; Settings, Printers), tap any number to switch its units, a curled sheet now measured, and on the phone a picture shared in from another app, shots out as CSV and large-sheet advice. Also on the site: "works on any target" with a sample marked by hand, and the day's consistency audit fixed. Nothing needs you for any of it.
+1. Out in nightly 121 (18:17 UTC), on top of 120's printer check and number taps: the picture score now follows how well a picture measures, and on the phone Paste a picture, a set shared as one large page with cut lines, and glossary words explained by a tap. The site is current, and the day's consistency audit is fixed. Nothing needs you for any of it.
 2. THE CAMERA TEST, ready now (about ten minutes, the Fold 7 closed, a printed 5x5 sheet flat on a table in ordinary light): open GroupLab Dev, Capture, Take a picture. (a) GUIDED: hold it over the sheet and follow the words until the shutter fires by itself, then Use this picture. (b) Three bad ones on purpose, about five seconds each: tilted well over, far too close, your hand's shadow across the sheet; note whether the words said what was wrong. (c) One more good one from another height. (d) Tap MANUAL: one ordinary picture with the shutter, then one deliberately bad one, and read the feedback. Then say "camera done", and anything that felt wrong.
 3. When you are at the computer, say "run the server read": one read-only command on the server for entry 261, which asks your approval (request 52 below).
 4. Devices: both show the black idle screen and can be picked up. The Tab S8 Ultra never answered adb overnight, so its pictures and torch reading wait for the next sitting.
-5. Updated 2026-09-28 17:23 UTC. Next: the camera test when you are ready (it now works on nightly 120 too), then the device sitting; question 67 (the card outline's gap) is with you through planning.
+5. Updated 2026-09-28 18:18 UTC. Next: the camera test when you are ready (nightly 121 or later), then the device sitting; question 67 (the card outline's gap) is with you through planning.
 
 # Requests for Alan
 

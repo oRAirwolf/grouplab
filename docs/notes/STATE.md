@@ -65,8 +65,8 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 2
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.120 (fc8a902): the printer check, tap a number to switch units, the curled-sheet mesh, and entry 258's
-  share-in, CSV out and large-sheet advice on the phone. Nightly 120 had first been refused for a wrong note (d3030d8's corrections file).
+- **Last nightly:** 0.2.0-nightly.121 (23325ec): the recalibrated picture score, and on the phone Paste a picture, a set as one
+  large page with cut lines, and glossary taps; nightly 120 (fc8a902) had the printer check and number taps.
 - **The site follows each push by itself**; it serves fc8a902 and later.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
