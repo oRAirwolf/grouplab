@@ -133,6 +133,26 @@
       }
     },
     {
+      "key": "printer-scale",
+      "group": "Reading a target",
+      "name": "Real inches from a photograph",
+      "sentence": "Scan one sheet or measure one ruler distance, once per printer, and photographs of that printer's sheets are corrected to real inches, each saying which printer's scale it used.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "corrected to real inches with your printer's scale",
+      "tour": "targets",
+      "guide": "3-photograph-or-scan-it",
+      "mobile": {
+        "noPicture": "the ruler card on a photograph's result is photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Targets GroupLab did not print",

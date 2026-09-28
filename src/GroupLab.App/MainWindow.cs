@@ -858,6 +858,7 @@ public sealed partial class MainWindow : Window
         })));
         panel.Children.Add(sheetChooser);
         panel.Children.Add(printScale);
+        panel.Children.Add(printerPanel);
         panel.Children.Add(problem);
         panel.Children.Add(Ruled("Shots"));
         panel.Children.Add(shotList);
@@ -1634,6 +1635,7 @@ public sealed partial class MainWindow : Window
 
         detectedState = null;
         plotDefinition = null;
+        printerPanel.IsVisible = false;
         registrationResidual = null;
         savedMarking = null;
         // A new sheet is a new question: entry 131 section 6.3's gate asks again, because the calibre is a property of this group and not of
@@ -1969,8 +1971,9 @@ public sealed partial class MainWindow : Window
         status.Text = automatic ? $"Recognized {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
         var calibre = session.State.Calibre;
+        var printer = settingsStore.LoadChosenPrinter();
         // An interactive run keeps each stage's picture for the timeline; a batch run never asks, so it pays nothing (DESIGN.md section 19).
-        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true), token);
+        var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true, printer: printer), token);
         CrashReporter.InFlight = null;
         token.ThrowIfCancellationRequested();
         LogDetection(result, trace, clock.ElapsedMilliseconds);
@@ -2014,6 +2017,7 @@ public sealed partial class MainWindow : Window
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
         var calibre = session.State.Calibre;
+        var printer = settingsStore.LoadChosenPrinter();
         detectionMetadata = waiting.Metadata;
 
         // Entry 243 section 3.2: the same progress and Cancel as a sheet that named itself; this path had neither.
@@ -2026,7 +2030,7 @@ public sealed partial class MainWindow : Window
         detectionProgress.IsVisible = cancelDetection.IsVisible = cancelDetection.IsEnabled = true;
         try
         {
-            var result = await Task.Run(() => AutomaticMarking.Run(waiting.Grey, waiting.Value, waiting.Metadata, chosen, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true), token);
+            var result = await Task.Run(() => AutomaticMarking.Run(waiting.Grey, waiting.Value, waiting.Metadata, chosen, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true, printer: printer), token);
             token.ThrowIfCancellationRequested();
             LogDetection(result, trace, clock.ElapsedMilliseconds);
             if (ReferenceEquals(waiting.Grey, grey))
@@ -2110,9 +2114,10 @@ public sealed partial class MainWindow : Window
         // The default tool now pans and selects both, so the tool the person chose stays chosen.
         // Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, rather than analysed silently.
         // Entry 161 section 3.2: and where the holes and the calibre named disagree, that is said beside it, in the same place.
-        printScale.Text = string.Join(" ", new[] { DetectionAdvice.PrintScale(result.Measurement), DetectionAdvice.CalibreDisagrees(result, session.State.Calibre) }
+        printScale.Text = string.Join(" ", new[] { DetectionAdvice.PrintScale(result.Measurement, (result.Scale as SheetReference)?.ScaleFrom), DetectionAdvice.CalibreDisagrees(result, session.State.Calibre) }
             .Where(s => !string.IsNullOrEmpty(s)));
         printScale.IsVisible = printScale.Text.Length > 0;
+        ShowPrinterOffer(result);
         // Entry 115 section 4: a sheet whose evidence says it may be another sheet is doubted out loud, rather than measured silently.
         problem.Text = result.Definition is { } against ? DetectionAdvice.Suspect(result.Measurement, against) ?? "" : "";
         // Entry 193 section 4: a sheet with no holes found says so, why if it knows, and how to mark them, rather than a blank result.
@@ -5130,6 +5135,9 @@ public sealed partial class MainWindow : Window
             Refresh();
         };
         column.Children.Add(paperFirst);
+
+        // Entry 271: which printer's measured scale photographs are corrected for.
+        BuildPrinterSettings(column);
 
         // Entry 42 section 2: dark, light, or following the system, remembered like the units.
         column.Children.Add(Ruled("Theme"));

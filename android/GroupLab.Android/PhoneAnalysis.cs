@@ -19,7 +19,7 @@ internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int Ori
 
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
 internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
-    GroupLab.Core.Capture.PictureVerdict? Check = null);
+    GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null);
 
 /// <summary>What the person said about the shooting: the caliber, which changes what GroupLab finds, and the distance.</summary>
 internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
@@ -227,7 +227,8 @@ internal static class PhoneAnalysis
                 null, working, AskWhichSheet: true, Check: unread);
         }
 
-        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre);
+        // Entry 271: a photograph is corrected for the printer chosen, where one has been measured.
+        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre, printer: App.Settings.LoadChosenPrinter());
         survey?.Record(new AnalysisFacts(working.OriginalWidth, working.OriginalHeight, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
         // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
         DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),
@@ -241,7 +242,7 @@ internal static class PhoneAnalysis
 
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture, result.SetSheet);
         long? id = Save(session.State, definition, units, null);
-        return new PhoneResult(session.State, definition, null, id, working, Check: check);
+        return new PhoneResult(session.State, definition, null, id, working, Check: check, Measured: result.Measurement.Scale);
     }
 
     /// <summary>Saves the session, or updates it where it was saved before; null where the database would not take it.</summary>

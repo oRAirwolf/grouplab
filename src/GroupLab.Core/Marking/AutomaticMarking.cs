@@ -119,7 +119,11 @@ public static class AutomaticMarking
     /// never slows the pipeline down. Off by default; only the marking screen turns it on. It sets <see cref="TraceRecorder.KeepArtefacts"/>,
     /// so each stage's record carries its picture as it files and a live run shows it as the stage lands.
     /// </param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false, Measurement.MeasureOptions? options = null)
+    /// <param name="printer">
+    /// The printer profile chosen, NOTES-FROM-PLANNING.md entry 271: a photograph's figures are multiplied by its scale and say so in one
+    /// line; a scan that measured its own scale ignores it. Null keeps a photograph in the sheet's own inches.
+    /// </param>
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false, Measurement.MeasureOptions? options = null, PrinterProfile? printer = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
         cancellation.ThrowIfCancellationRequested();
@@ -146,7 +150,9 @@ public static class AutomaticMarking
         }
 
         var mapping = registration.Mapping;
-        double printScale = SheetReference.Correction(measurement.Scale) ?? 1;
+        // Entry 271: a photograph, or a scan whose resolution is not believed, takes its print scale from the printer profile chosen.
+        var (chosenScale, scaleFrom) = SheetReference.Choose(measurement.Scale, printer);
+        double printScale = chosenScale ?? 1;
         var missing = fiducials.Missing.Select(m => mapping.ToImage(new PointD(m.X, m.Y))).ToList();
         double dpi = (measurement.Scale?.PixelsPerDmmArea ?? fiducials.PixelsPerDmm) * 254;
 
@@ -283,7 +289,7 @@ public static class AutomaticMarking
             $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method.Words()}{(string.IsNullOrWhiteSpace(assignment.Reason) ? "" : ": " + assignment.Reason)}");
         // Entry 243 section 3.1: on a design of several sheets, the sheet's place in its set, from the frame its codes carry.
         int? setSheet = definition.Tiling is { } set && set.Cols * set.Rows > 1 ? fiducials.TileIndex : null;
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = SheetReference.Correction(measurement.Scale) }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition, capture, setSheet);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = chosenScale, ScaleFrom = scaleFrom }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition, capture, setSheet);
     }
 }
 

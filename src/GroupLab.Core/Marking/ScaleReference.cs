@@ -132,12 +132,25 @@ public sealed record SheetReference(IPageMapping Mapping, string Summary) : Scal
     /// </summary>
     public double? PrintScale { get; init; }
 
+    /// <summary>
+    /// Where <see cref="PrintScale"/> came from when it was not this sheet's own scan: a printer profile's line, NOTES-FROM-PLANNING.md entry
+    /// 271, "Corrected for My printer's 99.2 percent, measured from a scan on 28 September." Null where the scan measured it or nothing did.
+    /// </summary>
+    public string? ScaleFrom { get; init; }
+
     /// <summary>Whether this sheet's figures are real inches, which is what a saved or exported group records.</summary>
     public bool RealInches => PrintScale is not null;
 
     /// <summary>The print scale a measurement's figures should be multiplied by, or null to keep them in the sheet's own inches.</summary>
     public static double? Correction(ScaleReport? report) =>
         report?.Scale is { } s && s >= LowestBelievable && s <= HighestBelievable ? s : null;
+
+    /// <summary>
+    /// The print scale to use and where it came from, NOTES-FROM-PLANNING.md entry 271: the sheet's own scan where it measured one GroupLab
+    /// believes, otherwise the printer profile chosen, otherwise none and the figures stay in the sheet's own inches.
+    /// </summary>
+    public static (double? Scale, string? From) Choose(ScaleReport? report, PrinterProfile? printer) =>
+        Correction(report) is { } s ? (s, null) : printer is null ? (null, null) : (printer.Scale, printer.Line);
 
     public override string Description => "the sheet's own printed markers: " + Summary;
 

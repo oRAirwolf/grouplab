@@ -1,0 +1,167 @@
+using GroupLab.Cli.Imaging;
+using GroupLab.Core.Imaging;
+using GroupLab.Core.Marking;
+using GroupLab.Core.Registration;
+using GroupLab.Core.Rendering;
+using GroupLab.Core.Tests.Support;
+
+namespace GroupLab.Core.Tests.Marking;
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 271: a printer's scale, measured once from a scan or a ruler, gives a photograph of its sheets real inches.
+/// </summary>
+public class PrinterProfileTests
+{
+    private const double Dpi = 300;
+    private const double Printed = 0.962;
+    private static readonly DateOnly Today = new(2026, 9, 28);
+
+    /// <summary>GL-CF25-LTR printed at 96.2 percent: one page inch is 288.6 pixels at 300 dpi.</summary>
+    private static GrayImage Small() => SceneRasterizer.Rasterize(SceneBuilder.Build(BuiltIns.Load("GL-CF25-LTR.gltd.json")).Pages[0], Dpi * Printed);
+
+    private static ImageMetadata Photo(GrayImage image) => new("JPEG", image.Width, image.Height, null, null, "Test", "Phone", 1, 6.25, 24);
+
+    private static ImageMetadata Scan(GrayImage image) => new("PNG", image.Width, image.Height, Dpi, Dpi, null, null, null, null, null);
+
+    /// <summary>The distance between two bulls as the result reports it, in inches.</summary>
+    private static double Between(AutomaticResult result, int a, int b)
+    {
+        var bulls = result.Definition!.Bulls;
+        var sheet = Assert.IsType<SheetReference>(result.Scale);
+        var p = sheet.ToTarget(sheet.Mapping.ToImage(new PointD(bulls[a].X, bulls[a].Y)));
+        var q = sheet.ToTarget(sheet.Mapping.ToImage(new PointD(bulls[b].X, bulls[b].Y)));
+        return Math.Sqrt(((p.X - q.X) * (p.X - q.X)) + ((p.Y - q.Y) * (p.Y - q.Y)));
+    }
+
+    private static double Drawn(AutomaticResult result, int a, int b)
+    {
+        var bulls = result.Definition!.Bulls;
+        return Math.Sqrt(Math.Pow(bulls[a].X - bulls[b].X, 2) + Math.Pow(bulls[a].Y - bulls[b].Y, 2)) / 254;
+    }
+
+    /// <summary>Entry 271 section 5: a sheet printed at 96.2 percent and photographed reads its true size once the profile is applied.</summary>
+    [Fact]
+    public void APhotographReadsTrueSizeWithTheProfile()
+    {
+        var image = Small();
+        var printer = new PrinterProfile("My printer", Printed, PrinterMethod.Scan, Today, 0.001);
+        var result = AutomaticMarking.Run(image, image, Photo(image), BuiltIns.Load("GL-CF25-LTR.gltd.json"), new OpenCvSharpBackend(), printer: printer);
+        Assert.Null(result.Failure);
+        var sheet = Assert.IsType<SheetReference>(result.Scale);
+        Assert.Equal(Printed, sheet.PrintScale);
+        Assert.True(sheet.RealInches);
+        Assert.Equal("Corrected for My printer's 96.2 percent, measured from a scan on 28 September.", sheet.ScaleFrom);
+        Assert.Equal(sheet.ScaleFrom, DetectionAdvice.PrintScale(result.Measurement, sheet.ScaleFrom));
+        Assert.InRange(Between(result, 0, 4), (Drawn(result, 0, 4) * Printed) - 0.002, (Drawn(result, 0, 4) * Printed) + 0.002);
+    }
+
+    /// <summary>With no profile, the same photograph stays in the sheet's own inches and says so, as before entry 271.</summary>
+    [Fact]
+    public void APhotographWithNoProfileKeepsTheSheetsInches()
+    {
+        var image = Small();
+        var result = AutomaticMarking.Run(image, image, Photo(image), BuiltIns.Load("GL-CF25-LTR.gltd.json"), new OpenCvSharpBackend());
+        var sheet = Assert.IsType<SheetReference>(result.Scale);
+        Assert.Null(sheet.PrintScale);
+        Assert.Null(sheet.ScaleFrom);
+        Assert.Equal(DetectionAdvice.SheetInches, DetectionAdvice.PrintScale(result.Measurement, sheet.ScaleFrom));
+        Assert.InRange(Between(result, 0, 4), Drawn(result, 0, 4) - 0.002, Drawn(result, 0, 4) + 0.002);
+    }
+
+    /// <summary>
+    /// A scan measures its own scale and the profile is not used; the scan's scale makes a profile; and a ruler read to a sixteenth at each
+    /// end over bull 1 to bull 5 makes one that agrees with it.
+    /// </summary>
+    [Fact]
+    public void AProfileFromAScanAndFromARulerAgree()
+    {
+        var image = Small();
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        var wrong = new PrinterProfile("Office", 1.03, PrinterMethod.Ruler, Today, 0.002);
+        var result = AutomaticMarking.Run(image, image, Scan(image), definition, new OpenCvSharpBackend(), printer: wrong);
+        var sheet = Assert.IsType<SheetReference>(result.Scale);
+        Assert.InRange(sheet.PrintScale!.Value, Printed - 0.0005, Printed + 0.0005);
+        Assert.Null(sheet.ScaleFrom);
+
+        var scan = PrinterProfile.FromScan(null, result.Measurement.Scale, Today);
+        Assert.NotNull(scan);
+        Assert.Equal(PrinterProfile.DefaultName, scan.Name);
+
+        var span = RulerSpan.Of(definition);
+        Assert.NotNull(span);
+        Assert.Equal(("1", "5"), (span.From, span.To));
+        double read = Math.Round(span.DrawnInches * Printed * 16) / 16;
+        var ruler = PrinterProfile.FromRuler("My printer", read, span.DrawnInches, Today);
+        Assert.NotNull(ruler);
+        Assert.True(scan.AgreesWith(ruler), $"scan {scan.Scale:0.0000} ± {scan.Uncertainty:0.0000}, ruler {ruler.Scale:0.0000} ± {ruler.Uncertainty:0.0000}");
+        Assert.Equal(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"Corrected for My printer's {ruler.Scale * 100:0.0} percent, measured with a ruler on 28 September."), ruler.Line);
+    }
+
+    /// <summary>A typing slip is refused rather than saved: no printer prints a sheet at half or twice its size.</summary>
+    [Fact]
+    public void ARulerSlipIsRefused()
+    {
+        Assert.Null(PrinterProfile.FromRuler(null, 3, 6, Today));
+        Assert.Null(PrinterProfile.FromRuler(null, 0, 6, Today));
+        Assert.Null(PrinterProfile.FromRuler(null, double.NaN, 6, Today));
+        Assert.NotNull(PrinterProfile.FromRuler(null, 5.75, 6, Today));
+    }
+
+    /// <summary>A ruler reading is read the ways a person types it, and anything else is asked again.</summary>
+    [Theory]
+    [InlineData("5.75", 5.75)]
+    [InlineData("5 3/4", 5.75)]
+    [InlineData("5.75 in", 5.75)]
+    [InlineData("5.75\"", 5.75)]
+    [InlineData("146.05 mm", 5.75)]
+    [InlineData("14.605cm", 5.75)]
+    [InlineData("23/4", 5.75)]
+    [InlineData("five", null)]
+    [InlineData("", null)]
+    [InlineData("-5", null)]
+    [InlineData("5 3/0", null)]
+    public void ARulerReadingIsReadAsTyped(string typed, double? inches)
+    {
+        var read = RulerSpan.ReadInches(typed);
+        if (inches is null)
+        {
+            Assert.Null(read);
+        }
+        else
+        {
+            Assert.NotNull(read);
+            Assert.Equal(inches.Value, read.Value, 6);
+        }
+    }
+
+    /// <summary>A profile is saved and read back whole, and a damaged one is dropped rather than applied.</summary>
+    [Fact]
+    public void AProfileIsKeptWhole()
+    {
+        var profile = new PrinterProfile("Garage laser", 0.9921, PrinterMethod.Ruler, Today, 0.0052);
+        Assert.Equal(profile, PrinterProfile.FromJson(profile.ToJson()));
+        var damaged = profile.ToJson();
+        damaged["scale"] = 2.5;
+        Assert.Null(PrinterProfile.FromJson(damaged));
+        Assert.Null(PrinterProfile.FromJson(null));
+    }
+
+    /// <summary>A saved session says which printer's scale corrected it.</summary>
+    [Fact]
+    public void ASavedSessionSaysWhichPrinterCorrectedIt()
+    {
+        var sheet = new SheetReference(new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1])), "38 of 38 markers found")
+        {
+            PrintScale = 0.992,
+            ScaleFrom = "Corrected for My printer's 99.2 percent, measured from a scan on 28 September.",
+        };
+        var session = new MarkingSession();
+        session.Open("sheet.jpg", 1);
+        session.SetScale(sheet);
+        session.AddShot(new PointD(1200, 900));
+        var (state, _) = MarkingFile.Read(MarkingFile.Write(session.State));
+        var read = Assert.IsType<SheetReference>(state.Scale);
+        Assert.Equal(0.992, read.PrintScale);
+        Assert.Equal(sheet.ScaleFrom, read.ScaleFrom);
+    }
+}

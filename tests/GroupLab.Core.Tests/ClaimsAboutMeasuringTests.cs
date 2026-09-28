@@ -180,6 +180,20 @@ public class ClaimsAboutMeasuringTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 271 section 4: how a photograph gets real inches is one sentence, and the tour, the user guide, the statement
+    /// of record and the phone's Capture page all say it from <see cref="DetectionAdvice.OncePerPrinter"/>.
+    /// </summary>
+    [Fact]
+    public void HowAPhotographGetsRealInchesIsSaidFromOneSentence()
+    {
+        Assert.Contains("DetectionAdvice.OncePerPrinter", File.ReadAllText(Path.Combine(Repo.Root, "android", "GroupLab.Android", "CapturePage.cs")), StringComparison.Ordinal);
+        Assert.Contains(DetectionAdvice.OncePerPrinter, File.ReadAllText(Path.Combine(Repo.PathTo("docs"), "WHAT-CAN-BE-MEASURED.md")), StringComparison.Ordinal);
+        Assert.Contains(DetectionAdvice.OncePerPrinter, File.ReadAllText(Path.Combine(Repo.PathTo("docs"), "USER-GUIDE.md")), StringComparison.Ordinal);
+        using var tour = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repo.PathTo("website"), "tour.json")));
+        Assert.Contains(DetectionAdvice.OncePerPrinter, tour.RootElement.GetProperty("screens").GetProperty("targets").GetProperty("purpose").GetString(), StringComparison.Ordinal);
+    }
+
+    /// <summary>
     /// Entry 152 section 5.2, the cheap version and the right one: one place says what GroupLab can measure, and everything else points at
     /// it. Two carefully written copies of a statement this specific drift, and then there are two versions of what the project claims with
     /// no way to tell which is the real one. That is exactly how these two claims came to disagree with a research article.

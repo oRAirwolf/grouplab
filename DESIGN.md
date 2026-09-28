@@ -193,7 +193,9 @@ An optional community library hosted by the project lets users share designs by 
 
 ### Print scale verification
 
-Fit-to-page shrinks an A4 target printed on letter by about four percent, and the user will not notice. Because the fiducials are at known coordinates, GroupLab detects this automatically. The correct behaviour is not to silently correct it but to say so: this target printed at 96.2 percent of intended size, measurements corrected accordingly. That converts a silent accuracy bug into visible reassurance.
+Fit-to-page shrinks an A4 target printed on letter by about four percent, and the user will not notice. Because the fiducials are at known coordinates, a **scan** of the sheet detects this automatically: the scanner's stated resolution is an absolute ruler. The correct behaviour is not to silently correct it but to say so: this target printed at 96.2 percent of intended size, measurements corrected accordingly. That converts a silent accuracy bug into visible reassurance.
+
+**A photograph cannot measure it** (NOTES-FROM-PLANNING.md entry 271, and `docs/WHAT-CAN-BE-MEASURED.md`). The tags measure the sheet's shape on any picture (perspective, curl, the lens) and its absolute size only on a scan: with no absolute ruler in the frame, a sheet printed small cannot be told from a full-size sheet a little farther away. So print scale is measured once per printer and remembered. A scan of one GroupLab sheet offers to save its scale as a printer profile, or one ruler measurement between two bulls does the same, and photographs of that printer's sheets are corrected with it from then on, each result saying in one line whose scale it used and how it was measured. With no profile, a photograph's figures stay in the sheet's own inches and say so.
 
 ### The built-in library [r3]
 

@@ -131,3 +131,27 @@ a learned classifier would only be worth it for the kinds of target the tuned de
 
 The measurement script was a scratch test, run once and deleted; its conditions are listed in section 1 so it can be rebuilt as the
 scoreboard.
+
+## 8. A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built)
+
+A photograph cannot measure how large a sheet was printed, because nothing in the frame has a known absolute size
+(`docs/WHAT-CAN-BE-MEASURED.md`). Entry 271 asked whether a card the size of a bank card, ISO/IEC 7810 ID-1, 85.60 by 53.98 mm, laid flat
+on the sheet, could supply one to better than about 0.5 percent at phone resolutions. **This is an estimate from the geometry, not a
+measurement, and nothing is promised until it has been measured on real photographs.**
+
+- **Resolution is not the limit.** A phone photograph of a Letter sheet from about 75 cm gives roughly 400 pixels an inch, so the card's
+  long side spans about 1,350 pixels. A straight edge fitted along its whole length places itself to a few tenths of a pixel, which is a
+  few hundredths of a percent of the card.
+- **The card is not on the paper.** Its top face is 0.76 mm above the sheet, so from 75 cm it reads about 0.1 percent large. That is a
+  known bias and can be taken out, but only if the distance is known roughly, which the sheet's markers give.
+- **The standard allows the card itself a tolerance** of roughly 0.15 percent in its width, so no card is a better ruler than that.
+- **The edges are the real risk.** The rounded corners (3.18 mm radius) mean only the straight runs can be used; a white card on white
+  paper has little contrast; a card's edge is often bevelled and throws a thin shadow; and a card with printing to its edge blurs the line
+  between card and paper. A dark card, or one laid on the sheet's dark printed area, would help.
+- **Taken together** the expected error is about 0.2 to 0.3 percent on a good photograph, inside the 0.5 percent asked, and far worse on a
+  poor one. Phone depth estimates and autofocus distance are percent-level at best and are not used for scale.
+
+**The measurement that would settle it:** one GroupLab sheet scanned at 600 dpi (the truth), then about ten photographs of it with a card
+flat on it, in ordinary light, at different heights and angles, with a light card and a dark one. The card's measured size against the
+scan's scale, photograph by photograph, gives the error directly. Entry 271 holds any card or coin detection until Alan's choices on the
+check page arrive, so the photographs are not asked for yet.

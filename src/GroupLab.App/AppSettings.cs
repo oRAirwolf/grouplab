@@ -194,6 +194,30 @@ public sealed class AppSettingsStore(string path)
     public bool SaveCaptureTorch(int torch) => Save(file => file["captureTorch"] = torch);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 271: every printer profile saved, by name. A profile measured again under the same name replaces the old.
+    /// </summary>
+    public IReadOnlyList<PrinterProfile> LoadPrinters() => Read(file => file["printers"] is JsonArray all
+        ? all.Select(PrinterProfile.FromJson).OfType<PrinterProfile>().ToList()
+        : null) ?? [];
+
+    /// <summary>The profile photographs are corrected with: the one chosen, which is the last one saved unless another was chosen since.</summary>
+    public PrinterProfile? LoadChosenPrinter() => Read(file => file["printer"]?.GetValueKind() == JsonValueKind.String ? (string?)file["printer"] : null) is { } name
+        ? LoadPrinters().FirstOrDefault(p => p.Name == name)
+        : null;
+
+    /// <summary>Saves a profile and makes it the one chosen.</summary>
+    public bool SavePrinter(PrinterProfile printer) => Save(file =>
+    {
+        var kept = file["printers"] is JsonArray all ? all.Select(PrinterProfile.FromJson).OfType<PrinterProfile>().Where(p => p.Name != printer.Name).ToList() : [];
+        kept.Add(printer);
+        file["printers"] = new JsonArray([.. kept.Select(p => (JsonNode)p.ToJson())]);
+        file["printer"] = printer.Name;
+    });
+
+    /// <summary>Chooses a saved profile by name, or none, which leaves photographs in the sheet's own inches.</summary>
+    public bool ChoosePrinter(string? name) => Save(file => file["printer"] = name);
+
+    /// <summary>
     /// Whether one "why" disclosure is open, NOTES-FROM-PLANNING.md entry 109 section 1: the reasoning behind a figure or a judgement sits one
     /// click away on the item it explains, and each remembers it was opened, as the More figures panel does.
     /// </summary>

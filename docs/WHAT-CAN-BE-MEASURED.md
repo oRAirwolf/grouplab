@@ -79,7 +79,9 @@ the difference between two good loads.
 ## So why print at actual size
 
 1. **It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it.** On a photograph a sheet printed small makes every group
-   read large by the same fraction, and nothing on the photograph can tell you how much.
+   read large by the same fraction, and nothing on the photograph can tell you how much. Print scale belongs to the printer,
+   though, and it is stable (NOTES-FROM-PLANNING.md entry 271). For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it. The photograph's result
+   then says whose scale corrected it and how that scale was measured.
 2. **A shrunk sheet is a different sheet.** The bulls are closer together and smaller than the sheet was
    designed for, which is a fact about the shooting rather than the measurement.
 3. **Scaling that is not uniform is not recoverable even in principle.** The registration fits a planar

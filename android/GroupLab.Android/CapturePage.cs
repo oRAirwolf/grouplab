@@ -59,6 +59,11 @@ public sealed class CapturePage : UserControl
 
                 // Entry 233: the one thing on a kitchen counter that still costs a hole, which the camera's live checks do not look for.
                 Screens.Card(Screens.Dim("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one.")),
+
+                // Entry 271 section 4: how a photograph gets real inches, and which printer's scale it will be corrected for.
+                Screens.Card(Screens.Dim(DetectionAdvice.OncePerPrinter + (App.Settings.LoadChosenPrinter() is { } printer
+                    ? string.Create(CultureInfo.CurrentCulture, $" Photographs are corrected for {printer.Name}'s {printer.Scale * 100:0.0} percent.")
+                    : ""))),
             },
         });
         Content = start;

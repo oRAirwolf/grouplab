@@ -2960,6 +2960,46 @@
   "Nothing else holds it (entry 267: the GPL section 7 app-store permission concerns Apple's App Store, and is not pursued while iOS is not planned).": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+  },
+  "A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built) A photograph cannot measure how large a sheet was printed, because nothing in the frame has a known absolute size (`docs/WHAT-CAN-BE-MEASURED.md`).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "Entry 271 asked whether a card the size of a bank card, ISO/IEC 7810 ID-1, 85.60 by 53.98 mm, laid flat on the sheet, could supply one to better than about 0.5 percent at phone resolutions.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "**This is an estimate from the geometry, not a measurement, and nothing is promised until it has been measured on real photographs.** - **Resolution is not the limit.** A phone photograph of a Letter sheet from about 75 cm gives roughly 400 pixels an inch, so the card's long side spans about 1,350 pixels.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "- **The card is not on the paper.** Its top face is 0.76 mm above the sheet, so from 75 cm it reads about 0.1 percent large.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "- **The standard allows the card itself a tolerance** of roughly 0.15 percent in its width, so no card is a better ruler than that.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "- **The edges are the real risk.** The rounded corners (3.18 mm radius) mean only the straight runs can be used; a white card on white paper has little contrast; a card's edge is often bevelled and throws a thin shadow; and a card with printing to its edge blurs the line between card and paper.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "- **Taken together** the expected error is about 0.2 to 0.3 percent on a good photograph, inside the 0.5 percent asked, and far worse on a poor one.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "**The measurement that would settle it:** one GroupLab sheet scanned at 600 dpi (the truth), then about ten photographs of it with a card flat on it, in ordinary light, at different heights and angles, with a light card and a dark one.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "Entry 271 holds any card or coin detection until Alan's choices on the check page arrive, so the photographs are not asked for yet.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so"
+  },
+  "**Real inches from a photograph.** A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your printer printed at 97 percent makes every group read about 3 percent large.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; AutomaticMarking.Run printer; MainWindow.Printer.cs; android PrinterCard.cs (entry 271)"
   }
  },
  "rules": [

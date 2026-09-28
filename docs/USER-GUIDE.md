@@ -74,6 +74,12 @@ For photographs:
 - keep the whole sheet and all its corner squares in the frame;
 - do not crop the pictures, and do not send them through a messaging app, which shrinks them.
 
+**Real inches from a photograph.** A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your
+printer printed at 97 percent makes every group read about 3 percent large. For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it.
+After a scan of a GroupLab sheet, GroupLab offers to keep the scale it measured for that printer; on a photograph, **Measure this sheet
+with a ruler** asks for the distance between two bulls, center to center, and can keep that too. Photographs are then corrected with the
+printer chosen in Settings, and the result says so in one line, naming the printer and how its scale was measured.
+
 ## 4. Mark it and settle the review queue
 
 Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sheet the rest happens on its own:

@@ -118,6 +118,12 @@ public static class DetectionAdvice
     public const string WhyActualSize = "It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it.";
 
     /// <summary>
+    /// How a photograph gets real inches, NOTES-FROM-PLANNING.md entry 271 section 4: the one sentence the tour, the user guide and the capture
+    /// screen take it from.
+    /// </summary>
+    public const string OncePerPrinter = "For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it.";
+
+    /// <summary>
     /// What the print scale means for this sheet's figures, or null where there is nothing to say.
     /// <para>
     /// <b>On a scan the figures are real inches.</b> NOTES-FROM-PLANNING.md entry 171 section 1 answered question 49: a scan measures the print
@@ -127,18 +133,23 @@ public static class DetectionAdvice
     /// entry 161 section 6 had made this sentence say so.
     /// </para>
     /// </summary>
-    public static string? PrintScale(SheetMeasurement measurement)
+    /// <param name="measurement">The sheet as measured.</param>
+    /// <param name="scaleFrom">
+    /// The printer profile's line where one corrected this sheet, NOTES-FROM-PLANNING.md entry 271 (<see cref="SheetReference.ScaleFrom"/>); it
+    /// takes the place of <see cref="SheetInches"/>.
+    /// </param>
+    public static string? PrintScale(SheetMeasurement measurement, string? scaleFrom = null)
     {
         ArgumentNullException.ThrowIfNull(measurement);
         if (measurement.Scale?.Scale is not { } scale)
         {
-            return SheetInches;
+            return scaleFrom ?? SheetInches;
         }
 
         if (SheetReference.Correction(measurement.Scale) is null)
         {
             return string.Create(CultureInfo.InvariantCulture,
-                $"The file's stated resolution puts this sheet at {scale * 100:0.0} percent of its intended size, which is more likely a wrong resolution than a real print, so nothing is corrected. ") + SheetInches;
+                $"The file's stated resolution puts this sheet at {scale * 100:0.0} percent of its intended size, which is more likely a wrong resolution than a real print, so it is not used. ") + (scaleFrom ?? SheetInches);
         }
 
         return Math.Abs(scale - 1) <= ScaleWorthSaying

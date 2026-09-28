@@ -74,6 +74,12 @@ public sealed class ResultView : UserControl
         var picture = new StackPanel { Spacing = 12 };
         var actions = new StackPanel { Spacing = 12 };
         numbers.Children.Add(full);
+        // Entry 271: what the figures are measured in, and on a photograph the ruler that makes them real inches.
+        if (PrinterCard.For(result, session, Changed) is { } printer)
+        {
+            numbers.Children.Add(printer);
+        }
+
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
             editor = new SheetEditor(new Bitmap(path), () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));

@@ -275,7 +275,7 @@ public static class MarkingFile
             scales = perBull.Scales.Select(s => new { bull = s.Bull, across = new { a = s.Across.A, b = s.Across.B, inches = s.Across.Inches }, upDown = s.UpDown is { } u ? new { a = u.A, b = u.B, inches = u.Inches } : null }),
             bulls = perBull.Bulls.Select(b => new { bull = b.Key, at = b.Value }),
         },
-        SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, inches = sheet.RealInches ? "real" : "sheet", printScale = sheet.PrintScale, mapping = MappingDocument(sheet.Mapping) },
+        SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, inches = sheet.RealInches ? "real" : "sheet", printScale = sheet.PrintScale, scaleFrom = sheet.ScaleFrom, mapping = MappingDocument(sheet.Mapping) },
         _ => null,
     };
 
@@ -380,7 +380,7 @@ public static class MarkingFile
                     [.. node!["scales"]!.AsArray().Select(s => new BullScale((int)s!["bull"]!, Length(s["across"]!), s["upDown"] is JsonObject u ? Length(u) : null))],
                     node["bulls"]!.AsArray().ToDictionary(b => (int)b!["bull"]!, b => Point(b!["at"])!.Value));
             case "sheet" when ReadMapping(node!["mapping"]) is { } mapping:
-                return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"], PrintScale = (double?)node["printScale"] };
+                return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"], PrintScale = (double?)node["printScale"], ScaleFrom = (string?)node["scaleFrom"] };
             case "sheet":
                 notes.Add("The sheet's registration is not stored in the file. Detect on the GroupLab sheet again to restore its scale.");
                 return null;
