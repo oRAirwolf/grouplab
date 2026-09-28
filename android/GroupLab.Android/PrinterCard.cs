@@ -23,6 +23,11 @@ internal static class PrinterCard
         var said = Screens.Dim(sheet.ScaleFrom ?? (sheet.RealInches ? "" : DetectionAdvice.SheetInches));
         said.IsVisible = said.Text!.Length > 0;
         var card = new StackPanel { Spacing = 8, Children = { said } };
+        // Entry 273 section 5: the paper's own edge, as a check on the profile or on a sheet printed with Fit to page.
+        if (PaperEdgeCheck.Advice(result.Paper, App.Settings.PrinterForPhotos()) is { } edge)
+        {
+            card.Children.Add(Screens.Line(edge));
+        }
 
         if (PrinterProfile.FromScan(null, result.Measured, Today()) is { } measured)
         {
@@ -42,6 +47,8 @@ internal static class PrinterCard
         }
         else if (!sheet.RealInches && RulerSpan.Of(definition) is { } span)
         {
+            // Entry 273 section 5: "Measured in the sheet's own inches", with the way to real inches beside it.
+            card.Children.Add(Screens.Choice("Check your printer", () => Shell.Current?.ShowPrinterCheck()));
             var form = new StackPanel { Spacing = 8, IsVisible = false };
             var reading = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "5 3/4 or 146 mm" };
             var keep = new CheckBox { Content = "Keep it for photos of sheets from this printer", IsChecked = true, MinHeight = Screens.Touch };
@@ -78,7 +85,7 @@ internal static class PrinterCard
                 bool kept = keep.IsChecked == true;
                 string line = kept
                     ? profile.Line
-                    : string.Create(CultureInfo.CurrentCulture, $"Corrected for this sheet's {profile.Scale * 100:0.0} percent, measured with a ruler.");
+                    : string.Create(CultureInfo.CurrentCulture, $"Corrected for this sheet, {profile.Percentages}, measured with a ruler");
                 if (kept)
                 {
                     App.Settings.SavePrinter(profile);
@@ -86,7 +93,7 @@ internal static class PrinterCard
 
                 if (session.State.Scale is SheetReference current)
                 {
-                    session.SetScale(current with { PrintScale = profile.Scale, ScaleFrom = line });
+                    session.SetScale(current.CorrectedBy(profile, line));
                 }
 
                 said.Text = line;

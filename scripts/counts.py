@@ -47,7 +47,8 @@ def counts() -> dict[str, int]:
     targets = sorted((REPO / "targets").glob("*.gltd.json"))
     # A tiled sheet's 3x2 preset is the same sheet laid out on six pages. The library lists it as its own
     # row, so it is an entry, and it is not a sheet.
-    sheets = [t for t in targets if ".3x2." not in t.name]
+    # Entry 273: the printer check page is printed from the library but is not a target, so it is not a sheet.
+    sheets = [t for t in targets if ".3x2." not in t.name and not t.name.startswith("GL-SCALE-")]
 
     research = REPO / "website" / "research"
     articles = [p for p in research.glob("*.md") if p.stem.isascii() and p.stem != "PUBLISHED"]

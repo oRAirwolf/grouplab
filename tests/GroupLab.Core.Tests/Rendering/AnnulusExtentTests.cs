@@ -1,5 +1,7 @@
+using GroupLab.Core.Marking;
 using GroupLab.Core.Rendering;
 using GroupLab.Core.Tests.Support;
+
 using Xunit.Abstractions;
 
 namespace GroupLab.Core.Tests.Rendering;
@@ -35,7 +37,7 @@ public class AnnulusExtentTests(ITestOutputHelper output)
         var d = BuiltIns.Load(file);
         var result = TargetRenderer.Render(d);
         var bands = result.Pages[0].Items.OfType<DiscBand>().ToList();
-        int[] sample = [.. new[] { 0, d.Bulls.Count(b => b.Scoring) - 1, d.Bulls.Count - 1 }.Distinct()];
+        int[] sample = [.. new[] { 0, d.Bulls.Count(b => b.Scoring) - 1, d.Bulls.Count - 1 }.Where(i => i >= 0).Distinct()];
         var failures = new List<string>();
         double worst = 0;
 
@@ -57,7 +59,8 @@ public class AnnulusExtentTests(ITestOutputHelper output)
                 // An annulus is measured along each ray, which crosses its band once. A solid disc is measured along a
                 // whole diameter, so a centre error of a fraction of a pixel cancels rather than counting against it.
                 // On a zeroing sheet the grid's axes cross the aiming mark, so rays along them measure grid ink too.
-                bool gridThroughBull = d.Grids?.Any(g => g.CentreX == bull.X && g.CentreY == bull.Y) ?? false;
+                // Entry 273: the printer check page's crosshairs are arms across their rings, on the same four rays.
+                bool gridThroughBull = (d.Grids?.Any(g => g.CentreX == bull.X && g.CentreY == bull.Y) ?? false) || PrinterCheck.IsCheckPage(d);
                 for (int n = 0; n < Directions; n++)
                 {
                     if (gridThroughBull && n % (Directions / 4) == 0)

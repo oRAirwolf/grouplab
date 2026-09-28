@@ -110,6 +110,7 @@ public static class Projection
             var (minor, majorStroke, axis) = m.Style switch
             {
                 WireCodes.ScopeGridStyle => (GridStyle3.FineStroke, GridStyle3.WholeStroke, GridStyle3.HeavyStroke),
+                WireCodes.CheckPageStyle => (GridStyle4.LineStroke, GridStyle4.LineStroke, GridStyle4.LineStroke),
                 WireCodes.ZeroingGridStyle => (GridStyle2.FineStroke, GridStyle2.MajorStroke, GridStyle2.WholeStroke),
                 _ => (MinorStroke, MajorStroke, AxisStroke),
             };
@@ -117,7 +118,7 @@ public static class Projection
                 WireCodes.GridUnitOf(m.Unit)!.Value, m.Distance, m.DistanceUnit == 1 ? DistanceUnit.Metres : DistanceUnit.Yards,
                 InkKey(m.InkPair & 0xF), major, major, minor, majorStroke, axis,
                 m.LabelStep, major,
-                zeroing ? m.Style : null, zeroing ? m.FieldX * q : null, zeroing ? m.FieldY * q : null, zeroing ? m.WholeEvery : null);
+                m.Style == WireCodes.StandardGridStyle ? null : m.Style, zeroing ? m.FieldX * q : null, zeroing ? m.FieldY * q : null, zeroing ? m.WholeEvery : null);
         }).ToList();
 
         var definition = new TargetDefinition(1, 0, definitionId, definitionId, null, null, null, null, "dmm", page, inks, ringSets,
@@ -541,6 +542,15 @@ public static class Projection
                     if (g.FieldX is null || g.FieldY is null || g.WholeEvery is not > 0)
                     {
                         Refuse("encode.notCarried", path, "Grid style 2 needs fieldX, fieldY and wholeEvery (question 59).");
+                    }
+                }
+                else if (g.StyleOrDefault == GridStyle4.Style)
+                {
+                    if (g.MinorStroke is not (null or GridStyle4.LineStroke) || g.MajorStroke is not (null or GridStyle4.LineStroke)
+                        || g.AxisStroke is not (null or GridStyle4.LineStroke) || g.FieldX is not null || g.FieldY is not null || g.WholeEvery is not null)
+                    {
+                        Refuse("encode.notCarried", path,
+                            $"Grid style 4, the printer check page (entry 273), is drawn in {GridStyle4.LineStroke} dmm lines and carries no field.");
                     }
                 }
                 else if (g.Style is not (null or 1) || g.FieldX is not null || g.FieldY is not null || g.WholeEvery is not null)

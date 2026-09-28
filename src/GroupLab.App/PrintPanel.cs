@@ -735,7 +735,7 @@ public sealed class PrintPanel : UserControl
         // Entry 105 section 9: a launch that worked leaves a trace too, which is what was missing when the print verb printed silently.
         DiagnosticLog.Info("print.open", [.. DiagnosticLog.File(path), ("verb", "none"), ("returned", true)]);
         SetStatus(opened, kind);
-        Confirm(opened);
+        Confirm(opened, checkPrinter: selected is { } printed ? PrinterOffer?.Invoke(printed.Definition) : null);
     }
 
     /// <summary>
@@ -796,7 +796,7 @@ public sealed class PrintPanel : UserControl
 
         DiagnosticLog.Info("print.open", [.. DiagnosticLog.File(path), ("verb", "none"), ("returned", true), ("kind", "pack")]);
         SetStatus(opened, kind);
-        Confirm(opened);
+        Confirm(opened, checkPrinter: selected is { } printed ? PrinterOffer?.Invoke(printed.Definition) : null);
     }
 
     /// <summary>
@@ -842,7 +842,7 @@ public sealed class PrintPanel : UserControl
                 break;
             case PrintOutcomeKind.Sent:
                 SetStatus(outcome.Message, StatusKind.Success);
-                Confirm(outcome.Message, "Printed");
+                Confirm(outcome.Message, "Printed", PrinterOffer?.Invoke(selected.Definition));
                 break;
             default:
                 SetStatus(outcome.Message, StatusKind.Alert);
@@ -855,9 +855,10 @@ public sealed class PrintPanel : UserControl
     /// The confirmation entry 106 section 1 asks for: a status line was missed, so a dialog says what GroupLab did and what the person must do,
     /// and nothing more, since on this path GroupLab only opened a file.
     /// </summary>
-    private void Confirm(string text, string heading = "Open to print")
+    private void Confirm(string text, string heading = "Open to print", Action? checkPrinter = null)
     {
         var ok = new Button { Content = "OK", HorizontalAlignment = HorizontalAlignment.Right, IsDefault = true, Classes = { AppStyles.Primary } };
+        var body = new StackPanel { Margin = new Thickness(Tokens.Space12), Spacing = Tokens.Space12, Children = { new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap } } };
         var dialog = new Window
         {
             Title = heading,
@@ -865,13 +866,25 @@ public sealed class PrintPanel : UserControl
             SizeToContent = SizeToContent.Height,
             CanResize = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Thickness(Tokens.Space12),
-                Spacing = Tokens.Space12,
-                Children = { new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap }, ok },
-            },
+            Content = body,
         };
+        // Entry 273: the first time a sheet is printed, the printer check is offered, since this is the printer its photos will come from.
+        if (checkPrinter is not null)
+        {
+            var check = new Button { Content = "Check this printer" };
+            check.Click += (_, _) =>
+            {
+                dialog.Close();
+                checkPrinter();
+            };
+            body.Children.Add(new TextBlock { Text = "Check this printer once, and every photo of a GroupLab sheet it printed measures in real inches.", TextWrapping = TextWrapping.Wrap });
+            body.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8, HorizontalAlignment = HorizontalAlignment.Right, Children = { check, ok } });
+        }
+        else
+        {
+            body.Children.Add(ok);
+        }
+
         ok.Click += (_, _) => dialog.Close();
         Confirmation = dialog;
         if (TopLevel.GetTopLevel(this) is Window owner)
@@ -879,6 +892,12 @@ public sealed class PrintPanel : UserControl
             _ = dialog.ShowDialog(owner);
         }
     }
+
+    /// <summary>
+    /// Entry 273: given the sheet just printed, the printer check to offer after it, or null where it is not due: it is offered once, the
+    /// first time a sheet is printed with no printer checked, and never after printing the check page itself.
+    /// </summary>
+    internal Func<TargetDefinition, Action?>? PrinterOffer { get; set; }
 
     /// <summary>The last confirmation shown, for the headless tests.</summary>
     internal Window? Confirmation { get; private set; }

@@ -227,6 +227,12 @@ public static class SceneBuilder
                     continue;
                 }
 
+                if (g.StyleOrDefault == GridStyle4.Style)
+                {
+                    AddCheckPage(items);
+                    continue;
+                }
+
                 var xs = MeasurementGridLines.Positions(g.CentreX, g.Half, g.Divisions);
                 var ys = MeasurementGridLines.Positions(g.CentreY, g.Half, g.Divisions);
                 long left = 2L * (g.CentreX - g.Half), right = 2L * (g.CentreX + g.Half);
@@ -502,6 +508,123 @@ public static class SceneBuilder
                 items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x, middle - (line / 2), side, line));
                 items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x + (side / 2) - GridStyle3.TickStroke, middle - (side / 2), 2L * GridStyle3.TickStroke, side));
             });
+        }
+
+        /// <summary>
+        /// Grid style 4, the printer check page of entries 272 and 273, as Alan approved it: the rulers, the crosshairs' arms and the dashed
+        /// guides between them, the card outline and every word, all derived by <see cref="GridStyle4"/> from the page size. The crosshairs'
+        /// circles are the definition's own bulls, drawn with the rest of the bulls.
+        /// </summary>
+        private void AddCheckPage(List<SceneItem> items)
+        {
+            var ink = RoleColour(InkRole.Text);
+            const SceneLayer layer = SceneLayer.MeasurementGrid;
+            long line = GridStyle4.LineStroke;
+            void Rect(long x, long y, long w, long h) => items.Add(new RectFill(layer, ink, 2 * x, 2 * y, 2 * w, 2 * h));
+            void Text(long x, long baseline, int cap, string text, TextAnchor anchor, bool bold = false, long room = 0)
+            {
+                long size = 2L * GridStyle3.FontSizeForCap(cap);
+                long wide = HelveticaMetrics.TextWidth(text, size, bold);
+                if (room > 0 && wide > 2 * room)
+                {
+                    size = size * 2 * room / wide;
+                }
+
+                items.Add(new TextRun(layer, ink, 2 * x, 2 * baseline, size, text, anchor, bold));
+            }
+
+            void Dashed(long x0, long y0, long x1, long y1)
+            {
+                const long dash = 20, gap = 16;
+                bool across = y0 == y1;
+                for (long s = across ? x0 : y0, end = across ? x1 : y1; s < end; s += dash + gap)
+                {
+                    long e = Math.Min(s + dash, end);
+                    if (across)
+                    {
+                        Rect(s, y0 - 1, e - s, 2);
+                    }
+                    else
+                    {
+                        Rect(x0 - 1, s, 2, e - s);
+                    }
+                }
+            }
+
+            var page = d.Page;
+            int middle = page.Width / 2;
+
+            // The title block, between the two top codes.
+            Text(middle, 150, 44, GridStyle4.Title, TextAnchor.Centre, bold: true);
+            Text(middle, 225, 24, GridStyle4.PrintAtActualSize, TextAnchor.Centre);
+            Text(middle, 290, 20, GridStyle4.PageName(page), TextAnchor.Centre);
+
+            // The ruler down the side, tick to tick, its words beside its top.
+            var (dx, top, bottom) = GridStyle4.RulerDown(page);
+            Rect(dx - (line / 2), top, line, bottom - top);
+            Rect(dx - (GridStyle4.EndTick / 2), top - (line / 2), GridStyle4.EndTick, line);
+            Rect(dx - (GridStyle4.EndTick / 2), bottom - (line / 2), GridStyle4.EndTick, line);
+            Text(dx + 45, 400, 20, "DOWN THIS SIDE, " + GridStyle4.RulerLabel(GridStyle4.RulerDownDmm), TextAnchor.Left, room: 1300);
+
+            // The ruler across the bottom.
+            var (ay, left, right) = GridStyle4.RulerAcross(page);
+            Rect(left, ay - (line / 2), right - left, line);
+            Rect(left - (line / 2), ay - (GridStyle4.EndTick / 2), line, GridStyle4.EndTick);
+            Rect(right - (line / 2), ay - (GridStyle4.EndTick / 2), line, GridStyle4.EndTick);
+            Text((left + right) / 2, ay - 50, 20, GridStyle4.RulerLabel(GridStyle4.RulerAcrossDmm), TextAnchor.Centre);
+
+            // The crosshairs' arms, and the dashed guides between their centers.
+            var cross = GridStyle4.Crosshairs(page);
+            foreach (var c in cross)
+            {
+                Rect(c.X - GridStyle4.CrossArm, c.Y - (line / 2), 2 * GridStyle4.CrossArm, line);
+                Rect(c.X - (line / 2), c.Y - GridStyle4.CrossArm, line, 2 * GridStyle4.CrossArm);
+            }
+
+            Dashed(cross[0].X + GridStyle4.CrossArm + 20, cross[0].Y, cross[1].X - GridStyle4.CrossArm - 20, cross[1].Y);
+            Dashed(cross[1].X, cross[1].Y + GridStyle4.CrossArm + 20, cross[1].X, cross[2].Y - GridStyle4.CrossArm - 20);
+            Text((cross[0].X + cross[1].X) / 2, cross[0].Y - 40, 20, GridStyle4.CaliperLabel, TextAnchor.Centre);
+            Text(cross[2].X - GridStyle4.CrossArm - 30, cross[2].Y + 12, 20, "DOWN, " + GridStyle4.CaliperLabel, TextAnchor.Right, room: 1400);
+
+            // The card outline, a gap of white outside the card's size so the card's edges lie on paper, and its words.
+            var card = GridStyle4.Card(page);
+            long o = GridStyle4.OutlineStroke, gap = GridStyle4.OutlineGap, w = GridStyle4.CardWidthDmm, h = GridStyle4.CardHeightDmm;
+            Rect(card.X - gap - o, card.Y - gap - o, w + (2 * (gap + o)), o);
+            Rect(card.X - gap - o, card.Y + h + gap, w + (2 * (gap + o)), o);
+            Rect(card.X - gap - o, card.Y - gap, o, h + (2 * gap));
+            Rect(card.X + w + gap, card.Y - gap, o, h + (2 * gap));
+            Text(card.X - gap - o, card.Y - gap - o - 22, 20, "CARD", TextAnchor.Left, bold: true);
+            long cx = card.X + (w / 2);
+            Text(cx, card.Y + (h / 2) - 40, 28, GridStyle4.CardHeading, TextAnchor.Centre, bold: true, room: w - 60);
+            Text(cx, card.Y + (h / 2) + 30, 22, GridStyle4.CardSize, TextAnchor.Centre);
+            Text(cx, card.Y + (h / 2) + 90, 20, GridStyle4.CardNote, TextAnchor.Centre);
+
+            // The four instructions under the card, each a bold lead and its words, wrapped to the room beside the dashed guide.
+            long x0 = 300, room = cross[1].X - 80 - x0, baselineY = 1760;
+            Text(x0, baselineY, 28, GridStyle4.InstructionsHeading, TextAnchor.Left, bold: true, room: room);
+            long size = 2L * GridStyle3.FontSizeForCap(22);
+            foreach (var (lead, words) in GridStyle4.Instructions)
+            {
+                baselineY += 80;
+                long leadWidth = (HelveticaMetrics.TextWidth(lead + " ", size, bold: true) + 1) / 2;
+                items.Add(new TextRun(layer, ink, 2 * x0, 2 * baselineY, size, lead, TextAnchor.Left, true));
+                var lineWords = new List<string>();
+                long start = x0 + leadWidth;
+                foreach (string word in words.Split(' '))
+                {
+                    string trial = string.Join(' ', lineWords.Append(word));
+                    if (lineWords.Count > 0 && (HelveticaMetrics.TextWidth(trial, size) / 2) > room - (start - x0))
+                    {
+                        items.Add(new TextRun(layer, ink, 2 * start, 2 * baselineY, size, string.Join(' ', lineWords), TextAnchor.Left));
+                        lineWords.Clear();
+                        baselineY += 55;
+                    }
+
+                    lineWords.Add(word);
+                }
+
+                items.Add(new TextRun(layer, ink, 2 * start, 2 * baselineY, size, string.Join(' ', lineWords), TextAnchor.Left));
+            }
         }
 
         /// <summary>The check bar below the numbers: 4 in or 10 cm, a tick at every inch or centimetre, and a line saying so.</summary>

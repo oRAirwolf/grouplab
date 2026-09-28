@@ -18,6 +18,46 @@ public sealed class SettingsView : UserControl
         var column = new StackPanel { Spacing = 12 };
         // Entry 246, look B: the page's title, each section's heading, its choices as cards and what it explains in the dim style.
         column.Children.Add(Screens.Title("Settings"));
+
+        // Entry 273 section 4: the printers, which one photographs are corrected for, check again, delete, add, and correction off.
+        column.Children.Add(Screens.Heading("Printers"));
+        column.Children.Add(Screens.Dim(GroupLab.Core.Marking.DetectionAdvice.OncePerPrinter));
+        var printers = settings.LoadPrinters();
+        var chosenPrinter = settings.LoadChosenPrinter();
+        if (printers.Count == 0)
+        {
+            column.Children.Add(Screens.Line("No printer checked yet, so photographs are measured in the sheet's own inches."));
+        }
+
+        foreach (var p in printers)
+        {
+            var use = new RadioButton
+            {
+                GroupName = "printer",
+                IsChecked = p.Name == chosenPrinter?.Name,
+                MinHeight = Screens.Touch,
+                Content = new TextBlock { Text = $"{p.Name}: {p.Percentages}, measured {p.How}", TextWrapping = Avalonia.Media.TextWrapping.Wrap },
+            };
+            use.IsCheckedChanged += (_, _) =>
+            {
+                if (use.IsChecked == true)
+                {
+                    settings.ChoosePrinter(p.Name);
+                }
+            };
+            column.Children.Add(use);
+            column.Children.Add(Screens.Choice("Check again", () => Shell.Current?.ShowPrinterCheck(p.Name)));
+            column.Children.Add(Screens.Choice("Delete " + p.Name, () =>
+            {
+                settings.DeletePrinter(p.Name);
+                Shell.Current?.Show(Shell.Place.Settings);
+            }));
+        }
+
+        var correcting = new CheckBox { Content = "Correct photographs by the chosen printer's scale", IsChecked = settings.LoadPrinterCorrection(), MinHeight = Screens.Touch };
+        correcting.IsCheckedChanged += (_, _) => settings.SavePrinterCorrection(correcting.IsChecked == true);
+        column.Children.Add(correcting);
+        column.Children.Add(Screens.Choice("Add a printer", () => Shell.Current?.ShowPrinterCheck("")));
         column.Children.Add(Screens.Heading("Sharing"));
 
         column.Children.Add(Screens.Heading("Sending targets"));

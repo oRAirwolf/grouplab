@@ -109,6 +109,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Photographs at an angle | the marking screen | the angle and its limit named |
 | Words explained where they appear | the analysis | a word's explanation open |
 | Pool the sheets of a set | Session records | a pooled set with a missing sheet named |
+| Tap a number to switch units | the analysis, with the one-time hint | a figure switched, with the note at the bottom |
 
 ## Not published
 

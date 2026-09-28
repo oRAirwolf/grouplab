@@ -145,6 +145,7 @@ source that is not on the list below, or if any test writing into this folder co
 | `targets-zero-light-2560x1440.png` | built-in library sheet |
 | `sheet-c-bull.png` | built-in library sheet |
 | `sheet-e-bull.png` | built-in library sheet |
+| `sheet-scale-check.png` | built-in library sheet |
 | `sheet-large-set.png` | built-in library sheet |
 | `sheet-zero-mil-100m.png` | built-in library sheet |
 | `sheet-zero-mil-100y.png` | built-in library sheet |

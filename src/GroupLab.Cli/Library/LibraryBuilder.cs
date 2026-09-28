@@ -302,7 +302,44 @@ public static class LibraryBuilder
             added.Add(Tiles(built.Single(t => t.FileName == source + ".gltd.json"), stem, name, page));
         }
 
+        added.Add(CheckPage("GL-SCALE-LTR-1", "GroupLab Printer Check, Letter", "letter"));
+        added.Add(CheckPage("GL-SCALE-A4-1", "GroupLab Printer Check, A4", "a4"));
         return added;
+    }
+
+    internal const string CheckPageCreated = "2026-09-28";
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 272 and 273: the printer check page, as Alan approved it, built like any sheet so it reads itself from a
+    /// photograph or a scan. Its artwork is grid style 4 (<see cref="GridStyle4"/>); the three crosshairs' circles are bulls that are not
+    /// scored, which meets the format's one-bull minimum; its markers stand where <see cref="GridStyle4.MarkerSpots"/> leaves room.
+    /// </summary>
+    internal static BuiltInTarget CheckPage(string stem, string name, string pageKey)
+    {
+        var (size, width, height) = Pages[pageKey];
+        var page = new Page(size, width, height, Orientation.Portrait);
+        var card = GridStyle4.Card(page);
+        var grid = new MeasurementGrid("check", card.X + (GridStyle4.CardWidthDmm / 2), card.Y + (GridStyle4.CardHeightDmm / 2), 100, 10, 1,
+            GridUnit.Cm, 100, DistanceUnit.Metres, "black", "black", "black", GridStyle4.LineStroke, GridStyle4.LineStroke, GridStyle4.LineStroke,
+            0, "black", GridStyle4.Style);
+        const string description = "The printer check page: print it at Actual size (100%) and measure it once, with a card and one photo, a digital "
+            + "caliper, a ruler or a scanner, and every photograph of a GroupLab sheet from that printer measures in real inches. It is not a target.";
+        var definition = new TargetDefinition(
+            1, 0, null, name, description, "GroupLab built-in library", "CC0-1.0", CheckPageCreated, "dmm",
+            page,
+            Inks,
+            [new RingSet("cross", [new Disc(GridStyle4.RingOuter, "black"), new Disc(GridStyle4.RingInner, "paper")])],
+            [.. GridStyle4.Crosshairs(page).Select(c => new Bull(c.X, c.Y, "cross", null, false, null))],
+            null,
+            new Fiducials("field-ring-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
+            Codes(width, height, 0, 2),
+            Print,
+            null,
+            null,
+            null,
+            [grid],
+            []);
+        return Finish(name, stem, definition);
     }
 
     /// <summary>

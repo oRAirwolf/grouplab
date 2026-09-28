@@ -613,6 +613,20 @@ white centre stays white.
 **Markers.** `field-ring-1` places a style 3 grid's markers only in the two side columns, at the heights of the ticks halfway between the
 numbered lines, because the numbers take the rows above and below the grid and its corners.
 
+#### Grid style 4: the printer check page (NOTES-FROM-PLANNING.md entries 272 and 273)
+
+Style 4 is not a measurement grid. It marks the definition as the page a printer's scale is checked on, and everything printed on it is
+derived from the page size by `GridStyle4`, as style 3's legend is: the title and "Print at Actual size (100%). Never Fit to page.", the
+page's short name (GL-SCALE-LTR-1 or GL-SCALE-A4-1), three crosshairs in an L 1500 dmm apart center to center, a ruler line 2500 dmm down
+the left side and one 1900 dmm across the bottom, tick to tick, a card outline standing 30 dmm outside an ISO/IEC 7810 ID-1 card's size
+(856 by 540 dmm, 85.60 by 53.98 mm to the nearest dmm) so a card laid inside it has its edges on paper, and four numbered instructions.
+The grid's own fields are placeholders: its centre is the card's, its half 100 dmm, 10 divisions, unit cm, and its strokes 4 dmm; it
+carries no field and no whole-unit step, and nothing more on the wire than a style 1 grid. The three crosshairs' circles are the
+definition's bulls, thin rings that are not scored, which meets the one-bull minimum of section 3.5 without changing it. `field-ring-1`
+places a style 4 page's markers where the artwork leaves room: a row under the title, a row above the bottom ruler, a column outside the
+crosshairs on each side and two beside the card on each side, so every crosshair lies inside them. A reader that does not know style 4
+refuses the frame, as any reader refuses a style it does not know.
+
 ---
 
 ## 4. Worked example: the reference 5x5 target
@@ -889,7 +903,7 @@ Measurement grid block, flag bit 8            1 + 15g bytes, 5 more per style 2 
     distance  2 bytes  uint16, in distanceUnit
     distUnit  1 byte   0 = yd, 1 = m
     inkPair   1 byte   bits 0-3 minor ink, bits 4-7 major
-    style     1 byte   line weights and axis emphasis: 1, 2 (question 59) or 3 (entry 251)
+    style     1 byte   line weights and axis emphasis: 1, 2 (question 59), 3 (entry 251) or 4 (entry 273)
     labelStep 1 byte   0 = no labels
     style 2 or 3 only:
     fieldX    2 bytes  uint16 quanta
@@ -1384,7 +1398,7 @@ Published at `https://grouplab.invalid/schema/gltd-1.schema.json`, versioned by 
           "axisStroke":   { "type": "integer", "minimum": 1, "maximum": 255 },
           "labelStep":    { "type": "integer", "minimum": 0, "maximum": 100 },
           "labelInk":     { "$ref": "#/$defs/inkKey" },
-          "style":        { "enum": [1, 2, 3] },
+          "style":        { "enum": [1, 2, 3, 4] },
           "fieldX":       { "type": "integer", "minimum": 100, "maximum": 65535 },
           "fieldY":       { "type": "integer", "minimum": 100, "maximum": 65535 },
           "wholeEvery":   { "type": "integer", "minimum": 1, "maximum": 100 }

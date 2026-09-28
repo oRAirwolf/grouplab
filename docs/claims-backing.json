@@ -3012,6 +3012,18 @@
   "It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how).": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales) and AutomaticMarking.Run on GroupLab sheets (entry 270)"
+  },
+  "Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its outline and take one photo (about 0.3 percent), measure between its crosshairs with a digital caliper (about 0.1 percent), measure its two long lines with a ruler or tape, or scan it.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, CardCheck.cs, PaperEdgeCheck.cs (Disagrees 0.015, LooksFitToPage), PrinterCheck.cs; MainWindow.PrinterWizard.cs; entry 273"
+  },
+  "Photographs of that printer's sheets are then corrected, and each result says so in one line, such as \"Corrected for My printer, 99.2 by 99.4%\".": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, CardCheck.cs, PaperEdgeCheck.cs (Disagrees 0.015, LooksFitToPage), PrinterCheck.cs; MainWindow.PrinterWizard.cs; entry 273"
+  },
+  "The paper's own edge is checked on every photo too: GroupLab says when it disagrees with the printer's figures by more than about 1.5 percent, or when a sheet looks printed with Fit to page.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, CardCheck.cs, PaperEdgeCheck.cs (Disagrees 0.015, LooksFitToPage), PrinterCheck.cs; MainWindow.PrinterWizard.cs; entry 273"
   }
  },
  "rules": [

@@ -44,13 +44,13 @@ public class PrinterProfileTests
     public void APhotographReadsTrueSizeWithTheProfile()
     {
         var image = Small();
-        var printer = new PrinterProfile("My printer", Printed, PrinterMethod.Scan, Today, 0.001);
+        var printer = new PrinterProfile("My printer", Printed, Printed, PrinterMethod.Scan, Today, 0.001);
         var result = AutomaticMarking.Run(image, image, Photo(image), BuiltIns.Load("GL-CF25-LTR.gltd.json"), new OpenCvSharpBackend(), printer: printer);
         Assert.Null(result.Failure);
         var sheet = Assert.IsType<SheetReference>(result.Scale);
         Assert.Equal(Printed, sheet.PrintScale);
         Assert.True(sheet.RealInches);
-        Assert.Equal("Corrected for My printer's 96.2 percent, measured from a scan on 28 September.", sheet.ScaleFrom);
+        Assert.Equal("Corrected for My printer, 96.2%", sheet.ScaleFrom);
         Assert.Equal(sheet.ScaleFrom, DetectionAdvice.PrintScale(result.Measurement, sheet.ScaleFrom));
         Assert.InRange(Between(result, 0, 4), (Drawn(result, 0, 4) * Printed) - 0.002, (Drawn(result, 0, 4) * Printed) + 0.002);
     }
@@ -77,7 +77,7 @@ public class PrinterProfileTests
     {
         var image = Small();
         var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
-        var wrong = new PrinterProfile("Office", 1.03, PrinterMethod.Ruler, Today, 0.002);
+        var wrong = new PrinterProfile("Office", 1.03, 1.03, PrinterMethod.Ruler, Today, 0.002);
         var result = AutomaticMarking.Run(image, image, Scan(image), definition, new OpenCvSharpBackend(), printer: wrong);
         var sheet = Assert.IsType<SheetReference>(result.Scale);
         Assert.InRange(sheet.PrintScale!.Value, Printed - 0.0005, Printed + 0.0005);
@@ -94,7 +94,41 @@ public class PrinterProfileTests
         var ruler = PrinterProfile.FromRuler("My printer", read, span.DrawnInches, Today);
         Assert.NotNull(ruler);
         Assert.True(scan.AgreesWith(ruler), $"scan {scan.Scale:0.0000} ± {scan.Uncertainty:0.0000}, ruler {ruler.Scale:0.0000} ± {ruler.Uncertainty:0.0000}");
-        Assert.Equal(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"Corrected for My printer's {ruler.Scale * 100:0.0} percent, measured with a ruler on 28 September."), ruler.Line);
+        Assert.Equal(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"Corrected for My printer, {ruler.Scale * 100:0.0}%"), ruler.Line);
+    }
+
+    /// <summary>
+    /// Entry 273: a printer that prints differently across and down corrects each axis by its own figure, and says both in its line.
+    /// </summary>
+    [Fact]
+    public void EachAxisIsCorrectedByItsOwnFigure()
+    {
+        var mapping = new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+        var printer = new PrinterProfile("My printer", 0.992, 0.994, PrinterMethod.Card, Today, PrinterProfile.CardUncertainty);
+        var sheet = new SheetReference(mapping, "38 of 38 markers found").CorrectedBy(printer);
+        var at = sheet.ToTarget(new PointD(2540, 2540));
+        Assert.Equal(9.92, at.X, 9);
+        Assert.Equal(9.94, at.Y, 9);
+        Assert.Equal("Corrected for My printer, 99.2 by 99.4%", sheet.ScaleFrom);
+        Assert.Equal("My printer prints at 99.2% across and 99.4% down (plus or minus 0.3%)", printer.Result);
+        Assert.Equal("My printer prints a little small", printer.Headline);
+    }
+
+    /// <summary>Entry 273: the check page's caliper and ruler readings, typed, each over its drawn length.</summary>
+    [Fact]
+    public void TypedLengthsMakeAProfile()
+    {
+        double mm = 1 / 25.4;
+        var caliper = PrinterProfile.FromLengths(null, PrinterMethod.Caliper, 148.8 * mm, 150 * mm, 149.1 * mm, 150 * mm, Today);
+        Assert.NotNull(caliper);
+        Assert.Equal(0.992, caliper.Across, 9);
+        Assert.Equal(0.994, caliper.Down, 9);
+        Assert.True(caliper.Uncertainty < 0.0015, $"{caliper.Uncertainty}");
+        var ruler = PrinterProfile.FromLengths(null, PrinterMethod.Ruler, 188.5 * mm, 190 * mm, 248.5 * mm, 250 * mm, Today);
+        Assert.NotNull(ruler);
+        Assert.True(caliper.AgreesWith(ruler));
+        Assert.Null(PrinterProfile.FromLengths(null, PrinterMethod.Scan, 1, 1, 1, 1, Today));
+        Assert.Null(PrinterProfile.FromLengths(null, PrinterMethod.Caliper, 75 * mm, 150 * mm, 150 * mm, 150 * mm, Today));
     }
 
     /// <summary>A typing slip is refused rather than saved: no printer prints a sheet at half or twice its size.</summary>
@@ -138,10 +172,10 @@ public class PrinterProfileTests
     [Fact]
     public void AProfileIsKeptWhole()
     {
-        var profile = new PrinterProfile("Garage laser", 0.9921, PrinterMethod.Ruler, Today, 0.0052);
+        var profile = new PrinterProfile("Garage laser", 0.9921, 0.9943, PrinterMethod.Ruler, Today, 0.0052);
         Assert.Equal(profile, PrinterProfile.FromJson(profile.ToJson()));
         var damaged = profile.ToJson();
-        damaged["scale"] = 2.5;
+        damaged["across"] = 2.5;
         Assert.Null(PrinterProfile.FromJson(damaged));
         Assert.Null(PrinterProfile.FromJson(null));
     }
@@ -152,8 +186,10 @@ public class PrinterProfileTests
     {
         var sheet = new SheetReference(new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1])), "38 of 38 markers found")
         {
-            PrintScale = 0.992,
-            ScaleFrom = "Corrected for My printer's 99.2 percent, measured from a scan on 28 September.",
+            PrintScale = 0.993,
+            PrintScaleAcross = 0.992,
+            PrintScaleDown = 0.994,
+            ScaleFrom = "Corrected for My printer, 99.2 by 99.4%",
         };
         var session = new MarkingSession();
         session.Open("sheet.jpg", 1);
@@ -161,7 +197,8 @@ public class PrinterProfileTests
         session.AddShot(new PointD(1200, 900));
         var (state, _) = MarkingFile.Read(MarkingFile.Write(session.State));
         var read = Assert.IsType<SheetReference>(state.Scale);
-        Assert.Equal(0.992, read.PrintScale);
+        Assert.Equal(0.993, read.PrintScale);
+        Assert.Equal((0.992, 0.994), (read.PrintScaleAcross, read.PrintScaleDown));
         Assert.Equal(sheet.ScaleFrom, read.ScaleFrom);
     }
 }

@@ -122,8 +122,7 @@ public sealed record SheetReference(IPageMapping Mapping, string Summary) : Scal
     public override PointD ToTarget(PointD image)
     {
         var page = Mapping.ToPage(image);
-        double k = (PrintScale ?? 1) / 254;
-        return new PointD(page.X * k, page.Y * k);
+        return new PointD(page.X * (PrintScaleAcross ?? PrintScale ?? 1) / 254, page.Y * (PrintScaleDown ?? PrintScale ?? 1) / 254);
     }
 
     /// <summary>
@@ -131,6 +130,14 @@ public sealed record SheetReference(IPageMapping Mapping, string Summary) : Scal
     /// on a photograph or wherever the scale could not be believed.
     /// </summary>
     public double? PrintScale { get; init; }
+
+    /// <summary>
+    /// A printer profile's scale across the sheet and down it, NOTES-FROM-PLANNING.md entry 273, where it differs by axis; null where one
+    /// figure, <see cref="PrintScale"/>, applies both ways, as a scan's does.
+    /// </summary>
+    public double? PrintScaleAcross { get; init; }
+
+    public double? PrintScaleDown { get; init; }
 
     /// <summary>
     /// Where <see cref="PrintScale"/> came from when it was not this sheet's own scan: a printer profile's line, NOTES-FROM-PLANNING.md entry
@@ -151,6 +158,13 @@ public sealed record SheetReference(IPageMapping Mapping, string Summary) : Scal
     /// </summary>
     public static (double? Scale, string? From) Choose(ScaleReport? report, PrinterProfile? printer) =>
         Correction(report) is { } s ? (s, null) : printer is null ? (null, null) : (printer.Scale, printer.Line);
+
+    /// <summary>This sheet corrected by a printer profile, across and down, with the profile's line.</summary>
+    public SheetReference CorrectedBy(PrinterProfile printer, string? line = null)
+    {
+        ArgumentNullException.ThrowIfNull(printer);
+        return this with { PrintScale = printer.Scale, PrintScaleAcross = printer.Across, PrintScaleDown = printer.Down, ScaleFrom = line ?? printer.Line };
+    }
 
     public override string Description => "the sheet's own printed markers: " + Summary;
 

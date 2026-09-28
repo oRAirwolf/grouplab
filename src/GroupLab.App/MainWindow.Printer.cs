@@ -14,8 +14,6 @@ public sealed partial class MainWindow
 {
     private readonly StackPanel printerPanel = new() { Spacing = Tokens.Space8, IsVisible = false };
 
-    private readonly ComboBox printerChoice = new() { MinWidth = 280 };
-
     private bool showingPrinters;
 
     private static DateOnly Today() => DateOnly.FromDateTime(DateTime.Now);
@@ -50,7 +48,8 @@ public sealed partial class MainWindow
 
         if (RulerSpan.Of(definition) is { } span)
         {
-            printerPanel.Children.Add(Row(Button("Measure this sheet with a ruler", () => ShowRuler(span))));
+            // Entry 273 section 5: in the sheet's own inches, with the way to real inches beside it.
+            printerPanel.Children.Add(Row(Button("Check your printer", () => OpenPrinterCheck()), Button("Measure this sheet with a ruler", () => ShowRuler(span))));
             printerPanel.IsVisible = true;
         }
     }
@@ -85,7 +84,7 @@ public sealed partial class MainWindow
             bool kept = keep.IsChecked == true;
             string line = kept
                 ? profile.Line
-                : string.Create(CultureInfo.InvariantCulture, $"Corrected for this sheet's {profile.Scale * 100:0.0} percent, measured with a ruler.");
+                : string.Create(CultureInfo.InvariantCulture, $"Corrected for this sheet, {profile.Percentages}, measured with a ruler");
             if (kept)
             {
                 settingsStore.SavePrinter(profile);
@@ -94,7 +93,7 @@ public sealed partial class MainWindow
 
             if (session.State.Scale is SheetReference sheet)
             {
-                session.SetScale(sheet with { PrintScale = profile.Scale, ScaleFrom = line });
+                session.SetScale(sheet.CorrectedBy(profile, line));
             }
 
             printScale.Text = line;
@@ -107,32 +106,60 @@ public sealed partial class MainWindow
         printerPanel.Children.Add(said);
     }
 
-    /// <summary>Settings' printer section: which saved printer photographs are corrected for, or none.</summary>
+    /// <summary>
+    /// Settings, under Printers (entry 273 section 4): every printer saved with its figures and date, which one photographs are corrected for,
+    /// Check again, Delete, Add a printer, and a switch to turn correction off.
+    /// </summary>
     private void BuildPrinterSettings(StackPanel column)
     {
-        column.Children.Add(Ruled("Printer scale"));
+        column.Children.Add(Ruled("Printers"));
         column.Children.Add(Line(DetectionAdvice.OncePerPrinter));
-        column.Children.Add(printerChoice);
-        printerChoice.SelectionChanged += (_, _) =>
-        {
-            if (!showingPrinters && printerChoice.SelectedIndex >= 0)
-            {
-                var printers = settingsStore.LoadPrinters();
-                settingsStore.ChoosePrinter(printerChoice.SelectedIndex == 0 ? null : printers[printerChoice.SelectedIndex - 1].Name);
-            }
-        };
+        column.Children.Add(printerList);
+        var correcting = new CheckBox { Content = Wrapped("Correct photographs by the chosen printer's scale"), IsChecked = settingsStore.LoadPrinterCorrection() };
+        correcting.IsCheckedChanged += (_, _) => settingsStore.SavePrinterCorrection(correcting.IsChecked == true);
+        column.Children.Add(correcting);
+        column.Children.Add(Row(Button("Add a printer", () => OpenPrinterCheck(""))));
         ShowPrinters();
     }
+
+    private readonly StackPanel printerList = new() { Spacing = Tokens.Space8 };
 
     private void ShowPrinters()
     {
         showingPrinters = true;
+        printerList.Children.Clear();
         var printers = settingsStore.LoadPrinters();
         var chosen = settingsStore.LoadChosenPrinter();
-        printerChoice.ItemsSource = new[] { "None: photographs stay in the sheet's own inches" }
-            .Concat(printers.Select(p => string.Create(CultureInfo.InvariantCulture, $"{p.Name}: {p.Scale * 100:0.0} percent, measured {p.How}")))
-            .ToList();
-        printerChoice.SelectedIndex = chosen is null ? 0 : 1 + printers.ToList().FindIndex(p => p.Name == chosen.Name);
+        if (printers.Count == 0)
+        {
+            printerList.Children.Add(Line("No printer checked yet, so photographs are measured in the sheet's own inches."));
+        }
+
+        foreach (var p in printers)
+        {
+            var use = new RadioButton
+            {
+                GroupName = "printerChosen",
+                IsChecked = p.Name == chosen?.Name,
+                Content = Wrapped(string.Create(CultureInfo.InvariantCulture, $"{p.Name}: {p.Percentages}, measured {p.How}")),
+            };
+            use.IsCheckedChanged += (_, _) =>
+            {
+                if (!showingPrinters && use.IsChecked == true)
+                {
+                    settingsStore.ChoosePrinter(p.Name);
+                }
+            };
+            printerList.Children.Add(use);
+            printerList.Children.Add(Row(
+                Button("Check again", () => OpenPrinterCheck(p.Name)),
+                Button("Delete", () =>
+                {
+                    settingsStore.DeletePrinter(p.Name);
+                    ShowPrinters();
+                })));
+        }
+
         showingPrinters = false;
     }
 }

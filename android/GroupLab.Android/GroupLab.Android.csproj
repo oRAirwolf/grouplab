@@ -60,6 +60,7 @@
     <Compile Include="..\..\src\GroupLab.Cli\Library\ParametricSheet.cs" Link="Shared\Library\ParametricSheet.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\LibraryBuilder.cs" Link="Shared\Library\LibraryBuilder.cs" />
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
+    <Compile Include="..\..\src\GroupLab.App\UnitTap.cs" Link="Shared\UnitTap.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
     <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />
     <Compile Include="..\..\src\GroupLab.App\BenchmarkPanel.cs" Link="Shared\BenchmarkPanel.cs" />

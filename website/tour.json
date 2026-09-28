@@ -200,7 +200,7 @@
   "analysis": {
    "name": "The analysis",
    "blurb": "Every shot on one bull, with the six figures a shooter reads in view and everything else one click away.",
-   "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is.",
+   "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is. Tap any number to switch its units: angles between MOA and mil, sizes between inches and centimeters, everywhere at once, and remembered.",
    "withoutASheet": "No difference. Every figure here is worked out from the marks and the scale, and it does not matter whether a detector placed them or you did.",
    "parts": [
     [
@@ -609,7 +609,7 @@
   "settings": {
    "name": "Settings",
    "blurb": "Units, theme, which builds it offers you, and the log. Every choice here is remembered.",
-   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
+   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record. Printers lists every printer you have checked, with how large it prints across and down and when it was measured; the one chosen corrects photographs of its sheets to real inches, and Check again, Add a printer and a switch to turn the correction off are beside it. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [

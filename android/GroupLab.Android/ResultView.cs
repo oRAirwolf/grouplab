@@ -24,7 +24,7 @@ public sealed class ResultView : UserControl
 {
     private readonly MarkingSession session;
     private readonly TargetDefinition? definition;
-    private readonly UnitSettings units;
+    private UnitSettings units;
     private readonly CompositePlot plot = new() { Height = 360, HorizontalAlignment = HorizontalAlignment.Stretch };
 
     /// <summary>Entry 259 screen 1: the tiles, the plot with its chips, and the sections that open, from the shared figures.</summary>
@@ -37,6 +37,15 @@ public sealed class ResultView : UserControl
 
     internal ResultView(PhoneResult result, ShotSetup setup, UnitSettings units, Action again)
     {
+        // Entry 273: a tap on any number switches units everywhere; this result shows them again.
+        void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            this.units = App.Settings.LoadUnits();
+            Refresh();
+        });
+        AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;
+        DetachedFromVisualTree += (_, _) => Shell.UnitsChanged -= Follow;
+
         this.units = units;
         this.again = again;
         definition = result.Definition;
@@ -74,6 +83,11 @@ public sealed class ResultView : UserControl
         var picture = new StackPanel { Spacing = 12 };
         var actions = new StackPanel { Spacing = 12 };
         numbers.Children.Add(full);
+        // Entry 273: the one-time hint card, until a number has been tapped once.
+        if (!App.Settings.LoadUnitTapped())
+        {
+            numbers.Children.Add(Screens.Card(Screens.Line(GroupLab.Core.Marking.UnitSwitch.Hint + "."), Screens.Dim(GroupLab.Core.Marking.UnitSwitch.HintMore)));
+        }
         // Entry 271: what the figures are measured in, and on a photograph the ruler that makes them real inches.
         if (PrinterCard.For(result, session, Changed) is { } printer)
         {

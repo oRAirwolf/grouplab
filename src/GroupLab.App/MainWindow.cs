@@ -452,6 +452,9 @@ public sealed partial class MainWindow : Window
     private readonly StackPanel sheetChooser = new() { Spacing = Tokens.Space4, IsVisible = false };
 
     /// <summary>What the print scale says, when a sheet did not print at its own size (entry 115 section 4).</summary>
+    /// <summary>Entry 273's one-time hint card, word for word from the concept.</summary>
+    private readonly TextBlock unitHint = new() { Text = UnitSwitch.Hint + ". " + UnitSwitch.HintMore, TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Secondary } };
+
     private readonly TextBlock printScale = new() { TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.FormWarning } };
 
     // The sheet's printed artwork in image pixels, from the last detection on this image, so the snap and the size check can tell printed
@@ -598,6 +601,10 @@ public sealed partial class MainWindow : Window
     internal MainWindow(AppSettingsStore settings)
     {
         settingsStore = settings;
+
+        // Entry 273: a tap on any number with a unit switches that kind of unit, here as on the phone.
+        UnitTap.Current = () => units ?? UnitSettings.Imperial;
+        UnitTap.Apply = TapUnits;
 
         // Before anything is built. The settings page reads these to fill the train and the interval and to say what the last check found,
         // and entry 125 section 3 found it showing the defaults and an empty line because they were loaded after it was built. This is the
@@ -1010,6 +1017,9 @@ public sealed partial class MainWindow : Window
         figures.Children.Add(zeroPanel);
         figures.Children.Add(Ruled("Group"));
         figures.Children.Add(statistics);
+        // Entry 273: the one-time hint under the group's figures, until a number has been tapped once.
+        unitHint.IsVisible = !settingsStore.LoadUnitTapped();
+        figures.Children.Add(unitHint);
         var advanced = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, Tokens.Space8, 0, 0) };
         advanced.Children.Add(advancedFigures);
         advanced.Children.Add(Ruled("A circle for any percent"));
@@ -1425,7 +1435,26 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        SetUnits(new UnitSettings((LinearUnit)linearUnit.SelectedIndex, UnitSettings.AngularChoices[angularUnit.SelectedIndex], (DistanceUnit)distanceUnit.SelectedIndex));
+        // Entry 273: through UseUnits, so what is typed on the Ballistics page is rewritten in the new units rather than changing meaning.
+        UseUnits(new UnitSettings((LinearUnit)linearUnit.SelectedIndex, UnitSettings.AngularChoices[angularUnit.SelectedIndex], (DistanceUnit)distanceUnit.SelectedIndex));
+    }
+
+    /// <summary>
+    /// Entry 273, tap a number to switch units: the whole application moves to the new units, what is typed on the Ballistics page is
+    /// rewritten in them, the screen showing is filled again, and the status line says what changed and that it is remembered.
+    /// </summary>
+    internal void TapUnits(UnitSettings next, UnitKind kind)
+    {
+        UseUnits(next);
+        if (destination is Destination.Compare or Destination.Ballistics)
+        {
+            Go(destination);
+        }
+
+        settingsStore.SaveUnitTapped();
+        unitHint.IsVisible = false;
+        status.Text = UnitSwitch.Said(next, kind) + " · remembered";
+        DiagnosticLog.Info("units.tap", ("kind", kind.ToString()), ("linear", next.Linear.ToString()), ("angular", next.Angular.ToString()), ("distance", next.Distance.ToString()));
     }
 
     /// <summary>
@@ -1533,7 +1562,7 @@ public sealed partial class MainWindow : Window
         // Entry 189 section 3: the figure's other form, smaller, beneath it: the size on the paper under an angle, or the angle under a size.
         return beneath is null
             ? row
-            : new StackPanel { Children = { row, new TextBlock { Text = beneath, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, Classes = { AppStyles.Secondary } } } };
+            : new StackPanel { Children = { row, UnitTap.Attach(new TextBlock { Text = beneath, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, Classes = { AppStyles.Secondary } }) } };
     }
 
     /// <summary>The smaller line beneath each figure kept in view, for the headless tests.</summary>
@@ -1971,7 +2000,7 @@ public sealed partial class MainWindow : Window
         status.Text = automatic ? $"Recognized {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
         var calibre = session.State.Calibre;
-        var printer = settingsStore.LoadChosenPrinter();
+        var printer = settingsStore.PrinterForPhotos();
         // An interactive run keeps each stage's picture for the timeline; a batch run never asks, so it pays nothing (DESIGN.md section 19).
         var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true, printer: printer), token);
         CrashReporter.InFlight = null;
@@ -2017,7 +2046,7 @@ public sealed partial class MainWindow : Window
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
         var calibre = session.State.Calibre;
-        var printer = settingsStore.LoadChosenPrinter();
+        var printer = settingsStore.PrinterForPhotos();
         detectionMetadata = waiting.Metadata;
 
         // Entry 243 section 3.2: the same progress and Cancel as a sheet that named itself; this path had neither.
@@ -2090,6 +2119,14 @@ public sealed partial class MainWindow : Window
     internal void ApplyDetection(AutomaticResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
+        if (PrinterCheck.IsCheckPage(result.Definition))
+        {
+            // Entry 273: the printer check page is measured by the printer check, not searched for holes.
+            status.Text = CheckPageOpened;
+            OpenPrinterCheck();
+            return;
+        }
+
         if (result.Failure is not null || result.Scale is null)
         {
             // Entry 115 section 4: what to do next, not what failed. Marking it by hand is the way out of every one of them.
@@ -2114,7 +2151,7 @@ public sealed partial class MainWindow : Window
         // The default tool now pans and selects both, so the tool the person chose stays chosen.
         // Entry 115 section 4: a sheet its printer shrank is named as such, with the figure, rather than analysed silently.
         // Entry 161 section 3.2: and where the holes and the calibre named disagree, that is said beside it, in the same place.
-        printScale.Text = string.Join(" ", new[] { DetectionAdvice.PrintScale(result.Measurement, (result.Scale as SheetReference)?.ScaleFrom), DetectionAdvice.CalibreDisagrees(result, session.State.Calibre) }
+        printScale.Text = string.Join(" ", new[] { DetectionAdvice.PrintScale(result.Measurement, (result.Scale as SheetReference)?.ScaleFrom), PaperEdgeCheck.Advice(result.Paper, settingsStore.PrinterForPhotos()), DetectionAdvice.CalibreDisagrees(result, session.State.Calibre) }
             .Where(s => !string.IsNullOrEmpty(s)));
         printScale.IsVisible = printScale.Text.Length > 0;
         ShowPrinterOffer(result);
@@ -4932,6 +4969,9 @@ public sealed partial class MainWindow : Window
             figure.Classes.Add(AppStyles.HeadlineFigure);
         }
 
+        // Entry 273: a value with a unit switches its kind's unit when tapped; its label still explains it.
+        UnitTap.Attach(figure);
+
         var row = new DockPanel();
         DockPanel.SetDock(name, Dock.Left);
         row.Children.Add(name);
@@ -5610,14 +5650,14 @@ public sealed partial class MainWindow : Window
         new() { Text = text, FontSize = Tokens.SecondarySize, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Faint } };
 
     /// <summary>One cell of the zero readouts, in the tabular mono, right-aligned so the columns line up.</summary>
-    private static TextBlock ZeroCell(string text) => new()
+    private static TextBlock ZeroCell(string text) => UnitTap.Attach(new TextBlock
     {
         Text = text,
         FontFamily = Mono,
         HorizontalAlignment = HorizontalAlignment.Right,
         Margin = new Thickness(Tokens.Space8, 0, 0, 0),
         VerticalAlignment = VerticalAlignment.Center,
-    };
+    });
 
     /// <summary>Entry 42 section 3: a second line under a readout, in mono at the secondary size and dim.</summary>
     private static TextBlock Detail(string text) =>

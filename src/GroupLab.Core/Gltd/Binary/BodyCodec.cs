@@ -364,8 +364,8 @@ public static class BodyCodec
                 Require(m.DistanceUnit <= 1, $"Measurement grid {i} has unknown distance unit {m.DistanceUnit}.");
                 RequireInk((byte)(m.InkPair & 0xF), inkCount, allowPaper: true, $"measurement grid {i} minor lines");
                 RequireInk((byte)(m.InkPair >> 4), inkCount, allowPaper: true, $"measurement grid {i} major lines");
-                Require(m.Style is WireCodes.StandardGridStyle or WireCodes.ZeroingGridStyle or WireCodes.ScopeGridStyle,
-                    $"Measurement grid {i} has style {m.Style}; only styles 1, 2 and 3 are defined (TARGET-SCHEMA.md section 3.13, questions 11 and 59, entry 251).");
+                Require(m.Style is WireCodes.StandardGridStyle or WireCodes.ZeroingGridStyle or WireCodes.ScopeGridStyle or WireCodes.CheckPageStyle,
+                    $"Measurement grid {i} has style {m.Style}; only styles 1 to 4 are defined (TARGET-SCHEMA.md section 3.13, questions 11 and 59, entries 251 and 273).");
                 grids.Add(m);
             }
         }

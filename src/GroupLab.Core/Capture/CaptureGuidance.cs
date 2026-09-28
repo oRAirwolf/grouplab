@@ -29,7 +29,8 @@ public enum Instruction
 /// on the paper is, the dimmest bull's paper against the brightest.
 /// </summary>
 public sealed record FrameVerdict(Instruction Say, string Words, bool SheetInFrame, bool Detected, bool AngleWithin, bool InFocus, bool ExposureWithin, bool MarkingsRead,
-    CaptureQuality? Quality = null, int? MarkersRead = null, int? MarkersExpected = null, int? CodesRead = null, int? CodesExpected = null, double? Evenness = null);
+    CaptureQuality? Quality = null, int? MarkersRead = null, int? MarkersExpected = null, int? CodesRead = null, int? CodesExpected = null, double? Evenness = null,
+    Registration.IPageMapping? Mapping = null, double? PixelsPerMm = null);
 
 /// <summary>
 /// docs/MOBILE-CAPTURE.md items C1 to C3, entry 219 item A2: the capture screen's conditions, all judged from one frame, and **one**
@@ -89,6 +90,9 @@ public static class CaptureGuidance
             CodesRead = codesRead,
             CodesExpected = definition.Codes?.Positions.Count,
             Evenness = evenness,
+            // Entry 273: the frame's registration, for the printer check's card, which is looked for on the check page only.
+            Mapping = measurement.Registration?.Mapping,
+            PixelsPerMm = measurement.Scale is { } s ? s.PixelsPerDmmArea * 10 : null,
         };
     }
 

@@ -416,8 +416,12 @@ public static class SheetMeasurer
             // Entry 260: paper that is not flat. A sheet bowed by a few pixels leaves a homography, even with radial distortion, few of
             // its corners or none, though every marker was read; then the page is registered through every corner by a mesh instead.
             int keptByRadial = radialInliers?.Count(x => x) ?? 0;
+            // The mesh is taken only where it is the better map: its error between markers, each predicted without itself, below the
+            // homography's over every corner. An ultrawide photograph whose radial fit kept few corners is not curled, and there the
+            // homography is better, as ultrawide2.jpg of the Phase 0 corpus showed (0.019 in against the mesh's 0.041).
+            double allRms = Rms(new HomographyMapping(homography.Transform), imagePoints, pagePoints, [.. imagePoints.Select(_ => true)]);
             if ((radial is null || keptByRadial < BentBelow * imagePoints.Count) && MarkerMesh.Fit(imagePoints, pagePoints) is { } mesh
-                && mesh.Kept.Count(x => x) > keptByRadial)
+                && mesh.Kept.Count(x => x) > keptByRadial && mesh.LeaveOneOutRms < allRms)
             {
                 stage.Decide("model", mesh.Model, string.Create(inv, $"the radial fit kept {keptByRadial} of {imagePoints.Count} corners, so the sheet is not flat"),
                     "homography with radial distortion");

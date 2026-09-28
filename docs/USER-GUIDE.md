@@ -76,9 +76,13 @@ For photographs:
 
 **Real inches from a photograph.** A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your
 printer printed at 97 percent makes every group read about 3 percent large. For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it.
-After a scan of a GroupLab sheet, GroupLab offers to keep the scale it measured for that printer; on a photograph, **Measure this sheet
-with a ruler** asks for the distance between two bulls, center to center, and can keep that too. Photographs are then corrected with the
-printer chosen in Settings, and the result says so in one line, naming the printer and how its scale was measured.
+The easiest way is the printer check, offered the first time GroupLab opens and the first time you print, and always in Settings under
+**Printers**. Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its
+outline and take one photo (about 0.3 percent), measure between its crosshairs with a digital caliper (about 0.1 percent), measure its
+two long lines with a ruler or tape, or scan it. GroupLab shows how large the printer prints across and down and saves it. Photographs of
+that printer's sheets are then corrected, and each result says so in one line, such as "Corrected for My printer, 99.2 by 99.4%". The
+paper's own edge is checked on every photo too: GroupLab says when it disagrees with the printer's figures by more than about 1.5 percent,
+or when a sheet looks printed with Fit to page. On any one photograph, **Measure this sheet with a ruler** corrects just that sheet.
 
 ## 4. Mark it and settle the review queue
 
@@ -139,6 +143,11 @@ The analysis has three columns:
 - **On the left:** the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A click on a bull in the small sheet selects its shots.
 - **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, over the bull's rings drawn as wide gray bands. Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the figures, with its range, and where your shots are too few to reach that far out, fewer than one expected outside the circle, it says the circle is the model's guess rather than something the shots show. Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered. **Group** and **Whole target** beside them frame the group alone or the entire bull with the group inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.
 - **On the right:** the zero correction, the figures and the two judgment cards.
+
+**Tap a number to switch units.** Tap any angle to switch every angle between MOA and mil, any size on the paper to switch between inches
+and centimeters, and any distance to switch between yards and meters: every number of that kind changes at once, on every screen, and
+GroupLab remembers it, because it is the same choice as Units in Settings. Right-click a number, or press and hold it on the phone, to
+choose any unit it can take, SMOA and millimeters included. A figure's name still explains it when you tap it; only the number switches.
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
 

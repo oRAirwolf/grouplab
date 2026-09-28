@@ -294,6 +294,12 @@ public sealed partial class MainWindow
         outer.Children.Add(card);
         outer.Children.Add(errors);
         outer.Children.Add(survey);
+        StackPanel? printer = null;
+        printer = FirstRunPrinterCard(() => printer!.IsVisible = false);
+        if (printer is not null)
+        {
+            outer.Children.Add(printer);
+        }
         void Answered()
         {
             if (!card.IsVisible && !errors.IsVisible && !survey.IsVisible)

@@ -30,7 +30,8 @@ public sealed record AutomaticResult(
     DetectionRecord? Detection = null,
     TargetDefinition? Definition = null,
     GroupLab.Core.Capture.CaptureRecord? Capture = null,
-    int? SetSheet = null);
+    int? SetSheet = null,
+    PaperEdge? Paper = null);
 
 /// <summary>
 /// The automatic path for a GroupLab sheet, as NOTES-FROM-PLANNING.md entry 21 section 3 frames it: a way of pre-filling the marks
@@ -289,7 +290,9 @@ public static class AutomaticMarking
             $"{markers}, {detection.Describe()}{(holes.HoleSize is { Source: HoleSizeSource.TwoSizes or HoleSizeSource.SheetTentative } sheetSize ? "; " + sheetSize.Description : "")}, registration RMS {registration.RmsResidual / 254:0.0000} in over {registration.Markers} markers, {holes.Holes.Count} holes detected{(holes.InsideZones.Count > 0 ? $", {holes.InsideZones.Count} hole-sized candidate{(holes.InsideZones.Count == 1 ? "" : "s")} inside printed-matter zones not looked at" : "")}, assigned by {assignment.Method.Words()}{(string.IsNullOrWhiteSpace(assignment.Reason) ? "" : ": " + assignment.Reason)}");
         // Entry 243 section 3.1: on a design of several sheets, the sheet's place in its set, from the frame its codes carry.
         int? setSheet = definition.Tiling is { } set && set.Cols * set.Rows > 1 ? fiducials.TileIndex : null;
-        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = chosenScale, ScaleFrom = scaleFrom }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition, capture, setSheet);
+        return new AutomaticResult(measurement, new SheetReference(mapping, summary) { MarkersFound = fiducials.Matches.Count, MarkersExpected = fiducials.Expected, PrintScale = chosenScale, PrintScaleAcross = scaleFrom is null ? null : printer?.Across, PrintScaleDown = scaleFrom is null ? null : printer?.Down, ScaleFrom = scaleFrom }, bulls, detections, missing, summary, null, holes.Expected, assignment, rejected, holes, detection, definition, capture, setSheet,
+            // Entry 273 section 5: on a photograph, what the paper's own edge says about the print scale, as a check.
+            measurement.Scale?.Scale is null ? PaperEdgeCheck.Measure(grey, mapping) : null);
     }
 }
 

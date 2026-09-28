@@ -16,6 +16,7 @@ using GroupLab.Cli.Imaging;
 using GroupLab.Core.Capture;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Marking;
 using Java.Util.Concurrent;
 
 namespace GroupLab.Android;
@@ -270,11 +271,22 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
                     ("markers", verdict.MarkersRead), ("codes", verdict.CodesRead), ("score", verdict.Quality?.Score), ("mode", manual ? "manual" : "guided"));
             }
 
-            readyInARow = verdict.Say == Instruction.Ready ? readyInARow + 1 : 0;
+            // Entry 273: on the printer check page the card is looked for too, and the shutter waits for it.
+            bool? card = null;
+            if (PrinterCheck.IsCheckPage(definition))
+            {
+                card = verdict.Mapping is { } mapping && verdict.PixelsPerMm is { } perMm && CardCheck.Measure(grey, mapping, definition!, perMm, 0) is not null;
+                if (verdict.Say == Instruction.Ready)
+                {
+                    verdict = verdict with { Words = card == true ? "Card found. Hold still." : "Lay the card inside the outline, flat." };
+                }
+            }
+
+            readyInARow = verdict.Say == Instruction.Ready && card != false ? readyInARow + 1 : 0;
             int? forecast = verdict.Quality is { } quality ? PictureCheck.Forecast(quality) : null;
             screen.Post(() =>
             {
-                screen.Show(verdict, forecast, torchOn);
+                screen.Show(verdict, forecast, torchOn, card);
                 screen.Shutter.Progress = manual ? 0 : (float)readyInARow / ReadyFrames;
             });
             if (!manual && readyInARow >= ReadyFrames && !taking)

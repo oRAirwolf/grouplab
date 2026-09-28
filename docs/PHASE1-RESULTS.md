@@ -40,6 +40,26 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 272 and 273: the printer check, and tap a number to switch units
+
+**The printer check.** `GL-SCALE-LTR-1` and `GL-SCALE-A4-1` are grid style 4 (`GridStyle4`, TARGET-SCHEMA.md section 3.13): three
+crosshairs in an L 150.00 mm apart, rulers of 250.0 and 190.0 mm, a card outline standing 3 mm outside an ID-1 card (question 67), the
+title and four instructions, all derived from the page size; the crosshairs' circles are unscored bulls. `PrinterProfile` now holds across
+and down. `CardCheck` finds the card's four sides where the photograph stops matching the printed page, fits each straight, and corrects for
+the card's 0.76 mm thickness from the camera's distance; on synthetic photographs at 99.2 percent a dark, a very dark and a light grey card,
+shifted up to 0.6 mm and turned up to 1.2 degrees, read 0.992 within 0.0015 across and 0.002 down. `PaperEdgeCheck` measures the paper
+through the markers and tells Letter from A4 by its shape; a sheet printed at 96.2 percent on Letter reads 0.955 to 0.969 and is said to
+look like Fit to page. The wizard is on both platforms; Printers in Settings lists each printer with its figures and date.
+
+**Tap a number to switch units.** `UnitSwitch` decides what a tap chooses, `UnitTap` makes any value that shows a unit tappable, reading its
+kind from the unit after its number; the desktop goes through `UseUnits`, so what is typed on Ballistics is rewritten rather than changing
+meaning (the Settings combos now do the same), and the phone's result, Ballistics, Compare and Shots Needed to Zero show a change at once.
+`UnitTapTests` taps the mean radius and checks every angle becomes mil, lengths stay, the note says so and it is remembered.
+
+**The curled-sheet mesh, rechecked.** Recording the new pages' artwork showed four Phase 0 phone photographs registering through entry 260's
+mesh, where the radial fit had held a third of their corners; the spurious marks on them went from 19 to 12 (ultrawide2 from 1 to 6). The
+mesh is now taken only where its error between markers beats the plain homography's over every corner, which these four still pass.
+
 ## Entry 271: real inches on photographs
 
 `PrinterProfile` keeps a printer's measured scale, from a scan (its x and y spread, at least 0.1 percent) or one typed ruler distance (a thirty-second of an inch over the span); `RulerSpan` names the two bulls to measure (bull 1 to bull 5 on the 5 by 5 sheets). A photograph is multiplied by the chosen printer's scale and says so in one line; a scan that measured its own ignores it. On a sheet printed at 96.2 percent and photographed, bull 1 to bull 5 reads within 0.002 in of its true size with the profile; a ruler read to a sixteenth agrees with the scan's profile within their stated uncertainty. The session file carries the factor and its line. DESIGN.md no longer says a photograph measures the print scale.

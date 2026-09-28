@@ -24,6 +24,74 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 273: Alan approved the printer check and unit-tap concepts. Build them as drawn
+
+**Status: done 2026-09-28, in part.** Built as drawn: the check page (grid style 4, question 67), the three wizard screens on both platforms with the phone's camera looking for the card, Printers in Settings, the offers at first run and first print, the paper-edge check and the line on every photo, and tap to switch units with its note, press and hold, and the one-time hint. Not done: numbers inside sentences (Shots Needed to Zero's size, the hit chance's prose) and the desktop's full table, whose cells are bare numbers under unit headings, are not tappable; the phone's Ballistics, Compare and Shots Needed to Zero follow a change but their numbers are not yet tappable; the card photo and the phone screens wait for a device sitting; question 67 asks about the outline's 3 mm gap.
+
+Alan: "I like the concepts. Go ahead and implement them." The canvas is claude.ai/artifact/ECbWJdj8VcYwpv8gd9Appc. This releases the hold in entries 271 and 272. Build:
+
+1. **Tap to switch units,** as in the demo board:
+   - Tapping any angular number switches MOA and mil everywhere. Tapping any size on paper switches inches and cm. Tapping a distance switches yards and meters.
+   - A short "Angles now in mil everywhere · remembered" note appears at the bottom.
+   - Labels keep their dotted underline and tap-to-explain.
+   - Press and hold (right-click on the desktop) lists every unit.
+   - A one-time hint card reads "Tap a number to switch units".
+   - It uses the same setting as Settings and the unit switches. Desktop, phone, reports, Compare, Ballistics and Shots Needed to Zero all follow it.
+2. **The Scale check page,** as drawn: Letter, and A4 for A4 locales.
+   - The title and "Print at Actual size (100%). Never Fit to page."
+   - A code naming the page (GL-SCALE-LTR-1, and an A4 equivalent) and tags.
+   - A card outline, 85.60 by 53.98 mm, with "Lay any bank, gift or ID card here".
+   - Three crosshairs in an L, 150.00 mm center to center across and down, labeled in mm and inches.
+   - Two ruler lines, 250.0 mm down the side and 190.0 mm across the bottom (adjust to fit A4 and label to match).
+   - The four numbered instructions.
+   The page is built from a definition in the library like any sheet, so it reads itself from a photo or scan.
+3. **The wizard,** three screens as drawn:
+   - **Pick a method:** name the printer, Print the check page, then choose Card photo, Digital caliper, Ruler or tape, or Scanner. Next, or "Skip for now, run it later from Settings".
+   - **The card photo:** Capture B's style, with live checks for card edges, printed outline, tags and focus, and the automatic shutter.
+   - **The result:** across and down percentages with their uncertainty, what it means for a group, the paper-edge check agreeing or not, and "Save and finish" or "Check again another way".
+   For the caliper and ruler methods, the middle screen is two number fields with a unit choice and a picture of where to measure.
+   When it appears: offered at first run (skippable), offered again the first time a sheet is printed, and always in Settings, under Printers.
+4. **Settings, under Printers:** the list of named printers with their factors and dates, a default, Check again, Add a printer, Delete, and a switch to turn correction off.
+5. **The paper-edge check on every photo,** and the line on each photo result: "Corrected for My printer, 99.2 by 99.4%", or "Measured in the sheet's own inches" with a link to run the check.
+
+The screenshot job, the Features page (one entry for the printer check and one for tap to switch units, each with its own picture), the user guide, the tour and the README all get updated in the same change (entry 267's rule).
+
+## 2026-09-28, entry 272: Alan's choices for checking the print scale, and switching units by tapping a number
+
+**Status: done 2026-09-28, with entry 273,** which released its build. The card, caliper, ruler and scan methods, the thickness correction, the result's words and the paper-edge check are in; the coin is left out as Alan chose. Not done: a card photographed for real, which waits for Alan's first check.
+
+### 1. The printer check (follows entry 271; the study is in the planning project, `print-scale-study.md`)
+
+Alan took every recommendation:
+
+1. **Methods at launch:** card photo, digital caliper, ruler or tape, and scan. The coin is left out.
+2. **When the wizard appears:** offered at first run (skippable), offered again the first time a sheet is printed, and always in Settings.
+3. **Profiles:** named printer profiles with one default ("My printer").
+4. **The paper-edge check on every photo: yes.** Warn when it disagrees with the profile by more than about 1.5 percent, or when there is no profile and the sheet looks fit-to-page.
+
+The build:
+- **The Scale check page,** one Letter (A4 where the locale uses it) sheet with:
+  - a card outline, 85.60 by 53.98 mm;
+  - two caliper crosshair pairs, across and down, 150.00 mm apart between centres;
+  - ruler lines both ways, as long as the page allows, with their designed lengths printed in mm and inches;
+  - tags, a code naming the page, and "Print at Actual size (100 percent), never Fit to page".
+- **The card photo:** detect the card's edges and the printed outline in one photo, correct for the card's thickness (0.76 mm, using the tag model's camera distance), and measure both directions. Report the uncertainty. Card size tolerance: unused cards 85.47 to 85.72 by 53.92 to 54.03 mm, worn cards within about 0.3 percent.
+- **Caliper and ruler:** type the measured lengths, with the unit chosen.
+- **Scan:** the existing scan path saves the measured scale to a profile.
+- **The result:** for example "My printer prints at 99.2% across and 99.4% down (plus or minus 0.3%)". Save it, use it for every photo, and show it in one line on each result.
+- **Design:** planning is making concepts of the check page and the wizard screens now. Build the measuring logic first and the screens once Alan has chosen.
+
+### 2. Switch units by tapping a number (Alan)
+
+"We need to find a way to make it easier to switch any value presented between moa and mil or inches to centimeters. Maybe if you click on the value, it switches and remembers that."
+
+- **Tap (or click) any angular value to switch MOA and mil. Tap any length to switch inches and cm.** Every value of that kind switches together, everywhere, and the choice is remembered. It is the same setting as the unit switches and Settings, so they always agree.
+- A value shown as both (an angle with its size on paper beneath) switches the part tapped.
+- **Long-press on the phone, or right-click on the desktop,** shows every unit the value can take (MOA, mil, IPHY where offered, in, cm, mm) so nothing is out of reach.
+- It must stay discoverable and not collide with tap-to-explain (entry 259, which opens a figure's explanation from its label). The value switches units; the label explains. Show a short hint the first time a result appears ("Tap a number to switch units"), and keep the dotted underline on labels only.
+- Desktop, phone, reports, Compare, Ballistics and Shots Needed to Zero all follow it. Reports and exports state their units in their headers.
+- Planning's concept canvas includes a working demo of this. Build it now. Alan may adjust the details after seeing the demo.
+
 ## 2026-09-28, entry 271: real inches on photographs too (the print scale, measured once and remembered)
 
 **Status: done 2026-09-28** (3a1e70b), sections 1, 2, 4 and 5; section 3 is written up as a study. The wizard, the check page and card detection were held by the entry and are released by entries 272 and 273.

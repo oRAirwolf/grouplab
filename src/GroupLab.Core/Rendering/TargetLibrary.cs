@@ -61,6 +61,8 @@ public static class TargetLibrary
         ("GL-ZERO-MOA-100M", "Zeroing", "100 m"),
         ("GL-ZERO-MIL-100Y", "Zeroing", "100 yd"),
         ("GL-ZERO-MIL-100M", "Zeroing", "100 m"),
+        // Entry 273: the page a printer is checked on, which is not a target.
+        ("GL-SCALE-", "Printer check", "not a target"),
     ];
 
     /// <summary>The family shown for a file the catalogue does not list, which a test keeps from happening to a built-in.</summary>

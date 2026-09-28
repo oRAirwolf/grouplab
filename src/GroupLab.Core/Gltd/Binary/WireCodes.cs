@@ -32,8 +32,11 @@ internal static class WireCodes
     /// <summary>Grid style 3, the C3 zeroing grid of entry 251: the same five more bytes as style 2, drawn to <c>GridStyle3</c>.</summary>
     public const byte ScopeGridStyle = 3;
 
+    /// <summary>Grid style 4, the printer check page of entries 272 and 273: no field on the wire, everything drawn to <c>GridStyle4</c>.</summary>
+    public const byte CheckPageStyle = 4;
+
     /// <summary>The wire code of a grid's style.</summary>
-    public static byte GridStyleCode(int style) => style switch { 3 => ScopeGridStyle, 2 => ZeroingGridStyle, _ => StandardGridStyle };
+    public static byte GridStyleCode(int style) => style switch { 4 => CheckPageStyle, 3 => ScopeGridStyle, 2 => ZeroingGridStyle, _ => StandardGridStyle };
 
     /// <summary>True for a style whose grid carries a field and a whole-unit step on the wire.</summary>
     public static bool CarriesField(byte style) => style is ZeroingGridStyle or ScopeGridStyle;

@@ -65,7 +65,8 @@ internal static class TermHelp
         ArgumentNullException.ThrowIfNull(root);
         foreach (var block in root.GetLogicalDescendants().OfType<TextBlock>())
         {
-            if (!block.Classes.Contains(Class) && Labels.Any(block.Classes.Contains))
+            // Entry 273: a value that switches units when tapped is never also a glossary word's tap.
+            if (!block.Classes.Contains(Class) && !block.Classes.Contains(UnitTap.Value) && Labels.Any(block.Classes.Contains))
             {
                 Explain(block);
             }

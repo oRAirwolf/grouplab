@@ -3,9 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Button = Avalonia.Controls.Button;
+using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Publication;
-using Button = Avalonia.Controls.Button;
 using RadioButton = Avalonia.Controls.RadioButton;
 
 namespace GroupLab.Android;
@@ -42,6 +43,14 @@ public sealed class Shell : UserControl
     private readonly Dictionary<Place, Button> tabs = [];
     private readonly UniformGrid bar = new() { Rows = 1 };
     private readonly DockPanel frame = new();
+
+    /// <summary>Entry 273: the note that says what a tap on a number switched, at the bottom, for a few seconds.</summary>
+    private readonly TextBlock toastWords = new() { TextWrapping = TextWrapping.Wrap };
+
+    private readonly Border toast;
+
+    /// <summary>Entry 273: the units changed by a tap on a number; every page showing figures shows them again.</summary>
+    internal static event Action? UnitsChanged;
 
     /// <summary>The capture page is kept, so going to Settings and back does not lose a result on screen.</summary>
     private CapturePage? capture;
@@ -83,7 +92,26 @@ public sealed class Shell : UserControl
         nav = new Border { Child = bar, Classes = { PhoneStyles.Nav } };
         DockPanel.SetDock(nav, Dock.Bottom);
         frame.Children.Add(nav);
-        frame.Children.Add(page);
+        toast = new Border
+        {
+            Child = toastWords,
+            IsVisible = false,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(16, 0, 16, 20),
+            Classes = { PhoneStyles.Card },
+        };
+        frame.Children.Add(new Grid { Children = { page, toast } });
+
+        // Entry 273: tap a number to switch units, the same setting everywhere, remembered.
+        UnitTap.Current = () => App.Settings.LoadUnits();
+        UnitTap.Apply = (units, kind) =>
+        {
+            App.Settings.SaveUnits(units);
+            App.Settings.SaveUnitTapped();
+            DiagnosticLog.Info("units.tap", ("kind", kind.ToString()), ("linear", units.Linear.ToString()), ("angular", units.Angular.ToString()), ("distance", units.Distance.ToString()));
+            UnitsChanged?.Invoke();
+            Toast(GroupLab.Core.Marking.UnitSwitch.Said(units, kind) + " · remembered");
+        };
         AttachedToVisualTree += (_, _) =>
         {
             if (TopLevel.GetTopLevel(this) is { } top)
@@ -112,6 +140,36 @@ public sealed class Shell : UserControl
     {
         Show(Place.Ballistics);
         page.Content = new BallisticsPage(state);
+    }
+
+    /// <summary>Entry 273: the printer check, under Settings, and back to Settings when it is done or skipped.</summary>
+    internal void ShowPrinterCheck(string? name = null)
+    {
+        Show(Place.Settings);
+        page.Content = new PrinterCheckPage(() => Show(Place.Settings), string.IsNullOrEmpty(name) ? (name is null ? null : PrinterProfileNewName()) : name);
+    }
+
+    /// <summary>A name for another printer: "My printer" where none has it, else "Printer 2" and on.</summary>
+    private static string PrinterProfileNewName()
+    {
+        var taken = App.Settings.LoadPrinters().Select(p => p.Name).ToHashSet(StringComparer.Ordinal);
+        return taken.Contains(GroupLab.Core.Marking.PrinterProfile.DefaultName)
+            ? Enumerable.Range(2, 99).Select(n => $"Printer {n}").First(n => !taken.Contains(n))
+            : GroupLab.Core.Marking.PrinterProfile.DefaultName;
+    }
+
+    /// <summary>The note at the bottom, for three seconds.</summary>
+    internal void Toast(string words)
+    {
+        toastWords.Text = words;
+        toast.IsVisible = true;
+        Avalonia.Threading.DispatcherTimer.RunOnce(() =>
+        {
+            if (toastWords.Text == words)
+            {
+                toast.IsVisible = false;
+            }
+        }, TimeSpan.FromSeconds(3));
     }
 
     /// <summary>Hides the bar along the bottom, or shows it again.</summary>
@@ -255,8 +313,8 @@ internal static class Screens
                     Children =
                     {
                         new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
-                        new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } },
-                        new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
+                        UnitTap.Attach(new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } }),
+                        UnitTap.Attach(new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } }),
                     },
                 },
                 Classes = { PhoneStyles.Tile },

@@ -5,87 +5,132 @@ using GroupLab.Core.Measurement;
 
 namespace GroupLab.Core.Marking;
 
-/// <summary>How a printer's scale was measured.</summary>
+/// <summary>How a printer's scale was measured, NOTES-FROM-PLANNING.md entries 271 to 273.</summary>
 public enum PrinterMethod
 {
     /// <summary>A scan of one of its sheets, whose stated resolution is an absolute ruler.</summary>
     Scan,
 
-    /// <summary>One distance on one of its sheets, measured with a ruler and typed in.</summary>
+    /// <summary>Lengths on one of its sheets or the check page, measured with a ruler or tape and typed in.</summary>
     Ruler,
+
+    /// <summary>A bank, gift or ID card laid on the check page's outline and photographed.</summary>
+    Card,
+
+    /// <summary>The check page's crosshairs, measured with a digital caliper and typed in.</summary>
+    Caliper,
 }
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 271: the scale a printer prints GroupLab sheets at, measured once and applied to photographs from then on.
+/// NOTES-FROM-PLANNING.md entries 271 to 273: the scale a printer prints GroupLab sheets at, measured once and applied to photographs from
+/// then on, across the sheet and down it separately, because a printer's paper feed and its print head do not have to agree.
 /// <para>
 /// A photograph has no absolute ruler in it, so a sheet printed small cannot be told from a full-size sheet a little farther away
-/// (<c>docs/WHAT-CAN-BE-MEASURED.md</c>). But print scale belongs to a printer and its settings, and it is stable, so a scan of one sheet, or
-/// one ruler measurement, gives the figure every later photograph of that printer's sheets is multiplied by. The result then says whose
-/// figure it used and how it was measured, so a person who changed printers can see it is the wrong one.
+/// (<c>docs/WHAT-CAN-BE-MEASURED.md</c>). But print scale belongs to a printer and its settings, and it is stable, so a scan of one sheet, a
+/// card on the check page, or a caliper or ruler reading gives the figures every later photograph of that printer's sheets is multiplied
+/// by. The result then says whose figures it used, so a person who changed printers can see it is the wrong one.
 /// </para>
 /// </summary>
 /// <param name="Name">What the person calls the printer, "My printer" unless they said otherwise.</param>
-/// <param name="Scale">How large the printer prints: 0.992 is 99.2 percent of the intended size.</param>
-/// <param name="Uncertainty">Half the width of the range the scale is believed to lie in, as a fraction: 0.001 is a tenth of a percent.</param>
-public sealed record PrinterProfile(string Name, double Scale, PrinterMethod Method, DateOnly MeasuredOn, double Uncertainty)
+/// <param name="Across">How large the printer prints across the sheet: 0.992 is 99.2 percent of the intended size.</param>
+/// <param name="Down">The same, down the sheet.</param>
+/// <param name="Uncertainty">Half the width of the range each figure is believed to lie in, as a fraction: 0.003 is 0.3 percent.</param>
+public sealed record PrinterProfile(string Name, double Across, double Down, PrinterMethod Method, DateOnly MeasuredOn, double Uncertainty)
 {
     public const string DefaultName = "My printer";
 
     /// <summary>
-    /// The least uncertainty a scan is given, a tenth of a percent: a flatbed's stated resolution is good to about that, and its own x and y
-    /// are known to differ by more than a printer's do.
+    /// A scan's uncertainty: a flatbed's stated resolution is good to about a tenth of a percent overall, but its own two axes can differ
+    /// by about two tenths, which is the size of what a scan says about across against down.
     /// </summary>
-    public const double ScanFloor = 0.001;
+    public const double ScanUncertainty = 0.002;
+
+    /// <summary>A card's: the card itself varies by about 0.15 percent new and 0.3 worn (entry 272), and its edges are read to about 0.1.</summary>
+    public const double CardUncertainty = 0.003;
 
     /// <summary>How finely a person reads a ruler: a sixteenth of an inch at each end, so a thirty-second either way over the span.</summary>
     public const double RulerReadingInches = 1.0 / 32;
 
-    /// <summary>The profile a scan's measured scale makes, or null where the scan measured none GroupLab believes.</summary>
-    public static PrinterProfile? FromScan(string? name, ScaleReport? report, DateOnly measuredOn)
-    {
-        if (SheetReference.Correction(report) is not { } scale || report is null)
-        {
-            return null;
-        }
+    /// <summary>How well a digital caliper is set on a crosshair's center by eye: about a tenth of a millimeter at each end.</summary>
+    public const double CaliperReadingInches = 0.2 / 25.4;
 
-        // The scan's x and y scales differ a little; half that difference, and never less than the floor, is how well the one figure is known.
-        double spread = Math.Abs(report.PixelsPerDmmX - report.PixelsPerDmmY) / (2 * report.PixelsPerDmmArea);
-        return new PrinterProfile(Named(name), scale, PrinterMethod.Scan, measuredOn, Math.Max(ScanFloor, spread));
-    }
+    /// <summary>The one figure for the area, which is what a single percentage means: the geometric mean of across and down.</summary>
+    public double Scale => Math.Sqrt(Across * Down);
+
+    /// <summary>The profile a scan's measured scale makes, or null where the scan measured none GroupLab believes.</summary>
+    public static PrinterProfile? FromScan(string? name, ScaleReport? report, DateOnly measuredOn) =>
+        SheetReference.Correction(report) is not null && report?.ScaleX is { } x && report.ScaleY is { } y && Believable(x) && Believable(y)
+            ? new PrinterProfile(Named(name), x, y, PrinterMethod.Scan, measuredOn, ScanUncertainty)
+            : null;
 
     /// <summary>
-    /// The profile one ruler measurement makes: the distance the person measured on the sheet over the distance it was drawn. Null where
-    /// either is not a positive number, or where the scale comes out beyond anything a printer does, which is far more likely a typing slip
-    /// or the wrong two bulls than a real print.
+    /// The profile one ruler measurement on a sheet makes (entry 271): the distance the person measured over the distance it was drawn, the
+    /// same both ways. Null where either is not a positive number, or where the scale comes out beyond anything a printer does, which is far
+    /// more likely a typing slip or the wrong two bulls than a real print.
     /// </summary>
-    public static PrinterProfile? FromRuler(string? name, double measuredInches, double drawnInches, DateOnly measuredOn)
+    public static PrinterProfile? FromRuler(string? name, double measuredInches, double drawnInches, DateOnly measuredOn) =>
+        Ratio(measuredInches, drawnInches) is { } k
+            ? new PrinterProfile(Named(name), k, k, PrinterMethod.Ruler, measuredOn, RulerReadingInches / drawnInches)
+            : null;
+
+    /// <summary>
+    /// The profile two typed lengths make (entry 273): the check page's crosshairs with a caliper, or its two long lines with a ruler, each
+    /// over its drawn length. Null where either is a slip.
+    /// </summary>
+    public static PrinterProfile? FromLengths(string? name, PrinterMethod method, double acrossInches, double acrossDrawnInches, double downInches, double downDrawnInches, DateOnly measuredOn)
     {
-        if (!(measuredInches > 0) || !(drawnInches > 0) || double.IsInfinity(measuredInches) || double.IsInfinity(drawnInches))
+        if (method is not (PrinterMethod.Ruler or PrinterMethod.Caliper) || Ratio(acrossInches, acrossDrawnInches) is not { } x || Ratio(downInches, downDrawnInches) is not { } y)
         {
             return null;
         }
 
-        double scale = measuredInches / drawnInches;
-        return scale < SheetReference.LowestBelievable || scale > SheetReference.HighestBelievable
-            ? null
-            : new PrinterProfile(Named(name), scale, PrinterMethod.Ruler, measuredOn, RulerReadingInches / drawnInches);
+        double reading = method == PrinterMethod.Caliper ? CaliperReadingInches : RulerReadingInches;
+        return new PrinterProfile(Named(name), x, y, method, measuredOn, reading / Math.Min(acrossDrawnInches, downDrawnInches));
     }
+
+    private static double? Ratio(double measured, double drawn) =>
+        double.IsFinite(measured) && double.IsFinite(drawn) && measured > 0 && drawn > 0 && Believable(measured / drawn) ? measured / drawn : null;
+
+    private static bool Believable(double k) => k >= SheetReference.LowestBelievable && k <= SheetReference.HighestBelievable;
 
     private static string Named(string? name) => string.IsNullOrWhiteSpace(name) ? DefaultName : name.Trim();
 
-    /// <summary>Whether two measurements of a printer agree within what each says it knows.</summary>
+    /// <summary>Whether two measurements of a printer agree within what each says it knows, both ways.</summary>
     public bool AgreesWith(PrinterProfile other)
     {
         ArgumentNullException.ThrowIfNull(other);
-        return Math.Abs(Scale - other.Scale) <= Uncertainty + other.Uncertainty;
+        double allowed = Uncertainty + other.Uncertainty;
+        return Math.Abs(Across - other.Across) <= allowed && Math.Abs(Down - other.Down) <= allowed;
     }
 
-    /// <summary>How it was measured, for the one line a result carries: "from a scan on 28 September".</summary>
-    public string How => string.Create(CultureInfo.InvariantCulture,
-        $"{(Method == PrinterMethod.Scan ? "from a scan" : "with a ruler")} on {MeasuredOn.ToString("d MMMM", CultureInfo.InvariantCulture)}");
+    /// <summary>How it was measured: "with a card", "from a scan".</summary>
+    public string MethodWords => Method switch
+    {
+        PrinterMethod.Scan => "from a scan",
+        PrinterMethod.Card => "with a card",
+        PrinterMethod.Caliper => "with a caliper",
+        _ => "with a ruler",
+    };
 
-    /// <summary>The one line a photograph's result carries once this profile has corrected it, entry 271 section 2, word for word.</summary>
-    public string Line => string.Create(CultureInfo.InvariantCulture, $"Corrected for {Name}'s {Scale * 100:0.0} percent, measured {How}.");
+    /// <summary>How it was measured and when: "with a card on 28 September".</summary>
+    public string How => string.Create(CultureInfo.InvariantCulture, $"{MethodWords} on {MeasuredOn.ToString("d MMMM", CultureInfo.InvariantCulture)}");
+
+    /// <summary>The two percentages, "99.2 by 99.4%", or one where they round the same.</summary>
+    public string Percentages => Math.Round(Across * 1000) == Math.Round(Down * 1000)
+        ? string.Create(CultureInfo.InvariantCulture, $"{Across * 100:0.0}%")
+        : string.Create(CultureInfo.InvariantCulture, $"{Across * 100:0.0} by {Down * 100:0.0}%");
+
+    /// <summary>The one line a photograph's result carries once this profile has corrected it, entry 273 section 5, word for word.</summary>
+    public string Line => $"Corrected for {Name}, {Percentages}";
+
+    /// <summary>The wizard's result, entry 272: "My printer prints at 99.2% across and 99.4% down (plus or minus 0.3%)".</summary>
+    public string Result => string.Create(CultureInfo.InvariantCulture,
+        $"{Name} prints at {Across * 100:0.0}% across and {Down * 100:0.0}% down (plus or minus {Uncertainty * 100:0.0}%)");
+
+    /// <summary>The wizard's heading: whether the printer prints small, large or true, to within what the measurement can tell.</summary>
+    public string Headline => Scale < 1 - Math.Max(Uncertainty, 0.001) ? $"{Name} prints a little small"
+        : Scale > 1 + Math.Max(Uncertainty, 0.001) ? $"{Name} prints a little large"
+        : $"{Name} prints at its true size";
 
     /// <summary>The offer a scan's result makes, entry 271 section 2.</summary>
     public static string Offer(double scale) => string.Create(CultureInfo.InvariantCulture,
@@ -94,27 +139,28 @@ public sealed record PrinterProfile(string Name, double Scale, PrinterMethod Met
     public JsonObject ToJson() => new()
     {
         ["name"] = Name,
-        ["scale"] = Scale,
-        ["method"] = Method == PrinterMethod.Scan ? "scan" : "ruler",
+        ["across"] = Across,
+        ["down"] = Down,
+        ["method"] = Method.ToString().ToLowerInvariant(),
         ["measuredOn"] = MeasuredOn.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
         ["uncertainty"] = Uncertainty,
     };
 
-    /// <summary>A profile read back, or null where anything in it is missing or beyond belief.</summary>
+    /// <summary>A profile read back, or null where anything in it is missing or beyond belief. Entry 271's one "scale" reads as both.</summary>
     public static PrinterProfile? FromJson(JsonNode? node)
     {
         try
         {
-            if (node is not JsonObject o || (string?)o["name"] is not { } name || (double?)o["scale"] is not { } scale
-                || (double?)o["uncertainty"] is not { } uncertainty
+            if (node is not JsonObject o || (string?)o["name"] is not { } name || (double?)o["uncertainty"] is not { } uncertainty
+                || ((double?)o["across"] ?? (double?)o["scale"]) is not { } across || ((double?)o["down"] ?? (double?)o["scale"]) is not { } down
                 || !DateOnly.TryParseExact((string?)o["measuredOn"], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var on)
-                || scale < SheetReference.LowestBelievable || scale > SheetReference.HighestBelievable || !(uncertainty >= 0))
+                || !Believable(across) || !Believable(down) || !(uncertainty >= 0)
+                || !Enum.TryParse<PrinterMethod>((string?)o["method"], ignoreCase: true, out var method) || !Enum.IsDefined(method))
             {
                 return null;
             }
 
-            var method = (string?)o["method"] switch { "scan" => PrinterMethod.Scan, "ruler" => PrinterMethod.Ruler, _ => (PrinterMethod?)null };
-            return method is { } m ? new PrinterProfile(Named(name), scale, m, on, uncertainty) : null;
+            return new PrinterProfile(Named(name), across, down, method, on, uncertainty);
         }
         catch (Exception ex) when (ex is InvalidOperationException or FormatException)
         {

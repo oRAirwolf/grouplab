@@ -1,9 +1,9 @@
 GOOD MORNING (the night of 28 September, in five lines):
-1. Finished and pushed: the phone's camera screen rebuilt (words, shutter and Back over the live picture, Guided and Manual, a score on every picture); a curled sheet now measured; the phone's seven new screens; real inches on photographs from a printer measured once; "works on any target" on the README and the site; the donor pack, Android on the download page, the new README. Nightly 119 has the camera; the rest reaches the next nightly.
+1. Finished and pushed: the phone's camera screen rebuilt (words, shutter and Back over the live picture, Guided and Manual, a score on every picture); a curled sheet now measured; the phone's seven new screens; "works on any target" on the README and the site; the donor pack and Android on the download page (both live); and, from your approved concepts, the printer check (print the check page, then a card photo, caliper, ruler or scanner; Settings, Printers) and tap any number to switch its units. They reach you in the next nightly.
 2. THE CAMERA TEST, ready now (about ten minutes, the Fold 7 closed, a printed 5x5 sheet flat on a table in ordinary light): open GroupLab Dev, Capture, Take a picture. (a) GUIDED: hold it over the sheet and follow the words until the shutter fires by itself, then Use this picture. (b) Three bad ones on purpose, about five seconds each: tilted well over, far too close, your hand's shadow across the sheet; note whether the words said what was wrong. (c) One more good one from another height. (d) Tap MANUAL: one ordinary picture with the shutter, then one deliberately bad one, and read the feedback. Then say "camera done", and anything that felt wrong.
 3. When you are at the computer, say "run the server read": one read-only command on the server for entry 261, which asks your approval (request 52 below).
 4. Devices: both show the black idle screen and can be picked up. The Tab S8 Ultra never answered adb overnight, so its pictures and torch reading wait for the next sitting.
-5. Updated 2026-09-28 13:40 UTC. Next: entries 272 and 273, the printer check and tap to switch units.
+5. Updated 2026-09-28 15:25 UTC. Next: the camera test when you are ready, then the device sitting; question 67 asks whether the card outline's 3 mm gap is all right.
 
 # Requests for Alan
 

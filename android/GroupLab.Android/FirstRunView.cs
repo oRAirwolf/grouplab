@@ -38,6 +38,17 @@ public sealed class FirstRunView : UserControl
         column.Children.Add(targets);
         column.Children.Add(errors);
         column.Children.Add(survey);
+
+        // Entry 273: the printer check, offered once beside the questions and never holding the page open.
+        if (settings.LoadPrinters().Count == 0 && !settings.LoadPrinterOffered())
+        {
+            settings.SavePrinterOffered();
+            var printer = new StackPanel { Spacing = 8 };
+            printer.Children.Add(Screens.Heading("Check your printer"));
+            printer.Children.Add(Screens.Dim("Printers often print a little small. Check once, with a card and one photo, a caliper, a ruler or a scanner, and every photo of a GroupLab sheet from that printer measures in real inches. It is also under Settings, Printers."));
+            printer.Children.Add(Screens.Choice("Skip for now", () => printer.IsVisible = false));
+            column.Children.Add(printer);
+        }
         void Answered()
         {
             if (!targets.IsVisible && !errors.IsVisible && !survey.IsVisible)

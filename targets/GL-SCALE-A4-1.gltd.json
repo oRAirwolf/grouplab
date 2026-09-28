@@ -1,0 +1,236 @@
+{
+  "gltd": 1,
+  "revision": 0,
+  "id": "GL-ZDZC-KGTR-435H-V14S",
+  "name": "GroupLab Printer Check, A4",
+  "description": "The printer check page: print it at Actual size (100%) and measure it once, with a card and one photo, a digital caliper, a ruler or a scanner, and every photograph of a GroupLab sheet from that printer measures in real inches. It is not a target.",
+  "author": "GroupLab built-in library",
+  "licence": "CC0-1.0",
+  "created": "2026-09-28",
+  "units": "dmm",
+  "page": {
+    "size": "a4",
+    "width": 2100,
+    "height": 2970,
+    "orientation": "portrait"
+  },
+  "inks": [
+    {
+      "key": "black",
+      "srgb": "#000000",
+      "role": "artwork"
+    },
+    {
+      "key": "paper",
+      "srgb": "#FFFFFF",
+      "role": "paper"
+    },
+    {
+      "key": "fid",
+      "srgb": "#000000",
+      "role": "fiducial"
+    },
+    {
+      "key": "code",
+      "srgb": "#000000",
+      "role": "code"
+    },
+    {
+      "key": "text",
+      "srgb": "#000000",
+      "role": "text"
+    }
+  ],
+  "ringSets": [
+    {
+      "key": "cross",
+      "discs": [
+        {
+          "diameter": 46,
+          "ink": "black"
+        },
+        {
+          "diameter": 38,
+          "ink": "paper"
+        }
+      ]
+    }
+  ],
+  "bulls": [
+    {
+      "x": 380,
+      "y": 794,
+      "ringSet": "cross",
+      "scoring": false
+    },
+    {
+      "x": 1880,
+      "y": 794,
+      "ringSet": "cross",
+      "scoring": false
+    },
+    {
+      "x": 1880,
+      "y": 2294,
+      "ringSet": "cross",
+      "scoring": false
+    }
+  ],
+  "fiducials": {
+    "scheme": "field-ring-1",
+    "family": "apriltag-36h11",
+    "markerSize": 40,
+    "quietZone": 10,
+    "ink": "fid",
+    "markers": [
+      {
+        "id": 0,
+        "x": 560,
+        "y": 470
+      },
+      {
+        "id": 1,
+        "x": 900,
+        "y": 470
+      },
+      {
+        "id": 2,
+        "x": 1240,
+        "y": 470
+      },
+      {
+        "id": 3,
+        "x": 1580,
+        "y": 470
+      },
+      {
+        "id": 4,
+        "x": 250,
+        "y": 794
+      },
+      {
+        "id": 5,
+        "x": 2000,
+        "y": 794
+      },
+      {
+        "id": 6,
+        "x": 552,
+        "y": 1120
+      },
+      {
+        "id": 7,
+        "x": 1708,
+        "y": 1120
+      },
+      {
+        "id": 8,
+        "x": 250,
+        "y": 1300
+      },
+      {
+        "id": 9,
+        "x": 2000,
+        "y": 1300
+      },
+      {
+        "id": 10,
+        "x": 552,
+        "y": 1480
+      },
+      {
+        "id": 11,
+        "x": 1708,
+        "y": 1480
+      },
+      {
+        "id": 12,
+        "x": 250,
+        "y": 1800
+      },
+      {
+        "id": 13,
+        "x": 2000,
+        "y": 1800
+      },
+      {
+        "id": 14,
+        "x": 250,
+        "y": 2294
+      },
+      {
+        "id": 15,
+        "x": 2000,
+        "y": 2294
+      },
+      {
+        "id": 16,
+        "x": 560,
+        "y": 2470
+      },
+      {
+        "id": 17,
+        "x": 900,
+        "y": 2470
+      },
+      {
+        "id": 18,
+        "x": 1240,
+        "y": 2470
+      },
+      {
+        "id": 19,
+        "x": 1580,
+        "y": 2470
+      }
+    ]
+  },
+  "codes": {
+    "count": 2,
+    "version": 10,
+    "ecLevel": "H",
+    "moduleSize": 4,
+    "quietZone": 16,
+    "placement": "corners-1",
+    "humanReadableId": true,
+    "positions": [
+      {
+        "x": 250,
+        "y": 250
+      },
+      {
+        "x": 1850,
+        "y": 250
+      }
+    ]
+  },
+  "print": {
+    "scaling": "none",
+    "minimumDpi": 300,
+    "colourMode": "mono",
+    "generator": "GroupLab 0.1.0",
+    "notes": "Print at 100 percent. Do not use fit to page."
+  },
+  "grids": [
+    {
+      "key": "check",
+      "centreX": 1130,
+      "centreY": 1328,
+      "half": 100,
+      "divisions": 10,
+      "majorEvery": 1,
+      "unit": "cm",
+      "distance": 100,
+      "distanceUnit": "m",
+      "minorInk": "black",
+      "majorInk": "black",
+      "axisInk": "black",
+      "minorStroke": 4,
+      "majorStroke": 4,
+      "axisStroke": 4,
+      "labelStep": 0,
+      "labelInk": "black",
+      "style": 4
+    }
+  ]
+}

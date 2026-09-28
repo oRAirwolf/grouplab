@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entries 253 to 271 were folded (the night of entry 263).
+**Last rewritten:** 2026-09-28, after entries 272 and 273 (the printer check, and tap a number to switch units).
 
 ---
 
@@ -20,11 +20,11 @@ If something here disagrees with the logs, the logs are right and this file is o
   was checked over adb on the Fold 7's cover screen only. **The camera test with Alan** (request 33, entry 255) is the next step.
 - **A curled sheet is registered through every marker** (`MarkerMesh`, a thin-plate spline) when the radial fit keeps fewer than half
   the corners; a saved session keeps the mesh as its corners (entry 260).
-- **Real inches on photographs** (entry 271): a printer profile from a scan or one ruler distance corrects photographs and says so in
-  one line; Settings chooses the printer on the desktop, the last one kept on the phone. **Entries 272 and 273 build the rest as Alan
-  approved it**: the Scale check page (GL-SCALE-LTR-1 and an A4 one), the three-screen wizard, card photos, Printers in Settings, the
-  paper-edge check on every photo, and scale across and down separately.
-- **Tap a number to switch units** (entries 272 and 273): approved as the concept's working demo; not started.
+- **The printer check** (entries 271 to 273): the check page (`GL-SCALE-LTR-1`, `GL-SCALE-A4-1`, grid style 4, question 67), the
+  three-screen wizard on both platforms, card photos (`CardCheck`), caliper and ruler readings, scans, Printers in Settings, offers at
+  first run and first print, and the paper-edge check on every photo (`PaperEdgeCheck`). A profile holds across and down.
+- **Tap a number to switch units** (entry 273): `UnitTap` on the desktop's figures, Compare and Ballistics and the phone's tiles and rows;
+  numbers inside sentences and the full table's bare cells are not tappable yet.
 - **The phone does what the desktop does** (entries 258, 259): full figures, the bulls you fired at, Shots Needed to Zero, compare loads,
   Ballistics as a fifth tab, the set as a checklist and the scan pill are on the phone; `docs/PHONE-PARITY.md` holds the rest (marking
   by touch, CSV, large sheet advice, a picture shared in), and the site build fails on a feature with no row.
@@ -37,11 +37,10 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## The next three
 
-1. Entries 272 and 273: the printer check (the measuring logic first, then the check page, the wizard and Printers in Settings) and
-   tap to switch units, with their Features entries, pictures, guide, tour and README in the same change.
-2. The camera test with Alan, then the device sitting: the phone and tablet pictures (253 section 3), the inner Fold screen (257),
-   torch strength in a session (262), and trying entry 259's screens.
-3. Entry 258's remaining phone features, in its order.
+1. The camera test with Alan, then the device sitting: the phone and tablet pictures (253 section 3), the inner Fold screen (257),
+   torch strength in a session (262), entry 259's screens, and the printer check's card photo on the phone (273).
+2. Entry 258's remaining phone features, in its order.
+3. Entry 270's picture once question 66 is answered; the outline's gap once question 67 is.
 
 ## Blocked, and on what
 
@@ -55,8 +54,9 @@ Open requests in `docs/notes/for-alan.md`: **7** (50 the device sitting with the
 
 ## Open questions
 
-Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
+- **67** the printer check page as grid style 4, and its card outline 3 mm outside the card
 - **66** which target the "Your own targets" picture may show (most commercial scans here are OnTarget designs)
 - **65** entry 261's `tools/study/` against CLAUDE.md's read-only `tools/`
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
@@ -86,7 +86,9 @@ line reads what the repository holds, and the test fails locally until the last 
 - **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
   own `camera.layout` log line instead (`scripts/device-capture-check.py`).
 - **Starting GroupLab Dev's main screen over the idle screen makes a second window, which crashes**; press Back first.
-- **A photograph's scale comes from the printer chosen**, where one is; a scan's own measured scale always wins.
+- **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
+- **The check page is in the library but is not a target**: it counts as no sheet in the README, and a picture of it opened as a target
+  goes to the printer check. A value on screen is tappable exactly when it shows a unit (`UnitTap.KindOf`).
 - **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself.
 - **A zeroing grid is drawn by its style**: style 3's strokes, ticks, numbers, legend and bar are fixed by `GridStyle3`. A real hole in
   black is as large as on white; a synthetic one is not.

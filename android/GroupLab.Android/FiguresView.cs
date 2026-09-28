@@ -45,6 +45,12 @@ internal sealed class FiguresView : UserControl
     {
         state = now;
         units = withUnits;
+        // Entry 273: an angle chosen here follows the setting a tap on a number changes.
+        if (angle is not null)
+        {
+            angle = withUnits.Angular;
+        }
+
         Build();
     }
 
@@ -65,6 +71,13 @@ internal sealed class FiguresView : UserControl
             var chip = Chip(words, angle == unit, () =>
             {
                 angle = unit;
+                // Entry 273: MOA and mil here are the one angle setting that a tap on any number switches too.
+                if (unit is { } chosen && chosen != units.Angular)
+                {
+                    UnitTap.Apply?.Invoke(units with { Angular = chosen }, GroupLab.Core.Marking.UnitKind.Angle);
+                    return;
+                }
+
                 Build();
             });
             chip.IsEnabled = unit is null || state.ShotDistanceInches is not null;
@@ -252,11 +265,11 @@ internal sealed class FiguresView : UserControl
 
     private Control Row(ResultFigure figure)
     {
-        var value = new TextBlock { Text = figure.Value, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, TextAlignment = TextAlignment.Right };
+        var value = UnitTap.Attach(new TextBlock { Text = figure.Value, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, TextAlignment = TextAlignment.Right });
         var right = new StackPanel { Spacing = 2, Children = { value } };
         if ((figure.Range ?? figure.Beneath) is { } under)
         {
-            right.Children.Add(Screens.Dim(under));
+            right.Children.Add(UnitTap.Attach(Screens.Dim(under)));
         }
 
         var label = Label(figure.Label, figure.Key, figure);

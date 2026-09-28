@@ -395,7 +395,7 @@ public static partial class GltdJsonReader
             o.Int("axisStroke", false, 1, 255),
             o.Int("labelStep", false, 0, 100),
             o.Str("labelInk", false, pattern: InkKeyPattern()),
-            o.Int("style", false, 1, 3),
+            o.Int("style", false, 1, 4),
             o.Int("fieldX", false, 100, DmmMax),
             o.Int("fieldY", false, 100, DmmMax),
             o.Int("wholeEvery", false, 1, 100));

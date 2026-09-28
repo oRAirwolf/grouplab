@@ -150,11 +150,37 @@
       }
     },
     {
+      "key": "unit-tap",
+      "group": "The numbers",
+      "name": "Tap a number to switch units",
+      "sentence": "Tap any angle to switch MOA and mil, any size on the paper to switch inches and centimeters, any distance to switch yards and meters, everywhere at once and remembered; press and hold for every unit.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "Tap any number to switch its units",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "tapping a number on the phone's result is photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "printer-scale",
       "group": "Reading a target",
-      "name": "Real inches from a photograph",
-      "sentence": "Scan one sheet or measure one ruler distance, once per printer, and photographs of that printer's sheets are corrected to real inches, each saying which printer's scale it used.",
+      "name": "Check your printer once, for real inches from photos",
+      "sentence": "Print the check page and measure it once, with a card and one photo, a digital caliper, a ruler or a scanner; photographs of that printer's sheets are then corrected across and down, each saying so, and the paper's own edge checks every photo.",
       "shot": "marking",
+      "sheets": [
+        [
+          "scale-check",
+          "The printer check page as it prints on Letter: a card outline, caliper crosshairs 150 mm apart and two ruler lines"
+        ]
+      ],
       "platforms": [
         "Windows",
         "macOS",

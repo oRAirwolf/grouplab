@@ -71,6 +71,24 @@ public partial class RenderingTests
         // Measurement grid lines sit on the derived positions, section 3.13.
         foreach (var g in d.Grids ?? [])
         {
+            if (g.StyleOrDefault == GridStyle4.Style)
+            {
+                // Entry 273: the printer check page's crosshairs are centered on their derived points and its rulers are their stated
+                // lengths exactly, tick to tick, since those are what a caliper and a ruler are read against.
+                var rects = page.Items.OfType<RectFill>().Where(r => r.Layer == SceneLayer.MeasurementGrid).ToList();
+                foreach (var c in GridStyle4.Crosshairs(d.Page))
+                {
+                    Assert.Contains(rects, r => r.Width > r.Height && r.X + (r.Width / 2) == 2L * c.X && r.Y + (r.Height / 2) == 2L * c.Y);
+                    Assert.Contains(rects, r => r.Height > r.Width && r.X + (r.Width / 2) == 2L * c.X && r.Y + (r.Height / 2) == 2L * c.Y);
+                }
+
+                var (dx, top, bottom) = GridStyle4.RulerDown(d.Page);
+                Assert.Contains(rects, r => r.X + (r.Width / 2) == 2L * dx && r.Y == 2L * top && r.Height == 2L * (bottom - top) && bottom - top == GridStyle4.RulerDownDmm);
+                var (ay, left, right) = GridStyle4.RulerAcross(d.Page);
+                Assert.Contains(rects, r => r.Y + (r.Height / 2) == 2L * ay && r.X == 2L * left && r.Width == 2L * (right - left) && right - left == GridStyle4.RulerAcrossDmm);
+                continue;
+            }
+
             if (g.StyleOrDefault == GridStyle3.Style)
             {
                 // Style 3 draws every line inside its field, the centre cross left out inside the aim's white; a tick is shorter than any

@@ -144,7 +144,21 @@ public sealed class TargetsPage : UserControl
         }
 
         var result = Screens.Line("");
-        column.Children.Add(Screens.Primary("Print", () => Out(sheet, result, print: true)));
+        var offer = new StackPanel { Spacing = 8, IsVisible = false };
+        column.Children.Add(Screens.Primary("Print", () =>
+        {
+            Out(sheet, result, print: true);
+            // Entry 273: the first time a sheet is printed, the printer check is offered, once, since this printer's sheets are the ones photographed.
+            var settings = App.Settings;
+            if (!GroupLab.Core.Marking.PrinterCheck.IsCheckPage(sheet.Definition) && settings.LoadPrinters().Count == 0 && !settings.LoadPrinterOffered())
+            {
+                settings.SavePrinterOffered();
+                offer.Children.Add(Screens.Dim("Check this printer once, and every photo of a GroupLab sheet it printed measures in real inches."));
+                offer.Children.Add(Screens.Choice("Check this printer", () => Shell.Current?.ShowPrinterCheck()));
+                offer.IsVisible = true;
+            }
+        }));
+        column.Children.Add(offer);
         column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false)));
         column.Children.Add(result);
         column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));

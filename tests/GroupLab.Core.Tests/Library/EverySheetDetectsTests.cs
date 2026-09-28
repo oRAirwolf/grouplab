@@ -44,6 +44,19 @@ public class EverySheetDetectsTests
         var definition = BuiltIns.Load(file);
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
         var random = new Random(189);
+        if (PrinterCheck.IsCheckPage(definition))
+        {
+            // Entry 273: the printer check page is not shot at. It names itself from its own codes, and a scan of it measures its printer.
+            var named = SheetIdentification.Identify(render, Library, new OpenCvSharpBackend(), new TraceRecorder());
+            Assert.Equal(GltdBinary.Encode(definition).Encoding!.DefinitionId, named.DefinitionId);
+            var scan = new ImageMetadata("PNG", render.Width, render.Height, Dpi, Dpi, null, null, null, null, null);
+            var check = PrinterCheck.Measure(render, scan, definition, new OpenCvSharpBackend(), null, new DateOnly(2026, 9, 28));
+            Assert.NotNull(check.Profile);
+            Assert.InRange(check.Profile.Across, 0.998, 1.002);
+            Assert.InRange(check.Profile.Down, 0.998, 1.002);
+            return;
+        }
+
 
         // Holes on up to five scoring bulls, each a little off center, as a group of shots lands. On a zeroing grid, one bull, the group
         // is five holes in the open cells around it, because the grid's axes cross at the point of aim. A hole says whether it is on

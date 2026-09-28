@@ -145,10 +145,16 @@ internal sealed class CaptureScreen : LinearLayout
     public QualityBar Bar { get; }
 
     /// <summary>One frame's verdict on the panel: the instruction, the live checks, and the forecast of the picture this frame would make.</summary>
-    public void Show(FrameVerdict verdict, int? forecast, bool torchOn)
+    public void Show(FrameVerdict verdict, int? forecast, bool torchOn, bool? card = null)
     {
         say.Text = verdict.Words;
         var parts = new List<string>();
+        if (card is { } seen)
+        {
+            parts.Add(seen ? "Card edges found" : "No card yet");
+            parts.Add(verdict.Mapping is null ? "Outline not read" : "Printed outline read");
+        }
+
         if (verdict.Quality is { } q)
         {
             parts.Add(q.FocusPart is >= CaptureGuidance.Holds ? "Focus sharp" : "Focus soft");

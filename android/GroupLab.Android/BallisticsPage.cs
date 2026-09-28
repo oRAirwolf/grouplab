@@ -25,7 +25,7 @@ namespace GroupLab.Android;
 internal sealed class BallisticsPage : UserControl
 {
     private readonly SessionStore store = PhoneAnalysis.Store();
-    private readonly UnitSettings units = App.Settings.LoadUnits();
+    private UnitSettings units = App.Settings.LoadUnits();
     private readonly StackPanel column = new() { Spacing = 12 };
     private readonly ContentControl form = new();
     private readonly ContentControl body = new();
@@ -47,6 +47,15 @@ internal sealed class BallisticsPage : UserControl
     /// <param name="carried">The result's group, carried in from a result's section list, for the hit chance; null from the tab.</param>
     public BallisticsPage(MarkingState? carried = null)
     {
+        // Entry 273: a tap on any number switches units everywhere; this page shows them again.
+        void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            this.units = App.Settings.LoadUnits();
+            Build();
+        });
+        AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;
+        DetachedFromVisualTree += (_, _) => Shell.UnitsChanged -= Follow;
+
         this.carried = carried;
         book = store.LoadBook();
         rifleName = carried?.Rifle?.Name ?? book.Rifles.FirstOrDefault()?.Name;

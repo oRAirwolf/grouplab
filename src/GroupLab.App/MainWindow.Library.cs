@@ -76,7 +76,7 @@ public sealed partial class MainWindow
     /// </summary>
     private Control BuildLibrary()
     {
-        targetsPanel = new PrintPanel(LibrarySheets, ownSheets);
+        targetsPanel = new PrintPanel(LibrarySheets, ownSheets) { PrinterOffer = PrinterOfferAfterPrinting };
         targetsPanel.PageShown += page =>
         {
             libraryPreview.Source = page;

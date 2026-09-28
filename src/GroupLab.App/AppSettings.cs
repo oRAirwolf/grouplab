@@ -214,6 +214,35 @@ public sealed class AppSettingsStore(string path)
         file["printer"] = printer.Name;
     });
 
+    /// <summary>Entry 273: whether the printer check has been offered, at first run or after the first print; it is offered once.</summary>
+    public bool LoadPrinterOffered() => Read(file => file["printerOffered"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SavePrinterOffered() => Save(file => file["printerOffered"] = true);
+
+    /// <summary>Entry 273: whether a number has ever been tapped to switch units; the one-time hint shows until one has.</summary>
+    public bool LoadUnitTapped() => Read(file => file["unitTapped"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveUnitTapped() => Save(file => file["unitTapped"] = true);
+
+    /// <summary>Entry 273: whether photographs are corrected at all; on until turned off under Printers.</summary>
+    public bool LoadPrinterCorrection() => Read(file => file["printerCorrection"]?.GetValueKind() != JsonValueKind.False);
+
+    public bool SavePrinterCorrection(bool on) => Save(file => file["printerCorrection"] = on);
+
+    /// <summary>The profile photographs are corrected with now: the one chosen, unless correction is turned off.</summary>
+    public PrinterProfile? PrinterForPhotos() => LoadPrinterCorrection() ? LoadChosenPrinter() : null;
+
+    /// <summary>Deletes a saved profile; the chosen one, deleted, leaves none chosen.</summary>
+    public bool DeletePrinter(string name) => Save(file =>
+    {
+        var kept = file["printers"] is JsonArray all ? all.Select(PrinterProfile.FromJson).OfType<PrinterProfile>().Where(p => p.Name != name).ToList() : [];
+        file["printers"] = new JsonArray([.. kept.Select(p => (JsonNode)p.ToJson())]);
+        if ((string?)file["printer"] == name)
+        {
+            file["printer"] = null;
+        }
+    });
+
     /// <summary>Chooses a saved profile by name, or none, which leaves photographs in the sheet's own inches.</summary>
     public bool ChoosePrinter(string? name) => Save(file => file["printer"] = name);
 

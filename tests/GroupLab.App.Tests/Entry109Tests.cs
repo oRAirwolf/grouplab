@@ -205,7 +205,7 @@ public class Entry109Tests
             // Entry 119 section 4 adds "This build", which is where a tester reads the version and the commit for a bug report.
             // Entry 165 section 9 adds "Sending targets", its own section rather than a toggle among the others.
             // Entry 208 section 4 gathers sending targets, error reports and the survey under one section, "Sharing".
-            Assert.Equal(["Units", "Printer scale", "Theme", "This build", "Updates", "Sharing", "Diagnostics", "Crash records"], settings);
+            Assert.Equal(["Units", "Printers", "Theme", "This build", "Updates", "Sharing", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }
@@ -543,6 +543,9 @@ public class Entry109Tests
             var d = Load(file + ".gltd.json");
             Save("page-" + file.Replace("GL-", "", StringComparison.Ordinal).ToLowerInvariant(), SceneRasterizer.Rasterize(SceneBuilder.Build(d).Pages[0], 40, words: true));
         }
+
+        // Entry 273: the printer check page, whole, as it prints on Letter.
+        Save("scale-check", SceneRasterizer.Rasterize(SceneBuilder.Build(Load("GL-SCALE-LTR-1.gltd.json")).Pages[0], 60, words: true));
 
         // A large format set: its four Letter sheets, whole, side by side as they are laid out to shoot.
         {

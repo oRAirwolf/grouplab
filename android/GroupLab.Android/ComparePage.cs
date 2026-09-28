@@ -20,12 +20,21 @@ internal sealed class ComparePage : UserControl
 {
     private readonly StackPanel column = new() { Spacing = 12 };
     private readonly LoadComparisonReport? report;
-    private readonly UnitSettings units;
+    private UnitSettings units;
     private readonly double? distance;
     private string figure = "Mean radius";
 
     public ComparePage(IReadOnlyList<SessionRecord> records, UnitSettings units, Action back)
     {
+        // Entry 273: a tap on any number switches units everywhere; this page shows them again.
+        void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            this.units = App.Settings.LoadUnits();
+            Draw();
+        });
+        AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;
+        DetachedFromVisualTree += (_, _) => Shell.UnitsChanged -= Follow;
+
         this.units = units;
         var setup = CompareSessions.From(records, units);
         distance = setup.Distance;

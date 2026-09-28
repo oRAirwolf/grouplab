@@ -24,7 +24,7 @@ internal sealed class ShotsToZeroPage : UserControl
         [("0.1 mil", 0.1, AngularUnit.Mrad), ("1/4 MOA", 0.25, AngularUnit.Moa), ("1/8 MOA", 0.125, AngularUnit.Moa), ("Other", 0, AngularUnit.Moa)];
 
     private readonly MarkingState state;
-    private readonly UnitSettings units;
+    private UnitSettings units;
     private readonly StackPanel column = new() { Spacing = 12 };
     private readonly StackPanel answer = new() { Spacing = 10 };
     private readonly TextBox typed = new() { PlaceholderText = "click, e.g. 0.2", MinHeight = Screens.Touch, Width = 120 };
@@ -37,6 +37,15 @@ internal sealed class ShotsToZeroPage : UserControl
 
     public ShotsToZeroPage(MarkingState state, UnitSettings units, Action back)
     {
+        // Entry 273: a tap on any number switches units everywhere; this page shows them again.
+        void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            this.units = App.Settings.LoadUnits();
+            Build();
+        });
+        AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;
+        DetachedFromVisualTree += (_, _) => Shell.UnitsChanged -= Follow;
+
         this.state = state;
         this.units = units;
         if (state.Rifle is { ClickValue: > 0 } rifle)

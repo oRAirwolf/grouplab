@@ -21,6 +21,26 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
+
+**Status: open.**
+
+Entry 273 says the check page "is built from a definition in the library like any sheet, so it reads itself from a photo or scan." The
+format had no way to say "this is a check page" or to print its crosshairs, rulers, card outline and words, and it requires at least one
+bull (schema `minItems: 1`, reader and decoder both). **What I built,** following question 59's precedent for the zeroing grids: a grid
+style 4 whose artwork is derived in code from the page size (`GridStyle4`, TARGET-SCHEMA.md section 3.13), with the three crosshairs'
+circles as bulls that are not scored, so the one-bull rule is met without changing it. On the wire a style 4 grid is a style 1 grid with
+another style byte; a reader from before this refuses the frame, as it refuses any style it does not know. `GL-SCALE-LTR-1` and
+`GL-SCALE-A4-1` are in the library and count as no sheet in the README's number, because they are not targets.
+
+**One change from the approved drawing, made on a measurement:** the card outline stands 3 mm outside the card's size, and its note
+reads "either side up, inside the line" instead of "edges on the line". A dark card whose edge lies on the black line shows no edge at
+all: card and line are one dark band, and the card can be read as much as the line's width larger, about 1 percent, three times the
+0.3 percent the card method promises. With the gap a card laid inside the line has its edges on white paper, and the synthetic test
+reads dark, very dark and light grey cards, shifted and turned, to within 0.15 percent across and 0.2 down. **The question:** is the gap
+acceptable as drawn, or should the concept change some other way (a thinner line, corner marks only)? A white card on white paper shows
+only its shadow and is not yet measured; the wizard will say a card with color works best.
+
 ## 2026-09-28, question 66: which target the "Your own targets" picture may show
 
 **Status: open.**

@@ -215,7 +215,12 @@ public static class FiducialDerivation
         long bottom = (2L * (grid.CentreY + grid.HalfY + Clearance)) + footprint;
 
         var candidates = new List<(long X2, long Y2)>();
-        if (grid.StyleOrDefault == GridStyle3.Style)
+        if (grid.StyleOrDefault == GridStyle4.Style)
+        {
+            // Entries 272 and 273: the printer check page's markers stand where its rulers, crosshairs, card and words leave room.
+            candidates.AddRange(GridStyle4.MarkerSpots(d.Page).Select(s => (2L * s.X, 2L * s.Y)));
+        }
+        else if (grid.StyleOrDefault == GridStyle3.Style)
         {
             // Entry 251: a style 3 grid's numbers take the rows above and below it and the corners, so its markers stand in the two side
             // columns only, between the numbers, at the heights of the ticks halfway between the lines.
