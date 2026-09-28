@@ -16,8 +16,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## In flight
 
 - Done: everything through 245, and 247 (the desktop Ballistics screen as concept B, three columns, a Hit probability view).
-  **246 and 248 wait on the second device sitting**: look B on the tablet and both home screens' icons, once nightly 115 carries
-  them; then requests 45 and 49 close. **249** (a Desktop | Mobile switch on the tour and Features page) comes after those screenshots.
+  **246 and 248 wait on the second device sitting**: look B on the tablet and both home screens' icons from nightly 115; the
+  READY line tops for-alan.md since 03:50 UTC 2026-09-28, and no device had appeared by 04:22. Then requests 45 and 49 close. **249** (a Desktop | Mobile switch on the tour and Features page) comes after those screenshots.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -80,7 +80,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 63 were answered by entries
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.114. 115 was skipped: CI on 8eb2396 was red on this file's inbox line, fixed by entry 247's commit.
+- **Last nightly:** 0.2.0-nightly.115 (f0a8bbb): look B on the phone, the new icon, the Ballistics screen as concept B.
 - **The site serves the newest commit that touched it.** Notes commits do not start the site workflow; a publish is started by hand.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
