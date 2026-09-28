@@ -473,7 +473,7 @@ Alan chose **A for all six** and **approved the scan proposal**. Canvas: claude.
 
 ## 2026-09-28, entry 258: the phone does everything the desktop does
 
-**Status: in part 2026-09-28.** The shared code, docs/PHONE-PARITY.md and the site check that every feature has a row are in; items 1 to 7 reached the phone as entry 259's screens (f2b1b81 to ffc5c21), and real inches from a photograph came with entry 271. Not done: marking targets GroupLab did not print by touch, CSV through the share sheet, large sheet advice and tiled printing, opening a picture shared from another app, and the device test of each group.
+**Status: in part 2026-09-28.** The shared code, docs/PHONE-PARITY.md and its site check are in; items 1 to 7 reached the phone as entry 259's screens (f2b1b81 to ffc5c21), and real inches from a photograph came with entries 271 to 273. Since: a picture shared into GroupLab or opened with it from another app is read, the shots are shared as CSV through the share sheet, and a large sheet's photograph advice is on the Targets screen. Not done: marking targets GroupLab did not print by touch and importing CSV, both waiting for a concept (DESIGN NEEDED in for-alan.md); pasting a picture; tiled printing with cut lines; word explanations inside sentences; and the device test of each group.
 
 Alan: "The mobile application should be able to do everything that the desktop can except for features that require a desktop or are completely unsuited for a mobile device."
 

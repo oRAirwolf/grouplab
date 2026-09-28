@@ -50,4 +50,20 @@ public static class PhotographLimit
                 ? $"{size} {numbers} Photograph it whole only at a 50 MP phone's full resolution; a 12 MP photograph is below the {Good:0} GroupLab needs for a good reading. Tiled Letter or A4 pages are the better choice for a large target."
                 : $"{size} {numbers} That is too few to read its markers from one photograph: print tiled Letter or A4 pages instead, or photograph it in pieces.";
     }
+
+    /// <summary>
+    /// Entry 226 section 5, shared with the phone by entry 258: what a sheet too large for a flatbed means for scanning or photographing it,
+    /// and that tiled Letter or A4 pages are the better choice for a large target; null for a sheet a flatbed takes.
+    /// </summary>
+    public static string? ForSheet(GroupLab.Core.Gltd.Model.TargetDefinition definition)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        var t = definition.Tiling;
+        if (t is not null)
+        {
+            return "Each sheet scans on a flatbed by itself, and the sheets can be printed on one large page with cut lines for a plotter.";
+        }
+
+        return Advice(definition.Page.Width / 254.0, definition.Page.Height / 254.0);
+    }
 }

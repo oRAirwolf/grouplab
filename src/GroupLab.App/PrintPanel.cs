@@ -590,18 +590,8 @@ public sealed class PrintPanel : UserControl
     /// Entry 226 section 5: what a sheet too large for a flatbed means for scanning or photographing it, and that tiled Letter or A4 pages
     /// are the better choice for a large target; nothing for a sheet a flatbed takes.
     /// </summary>
-    internal static string LargeSheetWords(GroupLab.Core.Gltd.Model.TargetDefinition definition)
-    {
-        var t = definition.Tiling;
-        double width = (t is null ? definition.Page.Width : t.Cols * t.SheetWidth) / 254.0;
-        double height = (t is null ? definition.Page.Height : t.Rows * t.SheetHeight) / 254.0;
-        if (t is not null)
-        {
-            return " Each sheet scans on a flatbed by itself, and the sheets can be printed on one large page with cut lines for a plotter.";
-        }
-
-        return GroupLab.Core.Capture.PhotographLimit.Advice(width, height) is { } advice ? " " + advice : "";
-    }
+    internal static string LargeSheetWords(GroupLab.Core.Gltd.Model.TargetDefinition definition) =>
+        GroupLab.Core.Capture.PhotographLimit.ForSheet(definition) is { } advice ? " " + advice : "";
 
     private static IReadOnlyList<string> FieldKeys(DataBlock block)
     {

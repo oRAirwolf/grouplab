@@ -40,6 +40,14 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 258, continued: a picture shared in, shots out as CSV, and large-sheet advice on the phone
+
+GroupLab on the phone is now offered for an image sent or opened from another application (`MainActivity`'s two intent filters); the
+picture is copied into the cache and read as a chosen photograph with the caliber and distance as typed. A result has "Share the shots as
+CSV", the file the desktop's export writes (`ShotCsv.Write`), through the share sheet. The Targets screen gives a sheet too large for a
+flatbed the same photograph advice as the desktop, now from one place in Core (`PhotographLimit.ForSheet`). Marking by touch and importing
+CSV each need a screen no concept covers, and are in for-alan.md as DESIGN NEEDED.
+
 ## Entries 272 and 273: the printer check, and tap a number to switch units
 
 **The printer check.** `GL-SCALE-LTR-1` and `GL-SCALE-A4-1` are grid style 4 (`GridStyle4`, TARGET-SCHEMA.md section 3.13): three

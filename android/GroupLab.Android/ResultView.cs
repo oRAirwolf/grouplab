@@ -139,6 +139,7 @@ public sealed class ResultView : UserControl
         actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
         actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
+        actions.Children.Add(Screens.Choice("Share the shots as CSV", () => shareSaid.Text = SessionFiles.ShareCsv(session.State, definition) ?? ""));
         actions.Children.Add(shareSaid);
         actions.Children.Add(Screens.Choice("Another target", again));
         Refresh();

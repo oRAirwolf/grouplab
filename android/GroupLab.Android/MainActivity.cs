@@ -24,6 +24,11 @@ namespace GroupLab.Android;
     ScreenOrientation = ScreenOrientation.FullUser,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize
         | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
+
+// Entry 258: a picture shared into GroupLab from another application, or opened with it, is read as a chosen photograph: the phone's
+// version of dropping a file on the desktop's window.
+[IntentFilter([Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
+[IntentFilter([Intent.ActionView], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
 public class MainActivity : AvaloniaMainActivity
 {
     /// <summary>The name under the icon, entry 234: the development build says it is one there too.</summary>
@@ -75,6 +80,7 @@ public class MainActivity : AvaloniaMainActivity
         }
 
         base.OnCreate(savedInstanceState);
+        Shared(Intent);
 #if GROUPLAB_DEV
         TestPicture(Intent);
         TestShotsToZero(Intent);
@@ -83,6 +89,51 @@ public class MainActivity : AvaloniaMainActivity
 #endif
     }
 
+    /// <summary>
+    /// Entry 258: a picture sent or opened from another application. Android hands a content address, not a path, so the picture is copied
+    /// into the cache and read as a chosen photograph once the Capture screen is there. Nothing about where it came from is kept.
+    /// </summary>
+    private void Shared(Intent? intent)
+    {
+        if (intent?.Action is not (Intent.ActionSend or Intent.ActionView) || intent.Type?.StartsWith("image/", StringComparison.Ordinal) != true)
+        {
+            return;
+        }
+
+        var uri = intent.Action == Intent.ActionSend
+            ? (OperatingSystem.IsAndroidVersionAtLeast(33) ? intent.GetParcelableExtra(Intent.ExtraStream, Java.Lang.Class.FromType(typeof(global::Android.Net.Uri))) as global::Android.Net.Uri : null)
+                ?? GetStream(intent)
+            : intent.Data;
+        if (uri is null || ContentResolver?.OpenInputStream(uri) is not { } from)
+        {
+            return;
+        }
+
+        string copy = Path.Combine(CacheDir!.AbsolutePath, "shared" + (intent.Type == "image/png" ? ".png" : ".jpg"));
+        using (from)
+        using (var to = File.Create(copy))
+        {
+            from.CopyTo(to);
+        }
+
+        GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.shared", ("action", intent.Action == Intent.ActionSend ? "send" : "view"));
+        Avalonia.Threading.DispatcherTimer.RunOnce(() => CapturePage.SharedPicture?.Invoke(copy), TimeSpan.FromSeconds(1));
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1422", Justification = "The typed call is used from Android 13; this is the older form for Android 10 to 12.")]
+    private static global::Android.Net.Uri? GetStream(Intent intent) =>
+#pragma warning disable CA1422
+        intent.GetParcelableExtra(Intent.ExtraStream) as global::Android.Net.Uri;
+#pragma warning restore CA1422
+
+#if !GROUPLAB_DEV
+    protected override void OnNewIntent(Intent? intent)
+    {
+        base.OnNewIntent(intent);
+        Shared(intent);
+    }
+#endif
+
 #if GROUPLAB_DEV
     /// <summary>The extra a test names a picture with, a file name in the application's own <c>test</c> folder (entry 246).</summary>
     internal const string TestPictureExtra = "org.grouplab.test.picture";
@@ -90,6 +141,7 @@ public class MainActivity : AvaloniaMainActivity
     protected override void OnNewIntent(Intent? intent)
     {
         base.OnNewIntent(intent);
+        Shared(intent);
         TestPicture(intent);
         TestShotsToZero(intent);
         TestCamera(intent);

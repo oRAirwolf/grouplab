@@ -138,6 +138,11 @@ public sealed class TargetsPage : UserControl
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title(sheet.Definition.Name));
         column.Children.Add(Screens.Dim(explanation is null ? sheet.Summary : string.Join(" ", explanation)));
+        // Entry 258: a sheet too large for a flatbed says what that means for photographing it, as on the desktop.
+        if (GroupLab.Core.Capture.PhotographLimit.ForSheet(sheet.Definition) is { } large)
+        {
+            column.Children.Add(Screens.Dim(large));
+        }
         if (Preview(sheet.Definition) is { } picture)
         {
             column.Children.Add(new Image { Source = picture, MaxHeight = 480, HorizontalAlignment = HorizontalAlignment.Center });

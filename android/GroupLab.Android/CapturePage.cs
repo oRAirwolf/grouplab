@@ -29,6 +29,12 @@ public sealed class CapturePage : UserControl
 
     public CapturePage()
     {
+        // Entry 258: a picture shared into GroupLab from another application is read as a chosen one.
+        SharedPicture = file =>
+        {
+            Shell.Current?.Show(Shell.Place.Capture);
+            _ = Opened(file);
+        };
 #if GROUPLAB_DEV
         TestPicture = file => _ = Picked(file);
         TestCamera = manual =>
@@ -146,6 +152,20 @@ public sealed class CapturePage : UserControl
         await Analyze(copy, setup);
     }
 #endif
+
+    /// <summary>Entry 258: set by the Capture page, for a picture shared into GroupLab from another application.</summary>
+    internal static Action<string>? SharedPicture { get; private set; }
+
+    /// <summary>A picture that arrived from another application, read as a chosen photograph with the caliber and distance as typed.</summary>
+    private async Task Opened(string file)
+    {
+        if (Setup() is not { } setup || !File.Exists(file))
+        {
+            return;
+        }
+
+        await Analyze(file, setup);
+    }
 
     private async Task Choose()
     {

@@ -23,7 +23,11 @@ Hit chance, the largest; (6) the set as a checklist, medium; (7) the scan pill, 
 through the share sheet, large sheet advice, and opening a picture shared from another app. `docs/PHONE-PARITY.md` lists every feature
 as on the phone, coming or left out, and the site build now fails on a feature with no row.
 
-**DESIGN NEEDED:** nothing open. (Shots Needed to Zero's colours answered by entry 269: within 1 click amber, the closest click teal, everywhere.)
+**DESIGN NEEDED:** two phone screens entry 258 asks for, which no concept covers yet (not a request for you; planning, please):
+(1) marking a target GroupLab did not print by touch: placing bulls, drawing a scale at a bull, keeping a template, as the desktop's
+marking screen does; (2) importing shots from a CSV file: choosing which column is across, which is up and down, and the unit, as the
+desktop's import dialog does. Everything else in entry 258 that needs no new screen is built. (Shots Needed to Zero's colours were
+answered by entry 269.)
 
 **The Features page shows each new thing itself** (entry 256; not a request). These entries now have their own picture, drawn as the
 sheet prints: **The E bull**, **The C bull** (with its dot), **Zeroing grids read through a scope** (all four C3 sheets, credited to you

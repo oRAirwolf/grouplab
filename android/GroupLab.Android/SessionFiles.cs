@@ -60,6 +60,40 @@ internal static class SessionFiles
         return null;
     }
 
+    /// <summary>
+    /// Entry 258: the shots as a CSV file through Android's share sheet, the file the desktop's export writes: each shot's offset from its own
+    /// bull, with a header that names the units and the distance, so it reads without GroupLab.
+    /// </summary>
+    public static string? ShareCsv(MarkingState state, TargetDefinition? definition)
+    {
+        if (MainActivity.Current is not { } activity)
+        {
+            return "The share sheet is not available.";
+        }
+
+        if (!state.Shots.Any(s => s.IsShot))
+        {
+            return "There are no shots to share.";
+        }
+
+        if (Directory.Exists(Shared))
+        {
+            Directory.Delete(Shared, recursive: true);
+        }
+
+        Directory.CreateDirectory(Shared);
+        string path = Path.Combine(Shared, (definition?.Name ?? "shots") + " " + DateTime.Now.ToString("yyyy-MM-dd HHmm", CultureInfo.InvariantCulture) + ".csv");
+        File.WriteAllText(path, ShotCsv.Write(state));
+        var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(activity, Authority, new Java.IO.File(path));
+        var send = new Intent(Intent.ActionSend);
+        send.SetType("text/csv");
+        send.PutExtra(Intent.ExtraStream, uri);
+        send.AddFlags(ActivityFlags.GrantReadUriPermission);
+        activity.StartActivity(Intent.CreateChooser(send, "Share the shots as CSV"));
+        DiagnosticLog.Info("session.csv", ("shots", state.Shots.Count(s => s.IsShot)));
+        return null;
+    }
+
     /// <summary>A session file read from a stream the picker gave, unpacked into its own folder and saved; the result to show, or why not.</summary>
     public static (PhoneResult? Result, string? Why) Open(Stream from, UnitSettings units)
     {
