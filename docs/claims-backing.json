@@ -2528,6 +2528,22 @@
   "- **What costs the most** lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first"
+  },
+  "The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs"
+  },
+  "What costs the most lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first"
+  },
+  "Every error source by the hits it takes away, largest first with a bar for each, so you can see whether the wind call, the load or the range estimate is what to work on.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first"
+  },
+  "Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's columns; tests/GroupLab.App.Tests/Entry112Tests.cs the heading"
   }
  },
  "rules": [

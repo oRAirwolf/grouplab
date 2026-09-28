@@ -3225,8 +3225,8 @@ one that matters.
 - *code* (FullFigures in src/GroupLab.App/MainWindow.Figures.cs): The table gives the CEP at 50, 90, 95 and 99 percent three ways.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Session records The analysis's Report button saves the session as a PDF: Page 1: the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Page 2: the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
-- *code* (the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs): The ballistics screen The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.
-- *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): What costs the most lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
+- *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
+- *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): What costs the most lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
 - *code* (src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)): Analyze each sheet as usual, in any order, then in Session records tick them and choose Pool the chosen : GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
@@ -4116,8 +4116,8 @@ one that matters.
 ### site:tour/ballistics/index.html
 
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): What this screen is for Everything else in GroupLab measures what your rifle did.
-- *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): Every error source by the hits it takes away, so you can see whether the wind call, the load or the range estimate is what to work on.
-- *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): Fill in anything the record is missing; the page names the field when it cannot solve.
+- *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's columns; tests/GroupLab.App.Tests/Entry112Tests.cs the heading): Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step.
+- *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): Every error source by the hits it takes away, largest first with a bar for each, so you can see whether the wind call, the load or the range estimate is what to work on.
 
 ### site:tour/compare/index.html
 
