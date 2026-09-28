@@ -5,6 +5,17 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-28, question 68: the "Apple mobile" paragraph is Alan's settled wording, which entry 275 asked to replace
+
+**Status: answered 2026-09-28 by entry 276:** keep it as it is; Alan's sentences stay word for word, and the paragraph is listed as settled in `docs/RETIRED-WORDING.json`.
+
+Entry 275 section 7 asked for "Apple mobile" in `docs/PLATFORM-SUPPORT.md` to read "iOS is not planned; the iPad Mini is used to test the
+website." That paragraph is part of the statement entry 147 made Alan's settled wording, and `MacBuildsTests` holds its sentences
+literally ("The hardware to test it exists; the machine to build it does not."), with the instruction that it is not to be reworded.
+**What I did:** kept his sentences as they are and put "iOS is not planned." in front of them, which makes the statement agree with
+`docs/ANDROID.md` and the README without rewording him. **The question:** should the paragraph be rewritten as the audit suggests, with
+Alan's say, and the test's pinned sentence changed with it?
+
 ## 2026-09-28, question 66: which target the "Your own targets" picture may show
 
 **Status: answered 2026-09-28 by entry 274:** option (c) now, a sample target GroupLab draws itself, marked by hand on the marking screen; Alan's photograph of a store-bought target may replace it.

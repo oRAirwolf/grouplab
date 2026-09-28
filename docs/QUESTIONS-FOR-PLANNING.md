@@ -14,23 +14,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 10 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 11 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
-
-## 2026-09-28, question 68: the "Apple mobile" paragraph is Alan's settled wording, which entry 275 asked to replace
-
-**Status: open.**
-
-Entry 275 section 7 asked for "Apple mobile" in `docs/PLATFORM-SUPPORT.md` to read "iOS is not planned; the iPad Mini is used to test the
-website." That paragraph is part of the statement entry 147 made Alan's settled wording, and `MacBuildsTests` holds its sentences
-literally ("The hardware to test it exists; the machine to build it does not."), with the instruction that it is not to be reworded.
-**What I did:** kept his sentences as they are and put "iOS is not planned." in front of them, which makes the statement agree with
-`docs/ANDROID.md` and the README without rewording him. **The question:** should the paragraph be rewritten as the audit suggests, with
-Alan's say, and the test's pinned sentence changed with it?
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 

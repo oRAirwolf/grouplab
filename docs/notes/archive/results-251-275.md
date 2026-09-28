@@ -123,3 +123,15 @@ CSV each need a screen no concept covers, and are in for-alan.md as DESIGN NEEDE
 
 The Fold 7 runs Android 16 and offers torch strength 1 to 5, default 1 (`docs/ANDROID.md` section 16). The tablet and the burst wait for a sitting.
 
+## Entry 265: Android on the download page
+
+/download/ has the APK beside the desktop builds, and the site build fails when a platform `docs/PLATFORM-SUPPORT.md` publishes has no download there.
+
+## Entry 264: the donor pack
+
+`dotnet run --project src/GroupLab.Cli -- donor-pack` builds one sheet of each style from the library into `website/donor/`, `docs/VOLUNTEER-PACK.md` is rewritten, and /shoot-a-target/ offers each sheet or the pack, with the one most useful now named.
+
+## Entry 263: the night's rules
+
+Followed: nothing stopped for Alan, and what needs him is at the top of `docs/notes/for-alan.md`.
+

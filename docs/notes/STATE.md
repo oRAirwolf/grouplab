@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entries 272 and 273 (the printer check, and tap a number to switch units).
+**Last rewritten:** 2026-09-28, after entry 276 (question 68 answered); entries 272 to 275 before it.
 
 ---
 
@@ -54,9 +54,7 @@ read-only server command; 46 the backups on 4 October; 38 the Store; then 9, 16 
 
 ## Open questions
 
-Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 274.
-
-- **68** the "Apple mobile" paragraph is Alan's settled wording; entry 275 asked to replace it
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 274, 68 by entry 276.
 
 - **67** the printer check page as grid style 4, and its card outline 3 mm outside the card (with Alan)
 - **51** which hole centre GroupLab should report; agreed to wait on request 9

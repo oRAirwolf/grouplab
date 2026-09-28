@@ -20,9 +20,15 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 Older entries, whole and unedited, one file per month. Nothing here is ever deleted; this log is the
 only written record of why much of this project is the way it is.
 
-- [`docs/notes/archive/notes-2026-09.md`](notes/archive/notes-2026-09.md), entries 1 to 258, 257 of them.
+- [`docs/notes/archive/notes-2026-09.md`](notes/archive/notes-2026-09.md), entries 1 to 261, 260 of them.
 
 ---
+
+## 2026-09-28, entry 276: answer to question 68 ("Apple mobile")
+
+**Status: done 2026-09-28.** Question 68 closed as answered; the paragraph is listed under "settled" in `docs/RETIRED-WORDING.json`, which the audit's reader and `scripts/consistency.py` share, so it is not reported again.
+
+Keep what you did. Alan's settled sentences stay word for word, and "iOS is not planned." in front of them is enough: the rest reads as what would happen if an iOS version were ever made, which agrees with `docs/ANDROID.md` and the README. Do not rewrite the paragraph or change the pinned sentence in `MacBuildsTests`. If Alan ever wants the paragraph reworded, he will say so and it will come as its own entry. Close question 68, and tell the next consistency audit's reader (the entry 267 rule) that this paragraph is settled wording, so it is not reported again: a line in the audit's notes, or wherever the weekly CI check keeps its exceptions.
 
 ## 2026-09-28, entry 275: consistency audit, 2026-09-28
 
@@ -523,123 +529,4 @@ Hole edges and centres must not move because of combining. Measure the centre er
 **Step 4, the setting:** under Torch, Auto uses the burst when the light is dim or there are shadows. On and Off stay available. The panel says what was done, for example "Torch at 3 levels, best frame kept".
 
 If the devices do not support strength levels, report that. Fall back to a torch-on and torch-off pair, which works on every phone with a torch, and keep steps 3 and 4 for that pair.
-
-## 2026-09-28, entry 261: STUDY ONLY. Is a self-improving detection engine worth building?
-
-**Status: done 2026-09-28** (0d2dd5c): docs/DETECTION-LEARNING-STUDY.md; entry 271 added section 8. Not done: section 6's server capacity, one read-only ssh command that waits for Alan's approval.
-
-**Do this after entry 260. Do not build the engine.** Alan: "Do you think we need to build an engine that can analyze photos and refine the detection and machine vision models without relying on claude itself to analyze? Is that possible? Dont start making this, we should research if this is worth the effort and if it is even possible."
-
-The output is one document, `docs/DETECTION-LEARNING-STUDY.md`, plus a short summary for Alan in `for-alan.md`. No product code. A throwaway script to take a measurement for the study is fine, as long as it is not wired into the app; it lives where everything else Code writes lives, a scratch test in the test projects deleted once its numbers are written down, and never under `tools/`, which stays read only (corrected by entry 274, answering question 65).
-
-Answer these, with measurements where the repository allows and plain estimates, marked as estimates, where it does not:
-
-1. **Where the current detector fails.** Run the existing corpus plus the photos already kept as tests. Add synthetic degradations: hard and soft shadows, a hand's shadow, dim and uneven light, curl and wave warps, blur, noise, JPEG, glare. Report recall, false marks and centre error for each condition against DETECTION-PIPELINE.md's gates (G1 to G5). Which failures could parameter changes fix, and which could not?
-2. **The data we have and will get.** Count the labelled holes available today. Every sent target already carries "what GroupLab found" and "what you changed", which are labels for free. Check that the existing consent wording ("GroupLab may use them to test and improve its detection") covers training, and whether "testing only" and "may be published" differ for this. Estimate how many labelled holes, and how much variety, a learned model would need, and how long the project would take to collect them.
-3. **The options, from cheapest up:**
-   - (a) a standing evaluation harness with synthetic degradation, run in CI;
-   - (b) automatic tuning of the classical parameters against that harness, keeping G3's stability rule;
-   - (c) a small learned model that only classifies or refines hole candidates, trained offline, shipped as ONNX and run through ONNX Runtime on Windows, Linux, macOS and Android, while markers, codes, geometry and every measurement stay classical and exact.
-   For each: effort, what it would gain, app size and speed on a 4 GB phone, how reproducible the results are and how easy they are to explain, and licensing (GPL-3.0; the licences of any pretrained weights and of the training data).
-4. **Whether Claude is needed.** Say plainly where Claude is and is not involved. The engine would run and retrain without Claude; Claude Code would only write and maintain the code.
-5. **A recommendation**, with the evidence behind it: what to build now, what to build later, and what not to build, plus the conditions (data volume, measured failure rates) that would change the answer.
-
-6. **Fully automatic, and where it runs (Alan, 2026-09-28).** Alan: "can it automatically scan new submissions on my web server? Does it have enough horsepower to handle this or does it need to be done somewhere else? ... I do not want to have to manually pull photos and feed them to claude or the detection engine." Design the whole loop with no human step, and answer:
-   - **The flow today.** A submission goes from the receiver to quarantine, then the intake worker rebuilds it from its pixels into `ready`, then the archive worker puts it in the private `grouplab-submissions-archive` releases and deletes it from the server. The natural hook is a new worker that analyzes each rebuilt submission in `ready` before archiving. It compares GroupLab's finding with the person's own changes, keeps only numbers and labels (never republishing the photo), and records the result.
-   - **The server's capacity.** Read (read only) the instance's cores, memory, disk use and load: `nproc`, `free -h`, `df -h`, `uptime`, and the shape in `/sys` or cloud-init if shown. Estimate seconds and memory per submission for the CLI analysis on aarch64. Say whether that fits beside pissinhot.com and grouplab.org under systemd limits like the other workers (CPUQuota, MemoryMax, Nice, IO weight), and at what volume of submissions a day it would stop fitting. The 47 GB boot volume holds everything, so say how much room the results and any corpus copy would take.
-   - **Arm64.** The server is aarch64. Today's Linux download is x64 only. Check that GroupLab.Cli with its OpenCV native library can be built and run for linux-arm64, and what that takes.
-   - **The heavier jobs.** The nightly re-run of every labelled submission and the synthetic-degradation corpus against the current build, and any automatic parameter tuning. Compare running them on the server at night (niced, capped), in GitHub Actions in the **private** archive repository (never the public one, because "testing only" photos must never appear in public logs or artifacts; count the free private-repository minutes), and on Alan's PC (last choice, since Alan wants automation off his desktop). Training a learned model, option (c), would need a GPU or many CPU hours, so say where that would run if it is ever justified.
-   - **What stays human.** A measured improvement to the detector still reaches users only through the normal path: code, tests, the nightly. Nothing changes the shipped detector by itself. The loop's output is a scoreboard and proposals that Code reads, for example the build's recall on real submissions by condition, and regressions raised as issues automatically, the way error reports already are.
-   - **Privacy and consent.** Analysis stays on the server or in the private archive. Results carry no photo, no GPS and no names. Submissions marked "testing only" are never published, and are used only as the consent wording allows.
-
-Keep it short and readable for Alan: the summary first, the detail after.
-
-7. **A stated goal to study (Alan, 2026-09-28):** on commercial and other non-GroupLab targets, the person sets the scale by hand, and **hole detection is automatic**, on the phone as on the desktop. Study how well the current detector finds holes on such targets, with no declared artwork to subtract: commercial bullseyes, grid targets, colored and splatter targets. Say what it would take to reach usable recall, with the person correcting the misses by touch, and whether the options in section 3 (tuning, or a learned hole classifier) are what gets it there.
-
-## 2026-09-28, entry 260: the camera test failed. Fix the capture screen first, then guided and manual modes
-
-**Status: in part 2026-09-28.** Part 1 and part 2 done (c5cc04d): the native capture screen shows its words, shutter and Back over the live preview, Guided and Manual, the quality bar, the torch on Auto, and Feedback B checks every picture; checked over adb on the Fold 7's cover screen, and the check now reads the screen's own layout log. The log showed why it failed: 640 by 480 frames too small to read the codes. Paper that is not flat is registered through every marker (19a6d67), and the study measured the rest. Not done: the inner screen and landscape (the Fold was never opened), the camera test with Alan, shadow normalisation, the torch pair, the check of the score against test photos, and an off-white background test case.
-
-**Do this before everything else in the inbox**, including entries 258 and 259. Request 50's sitting is on hold until this is fixed.
-
-### What Alan saw (nightly 118, GroupLab Dev, Fold 7, 10:05 to 10:10 UTC)
-
-Screenshots: `C:\Dev\grouplab-local\planning\camera-0928\`. They are local only; never commit them, since they show things on Alan's counter.
-
-1. **Front (outer) screen, portrait:** after pressing Take a picture, the camera preview filled the screen above the bottom bar. There was **no instruction, no Take button, no zoom and no Back**, only the preview and the app's bottom bar. The shutter **never fired**, whatever the distance, focus or angle, with or without caliber and distance entered. Leaving for Sessions and coming back showed "Move back." at the top for a moment, and it vanished as soon as the camera started again.
-2. **Inner screen, portrait:** the preview covered the **whole display, bottom bar included**. There were no controls and no words.
-3. **Inner screen, landscape:** the bottom bar came back, but again there were no words or controls, and no shutter.
-4. The sheet was a GroupLab 5x5 load sheet (GL-R0T0-384Z-HRBE-M0EW), flat on an off-white counter, in ordinary kitchen light, and fully in view in every screenshot.
-
-### Likely cause (confirm, do not assume)
-
-`CameraView` puts CameraX's `PreviewView` in a `NativeControlHost` that spans all three grid rows. The instruction border and the button row are Avalonia controls drawn in the same place. On Android a native view hosted this way is drawn **above** Avalonia's own surface, so everything Avalonia puts over the preview is hidden. The words exist ("Move back." shows before the preview surface attaches), but the preview covers them. On the inner screen the host is also sized over the bottom bar. The shutter not firing is a separate question. Read the entry 255 camera log for this run (`adb logcat`, and the app's own log) to learn whether frames were judged, what they said, and whether "Ready" ever came three frames in a row. Report what the log shows.
-
-### Fix, part 1: the screen works
-
-- **Never draw Avalonia controls over the native preview.** Either give the preview its own middle row, with the words above it and the controls below, no overlap, or draw the words, the outline and the buttons as native Android views in the same layout as the `PreviewView`. Choose whichever is reliable on the Fold 7 (both screens, both orientations) and the Tab S8 Ultra. The preview must never cover the app's bottom bar, or hide the way back.
-- **Every capture screen always has a shutter button and a way back,** visible and at least 44 px, in every mode and on every screen size.
-- **Add a device test** that fails if the words or the shutter button are not visible while the preview runs, using a screenshot or UI dump over adb on the Fold 7 (front and inner, both orientations) and the tablet. That test would have caught this before the sitting.
-
-### Fix, part 2: Guided and Manual modes (Alan asked for this)
-
-Alan: "there should be an option to manually take an image with a shutter button and the application should determine whether the photo was acceptable and if not, say why. The application should have a 'guided' and 'manual' mode for taking photos and both should analyze the image afterwards and give a score or feedback on the image."
-
-- **Guided:** what exists now, working. One instruction at a time over the preview, and the shutter fires by itself after the ready frames. The shutter button stays available to take it early.
-- **Manual:** no automatic shutter. The person frames it and presses the shutter. Guidance may still show as a hint, but it never blocks.
-- The mode is chosen on the capture screen and remembered. **Guided is the default** until the camera tests show it works.
-- **Both modes check every picture afterwards,** with the same checks the guidance uses plus the analysis's own: markers found, codes read, angle, sharpness and blur, lighting and shadow, glare, how much of the sheet is in the frame, and resolution at the bulls. The result is a **score or verdict** (verdicts as in "Tolerance comes first" below) with **the reasons in plain words**, each naming what to change: "Hold the phone flatter: the sheet is tilted 24 degrees", "A shadow falls across bulls 11 to 15", "Move closer: the bulls are too small to measure well". The person can then use the picture, or retake it. A picture chosen from the phone's files gets the same check.
-- **Design: Alan chose Capture B and Feedback B** (canvas claude.ai/artifact/GpEU9qYHHkBymNMJAN5HqD, boards "Capture B" and "Feedback B").
-  - **Capture B:** camera-app style. The camera fills most of the screen and the app's bottom bar is hidden while capturing. At the top sits a floating panel with a round Back button and the instruction. Alan asked for **more live feedback** in that panel: focus (sharp or not), light (good, dim, or uneven, and whether the torch is on), **how many tags (markers) are read out of how many**, and **how many QR codes are read out of how many**. At the top right is a torch button (Auto, On, Off), and a small level sits near the bottom of the camera. Under the camera is the shutter: a big round button whose amber ring fills in Guided. To its left is a photo picker, to its right the lens. The words GUIDED and MANUAL sit under the shutter as the mode switch. Every part of this must actually show over the live camera (part 1).
-  - **Feedback B:** the photo large, with each problem outlined and numbered on it. A panel below gives the verdict word, the numbered notes, a line summing up what was fine (focus, light, tags read, QR codes read, torch used), and "Take it again" and "Use this picture" side by side. **Most notes should say what GroupLab corrected**, for example "Shadow across bulls 11 to 15, evened out: check those 5 holes if you like", rather than asking for a retake.
-  Build part 1 and the checking logic now, then these two screens.
-
-### Tolerance comes first (Alan, 2026-09-28)
-
-Alan: "We need to make sure that the application is tolerant of shadows, lighting, and paper that is not perfectly flat. Most people are not as anal as a computer or even myself and this application needs to work for people under less than ideal conditions."
-
-- **Retake is the last resort.** Ask for one only when GroupLab truly cannot measure: markers or codes unreadable, the sheet cut off, or blur too heavy for the holes. Shadows, uneven light, moderate tilt, and curled or wavy paper are **handled in processing and reported**, not refused. The verdicts are, for example, Good, Good with notes, and Retake. Holes affected by a problem are flagged in the review queue, not silently dropped.
-- **A quality score and a colour bar (Alan, 2026-09-28):** "I want the app to want good pictures but it should be able to handle less than ideal pictures." Every picture gets a score from 0 to 100 and a bar that runs from red (Retake) through amber (Usable) to green (Good), with a marker at the score. The number and the band word are always written beside the bar, so colour is never the only signal. The message leads with the judgement and then what would help, for example "Good enough to measure. Here is what would make the next one better: ...". The same bar shows live in Capture B's panel, as a forecast of the picture you would get now. Define the score from the measured parts (tags and codes read, sharpness, light evenness, glare, tilt, the warp's residual, bull size in pixels), document the formula in MOBILE-CAPTURE.md, and check against the test photos that it agrees with how well each picture actually measured. The canvas boards "Capture B" and "Feedback B" now show the bar.
-- **Shadows and uneven light:** normalise against a locally modelled paper level (DETECTION-PIPELINE.md already calls for this). Measure recall and hole size with hard shadows, soft shadows, a hand's shadow, a phone's shadow, dim light, warm light and mixed light.
-- **Paper that is not flat:** the 30 or more tags on a GroupLab sheet allow a local, piecewise or mesh warp instead of one homography. Use them, so that curl, a fold or a wave is followed. Report the residual after the warp, and flag areas where too few tags were read.
-- **Torch and flash (Alan's idea):** follow MOBILE-CAPTURE.md L1 (torch at low power, not a burst). In Auto, turn the torch on when the metered light is dim or when shadows are detected, and say so in the panel. The person can force it On or Off. Because the torch sits beside the lens, it fills in the shadow of the phone and the hand. It can also cause glare on glossy paper, so check for a hot spot. Where it helps, take a torch and no-torch pair in one press and keep the better frame, or use both. Record in the capture record whether the torch was used.
-- **Measure it.** Add synthetic degradations to the test corpus (shadows, uneven light, curl and wave warps, blur, noise, JPEG), plus real photos. Report recall and centre error under each condition, so "tolerant" is a number and not a claim. Alan will stage bad conditions on purpose, and will ask other users for photos (through the existing Send your targets consent). List the conditions most wanted, so he can ask for them.
-
-- The camera log from entry 255 keeps recording each instruction, the mode, the score and the reasons, so a camera test can be read afterwards.
-
-### Then
-
-Ship it in a nightly, and post a READY line for a new camera test. The steps are the same as before, plus one Manual picture and one deliberately bad Manual picture, to see the feedback. Add an off-white or low-contrast background case to the tests (entry 259). Then continue with entries 253, 255, 257, 258 and 259. The request 50 sitting resumes with the camera working.
-
-## 2026-09-28, entry 259: Alan's choices for the phone parity screens (entry 258)
-
-**Status: done 2026-09-28**, screens 1 to 7 (f2b1b81, faba30d, fbf718e, ffc5c21). Not done: trying each on the devices at the next sitting.
-
-Alan chose **A for all six** and **approved the scan proposal**. Canvas: claude.ai/artifact/WGFnJWf6dKpBF46taq7m7u. Every number drawn there is a sample for the layout, not a calculation. Every screen is look B (entry 246), with the desktop's colors and IBM Plex, and works in both themes. The descriptions below are the build spec, so the canvas is not needed to build them.
-
-1. **Full figures, A ("tiles, then sections you open").** The result keeps look B's four tiles at the top: Mean radius (the amber headline, with the size on paper beneath), Extreme spread, CEP 50, and Center from aim. A units switch (in, MOA, mil) sits at the top right. Below the tiles is the plot card, with chips under it: CEP 50, CEP 90, CEP 95, CEP 99 and Sheet. They turn the circles and the photo on and off, and are drawn dotted, solid, dashed and short dashes as on the desktop. Then come the sections, as cards:
-   - "All figures", open by default: Group width × height, CEP 90, CEP 95 and CEP 99 with their ranges, the mean radius range, and the zero correction.
-   - "Advanced": a CEP of your own percent (a number field), sigma, and the across and up-and-down strips with their sentence.
-   - "Bull by bull".
-   - "Shots Needed to Zero", which opens the page in item 3.
-   - "Full CEP table and the fitted ellipse".
-   Every figure label and glossary word is dotted-underlined. **The explanation sheet:** tapping one opens a bottom sheet with the name, the value, the plain explanation, and an amber box headed "What N shots can say" giving the range and what fewer shots would do. It closes with Close. The same sheet serves glossary words (sigma, CEP, MOA, bull), in place of the desktop's hover.
-2. **Aimed bulls, A ("tap the bulls on the sheet").** A page titled "Bulls you fired at", reached from the result, with the line "Tap each bull you fired at. Tap it again to take it out." It shows the sheet's own layout with every bull as a tap target of at least 44 px, numbered. A chosen bull gets an amber fill and ring, and its state is announced to screen readers. Under it are chips: Every bull, Clear, Whole row and Whole column (the last two take one tap on a bull). A live count reads "N of M bulls chosen, S shots". At the bottom: "These ones" (amber, primary) and "Not said: nearest bull for each shot". The typed form from the desktop (1-10, rows 1-3, columns 2-5) is left out of this screen unless a sheet has too many bulls to tap. In that case, offer it under the chips.
-3. **Shots Needed to Zero, A ("its own page").** Reached from the result's section and from the zeroing sheets. At the top, a card holds:
-   - the click value as chips (0.1 mil, 1/4 MOA, 1/8 MOA, Other);
-   - "Your spread", taken from the open result, with its shot count;
-   - "Adjusting" as chips (Both ways, Up and down).
-   Then a table: columns 90, 95 and 99 in 100; rows "Within 1 click" (amber) and "Closest click". Under the table, a chart of chance against shots on a log axis, both curves, with a legend. Then one plain sentence on why the closest click takes so many more shots. At the bottom, the seed and the number of draws, and a Calculate again button. It uses the same core as the desktop, with progress and Cancel within the entry 252 budget. Keep the credit to Jylee wherever the desktop has it.
-4. **Compare loads, A ("one figure at a time").** Reached from Sessions: choose two or more sessions, then Compare. A figure picker as chips (Mean radius, Extreme spread, CEP 90, Velocity SD where there is a chronograph string). A card draws each load as a dot with its range on one shared scale, in the load's color. Use the desktop's compare colors, telling loads apart by lightness as well as hue. Beneath the chart is the load list (color, name, value, shots). Then an amber card headed "What these shots can tell", with the desktop's plain verdict, then "Add or take out a load".
-5. **Ballistics, A ("its own tab").** The bottom bar grows to five places: Capture, Sessions, **Ballistics**, Targets, Settings. Ballistics uses a trajectory-arc icon. The page has a large title, then three summary chips (Rifle, Load, Air), each opening its edit form. The desktop's Setup fields go there, grouped as on desktop concept B. Then tabs:
-   - **Dope:** To and every fields, and a table of range, elevation in the person's unit, clicks, wind for 10 mph, and clicks. The last row is highlighted. On a phone turned sideways, add drop, velocity and energy. Print the card from the menu.
-   - **Trajectory.**
-   - **Hit chance:** the desktop's Hit probability view (entry 247). It has target chips (10 in plate, 2 MOA, Other); range, wind and their uncertainties; and your group, from the open result or a saved one. The result is a large amber percentage with one sentence, then a chart of hit chance by range with the chosen range marked, then "What costs the most" as bars.
-   A result's section list also links to Ballistics with that group carried in.
-6. **Pooling, A ("the set as a checklist").** A page for a set from Made for your optic. The title reads "Your set, N of M read". Pooled tiles (mean radius so far, extreme spread, shots N of total). Then a card listing every sheet: a thumbnail, "Sheet k", and either the shot count and time, marked read, or "still to read" in amber with a dashed empty thumbnail. Then the line "Sheets can be photographed in any order. Each one names itself from its code." At the bottom: "Photograph the next sheet" (primary) and "See the pooled group". Photographing any sheet of the set brings the person back to this page updated.
-7. **Real inches from a scan: approved.** On a result opened from a scan, a teal pill reads, for example, "Printed 1.4% small, every size corrected". Tapping it opens a card: a plain sentence; the markers' distance as drawn and as printed; the correction factor in amber; and a note that a phone photograph cannot measure this and scans can. Check that note is true of GroupLab's method before shipping, and reword it if not. Figures on that result say "corrected".
-
-**Order:** as in entry 258. The shared-code parts first, then these screens in the order 1 to 7. Each ships in its own nightly and is tested at the next sitting. Record the choices in `docs/PHONE-PARITY.md` and in `docs/ANDROID.md`'s design section. Anything these descriptions do not settle visually goes to `for-alan.md` under "DESIGN NEEDED:".
-
-**Camera test note (request 33, running now):** Alan is doing the camera test on his kitchen counter, which is an off-white surface. A white sheet on an off-white counter has little contrast at the sheet's edge. When reading the results, record the surface. If the words or the automatic shutter behaved differently because of it, say so and handle it: the detector should rely on the markers, not on the paper edge, and a capture tip may be needed. Add a low-contrast background case to the camera tests.
 

@@ -1,5 +1,5 @@
 {
-  "about": "NOTES-FROM-PLANNING.md entry 267: wording that no longer describes the project, found by scripts/consistency.py wherever a reader meets it. Each phrase lists the files where it still belongs, the records of a search or a decision kept as they were. The planning history, the archive and the inbox are never searched.",
+  "about": "NOTES-FROM-PLANNING.md entry 267: wording that no longer describes the project, found by scripts/consistency.py wherever a reader meets it. Each phrase lists the files where it still belongs, the records of a search or a decision kept as they were. The planning history, the archive and the inbox are never searched. The settled list names wording that is settled on purpose and is not to be reported by an audit.",
   "searched": [
     "README.md",
     "CONTRIBUTING.md",
@@ -128,6 +128,12 @@
       "allowedIn": [
         "docs/RETIRED-WORDING.json"
       ]
+    }
+  ],
+  "settled": [
+    {
+      "where": "docs/PLATFORM-SUPPORT.md, \"Apple mobile\"",
+      "why": "Alan's settled wording (entry 147), held word for word by MacBuildsTests; \"iOS is not planned.\" stands in front of it (entries 275 and 276). A consistency audit does not report it; if Alan wants it reworded, that comes as its own entry."
     }
   ]
 }
