@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.116
+
+**2026-09-28**, commit `d211abd`. Nightly.
+
+**What you will notice**
+
+- The preview on the Targets screen now shows every word the sheet prints, its legend, labels, load block and identifier, on the desktop and the phone.
+- In the Targets list, Letter sheets now come before A4 in every group, or A4 first where your system is set to a country that uses it.
+
+**Under the hood**
+
+- The target format can now draw the new C3 zeroing grid, with bold legends and its numbers outside the grid; the sheets wait for a detection question before they are offered.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.116)
+
+---
+
 ## 0.2.0-nightly.115
 
 **2026-09-28**, commit `f0a8bbb`. Nightly.
