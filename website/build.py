@@ -73,6 +73,8 @@ OUT = HERE / "_site"
 DONOR = HERE / "donor"
 
 SCREENS = REPO / "docs" / "figures" / "screens" / "current"
+# Entry 246: the phone's own screenshots in look B, one per theme, the status bar already cut off.
+PHONE_SCREENS = REPO / "docs" / "figures" / "screens" / "phone"
 ASSETS = REPO / "src" / "GroupLab.App" / "Assets"
 
 # The stable asset names the rolling nightly release always serves. The Download buttons must
@@ -172,6 +174,14 @@ def build_images() -> None:
     for png in sorted(SCREENS.glob("*-1400x900.png")):
         img = Image.open(png).convert("RGB")
         dst = OUT / "assets" / "screens" / (png.stem + ".webp")
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        img.save(dst, "WEBP", quality=90, method=6)
+
+    # The phone's screens at half their size, which is still sharper than any page shows them.
+    for png in sorted(PHONE_SCREENS.glob("*.png")):
+        img = Image.open(png).convert("RGB")
+        img = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
+        dst = OUT / "assets" / "screens" / "phone" / (png.stem + ".webp")
         dst.parent.mkdir(parents=True, exist_ok=True)
         img.save(dst, "WEBP", quality=90, method=6)
 
@@ -474,6 +484,15 @@ def screen(name: str, alt: str, eager: bool = False, cls: str = "shot") -> str:
         f'<img class="{cls} only-dark" src="/assets/screens/{base}-dark-1400x900.webp" alt="{esc(alt)}" width="1400" height="900" {load} decoding="async">'
         f'<img class="{cls} only-light" src="/assets/screens/{base}-light-1400x900.webp" alt="{esc(alt)}" width="1400" height="900" loading="lazy" decoding="async">'
     )
+
+
+def phone_screen(name: str, alt: str) -> str:
+    """A phone screenshot in both themes, at the phone's own proportions."""
+    size = Image.open(need(PHONE_SCREENS / f"{name}-light.png")).size
+    w, h = size[0] // 2, size[1] // 2
+    return "".join(
+        f'<img class="shot phone-shot only-{theme}" src="/assets/screens/phone/{name}-{theme}.webp" alt="{esc(alt)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
+        for theme in ("dark", "light"))
 
 
 def btn(label: str, href: str, primary: bool = False, sub: str | None = None, big: bool = False) -> str:
@@ -1796,7 +1815,9 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
         if f.get("shot") is not None and f["shot"] not in shots:
             found.append(f"{where}: there is no screenshot {f['shot']!r}")
-        if f.get("shot") is None and not f.get("noPicture"):
+        if f.get("phoneShot") is not None and not all((PHONE_SCREENS / f"{f['phoneShot']}-{t}.png").exists() for t in ("light", "dark")):
+            found.append(f"{where}: there is no phone screenshot {f['phoneShot']!r} in both themes")
+        if f.get("shot") is None and not f.get("phoneShot") and not f.get("noPicture"):
             found.append(f"{where} has no picture and does not say why")
         if f.get("tour") and f["tour"] not in tours:
             found.append(f"{where}: no tour stop {f['tour']!r}")
@@ -1824,6 +1845,8 @@ def feature_card(f: dict, compact: bool = False) -> str:
     if f.get("article"):
         links.append(f'<a href="/research/{f["article"]}/">The research behind it</a>')
     picture = "" if compact or not f.get("shot") else f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
+    if not compact and not f.get("shot") and f.get("phoneShot"):
+        picture = f'<a class="plain" href="/assets/screens/phone/{f["phoneShot"]}-dark.webp">{phone_screen(f["phoneShot"], f["name"] + " in GroupLab on a phone")}</a>'
     platforms = " · ".join(f["platforms"])
     return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'
             f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. {esc(since_words(f))}.</p>'
@@ -2311,6 +2334,7 @@ a.plain{color:var(--text)}
 
 /* the features page and its spotlight, entry 242 */
 .feature img.shot{border-radius:6px;border:1px solid var(--line)}
+.feature img.phone-shot{width:auto;max-width:100%;max-height:420px;margin:0 auto;border-radius:14px}
 a.spot{color:inherit}
 a.spot:hover{border-color:var(--amber);text-decoration:none}
 
