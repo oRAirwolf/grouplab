@@ -503,6 +503,26 @@ def phone_screen(name: str, alt: str) -> str:
         for stem in files)
 
 
+def platform_switch() -> str:
+    """Entry 249: Desktop | Mobile at the top of the tour and the Features page. The script in the head picks the side before the page
+    draws, from a link's ?platform=, then the visitor's own last choice, then whether they are on a phone or tablet; without it, Desktop."""
+    return ('<div class="platform-switch" role="group" aria-label="Show GroupLab on">'
+            '<button type="button" data-choose="desktop">Desktop</button><button type="button" data-choose="mobile">Mobile</button></div>')
+
+
+def shown(platform: str, html: str) -> str:
+    """Something only one side of the switch shows."""
+    return f'<div data-show="{platform}">{html}</div>' if html else ""
+
+
+def only_note(words: str) -> str:
+    return f'<p class="note">{esc(words)}</p>'
+
+
+def phone_thumb(name: str) -> str:
+    return f'<img class="research-thumb phone-thumb" src="/assets/screens/phone/{phone_themes(name)[0]}.webp" alt="" width="320" height="206" loading="lazy">'
+
+
 def btn(label: str, href: str, primary: bool = False, sub: str | None = None, big: bool = False) -> str:
     cls = "btn " + ("btn-primary" if primary else "btn-secondary") + (" btn-big" if big else "")
     inner = f"<span>{esc(label)}</span>"
@@ -581,9 +601,9 @@ def page_home() -> str:
 <figure class="fig">{screen("marking", "The marking screen with every detected hole numbered to its bull and one shot raised for review")}<figcaption><strong>Marking and review</strong><span>Every hole numbered to its bull. Anything the software is unsure of is raised for you to settle, with the keys to do it. <a href="/tour/marking/">See this screen explained</a></span></figcaption></figure>
 <div class="panel status">
 <h3>What it is today</h3>
-<p>A Windows test build. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
+<p>Test builds for Windows, macOS, Linux and Android. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
 <p class="mono dim small">Not built yet</p>
-<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS</p>
+<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iOS</p>
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
 </div>
 </div>
@@ -1630,7 +1650,9 @@ def tour_problems() -> list:
     """Entry 146 section 4.2, as a build failure rather than a test, because the page is the thing that goes wrong."""
     found = []
     data = tour()
-    listed, have = set(data["order"]), rendered_screens()
+    # A stop only the phone has (entry 249) has no desktop render to hold it to.
+    listed = {k for k in data["order"] if data["screens"].get(k, {}).get("platform") != "mobile"}
+    have = rendered_screens()
 
     for key in sorted(listed - have):
         found.append(f"website/tour.json: the tour has a page for {key!r} and no screenshot of it was rendered")
@@ -1650,6 +1672,19 @@ def tour_problems() -> list:
             found.append(f"website/tour.json: {key} names fewer than three parts, so a reader cannot follow the picture")
         if not (2 <= len(screen_data.get("steps") or []) <= 5):
             found.append(f"website/tour.json: {key} needs two to five steps, entry 146 section 2.4")
+        # Entry 249: every stop has a Mobile side, a real phone screenshot with its own parts and touch steps, or words saying it is not there.
+        mobile = screen_data.get("mobile") or {}
+        if not mobile.get("shot") and mobile.get("only") != "desktop":
+            found.append(f"website/tour.json: {key} has no Mobile side: a phone screenshot, or \"only\": \"desktop\" with its words")
+        if mobile.get("shot") and not phone_themes(mobile["shot"]):
+            found.append(f"website/tour.json: {key}'s phone screenshot {mobile['shot']!r} is not in docs/figures/screens/phone")
+        if mobile.get("shot") and screen_data.get("platform") != "mobile":
+            if len(mobile.get("parts") or []) < 3 or not (2 <= len(mobile.get("steps") or []) <= 5):
+                found.append(f"website/tour.json: {key}'s Mobile side needs three parts and two to five steps of its own")
+        if mobile.get("only") == "desktop" and not mobile.get("words"):
+            found.append(f"website/tour.json: {key}'s Mobile side does not say it is on the desktop only")
+        if screen_data.get("platform") == "mobile" and not screen_data.get("desktopWords"):
+            found.append(f"website/tour.json: {key} is on the phone only and its Desktop side does not say so")
 
     return found
 
@@ -1666,9 +1701,13 @@ def page_tour_index() -> str:
     cards = []
     for key in data["order"]:
         item = data["screens"][key]
+        mobile = item.get("mobile") or {}
+        desktop_thumb = ('<p class="eyebrow">On the phone only</p>' if item.get("platform") == "mobile" else
+                         f'<img class="research-thumb" src="/assets/screens/{key}-dark-1400x900.webp" alt="" width="320" height="206" loading="lazy">')
+        mobile_thumb = phone_thumb(mobile["shot"]) if mobile.get("shot") else '<p class="eyebrow">On the desktop only, for now</p>'
         cards.append(
             f'<a class="panel pad stack tight research-card plain" href="/tour/{key}/">'
-            f'<img class="research-thumb" src="/assets/screens/{key}-dark-1400x900.webp" alt="" width="320" height="206" loading="lazy">'
+            f'{shown("desktop", desktop_thumb)}{shown("mobile", mobile_thumb)}'
             f'<h3 class="h3">{esc(item["name"])}</h3>'
             f'<p class="small">{esc(item["blurb"])}</p>'
             "</a>"
@@ -1678,7 +1717,9 @@ def page_tour_index() -> str:
 <section class="wrap stack">
 <h1>A tour of GroupLab</h1>
 <p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
-<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody's photographs.</p>
+{platform_switch()}
+{shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
+{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}
 <div class="research-grid">{"".join(cards)}</div>
 </section>
 """
@@ -1693,10 +1734,31 @@ def page_tour_screen(key: str) -> str:
     before = order[at - 1] if at > 0 else None
     after = order[at + 1] if at + 1 < len(order) else None
 
-    parts = "".join(
-        f'<li><strong>{esc(label)}.</strong> {text}</li>' for label, text in item["parts"]
-    )
-    steps = "".join(f"<li>{esc(step)}</li>" for step in item["steps"])
+    def parts_and_steps(parts: list, steps: list) -> str:
+        listed = "".join(f'<li><strong>{esc(label)}.</strong> {text}</li>' for label, text in parts)
+        done = "".join(f"<li>{esc(step)}</li>" for step in steps)
+        return (f'<h2>What you are looking at</h2><ul class="tour-parts">{listed}</ul>'
+                f'<h2>What you would do here</h2><ol>{done}</ol>')
+
+    # Entry 249: the Desktop side and the Mobile side of the stop. A stop only one of them has says so on the other, rather than hiding.
+    mobile = item.get("mobile") or {}
+    phone_only = item.get("platform") == "mobile"
+    if phone_only:
+        desktop_picture, desktop_words = only_note(item["desktopWords"]), ""
+    else:
+        desktop_picture = (tour_shot(key, item["name"] + " in GroupLab: " + item["blurb"], eager=True)
+                           + '<p class="small faint">From the newest build of GroupLab, regenerated every week. Tap the picture for it full size.</p>'
+                           + "".join(f'{tour_shot(shot, alt)}<p class="small faint">{esc(caption)}</p>' for shot, alt, caption in item.get("moreShots", [])))
+        desktop_words = parts_and_steps(item["parts"], item["steps"])
+    if mobile.get("shot"):
+        mobile_picture = (f'<a class="plain tour-shot" href="/assets/screens/phone/{phone_themes(mobile["shot"])[0]}.webp">'
+                          f'{phone_screen(mobile["shot"], item["name"] + " in GroupLab on a phone")}</a>'
+                          f'<p class="small faint">{esc(mobile.get("caption", ""))}</p>')
+        mobile_words = parts_and_steps(item["parts"], item["steps"]) if phone_only else parts_and_steps(mobile["parts"], mobile["steps"])
+        if mobile.get("note"):
+            mobile_words += only_note(mobile["note"])
+    else:
+        mobile_picture, mobile_words = only_note(mobile.get("words", "On the desktop only, for now.")), ""
     links = "".join(f'<li><a href="{href}">{esc(label)}</a></li>' for label, href in (item.get("links") or []))
 
     around = []
@@ -1713,17 +1775,15 @@ def page_tour_screen(key: str) -> str:
 <h1>{esc(item["name"])}</h1>
 <p class="lead">{esc(item["blurb"])}</p>
 {f'<p class="note note-teal">{esc(item["merged"])}</p>' if item.get("merged") else ""}
-{tour_shot(key, item["name"] + " in GroupLab: " + item["blurb"], eager=True)}
-<p class="small faint">From the newest build of GroupLab, regenerated every week. Tap the picture for it full size.</p>
-{"".join(f'{tour_shot(shot, alt)}<p class="small faint">{esc(caption)}</p>' for shot, alt, caption in item.get("moreShots", []))}
+{platform_switch()}
+{shown("desktop", desktop_picture)}
+{shown("mobile", mobile_picture)}
 <h2>What this screen is for</h2>
 <p>{esc(item["purpose"])}</p>
 <h2>Without a GroupLab sheet</h2>
 <p>{esc(item["withoutASheet"])} <a href="/what-can-be-measured/">What GroupLab can measure</a>.</p>
-<h2>What you are looking at</h2>
-<ul class="tour-parts">{parts}</ul>
-<h2>What you would do here</h2>
-<ol>{steps}</ol>
+{shown("desktop", desktop_words)}
+{shown("mobile", mobile_words)}
 <h2>Where it fits</h2>
 <p>{item["fits"]}</p>
 {f'<h2>Read more</h2><ul>{links}</ul>' if links else ""}
@@ -1823,10 +1883,17 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
         if f.get("shot") is not None and f["shot"] not in shots:
             found.append(f"{where}: there is no screenshot {f['shot']!r}")
-        if f.get("phoneShot") is not None and len(phone_themes(f["phoneShot"])) not in (1 if (PHONE_SCREENS / f"{f['phoneShot']}.png").exists() else 2,):
-            found.append(f"{where}: there is no phone screenshot {f['phoneShot']!r} in both themes")
-        if f.get("shot") is None and not f.get("phoneShot") and not f.get("noPicture"):
-            found.append(f"{where} has no picture and does not say why")
+        # Entry 249 item 4: a feature the phone has needs the phone's own picture, as one the desktop has needs the desktop's (entry 242).
+        mobile = f.get("mobile") or {}
+        desktop = set(f.get("platforms", [])) - {"Android"}
+        if desktop and f.get("shot") is None and not f.get("noPicture"):
+            found.append(f"{where} has no desktop picture and does not say why")
+        if "Android" in f.get("platforms", []) and not mobile.get("shot") and not mobile.get("noPicture"):
+            found.append(f"{where}: the phone has it and there is no phone picture, nor a reason; take one in the next device sitting")
+        if mobile.get("shot") and not phone_themes(mobile["shot"]):
+            found.append(f"{where}: there is no phone screenshot {mobile['shot']!r} in docs/figures/screens/phone")
+        if mobile and "Android" not in f.get("platforms", []):
+            found.append(f"{where} has a Mobile side and Android is not one of its platforms")
         if f.get("tour") and f["tour"] not in tours:
             found.append(f"{where}: no tour stop {f['tour']!r}")
         if f.get("guide") and f["guide"] not in anchors:
@@ -1852,9 +1919,16 @@ def feature_card(f: dict, compact: bool = False) -> str:
         links.append(f'<a href="/guides/user-guide/#{f["guide"]}">In the user guide</a>')
     if f.get("article"):
         links.append(f'<a href="/research/{f["article"]}/">The research behind it</a>')
-    picture = "" if compact or not f.get("shot") else f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
-    if not compact and not f.get("shot") and f.get("phoneShot"):
-        picture = f'<a class="plain" href="/assets/screens/phone/{phone_themes(f["phoneShot"])[0]}.webp">{phone_screen(f["phoneShot"], f["name"] + " in GroupLab on a phone")}</a>'
+    picture = ""
+    if not compact:
+        # Entry 249: each side of the switch shows its own picture, or says plainly that the feature is not on it.
+        mobile = f.get("mobile") or {}
+        on_desktop = bool(set(f["platforms"]) - {"Android"})
+        desktop = (f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
+                   if f.get("shot") else "" if on_desktop else only_note("On the phone only."))
+        phone = (f'<a class="plain" href="/assets/screens/phone/{phone_themes(mobile["shot"])[0]}.webp">{phone_screen(mobile["shot"], f["name"] + " in GroupLab on a phone")}</a>'
+                 if mobile.get("shot") else "" if "Android" in f["platforms"] else only_note("On the desktop only, for now."))
+        picture = shown("desktop", desktop) + shown("mobile", phone)
     platforms = " · ".join(f["platforms"])
     return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'
             f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. {esc(since_words(f))}.</p>'
@@ -1884,11 +1958,12 @@ def page_features() -> str:
 <p class="eyebrow">Features</p>
 <h1>Everything GroupLab does</h1>
 <p class="lead">Every feature, grouped, with where it is explained. The <a href="/tour/">tour</a> walks the main path, print, shoot, scan or photograph, read the numbers; this is the whole list.</p>
+{platform_switch()}
 <p class="small">{" · ".join(f'<a href="#{slug(g)}">{esc(g)}</a>' for g in data["groups"])}</p>
 </section>
 {spotlight_section("Newest")}
 {"".join(groups)}
-<section class="wrap stack last"><p class="small faint">The pictures are the desktop application's, from the newest build. Phone screens come once the phone's look is settled.</p></section>
+<section class="wrap stack last">{shown("desktop", '<p class="small faint">The pictures are the desktop application\'s, from the newest build, regenerated every week.</p>')}{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra; the result in them is Alan\'s own scan, published with his consent.</p>')}</section>
 """
     return shell(FEATURES_PATH, "Features", "Every feature GroupLab has, grouped, each with the build it arrived in and where it is explained.", body, "Features")
 
@@ -2343,6 +2418,15 @@ a.plain{color:var(--text)}
 /* the features page and its spotlight, entry 242 */
 .feature img.shot{border-radius:6px;border:1px solid var(--line)}
 .feature img.phone-shot{width:auto;max-width:100%;max-height:420px;margin:0 auto;border-radius:14px}
+[data-show="mobile"]{display:none}
+:root[data-platform="mobile"] [data-show="desktop"]{display:none}
+:root[data-platform="mobile"] [data-show="mobile"]{display:block}
+.platform-switch{display:inline-flex;border:1px solid var(--line2);border-radius:4px;overflow:hidden;align-self:flex-start}
+.platform-switch button{font:inherit;padding:8px 18px;background:transparent;border:0;color:var(--dim);cursor:pointer;min-height:44px}
+.platform-switch button+button{border-left:1px solid var(--line2)}
+:root:not([data-platform="mobile"]) .platform-switch [data-choose="desktop"],:root[data-platform="mobile"] .platform-switch [data-choose="mobile"]{background:var(--amber-tint);color:var(--amber)}
+.tour-shot img.phone-shot{width:auto;max-width:100%;max-height:640px;margin:0 auto;border-radius:14px}
+img.phone-thumb{object-fit:contain;background:var(--line)}
 a.spot{color:inherit}
 a.spot:hover{border-color:var(--amber);text-decoration:none}
 
@@ -2422,6 +2506,36 @@ JS = r"""/* GroupLab theme: follows the system unless the visitor has chosen, an
         var next = current() === "dark" ? "light" : "dark";
         root.setAttribute("data-theme", next);
         store(next);
+      });
+    }
+  });
+})();
+/* Entry 249: Desktop or Mobile on the tour and the Features page. A link's ?platform= first, then the visitor's own last choice, kept in
+   this browser and never sent anywhere, then Mobile on a phone or tablet and Desktop otherwise. */
+(function () {
+  var KEY = "grouplab-platform";
+  var root = document.documentElement;
+  function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  var ua = navigator.userAgent || "";
+  var forced = /[?&]platform=(mobile|desktop)(?:&|$)/.exec(location.search);
+  var saved = stored();
+  var handheld = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+  root.setAttribute("data-platform", forced ? forced[1] : (saved === "mobile" || saved === "desktop") ? saved : (handheld ? "mobile" : "desktop"));
+  function mark() {
+    var now = root.getAttribute("data-platform");
+    var buttons = document.querySelectorAll(".platform-switch [data-choose]");
+    for (var i = 0; i < buttons.length; i++) buttons[i].setAttribute("aria-pressed", String(buttons[i].getAttribute("data-choose") === now));
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    mark();
+    var buttons = document.querySelectorAll(".platform-switch [data-choose]");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener("click", function (e) {
+        var choice = e.currentTarget.getAttribute("data-choose");
+        root.setAttribute("data-platform", choice);
+        store(choice);
+        mark();
       });
     }
   });

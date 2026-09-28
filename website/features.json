@@ -50,7 +50,10 @@
       "note": "A real scanned sheet is included in the download",
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",
-      "article": "how-grouplab-reads-a-target"
+      "article": "how-grouplab-reads-a-target",
+      "mobile": {
+        "shot": "fold-result"
+      }
     },
     {
       "key": "every-hole",
@@ -68,7 +71,10 @@
       "note": "You can now click a hole to edit it",
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
-      "article": "one-hole-or-two"
+      "article": "one-hole-or-two",
+      "mobile": {
+        "shot": "fold-result-landscape"
+      }
     },
     {
       "key": "aimed-bulls",
@@ -103,7 +109,10 @@
       "note": "When every shot on a sheet of one shot per bull landed off by the same amount",
       "tour": "analysis",
       "guide": "5-read-the-analysis",
-      "article": "wrong-bull"
+      "article": "wrong-bull",
+      "mobile": {
+        "shot": "fold-result"
+      }
     },
     {
       "key": "other-targets",
@@ -154,7 +163,10 @@
       "note": "The analysis screen shows the six figures you read off a target",
       "tour": "analysis",
       "guide": "5-read-the-analysis",
-      "article": "mean-radius-or-extreme-spread"
+      "article": "mean-radius-or-extreme-spread",
+      "mobile": {
+        "shot": "fold-result"
+      }
     },
     {
       "key": "cep",
@@ -222,7 +234,10 @@
       "since": "0.2.0-nightly.71",
       "note": "The Session records screen now draws one load's sessions over time",
       "tour": "sessions",
-      "guide": "6-sessions-and-the-report"
+      "guide": "6-sessions-and-the-report",
+      "mobile": {
+        "shot": "fold-sessions-landscape"
+      }
     },
     {
       "key": "ballistics",
@@ -355,7 +370,10 @@
       "note": "A photograph taken more than 40 degrees off square to the sheet is now refused",
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",
-      "article": "curled-angled-paper"
+      "article": "curled-angled-paper",
+      "mobile": {
+        "shot": "fold-capture"
+      }
     },
     {
       "key": "share-session",
@@ -372,7 +390,10 @@
       "since": "0.2.0-nightly.108",
       "note": "You can share a session with the new Share a session file",
       "guide": "6-sessions-and-the-report",
-      "noPicture": "it happens between two devices, and the phone's screens come with its look (entry 243)"
+      "mobile": {
+        "noPicture": "it happens between two devices"
+      },
+      "noPicture": "it happens between two devices"
     },
     {
       "key": "phone-region",
@@ -385,7 +406,9 @@
       ],
       "since": "0.2.0-nightly.111",
       "note": "On the phone, units now follow the phone's region",
-      "phoneShot": "fold-targets"
+      "mobile": {
+        "shot": "fold-targets"
+      }
     },
     {
       "key": "send-targets",
@@ -403,7 +426,10 @@
       "note": "After you analyze a target, GroupLab now offers to send it to the project",
       "tour": "settings",
       "guide": "12-settings",
-      "article": "what-grouplab-sends"
+      "article": "what-grouplab-sends",
+      "mobile": {
+        "shot": "fold-settings"
+      }
     },
     {
       "key": "error-reports",
@@ -421,7 +447,10 @@
       "note": "GroupLab can now send a report when it hits an error",
       "tour": "settings",
       "guide": "12-settings",
-      "article": "what-grouplab-sends"
+      "article": "what-grouplab-sends",
+      "mobile": {
+        "shot": "fold-settings"
+      }
     },
     {
       "key": "survey",
@@ -439,7 +468,10 @@
       "note": "GroupLab now asks once whether you would like to take part in the hardware survey",
       "tour": "settings",
       "guide": "12-settings",
-      "article": "what-grouplab-sends"
+      "article": "what-grouplab-sends",
+      "mobile": {
+        "shot": "fold-settings"
+      }
     },
     {
       "key": "explain-words",
@@ -516,7 +548,10 @@
       "note": "three sheets with a new bull",
       "tour": "targets",
       "guide": "1-print-a-sheet",
-      "article": "can-you-see-the-bull"
+      "article": "can-you-see-the-bull",
+      "mobile": {
+        "shot": "tab-targets-landscape"
+      }
     },
     {
       "key": "c-bull",
@@ -534,7 +569,10 @@
       "note": "the C bull",
       "tour": "targets",
       "guide": "1-print-a-sheet",
-      "article": "can-you-see-the-bull"
+      "article": "can-you-see-the-bull",
+      "mobile": {
+        "shot": "tab-targets-landscape"
+      }
     },
     {
       "key": "large-on-letter",
@@ -551,7 +589,10 @@
       "since": "next",
       "note": "sets of four Letter or A4 sheets",
       "tour": "targets",
-      "guide": "1-print-a-sheet"
+      "guide": "1-print-a-sheet",
+      "mobile": {
+        "shot": "tab-targets-landscape"
+      }
     },
     {
       "key": "dev-build",
@@ -564,7 +605,9 @@
       ],
       "since": "next",
       "note": "GroupLab Dev",
-      "phoneShot": "icons-fold"
+      "mobile": {
+        "shot": "icons-fold"
+      }
     },
     {
       "key": "big-screen",
@@ -577,7 +620,9 @@
       ],
       "since": "next",
       "note": "side by side",
-      "phoneShot": "tab-result-landscape"
+      "mobile": {
+        "shot": "tab-result-landscape"
+      }
     },
     {
       "key": "phone-targets",
@@ -590,7 +635,9 @@
       ],
       "since": "next",
       "note": "Targets screen",
-      "phoneShot": "fold-targets"
+      "mobile": {
+        "shot": "fold-targets"
+      }
     }
   ]
 }

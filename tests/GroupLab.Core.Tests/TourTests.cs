@@ -46,11 +46,18 @@ public class TourTests
     private static List<string> Order() =>
         [.. Tour().GetProperty("order").EnumerateArray().Select(e => e.GetString()!)];
 
+    /// <summary>The stops the desktop has: every one but those only the phone has (entry 249), which have no desktop render to show.</summary>
+    private static List<string> DesktopOrder()
+    {
+        var screens = Tour().GetProperty("screens");
+        return [.. Order().Where(k => !(screens.GetProperty(k).TryGetProperty("platform", out var p) && p.GetString() == "mobile"))];
+    }
+
     /// <summary>Entry 146 section 4.2, both directions. Either one alone would let the tour go quietly stale.</summary>
     [Fact]
     public void TheTourAndTheScreenshotsAreTheSameListOfScreens()
     {
-        var listed = Order().ToHashSet(StringComparer.Ordinal);
+        var listed = DesktopOrder().ToHashSet(StringComparer.Ordinal);
         var rendered = Rendered();
 
         var noPicture = listed.Except(rendered).Order(StringComparer.Ordinal).ToList();
@@ -71,7 +78,7 @@ public class TourTests
         string folder = Repo.PathTo("docs", "figures", "screens", "current");
         var missing = new List<string>();
 
-        foreach (string key in Order())
+        foreach (string key in DesktopOrder())
         {
             foreach (string theme in new[] { "dark", "light" })
             {
@@ -161,14 +168,105 @@ public class TourTests
         Assert.True(wrong.Count == 0, "the tour is read by people who have never seen this repository:\n  " + string.Join("\n  ", wrong));
     }
 
-    /// <summary>Every piece of writing on one screen's page, flattened.</summary>
+    /// <summary>
+    /// Entry 249: every stop has a Mobile side, a real screenshot from the phone with its own parts and steps written for touch, or words
+    /// saying plainly that it is on the desktop only. A stop the phone alone has says so on its Desktop side.
+    /// </summary>
+    [Fact]
+    public void EveryStopHasAMobileSide()
+    {
+        var screens = Tour().GetProperty("screens");
+        string phone = Repo.PathTo("docs", "figures", "screens", "phone");
+        var wrong = new List<string>();
+
+        foreach (string key in Order())
+        {
+            var screen = screens.GetProperty(key);
+            bool phoneOnly = screen.TryGetProperty("platform", out var platform) && platform.GetString() == "mobile";
+            if (phoneOnly && !(screen.TryGetProperty("desktopWords", out var words) && words.GetString()!.Length > 0))
+            {
+                wrong.Add($"{key}: is on the phone only and its Desktop side does not say so");
+            }
+
+            if (!screen.TryGetProperty("mobile", out var mobile))
+            {
+                wrong.Add($"{key}: has no Mobile side");
+                continue;
+            }
+
+            if (mobile.TryGetProperty("shot", out var shot))
+            {
+                string name = shot.GetString()!;
+                bool both = File.Exists(Path.Combine(phone, name + "-light.png")) && File.Exists(Path.Combine(phone, name + "-dark.png"));
+                if (!both && !File.Exists(Path.Combine(phone, name + ".png")))
+                {
+                    wrong.Add($"{key}: its phone screenshot {name} is not in docs/figures/screens/phone");
+                }
+
+                int parts = mobile.TryGetProperty("parts", out var p) ? p.GetArrayLength() : phoneOnly ? 3 : 0;
+                int steps = mobile.TryGetProperty("steps", out var s) ? s.GetArrayLength() : phoneOnly ? 2 : 0;
+                if (parts < 3 || steps is < 2 or > 5)
+                {
+                    wrong.Add($"{key}: its Mobile side has {parts} parts and {steps} steps of its own");
+                }
+            }
+            else if (!(mobile.TryGetProperty("only", out var only) && only.GetString() == "desktop" && mobile.TryGetProperty("words", out _)))
+            {
+                wrong.Add($"{key}: its Mobile side has neither a phone screenshot nor words saying it is on the desktop only");
+            }
+        }
+
+        Assert.True(wrong.Count == 0, "website/tour.json:\n  " + string.Join("\n  ", wrong));
+    }
+
+    /// <summary>
+    /// Mouse words on the Mobile side are the wrong instructions for somebody holding a phone (entry 249 item 5): tap, not click.
+    /// </summary>
+    [Fact]
+    public void TheMobileStepsAreWrittenForTouch()
+    {
+        var wrong = new List<string>();
+        foreach (var screen in Tour().GetProperty("screens").EnumerateObject())
+        {
+            bool phoneOnly = screen.Value.TryGetProperty("platform", out var platform) && platform.GetString() == "mobile";
+            var side = phoneOnly ? screen.Value : screen.Value.TryGetProperty("mobile", out var m) ? m : default;
+            if (side.ValueKind != JsonValueKind.Object)
+            {
+                continue;
+            }
+
+            foreach (string text in Prose(side))
+            {
+                var mouse = System.Text.RegularExpressions.Regex.Match(text, "\\b(click|clicks|clicking|double[- ]click|right[- ]click|mouse|hover|scroll wheel)\\b",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+                // A scope's clicks are a turret's, not a mouse's.
+                if (mouse.Success && !System.Text.RegularExpressions.Regex.IsMatch(text, "clicks? (up|down|left|right|value)", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    wrong.Add($"{screen.Name}: \"{mouse.Value}\" on the Mobile side");
+                }
+            }
+        }
+
+        Assert.True(wrong.Count == 0, "the Mobile side is read by somebody holding a phone:\n  " + string.Join("\n  ", wrong));
+    }
+
+    /// <summary>Every piece of writing on one screen's page, flattened, the Mobile side's included.</summary>
     private static IEnumerable<string> Prose(JsonElement screen)
     {
-        foreach (string field in new[] { "name", "blurb", "purpose", "fits" })
+        foreach (string field in new[] { "name", "blurb", "purpose", "fits", "withoutASheet", "desktopWords", "caption", "words", "note" })
         {
             if (screen.TryGetProperty(field, out var value) && value.ValueKind == JsonValueKind.String)
             {
                 yield return value.GetString()!;
+            }
+        }
+
+        if (screen.TryGetProperty("mobile", out var mobile))
+        {
+            foreach (string text in Prose(mobile))
+            {
+                yield return text;
             }
         }
 

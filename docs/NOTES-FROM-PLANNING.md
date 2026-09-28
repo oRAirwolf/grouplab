@@ -24,6 +24,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 249: a Desktop / Mobile switch on the tour and the Features page (after look B is built)
+
+**Status: done 2026-09-28.** Every item. Item 7: a feature's Mobile side carries its screenshot or the reason it has none; availability and version are the feature's own platforms and build, which the release notes already hold it to. No feature card has steps on either side, so none were added; the tour's stops carry the steps.
+
+Alan: "Once we have a decent working version of the mobile app with the new design language, I would like a desktop/mobile toggle to the
+tour and features pages." **Not before look B (entry 246) is built and its screenshots are taken on the Fold 7 and the tablet.** Then:
+
+1. **A two-way switch, Desktop | Mobile**, at the top of `grouplab.org/tour/` (every stop) and `grouplab.org/features/` (the page and
+   every feature's section). It changes every screenshot, caption and step to that platform's version.
+2. **It remembers the choice** (a cookie-free local setting in the browser) and **starts on Mobile when the visitor is on a phone or
+   tablet**, Desktop otherwise; a link can force either (`?platform=mobile`).
+3. **Where a feature or stop exists on only one platform**, the other side says so plainly ("On the desktop only, for now") with the
+   version it is planned for if the plan says, rather than hiding the stop or showing the other platform's picture.
+4. **Screenshots for Mobile** are real ones from the Fold 7 (phone width) and, where the layout differs, the Tab S8 Ultra, taken by the
+   phone script over adb in look B, from the sample data and Alan's publishable scans; the build treats a missing mobile screenshot for a
+   feature the phone has as a gap to fill, as entry 242 section 3 does for desktop ones.
+5. Steps written for touch on the Mobile side (tap, long-press, the share sheet, the camera), not mouse words.
+6. The same switch or a platform badge on the README's feature list is not needed; the README links to the Features page.
+7. `features.json` gains a per-platform entry for each feature (availability, version, screenshots, steps), so the Features page, the tour
+   and the release notes read one source.
+
 ## 2026-09-28, entry 248: the Android app's icon is the desktop's GroupLab mark
 
 **Status: done 2026-09-28.** Every section. Section 4: the two icons were cropped from the launcher's app search for "GroupLab" rather than the home screen, so no other app is in the picture. **Not done: the themed version.** One UI offers themed icons only as a switch for the whole home screen, and turning it on to take a picture would change the look of every app on Alan's phone; the monochrome layer is built and tested (`Entry234Tests`).

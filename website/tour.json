@@ -25,6 +25,7 @@
  "order": [
   "targets",
   "optic",
+  "capture",
   "marking",
   "analysis",
   "analysis-open",
@@ -111,7 +112,35 @@
      "When a shot is on the wrong bull",
      "/research/wrong-bull/"
     ]
-   ]
+   ],
+   "mobile": {
+    "shot": "fold-result-landscape",
+    "caption": "The phone marks the holes on the result screen itself, under the figures.",
+    "parts": [
+     [
+      "The rings",
+      "One on each hole GroupLab found, on the photograph or scan itself."
+     ],
+     [
+      "Move",
+      "Drag a ring to the center of its hole."
+     ],
+     [
+      "Add a hole",
+      "Tap where a hole is that GroupLab missed."
+     ],
+     [
+      "Remove",
+      "Tap a ring that is not a shot to remove it. Undo takes back the last change."
+     ]
+    ],
+    "steps": [
+     "Look over the rings on the sheet under the figures.",
+     "Tap Move, Add a hole or Remove, then drag or tap on the sheet.",
+     "The figures above follow every change, and each is saved as you make it."
+    ],
+    "note": "Placing bulls by hand and the lasso, for a target GroupLab did not print, are on the desktop only, for now."
+   }
   },
   "analysis": {
    "name": "The analysis",
@@ -184,7 +213,34 @@
      "When to adjust your zero",
      "/research/when-to-adjust-zero/"
     ]
-   ]
+   ],
+   "mobile": {
+    "shot": "fold-result",
+    "caption": "A result on a Galaxy Z Fold 7's cover screen, from a scan of 25 shots.",
+    "parts": [
+     [
+      "Mean radius",
+      "The lead figure, in amber: the average distance of the shots from the group's center."
+     ],
+     [
+      "Extreme spread, Shots, Center from aim",
+      "The other figures, each on its own tile."
+     ],
+     [
+      "The plot",
+      "Every shot on one bull, with the group's center, the circles and the extreme spread. Key explains the lines."
+     ],
+     [
+      "Share this session, Another target",
+      "Send the session to another device, or go back to Capture."
+     ]
+    ],
+    "steps": [
+     "Read the mean radius first; enter the distance on Capture to see the angles too.",
+     "Tap Key to see what each line on the plot is.",
+     "Tap Share this session to open it on a computer, or Another target for the next."
+    ]
+   }
   },
   "analysis-open": {
    "name": "Showing the work",
@@ -216,7 +272,11 @@
      "How many shots",
      "/research/how-many-shots/"
     ]
-   ]
+   ],
+   "mobile": {
+    "only": "desktop",
+    "words": "On the desktop only, for now. The phone shows the figures and the plot; the explanations behind every number, the strips and the full tables are on the desktop."
+   }
   },
   "sessions": {
    "name": "Session records",
@@ -264,7 +324,30 @@
      "Pooling groups",
      "/research/pooling-groups/"
     ]
-   ]
+   ],
+   "mobile": {
+    "shot": "fold-sessions-landscape",
+    "caption": "Sessions on the Fold's cover screen held sideways.",
+    "parts": [
+     [
+      "Open a session file",
+      "Reads a session shared from another device."
+     ],
+     [
+      "The list",
+      "Every target analyzed on this phone: its sheet, the date, the shots and the mean radius."
+     ],
+     [
+      "A row",
+      "Tap it to open that result again."
+     ]
+    ],
+    "steps": [
+     "Tap Sessions in the bar at the bottom.",
+     "Tap a row to open that result again.",
+     "Tap Open a session file to read one another device shared."
+    ]
+   }
   },
   "compare": {
    "name": "Compare loads",
@@ -321,7 +404,11 @@
      "Did the suppressor move the point of impact? Two real sheets compared",
      "/research/suppressor-shift/"
     ]
-   ]
+   ],
+   "mobile": {
+    "only": "desktop",
+    "words": "On the desktop only, for now."
+   }
   },
   "equipment": {
    "name": "Equipment",
@@ -362,7 +449,11 @@
      "The user guide",
      "/guides/user-guide/"
     ]
-   ]
+   ],
+   "mobile": {
+    "only": "desktop",
+    "words": "On the desktop only, for now."
+   }
   },
   "ballistics": {
    "name": "Ballistics",
@@ -436,7 +527,11 @@
      "When to adjust your zero",
      "/research/when-to-adjust-zero/"
     ]
-   ]
+   ],
+   "mobile": {
+    "only": "desktop",
+    "words": "On the desktop only, for now."
+   }
   },
   "settings": {
    "name": "Settings",
@@ -493,7 +588,33 @@
      "Nightly builds",
      "/research/nightly-builds/"
     ]
-   ]
+   ],
+   "mobile": {
+    "shot": "fold-settings",
+    "caption": "Settings on the phone.",
+    "parts": [
+     [
+      "Sending targets",
+      "Every target automatically, ask each time, or never, and the consent that goes with them."
+     ],
+     [
+      "Error reports",
+      "Automatically, ask each time, or never."
+     ],
+     [
+      "Hardware survey",
+      "Yes or no; the benchmark runs only when you tap it."
+     ],
+     [
+      "About",
+      "The version on this phone."
+     ]
+    ],
+    "steps": [
+     "Tap Settings in the bar at the bottom.",
+     "Tap the choice you want under each heading; it is kept at once."
+    ]
+   }
   },
   "targets": {
    "name": "Targets",
@@ -564,7 +685,34 @@
      "The user guide",
      "/guides/user-guide/"
     ]
-   ]
+   ],
+   "mobile": {
+    "shot": "fold-targets",
+    "caption": "GroupLab on a Galaxy Z Fold 7's cover screen, nightly 115.",
+    "parts": [
+     [
+      "Made for your optic",
+      "Distance, the lowest magnification, a red dot's size and the shots, then Make the sheet."
+     ],
+     [
+      "Paper",
+      "Letter or A4, chosen from your phone's region. Tap the other to change it."
+     ],
+     [
+      "The library",
+      "Every built-in sheet in its family. Tap one to open it."
+     ],
+     [
+      "The sheet",
+      "A preview with Print and Share the PDF, to print it from a computer instead."
+     ]
+    ],
+    "steps": [
+     "Tap Targets in the bar at the bottom.",
+     "Tap a sheet in the library, or fill in Made for your optic and tap Make the sheet.",
+     "Tap Print, or Share the PDF to print it on a computer, at actual size."
+    ]
+   }
   },
   "optic": {
    "name": "Made for your optic",
@@ -611,7 +759,70 @@
      "Made for your optic through 4x at 100 yards: a bigger bull, four to a sheet, and a set of sheets",
      "Through 4x the same 25 shots need a bigger bull, so they take a set of sheets."
     ]
-   ]
+   ],
+   "mobile": {
+    "shot": "fold-targets",
+    "caption": "Made for your optic sits at the top of the phone's Targets screen.",
+    "parts": [
+     [
+      "Distance and lowest magnification",
+      "How far, and the lowest power you will shoot at: 1 for a red dot."
+     ],
+     [
+      "Red dot size",
+      "Only at 1x: the dot's size in MOA, so the bull is one you can center on."
+     ],
+     [
+      "Shots",
+      "How many; GroupLab makes as many sheets as they need."
+     ],
+     [
+      "Bull shape",
+      "Disc or Diamond. Tap one."
+     ]
+    ],
+    "steps": [
+     "Tap Targets in the bar at the bottom.",
+     "Type the distance, the lowest magnification and the shots.",
+     "Tap Make the sheet, then Print or Share the PDF."
+    ]
+   }
+  },
+  "capture": {
+   "name": "Capture",
+   "platform": "mobile",
+   "desktopWords": "On the phone only. On a computer, open a scan or a photograph from the marking screen instead.",
+   "blurb": "Photograph a GroupLab target with the phone, or choose a photograph, and GroupLab finds the holes and measures the group.",
+   "purpose": "The phone's first screen. Hold the phone square over the sheet and the words at the top of the camera say what to change; it takes the picture itself when everything is right. A photograph already on the phone works too.",
+   "withoutASheet": "Placing bulls by hand on a target GroupLab did not print is on the desktop only, for now; the phone is for GroupLab's own sheets.",
+   "fits": "Its result is the <a href=\"/tour/analysis/\">analysis</a>, kept in <a href=\"/tour/sessions/\">sessions</a>. The sheets come from <a href=\"/tour/targets/\">Targets</a>.",
+   "parts": [
+    [
+     "The caliber and the distance",
+     "Optional, typed before the picture: the caliber sizes the holes, and the distance turns sizes into angles."
+    ],
+    [
+     "Take a picture",
+     "Opens the camera, which says what to change and takes the picture itself."
+    ],
+    [
+     "Choose a photograph",
+     "Opens one already on the phone."
+    ],
+    [
+     "The tip",
+     "Shade the whole sheet or none of it, and hold it down outside the printed area."
+    ]
+   ],
+   "steps": [
+    "Type the caliber and the distance if you know them.",
+    "Tap Take a picture and hold the phone square over the sheet until it takes the picture.",
+    "Read the result that opens."
+   ],
+   "mobile": {
+    "shot": "fold-capture",
+    "caption": "Capture on a Galaxy Z Fold 7's cover screen, nightly 115."
+   }
   }
  }
 }

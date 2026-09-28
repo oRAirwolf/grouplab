@@ -9,15 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entries 246 and 248.
+**Last rewritten:** 2026-09-28, after entry 249.
 
 ---
 
 ## In flight
 
-- Done: everything through 248. 246: both device sittings, look B on the phone and tablet photographed in both themes and both
-  orientations (`docs/figures/screens/phone/`), requests 44, 45 and 49 closed. 247: the desktop Ballistics screen as concept B.
-  248: the icon; its themed version was not photographed. Next **249** (Desktop | Mobile on the tour and Features), then **250**.
+- Done: everything through 249. 246: look B photographed on both devices (`docs/figures/screens/phone/`), requests 44, 45, 49
+  closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile on the tour and Features, a phone-only Capture
+  stop. Next **250**: the Targets preview with its words, Letter first, the zeroing grid concepts (C1 to C6), the one-shot zero note.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -101,6 +101,7 @@ line reads what the repository holds, and the test fails locally until the last 
   label breaks the line behind it on purpose.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **One solid amber button a screen**: a chosen switch is the tint, `AppStyles.Chosen` (entry 247).
+- **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words, or the site build fails.
 - **An error GroupLab survives is no longer called a close** (entry 192); each run leaves a marker so a real close is caught.
 - **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
 - **The upload page asks for one of two consent levels**, and a testing only target can never reach `samples/` or the site (entry 165).
@@ -109,7 +110,6 @@ line reads what the repository holds, and the test fails locally until the last 
 - **Every word a shooter may not know explains itself**, in the app and on the site, from `glossary.json` (entry 154).
 - **Every published sentence has its backing**: `scripts/claims.py --check` fails CI otherwise (entry 159).
 - **Publishing an article is a decision** recorded in `website/research/PUBLISHED.md`; `ready` means finished and not live.
-- **Everything a user reads is in American spelling**, and a test holds it.
 - **A scan reports real inches.** A photograph stays in the sheet's own inches and says so.
 - **Temporary files clean themselves up.** Tests write into one folder per run, CI fails on a leak.
 - **Nothing under `website/server/` may hold a carriage return**: it is copied to Linux as it is.

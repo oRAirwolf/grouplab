@@ -59,6 +59,26 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 249: Desktop | Mobile on the tour and the Features page
+
+**The switch.** At the top of the tour, every stop and the Features page. Both sides are in each page and the switch shows one: a
+link's `?platform=mobile` or `?platform=desktop` first, then the visitor's own last choice (kept in the browser's local storage, no
+cookie, never sent), then Mobile on a phone or tablet and Desktop otherwise. It is decided in the head, with the theme, so the page
+never draws the wrong side first; without scripts it is Desktop.
+
+**The Mobile side.** Every tour stop has one in `website/tour.json`: the phone's own screenshot from entry 246's sittings, a caption, and
+parts and steps written for touch, or words saying it is on the desktop only, for now (the full analysis, compare, equipment and
+ballistics). Capture is a new stop the phone alone has, and its Desktop side says so. Marking on the phone is the result screen's Move,
+Add a hole and Remove, and says that placing bulls by hand is desktop only. Every feature the phone has shows its picture on the Mobile
+side of the Features page, or the reason it has none, and a desktop feature says "On the desktop only, for now".
+
+**Held.** The site build refuses a stop without a Mobile side, a phone screenshot that is not there, a Mobile side without three parts
+and two to five steps, and a feature the phone has without a phone picture or a reason. `TourTests` adds `EveryStopHasAMobileSide` and
+`TheMobileStepsAreWrittenForTouch` (no click, mouse or hover on the Mobile side; a turret's clicks are allowed).
+
+**Found on the way.** The home page still called GroupLab "a Windows test build" and listed Android as not built; it now names the four
+platforms and the things the README says do not exist yet.
+
 ## Entry 248: the desktop's mark as the Android icon
 
 `scripts/android-icons.py` draws the icons from `grouplab-mark.svg`: adaptive icons for GroupLab (dark background) and GroupLab Dev

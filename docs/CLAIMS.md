@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1138 |
-| measured | 1509 |
-| decided | 1201 |
+| code | 1141 |
+| measured | 1513 |
+| decided | 1203 |
 | unbacked | 0 |
-| **total** | **3848** |
+| **total** | **3857** |
 
-**624** of them were read one sentence at a time and their backing written against the sentence. The other **3224** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**633** of them were read one sentence at a time and their backing written against the sentence. The other **3224** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3125,16 +3125,17 @@ one that matters.
 ### site:features/index.html
 
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest New in nightly.114 The C bull A black diamond standing on a point, with a white center and a dot: its points sit on a crosshair&#x27;s lines, on three sheets and in the designer and Made for your optic.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): Desktop Mobile Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest New in nightly.114 The C bull A black diamond standing on a point, with a white center and a dot: its points sit on a crosshair&#x27;s lines, on three sheets and in the designer and Made for your optic.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.114 Large format on a home printer The large format sheets print as sets of four Letter or A4 sheets, the same bulls and spacing, each sheet with its own markers and codes.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.113 Pool the sheets of a set The sheets of a set from Made for your optic are read in any order and pooled into one group, and GroupLab says which sheets are still missing.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.
 - *code* (website/features.json, from LibraryBuilder.Additions and the aim point test (entry 243)): On the tour · In the user guide The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): In the user guide Builds for the Mac Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Builds for the Mac Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.
+- *decided* (docs/figures/screens/phone/SOURCES.md and samples/PROVENANCE.md, the 2026-09-26 range day, Alan's standing consent of entry 171): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra; the result in them is Alan's own scan, published with his consent.
 
 ### site:guides/glossary/index.html
 
@@ -3250,7 +3251,7 @@ one that matters.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.
-- *decided* (the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; Android and iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the ten screens: what it is for, what you are looking at, and what you would do there.
+- *decided* (README.md, What does not exist yet; the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the eleven screens: what it is for, what you are looking at, and what you would do there.
 - *code* (LICENSE, and the footer in website/build.py shell()): Get the donor pack Instructions and two targets · PDF Free and open source under GPL-3.0.
 
 ### site:releases/index.html
@@ -4112,6 +4113,7 @@ one that matters.
 
 ### site:tour/analysis/index.html
 
+- *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): A result on a Galaxy Z Fold 7&#x27;s cover screen, from a scan of 25 shots.
 - *code* (website/build.py: the link to /what-can-be-measured/): What GroupLab can measure .
 - *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed.
 - *code* (src/GroupLab.App/CompositePlot.cs WholeTarget, ZoomAbout, ResetView and the pointer handlers; MainWindow.cs groupView and wholeView; tests/GroupLab.App.Tests/Entry210Tests.cs): Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both.
@@ -4122,6 +4124,11 @@ one that matters.
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): What this screen is for Everything else in GroupLab measures what your rifle did.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's columns; tests/GroupLab.App.Tests/Entry112Tests.cs the heading): Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): Every error source by the hits it takes away, largest first with a bar for each, so you can see whether the wind call, the load or the range estimate is what to work on.
+
+### site:tour/capture/index.html
+
+- *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): Capture on a Galaxy Z Fold 7&#x27;s cover screen, nightly 115.
+- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): &lsaquo; Made for your optic All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/compare/index.html
 
@@ -4135,7 +4142,9 @@ one that matters.
 
 ### site:tour/index.html
 
-- *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Ten pages, one per screen, so you can see what using GroupLab is like before you download it.
+- *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Eleven pages, one per screen, so you can see what using GroupLab is like before you download it.
+- *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra.
+- *decided* (docs/figures/screens/phone/SOURCES.md and samples/PROVENANCE.md, the 2026-09-26 range day, Alan's standing consent of entry 171): The result in them is Alan's own scan of a 25 shot group, published with his consent.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.
 
 ### site:tour/marking/index.html
@@ -4152,8 +4161,10 @@ one that matters.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): At 100 yards through 10x the white center comes out 0.37 inches across in a disc of 1.11, 25 bulls 1.51 inches apart on one Letter sheet for 25 shots.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through 4x it is 0.92 inches in a disc of 2.74, so only 4 bulls fit a sheet and 25 shots take 7 sheets, each of which names itself by its codes.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The distance in yards; the lowest magnification you will shoot at, 1 for a red dot, with the dot's size in MOA; and how many shots.
+- *code* (android/GroupLab.Android/TargetsPage.cs, Made for your optic; TargetGenerator (entry 242)): How far, and the lowest power you will shoot at: 1 for a red dot.
+- *code* (android/GroupLab.Android/TargetsPage.cs, the red dot field; TargetGenerator (entry 242)): Only at 1x: the dot's size in MOA, so the bull is one you can center on.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Where the 3.5 arcminute rule comes from is Can you see the bull?
-- *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The aim point test The Targets screen &lsaquo; Targets All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
+- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): The aim point test The Targets screen &lsaquo; Targets All screens Capture &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/sessions/index.html
 
@@ -4165,6 +4176,7 @@ one that matters.
 
 ### site:tour/targets/index.html
 
+- *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): GroupLab on a Galaxy Z Fold 7&#x27;s cover screen, nightly 115.
 - *code* (SheetReference.PrintScale, entry 171; ImperfectSheetTests): A scan measures the scale and reports every size in real inches; a photograph of a sheet printed at 97 percent makes every group read about 3 percent large.
 - *code* (the print screen, src/GroupLab.App/PrintWindow.cs): So this screen asks the PDF viewer for no scaling, prints the instruction along the bottom of the sheet so you can check with a ruler, and refuses outright when the paper cannot hold the sheet.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs Statement and Ruler; src/GroupLab.Cli/Library/TargetGenerator.cs and PrintPanel.Generate; CutSheet (entry 226 sections 1, 4 and 5)): A zeroing grid is for sighting in by eye at the bench, read off the grid after each shot, and says on the sheet what its squares are, with a ruler to check the print; for a zero worked out from a group, and group figures, use a 5x5 sheet.
