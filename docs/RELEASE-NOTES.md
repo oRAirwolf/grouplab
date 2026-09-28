@@ -515,7 +515,7 @@ This build has no change to the application; it behaves exactly as nightly 93 do
 - A broken or hostile image file that claims to be hundreds of megapixels is now refused with its measured size, instead of being decoded until GroupLab runs out of memory. Real scans are unaffected: the limit is twelve times a 600 dpi letter scan. (Entry 143, 43)
 - When you run detection again on a sheet, the marks you had already moved or reassigned are kept where you put them instead of being thrown away, and the button tells you how many it will keep. (Entry 143, 42)
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.91)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
