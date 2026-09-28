@@ -575,15 +575,43 @@ Added by NOTES-FROM-PLANNING.md entries 226 and 227 and put to the planning sess
 
 | Field | Type | Required | Meaning |
 |---|---|---|---|
-| `style` | integer | no | 1 when absent. 2 for the drawing below |
-| `fieldX`, `fieldY` | integer dmm | with style 2 | Half-extents of the drawn field, across and up and down, each no larger than `half` |
-| `wholeEvery` | integer | with style 2 | Minor cells per whole unit, a multiple of `majorEvery` |
+| `style` | integer | no | 1 when absent. 2 for the drawing below, 3 for the C3 drawing after it |
+| `fieldX`, `fieldY` | integer dmm | with style 2 or 3 | Half-extents of the drawn field, across and up and down, each no larger than `half` |
+| `wholeEvery` | integer | with style 2 or 3 | Minor cells per whole unit, a multiple of `majorEvery` |
 
 **The lattice is style 1's; only what is drawn changes.** Lines are still `round(half * i / divisions)` from the stored half, ties toward zero, so the half-dmm bound of test 36 holds. Only the lines whose offset is within the field are drawn, so the field can be a rectangle and need not end on a line. A style 2 `half` is chosen so the lattice reaches the field with every line within half a dmm of its angle: 1.25 mil over 5 divisions at 100 yards is 1143.0 dmm exactly, where 1 mil over 4 would round 914.4 to 914 and put the first line 0.6 dmm out.
 
 **Three weights, labels, and the scale printed.** Every line is 6 dmm wide, every `majorEvery`-th 20 dmm, and every `wholeEvery`-th, the whole unit and the axes, 30 dmm. Every major line carries its value in the grid's unit ("0.5" and "1.0" where there are half units, "1", "2", "3" where there are not), 130 dmm tall, centred on its line below the horizontal axis and beside the vertical one, with the line broken behind it; a label on the field's edge moves inward rather than off the field. Above the field, clear of the marker row, three lines say what a small square is and what the heavier lines are, in the unit and in inches or centimetres at the stated distance, and tell the reader to print at 100 percent, over a ruler bar 4 in long on a yard sheet or 10 cm on a metre sheet with a tick at every inch or centimetre. Every number in it is worked out from the grid block, so it cannot disagree with the lines. `src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs` holds these numbers, and the reasons for them: at 100 yards one arcminute through a 6x scope is 44 dmm on the paper, so the labels are 3.0 arcminutes at 6x and the whole-unit lines 1.1 arcminutes at 10x.
 
 **Markers.** `field-ring-1` places its ring around the style 2 field rather than around `half`, on the major lines inside the field, and a line within a footprint and 20 dmm of the field's edge gives way to the corner marker. A style 2 grid's side band is measured to the tight edge of 60 dmm rather than the safe margin, because a printer's side margins are narrower than its bottom one (question 59, adopted by entry 243). Lines are sized to be seen and labels and the aiming ring to be recognised at the lowest magnification a sheet is for, the reading of the visibility rule entry 243 kept.
+
+
+#### Grid style 3: design C3, read through a scope with the numbers outside
+
+NOTES-FROM-PLANNING.md entries 251 and 252, chosen by Alan with Jylee and Unholy. The fields are style 2's (`fieldX`, `fieldY`,
+`wholeEvery`); on the wire it is style byte 3, followed by the same five bytes. A reader that knows only styles 1 and 2 refuses the body,
+as it must: the drawing is not one it can render.
+
+**The lattice is style 2's, every line inside the field is drawn.** The squares are one scope subtension: `wholeEvery` 5 for 0.2 mil,
+2 for 0.5 MOA, and `majorEvery` 1. Weights: the axes and the frame (the outermost lines inside the field) 20 dmm; on an MOA grid every
+whole MOA 12 dmm; every other line 5 dmm. On a mil grid the whole mils are the axes and the frame.
+
+**Ticks.** One click, halfway between neighbouring lines, 5 dmm wide: across the centre cross, 30 dmm each way, and inward from each side
+of the frame, 30 dmm.
+
+**Numbers outside the grid only.** Every line's distance from the aim in the grid's unit ("0", "0.2" ... "1.0" in mils; "0", "0.5",
+"1" ... in MOA) on all four sides, 16 dmm beyond the frame's outer edge: 40 dmm capitals, and 46 dmm bold for a whole unit. Nothing is
+written inside the frame.
+
+**The legend,** centred above the grid between the two top codes, bold: the unit and distance at 100 dmm capitals ("MIL · 100 YD"), a
+square beside "= 0.2 MIL" at 80 dmm, and a tick beside "TICK = 0.1 MIL (1 CLICK)" at 60 dmm, each shrunk only to fit 1320 dmm. **Below
+the grid,** a 4 in (yard sheets) or 10 cm (metre sheets) check bar with a tick at every inch or centimetre, and a line saying so.
+
+**The aim** is the bull the definition places at the grid's centre; the centre cross is left out inside its paper disc, so a C diamond's
+white centre stays white.
+
+**Markers.** `field-ring-1` places a style 3 grid's markers only in the two side columns, at the heights of the ticks halfway between the
+numbered lines, because the numbers take the rows above and below the grid and its corners.
 
 ---
 
@@ -849,7 +877,7 @@ Tiling block, flag bit 7                            9 bytes
   overlap     2 bytes
   flags       1 byte   reserved, zero
 
-Measurement grid block, flag bit 8            1 + 15g bytes, 5 more per style 2 grid
+Measurement grid block, flag bit 8            1 + 15g bytes, 5 more per style 2 or 3 grid
   gridCount   1 byte
   for each grid:
     centreX   2 bytes uint16 quanta
@@ -861,9 +889,9 @@ Measurement grid block, flag bit 8            1 + 15g bytes, 5 more per style 2 
     distance  2 bytes  uint16, in distanceUnit
     distUnit  1 byte   0 = yd, 1 = m
     inkPair   1 byte   bits 0-3 minor ink, bits 4-7 major
-    style     1 byte   line weights and axis emphasis: 1, or 2 (question 59)
+    style     1 byte   line weights and axis emphasis: 1, 2 (question 59) or 3 (entry 251)
     labelStep 1 byte   0 = no labels
-    style 2 only:
+    style 2 or 3 only:
     fieldX    2 bytes  uint16 quanta
     fieldY    2 bytes
     wholeEvery 1 byte
@@ -1356,7 +1384,7 @@ Published at `https://grouplab.invalid/schema/gltd-1.schema.json`, versioned by 
           "axisStroke":   { "type": "integer", "minimum": 1, "maximum": 255 },
           "labelStep":    { "type": "integer", "minimum": 0, "maximum": 100 },
           "labelInk":     { "$ref": "#/$defs/inkKey" },
-          "style":        { "enum": [1, 2] },
+          "style":        { "enum": [1, 2, 3] },
           "fieldX":       { "type": "integer", "minimum": 100, "maximum": 65535 },
           "fieldY":       { "type": "integer", "minimum": 100, "maximum": 65535 },
           "wholeEvery":   { "type": "integer", "minimum": 1, "maximum": 100 }

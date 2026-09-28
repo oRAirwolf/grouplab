@@ -41,6 +41,9 @@ public static class PdfWriter
 
         // Images, entry 113 section 6, are objects after every page's two, numbered in the order the pages carry them.
         var images = new List<string>();
+        int imageCount = pages.Sum(p => p.Items.OfType<ImageBox>().Count());
+        int? bold = pages.Any(p => p.Items.OfType<TextRun>().Any(t => t.Bold)) ? 4 + (2 * pages.Count) + imageCount - 1 + 1 : null;
+        string fonts = bold is { } b ? $"/F1 3 0 R /F2 {b} 0 R" : "/F1 3 0 R";
         for (int i = 0; i < pages.Count; i++)
         {
             var page = pages[i];
@@ -56,11 +59,21 @@ public static class PdfWriter
             string xobjects = k > 0 ? $" /XObject << {names}>>" : "";
             objects.Add(
                 $"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {Number(page.Width * PointsPerUnit)} {Number(page.Height * PointsPerUnit)}] " +
-                $"/Resources << /Font << /F1 3 0 R >>{xobjects} >> /Contents {5 + (2 * i)} 0 R >>");
+                $"/Resources << /Font << {fonts} >>{xobjects} >> /Contents {5 + (2 * i)} 0 R >>");
             objects.Add($"<< /Length {Encoding.Latin1.GetByteCount(content)} >>\nstream\n{content}\nendstream");
         }
 
         objects.AddRange(images);
+
+        // Entry 251: Helvetica-Bold, only in a PDF with bold words and after everything else, so a PDF without them is as it always was.
+        if (bold is { } boldObject)
+        {
+            objects.Add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+            if (boldObject != objects.Count)
+            {
+                throw new InvalidOperationException("the bold font is not where the pages point");
+            }
+        }
 
         var pdf = new StringBuilder("%PDF-1.7\n%âãÏÓ\n");
         var offsets = new List<int>();
@@ -192,7 +205,7 @@ public static class PdfWriter
 
     private static void Text(StringBuilder s, TextRun text)
     {
-        long width = HelveticaMetrics.TextWidth(text.Text, text.FontSize);
+        long width = HelveticaMetrics.TextWidth(text.Text, text.FontSize, text.Bold);
         double x = text.Anchor switch
         {
             TextAnchor.Right => text.X - width,
@@ -212,7 +225,7 @@ public static class PdfWriter
         }
 
         // The page transform flips y, so the text matrix flips it back to keep glyphs upright.
-        s.Append(CultureInfo.InvariantCulture, $"BT /F1 {text.FontSize} Tf 1 0 0 -1 {Number(x)} {text.Baseline} Tm ({escaped}) Tj ET\n");
+        s.Append(CultureInfo.InvariantCulture, $"BT /{(text.Bold ? "F2" : "F1")} {text.FontSize} Tf 1 0 0 -1 {Number(x)} {text.Baseline} Tm ({escaped}) Tj ET\n");
     }
 
     private static string Channel(byte value) => Number(value / 255.0);

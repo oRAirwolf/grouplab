@@ -59,6 +59,28 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 251: the C3 zeroing grids, built and held
+
+**The design, as grid style 3** (`GridStyle3`, TARGET-SCHEMA.md section 3.13's new subsection). 0.2 mil or 0.5 MOA squares; lines
+0.5 mm, whole MOA 1.2 mm, axes and frame 2 mm; a click's tick (0.1 mil, 1/4 MOA) halfway between lines on the centre cross and inward
+from the frame; each line's distance from the aim outside the frame on all four sides, whole units larger and bold, nothing inside;
+the legend above between the two codes in bold ("MIL · 100 YD", a square and "= 0.2 MIL", a tick and "TICK = 0.1 MIL (1 CLICK)"); the
+4 in or 10 cm check bar below; the C diamond as the aim, 0.2 mil or 1 MOA point to point (entry 252 section 1), its white centre
+kept clear of the cross. Markers stand in the two side columns between the numbers, at the ticks' heights, since the numbers take
+the corners and the rows. **Bold** is new to the format's text: Helvetica-Bold in the PDF only when a page uses it (every existing
+PDF is byte for byte as it was), and Liberation Sans Bold's outlines for the preview.
+
+**The four sheets** (`LibraryBuilder.ZeroC3Sheets`, `grouplab library held`): MIL-100Y plus or minus 1.0 mil; MIL-100M 0.8 mil both
+ways (1.0 up and down collides with the check bar and the identifier); MOA-100Y 3 MOA across and 3.5 up and down; MOA-100M 3 MOA.
+None has a load block: there is no room beside the numbers without shrinking the grid, so the load goes on the session. They
+validate, round trip through GLTD-B as style byte 3 with their markers, and no number touches a marker or another number.
+
+**The detection check** (`ZeroGridC3Tests`, 300 dpi, .224, .264 and .308): on the grid, 72 of 72 holes found, worst 0.023 in. In the
+diamond's black, 0 of 12: refused as too small, because the rim vanishes into the ink and the size floor is set on whole marks on
+paper. Touching the diamond 12 of 12, worst 0.053 in; in the white centre 10 of 12. The same refusal happens on the E and C bulls
+already released. **So the C3 sheets are not in the library yet:** question 64, and request 51 for a real scan of holes in black.
+PDFs for that are in `C:\Dev\grouplab-local\zero-concepts\`.
+
 ## Entry 250: the Targets preview shows the words; Letter before A4; the one-shot zero evaluated
 
 **Section 1.** The preview drew a scene's discs and rectangles and skipped its text. `SceneRasterizer` can now draw text runs, from

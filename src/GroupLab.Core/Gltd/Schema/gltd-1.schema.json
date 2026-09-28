@@ -293,7 +293,7 @@
           "axisStroke":   { "type": "integer", "minimum": 1, "maximum": 255 },
           "labelStep":    { "type": "integer", "minimum": 0, "maximum": 100 },
           "labelInk":     { "$ref": "#/$defs/inkKey" },
-          "style":        { "enum": [1, 2] },
+          "style":        { "enum": [1, 2, 3] },
           "fieldX":       { "type": "integer", "minimum": 100, "maximum": 65535 },
           "fieldY":       { "type": "integer", "minimum": 100, "maximum": 65535 },
           "wholeEvery":   { "type": "integer", "minimum": 1, "maximum": 100 }

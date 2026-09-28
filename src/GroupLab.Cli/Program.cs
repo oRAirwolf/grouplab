@@ -22,6 +22,7 @@ return args switch
     ["decode", .. var frames] when frames.Length > 0 => Decode(frames),
     ["library", "build", var layouts, var directory] => LibraryBuild(layouts, directory),
     ["library", "verify", var layouts, var directory] => LibraryVerify(layouts, directory),
+    ["library", "held", var layouts, var directory] => LibraryHeld(layouts, directory),
     ["render", var input, .. var rest] => Render(input, rest),
     ["selftest"] => SelfTest("targets"),
     ["selftest", var directory] => SelfTest(directory),
@@ -440,6 +441,20 @@ static int LibraryBuild(string layouts, string directory)
 {
     Directory.CreateDirectory(directory);
     foreach (var target in LibraryBuilder.Library(layouts))
+    {
+        File.WriteAllBytes(Path.Combine(directory, target.FileName), CanonicalJsonWriter.Write(target.Definition));
+        Console.WriteLine($"{target.Definition.Id}  {target.FileName}");
+    }
+
+    return 0;
+}
+
+// Entry 251: the C3 zeroing sheets, built but held back from the library until question 64 is answered, written where they can be
+// rendered and printed for a test (request 51); they are not the library's and nothing reads them from there.
+static int LibraryHeld(string layouts, string directory)
+{
+    Directory.CreateDirectory(directory);
+    foreach (var target in LibraryBuilder.ZeroC3Sheets(layouts))
     {
         File.WriteAllBytes(Path.Combine(directory, target.FileName), CanonicalJsonWriter.Write(target.Definition));
         Console.WriteLine($"{target.Definition.Id}  {target.FileName}");

@@ -29,6 +29,15 @@ internal static class WireCodes
     /// <summary>Grid style 2, question 59: five more bytes, the drawn field's two half-extents and the whole-unit step.</summary>
     public const byte ZeroingGridStyle = 2;
 
+    /// <summary>Grid style 3, the C3 zeroing grid of entry 251: the same five more bytes as style 2, drawn to <c>GridStyle3</c>.</summary>
+    public const byte ScopeGridStyle = 3;
+
+    /// <summary>The wire code of a grid's style.</summary>
+    public static byte GridStyleCode(int style) => style switch { 3 => ScopeGridStyle, 2 => ZeroingGridStyle, _ => StandardGridStyle };
+
+    /// <summary>True for a style whose grid carries a field and a whole-unit step on the wire.</summary>
+    public static bool CarriesField(byte style) => style is ZeroingGridStyle or ScopeGridStyle;
+
     public static byte PageCode(PageSize size) => size switch
     {
         PageSize.Custom => 0,

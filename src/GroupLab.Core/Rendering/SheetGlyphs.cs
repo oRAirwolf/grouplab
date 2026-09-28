@@ -16,7 +16,12 @@ public static class SheetGlyphs
     /// <summary>Straight pieces a quadratic curve is drawn with: at the sizes a sheet uses, finer than a pixel.</summary>
     private const int CurvePieces = 8;
 
-    private static readonly Lazy<Dictionary<char, IReadOnlyList<(double X, double Y)[]>>> Outlines = new(Load);
+    private static readonly Lazy<Dictionary<char, (int Advance, IReadOnlyList<(double X, double Y)[]> Contours)>> Outlines = new(() => Load("SheetSans"));
+
+    private static readonly Lazy<Dictionary<char, (int Advance, IReadOnlyList<(double X, double Y)[]> Contours)>> BoldOutlines = new(() => Load("SheetSansBold"));
+
+    /// <summary>A bold character's advance in thousandths of the em, or null where the outlines have no such character.</summary>
+    public static int? BoldAdvance(char c) => BoldOutlines.Value.TryGetValue(c, out var glyph) ? glyph.Advance : null;
 
     /// <summary>
     /// The closed outlines of <paramref name="text"/> set as <see cref="PdfWriter"/> sets a <see cref="TextRun"/>, in the page's own units,
@@ -25,7 +30,7 @@ public static class SheetGlyphs
     public static IEnumerable<(double X, double Y)[]> Contours(TextRun text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        long width = HelveticaMetrics.TextWidth(text.Text, text.FontSize);
+        long width = HelveticaMetrics.TextWidth(text.Text, text.FontSize, text.Bold);
         double x = text.Anchor switch
         {
             TextAnchor.Right => text.X - width,
@@ -36,9 +41,9 @@ public static class SheetGlyphs
         foreach (char c in text.Text)
         {
             char mapped = HelveticaMetrics.ToWinAnsi(c);
-            if (Outlines.Value.TryGetValue(mapped, out var contours))
+            if ((text.Bold ? BoldOutlines : Outlines).Value.TryGetValue(mapped, out var glyph))
             {
-                foreach (var contour in contours)
+                foreach (var contour in glyph.Contours)
                 {
                     var placed = new (double X, double Y)[contour.Length];
                     for (int i = 0; i < contour.Length; i++)
@@ -50,16 +55,16 @@ public static class SheetGlyphs
                 }
             }
 
-            x += HelveticaMetrics.Width(c) * text.FontSize / 1000.0;
+            x += HelveticaMetrics.Width(c, text.Bold) * text.FontSize / 1000.0;
         }
     }
 
-    private static Dictionary<char, IReadOnlyList<(double X, double Y)[]>> Load()
+    private static Dictionary<char, (int Advance, IReadOnlyList<(double X, double Y)[]> Contours)> Load(string name)
     {
-        using var stream = typeof(SheetGlyphs).Assembly.GetManifestResourceStream("GroupLab.Core.Rendering.SheetSans.glyphs")
+        using var stream = typeof(SheetGlyphs).Assembly.GetManifestResourceStream($"GroupLab.Core.Rendering.{name}.glyphs")
             ?? throw new InvalidOperationException("the sheet glyphs are not embedded");
         using var reader = new StreamReader(stream);
-        var glyphs = new Dictionary<char, IReadOnlyList<(double X, double Y)[]>>();
+        var glyphs = new Dictionary<char, (int, IReadOnlyList<(double X, double Y)[]>)>();
         while (reader.ReadLine() is { } line)
         {
             if (line.Length == 0 || line[0] == '#')
@@ -72,7 +77,7 @@ public static class SheetGlyphs
             var current = new List<(double X, double Y)>();
             (double X, double Y) at = default;
             double N(int i) => double.Parse(parts[i], CultureInfo.InvariantCulture);
-            for (int i = 1; i < parts.Length;)
+            for (int i = 2; i < parts.Length;)
             {
                 switch (parts[i])
                 {
@@ -110,7 +115,7 @@ public static class SheetGlyphs
                 }
             }
 
-            glyphs[(char)int.Parse(parts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture)] = contours;
+            glyphs[(char)int.Parse(parts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture)] = (int.Parse(parts[1], CultureInfo.InvariantCulture), contours);
         }
 
         return glyphs;

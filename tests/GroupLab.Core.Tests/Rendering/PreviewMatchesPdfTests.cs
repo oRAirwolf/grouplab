@@ -89,9 +89,11 @@ public class PreviewMatchesPdfTests
             {
                 var boxes = pages[page].Items.OfType<TextRun>().Where(r => r.Text.Trim().Length > 0).Select(r =>
                 {
-                    long width = GroupLab.Core.Rendering.Pdf.HelveticaMetrics.TextWidth(r.Text, r.FontSize);
+                    long width = GroupLab.Core.Rendering.Pdf.HelveticaMetrics.TextWidth(r.Text, r.FontSize, r.Bold);
                     double left = r.Anchor switch { TextAnchor.Right => r.X - width, TextAnchor.Centre => r.X - (width / 2.0), _ => r.X };
-                    return (r.Text, Left: left, Right: left + width, Top: r.Baseline - (0.72 * r.FontSize), Bottom: r.Baseline + (0.21 * r.FontSize));
+                    // Only letters that hang below the line have a descender; a number sits on it.
+                    double below = r.Text.IndexOfAny(['g', 'j', 'p', 'q', 'y', '(', ')', ',', ';', 'Q', 'J']) >= 0 ? 0.21 : 0.02;
+                    return (r.Text, Left: left, Right: left + width, Top: r.Baseline - (0.72 * r.FontSize), Bottom: r.Baseline + (below * r.FontSize));
                 }).ToList();
                 for (int i = 0; i < boxes.Count; i++)
                 {
@@ -118,7 +120,7 @@ public class PreviewMatchesPdfTests
     private static int Allowed(GrayImage page, Scene scene)
     {
         double k = Dpi / 508.0;
-        double lettering = scene.Items.OfType<TextRun>().Sum(r => GroupLab.Core.Rendering.Pdf.HelveticaMetrics.TextWidth(r.Text, r.FontSize) * k * r.FontSize * k);
+        double lettering = scene.Items.OfType<TextRun>().Sum(r => GroupLab.Core.Rendering.Pdf.HelveticaMetrics.TextWidth(r.Text, r.FontSize, r.Bold) * k * r.FontSize * k);
         return 50 + (int)(0.03 * lettering);
     }
 

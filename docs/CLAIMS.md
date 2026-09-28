@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1146 |
+| code | 1158 |
 | measured | 1513 |
 | decided | 1203 |
 | unbacked | 0 |
-| **total** | **3862** |
+| **total** | **3874** |
 
-**638** of them were read one sentence at a time and their backing written against the sentence. The other **3224** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**638** of them were read one sentence at a time and their backing written against the sentence. The other **3236** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2655,6 +2655,18 @@ one that matters.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **Markers.** `field-ring-1` places its ring around the style 2 field rather than around `half`, on the major lines inside the field, and a line within a footprint and 20 dmm of the field's edge gives way to the corner marker.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): A style 2 grid's side band is measured to the tight edge of 60 dmm rather than the safe margin, because a printer's side margins are narrower than its bottom one (question 59, adopted by entry 243).
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): Lines are sized to be seen and labels and the aiming ring to be recognised at the lowest magnification a sheet is for, the reading of the visibility rule entry 243 kept.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): #### Grid style 3: design C3, read through a scope with the numbers outside NOTES-FROM-PLANNING.md entries 251 and 252, chosen by Alan with Jylee and Unholy.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): The fields are style 2's (`fieldX`, `fieldY`, `wholeEvery`); on the wire it is style byte 3, followed by the same five bytes.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): A reader that knows only styles 1 and 2 refuses the body, as it must: the drawing is not one it can render.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **The lattice is style 2's, every line inside the field is drawn.** The squares are one scope subtension: `wholeEvery` 5 for 0.2 mil, 2 for 0.5 MOA, and `majorEvery` 1.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): Weights: the axes and the frame (the outermost lines inside the field) 20 dmm; on an MOA grid every whole MOA 12 dmm; every other line 5 dmm.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **Ticks.** One click, halfway between neighbouring lines, 5 dmm wide: across the centre cross, 30 dmm each way, and inward from each side of the frame, 30 dmm.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **Numbers outside the grid only.** Every line's distance from the aim in the grid's unit ("0", "0.2" ...
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): "1.0" in mils; "0", "0.5", "1" ...
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): in MOA) on all four sides, 16 dmm beyond the frame's outer edge: 40 dmm capitals, and 46 dmm bold for a whole unit.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **The legend,** centred above the grid between the two top codes, bold: the unit and distance at 100 dmm capitals ("MIL · 100 YD"), a square beside "= 0.2 MIL" at 80 dmm, and a tick beside "TICK = 0.1 MIL (1 CLICK)" at 60 dmm, each shrunk only to fit 1320 dmm.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **Below the grid,** a 4 in (yard sheets) or 10 cm (metre sheets) check bar with a tick at every inch or centimetre, and a line saying so.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **Markers.** `field-ring-1` places a style 3 grid's markers only in the two side columns, at the heights of the ticks halfway between the numbered lines, because the numbers take the rows above and below the grid and its corners.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): Worked example: the reference 5x5 target Full document for **GL-CF25-LTR**, the reference layout from TARGET-LIBRARY.md, whose geometry has been placed and overlap-checked by the layout validator.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): This is the definition the Phase 0 sample set was printed from, frozen at `targets/frozen/phase0/GL-YCSK-DZZ1-R0VJ-4T5Y.gltd.json` and superseded in the live library by `GL-20J3-Y141-0BN3-EYME`, and it is kept here as printed because an identifier hashes geometry, so a worked example that tracked the library would change with every geometry commit.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): Do not use fit to page." } } ``` **Geometry check.** Five columns at 380 dmm pitch from 320 dmm put the last centre at 320 + 4 x 380 = 1840, and the outer disc extends 127 dmm beyond, reaching 1967 against a page width of 2159.

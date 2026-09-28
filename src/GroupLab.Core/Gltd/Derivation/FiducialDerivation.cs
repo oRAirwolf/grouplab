@@ -214,21 +214,33 @@ public static class FiducialDerivation
         long top = (2L * (grid.CentreY - grid.HalfY - Clearance)) - footprint;
         long bottom = (2L * (grid.CentreY + grid.HalfY + Clearance)) + footprint;
 
-        // A style 2 line too near the field's edge gives way to the corner marker, which would otherwise sit a footprint beside it.
-        int corner = grid.StyleOrDefault == GridStyle2.Style ? footprint + MarkerSpacing : 0;
-        var major = Enumerable.Range(0, (grid.Divisions / grid.MajorEvery) + 1).Select(k => offsets[k * grid.MajorEvery]).ToList();
         var candidates = new List<(long X2, long Y2)>();
-        foreach (int o in major.Where(o => o <= grid.HalfY - corner))
+        if (grid.StyleOrDefault == GridStyle3.Style)
         {
-            candidates.AddRange([(left, cy2 - (2L * o)), (right, cy2 - (2L * o)), (left, cy2 + (2L * o)), (right, cy2 + (2L * o))]);
+            // Entry 251: a style 3 grid's numbers take the rows above and below it and the corners, so its markers stand in the two side
+            // columns only, between the numbers, at the heights of the ticks halfway between the lines.
+            foreach (int tick in GridStyle3.Ticks(grid, grid.HalfY))
+            {
+                candidates.AddRange([(left, cy2 + (2L * tick)), (right, cy2 + (2L * tick))]);
+            }
         }
-
-        foreach (int o in major.Where(o => o <= grid.HalfX - corner))
+        else
         {
-            candidates.AddRange([(cx2 - (2L * o), top), (cx2 - (2L * o), bottom), (cx2 + (2L * o), top), (cx2 + (2L * o), bottom)]);
-        }
+            // A style 2 line too near the field's edge gives way to the corner marker, which would otherwise sit a footprint beside it.
+            int corner = grid.StyleOrDefault == GridStyle2.Style ? footprint + MarkerSpacing : 0;
+            var major = Enumerable.Range(0, (grid.Divisions / grid.MajorEvery) + 1).Select(k => offsets[k * grid.MajorEvery]).ToList();
+            foreach (int o in major.Where(o => o <= grid.HalfY - corner))
+            {
+                candidates.AddRange([(left, cy2 - (2L * o)), (right, cy2 - (2L * o)), (left, cy2 + (2L * o)), (right, cy2 + (2L * o))]);
+            }
 
-        candidates.AddRange([(left, top), (right, top), (left, bottom), (right, bottom)]);
+            foreach (int o in major.Where(o => o <= grid.HalfX - corner))
+            {
+                candidates.AddRange([(cx2 - (2L * o), top), (cx2 - (2L * o), bottom), (cx2 + (2L * o), top), (cx2 + (2L * o), bottom)]);
+            }
+
+            candidates.AddRange([(left, top), (right, top), (left, bottom), (right, bottom)]);
+        }
 
         var codes = CodeBoxes(d);
         int dataBlockHeight = d.DataBlock?.Height ?? 0;

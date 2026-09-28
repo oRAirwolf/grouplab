@@ -12,6 +12,36 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-28, question 64: a hole in solid black is refused as too small, so the C3 grids are built and held
+
+Status: open.
+
+Entry 251 says: "Entry 250 section 3's detection check still runs, now on C3 only, before release." It ran (`ZeroGridC3Tests`, four
+sheets at .224, .264 and .308, synthetic holes on the render at 300 dpi, the whole pipeline):
+
+- **Every hole on the grid is found, where it is:** on a fine line, a crossing, a frame tick, a centre-cross tick, the heavy axis and a
+  whole-MOA line, 72 of 72, worst 0.023 in (a .22 on an MOA crossing); held in CI at 0.03 in, a tenth of a quarter-MOA click at 100 yd.
+- **A hole in the diamond's black is never found:** 12 of 12 refused as "too small" (0.05 to 0.085 in against a floor of 0.131 in with
+  .308 named, 0.150 in without). On black ink the hole's dark rim is the ink's own colour, so the detector sees only the bright core,
+  and its size floor was set on whole marks on white paper (`RenderDifferenceHoleDetector`, S8's size filter).
+- **A hole partly on it is unreliable:** touching the diamond, found 12 of 12 but up to 0.053 in off; in its white centre, 10 of 12.
+- **It is not C3's alone.** The same hole in the black of the E and C bulls of entry 243 (GL-CF25-LTR-E and -C, in nightly 114) is
+  refused the same way, calibre named or not (`AHoleInSolidBlackIsStillRefusedAsTooSmall`). The D sheets' rings are thin, which is why
+  Alan's real Dominus K and Magnus scans read 25 of 25.
+
+**What is not known** is whether a real hole's core in black is as small as the synthetic one's: the synthetic holes are calibrated on
+white paper, and no real scan has holes in solid black. Request 51 asks Alan for one.
+
+**What I did.** C3 is built in full (grid style 3 in the format, the renderer, the marker rule, the four sheets, the tests) but **not put
+in the library**: the library keeps the style 2 sheets, and the C3 sheets are built beside it (`LibraryBuilder.ZeroC3Sheets`,
+`grouplab library held`). Print-ready PDFs are in `C:\Dev\grouplab-local\zero-concepts\`.
+
+**The options.** (a) Hold C3 until a real scan of holes in black is measured, then set the on-ink size floor from it and release; the
+E and C sheets are fixed by the same change. (b) Release C3 now and lower the floor for blobs the render calls solid ink, from the
+synthetic model alone; risk: a floor set on a model that may not match real holes, and white print specks in black read as holes.
+(c) Release C3 now as it is: centre hits in the diamond are left for the shooter to add by hand ("Add a hole"). **What I would choose:**
+(a), with the scan of request 51 first; it is one sheet and one scan, and the same answer mends the E and C bulls.
+
 ## 2026-09-27, question 63: how many bulls each sheet of the redrawn large format sets carries
 
 Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 245: (a), as built. Was: open.

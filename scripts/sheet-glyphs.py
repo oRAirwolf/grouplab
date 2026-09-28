@@ -7,12 +7,15 @@ Helvetica and free to redistribute (SIL Open Font License 1.1), so its outlines,
 where the PDF puts it. This writes the outlines of every character a sheet can carry, printable ASCII and Latin-1 as the PDF's
 WinAnsi encoding has them, to a small text file the Core embeds: no font file ships, and nothing is read from the machine.
 
-    python scripts/sheet-glyphs.py LiberationSans-Regular.ttf LICENSE
+    python scripts/sheet-glyphs.py LiberationSans-Regular.ttf LiberationSans-Bold.ttf LICENSE
+
+The bold outlines, with their advances, are for the zeroing grids' legend and whole-unit numbers (entry 251), which the PDF sets in
+Helvetica-Bold.
 
 The outlines are a modified form of the font, so under the SIL Open Font License they do not carry its reserved name: the file is
 SheetSans.glyphs, and its header holds the font's copyright notice and the whole license, as the license asks of a modified version.
 
-Each line is one character: its code point, then its contours, each "M x y" followed by "L x y" and "Q cx cy x y" segments and "Z",
+Each line is one character: its code point, its advance in thousandths of the em, then its contours, each "M x y" followed by "L x y" and "Q cx cy x y" segments and "Z",
 in font units (2048 to the em), y up. Run it again only to change the font.
 """
 from __future__ import annotations
@@ -50,15 +53,16 @@ class Path_(BasePen):
     _endPath = _closePath
 
 
-def main() -> int:
-    font = TTFont(sys.argv[1])
+def write(ttf: str, weight: str, out: Path, notice: list[str]) -> None:
+    font = TTFont(ttf)
     if font["head"].unitsPerEm != 2048:
         raise SystemExit("expected 2048 units to the em")
     cmap = font.getBestCmap()
     glyphs = font.getGlyphSet()
-    notice = Path(sys.argv[2]).read_text(encoding="utf-8").splitlines()
-    lines = ["# Glyph outlines derived from Liberation Sans Regular 2.1.5 by scripts/sheet-glyphs.py (entry 250 section 1), converted",
-             "# to straight and quadratic segments; a modified version under the license below, so it does not use the reserved name.", "#"]
+    advances = font["hmtx"].metrics
+    lines = [f"# Glyph outlines derived from Liberation Sans {weight} 2.1.5 by scripts/sheet-glyphs.py (entries 250 and 251), converted",
+             "# to straight and quadratic segments; a modified version under the license below, so it does not use the reserved name.",
+             "# Each line: the code point, the advance in thousandths of the em (Helvetica's metrics, which these share), the contours.", "#"]
     lines += ["# " + line if line else "#" for line in notice]
     for code in CODES:
         name = cmap.get(code)
@@ -66,10 +70,16 @@ def main() -> int:
             continue
         pen = Path_(glyphs)
         glyphs[name].draw(pen)
-        lines.append(f"{code:X} " + " ".join(pen.out))
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_bytes(("\n".join(lines) + "\n").encode("ascii"))
-    print(f"{sum(1 for line in lines if not line.startswith('#'))} characters, {OUT.stat().st_size:,} bytes")
+        lines.append(f"{code:X} {round(advances[name][0] * 1000 / 2048)} " + " ".join(pen.out))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(("\n".join(lines) + "\n").encode("ascii"))
+    print(f"{out.name}: {sum(1 for line in lines if not line.startswith('#'))} characters, {out.stat().st_size:,} bytes")
+
+
+def main() -> int:
+    notice = Path(sys.argv[3]).read_text(encoding="utf-8").splitlines()
+    write(sys.argv[1], "Regular", OUT, notice)
+    write(sys.argv[2], "Bold", OUT.with_name("SheetSansBold.glyphs"), notice)
     return 0
 
 

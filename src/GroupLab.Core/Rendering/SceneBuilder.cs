@@ -221,6 +221,12 @@ public static class SceneBuilder
                     continue;
                 }
 
+                if (g.StyleOrDefault == GridStyle3.Style)
+                {
+                    AddStyle3Grid(items, g);
+                    continue;
+                }
+
                 var xs = MeasurementGridLines.Positions(g.CentreX, g.Half, g.Divisions);
                 var ys = MeasurementGridLines.Positions(g.CentreY, g.Half, g.Divisions);
                 long left = 2L * (g.CentreX - g.Half), right = 2L * (g.CentreX + g.Half);
@@ -345,6 +351,177 @@ public static class SceneBuilder
 
             items.AddRange(labels.Select(l => l.Run));
             AddScaleStatement(items, g, majorColour);
+        }
+
+        /// <summary>
+        /// A style 3 grid (<see cref="GridStyle3"/>, design C3 of entry 251): every lattice line inside the field in three weights, a click's
+        /// tick halfway between the lines along the centre cross and inward from the frame, each line's distance from the aim written
+        /// outside the frame on all four sides and nothing inside it, the legend above between the codes, and the check bar below.
+        /// </summary>
+        private void AddStyle3Grid(List<SceneItem> items, MeasurementGrid g)
+        {
+            string? major = g.MajorInk ?? FirstArtworkKey();
+            string? minor = g.MinorInk ?? FirstArtworkKey();
+            string? axis = g.AxisInk ?? major;
+            if (major is null || minor is null || axis is null || Colour(major) is not { } ink)
+            {
+                return;
+            }
+
+            int halfX = g.HalfX, halfY = g.HalfY;
+            var columns = GridStyle3.Lines(g, halfX);
+            var rows = GridStyle3.Lines(g, halfY);
+            long left = 2L * (g.CentreX - halfX), right = 2L * (g.CentreX + halfX);
+            long top = 2L * (g.CentreY - halfY), bottom = 2L * (g.CentreY + halfY);
+
+            // The aim's white centre stays white: the centre cross is left out inside it, where the drawing has paper.
+            var clear = new List<(long X0, long Y0, long X1, long Y1)>();
+            foreach (var bull in d.Bulls.Where(b => b.X == g.CentreX && b.Y == g.CentreY))
+            {
+                if (d.RingSets.FirstOrDefault(r => r.Key == bull.RingSet)?.Discs.Where(disc => Colour(disc.Ink) is null).Select(disc => disc.Diameter).DefaultIfEmpty(0).Max() is > 0 and var white)
+                {
+                    clear.Add((2L * g.CentreX - white, 2L * g.CentreY - white, 2L * g.CentreX + white, 2L * g.CentreY + white));
+                }
+            }
+
+            foreach (int weight in (int[])[0, 1, 2])
+            {
+                var (key, stroke) = weight switch
+                {
+                    2 => (axis, (long)GridStyle3.HeavyStroke),
+                    1 => (major, (long)GridStyle3.WholeStroke),
+                    _ => (minor, (long)GridStyle3.FineStroke),
+                };
+                if (Colour(key) is not { } colour)
+                {
+                    continue;
+                }
+
+                foreach (var (i, offset) in columns.Where(c => GridStyle3.Weight(g, c.Index, c.Offset, halfX) == weight))
+                {
+                    long x = 2L * (g.CentreX + offset);
+                    AddBroken(items, colour, x - stroke, x + stroke, top - (weight == 2 ? stroke : 0), bottom + (weight == 2 ? stroke : 0), vertical: true, clear);
+                }
+
+                foreach (var (i, offset) in rows.Where(r => GridStyle3.Weight(g, r.Index, r.Offset, halfY) == weight))
+                {
+                    long y = 2L * (g.CentreY + offset);
+                    AddBroken(items, colour, y - stroke, y + stroke, left, right, vertical: false, clear);
+                }
+            }
+
+            // One click's tick halfway between the lines: across the centre cross both ways, and inward from each side of the frame.
+            long tickHalf = GridStyle3.TickStroke, reach = 2L * GridStyle3.TickReach;
+            foreach (int tick in GridStyle3.Ticks(g, halfX))
+            {
+                long x = 2L * (g.CentreX + tick);
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x - tickHalf, (2L * g.CentreY) - reach, 2 * tickHalf, 2 * reach));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x - tickHalf, top, 2 * tickHalf, reach));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x - tickHalf, bottom - reach, 2 * tickHalf, reach));
+            }
+
+            foreach (int tick in GridStyle3.Ticks(g, halfY))
+            {
+                long y = 2L * (g.CentreY + tick);
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, (2L * g.CentreX) - reach, y - tickHalf, 2 * reach, 2 * tickHalf));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, left, y - tickHalf, reach, 2 * tickHalf));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, right - reach, y - tickHalf, reach, 2 * tickHalf));
+            }
+
+            // Each line's distance from the aim, outside the frame on all four sides; a whole unit larger and bold.
+            long outer = GridStyle3.HeavyStroke / 2, gap = GridStyle3.NumberGap;
+            foreach (var (i, offset) in columns)
+            {
+                bool whole = GridStyle3.IsWhole(g, i);
+                int cap = whole ? GridStyle3.WholeNumberCap : GridStyle3.NumberCap;
+                long size = 2L * GridStyle3.FontSizeForCap(cap);
+                string text = GridStyle3.Number(g, i);
+                long x = 2L * (g.CentreX + offset);
+                items.Add(new TextRun(SceneLayer.MeasurementGrid, ink, x, 2L * (g.CentreY - halfY - outer - gap), size, text, TextAnchor.Centre, whole));
+                items.Add(new TextRun(SceneLayer.MeasurementGrid, ink, x, 2L * (g.CentreY + halfY + outer + gap + cap), size, text, TextAnchor.Centre, whole));
+            }
+
+            foreach (var (i, offset) in rows)
+            {
+                bool whole = GridStyle3.IsWhole(g, i);
+                int cap = whole ? GridStyle3.WholeNumberCap : GridStyle3.NumberCap;
+                long size = 2L * GridStyle3.FontSizeForCap(cap);
+                string text = GridStyle3.Number(g, i);
+                long baseline = (2L * (g.CentreY + offset)) + cap;
+                items.Add(new TextRun(SceneLayer.MeasurementGrid, ink, 2L * (g.CentreX - halfX - outer - gap), baseline, size, text, TextAnchor.Right, whole));
+                items.Add(new TextRun(SceneLayer.MeasurementGrid, ink, 2L * (g.CentreX + halfX + outer + gap), baseline, size, text, TextAnchor.Left, whole));
+            }
+
+            AddStyle3Legend(items, g, ink);
+            AddStyle3Bar(items, g, ink);
+        }
+
+        /// <summary>
+        /// The legend above the grid, between the two top codes, in bold large enough to read through the scope at the sheet's distance:
+        /// the unit and distance, a square drawn beside what it is, and a tick drawn beside what it is.
+        /// </summary>
+        private void AddStyle3Legend(List<SceneItem> items, MeasurementGrid g, Rgb ink)
+        {
+            var (heading, square, tick) = GridStyle3.Legend(g);
+            long centre = 2L * g.CentreX, width = 2L * GridStyle3.LegendWidth;
+            long Fit(string text, int cap, long room)
+            {
+                long size = 2L * GridStyle3.FontSizeForCap(cap);
+                long wide = HelveticaMetrics.TextWidth(text, size, bold: true);
+                return wide <= room ? size : size * room / wide;
+            }
+
+            long headingSize = Fit(heading, GridStyle3.LegendCap, width);
+            items.Add(new TextRun(SceneLayer.MeasurementGrid, ink, centre, 2L * GridStyle3.LegendBaselines[0], headingSize, heading, TextAnchor.Centre, true));
+
+            // A swatch the height of the capitals it stands beside, then the words.
+            void Swatched(string text, int cap, long baseline, Action<long, long> swatch)
+            {
+                long side = 2L * cap, space = side / 3;
+                long size = Fit(text, cap, width - side - space);
+                long total = side + space + HelveticaMetrics.TextWidth(text, size, bold: true);
+                long start = centre - (total / 2);
+                swatch(start, side);
+                items.Add(new TextRun(SceneLayer.MeasurementGrid, ink, start + side + space, baseline, size, text, TextAnchor.Left, true));
+            }
+
+            long squareBaseline = 2L * GridStyle3.LegendBaselines[1];
+            Swatched(square, GridStyle3.SquareCap, squareBaseline, (x, side) =>
+            {
+                long line = 2L * GridStyle3.FineStroke, y = squareBaseline - side;
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x, y, side, line));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x, squareBaseline - line, side, line));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x, y, line, side));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x + side - line, y, line, side));
+            });
+
+            long tickBaseline = 2L * GridStyle3.LegendBaselines[2];
+            Swatched(tick, GridStyle3.TickCap, tickBaseline, (x, side) =>
+            {
+                long middle = tickBaseline - (side / 2), line = GridStyle3.HeavyStroke;
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x, middle - (line / 2), side, line));
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, x + (side / 2) - GridStyle3.TickStroke, middle - (side / 2), 2L * GridStyle3.TickStroke, side));
+            });
+        }
+
+        /// <summary>The check bar below the numbers: 4 in or 10 cm, a tick at every inch or centimetre, and a line saying so.</summary>
+        private void AddStyle3Bar(List<SceneItem> items, MeasurementGrid g, Rgb ink)
+        {
+            var (length, ticks, caption) = GridStyle3.Bar(g);
+            long barTop = g.CentreY + g.HalfY + (GridStyle3.HeavyStroke / 2) + GridStyle3.BarBelowFrame;
+            long barLeft = g.CentreX - (length / 2);
+            items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, 2 * barLeft, 2 * barTop, 2L * length, 2L * GridStyle3.BarThickness));
+            for (int k = 0; k <= ticks; k++)
+            {
+                long x = (2 * barLeft) + (2L * length * k / ticks);
+                long tick = (k == 0 || k == ticks || (ticks == 10 && k == 5)) ? 2L * GridStyle2.RulerTick : GridStyle2.RulerTick;
+                items.Add(new RectFill(SceneLayer.MeasurementGrid, ink, Math.Clamp(x - GridStyle2.RulerTickWidth, 2 * barLeft, (2 * (barLeft + length)) - (2 * GridStyle2.RulerTickWidth)),
+                    (2 * barTop) - tick, 2L * GridStyle2.RulerTickWidth, tick));
+            }
+
+            long size = 2L * GridStyle3.FontSizeForCap(GridStyle3.BarCaptionCap);
+            long baseline = 2L * (barTop + GridStyle3.BarThickness + 20 + GridStyle3.BarCaptionCap);
+            items.Add(new TextRun(SceneLayer.MeasurementGrid, RoleColour(InkRole.Text), 2L * g.CentreX, baseline, size, caption, TextAnchor.Centre));
         }
 
         /// <summary>

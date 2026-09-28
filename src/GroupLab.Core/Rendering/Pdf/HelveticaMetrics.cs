@@ -35,14 +35,23 @@ public static class HelveticaMetrics
         return mapped is >= ' ' and <= '~' ? PrintableAsciiWidths[mapped - ' '] : FallbackWidth;
     }
 
+    /// <summary>
+    /// A character's advance in Helvetica-Bold, from the bold outlines' own advances (Liberation Sans Bold, metric-compatible with it),
+    /// entry 251.
+    /// </summary>
+    public static int BoldWidth(char c) => SheetGlyphs.BoldAdvance(ToWinAnsi(c)) ?? FallbackWidth;
+
+    /// <summary>The advance in the weight <paramref name="bold"/> names.</summary>
+    public static int Width(char c, bool bold) => bold ? BoldWidth(c) : Width(c);
+
     /// <summary>The advance of <paramref name="text"/> at <paramref name="fontSize"/>, rounded up to a whole unit.</summary>
-    public static long TextWidth(string text, long fontSize)
+    public static long TextWidth(string text, long fontSize, bool bold = false)
     {
         ArgumentNullException.ThrowIfNull(text);
         long units = 0;
         foreach (char c in text)
         {
-            units += Width(c);
+            units += Width(c, bold);
         }
 
         return ((units * fontSize) + 999) / 1000;

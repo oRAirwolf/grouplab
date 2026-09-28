@@ -492,18 +492,18 @@ public static class GltdValidator
                     }
                 }
 
-                bool zeroing = g.StyleOrDefault == GridStyle2.Style;
+                bool zeroing = g.HasField;
                 if (zeroing && (g.FieldX is not { } fx || g.FieldY is not { } fy || g.WholeEvery is not { } whole
                     || fx > g.Half || fy > g.Half || whole % g.MajorEvery != 0))
                 {
                     Error("validate.gridStyle", path,
-                        "Grid style 2 needs fieldX and fieldY no larger than half, and wholeEvery a multiple of majorEvery (section 3.13, question 59).", "37");
+                        $"Grid style {g.StyleOrDefault} needs fieldX and fieldY no larger than half, and wholeEvery a multiple of majorEvery (section 3.13, question 59, entry 251).", "37");
                     continue;
                 }
 
                 if (!zeroing && (g.FieldX is not null || g.FieldY is not null || g.WholeEvery is not null))
                 {
-                    Error("validate.gridStyle", path, "fieldX, fieldY and wholeEvery belong to grid style 2 (section 3.13, question 59).", "37");
+                    Error("validate.gridStyle", path, "fieldX, fieldY and wholeEvery belong to grid styles 2 and 3 (section 3.13, question 59, entry 251).", "37");
                 }
 
                 var field = Box2.Centred(g.CentreX, g.CentreY, 2L * g.HalfX, 2L * g.HalfY);

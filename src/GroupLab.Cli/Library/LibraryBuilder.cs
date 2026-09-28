@@ -229,6 +229,88 @@ public static class LibraryBuilder
         return Finish(name, name, definition);
     }
 
+    /// <summary>The C3 zeroing sheets' own date (entries 251 and 252).</summary>
+    internal const string ZeroC3Created = "2026-09-28";
+
+    /// <summary>
+    /// The C3 zeroing sheets, built beside the library's rather than in it: entry 251 asks for the detection check before they are released,
+    /// and it found that a hole in the diamond's black is refused as too small (question 64), so they wait for that answer.
+    /// </summary>
+    public static IReadOnlyList<BuiltInTarget> ZeroC3Sheets(string layoutsJsonPath)
+    {
+        using var doc = JsonDocument.Parse(File.ReadAllText(layoutsJsonPath));
+        return [.. doc.RootElement.GetProperty("zero").EnumerateArray().Select(ZeroC3)];
+    }
+
+    /// <summary>
+    /// The zeroing sheets as design C3, NOTES-FROM-PLANNING.md entries 251 and 252, chosen by Alan with Jylee and Unholy: grid style 3
+    /// (<see cref="GridStyle3"/>), squares of 0.2 mil or 0.5 MOA, a click's tick between the lines on the centre cross and the frame, the
+    /// numbers outside the grid, the legend above, and the C diamond as the aim, sized in angle: 0.2 mil or 1 MOA point to point. Each field is
+    /// as much as Letter holds with the numbers beside it, in whole squares: plus or minus 1.0 mil at 100 yd; 0.8 mil at 100 m, where 1.0 mil
+    /// is 20 cm and does not fit; 3 MOA across and 3.5 up and down at 100 yd; 3 MOA at 100 m. There is no room for a load block beside the
+    /// numbers without shrinking the grid, so the load goes on the session. Two codes at the top, the legend between them. The page and name
+    /// still come from <c>layouts.json</c>.
+    /// </summary>
+    private static BuiltInTarget ZeroC3(JsonElement z)
+    {
+        string name = z.GetProperty("name").GetString()!;
+        var (size, width, height) = Pages[z.GetProperty("page").GetString()!];
+        string unitName = z.GetProperty("unit").GetString()!;
+        var unit = unitName.Contains("MOA", StringComparison.Ordinal) ? GridUnit.Moa : GridUnit.Mil;
+        var distanceUnit = unitName.EndsWith("yd", StringComparison.Ordinal) ? DistanceUnit.Yards : DistanceUnit.Metres;
+        int cx = width / 2;
+
+        // The lattice: squares of one scope subtension, whose half reaches the field's larger side, so every line is rounded from a stored
+        // half (section 3.13); (squares across, squares up and down) each side of the aim.
+        int wholeEvery = unit == GridUnit.Mil ? 5 : 2;
+        var (across, upDown) = (unit, distanceUnit) switch
+        {
+            (GridUnit.Mil, DistanceUnit.Yards) => (5, 5),
+            (GridUnit.Mil, _) => (4, 4),
+            (_, DistanceUnit.Yards) => (6, 7),
+            _ => (6, 6),
+        };
+        double unitDmm = (distanceUnit == DistanceUnit.Yards ? 9144.0 : 10000.0) * (unit == GridUnit.Mil ? 0.001 : Math.Tan(Math.PI / 180.0 / 60.0)) * 100;
+        int divisions = Math.Max(across, upDown);
+        int half = (int)Math.Round(unitDmm * divisions / wholeEvery);
+        var offsets = MeasurementGridLines.Offsets(half, divisions);
+        int fieldX = offsets[across], fieldY = offsets[upDown];
+        int cy = GridStyle3.CentreY(fieldY);
+        var grid = new MeasurementGrid("zero", cx, cy, half, divisions, 1, unit, 100, distanceUnit,
+            "black", "black", "black", GridStyle3.FineStroke, GridStyle3.WholeStroke, GridStyle3.HeavyStroke, 1, "black",
+            GridStyle3.Style, fieldX, fieldY, wholeEvery);
+
+        // The aim: the C diamond, 0.2 mil or 1 MOA point to point (entry 252 section 1), its points on the centre lines.
+        int diamond = (int)Math.Round(unitDmm * (unit == GridUnit.Mil ? 0.2 : 1.0));
+        string unitLabel = unit == GridUnit.Moa ? "MOA" : "mil";
+        string description = string.Create(CultureInfo.InvariantCulture,
+            $"Design C3, chosen by Alan with Jylee and Unholy: a grid of {1.0 / wholeEvery:0.0##} {unitLabel} squares reaching " +
+            $"{across / (double)wholeEvery:0.0#} {unitLabel} each side of the aim across and {upDown / (double)wholeEvery:0.0#} up and down at 100 " +
+            $"{(distanceUnit == DistanceUnit.Yards ? "yards" : "meters")}, a tick of one click ({(unit == GridUnit.Mil ? "0.1 mil" : "1/4 MOA")}) between the lines " +
+            $"along the center cross and the frame, each line's distance from the aim written outside the grid, a legend above to read through the " +
+            $"scope, and the C diamond as the aim, {(unit == GridUnit.Mil ? "0.2 mil" : "1 MOA")} point to point. It has no load block: enter the load on the session in GroupLab.")
+            // NOTES-FROM-PLANNING.md entry 197 section 3: what a zeroing grid is for, and what it is not.
+            + " For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.";
+
+        var definition = new TargetDefinition(
+            1, 0, null, Names[name], description, "GroupLab built-in library", "CC0-1.0", ZeroC3Created, "dmm",
+            new Page(size, width, height, Orientation.Portrait),
+            Inks,
+            [new RingSet("aim", CDiscs(diamond))],
+            [new Bull(cx, cy, "aim", null, true, null)],
+            null,
+            new Fiducials("field-ring-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
+            Codes(width, height, 0, 2),
+            Print,
+            null,
+            null,
+            null,
+            [grid],
+            []);
+
+        return Finish(name, name, definition);
+    }
+
     internal static BuiltInTarget Finish(string name, string fileStem, TargetDefinition definition)
     {
         definition = FiducialDerivation.WithDerivedMarkers(definition);

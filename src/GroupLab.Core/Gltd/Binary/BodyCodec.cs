@@ -155,7 +155,7 @@ public static class BodyCodec
                 w.Add(m.InkPair);
                 w.Add(m.Style);
                 w.Add(m.LabelStep);
-                if (m.Style == WireCodes.ZeroingGridStyle)
+                if (WireCodes.CarriesField(m.Style))
                 {
                     U16(w, m.FieldX);
                     U16(w, m.FieldY);
@@ -351,7 +351,7 @@ public static class BodyCodec
                     r.U8("the grid divisions"), r.U8("the grid major step"), r.U8("the grid unit"),
                     r.U16("the grid distance"), r.U8("the grid distance unit"), r.U8("the grid inks"),
                     r.U8("the grid style"), r.U8("the grid label step"));
-                if (m.Style == WireCodes.ZeroingGridStyle)
+                if (WireCodes.CarriesField(m.Style))
                 {
                     m = m with { FieldX = r.U16("a grid field"), FieldY = r.U16("a grid field"), WholeEvery = r.U8("the grid whole-unit step") };
                     Require(m.FieldX > 0 && m.FieldY > 0 && m.FieldX <= m.Half && m.FieldY <= m.Half,
@@ -364,8 +364,8 @@ public static class BodyCodec
                 Require(m.DistanceUnit <= 1, $"Measurement grid {i} has unknown distance unit {m.DistanceUnit}.");
                 RequireInk((byte)(m.InkPair & 0xF), inkCount, allowPaper: true, $"measurement grid {i} minor lines");
                 RequireInk((byte)(m.InkPair >> 4), inkCount, allowPaper: true, $"measurement grid {i} major lines");
-                Require(m.Style is WireCodes.StandardGridStyle or WireCodes.ZeroingGridStyle,
-                    $"Measurement grid {i} has style {m.Style}; only styles 1 and 2 are defined (TARGET-SCHEMA.md section 3.13, questions 11 and 59).");
+                Require(m.Style is WireCodes.StandardGridStyle or WireCodes.ZeroingGridStyle or WireCodes.ScopeGridStyle,
+                    $"Measurement grid {i} has style {m.Style}; only styles 1, 2 and 3 are defined (TARGET-SCHEMA.md section 3.13, questions 11 and 59, entry 251).");
                 grids.Add(m);
             }
         }

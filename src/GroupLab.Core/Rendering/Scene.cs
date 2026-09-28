@@ -66,8 +66,11 @@ public sealed record DiscBand(
 /// <summary>An axis-aligned filled rectangle, used for marker and QR modules, rules and grid lines.</summary>
 public sealed record RectFill(SceneLayer Layer, Rgb Colour, long X, long Y, long Width, long Height) : SceneItem(Layer, Colour);
 
-/// <summary>A line of Helvetica text. <see cref="X"/> is the anchor point and <see cref="Baseline"/> the baseline.</summary>
-public sealed record TextRun(SceneLayer Layer, Rgb Colour, long X, long Baseline, long FontSize, string Text, TextAnchor Anchor)
+/// <summary>
+/// A line of Helvetica text. <see cref="X"/> is the anchor point and <see cref="Baseline"/> the baseline. <see cref="Bold"/> sets it in
+/// Helvetica-Bold, which the zeroing grids' legend and whole-unit numbers use (NOTES-FROM-PLANNING.md entry 251).
+/// </summary>
+public sealed record TextRun(SceneLayer Layer, Rgb Colour, long X, long Baseline, long FontSize, string Text, TextAnchor Anchor, bool Bold = false)
     : SceneItem(Layer, Colour);
 
 /// <summary>

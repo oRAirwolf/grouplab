@@ -24,6 +24,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 251: the zeroing grids are C3 (chosen with Jylee and Unholy); build the mil sheets now, the MOA ones after Alan sees them
+
+**Status: built 2026-09-28, release held on question 64.** Sections 1 and 2.1, 2.2 and 2.4 built (with entry 252's diamond sizes), and the detection check ran. **Not done: section 2.3,** replacing the library's mil sheets, freezing the current ones, and the credit on the Features page, the tour and a zeroing article (there is no zeroing grid article yet): the check found that a hole in the diamond's black is refused as too small, so the C3 sheets wait beside the library for question 64 and request 51's scan. **Section 2.2:** plus or minus 0.8 mil both ways at 100 m; 1.0 up and down does not fit with the numbers, the check bar and the identifier.
+
+**Decision (Alan, 2026-09-28):** the zeroing grid design is **C3** from the design page https://claude.ai/artifact/6BqMkT9Gy5iP1cWNtUCCtV
+(entry 250 section 3 and its updates). **Credit: chosen by Alan with Jylee and Unholy** (both may be named) in the release note, the
+Features page entry, the tour and the zeroing article. Entry 250 section 3's detection check still runs, now on C3 only, before release.
+
+## 1. What C3 is
+
+- **0.2 mil squares** (a mil reticle's usual subtension), heaviest lines at every whole mil, at the center cross and at the frame; fine lines
+  about 0.5 mm, whole-mil and center about 2 mm (the drawing uses 1.8 and 8 px at 96 px an inch; keep the proportions, and check the fine
+  lines against entry 196's touching-holes finding).
+- **0.1 mil tick marks (one click)** between the grid lines along the center cross and along all four frame edges, short enough not to
+  read as lines.
+- **Numbers outside the grid only**, on all four sides: each line's distance from the aim in mils (0, 0.2, 0.4 ... 1.0), whole mils larger
+  and bold. **Nothing written on the grid.**
+- **Aim:** Alan's C diamond (standing on a point, points on the center lines, white diamond center, small dot), as in the drawing.
+- **Legend above**, large enough to read at 100 yd through about 10x: "MIL · 100 YD" (or "MIL · 100 M"), a square swatch "= 0.2 MIL", and
+  a tick swatch "TICK = 0.1 MIL (1 CLICK)". The small print (the 4 in check bar, "print at 100 percent", the sheet ID) at the bottom.
+- Real markers and codes placed so they clear the numbers and the legend; the drawing's corner placeholders show the room available.
+- The load block: keep it if it fits under the grid without shrinking it; otherwise move it off this sheet and say so.
+
+## 2. Which sheets
+
+1. **GL-ZERO-MIL-100Y:** C3 as drawn, plus or minus 1.0 mil (7.2 in) square.
+2. **GL-ZERO-MIL-100M:** the same design at 100 m, where 1 mil is 10 cm. Plus or minus 1.0 mil is 20 cm (7.87 in), too wide for Letter
+   with numbers and markers, so use plus or minus 0.8 mil across (16 cm) and as much as fits up and down (plus or minus 1.0 mil if it does),
+   in whole 0.2 mil squares. Say what you chose.
+3. **Replace** both current mil sheets with these (new identifiers; freeze the current ones in `targets/frozen/` so printed sheets still
+   read), in the library, the phone and the zeroing article, with the Targets preview showing the words (entry 250 section 1).
+4. **The MOA sheets wait.** Alan asked to see the MOA version first; the planning session drew it on the same design page ("C3 in MOA"):
+   **0.5 MOA squares (two 1/4 MOA clicks), 1/4 MOA ticks (one click), heavier every 1 MOA, heaviest at the center and frame, plus or minus
+   3 MOA at 100 yd, numbers every 0.5 MOA (whole MOA bold).** Do not build it until Alan approves it; a later entry will say. Note for
+   that entry: 1/4 MOA ticks at 100 yd are 0.26 in apart, about 2.5 arcminutes at 10x, under the visibility rule, so they are a counting
+   aid at 15x and up; say whether 1/2 MOA ticks would be the better choice.
+
 ## 2026-09-28, entry 250: the Targets preview leaves out the words; Letter before A4; new zeroing grid concepts; a one-shot zero evaluated
 
 **Status: done 2026-09-28, section 3 superseded.** Sections 1, 2 and 4 done. **Section 3 not done as written:** entry 251 records the choice (C3, with Jylee and Unholy) before the six concepts were built, so there are no concept PDFs and no request to choose; the detection check runs on C3 under entry 251. **Section 5:** the preview and the Letter-first order were built after the second device sitting, so they are checked on the phone in the next one (request 50).

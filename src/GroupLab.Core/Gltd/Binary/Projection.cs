@@ -106,13 +106,18 @@ public static class Projection
         var grids = body.Grids?.Select((m, i) =>
         {
             string major = InkKey(m.InkPair >> 4);
-            bool zeroing = m.Style == WireCodes.ZeroingGridStyle;
+            bool zeroing = WireCodes.CarriesField(m.Style);
+            var (minor, majorStroke, axis) = m.Style switch
+            {
+                WireCodes.ScopeGridStyle => (GridStyle3.FineStroke, GridStyle3.WholeStroke, GridStyle3.HeavyStroke),
+                WireCodes.ZeroingGridStyle => (GridStyle2.FineStroke, GridStyle2.MajorStroke, GridStyle2.WholeStroke),
+                _ => (MinorStroke, MajorStroke, AxisStroke),
+            };
             return new MeasurementGrid($"grid{i}", m.CentreX * q, m.CentreY * q, m.Half * q, m.Divisions, m.MajorEvery,
                 WireCodes.GridUnitOf(m.Unit)!.Value, m.Distance, m.DistanceUnit == 1 ? DistanceUnit.Metres : DistanceUnit.Yards,
-                InkKey(m.InkPair & 0xF), major, major,
-                zeroing ? GridStyle2.FineStroke : MinorStroke, zeroing ? GridStyle2.MajorStroke : MajorStroke, zeroing ? GridStyle2.WholeStroke : AxisStroke,
+                InkKey(m.InkPair & 0xF), major, major, minor, majorStroke, axis,
                 m.LabelStep, major,
-                zeroing ? GridStyle2.Style : null, zeroing ? m.FieldX * q : null, zeroing ? m.FieldY * q : null, zeroing ? m.WholeEvery : null);
+                zeroing ? m.Style : null, zeroing ? m.FieldX * q : null, zeroing ? m.FieldY * q : null, zeroing ? m.WholeEvery : null);
         }).ToList();
 
         var definition = new TargetDefinition(1, 0, definitionId, definitionId, null, null, null, null, "dmm", page, inks, ringSets,
@@ -229,11 +234,11 @@ public static class Projection
             var grids = d.Grids?.Select((m, i) => new BodyMeasurementGrid(Q(m.CentreX), Q(m.CentreY), Q(m.Half),
                 (byte)m.Divisions, (byte)m.MajorEvery, WireCodes.GridUnitCode(m.Unit), (ushort)m.Distance,
                 m.DistanceUnit == DistanceUnit.Metres ? (byte)1 : (byte)0, gridInks[i],
-                m.StyleOrDefault == GridStyle2.Style ? WireCodes.ZeroingGridStyle : WireCodes.StandardGridStyle,
+                WireCodes.GridStyleCode(m.StyleOrDefault),
                 (byte)(m.LabelStep ?? 0),
-                m.StyleOrDefault == GridStyle2.Style ? Q(m.HalfX) : (ushort)0,
-                m.StyleOrDefault == GridStyle2.Style ? Q(m.HalfY) : (ushort)0,
-                (byte)(m.StyleOrDefault == GridStyle2.Style ? m.WholeEvery ?? 0 : 0))).ToList();
+                m.HasField ? Q(m.HalfX) : (ushort)0,
+                m.HasField ? Q(m.HalfY) : (ushort)0,
+                (byte)(m.HasField ? m.WholeEvery ?? 0 : 0))).ToList();
 
             var model = new BodyModel(bodyPage, inks, ringSets, layout?.Grid, layout?.Sighters ?? [], bulls,
                 fiducials, codes, dataBlock, tiling, grids);
@@ -510,7 +515,21 @@ public static class Projection
                     Refuse("encode.notCarried", $"{path}/labelInk", "Grid style 1 draws the labels in the major ink (question 11).");
                 }
 
-                if (g.StyleOrDefault == GridStyle2.Style)
+                if (g.StyleOrDefault == GridStyle3.Style)
+                {
+                    if (g.MinorStroke is not (null or GridStyle3.FineStroke) || g.MajorStroke is not (null or GridStyle3.WholeStroke)
+                        || g.AxisStroke is not (null or GridStyle3.HeavyStroke))
+                    {
+                        Refuse("encode.notCarried", path,
+                            $"Grid style 3 is strokes of {GridStyle3.FineStroke}, {GridStyle3.WholeStroke} and {GridStyle3.HeavyStroke} dmm (entry 251); other weights would not survive.");
+                    }
+
+                    if (g.FieldX is null || g.FieldY is null || g.WholeEvery is not > 0)
+                    {
+                        Refuse("encode.notCarried", path, "Grid style 3 needs fieldX, fieldY and wholeEvery (entry 251).");
+                    }
+                }
+                else if (g.StyleOrDefault == GridStyle2.Style)
                 {
                     if (g.MinorStroke is not (null or GridStyle2.FineStroke) || g.MajorStroke is not (null or GridStyle2.MajorStroke)
                         || g.AxisStroke is not (null or GridStyle2.WholeStroke))
@@ -526,7 +545,7 @@ public static class Projection
                 }
                 else if (g.Style is not (null or 1) || g.FieldX is not null || g.FieldY is not null || g.WholeEvery is not null)
                 {
-                    Refuse("encode.notCarried", path, "fieldX, fieldY and wholeEvery belong to grid style 2, and style 1 carries none of them.");
+                    Refuse("encode.notCarried", path, "fieldX, fieldY and wholeEvery belong to grid styles 2 and 3, and style 1 carries none of them.");
                 }
                 else if (g.MinorStroke is not (null or MinorStroke) || g.MajorStroke is not (null or MajorStroke) || g.AxisStroke is not (null or AxisStroke))
                 {
@@ -576,7 +595,7 @@ public static class Projection
             foreach (var g in d.Grids ?? [])
             {
                 lengths.AddRange([g.CentreX, g.CentreY, g.Half]);
-                if (g.StyleOrDefault == GridStyle2.Style)
+                if (g.HasField)
                 {
                     lengths.AddRange([g.HalfX, g.HalfY]);
                 }

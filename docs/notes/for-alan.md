@@ -2,7 +2,7 @@ DONE WITH THE PHONE AND TABLET (2026-09-28 04:35 UTC, 22:35 MDT on the 27th): yo
 
 # Requests for Alan
 
-**Open: 7.** Most urgent: none today; **50** is a device sitting later, announced by a READY line. **The devices are done with** (both sittings of 2026-09-28); put them away. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 8.** Most urgent: **51**, five shots into a black diamond and one scan, which decides when the C3 zeroing grids ship; **50** is a device sitting later, announced by a READY line. **The devices are done with** (both sittings of 2026-09-28); put them away. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.
@@ -47,6 +47,15 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 51. Five shots into a black diamond, and one scan (about 20 minutes at the range)
+
+**Opened 2026-09-28 (entries 251 and 252, question 64).** **Needed:** print `C:\Dev\grouplab-local\zero-concepts\C3-GL-ZERO-MOA-100Y.pdf`
+(or the MIL one) at 100 percent, fire five rounds at the diamond at any distance so most land **in its black**, and scan the sheet at 600
+dpi like the others; put the scan with the rest. **Why:** the C3 grids are built, but the check before release found that GroupLab refuses
+a hole in solid black as too small in its simulation; the same happens on the C and E bulls. Whether it happens with real holes is the one
+thing a simulation cannot say, and one scan settles it. The GroupLab application will not read this printout yet (the C3 sheets are held
+back), so I measure the scan here. **A good answer:** the scan, and which calibre it was.
 
 ## 50. One more short sitting with the Fold 7 and the tablet, later (nothing to do yet)
 

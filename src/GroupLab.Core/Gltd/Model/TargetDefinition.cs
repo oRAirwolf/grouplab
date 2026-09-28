@@ -167,9 +167,12 @@ public sealed record MeasurementGrid(
     /// <summary>1 unless the definition says otherwise.</summary>
     public int StyleOrDefault => Style ?? 1;
 
+    /// <summary>True for the styles with a drawn field of their own and a whole-unit step: 2 (question 59) and 3 (entry 251).</summary>
+    public bool HasField => StyleOrDefault is 2 or 3;
+
     /// <summary>Half the drawn field across: the lattice's own half for style 1.</summary>
-    public int HalfX => StyleOrDefault == 2 ? FieldX ?? Half : Half;
+    public int HalfX => HasField ? FieldX ?? Half : Half;
 
     /// <summary>Half the drawn field up and down.</summary>
-    public int HalfY => StyleOrDefault == 2 ? FieldY ?? Half : Half;
+    public int HalfY => HasField ? FieldY ?? Half : Half;
 }
