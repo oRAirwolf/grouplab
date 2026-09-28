@@ -246,7 +246,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; marking a target by hand is not on the phone yet. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, gives the dope and the chance of a hit, prints targets and keeps sessions; marking a target by hand is not on the phone yet. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
 
 ### Running the macOS build
 
@@ -313,6 +313,7 @@ New on the phone in the latest builds, as entries 258 and 259 bring it level wit
 - On the phone, Shots Needed to Zero has a page of its own.
 - On the phone, you tap the bulls you fired at on the sheet itself.
 - On the phone, Sessions can compare loads.
+- On the phone, Ballistics is a tab of its own: the dope, the trajectory and the chance of a hit with your own group.
 
 What does not exist yet: Garmin Xero import, velocity regression, synchronization, an iOS build, and hand marking on the phone.
 

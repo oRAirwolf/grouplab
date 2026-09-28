@@ -22,6 +22,9 @@ public sealed class Shell : UserControl
     {
         Capture,
         Sessions,
+
+        // Entry 259 screen 5: Ballistics is its own place, between Sessions and Targets.
+        Ballistics,
         Targets,
         Settings,
     }
@@ -104,6 +107,13 @@ public sealed class Shell : UserControl
         }
     }
 
+    /// <summary>Entry 259 screen 5: Ballistics with a result's group carried in, for its hit chance.</summary>
+    internal void ShowBallistics(GroupLab.Core.Marking.MarkingState state)
+    {
+        Show(Place.Ballistics);
+        page.Content = new BallisticsPage(state);
+    }
+
     /// <summary>Hides the bar along the bottom, or shows it again.</summary>
     internal void Immersive(bool on) => nav.IsVisible = !on;
 
@@ -122,6 +132,7 @@ public sealed class Shell : UserControl
             Place.Settings => new SettingsView(App.Settings),
             Place.Sessions => new SessionsPage(),
             Place.Targets => new TargetsPage(),
+            Place.Ballistics => new BallisticsPage(),
             _ => capture ??= new CapturePage(),
         };
     }
@@ -132,6 +143,7 @@ public sealed class Shell : UserControl
         Place.Capture => GroupLab.App.Theme.Icons.Aim,
         Place.Sessions => GroupLab.App.Theme.Icons.Records,
         Place.Targets => GroupLab.App.Theme.Icons.Print,
+        Place.Ballistics => GroupLab.App.Theme.Icons.Ballistics,
         _ => GroupLab.App.Theme.Icons.Settings,
     };
 

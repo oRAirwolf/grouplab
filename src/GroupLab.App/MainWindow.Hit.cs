@@ -419,24 +419,18 @@ public sealed partial class MainWindow
 
                 return (new HitPrecision(typed / ShownPerMrad, null, null), "Typed, so its own uncertainty is not known and is left out of the interval. It is the per axis standard deviation, sigma, and never a group size or a mean radius.", null);
             default:
-                var state = session.State;
-                var figures = GroupAnalysis.Analyse(state);
-                var group = figures.Excluded > 0 ? figures.WithoutExclusions : figures.AllShots;
-                if (state.ShotDistanceInches is not { } distance)
+                // Entry 258: the precision from the open group is the shared code the phone's Hit chance uses too.
+                var (group, refusal) = HitFromGroup.Of(session.State);
+                if (group is null)
                 {
-                    return (null, "The group open in the analysis has no shot distance; set it in the marking.", null);
+                    return (null, refusal!, null);
                 }
 
-                if (group?.Sigma is not { } sigma)
-                {
-                    return (null, "The analysis has no group with a sigma; mark at least " + GroupAnalysis.MinimumShotsForDispersion.ToString(CultureInfo.InvariantCulture) + " shots and accept them.", null);
-                }
-
-                double yards = distance / 36, mrad = HitPrecision.MradFromInches(sigma.Value, yards);
-                string interval = sigma.Lower is { } lo && sigma.Upper is { } hi ? $", {Angle(HitPrecision.MradFromInches(lo, yards))} to {Angle(HitPrecision.MradFromInches(hi, yards))}" : "";
-                return (new HitPrecision(mrad, 2.0 * (group.Shots - 1), yards),
-                    $"From the group open in the analysis: sigma {Angle(mrad)} per axis{interval}, {group.Shots} shots at {units.DistanceText(distance)}.",
-                    mrad / Math.Sqrt(group.Shots));
+                double mrad = group.Precision.SigmaMrad;
+                string interval = group.LowerMrad is { } lo && group.UpperMrad is { } hi ? $", {Angle(lo)} to {Angle(hi)}" : "";
+                return (group.Precision,
+                    $"From the group open in the analysis: sigma {Angle(mrad)} per axis{interval}, {group.Shots} shots at {units.DistanceText(group.DistanceInches)}.",
+                    group.ZeroMrad);
         }
     }
 

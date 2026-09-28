@@ -99,6 +99,9 @@ public sealed class ResultView : UserControl
             picture.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
         }
 
+        // Entry 259 screen 5: the hit chance with this group carried in.
+        actions.Children.Add(Screens.Row("Ballistics", "The dope, and the chance of a hit with this group", () => Shell.Current?.ShowBallistics(session.State)));
+
         // Entry 259 screen 2: which bulls were fired at, so each shot is measured from its own.
         if (session.State.Bulls.Count(b => b.Scoring) > 1)
         {
