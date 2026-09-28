@@ -205,7 +205,7 @@ public class Entry109Tests
             // Entry 119 section 4 adds "This build", which is where a tester reads the version and the commit for a bug report.
             // Entry 165 section 9 adds "Sending targets", its own section rather than a toggle among the others.
             // Entry 208 section 4 gathers sending targets, error reports and the survey under one section, "Sharing".
-            Assert.Equal(["Units", "Theme", "This build", "Updates", "Sharing", "Diagnostics", "Crash records"], settings);
+            Assert.Equal(["Units", "Printer scale", "Theme", "This build", "Updates", "Sharing", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }
