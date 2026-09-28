@@ -1,3 +1,5 @@
+READY FOR THE PHONE AND TABLET: nightly 115 carries look B and the new icon. On both the Fold 7 and the Tab S8 Ultra: unlock it, turn Wireless debugging off and on again, check Stay awake is on, and leave it on the charger, unlocked, on the same Wi-Fi as the PC. About fifteen minutes; this line will say when you can put them away.
+
 # Requests for Alan
 
 **Open: 8.** Most urgent: none today. **The devices: the first sitting is done (2026-09-28, 18:44 MDT); leave the Fold 7 and the tablet on, with Wireless debugging and Stay awake, for one more short sitting once look B is built, later today; this line will say when you can put them away.** **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
