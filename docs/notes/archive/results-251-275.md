@@ -111,3 +111,15 @@ the catalogue's order within a size; with the region's A4 the ISO sizes lead. Th
 
 **Section 3** is superseded by entry 251 (C3 chosen); **section 4** is `docs/notes/ONE-SHOT-ZERO.md` and its answer in `for-alan.md`.
 
+## Entry 258, continued: a picture shared in, shots out as CSV, and large-sheet advice on the phone
+
+GroupLab on the phone is now offered for an image sent or opened from another application (`MainActivity`'s two intent filters); the
+picture is copied into the cache and read as a chosen photograph with the caliber and distance as typed. A result has "Share the shots as
+CSV", the file the desktop's export writes (`ShotCsv.Write`), through the share sheet. The Targets screen gives a sheet too large for a
+flatbed the same photograph advice as the desktop, now from one place in Core (`PhotographLimit.ForSheet`). Marking by touch and importing
+CSV each need a screen no concept covers, and are in for-alan.md as DESIGN NEEDED.
+
+## Entry 262: torch strength
+
+The Fold 7 runs Android 16 and offers torch strength 1 to 5, default 1 (`docs/ANDROID.md` section 16). The tablet and the burst wait for a sitting.
+

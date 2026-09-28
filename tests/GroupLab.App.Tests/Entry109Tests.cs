@@ -345,6 +345,40 @@ public class Entry109Tests
                         window.BackToEditor();
                         window.Canvas.FitToView();
                         Save(window, $"marking-{name}-{size}");
+
+                        // Entry 274, answering question 66: a target GroupLab did not print, marked by hand as a person would: a plain sample
+                        // drawn here, with no markers or codes, its scale set from a ring's known width, its bulls and shots placed by hand.
+                        string other = PlainSample();
+                        try
+                        {
+                            window.OpenImage(other);
+                            window.Session.SetCalibre(Calibre.Of(0.308));
+                            window.Session.SetShotDistance(3600);
+                            window.CalibreAnswered();
+                            Dispatcher.UIThread.RunJobs();
+                            window.Session.SetScale(new LengthReference(new PointD(PlainCentres[0].X - PlainOuter, PlainCentres[0].Y), new PointD(PlainCentres[0].X + PlainOuter, PlainCentres[0].Y), 2.0 * PlainOuter / PlainDpi));
+                            foreach (var centre in PlainCentres)
+                            {
+                                window.Session.AddBull(centre);
+                            }
+
+                            foreach (var (x, y) in PlainHoles)
+                            {
+                                window.Session.AddShot(new PointD(x, y));
+                            }
+
+                            window.Canvas.FitToView();
+                            Save(window, $"marking-other-{name}-{size}");
+                        }
+                        finally
+                        {
+                            window.OpenImage(path);
+                            window.ApplyDetection(synthetic);
+                            window.Session.SetCalibre(Calibre.Of(0.308));
+                            window.Session.SetShotDistance(3600);
+                            window.Session.SetEquipment(rifle, null, "Test load");
+                            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(other)!);
+                        }
                         window.CalibreAnswered();
                         window.Analyse();
                         window.SetEveryWhy(false);
@@ -482,6 +516,55 @@ public class Entry109Tests
         }
 
         SheetPictures(outputs);
+    }
+
+    private const double PlainDpi = 150;
+
+    private const int PlainOuter = 150;
+
+    /// <summary>The plain sample's four aim points, in its pixels: two by two on a Letter page at 150 dpi.</summary>
+    private static readonly PointD[] PlainCentres = [new(425, 560), new(850, 560), new(425, 1110), new(850, 1110)];
+
+    /// <summary>Five shots on each bull, where the sample's holes are drawn.</summary>
+    private static readonly (int X, int Y)[] PlainHoles =
+    [
+        (440, 548), (409, 575), (431, 590), (452, 566), (417, 541),
+        (866, 552), (839, 571), (858, 584), (871, 565), (844, 543),
+        (433, 1098), (409, 1121), (447, 1127), (425, 1093), (452, 1112),
+        (861, 1101), (835, 1119), (872, 1124), (848, 1094), (866, 1115),
+    ];
+
+    /// <summary>
+    /// Entry 274, answering question 66: a sample target GroupLab draws itself, plainly not a GroupLab sheet: Letter at 150 dpi, four plain
+    /// ring bulls with a solid center, no markers and no codes, five holes in each, and the words "Sample target" along the bottom. It carries
+    /// nobody's design, so it may be shown anywhere.
+    /// </summary>
+    private static string PlainSample()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-plain-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string file = Path.Combine(folder, "sample-target.png");
+        using var image = new Mat((int)(11 * PlainDpi), (int)(8.5 * PlainDpi), MatType.CV_8UC3, new Scalar(238, 240, 242));
+        foreach (var c in PlainCentres)
+        {
+            var at = new OpenCvSharp.Point(c.X, c.Y);
+            foreach (int r in new[] { PlainOuter, 110, 70 })
+            {
+                Cv2.Circle(image, at, r, new Scalar(40, 40, 40), 3, LineTypes.AntiAlias);
+            }
+
+            Cv2.Circle(image, at, 34, new Scalar(30, 30, 30), -1, LineTypes.AntiAlias);
+        }
+
+        foreach (var (x, y) in PlainHoles)
+        {
+            Cv2.Circle(image, new OpenCvSharp.Point(x, y), 7, new Scalar(150, 150, 150), -1, LineTypes.AntiAlias);
+            Cv2.Circle(image, new OpenCvSharp.Point(x, y), 5, new Scalar(25, 25, 25), -1, LineTypes.AntiAlias);
+        }
+
+        Cv2.PutText(image, "Sample target", new OpenCvSharp.Point(500, 1560), HersheyFonts.HersheySimplex, 1.0, new Scalar(60, 60, 60), 2, LineTypes.AntiAlias);
+        Cv2.ImWrite(file, image);
+        return file;
     }
 
     /// <summary>

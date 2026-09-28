@@ -582,13 +582,14 @@ def page_home() -> str:
 
 {spotlight_section("New in GroupLab")}
 
-<section class="wrap section">
-<div class="stack narrow">
+<section class="wrap section two-col">
+<div class="stack">
 <p class="eyebrow">Your own targets</p>
 <h2>Any target you already shoot.</h2>
-<p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target.</p>
+<p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target. Marking by hand is on the computer; it is coming to the phone.</p>
 <p>Finding the holes by itself on any target is the goal, not yet a feature. On a GroupLab sheet it already does, which makes the sheet the fast lane, not a requirement.</p>
 </div>
+<figure class="fig">{screen("marking-other", "A plain sample target with four ring bulls, its scale drawn across one ring and each bull's shots marked by hand in its own color")}<figcaption><strong>A sample, marked by hand</strong><span>A plain target GroupLab drew for this picture, with no markers or codes: the scale set from a ring's known width, then the bulls and the shots placed by hand.</span></figcaption></figure>
 </section>
 
 <section class="wrap section two-col">
@@ -633,7 +634,11 @@ def page_home() -> str:
 <p>Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.</p>
 </div>
 <div class="grid-2">
-<figure class="fig">{screen("marking", "The marking screen with every detected hole numbered to its bull and one shot raised for review")}<figcaption><strong>Marking and review</strong><span>Every hole numbered to its bull. Anything the software is unsure of is raised for you to settle, with the keys to do it. <a href="/tour/marking/">See this screen explained</a></span></figcaption></figure>
+<div class="panel status">
+<h3>Marking and review</h3>
+<p>Every hole is numbered to its bull. Anything the software is unsure of is raised for you to settle, with the keys to do it, and every figure's reasoning is one click away. The tour shows every screen.</p>
+<a href="/tour/marking/">See the marking screen explained</a>
+</div>
 <div class="panel status">
 <h3>What it is today</h3>
 <p>Test builds for Windows, macOS, Linux and Android. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
@@ -1786,7 +1791,7 @@ def page_tour_index() -> str:
 <section class="wrap stack">
 <h1>A tour of GroupLab</h1>
 <p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
-<div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the <a href="/tour/marking/">marking screen</a>. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p></div>
+<div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample; marking by hand is coming to the phone. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
 {platform_switch()}
 {shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
 {shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}

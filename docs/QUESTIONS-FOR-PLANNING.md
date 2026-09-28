@@ -14,16 +14,16 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 8 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 10 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 64, 63, 62, 61, 60, 59, 58, 57.
+> 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
-**Status: open.**
+**Status: open, with Alan (entry 274):** planning has drawn three options on the canvas and recommended A, the gap as built; nothing waits on it.
 
 Entry 273 says the check page "is built from a definition in the library like any sheet, so it reads itself from a photo or scan." The
 format had no way to say "this is a check page" or to print its crosshairs, rulers, card outline and words, and it requires at least one
@@ -40,31 +40,6 @@ all: card and line are one dark band, and the card can be read as much as the li
 reads dark, very dark and light grey cards, shifted and turned, to within 0.15 percent across and 0.2 down. **The question:** is the gap
 acceptable as drawn, or should the concept change some other way (a thinner line, corner marks only)? A white card on white paper shows
 only its shadow and is not yet measured; the wizard will say a card with color works best.
-
-## 2026-09-28, question 66: which target the "Your own targets" picture may show
-
-**Status: open.**
-
-Entry 270 section 3 asks for "a picture of a commercial target marked by hand (the desktop's marking screen on a non-GroupLab target)"
-on the home page and the tour. The commercial scans in the repository are Alan's own and publishable under entry 171, but most of them
-(`scans/300_nm_hand_load.jpg`, `300_nm_factory.jpg` and the rest) are OnTarget sheets, and `docs/PHASE1-BRIEF.md` line 202 says: "Do not
-implement any OnTarget compatibility, read any OnTarget format, or reproduce any OnTarget target design." A screenshot of Alan's shot
-sheet on the marking screen is not a reproduction for printing, but it does put that design on the home page. **Options:** (a) use one
-of those scans anyway, cropped to a few bulls; (b) Alan photographs a plain store-bought target, or a sheet of paper with a hand-drawn
-aim point, shot and marked, which carries no one's design; (c) a generated "other target" drawn by GroupLab itself, like the synthetic
-sheets the tour already uses. **What I did:** the "Your own targets" section is on the home page and the tour index in words, with no
-picture yet; everything else in entry 270 is done. **I would choose (b)**, because it shows exactly what a new user would do, and (c)
-until it arrives.
-
-## 2026-09-28, question 65: entry 261 puts a study script in `tools/study/`, which CLAUDE.md keeps read only
-
-**Status: open.**
-
-Entry 261 says: "A throwaway script to take a measurement for the study is fine, as long as it is kept under `tools/study/` and not wired
-into the app." CLAUDE.md's standing constraints say: "`tools/` is read only." The two cannot both hold. **What I did:** the measurement
-ran as a scratch test in the Core test project, was deleted once its numbers were written into `docs/DETECTION-LEARNING-STUDY.md`, and
-its conditions are listed there so it can be rebuilt. **The question:** when the scoreboard is built (the study's recommendation), where
-should it live: `tools/study/` with CLAUDE.md amended, or `scripts/` and the test projects, as everything else Code writes?
 
 ## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow
 

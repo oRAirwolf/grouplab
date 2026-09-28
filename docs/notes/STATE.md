@@ -29,7 +29,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   Ballistics as a fifth tab, the set as a checklist and the scan pill are on the phone; `docs/PHONE-PARITY.md` holds the rest (marking
   by touch, CSV, large sheet advice, a picture shared in), and the site build fails on a feature with no row.
 - **Any target, and the sheet as the fast lane** (entry 270): the README, the home page, the tour index, Features and the user guide
-  lead with it. Its picture waits on question 66.
+  lead with it, with a sample target marked by hand as the picture (entry 274).
 - **The README is Alan's chosen design** (entry 266), its pictures made by `scripts/readme-images.py`; `scripts/consistency.py` audits
   the README, the site and the assets (entry 267), including retired wording in `docs/RETIRED-WORDING.json`.
 - **The donor pack** is one sheet of each style, built from the library (entry 264); /download/ lists Android (entry 265).
@@ -40,7 +40,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 1. The camera test with Alan, then the device sitting: the phone and tablet pictures (253 section 3), the inner Fold screen (257),
    torch strength in a session (262), entry 259's screens, and the printer check's card photo on the phone (273).
 2. Entry 258's remaining phone features, in its order.
-3. Entry 270's picture once question 66 is answered; the outline's gap once question 67 is.
+3. Entry 275's consistency audit, then the outline's gap once Alan answers question 67.
 
 ## Blocked, and on what
 
@@ -54,11 +54,9 @@ Open requests in `docs/notes/for-alan.md`: **7** (50 the device sitting with the
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`.
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 274.
 
-- **67** the printer check page as grid style 4, and its card outline 3 mm outside the card
-- **66** which target the "Your own targets" picture may show (most commercial scans here are OnTarget designs)
-- **65** entry 261's `tools/study/` against CLAUDE.md's read-only `tools/`
+- **67** the printer check page as grid style 4, and its card outline 3 mm outside the card (with Alan)
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have

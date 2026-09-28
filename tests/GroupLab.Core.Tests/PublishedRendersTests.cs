@@ -35,6 +35,8 @@ public partial class PublishedRendersTests
         "scan 3",
         "sheet made by the generator",
         "Alan's own scans, entry 171",
+        // Entry 274, answering question 66: a plain target the walk draws itself, with no markers or codes, marked by hand.
+        "Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274)",
     ];
 
     /// <summary>

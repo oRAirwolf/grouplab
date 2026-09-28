@@ -20,9 +20,21 @@ Questions going the other way belong in `docs/QUESTIONS-FOR-PLANNING.md`.
 Older entries, whole and unedited, one file per month. Nothing here is ever deleted; this log is the
 only written record of why much of this project is the way it is.
 
-- [`docs/notes/archive/notes-2026-09.md`](notes/archive/notes-2026-09.md), entries 1 to 256, 255 of them.
+- [`docs/notes/archive/notes-2026-09.md`](notes/archive/notes-2026-09.md), entries 1 to 258, 257 of them.
 
 ---
+
+## 2026-09-28, entry 274: answers to questions 65 and 66 (question 67 is with Alan)
+
+**Status: done 2026-09-28.** Question 65: entry 261's wording corrected in this log. Question 66: the home page's "Your own targets", the tour index and the marking stop show a sample target GroupLab draws itself, marked by hand, labelled as a sample (`marking-other`, made by the screenshot walk); the Features entry uses it. Question 67 stays with Alan; nothing waits on it.
+
+**Question 65, where the detection scoreboard lives.** `tools/` stays read only, and CLAUDE.md is not amended. When the scoreboard is built (the study's recommendation), it lives where everything else Code writes lives: the scoring code and its fixtures in the test projects, so it runs with every build like any other test, and any command-line runner or report script under `scripts/`. What you did for the study (a scratch test, deleted once its numbers were in `docs/DETECTION-LEARNING-STUDY.md`, with its conditions listed) was right. Correct entry 261's wording in the log so it no longer names `tools/study/`.
+
+**Question 66, the "Your own targets" picture.** Do not use the OnTarget scans on the home page or in the tour, not even cropped. Use (c) now: a generated "other target" drawn by GroupLab itself, plainly not a GroupLab sheet (no tags, no QR code, a simple aim point and plain rings or a square), shot and marked on the desktop's marking screen, with the scale set by hand, as a real user would. Label it as a sample. Option (b), Alan's own photograph of a plain store-bought target, replaces it later if he takes one; I am asking him in chat and will pass on his answer. Keep the screenshot job and the Features page in step (entry 267's rule).
+
+**Question 67, the card outline's 3 mm gap.** A visual change from an approved drawing, so it goes to Alan (standing rule). I have drawn three options on the printer check canvas (A the gap as built, B a hairline on the card's edge, C corner marks only) and recommended A. Keep what you built; I will send his answer as its own entry. Nothing waits on it.
+
+**DESIGN NEEDED in for-alan.md (entry 258's two phone screens).** Concepts are with Alan on the phone parity canvas, rows 8 and 9: marking a target GroupLab did not print (A, one step at a time: scale, bull, holes; B, one screen with Scale, Bull, Holes and Template tools), and importing shots from a CSV file (A, the file as a table with a role over each column; B, GroupLab guesses the columns, unit and origin and shows the group to check). In both marking ideas the holes are found automatically and the scale is set by hand. Do not build either screen until his choice arrives as its own entry. Change the DESIGN NEEDED line to say the concepts are with Alan.
 
 ## 2026-09-28, entry 273: Alan approved the printer check and unit-tap concepts. Build them as drawn
 
@@ -358,7 +370,7 @@ If the devices do not support strength levels, report that. Fall back to a torch
 
 **Do this after entry 260. Do not build the engine.** Alan: "Do you think we need to build an engine that can analyze photos and refine the detection and machine vision models without relying on claude itself to analyze? Is that possible? Dont start making this, we should research if this is worth the effort and if it is even possible."
 
-The output is one document, `docs/DETECTION-LEARNING-STUDY.md`, plus a short summary for Alan in `for-alan.md`. No product code. A throwaway script to take a measurement for the study is fine, as long as it is kept under `tools/study/` and not wired into the app.
+The output is one document, `docs/DETECTION-LEARNING-STUDY.md`, plus a short summary for Alan in `for-alan.md`. No product code. A throwaway script to take a measurement for the study is fine, as long as it is not wired into the app; it lives where everything else Code writes lives, a scratch test in the test projects deleted once its numbers are written down, and never under `tools/`, which stays read only (corrected by entry 274, answering question 65).
 
 Answer these, with measurements where the repository allows and plain estimates, marked as estimates, where it does not:
 
@@ -470,55 +482,4 @@ Alan chose **A for all six** and **approved the scan proposal**. Canvas: claude.
 **Order:** as in entry 258. The shared-code parts first, then these screens in the order 1 to 7. Each ships in its own nightly and is tested at the next sitting. Record the choices in `docs/PHONE-PARITY.md` and in `docs/ANDROID.md`'s design section. Anything these descriptions do not settle visually goes to `for-alan.md` under "DESIGN NEEDED:".
 
 **Camera test note (request 33, running now):** Alan is doing the camera test on his kitchen counter, which is an off-white surface. A white sheet on an off-white counter has little contrast at the sheet's edge. When reading the results, record the surface. If the words or the automatic shutter behaved differently because of it, say so and handle it: the detector should rely on the markers, not on the paper edge, and a capture tip may be needed. Add a low-contrast background case to the camera tests.
-
-## 2026-09-28, entry 258: the phone does everything the desktop does
-
-**Status: in part 2026-09-28.** The shared code, docs/PHONE-PARITY.md and its site check are in; items 1 to 7 reached the phone as entry 259's screens (f2b1b81 to ffc5c21), and real inches from a photograph came with entries 271 to 273. Since: a picture shared into GroupLab or opened with it from another app is read, the shots are shared as CSV through the share sheet, and a large sheet's photograph advice is on the Targets screen. Not done: marking targets GroupLab did not print by touch and importing CSV, both waiting for a concept (DESIGN NEEDED in for-alan.md); pasting a picture; tiled printing with cut lines; word explanations inside sentences; and the device test of each group.
-
-Alan: "The mobile application should be able to do everything that the desktop can except for features that require a desktop or are completely unsuited for a mobile device."
-
-He named these first, in this order:
-
-1. **Saying which bulls you aimed at** (by rows, columns or a list), so each shot is measured from its own bull.
-2. **Shots Needed to Zero** (suggested by Jylee). There is a real screen from the result, not only the GroupLab Dev timing test. Use the same core code, the same seed and trials display, and Calculate again. Keep to the entry 252 section 4 budget: about 2 s on a 4 GB phone, with progress and Cancel.
-3. **Full figures.** Everything the desktop analysis shows: CEP 50, 90, 95 and 99 circles on the plot with their ranges, a CEP for any percent under Advanced, sigma, the zero correction in clicks, and every other figure the desktop lists. Every figure can explain itself in plain sentences, including what a small shot count does to it. Keep look B's tiles for the headline figures and put the rest in a section the person can open.
-4. **Compare loads,** with each load's range drawn, from the phone's saved sessions.
-5. **Ballistics and hit probability,** the same solver and the Hit probability view (entry 247).
-6. **Pooling the sheets of a set** from Made for your optic into one group, read in any order, and saying which sheets are still missing. On the phone this should work sheet by sheet at the range: photograph one, see the pooled group so far and what is still missing, then photograph the next.
-7. **Real inches from a scan,** when the picture opened on the phone is a scan (from the phone's files, Google Drive and so on). Also use any printed-size information a phone photo gives, where the markers allow it.
-
-**Then everything else, under the same rule.** Everything else the desktop does comes to the phone, except what needs a desktop or clearly does not suit a phone. That includes:
-
-- Marking targets GroupLab did not print: bulls placed by touch, a scale drawn at each bull, and templates.
-- Shots out and in as CSV, through Android's share sheet and file picker.
-- Large sheet advice and tiled printing with cut lines, through Android's print dialog.
-- Word explanations by tap instead of hover.
-- Opening a picture shared into GroupLab from another app, and pasting one. This is the phone's version of drag and drop.
-
-Leave out anything that truly depends on a desktop (for example, building for the Mac, or the desktop's own updater when Google Play updates the app). List each item left out, with a one-line reason, in the new document below.
-
-**How:**
-
-- **Shared code.** Move what the desktop screens compute into shared code wherever it is not already there, so the phone and the desktop cannot give different numbers. The same tests cover both.
-- **Design.** Build to look B (entry 246) and the desktop's design language: sections and cards, and the one main action in amber. Lay things out for touch, not as shrunken desktop screens. **Standing rule from Alan (2026-09-28):** any design decision that can be settled by seeing it (layout, interface, how a screen is organized, what goes where) is not made by Code. Planning makes concepts in Claude Design and Alan picks one. For this entry, planning is making phone concepts now for all seven features. Build the shared-code and engine parts first, while the concepts are pending. Build each screen once its concept is chosen; the choice will arrive as a new inbox entry. From now on, whenever Code meets a visual decision that no chosen concept covers, add a line to `for-alan.md` under a heading "DESIGN NEEDED:" that names the screen and the question. Keep working on other things meanwhile. Planning turns each one into concepts.
-- **Big screens.** Use the side-by-side layout on the tablet and the unfolded Fold 7 where it helps, and test the unfolded Fold (entry 257).
-- **Parity document and check.** Add `docs/PHONE-PARITY.md`. It lists every feature in `website/features.json` as on the phone, coming (with its stage), or left out (with the reason). Make the site build fail when a feature has no Android status. From now on, a new desktop feature is not finished until it is either on the phone or listed as coming or left out.
-- **Features page.** As each feature reaches the phone, add Android to its platforms in `features.json` and give it a mobile picture of that feature itself (entry 256). Update the platform statements in README, `PLATFORM-SUPPORT.md` and `ANDROID.md` ("marking a target by hand is not on the phone yet" and similar lines).
-- **Order and size.** Work in the order above. Ship each feature in its own nightly when it is ready rather than holding them all. After each group, test on the Fold 7 and the Tab S8 Ultra in the usual sitting, with the READY line.
-- **Performance.** Measure anything heavy against the 4 GB phone budget, and scale memory to the device (entry 240).
-
-Tell Alan in `for-alan.md` the planned order with rough sizes, then report as each feature lands.
-
-## 2026-09-28, entry 257: the Fold 7 can be opened for the big-screen tests
-
-**Status: standing.** Nobody could open the Fold 7 overnight, so no big-screen test ran. Not done: section 2's inner-screen pictures and fold-unfold check, and section 3's record, at the next sitting with the Fold open.
-
-Alan: "I can open the fold if it wants to use the larger screen for any tests"
-
-1. **During this sitting (request 50, nightly 118):** if any test, screenshot or check would be better on the Fold 7's inner (unfolded) screen, ask for it. Put a plain step at the top of `for-alan.md` under the READY line, for example "Open the Fold 7 now and leave it open, unlocked, on the charger." Put the matching "you can close the Fold 7" step there when it is no longer needed. Group the unfolded work together so Alan opens and closes it once, not over and over.
-2. **Worth doing unfolded:** the phone screenshots for entry 253 (inner screen in portrait and landscape, both themes, beside the outer screen ones), the design B layout at the inner screen's width, the Targets preview words, the Ballistics and Hit probability views, and the fold and unfold change itself (the app keeps its place and state when the Fold is opened or closed mid-task). Only do the camera test (request 33) unfolded if it adds something. The folded Fold 7 stays the main phone case.
-3. **Features page:** where the Desktop/Mobile toggle (entry 249) shows phone pictures, the unfolded Fold 7 can supply the large-phone pictures. Record which screen each picture came from in `docs/figures/SCREENSHOTS.md`.
-4. **Later sittings:** the unfolded Fold 7 is a standing option. Ask for it the same way whenever a test needs the larger screen.
-
-The same device rules apply as before. Only GroupLab and GroupLab Dev are touched. Lock-screen notifications are never read. Every setting changed is put back.
 

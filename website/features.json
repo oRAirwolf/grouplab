@@ -54,8 +54,8 @@
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Any target you already shoot",
-      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand; place several bulls and keep the layout as a template for the next sheet. Finding the holes by itself on any target is the goal, not yet a feature.",
-      "shot": "marking",
+      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand on the computer; place several bulls and keep the layout as a template for the next sheet. Finding the holes by itself on any target is the goal, not yet a feature.",
+      "shot": "marking-other",
       "platforms": [
         "Windows",
         "macOS",

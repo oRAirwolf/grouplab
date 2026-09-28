@@ -79,6 +79,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `marking-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `marking-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `marking-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `marking-other-dark-1280x720.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-dark-1400x900.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-dark-1920x1080.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-dark-2560x1440.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-light-1280x720.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-light-1400x900.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-light-1920x1080.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `marking-other-light-2560x1440.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
 | `sessions-dark-1280x720.png` | Alan's own scans, entry 171 |
 | `sessions-dark-1400x900.png` | Alan's own scans, entry 171 |
 | `sessions-dark-1920x1080.png` | Entry109Tests synthetic sheet |

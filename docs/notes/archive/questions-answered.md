@@ -5,6 +5,31 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-28, question 66: which target the "Your own targets" picture may show
+
+**Status: answered 2026-09-28 by entry 274:** option (c) now, a sample target GroupLab draws itself, marked by hand on the marking screen; Alan's photograph of a store-bought target may replace it.
+
+Entry 270 section 3 asks for "a picture of a commercial target marked by hand (the desktop's marking screen on a non-GroupLab target)"
+on the home page and the tour. The commercial scans in the repository are Alan's own and publishable under entry 171, but most of them
+(`scans/300_nm_hand_load.jpg`, `300_nm_factory.jpg` and the rest) are OnTarget sheets, and `docs/PHASE1-BRIEF.md` line 202 says: "Do not
+implement any OnTarget compatibility, read any OnTarget format, or reproduce any OnTarget target design." A screenshot of Alan's shot
+sheet on the marking screen is not a reproduction for printing, but it does put that design on the home page. **Options:** (a) use one
+of those scans anyway, cropped to a few bulls; (b) Alan photographs a plain store-bought target, or a sheet of paper with a hand-drawn
+aim point, shot and marked, which carries no one's design; (c) a generated "other target" drawn by GroupLab itself, like the synthetic
+sheets the tour already uses. **What I did:** the "Your own targets" section is on the home page and the tour index in words, with no
+picture yet; everything else in entry 270 is done. **I would choose (b)**, because it shows exactly what a new user would do, and (c)
+until it arrives.
+
+## 2026-09-28, question 65: entry 261 puts a study script in `tools/study/`, which CLAUDE.md keeps read only
+
+**Status: answered 2026-09-28 by entry 274:** the scoreboard lives in the test projects and `scripts/`; `tools/` stays read only, and entry 261's wording is corrected.
+
+Entry 261 says: "A throwaway script to take a measurement for the study is fine, as long as it is kept under `tools/study/` and not wired
+into the app." CLAUDE.md's standing constraints say: "`tools/` is read only." The two cannot both hold. **What I did:** the measurement
+ran as a scratch test in the Core test project, was deleted once its numbers were written into `docs/DETECTION-LEARNING-STUDY.md`, and
+its conditions are listed there so it can be rebuilt. **The question:** when the scoreboard is built (the study's recommendation), where
+should it live: `tools/study/` with CLAUDE.md amended, or `scripts/` and the test projects, as everything else Code writes?
+
 ## 2026-09-28, question 64: a hole in solid black is refused as too small, so the C3 grids are built and held
 
 Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 254: (a), measured on the aim point card's real holes; the refusal was the synthetic model's, and C3 is released. Was: open.
