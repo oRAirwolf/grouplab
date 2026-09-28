@@ -26,10 +26,10 @@
     "GL-RF25-A4.gltd.json": "4ef6ca28d45422913dd2ca1258965075b62d1838c21235284bb640d492fdaa9b",
     "GL-RF25-LTR.gltd.json": "b0e3135241ff6da8ecf3dd6a2df81888c72f5c8107cf121525a43d888d11223a",
     "GL-RF36-LTR.gltd.json": "62d298dbff513348b92cff6dfaf8ed88d21e5deccc27cba6788578c95c0befdb",
-    "GL-ZERO-MIL-100M.gltd.json": "c76df67d9319e3cb834cb5a498eba3b87092d12a217478ed2fbd3858a613f2c4",
-    "GL-ZERO-MIL-100Y.gltd.json": "d7c157670d16c395bdb5edaabf8adb86273bd822ef9dbc47852f18374d4f65b4",
-    "GL-ZERO-MOA-100M.gltd.json": "b6cbebfae0aabd365cbb2b0c0fe34e1f085063a4b2d37cedfd04eba95fa56710",
-    "GL-ZERO-MOA-100Y.gltd.json": "b4bb02fa026ceb96daeba0bcbc6952fc6910c66cf1b8e5c19e75f095bc456275",
+    "GL-ZERO-MIL-100M.gltd.json": "d13f0e8693b7895d6d5ac47ec79c6ab177910a60b897d065ceef8139e17d8146",
+    "GL-ZERO-MIL-100Y.gltd.json": "4c7d786daa19866819b5b9540cd819da1e022a68aa61a8495c855dd1708b5967",
+    "GL-ZERO-MOA-100M.gltd.json": "2724963f711eed48c7b598a8da2a39ff6be77782b21bc27e1ca2af34aba41ded",
+    "GL-ZERO-MOA-100Y.gltd.json": "c94ccead265accd68be37b00b791e32a3384223b198b74afd5053bb7768f1144",
     "frozen/large-format-1/GL-025B-Y7FF-VX15-JKXE.gltd.json": "ba1c4366f6e89b4453a81c5a7ee3545091401ae84bd811d051f1c6bc39384274",
     "frozen/large-format-1/GL-JNR9-FXK1-P17X-JQF1.gltd.json": "c6c977aa25f49fa9a64ae71c95a6a376f0f2f570847cd44d5953fbedffbaffb3",
     "frozen/large-format-1/GL-NG21-1WWR-55A5-T7Q0.gltd.json": "e158c2ac2700ad676dde269b70cbc6ca1111262129566bc2cd90db1c81453ae3",
@@ -39,7 +39,11 @@
     "frozen/zero-grid-1/GL-0DEQ-H5XA-X9TA-EJ6H.gltd.json": "0b92d7b651064b1856b0523df099e6e66cb01bc5b79d95597de2df0cec51165d",
     "frozen/zero-grid-1/GL-4ZY5-DBSH-MRJK-W4R3.gltd.json": "08333df08800a26f75005f6d59d44a4f58cf49d008e1df4aa35aa3967d01b812",
     "frozen/zero-grid-1/GL-VFQD-KYZR-7BE2-ZH4K.gltd.json": "d5d1d9ff2085ec928ced5b747bad7c024c2b5c32132a2249b5f50f645d297098",
-    "frozen/zero-grid-1/GL-XD6D-R325-J52P-3NH7.gltd.json": "651211c902e6322db48317325b4705271a7e1c2f67f02e9c45fb1deb7cadc875"
+    "frozen/zero-grid-1/GL-XD6D-R325-J52P-3NH7.gltd.json": "651211c902e6322db48317325b4705271a7e1c2f67f02e9c45fb1deb7cadc875",
+    "frozen/zero-grid-2/GL-6DX8-6NNC-QF2S-BAWN.gltd.json": "b4bb02fa026ceb96daeba0bcbc6952fc6910c66cf1b8e5c19e75f095bc456275",
+    "frozen/zero-grid-2/GL-DR6D-HR6N-4CP1-DY8V.gltd.json": "b6cbebfae0aabd365cbb2b0c0fe34e1f085063a4b2d37cedfd04eba95fa56710",
+    "frozen/zero-grid-2/GL-JZ3H-FDJH-NXQF-BN49.gltd.json": "d7c157670d16c395bdb5edaabf8adb86273bd822ef9dbc47852f18374d4f65b4",
+    "frozen/zero-grid-2/GL-ZGFN-ZEMF-PQVV-ANAQ.gltd.json": "c76df67d9319e3cb834cb5a498eba3b87092d12a217478ed2fbd3858a613f2c4"
   },
   "rows": [
     {

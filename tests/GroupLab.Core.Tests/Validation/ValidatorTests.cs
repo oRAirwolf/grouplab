@@ -275,8 +275,10 @@ public class ValidatorTests
     [Fact]
     public void Test26GridFieldWithoutRoomForMarkersIsAnError()
     {
-        // Entry 226: the zeroing grids are style 2, whose drawn field is what needs the room.
+        // Entries 226 and 251: the zeroing grids' drawn field is what needs the room; a C3 grid's lattice widened with it.
         var doc = BuiltIn("GL-ZERO-MIL-100M");
+        doc["grids"]![0]!["half"] = 1000;
+        doc["grids"]![0]!["divisions"] = 5;
         doc["grids"]![0]!["fieldX"] = 1000;
         doc["grids"]![0]!["fieldY"] = 1000;
 

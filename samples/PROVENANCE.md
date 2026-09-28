@@ -86,6 +86,11 @@ whole and unchanged in `C:\Dev\grouplab-originals\range-2026-09-26\`, outside th
 **Backer:** OSB, for all three load sheets (entry 226 section 2.3), not the corrugated plastic of earlier range days. None was
 photographed on the backer.
 
+**A hole cut from the aim point card** (entry 254, which names the file): `tests/GroupLab.Core.Tests/Fixtures/real-hole-in-black-2026-09-26.png`,
+a 256 by 256 square at 600 dpi around the shot through the black of the card's C diamond, just above its white centre, with every pixel
+that is not the hole set to 0, so only the hole's own greys are kept (its bright core 0.194 in across). Cut from `aim test09262026.png`
+above; Alan's own, entry 171. It is set into rendered sheets by `ZeroGridC3Tests.ARealHoleInSolidBlackIsFound`.
+
 **Published so far:** the research article "Did the suppressor move the point of impact?" publishes the offsets GroupLab measured on the
 two 6 ARC sheets and a chart drawn from them. The 6.5 Creedmoor scan is on the `test-data` release as a test fixture (entry 229 section 4),
 `load-sheet-6.5-wrong-bull-2026-09-26.png`, 14,797,501 bytes, SHA-256 `1f43bab71b79c3005e4213a1e4b9b9eb1f015459a982fdbf4a2d2878fdc985fe`,

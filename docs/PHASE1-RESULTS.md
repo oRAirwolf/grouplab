@@ -59,6 +59,24 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 254: question 64 answered from real holes, and C3 released
+
+**The real holes.** `aim test09262026.png` (600 dpi, the aim point card of 2026-09-26), each hole's bright blob on the lid of the
+scan: C's shot through the black diamond 0.194 in across (box 0.217 by 0.228 in); C's second mark 0.091 in; I's hole 0.345 in, several
+shots through one hole and not used; A and E on white paper 0.139 to 0.347 in, the same-sheet control. The synthetic hole on black
+showed 0.05 to 0.085 in, which is why it was refused; a real one's core is as large as on white paper.
+
+**The check** (`ZeroGridC3Tests.ARealHoleInSolidBlackIsFound`, seven cases): C's hole, cut from the scan as a 256 pixel square
+(`Fixtures/real-hole-in-black-2026-09-26.png`, consent in `samples/PROVENANCE.md`), set into GroupLab's own render of each C3
+diamond and the E and C bulls, at 300 dpi, with and without a calibre: found every time, more than half its area on the black.
+`TheSyntheticHoleOnBlackIsSmallerThanARealOne` replaces the old refusal test and holds the difference. **The on-ink floor is unchanged**;
+the white print specks in the card's black measure 0.030 to 0.036 in, below every floor.
+
+**Released.** `GL-ZERO-MOA-100Y`, `-MIL-100Y`, `-MOA-100M` and `-MIL-100M` are C3 (grid style 3) in the library, with new identifiers;
+the style 2 sheets are frozen in `targets/frozen/zero-grid-2` and still read. `TARGET-LIBRARY.md` section 5 is rewritten; the held
+builder and the `library held` command are gone. Tests that held a ring aim's touching pairs read the frozen style 2 sheet. Request 51
+is answered unasked; E and C needed no warning.
+
 ## Entry 252: Shots Needed to Zero; C3's diamond in angle and the MOA grids
 
 **Sections 1 and 2** are in the C3 sheets of entry 251: the diamond 0.2 mil or 1 MOA point to point, the MOA grids at 0.5 MOA squares

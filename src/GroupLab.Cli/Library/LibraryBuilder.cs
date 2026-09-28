@@ -162,85 +162,8 @@ public static class LibraryBuilder
         return Finish(name, preset is null ? layoutName : $"{layoutName}.{preset.Value.Cols}x{preset.Value.Rows}", definition);
     }
 
-    /// <summary>The zeroing sheets' own date, since entry 226 redrew them.</summary>
-    internal const string ZeroCreated = "2026-09-27";
-
-    /// <summary>Where every zeroing grid sits and how far its drawn field reaches, dmm (entry 226 section 1, question 59).</summary>
-    internal const int ZeroCentreY = 1412;
-
-    internal const int ZeroField = 914;
-
-    /// <summary>
-    /// The zeroing sheets as redrawn by NOTES-FROM-PLANNING.md entries 226 and 227 section 1: grid style 2 (<see cref="GridStyle2"/>),
-    /// a field of 914 dmm each side of the aiming point, which is exactly plus or minus 1.0 mil at 100 yd, fine squares of 0.25 mil or
-    /// 0.5 MOA, the whole unit heaviest, every heavier line labeled, and the scale statement with a 4 in or 10 cm ruler above the grid.
-    /// Two codes at the top rather than four in the corners leave the page's height to the grid. The page and name still come from
-    /// <c>layouts.json</c>; the grid no longer does, and the sheets printed from the old one are frozen in <c>targets/frozen/zero-grid-1</c>.
-    /// </summary>
-    private static BuiltInTarget Zero(JsonElement z)
-    {
-        string name = z.GetProperty("name").GetString()!;
-        var (size, width, height) = Pages[z.GetProperty("page").GetString()!];
-        int dataBlockHeight = z.GetProperty("data_block").GetInt32();
-        string unitName = z.GetProperty("unit").GetString()!;
-        var unit = unitName.Contains("MOA", StringComparison.Ordinal) ? GridUnit.Moa : GridUnit.Mil;
-        var distanceUnit = unitName.EndsWith("yd", StringComparison.Ordinal) ? DistanceUnit.Yards : DistanceUnit.Metres;
-        int cx = width / 2;
-
-        // The lattice: a whole number of fine squares whose half reaches at least the field, so every line is rounded from a stored
-        // half (section 3.13) and the field cuts it. Mil: 0.25 mil squares over 1.25 mil, whose half is a whole number of dmm at 100 yd
-        // (1143.0), so no line is more than half a dmm from its angle; over 1 mil, 914.4 rounds to 914 and the first line misses by 0.6.
-        // MOA: 0.5 MOA squares over 3.5 MOA.
-        var (halfUnits, divisions, majorEvery, wholeEvery) = unit == GridUnit.Mil ? (1.25, 5, 2, 4) : (3.5, 7, 2, 2);
-        double unitDmm = (distanceUnit == DistanceUnit.Yards ? 9144.0 : 10000.0) * (unit == GridUnit.Mil ? 0.001 : Math.Tan(Math.PI / 180.0 / 60.0)) * 100;
-        int half = (int)Math.Round(unitDmm * halfUnits);
-        int field = Math.Min(half, ZeroField);
-        var grid = new MeasurementGrid("zero", cx, ZeroCentreY, half, divisions, majorEvery, unit, 100, distanceUnit,
-            "black", "black", "black", GridStyle2.FineStroke, GridStyle2.MajorStroke, GridStyle2.WholeStroke, majorEvery, "black",
-            GridStyle2.Style, field, field, wholeEvery);
-
-        string unitLabel = unit == GridUnit.Moa ? "MOA" : "mil";
-        double reach = field / unitDmm;
-        string description = string.Create(CultureInfo.InvariantCulture,
-            $"One aiming ring on a grid of {1.0 / wholeEvery:0.##} {unitLabel} squares reaching {reach:0.0#} {unitLabel} each side of the aim " +
-            $"at 100 {(distanceUnit == DistanceUnit.Yards ? "yards" : "meters")}, heavier every {(double)majorEvery / wholeEvery:0.##} {unitLabel} and " +
-            $"heaviest every {unitLabel}, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, " +
-            $"and a six-field load block.")
-            // NOTES-FROM-PLANNING.md entry 197 section 3: what a zeroing grid is for, and what it is not.
-            + " For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.";
-
-        var definition = new TargetDefinition(
-            1, 0, null, Names[name], description, "GroupLab built-in library", "CC0-1.0", ZeroCreated, "dmm",
-            new Page(size, width, height, Orientation.Portrait),
-            Inks,
-            [new RingSet("aim", [new Disc(200, "black"), new Disc(150, "paper")])],
-            [new Bull(cx, ZeroCentreY, "aim", null, true, null)],
-            null,
-            new Fiducials("field-ring-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
-            Codes(width, height, dataBlockHeight, 2),
-            Print,
-            new DataBlock(Corners1.SafeMargin, height - Corners1.SafeMargin - dataBlockHeight, width - (2 * Corners1.SafeMargin),
-                dataBlockHeight, DataBlockLayout.Fields3x2, FieldSet.Standard6, 210, "black", "text", 2, null),
-            null,
-            null,
-            [grid],
-            []);
-
-        return Finish(name, name, definition);
-    }
-
     /// <summary>The C3 zeroing sheets' own date (entries 251 and 252).</summary>
-    internal const string ZeroC3Created = "2026-09-28";
-
-    /// <summary>
-    /// The C3 zeroing sheets, built beside the library's rather than in it: entry 251 asks for the detection check before they are released,
-    /// and it found that a hole in the diamond's black is refused as too small (question 64), so they wait for that answer.
-    /// </summary>
-    public static IReadOnlyList<BuiltInTarget> ZeroC3Sheets(string layoutsJsonPath)
-    {
-        using var doc = JsonDocument.Parse(File.ReadAllText(layoutsJsonPath));
-        return [.. doc.RootElement.GetProperty("zero").EnumerateArray().Select(ZeroC3)];
-    }
+    internal const string ZeroCreated = "2026-09-28";
 
     /// <summary>
     /// The zeroing sheets as design C3, NOTES-FROM-PLANNING.md entries 251 and 252, chosen by Alan with Jylee and Unholy: grid style 3
@@ -249,9 +172,9 @@ public static class LibraryBuilder
     /// as much as Letter holds with the numbers beside it, in whole squares: plus or minus 1.0 mil at 100 yd; 0.8 mil at 100 m, where 1.0 mil
     /// is 20 cm and does not fit; 3 MOA across and 3.5 up and down at 100 yd; 3 MOA at 100 m. There is no room for a load block beside the
     /// numbers without shrinking the grid, so the load goes on the session. Two codes at the top, the legend between them. The page and name
-    /// still come from <c>layouts.json</c>.
+    /// still come from <c>layouts.json</c>; the sheets printed from the two earlier grids are frozen in <c>targets/frozen/</c>.
     /// </summary>
-    private static BuiltInTarget ZeroC3(JsonElement z)
+    private static BuiltInTarget Zero(JsonElement z)
     {
         string name = z.GetProperty("name").GetString()!;
         var (size, width, height) = Pages[z.GetProperty("page").GetString()!];
@@ -271,8 +194,12 @@ public static class LibraryBuilder
             _ => (6, 6),
         };
         double unitDmm = (distanceUnit == DistanceUnit.Yards ? 9144.0 : 10000.0) * (unit == GridUnit.Mil ? 0.001 : Math.Tan(Math.PI / 180.0 / 60.0)) * 100;
-        int divisions = Math.Max(across, upDown);
-        int half = (int)Math.Round(unitDmm * divisions / wholeEvery);
+        // Every line is rounded from the stored half, so the half is chosen a whole number of dmm where it can be: 1 mil at 100 yd is 914.4
+        // dmm, and a half of 914 put the third line 0.64 dmm off its angle, so that lattice runs to 5 mil (exactly 4,572 dmm) in 25 squares and
+        // the field cuts it at 1.0 mil, as style 2's ran to 1.25 mil. The others' lines fall within half a dmm as they are.
+        var (divisions, half) = (unit, distanceUnit) == (GridUnit.Mil, DistanceUnit.Yards)
+            ? (25, 4572)
+            : (Math.Max(across, upDown), (int)Math.Round(unitDmm * Math.Max(across, upDown) / wholeEvery));
         var offsets = MeasurementGridLines.Offsets(half, divisions);
         int fieldX = offsets[across], fieldY = offsets[upDown];
         int cy = GridStyle3.CentreY(fieldY);
@@ -293,7 +220,7 @@ public static class LibraryBuilder
             + " For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.";
 
         var definition = new TargetDefinition(
-            1, 0, null, Names[name], description, "GroupLab built-in library", "CC0-1.0", ZeroC3Created, "dmm",
+            1, 0, null, Names[name], description, "GroupLab built-in library", "CC0-1.0", ZeroCreated, "dmm",
             new Page(size, width, height, Orientation.Portrait),
             Inks,
             [new RingSet("aim", CDiscs(diamond))],

@@ -1,12 +1,12 @@
 {
   "gltd": 1,
   "revision": 0,
-  "id": "GL-V9JT-FHB6-HRDN-0YYQ",
+  "id": "GL-ZGFN-ZEMF-PQVV-ANAQ",
   "name": "GroupLab Zeroing Grid, mil at 100 m",
-  "description": "Design C3, chosen by Alan with Jylee and Unholy: a grid of 0.2 mil squares reaching 0.8 mil each side of the aim across and 0.8 up and down at 100 meters, a tick of one click (0.1 mil) between the lines along the center cross and the frame, each line's distance from the aim written outside the grid, a legend above to read through the scope, and the C diamond as the aim, 0.2 mil point to point. It has no load block: enter the load on the session in GroupLab. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
+  "description": "One aiming ring on a grid of 0.25 mil squares reaching 0.91 mil each side of the aim at 100 meters, heavier every 0.5 mil and heaviest every mil, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, and a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
   "author": "GroupLab built-in library",
   "licence": "CC0-1.0",
-  "created": "2026-09-28",
+  "created": "2026-09-27",
   "units": "dmm",
   "page": {
     "size": "letter",
@@ -47,19 +47,11 @@
       "discs": [
         {
           "diameter": 200,
-          "ink": "black",
-          "shape": "square",
-          "rotation": 45
-        },
-        {
-          "diameter": 58,
-          "ink": "paper",
-          "shape": "square",
-          "rotation": 45
-        },
-        {
-          "diameter": 16,
           "ink": "black"
+        },
+        {
+          "diameter": 150,
+          "ink": "paper"
         }
       ]
     }
@@ -67,7 +59,7 @@
   "bulls": [
     {
       "x": 1079,
-      "y": 1298,
+      "y": 1412,
       "ringSet": "aim",
       "scoring": true
     }
@@ -81,83 +73,83 @@
     "markers": [
       {
         "id": 0,
-        "x": 219,
-        "y": 598
+        "x": 105,
+        "y": 438
       },
       {
         "id": 1,
-        "x": 1939,
-        "y": 598
+        "x": 579,
+        "y": 438
       },
       {
         "id": 2,
-        "x": 219,
-        "y": 798
+        "x": 1079,
+        "y": 438
       },
       {
         "id": 3,
-        "x": 1939,
-        "y": 798
+        "x": 1579,
+        "y": 438
       },
       {
         "id": 4,
-        "x": 219,
-        "y": 998
+        "x": 2053,
+        "y": 438
       },
       {
         "id": 5,
-        "x": 1939,
-        "y": 998
+        "x": 105,
+        "y": 912
       },
       {
         "id": 6,
-        "x": 219,
-        "y": 1198
+        "x": 2053,
+        "y": 912
       },
       {
         "id": 7,
-        "x": 1939,
-        "y": 1198
+        "x": 105,
+        "y": 1412
       },
       {
         "id": 8,
-        "x": 219,
-        "y": 1398
+        "x": 2053,
+        "y": 1412
       },
       {
         "id": 9,
-        "x": 1939,
-        "y": 1398
+        "x": 105,
+        "y": 1912
       },
       {
         "id": 10,
-        "x": 219,
-        "y": 1598
+        "x": 2053,
+        "y": 1912
       },
       {
         "id": 11,
-        "x": 1939,
-        "y": 1598
+        "x": 105,
+        "y": 2386
       },
       {
         "id": 12,
-        "x": 219,
-        "y": 1798
+        "x": 579,
+        "y": 2386
       },
       {
         "id": 13,
-        "x": 1939,
-        "y": 1798
+        "x": 1079,
+        "y": 2386
       },
       {
         "id": 14,
-        "x": 219,
-        "y": 1998
+        "x": 1579,
+        "y": 2386
       },
       {
         "id": 15,
-        "x": 1939,
-        "y": 1998
+        "x": 2053,
+        "y": 2386
       }
     ]
   },
@@ -187,29 +179,41 @@
     "generator": "GroupLab 0.1.0",
     "notes": "Print at 100 percent. Do not use fit to page."
   },
+  "dataBlock": {
+    "x": 120,
+    "y": 2464,
+    "width": 1919,
+    "height": 210,
+    "layout": "fields-3x2-1",
+    "fieldSet": "standard-6",
+    "reserve": 210,
+    "ink": "black",
+    "labelInk": "text",
+    "border": 2
+  },
   "grids": [
     {
       "key": "zero",
       "centreX": 1079,
-      "centreY": 1298,
-      "half": 800,
-      "divisions": 4,
-      "majorEvery": 1,
+      "centreY": 1412,
+      "half": 1250,
+      "divisions": 5,
+      "majorEvery": 2,
       "unit": "mil",
       "distance": 100,
       "distanceUnit": "m",
       "minorInk": "black",
       "majorInk": "black",
       "axisInk": "black",
-      "minorStroke": 5,
-      "majorStroke": 12,
-      "axisStroke": 20,
-      "labelStep": 1,
+      "minorStroke": 6,
+      "majorStroke": 20,
+      "axisStroke": 30,
+      "labelStep": 2,
       "labelInk": "black",
-      "style": 3,
-      "fieldX": 800,
-      "fieldY": 800,
-      "wholeEvery": 5
+      "style": 2,
+      "fieldX": 914,
+      "fieldY": 914,
+      "wholeEvery": 4
     }
   ]
 }

@@ -2692,6 +2692,18 @@
   "Under the full CEP table: how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from the group's spread and your scope's click value.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.ShotsToZero.cs, the Shots Needed to Zero section in the full figures (entry 252 section 3); tests/GroupLab.App.Tests/Entry252Tests.cs"
+  },
+  "Zeroing grids read through a scope Design C3, chosen by Alan with Jylee and Unholy: squares of a scope&#x27;s own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs and src/GroupLab.Cli/Library/LibraryBuilder.cs Zero; held by BuiltInLibraryTests.TheZeroingGridsAreC3AndSayTheirScale; chosen by Alan with Jylee and Unholy, entry 251"
+  },
+  "The squares are a scope's own: 0.2 mil or 0.5 MOA, with a small tick at every click (0.1 mil or 1/4 MOA) between the lines along the center cross and the frame.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs and src/GroupLab.Cli/Library/LibraryBuilder.cs Zero; held by BuiltInLibraryTests.TheZeroingGridsAreC3AndSayTheirScale; chosen by Alan with Jylee and Unholy, entry 251"
+  },
+  "A 4 in or 10 cm bar at the bottom checks the print: measure it before you shoot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs and src/GroupLab.Cli/Library/LibraryBuilder.cs Zero; held by BuiltInLibraryTests.TheZeroingGridsAreC3AndSayTheirScale; chosen by Alan with Jylee and Unholy, entry 251"
   }
  },
  "rules": [

@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-28, question 64: a hole in solid black is refused as too small, so the C3 grids are built and held
 
-Status: open.
+Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 254: (a), measured on the aim point card's real holes; the refusal was the synthetic model's, and C3 is released. Was: open.
 
 Entry 251 says: "Entry 250 section 3's detection check still runs, now on C3 only, before release." It ran (`ZeroGridC3Tests`, four
 sheets at .224, .264 and .308, synthetic holes on the render at 300 dpi, the whole pipeline):

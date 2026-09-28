@@ -26,7 +26,9 @@ public class TightGroupTests
     public static TheoryData<bool> Sheets() => new() { true, false };
 
     /// <summary>The 5x5 Letter sheet, or the library's one bull sheet.</summary>
-    private static TargetDefinition Sheet(bool oneBull) => BuiltIns.Load(oneBull ? "GL-ZERO-MOA-100Y.gltd.json" : "GL-CF25-LTR.gltd.json");
+    // The one-bull sheet is the style 2 MOA zeroing grid, frozen since entry 254: these hold a ring aim's touching pairs, and a hole in the
+    // C3 diamond's black is ZeroGridC3Tests' business.
+    private static TargetDefinition Sheet(bool oneBull) => BuiltIns.Load(oneBull ? "frozen/zero-grid-2/GL-6DX8-6NNC-QF2S-BAWN.gltd.json" : "GL-CF25-LTR.gltd.json");
 
     /// <summary>The middle scoring bull, and its outer radius in dmm.</summary>
     private static (Bull Aim, double Radius) Aim(TargetDefinition definition)

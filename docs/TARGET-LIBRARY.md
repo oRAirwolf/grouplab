@@ -370,38 +370,52 @@ The `roll-24`, `roll-36` and `roll-42` page presets fix the width and leave the 
 
 Four sheets, one for each combination of adjustment unit and distance unit, because a scope turret is calibrated in MOA or in mil and a range is marked in yards or in metres, and the four combinations do not convert into one another by scaling a printed grid.
 
-**Redrawn on 2026-09-27** (NOTES-FROM-PLANNING.md entries 226 and 227, question 59). Alan looked at the mil grid through a Vortex Razor HD 6-36 and a DNT 7-35 at 100 yards expecting a 1.0 by 1.0 mil square each side of the aim, and found a grid 1.6 mil across whose 0.5 mil marks he could not make out. His printout measured exactly right (a small square 0.36 in, a bold one 1.80 in, the grid 5.76 in), so the scale was never the fault: the grid was too small, too fine, and said nothing about itself. The sheets printed before then are frozen in `targets/frozen/zero-grid-1/` and are still identified.
+**Redrawn on 2026-09-28 as design C3** (NOTES-FROM-PLANNING.md entries 250 to 252 and 254), chosen by Alan with Jylee and Unholy from
+the planning session's design page. Alan found the words written on the style 2 grid unhelpful at 100 yards; C3 writes nothing on the
+grid, puts each line's distance from the aim outside it, and is squared to a scope: 0.2 mil squares, a mil reticle's usual subtension,
+with a tick at one click (0.1 mil) between the lines, or 0.5 MOA squares with a tick at 1/4 MOA. The style 2 sheets of 2026-09-27 are
+frozen in `targets/frozen/zero-grid-2`, the style 1 sheets before them in `targets/frozen/zero-grid-1`, and both still read.
 
-| Sheet | Unit | Fine square | Heavier lines | Reach each side of the aim | Markers |
-|---|---|---|---|---|---|
-| **GL-ZERO-MOA-100Y** | MOA at 100 yd | 0.5 MOA, 13.30 mm | 1 MOA, labeled 1 to 3 | 3.44 MOA | 32 |
-| **GL-ZERO-MIL-100Y** | mil at 100 yd | 0.25 mil, 22.86 mm | 0.5 mil, and 1 mil heaviest, labeled 0.5 and 1.0 | 1.00 mil | 16 |
-| **GL-ZERO-MOA-100M** | MOA at 100 m | 0.5 MOA, 14.54 mm | 1 MOA, labeled 1 to 3 | 3.14 MOA | 24 |
-| **GL-ZERO-MIL-100M** | mil at 100 m | 0.25 mil, 25.00 mm | 0.5 mil, labeled 0.5 | 0.91 mil | 16 |
+| Sheet | Unit | Square | Tick | Reach each side of the aim, across and up and down | Diamond, point to point | Markers |
+|---|---|---|---|---|---|---|
+| **GL-ZERO-MOA-100Y** | MOA at 100 yd | 0.5 MOA, 13.30 mm | 1/4 MOA | 3 MOA and 3.5 MOA | 1 MOA, 26.6 mm | 28 |
+| **GL-ZERO-MIL-100Y** | mil at 100 yd | 0.2 mil, 18.29 mm | 0.1 mil | 1.0 mil and 1.0 mil | 0.2 mil, 18.3 mm | 20 |
+| **GL-ZERO-MOA-100M** | MOA at 100 m | 0.5 MOA, 14.54 mm | 1/4 MOA | 3 MOA and 3 MOA | 1 MOA, 29.1 mm | 24 |
+| **GL-ZERO-MIL-100M** | mil at 100 m | 0.2 mil, 20.00 mm | 0.1 mil | 0.8 mil and 0.8 mil | 0.2 mil, 20.0 mm | 16 |
 
-All four are Letter, portrait, with two codes at the top, a single aiming ring, the scale printed above the grid with a ruler to check the print, and a six-field load block. Every field is 182.8 mm square, which is exactly plus or minus 1.0 mil at 100 yards.
+All four are Letter, portrait, with two codes at the top and the legend between them, the check bar and the identifier at the bottom,
+and no load block: the numbers outside the grid leave no room for one without shrinking the grid, so the load goes on the session.
+At 100 m, 1.0 mil up and down would collide with the check bar and the identifier, so that sheet reaches 0.8 mil both ways.
 
 ```
-common      letter, 2159 x 2794 dmm, grid style 2 (TARGET-SCHEMA.md section 3.13)
-centre      x 1079, y 1412
-field       914 dmm each side, across and up and down
-aim ring    discs 200 / 150 dmm: a 20 mm ring, 4.5 arcminutes at 6x, with nothing in its centre
-            for a crosshair to cover; the axes cross inside it
-lines       6, 20 and 30 dmm: fine, major, and the whole unit with the axes
-labels      130 dmm tall, 3.0 arcminutes at 6x at 100 yd
-scale       three lines and a 4 in or 10 cm ruler above the field
-data block  x 120, y 2464, 1919 x 210 dmm, fields-3x2-1, standard-6,
-            210 dmm reserved square holding the identifier and serial as text
-fiducials   field-ring-1, on the grid's major lines in the band around the field
-codes       2, corners-1, centres (250,250) (1909,250), each carrying the whole body
+common      letter, 2159 x 2794 dmm, grid style 3 (TARGET-SCHEMA.md section 3.13), centred across at x 1079
+lines       5 dmm; 12 dmm every whole MOA; 20 dmm for the axes, the frame and a mil sheet's whole mils
+ticks       one click halfway between the lines, 5 dmm wide, 30 dmm across the centre cross and in from the frame
+numbers     outside the frame on all four sides, 16 dmm clear of it: 40 dmm capitals, a whole unit 46 dmm and bold
+legend      bold, between the codes: "MIL · 100 YD" at 100 dmm capitals, a square and "= 0.2 MIL" at 80, a tick and
+            "TICK = 0.1 MIL (1 CLICK)" at 60, each shrunk only to fit 1320 dmm
+check bar   4 in or 10 cm, 150 dmm below the frame, with a line saying so
+aim         the C diamond, sized in angle; its white centre 0.288 of it and the dot 0.08, the centre cross left out in the white
+fiducials   field-ring-1, in the two side columns only, between the numbers, at the heights of the ticks
+codes       2, corners-1, centres (250,250) (1909,250)
 
-GL-ZERO-MOA-100Y   half 931 dmm, 7 divisions    offsets 0 133 266 399 532 665 798 931
-GL-ZERO-MIL-100Y   half 1143 dmm, 5 divisions   offsets 0 229 457 686 914 1143
-GL-ZERO-MOA-100M   half 1018 dmm, 7 divisions   offsets 0 145 291 436 582 727 873 1018
-GL-ZERO-MIL-100M   half 1250 dmm, 5 divisions   offsets 0 250 500 750 1000 1250
+GL-ZERO-MOA-100Y   centre y 1429, half 931 dmm, 7 divisions, field 798 across and 931 up and down
+GL-ZERO-MIL-100Y   centre y 1412, half 4572 dmm, 25 divisions, field 914: the lattice runs to 5 mil, exactly 4,572 dmm, so every
+                   line rounds from its true angle; the field cuts it at 1.0 mil
+GL-ZERO-MOA-100M   centre y 1371, half 873 dmm, 6 divisions, field 873
+GL-ZERO-MIL-100M   centre y 1298, half 800 dmm, 4 divisions, field 800
 ```
 
-The lattice reaches past the field and only the lines inside it are drawn. The worst line is 0.44 dmm from its true angle, on GL-ZERO-MOA-100M.
+Every line is within half a dmm of its true angle (`BuiltInLibraryTests.TheZeroingGridsAreC3AndSayTheirScale`).
+
+**The detection check before release** (entries 251 and 254, `ZeroGridC3Tests`). Every hole on the grid was found where it is, on lines,
+crossings, ticks, the heavy axis and the whole-MOA lines, at .224, .264 and .308, worst 0.023 in. Synthetic holes in the diamond's black
+were refused as too small, because the synthetic hole's bright core on black is far smaller than a real one's; a real shot through the
+black of the aim point card's C diamond, cut from the scan and set into the render, is found in every C3 diamond and in the E and C bulls,
+with a calibre named and without (question 64).
+
+**The reasoning of the style 2 grids of 2026-09-27, which C3 keeps where it still holds** (the field as large as the page allows, the line
+weights against the visibility rule, lines rounded from a stored half); what C3 changed is above.
 
 **Why these sizes.** A zeroing grid's first job is to catch the first shot of a rifle that is not yet zeroed, which is often more than 0.8 mil out, so the field is as large as the page allows. Across, it is held by the marker columns at the side edges; up and down, by the two codes, the scale statement and the load block. Two codes at the top instead of four in the corners is what frees the height: each carries the whole body, so either one alone names the sheet. On the metric mil sheet 1.0 mil is 200 mm, wider than a Letter page can hold with its markers, so it reaches 0.91 mil and its edge falls between lines.
 

@@ -20,10 +20,8 @@ public class ZeroGridC3Tests
 {
     private const double Dpi = 300;
 
-    private static readonly Lazy<IReadOnlyList<GroupLab.Cli.Library.BuiltInTarget>> C3 =
-        new(() => GroupLab.Cli.Library.LibraryBuilder.ZeroC3Sheets(Repo.PathTo("tools", "layout", "layouts.json")));
-
-    internal static TargetDefinition Load(string file) => C3.Value.Single(t => t.FileName == file).Definition;
+    /// <summary>A C3 sheet from the library, where entry 254 put them.</summary>
+    internal static TargetDefinition Load(string file) => BuiltIns.Load(file);
 
     public static TheoryData<string, double> Sheets()
     {
@@ -109,17 +107,90 @@ public class ZeroGridC3Tests
     }
 
     /// <summary>
-    /// The finding the check made, question 64: a hole in solid black, the C3 diamond's or the E and C bulls' of entry 243, is found and
-    /// refused as too small, calibre named or not. On black the hole's dark rim is the ink's own colour, so only its bright core shows,
-    /// and the size floor was set on whole marks on white paper. Held here as it is, so a change to the detector shows up; whether a real
-    /// hole's core is as small as the synthetic one's needs a real scan (request 51).
+    /// Entry 254, answering question 64: a <b>real</b> hole in solid black. Alan's aim point card of 2026-09-26 has a shot through the black of
+    /// its C diamond, just above the white centre, and the card's C is the C sheets' own bull. Its pixels, cut from the 600 dpi scan with
+    /// nothing but the hole kept (<c>Fixtures/real-hole-in-black-2026-09-26.png</c>, its bright core 0.194 in across), are set into the
+    /// render's black at the same place, and into the E bull's and each C3 diamond's black, and the whole pipeline runs. Where the
+    /// synthetic hole's core is refused as too small, the real one is found.
+    /// </summary>
+    [Theory]
+    [InlineData("GL-CF25-LTR-C.gltd.json", -0.0142, -0.1400, true)]
+    [InlineData("GL-CF25-LTR-C.gltd.json", -0.0142, -0.1400, false)]
+    [InlineData("GL-CF25-LTR-E.gltd.json", 0.0, -0.30, true)]
+    [InlineData("GL-ZERO-MIL-100Y.gltd.json", 0.0, -0.20, true)]
+    [InlineData("GL-ZERO-MIL-100M.gltd.json", 0.0, -0.25, false)]
+    [InlineData("GL-ZERO-MOA-100Y.gltd.json", 0.0, -0.33, true)]
+    [InlineData("GL-ZERO-MOA-100M.gltd.json", 0.0, -0.36, false)]
+    public void ARealHoleInSolidBlackIsFound(string file, double dxInches, double dyInches, bool named)
+    {
+        var definition = file.StartsWith("GL-ZERO", StringComparison.Ordinal) ? Load(file) : BuiltIns.Load(file);
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
+        var bull = definition.Bulls[definition.Bulls.Count / 2];
+        double hx = bull.X + (dxInches * 254), hy = bull.Y + (dyInches * 254);
+        // The scan's 600 dpi patch onto the render's 300: each render pixel takes the share of it the hole covers, at the hole's own grey.
+        using var patch = OpenCvSharp.Cv2.ImRead(Repo.PathTo("tests", "GroupLab.Core.Tests", "Fixtures", "real-hole-in-black-2026-09-26.png"), OpenCvSharp.ImreadModes.Grayscale);
+        var pixels = (byte[])render.Pixels.Clone();
+        double scale = 600 / Dpi;
+        int cx = (int)Math.Round(hx * Dpi / 254), cy = (int)Math.Round(hy * Dpi / 254), reach = (int)(patch.Width / scale / 2);
+        double onBlack = 0, covered = 0;
+        for (int v = -reach; v < reach; v++)
+        {
+            for (int u = -reach; u < reach; u++)
+            {
+                double sum = 0;
+                int count = 0;
+                for (int j = 0; j < (int)scale; j++)
+                {
+                    for (int i = 0; i < (int)scale; i++)
+                    {
+                        byte value = patch.At<byte>((int)(((v + reach) * scale) + j), (int)(((u + reach) * scale) + i));
+                        if (value > 0)
+                        {
+                            sum += value;
+                            count++;
+                        }
+                    }
+                }
+
+                if (count > 0)
+                {
+                    double share = count / (scale * scale);
+                    int at = ((cy + v) * render.Width) + cx + u;
+                    onBlack += render.Pixels[at] < 128 ? share : 0;
+                    covered += share;
+                    pixels[at] = (byte)Math.Round((pixels[at] * (1 - share)) + (sum / count * share));
+                }
+            }
+        }
+
+        // Most of the hole lies on the black, as on the card, where its centre sits at the tip of the white centre.
+        Assert.True(onBlack / covered > 0.5, $"only {onBlack / covered:P0} of the hole is on the black");
+        var holed = new GrayImage(render.Width, render.Height, pixels);
+        var random = new Random(254);
+        double s = 254 / Dpi;
+        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
+        var image = SyntheticSheet.Compose(holed, Dpi, truth, render.Width, render.Height, [], [], random);
+        var metadata = new ImageMetadata("PNG", image.Width, image.Height, Dpi, Dpi, null, null, null, null, null);
+        var result = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend(), calibre: named ? Calibre.Of(0.264) : null);
+        Assert.True(result.Failure is null, $"{file} was not analyzed: {result.Failure}");
+        var found = result.Detections.Select(d => Math.Sqrt(Math.Pow(((d.Image.X + 0.5) * s) - hx, 2) + Math.Pow(((d.Image.Y + 0.5) * s) - hy, 2))).DefaultIfEmpty(double.MaxValue).Min();
+        Assert.True(found < 0.1 * 254, $"{file}: the real hole in the black was not found; {result.Detections.Count} found, refused " + string.Join("; ", (result.Difference?.Rejected ?? []).Select(r => r.Reason)));
+        Assert.Single(result.Detections);
+    }
+
+    /// <summary>
+    /// Question 64's finding, and entry 254's answer to it. The synthetic hole, calibrated on holes in white paper, is drawn on black as a small
+    /// bright core inside a dark rim, and the detector refuses that core as too small (0.05 to 0.08 in against a floor of 0.13 to 0.15). A
+    /// real hole in black is not like that: the card's shot through the C diamond shows a core 0.194 in across, about what a hole shows on
+    /// white paper, and <see cref="ARealHoleInSolidBlackIsFound"/> finds it on every black-bodied sheet. So the size floor stands, and this
+    /// holds the synthetic model's limit where it is, so a sweep that relies on synthetic holes in black knows not to believe them.
     /// </summary>
     [Theory]
     [InlineData("GL-ZERO-MOA-100Y.gltd.json", true)]
     [InlineData("GL-CF25-LTR-E.gltd.json", true)]
     [InlineData("GL-CF25-LTR-E.gltd.json", false)]
     [InlineData("GL-CF25-LTR-C.gltd.json", false)]
-    public void AHoleInSolidBlackIsStillRefusedAsTooSmall(string file, bool named)
+    public void TheSyntheticHoleOnBlackIsSmallerThanARealOne(string file, bool named)
     {
         var definition = file.StartsWith("GL-ZERO", StringComparison.Ordinal) ? Load(file) : BuiltIns.Load(file);
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
@@ -135,7 +206,7 @@ public class ZeroGridC3Tests
         var metadata = new ImageMetadata("PNG", image.Width, image.Height, Dpi, Dpi, null, null, null, null, null);
         var result = AutomaticMarking.Run(image, image, metadata, definition, new OpenCvSharpBackend(), calibre: named ? Calibre.Of(0.308) : null);
         Assert.True(result.Detections.Count == 0 && (result.Difference?.Rejected ?? []).Any(b => b.Reason.StartsWith("too small", StringComparison.Ordinal)),
-            $"{file}: a hole in the black was {(result.Detections.Count > 0 ? "found" : "not refused as too small")}. If the detector now finds it, answer question 64 and move the case back into the check.");
+            $"{file}: the synthetic hole in the black was {(result.Detections.Count > 0 ? "found" : "not refused as too small")}; if the synthetic model now draws holes in black as real ones look, this test has done its job.");
     }
 
     /// <summary>Where each hole goes, named, in dmm from the aim: <paramref name="p"/> is a square, <paramref name="h"/> half the diamond.</summary>

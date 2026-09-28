@@ -71,6 +71,18 @@ public partial class RenderingTests
         // Measurement grid lines sit on the derived positions, section 3.13.
         foreach (var g in d.Grids ?? [])
         {
+            if (g.StyleOrDefault == GridStyle3.Style)
+            {
+                // Style 3 draws every line inside its field, the centre cross left out inside the aim's white; a tick is shorter than any
+                // line, so every upright piece longer than a tick is on a derived line.
+                var derived3 = GridStyle3.Lines(g, g.HalfX).Select(l => 2L * (g.CentreX + l.Offset)).ToHashSet();
+                var upright3 = page.Items.OfType<RectFill>().Where(r => r.Layer == SceneLayer.MeasurementGrid && r.Height > r.Width
+                    && r.Height > 8L * GridStyle3.TickReach && r.Y >= 2L * (g.CentreY - g.HalfY - GridStyle3.HeavyStroke) && r.Y + r.Height <= 2L * (g.CentreY + g.HalfY + GridStyle3.HeavyStroke))
+                    .Select(r => r.X + (r.Width / 2)).ToHashSet();
+                Assert.Equal(derived3.Order(), upright3.Order());
+                continue;
+            }
+
             if (g.StyleOrDefault == GridStyle2.Style)
             {
                 // Style 2 breaks a line where a label sits, and draws only inside its field: every upright piece is on a derived line.
@@ -140,9 +152,10 @@ public partial class RenderingTests
     [Fact]
     public void Test41AKnockoutInTheAimingMarkShowsTheGridBeneathIt()
     {
-        // Section 3.4: a paper disc reveals what is underneath. On a zeroing sheet that is the grid's axis lines. Since entry 226 the
-        // aiming ring is discs of 200 and 150 dmm, so its knockout is everything inside a radius of 75 dmm.
-        var d = BuiltIns.Load("GL-ZERO-MOA-100Y.gltd.json");
+        // Section 3.4: a paper disc reveals what is underneath. On a style 2 zeroing sheet (frozen since entry 254) that is the grid's axis
+        // lines; the aiming ring is discs of 200 and 150 dmm, so its knockout is everything inside a radius of 75 dmm. A C3 sheet keeps its
+        // white centre clear instead (Test41BTheC3DiamondsWhiteCentreStaysWhite).
+        var d = BuiltIns.Load("frozen/zero-grid-2/GL-6DX8-6NNC-QF2S-BAWN.gltd.json");
         var page = TargetRenderer.Render(d).Pages[0];
         var aim = d.Bulls[0];
         var raster = Raster.Render(page, aim.X, aim.Y, 250, 600);
@@ -153,11 +166,27 @@ public partial class RenderingTests
         Assert.True(raster.Ink(aim.X + 61.9, aim.Y + 61.9) > 0.9, "The ring between 150 and 200 dmm is not inked.");
     }
 
+    /// <summary>Entry 251: a C3 diamond's white centre is left white, the centre cross broken inside it, and its dot and black are inked.</summary>
+    [Fact]
+    public void Test41BTheC3DiamondsWhiteCentreStaysWhite()
+    {
+        var d = BuiltIns.Load("GL-ZERO-MOA-100Y.gltd.json");
+        var page = TargetRenderer.Render(d).Pages[0];
+        var aim = d.Bulls[0];
+        double white = d.RingSets[0].Discs[1].Diameter / 2.0, outer = d.RingSets[0].Discs[0].Diameter / 2.0;
+        var raster = Raster.Render(page, aim.X, aim.Y, 400, 600);
+
+        Assert.True(raster.Ink(aim.X + (0.7 * white), aim.Y) < 0.05, "The horizontal axis runs through the white centre.");
+        Assert.True(raster.Ink(aim.X, aim.Y - (0.7 * white)) < 0.05, "The vertical axis runs through the white centre.");
+        Assert.True(raster.Ink(aim.X, aim.Y) > 0.9, "The dot is not inked.");
+        Assert.True(raster.Ink(aim.X + ((white + outer) / 2), aim.Y) > 0.9, "The diamond's black is not inked.");
+    }
+
     [Fact]
     public void Test27BlankAndFilledDifferOnlyInsideTheDataBlock()
     {
         var instance = InstanceFromSection311();
-        foreach (string file in (string[])["GL-CF25-LTR-D.gltd.json", "GL-ZERO-MIL-100Y.gltd.json"])
+        foreach (string file in (string[])["GL-CF25-LTR-D.gltd.json", "frozen/zero-grid-2/GL-JZ3H-FDJH-NXQF-BN49.gltd.json"])
         {
             var d = BuiltIns.Load(file);
             var blank = TargetRenderer.Render(d, new RenderOptions(DataBlockMode.Blank, instance));

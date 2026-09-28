@@ -45,7 +45,8 @@ public class PrintedNameTests
             var names = page.Items.OfType<TextRun>().Where(t => t.Layer == SceneLayer.Name).ToList();
             // A tile of the 300 yd sets has no room for its name; the large format sets of entry 243 section 1.4 do, and theirs is held to
             // the same clearances as any other sheet's.
-            if (definition.Tiling is not null && names.Count == 0)
+            // A C3 zeroing sheet (entry 251) gives the top to its legend, which says what the sheet is ("MIL · 100 YD"), and prints no name.
+            if ((definition.Tiling is not null || definition.Grids?.Any(g => g.StyleOrDefault == GroupLab.Core.Gltd.Derivation.GridStyle3.Style) == true) && names.Count == 0)
             {
                 continue;
             }

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 252.
+**Last rewritten:** 2026-09-28, after entry 254.
 
 ---
 
@@ -17,15 +17,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - Done: everything through 249. 246: look B photographed on both devices (`docs/figures/screens/phone/`), requests 44, 45, 49
   closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile. 250: the Targets preview draws the words
-  (`SheetGlyphs`), Letter first, the one-shot zero note. 251: the C3 grids built (grid style 3) and **held**: a hole in solid black
-  is refused as too small (question 64, request 51). 252: C3 in MOA (held too) and Shots Needed to Zero (Jylee's), with its article.
-  **Next: entries 253 and 254.** Waiting on: question 64, request 51's scan, request 50's device sitting.
+  (`SheetGlyphs`), Letter first, the one-shot zero note. 251 and 252: the C3 grids (grid style 3), mil and MOA, and Shots Needed to
+  Zero (Jylee's), with its article. 254: **C3 released**; the aim point card's real hole in black is found, so the floor is unchanged
+  and request 51 closed. **Next: entry 253** (every screenshot redone, the phone's in request 50's sitting), then 255.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
-- **The zeroing grids were redrawn** (entry 226, grid style 2, question 59): plus or minus 1.0 mil at 100 yd exactly, 0.25 mil and
-  0.5 MOA squares, the whole unit heaviest, labels, the scale and a ruler printed. The old four are frozen in `targets/frozen/zero-grid-1`.
-  **Every published build before this one cannot read a style 2 frame**; the old sheets still read in the new build.
+- **The zeroing grids are C3** (entries 251, 252, 254, grid style 3): 0.2 mil or 0.5 MOA squares, a tick at one click, numbers outside
+  the grid, the legend at the top, a diamond sized in angle. Style 2 is frozen in `targets/frozen/zero-grid-2`, style 1 in
+  `zero-grid-1`. **A build before this one cannot read a style 3 frame**; the old sheets still read in the new build.
 - **The target generator** is on the Targets screen ("Made for your optic"), on the phone too, disc or diamond; a set of sheets is a
   tiled assembly, and Session records pools its sheets ("Pool the chosen").
 - **A target GroupLab did not print** can have bulls placed by hand, a lasso, templates, and a scale at each bull (entry 228,
@@ -67,14 +67,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **8** (51 a scan of holes in a black diamond; 50 a device sitting later; 46 the backups on
-4 October; 38 the Store; 33 the Fold 7's camera; then 9, 16 and 20).
+Open requests in `docs/notes/for-alan.md`: **7** (50 a device sitting later; 46 the backups on 4 October; 38 the Store; 33 the
+Fold 7's camera; then 9, 16 and 20).
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 63 were answered by entries 243 and 245.
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 64 were answered by entries 243, 245 and 254.
 
-- **64** a hole in solid black is refused as too small; the C3 grids wait on it and request 51
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
@@ -100,8 +99,8 @@ line reads what the repository holds, and the test fails locally until the last 
 - **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself, not as the
   circle through its points, by the marker drop test, the validator and the edge fit. Older builds refuse a C sheet rather than misread it.
 - **A QR code's bytes can arrive as UTF-8** from OpenCV; the reader now takes the reading that can be right (entry 243 section 4).
-- **A zeroing grid is now drawn by its style**: style 2's strokes, labels, statement and ruler are fixed by `GridStyle2`, and a
-  label breaks the line behind it on purpose.
+- **A zeroing grid is drawn by its style**: style 3's strokes, ticks, numbers, legend and bar are fixed by `GridStyle3`, and the
+  centre cross is broken inside the diamond's white on purpose. A real hole in black is as large as on white; a synthetic one is not.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **A preview draws words; a measured render does not** (`SceneRasterizer` `words:`, entry 250).
 - **One solid amber button a screen**: a chosen switch is the tint, `AppStyles.Chosen` (entry 247).

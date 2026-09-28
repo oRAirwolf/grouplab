@@ -202,26 +202,27 @@ public class BuiltInLibraryTests
     }
 
     /// <summary>
-    /// Entries 226 and 227 section 1: the redrawn zeroing grids. The 100 yd mil grid reaches exactly plus or minus 1.0 mil, the others as
-    /// far as the page allows; fine squares are 0.25 mil or 0.5 MOA; the whole unit is the heaviest line and every heavier line is
-    /// labeled; the scale statement and the ruler are printed; and every line falls within half a dmm of its true angle (test 36).
+    /// The zeroing grids as design C3 (entries 251, 252 and 254): grid style 3, squares of 0.2 mil or 0.5 MOA, as far as Letter holds with the
+    /// numbers outside, every line within half a dmm of its true angle (test 36), the legend's three lines and every line's number printed,
+    /// and two codes.
     /// </summary>
     [Theory]
-    [InlineData("GL-ZERO-MIL-100Y", 1.0, 0.25)]
-    [InlineData("GL-ZERO-MIL-100M", 0.91, 0.25)]
-    [InlineData("GL-ZERO-MOA-100Y", 3.44, 0.5)]
-    [InlineData("GL-ZERO-MOA-100M", 3.14, 0.5)]
-    public void TheRedrawnZeroingGridsReachFarEnoughAndSayTheirScale(string name, double reach, double fine)
+    [InlineData("GL-ZERO-MIL-100Y", 1.0, 1.0, 0.2)]
+    [InlineData("GL-ZERO-MIL-100M", 0.8, 0.8, 0.2)]
+    [InlineData("GL-ZERO-MOA-100Y", 3.0, 3.5, 0.5)]
+    [InlineData("GL-ZERO-MOA-100M", 3.0, 3.0, 0.5)]
+    public void TheZeroingGridsAreC3AndSayTheirScale(string name, double across, double upDown, double square)
     {
         var d = Target(name).Definition;
         var g = d.Grids!.Single();
         double unit = GridStyle2.UnitDmm(g)!.Value;
 
-        Assert.Equal(GridStyle2.Style, g.Style);
-        Assert.Equal(reach, g.HalfX / unit, 2);
-        Assert.Equal(reach, g.HalfY / unit, 2);
-        Assert.Equal(fine, 1.0 / g.WholeEvery!.Value, 3);
+        Assert.Equal(GridStyle3.Style, g.Style);
+        Assert.Equal(across, g.HalfX / unit, 2);
+        Assert.Equal(upDown, g.HalfY / unit, 2);
+        Assert.Equal(square, 1.0 / g.WholeEvery!.Value, 3);
         Assert.Equal(2, d.Codes!.Count);
+        Assert.Null(d.DataBlock);
 
         var offsets = MeasurementGridLines.Offsets(g.Half, g.Divisions);
         for (int i = 0; i <= g.Divisions; i++)
@@ -231,16 +232,28 @@ public class BuiltInLibraryTests
 
         var page = GroupLab.Core.Rendering.SceneBuilder.Build(d).Pages[0];
         var text = page.Items.OfType<GroupLab.Core.Rendering.TextRun>().Select(r => r.Text).ToList();
-        Assert.Equal(3, GridStyle2.Statement(g).Count);
-        Assert.All(GridStyle2.Statement(g), line => Assert.Contains(line, text));
-        foreach (var (i, _) in GridStyle2.Lines(g, g.HalfX).Where(l => l.Index != 0 && l.Index % g.MajorEvery == 0))
+        var (heading, squareWords, tick) = GridStyle3.Legend(g);
+        Assert.Contains(heading, text);
+        Assert.Contains(squareWords, text);
+        Assert.Contains(tick, text);
+        foreach (var (i, _) in GridStyle3.Lines(g, g.HalfX).Concat(GridStyle3.Lines(g, g.HalfY)))
         {
-            Assert.Contains(GridStyle2.Label(g, i), text);
+            Assert.Contains(GridStyle3.Number(g, i), text);
         }
+    }
 
-        if (reach >= 1)
+    /// <summary>The style 2 grids, printed from 2026-09-27 until C3 replaced them, frozen so their printouts still read (entry 254).</summary>
+    [Fact]
+    public void TheStyle2ZeroingGridsAreFrozen()
+    {
+        var files = Directory.EnumerateFiles(Repo.PathTo("targets", "frozen", "zero-grid-2"), "*.gltd.json").ToList();
+        Assert.Equal(4, files.Count);
+        foreach (string file in files)
         {
-            Assert.Contains(g.Unit == GridUnit.Mil ? "1.0" : "3", text);
+            var frozen = GltdJsonReader.Read(File.ReadAllBytes(file)).Definition!;
+            Assert.Equal(GridStyle2.Style, frozen.Grids!.Single().StyleOrDefault);
+            Assert.Equal(Path.GetFileName(file), frozen.Id + ".gltd.json");
+            Assert.Equal(frozen.Id, GltdBinary.Encode(frozen).Encoding!.DefinitionId);
         }
     }
 

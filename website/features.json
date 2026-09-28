@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "The four zeroing grids are redrawn as design C3",
     "In the Targets list, Letter sheets now come before A4",
     "The preview on the Targets screen now shows every word",
     "The Ballistics screen is laid out in three columns",
@@ -328,7 +329,7 @@
       "key": "zero-grids",
       "group": "Sheets and printing",
       "name": "Zeroing grids read through a scope",
-      "sentence": "The zeroing grids are drawn to be read through a scope, with heavier lines at every half and whole unit and the scale printed on the sheet.",
+      "sentence": "Design C3, chosen by Alan with Jylee and Unholy: squares of a scope's own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.",
       "shot": "targets",
       "platforms": [
         "Windows",

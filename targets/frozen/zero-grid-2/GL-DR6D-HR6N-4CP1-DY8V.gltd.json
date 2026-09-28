@@ -1,12 +1,12 @@
 {
   "gltd": 1,
   "revision": 0,
-  "id": "GL-CMKF-9X1R-Z1KF-KTGG",
-  "name": "GroupLab Zeroing Grid, MOA at 100 yd",
-  "description": "Design C3, chosen by Alan with Jylee and Unholy: a grid of 0.5 MOA squares reaching 3.0 MOA each side of the aim across and 3.5 up and down at 100 yards, a tick of one click (1/4 MOA) between the lines along the center cross and the frame, each line's distance from the aim written outside the grid, a legend above to read through the scope, and the C diamond as the aim, 1 MOA point to point. It has no load block: enter the load on the session in GroupLab. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
+  "id": "GL-DR6D-HR6N-4CP1-DY8V",
+  "name": "GroupLab Zeroing Grid, MOA at 100 m",
+  "description": "One aiming ring on a grid of 0.5 MOA squares reaching 3.14 MOA each side of the aim at 100 meters, heavier every 1 MOA and heaviest every MOA, every heavier line labeled, with its scale printed on the sheet and a ruler to check the print, and a six-field load block. For sighting in by eye at the bench: it prints at exact scale, so the correction is read straight off the grid after each shot. For a zero worked out from a group, and group figures, shoot a 5x5 sheet.",
   "author": "GroupLab built-in library",
   "licence": "CC0-1.0",
-  "created": "2026-09-28",
+  "created": "2026-09-27",
   "units": "dmm",
   "page": {
     "size": "letter",
@@ -46,20 +46,12 @@
       "key": "aim",
       "discs": [
         {
-          "diameter": 266,
-          "ink": "black",
-          "shape": "square",
-          "rotation": 45
-        },
-        {
-          "diameter": 77,
-          "ink": "paper",
-          "shape": "square",
-          "rotation": 45
-        },
-        {
-          "diameter": 21,
+          "diameter": 200,
           "ink": "black"
+        },
+        {
+          "diameter": 150,
+          "ink": "paper"
         }
       ]
     }
@@ -67,7 +59,7 @@
   "bulls": [
     {
       "x": 1079,
-      "y": 1429,
+      "y": 1412,
       "ringSet": "aim",
       "scoring": true
     }
@@ -81,143 +73,123 @@
     "markers": [
       {
         "id": 0,
-        "x": 221,
-        "y": 565
+        "x": 105,
+        "y": 438
       },
       {
         "id": 1,
-        "x": 1937,
-        "y": 565
+        "x": 497,
+        "y": 438
       },
       {
         "id": 2,
-        "x": 221,
-        "y": 698
+        "x": 788,
+        "y": 438
       },
       {
         "id": 3,
-        "x": 1937,
-        "y": 698
+        "x": 1079,
+        "y": 438
       },
       {
         "id": 4,
-        "x": 221,
-        "y": 831
+        "x": 1370,
+        "y": 438
       },
       {
         "id": 5,
-        "x": 1937,
-        "y": 831
+        "x": 1661,
+        "y": 438
       },
       {
         "id": 6,
-        "x": 221,
-        "y": 964
+        "x": 2053,
+        "y": 438
       },
       {
         "id": 7,
-        "x": 1937,
-        "y": 964
+        "x": 105,
+        "y": 830
       },
       {
         "id": 8,
-        "x": 221,
-        "y": 1097
+        "x": 2053,
+        "y": 830
       },
       {
         "id": 9,
-        "x": 1937,
-        "y": 1097
+        "x": 105,
+        "y": 1121
       },
       {
         "id": 10,
-        "x": 221,
-        "y": 1230
+        "x": 2053,
+        "y": 1121
       },
       {
         "id": 11,
-        "x": 1937,
-        "y": 1230
+        "x": 105,
+        "y": 1412
       },
       {
         "id": 12,
-        "x": 221,
-        "y": 1363
+        "x": 2053,
+        "y": 1412
       },
       {
         "id": 13,
-        "x": 1937,
-        "y": 1363
+        "x": 105,
+        "y": 1703
       },
       {
         "id": 14,
-        "x": 221,
-        "y": 1495
+        "x": 2053,
+        "y": 1703
       },
       {
         "id": 15,
-        "x": 1937,
-        "y": 1495
+        "x": 105,
+        "y": 1994
       },
       {
         "id": 16,
-        "x": 221,
-        "y": 1628
+        "x": 2053,
+        "y": 1994
       },
       {
         "id": 17,
-        "x": 1937,
-        "y": 1628
+        "x": 105,
+        "y": 2386
       },
       {
         "id": 18,
-        "x": 221,
-        "y": 1761
+        "x": 497,
+        "y": 2386
       },
       {
         "id": 19,
-        "x": 1937,
-        "y": 1761
+        "x": 788,
+        "y": 2386
       },
       {
         "id": 20,
-        "x": 221,
-        "y": 1894
+        "x": 1079,
+        "y": 2386
       },
       {
         "id": 21,
-        "x": 1937,
-        "y": 1894
+        "x": 1370,
+        "y": 2386
       },
       {
         "id": 22,
-        "x": 221,
-        "y": 2027
+        "x": 1661,
+        "y": 2386
       },
       {
         "id": 23,
-        "x": 1937,
-        "y": 2027
-      },
-      {
-        "id": 24,
-        "x": 221,
-        "y": 2160
-      },
-      {
-        "id": 25,
-        "x": 1937,
-        "y": 2160
-      },
-      {
-        "id": 26,
-        "x": 221,
-        "y": 2293
-      },
-      {
-        "id": 27,
-        "x": 1937,
-        "y": 2293
+        "x": 2053,
+        "y": 2386
       }
     ]
   },
@@ -247,28 +219,40 @@
     "generator": "GroupLab 0.1.0",
     "notes": "Print at 100 percent. Do not use fit to page."
   },
+  "dataBlock": {
+    "x": 120,
+    "y": 2464,
+    "width": 1919,
+    "height": 210,
+    "layout": "fields-3x2-1",
+    "fieldSet": "standard-6",
+    "reserve": 210,
+    "ink": "black",
+    "labelInk": "text",
+    "border": 2
+  },
   "grids": [
     {
       "key": "zero",
       "centreX": 1079,
-      "centreY": 1429,
-      "half": 931,
+      "centreY": 1412,
+      "half": 1018,
       "divisions": 7,
-      "majorEvery": 1,
+      "majorEvery": 2,
       "unit": "moa",
       "distance": 100,
-      "distanceUnit": "yd",
+      "distanceUnit": "m",
       "minorInk": "black",
       "majorInk": "black",
       "axisInk": "black",
-      "minorStroke": 5,
-      "majorStroke": 12,
-      "axisStroke": 20,
-      "labelStep": 1,
+      "minorStroke": 6,
+      "majorStroke": 20,
+      "axisStroke": 30,
+      "labelStep": 2,
       "labelInk": "black",
-      "style": 3,
-      "fieldX": 798,
-      "fieldY": 931,
+      "style": 2,
+      "fieldX": 914,
+      "fieldY": 914,
       "wholeEvery": 2
     }
   ]

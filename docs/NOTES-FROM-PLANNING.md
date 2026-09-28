@@ -24,6 +24,31 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 254: question 64 answered: real holes in solid black already exist in a scan; try that before asking Alan to shoot
+
+**Status: done 2026-09-28.** Measured on the aim point card's real holes: C's shot through the black shows a bright core 0.194 in across, as a hole on white paper does; the synthetic holes on black were the model's fault, not the detector's. The real hole, cut from the scan and set into the render, is found in every C3 diamond and in the E and C bulls, calibre named or not, so the on-ink floor is **unchanged**, C3 is released and request 51 is closed unasked. E and C needed no fix, so the Targets screen and the notes carry no warning. The white print specks on the card measure 0.030 to 0.036 in, under every floor; with the floor unchanged, option (b)'s risk does not arise, and the kitchen photo was not measured separately. I's hole is several shots merged (0.345 in) and was not used.
+
+**Question 64 (a hole in solid black refused as too small):** option **(a)**, hold C3 until real holes in black are measured, then set the
+on-ink size floor from them and release; the same change mends the E and C bulls. But **request 51 may not be needed**: Alan has already
+scanned real holes in solid black.
+
+- `aim test09262026.png` in the 2026-09-26 zip (copied to `C:\Dev\grouplab-originals\range-2026-09-26\` by entry 226; 600 dpi, Alan's,
+  publishable) is the aim point card with Alan's shots. The planning session's look at it (entry 229 section 5.1): **I**, the 2 in black
+  disc, has a large hole **in its black** (probably several shots through one hole); **C**, the black diamond with a white center, has one
+  hole in or at the edge of its white center and two just outside; A and E have holes on white paper near them, which make a same-sheet
+  control for the rim and core sizes.
+- The kitchen photo of the same card, `20260926_222616.jpg` (entry 233), shows the same holes photographed, a second look at them.
+
+So: measure those real holes in black on the scan (core size, rim contrast against black, against the model's synthetic holes), set the
+on-ink floor from them, rerun `ZeroGridC3Tests` and `AHoleInSolidBlackIsStillRefusedAsTooSmall` against the new rule, and check the white
+print specks in black the option (b) risk names on every black-bodied sheet at 600 dpi and on the kitchen photos. If the card's holes are
+enough to set the rule, release C3 (mil and MOA, 100 yd and 100 m) and fix E and C, and close request 51 unasked. If they are not (for
+example only one usable hole, or all merged), say exactly why in for-alan.md and leave request 51 open; the planning session will pass it on.
+
+Until it is fixed, the E and C bull sheets already in nightly 114 and 115 carry a known issue: a hole wholly in their black can be missed.
+Say so on those sheets in the Targets screen ("a hole in the black may need adding by hand for now") and in the release notes, rather than
+leaving it silent.
+
 ## 2026-09-28, entry 252: the C3 diamond sized in angle; the MOA grid approved; "Shots Needed to Zero" on the analysis screen (Jylee's suggestion)
 
 **Status: done 2026-09-28, sections 1 and 2 held with entry 251.** Sections 1 and 2 are built into the C3 sheets, which wait beside the library for question 64. Sections 3 and 4 done: Shots Needed to Zero, its article, glossary entries and the desktop's timings. **Not yet measured: the Fold 7, the tablet and a 4 GB phone** (section 4.2); GroupLab Dev can now time it (`org.grouplab.test.shotstozero`), and request 50's sitting does. MOA 100 yd reaches 3 MOA across and 3.5 up and down.
