@@ -1,8 +1,8 @@
-READY FOR THE PHONE AND TABLET: nightly 115 carries look B and the new icon. On both the Fold 7 and the Tab S8 Ultra: unlock it, turn Wireless debugging off and on again, check Stay awake is on, and leave it on the charger, unlocked, on the same Wi-Fi as the PC. About fifteen minutes; this line will say when you can put them away.
+DONE WITH THE PHONE AND TABLET (2026-09-28 04:35 UTC, 22:35 MDT on the 27th): you can put the Fold 7 and the Tab S8 Ultra away and turn Stay awake off. Both have nightly 115 and its GroupLab Dev, and every setting the sitting changed is back as it was.
 
 # Requests for Alan
 
-**Open: 8.** Most urgent: none today. **The devices: the first sitting is done (2026-09-28, 18:44 MDT); leave the Fold 7 and the tablet on, with Wireless debugging and Stay awake, for one more short sitting once look B is built, later today; this line will say when you can put them away.** **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 6.** Most urgent: none today. **The devices are done with** (both sittings of 2026-09-28); put them away. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.
@@ -40,6 +40,17 @@ At the start of a run, the count of open requests in this file is printed and no
 ---
 
 ## 49. How GroupLab should look on the phone: A, B or C
+
+**Answered 2026-09-28 (entry 246): B, cards for the thumb. Built, and in nightly 115; nothing to do.** Real screenshots replace the
+drawings. The Fold 7: [first run](../figures/screens/phone/fold-firstrun-light.png) ([dark](../figures/screens/phone/fold-firstrun-dark.png)),
+[capture](../figures/screens/phone/fold-capture-light.png) ([dark](../figures/screens/phone/fold-capture-dark.png)), [a result](../figures/screens/phone/fold-result-light.png)
+([dark](../figures/screens/phone/fold-result-dark.png)), [Targets](../figures/screens/phone/fold-targets-light.png) ([dark](../figures/screens/phone/fold-targets-dark.png)),
+[Settings](../figures/screens/phone/fold-settings-light.png) ([dark](../figures/screens/phone/fold-settings-dark.png)). The tablet: [a result held
+sideways](../figures/screens/phone/tab-result-landscape-light.png) ([dark](../figures/screens/phone/tab-result-landscape-dark.png)), [upright](../figures/screens/phone/tab-result-portrait-light.png)
+([dark](../figures/screens/phone/tab-result-portrait-dark.png)), [Sessions](../figures/screens/phone/tab-sessions-landscape-light.png), [Targets](../figures/screens/phone/tab-targets-landscape-light.png),
+[Settings](../figures/screens/phone/tab-settings-landscape-light.png). The Fold held sideways: [a result](../figures/screens/phone/fold-result-landscape-light.png) ([dark](../figures/screens/phone/fold-result-landscape-dark.png)), [Sessions](../figures/screens/phone/fold-sessions-landscape-dark.png).
+The new icon beside GroupLab Dev's: [Fold](../figures/screens/phone/icons-fold.png), [tablet](../figures/screens/phone/icons-tab.png).
+The Features page shows them for the phone's own features. The result is your Dominus K scan of 26 September.
 
 **Needed:** your pick of three looks for the phone and tablet, or a mix of them. **Why:** entry 243 section 3.5 asked to bring the
 desktop's look to the phone, and the look is not changed without you. **Where:** the page is private, at
@@ -87,6 +98,9 @@ Storage**, **Boot Volume Backups**: is there a backup of type **Full** created o
 A good answer: "Full, 4 October, expires 17 October", or what the list shows instead.
 
 ## 45. The Fold 7 and the Tab S8 Ultra: reconnect both, about five minutes
+
+**Answered 2026-09-28 (entry 246). Nothing to do.** You reconnected both; two sittings ran: the Fold's benchmark and memory,
+GroupLab Dev, look B on every screen of both, and the icons. The devices can be put away.
 
 **Opened 2026-09-27 (entry 234).** Both dropped off the desktop tonight: the phone script's first run restarted the connection program
 while nobody was there to answer it, the Fold 7 now refuses connections (its Wireless debugging closed while it slept) and the tablet left

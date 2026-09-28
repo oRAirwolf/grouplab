@@ -486,13 +486,21 @@ def screen(name: str, alt: str, eager: bool = False, cls: str = "shot") -> str:
     )
 
 
+def phone_themes(name: str) -> list[str]:
+    """The files a phone screenshot has: one per theme, or one alone for something with no theme, such as the launcher's icons."""
+    if (PHONE_SCREENS / f"{name}.png").exists():
+        return [name]
+    return [f"{name}-{theme}" for theme in ("dark", "light") if (PHONE_SCREENS / f"{name}-{theme}.png").exists()]
+
+
 def phone_screen(name: str, alt: str) -> str:
     """A phone screenshot in both themes, at the phone's own proportions."""
-    size = Image.open(need(PHONE_SCREENS / f"{name}-light.png")).size
+    files = phone_themes(name)
+    size = Image.open(need(PHONE_SCREENS / f"{files[-1]}.png")).size
     w, h = size[0] // 2, size[1] // 2
     return "".join(
-        f'<img class="shot phone-shot only-{theme}" src="/assets/screens/phone/{name}-{theme}.webp" alt="{esc(alt)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
-        for theme in ("dark", "light"))
+        f'<img class="shot phone-shot{"" if len(files) == 1 else " only-" + stem.rsplit("-", 1)[1]}" src="/assets/screens/phone/{stem}.webp" alt="{esc(alt)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
+        for stem in files)
 
 
 def btn(label: str, href: str, primary: bool = False, sub: str | None = None, big: bool = False) -> str:
@@ -1815,7 +1823,7 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
         if f.get("shot") is not None and f["shot"] not in shots:
             found.append(f"{where}: there is no screenshot {f['shot']!r}")
-        if f.get("phoneShot") is not None and not all((PHONE_SCREENS / f"{f['phoneShot']}-{t}.png").exists() for t in ("light", "dark")):
+        if f.get("phoneShot") is not None and len(phone_themes(f["phoneShot"])) not in (1 if (PHONE_SCREENS / f"{f['phoneShot']}.png").exists() else 2,):
             found.append(f"{where}: there is no phone screenshot {f['phoneShot']!r} in both themes")
         if f.get("shot") is None and not f.get("phoneShot") and not f.get("noPicture"):
             found.append(f"{where} has no picture and does not say why")
@@ -1846,7 +1854,7 @@ def feature_card(f: dict, compact: bool = False) -> str:
         links.append(f'<a href="/research/{f["article"]}/">The research behind it</a>')
     picture = "" if compact or not f.get("shot") else f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
     if not compact and not f.get("shot") and f.get("phoneShot"):
-        picture = f'<a class="plain" href="/assets/screens/phone/{f["phoneShot"]}-dark.webp">{phone_screen(f["phoneShot"], f["name"] + " in GroupLab on a phone")}</a>'
+        picture = f'<a class="plain" href="/assets/screens/phone/{phone_themes(f["phoneShot"])[0]}.webp">{phone_screen(f["phoneShot"], f["name"] + " in GroupLab on a phone")}</a>'
     platforms = " · ".join(f["platforms"])
     return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'
             f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. {esc(since_words(f))}.</p>'

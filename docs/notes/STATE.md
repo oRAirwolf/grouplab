@@ -9,15 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 247.
+**Last rewritten:** 2026-09-28, after entries 246 and 248.
 
 ---
 
 ## In flight
 
-- Done: everything through 245, and 247 (the desktop Ballistics screen as concept B, three columns, a Hit probability view).
-  **246 and 248 wait on the second device sitting**: look B on the tablet and both home screens' icons from nightly 115; the
-  READY line tops for-alan.md since 03:50 UTC 2026-09-28, and no device had appeared by 04:22. Then requests 45 and 49 close. **249** (a Desktop | Mobile switch on the tour and Features page) comes after those screenshots.
+- Done: everything through 248. 246: both device sittings, look B on the phone and tablet photographed in both themes and both
+  orientations (`docs/figures/screens/phone/`), requests 44, 45 and 49 closed. 247: the desktop Ballistics screen as concept B.
+  248: the icon; its themed version was not photographed. Next **249** (Desktop | Mobile on the tour and Features), then **250**.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -36,8 +36,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
   definitions too. **A public Play listing waits on the attorney's review of the GPL app store permission.**
-- **The first device sitting of 246 ran** (2026-09-28): the Fold's benchmark and memory, GroupLab Dev, look B checked on the Fold.
-  Both run nightly 111 side-loaded; the second sitting installs 115 over it, the same key. The tablet was locked for B.
+- **Both devices run nightly 115** and its GroupLab Dev (nightly-signed now), and can be put away; for-alan.md's first line says so.
+  The Dev build reads a picture a test names (`files/test/`), so a sitting never opens the owner's picker.
 - **The Play internal test ran on the Fold 7** (entry 232). Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
   has the link, the uninstall-first rule and the symbols zip each nightly now makes. Automatic Play upload waits on request 38.
 - **The survey page is live** (entry 241): grouplab.org/survey/, its worker installed on 2026-09-27; counting restarted under the
@@ -65,8 +65,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **8** (45 and 49 close after the second sitting; 46 the backups on 4 October; 38 the
-Store; 33 the Fold 7's camera; then 9, 16 and 20).
+Open requests in `docs/notes/for-alan.md`: **6** (46 the backups on 4 October; 38 the Store; 33 the Fold 7's camera; then 9, 16
+and 20).
 
 ## Open questions
 

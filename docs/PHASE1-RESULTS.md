@@ -59,6 +59,14 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 248: the desktop's mark as the Android icon
+
+`scripts/android-icons.py` draws the icons from `grouplab-mark.svg`: adaptive icons for GroupLab (dark background) and GroupLab Dev
+(light), each with a monochrome layer for themed icons and the mark inside the safe zone, square and round PNGs at every density, and the
+Play listing's 512 px icon and 1024 by 500 feature graphic in `docs/store/`. Both builds point at theirs (`Entry234Tests`). On nightly 115
+both devices show the two side by side (`docs/figures/screens/phone/icons-fold.png`, `icons-tab.png`). The themed version was not
+photographed: One UI turns themed icons on for the whole home screen or not at all.
+
 ## Entry 247: the desktop Ballistics screen as concept B
 
 **Layout.** Three columns as on the analysis screen (`MainWindow.BallisticsLayout.cs`). The top bar holds the pickers, the unit switch and
@@ -85,6 +93,25 @@ Ballistics page and the user guide's section 8 describe the new layout.
 
 **Also in this commit.** The red CI on 8eb2396 was `StateFileTests.ItsInboxListIsWhatTheInboxHolds`: STATE listed the four uncommitted
 inbox files; it now reads what the repository holds.
+
+## Entry 246: the Fold 7 and the tablet, look B, and the two sittings
+
+**First sitting** (edcd707): the Fold's benchmark line, 2.6 s, 438 MB, 25 of 25, on the survey page; GroupLab Dev on both; a 32 MP
+scan at the working size, 25 of 25, Fold 429 MB at most in 2.8 s and tablet 523 MB in 4.6 s, against budgets of 724 and 1,527 MB. What
+the devices showed was fixed in the same commit: the phone's result order, side by side only in landscape, Letter by region, and a
+second activity stacked by a start aimed at a running GroupLab.
+
+**Look B** (eb8a936): the desktop's tokens and faces with `PhoneStyles` on top, on every screen, light and dark.
+
+**Second sitting**, nightly 115 on both: GroupLab updated in place; GroupLab Dev reinstalled, since the one there was a local build signed
+differently (announced in the panel first). Every screen in light and dark, the tablet upright and sideways and the Fold's cover screen
+upright and sideways; the result from Alan's Dominus K scan through the Dev build's test picture, so no picker showed his own pictures.
+The status bar is cut off every picture and the S Pen's floating button painted out with the page around it. What is published is in
+`docs/figures/screens/phone/`, and the Features page shows it for the phone's own features (`phoneShot` in `website/features.json`,
+checked by the site build). Every setting the sitting changed was put back and compared with the record taken first.
+
+**Found on the way:** the release-notes check refused nightly 115 because "an unfolded phone" contains "folded"; it matches whole words
+now (f0a8bbb).
 
 ## Entry 245: question 63 answered, and where the load goes on a set
 

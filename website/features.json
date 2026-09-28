@@ -559,12 +559,12 @@
       "name": "GroupLab Dev for testers",
       "sentence": "A development build installs beside GroupLab from Google Play, so a tester can have both on one phone.",
       "shot": null,
-      "noPicture": "a phone build, whose screens come with the phone's look (entry 243)",
       "platforms": [
         "Android"
       ],
       "since": "next",
-      "note": "GroupLab Dev"
+      "note": "GroupLab Dev",
+      "phoneShot": "icons-fold"
     },
     {
       "key": "big-screen",
@@ -572,12 +572,12 @@
       "name": "The sheet beside the numbers on a big screen",
       "sentence": "On a tablet in landscape or an unfolded phone, the result shows the sheet and its numbers side by side instead of one under the other.",
       "shot": null,
-      "noPicture": "a phone build, whose screens come with the phone's look (entry 243)",
       "platforms": [
         "Android"
       ],
       "since": "next",
-      "note": "side by side"
+      "note": "side by side",
+      "phoneShot": "tab-result-landscape"
     },
     {
       "key": "phone-targets",

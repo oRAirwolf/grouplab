@@ -24,6 +24,28 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 248: the Android app's icon is the desktop's GroupLab mark
+
+**Status: done 2026-09-28.** Every section. Section 4: the two icons were cropped from the launcher's app search for "GroupLab" rather than the home screen, so no other app is in the picture. **Not done: the themed version.** One UI offers themed icons only as a switch for the whole home screen, and turning it on to take a picture would change the look of every app on Alan's phone; the monochrome layer is built and tested (`Entry234Tests`).
+
+Alan: "Can you make the app icon match the desktop icon? Right now it is a generic android icon." The release build's manifest placeholder
+is `grouplabIcon=@android:drawable/sym_def_app_icon`, Android's stock icon. The desktop's mark is in `src/GroupLab.App/Assets/grouplab-mark.svg`
+(and `-light`), with the Windows `.ico`, the macOS `.icns` and the Linux PNGs built from it.
+
+1. Make a proper Android launcher icon from the same mark: an **adaptive icon** (`mipmap-anydpi-v26/ic_launcher.xml` with a background
+   layer and the mark as the foreground layer, kept inside the 66 dp safe zone so no launcher mask crops it), a **monochrome layer** for
+   Android 13 and later's themed icons, a round variant, and PNG fallbacks at every density for Android 10 to 12 devices that need them.
+   Background: the desktop's dark `bg` or the color the Windows icon already uses, whichever reads better on both light and dark home
+   screens. Generate them from the SVG in the build (or once, with the script committed), never drawn by hand, so a change to the mark
+   carries everywhere.
+2. Point `grouplabIcon` at it for the release build. **GroupLab Dev** keeps a clearly different icon so the two are never confused on the
+   home screen: the same mark with a "DEV" band or a different background, generated the same way.
+3. The Play listing's 512 by 512 icon and its feature graphic from the same source, in `docs/store/` next to the Store listing, for when
+   Alan fills in the Play store listing.
+4. Install on the Fold 7 and the tablet in the next device sitting and take a screenshot of each home screen's icons (GroupLab and GroupLab
+   Dev side by side, and the themed version if the launcher offers it); nothing else on the home screen is kept in the screenshot beyond
+   the two icons, cropped.
+
 ## 2026-09-28, entry 247: the desktop Ballistics screen redesigned, concept B
 
 **Status: done 2026-09-28.** Every item and the whole addition. Built before entry 246's second device sitting, which waits for nightly 115 to carry look B and the icon, rather than after it as the entry asked: the order changes nothing either depends on.
@@ -78,6 +100,39 @@ sessions:
 4. **Right column** stays "At one range", and the target's distance follows it, so the hold shown and the chance are for the same shot.
 5. The footer carries the trials and seed sentence.
 Nothing the simulation computes changes. Same themes, narrow-window rule, screenshots and tests as the rest of B.
+
+## 2026-09-28, entry 246: the phone's look is B; the Fold 7 and the tablet are back; the Fold's benchmark
+
+**Status: done 2026-09-28.** Every section. Request 44 closed in the first sitting, requests 45 and 49 in the second. The second sitting ran on nightly 115 rather than a local build, because 115 had published by the time the devices were back; it covers the release build's icon too. Not taken: Capture in dark on the tablet upright, which the Fold covers.
+
+1. **Request 49: Alan chose B**, "cards for the thumb": the desktop's colors and type on rounded panels, big tappable choices, figure
+   tiles. Build B on the phone and the tablet, on every screen (first run, result, Settings, Targets, capture), light and dark, with the
+   desktop's tokens from `docs/DESIGN.md` as the only source of colors and type. Replace the concept drawings with real screenshots from
+   the Fold 7 and the tablet once built, and put them in for-alan.md and on the Features page. Close request 49.
+2. **Request 45: done.** Alan turned Wireless debugging and Stay awake on for both the Fold 7 and the Tab S8 Ultra (the tablet over
+   wireless debugging this time; connect it by its mDNS name as entry 236 says). Run everything that waited on them: GroupLab Dev's first
+   install and log (entry 234), the picked-photo memory on each (entry 239), the scaled memory budget (entry 240), the side by side layout
+   and the phone's Targets screen screenshots (entry 243), and B once built. Close request 45.
+3. **Request 44:** Alan read "Last run on 27 September 2026 18:22" from the Fold 7's Settings but not the time and memory on the same
+   line. Now that the phone is connected, read the full line from its Settings screen over adb (a screenshot of that screen only, nothing
+   else on the phone), put the Fold's result on the survey page, and close request 44.
+
+**Order (Alan, same morning):** do every test that needs the Fold 7 or the Tab S8 Ultra **first**, in one sitting, before any other work
+in this entry or entry 245: request 44's line, then GroupLab Dev's install and log, the picked-photo memory and the memory budget on both,
+the side by side and Targets screenshots. Then build B, and when B is built, take its screenshots on both in a second, short sitting. Say
+in for-alan.md the moment the devices are no longer needed, so Alan can put them away.
+
+**Telling Alan (added):** Alan wants to be told when the second device sitting is ready. The moment look B and the icon (entry 248) are
+built and installable, before starting the sitting: put one line at the very top of for-alan.md that starts with **"READY FOR THE PHONE
+AND TABLET:"** and says what he needs to do (usually: unlock both, Wireless debugging off and on, Stay awake on, on the charger), and print
+the same line as the last line of the panel. Then wait up to thirty minutes for the devices to appear before moving on to other work, and
+check again at the end of each entry after that. The planning session watches for-alan.md for that line and passes it to him.
+
+**Do the second device sitting now (Alan, 2026-09-28 evening):** do not wait for CI or nightly 115. Build GroupLab Dev locally from the
+current commit (look B and the icon, eb8a936 and later), install it over wireless debugging on the Fold 7 and the Tab S8 Ultra, and run the
+whole second sitting while CI finishes: look B on every screen in light and dark, both devices, portrait and landscape; the icon on each
+home screen (entry 248, cropped to the two icons); the new desktop Ballistics screen is not a phone item. Report in for-alan.md and say
+when the devices can be put away. The release build's icon is checked once nightly 115 has it.
 
 ## 2026-09-28, entry 245: question 63 answered
 
