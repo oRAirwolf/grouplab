@@ -2712,6 +2712,14 @@
   "Twelve pages, one per screen, so you can see what using GroupLab is like before you download it.": {
    "kind": "code",
    "where": "website/tour.json order, counted by scripts/counts.py tour-screens"
+  },
+  "On the tour · In the user guide · The research behind it MOA at 100 yd Mil at 100 yd MOA at 100 m Mil at 100 m; design C3, chosen by Alan with Jylee and Unholy On the desktop only, for now.": {
+   "kind": "code",
+   "where": "tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures, drawn from targets/GL-CF25-LTR-E, GL-CF25-LTR-C and the four GL-ZERO sheets; the pictures chosen by entry 256, C3 by entry 251"
+  },
+  "On the tour · In the user guide The E bull as it prints: a black disc, its white center and a small dot The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.": {
+   "kind": "code",
+   "where": "tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures, drawn from targets/GL-CF25-LTR-E, GL-CF25-LTR-C and the four GL-ZERO sheets; the pictures chosen by entry 256, C3 by entry 251"
   }
  },
  "rules": [

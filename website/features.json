@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, a sheet with one bull now says 1 bull",
     "The four zeroing grids are redrawn as design C3",
     "In the Targets list, Letter sheets now come before A4",
     "The preview on the Targets screen now shows every word",
@@ -331,6 +332,7 @@
       "name": "Zeroing grids read through a scope",
       "sentence": "Design C3, chosen by Alan with Jylee and Unholy: squares of a scope's own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.",
       "shot": "targets-zero",
+      "sheets": [["zero-moa-100y", "MOA at 100 yd"], ["zero-mil-100y", "Mil at 100 yd"], ["zero-moa-100m", "MOA at 100 m"], ["zero-mil-100m", "Mil at 100 m; design C3, chosen by Alan with Jylee and Unholy"]],
       "platforms": [
         "Windows",
         "macOS",
@@ -558,6 +560,7 @@
       "name": "The E bull",
       "sentence": "Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.",
       "shot": "targets",
+      "sheets": [["e-bull", "The E bull as it prints: a black disc, its white center and a small dot"]],
       "platforms": [
         "Windows",
         "macOS",
@@ -579,6 +582,7 @@
       "name": "The C bull",
       "sentence": "A black diamond standing on a point, with a white center and a dot: its points sit on a crosshair's lines, on three sheets and in the designer and Made for your optic.",
       "shot": "targets",
+      "sheets": [["c-bull", "The C bull as it prints: a black diamond on its point, its white center and a dot"]],
       "platforms": [
         "Windows",
         "macOS",
@@ -600,6 +604,7 @@
       "name": "Large format on a home printer",
       "sentence": "The large format sheets print as sets of four Letter or A4 sheets, the same bulls and spacing, each sheet with its own markers and codes.",
       "shot": "targets",
+      "sheets": [["large-set", "One large format target as its four Letter sheets, laid out as they are shot"]],
       "platforms": [
         "Windows",
         "macOS",

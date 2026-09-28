@@ -1,8 +1,17 @@
 READY FOR THE PHONE AND TABLET: nightly 118 carries the C3 zeroing grids, Shots Needed to Zero and the camera's new log. On both the Fold 7 and the Tab S8 Ultra: unlock it, turn Wireless debugging off and on again, check Stay awake is on, and leave it on the charger, unlocked, on the same Wi-Fi as the PC. Have a printed GroupLab 5x5 sheet on a table in ordinary room light for the camera test. About thirty minutes, most of it needing nobody; the few steps with the Fold 7 over the sheet will appear here, and this line will say when you can put them away.
 
+NOW, STEP 1 OF 3, THE CAMERA TEST (Fold 7 closed, about five minutes; the tablet needs nothing): GroupLab Dev is on its Capture screen. With the printed 5x5 sheet flat on the table: (a) press Take a picture, allow the camera if asked, hold the phone over the sheet so all of it shows, and follow the words at the top until the shutter fires by itself; (b) then three bad ones on purpose, one at a time, about five seconds each, noting whether the words said what was wrong: the phone tilted well over to one side, far too close so the sheet runs off the screen, and your hand's shadow across the sheet; (c) one more good one from a clearly different height, until the shutter fires by itself. Then say "camera done", and anything that felt wrong. Step 2 will be opening the Fold once for the big-screen pictures.
+
 # Requests for Alan
 
 **Open: 7.** Most urgent: **50**, the device sitting now, with the camera test of 33 inside it (the READY line above). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+
+**The Features page shows each new thing itself** (entry 256; not a request). These entries now have their own picture, drawn as the
+sheet prints: **The E bull**, **The C bull** (with its dot), **Zeroing grids read through a scope** (all four C3 sheets, credited to you
+with Jylee and Unholy) and **Large format on a home printer** (the four Letter sheets); and **Shots Needed to Zero** (credited to
+Jylee) and **Ballistics and hit chances** (the Hit probability view) show their own views. Twelve entries still use a general screen and
+are listed as gaps in `docs/figures/SCREENSHOTS.md` until each has its own crop. From now on a new bull, sheet or view is not finished
+until it has its own picture there.
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.

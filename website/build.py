@@ -182,6 +182,13 @@ def build_images() -> None:
         dst.parent.mkdir(parents=True, exist_ok=True)
         img.save(dst, "WEBP", quality=90, method=6)
 
+    # Entry 256: the bulls, grids and sheets as they print, one picture for both themes, on their own white paper.
+    for png in sorted(SCREENS.glob("sheet-*.png")):
+        img = Image.open(png).convert("RGB")
+        dst = OUT / "assets" / "screens" / (png.stem + ".webp")
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        img.save(dst, "WEBP", quality=90, method=6)
+
     # The phone's screens at half their size, which is still sharper than any page shows them.
     for png in sorted(PHONE_SCREENS.glob("*.png")):
         img = Image.open(png).convert("RGB")
@@ -1888,6 +1895,9 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
         if f.get("shot") is not None and f["shot"] not in shots:
             found.append(f"{where}: there is no screenshot {f['shot']!r}")
+        for name, _ in f.get("sheets", []):
+            if not (SCREENS / f"sheet-{name}.png").is_file():
+                found.append(f"{where}: there is no picture sheet-{name}.png in docs/figures/screens/current (entry 256)")
         # Entry 249 item 4: a feature the phone has needs the phone's own picture, as one the desktop has needs the desktop's (entry 242).
         mobile = f.get("mobile") or {}
         desktop = set(f.get("platforms", [])) - {"Android"}
@@ -1933,11 +1943,24 @@ def feature_card(f: dict, compact: bool = False) -> str:
                    if f.get("shot") else "" if on_desktop else only_note("On the phone only."))
         phone = (f'<a class="plain" href="/assets/screens/phone/{phone_themes(mobile["shot"])[0]}.webp">{phone_screen(mobile["shot"], f["name"] + " in GroupLab on a phone")}</a>'
                  if mobile.get("shot") else "" if "Android" in f["platforms"] else only_note("On the desktop only, for now."))
-        picture = shown("desktop", desktop) + shown("mobile", phone)
+        picture = sheet_pictures(f) + shown("desktop", desktop) + shown("mobile", phone)
     platforms = " · ".join(f["platforms"])
     return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'
             f'<p>{esc(f["sentence"])}</p><p class="small faint">{esc(platforms)}. {esc(since_words(f))}.</p>'
             + (f'<p class="small">{" · ".join(links)}</p>' if links else "") + "</article>")
+
+
+def sheet_pictures(f: dict) -> str:
+    """Entry 256: a feature that names a bull, a grid or a sheet shows that thing as it prints, the same on both sides of the switch."""
+    if not f.get("sheets"):
+        return ""
+    figures = []
+    for name, caption in f["sheets"]:
+        size = Image.open(need(SCREENS / f"sheet-{name}.png")).size
+        figures.append(f'<figure class="sheet-pic"><a class="plain" href="/assets/screens/sheet-{name}.webp"><img src="/assets/screens/sheet-{name}.webp" '
+                       f'alt="{esc(caption)}" width="{size[0]}" height="{size[1]}" loading="lazy" decoding="async"></a>'
+                       f'<figcaption class="small faint">{esc(caption)}</figcaption></figure>')
+    return f'<div class="sheet-pics">{"".join(figures)}</div>'
 
 
 def since_words(f: dict) -> str:
@@ -2432,6 +2455,11 @@ a.plain{color:var(--text)}
 :root:not([data-platform="mobile"]) .platform-switch [data-choose="desktop"],:root[data-platform="mobile"] .platform-switch [data-choose="mobile"]{background:var(--amber-tint);color:var(--amber)}
 .tour-shot img.phone-shot{width:auto;max-width:100%;max-height:640px;margin:0 auto;border-radius:14px}
 img.phone-thumb{object-fit:contain;background:var(--line)}
+/* Entry 256: a bull, grid or sheet as it prints, on its own paper, so one picture reads in both themes. */
+.sheet-pics{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.sheet-pic{margin:0;flex:1 1 140px;max-width:320px}
+.sheet-pic img{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:4px;display:block}
+.sheet-pic figcaption{margin-top:4px}
 a.spot{color:inherit}
 a.spot:hover{border-color:var(--amber);text-decoration:none}
 

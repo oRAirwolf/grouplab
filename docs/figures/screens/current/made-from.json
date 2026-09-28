@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 117,
+  "afterNightly": 118,
   "screens": {
     "analysis": "7b69c4deabc7081fc54bbba0f2bf19b9d6df8c4cef906e3320bb3c171de69698",
     "analysis-open": "d5131f5de776619f3dd6f278939e71a0851ec96717992bb4dd2d48de0bb3e436",
@@ -14,6 +14,13 @@
     "optic-4x": "1488f998fdfb6fb3e2548eca0ce77d9bab3a3947b61efd67f1fb7080506705c7",
     "sessions": "efff5e655192573f822bbab895e1713cef8c5ad086eb68ceda8535c89d3cc3ef",
     "settings": "a03e69f710be55b03d1df8cc00a794ebc6c958d28e680359189b5e5f7df5083b",
+    "sheet-c-bull": "6632a59d978844eb38dea478106942e0cbfaf9fb9885dc78d44c61e483fd1b62",
+    "sheet-e-bull": "eee7eff92d0aca6a5c2a95d6c6dbb6fd5b9b812b386ef33709b245f42d35546c",
+    "sheet-large-set": "63c624ff2a814357eef40a65c2f34a05d492a970412d1e252e19904b2af476e7",
+    "sheet-zero-mil-100m": "02d19ec39c93d51768734c1941150bea922427e98baec2f92a52553863ee4744",
+    "sheet-zero-mil-100y": "70050eec94e7be27380fea84811bb32177175d92bb77cca88cc54ce7ff16b9df",
+    "sheet-zero-moa-100m": "e83597bf8c466f24caba2f363a5c74d2323cb0d9cc546201852b763bd12da0b2",
+    "sheet-zero-moa-100y": "951a8d29d837b30ab5082c956e0eb67924b78a34402f9518b03f3368a1f6ea9e",
     "shots-to-zero": "48fb1339c3312a93530c504b116ee57556500fe615b46cfa340aa7b7f206cbe9",
     "targets": "a62f7bd1f59b0ab6487be0b9d6a6e2c78a2ddae99673cd0ff02cd73efb01aa5a",
     "targets-zero": "efe5276689dd3b45f29b5155af3c43fbfbb29b8a7998396993d25e5d09880a77"

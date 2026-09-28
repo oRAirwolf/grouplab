@@ -94,7 +94,8 @@ public sealed class TargetsPage : UserControl
             {
                 int bulls = sheet.Definition.Bulls.Count(b => b.Scoring);
                 string paper = sheet.Paper.Split(',')[0];
-                rows.Children.Add(Screens.Row(sheet.Definition.Name, sheet.Sheets > 1 ? $"{paper} · {bulls} bulls a sheet, {sheet.Sheets} sheets" : $"{paper} · {bulls} bulls", () => Content = Sheet(sheet)));
+                string count = bulls == 1 ? "1 bull" : $"{bulls} bulls";
+                rows.Children.Add(Screens.Row(sheet.Definition.Name, sheet.Sheets > 1 ? $"{paper} · {count} a sheet, {sheet.Sheets} sheets" : $"{paper} · {count}", () => Content = Sheet(sheet)));
             }
 
             column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });

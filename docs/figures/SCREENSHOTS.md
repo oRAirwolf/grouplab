@@ -79,6 +79,37 @@ nightly that carries the C3 grids and Shots Needed to Zero (entry 253 section 3)
 | `tab-targets-landscape-dark.png` | /features/ |
 | `tab-targets-landscape-light.png` | /features/ |
 
+## The Features page: each entry's own picture (entry 256)
+
+**The rule.** When a Features entry names a particular thing (a bull, a grid, a sheet, a view, a result), its picture shows that thing,
+large enough to see what makes it different; a general screen that only happens to contain it does not count. A bull, grid or sheet is
+drawn by the screenshot walk straight from the library as it prints (`sheet-*.png`, one picture for both themes on its own paper, the
+same on both sides of the Desktop and Mobile switch), and the stale check holds it to the renderer and its target file. **A new bull,
+sheet or view is not finished until the Features page has its own picture of it.**
+
+**Their own picture now:** the E bull (`sheet-e-bull`), the C bull with its dot (`sheet-c-bull`), the zeroing grids (the four C3
+sheets, MOA and mil at 100 yd and 100 m, credited to Alan with Jylee and Unholy), large format on a home printer (`sheet-large-set`,
+the four Letter sheets), Shots Needed to Zero (credited to Jylee), Ballistics and hit chances (the Hit probability view), Made for
+your optic, the Targets screen, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
+read off a target, and the three sharing choices (Settings, where they are made).
+
+**Gaps: still a general screen**, each to get a crop of the view it names:
+
+| Entry | Its picture now | What it should show |
+|---|---|---|
+| A GroupLab sheet reads itself | the marking screen | a sheet's codes and markers found |
+| Every hole found | the marking screen | a few holes close up with their rings |
+| The bulls you aimed at | the marking screen | the bull picker with rows chosen |
+| A sheet shot off by the same amount | the analysis | the whole-sheet assignment's statement |
+| Targets GroupLab did not print | the marking screen | bulls placed by hand and a scale drawn at one |
+| Open by dropping or pasting | the marking screen | the drop target over the window |
+| Shots in and out as CSV | the analysis | the export and import commands |
+| Large sheets | the Targets screen | the photograph detail statement for a tiled target |
+| Real inches from a scan | the analysis | the scale line saying the print's own size |
+| Photographs at an angle | the marking screen | the angle and its limit named |
+| Words explained where they appear | the analysis | a word's explanation open |
+| Pool the sheets of a set | Session records | a pooled set with a missing sheet named |
+
 ## Not published
 
 `docs/figures/screens/*.png` (2026-09-14), `before/` and `after/` (entry 247's comparison for Alan) are the record of their day. No

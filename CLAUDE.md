@@ -134,6 +134,10 @@ What that means for me:
 
 **The tour is words about pictures, so a picture changing is not enough.** Entry 146 section 4.4: the weekly screenshot job replaces the picture on its own, and nothing replaces the words. So an entry that changes a screen says in its report whether the tour page for that screen still describes it, and I fix it in the same task if it does not. A tour page naming a button that is no longer there is worse than no tour page, because a reader takes it for the truth.
 
+**A new bull, sheet or view is not finished until the Features page has its own picture of it** (entry 256): the thing itself, large
+enough to see what makes it different, never a general screen that happens to contain it. `docs/figures/SCREENSHOTS.md` lists the
+entries still waiting for one.
+
 **After a push that publishes**, I confirm within 20 minutes that the new commit is live in the `grouplab-site-build` meta tag, and record in the task's report what was published and why. If the workflow fails, or the commit is not live after 30 minutes, I report it with the evidence rather than retrying blindly. The server keeps serving the last good site meanwhile. Reading the sync log over SSH is allowed for diagnosis; any other server change needs its own entry.
 
 **Never:** change the look without Alan, put an address, key or password in the repository, touch pissinhot.com, or publish a photograph or scan that no consent record in `samples/PROVENANCE.md` covers.

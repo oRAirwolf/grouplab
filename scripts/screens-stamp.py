@@ -86,6 +86,8 @@ def problems() -> list[str]:
         return found
 
     pictured = {m.group("screen") for p in (SCREENS / "current").glob("*.png") if (m := PICTURE.match(p.name))}
+    # Entry 256: a bull, a grid or a sheet drawn as it prints, one picture for both themes.
+    pictured |= {p.stem for p in (SCREENS / "current").glob("sheet-*.png")}
     for screen in sorted(pictured - set(mapping["screens"])):
         found.append(f"docs/figures/screens/current has pictures of {screen!r} and screens.json does not say which files draw it")
     for screen in sorted(set(mapping["screens"]) - pictured):

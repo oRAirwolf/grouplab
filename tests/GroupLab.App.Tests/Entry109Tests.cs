@@ -480,5 +480,82 @@ public class Entry109Tests
         {
             Application.Current!.RequestedThemeVariant = ThemeVariant.Default;
         }
+
+        SheetPictures(outputs);
+    }
+
+    /// <summary>
+    /// Entry 256: a Features entry that names a bull, a grid or a sheet shows that thing itself, drawn from the library as it prints, cropped
+    /// to it with a little margin, on its own white paper so one picture reads in both themes. The grids keep their legend and the numbers
+    /// outside them, so the scale can be read.
+    /// </summary>
+    private static void SheetPictures(IReadOnlyList<string> outputs)
+    {
+        const double dpi = 200;
+        const double perDmm = dpi / 254;
+
+        static GroupLab.Core.Gltd.Model.TargetDefinition Load(string file) =>
+            GltdJsonReader.ReadFile(Path.Combine(Repository(), "targets", file)).Definition!;
+
+        GrayImage Draw(GroupLab.Core.Gltd.Model.TargetDefinition d, int page, double left, double top, double right, double bottom)
+        {
+            var scene = SceneBuilder.Build(d).Pages[page];
+            left = Math.Max(0, left);
+            top = Math.Max(0, top);
+            right = Math.Min(scene.Width / 2.0, right);
+            bottom = Math.Min(scene.Height / 2.0, bottom);
+            var region = new PixelRegion((int)Math.Round(left * perDmm), (int)Math.Round(top * perDmm), (int)Math.Round((right - left) * perDmm), (int)Math.Round((bottom - top) * perDmm));
+            return SceneRasterizer.Rasterize(scene, dpi, 1.0, region, words: true);
+        }
+
+        void Save(string name, GrayImage image)
+        {
+            using var mat = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+            foreach (string output in outputs)
+            {
+                Cv2.ImWrite(Path.Combine(output, $"sheet-{name}.png"), mat);
+            }
+        }
+
+        // One bull, a little more than its outer disc on every side.
+        foreach (var (name, file) in new[] { ("e-bull", "GL-CF25-LTR-E.gltd.json"), ("c-bull", "GL-CF25-LTR-C.gltd.json") })
+        {
+            var d = Load(file);
+            var bull = d.Bulls.First(b => b.Scoring);
+            double reach = 0.6 * d.RingSets.First(r => r.Key == bull.RingSet).Discs[0].Diameter;
+            Save(name, Draw(d, 0, bull.X - reach, bull.Y - reach, bull.X + reach, bull.Y + reach));
+        }
+
+        // Each zeroing grid, from the legend at the top to the numbers under it, and the numbers each side.
+        foreach (string file in new[] { "GL-ZERO-MOA-100Y", "GL-ZERO-MIL-100Y", "GL-ZERO-MOA-100M", "GL-ZERO-MIL-100M" })
+        {
+            var d = Load(file + ".gltd.json");
+            var g = d.Grids![0];
+            double halfX = g.FieldX ?? g.Half, halfY = g.FieldY ?? g.Half;
+            Save(file.Replace("GL-", "", StringComparison.Ordinal).ToLowerInvariant(),
+                Draw(d, 0, g.CentreX - halfX - 130, 40, g.CentreX + halfX + 130, g.CentreY + halfY + 110));
+        }
+
+        // A large format set: its four Letter sheets, whole, side by side as they are laid out to shoot.
+        {
+            var d = Load("GL-LR25-T.gltd.json");
+            var pages = SceneBuilder.Build(d).Pages;
+            const double small = 40;
+            var drawn = pages.Select(p => SceneRasterizer.Rasterize(p, small, words: true)).ToList();
+            int cols = d.Tiling!.Cols, rows = d.Tiling.Rows, gap = 12, w = drawn[0].Width, h = drawn[0].Height;
+            var all = new byte[((cols * w) + ((cols - 1) * gap)) * ((rows * h) + ((rows - 1) * gap))];
+            Array.Fill(all, (byte)200);
+            int width = (cols * w) + ((cols - 1) * gap);
+            for (int i = 0; i < drawn.Count; i++)
+            {
+                int x0 = (i % cols) * (w + gap), y0 = (i / cols) * (h + gap);
+                for (int y = 0; y < h; y++)
+                {
+                    Array.Copy(drawn[i].Pixels, y * w, all, ((y0 + y) * width) + x0, w);
+                }
+            }
+
+            Save("large-set", new GrayImage(width, (rows * h) + ((rows - 1) * gap), all));
+        }
     }
 }
