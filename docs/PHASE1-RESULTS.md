@@ -59,6 +59,24 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 250: the Targets preview shows the words; Letter before A4; the one-shot zero evaluated
+
+**Section 1.** The preview drew a scene's discs and rectangles and skipped its text. `SceneRasterizer` can now draw text runs, from
+glyph outlines derived from Liberation Sans (metric-compatible with the PDF's Helvetica) and placed at the PDF's own advances
+(`SheetGlyphs`, the outlines written by `scripts/sheet-glyphs.py` with the font's license at their head). Only the previews ask for it;
+everything that measures a render still draws no words, so no measured figure moves. Both previews carry the actual-size line when the PDF
+does, and the "text is drawn in the PDF" sentence is gone. **Which sheets were wrong: every one.** Every library sheet and a designer sheet
+has words, and the old preview differed from its PDF by 1,643 to 43,016 pixels at 150 dpi; with the words, 0 to 4, except the zeroing
+grids' large labels at about 1,300, the fine shape of Liberation Sans against the reader's Helvetica (`PreviewMatchesPdfTests`). No two
+words overlap on any sheet (`NoWordsOnAnySheetRunTogether`); the mil grid's "1.0" and "0.5" come close without overlapping, and entry
+251 replaces that layout.
+
+**Section 2.** One rule in `TargetLibrary.PaperRank` orders each family: Letter, then Legal, Tabloid and the rolls, then A4, A3 and A5,
+the catalogue's order within a size; with the region's A4 the ISO sizes lead. The desktop and the phone pass the region
+(`LibraryOrderTests`).
+
+**Section 3** is superseded by entry 251 (C3 chosen); **section 4** is `docs/notes/ONE-SHOT-ZERO.md` and its answer in `for-alan.md`.
+
 ## Entry 249: Desktop | Mobile on the tour and the Features page
 
 **The switch.** At the top of the tour, every stop and the Features page. Both sides are in each page and the switch shows one: a

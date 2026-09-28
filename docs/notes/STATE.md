@@ -9,15 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 249.
+**Last rewritten:** 2026-09-28, after entry 250.
 
 ---
 
 ## In flight
 
 - Done: everything through 249. 246: look B photographed on both devices (`docs/figures/screens/phone/`), requests 44, 45, 49
-  closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile on the tour and Features, a phone-only Capture
-  stop. Next **250**: the Targets preview with its words, Letter first, the zeroing grid concepts (C1 to C6), the one-shot zero note.
+  closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile. 250: the Targets preview draws the words
+  (`SheetGlyphs`), Letter first, the one-shot zero note. Next **251** (the C3 mil grids) and **252** (C3 in MOA, Shots Needed to Zero).
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -100,6 +100,7 @@ line reads what the repository holds, and the test fails locally until the last 
 - **A zeroing grid is now drawn by its style**: style 2's strokes, labels, statement and ruler are fixed by `GridStyle2`, and a
   label breaks the line behind it on purpose.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
+- **A preview draws words; a measured render does not** (`SceneRasterizer` `words:`, entry 250).
 - **One solid amber button a screen**: a chosen switch is the tint, `AppStyles.Chosen` (entry 247).
 - **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words, or the site build fails.
 - **An error GroupLab survives is no longer called a close** (entry 192); each run leaves a marker so a real close is caught.
@@ -111,7 +112,6 @@ line reads what the repository holds, and the test fails locally until the last 
 - **Every published sentence has its backing**: `scripts/claims.py --check` fails CI otherwise (entry 159).
 - **Publishing an article is a decision** recorded in `website/research/PUBLISHED.md`; `ready` means finished and not live.
 - **A scan reports real inches.** A photograph stays in the sheet's own inches and says so.
-- **Temporary files clean themselves up.** Tests write into one folder per run, CI fails on a leak.
 - **Nothing under `website/server/` may hold a carriage return**: it is copied to Linux as it is.
 - **Nothing is written into a HestiaCP `conf/web/<domain>/` folder** but the include itself.
 - **Alan's own photographs and scans may be published**, and so may what he passes on from Unholy (also TNA) and his other friends;

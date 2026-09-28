@@ -2,7 +2,7 @@ DONE WITH THE PHONE AND TABLET (2026-09-28 04:35 UTC, 22:35 MDT on the 27th): yo
 
 # Requests for Alan
 
-**Open: 6.** Most urgent: none today. **The devices are done with** (both sittings of 2026-09-28); put them away. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 7.** Most urgent: none today; **50** is a device sitting later, announced by a READY line. **The devices are done with** (both sittings of 2026-09-28); put them away. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.
@@ -10,6 +10,15 @@ DONE WITH THE PHONE AND TABLET (2026-09-28 04:35 UTC, 22:35 MDT on the 27th): yo
 3. Finished: the tabloid and A3 sheets now print as sets of four Letter or A4 sheets; your old printouts still read.
 4. Waits on you: **49**, pick the phone's look (A, B or C) from the page it links; **45**, reconnect the Fold 7 and the tablet so the screenshots and measurements can run.
 5. Also done: entry 244 (the README now keeps itself current) and the server sitting (the survey worker installed, request 21 closed).
+
+**Jylee's one-shot zero, evaluated** (entry 250 section 4; not a request). It can be done: the phone already reads the zeroing grid and
+finds the hole's offset, and GroupLab already turns an offset into clicks. What is missing is the click value on the phone, a rifle on
+the phone to take its usual spread from, and the zero correction on the phone's result screen. What one shot can honestly say: only an
+error clearly bigger than the rifle's own spread (about 0.7 MOA for a rifle that shoots 1 MOA groups) is worth dialling off one shot;
+anything smaller gets "fire more before adjusting". So one shot is for getting on paper and big errors, not a fine zero. The design that
+fits GroupLab is "Zero, step by step": shot 1 gives a rough correction only when it is clearly outside the spread, each further shot
+updates the clicks and their interval, and the screen says when more shots stop changing the answer; "Shots Needed to Zero" (entry 252)
+is the same question from the other end. The full note is `docs/notes/ONE-SHOT-ZERO.md`. Jylee is credited by name.
 
 **The Ballistics screen, laid out as the B you chose** (entry 247; not a request). Before and after, light, 1400 by 900:
 [before](../figures/screens/before/ballistics-light-1400x900.png), [after, the trajectory](../figures/screens/after/ballistics-light-1400x900.png),
@@ -38,6 +47,15 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 50. One more short sitting with the Fold 7 and the tablet, later (nothing to do yet)
+
+**Opened 2026-09-28 (entries 250 and 252).** **Needed:** the phone and the tablet on the charger, unlocked, Wireless debugging off and on,
+Stay awake on, for about twenty minutes, **once a line at the top of this file starting "READY FOR THE PHONE AND TABLET:" says so**; not
+before. **Why:** three things can only be checked on the devices: the Targets preview now showing a sheet's words and Letter above A4 on the
+phone (entry 250), the new C3 zeroing grids on the phone, and how long "Shots Needed to Zero" takes to work out on the Fold and the tablet
+(entry 252, which asks for those timings). **A good answer:** nothing written; the devices on and reachable when the line appears. Until
+then they can stay put away.
 
 ## 49. How GroupLab should look on the phone: A, B or C
 

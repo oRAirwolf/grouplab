@@ -24,6 +24,105 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 250: the Targets preview leaves out the words; Letter before A4; new zeroing grid concepts; a one-shot zero evaluated
+
+**Status: done 2026-09-28, section 3 superseded.** Sections 1, 2 and 4 done. **Section 3 not done as written:** entry 251 records the choice (C3, with Jylee and Unholy) before the six concepts were built, so there are no concept PDFs and no request to choose; the detection check runs on C3 under entry 251. **Section 5:** the preview and the Letter-first order were built after the second device sitting, so they are checked on the phone in the next one (request 50).
+
+Alan sent two screenshots on 2026-09-27 (22:13 local): the exported PDF of GL-ZERO-MIL-100Y (legend lines, check bar, labels "1.0" and
+"0.5" on the grid, load block) and the same sheet in the Targets screen's preview, which shows the lines and codes but **none of the
+writing** (no legend, no labels, no check bar text, no load block labels, no sheet ID). The screen says "The preview shows the artwork;
+its text is drawn in the PDF", but to a person that is a wrong picture of the sheet.
+
+## 1. The preview shows the sheet as it prints
+
+1. The Targets preview (desktop and phone) draws everything the PDF draws, words included, in the same fonts and places: render the preview
+   from the same drawing the PDF writer uses (or rasterize the PDF page itself), not from a separate artwork-only path. Remove the "text is
+   drawn in the PDF" sentence once it is true.
+2. Check **every** sheet in the library, the four zeroing grids first (mil and MOA, 100 yd and 100 m), then every other sheet and a
+   designer sheet: a test renders each preview and each PDF page to images at the same size and fails when they differ beyond
+   antialiasing. Report which sheets were wrong.
+3. While there: on the exported mil 100 yd grid the horizontal labels run together ("1.0 0.5" reads as "1.00.5" at the left and right).
+   That layout is being replaced (section 3), so do not polish it; just make sure no text overlaps text on any sheet until then.
+
+## 2. Letter before A4 in the Targets list
+
+Alan: "Can we push the A4 pages to the bottom of the lists? I want letter to be above A4." In every group of the Targets list (desktop and
+phone), sort Letter sheets first, then other US sizes (Tabloid, rolls), then A4 and A3, keeping each group's existing order within a size.
+Make the order a rule in one place (and later a setting, "paper sizes first: Letter or A4", defaulting from the system's region), not a
+hand-ordered list.
+
+## 3. New zeroing grids: six concepts for Alan and his friends to choose from
+
+Alan: "the writing on the grid is not helpful and should be removed ... make at least 5 options ... a legend above that can be read from
+far away with no writing on the grid itself." The planning session drew **six** concepts, true size on Letter, on a private design page:
+https://claude.ai/artifact/6BqMkT9Gy5iP1cWNtUCCtV (each artboard exports as a Letter PDF at 100 percent; the codes and markers are
+placeholders). All six: plus or minus 1.0 mil at 100 yd (2 mil square, 7.2 in), Alan's C diamond with a white center and dot as the aim,
+a two-line legend above in 40 to 60 px bold type (about 0.3 to 0.45 in capitals, readable at 100 yd at about 10x), nothing written on the
+grid, a 4 in check bar and the codes at the bottom.
+
+1. Classic grid: 0.25 mil squares, heavier every 0.5 mil, heaviest every mil.
+2. Half-mil checkerboard: gray and white 0.5 mil squares, heavy whole-mil lines, no fine lines.
+3. Reticle on paper: no grid; heavy horizontal and vertical axes with ticks at 0.25 (short), 0.5 (medium) and 1 mil (long), a thin frame.
+4. Rings every 0.25 mil around the aim (heavier at 0.5 and 1.0) with ticked axes.
+5. Dot lattice: a dot every 0.25 mil, larger at 0.5, largest at whole mils.
+6. Whole-mil boxes: four 1 mil squares (two gray), quarter-mil ticks along the edges and the center cross, no interior lines.
+
+Before Alan and his friends shoot them, **check each for detection** so nobody chooses one GroupLab cannot read: render each concept as a
+real GroupLab sheet (grid style 3 or whatever the format needs, real markers and codes, the legend as the sheet's statement), put
+simulated holes on it at the usual calibers (on lines, on ticks, on dots, on gray, touching the diamond), and run the pipeline. Report per
+concept: holes found and position error, and anything the format cannot draw yet. Then print-ready PDFs of all six (true size, real codes)
+in `C:\Dev\grouplab-local\zero-concepts\` and a request in for-alan.md: print, shoot one group on each at 100 yd, and say which reads best
+through the scope. **Build only the one they choose**, in mil and MOA, 100 yd and 100 m; freeze the current four so printed ones still read.
+
+## 4. A one-shot zero on the phone: evaluate, do not build yet
+
+Jylee, a friend of Alan's, asks for an Android feature: photograph the zeroing grid after **one** shot, enter the scope (click value) and
+the distance, and GroupLab says how many clicks to adjust. Alan doubts it fits GroupLab's insistence on sample size, and asks that it at
+least be evaluated. Write the evaluation into `docs/notes/` (a short design note) and answer in for-alan.md:
+1. **Can it be done?** Technically: the zeroing grid is read like any sheet, one hole is found, its offset from the aim is known in
+   inches and angle, and the rifle record already holds the click value; the phone app has capture. Say what is missing.
+2. **What one shot can honestly say.** A single shot's offset is the zero error plus that shot's own dispersion. Use the same rule as the
+   desktop's zero correction ("not distinguishable from zero at N shots"): with the rifle's known sigma from earlier sessions (or a stated
+   typical value if none), show the suggested clicks **with their uncertainty**, and when the offset is within about two sigma, say plainly
+   "this could be the rifle's own spread; fire more before adjusting". One shot is good for getting on paper and for large errors, not
+   for a fine zero.
+3. **A design that fits GroupLab:** "Zero, step by step": shot 1 gives a rough correction only if it is clearly outside the rifle's spread;
+   each further shot on the same grid (or the next sheet) updates the group center, the suggested clicks and their interval, and the
+   screen says when adding shots stops changing the answer. The one-shot case becomes the first step of the normal group zero instead of a
+   separate shortcut. Say what it would take to build (camera flow, grid reading on the phone, the rifle's click value and sigma).
+4. Credit Jylee only if Alan says so; the planning session is asking.
+
+## 5. Devices
+
+Alan has both the Fold 7 and the Tab S8 Ultra connected over wireless debugging with Stay awake on (entry 246's second sitting). Include
+the Targets preview check (section 1) and the new Letter-first order on the phone in that sitting if they are built by then; otherwise
+the next.
+
+**Update from Alan, same night (supersedes section 3's list of six):** "1 is the only good one." Concepts 2 to 6 are dropped. The design
+page now shows concept 1 and five versions of it, all with **numbers outside the grid giving each line's distance from the aim in mils**
+(nothing written on the grid itself), same legend above, same C diamond aim, true size on Letter:
+- 1A: the classic grid with a number at every line (0.25, 0.5, 0.75, 1.0, and 0 at the center lines) on all four sides.
+- 1B: quarter lines in gray and thicker, half and whole mil lines black, numbers at half and whole mils only, larger.
+- 1C: 0.2 mil squares (like a mil reticle's 0.2 hash marks), heaviest every mil, a number at every line.
+- 1D: a heavy center cross, big numbers on the top and left edges only.
+- 1E: the classic grid with the central half-mil square shaded (the zero you are aiming for), numbers on all sides.
+The corner markers are placeholders (moved to the page corners to leave room for the numbers); check that the real markers and codes fit
+with the numbers and the legend, and run the section 3 detection check on 1 and 1A to 1E only. Alan and his friends choose among these.
+
+**Section 4:** Jylee may be credited by name (Alan, same night).
+
+**Second update from Alan (supersedes the 1A to 1E list):** "A mil reticle will usually have 0.2 mil subtensions and click values will almost
+always be 0.1 mils, so 1C makes the most sense." The mil grids use **0.2 mil squares**, heaviest every whole mil and at the center cross,
+numbers outside the grid in mils. The design page now holds six permutations of it:
+- C1: 0.2 mil squares, a number at every line on all four sides.
+- C2: gray, thicker 0.2 mil lines; black center cross and whole-mil lines.
+- C3: C1 plus 0.1 mil tick marks (one click) on the center cross and along the frame.
+- C4: mils on the top and left; the bottom and right numbered in 0.1 mil clicks (2, 4, 6, 8, 10), gray.
+- C5: C1 with the central 0.4 mil square shaded (within 2 clicks of the aim).
+- C6: no diamond; the aim is the heavy center cross with a 0.2 mil ring at its middle.
+Run the detection check on C1 to C6. The MOA sheets follow whichever is chosen, on the MOA equivalent (for example 0.5 MOA squares with
+1/4 MOA ticks if C3 is chosen); say what you would use. Alan and his friends choose.
+
 ## 2026-09-28, entry 249: a Desktop / Mobile switch on the tour and the Features page (after look B is built)
 
 **Status: done 2026-09-28.** Every item. Item 7: a feature's Mobile side carries its screenshot or the reason it has none; availability and version are the feature's own platforms and build, which the release notes already hold it to. No feature card has steps on either side, so none were added; the tour's stops carry the steps.
