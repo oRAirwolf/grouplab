@@ -29,13 +29,9 @@ public sealed class App : Avalonia.Application
     {
         Styles.Add(new FluentTheme());
 
-        // Entry 243 section 3.5: Fluent's own blue is in no palette of the desktop's, so the accent is the desktop's amber for the theme
-        // the phone is in. That is a mismatch fixed, not a choice made; the look as a whole waits for Alan's pick of the concepts.
-        Accent();
-        ActualThemeVariantChanged += (_, _) => Accent();
+        // Entry 246, request 49: look B. The desktop's styles and palette, the accent its amber, and the phone's cards on top of them.
+        PhoneStyles.Apply(this);
     }
-
-    private void Accent() => Resources["SystemAccentColor"] = GroupLab.App.Theme.Tokens.For(ActualThemeVariant).Amber;
 
     public override void OnFrameworkInitializationCompleted()
     {

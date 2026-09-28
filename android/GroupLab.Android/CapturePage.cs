@@ -42,15 +42,17 @@ public sealed class CapturePage : UserControl
             Spacing = 12,
             Children =
             {
-                Screens.Heading("Capture"),
+                Screens.Title("Capture"),
                 Screens.Line("Photograph a GroupLab target and GroupLab finds the holes and measures the group. Hold the phone square over the sheet; the words at the top of the camera say what to change, and it takes the picture itself when everything is right."),
-                // Entry 233: the one thing on a kitchen counter that still costs a hole, which the camera's live checks do not look for.
-                Screens.Line("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one."),
-                calibre,
-                distance,
-                Screens.Choice("Take a picture", Camera),
+
+                // Entry 246, look B: what GroupLab needs to know on one card, then the one thing the screen is for.
+                Screens.Card(Screens.Dim("The caliber and the distance"), calibre, distance),
+                Screens.Primary("Take a picture", Camera),
                 Screens.Choice("Choose a photograph", () => _ = Choose()),
                 status,
+
+                // Entry 233: the one thing on a kitchen counter that still costs a hole, which the camera's live checks do not look for.
+                Screens.Card(Screens.Dim("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one.")),
             },
         });
         Content = start;

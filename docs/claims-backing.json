@@ -2512,6 +2512,10 @@
   "**A picture without the picker** (entry 246): GroupLab Dev reads a picture named by the extra `org.grouplab.test.picture`, a file name in its own `files/test` folder, exactly as a chosen photograph, so a device is measured without opening the system's picker, which shows the owner's own pictures.": {
    "kind": "code",
    "where": "android/GroupLab.Android/MainActivity.cs TestPictureExtra and CapturePage.TestPicture, under GROUPLAB_DEV only; PhoneAnalysis's phone.prepare and phone.detect log lines (entry 246)"
+  },
+  "**Look and icon** (entries 246 and 248): the phone uses the desktop's styles and tokens with look B's cards on top of them, as DESIGN.md section 19 describes, and its icons, GroupLab's dark and GroupLab Dev's light, adaptive with a monochrome layer and PNGs for older launchers, are written by `scripts/android-icons.py` from the desktop's mark.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/PhoneStyles.cs and App.cs PhoneStyles.Apply; scripts/android-icons.py and android/GroupLab.Android/Resources/mipmap-*; held by Entry234Tests (entries 246 and 248)"
   }
  },
  "rules": [

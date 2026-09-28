@@ -398,6 +398,10 @@ the address), installs the newest GroupLab Dev, starts it, takes screenshots, an
 **Logcat.** Every line the application logs above DEBUG also goes to logcat under the tag `GroupLab`, scrubbed as the log file is: no
 path, no file name, no location. That is how a problem on a tester's phone from Google Play is read, since that copy is not debuggable.
 
+**Look and icon** (entries 246 and 248): the phone uses the desktop's styles and tokens with look B's cards on top of them, as DESIGN.md
+section 19 describes, and its icons, GroupLab's dark and GroupLab Dev's light, adaptive with a monochrome layer and PNGs for older
+launchers, are written by `scripts/android-icons.py` from the desktop's mark.
+
 **A picture without the picker** (entry 246): GroupLab Dev reads a picture named by the extra `org.grouplab.test.picture`, a file name in
 its own `files/test` folder, exactly as a chosen photograph, so a device is measured without opening the system's picker, which shows the
 owner's own pictures. Put the file there with `run-as org.grouplab.app.dev`, then `am start -n <its activity> --es

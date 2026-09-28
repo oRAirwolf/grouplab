@@ -534,8 +534,12 @@ Loads are compared on their own screen, the rail's chart slot, from sessions cho
   in the middle, a right column of figures, and a status line along the bottom.
 - **Themes.** Dark, light and high contrast, and following the system, resolved at run time; the plot has its own inks per theme.
 
-The phone today (entry 219) is Avalonia's Fluent theme with its own default accent and the phone's system font; the concepts of entry
-243 section 3.5 are the ways it could take this language on, and only the one Alan chooses is built.
+**The phone takes this language on as look B, "cards for the thumb"** (entry 246, Alan's choice of entry 243 section 3.5's three). It
+applies the desktop's own styles first, so its palette, faces and control states are the desktop's, and adds its own on top
+(`android/GroupLab.Android/PhoneStyles.cs`): a page title at the lead size, related things on rounded panels, choices as cards that turn
+amber when chosen, pill buttons with one amber primary a screen, figures as tiles with mean radius the amber one, and a bottom bar of icons
+with the current place in an amber pill. The radii and the 48 dp touch height are the phone's; every color and size is a token. Its icon
+is the desktop's mark (entry 248).
 
 **[r3] The analysis shows its work.** Every pipeline stage emits a structured record carrying its resolved parameters, the decisions it made with their alternatives, what it rejected and why, and its artefacts. That gives three things from one contract: a stage timeline the user can scrub, with clicking a rejection highlighting it on the image; a live run where each stage's artefact appears as it lands, so the markers light up, the residual map settles, the artwork vanishes and the holes emerge; and a console form that gives the Phase 0 and Phase 1 spikes their output for free before any UI exists.
 

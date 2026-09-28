@@ -25,7 +25,10 @@ public sealed class ResultView : UserControl
     private readonly MarkingSession session;
     private readonly TargetDefinition? definition;
     private readonly UnitSettings units;
-    private readonly TextBlock figures = Screens.Line("");
+    private readonly TextBlock figures = Screens.Dim("");
+
+    /// <summary>Entry 246, look B: the figures as tiles, two to a row, mean radius the amber one.</summary>
+    private readonly ContentControl tiles = new();
     private readonly CompositePlot plot = new() { Height = 360, HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly TextBlock saved = Screens.Line("");
     private readonly Button undo = new() { Content = "Undo", MinHeight = Screens.Touch, Margin = new Thickness(4), IsEnabled = false };
@@ -39,7 +42,7 @@ public sealed class ResultView : UserControl
         sessionId = result.SessionId;
         session = new MarkingSession(result.State);
         var column = new StackPanel { Spacing = 12 };
-        column.Children.Add(Screens.Heading(result.Definition?.Name ?? "The sheet"));
+        column.Children.Add(Screens.Title(result.Definition?.Name ?? "The sheet"));
         if (result.Failure is { } failure)
         {
             column.Children.Add(Screens.Line(failure));
@@ -68,8 +71,9 @@ public sealed class ResultView : UserControl
         var numbers = new StackPanel { Spacing = 12 };
         var picture = new StackPanel { Spacing = 12 };
         var actions = new StackPanel { Spacing = 12 };
+        numbers.Children.Add(tiles);
         numbers.Children.Add(figures);
-        numbers.Children.Add(plot);
+        numbers.Children.Add(Screens.Card(plot));
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
             editor = new SheetEditor(new Bitmap(path), () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));
@@ -175,7 +179,13 @@ public sealed class ResultView : UserControl
         var labels = ShotLabels.For(state);
         string Label(int id) => labels.FirstOrDefault(l => l.ShotId == id) is { Text: { } text } ? text : id.ToString(CultureInfo.InvariantCulture);
         string Bull(int index) => state.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
-        figures.Text = Figures(GroupAnalysis.Analyse(state).AllShots, units, state.ShotDistanceInches);
+        var all = GroupAnalysis.Analyse(state).AllShots;
+        var shown = Tiles(all, units, state.ShotDistanceInches);
+        tiles.Content = shown.Count > 0 ? Screens.Tiles(shown) : null;
+        figures.Text = shown.Count > 0
+            ? (state.ShotDistanceInches is null ? "Enter the distance on Capture to see the angles." : "")
+            : Figures(all, units, state.ShotDistanceInches);
+        figures.IsVisible = figures.Text.Length > 0;
         plot.Show(state, definition, units, Label, Bull);
         undo.IsEnabled = session.UndoWords is not null;
         saved.Text = sessionId is null ? "This session could not be saved on the phone." : "Saved in Sessions. Every change is saved as you make it.";
@@ -204,6 +214,34 @@ public sealed class ResultView : UserControl
             PhoneAnalysis.Forget(working);
             Dispatcher.UIThread.Post(again);
         }
+    }
+
+    /// <summary>
+    /// Entry 246, look B: the figures as tiles, in the person's own units with the angle beneath where the distance is known: mean radius,
+    /// the one that answers the question, extreme spread, the shots and the group's center from the aim. None where there is no group.
+    /// </summary>
+    internal static IReadOnlyList<(string Label, string Value, string Under, bool Headline)> Tiles(GroupFigures? figures, UnitSettings units, double? distanceInches)
+    {
+        if (figures is null || figures.Shots == 0 || figures.MeanRadius is null)
+        {
+            return [];
+        }
+
+        string Angle(double inches) => units.Angle(inches, distanceInches) is { } angle ? $"{angle.ToString("0.00", CultureInfo.CurrentCulture)} {UnitSettings.Symbol(units.Angular)}" : "";
+        var shown = new List<(string, string, string, bool)> { ("Mean radius", units.Length(figures.MeanRadius.Value), Angle(figures.MeanRadius.Value), true) };
+        if (figures.ExtremeSpread is { } spread)
+        {
+            shown.Add(("Extreme spread", units.Length(spread.Value), Angle(spread.Value) is { Length: > 0 } a ? a : "center to center", false));
+        }
+
+        shown.Add(("Shots", figures.Shots.ToString(CultureInfo.CurrentCulture), "on the sheet", false));
+        if (figures.CentreFromAim is { } centre)
+        {
+            double off = Math.Sqrt((centre.X * centre.X) + (centre.Y * centre.Y));
+            shown.Add(("Center from aim", units.Length(off), Angle(off) is { Length: > 0 } a ? a : "from the bulls' centers", false));
+        }
+
+        return shown;
     }
 
     /// <summary>The group in one or two sentences: how many shots, the extreme spread and the mean radius, with the angle where the distance is known.</summary>

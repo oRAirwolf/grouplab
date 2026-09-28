@@ -16,12 +16,14 @@ public sealed class SettingsView : UserControl
     public SettingsView(AppSettingsStore settings)
     {
         var column = new StackPanel { Spacing = 12 };
+        // Entry 246, look B: the page's title, each section's heading, its choices as cards and what it explains in the dim style.
+        column.Children.Add(Screens.Title("Settings"));
         column.Children.Add(Screens.Heading("Sharing"));
 
         column.Children.Add(Screens.Heading("Sending targets"));
         if (!Shell.TargetsOpen)
         {
-            column.Children.Add(Screens.Line(SharingWords.TargetsClosed));
+            column.Children.Add(Screens.Dim(SharingWords.TargetsClosed));
         }
         else
         {
@@ -40,7 +42,7 @@ public sealed class SettingsView : UserControl
                 column.Children.Add(radio);
             }
 
-            column.Children.Add(Screens.Line(SharingWords.LevelHeading));
+            column.Children.Add(Screens.Dim(SharingWords.LevelHeading));
             foreach (var (value, words) in SharingWords.Levels(ReceiverTerms.Current))
             {
                 var radio = Screens.Radio("sendingLevel", words, level == value);
@@ -79,17 +81,17 @@ public sealed class SettingsView : UserControl
                 column.Children.Add(radio);
             }
 
-            column.Children.Add(Screens.Line(SharingWords.ErrorsIntro));
+            column.Children.Add(Screens.Dim(SharingWords.ErrorsIntro));
             foreach (string line in ErrorReports.WhatIsSent)
             {
-                column.Children.Add(Screens.Line("• " + line));
+                column.Children.Add(Screens.Dim("• " + line));
             }
         }
 
         column.Children.Add(Screens.Heading("Hardware survey"));
         if (!Shell.SurveyOpen)
         {
-            column.Children.Add(Screens.Line(SharingWords.SurveyClosed));
+            column.Children.Add(Screens.Dim(SharingWords.SurveyClosed));
         }
         else
         {
@@ -115,7 +117,7 @@ public sealed class SettingsView : UserControl
 
             foreach (string line in SurveyReport.WhatIsSent)
             {
-                column.Children.Add(Screens.Line("• " + line));
+                column.Children.Add(Screens.Dim("• " + line));
             }
 
             // Entry 227 section 2: when the benchmark last ran and what it found, and a button to run it now, with its progress.
@@ -124,7 +126,7 @@ public sealed class SettingsView : UserControl
             benchmark.Say(settings.LoadBenchmark() is { } last
                 ? SharingWords.BenchmarkLast(settings.LoadBenchmarkRanAt(), last.Result, last.Sent)
                 : SharingWords.BenchmarkNever);
-            column.Children.Add(benchmark);
+            column.Children.Add(Screens.Card(benchmark));
 
             // Entry 241 sections 1.2 and 2.4: every run this copy has made, newest first, and the two things a person can do with their number.
             column.Children.Add(Screens.Heading(SharingWords.BenchmarkHistory));
@@ -146,7 +148,7 @@ public sealed class SettingsView : UserControl
 
             FillHistory();
             benchmark.Ended += FillHistory;
-            column.Children.Add(history);
+            column.Children.Add(Screens.Card(history));
             var said = Screens.Line("");
             column.Children.Add(Screens.Choice(SharingWords.ResetNumber, () =>
             {
@@ -165,10 +167,11 @@ public sealed class SettingsView : UserControl
         }
 
         column.Children.Add(Screens.Heading("About"));
-        column.Children.Add(Screens.Line($"GroupLab {AppInfo.Version}"));
+        var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.Version}"));
+        column.Children.Add(about);
 #if GROUPLAB_DEV
         // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
-        column.Children.Add(Screens.Line("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+        ((StackPanel)about.Child!).Children.Add(Screens.Dim("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
 #endif
         Content = Screens.Page(column);
     }

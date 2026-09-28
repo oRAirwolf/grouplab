@@ -44,27 +44,33 @@ public sealed class TargetsPage : UserControl
         return box;
     }
 
-    private static Control Field(string words, TextBox box) => new StackPanel { Spacing = 4, Children = { Screens.Line(words), box } };
+    private static Control Field(string words, TextBox box) => new StackPanel { Spacing = 4, Children = { Screens.Dim(words), box } };
 
     private Control List()
     {
         var column = new StackPanel { Spacing = 12 };
-        column.Children.Add(Screens.Heading("Targets"));
+        column.Children.Add(Screens.Title("Targets"));
         column.Children.Add(Screens.Line("Print a sheet GroupLab reads by itself, or share it as a PDF to print on a computer. Print it at actual size."));
 
-        column.Children.Add(Screens.Heading("Made for your optic"));
-        column.Children.Add(Screens.Line("Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need."));
-        column.Children.Add(Field("Distance, yards", distance));
-        column.Children.Add(Field("Lowest magnification", magnification));
-        column.Children.Add(Field("Red dot size in MOA, at 1x only", dot));
-        column.Children.Add(Field("Shots", shots));
-        column.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, Children = { letter, a4 } });
+        // Entry 246, look B: the optic's form on one card, two fields to a row, the choices as cards, and the one action in amber.
+        static Control Pair(Control a, Control b)
+        {
+            Grid.SetColumn(b, 2);
+            return new Grid { ColumnDefinitions = new ColumnDefinitions("*,12,*"), Children = { a, b } };
+        }
 
         // Entry 243 section 4 item 4: the C bull's diamond beside the disc, sized by the same rule.
-        column.Children.Add(Screens.Line("Bull shape"));
-        column.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, Children = { disc, diamond } });
-        column.Children.Add(Screens.Choice("Make the sheet", Generate));
-        column.Children.Add(said);
+        column.Children.Add(Screens.Card(
+            Screens.Heading("Made for your optic"),
+            Screens.Dim("Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need."),
+            Pair(Field("Distance, yards", distance), Field("Lowest magnification", magnification)),
+            Pair(Field("Red dot size in MOA, at 1x only", dot), Field("Shots", shots)),
+            Screens.Dim("Paper"),
+            Pair(letter, a4),
+            Screens.Dim("Bull shape"),
+            Pair(disc, diamond),
+            Screens.Primary("Make the sheet", Generate),
+            said));
 
         column.Children.Add(Screens.Heading("The library"));
         IReadOnlyList<LibrarySheet> sheets;
@@ -79,13 +85,19 @@ public sealed class TargetsPage : UserControl
             sheets = [];
         }
 
+        // Each family on a card of its own, a sheet a row: its name, and beneath it its paper and how many bulls it has.
         foreach (var family in sheets.GroupBy(s => s.Family))
         {
-            column.Children.Add(new TextBlock { Text = family.Key, FontWeight = Avalonia.Media.FontWeight.SemiBold, Margin = new Avalonia.Thickness(0, 8, 0, 0) });
+            column.Children.Add(Screens.Dim(family.Key));
+            var rows = new StackPanel();
             foreach (var sheet in family)
             {
-                column.Children.Add(Screens.Choice(sheet.Definition.Name, () => Content = Sheet(sheet)));
+                int bulls = sheet.Definition.Bulls.Count(b => b.Scoring);
+                string paper = sheet.Paper.Split(',')[0];
+                rows.Children.Add(Screens.Row(sheet.Definition.Name, sheet.Sheets > 1 ? $"{paper} · {bulls} bulls a sheet, {sheet.Sheets} sheets" : $"{paper} · {bulls} bulls", () => Content = Sheet(sheet)));
             }
+
+            column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         }
 
         return Screens.Page(column);
@@ -123,18 +135,18 @@ public sealed class TargetsPage : UserControl
     private Control Sheet(LibrarySheet sheet, IReadOnlyList<string>? explanation = null)
     {
         var column = new StackPanel { Spacing = 12 };
-        column.Children.Add(Screens.Heading(sheet.Definition.Name));
-        column.Children.Add(Screens.Line(explanation is null ? sheet.Summary : string.Join(" ", explanation)));
+        column.Children.Add(Screens.Title(sheet.Definition.Name));
+        column.Children.Add(Screens.Dim(explanation is null ? sheet.Summary : string.Join(" ", explanation)));
         if (Preview(sheet.Definition) is { } picture)
         {
             column.Children.Add(new Image { Source = picture, MaxHeight = 480, HorizontalAlignment = HorizontalAlignment.Center });
         }
 
         var result = Screens.Line("");
-        column.Children.Add(Screens.Choice("Print", () => Out(sheet, result, print: true)));
+        column.Children.Add(Screens.Primary("Print", () => Out(sheet, result, print: true)));
         column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false)));
         column.Children.Add(result);
-        column.Children.Add(Screens.Line("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
+        column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
         column.Children.Add(Screens.Choice("Back to the targets", () => Content = List()));
         return Screens.Page(column);
     }

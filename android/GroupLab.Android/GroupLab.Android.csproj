@@ -20,7 +20,7 @@
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <RootNamespace>GroupLab.Android</RootNamespace>
-    <AndroidManifestPlaceholders>grouplabLabel=GroupLab;grouplabDebuggable=false;grouplabIcon=@android:drawable/sym_def_app_icon</AndroidManifestPlaceholders>
+    <AndroidManifestPlaceholders>grouplabLabel=GroupLab;grouplabDebuggable=false;grouplabIcon=@mipmap/ic_launcher;grouplabRoundIcon=@mipmap/ic_launcher_round</AndroidManifestPlaceholders>
   </PropertyGroup>
 
   <!--
@@ -31,7 +31,7 @@
   <PropertyGroup Condition="'$(GroupLabDev)' == 'true'">
     <ApplicationId>org.grouplab.app.dev</ApplicationId>
     <ApplicationTitle>GroupLab Dev</ApplicationTitle>
-    <AndroidManifestPlaceholders>grouplabLabel=GroupLab Dev;grouplabDebuggable=true;grouplabIcon=@drawable/grouplab_dev</AndroidManifestPlaceholders>
+    <AndroidManifestPlaceholders>grouplabLabel=GroupLab Dev;grouplabDebuggable=true;grouplabIcon=@mipmap/ic_launcher_dev;grouplabRoundIcon=@mipmap/ic_launcher_dev_round</AndroidManifestPlaceholders>
     <DefineConstants>$(DefineConstants);GROUPLAB_DEV</DefineConstants>
   </PropertyGroup>
 
@@ -48,6 +48,7 @@
   <ItemGroup>
     <!-- Entry 243 section 3.4: the desktop's library code is compiled here, and its Orientation is the sheet's, not Android's widget one. -->
     <Using Remove="Android.Widget" />
+    <Using Remove="Android.App" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +66,10 @@
     <Compile Include="..\..\src\GroupLab.App\CompositePlot.cs" Link="Shared\CompositePlot.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Marks.cs" Link="Shared\Theme\Marks.cs" />
+    <!-- Entry 246, look B: the desktop's styles, icons and faces, so the phone's colors and type come from the same tokens. -->
+    <Compile Include="..\..\src\GroupLab.App\Theme\AppStyles.cs" Link="Shared\Theme\AppStyles.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Theme\Icons.cs" Link="Shared\Theme\Icons.cs" />
+    <AvaloniaResource Include="..\..\src\GroupLab.App\Assets\Fonts\*.ttf" Link="Assets\Fonts\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\GroupLab.App\Diagnostics\ErrorReports.cs" Link="Shared\Diagnostics\ErrorReports.cs" />
     <Compile Include="..\..\src\GroupLab.App\Diagnostics\DiagnosticLog.cs" Link="Shared\Diagnostics\DiagnosticLog.cs" />
     <Compile Include="..\..\src\GroupLab.App\Diagnostics\AppInfo.cs" Link="Shared\Diagnostics\AppInfo.cs" />

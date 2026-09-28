@@ -22,7 +22,7 @@ public sealed class SessionsPage : UserControl
     private Control List()
     {
         var column = new StackPanel { Spacing = 8 };
-        column.Children.Add(Screens.Heading("Sessions"));
+        column.Children.Add(Screens.Title("Sessions"));
         var said = Screens.Line("");
         column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)));
         column.Children.Add(said);
@@ -42,12 +42,18 @@ public sealed class SessionsPage : UserControl
             column.Children.Add(Screens.Line("Each target you analyze on this phone is kept here, to open again. There are none yet."));
         }
 
+        // Entry 246, look B: the sessions as rows on one card, the sheet's name and beneath it the date, the shots and the mean radius.
         var units = App.Settings.LoadUnits();
+        var rows = new StackPanel();
         foreach (var s in saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal))
         {
-            string words = $"{s.ShotDate ?? s.CreatedUtc[..10]}, {s.SheetName}: {s.ShotCount} shots"
-                + (s.MeanRadiusInches is { } mr ? $", mean radius {units.Length(mr)}" : "");
-            column.Children.Add(Screens.Choice(words, () => Open(s.Id)));
+            string detail = $"{s.ShotDate ?? s.CreatedUtc[..10]} · {s.ShotCount} shots" + (s.MeanRadiusInches is { } mr ? $" · mean radius {units.Length(mr)}" : "");
+            rows.Children.Add(Screens.Row(s.SheetName, detail, () => Open(s.Id)));
+        }
+
+        if (rows.Children.Count > 0)
+        {
+            column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         }
 
         return Screens.Page(column);

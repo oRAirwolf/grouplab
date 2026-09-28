@@ -43,7 +43,24 @@ public partial class Entry234Tests
         var dev = project.Descendants("PropertyGroup").Single(g => ((string?)g.Attribute("Condition"))?.Contains("GroupLabDev", StringComparison.Ordinal) == true);
         Assert.Equal("org.grouplab.app.dev", (string?)dev.Element("ApplicationId"));
         Assert.Contains("grouplabDebuggable=true", (string?)dev.Element("AndroidManifestPlaceholders"), StringComparison.Ordinal);
-        Assert.True(File.Exists(Path.Combine(Android, "Resources", "drawable", "grouplab_dev.png")));
+
+        // Entry 248: each build has its own icon from the desktop's mark, adaptive with a monochrome layer and PNGs for older launchers,
+        // written by scripts/android-icons.py; the development build's is the light one, so the two are never confused.
+        Assert.Contains("grouplabIcon=@mipmap/ic_launcher_dev;", (string?)dev.Element("AndroidManifestPlaceholders"), StringComparison.Ordinal);
+        var release = project.Descendants("PropertyGroup").Single(g => ((string?)g.Element("AndroidManifestPlaceholders"))?.Contains("grouplabDebuggable=false", StringComparison.Ordinal) == true);
+        Assert.Contains("grouplabIcon=@mipmap/ic_launcher;", (string?)release.Element("AndroidManifestPlaceholders"), StringComparison.Ordinal);
+        Assert.Contains("android:roundIcon=\"${grouplabRoundIcon}\"", manifest, StringComparison.Ordinal);
+        foreach (string icon in new[] { "ic_launcher", "ic_launcher_dev" })
+        {
+            Assert.Contains("<monochrome", File.ReadAllText(Path.Combine(Android, "Resources", "mipmap-anydpi-v26", icon + ".xml")), StringComparison.Ordinal);
+            foreach (string density in new[] { "mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi" })
+            {
+                foreach (string layer in new[] { "", "_round", "_foreground", "_monochrome" })
+                {
+                    Assert.True(File.Exists(Path.Combine(Android, "Resources", $"mipmap-{density}", icon + layer + ".png")), $"{icon}{layer} at {density}");
+                }
+            }
+        }
     }
 
     [Fact]

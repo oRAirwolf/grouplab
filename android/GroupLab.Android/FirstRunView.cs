@@ -29,6 +29,9 @@ public sealed class FirstRunView : UserControl
     public FirstRunView(AppSettingsStore settings, Action done)
     {
         var column = new StackPanel { Spacing = 24 };
+
+        // Entry 246, look B: the page's own title, then each question with what it sends on a card of its own.
+        column.Children.Add(Screens.Title("Before you start"));
         var targets = new StackPanel { Spacing = 8, IsVisible = TargetsDue(settings) };
         var errors = new StackPanel { Spacing = 8, IsVisible = ErrorsDue(settings) };
         var survey = new StackPanel { Spacing = 8, IsVisible = SurveyDue(settings) };
@@ -45,11 +48,7 @@ public sealed class FirstRunView : UserControl
 
         var terms = ReceiverTerms.Current;
         targets.Children.Add(Screens.Heading(SharingWords.TargetsQuestion));
-        targets.Children.Add(Screens.Line(SharingWords.TargetsIntro));
-        foreach (string line in TargetPackages.WhatIsSent)
-        {
-            targets.Children.Add(Screens.Line("• " + line));
-        }
+        targets.Children.Add(Screens.Card([Screens.Dim(SharingWords.TargetsIntro), .. TargetPackages.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))]));
 
         var testing = Screens.Radio("firstRunLevel", SharingWords.TestingOnly + terms.TestingText, false);
         var publishable = Screens.Radio("firstRunLevel", SharingWords.MayBePublished + terms.PublishableText, false);
@@ -75,14 +74,10 @@ public sealed class FirstRunView : UserControl
             }));
         }
 
-        targets.Children.Add(Screens.Line(SharingWords.TargetsLater));
+        targets.Children.Add(Screens.Dim(SharingWords.TargetsLater));
 
         errors.Children.Add(Screens.Heading(SharingWords.ErrorsQuestion));
-        errors.Children.Add(Screens.Line(SharingWords.ErrorsIntro));
-        foreach (string line in ErrorReports.WhatIsSent)
-        {
-            errors.Children.Add(Screens.Line("• " + line));
-        }
+        errors.Children.Add(Screens.Card([Screens.Dim(SharingWords.ErrorsIntro), .. ErrorReports.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))]));
 
         foreach (var (choice, words) in SharingWords.ErrorChoices)
         {
@@ -96,12 +91,12 @@ public sealed class FirstRunView : UserControl
             }));
         }
 
-        errors.Children.Add(Screens.Line(SharingWords.ErrorsLater));
+        errors.Children.Add(Screens.Dim(SharingWords.ErrorsLater));
 
         // Entry 208: the survey, third, in the desktop's words; somebody who answered the other two before is told their answers are kept.
         if (!targets.IsVisible && !errors.IsVisible)
         {
-            survey.Children.Add(Screens.Line(SharingWords.EarlierKept));
+            survey.Children.Add(Screens.Dim(SharingWords.EarlierKept));
         }
 
         // Entry 241 section 2.5: a yes given to the earlier wording is asked again, and says why.
@@ -111,11 +106,7 @@ public sealed class FirstRunView : UserControl
         }
 
         survey.Children.Add(Screens.Heading(SharingWords.SurveyQuestion));
-        survey.Children.Add(Screens.Line(SharingWords.SurveyIntro));
-        foreach (string line in SurveyReport.WhatIsSent)
-        {
-            survey.Children.Add(Screens.Line("• " + line));
-        }
+        survey.Children.Add(Screens.Card([Screens.Dim(SharingWords.SurveyIntro), .. SurveyReport.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))]));
 
         foreach (var (choice, words) in SharingWords.SurveyChoices)
         {
@@ -158,12 +149,12 @@ public sealed class FirstRunView : UserControl
                     }
                 };
                 survey.Children.Add(benchmark);
-                survey.Children.Add(Screens.Line(SharingWords.SurveyLater));
+                survey.Children.Add(Screens.Dim(SharingWords.SurveyLater));
             }));
         }
 
-        survey.Children.Insert(survey.Children.Count - SharingWords.SurveyChoices.Count, Screens.Line(SharingWords.BenchmarkOffer));
-        survey.Children.Add(Screens.Line(SharingWords.SurveyLater));
+        survey.Children.Insert(survey.Children.Count - SharingWords.SurveyChoices.Count, Screens.Dim(SharingWords.BenchmarkOffer));
+        survey.Children.Add(Screens.Dim(SharingWords.SurveyLater));
         Content = Screens.Page(column);
     }
 }

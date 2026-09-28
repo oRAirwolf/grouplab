@@ -27,7 +27,9 @@
     "On Android, GroupLab no longer reports that it closed without shutting down",
     "On a phone the result is back in its usual order",
     "The phone's Targets screen now starts on Letter paper",
-    "Opening GroupLab from another application while it is already running"
+    "Opening GroupLab from another application while it is already running",
+    "The phone now looks like the desktop",
+    "GroupLab on Android now has its own icon"
   ],
   "features": [
     {

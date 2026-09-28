@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1132 |
+| code | 1133 |
 | measured | 1509 |
-| decided | 1199 |
+| decided | 1201 |
 | unbacked | 0 |
-| **total** | **3840** |
+| **total** | **3843** |
 
-**622** of them were read one sentence at a time and their backing written against the sentence. The other **3218** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**623** of them were read one sentence at a time and their backing written against the sentence. The other **3220** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -237,7 +237,9 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): - **Space and shape.** A 4 point grid (4, 8, 12, 16, 20, 24).
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Corners are nearly square: 3 on a surface, 4 on a button.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): A pill is mono 11 with a thin border, teal when good.
-- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The phone today (entry 219) is Avalonia's Fluent theme with its own default accent and the phone's system font; the concepts of entry 243 section 3.5 are the ways it could take this language on, and only the one Alan chooses is built.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): **The phone takes this language on as look B, "cards for the thumb"** (entry 246, Alan's choice of entry 243 section 3.5's three).
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The radii and the 48 dp touch height are the phone's; every color and size is a token.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Its icon is the desktop's mark (entry 248).
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): That gives three things from one contract: a stage timeline the user can scrub, with clicking a rejection highlighting it on the image; a live run where each stage's artefact appears as it lands, so the markers light up, the residual map settles, the artwork vanishes and the holes emerge; and a console form that gives the Phase 0 and Phase 1 spikes their output for free before any UI exists.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): **[r7] The contract is built and the screen is Phase 4.** Every stage already emits its record, and the console form of it gave the Phase 0 and Phase 1 spikes their output as intended.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The scrubbable timeline, the artefacts appearing as they land and the rejection clicked to highlight it on the image are the Phase 4 half, and they are now listed there rather than left implied by the contract underneath them, which is how a headline feature becomes an internal diagnostic by default (`docs/NOTES-FROM-PLANNING.md` entry 90 section 2).
@@ -568,6 +570,7 @@ one that matters.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): **The opt-in link** is https://play.google.com/apps/internaltest/4701684356677501640.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): **Play's two warnings on that release.** 1.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Alan's request with the exact steps is written after the Store work of request 38 is done.
+- *code* (android/GroupLab.Android/PhoneStyles.cs and App.cs PhoneStyles.Apply; scripts/android-icons.py and android/GroupLab.Android/Resources/mipmap-*; held by Entry234Tests (entries 246 and 248)): **Look and icon** (entries 246 and 248): the phone uses the desktop's styles and tokens with look B's cards on top of them, as DESIGN.md section 19 describes, and its icons, GroupLab's dark and GroupLab Dev's light, adaptive with a monochrome layer and PNGs for older launchers, are written by `scripts/android-icons.py` from the desktop's mark.
 - *code* (android/GroupLab.Android/MainActivity.cs TestPictureExtra and CapturePage.TestPicture, under GROUPLAB_DEV only; PhoneAnalysis's phone.prepare and phone.detect log lines (entry 246)): **A picture without the picker** (entry 246): GroupLab Dev reads a picture named by the extra `org.grouplab.test.picture`, a file name in its own `files/test` folder, exactly as a chosen photograph, so a device is measured without opening the system's picker, which shows the owner's own pictures.
 - *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; android/GroupLab.Android/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): The memory budget, scaled to the device (entry 240) Entry 206's single number is replaced by a rule, `MemoryBudget.Phone`.
 - *measured* (docs/PHASE1-RESULTS.md, Entry 240: the published scan at 4 to 24 megapixels and the three kitchen photographs at 8 and 12, 2026-09-27): Measured on this machine at each working size: the published scan's shots moved about 0.0005 in between 8 and 24 megapixels, and on the three kitchen photographs of entry 233 the 8 and 12 megapixel readings agreed to 0.001 in, against a photo to scan difference of 0.015 to 0.027 in, with the odd extra mark going either way.

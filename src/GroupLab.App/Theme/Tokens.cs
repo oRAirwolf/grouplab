@@ -245,11 +245,15 @@ public static class Tokens
     }
 
     // Typography, entry 42 section 3. The faces are embedded (Assets/Fonts), each with the fallback stack section 3 names.
-    public static FontFamily Sans { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Sans, $Default");
+    // Entry 246: the phone compiles this file into its own assembly and carries the same faces, so the address names whichever assembly
+    // this is, the desktop's or the phone's.
+    private static readonly string Fonts = $"avares://{typeof(Tokens).Assembly.GetName().Name}/Assets/Fonts";
 
-    public static FontFamily Condensed { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Sans Condensed, avares://GroupLab.App/Assets/Fonts#IBM Plex Sans, $Default");
+    public static FontFamily Sans { get; } = new($"{Fonts}#IBM Plex Sans, $Default");
 
-    public static FontFamily Mono { get; } = new("avares://GroupLab.App/Assets/Fonts#IBM Plex Mono, Cascadia Mono, Consolas, Menlo, monospace");
+    public static FontFamily Condensed { get; } = new($"{Fonts}#IBM Plex Sans Condensed, {Fonts}#IBM Plex Sans, $Default");
+
+    public static FontFamily Mono { get; } = new($"{Fonts}#IBM Plex Mono, Cascadia Mono, Consolas, Menlo, monospace");
 
     // The type scale, NOTES-FROM-PLANNING.md entry 109 section 1 principle 2: five styles and no more. A screen title, a section heading, a
     // label, a value and a detail. Prose is a label or a detail, never the value style. The one size outside the five is mean radius's lead

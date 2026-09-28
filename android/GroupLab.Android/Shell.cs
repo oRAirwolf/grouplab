@@ -49,22 +49,31 @@ public sealed class Shell : UserControl
     {
         foreach (var place in Enum.GetValues<Place>())
         {
+            // Entry 246, look B: each place an icon over its name; the current one's icon sits in an amber pill.
             var tab = new Button
             {
-                Content = place.ToString(),
+                Content = new StackPanel
+                {
+                    Spacing = 2,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Children =
+                    {
+                        new Border { Child = GroupLab.App.Theme.Icons.Draw(Icon(place), 20), Classes = { PhoneStyles.NavPill } },
+                        new TextBlock { Text = place.ToString(), HorizontalAlignment = HorizontalAlignment.Center, Classes = { PhoneStyles.NavLabel } },
+                    },
+                },
                 MinHeight = 56,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                CornerRadius = new CornerRadius(0),
+                Classes = { PhoneStyles.NavItem },
             };
             tab.Click += (_, _) => Show(place);
             tabs[place] = tab;
             bar.Children.Add(tab);
         }
 
-        DockPanel.SetDock(bar, Dock.Bottom);
-        frame.Children.Add(bar);
+        var nav = new Border { Child = bar, Classes = { PhoneStyles.Nav } };
+        DockPanel.SetDock(nav, Dock.Bottom);
+        frame.Children.Add(nav);
         frame.Children.Add(page);
         AttachedToVisualTree += (_, _) =>
         {
@@ -94,7 +103,7 @@ public sealed class Shell : UserControl
         Showing = place;
         foreach (var (each, tab) in tabs)
         {
-            tab.FontWeight = each == place ? FontWeight.Bold : FontWeight.Normal;
+            tab.Classes.Set(PhoneStyles.On, each == place);
         }
 
         DiagnosticLog.Info("ui.place", ("place", place.ToString()));
@@ -106,6 +115,15 @@ public sealed class Shell : UserControl
             _ => capture ??= new CapturePage(),
         };
     }
+
+    /// <summary>The desktop's icon for each place: the aim for Capture, the records for Sessions, the printer for Targets, the gear for Settings.</summary>
+    private static string Icon(Place place) => place switch
+    {
+        Place.Capture => GroupLab.App.Theme.Icons.Aim,
+        Place.Sessions => GroupLab.App.Theme.Icons.Records,
+        Place.Targets => GroupLab.App.Theme.Icons.Print,
+        _ => GroupLab.App.Theme.Icons.Settings,
+    };
 
     /// <summary>Back returns to Capture from anywhere else, and is left to Android on Capture itself.</summary>
     internal bool Back()
@@ -125,26 +143,107 @@ internal static class Screens
 {
     public const double Touch = 48;
 
-    public static TextBlock Heading(string text) => new() { Text = text, FontSize = 22, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap };
+    /// <summary>A page's own name, at the top of it, as look B has it (entry 246): the desktop's lead size.</summary>
+    public static TextBlock Title(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Title } };
+
+    /// <summary>A section's heading, at the desktop's value size.</summary>
+    public static TextBlock Heading(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Heading } };
 
     public static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap };
 
-    public static Button Choice(string words, Action chosen)
+    /// <summary>Words that explain rather than say: smaller and dim.</summary>
+    public static TextBlock Dim(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } };
+
+    public static Button Choice(string words, Action chosen) => Pill(words, chosen, primary: false);
+
+    /// <summary>The one thing a screen is for, in amber, as the desktop's primary action is.</summary>
+    public static Button Primary(string words, Action chosen) => Pill(words, chosen, primary: true);
+
+    private static Button Pill(string words, Action chosen, bool primary)
     {
         var button = new Button
         {
-            Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap },
-            MinHeight = Touch,
+            Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center },
             HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        if (primary)
+        {
+            button.Classes.Add(PhoneStyles.Primary);
+        }
+
+        button.Click += (_, _) => chosen();
+        return button;
+    }
+
+    /// <summary>A row of a list on a card: what it is, a dim line beneath, and a chevron that says it opens.</summary>
+    public static Button Row(string words, string? detail, Action chosen)
+    {
+        var text = new StackPanel { Spacing = 2, Children = { Line(words) } };
+        if (detail is not null)
+        {
+            text.Children.Add(Dim(detail));
+        }
+
+        var chevron = new TextBlock { Text = "›", VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Heading } };
+        Grid.SetColumn(chevron, 1);
+        var button = new Button
+        {
+            Content = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 8, Children = { text, chevron } },
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Classes = { PhoneStyles.Row },
         };
         button.Click += (_, _) => chosen();
         return button;
     }
 
+    /// <summary>One choice among several, as a card of its own that turns amber when chosen.</summary>
     public static RadioButton Radio(string group, string words, bool chosen) =>
-        new() { GroupName = group, Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap }, MinHeight = Touch, IsChecked = chosen };
+        new() { GroupName = group, Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap }, IsChecked = chosen, Classes = { PhoneStyles.Choice } };
 
-    /// <summary>A page of words: a heading and a paragraph, scrolled when it does not fit.</summary>
+    /// <summary>Related things on one panel.</summary>
+    public static Border Card(params Control[] children)
+    {
+        var inside = new StackPanel { Spacing = 8 };
+        foreach (var child in children)
+        {
+            inside.Children.Add(child);
+        }
+
+        return new Border { Child = inside, Classes = { PhoneStyles.Card } };
+    }
+
+    /// <summary>Figures as tiles, two to a row: a label, the value in the desktop's figure face, and what it is in; one may be the headline.</summary>
+    public static Control Tiles(IEnumerable<(string Label, string Value, string Under, bool Headline)> figures)
+    {
+        var grid = new Avalonia.Controls.Primitives.UniformGrid { Columns = 2 };
+        foreach (var (label, value, under, headline) in figures)
+        {
+            var tile = new Border
+            {
+                Margin = new Thickness(4),
+                Child = new StackPanel
+                {
+                    Spacing = 2,
+                    Children =
+                    {
+                        new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
+                        new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } },
+                        new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
+                    },
+                },
+                Classes = { PhoneStyles.Tile },
+            };
+            if (headline)
+            {
+                tile.Classes.Add(PhoneStyles.TileHeadline);
+            }
+
+            grid.Children.Add(tile);
+        }
+
+        return grid;
+    }
+
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 243 section 3.2: a long analysis says what it is doing, a step at a time, and can be canceled. Returns the
     /// page, the line to update and the button, so the caller wires the cancel.
@@ -153,11 +252,12 @@ internal static class Screens
     {
         var line = Line(GroupLab.Core.Trace.StageWords.Starting);
         var bar = new Avalonia.Controls.ProgressBar { IsIndeterminate = true, MinHeight = 6 };
-        var cancel = new Button { Content = new TextBlock { Text = "Cancel" }, MinHeight = Touch, HorizontalAlignment = HorizontalAlignment.Left };
-        return (Page(new StackPanel { Spacing = 12, Children = { Heading(heading), bar, line, cancel } }), line, cancel);
+        var cancel = new Button { Content = new TextBlock { Text = "Cancel" }, HorizontalAlignment = HorizontalAlignment.Left };
+        return (Page(new StackPanel { Spacing = 12, Children = { Title(heading), Card(bar, line), cancel } }), line, cancel);
     }
 
-    public static Control Words(string heading, string words) => Page(new StackPanel { Spacing = 12, Children = { Heading(heading), Line(words) } });
+    /// <summary>A page of words: a title and a paragraph, scrolled when it does not fit.</summary>
+    public static Control Words(string heading, string words) => Page(new StackPanel { Spacing = 12, Children = { Title(heading), Line(words) } });
 
     /// <summary>Any page's column: a margin, no wider than reads well on the Fold 7 open or a tablet, and scrolled.</summary>
     public static Control Page(Control column)
