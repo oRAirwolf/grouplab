@@ -166,13 +166,19 @@ internal sealed class ShotsToZeroPage : UserControl
         var within = bothWays ? result.WithinOneClick : result.WithinOneClickOneAxis;
         var closest = bothWays ? result.ClosestClick : result.ClosestClickOneAxis;
         var table = new Grid { ColumnDefinitions = new ColumnDefinitions("2*,*,*,*"), RowDefinitions = new RowDefinitions("Auto,Auto,Auto"), RowSpacing = 8 };
-        void Cell(string text, int row, int col, bool amber = false, bool dim = false)
+        void Cell(string text, int row, int col, bool amber = false, bool dim = false, bool teal = false)
         {
             var block = dim ? Screens.Dim(text) : Screens.Line(text);
             if (amber)
             {
                 block.Foreground = new SolidColorBrush(Color.FromRgb(232, 150, 46));
                 block.FontWeight = FontWeight.SemiBold;
+            }
+
+            // Entry 269: the closest click is teal everywhere, as the chart draws it.
+            if (teal)
+            {
+                block.Foreground = new SolidColorBrush(Color.FromRgb(42, 157, 143));
             }
 
             if (col > 0)
@@ -193,10 +199,10 @@ internal sealed class ShotsToZeroPage : UserControl
         Cell(Count(within.Ninety), 1, 1, amber: true);
         Cell(Count(within.NinetyFive), 1, 2, amber: true);
         Cell(Count(within.NinetyNine), 1, 3, amber: true);
-        Cell("Closest click", 2, 0);
-        Cell(Count(closest.Ninety), 2, 1);
-        Cell(Count(closest.NinetyFive), 2, 2);
-        Cell(Count(closest.NinetyNine), 2, 3);
+        Cell("Closest click", 2, 0, teal: true);
+        Cell(Count(closest.Ninety), 2, 1, teal: true);
+        Cell(Count(closest.NinetyFive), 2, 2, teal: true);
+        Cell(Count(closest.NinetyNine), 2, 3, teal: true);
         answer.Children.Add(Screens.Card(table));
 
         curve.Points = result.Curve;
@@ -206,7 +212,7 @@ internal sealed class ShotsToZeroPage : UserControl
             old.Children.Remove(curve);
         }
 
-        answer.Children.Add(Screens.Card(Screens.Dim("The chance against shots, both ways: teal within 1 click, amber the closest click."), curve));
+        answer.Children.Add(Screens.Card(Screens.Dim("The chance against shots, both ways: amber within 1 click, teal the closest click."), curve));
         answer.Children.Add(Screens.Line("The closest click comes slowly: where the true zero lies near the line between two clicks, only a very large group tells which side it is on. Within one click comes far sooner, and is what most zeroing needs."));
         string moves = result.ShotsCanMove == 0 ? "another seed would not move these counts" : $"another seed could move a count by up to {result.ShotsCanMove}";
         answer.Children.Add(Screens.Dim(string.Create(CultureInfo.CurrentCulture, $"{result.Trials:N0} draws of the spread the group could really have, seed {result.Seed}; {moves}.")));

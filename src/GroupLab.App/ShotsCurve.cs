@@ -53,8 +53,9 @@ internal sealed class ShotsCurve : Control
             }
         }
 
-        Curve(p => p.WithinOneClick, palette.Teal);
-        Curve(p => p.ClosestClick, palette.Amber);
-        context.DrawText(new FormattedText("amber: closest click    teal: within 1 click", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.DetailSize, dim), new Point(left, 4));
+        // Entry 269, Alan's choice: within 1 click amber and the closest click teal, on the desktop and the phone alike.
+        Curve(p => p.WithinOneClick, palette.Amber);
+        Curve(p => p.ClosestClick, palette.Teal);
+        context.DrawText(new FormattedText("amber: within 1 click    teal: closest click", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.DetailSize, dim), new Point(left, 4));
     }
 }
