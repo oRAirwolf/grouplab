@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.121
+
+**2026-09-28**, commit `23325ec`. Nightly.
+
+**What you will notice**
+
+- On the phone, a line that names a word from the glossary now explains it when you tap it, as the computer does.
+- On the phone, a picture copied in another app can be pasted on the Capture screen and read like a chosen photograph.
+- On the phone, a set of tiled sheets can be shared as one large page with cut lines between them, for a plotter.
+- Every picture is still checked, but its score now counts how well the sheet's markers agree and no longer marks down a tilt GroupLab has corrected, so it follows how well a picture measures.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.121)
+
+---
+
 ## 0.2.0-nightly.120
 
 **2026-09-28**, commit `fc8a902`. Nightly.
