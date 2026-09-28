@@ -1,0 +1,14 @@
+{
+  "about": "A pushed commit's Release-note trailer cannot be rewritten, because main is never force pushed. Where one was wrong, the note that replaces it is written here, by the commit's full hash, and scripts/release-notes.py reads it in the trailer's place. Each says why.",
+  "corrections": {
+    "f1d775ea501a92b9f98c0335192b0da02aca6f02": {
+      "why": "Entry 266's README commit said the application did not change, but it also changed one word in the volunteer pack, which ships; nightly 120 refused it.",
+      "notes": [
+        {
+          "note": "The printed volunteer pack's ruler check now spells center the American way, as the rest of GroupLab does. (Entry 266)",
+          "kind": "changed"
+        }
+      ]
+    }
+  }
+}

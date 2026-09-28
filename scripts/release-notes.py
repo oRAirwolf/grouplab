@@ -181,6 +181,24 @@ def previous_published(version):
     return max(below)[1] if below else ""
 
 
+# A pushed commit's trailer cannot be rewritten, since main is never force pushed. Where one was wrong, its replacement is
+# kept in docs/release-note-corrections.json by the commit's full hash and read in the trailer's place: entry 266's README
+# commit said the application did not change while changing one word of the volunteer pack, and nightly 120 refused it.
+CORRECTIONS = Path(__file__).resolve().parent.parent / "docs" / "release-note-corrections.json"
+
+
+def corrected(sha):
+    """The notes that replace a commit's own trailer, or None where it has none."""
+    try:
+        data = json.loads(CORRECTIONS.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
+    for full, entry in data.get("corrections", {}).items():
+        if full.startswith(sha):
+            return [(n["note"], n["kind"].lower()) for n in entry["notes"]]
+    return None
+
+
 def commits(previous, head):
     """Every commit's full message since the previous build, newest last."""
     span = (previous + ".." + head) if previous else ("-n 40 " + head)
@@ -391,7 +409,7 @@ def build_notes(version, head, previous, heading=True, new=True):
         subject = message.splitlines()[0] if message.splitlines() else ""
         if subject.startswith("[notes]") or subject.startswith("[screens]") or not ships(sha):
             continue
-        read_notes = reads(message)
+        read_notes = corrected(sha) or reads(message)
         if not read_notes:
             # Entry 145 section 1: no build ever says nothing changed. A commit with no trailer still did something,
             # so its subject becomes a line rather than a number.
