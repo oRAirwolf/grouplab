@@ -165,15 +165,20 @@ public sealed class TargetsPage : UserControl
         }));
         column.Children.Add(offer);
         column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false)));
+        // Entry 258: a set of tiles as one large page with cut lines between them, for a plotter, shared rather than printed on the phone.
+        if (GroupLab.Core.Rendering.CutSheet.Refusal(sheet.Definition) is null)
+        {
+            column.Children.Add(Screens.Choice("Share as one large page with cut lines, for a plotter", () => Out(sheet, result, print: false, oneSheet: true)));
+        }
         column.Children.Add(result);
         column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
         column.Children.Add(Screens.Choice("Back to the targets", () => Content = List()));
         return Screens.Page(column);
     }
 
-    private static void Out(LibrarySheet sheet, TextBlock result, bool print)
+    private static void Out(LibrarySheet sheet, TextBlock result, bool print, bool oneSheet = false)
     {
-        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, OneSheet: oneSheet));
         if (rendered.Pdf is not { } pdf)
         {
             result.Text = "This sheet cannot be printed as it is: " + string.Join(" ", rendered.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message));

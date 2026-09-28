@@ -47,7 +47,8 @@
     "The large format and 300 yard sets now say on the Targets screen",
     "A photograph of a sheet that is not lying flat",
     "On the phone, a picture shared into GroupLab",
-    "On the phone, the shots can be shared as a CSV file"
+    "On the phone, the shots can be shared as a CSV file",
+    "On the phone, a set of tiled sheets can be shared"
   ],
   "features": [
     {
@@ -446,9 +447,13 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.111",
+      "mobile": {
+        "noPicture": "the phone's large-sheet advice and cut-line page are photographed at the next sitting with the phone"
+      },
       "note": "For a target larger than a scanner takes",
       "tour": "targets",
       "guide": "1-print-a-sheet"

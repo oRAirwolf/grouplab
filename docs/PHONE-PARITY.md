@@ -38,7 +38,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The Targets screen | `targets` | on the phone | the phone's Targets screen (entry 243) |
 | Made for your optic | `optic` | on the phone | on the phone's Targets screen |
 | Zeroing grids read through a scope | `zero-grids` | on the phone | in the phone's Targets library, previewed with their words |
-| Large sheets | `large-sheets` | coming | the photograph detail advice is on the Targets screen since entry 258; tiled printing with cut lines is still to come |
+| Large sheets | `large-sheets` | on the phone | entry 258: the photograph detail advice on the Targets screen, and a set shared as one large page with cut lines for a plotter |
 | Real inches from a scan | `true-size` | on the phone | entry 259 screen 7, the scan pill; a phone photograph cannot measure its print size |
 | Photographs at an angle | `angle` | on the phone | |
 | Sessions between phone and computer | `share-session` | on the phone | |
