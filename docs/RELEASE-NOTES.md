@@ -469,7 +469,7 @@ This build has no change to the application; it behaves exactly as nightly 75 do
 
 This build has no change to the application; it behaves exactly as nightly 74 does.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.75)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 ## 0.2.0-nightly.74
