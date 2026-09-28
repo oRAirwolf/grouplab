@@ -77,6 +77,7 @@ public class MainActivity : AvaloniaMainActivity
         base.OnCreate(savedInstanceState);
 #if GROUPLAB_DEV
         TestPicture(Intent);
+        TestShotsToZero(Intent);
 #endif
     }
 
@@ -88,6 +89,40 @@ public class MainActivity : AvaloniaMainActivity
     {
         base.OnNewIntent(intent);
         TestPicture(intent);
+        TestShotsToZero(intent);
+    }
+
+    /// <summary>The extra that asks GroupLab Dev to time "Shots Needed to Zero" (entry 252 section 4), with any value.</summary>
+    internal const string TestShotsToZeroExtra = "org.grouplab.test.shotstozero";
+
+    /// <summary>
+    /// GroupLab Dev only: works out Shots Needed to Zero for 5, 10, 25 and 100 shot groups, at sigma of 0.3, 1 and 3 clicks, off the
+    /// interface thread, and logs each time and the most memory held, so a device sitting can measure it without the desktop's screen.
+    /// </summary>
+    private static void TestShotsToZero(Intent? intent)
+    {
+        if (intent?.GetStringExtra(TestShotsToZeroExtra) is null)
+        {
+            return;
+        }
+
+        Task.Run(() =>
+        {
+            GroupLab.Core.Statistics.ShotsToZero.Work(1.0, 8, false, 1);
+            foreach (int shots in new[] { 5, 10, 25, 100 })
+            {
+                foreach (double sigma in new[] { 0.3, 1.0, 3.0 })
+                {
+                    GC.Collect();
+                    long before = GC.GetTotalMemory(true);
+                    var clock = System.Diagnostics.Stopwatch.StartNew();
+                    GroupLab.Core.Statistics.ShotsToZero.Work(sigma, (2 * shots) - 2, false, 41);
+                    clock.Stop();
+                    GroupLab.App.Diagnostics.DiagnosticLog.Info("dev.shotstozero", ("shots", (object?)shots), ("sigma", sigma), ("ms", Math.Round(clock.Elapsed.TotalMilliseconds)),
+                        ("kb", Math.Max(0, GC.GetTotalMemory(false) - before) / 1024), ("cores", System.Environment.ProcessorCount));
+                }
+            }
+        });
     }
 
     /// <summary>GroupLab Dev only: the named picture is read as a chosen photograph once the Capture screen is there.</summary>

@@ -45,6 +45,7 @@ public class BenchCoverageTests
     {
         ["GridStyle2"] = "The zeroing grid's fixed numbers and its three sentences of scale. Drawing the grid is measured, in rendering the sheet.",
         ["GridStyle3"] = "The C3 zeroing grid's fixed numbers, its numbers' wording and its legend. Drawing it is rendering a sheet, which is measured.",
+        ["ShotsToZero"] = "Shots Needed to Zero is arithmetic on one group, not the detection the bench times; its own test holds it to entry 252's half-second budget.",
         ["SheetGlyphs"] = "The outlines the Targets preview draws a sheet's words with; only a preview asks for them, and nothing that measures a render does.",
         ["CutSheet"] = "Moves a rendered assembly's items onto one page, once, when a person prints for a plotter. Rendering the tiles is measured.",
         ["CalibreList"] = "A generated document, written by grouplab calibres at release time and not by anything a person waits for.",

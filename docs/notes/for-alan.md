@@ -11,6 +11,15 @@ DONE WITH THE PHONE AND TABLET (2026-09-28 04:35 UTC, 22:35 MDT on the 27th): yo
 4. Waits on you: **49**, pick the phone's look (A, B or C) from the page it links; **45**, reconnect the Fold 7 and the tablet so the screenshots and measurements can run.
 5. Also done: entry 244 (the README now keeps itself current) and the server sitting (the survey worker installed, request 21 closed).
 
+**Shots Needed to Zero, and how fast it is** (entry 252 sections 3 and 4; not a request). It is in the analysis screen's Advanced
+figures, under the full CEP table, credited to Jylee. **How long:** about 0.15 to 0.2 seconds on your desktop for groups of 5, 10, 25 or
+100 shots (measured), off the screen's own thread, only when that section is open and its inputs change, and remembered after that. The
+Fold 7 and the tablet are measured at the next sitting (request 50); from the benchmark's ratios they should take about a quarter and half
+a second. **What made it fast:** with the spread known, the answer is an exact formula, with no simulation at all; with the spread uncertain,
+only the spread is simulated, 4,000 evenly spread draws rather than random ones, and the formula does the rest; the shot counts are found by
+halving the range rather than trying every count. **What gave:** nothing; the numbers are good to far better than a shot, and the screen
+says so. The short article is `shots-to-zero` on the research pages.
+
 **Jylee's one-shot zero, evaluated** (entry 250 section 4; not a request). It can be done: the phone already reads the zeroing grid and
 finds the hole's offset, and GroupLab already turns an offset into clicks. What is missing is the click value on the phone, a rifle on
 the phone to take its usual spread from, and the zero correction on the phone's result screen. What one shot can honestly say: only an

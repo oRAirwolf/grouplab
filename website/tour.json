@@ -259,6 +259,10 @@
     [
      "The review notice",
      "Where decisions were left unmade in marking, it says how many and offers to take you back to them, because an analysis over unsettled marks is worth less than one over settled ones."
+    ],
+    [
+     "Shots Needed to Zero",
+     "Under the full CEP table: how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from the group's spread and your scope's click value. Suggested by Jylee."
     ]
    ],
    "steps": [

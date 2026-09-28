@@ -23,6 +23,7 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - primer-comparison  2026-09-23  batches 1 to 3
 - safe-updates  2026-09-23  batches 1 to 3
 - scans-against-photos  2026-09-23  batches 1 to 3
+- shots-to-zero  2026-09-28  entry 252, which asked for it with the Shots Needed to Zero section
 - smaller-installer  2026-09-23  batches 1 to 3
 - suppressor-shift  2026-09-27  entry 226, which asked for it on the research pages and the tour
 - uploads-rebuilt-from-pixels  2026-09-23  batches 1 to 3

@@ -65,6 +65,14 @@ The way the interval for a spread figure such as sigma is worked out. It account
 
 The check of whether a group is really stretched or only looks it by chance. It compares how well a round pattern and a stretched one each explain the shots.
 
+## Closest click
+
+<a id="closest-click"></a>
+
+The click on your scope nearest to where the rifle truly shoots. A true zero usually lies somewhere between two clicks, so the best any adjustment can do is land on the nearer one. Telling which click is nearer takes many shots when the true zero sits near the halfway point between them.
+
+More in [the research article](https://grouplab.org/research/shots-to-zero/).
+
 ## Comparing loads
 
 <a id="load-comparison"></a>
@@ -400,6 +408,14 @@ Your reading of the crosswind before you fire, and how far the true wind may be 
 How far a crosswind pushes the bullet sideways by the time it reaches the target. It grows quickly with distance, and faster for a bullet that slows more.
 
 More in [the research article](https://grouplab.org/research/wind-or-rifle/).
+
+## Within 1 click
+
+<a id="within-one-click"></a>
+
+Landing on the closest click or on one click either side of it, on both windage and elevation. At the distances most rifles are zeroed, one click is a small fraction of the group, so this is what most zeroing needs, and it takes far fewer shots than the closest click.
+
+More in [the research article](https://grouplab.org/research/shots-to-zero/).
 
 ## Worst shot
 

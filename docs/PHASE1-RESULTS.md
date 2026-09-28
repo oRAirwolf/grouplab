@@ -59,6 +59,25 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 252: Shots Needed to Zero; C3's diamond in angle and the MOA grids
+
+**Sections 1 and 2** are in the C3 sheets of entry 251: the diamond 0.2 mil or 1 MOA point to point, the MOA grids at 0.5 MOA squares
+with 1/4 MOA ticks, MOA-100Y 3 MOA across and 3.5 up and down, MOA-100M 3 MOA; held with the mil sheets for question 64.
+
+**Section 3** (`ShotsToZero`, `MainWindow.ShotsToZero.cs`, credited to Jylee). With sigma known, one axis's chance is a closed form
+(the true zero uniform in its click, the centre of n shots normal about it); both axes is its square. With sigma estimated from the group,
+sigma is drawn from its own uncertainty, 4,000 stratified quantiles offset by the seed, and each draw's chance is the closed form, so the
+error of the mean is bounded by the chance's range over 4,000 and the screen says how far a count could move. The procedure simulated
+shot by shot (200,000 sessions) agrees within 0.005; the planning session's 42, 56, 68 and 76 percent at 5, 10, 20 and 40 shots are
+reproduced; more shots never lower the chance; a wider rifle needs more; an uncertain sigma needs more than a known one (a 5 shot group's
+99 percent within one click, 9 shots against 5). Glossary: closest click, within 1 click. Article 32, `shots-to-zero`.
+
+**Section 4.** Cost: trials, times the shot counts the bisection visits (about a dozen for each of twelve thresholds, cached), times two
+goals; the centre of n shots is never drawn shot by shot. Desktop, measured 2026-09-28: 150 to 191 ms a calculation for 5, 10, 25 and
+100 shot groups at sigma of 0.3, 1 and 3 clicks. Budget held in `ItIsWorkedOutWithinTheBudget` (2 s allowed for a CI runner). The Fold 7,
+the tablet and a 4 GB phone are measured in request 50's sitting through GroupLab Dev's `org.grouplab.test.shotstozero`; by the benchmark's
+ratios, 1.45 and 2.6 times the desktop, about 0.25 and 0.5 s, and the phone's run is off its interface thread. Nothing had to give.
+
 ## Entry 251: the C3 zeroing grids, built and held
 
 **The design, as grid style 3** (`GridStyle3`, TARGET-SCHEMA.md section 3.13's new subsection). 0.2 mil or 0.5 MOA squares; lines

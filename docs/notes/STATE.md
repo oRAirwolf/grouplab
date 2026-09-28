@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 251.
+**Last rewritten:** 2026-09-28, after entry 252.
 
 ---
 
@@ -18,7 +18,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - Done: everything through 249. 246: look B photographed on both devices (`docs/figures/screens/phone/`), requests 44, 45, 49
   closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile. 250: the Targets preview draws the words
   (`SheetGlyphs`), Letter first, the one-shot zero note. 251: the C3 grids built (grid style 3) and **held**: a hole in solid black
-  is refused as too small (question 64, request 51). Next **252** sections 3 and 4, Shots Needed to Zero.
+  is refused as too small (question 64, request 51). 252: C3 in MOA (held too) and Shots Needed to Zero (Jylee's), with its article.
+  **Next: entries 253 and 254.** Waiting on: question 64, request 51's scan, request 50's device sitting.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -105,7 +106,6 @@ line reads what the repository holds, and the test fails locally until the last 
 - **A preview draws words; a measured render does not** (`SceneRasterizer` `words:`, entry 250).
 - **One solid amber button a screen**: a chosen switch is the tint, `AppStyles.Chosen` (entry 247).
 - **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words, or the site build fails.
-- **An error GroupLab survives is no longer called a close** (entry 192); each run leaves a marker so a real close is caught.
 - **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
 - **The upload page asks for one of two consent levels**, and a testing only target can never reach `samples/` or the site (entry 165).
 - **A photograph over 37 degrees off square is refused** (was 40; entry 238's angled photographs), naming the angle, and keeps its angle and a quality score (entry 157).

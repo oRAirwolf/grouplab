@@ -113,6 +113,9 @@ public sealed partial class MainWindow
         }
 
         fullFigures.Children.Add(Note("The circular estimate assumes the group round and gives its interval. The correlated normal and Grubbs-Patnaik estimates follow the group's own shape, so they allow for a group that is not round, and have no interval here. All three are about the group's own center."));
+
+        // Entry 252 section 3: in the same disclosure as the full CEP table.
+        ShowShotsToZero(state);
     }
 
     private void FullFigures(IReadOnlyList<PointD> offsets, string heading)

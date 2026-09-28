@@ -24,6 +24,87 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 252: the C3 diamond sized in angle; the MOA grid approved; "Shots Needed to Zero" on the analysis screen (Jylee's suggestion)
+
+**Status: done 2026-09-28, sections 1 and 2 held with entry 251.** Sections 1 and 2 are built into the C3 sheets, which wait beside the library for question 64. Sections 3 and 4 done: Shots Needed to Zero, its article, glossary entries and the desktop's timings. **Not yet measured: the Fold 7, the tablet and a 4 GB phone** (section 4.2); GroupLab Dev can now time it (`org.grouplab.test.shotstozero`), and request 50's sitting does. MOA 100 yd reaches 3 MOA across and 3.5 up and down.
+
+## 1. The C3 aim diamond, sized in angle (adds to entry 251)
+
+Alan: the diamond's "edges" sit 0.1 mil from the center on the mil sheets, so it is **0.2 mil tall and wide** point to point (0.72 in at
+100 yd, 2 cm at 100 m); on the MOA sheets it is **1 MOA tall and wide** (1.047 in at 100 yd, 2.9 cm at 100 m). Keep the white diamond center
+and the dot in the same proportions as the drawing (white center about 0.29 of the diamond, the dot as small as still prints cleanly).
+The design page's C3 and "C3 in MOA" artboards now show these sizes. Its points still lie on the center lines.
+
+## 2. The MOA zeroing grids: approved with 1/4 MOA ticks
+
+Alan approved "C3 in MOA" as drawn, **with 1/4 MOA ticks**: 0.5 MOA squares, 1/4 MOA click ticks on the center cross and the frame,
+heavier every 1 MOA, heaviest at the center and frame, numbers outside every 0.5 MOA (whole MOA bold), the 1 MOA diamond, the legend
+"MOA · 100 YD", "□ = 0.5 MOA", "TICK = 1/4 MOA (1 CLICK)". Build **GL-ZERO-MOA-100Y** (plus or minus 3 MOA, more if it fits) and
+**GL-ZERO-MOA-100M** (the same design at 100 m, as far as Letter allows) now, replacing the current two, frozen copies kept, with the same
+detection check and credit as entry 251 (chosen by Alan with Jylee and Unholy).
+
+## 3. "Shots Needed to Zero" in the analysis screen's advanced results
+
+**Suggested by Jylee** (credit by name). Alan: "Add a section labeled Shots Needed to Zero in the advanced results on the analysis page.
+Calculate the number of shots needed for a 90%, 95% and 99% chance to zero on closest click, and chance of zero within 1 click, based on
+the user inputted scope information, scope adjustment per click, and the analyzed group data." His example is Blackburn Defense's
+calculator (https://www.blackburndefense.com/tools/shots-to-zero); its page needs JavaScript and publishes no method, so this is the
+planning session's own specification. Label the section exactly **"Shots Needed to Zero"**, in the same disclosure as the full CEP table.
+
+**Inputs:** the analyzed group (its per-axis sigma and the number of shots it rests on) and the distance; the scope's **adjustment per click**
+(0.1 mil, 1/4 MOA, 1/8 MOA, or typed), taken from the rifle record's scope if it has one, else a field in the section, remembered on the
+rifle record when the user chooses.
+
+**The procedure simulated (Monte Carlo):** in each trial,
+1. draw the rifle's true per-axis sigma from the uncertainty of the analyzed group's estimate (so a 5-shot group gives a wider answer
+   than a 50-shot one), unless the user ticks "treat the measured sigma as exact";
+2. place the true zero at a uniformly random position within a click on each axis (where the true zero falls between clicks is unknown);
+3. fire n shots, take their center, adjust by that center **rounded to the nearest click** on each axis;
+4. **"zero on the closest click"** = after the adjustment, both axes sit on the click nearest the true zero; **"within 1 click"** = both axes
+   sit on that click or one click either side of it. Also give each axis alone (windage, elevation) in the detail.
+For each n from 1 upward, estimate the probability; report the **smallest n that reaches 90, 95 and 99 percent** for each of the two goals,
+with a small curve of probability against shots. Search up to 1000 shots and say "more than 1000" beyond it.
+
+**What to expect, so the result is not mistaken for a bug.** The planning session ran a quick check of this procedure (sigma per axis in
+clicks, 200,000 trials, both axes): with sigma of 1 click per axis, "closest click" is only about 42 percent at 5 shots, 56 percent at 10,
+68 percent at 20 and 76 percent at 40, while "within 1 click" is 99 percent at 5 shots. Closest click converges slowly because a true zero
+near the boundary between two clicks takes a very large sample to resolve; 95 and 99 percent on the closest click will often read "more
+than 1000". Say so in a sentence beside the numbers, and explain it in the article.
+
+**Monte Carlo shown honestly.** Like Blackburn's, pressing Calculate again gives slightly different numbers because the trials are random.
+Show the trial count and seed ("100,000 trials, seed 41"), a **Calculate again** button (new seed), and a field to enter a seed to repeat a
+result exactly, as the hit probability simulation does. Use enough trials that the reported shot counts rarely change between runs, and
+say how much they can move.
+
+**Tests:** a single-axis case against a numerical integration of the same procedure; the monotonic rise with n; a larger sigma needing
+more shots; the "exact sigma" and "uncertain sigma" cases differing in the expected direction. Glossary entries for "closest click" and
+"within 1 click". A short research article ("How many shots to zero?") using this and the one-shot evaluation of entry 250 section 4, which
+this section answers in part: a one-shot zero is the n = 1 row of this table.
+
+## 4. Performance analysis of "Shots Needed to Zero" (Alan asked, same night)
+
+Before it ships, measure and report what the simulation costs, and design it so it never makes the analysis screen feel slow:
+1. **Cost model:** trials times shot counts searched times two axes. A naive search (every n from 1 to 1000, 100,000 trials each) is
+   10^8 trial-shots per axis; say what that takes on Alan's desktop, the Fold 7, the Tab S8 Ultra and, by the benchmark ratio, a 4 GB
+   phone. Then make it cheap:
+   - simulate the center of n shots directly as one normal draw with sigma over the square root of n, not n separate shots;
+   - reuse the same random draws (common random numbers) across n, so the curve is smooth and one pass serves every n;
+   - find the thresholds by a coarse-to-fine search (for example n = 1, 2, 4, 8 ... then bisection) instead of every n;
+   - the two axes are independent given sigma: simulate per axis and combine where that is exact, and say where it is not (the
+     "both axes" probability when sigma is drawn once per trial for both);
+   - stop adding trials once the reported shot counts are settled to within one shot, with a cap.
+   Where a closed form or numerical integration gives the same answer faster for the "exact sigma" case, use it and keep the Monte
+   Carlo for the uncertain-sigma case; say which is used.
+2. **Measure** time and peak memory for 5, 10, 25 and 100 shot groups at 0.1 mil and 1/4 MOA clicks, sigma from small to large, on all
+   four machine classes above; report median and worst case, and the effect on the analysis screen's responsiveness.
+3. **Budgets** (propose, then hold them in a performance test): the numbers appear within about half a second on the desktop and two
+   seconds on a 4 GB phone; the work runs off the UI thread with the existing progress and Cancel (entry 243), only when the section is
+   opened or its inputs change, never during detection or when the section is closed; results cached per group and click value.
+4. **Battery and heat on the phone:** state the energy cost of one Calculate on the Fold 7 roughly (time at full load on how many cores),
+   and do not rerun it automatically.
+5. Report in for-alan.md in plain words: how long it takes on each device, what was done to make it fast, and whether anything had to
+   give (fewer trials, a narrower search), with the effect on the accuracy of the reported numbers.
+
 ## 2026-09-28, entry 251: the zeroing grids are C3 (chosen with Jylee and Unholy); build the mil sheets now, the MOA ones after Alan sees them
 
 **Status: built 2026-09-28, release held on question 64.** Sections 1 and 2.1, 2.2 and 2.4 built (with entry 252's diamond sizes), and the detection check ran. **Not done: section 2.3,** replacing the library's mil sheets, freezing the current ones, and the credit on the Features page, the tour and a zeroing article (there is no zeroing grid article yet): the check found that a hole in the diamond's black is refused as too small, so the C3 sheets wait beside the library for question 64 and request 51's scan. **Section 2.2:** plus or minus 0.8 mil both ways at 100 m; 1.0 up and down does not fit with the numbers, the check bar and the identifier.

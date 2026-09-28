@@ -2628,6 +2628,70 @@
   "``` It is licensed under the SIL Open Font License, Version 1.1, whose full text is at the head of the file itself, so it travels wherever the outlines do.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)"
+  },
+  "Desktop Mobile Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest Coming in the next build Shots Needed to Zero How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope&#x27;s click value.": {
+   "kind": "code",
+   "where": "website/build.py, the page's own frame and lists, from website/features.json and website/research/*.md"
+  },
+  "Shots Needed to Zero How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope&#x27;s click value.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.ShotsToZero.cs, the Shots Needed to Zero section in the full figures (entry 252 section 3); tests/GroupLab.App.Tests/Entry252Tests.cs"
+  },
+  "From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.ShotsToZero.cs, the Shots Needed to Zero section in the full figures (entry 252 section 3); tests/GroupLab.App.Tests/Entry252Tests.cs"
+  },
+  "Measuring groups 32 How many shots to zero?": {
+   "kind": "code",
+   "where": "website/build.py, the page's own frame and lists, from website/features.json and website/research/*.md"
+  },
+  "Written 2026-09-28; the data is from Worked out exactly, and checked against 200,000 simulated zeroing sessions.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "No figure: the three rows of the table are the result; the curve against shots is in GroupLab itself, drawn for your own group What we found with a rifle whose shot-to-shot spread is one click in each direction, five shots put you within one click of the best zero 99 times in 100, but landing on exactly the closest click needs 242 shots for a 90 percent chance and more than a thousand for 95.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "Spread of the rifle, one direction Within 1 click, 99 percent Closest click, 90 percent Closest click, 95 percent half a click 2 shots 61 shots 249 shots 1 click 5 shots 242 shots 993 shots 2 clicks 19 shots 967 shots more than 1,000 The pattern is the point.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "With quarter-MOA clicks at 100 yards, a rifle that shoots five-shot groups of about 1 MOA has a spread of about 0.35 MOA in each direction, which is 1.4 clicks.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "GroupLab allows for it by drawing the spread the group could really have, many times over, and averaging: with a spread of one click measured on five shots, within one click at 99 percent needs 9 shots rather than 5.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "With 25 shots behind the spread, it needs 6.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "What one shot can say A one-shot zero is the n = 1 row.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "For the 1 MOA rifle above that is an error over about 0.7 MOA, three quarter-MOA clicks.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "It takes the group you analyzed and your scope's click value, from the rifle record or chosen there, and gives the shots for 90, 95 and 99 percent on both goals, each axis alone, and the curve against shots.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "Sources GroupLab statistics reference, sections 2 and 8.2 on group centres (docs/STATISTICS.md).": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "https://en.wikipedia.org/wiki/Standard_error Free and open source under GPL-3.0.": {
+   "kind": "measured",
+   "where": "src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)"
+  },
+  "Under the full CEP table: how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from the group's spread and your scope's click value.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.ShotsToZero.cs, the Shots Needed to Zero section in the full figures (entry 252 section 3); tests/GroupLab.App.Tests/Entry252Tests.cs"
   }
  },
  "rules": [

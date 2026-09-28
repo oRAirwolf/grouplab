@@ -171,6 +171,23 @@
       }
     },
     {
+      "key": "shots-to-zero",
+      "group": "The numbers",
+      "name": "Shots Needed to Zero",
+      "sentence": "How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope's click value. Suggested by Jylee.",
+      "noPicture": "it sits in the analysis screen's Advanced figures, which the weekly screenshots show closed",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "next",
+      "note": "now say how many shots a zeroing group needs",
+      "tour": "analysis-open",
+      "guide": "5-read-the-analysis",
+      "article": "shots-to-zero"
+    },
+    {
       "key": "cep",
       "group": "The numbers",
       "name": "CEP circles, any percent",
