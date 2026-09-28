@@ -100,11 +100,15 @@ intake and archive: it runs the command line analysis on the rebuilt submission,
 keeps only numbers and labels (never the photograph, no GPS, no names), and appends a row to the scoreboard. A regression past a set margin
 opens an issue in the private error-report repository, as error reports already do.
 
-**The server's capacity: not read tonight.** Reading it needs one ssh command, and every ssh command waits for Alan's approval, so it is
-the first thing in the morning (`docs/notes/for-alan.md`). Until then, an estimate: a 300 dpi Letter scan takes a few seconds and a few
-hundred MB on the desktop; on the server's ARM cores, perhaps two to four times that. At tens of submissions a day it would fit beside
-both sites under the same systemd limits as the other workers (CPUQuota, MemoryMax, Nice, IO weight); at thousands a day it would not.
-The results are numbers only, a few kB a submission, so the 47 GB volume is not the limit; a corpus copy is not kept on the server.
+**The server's capacity, read 2026-09-28 17:45 UTC** (one read-only command, request 52, approved by Alan). Two processors, 11.9 GB of
+memory of which 10.2 GB was available with both sites running and no swap, 36 GB free of the 45 GB volume, and a load average of 0.64,
+0.22 and 0.13 over one, five and fifteen minutes. **So yes, it has room**, for the loop as sized here: a 300 dpi Letter scan takes a few
+seconds and a few hundred MB on the desktop, perhaps two to four times the time on the server's cores, so tens of submissions a day is
+minutes of one processor. It runs as one more worker under the same systemd limits as the others, capped at one processor and about 1.5 GB
+(CPUQuota 50%, MemoryMax, Nice, IO weight), so it can never take the second processor from the two sites. **The one thing the read
+changes:** there is no swap, so the memory cap is not optional; without it one oversized picture could push the sites' own processes out
+of memory. At thousands a day it would not fit, and the heavier jobs below stay off the server. The results are numbers only, a few kB a
+submission, so the disk is not the limit; a corpus copy is not kept on the server.
 
 **Arm64.** The command line references OpenCV's native library for linux-x64 only (`OpenCvSharp4.official.runtime.linux-x64`). The phone's
 arm64 library is Android's and does not run on the server's Linux. A linux-arm64 build needs OpenCV's native part built for linux-arm64,

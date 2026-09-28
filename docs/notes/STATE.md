@@ -45,12 +45,10 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## Blocked, and on what
 
 - **The tablet** did not answer adb all night (from 11:19 UTC on 2026-09-28): its pictures and torch reading wait for it.
-- **Entry 261 section 6**, the server's capacity: one read-only ssh command, which needs Alan's approval.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 section 3.2.** Request 16: the Mac tester's trackpad check (his thanks, to Fenix, is in the README since entry 189).
 
-Open requests in `docs/notes/for-alan.md`: **8** (50 the device sitting with the camera test of 33 in it; 52 one approval for a
-read-only server command; 46 the backups on 4 October; 38 the Store; then 9, 16 and 20). for-alan.md's own count says the same.
+Open requests in `docs/notes/for-alan.md`: **7** (50 the device sitting with the camera test of 33 in it; 46 the backups on 4 October; 38 the Store; then 9, 16 and 20). for-alan.md's own count says the same.
 
 ## Open questions
 

@@ -3140,6 +3140,22 @@
   "**The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.": {
    "kind": "code",
    "where": "android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)"
+  },
+  "**The server's capacity, read 2026-09-28 17:45 UTC** (one read-only command, request 52, approved by Alan).": {
+   "kind": "measured",
+   "where": "request 52, entry 261 section 6: nproc, free -m, df -h /home and uptime on the server, read-only, 2026-09-28 17:45 UTC; the worker limits are those of the intake and archive workers' systemd units under website/server/"
+  },
+  "Two processors, 11.9 GB of memory of which 10.2 GB was available with both sites running and no swap, 36 GB free of the 45 GB volume, and a load average of 0.64, 0.22 and 0.13 over one, five and fifteen minutes.": {
+   "kind": "measured",
+   "where": "request 52, entry 261 section 6: nproc, free -m, df -h /home and uptime on the server, read-only, 2026-09-28 17:45 UTC; the worker limits are those of the intake and archive workers' systemd units under website/server/"
+  },
+  "**So yes, it has room**, for the loop as sized here: a 300 dpi Letter scan takes a few seconds and a few hundred MB on the desktop, perhaps two to four times the time on the server's cores, so tens of submissions a day is minutes of one processor.": {
+   "kind": "measured",
+   "where": "request 52, entry 261 section 6: nproc, free -m, df -h /home and uptime on the server, read-only, 2026-09-28 17:45 UTC; the worker limits are those of the intake and archive workers' systemd units under website/server/"
+  },
+  "It runs as one more worker under the same systemd limits as the others, capped at one processor and about 1.5 GB (CPUQuota 50%, MemoryMax, Nice, IO weight), so it can never take the second processor from the two sites.": {
+   "kind": "measured",
+   "where": "request 52, entry 261 section 6: nproc, free -m, df -h /home and uptime on the server, read-only, 2026-09-28 17:45 UTC; the worker limits are those of the intake and archive workers' systemd units under website/server/"
   }
  },
  "rules": [

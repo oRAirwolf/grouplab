@@ -40,6 +40,10 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 261, continued: the server's capacity read
+
+Section 6's one read-only command ran at 17:45 UTC with Alan's approval (request 52): two processors, 11.9 GB of memory with 10.2 GB available and no swap, 36 GB free of 45 GB, load 0.64. The re-reading loop fits at tens of submissions a day as one more worker capped at one processor and about 1.5 GB; with no swap the memory cap is required. `docs/DETECTION-LEARNING-STUDY.md` section 6 has it. Nothing on the server changed.
+
 ## Entry 260, continued: the score checked, the off-white counter, and shadows
 
 **The score against how pictures measured.** On the sixteen Phase 0 phone photographs of unshot sheets the first score disagreed with how each measured; with the angle free to 25 degrees and the registration's error a part, the tightest registrations score 91 to 100 and the four worst 40 (MOBILE-CAPTURE.md section 6). **The off-white counter.** `CaptureScreenTests.ASheetOnAnOffWhiteCounterIsFoundAndReady` holds the guidance to a 1920 by 1440 frame of a sheet on a counter barely darker than its paper; at that size the codes are not read and the sheet is found by its markers' layout, which the E and C bull variants share. **Shadows.** The normalisation entry 260 asks for is already render-and-difference's stages S5 and S6: a local paper field from the pixels the render calls paper, and both images divided by it before differencing; the detection study measured hard, soft and hand shadows against it. **Still to do:** the inner Fold screen and landscape, the camera test with Alan, and the torch pair, which need the devices.

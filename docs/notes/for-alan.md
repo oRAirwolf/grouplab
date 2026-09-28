@@ -1,13 +1,13 @@
 GOOD MORNING (the night of 28 September, in five lines):
 1. Out in nightly 121 (18:17 UTC), on top of 120's printer check and number taps: the picture score now follows how well a picture measures, and on the phone Paste a picture, a set shared as one large page with cut lines, and glossary words explained by a tap. The site is current, and the day's consistency audit is fixed. Nothing needs you for any of it.
 2. THE CAMERA TEST, ready now (about ten minutes, the Fold 7 closed, a printed 5x5 sheet flat on a table in ordinary light): open GroupLab Dev, Capture, Take a picture. (a) GUIDED: hold it over the sheet and follow the words until the shutter fires by itself, then Use this picture. (b) Three bad ones on purpose, about five seconds each: tilted well over, far too close, your hand's shadow across the sheet; note whether the words said what was wrong. (c) One more good one from another height. (d) Tap MANUAL: one ordinary picture with the shutter, then one deliberately bad one, and read the feedback. Then say "camera done", and anything that felt wrong.
-3. When you are at the computer, say "run the server read": one read-only command on the server for entry 261, which asks your approval (request 52 below).
+3. The server read is done (request 52, 17:45 UTC): two processors, 10.2 GB of memory free, 36 GB of disk free, load 0.6. It has room to re-read sent targets, capped at one processor.
 4. Devices: both show the black idle screen and can be picked up. The Tab S8 Ultra never answered adb overnight, so its pictures and torch reading wait for the next sitting.
-5. Updated 2026-09-28 18:18 UTC. Next: the camera test when you are ready (nightly 121 or later), then the device sitting; question 67 (the card outline's gap) is with you through planning.
+5. Updated 2026-09-28 17:50 UTC. Next: the camera test when you are ready (nightly 121 or later), then the device sitting; question 67 (the card outline's gap) is with you through planning.
 
 # Requests for Alan
 
-**Open: 8.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). Then **52**, one approval for a read-only server command (line 3). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 7.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -90,6 +90,9 @@ At the start of a run, the count of open requests in this file is printed and no
 ---
 
 ## 52. One approval: a read-only look at the server's size (entry 261 section 6), about one minute
+
+**Answered 2026-09-28**: "run the server read", and the command ran at 17:45 UTC. Two processors, 11.9 GB of memory with 10.2 GB
+available and no swap, 36 GB free of 45 GB, load 0.64. It has room; `docs/DETECTION-LEARNING-STUDY.md` section 6 has the sizing.
 
 **What:** when you are at the computer, say "run the server read". I then run this one command, which stops for your approval in the
 panel because every ssh does:
