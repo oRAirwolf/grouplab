@@ -314,6 +314,8 @@ New on the phone in the latest builds, as entries 258 and 259 bring it level wit
 - On the phone, you tap the bulls you fired at on the sheet itself.
 - On the phone, Sessions can compare loads.
 - On the phone, Ballistics is a tab of its own: the dope, the trajectory and the chance of a hit with your own group.
+- On the phone, a set of sheets is a checklist: the sheets read so far pooled into one group, and those still to read.
+- On the phone, a scan says how it was printed, and every size is corrected to real inches.
 
 What does not exist yet: Garmin Xero import, velocity regression, synchronization, an iOS build, and hand marking on the phone.
 

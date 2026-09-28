@@ -33,14 +33,16 @@ public sealed class ResultView : UserControl
     private readonly Button undo = new() { Content = "Undo", MinHeight = Screens.Touch, Margin = new Thickness(4), IsEnabled = false };
     private SheetEditor? editor;
     private long? sessionId;
+    private readonly Action again;
 
     internal ResultView(PhoneResult result, ShotSetup setup, UnitSettings units, Action again)
     {
         this.units = units;
+        this.again = again;
         definition = result.Definition;
         sessionId = result.SessionId;
         session = new MarkingSession(result.State);
-        full = new FiguresView(result.State, units, plot, ShowShotsToZero);
+        full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition };
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title(result.Definition?.Name ?? "The sheet"));
         if (result.Failure is { } failure)
@@ -97,6 +99,12 @@ public sealed class ResultView : UserControl
             picture.Children.Add(tools);
             picture.Children.Add(toolWords);
             picture.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
+        }
+
+        // Entry 259 screen 6: a sheet of a set from Made for your optic leads to the set, pooled so far, and the sheets still to read.
+        if (session.State.SetSheet is not null && definition?.Tiling is { } set && set.Cols * set.Rows > 1)
+        {
+            actions.Children.Insert(0, Screens.Row("Your set", "The sheets read so far pooled into one group, and those still to read", ShowSet));
         }
 
         // Entry 259 screen 5: the hit chance with this group carried in.
@@ -170,6 +178,14 @@ public sealed class ResultView : UserControl
                 full.Sheet,
             },
         };
+    }
+
+    /// <summary>Entry 259 screen 6: the set this sheet belongs to, as a checklist; photographing the next sheet goes to the camera.</summary>
+    private void ShowSet()
+    {
+        var result = Content;
+        string? date = sessionId is { } id ? PhoneAnalysis.Store().Get(id)?.ShotDate : null;
+        Content = new SetPage(definition!, date, units, again, () => Content = result);
     }
 
     /// <summary>Entry 259 screen 2: the bulls fired at, chosen on the sheet's own layout, and back to the result.</summary>

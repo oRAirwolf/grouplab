@@ -15,6 +15,8 @@
     "On the phone, you tap the bulls you fired at",
     "On the phone, Sessions can compare loads",
     "On the phone, Ballistics is a tab of its own",
+    "On the phone, a set of sheets is a checklist",
+    "On the phone, a scan says how it was printed",
     "On the phone, a sheet with one bull now says 1 bull",
     "The four zeroing grids are redrawn as design C3",
     "In the Targets list, Letter sheets now come before A4",
@@ -409,13 +411,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.95",
       "note": "A scanned target now reports real inches",
       "tour": "analysis",
       "guide": "1-print-a-sheet",
-      "article": "printer-true-size"
+      "article": "printer-true-size",
+      "mobile": {
+        "noPicture": "the scan pill is photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "angle",
@@ -588,12 +594,16 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "next",
       "note": "pool",
       "tour": "sessions",
-      "guide": "10-comparing-several-sheets-at-once"
+      "guide": "10-comparing-several-sheets-at-once",
+      "mobile": {
+        "noPicture": "the phone's set checklist is photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "e-bull",

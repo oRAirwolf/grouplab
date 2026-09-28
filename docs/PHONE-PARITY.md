@@ -37,7 +37,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Made for your optic | `optic` | on the phone | on the phone's Targets screen |
 | Zeroing grids read through a scope | `zero-grids` | on the phone | in the phone's Targets library, previewed with their words |
 | Large sheets | `large-sheets` | coming | after entry 259: the photograph detail advice, and tiled printing with cut lines through Android's print dialog |
-| Real inches from a scan | `true-size` | coming | entry 259 screen 7, the scan pill |
+| Real inches from a scan | `true-size` | on the phone | entry 259 screen 7, the scan pill; a phone photograph cannot measure its print size |
 | Photographs at an angle | `angle` | on the phone | |
 | Sessions between phone and computer | `share-session` | on the phone | |
 | The phone follows your region | `phone-region` | on the phone | |
@@ -47,7 +47,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Words explained where they appear | `explain-words` | coming | a figure's name opens its explanation by a tap since entry 259 screen 1; glossary words inside sentences do not yet |
 | Updates that list what you skipped | `updates` | left out | Google Play updates the phone's application; the desktop's own updater has nothing to do there |
 | Builds for the Mac | `mac` | left out | a platform, not something a phone can do |
-| Pool the sheets of a set | `pool-set` | coming | entry 259 screen 6, the set as a checklist |
+| Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist: the saved sheets of the set's design shot the same day |
 | The E bull | `e-bull` | on the phone | |
 | The C bull | `c-bull` | on the phone | |
 | Large format on a home printer | `large-on-letter` | on the phone | |

@@ -72,6 +72,10 @@ internal sealed class FiguresView : UserControl
         }
 
         column.Children.Add(switcher);
+        if (Printed() is { } pill)
+        {
+            column.Children.Add(pill);
+        }
         column.Children.Add(Screens.Tiles(tiles.Select(t => (t.Label, t.Value, t.Beneath ?? "", t.Headline))));
         if (state.ShotDistanceInches is null)
         {
@@ -124,6 +128,69 @@ internal sealed class FiguresView : UserControl
                 column.Children.Add(Screens.Row("Shots Needed to Zero", "How many shots a zeroing group needs, from this group. Suggested by Jylee.", shotsToZero));
             }
         }
+    }
+
+    /// <summary>The sheet's definition, for the scan pill's markers; the result sets it.</summary>
+    public GroupLab.Core.Gltd.Model.TargetDefinition? Definition { get; set; }
+
+    private bool scaleOpen;
+
+    /// <summary>
+    /// Entry 259 screen 7, approved: on a result from a scan, a teal pill saying how the sheet was printed and that every size is corrected,
+    /// which opens a card with the plain sentence, the markers' distance as drawn and as printed, the correction in amber, and why a
+    /// photograph cannot do this. Null on a photograph or where the scan's scale was not believed (<see cref="SheetReference.PrintScale"/>).
+    /// </summary>
+    private Control? Printed()
+    {
+        if (state.Scale is not SheetReference { PrintScale: { } k })
+        {
+            return null;
+        }
+
+        double off = Math.Abs(1 - k) * 100;
+        string words = Math.Abs(k - 1) <= DetectionAdvice.ScaleWorthSaying
+            ? "Printed at its true size, checked"
+            : string.Create(CultureInfo.CurrentCulture, $"Printed {off:0.0}% {(k < 1 ? "small" : "large")}, every size corrected");
+        var teal = Color.FromRgb(42, 157, 143);
+        var pill = new Button
+        {
+            Content = words,
+            MinHeight = Screens.Touch,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Foreground = new SolidColorBrush(teal),
+            BorderBrush = new SolidColorBrush(teal),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(20),
+        };
+        pill.Click += (_, _) =>
+        {
+            scaleOpen = !scaleOpen;
+            Build();
+        };
+        var holder = new StackPanel { Spacing = 8, Children = { pill } };
+        if (scaleOpen)
+        {
+            var card = new StackPanel { Spacing = 6 };
+            card.Children.Add(Screens.Line(string.Create(CultureInfo.CurrentCulture,
+                $"This sheet was printed at {k * 100:0.0} percent of its intended size. The scan measured that, so every size here is corrected to real inches.")));
+            if (Definition?.Fiducials?.Markers is { Count: >= 2 } markers)
+            {
+                var (a, b) = markers.SelectMany(m => markers.Select(n => (m, n))).MaxBy(p => ((p.m.X - p.n.X) * (p.m.X - p.n.X)) + ((p.m.Y - p.n.Y) * (p.m.Y - p.n.Y)));
+                double drawn = Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y))) / 254;
+                card.Children.Add(Screens.Dim($"The farthest two markers are {units.Length(drawn)} apart as drawn, and {units.Length(drawn * k)} as printed."));
+            }
+
+            card.Children.Add(new TextBlock
+            {
+                Text = string.Create(CultureInfo.CurrentCulture, $"Every size times {k:0.000}"),
+                FontWeight = FontWeight.SemiBold,
+                Foreground = new SolidColorBrush(Color.FromRgb(232, 150, 46)),
+            });
+            card.Children.Add(Screens.Dim("A phone photograph cannot measure this, because it has no absolute ruler: its figures stay in the sheet's own inches. A scan states its resolution, which is one."));
+            holder.Children.Add(Screens.Card(card));
+        }
+
+        return holder;
     }
 
     /// <summary>The plot moved into the new card: a control has one parent, and the page is rebuilt on every change.</summary>
