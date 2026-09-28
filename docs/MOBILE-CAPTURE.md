@@ -199,7 +199,8 @@ be measured, the markings on a sheet with none, takes no part.
 3. **Exposure.** Otsu's threshold on the rectified sheet; the pixels above it are paper. Two figures: the share of the paper at 250 or
    above, **perfect at 2 percent and worthless at 20**; and the paper's median level, **perfect at 140 and worthless at 70**. The part is
    the lesser.
-4. **Angle.** The off-axis angle of section 4.2: **perfect at 10 degrees, worthless at the limit, 37.**
+4. **Angle.** The off-axis angle of section 4.2: **perfect at 25 degrees, worthless at the limit, 37.** It was 10 until entry 260's check
+   below: the angle is corrected, and pictures 21 to 28 degrees off square registered to 0.003 in.
 5. **Resolution.** The fewest image pixels an inch of the sheet gets: the smaller singular value of the page-to-image homography's
    derivative, taken at the four corners and the center. **Perfect at 150, worthless at 50.**
 6. **Markings.** The markers read over the markers printed. **Perfect at 90 percent, worthless at 50.**
@@ -216,7 +217,8 @@ written beside the bar.
 
 1. **The score** is section 5's, the weakest of its parts, with a sixth: **the evenness of the light**, the dimmest bull's paper over the
    brightest. A bull's paper is the median of eight samples at 1.2 times its outer disc's radius, each the brightest pixel within two.
-   **Perfect at 0.85, worthless at 0.40.**
+   **Perfect at 0.85, worthless at 0.40.** And a seventh: **the registration's own error**, the fit's residual, or through a bent sheet's
+   mesh each marker as the others predict it. **Perfect at 0.005 in, worthless at 0.05.**
 2. **The band agrees with the decision.** GroupLab asks for a retake only where it cannot measure: the codes name no sheet, the
    markers do not register, the sheet is past the angle limit, the focus part is 0 (blur of 0.015 in or more), or the resolution part is
    0 (under 50 pixels an inch). A picture it can measure never scores below 40; one it cannot never scores 40 or above. So the bar's red
@@ -224,14 +226,21 @@ written beside the bar.
 3. **The verdict** is Retake, Good (green with no notes), or Good with notes. The lead for amber is "Good enough to measure. Here is what
    would make the next one better:".
 4. **The notes**, numbered, say what GroupLab corrected where it did: a bull's paper under 80 percent of the median bull's is in shadow,
-   "A shadow falls across bulls 21 to 25, evened out: check those 5 holes if you like"; off square beyond 10 degrees; resolution under
+   "A shadow falls across bulls 21 to 25, evened out: check those 5 holes if you like"; off square beyond 25 degrees; the markers agreeing
+   worse than 0.005 in, which says the paper may be curled or folded; resolution under
    150 pixels an inch; soft focus; dim or washed-out paper; markers not all read. **What was fine** lists sharp focus, even light, tags
    and codes read of how many, and whether the torch was on.
 5. **Live.** The capture screen's bar is the same score for the frame in view, placed in the band the picture would get
    (`PictureCheck.Forecast`).
-6. **Not yet measured:** whether the score agrees with how well each picture actually measured across the test photographs, and the
-   tolerance conditions (hard and soft shadows, a hand's and a phone's shadow, dim, warm and mixed light, curl and wave, blur, noise,
-   JPEG). Entry 260 asks for both; they are the next part of it.
+6. **Checked against how the pictures measured** (2026-09-28, the sixteen Phase 0 phone photographs of unshot sheets, so every hole
+   found is a false mark and the registration's error is the other measure of how well a picture measured). Thirteen registered; the
+   three telephoto ones did not, their codes unread. As first defined, the score disagreed: the four with the tightest registration
+   (0.0025 to 0.0037 in, no false marks) scored 41 to 100, held down by an angle of 21 to 26 degrees GroupLab had corrected, while the
+   one with the worst (0.041 in, six false marks) scored 77. With the angle perfect to 25 degrees and the registration's error a part,
+   the tightest score 91 to 100 and the four that registered worst (0.036 to 0.049 in, two to six false marks) score 40, the floor for a
+   picture GroupLab can measure. Two clean pictures stay at 40 for a shadow across several bulls; an unshot sheet cannot show a hole a
+   shadow hides, so the evenness part stays until shot sheets can test it. The tolerance conditions are in
+   `docs/DETECTION-LEARNING-STUDY.md` section 1.
 
 `PictureCheckTests`: a clean sheet is green; a shadow across the bottom row is named, "21 to 25", and stays out of the red; an unread
 sheet is a red retake.

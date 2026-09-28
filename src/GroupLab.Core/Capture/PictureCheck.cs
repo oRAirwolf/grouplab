@@ -127,6 +127,11 @@ public static class PictureCheck
     /// The check of an analysed picture: <paramref name="definition"/> is what the codes named or the person chose, null where neither;
     /// <paramref name="result"/> the analysis, null where it did not run; <paramref name="codesRead"/> the square codes read.
     /// </summary>
+    /// <summary>The registration's error that costs nothing, a flat sheet's, and the one at which the part is worthless, in inches.</summary>
+    public const double RegistrationFine = 0.005;
+
+    public const double RegistrationUseless = 0.05;
+
     public static PictureVerdict Of(GrayImage image, TargetDefinition? definition, AutomaticResult? result, int codesRead, bool torch)
     {
         ArgumentNullException.ThrowIfNull(image);
@@ -209,6 +214,15 @@ public static class PictureCheck
             }
         }
 
+        // Entry 260: the registration's own error is part of the score, the fit's residual or, through a bent sheet's mesh, each marker as
+        // the others predict it. On the Phase 0 photographs it was what separated the pictures that measured badly from those that did not.
+        double? registrationInches = result?.Measurement.Registration?.RmsResidual / 254;
+        double registrationPart = registrationInches is { } rms ? Math.Clamp((RegistrationUseless - rms) / (RegistrationUseless - RegistrationFine), 0, 1) : 1;
+        if (registrationPart < 1 && cannot is null)
+        {
+            notes.Add((string.Create(CultureInfo.InvariantCulture, $"The markers agree only to {registrationInches:0.000} in, where a flat sheet gives {RegistrationFine:0.000}: the paper may be curled or folded. GroupLab followed it; a flatter sheet would measure better."), sheet));
+        }
+
         if (quality?.FocusPart is >= 0.9)
         {
             fine.Add("sharp");
@@ -232,7 +246,7 @@ public static class PictureCheck
         fine.Add(torch ? "torch on" : "no torch");
 
         double evenPart = evenness is { } v ? Math.Clamp((v - UnevenLight) / (EvenLight - UnevenLight), 0, 1) : 1;
-        int raw = quality is null ? 0 : (int)Math.Round(Math.Min(quality.Score, 100 * evenPart), MidpointRounding.AwayFromZero);
+        int raw = quality is null ? 0 : (int)Math.Round(Math.Min(Math.Min(quality.Score, 100 * evenPart), 100 * registrationPart), MidpointRounding.AwayFromZero);
         bool can = cannot is null;
         int score = can ? Math.Max(raw, CaptureQualities.Usable) : Math.Min(raw, CaptureQualities.Usable - 1);
         var band = Band(score);

@@ -55,7 +55,11 @@ public static class CaptureQualities
     public const double UselessClipped = 0.2;
     public const double FinePaperLevel = 140;
     public const double UselessPaperLevel = 70;
-    public const double FineDegrees = 10;
+    /// <summary>
+    /// Entry 260, checked on the Phase 0 photographs: 21 to 28 degrees off square registered to 0.003 in with no false marks, because the
+    /// angle is corrected, so the angle costs nothing until 25 degrees; it was 10, which scored those pictures 41 to 60.
+    /// </summary>
+    public const double FineDegrees = 25;
     public const double FinePixelsPerInch = 150;
     public const double UselessPixelsPerInch = 50;
     public const double FineMarkings = 0.9;
