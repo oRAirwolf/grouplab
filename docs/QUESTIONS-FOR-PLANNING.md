@@ -12,6 +12,16 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-28, question 65: entry 261 puts a study script in `tools/study/`, which CLAUDE.md keeps read only
+
+Status: open.
+
+Entry 261 says: "A throwaway script to take a measurement for the study is fine, as long as it is kept under `tools/study/` and not wired
+into the app." CLAUDE.md's standing constraints say: "`tools/` is read only." The two cannot both hold. **What I did:** the measurement
+ran as a scratch test in the Core test project, was deleted once its numbers were written into `docs/DETECTION-LEARNING-STUDY.md`, and
+its conditions are listed there so it can be rebuilt. **The question:** when the scoreboard is built (the study's recommendation), where
+should it live: `tools/study/` with CLAUDE.md amended, or `scripts/` and the test projects, as everything else Code writes?
+
 ## 2026-09-28, question 64: a hole in solid black is refused as too small, so the C3 grids are built and held
 
 Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 254: (a), measured on the aim point card's real holes; the refusal was the synthetic model's, and C3 is released. Was: open.

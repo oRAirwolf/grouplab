@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1177 |
-| measured | 1540 |
-| decided | 1211 |
+| measured | 1549 |
+| decided | 1220 |
 | unbacked | 0 |
-| **total** | **3928** |
+| **total** | **3946** |
 
-**666** of them were read one sentence at a time and their backing written against the sentence. The other **3262** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**685** of them were read one sentence at a time and their backing written against the sentence. The other **3261** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -656,6 +656,28 @@ one that matters.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): --- **How this client departs from the example in section 2,** so a reader of a real record is not surprised: - **`last_action`** is the name of the last event the log recorded, such as `print.select`, rather than a separately chosen name.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): - **`renderer`** is `Skia`, which is what Avalonia 12 draws through on every desktop platform.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): - **`framework`** is the runtime's own description, such as `.NET 10.0.5`.
+
+### docs/DETECTION-LEARNING-STUDY.md
+
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): NOTES-FROM-PLANNING.md entry 261, a study only: nothing here is built.
+- *measured* (a scratch degradation test (deleted after the run) of AutomaticMarking.Run on GL-CF25-LTR at 300 dpi with SyntheticSheet holes, seeds 261 and 262, 2026-09-28; conditions listed in docs/DETECTION-LEARNING-STUDY.md section 1 (entry 261)): - **The first measurement already pays for itself.** On a rendered sheet with synthetic holes, the detector kept 22 to 25 of 25 holes through hard, soft and hand shadows, dim and uneven light, blur, noise and JPEG, with no false marks and a median centre error under 0.01 in.
+- *measured* (a scratch degradation test (deleted after the run) of AutomaticMarking.Run on GL-CF25-LTR at 300 dpi with SyntheticSheet holes, seeds 261 and 262, 2026-09-28; conditions listed in docs/DETECTION-LEARNING-STUDY.md section 1 (entry 261)): It **failed completely on curl**: a sheet bowed by 15 pixels across its width at 300 dpi (about 0.05 in) did not register at all.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): That is not a detection problem; it is the registration's, and entry 260's tolerance work (a warp that follows the tags) is the fix.
+- *measured* (a scratch degradation test (deleted after the run) of AutomaticMarking.Run on GL-CF25-LTR at 300 dpi with SyntheticSheet holes, seeds 261 and 262, 2026-09-28; conditions listed in docs/DETECTION-LEARNING-STUDY.md section 1 (entry 261)): Where the current detector fails (measured 2026-09-28, synthetic) GL-CF25-LTR rendered at 300 dpi, one synthetic hole on each of its 25 bulls (`SyntheticSheet`, scanner-lid backing), two seeds, each degraded, and read by the whole pipeline (`AutomaticMarking.Run`) as a photograph.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): A hole counts as found when a mark lies within 0.1 in.
+- *measured* (a scratch degradation test (deleted after the run) of AutomaticMarking.Run on GL-CF25-LTR at 300 dpi with SyntheticSheet holes, seeds 261 and 262, 2026-09-28; conditions listed in docs/DETECTION-LEARNING-STUDY.md section 1 (entry 261)): **What parameters can fix:** glare (a hot-spot mask and the torch's own glare check of entry 262), and the one hole lost in soft shadow and uneven light (the local paper level entry 260 asks for).
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): Real photographs are the next step (section 2).
+- *measured* (docs/PHASE1-BRIEF.md (25 of 27 on 300_nm_hand_load.jpg), docs/RESEARCH.md (54 of 400 shots, overlapping holes), docs/SCAN-MEASUREMENTS.md section 3 (343 holes)): **Real targets already measured** (docs/SCAN-MEASUREMENTS.md, docs/RESEARCH.md): 25 of 27 hand-verified holes with no false marks on a commercial target scan (`300_nm_hand_load.jpg`), by the neutral darkness detector; and where holes overlap in tight groups, only 54 of 400 shots as marks of their own.
+- *measured* (docs/PHASE1-BRIEF.md (25 of 27 on 300_nm_hand_load.jpg), docs/RESEARCH.md (54 of 400 shots, overlapping holes), docs/SCAN-MEASUREMENTS.md section 3 (343 holes)): The data we have and will get - **Labelled holes today, an estimate:** about 450.
+- *measured* (docs/PHASE1-BRIEF.md (25 of 27 on 300_nm_hand_load.jpg), docs/RESEARCH.md (54 of 400 shots, overlapping holes), docs/SCAN-MEASUREMENTS.md section 3 (343 holes)): The 343 surveyed holes of docs/SCAN-MEASUREMENTS.md section 3, the 27 hand-verified ones on the commercial scan, and the 75 shots of Alan's three 25 shot load sheets of 2026-09-26, whose truth is known by count and by eye; plus the synthetic corpus, which is unlimited and labels itself.
+- *measured* (a scratch degradation test (deleted after the run) of AutomaticMarking.Run on GL-CF25-LTR at 300 dpi with SyntheticSheet holes, seeds 261 and 262, 2026-09-28; conditions listed in docs/DETECTION-LEARNING-STUDY.md section 1 (entry 261)): **Now:** the scoreboard, starting with the synthetic conditions above in CI, with the curl case as its first failing line, and entry 260's tolerance work fixing it.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): **Next:** the server loop of section 6, adding real sent targets to the scoreboard.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): Until then, an estimate: a 300 dpi Letter scan takes a few seconds and a few hundred MB on the desktop; on the server's ARM cores, perhaps two to four times that.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): The results are numbers only, a few kB a submission, so the 47 GB volume is not the limit; a corpus copy is not kept on the server.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): The phone's arm64 library is Android's and does not run on the server's Linux.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): Holes found automatically on other people's targets (Alan, 2026-09-28) On a commercial or other non-GroupLab target, the person sets the scale by hand and GroupLab has no printed artwork to subtract.
+- *measured* (docs/PHASE1-BRIEF.md (25 of 27 on 300_nm_hand_load.jpg), docs/RESEARCH.md (54 of 400 shots, overlapping holes), docs/SCAN-MEASUREMENTS.md section 3 (343 holes)): The detector for that already exists and is measured: the neutral darkness detector found **25 of 27** hand-verified holes with **no false marks** on a commercial target scan, and it is what GroupLab's own pipeline grew from.
+- *decided* (NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are): The measurement script was a scratch test, run once and deleted; its conditions are listed in section 1 so it can be rebuilt as the scoreboard.
 
 ### docs/DETECTION-PIPELINE.md
 
@@ -1977,7 +1999,6 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): ## Figures come in both themes NOTES-FROM-PLANNING.md entry 143 section 1.2.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): ## Three states, and a record of what went live Entry 143 section 1.3.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The standing rule, and what was decided NOTES-FROM-PLANNING.md entry 158 section 1.
-- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | investigation | decision | why | |---|---|---| | Nineteen angled photographs of one scanned sheet (entry 238) | written, as a section of curled-angled-paper, with a figure | It tells a shooter how steep a phone can be held and why, and it moved GroupLab's own limit from 40 to 37 degrees.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Phone photos of three load sheets against their scans (entry 233) | written, as a section of photographing-targets | It changes what a shooter does at the kitchen counter: shade all of the sheet or none, hold it down outside the print; and it shows the suppressor result can be repeated with a phone.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Question 38: a photographed hole has no size constant | **already covered** | Articles 1, `photo-hole-size`, and 2, `hole-is-not-the-bullet`, are that finding.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Question 44: the bent-sheet model predicts a held-out marker as well as a fitted one | **not written** | It improved the bull centers on seven of seven photographs and worsened the hole positions on seven of seven, so there is no conclusion yet that a developer could build on, and the model is not adopted.

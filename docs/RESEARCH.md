@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| The detector under synthetic degradations, entry 261 (docs/DETECTION-LEARNING-STUDY.md section 1) | **not yet** | synthetic holes on one sheet cannot separate what a condition does from what a real hole does; worth one once the scoreboard has real sent photographs by condition, and the curl result is fixed first |
 | Nineteen angled photographs of one scanned sheet (entry 238) | written, as a section of curled-angled-paper, with a figure | It tells a shooter how steep a phone can be held and why, and it moved GroupLab's own limit from 40 to 37 degrees. |
 | Phone photos of three load sheets against their scans (entry 233) | written, as a section of photographing-targets | It changes what a shooter does at the kitchen counter: shade all of the sheet or none, hold it down outside the print; and it shows the suppressor result can be repeated with a phone. |
 | Question 38: a photographed hole has no size constant | **already covered** | Articles 1, `photo-hole-size`, and 2, `hole-is-not-the-bullet`, are that finding. |
