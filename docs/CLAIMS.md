@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1203 |
-| measured | 1550 |
-| decided | 1228 |
+| code | 1201 |
+| measured | 1548 |
+| decided | 1247 |
 | unbacked | 0 |
-| **total** | **3981** |
+| **total** | **3996** |
 
-**712** of them were read one sentence at a time and their backing written against the sentence. The other **3269** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**727** of them were read one sentence at a time and their backing written against the sentence. The other **3269** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -352,6 +352,7 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): On Windows, macOS, Linux and Android.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **2** | On the computer, every hole found, then the group with honest ranges.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **3** | On the phone, photograph it at the range.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): | The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting.
 - *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | [![Session records](docs/figures/screens/current/sessions-dark-1400x900.png)](docs/figures/screens/current/sessions-dark-1400x900.png) | [![Compare loads](docs/figures/screens/current/compare-dark-1400x900.png)](docs/figures/screens/current/compare-dark-1400x900.png) | | **Session records.** Every analyzed sheet, by rifle and load, to open again, compare or pool.
 - *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | | |---| | [![The analysis screen, light theme](docs/figures/screens/current/analysis-light-1400x900.png)](docs/figures/screens/current/analysis-light-1400x900.png) | | **Light theme.** Dark, light, high contrast, or following the system.
 - *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): | ## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.
@@ -387,11 +388,12 @@ one that matters.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Core and statistics** | **Built, not proven** | statistical output matches the R package `shotGroups` to numerical tolerance on shared test data | | **3.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Editor** | **Built, not proven** | a full 25-shot target with several misassignments corrected in under two minutes | | **4.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Windows application** | **In progress** | target library, generation, printing, analysis, reporting and session records, in one application | | **5.
-- *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Chronograph, solver, and comparison** | **Not started** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots | | **6.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): Chronograph, solver, and comparison** | **In progress** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots | | **6.
 - *code* (android/GroupLab.Android, the Phase 6 features listed under it with their states (entries 219 to 243)): Android** | **In progress** | camera capture and lens distortion fitted on the device | | **7.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Synchronization** | **Not started** | cloud provider adapters over three-tier storage | | **8.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): iOS** | **Not started** | built and signed on CI | | **9.
-- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | #### What each phase holds **Phase 0a.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): #### What each phase holds **Phase 0a.
 - *code* (targets/*.gltd.json, counted by scripts/counts.py sheets): - **Done.** A validator, and 26 built-in target sheets.
 - *code* (the compare-photos command, src/GroupLab.Cli/Measurement/PhotoVerb.cs): For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
@@ -422,10 +424,10 @@ one that matters.
 - *code* (the files themselves): **[DESIGN.md](DESIGN.md)**, the design document: what GroupLab is for, how it works, and the build plan.
 - *code* (the files themselves): **[docs/TARGET-SCHEMA.md](docs/TARGET-SCHEMA.md)**, the GLTD 1.0 format, including the conformance tests of section 10.
 - *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): | | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia.
-- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause, reached through P/Invoke.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): | | **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on the desktop, and a GroupLab build of OpenCV on Android; on both the markers are read with OpenCV's ArUco module and the AprilTag 36h11 dictionary.
 - *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): **None of it ships or runs at runtime.** | **Why C# rather than Rust or Go.** The deciding argument was one language across three shells: a measurement core plus Windows, Android and iOS interfaces that must produce identical numbers.
 - *code* (.github/workflows/ci.yml): In short, with the .NET 10 SDK: ``` dotnet build dotnet test dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf ``` GroupLab builds and its tests pass on Windows, Linux and macOS , and every push runs the suite on all three.
-- *code* (.github/workflows/nightly.yml and package.yml): Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
 - *decided* (entry 37: donated photographs live in their own repository): They go in a separate one, `grouplab-testdata`, published under GPL-3.0, because that is the license named in the consent text contributors agreed to.
 - *code* (the gate records and tests read scans/ by path): The Phase 0 and Phase 1 scans under `scans/` stay here, because committed tests and gate records read them by path.
 - *code* (LICENSE, and the footer in website/build.py shell()): ## License **GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the license in force today for every copy of GroupLab from every source.
@@ -1812,7 +1814,7 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): **Why the nightly numbers skip.** Up to nightly 91 a nightly was numbered by the workflow run that built it, and a run that was cancelled or skipped still took its number.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): From nightly 92 the number is the last published build plus one, so from there a gap means a number was never used, and a build that should not have been made is named as such below rather than hidden.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): --- ## 0.2.0-nightly.119 **2026-09-28**, commit `9046087`.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.119) --- ## 0.2.0-nightly.118 **2026-09-28**, commit `401a978`.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): *The last two lines were added on 2026-09-28: this build carried both, and its notes left them out because a change to the Android application alone was not yet counted as one that ships.* [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.119) --- ## 0.2.0-nightly.118 **2026-09-28**, commit `401a978`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.118) --- ## 0.2.0-nightly.117 **2026-09-28**, commit `6b80b4e`.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): **What you will notice** - The analysis screen's Advanced figures now say how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100; suggested by Jylee.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.117) --- ## 0.2.0-nightly.116 **2026-09-28**, commit `d211abd`.
@@ -2880,7 +2882,7 @@ one that matters.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows may say **"Windows protected your PC"**.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.
 - *measured* (measured 2026-09-21, entries 119 to 123): On 2026-09-21 two machines installed `grouplab-setup-win-x64.exe` from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.
-- *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): The zip and the Linux tarball cannot replace themselves, because they were unpacked wherever you put them.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 section 8): The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them.
 - *measured* (measured 2026-09-21: the first self-update run end to end, entry 123): ### One reinstall by hand, once **`v0.2.0-nightly.25` is the first build that can update itself.** If you are on anything earlier, the update will not work and it is not your machine's fault: the signature those builds check was written differently on the machine that made them, so they reject a perfectly good update.
 - *measured* (measured 2026-09-21: the first self-update run end to end, entry 123): The update from `nightly.25` to `nightly.26` was then run end to end on a real machine, with real clicks: 97 MB downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back on the screen it was on.
 - *code* (samples/ and samples/PROVENANCE.md): It is a GroupLab sheet with 25 shots, generated by GroupLab itself, so it is nobody's target.
@@ -3021,7 +3023,10 @@ one that matters.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
-- *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The settings](figures/screens/current/settings-light-1400x900.png)
+- *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): ![The settings](figures/screens/current/settings-light-1400x900.png) ## 13.
+- *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On the phone GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory.
+- *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): **The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.
+- *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On a large screen, such as the Tab S8 Ultra or the Fold 7 opened, the result shows the sheet beside the numbers.
 
 ### docs/VOLUNTEER-PACK.md
 
@@ -3213,7 +3218,6 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Other Linux builds The published Linux build is x86-64.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Reports from Linux and macOS are welcome A report is useful even when the answer is that it crashed on startup.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request.
@@ -3223,7 +3227,6 @@ one that matters.
 
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.119 Guided or Manual on the camera The camera&#x27;s instruction, shutter and Back show over the live picture, with the torch, a level and a quality bar; Guided takes the picture itself when everything is right, and Manual when you press.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.119 Every picture checked Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
 - *code* (src/GroupLab.Core/Statistics/ShotsToZero.cs Work and SigmaClicks, shared by src/GroupLab.App/MainWindow.ShotsToZero.cs and android/GroupLab.Android/ShotsToZeroPage.cs; suggested by Jylee (entries 252, 259)): On the tour · In the user guide · The research behind it Shots Needed to Zero How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope&#x27;s click value.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
@@ -3232,9 +3235,10 @@ one that matters.
 - *code* (tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures and website/features.json zero-grids (entries 251, 256, 258)): On the tour · In the user guide · The research behind it MOA at 100 yd Mil at 100 yd MOA at 100 m Mil at 100 m; design C3, chosen by Alan with Jylee and Unholy Zeroing grids read through a scope Design C3, chosen by Alan with Jylee and Unholy: squares of a scope&#x27;s own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.
 - *code* (tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures, drawn from targets/GL-CF25-LTR-E, GL-CF25-LTR-C and the four GL-ZERO sheets; the pictures chosen by entry 256, C3 by entry 251): On the tour · In the user guide The E bull as it prints: a black disc, its white center and a small dot The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.
 - *code* (src/GroupLab.Core/Capture/PictureCheck.cs Of and Band (the score, the 40 and 70 bands, retake only where it cannot measure), android/GroupLab.Android/FeedbackView.cs; held by PictureCheckTests (entry 260)): Every picture checked Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 section 6, checked against the updater): In the user guide Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 section 6, checked against the updater): Updates that list what you skipped The Windows installer updates itself; on every desktop build the update bar lists each build you skipped, newest first, with what each changed, and the zip, the tarball and the Mac builds leave the download to you.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Builds for the Mac Every nightly is built for Apple silicon and Intel Macs as well as Windows and Linux.
-- *decided* (docs/figures/screens/phone/SOURCES.md and samples/PROVENANCE.md, the 2026-09-26 range day, Alan's standing consent of entry 171): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra; the result in them is Alan's own scan, published with his consent.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 section 6, checked against the updater): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, retaken at the next device sitting; the result in them is Alan's own scan, published with his consent.
 
 ### site:guides/glossary/index.html
 
@@ -3259,14 +3263,14 @@ one that matters.
 
 ### site:guides/index.html
 
-- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 section 15): Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.
 
 ### site:guides/testing-guide/index.html
 
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows may say "Windows protected your PC" .
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.
 - *measured* (measured 2026-09-21, entries 119 to 123): On 2026-09-21 two machines installed grouplab-setup-win-x64.exe from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.
-- *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): The zip and the Linux tarball cannot replace themselves, because they were unpacked wherever you put them.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 section 8): The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them.
 - *measured* (measured 2026-09-21: the first self-update run end to end, entry 123): One reinstall by hand, once v0.2.0-nightly.25 is the first build that can update itself.
 - *measured* (measured 2026-09-21: the first self-update run end to end, entry 123): The update from nightly.25 to nightly.26 was then run end to end on a real machine, with real clicks: 97 MB downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back on the screen it was on.
 - *code* (samples/ and samples/PROVENANCE.md): It is a GroupLab sheet with 25 shots, generated by GroupLab itself, so it is nobody's target.
@@ -3290,7 +3294,7 @@ one that matters.
 - *code* (website/build.py: the guide's contents, generated from its headings): Keeping GroupLab up to date 10.
 - *code* (website/build.py: the guide's contents, generated from its headings): Comparing several sheets at once 11.
 - *code* (website/build.py: the guide's contents, generated from its headings): If something goes wrong 12.
-- *decided* (what GroupLab is, DESIGN.md section 1): Settings GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
+- *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On the phone GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
 - *code* (src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales) and AutomaticMarking.Run on GroupLab sheets (entry 270)): It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how).
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
@@ -3342,11 +3346,13 @@ one that matters.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error reports , you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
-- *code* (LICENSE, and the footer in website/build.py shell()): The settings Free and open source under GPL-3.0.
+- *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On the phone GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory.
+- *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.
+- *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On a large screen, such as the Tab S8 Ultra or the Fold 7 opened, the result shows the sheet beside the numbers.
 
 ### site:index.html
 
-- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android Measure how accurately your rifle shoots, and how little a small group can tell you.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
@@ -3356,7 +3362,7 @@ one that matters.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.
-- *decided* (README.md, What does not exist yet; the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.
+- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Get the donor pack One sheet of each, with instructions · PDF Free and open source under GPL-3.0.
 
 ### site:releases/index.html
@@ -3364,6 +3370,7 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): GroupLab is unreleased, so every one of these is a pre-release.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.119 2026-09-28 , commit 9046087 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): The last two lines were added on 2026-09-28: this build carried both, and its notes left them out because a change to the Android application alone was not yet counted as one that ships.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.118 2026-09-28 , commit 401a978 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.117 2026-09-28 , commit 6b80b4e .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): What you will notice The analysis screen's Advanced figures now say how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100; suggested by Jylee.
@@ -4241,12 +4248,13 @@ one that matters.
 
 ### site:tour/analysis-open/index.html
 
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): On the phone since nightly 119: every figure the desktop shows, each with a tap on its name to say what it means and what your number of shots can tell.
 - *decided* (DESIGN.md section 19: every figure carries its reasoning): It exists because a measurement you cannot check is a measurement you cannot argue with, and the whole point of measuring a group is to settle an argument about a load.
 - *code* (src/GroupLab.App/MainWindow.ShotsToZero.cs, the Shots Needed to Zero section in the full figures (entry 252 section 3); tests/GroupLab.App.Tests/Entry252Tests.cs): Under the full CEP table: how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from the group's spread and your scope's click value.
 
 ### site:tour/analysis/index.html
 
-- *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): A result on a Galaxy Z Fold 7&#x27;s cover screen, from a scan of 25 shots.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): A result on a Galaxy Z Fold 7&#x27;s cover screen, from a scan of 25 shots, nightly 115.
 - *code* (website/build.py: the link to /what-can-be-measured/): What GroupLab can measure .
 - *code* (src/GroupLab.App/CompositePlot.cs Render and Key; MainWindow.cs cep50Box, cep90Box, cep95Box, spreadBox; AppSettings.cs LoadPlotMarks; tests/GroupLab.App.Tests/Entry204Tests.cs): What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed.
 - *code* (src/GroupLab.App/CompositePlot.cs WholeTarget, ZoomAbout, ResetView and the pointer handlers; MainWindow.cs groupView and wholeView; tests/GroupLab.App.Tests/Entry210Tests.cs): Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both.
@@ -4254,6 +4262,7 @@ one that matters.
 
 ### site:tour/ballistics/index.html
 
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): On the phone since nightly 119, as a fifth tab: the dope for your rifle and load, the trajectory, and the chance of a hit with a result&#x27;s group.
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): What this screen is for Everything else in GroupLab measures what your rifle did.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's columns; tests/GroupLab.App.Tests/Entry112Tests.cs the heading): Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): Every error source by the hits it takes away, largest first with a bar for each, so you can see whether the wind call, the load or the range estimate is what to work on.
@@ -4265,6 +4274,7 @@ one that matters.
 
 ### site:tour/compare/index.html
 
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): On the phone since nightly 119: in Sessions, tick two or more and compare them one figure at a time, with the range each could really be.
 - *code* (tests/GroupLab.App.Tests/Entry109Tests.cs AnalyzeScan and SuppressorScans; docs/figures/screens/current/SOURCES.md (entry 243 section 1.3)): Here they are the developer's own two 6 ARC sheets of 2026-09-26, one shot through each of two suppressors; the article linked below says what they show about the point of impact.
 - *code* (the Compare screen, src/GroupLab.App/MainWindow.Compare.cs): Sigma, mean radius and extreme spread, each with its 95 percent interval.
 - *decided* (website/tour.json, the link to the suppressor-shift article, entry 226 section 2.1): Two real sheets compared &lsaquo; Session records All screens Equipment &rsaquo; Free and open source under GPL-3.0.
@@ -4273,21 +4283,27 @@ one that matters.
 
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): The extra fields are there because the ballistics page and the zero correction need them, and it says which one is missing when it cannot work something out.
 
+### site:tour/firstrun/index.html
+
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): Before you start, on the phone, nightly 115.
+
 ### site:tour/index.html
 
 - *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Twelve pages, one per screen, so you can see what using GroupLab is like before you download it.
-- *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting.
 - *decided* (docs/figures/screens/phone/SOURCES.md and samples/PROVENANCE.md, the 2026-09-26 range day, Alan's standing consent of entry 171): The result in them is Alan's own scan of a 25 shot group, published with his consent.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.
 
 ### site:tour/marking/index.html
 
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): The phone marks the holes on the result screen itself, under the figures, nightly 115.
 - *code* (the review pill, ReviewQueue in src/GroupLab.Core/Marking): How many shots are marked and how many need review, so you know how much is left before you can trust the result.
 - *code* (the tour's marking screenshot, rendered by the screenshot tests from a sample): Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it.
 
 ### site:tour/optic/index.html
 
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through 4x the same 25 shots need a bigger bull, so they take a set of sheets.
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): Made for your optic sits at the top of the phone&#x27;s Targets screen, nightly 115.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): What this screen is for A bull you cannot see the middle of is a bull you cannot aim at the same way twice, and that is what spreads a group before the rifle does.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The aim point test of 2026-09-26 found that a feature needs about 3.5 arcminutes at the lowest magnification a sheet is shot at before it can be centered on.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through a red dot, whose dot hides whatever is under it, the white center is 1.5 times the dot.
@@ -4301,10 +4317,12 @@ one that matters.
 
 ### site:tour/sessions/index.html
 
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): Sessions on the Fold&#x27;s cover screen held sideways, nightly 115.
 - *code* (the session records table, src/GroupLab.App/MainWindow.cs BuildSessions): Date, sheet, rifle, load, distance, how many shots, and the mean radius with its interval, so you can see at a glance which sessions are worth comparing without opening any of them.
 
 ### site:tour/settings/index.html
 
+- *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): Settings on the phone, nightly 115.
 - *code* (UnitSettings in src/GroupLab.Core/Marking/Units.cs; MarkingScreenTests.UnitsChangeWhatIsShownAndNothingThatIsStored): The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record.
 
 ### site:tour/targets/index.html

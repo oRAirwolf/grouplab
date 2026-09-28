@@ -3024,6 +3024,122 @@
   "The paper's own edge is checked on every photo too: GroupLab says when it disagrees with the printer's figures by more than about 1.5 percent, or when a sheet looks printed with Fit to page.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, CardCheck.cs, PaperEdgeCheck.cs (Disagrees 0.015, LooksFitToPage), PrinterCheck.cs; MainWindow.PrinterWizard.cs; entry 273"
+  },
+  "In the user guide Sharing and privacy Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 section 6, checked against the updater"
+  },
+  "Updates that list what you skipped The Windows installer updates itself; on every desktop build the update bar lists each build you skipped, newest first, with what each changed, and the zip, the tarball and the Mac builds leave the download to you.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 section 6, checked against the updater"
+  },
+  "The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, retaken at the next device sitting; the result in them is Alan's own scan, published with his consent.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 section 6, checked against the updater"
+  },
+  "Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 section 15"
+  },
+  "The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 section 8"
+  },
+  "On the phone GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md"
+  },
+  "On the phone GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md"
+  },
+  "Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md"
+  },
+  "On a large screen, such as the Tab S8 Ultra or the Fold 7 opened, the result shows the sheet beside the numbers.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md"
+  },
+  "GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android Measure how accurately your rifle shoots, and how little a small group can tell you.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28"
+  },
+  "Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28"
+  },
+  "A result on a Galaxy Z Fold 7&#x27;s cover screen, from a scan of 25 shots, nightly 115.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "On the phone since nightly 119: every figure the desktop shows, each with a tap on its name to say what it means and what your number of shots can tell.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "On the phone since nightly 119, as a fifth tab: the dope for your rifle and load, the trajectory, and the chance of a hit with a result&#x27;s group.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "On the phone since nightly 119: in Sessions, tick two or more and compare them one figure at a time, with the range each could really be.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "Before you start, on the phone, nightly 115.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "The phone marks the holes on the result screen itself, under the figures, nightly 115.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "Made for your optic sits at the top of the phone&#x27;s Targets screen, nightly 115.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "Sessions on the Fold&#x27;s cover screen held sideways, nightly 115.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "Settings on the phone, nightly 115.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
+  },
+  "| The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items"
+  },
+  "Chronograph, solver, and comparison** | **In progress** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots | | **6.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items"
+  },
+  "Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items"
+  },
+  "#### What each phase holds **Phase 0a.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items"
+  },
+  "| | **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on the desktop, and a GroupLab build of OpenCV on Android; on both the markers are read with OpenCV's ArUco module and the AprilTag 36h11 dictionary.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items"
+  },
+  "Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev; what each one is, and what is and is not tested on real hardware, is in the platform statement above.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items"
+  },
+  "![The settings](figures/screens/current/settings-light-1400x900.png) ## 13.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)"
+  },
+  "**The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)"
   }
  },
  "rules": [

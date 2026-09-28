@@ -306,3 +306,29 @@ The gear opens the settings:
 - **Problems:** a way to report a problem, and any crash records not yet dealt with.
 
 ![The settings](figures/screens/current/settings-light-1400x900.png)
+
+## 13. On the phone
+
+GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory. Install the APK from the
+[download page](https://grouplab.org/download/), or the Google Play internal test if you are invited; remove one before installing the
+other, because they are signed with different keys. It uses the same engine as the computer, so the same picture gives the same numbers.
+
+**Capture.** Type the caliber and the distance, then **Take a picture**. The camera fills the screen with the instruction at the top, the
+checks beneath it (focus, light, the tags and codes read) and a bar that forecasts the picture's quality. In **Guided** it takes the
+picture by itself once everything holds; in **Manual** you press the shutter when you choose. **Choose a photograph** reads one already on
+the phone, and a picture shared into GroupLab from another app is read the same way.
+
+**The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the
+picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.
+
+**The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
+number to switch its units. From the result: the bulls you fired at, Shots Needed to Zero, Ballistics with the group carried in, sharing
+the session, and sharing the shots as a CSV file.
+
+**Sessions, Ballistics and Targets.** Sessions keeps every result; tick two or more to compare loads, one figure at a time. Ballistics is a
+tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
+PDF, and prints the printer check page; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
+the Fold 7 opened, the result shows the sheet beside the numbers.
+
+Marking a target GroupLab did not print by hand, and importing shots from a CSV file, are on the computer only for now.
+

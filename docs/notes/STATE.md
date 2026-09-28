@@ -40,21 +40,23 @@ If something here disagrees with the logs, the logs are right and this file is o
 1. The camera test with Alan, then the device sitting: the phone and tablet pictures (253 section 3), the inner Fold screen (257),
    torch strength in a session (262), entry 259's screens, and the printer check's card photo on the phone (273).
 2. Entry 258's remaining phone features, in its order.
-3. Entry 275's consistency audit, then the outline's gap once Alan answers question 67.
+3. The outline's gap once Alan answers question 67; the next scheduled consistency audit.
 
 ## Blocked, and on what
 
 - **The tablet** did not answer adb all night (from 11:19 UTC on 2026-09-28): its pictures and torch reading wait for it.
 - **Entry 261 section 6**, the server's capacity: one read-only ssh command, which needs Alan's approval.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
-- **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
+- **Entry 166 section 3.2.** Request 16: the Mac tester's trackpad check (his thanks, to Fenix, is in the README since entry 189).
 
-Open requests in `docs/notes/for-alan.md`: **7** (50 the device sitting with the camera test of 33 in it; 46 the backups on
-4 October; 38 the Store; then 9, 16 and 20).
+Open requests in `docs/notes/for-alan.md`: **8** (50 the device sitting with the camera test of 33 in it; 52 one approval for a
+read-only server command; 46 the backups on 4 October; 38 the Store; then 9, 16 and 20). for-alan.md's own count says the same.
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 274.
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 274.
+
+- **68** the "Apple mobile" paragraph is Alan's settled wording; entry 275 asked to replace it
 
 - **67** the printer check page as grid style 4, and its card outline 3 mm outside the card (with Alan)
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
@@ -85,6 +87,7 @@ line reads what the repository holds, and the test fails locally until the last 
   own `camera.layout` log line instead (`scripts/device-capture-check.py`).
 - **Starting GroupLab Dev's main screen over the idle screen makes a second window, which crashes**; press Back first.
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
+- **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **The check page is in the library but is not a target**: it counts as no sheet in the README, and a picture of it opened as a target
   goes to the printer check. A value on screen is tappable exactly when it shows a unit (`UnitTap.KindOf`).
 - **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself.

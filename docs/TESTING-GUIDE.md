@@ -2,7 +2,7 @@
 
 ## What it is, in three sentences
 
-GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot. It is built around one idea: a small group tells you far less than shooters think, so every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion. It is free, it keeps everything on your own machine, and it has no account and no network use at all.
+GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot. It is built around one idea: a small group tells you far less than shooters think, so every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion. It is free, it keeps everything on your own machine, it has no account, and it sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first.
 
 This page is for somebody who has never seen it. It is an unfinished test build, and the last section says what is not done.
 
@@ -15,11 +15,19 @@ This page is for somebody who has never seen it. It is an unfinished test build,
 
 Nothing else is needed: the download carries its own .NET runtime.
 
+## On the phone
+
+GroupLab for Android is the APK on the [download page](https://grouplab.org/download/), or the Google Play internal test for those
+invited. Remove one before installing the other: they are signed with different keys. On the Capture screen, **Guided** takes the picture
+by itself when everything is right and **Manual** leaves it to you; either way every picture is checked, with a score and notes on what
+GroupLab corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a tap on a number to switch its
+units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a sheet or the printer check page.
+
 ## It keeps itself up to date
 
 The installer's copy updates itself. It looks for a newer nightly when it starts, and a bar appears under the header naming the version, with **Update now**, **Later** and **Skip this version**. Update now downloads it, checks it against the build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and comes back on the screen you were on. No installer window and no administrator prompt appear at any point. You can change how often it looks, or turn it off, in the settings.
 
-The zip and the Linux tarball cannot replace themselves, because they were unpacked wherever you put them. They tell you a newer build exists and point you at the download.
+The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them. They tell you a newer build exists and point you at the download.
 
 ### One reinstall by hand, once
 
@@ -77,8 +85,7 @@ The repository's README is the authority on what works; this is the short versio
 - **Printing from inside GroupLab** lost every marker and code on one printer, which made those sheets unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed version has been checked on paper yet, so use **Open to print**.
 - **Hole detection on plain paper**, with no sheet definition, is not built.
 - **Garmin Xero import** is not built. Chronograph readings are typed in, and reconciled with the shots rather than assumed to line up with them.
-- **The Equipment screen is not built.** Rifles, barrels and loads are added from a cramped box on the marking screen that shares one field between a barrel's round count and a load's components. It is confusing and it is being replaced.
-- **Sending in sheets** is coming. `grouplab.org/upload` is written and its address is reserved, but the server is not installed yet, so the link does not work.
+- **The phone does not yet mark a target by hand**, nor import shots from a CSV file; both are coming (the Features page and `docs/PHONE-PARITY.md` say what the phone does).
 - **Two of the project's own gates have no material yet**: no 25-shot editor timing and no blank-paper photograph. The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them. So GroupLab is careful software that has not yet been proved against a large body of real targets.
 - **Linux and macOS** are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon Mac build has been run on one Mac; the platform statement on the download page says exactly what has been checked.
 

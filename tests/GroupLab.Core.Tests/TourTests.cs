@@ -210,7 +210,9 @@ public class TourTests
                     wrong.Add($"{key}: its Mobile side has {parts} parts and {steps} steps of its own");
                 }
             }
-            else if (!(mobile.TryGetProperty("only", out var only) && only.GetString() == "desktop" && mobile.TryGetProperty("words", out _)))
+            // Entry 275: a stop the phone has but has not been photographed on says so in words until the next device sitting.
+            else if (!(mobile.TryGetProperty("only", out var only) && only.GetString() == "desktop" && mobile.TryGetProperty("words", out _))
+                && !(mobile.TryGetProperty("pending", out var pending) && pending.GetBoolean() && mobile.TryGetProperty("words", out _)))
             {
                 wrong.Add($"{key}: its Mobile side has neither a phone screenshot nor words saying it is on the desktop only");
             }

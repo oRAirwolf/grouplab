@@ -107,6 +107,27 @@
       "allowedIn": [
         "docs/RETIRED-WORDING.json"
       ]
+    },
+    {
+      "phrase": "sends nothing anywhere",
+      "why": "entry 275 section 5: sending a target, error reports and the survey each send, after asking",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "no network use at all",
+      "why": "entry 275 section 5: sending a target, error reports and the survey each send, after asking",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "Equipment screen is not built",
+      "why": "entry 275 section 8: the Equipment screen exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
     }
   ]
 }

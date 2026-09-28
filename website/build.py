@@ -486,7 +486,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <div class="wrap footer-row">
 <div class="footer-about">
 <a href="/" aria-label="GroupLab home">{logo("logo small")}</a>
-<p>Free and open source under GPL-3.0. No account, no ads, no paid tier. The application keeps everything on your own computer and sends nothing anywhere.</p>
+<p>Free and open source under GPL-3.0. No account, no ads, no paid tier. The application keeps everything on your own computer and sends nothing you have not agreed to: targets, error reports and the survey each ask first.</p>
 </div>
 <nav class="footer-links" aria-label="Footer">
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
@@ -565,7 +565,7 @@ def page_home() -> str:
     body = f"""
 <section class="wrap hero">
 <div class="hero-text">
-<p class="eyebrow">Free &#183; open source &#183; GPL-3.0 &#183; Windows test build</p>
+<p class="eyebrow">Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android</p>
 <h1 class="display">Measure how accurately your rifle shoots, and how little a small group can tell you.</h1>
 <p class="lead">Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth. Print a GroupLab sheet, and it does all of it by itself. Every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion.</p>
 <div class="actions">
@@ -643,7 +643,7 @@ def page_home() -> str:
 <h3>What it is today</h3>
 <p>Test builds for Windows, macOS, Linux and Android. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
 <p class="mono dim small">Not built yet</p>
-<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iOS</p>
+<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone</p>
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
 </div>
 </div>
@@ -680,7 +680,8 @@ def platform_support() -> str:
         raise SystemExit("docs/PLATFORM-SUPPORT.md has no rule separating its notes from the statement")
 
     body = text.split("\n---\n", 1)[1].strip()
-    rendered = markdown.markdown(body, extensions=["sane_lists", "fenced_code"])
+    # Entry 275 section 4: the minimums are a Markdown table, which printed as raw pipes without the tables extension.
+    rendered = markdown.markdown(body, extensions=["sane_lists", "fenced_code", "tables"])
 
     # The page's own heading level: the statement's h2s sit under this section's h2, so they become h3s.
     rendered = rendered.replace("<h2>", '<h3 class="h3">').replace("</h2>", "</h3>")
@@ -721,7 +722,7 @@ def page_download() -> str:
 </div>
 </section>
 <section class="wrap grid-3">
-{card("Android", "grouplab-android.apk", "For an arm64 phone or tablet with Android 10 or later and 4 GB of memory. An early test build: it photographs or opens a sheet and reads it with the same engine as the desktop.", ["Open the file on the phone; allow your browser to install apps when Android asks", "Remove the Google Play copy first, if you have it: the two are signed with different keys", "Builds up to nightly 118 showed only the camera on the capture screen; the next build shows its words, shutter and Back"], label="Download for Android")}
+{card("Android", "grouplab-android.apk", "For an arm64 phone or tablet with Android 10 or later and 4 GB of memory. An early test build with the same engine as the desktop: it photographs or opens a sheet and gives every figure with its explanation, the bulls you fired at, Shots Needed to Zero, compare loads, Ballistics, printing and sessions. Marking a target by hand is not on the phone yet.", ["Open the file on the phone; allow your browser to install apps when Android asks", "Remove the Google Play copy first, if you have it: the two are signed with different keys", "Since nightly 119 the capture screen shows its words, shutter and Back over the picture"], label="Download for Android")}
 {card("GroupLab Dev", "grouplab-android-dev.apk", "For testers: installs beside GroupLab, with the hooks a test sitting uses.", ["The same app under its own name, so both can be on one phone", "Nobody needs it to use GroupLab"], label="Download GroupLab Dev")}
 <div class="panel pad stack tight">
 <h2 class="h3">Google Play, by invitation</h2>
@@ -1678,7 +1679,7 @@ def page_guides_index() -> str:
 <section class="wrap page-head">
 <p class="eyebrow">Guides</p>
 <h1>Guides</h1>
-<p class="lead">Both guides describe the Windows application as it is built today, and every picture in them is a render of the build. They are published from the repository, so they change when it does.</p>
+<p class="lead">Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone. They are published from the repository, so they change when it does.</p>
 </section>
 <section class="wrap grid-2 last">
 {''.join(cards)}
@@ -1720,6 +1721,16 @@ def rendered_screens() -> set:
     return {p.name[: -len("-light-1400x900.png")] for p in SCREENS.glob("*-light-1400x900.png")} - extra
 
 
+def raw_table_problems() -> list:
+    """Entry 275 section 4: a Markdown table that reached a page as text, its pipes and its |---| row showing."""
+    found = []
+    for page in sorted(OUT.rglob("*.html")):
+        text = re.sub(r"<(pre|code)[^>]*>.*?</\1>", "", page.read_text(encoding="utf-8"), flags=re.DOTALL)
+        if re.search(r"(?:^|>)\s*\|\s*-{3}|(?:^|>)\s*\|\s\|", text, flags=re.MULTILINE):
+            found.append(f"{page.relative_to(OUT).as_posix()}: a Markdown table is printed as text; convert it with the tables extension")
+    return found
+
+
 def tour_problems() -> list:
     """Entry 146 section 4.2, as a build failure rather than a test, because the page is the thing that goes wrong."""
     found = []
@@ -1748,7 +1759,10 @@ def tour_problems() -> list:
             found.append(f"website/tour.json: {key} needs two to five steps, entry 146 section 2.4")
         # Entry 249: every stop has a Mobile side, a real phone screenshot with its own parts and touch steps, or words saying it is not there.
         mobile = screen_data.get("mobile") or {}
-        if not mobile.get("shot") and mobile.get("only") != "desktop":
+        # Entry 275: a stop the phone has but has not been photographed on says so in words, until the next device sitting.
+        if mobile.get("pending") and not mobile.get("words"):
+            found.append(f"website/tour.json: {key}'s Mobile side is on the phone with its picture to come, and does not say what the phone does")
+        if not mobile.get("shot") and mobile.get("only") != "desktop" and not mobile.get("pending"):
             found.append(f"website/tour.json: {key} has no Mobile side: a phone screenshot, or \"only\": \"desktop\" with its words")
         if mobile.get("shot") and not phone_themes(mobile["shot"]):
             found.append(f"website/tour.json: {key}'s phone screenshot {mobile['shot']!r} is not in docs/figures/screens/phone")
@@ -1778,7 +1792,9 @@ def page_tour_index() -> str:
         mobile = item.get("mobile") or {}
         desktop_thumb = ('<p class="eyebrow">On the phone only</p>' if item.get("platform") == "mobile" else
                          f'<img class="research-thumb" src="/assets/screens/{key}-dark-1400x900.webp" alt="" width="320" height="206" loading="lazy">')
-        mobile_thumb = phone_thumb(mobile["shot"]) if mobile.get("shot") else '<p class="eyebrow">On the desktop only, for now</p>'
+        mobile_thumb = (phone_thumb(mobile["shot"]) if mobile.get("shot")
+                        else '<p class="eyebrow">On the phone; its picture comes at the next sitting</p>' if mobile.get("pending")
+                        else '<p class="eyebrow">On the desktop only, for now</p>')
         cards.append(
             f'<a class="panel pad stack tight research-card plain" href="/tour/{key}/">'
             f'{shown("desktop", desktop_thumb)}{shown("mobile", mobile_thumb)}'
@@ -1794,7 +1810,7 @@ def page_tour_index() -> str:
 <div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample; marking by hand is coming to the phone. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
 {platform_switch()}
 {shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
-{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}
+{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}
 <div class="research-grid">{"".join(cards)}</div>
 </section>
 """
@@ -2095,7 +2111,7 @@ def page_features() -> str:
 </section>
 {spotlight_section("Newest")}
 {"".join(groups)}
-<section class="wrap stack last">{shown("desktop", '<p class="small faint">The pictures are the desktop application\'s, from the newest build, regenerated every week.</p>')}{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra; the result in them is Alan\'s own scan, published with his consent.</p>')}</section>
+<section class="wrap stack last">{shown("desktop", '<p class="small faint">The pictures are the desktop application\'s, from the newest build, regenerated every week.</p>')}{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, retaken at the next device sitting; the result in them is Alan\'s own scan, published with his consent.</p>')}</section>
 """
     return shell(FEATURES_PATH, "Features", "Every feature GroupLab has, grouped, each with the build it arrived in and where it is explained.", body, "Features")
 
@@ -2996,6 +3012,7 @@ def main() -> None:
 
     problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems() + limit_problems() + feature_problems()
     problems += link_problems()
+    problems += raw_table_problems()
     problems += php_problems()
     problems += send_problems()
     problems += term_problems()

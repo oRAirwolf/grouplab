@@ -70,7 +70,7 @@
    ],
    "mobile": {
     "shot": "fold-firstrun",
-    "caption": "Before you start, on the phone.",
+    "caption": "Before you start, on the phone, nightly 115.",
     "parts": [
      [
       "Send your targets",
@@ -170,7 +170,7 @@
    ],
    "mobile": {
     "shot": "fold-result-landscape",
-    "caption": "The phone marks the holes on the result screen itself, under the figures.",
+    "caption": "The phone marks the holes on the result screen itself, under the figures, nightly 115.",
     "parts": [
      [
       "The rings",
@@ -278,7 +278,7 @@
    ],
    "mobile": {
     "shot": "fold-result",
-    "caption": "A result on a Galaxy Z Fold 7's cover screen, from a scan of 25 shots.",
+    "caption": "A result on a Galaxy Z Fold 7's cover screen, from a scan of 25 shots, nightly 115.",
     "parts": [
      [
       "Mean radius",
@@ -347,8 +347,8 @@
     ]
    ],
    "mobile": {
-    "only": "desktop",
-    "words": "On the desktop only, for now. The phone shows the figures and the plot; the explanations behind every number, the strips and the full tables are on the desktop."
+    "pending": true,
+    "words": "On the phone since nightly 119: every figure the desktop shows, each with a tap on its name to say what it means and what your number of shots can tell. The picture of it on the phone comes at the next device sitting."
    }
   },
   "sessions": {
@@ -400,7 +400,7 @@
    ],
    "mobile": {
     "shot": "fold-sessions-landscape",
-    "caption": "Sessions on the Fold's cover screen held sideways.",
+    "caption": "Sessions on the Fold's cover screen held sideways, nightly 115.",
     "parts": [
      [
       "Open a session file",
@@ -479,8 +479,8 @@
     ]
    ],
    "mobile": {
-    "only": "desktop",
-    "words": "On the desktop only, for now."
+    "pending": true,
+    "words": "On the phone since nightly 119: in Sessions, tick two or more and compare them one figure at a time, with the range each could really be. The picture of it on the phone comes at the next device sitting."
    }
   },
   "equipment": {
@@ -609,8 +609,8 @@
     ]
    ],
    "mobile": {
-    "only": "desktop",
-    "words": "On the desktop only, for now."
+    "pending": true,
+    "words": "On the phone since nightly 119, as a fifth tab: the dope for your rifle and load, the trajectory, and the chance of a hit with a result's group. The picture of it on the phone comes at the next device sitting."
    }
   },
   "settings": {
@@ -671,7 +671,7 @@
    ],
    "mobile": {
     "shot": "fold-settings",
-    "caption": "Settings on the phone.",
+    "caption": "Settings on the phone, nightly 115.",
     "parts": [
      [
       "Sending targets",
@@ -849,7 +849,7 @@
    ],
    "mobile": {
     "shot": "fold-targets",
-    "caption": "Made for your optic sits at the top of the phone's Targets screen.",
+    "caption": "Made for your optic sits at the top of the phone's Targets screen, nightly 115.",
     "parts": [
      [
       "Distance and lowest magnification",

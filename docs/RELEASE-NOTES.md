@@ -25,6 +25,10 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 - Every picture on the phone is now checked, taken or chosen: a score on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time.
 - On the phone, the camera's words, shutter and Back now show over the live picture, and you choose Guided or Manual: it takes the picture itself when everything is right, or when you press.
 - In Shots Needed to Zero, within one click is now amber and the closest click teal, on the chart and in the phone's table alike.
+- On the phone, a set of sheets is a checklist of what is read and what is still to read, pooled into one group as you go.
+- On the phone, a scan says how it was printed, and every size is corrected to real inches.
+
+*The last two lines were added on 2026-09-28: this build carried both, and its notes left them out because a change to the Android application alone was not yet counted as one that ships.*
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.119)
 

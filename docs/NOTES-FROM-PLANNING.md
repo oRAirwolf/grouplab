@@ -24,6 +24,166 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 275: consistency audit, 2026-09-28
+
+**Status: done 2026-09-28.** All sixteen fixed in one change, the README, the site, the guides and the assets together, every new sentence backed. Two done differently, and why: section 1's three stops say in words that the phone has them since nightly 119, a new "pending" Mobile side the site build accepts until their pictures are taken at the next sitting; section 9's two lines are added to nightly 119 in RELEASE-NOTES.md with a line saying when and why, and its GitHub release is left as published. Section 9 also found the cause: `android/` was still classed as the spike, so a change to the Android application alone did not count as shipping; `android/GroupLab.Android/` now ships. Section 7's "Apple mobile" paragraph is Alan's settled wording, held literally by a test, so it keeps his sentences with "iOS is not planned." in front; question 68 asks whether to reword it. Not done: the phone pictures themselves, at the next device sitting.
+
+The scheduled consistency audit of entry 267 section 2b. It read the README, the live site (home, /download/, /features/, /tour/,
+/shoot-a-target/, /guides/, /releases/, /support/, fetched about 15:50 UTC), `website/features.json`, `website/tour.json`, the newest
+release notes, STATE, for-alan, PLATFORM-SUPPORT, PHONE-PARITY, ANDROID, the testing guide, the inbox and the last five days of commits.
+No GitHub issue labelled `consistency` exists yet. Nothing here needs Alan. Fix each in the same way as any change: the README, the site,
+the guides and the assets together, with claims backing where a sentence is published.
+
+### 1. The tour's Mobile side still calls three phone screens desktop only
+
+- **Where:** `website/tour.json`, the `mobile` field of `analysis-open` (line 300), `compare` (line 418) and `ballistics` (line 524),
+  shown at https://grouplab.org/tour/ with the Mobile switch, and on each stop's own page.
+- **What it says:** "On the desktop only, for now." For `analysis-open` it adds that the phone shows the figures and the plot but not the
+  explanations.
+- **What it should say:** since nightly 119 the phone has every figure with its explanation, compare loads, and Ballistics as a fifth tab
+  (docs/RELEASE-NOTES.md nightly 119; docs/PHONE-PARITY.md rows `why`, `compare`, `ballistics` read "on the phone"). Give each a phone
+  screenshot at the next device sitting, and until then words saying it is on the phone since nightly 119. Check `equipment` too: if the
+  phone's Ballistics tab lets you enter a rifle and load, that stop is not desktop only either.
+
+### 2. The phone's pictures show the old capture screen and four tabs, under a caption that says "the current build"
+
+- **Where:** `docs/figures/screens/phone/fold-capture-light.png` and `-dark.png` (nightly 115), used by `scripts/readme-images.py`
+  (line 42) for the "Photograph it" tile of `docs/figures/readme/mosaic-*.png`, and by the tour's Capture stop. README.md line 29 says
+  under the mosaic: "The pictures come from the current build."
+- **What it shows:** the nightly 115 Capture form (caliber, distance, Take a picture, Choose a photograph) and a tab bar of four tabs.
+- **What it should show:** nightly 119's Capture B over the live picture, Guided and Manual, the quality bar, and five tabs with Ballistics.
+  The retake is already planned for the device sitting (entry 253 section 3). Until then README line 29 should not claim the current build
+  for the phone tile, for example: "The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next
+  device sitting." Every phone screenshot on the site shows four tabs, so the same caveat applies to the Features and tour captions that
+  do not already name nightly 115.
+
+### 3. The download page's Android card is behind the build
+
+- **Where:** `website/build.py` line 719, shown on https://grouplab.org/download/ under Android.
+- **What it says:** "An early test build: it photographs or opens a sheet and reads it with the same engine as the desktop." and
+  "Builds up to nightly 118 showed only the camera on the capture screen; the next build shows its words, shutter and Back".
+- **What it should say:** nightly 119 is out, so "the next build" is now wrong: "Since nightly 119 the capture screen shows its words,
+  shutter and Back over the picture", or drop the line. The description should match the README's Android row (README.md, the
+  "Before you install" table): every figure with its explanation, the bulls you fired at, Shots Needed to Zero, compare loads,
+  Ballistics, printing and sessions; marking by hand is not on the phone yet.
+
+### 4. The minimums table on /download/ is printed as raw text
+
+- **Where:** https://grouplab.org/download/, "Minimums". The HTML is one `<p>` holding `| | Operating system | Built and published |
+  ...` with the pipes and the `|---|` row visible. Source: `docs/PLATFORM-SUPPORT.md` line 31 and the table around it, converted by
+  `website/build.py`.
+- **What it should be:** a real table, as it renders in the README. The converter used for the platform statement does not handle
+  Markdown tables. Add a site build check that no published page contains a line starting with `|---` or `| |`.
+
+### 5. "Sends nothing anywhere" contradicts three features
+
+- **Where:** the footer of every page (`website/build.py` line 489): "The application keeps everything on your own computer and sends
+  nothing anywhere." README.md, "Before you install": "It sends nothing anywhere, and an update check sends nothing about you."
+  `docs/TESTING-GUIDE.md` line 5: "it keeps everything on your own machine".
+- **Why it is wrong:** /features/ lists "Send a target to the project", "Error reports" ("automatically, after asking, or never") and
+  "The hardware survey"; the tour's first run asks those three questions.
+- **What it should say:** something true and short, for example "It keeps everything on your own computer and sends nothing you have not
+  agreed to: targets, error reports and the survey each ask first." Keep it backed in `docs/claims-backing.json`.
+
+### 6. The Features page says GroupLab updates itself on macOS and Linux
+
+- **Where:** `website/features.json` line 612, key `updates`, platforms Windows, macOS, Linux; https://grouplab.org/features/#updates.
+- **What it says:** "GroupLab updates itself, and the update bar lists every build you skipped".
+- **What it should say:** only the Windows installer updates itself; the zip, the tarball and the Mac builds tell you and leave the
+  download to you (the download page, "Updating", and README "Before you install" both say so). For example: "The Windows installer
+  updates itself, and on every desktop build the update bar lists each build you skipped, newest first, with what each changed."
+
+### 7. iOS and the phone's marker detector are described three different ways
+
+- **Where and what:**
+  - `docs/PLATFORM-SUPPORT.md` lines 75 to 77, "Apple mobile", shown in the README and on /download/: an iOS version "would be tested
+    on" the iPad Mini and "cannot be produced at present" for want of a Mac.
+  - `docs/ANDROID.md` section 1: "iOS is not planned. The iPad Mini is for testing the website only." README Phase 8 and License agree
+    with ANDROID.md.
+  - README.md line 555, the architecture diagram: `iOS planned`. Line 561: `libapriltag mobile, planned`.
+  - README "Built with", Imaging row: "On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause,
+    reached through P/Invoke." `docs/ANDROID.md` section 3 says the phone runs GroupLab's own OpenCV build (ArUco with the AprilTag
+    36h11 dictionary, `libOpenCvSharpExtern.so`), and no Android or core source names libapriltag.
+  - The home page, "Not built yet": "... hand marking on the phone · iOS".
+- **What it should say:** "Apple mobile": iOS is not planned; the iPad Mini is used to test the website. The diagram: iOS "not planned",
+  and the imaging backend as OpenCV on both desktop and phone (drop the libapriltag box, or mark it "not used"). The Imaging row: OpenCV
+  through OpenCvSharp on the desktop and a GroupLab build of OpenCV on Android. The home page: drop iOS from "Not built yet", or say
+  "not planned".
+
+### 8. The testing guide's "What is not done yet" is out of date
+
+- **Where:** `docs/TESTING-GUIDE.md` (and its PDF), linked from https://grouplab.org/guides/ and from /support/ step 01.
+- **What it says:** line 80, "The Equipment screen is not built."; line 81, "Sending in sheets is coming. `grouplab.org/upload` is written
+  ... the server is not installed yet, so the link does not work." "It keeps itself up to date" names only the zip and the Linux tarball.
+  Android is not mentioned anywhere in it.
+- **What it should say:** the Equipment screen exists (tour /tour/equipment/, README Phase 4 "Done. Records for rifles, barrels and
+  loads"); sending works (https://grouplab.org/shoot-a-target/ has the upload, Features "Send a target" since nightly 102); the Mac builds
+  also only tell you of a newer build; and a short Android part: the APK or the Play internal test, and what the phone does not do yet
+  (marking by hand, CSV, large sheet advice, a picture shared in, from PHONE-PARITY). Regenerate the PDF.
+
+### 9. Nightly 119's notes leave out two phone features it carries
+
+- **Where:** `docs/RELEASE-NOTES.md`, 0.2.0-nightly.119, and so /releases/ and README "What is new".
+- **What is missing:** the set of sheets as a checklist and the scan pill (entry 259 screens 6 and 7, commit `ffc5c21`, an ancestor of
+  nightly 119's `9046087`). README "Status" lists both as new on the phone.
+- **What it should say:** two more lines under nightly 119, for example "On the phone, a set of sheets is a checklist: the sheets read so
+  far pooled into one group, and those still to read." and "On the phone, a scan says how large it was printed, and every size is
+  corrected to real inches."
+
+### 10. Two phase states in the README contradict their own items
+
+- **Where:** README.md line 378, Phase 5 "**Not started**", while its items include four "Built, not proven" (chronograph strings by hand,
+  the ballistic solver, load against load, hit probability at another distance). Phase 9 is "Not started" while `grouplab bench` is
+  "Built, not proven".
+- **What it should say:** "In progress" for both, by the README's own four states ("being built, not usable" does not fit either, so
+  choose the nearest honest state and say why in one line). `DESIGN.md` section 21 changes with it, since `ReadmeTests` holds them equal.
+
+### 11. Android is left off in the README's developer sections
+
+- **Where:** README "Building": "Every nightly build is published for Windows, Linux and macOS". "Repository layout" has no row for
+  `android/` or `website/`.
+- **What it should say:** every nightly also publishes the Android APK and GroupLab Dev; add rows for `android/` (the Android shell and
+  its OpenCV build) and `website/` (the site's source and build).
+
+### 12. Hand marking on any target: said twice, and never said to be desktop only
+
+- **Where:** README "How it works" opens with "Any target works ... mark the holes by hand" and repeats it at line 294 ("It also works on
+  targets GroupLab did not print"). The home page's "Your own targets" and the tour index's "Your own targets" say the same with no
+  platform.
+- **What it should say:** keep one of the two README paragraphs, and add in each place that marking by hand is on the computer and coming
+  to the phone (PHONE-PARITY `other-targets`: coming). The hero may keep "Photograph any target", since the phone photographs and the
+  computer marks.
+
+### 13. The home page's eyebrow names one platform
+
+- **Where:** `website/build.py` line 568, https://grouplab.org/: "Free · open source · GPL-3.0 · Windows test build".
+- **What it should say:** the same page's "What it is today" and README line 5 name Windows, macOS, Linux and Android. For example
+  "Free · open source · GPL-3.0 · test builds for Windows, macOS, Linux and Android". The Windows download button can stay as it is.
+
+### 14. The minimums name a Microsoft Store copy that does not exist
+
+- **Where:** `docs/PLATFORM-SUPPORT.md` line 31, Windows: "version 1809 or later for the Microsoft Store copy", in the README and on
+  /download/. The same section says "nothing is listed for a platform that has no published build", and the Store listing waits on
+  request 38.
+- **What it should say:** drop the Store clause until the Store copy is published, or write "for the Microsoft Store copy, once it is
+  published".
+
+### 15. The phone has no guide
+
+- **Where:** https://grouplab.org/guides/: "Both guides describe the Windows application". `docs/USER-GUIDE.md` mentions the phone four
+  times, only as a camera. The Android-only features on /features/ (Guided or Manual, Every picture checked, Print a sheet from the phone,
+  and others) have no "In the user guide" link.
+- **What it should be:** a phone part in the user guide, or a short phone guide beside the two, covering install (APK or Play test),
+  Capture in Guided and Manual, reading the picture check, the result's figures, Sessions and compare, Ballistics and Targets. Link each
+  Android feature to it.
+
+### 16. STATE and for-alan disagree on the open requests
+
+- **Where:** `docs/notes/STATE.md`: "Open requests ...: **7** (50 ...; 46 ...; 38 ...; then 9, 16 and 20)". `docs/notes/for-alan.md`:
+  "**Open: 8**", with 52 and 33 besides. STATE's blocked list also says request 16 waits on "his name for a thanks", which entry 189
+  answered (Fenix, thanked in the README).
+- **What it should say:** the same count and list in both, and request 16 as the trackpad check only.
+
 ## 2026-09-28, entry 274: answers to questions 65 and 66 (question 67 is with Alan)
 
 **Status: done 2026-09-28.** Question 65: entry 261's wording corrected in this log. Question 66: the home page's "Your own targets", the tour index and the marking stop show a sample target GroupLab draws itself, marked by hand, labelled as a sample (`marking-other`, made by the screenshot walk); the Features entry uses it. Question 67 stays with Alan; nothing waits on it.

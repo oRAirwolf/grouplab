@@ -525,6 +525,7 @@
         "Android"
       ],
       "since": "0.2.0-nightly.111",
+      "guide": "13-on-the-phone",
       "note": "On the phone, units now follow the phone's region",
       "mobile": {
         "shot": "fold-targets"
@@ -611,7 +612,7 @@
       "key": "updates",
       "group": "Updates and platforms",
       "name": "Updates that list what you skipped",
-      "sentence": "GroupLab updates itself, and the update bar lists every build you skipped, newest first, with what each changed.",
+      "sentence": "The Windows installer updates itself; on every desktop build the update bar lists each build you skipped, newest first, with what each changed, and the zip, the tarball and the Mac builds leave the download to you.",
       "shot": null,
       "platforms": [
         "Windows",
@@ -731,6 +732,7 @@
         "Android"
       ],
       "since": "next",
+      "guide": "13-on-the-phone",
       "note": "GroupLab Dev",
       "mobile": {
         "shot": "icons-fold"
@@ -746,6 +748,7 @@
         "Android"
       ],
       "since": "next",
+      "guide": "13-on-the-phone",
       "note": "side by side",
       "mobile": {
         "shot": "tab-result-landscape"
@@ -761,6 +764,7 @@
         "Android"
       ],
       "since": "next",
+      "guide": "13-on-the-phone",
       "note": "Targets screen",
       "mobile": {
         "shot": "fold-targets"
@@ -776,6 +780,7 @@
         "Android"
       ],
       "since": "next",
+      "guide": "13-on-the-phone",
       "note": "Guided or Manual",
       "mobile": {
         "noPicture": "the new camera screen is photographed at the next sitting with the phone"
@@ -791,6 +796,7 @@
         "Android"
       ],
       "since": "next",
+      "guide": "13-on-the-phone",
       "note": "checked",
       "mobile": {
         "noPicture": "the check after a picture is photographed at the next sitting with the phone"

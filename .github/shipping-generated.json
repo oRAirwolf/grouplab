@@ -9,6 +9,7 @@
     "Directory.Build.targets",
     "LICENSE",
     "THIRD-PARTY-NOTICES.md",
+    "android/GroupLab.Android/",
     "docs/VOLUNTEER-PACK.md",
     "nuget.config",
     "packaging/",

@@ -23,10 +23,11 @@
     "scans/phase0/gl-cf25-ltr-1-300-dpi.png": "copied into the Windows package as the unshot sample",
     "Directory.Build.props": "the version the build is named from, and the compiler settings",
     "nuget.config": "where the packages the executable contains are restored from",
-    "src/GroupLab.App/Assets/icons/grouplab.icns": "copied into the macOS application bundle by scripts/macos-bundle.py"
+    "src/GroupLab.App/Assets/icons/grouplab.icns": "copied into the macOS application bundle by scripts/macos-bundle.py",
+    "android/GroupLab.Android/": "the Android application, published in every nightly as the APK and GroupLab Dev (entry 275: an Android-only change is a change to what ships)"
   },
   "checked": {
-    "android": "the Android spike and its native build: .github/workflows/android.yml builds it, and nothing in it goes into the desktop application",
+    "android": "the rest of android/: the spike and the native OpenCV build's scripts; android/GroupLab.Android/ ships, listed under ships-packaging",
     ".gitattributes": "line endings at checkout; a test has failed over CRLF on a Windows runner, so CI runs, and nothing ships",
     ".github": "the workflows: CI runs on a change to them, and only package.yml, listed above, changes a package",
     "Directory.Build.props": "listed here for its top level class; it ships through ships-packaging",

@@ -26,7 +26,7 @@ Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows
   <img src="docs/figures/readme/mosaic-light.png" alt="Six screens of GroupLab: any target or a printed GroupLab sheet, photographing it on the phone, every hole found, the honest numbers, comparing loads, and ballistics with the chance of a hit.">
 </picture>
 
-<p align="center">The pictures come from the current build. <a href="https://grouplab.org/tour/">Take the tour</a>.</p>
+<p align="center">The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting. <a href="https://grouplab.org/tour/">Take the tour</a>.</p>
 
 <p align="center"><a href="#download">Download</a> · <a href="https://grouplab.org">Website</a> · <a href="https://grouplab.org/features/">Features</a> · <a href="https://grouplab.org/tour/">Tour</a> · <a href="https://grouplab.org/guides/user-guide/">User guide</a> · <a href="https://grouplab.org/discord">Discord</a></p>
 
@@ -101,7 +101,7 @@ These are the application as it is: the build renders every screen itself, in bo
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
 - **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
-- **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing anywhere, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
+- **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
 - **Which build you have:** the Settings screen names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
 - **On a Mac**, move `GroupLab.app` into Applications and then run `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal. That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software. It is the standard way to run unsigned software. **Anyone not comfortable running that command should not run this build.**
@@ -154,6 +154,8 @@ What the newest builds changed that you would notice, from their release notes.
 - Every picture on the phone is now checked, taken or chosen: a score on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time. [Every picture checked](https://grouplab.org/features/#picture-check)
 - On the phone, the camera's words, shutter and Back now show over the live picture, and you choose Guided or Manual: it takes the picture itself when everything is right, or when you press. [Guided or Manual on the camera](https://grouplab.org/features/#capture-modes)
 - In Shots Needed to Zero, within one click is now amber and the closest click teal, on the chart and in the phone's table alike.
+- On the phone, a set of sheets is a checklist of what is read and what is still to read, pooled into one group as you go. [Pool the sheets of a set](https://grouplab.org/features/#pool-set)
+- On the phone, a scan says how it was printed, and every size is corrected to real inches.
 
 **0.2.0-nightly.118**, 2026-09-28
 
@@ -188,7 +190,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 
 | | Operating system | Built and published | Memory | Disk | Screen |
 |---|---|---|---|---|---|
-| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
+| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy, once it is published | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's internal test by invitation | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
@@ -234,7 +236,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ### Apple mobile
 
-An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+iOS is not planned. An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
 
 ### Other Linux builds
 
@@ -270,7 +272,7 @@ That is the whole point of the project. Everything else is the machinery that ma
 
 ## How it works
 
-**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand; the same statistics run. Finding the holes by itself on any target is the goal, not yet a feature.
+**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer for now; marking by hand is coming to the phone. The same statistics run. Finding the holes by itself on any target is the goal, not yet a feature.
 
 **A GroupLab sheet is the fast lane, not a requirement.** On its own sheets everything is automatic: the scale, every hole, and which bull each shot belongs to, and one shot per bull gives large groups. You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyze it correctly.
 
@@ -290,8 +292,6 @@ flowchart TB
 ```
 
 The one-shot-per-bull design is what makes the accuracy possible. Holes never overlap, so each one is measured cleanly against its own aiming point, and the twenty-five offsets are then pooled into a single group far larger than anything you could shoot into one bullseye.
-
-**It also works on targets GroupLab did not print.** A commercial target with a printed grid can be marked by hand: set a known length, tap each impact, and the same statistics engine runs.
 
 ## Status and plan
 
@@ -375,11 +375,13 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 | **2. Core and statistics** | **Built, not proven** | statistical output matches the R package `shotGroups` to numerical tolerance on shared test data |
 | **3. Editor** | **Built, not proven** | a full 25-shot target with several misassignments corrected in under two minutes |
 | **4. Windows application** | **In progress** | target library, generation, printing, analysis, reporting and session records, in one application |
-| **5. Chronograph, solver, and comparison** | **Not started** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots |
+| **5. Chronograph, solver, and comparison** | **In progress** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots |
 | **6. Android** | **In progress** | camera capture and lens distortion fitted on the device |
 | **7. Synchronization** | **Not started** | cloud provider adapters over three-tier storage |
 | **8. iOS** | **Not started** | built and signed on CI |
-| **9. Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
+| **9. Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
+
+Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started.
 
 #### What each phase holds
 
@@ -534,7 +536,7 @@ data. Linux and macOS are held correct continuously so that neither turns into a
 |---|---|
 | **Language** | C#, on <!--framework-->.NET 10<!--/framework-->. One language across the core and every platform shell, so the desktop and the phone cannot disagree about a measurement. |
 | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia. |
-| **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on desktop. On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause, reached through P/Invoke. |
+| **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on the desktop, and a GroupLab build of OpenCV on Android; on both the markers are read with OpenCV's ArUco module and the AprilTag 36h11 dictionary. |
 | **Fiducials** | AprilTag `tag36h11`. |
 | **Reference tooling** | R and Python, in `tools/`. These generate the geometry and statistics fixtures the C# is validated against. **None of it ships or runs at runtime.** |
 
@@ -552,13 +554,13 @@ flowchart TB
         APP["Desktop<br/>Avalonia"]
         CLI["Command line<br/>grouplab"]
         AND["Android<br/>in testing"]
-        IOS["iOS<br/>planned"]
+        IOS["iOS<br/>not planned"]
     end
 
     subgraph img["Imaging backend"]
         direction LR
         CV["OpenCvSharp<br/>desktop"]
-        AT["libapriltag<br/>mobile, planned"]
+        AT["GroupLab's OpenCV build<br/>Android"]
     end
 
     subgraph core["GroupLab.Core: no UI, no OpenCV, no platform code"]
@@ -595,7 +597,7 @@ dotnet test
 dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf
 ```
 
-GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
+GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
 
 </details>
 
@@ -607,6 +609,8 @@ GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!
 | `src/GroupLab.Core` | Format, validation, derivations, renderer, registration and statistics, with no platform or OpenCV dependency |
 | `src/GroupLab.Cli` | The `grouplab` command line, and the OpenCV imaging backend |
 | `src/GroupLab.App` | The Avalonia desktop shell |
+| `android/` | The Android shell, GroupLab Dev, and the Android build of OpenCV |
+| `website/` | The source of grouplab.org and the script that builds it |
 | `tests/`, `test/fixtures/` | Conformance tests, and the `shotGroups` reference fixtures |
 | `targets/` | The built-in definitions, generated from `tools/layout/layouts.json` |
 | `tools/` | Python and R reference tools; the authority for geometry, identifiers and statistics fixtures |
