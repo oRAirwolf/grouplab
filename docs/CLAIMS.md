@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1182 |
+| code | 1185 |
 | measured | 1550 |
-| decided | 1219 |
+| decided | 1218 |
 | unbacked | 0 |
-| **total** | **3951** |
+| **total** | **3953** |
 
-**694** of them were read one sentence at a time and their backing written against the sentence. The other **3257** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**695** of them were read one sentence at a time and their backing written against the sentence. The other **3258** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -102,6 +102,7 @@ one that matters.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **The cases so far:** too few shots (NOTES-FROM-PLANNING.md entry 24), and shots on a sheet of several bulls that are not all assigned to one (entry 39).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **What that means:** no mark is drawn in white, and every stroke and label is drawn over a dark outline (entry 39 section 5).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **The check:** `ThemeTests` fails on a colour literal anywhere else in the application (entry 42).
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **Free, with nothing to sell.** No paid tier, no license key, no upsell.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **`phase-1`** is kept until Phase 1 formally closes.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **`phase-0` and `phase-0a`** are closed phases, kept as history.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **When Phase 1 closes,** `phase-1` is retired rather than carried alongside `main`.
@@ -345,10 +346,13 @@ one that matters.
 
 ### README.md
 
-- *decided* (DESIGN.md section 1): # GroupLab **An open-source tool that measures how accurately a rifle shoots, and is honest about how little a small group actually tells you.** Free, GPL-3.0, no account, no ads, no paid tier.
-- *decided* (docs/TRADEMARK-SEARCH.md): GroupLab is a working name and may change.
-- *code* (website/, published by website.yml (entry 144)): ** ** is the website: what GroupLab is, how to use it, and where to download it.
-- *code* (.github/workflows/nightly.yml, after ci.yml passes (entry 119)): --- ## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.
+- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): GroupLab measures every hole and tells you honestly what your group size is worth.** Free and open source under GPL-3.0: no account, no ads, no paid tier.
+- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): On Windows, macOS, Linux and Android.
+- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **2** | On the computer, every hole found, then the group with honest ranges.
+- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **3** | On the phone, photograph it at the range.
+- *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | [![Session records](docs/figures/screens/current/sessions-dark-1400x900.png)](docs/figures/screens/current/sessions-dark-1400x900.png) | [![Compare loads](docs/figures/screens/current/compare-dark-1400x900.png)](docs/figures/screens/current/compare-dark-1400x900.png) | | **Session records.** Every analyzed sheet, by rifle and load, to open again, compare or pool.
+- *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | | |---| | [![The analysis screen, light theme](docs/figures/screens/current/analysis-light-1400x900.png)](docs/figures/screens/current/analysis-light-1400x900.png) | | **Light theme.** Dark, light, high contrast, or following the system.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): | ## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.
 - *decided* (entry 119 section 2): **It may be broken**, because passing the tests is not the same as somebody having used it, and the Windows installer updates itself when a newer one appears.
 - *code* (.github/workflows/package.yml; the platform statement): | | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day.
 - *decided* (entries 147 and 166, the platform statement; package.yml builds both bundles): | | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later.
@@ -361,6 +365,8 @@ one that matters.
 - *code* (docs/ANDROID.md section 12, the uninstall-first rule and GroupLab Dev (entries 231 and 234)): [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - *code* (README.md's generated platform section and the download page): - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): ## What is supported, and what is not Every platform, its minimums and what happens on it --- ## Why it exists **An open-source tool that measures how accurately a rifle shoots, and is honest about how little a small group actually tells you.** Free, GPL-3.0, no account, no ads, no paid tier.
+- *code* (website/, published by website.yml (entry 144)): ** ** is the website: what GroupLab is, how to use it, and where to download it.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the rifle's true spread is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups are statistically indistinguishable.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures the same thing far more carefully, and then tells you what the number is worth.
@@ -371,14 +377,7 @@ one that matters.
 - *code* (the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs): Detect: find every hole, by subtracting the artwork the sheet declares"] F["6.
 - *code* (the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs): Assign each hole to the bull it belongs to"] G["7.
 - *code* (the pipeline, docs/DETECTION-PIPELINE.md and src/GroupLab.Core/Marking/AutomaticMarking.cs): Combine twenty-five bulls into one group"] H["8.
-- *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | [![Session records](docs/figures/screens/current/sessions-dark-1400x900.png)](docs/figures/screens/current/sessions-dark-1400x900.png) | [![Compare loads](docs/figures/screens/current/compare-dark-1400x900.png)](docs/figures/screens/current/compare-dark-1400x900.png) | | **Session records.** Every analyzed sheet, by rifle and load, to open again, compare or pool.
-- *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | | |---| | [![The analysis screen, light theme](docs/figures/screens/current/analysis-light-1400x900.png)](docs/figures/screens/current/analysis-light-1400x900.png) | | **Light theme.** Dark, light, high contrast, or following the system.
-- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): | ## Built with | | | |---|---| | **Language** | C#, on .NET 10 .
-- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): | | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia.
-- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause, reached through P/Invoke.
-- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): **None of it ships or runs at runtime.** | **Why C# rather than Rust or Go.** The deciding argument was one language across three shells: a measurement core plus Windows, Android and iOS interfaces that must produce identical numbers.
-- *code* (README.md Planned, held to DESIGN.md section 21 by ReadmeTests; the generated sections by scripts/readme.py (entry 244)): ## What is supported, and what is not --- ## Status **Where the work stands is in Planned below, phase by phase, with the state of every feature and the gate each phase is measured against.** The newest build is named under [Download](#download), and what it changed under [What is new](#what-is-new).
-- *decided* (docs/RELEASE-PLAN.md, What must be true first (entry 219 item D4), copied by scripts/readme.py): Each of these is checked first, from [docs/RELEASE-PLAN.md](docs/RELEASE-PLAN.md): ## Planned Every phase below is `DESIGN.md` section 21's, with its gate.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): Each of these is checked first, from [docs/RELEASE-PLAN.md](docs/RELEASE-PLAN.md): ### Planned Every phase, its state and what it holds Every phase below is `DESIGN.md` section 21's, with its gate.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): | Phase | State | Gate | |---|---|---| | **0a.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Format and renderer** | **Done** | conformance test 43: a rendered definition analyzed as a scan recovers every bull center within 0.001 in | | **0.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Registration spike** | **Built, not proven** | worst bull center within 0.005 in on a 600 DPI scan of a printed sheet, and on an off-axis photograph of a sheet held flat | | **1.
@@ -390,7 +389,7 @@ one that matters.
 - *code* (android/GroupLab.Android, the Phase 6 features listed under it with their states (entries 219 to 243)): Android** | **In progress** | camera capture and lens distortion fitted on the device | | **7.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Synchronization** | **Not started** | cloud provider adapters over three-tier storage | | **8.
 - *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): iOS** | **Not started** | built and signed on CI | | **9.
-- *decided* (DESIGN.md section 21's phases, held to the README by ReadmeTests): Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | ### What each phase holds **Phase 0a.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | #### What each phase holds **Phase 0a.
 - *code* (targets/*.gltd.json, counted by scripts/counts.py sheets): - **Done.** A validator, and 26 built-in target sheets.
 - *code* (the compare-photos command, src/GroupLab.Cli/Measurement/PhotoVerb.cs): For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
@@ -407,10 +406,10 @@ one that matters.
 - *code* (the Ballistics screen and the zero carry, src/GroupLab.App/MainWindow.Ballistics.cs): On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.
 - *decided* (README's License section and DESIGN.md: the permission is with a lawyer and not in force): It waits on the license permission under License, for distribution rather than for development.
 - *decided* (DESIGN.md section 21, Phase 9): It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop.
-- *decided* (README's Deferred and ReadmeTests): ### Deferred, and why **One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): Deferred, and why #### Deferred, and why **One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down.
 - *decided* (README's Deferred and ReadmeTests): Assisted placement on a target with no definition is the snap, above, and detection on blank paper is Phase 4.
 - *decided* (README's Deferred and ReadmeTests): A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.
-- *code* (scripts/platform-support.py writes it into README.md): ### Platforms **What is supported, and what has been checked on real hardware, is the platform statement above,** generated from its one source, `docs/PLATFORM-SUPPORT.md`.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): #### Platforms **What is supported, and what has been checked on real hardware, is the platform statement above,** generated from its one source, `docs/PLATFORM-SUPPORT.md`.
 - *code* (.github/workflows/ci.yml: the test matrix on windows, ubuntu and macos): **Linux and macOS are built and tested alongside Windows, not after it.** Every push builds and runs the whole suite on all three.
 - *code* (.github/workflows/gate-record.yml): A second workflow reruns the complete Phase 0 measurement record on all three and compares every printed table against the Windows record, which is a harder question than whether the code compiles: it asks whether the three platforms produce the same answers.
 - *code* (.github/workflows/gate-record.yml): Both reproduce the record: every gate verdict and every printed table is identical to Windows, which is how the gate record workflow defines reproducing it.
@@ -418,16 +417,19 @@ one that matters.
 - *decided* (entry 147 section 3): Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 - *code* (docs/PLATFORM-SUPPORT.md, generated into the README by scripts/platform-support.py): **Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on.
 - *decided* (README's License section and DESIGN.md: the permission is with a lawyer and not in force): iOS is Phase 8 and needs the GPL section 7 additional permission described under License, which is drafted and with a lawyer and not in force.
-- *decided* (DESIGN.md section 2 and docs/PATENT-SEARCH.md: no compatibility, by decision): ## What GroupLab is not - **Not compatible with OnTarget, in any way.** No OnTarget PC or OnTarget TDS file format, target design or import path, and never will be.
-- *decided* (DESIGN.md section 1): - **Not a commercial product.** No paid tier, no license key, no upsell.
+- *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): ## For developers Where to start 1.
 - *code* (the files themselves): **[DESIGN.md](DESIGN.md)**, the design document: what GroupLab is for, how it works, and the build plan.
 - *code* (the files themselves): **[docs/TARGET-SCHEMA.md](docs/TARGET-SCHEMA.md)**, the GLTD 1.0 format, including the conformance tests of section 10.
-- *decided* (entry 37: donated photographs live in their own repository): They go in a separate one, `grouplab-testdata`, published under GPL-3.0, because that is the license named in the consent text contributors agreed to.
-- *code* (the gate records and tests read scans/ by path): The Phase 0 and Phase 1 scans under `scans/` stay here, because committed tests and gate records read them by path.
+- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): | | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia.
+- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): On mobile the marker detector is the AprilTag reference implementation under BSD-2-Clause, reached through P/Invoke.
+- *code* (Directory.Build.props, the project files and THIRD-PARTY-NOTICES.md; the language decision, DESIGN.md section 20): **None of it ships or runs at runtime.** | **Why C# rather than Rust or Go.** The deciding argument was one language across three shells: a measurement core plus Windows, Android and iOS interfaces that must produce identical numbers.
 - *code* (.github/workflows/ci.yml): In short, with the .NET 10 SDK: ``` dotnet build dotnet test dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf ``` GroupLab builds and its tests pass on Windows, Linux and macOS , and every push runs the suite on all three.
 - *code* (.github/workflows/nightly.yml and package.yml): Every nightly build is published for Windows, Linux and macOS; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
+- *decided* (entry 37: donated photographs live in their own repository): They go in a separate one, `grouplab-testdata`, published under GPL-3.0, because that is the license named in the consent text contributors agreed to.
+- *code* (the gate records and tests read scans/ by path): The Phase 0 and Phase 1 scans under `scans/` stay here, because committed tests and gate records read them by path.
 - *code* (LICENSE, and the footer in website/build.py shell()): ## License **GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the license in force today for every copy of GroupLab from every source.
 - *decided* (README's License section and DESIGN.md: the permission is with a lawyer and not in force): **An additional permission under section 7, for app-store distribution, is intended and is with a lawyer.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this.
+- *decided* (docs/TRADEMARK-SEARCH.md): GroupLab is a working name and may change.
 
 ### SAMPLE-NOTES.md
 

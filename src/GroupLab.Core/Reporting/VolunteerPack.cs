@@ -52,7 +52,7 @@ public static class VolunteerPack
         bool block = definition.DataBlock is not null;
         string check = grid
             ? "Measure the bar under the grid with a ruler: it is 4 in, or 10 cm on a metric sheet, as printed beside it."
-            : "Measure from the centre of bull 1 to the centre of bull 5 with a ruler. It should be " + (BullOneToFive(definition) ?? "four times the distance between neighboring bulls") + ".";
+            : "Measure from the center of bull 1 to the center of bull 5 with a ruler. It should be " + (BullOneToFive(definition) ?? "four times the distance between neighboring bulls") + ".";
         string shoot = grid
             ? "Shoot one group at the diamond. Adjust the scope from the grid if you like, and shoot again on a fresh sheet."
             : "One shot per bull, in order, starting at bull 1.";

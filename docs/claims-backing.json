@@ -2912,6 +2912,50 @@
   "Android grouplab-android.apk For an arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md's Android row (Android 10, arm64, 4 GB), entries 207 and 265; the APK is on the rolling nightly release"
+  },
+  "GroupLab measures every hole and tells you honestly what your group size is worth.** Free and open source under GPL-3.0: no account, no ads, no paid tier.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table"
+  },
+  "On Windows, macOS, Linux and Android.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table"
+  },
+  "| | **2** | On the computer, every hole found, then the group with honest ranges.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table"
+  },
+  "| | **3** | On the phone, photograph it at the range.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table"
+  },
+  "| ## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "## What is supported, and what is not Every platform, its minimums and what happens on it --- ## Why it exists **An open-source tool that measures how accurately a rifle shoots, and is honest about how little a small group actually tells you.** Free, GPL-3.0, no account, no ads, no paid tier.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "Each of these is checked first, from [docs/RELEASE-PLAN.md](docs/RELEASE-PLAN.md): ### Planned Every phase, its state and what it holds Every phase below is `DESIGN.md` section 21's, with its gate.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "Performance** | **Not started** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | #### What each phase holds **Phase 0a.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "Deferred, and why #### Deferred, and why **One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "#### Platforms **What is supported, and what has been checked on real hardware, is the platform statement above,** generated from its one source, `docs/PLATFORM-SUPPORT.md`.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "## For developers Where to start 1.": {
+   "kind": "code",
+   "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
   }
  },
  "rules": [

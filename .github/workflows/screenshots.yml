@@ -82,6 +82,12 @@ jobs:
       - name: Stamp what the pictures show
         run: python scripts/screens-stamp.py --write
 
+      # Entry 266: the README's product shot and mosaic, composed from the pictures just made.
+      - name: Make the README's pictures
+        run: |
+          python -m pip install --quiet pillow
+          python scripts/readme-images.py
+
       - name: Commit them if they changed
         shell: bash
         run: |
@@ -89,13 +95,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet -- docs/figures/screens; then
+          if git diff --quiet -- docs/figures/screens docs/figures/readme; then
             echo "the interface renders the same as what is committed, so there is nothing to publish."
             exit 0
           fi
 
-          count=$(git diff --name-only -- docs/figures/screens | wc -l)
-          git add docs/figures/screens
+          count=$(git diff --name-only -- docs/figures/screens docs/figures/readme | wc -l)
+          git add docs/figures/screens docs/figures/readme
           git commit -m "[screens] the website's screenshots catch up with the application" -m "Rendered from main by the weekly job, NOTES-FROM-PLANNING.md entry 144 section 4. $count images changed. The marker keeps this out of the test suite and the nightly: no C# has changed, PublishedRendersTests has already run above, and a build of the application from an image-only commit would be a release of nothing."
           git pull --rebase origin main
           git push origin main

@@ -23,7 +23,7 @@ public class VolunteerPackTests
         string text = string.Join(" ", page.Items.OfType<TextRun>().Select(t => t.Text));
         foreach (string expected in new[]
         {
-            "actual size", "bull 1 to the centre of bull 5", "5.98 in (152.0 mm)", "Flat", "One shot per bull, in order", "Write nothing on this sheet",
+            "actual size", "bull 1 to the center of bull 5", "5.98 in (152.0 mm)", "Flat", "One shot per bull, in order", "Write nothing on this sheet",
             "Guided", "Manual", "torch", "score", "2.5 ft", "main camera", "uncropped", "messaging app", "600 dpi", "https://grouplab.org/targets", "terms on that page",
         })
         {

@@ -40,16 +40,6 @@ PLAN = HERE / "docs" / "RELEASE-PLAN.md"
 SITE = "https://grouplab.org"
 RELEASES = "https://github.com/oRAirwolf/grouplab/releases"
 
-# The downloads, by the rolling nightly's stable names, which the Download table below also uses.
-ASSETS = [
-    ("Windows installer", "grouplab-setup-win-x64.exe"),
-    ("Windows zip", "grouplab-win-x64.zip"),
-    ("Linux", "grouplab-linux-x64.tar.gz"),
-    ("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz"),
-    ("macOS, Intel", "grouplab-macos-x64.tar.gz"),
-    ("Android", "grouplab-android.apk"),
-]
-
 # How many builds "What is new" shows.
 NEWEST = 3
 
@@ -97,12 +87,26 @@ def feature_for(note: str, book: dict) -> dict | None:
     return None
 
 
+# Entry 266: the Download section is one table by platform.
+PLATFORMS = [
+    ("Windows", [("Installer", "grouplab-setup-win-x64.exe"), ("Zip", "grouplab-win-x64.zip")]),
+    ("macOS", [("Apple silicon", "grouplab-macos-arm64.tar.gz"), ("Intel", "grouplab-macos-x64.tar.gz")]),
+    ("Linux", [("Tarball", "grouplab-linux-x64.tar.gz")]),
+    ("Android", [("APK", "grouplab-android.apk")]),
+]
+PLAY_TEST = "https://play.google.com/apps/internaltest/4701684356677501640"
+
+
 def newest() -> str:
     b = builds(NOTES.read_text(encoding="utf-8"))[0]
-    links = " · ".join(f"[{name}]({RELEASES}/download/nightly/{asset})" for name, asset in ASSETS)
+    rows = ["| Platform | Download |", "|---|---|"]
+    for name, files in PLATFORMS:
+        links = " · ".join(f"[{label}]({RELEASES}/download/nightly/{asset})" for label, asset in files)
+        if name == "Android":
+            links += f" · [Google Play internal test]({PLAY_TEST}), by invitation"
+        rows.append(f"| **{name}** | {links} |")
     return (f"**The newest build is {b['version']}**, from {b['date']}, commit `{b['commit']}`: "
-            f"[its release page]({RELEASES}/tag/v{b['version']}), and [what is new in it](#what-is-new).\n\n"
-            f"{links}")
+            f"[its release page]({RELEASES}/tag/v{b['version']}), and [what is new in it](#what-is-new).\n\n" + "\n".join(rows))
 
 
 def whats_new() -> str:
@@ -121,16 +125,29 @@ def whats_new() -> str:
     return "\n".join(lines)
 
 
+# Entry 266: three columns, each gathering the Features page's groups under it; every other group follows in one line.
+COLUMNS = [
+    ("Reads targets", ["Reading a target", "Photos and the phone"]),
+    ("Honest statistics", ["The numbers"]),
+    ("Prints sheets", ["Sheets and printing"]),
+]
+
+
 def feature_list() -> str:
     book = features()
-    lines = []
-    for group in book["groups"]:
-        items = [f for f in book["features"] if f["group"] == group]
-        if not items:
-            continue
-        named = ", ".join(f"[{f['name']}]({SITE}/features/#{f['key']})" + (" (Android)" if f["platforms"] == ["Android"] else "") for f in items)
-        lines.append(f"- **{group}:** {named}.")
+
+    def named(groups: list[str]) -> str:
+        return ", ".join(f"[{f['name']}]({SITE}/features/#{f['key']})" + (" (Android)" if f["platforms"] == ["Android"] else "")
+                         for f in book["features"] if f["group"] in groups)
+
+    lines = ["| " + " | ".join(f"**{title}**" for title, _ in COLUMNS) + " |", "|" + "---|" * len(COLUMNS)]
+    lines.append("| " + " | ".join(named(groups) for _, groups in COLUMNS) + " |")
     lines.append("")
+    rest = [g for g in book["groups"] if all(g not in groups for _, groups in COLUMNS)]
+    for group in rest:
+        if named([group]):
+            lines.append(f"**{group}:** {named([group])}.")
+            lines.append("")
     lines.append(f"Each one, with its picture, its platforms and the build it arrived in, is on the [Features page]({SITE}/features/).")
     return "\n".join(lines)
 

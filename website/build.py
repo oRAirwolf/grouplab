@@ -43,6 +43,11 @@ _counts = _importlib_util.module_from_spec(_spec)
 _spec.loader.exec_module(_counts)
 COUNTS = _counts.counts()
 
+# Entry 266: the README's two pictures, held to the pictures they are made from the same way.
+_spec = _importlib_util.spec_from_file_location("readme_images", Path(__file__).resolve().parent.parent / "scripts" / "readme-images.py")
+_readme_images = _importlib_util.module_from_spec(_spec)
+_spec.loader.exec_module(_readme_images)
+
 # Entry 253 section 5: the build fails when a screenshot no longer shows the application (scripts/screens-stamp.py says how).
 _spec = _importlib_util.spec_from_file_location("screens_stamp", Path(__file__).resolve().parent.parent / "scripts" / "screens-stamp.py")
 _screens_stamp = _importlib_util.module_from_spec(_spec)
@@ -2981,6 +2986,7 @@ def main() -> None:
     problems += send_problems()
     problems += term_problems()
     problems += _screens_stamp.problems()
+    problems += _readme_images.problems()
     problems += parity_problems()
     problems += download_problems()
     if problems:

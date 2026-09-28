@@ -111,7 +111,7 @@ public partial class ReadmeTests
     public void EveryPhaseOfTheBuildPlanCarriesOneStateAndItsFeaturesDoToo()
     {
         string[] states = ["Not started", "In progress", "Built, not proven", "Done"];
-        var planned = Section("## Planned", "## What GroupLab is not");
+        var planned = Section("### Planned", "## For developers");
         var design = File.ReadAllLines(Repo.PathTo("DESIGN.md"));
 
         var inDesign = design.Select(l => DesignPhase().Match(l)).Where(m => m.Success)
@@ -134,7 +134,7 @@ public partial class ReadmeTests
 
         // Every phase has a feature list under "What each phase holds", and every feature carries a state. The deferrals below that
         // subsection are not features and are checked by EveryPromiseInScopeNamesAPhaseThatExistsOrSaysItIsDeferred instead.
-        var holds = Between(planned, "### What each phase holds", "### Deferred");
+        var holds = Between(planned, "#### What each phase holds", "#### Deferred");
         var headings = holds.Select(l => FeatureHeading().Match(l)).Where(m => m.Success).Select(m => m.Groups["id"].Value).ToList();
         Assert.Equal(inDesign.Keys.Order(), headings.Order());
         var features = holds.Select(l => Feature().Match(l)).Where(m => m.Success).ToList();
@@ -200,7 +200,7 @@ public partial class ReadmeTests
         }
 
         // The README carries the same deferrals, so the page cannot drop what the design still promises.
-        int listed = Section("## Planned", "## What GroupLab is not").Count(l => l.StartsWith("- **Deferred", StringComparison.Ordinal));
+        int listed = Section("### Planned", "## For developers").Count(l => l.StartsWith("- **Deferred", StringComparison.Ordinal));
         Assert.True(listed >= deferred, $"DESIGN.md section 3 defers {deferred} promises and the README's Planned section lists {listed}. Add the missing one under \"Deferred, and why\", beginning the line with \"- **Deferred\".");
     }
 
@@ -213,7 +213,8 @@ public partial class ReadmeTests
     [Fact]
     public void WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone()
     {
-        string paragraph = string.Join(" ", Section("## Screens", "## Built with"));
+        // Entry 266 folded the Screens section under What it does.
+        string paragraph = string.Join(" ", Section("## What it does", "## Download"));
         var match = NotBuiltYet().Match(paragraph);
         Assert.True(match.Success, "the Screens section no longer says what is not built in one sentence beginning \"Not built yet:\", so this test cannot check it.");
         var absent = match.Groups["list"].Value.Split([", and ", ", ", " and "], StringSplitOptions.RemoveEmptyEntries)
@@ -222,7 +223,7 @@ public partial class ReadmeTests
             .ToList();
         Assert.NotEmpty(absent);
 
-        var features = Section("## Planned", "## What GroupLab is not").Where(l => l.StartsWith("- **", StringComparison.Ordinal)).ToList();
+        var features = Section("### Planned", "## For developers").Where(l => l.StartsWith("- **", StringComparison.Ordinal)).ToList();
         foreach (string item in absent)
         {
             Assert.True(
@@ -283,7 +284,8 @@ public partial class ReadmeTests
             if (line.StartsWith("## ", StringComparison.Ordinal))
             {
                 string text = line[3..].Trim();
-                inPlanned = text == "Planned";
+                // Entry 266: Status and plan holds Status and Planned as its two children.
+                inPlanned = text == "Status and plan";
                 headings.Add((text, false));
             }
             else if (inPlanned && line.StartsWith("### ", StringComparison.Ordinal))
@@ -303,9 +305,9 @@ public partial class ReadmeTests
         int start = Array.FindIndex(Lines, l => l.StartsWith("**On this page.**", StringComparison.Ordinal));
         Assert.True(start >= 0, "README.md has no contents list. It goes after the Download section, under a line reading **On this page.**");
 
-        // The list is where entry 118 puts it: after Download, and before the first section it names.
+        // The list is where entry 118 puts it: after Download, and before the section that follows it (entry 266 put What it does first).
         int download = Array.FindIndex(Lines, l => l == "## Download");
-        int first = Array.FindIndex(Lines, l => l.StartsWith("## " + headings.First(h => h.Text != "Download").Text, StringComparison.Ordinal));
+        int first = Array.FindIndex(Lines, start, l => l.StartsWith("## ", StringComparison.Ordinal));
         Assert.True(download >= 0 && download < start && start < first,
             "the contents list must sit after the Download section and before the section that follows it, so somebody who came to get the program does not read past it");
 
