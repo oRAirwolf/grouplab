@@ -12,6 +12,28 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.120
+
+**2026-09-28**, commit `fc8a902`. Nightly.
+
+**What you will notice**
+
+- Photos can now be corrected to real inches with your printer's scale measured once, across and down, from the new printer check page (a card and one photo, a caliper, a ruler or a scanner), and every photo's paper edge is checked for a sheet printed with Fit to page.
+- Tap any number to switch its units: angles between MOA and mil, sizes between inches and centimeters, distances between yards and meters, everywhere at once and remembered; right-click or press and hold for every unit.
+- Photographs of GroupLab sheets can now be corrected to real inches with your printer's scale: scan one sheet, or measure one distance between two bulls with a ruler, and GroupLab remembers it for that printer.
+- A photograph of a sheet that is not lying flat, curled or bowed across its width, is now measured through every printed marker instead of being refused.
+- On the phone, a picture shared into GroupLab from another app now opens like a chosen photograph, a result can share its shots as a CSV file, and a large sheet says how to photograph it.
+- The printed volunteer pack's ruler check now spells center the American way, as the rest of GroupLab does.
+- The volunteer pack's page of instructions now suits the sheet: a zeroing grid is checked by its printed bar and shot as one group at its diamond, and the photographs follow the phone's Guided and Manual camera.
+
+**Under the hood**
+
+- The phone's camera screen now records which of its words and buttons are showing, so the build can be checked on a phone with nobody holding it.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.120)
+
+---
+
 ## 0.2.0-nightly.119
 
 **2026-09-28**, commit `9046087`. Nightly.
