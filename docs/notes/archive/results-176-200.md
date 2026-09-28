@@ -478,3 +478,68 @@ over-limit answer as not scanned, never clean. `install.py --intake` refuses to 
 **Tested where it failed.** The CI worker job now runs the worker under the unit's own mount sandbox, not only its memory limit, with
 clamd configured as the server will be and a photograph whose rebuilt PNG is over 25 MB, and it must come out recorded `clean, clamdscan`.
 
+## Entries 198 and 199: the Android application's first stage
+
+**The plan is `docs/ANDROID.md`.** Avalonia on .NET Android over the same Core; CameraX through the .NET bindings for the camera;
+Android 7.0 (API 24) as the floor; layout by width class; sessions moved by hand first, then by two QR routes that need no account,
+with the sync folder doubtful on Android.
+
+**OpenCV.** GroupLab calls about thirty OpenCV functions, the ArUco detector and two QR readers, from core, imgproc, imgcodecs,
+calib3d, objdetect, aruco and wechat_qrcode. OpenCvSharp has no Android runtime, and the one community runtime, Sdcb's mini build,
+carries core, imgproc, imgcodecs and dnn only. `android/opencv/build-extern.sh` builds OpenCV 4.13.0 with GroupLab's modules and
+OpenCvSharp 4.13.0.20260627's bindings for them into one `libOpenCvSharpExtern.so` for android-arm64, the way Sdcb's pipeline builds
+its own. All three projects are Apache-2.0.
+
+**The spike**, `android/GroupLab.Android.Spike/`: one Avalonia screen that runs the desktop's engine (`SpikeRun.Run`: load, name the
+sheet from its codes, automatic marking) on the published sample scan and on any image pushed into its folder, and records every size
+the screen takes with its width class and density. Each line also goes to the device log. It is outside `GroupLab.slnx`, and its id is
+`org.grouplab.app.spike`. `.github/workflows/android.yml` builds the native library, cached until the script changes, and a debug APK
+kept fourteen days; nothing from it is published.
+
+**The desktop, measured with the same code on 2026-09-25**, Release: the 600 dpi sample scan, 4958 by 6458, loads in 0.4 s, names
+itself from 2 codes in 1.2 s, and marks 25 of 25 holes in 6.2 s, 7.9 s in all, at a peak of 732 MB. A range photograph, 4000 by 3000,
+names itself in 0.9 s and is refused at registration, "0 of 34 markers found", as the desktop refuses it; peak 440 MB. **The phone is
+not measured**: requests 25 and 26.
+
+**Requests.** 25, the .NET Android workload and the Android SDK into `C:\Dev\tools\android-sdk`, since this machine has neither
+(`C:\Dev\tools\sdkmanager` is Garmin's). 26, the Fold 7 in wireless debugging, paired.
+
+## Entries 196 and 197: a group on a one bull sheet, touching holes and a ragged hole
+
+**What was true before, run rather than read.** On a zeroing grid, a five-shot group went to its one bull, and the review held a
+count item ("This sheet takes 1 shots") and a Contested card on every shot. The gate is infinite in the automatic marking, so a far
+first shot was never left unassigned; that part of entry 196 section 1.2 did not happen. A ragged three-shot hole was not flagged
+at all on a sheet of few marks, which section 1.4 had read as flagged.
+
+**A sheet with exactly one scoring bull takes a group**, whatever the sheet: every shot to that bull with no limit
+(`ShotAssignment.OneBullTakesAll`, in the automatic marking and in the reassignment after an edit), no count from the sheet itself
+(`ReviewQueue.Expected` is null there), and no Doubled item for the bull holding several. The gate is infinite already, so a shot 4 in
+out is still the bull's. The definition format is not changed to say this per bull: one scoring bull is unambiguous, and a
+per-bull count would change the encoded body of every printed sheet, which is its own entry if a sheet ever needs it.
+
+**Touching pairs**, rims meeting, split about half the time wherever they sit, measured over twenty seeds each: across the bull's
+edge 10 and 9 of 20 (25 bull sheet, one bull sheet), on paper 12 and 9, in the black 9 and 8. A printed line is not what makes it
+hard. Left whole, and on a sheet of fewer than five marks, nothing flags it (entry 161); question 57 offers a flag against the
+sheet's other marks. With the rounds fired entered, the count names it first as most likely to be two.
+
+**The ragged hole.** Three shots through one hole read as one mark of about two holes' area. It is flagged only once the rounds
+fired are entered, as above. Three places are not offered: the two-way split already sits toward the middle of the mark, and a
+three-way split would put a shot wherever the outline bulges, which is a guess dressed as a measurement. Instead, where the mark
+holds 2.5 or more holes of the named caliber, the oversize sentence adds "It may be three or more: take it as two shots, then mark
+any more by hand with Impact."; with no caliber it says "Name the caliber and GroupLab can say whether it may be three." The
+caliber's count now travels with the flag (`DetectedOversize.CalibreHoles`) and is saved with the marking.
+
+**Zeroing grids** keep the every-sheet test and Unholy's scan and nothing more. Their library descriptions, the tour's Targets page
+and the guide now say they are for sighting in by eye at the bench, and that a zero from a group is shot on a 5x5 sheet.
+
+**The roll sheets' codes on Linux and macOS.** CI on 760083c failed the every-sheet test for GL-LR300-R24, R36 and R42: no code
+read, on Linux and macOS, where Windows reads them. Smaller corner squares (84a256a) did not help. **The cause**: those three are the
+only sheets longer than `SheetIdentification.MaximumWorkingSide`, 8000 pixels, at 300 dpi, so their codes were only ever looked for at
+half resolution, about 2.4 pixels a module, which Windows' decoder reads and the Linux and macOS builds do not. Since 3c3fa98, where
+the whole image was shrunk, the corners are cut from the full image; a corner is well within the limit.
+
+**Tests.** Core `TightGroupTests` (8): the five-shot group on a one bull sheet with nothing to review, with and without the rounds
+entered; a shot 4 in out; a touching pair across the bull's edge on six seeds, two shots or named by the count; the ragged hole on
+both sheets; and the three-or-more sentence only from a caliber. Core 1656 passed and 2 skipped; App 298 of 299, with
+`CrashTests.AnExceptionThrownFromAClickHandlerLeavesACrashRecordThatNamesIt` failing in the full run and passing alone.
+

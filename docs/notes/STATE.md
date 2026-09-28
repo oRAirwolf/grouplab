@@ -9,71 +9,56 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 254, with 253 and 255 in part.
+**Last rewritten:** 2026-09-28, after entries 253 to 271 were folded (the night of entry 263).
 
 ---
 
 ## In flight
 
-- Done: everything through 249. 246: look B photographed on both devices (`docs/figures/screens/phone/`), requests 44, 45, 49
-  closed. 247: desktop Ballistics as concept B. 248: the icon. 249: Desktop | Mobile. 250: the Targets preview draws the words
-  (`SheetGlyphs`), Letter first, the one-shot zero note. 251 and 252: the C3 grids (grid style 3), mil and MOA, and Shots Needed to
-  Zero (Jylee's), with its article. 254: **C3 released**; the aim point card's real hole in black is found, so the floor is unchanged
-  and request 51 closed. 253 in part: every desktop screenshot redone, `docs/figures/SCREENSHOTS.md`, and the site build's stale
-  check (`scripts/screens-stamp.py`). **Waiting on request 50's sitting** (READY line posted for nightly 118): 253's phone
-  retakes and 255's camera test (request 33), which the phone now logs.
-- **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
-  E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
-  format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
-- **The zeroing grids are C3** (entries 251, 252, 254, grid style 3): 0.2 mil or 0.5 MOA squares, a tick at one click, numbers outside
-  the grid, the legend at the top, a diamond sized in angle. Style 2 is frozen in `targets/frozen/zero-grid-2`, style 1 in
-  `zero-grid-1`. **A build before this one cannot read a style 3 frame**; the old sheets still read in the new build.
-- **The target generator** is on the Targets screen ("Made for your optic"), on the phone too, disc or diamond; a set of sheets is a
-  tiled assembly, and Session records pools its sheets ("Pool the chosen").
-- **A target GroupLab did not print** can have bulls placed by hand, a lasso, templates, and a scale at each bull (entry 228,
-  Unholy's); Android has no hand marking yet.
-- **A sheet whose shots all landed off by the same amount** is assigned by that amount when the solver is certain (entry 229): the
-  6.5 sheet's shots all go to their own bulls. Copies of one design stay separate sessions with labels of their own.
-- **The suppressor article is published** (`suppressor-shift`): Magnus S 0.28 in lower than Dominus K, p = 0.049.
-- **Storage on GitHub**: `docs/notes/STORAGE.md`. Submissions leave the server only once archived and proven (entries 215 to 217).
-- **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
-- **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
-  definitions too. **A public Play listing waits on Google's closed test: 12 testers for 14 days** (entry 267).
-- **Both devices run nightly 115** and its GroupLab Dev (nightly-signed now), and can be put away; for-alan.md's first line says so.
-  The Dev build reads a picture a test names (`files/test/`), so a sitting never opens the owner's picker.
-- **The Play internal test ran on the Fold 7** (entry 232). Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
-  has the link, the uninstall-first rule and the symbols zip each nightly now makes. Automatic Play upload waits on request 38.
-- **The survey page is live** (entry 241): grouplab.org/survey/, its worker installed on 2026-09-27; counting restarted under the
-  keyed hash, so the everyone-else half is empty until reports arrive. The workers' time limits are in force (TimeoutStartSec).
-- **Sending targets, error reports and the survey are on** (entries 195, 200, 223); crash issues are read at every start.
+- **The phone's camera screen is rebuilt** (entry 260): a native Capture B over the live preview, Guided and Manual, the quality bar,
+  the torch on Auto, and Feedback B checking every picture with a score from 0 to 100 (`PictureCheck`). Nightly 119 carries it; it
+  was checked over adb on the Fold 7's cover screen only. **The camera test with Alan** (request 33, entry 255) is the next step.
+- **A curled sheet is registered through every marker** (`MarkerMesh`, a thin-plate spline) when the radial fit keeps fewer than half
+  the corners; a saved session keeps the mesh as its corners (entry 260).
+- **Real inches on photographs** (entry 271): a printer profile from a scan or one ruler distance corrects photographs and says so in
+  one line; Settings chooses the printer on the desktop, the last one kept on the phone. **Entries 272 and 273 build the rest as Alan
+  approved it**: the Scale check page (GL-SCALE-LTR-1 and an A4 one), the three-screen wizard, card photos, Printers in Settings, the
+  paper-edge check on every photo, and scale across and down separately.
+- **Tap a number to switch units** (entries 272 and 273): approved as the concept's working demo; not started.
+- **The phone does what the desktop does** (entries 258, 259): full figures, the bulls you fired at, Shots Needed to Zero, compare loads,
+  Ballistics as a fifth tab, the set as a checklist and the scan pill are on the phone; `docs/PHONE-PARITY.md` holds the rest (marking
+  by touch, CSV, large sheet advice, a picture shared in), and the site build fails on a feature with no row.
+- **Any target, and the sheet as the fast lane** (entry 270): the README, the home page, the tour index, Features and the user guide
+  lead with it. Its picture waits on question 66.
+- **The README is Alan's chosen design** (entry 266), its pictures made by `scripts/readme-images.py`; `scripts/consistency.py` audits
+  the README, the site and the assets (entry 267), including retired wording in `docs/RETIRED-WORDING.json`.
+- **The donor pack** is one sheet of each style, built from the library (entry 264); /download/ lists Android (entry 265).
+- **GroupLab Dev has a black idle screen** for the OLED devices (entry 268); every device session ends on it.
 
-## Next
+## The next three
 
-- **The benchmark is offered after Yes** and runs with progress and a Cancel, on the desktop and the phone (entry 227); **CEP 99** and a
-  percent of one's own are on the analysis screen. Next **228** (several bulls and a scale at each on other people's targets, Unholy's), **229** (duplicate identifiers,
-  the whole-sheet wrong-bull assignment on the 6.5 sheet, spelling) and **230** (the Oracle backup recorded, sudo widened).
-- **Backups (entries 222 to 235)**: nightly to `grouplab-backups`, weekly restore test; Oracle: daily incremental, first Full on
-  2026-09-27; the weekly Full moved to Sunday 12:00 UTC, first due 2026-10-04 (request 46). Sudo is not limited to GroupLab (230).
-- **The Microsoft Store**: MSIX built in CI; tagged releases go to the Store by themselves once request 38 is done.
-
-## The roadmap (entry 219), in place of the next three
-
-- A1, A3, A4, A5 built; A2 the capture screen's measurement is request 33; **A6 built** and on Play's internal test; A7 the older phones.
-- D1 the survey: built and open. D2 question 51 when request 9 arrives. D4 done (`docs/RELEASE-PLAN.md`, request 37).
-- Waiting on requests: Program A (entry 158) on request 19's ST-4 scan; Program B's article on request 20's test.
+1. Entries 272 and 273: the printer check (the measuring logic first, then the check page, the wizard and Printers in Settings) and
+   tap to switch units, with their Features entries, pictures, guide, tour and README in the same change.
+2. The camera test with Alan, then the device sitting: the phone and tablet pictures (253 section 3), the inner Fold screen (257),
+   torch strength in a session (262), and trying entry 259's screens.
+3. Entry 258's remaining phone features, in its order.
 
 ## Blocked, and on what
 
+- **The tablet** did not answer adb all night (from 11:19 UTC on 2026-09-28): its pictures and torch reading wait for it.
+- **Entry 261 section 6**, the server's capacity: one read-only ssh command, which needs Alan's approval.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **7** (50 a device sitting later; 46 the backups on 4 October; 38 the Store; 33 the
-Fold 7's camera; then 9, 16 and 20).
+Open requests in `docs/notes/for-alan.md`: **7** (50 the device sitting with the camera test of 33 in it; 46 the backups on
+4 October; 38 the Store; then 9, 16 and 20).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 64 were answered by entries 243, 245 and 254.
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`.
 
+- **66** which target the "Your own targets" picture may show (most commercial scans here are OnTarget designs)
+- **65** entry 261's `tools/study/` against CLAUDE.md's read-only `tools/`
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
@@ -82,8 +67,8 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 64 were answered by entries
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.115 (f0a8bbb): look B on the phone, the new icon, the Ballistics screen as concept B.
-- **The site serves the newest commit that touched it.** Notes commits do not start the site workflow; a publish is started by hand.
+- **Last nightly:** 0.2.0-nightly.119: the rebuilt capture screen, the phone's parity screens, the idle screen.
+- **Entries 260 (the mesh), 264 to 267, 270 and 271 are pushed together** after nightly 119; the site follows each push by itself.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
 ## The inbox
@@ -96,21 +81,18 @@ line reads what the repository holds, and the test fails locally until the last 
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself, not as the
-  circle through its points, by the marker drop test, the validator and the edge fit. Older builds refuse a C sheet rather than misread it.
-- **A QR code's bytes can arrive as UTF-8** from OpenCV; the reader now takes the reading that can be right (entry 243 section 4).
-- **A zeroing grid is drawn by its style**: style 3's strokes, ticks, numbers, legend and bar are fixed by `GridStyle3`, and the
-  centre cross is broken inside the diamond's white on purpose. A real hole in black is as large as on white; a synthetic one is not.
+- **The logs were split again** on 2026-09-28 (entry 160's rule): the live files keep the newest fifteen entries and twelve results
+  sections; the rest is whole in `docs/notes/archive/`. A question is taken as open only when its line reads `**Status: open`.
+- **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
+  own `camera.layout` log line instead (`scripts/device-capture-check.py`).
+- **Starting GroupLab Dev's main screen over the idle screen makes a second window, which crashes**; press Back first.
+- **A photograph's scale comes from the printer chosen**, where one is; a scan's own measured scale always wins.
+- **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself.
+- **A zeroing grid is drawn by its style**: style 3's strokes, ticks, numbers, legend and bar are fixed by `GridStyle3`. A real hole in
+  black is as large as on white; a synthetic one is not.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
-- **A preview draws words; a measured render does not** (`SceneRasterizer` `words:`, entry 250).
-- **One solid amber button a screen**: a chosen switch is the tint, `AppStyles.Chosen` (entry 247).
-- **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words, or the site build fails.
-- **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
-- **The upload page asks for one of two consent levels**, and a testing only target can never reach `samples/` or the site (entry 165).
-- **A photograph over 37 degrees off square is refused** (was 40; entry 238's angled photographs), naming the angle, and keeps its angle and a quality score (entry 157).
-- **Every word a shooter may not know explains itself**, in the app and on the site, from `glossary.json` (entry 154).
+- **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words.
 - **Every published sentence has its backing**: `scripts/claims.py --check` fails CI otherwise (entry 159).
-- **A scan reports real inches.** A photograph stays in the sheet's own inches and says so.
 - **Nothing under `website/server/` may hold a carriage return**: it is copied to Linux as it is.
 - **Nothing is written into a HestiaCP `conf/web/<domain>/` folder** but the include itself.
 - **Alan's own photographs and scans may be published**, and so may what he passes on from Unholy (also TNA) and his other friends;

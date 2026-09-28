@@ -12,9 +12,18 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## Answered, and moved
+
+These 8 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+number is never reused and a question is never lost:
+
+> 64, 63, 62, 61, 60, 59, 58, 57.
+
+---
+
 ## 2026-09-28, question 66: which target the "Your own targets" picture may show
 
-Status: open.
+**Status: open.**
 
 Entry 270 section 3 asks for "a picture of a commercial target marked by hand (the desktop's marking screen on a non-GroupLab target)"
 on the home page and the tour. The commercial scans in the repository are Alan's own and publishable under entry 171, but most of them
@@ -29,180 +38,13 @@ until it arrives.
 
 ## 2026-09-28, question 65: entry 261 puts a study script in `tools/study/`, which CLAUDE.md keeps read only
 
-Status: open.
+**Status: open.**
 
 Entry 261 says: "A throwaway script to take a measurement for the study is fine, as long as it is kept under `tools/study/` and not wired
 into the app." CLAUDE.md's standing constraints say: "`tools/` is read only." The two cannot both hold. **What I did:** the measurement
 ran as a scratch test in the Core test project, was deleted once its numbers were written into `docs/DETECTION-LEARNING-STUDY.md`, and
 its conditions are listed there so it can be rebuilt. **The question:** when the scoreboard is built (the study's recommendation), where
 should it live: `tools/study/` with CLAUDE.md amended, or `scripts/` and the test projects, as everything else Code writes?
-
-## 2026-09-28, question 64: a hole in solid black is refused as too small, so the C3 grids are built and held
-
-Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 254: (a), measured on the aim point card's real holes; the refusal was the synthetic model's, and C3 is released. Was: open.
-
-Entry 251 says: "Entry 250 section 3's detection check still runs, now on C3 only, before release." It ran (`ZeroGridC3Tests`, four
-sheets at .224, .264 and .308, synthetic holes on the render at 300 dpi, the whole pipeline):
-
-- **Every hole on the grid is found, where it is:** on a fine line, a crossing, a frame tick, a centre-cross tick, the heavy axis and a
-  whole-MOA line, 72 of 72, worst 0.023 in (a .22 on an MOA crossing); held in CI at 0.03 in, a tenth of a quarter-MOA click at 100 yd.
-- **A hole in the diamond's black is never found:** 12 of 12 refused as "too small" (0.05 to 0.085 in against a floor of 0.131 in with
-  .308 named, 0.150 in without). On black ink the hole's dark rim is the ink's own colour, so the detector sees only the bright core,
-  and its size floor was set on whole marks on white paper (`RenderDifferenceHoleDetector`, S8's size filter).
-- **A hole partly on it is unreliable:** touching the diamond, found 12 of 12 but up to 0.053 in off; in its white centre, 10 of 12.
-- **It is not C3's alone.** The same hole in the black of the E and C bulls of entry 243 (GL-CF25-LTR-E and -C, in nightly 114) is
-  refused the same way, calibre named or not (`AHoleInSolidBlackIsStillRefusedAsTooSmall`). The D sheets' rings are thin, which is why
-  Alan's real Dominus K and Magnus scans read 25 of 25.
-
-**What is not known** is whether a real hole's core in black is as small as the synthetic one's: the synthetic holes are calibrated on
-white paper, and no real scan has holes in solid black. Request 51 asks Alan for one.
-
-**What I did.** C3 is built in full (grid style 3 in the format, the renderer, the marker rule, the four sheets, the tests) but **not put
-in the library**: the library keeps the style 2 sheets, and the C3 sheets are built beside it (`LibraryBuilder.ZeroC3Sheets`,
-`grouplab library held`). Print-ready PDFs are in `C:\Dev\grouplab-local\zero-concepts\`.
-
-**The options.** (a) Hold C3 until a real scan of holes in black is measured, then set the on-ink size floor from it and release; the
-E and C sheets are fixed by the same change. (b) Release C3 now and lower the floor for blobs the render calls solid ink, from the
-synthetic model alone; risk: a floor set on a model that may not match real holes, and white print specks in black read as holes.
-(c) Release C3 now as it is: centre hits in the diamond are left for the shooter to add by hand ("Add a hole"). **What I would choose:**
-(a), with the scan of request 51 first; it is one sheet and one scan, and the same answer mends the E and C bulls.
-
-## 2026-09-27, question 63: how many bulls each sheet of the redrawn large format sets carries
-
-Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 245: (a), as built. Was: open.
-
-Entry 243 section 1.4 (question 62 (a)) says: "Redraw the three large format 5x5 and 5x6 sheets as 2 by 2 Letter and A4 tiles; freeze the
-printed ones so they still read." A set's four sheets are identical in this format (TARGET-SCHEMA.md section 3.12: every tile encodes to
-one body), so a 5 by 5 grid cannot be split across them. **Built:** GL-LR25-T (Letter), GL-LR25-TA4 (A4) and GL-LR30-T (Letter) keep
-the original bull (38.1 mm, or 35.6 mm for the 5x6) and the 50.8 mm pitch, and each sheet carries the smallest grid that gives the set at
-least the original's bulls: 2 columns by 4 rows, 8 a sheet, 32 a set, for the 25 and the 30 alike. No sighters and no load block, because
-every sheet of a set would carry them (`LibraryBuilder.Tiles`). The printed originals are in `targets/frozen/large-format-1`.
-
-**The alternatives.** (a) As built, 32 a set. (b) The most a sheet holds at that pitch: more shots a session than the originals were
-for. (c) Keep a load block on every sheet, which costs about a row, so each sheet holds fewer bulls. (d) Three sighters on each sheet, 12 a set. **What I would choose:** (a), because the set then matches
-what the originals were for, a 25 or 30 shot session, with a few bulls to spare, and a load block belongs on a sheet, not on four copies.
-
-## 2026-09-27, question 62: the large sheets that are not tiles, and the generator on the website
-
-Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 sections 1.4 and 2.3: (a) yes, built; (b) after the generator has been used in the application. Was: open. Nothing waits on it.
-
-Entry 226 section 5.1 asks for cut lines on "any sheet larger than the flatbed sizes the library supports", with markers and a code on
-every piece. **Built:** a tiled target (GL-LR300-T, GL-LR300-TA4 and their 3x2 presets) can now be printed on one large page with dashed
-cut lines between its sheets, each piece a whole sheet with its own markers and codes (`CutSheet`, the Targets screen's "Print every
-sheet on one large page"). **Not built:** the six single large sheets (GL-LR25-TAB, GL-LR25-A3, GL-LR30-TAB and the three roll sheets)
-cannot be cut, because their markers and codes are laid out for the whole page; a piece would carry no code. Making them cuttable means
-redrawing each as a tiled assembly of Letter or A4 sheets, which changes six library identifiers (the printed ones frozen, as the zeroing
-grids were). The Targets screen already says, for each, what a phone photograph of the whole sheet gives and that tiled pages are the
-better choice (`PhotographLimit`). **Proposal:** redraw the three large format 5x5 and 5x6 sheets as 2 by 2 Letter and A4 tiles, and
-leave the roll sheets as they are for people with a 50 MP phone, saying so. (a) Yes or no?
-
-Entry 226 section 4.1 asks for the target generator as a page on grouplab.org "if it can share the same code". **What it would take:**
-the generator and the PDF writer are plain C# with no OpenCV, so they run in a browser as .NET WebAssembly, about 10 MB of download on
-first use. CI would publish the WebAssembly bundle with the site, the site's content security policy would need `wasm-unsafe-eval`, and
-the server serves it as static files, so nothing new runs on the server. About a day's work and a new thing to keep working. (b) Worth
-doing now, or after the generator has been used in the application?
-
-## 2026-09-27, question 61: the ring set decision, with the aim point test's results
-
-Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 sections 1.1 and 4: E as discs and C as a diamond, both beside the usual bull. Was: open. The result is in `website/research/can-you-see-the-bull.md`, "Results".
-
-Entry 226 section 3 asks that the crosshair finding go "into the ring set decision". The evidence: at 10x, through three high power
-scopes, the current bull (A) could not be centered by either shooter; E was centered by both on every scope; C by all but one. Through the
-Razor HD's crosshair the centers of D and G disappeared. At 4x through the PLxC only I, the 2 inch bull, scored. The developer prefers C,
-with E close; Justin prefers F. Three shots at A, C, E and I cannot tell their groups apart.
-
-**Proposal:** the library's new ring set is E's idea in discs, a black disc with a white center of 0.36 in and a small dot, because a ring
-set is concentric discs and C's diamond is not one. Its white center is 3.4 arcminutes at 10x at 100 yd. D and G are ruled out under a
-crosshair. For sheets meant for low power, the generator of entry 226 section 4 already sizes the same shape by the visibility rule. (a)
-Is E-in-discs the ring set, or should the format learn squares so C or E can be drawn as tested? (b) Replace the current bull in the
-library now (every sheet's identifier changes and the printed ones are frozen), or offer it alongside?
-
-## 2026-09-27, question 60: may the tour's screenshots show Alan's own range scans now?
-
-Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 1.3: yes, Alan's own scans.
-
-Entry 226 section 2.1 asks to feature the suppressor comparison "on the tour and the research pages with these scans as the example".
-`docs/figures/screens/current/SOURCES.md` says, from entry 126 section 3.2, that "a photograph of somebody's target must never appear here,
-whether or not it was donated, and neither must anything from a range folder", and `PublishedRendersTests` holds the screenshots to a
-list of allowed sources. Entry 171 section 6 later gave a standing consent for Alan's own scans. **Built for now:** the research article,
-and a link to it from the tour's Compare loads page; the screenshot is unchanged. (a) May the screenshot job use Alan's own scans, under
-entry 171's consent, so the Compare loads picture shows the two suppressor sheets? The rule would then read "no photograph of anybody
-else's target"; Unholy's and other friends' would still be excluded unless entry 190's consent is read as covering the screenshots too.
-
-## 2026-09-27, question 59: the redrawn zeroing grids needed three changes to the format, and two readings of the visibility rule
-
-Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 2.2: style 2 into the specification, and the line reading stands. Was: open. Built to the proposal below; nothing waits on the answer, and the sheets can be redrawn if it goes otherwise.
-
-Entries 226 and 227 section 1 ask for the zeroing grids to be redrawn: plus or minus 1.0 mil at 100 yd "or as much as the page allows",
-coarser fine lines, the whole unit boldest, every bold line labeled, the scale and a ruler printed, and lines and labels sized by the
-visibility rule. The format could not draw that. TARGET-SCHEMA.md section 3.13 made the grid square, stopped its lines at `half`, and
-fixed "style 1" to strokes of 2, 3 and 4 dmm with 20 dmm labels (docs/SPEC-ERRATA.md Q11); the wire carried no more. What was built:
-
-1. **Grid style 2** (TARGET-SCHEMA.md section 3.13, "Grid style 2"). Three new fields, `fieldX`, `fieldY` and `wholeEvery`, five more
-   bytes behind the existing style byte. The lattice is unchanged (`round(half * i / divisions)`, ties toward zero); only lines inside the
-   field are drawn, so the field can be a rectangle and need not end on a line. The style fixes everything else: strokes of 6, 20 and 30
-   dmm, 130 dmm labels centred on every major line with the line broken behind them, and a three-line scale statement with a 4 in or
-   10 cm ruler above the field, all worked out from the grid block. **A decoder that knows only style 1 rejects a style 2 frame** with
-   "only style 1 is defined", which is the right failure: every published build until this one will not identify the new sheets. The four
-   old sheets are frozen in `targets/frozen/zero-grid-1/`, so the new build still identifies every sheet already printed.
-2. **Two codes instead of four.** `corners-1` with a count of 2 already existed (each code carries the whole body). The redrawn sheets
-   use it so the grid can take the page's height. Either code alone names the sheet; four corner codes need any two.
-3. **The side band measured to the tight edge.** Section 7 requires the field plus a marker row inside the 120 dmm safe margin, which
-   caps a Letter field at plus or minus 869 dmm, 0.95 mil at 100 yd. For style 2 only, the side band is measured to the 60 dmm tight edge,
-   which allows 914 dmm, exactly 1.0 mil; the side markers then sit 8.5 to 12.5 mm from the paper's edge. Printers' side margins are
-   6.35 mm or less; bottom margins are the ones that reach 12 mm, and top and bottom keep the safe margin.
-
-**Two readings of the visibility rule, and the one taken.** Entry 226 section 1.3 asks that "every line and label must subtend at least
-about 3 to 4 arcmin at the lowest magnification the sheet is meant for". At 100 yd one arcminute through a 6x scope is 44 dmm on the paper.
-Applied to line width, 3 arcminutes is a 13 mm line on a 23 mm square, which buries the squares and any hole on a line. **Taken:** the rule
-applies in full to what has to be recognised, the labels (130 dmm, 3.0 arcminutes at 6x, 4.9 at 10x) and the aiming ring (200 dmm, 4.5 at
-6x); lines are sized to be seen, which a dark line on white is well below an arcminute: 3 mm whole-unit lines (1.1 arcminutes at 10x),
-2 mm half-unit lines, 0.6 mm fine lines. At 1 mm fine lines one of the library's tests found a touching pair of .308 holes on a crossing of
-two fine lines as one hole, so the fine lines stayed at 0.6 mm. **The other reading** would need a label band outside the field for
-labels readable at 6x (5 arcminutes, 22 mm tall) and 13 mm lines; say if that is wanted.
-
-**Also for the record.** The 100 m mil sheet reaches only 0.91 mil: 1.0 mil at 100 m is 200 mm, wider than Letter allows with markers.
-An A4 page does not help across (it is narrower). The aiming mark is now an open 20 mm ring with nothing at its centre, per entry 226
-section 3's finding that a crosshair covers a small central feature.
-
-**What I would like answered:** (a) whether style 2 goes into the specification as built, including the tight-edge side band; (b) whether
-the line reading of the visibility rule stands.
-
-## 2026-09-25, question 58: the analysis screen needs about 1060 units of width, and a 1920 screen at 200 percent gives 960
-
-**Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 1.2: option A, built.** Was: open. Nothing is changed; entry 203 fixed the consent text and found this. CLAUDE.md: "Never: change the look without
-Alan." The analysis screen's grid has three columns beside the rail: 300 wide (at least 260), the image (at least 320), and 372 wide (at
-least 260), with two 6 wide splitters. The two outer columns are fixed widths, so they do not shrink toward their minimums as the window
-narrows: the columns need 1004 units, 1057 with the rail, and the window sets no minimum width.
-
-**What that does.** Measured in the headless tests at a window 960 wide, which is a 1920 pixel screen at 200 percent: the grid is 907
-wide and its right column starts at 632 and runs to 1004, so the last 97 units of it, where the sending question and the figures sit,
-are past the window's edge. At 683, a 1366 pixel laptop at 200 percent, it is worse. Settings and the first run screen fit at both.
-
-**The options.** A: the two outer columns shrink toward their minimums below the default size (the look at 1400 is unchanged; below
-about 1060 they narrow), and below 893 units (260 + 320 + 260 + 12 + the rail) the right column moves under the image. B: the window
-gets a minimum width of 1060 and a smaller screen scrolls. C: leave it.
-
-**What I would choose.** A, because B does not fit the screen that shows it, and a 200 percent laptop is ordinary.
-
-## 2026-09-25, question 57: may a sheet of two to four marks flag one mark against the others?
-
-**Status: answered 2026-09-27 by NOTES-FROM-PLANNING.md entry 243 section 2.1: yes, the tentative flag, built.** Was: open. Nothing is changed; the behaviour below stands until it is answered. Entry 161 section 3: "Too few marks to measure
-a reference from. A calibre keeps a single hole from being split, and flags nothing". Below five round marks
-(`MarksForTentativeSize`), `RenderDifferenceHoleDetector.SizeReference` returns the caliber source with no flag size.
-
-**What entries 196 and 197 found.** A touching pair of .308 holes, rims meeting, is found as two shots about half the time, measured
-over twenty seeds each on the 25 bull sheet and the one bull sheet: across the bull's printed edge 10 and 9 of 20, on paper 12 and 9,
-inside the black 9 and 8. Left whole it measures 0.42 to 0.58 in across. Three shots through one ragged hole are one mark of about
-two holes' area. On a sheet of fewer than five marks neither is flagged, so a five-shot group with one merged pair arrives as four
-shots with nothing said. Entering the rounds fired catches both: the count item names the mark most likely to be two, first.
-
-**The option.** Where there are two to four round marks, flag a mark whose area is at least twice the median of the others'. A wrong
-caliber, the case entry 161 guards against, scales every mark alike and so cannot make one stand out. It does nothing for a lone
-ragged hole, which has no others to compare with; there the count stays the only catch. Cost: one rule in `SizeReference`, and
-`CryingWolfTests` still holds because its marks are all one size.
-
-**What I would choose.** The option, tentative flags only, with the sentence that already says "judged from too few marks to be sure".
 
 ## 2026-09-24, question 51: which hole centre GroupLab should report, now that the one it reports leans toward the shadow
 

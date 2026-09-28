@@ -1,13 +1,13 @@
-GOOD MORNING (the night of 28 September, in five lines; this block is rewritten as the night goes on):
-1. Finished: the phone's camera screen rebuilt so its words, shutter and Back show over the live picture, with Guided and Manual and a check on every picture (entry 260, first part); on the phone, every figure the desktop shows with a tap to explain it, the bulls you fired at, Shots Needed to Zero and Compare loads (entry 259 screens 1 to 4); a black idle screen in GroupLab Dev for your OLED screens (entry 268).
-2. Waiting on you: the camera test with the printed sheet, this morning; its steps go here once the fix is checked on the Fold 7 over adb. One DESIGN NEEDED question below.
-3. Next: the Ballistics tab, the set as a checklist and the scan pill (entry 259 screens 5 to 7), then entries 261, 262 and 264 to 267.
-4. Devices: the Fold 7 answers; the Tab S8 Ultra has not answered adb since 11:19 UTC, retried every 15 minutes.
-5. Updated 2026-09-28 11:36 UTC.
+GOOD MORNING (the night of 28 September, in five lines):
+1. Finished and pushed: the phone's camera screen rebuilt (words, shutter and Back over the live picture, Guided and Manual, a score on every picture); a curled sheet now measured; the phone's seven new screens; real inches on photographs from a printer measured once; "works on any target" on the README and the site; the donor pack, Android on the download page, the new README. Nightly 119 has the camera; the rest reaches the next nightly.
+2. THE CAMERA TEST, ready now (about ten minutes, the Fold 7 closed, a printed 5x5 sheet flat on a table in ordinary light): open GroupLab Dev, Capture, Take a picture. (a) GUIDED: hold it over the sheet and follow the words until the shutter fires by itself, then Use this picture. (b) Three bad ones on purpose, about five seconds each: tilted well over, far too close, your hand's shadow across the sheet; note whether the words said what was wrong. (c) One more good one from another height. (d) Tap MANUAL: one ordinary picture with the shutter, then one deliberately bad one, and read the feedback. Then say "camera done", and anything that felt wrong.
+3. When you are at the computer, say "run the server read": one read-only command on the server for entry 261, which asks your approval (request 52 below).
+4. Devices: both show the black idle screen and can be picked up. The Tab S8 Ultra never answered adb overnight, so its pictures and torch reading wait for the next sitting.
+5. Updated 2026-09-28 13:40 UTC. Next: entries 272 and 273, the printer check and tap to switch units.
 
 # Requests for Alan
 
-**Open: 7.** Most urgent: **50**, the device sitting with the camera test of 33 inside it, paused until the camera fix is checked (the lines above say when). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 8.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). Then **52**, one approval for a read-only server command (line 3). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -84,6 +84,16 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 52. One approval: a read-only look at the server's size (entry 261 section 6), about one minute
+
+**What:** when you are at the computer, say "run the server read". I then run this one command, which stops for your approval in the
+panel because every ssh does:
+
+`ssh -i "C:\Users\Airwolf\Documents\ssh-key-2026-03-25.key" ubuntu@ssh.pissinhot.com "nproc; free -m; df -h /home; uptime"`
+
+**Why:** entry 261 asked whether the server has the room to re-read every sent target by itself. This prints its processor count, memory,
+free disk and load, and changes nothing. **A good answer:** "run the server read", then approve it once.
 
 ## 51. Five shots into a black diamond, and one scan (about 20 minutes at the range)
 
