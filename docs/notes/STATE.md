@@ -65,8 +65,9 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 2
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.119: the rebuilt capture screen, the phone's parity screens, the idle screen.
-- **Entries 260 (the mesh), 264 to 267, 270 and 271 are pushed together** after nightly 119; the site follows each push by itself.
+- **Last nightly:** 0.2.0-nightly.120 (fc8a902): the printer check, tap a number to switch units, the curled-sheet mesh, and entry 258's
+  share-in, CSV out and large-sheet advice on the phone. Nightly 120 had first been refused for a wrong note (d3030d8's corrections file).
+- **The site follows each push by itself**; it serves fc8a902 and later.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
 ## The inbox
