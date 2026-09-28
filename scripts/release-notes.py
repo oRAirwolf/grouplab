@@ -308,8 +308,9 @@ def problems(sha, note, generated=False, new=True):
         found.append("it is only a reference")
 
     low = note.lower()
+    # Whole words: an unfolded phone is not a folded planning note, and a stubborn stain is not unfinished code.
     for word, why in JARGON.items():
-        if word in low:
+        if re.search(rf"\b{re.escape(word)}\b", low):
             found.append(f"it uses {word!r}, which means nothing to somebody who shoots: {why}")
 
     for what, pattern in FORBIDDEN:
