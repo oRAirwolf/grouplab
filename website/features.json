@@ -663,6 +663,36 @@
       "mobile": {
         "shot": "fold-targets"
       }
+    },
+    {
+      "key": "capture-modes",
+      "group": "Photos and the phone",
+      "name": "Guided or Manual on the camera",
+      "sentence": "The camera's instruction, shutter and Back show over the live picture, with the torch, a level and a quality bar; Guided takes the picture itself when everything is right, and Manual when you press.",
+      "shot": null,
+      "platforms": [
+        "Android"
+      ],
+      "since": "next",
+      "note": "Guided or Manual",
+      "mobile": {
+        "noPicture": "the new camera screen is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "picture-check",
+      "group": "Photos and the phone",
+      "name": "Every picture checked",
+      "sentence": "Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.",
+      "shot": null,
+      "platforms": [
+        "Android"
+      ],
+      "since": "next",
+      "note": "checked",
+      "mobile": {
+        "noPicture": "the check after a picture is photographed at the next sitting with the phone"
+      }
     }
   ]
 }

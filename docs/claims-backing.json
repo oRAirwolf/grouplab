@@ -2720,6 +2720,14 @@
   "On the tour · In the user guide The E bull as it prints: a black disc, its white center and a small dot The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.": {
    "kind": "code",
    "where": "tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures, drawn from targets/GL-CF25-LTR-E, GL-CF25-LTR-C and the four GL-ZERO sheets; the pictures chosen by entry 256, C3 by entry 251"
+  },
+  "Coming in the next build Every picture checked Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/PictureCheck.cs Of and Band (the score, the 40 and 70 bands, retake only where it cannot measure), android/GroupLab.Android/FeedbackView.cs; held by PictureCheckTests (entry 260)"
+  },
+  "Every picture checked Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/PictureCheck.cs Of and Band (the score, the 40 and 70 bands, retake only where it cannot measure), android/GroupLab.Android/FeedbackView.cs; held by PictureCheckTests (entry 260)"
   }
  },
  "rules": [

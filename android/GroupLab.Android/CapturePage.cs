@@ -31,6 +31,12 @@ public sealed class CapturePage : UserControl
     {
 #if GROUPLAB_DEV
         TestPicture = file => _ = Picked(file);
+        TestCamera = manual =>
+        {
+            Shell.Current?.Show(Shell.Place.Capture);
+            App.Settings.SaveCaptureManual(manual);
+            Camera();
+        };
 #endif
         var units = App.Settings.LoadUnits();
         var (typed, inches) = App.Settings.LoadShotSetup();
@@ -89,7 +95,27 @@ public sealed class CapturePage : UserControl
             return;
         }
 
-        Content = new CameraView(path => _ = Analyze(path, setup), () => Content = start);
+        // Entry 260, Capture B: the camera fills the screen and the bar along the bottom is hidden while it does; Back, Android's back and
+        // leaving for a photograph all bring them back.
+        Shell.Current?.Immersive(true);
+        Content = new CameraView((path, torch) => _ = Analyze(path, setup, torch), () => CloseCamera(), () =>
+        {
+            CloseCamera();
+            _ = Choose();
+        });
+    }
+
+    /// <summary>Whether the camera is showing; closes it and returns to the start where it was.</summary>
+    internal bool CloseCamera()
+    {
+        if (Content is not CameraView)
+        {
+            return false;
+        }
+
+        Shell.Current?.Immersive(false);
+        Content = start;
+        return true;
     }
 
 #if GROUPLAB_DEV
@@ -98,6 +124,9 @@ public sealed class CapturePage : UserControl
     /// is, so a device can be measured without the system's picker, which would show the owner's own pictures.
     /// </summary>
     internal static Action<string>? TestPicture { get; private set; }
+
+    /// <summary>Entry 260, GroupLab Dev only: opens the camera, in Manual where asked, for the device check.</summary>
+    internal static Action<bool>? TestCamera { get; private set; }
 
     private async Task Picked(string file)
     {
@@ -142,7 +171,7 @@ public sealed class CapturePage : UserControl
         await Analyze(copy, setup);
     }
 
-    private async Task Analyze(string photo, ShotSetup setup)
+    private async Task Analyze(string photo, ShotSetup setup, bool torch = false)
     {
         using var cancel = new CancellationTokenSource();
         var (page, line, stop) = Screens.Progress("Reading the sheet");
@@ -151,12 +180,13 @@ public sealed class CapturePage : UserControl
             cancel.Cancel();
             line.Text = "Canceling…";
         };
+        Shell.Current?.Immersive(false);
         Content = page;
         var units = App.Settings.LoadUnits();
         PhoneResult result;
         try
         {
-            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, App.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
+            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, App.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words), torch));
         }
         catch (OperationCanceledException)
         {
@@ -177,6 +207,20 @@ public sealed class CapturePage : UserControl
             File.Delete(photo);
         }
 
-        Dispatcher.UIThread.Post(() => Content = new ResultView(result, setup, units, () => Content = start));
+        // Entry 260, Feedback B: every picture is checked before its result, taken or chosen; taking it again forgets this one.
+        void Show() => Content = new ResultView(result, setup, units, () => Content = start);
+        Dispatcher.UIThread.Post(() => Content = result.Check is { } check
+            ? new FeedbackView(check, result.Image?.Path, Show, () =>
+            {
+                if (result.SessionId is { } id)
+                {
+                    PhoneAnalysis.Store().Delete(id);
+                }
+
+                PhoneAnalysis.Discard(result.Image);
+                DiagnosticLog.Info("phone.retake", ("score", check.Score));
+                Camera();
+            })
+            : new ResultView(result, setup, units, () => Content = start));
     }
 }

@@ -31,7 +31,6 @@ public class CaptureScreenTests
             ("too much angle", CaptureGuidance.Judge(Square, null, Quality(degrees: OffAxisLimit.Degrees + 1))),
             ("blurred", CaptureGuidance.Judge(Square, null, Quality(focus: 0.3))),
             ("dark", CaptureGuidance.Judge(Square, null, Quality(exposure: 0.2))),
-            ("curled", CaptureGuidance.Judge(null, SheetOutline.NotFourSides, Quality())),
             ("few markings read", CaptureGuidance.Judge(Square, null, Quality(markings: 0.1))),
         })
         {
@@ -53,7 +52,8 @@ public class CaptureScreenTests
             (Quality(focus: 0.1, exposure: 0.1), SheetOutline.NotFourSides, Instruction.HoldSteadier),
             (Quality(exposure: 0.1, clipped: 0.3), SheetOutline.NotFourSides, Instruction.LessLight),
             (Quality(exposure: 0.1), SheetOutline.NotFourSides, Instruction.MoreLight),
-            (Quality(), SheetOutline.NotFourSides, Instruction.FlattenThePaper),
+            // Entry 260: curled or wavy paper is followed by the registration and reported afterwards; it never holds the shutter.
+            (Quality(), SheetOutline.NotFourSides, Instruction.Ready),
             (Quality(), null, Instruction.Ready),
         };
         foreach (var (quality, reason, expected) in steps)

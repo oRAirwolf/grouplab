@@ -45,8 +45,14 @@ public sealed class Shell : UserControl
 
     internal Place Showing { get; private set; } = Place.Capture;
 
+    /// <summary>The one shell, for the capture screen to hide the bar along the bottom while the camera fills the screen (entry 260).</summary>
+    internal static Shell? Current { get; private set; }
+
+    private readonly Border nav;
+
     public Shell()
     {
+        Current = this;
         foreach (var place in Enum.GetValues<Place>())
         {
             // Entry 246, look B: each place an icon over its name; the current one's icon sits in an amber pill.
@@ -71,7 +77,7 @@ public sealed class Shell : UserControl
             bar.Children.Add(tab);
         }
 
-        var nav = new Border { Child = bar, Classes = { PhoneStyles.Nav } };
+        nav = new Border { Child = bar, Classes = { PhoneStyles.Nav } };
         DockPanel.SetDock(nav, Dock.Bottom);
         frame.Children.Add(nav);
         frame.Children.Add(page);
@@ -98,8 +104,12 @@ public sealed class Shell : UserControl
         }
     }
 
+    /// <summary>Hides the bar along the bottom, or shows it again.</summary>
+    internal void Immersive(bool on) => nav.IsVisible = !on;
+
     internal void Show(Place place)
     {
+        Immersive(false);
         Showing = place;
         foreach (var (each, tab) in tabs)
         {
@@ -128,6 +138,12 @@ public sealed class Shell : UserControl
     /// <summary>Back returns to Capture from anywhere else, and is left to Android on Capture itself.</summary>
     internal bool Back()
     {
+        // Entry 260: on the camera, Android's back closes it rather than leaving the application.
+        if (Content == frame && Showing == Place.Capture && capture?.CloseCamera() == true)
+        {
+            return true;
+        }
+
         if (Content != frame || Showing == Place.Capture)
         {
             return false;

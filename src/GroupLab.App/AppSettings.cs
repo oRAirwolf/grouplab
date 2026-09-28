@@ -183,6 +183,16 @@ public sealed class AppSettingsStore(string path)
 
     public bool SaveShowWork(bool shown) => Save(file => file["showWork"] = shown);
 
+    /// <summary>NOTES-FROM-PLANNING.md entry 260: the phone's capture mode as last chosen, Manual or Guided; Guided until one is chosen.</summary>
+    public bool LoadCaptureManual() => Read(file => file["captureManual"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveCaptureManual(bool manual) => Save(file => file["captureManual"] = manual);
+
+    /// <summary>Entry 260: the capture screen's torch as last chosen: 0 Auto (the default), 1 On, 2 Off.</summary>
+    public int LoadCaptureTorch() => Read(file => file["captureTorch"]?.GetValueKind() == JsonValueKind.Number ? Math.Clamp(file["captureTorch"]!.GetValue<int>(), 0, 2) : 0);
+
+    public bool SaveCaptureTorch(int torch) => Save(file => file["captureTorch"] = torch);
+
     /// <summary>
     /// Whether one "why" disclosure is open, NOTES-FROM-PLANNING.md entry 109 section 1: the reasoning behind a figure or a judgement sits one
     /// click away on the item it explains, and each remembers it was opened, as the More figures panel does.

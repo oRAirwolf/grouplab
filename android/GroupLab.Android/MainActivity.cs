@@ -78,6 +78,7 @@ public class MainActivity : AvaloniaMainActivity
 #if GROUPLAB_DEV
         TestPicture(Intent);
         TestShotsToZero(Intent);
+        TestCamera(Intent);
 #endif
     }
 
@@ -90,6 +91,24 @@ public class MainActivity : AvaloniaMainActivity
         base.OnNewIntent(intent);
         TestPicture(intent);
         TestShotsToZero(intent);
+        TestCamera(intent);
+    }
+
+    /// <summary>The extra that asks GroupLab Dev to open the capture screen's camera (entry 260), with any value; "manual" opens it in Manual.</summary>
+    internal const string TestCameraExtra = "org.grouplab.test.camera";
+
+    /// <summary>
+    /// GroupLab Dev only: opens the camera as Take a picture does, so the device check (scripts/device-capture-check.py) can read the capture
+    /// screen with nobody holding the phone.
+    /// </summary>
+    private static void TestCamera(Intent? intent)
+    {
+        if (intent?.GetStringExtra(TestCameraExtra) is not { } mode)
+        {
+            return;
+        }
+
+        Avalonia.Threading.DispatcherTimer.RunOnce(() => CapturePage.TestCamera?.Invoke(mode == "manual"), TimeSpan.FromSeconds(2));
     }
 
     /// <summary>The extra that asks GroupLab Dev to time "Shots Needed to Zero" (entry 252 section 4), with any value.</summary>

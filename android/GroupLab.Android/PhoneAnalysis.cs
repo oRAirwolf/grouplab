@@ -18,7 +18,8 @@ namespace GroupLab.Android;
 internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int OriginalWidth, int OriginalHeight);
 
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
-internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false);
+internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
+    GroupLab.Core.Capture.PictureVerdict? Check = null);
 
 /// <summary>What the person said about the shooting: the caliber, which changes what GroupLab finds, and the distance.</summary>
 internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
@@ -154,7 +155,7 @@ internal static class PhoneAnalysis
     /// A photograph, prepared and analyzed. Entry 243 section 3.2: <paramref name="progress"/> hears what it is doing, a step at a time, and a
     /// cancel leaves nothing behind: the working copy made for it is deleted, and nothing was saved yet.
     /// </summary>
-    public static PhoneResult Run(string photo, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null)
+    public static PhoneResult Run(string photo, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null, bool torch = false)
     {
         progress?.Invoke(GroupLab.Core.Trace.StageWords.Starting);
         if (Prepare(photo) is not { } working)
@@ -165,7 +166,7 @@ internal static class PhoneAnalysis
         try
         {
             token.ThrowIfCancellationRequested();
-            return Detect(working, null, setup, units, survey, token, progress);
+            return Detect(working, null, setup, units, survey, token, progress, torch);
         }
         catch (OperationCanceledException)
         {
@@ -194,7 +195,7 @@ internal static class PhoneAnalysis
     /// The working image analyzed: as the sheet its codes name, or as <paramref name="chosen"/> where the person named it because the codes
     /// could not be read (entry 115 section 4, as the desktop asks).
     /// </summary>
-    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null)
+    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null, bool torch = false)
     {
         var clock = Stopwatch.StartNew();
         var (grey, _) = ImageLoader.Load(working.Path);
@@ -213,13 +214,17 @@ internal static class PhoneAnalysis
         session.SetCalibre(setup.Calibre);
         session.SetShotDistance(setup.DistanceInches);
 
-        var definition = chosen ?? SheetIdentification.Identify(grey, Library(), backend, trace, token).Definition;
+        var identity = chosen is null ? SheetIdentification.Identify(grey, Library(), backend, trace, token) : null;
+        var definition = chosen ?? identity!.Definition;
+        int codesRead = identity?.CodesRead ?? 0;
         if (definition is null)
         {
-            DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds));
+            // Entry 260: every picture is checked, a picture that names no sheet included.
+            var unread = GroupLab.Core.Capture.PictureCheck.Of(grey, null, null, codesRead, torch);
+            DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds), ("check", unread.Describe()));
             return new PhoneResult(session.State, null,
                 "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
-                null, working, AskWhichSheet: true);
+                null, working, AskWhichSheet: true, Check: unread);
         }
 
         var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre);
@@ -227,14 +232,16 @@ internal static class PhoneAnalysis
         // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
         DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),
             ("peakMb", Benchmark.PeakMegabytes()), ("stages", string.Join(" ", Benchmark.Stages(trace).Select(s => $"{s.Stage}={s.Milliseconds}"))));
+        var check = GroupLab.Core.Capture.PictureCheck.Of(grey, definition, result, codesRead, torch);
+        DiagnosticLog.Info("phone.check", ("check", check.Describe()), ("torch", torch));
         if (result.Failure is not null || result.Scale is null)
         {
-            return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null, working);
+            return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null, working, Check: check);
         }
 
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture, result.SetSheet);
         long? id = Save(session.State, definition, units, null);
-        return new PhoneResult(session.State, definition, null, id, working);
+        return new PhoneResult(session.State, definition, null, id, working, Check: check);
     }
 
     /// <summary>Saves the session, or updates it where it was saved before; null where the database would not take it.</summary>

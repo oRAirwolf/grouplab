@@ -9,14 +9,25 @@ Each of its parts is reported as what it measured, not as an assertion that it w
 
 ## 1. What the capture screen does
 
-**C1. It takes the picture itself.** The user frames the sheet and the shutter fires when every condition of C2 holds. A manual
-shutter exists as an override and is never the primary path. *Test to write: `CaptureScreenTests.TheShutterFiresOnlyWhenEveryConditionHolds`.*
+**C1. Guided and Manual (entry 260).** In **Guided**, the default, the user frames the sheet and the shutter fires by itself after three
+ready frames in a row, when every condition of C2 holds; the shutter can be pressed sooner. In **Manual** it never fires by itself: the
+user frames it and presses, and the guidance still shows, as a hint that never blocks. The mode is chosen under the shutter and
+remembered. Both check every picture afterwards (section 6). `CaptureScreenTests.TheShutterFiresOnlyWhenEveryConditionHolds`.
+
+**C0. Everything on the capture screen can be seen over the live camera (entry 260).** On 2026-09-28 the Fold 7's capture screen showed
+only the camera: the instruction, Take and Back were Avalonia controls laid over CameraX's preview, and a native view hosted in an Avalonia
+screen is drawn above whatever Avalonia draws in its place. The screen is now Android's own views around the preview (`CaptureScreen`):
+at the top a floating panel with a round Back, the instruction, the torch (Auto, On, Off), the live checks (focus, light, tags read of
+how many, QR codes read of how many, the torch) and the quality bar's forecast; a level near the bottom of the camera; under the camera, not
+over it, the shutter, the photo picker to its left and the lens to its right, and GUIDED and MANUAL beneath. The app's bar along the
+bottom is hidden while the camera shows, and Android's back closes the camera. `scripts/device-capture-check.py` opens GroupLab Dev's
+camera over adb and fails unless the instruction, the shutter and Back are on the screen, inside it and at least 44 pixels, in both modes.
 
 **C2. The conditions, all live on screen**, shown as one closing ring or a short checklist, never as six separate warnings:
 
 | condition | what decides it | built |
 |---|---|---|
-| the whole sheet is inside the frame with margin on every side | the outline or the markers are found, and the outline does not touch the frame | `SheetOutline`, `CaptureTests.WhereThereIsNoSheetToFindItSaysWhy` |
+| the whole sheet is inside the frame | once registered, the sheet's four corners, from its markers, fall inside the frame; before that, the outline does not touch the frame (entry 260: a white sheet on an off-white counter has no outline, and was told to move back) | `PictureCheckTests.ASheetOnAnOffWhiteCounterIsNotToldToMoveBack` |
 | the sheet's edges or its printed markers are detected | `SheetOutline.Find`, or the markers read | `CaptureTests.ThePapersCornersAreFoundOnADarkBoard` |
 | the off-axis angle is within the limit | `OffAxisLimit.Degrees`, section 4.2 | `CaptureTests.TheRefusalNamesTheAngleAndTheLimit` |
 | the image is in focus | the quality score's focus part, section 5 | `CaptureTests.TheQualityScoreIsItsWeakestPart` |
@@ -26,8 +37,13 @@ shutter exists as an override and is never the primary path. *Test to write: `Ca
 **C3. Guidance is one instruction at a time**, in plain words, and never a number the user cannot act on. When more than one condition
 fails, the first in this order is the one said: *move back* (the sheet runs out of the frame), *move closer* (the least resolution is
 below the resolution part's useless level), *less angle* (beyond the limit), *hold steadier* (focus), *more light* or *less light*
-(exposure), *flatten the paper* (the outline is not four straight sides). *Test to write:
-`CaptureScreenTests.OnlyOneInstructionIsShownAtATime`.*
+(exposure). Paper that is not four straight sides no longer holds the shutter (entry 260): curl is followed by the registration and
+reported afterwards. `CaptureScreenTests.OnlyOneInstructionIsShownAtATime`.
+
+**C3a. Knowing the sheet from a live frame (entry 260).** The analysis stream is asked for 1920 by 1440, not CameraX's 640 by 480, at
+which a code's module is about a pixel. The codes are tried first; failing them, `LiveSheet.ByLayout` fits each library sheet's marker
+layout to the markers found, and the best fit guides the camera; the picture itself is identified from its codes afterwards. Markers too
+small to read the codes from mean *move closer*.
 
 **C4. A visual outline** shows where the paper should sit, and it snaps to the detected sheet as it comes into position, so the user can
 see that the application has found it. *Test to write: `CaptureScreenTests.TheOutlineSnapsToTheFoundSheet`.*
@@ -189,3 +205,33 @@ be measured, the markings on a sheet with none, takes no part.
 6. **Markings.** The markers read over the markers printed. **Perfect at 90 percent, worthless at 50.**
 
 **On the 2026-09-20 range photographs that registered**, the words and what set them are in section 4.3.
+
+## 6. The check after every picture, and its bar (entry 260)
+
+Alan: "I want the app to want good pictures but it should be able to handle less than ideal pictures." Every picture, taken in Guided
+or Manual or chosen from the phone's files, is checked after it is analysed (`PictureCheck.Of`) and shown before its result (Feedback
+B): the photograph with each note's place outlined and numbered, the verdict, the bar, the notes, what was fine, and "Take it again"
+beside "Use this picture". Entry 260 replaces section 5's rule that the number is never shown: the number and the band word are always
+written beside the bar.
+
+1. **The score** is section 5's, the weakest of its parts, with a sixth: **the evenness of the light**, the dimmest bull's paper over the
+   brightest. A bull's paper is the median of eight samples at 1.2 times its outer disc's radius, each the brightest pixel within two.
+   **Perfect at 0.85, worthless at 0.40.**
+2. **The band agrees with the decision.** GroupLab asks for a retake only where it cannot measure: the codes name no sheet, the
+   markers do not register, the sheet is past the angle limit, the focus part is 0 (blur of 0.015 in or more), or the resolution part is
+   0 (under 50 pixels an inch). A picture it can measure never scores below 40; one it cannot never scores 40 or above. So the bar's red
+   band (under 40) means take it again, amber (40 to 69) usable, green (70 and above) good.
+3. **The verdict** is Retake, Good (green with no notes), or Good with notes. The lead for amber is "Good enough to measure. Here is what
+   would make the next one better:".
+4. **The notes**, numbered, say what GroupLab corrected where it did: a bull's paper under 80 percent of the median bull's is in shadow,
+   "A shadow falls across bulls 21 to 25, evened out: check those 5 holes if you like"; off square beyond 10 degrees; resolution under
+   150 pixels an inch; soft focus; dim or washed-out paper; markers not all read. **What was fine** lists sharp focus, even light, tags
+   and codes read of how many, and whether the torch was on.
+5. **Live.** The capture screen's bar is the same score for the frame in view, placed in the band the picture would get
+   (`PictureCheck.Forecast`).
+6. **Not yet measured:** whether the score agrees with how well each picture actually measured across the test photographs, and the
+   tolerance conditions (hard and soft shadows, a hand's and a phone's shadow, dim, warm and mixed light, curl and wave, blur, noise,
+   JPEG). Entry 260 asks for both; they are the next part of it.
+
+`PictureCheckTests`: a clean sheet is green; a shadow across the bottom row is named, "21 to 25", and stays out of the red; an unread
+sheet is a red retake.
