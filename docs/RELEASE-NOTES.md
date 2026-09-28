@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.119
+
+**2026-09-28**, commit `9046087`. Nightly.
+
+**What you will notice**
+
+- On the phone, Ballistics is a tab of its own: the dope for your rifle and load, the trajectory, and the chance of a hit with the group from a result.
+- On the phone, Sessions can compare loads: tick two or more, then see one figure at a time with the range each could really be and whether the shots can tell them apart.
+- On the phone, the result now opens into every figure the desktop shows, each with a tap to say what it means and what your number of shots can tell; Shots Needed to Zero has a page of its own.
+- On the phone, you tap the bulls you fired at on the sheet itself, so each shot is measured from its own bull.
+- Every picture on the phone is now checked, taken or chosen: a score on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time.
+- On the phone, the camera's words, shutter and Back now show over the live picture, and you choose Guided or Manual: it takes the picture itself when everything is right, or when you press.
+- In Shots Needed to Zero, within one click is now amber and the closest click teal, on the chart and in the phone's table alike.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.119)
+
+---
+
 ## 0.2.0-nightly.118
 
 **2026-09-28**, commit `401a978`. Nightly.
