@@ -8,11 +8,11 @@
 | not gated | 2.20 mm f/2.2 | `20260913_130554.jpg` | 34/34 | 135 of 136 | 0.00370 / 0.00380 | 0.00387 | +0.0049 / -0.0100 | 42 px = 0.370 in | 0.00309 | 0.00597 at 11 | 3 of 25 | 0.01083 at S3 | 3 of 3 | fail, not gated |
 | not gated | 2.20 mm f/2.2 | `20260913_130559.jpg` | 34/34 | 136 of 136 | 0.00248 / 0.00248 | 0.00297 | +0.0034 / -0.0091 | 42 px = 0.171 in | 0.00198 | 0.00338 at 15 | 0 of 25 | 0.00922 at S3 | 2 of 3 | fail, not gated |
 | mounted, Phase 1 | 2.20 mm f/2.2 | `ultrawide1.jpg` | 34/34 | 68 of 136 | 0.00420 / 0.02449 | 0.01829 | -0.0276 / -0.0250 | 260 px = 1.081 in | 0.01224 | 0.03902 at 21 | 14 of 25 | 0.07450 at S1 | 3 of 3 | fail |
-| mounted, Phase 1 | 2.20 mm f/2.2 | `ultrawide2.jpg` | 34/34 | 46 of 136 | 0.00436 / 0.03756 | 0.01943 | -0.0802 / +0.0854 | 207 px = 2.303 in | 0.01981 | 0.08305 at 5 | 19 of 25 | 0.07438 at S1 | 3 of 3 | fail |
-| mounted, Phase 1 | 2.20 mm f/2.2 | `ultrawide3.jpg` | 32/34 | 51 of 128 | 0.00547 / 0.07041 | 0.01689 | -0.0171 / -0.0441 | 335 px = 5.795 in | 0.02270 | 0.11331 at 21 | 18 of 25 | 0.10643 at S2 | 3 of 3 | fail |
+| mounted, Phase 1 | 2.20 mm f/2.2 | `ultrawide2.jpg` | 34/34 | 135 of 136 | 0.04135 / 0.00134 | 0.01943 |  |  | 0.00818 | 0.00763 at 25 | 4 of 25 | 0.05084 at S1 | 3 of 3 | fail |
+| mounted, Phase 1 | 2.20 mm f/2.2 | `ultrawide3.jpg` | 32/34 | 124 of 128 | 0.04861 / 0.00302 | 0.01689 |  |  | 0.00871 | 0.01635 at 21 | 6 of 25 | 0.05236 at S2 | 3 of 3 | fail |
 | mounted, Phase 1 | 6.25 mm f/1.7 | `main1.jpg` | 34/34 | 94 of 136 | 0.00501 / 0.01472 | 0.01370 | -0.0684 / +0.0663 | 138 px = 0.639 in | 0.00860 | 0.01824 at 21 | 8 of 25 | 0.05183 at S1 | 3 of 3 | fail |
-| mounted, Phase 1 | 6.25 mm f/1.7 | `main2.jpg` | 26/34 | 32 of 104 | 0.00494 / 0.05665 | 0.02028 | -0.1549 / +0.3293 | 1402 px = 14.260 in | 0.01980 | 0.08900 at 5 | 22 of 25 | 0.06950 at S1 | 3 of 3 | fail |
+| mounted, Phase 1 | 6.25 mm f/1.7 | `main2.jpg` | 26/34 | 104 of 104 | 0.03642 / 0.00079 | 0.02028 |  |  | 0.00874 | 0.05486 at 20 | 7 of 25 | 0.04298 at S1 | 3 of 3 | fail |
 | mounted, Phase 1 | 6.25 mm f/1.7 | `main3.jpg` | 27/34 | 58 of 108 | 0.00535 / 0.02374 | 0.01567 | -0.0532 / +0.0699 | 218 px = 1.750 in | 0.01881 | 0.06540 at 21 | 20 of 25 | 0.11379 at S1 | 3 of 3 | fail |
 | mounted, Phase 1 | 7.00 mm f/2.4 | `telephoto1.jpg` | 16/34 | excluded: the sheet overflows the frame (NOTES-FROM-PLANNING.md entry 6) | | | | | | | | | | excluded |
-| mounted, Phase 1 | 7.00 mm f/2.4 | `telephoto2.jpg` | 33/34 | 38 of 132 | 0.00622 / 0.03080 | 0.01975 | +0.0879 / -0.1128 | 344 px = 1.747 in | 0.01955 | 0.04584 at 21 | 21 of 25 | 0.09626 at S1 | 3 of 3 | fail |
+| mounted, Phase 1 | 7.00 mm f/2.4 | `telephoto2.jpg` | 33/34 | 132 of 132 | 0.01558 / 0.00071 | 0.01975 |  |  | 0.00588 | 0.00950 at 5 | 2 of 25 | 0.03152 at S1 | 3 of 3 | fail |
 | mounted, Phase 1 | 7.00 mm f/2.4 | `telephoto3.jpg` | 4/34 | excluded: the sheet overflows the frame (NOTES-FROM-PLANNING.md entry 6) | | | | | | | | | | excluded |
