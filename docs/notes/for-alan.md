@@ -74,6 +74,11 @@ back), so I measure the scan here. **A good answer:** the scan, and which calibr
 
 ## 50. One more short sitting with the Fold 7 and the tablet, later (nothing to do yet)
 
+**Added 2026-09-28 (entries 253 and 255): about thirty minutes now, and the camera test of request 33 is part of it.** Have a printed
+GroupLab 5x5 sheet on a table in ordinary room light for the camera test. The sitting also retakes every phone and tablet picture on the
+website (entry 253). When the checks that need nobody are done, the panel and the top of this file give you a few short steps with the
+Fold 7 over that sheet; nothing else needs your hands.
+
 **Opened 2026-09-28 (entries 250 and 252).** **Needed:** the phone and the tablet on the charger, unlocked, Wireless debugging off and on,
 Stay awake on, for about twenty minutes, **once a line at the top of this file starting "READY FOR THE PHONE AND TABLET:" says so**; not
 before. **Why:** three things can only be checked on the devices: the Targets preview now showing a sheet's words and Letter above A4 on the
@@ -403,6 +408,9 @@ survey is turned on in the next entry.
 ---
 
 ## 33. The Fold 7's camera: ten minutes with a printed sheet
+
+**2026-09-28 (entry 255): this is now done in request 50's sitting**, while the Fold 7 is connected anyway, with GroupLab Dev rather than
+the spike. The steps below are kept as the record; you will be given shorter ones at the time.
 
 **Opened 2026-09-25. Entry 219 item A2.** The capture screen is built: the camera's preview inside GroupLab, one instruction at a time
 (move back, move closer, less angle, hold steadier, more or less light, flatten the paper), the lens by zoom, tap to focus, and a shutter

@@ -106,6 +106,12 @@ internal sealed class CameraSession(Context context, ILifecycleOwner owner, Prev
     private int readyInARow;
     private bool taking;
 
+    // Entry 255: each change of instruction, and how long the shutter took to fire by itself, go to the log, so a camera test is read
+    // afterwards rather than watched.
+    private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
+    private Instruction? lastSay;
+    private long readySince;
+
     public event Action<FrameVerdict>? Judged;
 
     /// <summary>A still saved: its path in the application's cache.</summary>
@@ -163,10 +169,19 @@ internal sealed class CameraSession(Context context, ILifecycleOwner owner, Prev
                 ? CaptureGuidance.Judge(SheetOutline.Find(grey, out string? reason), reason, null)
                 : CaptureGuidance.JudgeFrame(grey, metadata, definition, backend);
             Judged?.Invoke(verdict);
+            long now = clock.ElapsedMilliseconds;
+            if (verdict.Say != lastSay)
+            {
+                lastSay = verdict.Say;
+                readySince = now;
+                DiagnosticLog.Info("camera.say", ("say", verdict.Say.ToString()), ("ms", now.ToString(CultureInfo.InvariantCulture)));
+            }
+
             readyInARow = verdict.Say == Instruction.Ready ? readyInARow + 1 : 0;
             if (readyInARow >= 3 && !taking)
             {
                 readyInARow = 0;
+                DiagnosticLog.Info("camera.auto", ("afterReadyMs", (now - readySince).ToString(CultureInfo.InvariantCulture)), ("ms", now.ToString(CultureInfo.InvariantCulture)));
                 Take("automatic");
             }
         }
