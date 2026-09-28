@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1190 |
+| code | 1191 |
 | measured | 1550 |
-| decided | 1229 |
+| decided | 1228 |
 | unbacked | 0 |
 | **total** | **3969** |
 
-**704** of them were read one sentence at a time and their backing written against the sentence. The other **3265** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**706** of them were read one sentence at a time and their backing written against the sentence. The other **3263** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -348,7 +348,7 @@ one that matters.
 
 ### README.md
 
-- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): GroupLab measures every hole and tells you honestly what your group size is worth.** Free and open source under GPL-3.0: no account, no ads, no paid tier.
+- *code* (src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales); AutomaticMarking.Run on GroupLab sheets; the goal from entry 270 and DETECTION-LEARNING-STUDY.md section 7): # GroupLab **Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): On Windows, macOS, Linux and Android.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **2** | On the computer, every hole found, then the group with honest ranges.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **3** | On the phone, photograph it at the range.
@@ -2958,6 +2958,7 @@ one that matters.
 ### docs/USER-GUIDE.md
 
 - *decided* (what GroupLab is, DESIGN.md section 1): # GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
+- *code* (src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales) and AutomaticMarking.Run on GroupLab sheets (entry 270)): It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how).
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
@@ -3212,9 +3213,8 @@ one that matters.
 ### site:features/index.html
 
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): Desktop Mobile Reading a target · The numbers · Sheets and printing · Photos and the phone · Sharing and privacy · Updates and platforms Newest New in nightly.119 Guided or Manual on the camera The camera&#x27;s instruction, shutter and Back show over the live picture, with the torch, a level and a quality bar; Guided takes the picture itself when everything is right, and Manual when you press.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.119 Guided or Manual on the camera The camera&#x27;s instruction, shutter and Back show over the live picture, with the torch, a level and a quality bar; Guided takes the picture itself when everything is right, and Manual when you press.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.119 Every picture checked Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.117 Shots Needed to Zero How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope&#x27;s click value.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
 - *code* (src/GroupLab.Core/Statistics/ShotsToZero.cs Work and SigmaClicks, shared by src/GroupLab.App/MainWindow.ShotsToZero.cs and android/GroupLab.Android/ShotsToZeroPage.cs; suggested by Jylee (entries 252, 259)): On the tour · In the user guide · The research behind it Shots Needed to Zero How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope&#x27;s click value.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
@@ -3282,6 +3282,7 @@ one that matters.
 - *code* (website/build.py: the guide's contents, generated from its headings): Comparing several sheets at once 11.
 - *code* (website/build.py: the guide's contents, generated from its headings): If something goes wrong 12.
 - *decided* (what GroupLab is, DESIGN.md section 1): Settings GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
+- *code* (src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales) and AutomaticMarking.Run on GroupLab sheets (entry 270)): It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how).
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - *code* (src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)): Three sheets come with the E bull as well : the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.
@@ -3303,6 +3304,7 @@ one that matters.
 - *decided* (how the sheets are designed to be shot, docs/TARGET-LIBRARY.md): Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10.
 - *code* (ScaleReference and StatedResolutionScale in src/GroupLab.Core/Marking; entry 171): GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the real resolution from the sheet's own printed markers and tells you both.
 - *decided* (the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets): For photographs: stand about 2.5 ft (75 cm) from the sheet; use the phone's main camera, not its wide or zoom lens; keep the whole sheet and all its corner squares in the frame; do not crop the pictures, and do not send them through a messaging app, which shrinks them.
+- *code* (src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; SheetReference.PrintScale; DetectionAdvice.SheetInches (entry 271)): A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your printer printed at 97 percent makes every group read about 3 percent large.
 - *code* (AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment): On a GroupLab sheet the rest happens on its own: GroupLab reads the sheet's printed codes to name its definition.
 - *code* (MarkingSession in src/GroupLab.Core/Marking/MarkingSession.cs): Every result is an ordinary mark that you can move, delete or reassign.
 - *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): On a white board it cannot tell the paper from the board, and you tap the corners.
@@ -3333,8 +3335,6 @@ one that matters.
 ### site:index.html
 
 - *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; Windows test build Measure how accurately your rifle shoots, and how little a small group can tell you.
-- *code* (AutomaticMarking.Run and GroupAnalysis): GroupLab reads a photograph or a scan of a target you have shot, finds every hole, and gives you the group's statistics.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in GroupLab New in nightly.119 Guided or Manual on the camera The camera&#x27;s instruction, shutter and Back show over the live picture, with the torch, a level and a quality bar; Guided takes the picture itself when everything is right, and Manual when you press.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.

@@ -24,7 +24,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The bulls you aimed at | `aimed-bulls` | on the phone | entry 259 screen 2, "tap the bulls on the sheet" |
 | A sheet shot off by the same amount | `whole-sheet` | on the phone | |
 | Real inches from a photograph | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept |
-| Targets GroupLab did not print | `other-targets` | coming | after entry 259: bulls placed by touch, a scale drawn at each, templates |
+| Any target you already shoot | `other-targets` | coming | after entry 259: bulls placed by touch, a scale drawn at each, templates |
 | Open by dropping or pasting | `open-anyhow` | coming | after entry 259: a picture shared into GroupLab from another app, and pasting one |
 | The figures you read off a target | `six-figures` | on the phone | |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page |

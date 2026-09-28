@@ -37,6 +37,76 @@
         "docs/CLAIMS.md",
         "docs/RETIRED-WORDING.json"
       ]
+    },
+    {
+      "phrase": "requires a GroupLab sheet",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "require a GroupLab sheet",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "need a GroupLab sheet",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "needs a GroupLab sheet",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "only works on GroupLab",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "only works with GroupLab",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "only reads GroupLab",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "must print a GroupLab",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "Print a target, shoot it, photograph it",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "Print and shoot a GroupLab sheet.",
+      "why": "entry 270: GroupLab works on any target; a GroupLab sheet is the fast lane, not a requirement",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
     }
   ]
 }

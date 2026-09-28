@@ -101,7 +101,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Every hole found | the marking screen | a few holes close up with their rings |
 | The bulls you aimed at | the marking screen | the bull picker with rows chosen |
 | A sheet shot off by the same amount | the analysis | the whole-sheet assignment's statement |
-| Targets GroupLab did not print | the marking screen | bulls placed by hand and a scale drawn at one |
+| Any target you already shoot | the marking screen | bulls placed by hand and a scale drawn at one |
 | Open by dropping or pasting | the marking screen | the drop target over the window |
 | Shots in and out as CSV | the analysis | the export and import commands |
 | Large sheets | the Targets screen | the photograph detail statement for a tiled target |

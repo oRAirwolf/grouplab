@@ -12,6 +12,21 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-09-28, question 66: which target the "Your own targets" picture may show
+
+Status: open.
+
+Entry 270 section 3 asks for "a picture of a commercial target marked by hand (the desktop's marking screen on a non-GroupLab target)"
+on the home page and the tour. The commercial scans in the repository are Alan's own and publishable under entry 171, but most of them
+(`scans/300_nm_hand_load.jpg`, `300_nm_factory.jpg` and the rest) are OnTarget sheets, and `docs/PHASE1-BRIEF.md` line 202 says: "Do not
+implement any OnTarget compatibility, read any OnTarget format, or reproduce any OnTarget target design." A screenshot of Alan's shot
+sheet on the marking screen is not a reproduction for printing, but it does put that design on the home page. **Options:** (a) use one
+of those scans anyway, cropped to a few bulls; (b) Alan photographs a plain store-bought target, or a sheet of paper with a hand-drawn
+aim point, shot and marked, which carries no one's design; (c) a generated "other target" drawn by GroupLab itself, like the synthetic
+sheets the tour already uses. **What I did:** the "Your own targets" section is on the home page and the tour index in words, with no
+picture yet; everything else in entry 270 is done. **I would choose (b)**, because it shows exactly what a new user would do, and (c)
+until it arrives.
+
 ## 2026-09-28, question 65: entry 261 puts a study script in `tools/study/`, which CLAUDE.md keeps read only
 
 Status: open.

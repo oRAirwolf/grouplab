@@ -567,7 +567,7 @@ def page_home() -> str:
 <div class="hero-text">
 <p class="eyebrow">Free &#183; open source &#183; GPL-3.0 &#183; Windows test build</p>
 <h1 class="display">Measure how accurately your rifle shoots, and how little a small group can tell you.</h1>
-<p class="lead">GroupLab reads a photograph or a scan of a target you have shot, finds every hole, and gives you the group's statistics. Every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion.</p>
+<p class="lead">Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth. Print a GroupLab sheet, and it does all of it by itself. Every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion.</p>
 <div class="actions">
 {btn("Download for Windows", NIGHTLY + "grouplab-setup-win-x64.exe", True, "Latest test build · installer · no admin rights", True)}
 {btn("View the source on GitHub", GITHUB, big=True)}
@@ -582,12 +582,21 @@ def page_home() -> str:
 
 {spotlight_section("New in GroupLab")}
 
+<section class="wrap section">
+<div class="stack narrow">
+<p class="eyebrow">Your own targets</p>
+<h2>Any target you already shoot.</h2>
+<p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target.</p>
+<p>Finding the holes by itself on any target is the goal, not yet a feature. On a GroupLab sheet it already does, which makes the sheet the fast lane, not a requirement.</p>
+</div>
+</section>
+
 <section class="wrap section two-col">
 <div class="stack">
 <p class="eyebrow">The problem</p>
 <h2>Five shots measured three quarters. What does the rifle actually shoot?</h2>
 <p>A shooter fires five rounds, measures the two widest holes, changes one thing, fires five more and concludes the change worked. It almost certainly did not. Two loads that differ by 20 percent on five-shot groups cannot be told apart.</p>
-<p>GroupLab measures far more carefully, and then tells you what the number is worth.</p>
+<p>GroupLab measures far more carefully, and then tells you what the number is worth. It also aims to help shooters think in mean radius and confidence rather than in the extreme spread of a few shots.</p>
 </div>
 <div class="panel figure-panel">
 <div class="figure-top">
@@ -605,7 +614,7 @@ def page_home() -> str:
 
 <section class="wrap section">
 <div class="stack narrow">
-<p class="eyebrow">How it works</p>
+<p class="eyebrow">The fast lane: a GroupLab sheet</p>
 <h2>One shot per bull, twenty-five bulls, one honest group.</h2>
 <p>Each hole is measured against its own aiming point, so holes never overlap, and the offsets are pooled into one group far larger than you could shoot into a single bullseye.</p>
 </div>
@@ -615,7 +624,6 @@ def page_home() -> str:
 <li class="panel"><span class="mono num">03</span><h3>Scan or photograph it</h3><p>A flat 600 dpi scan is best. A photograph works too, even with the sheet still stapled to the board.</p></li>
 <li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.</p></li>
 </ol>
-<div class="note note-teal"><span class="mono">Any target</span><p>A store-bought target or blank paper can be marked by hand: set a known length, tap each impact, and the same statistics run.</p></div>
 </section>
 
 <section class="wrap section">
@@ -1778,6 +1786,7 @@ def page_tour_index() -> str:
 <section class="wrap stack">
 <h1>A tour of GroupLab</h1>
 <p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
+<div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the <a href="/tour/marking/">marking screen</a>. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p></div>
 {platform_switch()}
 {shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
 {shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}

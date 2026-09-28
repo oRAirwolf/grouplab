@@ -38,7 +38,7 @@ THEMES = {
 
 # The mosaic's six tiles: caption, then the picture it shows, per theme.
 TILES = [
-    ("Print a sheet", "current/targets-{t}-1400x900.png"),
+    ("Any target, or print a sheet", "current/targets-{t}-1400x900.png"),
     ("Photograph it", "phone/fold-capture-{t}.png"),
     ("Every hole found", "current/marking-{t}-1400x900.png"),
     ("Honest numbers", "current/analysis-open-{t}-1400x900.png"),

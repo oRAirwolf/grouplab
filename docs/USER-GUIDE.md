@@ -1,6 +1,6 @@
 # GroupLab user guide
 
-GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted. This guide takes one sheet from the printer to the analysis. It describes the Windows application as it is built today, and every picture in it is a render of the build.
+GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted. It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how). A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves, and this guide takes one from the printer to the analysis. It describes the Windows application as it is built today, and every picture in it is a render of the build.
 
 The rail down the left of the window is how you move around it:
 - the mark at the top is the sheet you are working on;

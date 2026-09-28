@@ -3000,6 +3000,18 @@
   "**Real inches from a photograph.** A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your printer printed at 97 percent makes every group read about 3 percent large.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; AutomaticMarking.Run printer; MainWindow.Printer.cs; android PrinterCard.cs (entry 271)"
+  },
+  "A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your printer printed at 97 percent makes every group read about 3 percent large.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; SheetReference.PrintScale; DetectionAdvice.SheetInches (entry 271)"
+  },
+  "# GroupLab **Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales); AutomaticMarking.Run on GroupLab sheets; the goal from entry 270 and DETECTION-LEARNING-STUDY.md section 7"
+  },
+  "It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how).": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales) and AutomaticMarking.Run on GroupLab sheets (entry 270)"
   }
  },
  "rules": [

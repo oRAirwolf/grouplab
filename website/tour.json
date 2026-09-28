@@ -94,7 +94,7 @@
   "marking": {
    "name": "Marking and review",
    "blurb": "Every hole found and numbered to its bull, with anything uncertain raised for you to settle.",
-   "purpose": "This is where GroupLab shows its working before it measures anything. It finds the holes, works out the scale from the printed markers, and assigns each hole to a bull. Where it is not sure, it says so and asks, rather than quietly guessing and giving you a clean-looking number built on a guess.",
+   "purpose": "This is where GroupLab shows its working before it measures anything. It finds the holes, works out the scale from the printed markers, and assigns each hole to a bull. Where it is not sure, it says so and asks, rather than quietly guessing and giving you a clean-looking number built on a guess. On a target GroupLab did not print, any target you already shoot, this is where you set the scale once and mark the holes by hand, and the same statistics follow.",
    "withoutASheet": "The same screen, and the work is yours. You set the scale, by tapping a known length or the corners of a known rectangle, which removes the photograph's angle, and you place each shot. On a target with several bulls, the bulls tool places each bull's aim point: shots go to their nearest bull and are drawn in its color, the lasso moves several at once to another, and a length drawn near a bull can be that bull's own scale, so an angled photograph is measured right at every bull; the bulls can be kept as a template for the next sheet of the same target. That was Unholy's suggestion (also TNA). There is no automatic detection, and the review queue stays empty, because it exists to question what the detector decided and nothing decided anything.",
    "parts": [
     [

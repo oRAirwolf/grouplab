@@ -49,6 +49,23 @@
   ],
   "features": [
     {
+      "key": "other-targets",
+      "group": "Reading a target",
+      "name": "Any target you already shoot",
+      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand; place several bulls and keep the layout as a template for the next sheet. Finding the holes by itself on any target is the goal, not yet a feature.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "0.2.0-nightly.111",
+      "note": "On a target GroupLab did not print, you can now place each bull by hand",
+      "tour": "marking",
+      "guide": "3-photograph-or-scan-it",
+      "article": "photographing-targets"
+    },
+    {
       "key": "reads-itself",
       "group": "Reading a target",
       "name": "A GroupLab sheet reads itself",
@@ -151,23 +168,6 @@
       "mobile": {
         "noPicture": "the ruler card on a photograph's result is photographed at the next sitting with the phone"
       }
-    },
-    {
-      "key": "other-targets",
-      "group": "Reading a target",
-      "name": "Targets GroupLab did not print",
-      "sentence": "On any other target you place the bulls by hand, draw a scale at each one, and keep the layout as a template for the next sheet.",
-      "shot": "marking",
-      "platforms": [
-        "Windows",
-        "macOS",
-        "Linux"
-      ],
-      "since": "0.2.0-nightly.111",
-      "note": "On a target GroupLab did not print, you can now place each bull by hand",
-      "tour": "marking",
-      "guide": "3-photograph-or-scan-it",
-      "article": "photographing-targets"
     },
     {
       "key": "open-anyhow",
