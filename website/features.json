@@ -48,7 +48,8 @@
     "A photograph of a sheet that is not lying flat",
     "On the phone, a picture shared into GroupLab",
     "On the phone, the shots can be shared as a CSV file",
-    "On the phone, a set of tiled sheets can be shared"
+    "On the phone, a set of tiled sheets can be shared",
+    "On the phone, a picture copied in another app can be pasted"
   ],
   "features": [
     {
@@ -207,9 +208,13 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.71",
+      "mobile": {
+        "noPicture": "sharing a picture into GroupLab and pasting one are photographed at the next sitting with the phone"
+      },
       "note": "You can now open a target by dropping the image on the GroupLab window",
       "tour": "marking",
       "guide": "3-photograph-or-scan-it"

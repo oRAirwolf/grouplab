@@ -26,7 +26,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Tap a number to switch units | `unit-tap` | on the phone | entry 273: tiles and figure rows, press and hold for every unit, the note at the bottom |
 | Check your printer once, for real inches from photos | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept |
 | Any target you already shoot | `other-targets` | coming | bulls placed by touch, a scale drawn at each, templates: waits for a concept (DESIGN NEEDED) |
-| Open by dropping or pasting | `open-anyhow` | coming | a picture shared into GroupLab or opened with it from another app is read (entry 258); pasting one is still to come |
+| Open by dropping or pasting | `open-anyhow` | on the phone | entry 258: a picture shared into GroupLab or opened with it from another app, and Paste a picture on Capture |
 | The figures you read off a target | `six-figures` | on the phone | |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures |

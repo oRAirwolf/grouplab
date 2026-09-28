@@ -61,6 +61,7 @@ public sealed class CapturePage : UserControl
                 Screens.Card(Screens.Dim("The caliber and the distance"), calibre, distance),
                 Screens.Primary("Take a picture", Camera),
                 Screens.Choice("Choose a photograph", () => _ = Choose()),
+                Screens.Choice("Paste a picture", () => _ = Paste()),
                 status,
 
                 // Entry 233: the one thing on a kitchen counter that still costs a hole, which the camera's live checks do not look for.
@@ -165,6 +166,38 @@ public sealed class CapturePage : UserControl
         }
 
         await Analyze(file, setup);
+    }
+
+    /// <summary>
+    /// Entry 258: a picture copied in another application, pasted, the phone's version of pasting an image into the desktop's window. The
+    /// clipboard holds its content address; the picture is copied into the cache and read as a chosen one.
+    /// </summary>
+    private async Task Paste()
+    {
+        if (Setup() is not { } setup)
+        {
+            return;
+        }
+
+        var context = global::Android.App.Application.Context;
+        var clipboard = context.GetSystemService(global::Android.Content.Context.ClipboardService) as global::Android.Content.ClipboardManager;
+        var uri = clipboard?.PrimaryClip is { ItemCount: > 0 } clip ? clip.GetItemAt(0)?.Uri : null;
+        string? type = uri is null ? null : context.ContentResolver?.GetType(uri);
+        if (uri is null || type?.StartsWith("image/", StringComparison.Ordinal) != true || context.ContentResolver?.OpenInputStream(uri) is not { } from)
+        {
+            status.Text = "There is no picture to paste. Copy one in another app first, then press Paste a picture.";
+            return;
+        }
+
+        string copy = Path.Combine(context.CacheDir!.AbsolutePath, "pasted" + (type == "image/png" ? ".png" : ".jpg"));
+        await using (from)
+        await using (var to = File.Create(copy))
+        {
+            await from.CopyToAsync(to);
+        }
+
+        DiagnosticLog.Info("phone.paste", ("type", type));
+        await Analyze(copy, setup);
     }
 
     private async Task Choose()
