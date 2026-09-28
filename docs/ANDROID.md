@@ -22,8 +22,9 @@ for the phone.
   Discord server. No dates are promised.
 - **The package name is `org.grouplab.app`**, permanent once on Play. The spike uses `org.grouplab.app.spike`, so nothing built from
   it can be taken for the real application.
-- **A public Play listing waits on the attorney's review** of the draft GPL section 7 additional permission for app stores. Internal and
-  closed testing can go ahead before it.
+- **The path to a public Play listing is Google's own rule** for a new personal developer account: a closed test with at least 12
+  testers for 14 days. Nothing else holds it (entry 267: the GPL section 7 app-store permission concerns Apple's App Store, and is not
+  pursued while iOS is not planned).
 - **iOS is not planned.** The iPad Mini is for testing the website only.
 
 ## 2. The user interface: Avalonia on .NET Android

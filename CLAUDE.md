@@ -134,6 +134,10 @@ What that means for me:
 
 **The tour is words about pictures, so a picture changing is not enough.** Entry 146 section 4.4: the weekly screenshot job replaces the picture on its own, and nothing replaces the words. So an entry that changes a screen says in its report whether the tour page for that screen still describes it, and I fix it in the same task if it does not. A tour page naming a button that is no longer there is worse than no tour page, because a reader takes it for the truth.
 
+**When I change behaviour, a platform, a decision or a user-facing name, I update the README, the site, the guides and the assets in the
+same change**, or say in the commit why not (entry 267). `scripts/consistency.py` runs in CI as warnings and weekly as an issue labelled
+`consistency`; it catches what slips through and does not replace doing it. Retired wording is listed in `docs/RETIRED-WORDING.json`.
+
 **A new bull, sheet or view is not finished until the Features page has its own picture of it** (entry 256): the thing itself, large
 enough to see what makes it different, never a general screen that happens to contain it. `docs/figures/SCREENSHOTS.md` lists the
 entries still waiting for one.

@@ -963,7 +963,7 @@
   },
   "It waits on the license permission under License, for distribution rather than for development.": {
    "kind": "decided",
-   "where": "README's License section and DESIGN.md: the permission is with a lawyer and not in force"
+   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
   },
   "It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop.": {
    "kind": "decided",
@@ -1009,10 +1009,6 @@
    "kind": "decided",
    "where": "DESIGN.md section 21"
   },
-  "iOS is Phase 8 and needs the GPL section 7 additional permission described under License, which is drafted and with a lawyer and not in force.": {
-   "kind": "decided",
-   "where": "README's License section and DESIGN.md: the permission is with a lawyer and not in force"
-  },
   "## What GroupLab is not - **Not compatible with OnTarget, in any way.** No OnTarget PC or OnTarget TDS file format, target design or import path, and never will be.": {
    "kind": "decided",
    "where": "DESIGN.md section 2 and docs/PATENT-SEARCH.md: no compatibility, by decision"
@@ -1048,10 +1044,6 @@
   "## License **GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the license in force today for every copy of GroupLab from every source.": {
    "kind": "code",
    "where": "LICENSE, and the footer in website/build.py shell()"
-  },
-  "**An additional permission under section 7, for app-store distribution, is intended and is with a lawyer.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this.": {
-   "kind": "decided",
-   "where": "README's License section and DESIGN.md: the permission is with a lawyer and not in force"
   },
   "## Included in the source ### AprilTag tag36h11 code table `src/GroupLab.Core/Rendering/Markers/Tag36h11.cs` contains the 587 codes and the bit layout of the `tag36h11` family, generated from `tag36h11.c` of the AprilTag reference implementation, https://github.com/AprilRobotics/apriltag.": {
    "kind": "code",
@@ -1422,10 +1414,6 @@
    "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
   },
   "A newer personal Play account runs a closed test with at least 12 testers for 14 days before a production listing; the testers come from the Discord server.": {
-   "kind": "decided",
-   "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
-  },
-  "- **A public Play listing waits on the attorney's review** of the draft GPL section 7 additional permission for app stores.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entries 198 and 199, as planned in docs/ANDROID.md"
   },
@@ -2956,6 +2944,22 @@
   "## For developers Where to start 1.": {
    "kind": "code",
    "where": "moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement"
+  },
+  "iOS is Phase 8 and would need the GPL section 7 additional permission described under License, which is not in force and not pursued now.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+  },
+  "**An additional permission under section 7, for app-store distribution, is not in force, and not pursued now.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this; it would be revisited only before an iOS release, which is not planned.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+  },
+  "- **The path to a public Play listing is Google's own rule** for a new personal developer account: a closed test with at least 12 testers for 14 days.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+  },
+  "Nothing else holds it (entry 267: the GPL section 7 app-store permission concerns Apple's App Store, and is not pursued while iOS is not planned).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
   }
  },
  "rules": [

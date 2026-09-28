@@ -555,7 +555,7 @@ The sequence is a real depiction of what happened and nothing false needs adding
 
 **Sequencing.** Windows first. Android second. iOS third, built on GitHub Actions macOS runners, which are free for public repositories, so no Apple hardware is required. The Apple Developer Program fee of 99 dollars per year applies only when shipping to the App Store or TestFlight.
 
-**Licence.** GPL-3.0, with an additional permission under section 7 permitting distribution through app stores. Plain GPL-3.0 conflicts with Apple's terms and GPL applications have been removed from the App Store before. Adding this now costs nothing; adding it later would require the agreement of every contributor.
+**Licence.** GPL-3.0. An additional permission under section 7 permitting distribution through app stores is not in force and not pursued now (entry 267); it would be revisited only before an iOS release, since plain GPL-3.0 conflicts with Apple's terms and GPL applications have been removed from the App Store before. Adding it later needs the agreement of every contributor, which CONTRIBUTING.md asks for when a pull request is opened.
 
 **[r3] That licence choice nearly collided with the imaging stack, and the fiducial family is what saved it.** Emgu.CV is the only .NET OpenCV binding covering Windows, Android and iOS, and its open-source licence is **plain GPL-3.0 with no app-store additional permission**. A downstream distributor may remove additional permissions but cannot add them to somebody else's code, so shipping GroupLab plus Emgu.CV through the App Store would reproduce exactly the conflict this licence choice exists to avoid. Windows is unaffected, because OpenCvSharp is Apache-2.0.
 
@@ -669,7 +669,7 @@ A deferral is a statement that the promise is still made and is not being worked
 
 **[r3] Licence conflict in the imaging stack**, which is a distinct risk from availability and has a different mitigation. Emgu.CV is plain GPL-3.0 with no app-store additional permission, and it is the only .NET OpenCV binding covering mobile. Mitigated by the AprilTag family choice, per sections 9 and 20. Residual risk: any Phase 6 requirement for an OpenCV routine on mobile that libapriltag does not provide reopens it.
 
-**[r3] Patent exposure, now specific.** `docs/PATENT-SEARCH.md` found **US7769236B2** (Fiala, now Millennium Three Technologies), live to **2029-05-03** with all maintenance fees paid, whose method claim 12 describes single-image coded-marker detection with no video limitation. That claim reads onto what any ArUco or AprilTag detector does. The decision taken is to adopt a standard fiducial scheme and accept the risk, which is recorded with its bounds in `docs/FIDUCIAL-DECISION.md` section 9. **An attorney should read claim 12 before the design is frozen.** The closest target-design art, US11257243B2 (Targetscope), lapsed on 2026-03-30 for non-payment and is revivable until roughly February 2028.
+**[r3] Patent exposure, now specific.** `docs/PATENT-SEARCH.md` found **US7769236B2** (Fiala, now Millennium Three Technologies), live to **2029-05-03** with all maintenance fees paid, whose method claim 12 describes single-image coded-marker detection with no video limitation. That claim reads onto what any ArUco or AprilTag detector does. The decision taken is to adopt a standard fiducial scheme and accept the risk, which is recorded with its bounds in `docs/FIDUCIAL-DECISION.md` section 9. **An attorney should read claim 12 before the design is frozen; that is not pursued now (entry 267), while GroupLab is a free project.** The closest target-design art, US11257243B2 (Targetscope), lapsed on 2026-03-30 for non-payment and is revivable until roughly February 2028.
 
 **Trademark.** **[r3] Searched.** `docs/TRADEMARK-SEARCH.md` found zero USPTO records for GROUPLAB in any form, exact, wildcard, pseudo-mark or component. The three GROUP LABS marks on file are all dead. The real exposure is common-law: a GroupLab human-computer-interaction research group at the University of Calgary. No AI assurance of availability should be treated as a clearance.
 
@@ -692,7 +692,7 @@ A deferral is a statement that the promise is still made and is not being worked
 
 **[r3] Opened in revision 3:**
 
-- **Attorney review of US7769236B2 claim 12** before the fiducial design is frozen. Not blocking any code
+- **A professional review of US7769236B2 claim 12:** not pursued now (entry 267), and revisited only if GroupLab grows past a free project. Not blocking any code
 - **An email to Emgu Corporation** asking for an app-store additional permission. Costs one email and the answer changes the Phase 6 plan
 - **Transcribe the hand-drawn assignment arrows** into a fixture file. The only independent ground truth for cross-cell assignment in the corpus
 - **Which backer material is actually used.** Irrelevant to scans, decisive for photographs. Two photographs of one target against two backers would isolate the one variable the scan corpus cannot exercise

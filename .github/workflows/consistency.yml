@@ -1,0 +1,43 @@
+# Whether the README, grouplab.org and the assets agree with the project, NOTES-FROM-PLANNING.md entry 267 section 2(a).
+#
+# Alan: "I should not have to find these oversights because they should be analyzed. It does not have to happen with every build, but it
+# should at least happen once every few days or a week." Every Monday, and by hand, scripts/consistency.py runs every check the repository
+# has for this, including the ones that need the network (the live site, the README's links), and keeps one GitHub issue labelled
+# consistency listing what it found; it closes the issue when there is nothing. The ordinary build runs the same script offline, as
+# warnings.
+name: consistency
+
+on:
+  schedule:
+    - cron: "7 13 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: consistency
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: the README, the site and the assets agree with the project
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: The builder's packages
+        run: python -m pip install --quiet markdown Pillow fonttools brotli
+
+      - name: Check, and keep the consistency issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/consistency.py --warn --issue

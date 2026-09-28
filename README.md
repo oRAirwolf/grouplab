@@ -461,7 +461,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 - **Not started.** Cloud provider adapters over three-tier storage.
 
 **Phase 8. iOS.**
-- **Not started.** A CI build, signed. It waits on the license permission under License, for distribution rather than for development.
+- **Not started.** A CI build, signed. Not pursued now: iOS is not planned, and the app-store permission under License would be revisited only before an iOS release.
 
 **Phase 9. Performance.**
 - **Not started.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. It starts only when the application works as intended, because a fast wrong answer is worthless.
@@ -495,7 +495,7 @@ it.
 **The developer works on Windows.** Targets are printed, shot, photographed and marked there, so that is where the application meets real
 data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
-**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8 and needs the GPL section 7 additional permission described under License, which is drafted and with a lawyer and not in force. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
+**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8 and would need the GPL section 7 additional permission described under License, which is not in force and not pursued now. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
 
 </details>
 
@@ -638,7 +638,7 @@ To the people who have tested GroupLab and said what they found, by the names th
 
 **GPL-3.0.** The full text is in [LICENSE](LICENSE), and that is the license in force today for every copy of GroupLab from every source.
 
-**An additional permission under section 7, for app-store distribution, is intended and is with a lawyer.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this. The permission is the standard resolution, and it can only be granted by the copyright holders, so it is far cheaper to add before there are outside contributors than after. It is not in force yet and this README will say so until it is. **Do not rely on it.**
+**An additional permission under section 7, for app-store distribution, is not in force, and not pursued now.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this; it would be revisited only before an iOS release, which is not planned. **Do not rely on it.**
 
 Work by others that GroupLab includes or depends on is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 

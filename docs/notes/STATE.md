@@ -38,7 +38,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Storage on GitHub**: `docs/notes/STORAGE.md`. Submissions leave the server only once archived and proven (entries 215 to 217).
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
-  definitions too. **A public Play listing waits on the attorney's review of the GPL app store permission.**
+  definitions too. **A public Play listing waits on Google's closed test: 12 testers for 14 days** (entry 267).
 - **Both devices run nightly 115** and its GroupLab Dev (nightly-signed now), and can be put away; for-alan.md's first line says so.
   The Dev build reads a picture a test names (`files/test/`), so a sitting never opens the owner's picker.
 - **The Play internal test ran on the Fold 7** (entry 232). Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12

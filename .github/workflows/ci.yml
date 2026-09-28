@@ -374,6 +374,11 @@ jobs:
       - name: Build the site
         run: python website/build.py
 
+      # NOTES-FROM-PLANNING.md entry 267: the weekly consistency audit's checks, offline and as warnings, so a drift shows on the push that
+      # made it; the weekly job (consistency.yml) adds the network checks and keeps the issue.
+      - name: The consistency audit, as warnings
+        run: python scripts/consistency.py --warn --offline
+
       # NOTES-FROM-PLANNING.md entry 159 section 5.4: every checkable sentence the built site, the README and the documents publish has its
       # backing in docs/claims-backing.json, read one sentence at a time or classified by a rule that says what the document is. A new or
       # changed sentence with nothing behind it fails here, which is what makes the audit worth doing once.

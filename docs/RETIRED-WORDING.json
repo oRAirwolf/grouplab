@@ -1,0 +1,42 @@
+{
+  "about": "NOTES-FROM-PLANNING.md entry 267: wording that no longer describes the project, found by scripts/consistency.py wherever a reader meets it. Each phrase lists the files where it still belongs, the records of a search or a decision kept as they were. The planning history, the archive and the inbox are never searched.",
+  "searched": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "DESIGN.md",
+    "docs",
+    "website"
+  ],
+  "neverSearched": [
+    "docs/notes",
+    "docs/NOTES-FROM-PLANNING.md",
+    "docs/PHASE1-RESULTS.md",
+    "docs/QUESTIONS-FOR-PLANNING.md",
+    "website/_site",
+    "website/research/range-test-log"
+  ],
+  "phrases": [
+    {
+      "phrase": "lawyer",
+      "why": "entry 267: no lawyer's review for now",
+      "allowedIn": [
+        "docs/TRADEMARK-SEARCH.md",
+        "docs/PATENT-SEARCH.md",
+        "docs/FIDUCIAL-DECISION.md",
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "attorney",
+      "why": "entry 267: no lawyer's review for now; the patent and trademark searches keep their advice as it was written",
+      "allowedIn": [
+        "docs/PATENT-SEARCH.md",
+        "docs/TRADEMARK-SEARCH.md",
+        "docs/FIDUCIAL-DECISION.md",
+        "DESIGN.md",
+        "docs/CLAIMS.md",
+        "docs/RETIRED-WORDING.json"
+      ]
+    }
+  ]
+}
