@@ -1,4 +1,5 @@
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
@@ -16,6 +17,10 @@ namespace GroupLab.Android;
     Label = MainActivity.Name,
     Theme = "@style/GroupLabTheme",
     MainLauncher = true,
+
+    // Entry 246: a start aimed at GroupLab while it runs reaches this one through OnNewIntent rather than stacking a second activity on it,
+    // which moved the one application view between them mid-analysis on the tablet ("InvalidateArrange on wrong LayoutManager").
+    LaunchMode = LaunchMode.SingleTop,
     ScreenOrientation = ScreenOrientation.FullUser,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize
         | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
@@ -70,7 +75,33 @@ public class MainActivity : AvaloniaMainActivity
         }
 
         base.OnCreate(savedInstanceState);
+#if GROUPLAB_DEV
+        TestPicture(Intent);
+#endif
     }
+
+#if GROUPLAB_DEV
+    /// <summary>The extra a test names a picture with, a file name in the application's own <c>test</c> folder (entry 246).</summary>
+    internal const string TestPictureExtra = "org.grouplab.test.picture";
+
+    protected override void OnNewIntent(Intent? intent)
+    {
+        base.OnNewIntent(intent);
+        TestPicture(intent);
+    }
+
+    /// <summary>GroupLab Dev only: the named picture is read as a chosen photograph once the Capture screen is there.</summary>
+    private static void TestPicture(Intent? intent)
+    {
+        if (intent?.GetStringExtra(TestPictureExtra) is not { Length: > 0 } name || name.Contains('/') || name.Contains('\\'))
+        {
+            return;
+        }
+
+        string file = Path.Combine(global::Android.App.Application.Context.FilesDir!.AbsolutePath, "test", name);
+        Avalonia.Threading.DispatcherTimer.RunOnce(() => CapturePage.TestPicture?.Invoke(file), TimeSpan.FromSeconds(2));
+    }
+#endif
 
     /// <summary>
     /// Error report issue 6: every time Android ended GroupLab in the background, which it does whenever it wants the memory, the next start

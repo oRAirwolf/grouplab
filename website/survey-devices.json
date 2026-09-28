@@ -30,13 +30,13 @@
       "name": "Galaxy Z Fold 7",
       "hardware": "Samsung SM-F966U1, 12 GB of memory, Android 16",
       "version": "0.2.0-nightly.111",
-      "runs": null,
-      "milliseconds": null,
-      "peakMegabytes": null,
-      "holesFound": null,
-      "holesPlaced": null,
+      "runs": 1,
+      "milliseconds": 2600,
+      "peakMegabytes": 438,
+      "holesFound": 25,
+      "holesPlaced": 25,
       "stages": null,
-      "source": "its result is to be read from the phone's own Settings screen; the phone was locked when the others were read"
+      "source": "read from the phone's own Settings screen over the desk's connection on 2026-09-28 (entry 246), the run of 27 September at 18:22; it gives the time to a tenth of a second and not the stages"
     }
   ]
 }

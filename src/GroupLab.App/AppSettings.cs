@@ -63,6 +63,12 @@ public sealed class AppSettingsStore(string path)
             DiagnosticLog.Exception(LogLevel.Warn, "settings.read", ex, ("setting", "units"), ("fallback", "the region's default"));
         }
 
+        return UnitSettings.ForRegion(Region());
+    }
+
+    /// <summary>The system's region as two letters, from <see cref="RegionSource"/> where it is set and .NET otherwise, or null when neither knows.</summary>
+    public static string? Region()
+    {
         string? region = RegionSource?.Invoke();
         try
         {
@@ -70,12 +76,19 @@ public sealed class AppSettingsStore(string path)
         }
         catch (ArgumentException ex)
         {
-            // No region is known, so the default is metric.
+            // No region is known, so the defaults are metric and A4.
             DiagnosticLog.Exception(LogLevel.Warn, "settings.region", ex, ("fallback", "metric"));
         }
 
-        return UnitSettings.ForRegion(region);
+        return region;
     }
+
+    /// <summary>
+    /// Entry 246: the countries that print on Letter rather than A4, for a first choice of paper. The phone's Targets screen offered A4 to a
+    /// US phone, because it asked .NET for the region, which the phone's invariant globalization leaves empty.
+    /// </summary>
+    public static bool LetterRegion(string? region) =>
+        region is not null && new[] { "US", "CA", "MX", "PH", "CL", "CO", "VE", "PR", "GT", "CR", "DO", "PA", "SV", "NI", "BO" }.Contains(region.ToUpperInvariant());
 
     /// <summary>Remembers the units. Returns false if the file could not be written, in which case the choice lasts until the application closes.</summary>
     public bool SaveUnits(UnitSettings units)

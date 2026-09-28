@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input.TextInput;
 using Avalonia.Layout;
 using Avalonia.Media.Imaging;
+using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd.Model;
@@ -25,8 +26,8 @@ public sealed class TargetsPage : UserControl
     private readonly TextBox magnification = Number("");
     private readonly TextBox dot = Number("");
     private readonly TextBox shots = Number("25");
-    private readonly RadioButton letter = Screens.Radio("page", "Letter", !RegionInfo.CurrentRegion.IsMetric);
-    private readonly RadioButton a4 = Screens.Radio("page", "A4", RegionInfo.CurrentRegion.IsMetric);
+    private readonly RadioButton letter = Screens.Radio("page", "Letter", AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
+    private readonly RadioButton a4 = Screens.Radio("page", "A4", !AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
     private readonly RadioButton disc = Screens.Radio("shape", "Disc", true);
     private readonly RadioButton diamond = Screens.Radio("shape", "Diamond", false);
     private readonly StackPanel said = new() { Spacing = 8 };

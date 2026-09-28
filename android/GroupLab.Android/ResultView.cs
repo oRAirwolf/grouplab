@@ -61,10 +61,13 @@ public sealed class ResultView : UserControl
             return;
         }
 
-        // Entry 243 section 3.3: two parts, the numbers and the sheet, which a phone shows one under the other, as before, and a big screen
-        // in landscape, or any window at least ExpandedWidth wide, side by side: the sheet on the left and the numbers beside it.
+        // Entry 243 section 3.3: three parts, the numbers, the sheet and what to do next, which a phone shows one under the other in the
+        // order it always had, and a big screen in landscape, at least ExpandedWidth wide, side by side: the sheet on the left, the numbers
+        // and what to do next beside it. Entry 246 found the tablet in portrait, 924 wide, going side by side too, which the entry did not
+        // ask for, and the phone's order changed; both are as they were now.
         var numbers = new StackPanel { Spacing = 12 };
         var picture = new StackPanel { Spacing = 12 };
+        var actions = new StackPanel { Spacing = 12 };
         numbers.Children.Add(figures);
         numbers.Children.Add(plot);
         if (result.State.ImagePath is { } path && File.Exists(path))
@@ -94,18 +97,21 @@ public sealed class ResultView : UserControl
             picture.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
         }
 
-        numbers.Children.Add(saved);
+        actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
-        numbers.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
-        numbers.Children.Add(shareSaid);
-        numbers.Children.Add(Screens.Choice("Another target", again));
+        actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
+        actions.Children.Add(shareSaid);
+        actions.Children.Add(Screens.Choice("Another target", again));
         Refresh();
 
         var host = new Grid { Margin = new Thickness(16) };
+        var left = new StackPanel { Spacing = 12 };
+        var right = new StackPanel { Spacing = 12 };
+        Grid.SetColumn(right, 2);
         bool? wide = null;
-        void Arrange(double width)
+        void Arrange(Size size)
         {
-            bool now = width >= ExpandedWidth && picture.Children.Count > 0;
+            bool now = size.Width >= ExpandedWidth && size.Width > size.Height && picture.Children.Count > 0;
             if (wide == now)
             {
                 return;
@@ -114,32 +120,40 @@ public sealed class ResultView : UserControl
             wide = now;
             host.Children.Clear();
             host.ColumnDefinitions.Clear();
-            column.Children.Remove(numbers);
-            column.Children.Remove(picture);
+            left.Children.Clear();
+            right.Children.Clear();
+            foreach (var part in new Control[] { numbers, picture, actions })
+            {
+                column.Children.Remove(part);
+            }
+
             if (now)
             {
                 host.MaxWidth = double.PositiveInfinity;
                 host.ColumnDefinitions = new ColumnDefinitions("3*,24,2*");
-                var left = new StackPanel { Spacing = 12, Children = { column, picture } };
-                Grid.SetColumn(numbers, 2);
+                left.Children.Add(column);
+                left.Children.Add(picture);
+                right.Children.Add(numbers);
+                right.Children.Add(actions);
                 host.Children.Add(left);
-                host.Children.Add(numbers);
+                host.Children.Add(right);
             }
             else
             {
                 host.MaxWidth = 640;
                 column.Children.Add(numbers);
                 column.Children.Add(picture);
+                column.Children.Add(actions);
                 host.Children.Add(column);
             }
         }
 
-        SizeChanged += (_, e) => Arrange(e.NewSize.Width);
-        Arrange(Bounds.Width > 0 ? Bounds.Width : 0);
+        SizeChanged += (_, e) => Arrange(e.NewSize);
+        Arrange(Bounds.Size);
         Content = new ScrollViewer { Content = host, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
     }
 
-    /// <summary>The width from which the sheet and the numbers sit side by side, Material's expanded window class, entry 243 section 3.3.</summary>
+    /// <summary>The width from which the sheet and the numbers sit side by side in landscape, Material's expanded window class, entry 243 section 3.3.</summary>
     internal const double ExpandedWidth = 840;
 
     private Action<Action<MarkingSession>> Edited(MarkingSession s) => change =>

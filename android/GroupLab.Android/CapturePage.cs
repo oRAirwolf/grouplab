@@ -29,6 +29,9 @@ public sealed class CapturePage : UserControl
 
     public CapturePage()
     {
+#if GROUPLAB_DEV
+        TestPicture = file => _ = Picked(file);
+#endif
         var units = App.Settings.LoadUnits();
         var (typed, inches) = App.Settings.LoadShotSetup();
         calibre.Text = typed ?? "";
@@ -86,6 +89,27 @@ public sealed class CapturePage : UserControl
 
         Content = new CameraView(path => _ = Analyze(path, setup), () => Content = start);
     }
+
+#if GROUPLAB_DEV
+    /// <summary>
+    /// Entry 246, GroupLab Dev only: a picture in the application's own files, named by a test over adb, read exactly as a chosen photograph
+    /// is, so a device can be measured without the system's picker, which would show the owner's own pictures.
+    /// </summary>
+    internal static Action<string>? TestPicture { get; private set; }
+
+    private async Task Picked(string file)
+    {
+        if (Setup() is not { } setup || !File.Exists(file))
+        {
+            DiagnosticLog.Info("phone.test.picture", ("found", File.Exists(file)));
+            return;
+        }
+
+        string copy = Path.Combine(global::Android.App.Application.Context.CacheDir!.AbsolutePath, "chosen" + Path.GetExtension(file));
+        File.Copy(file, copy, overwrite: true);
+        await Analyze(copy, setup);
+    }
+#endif
 
     private async Task Choose()
     {

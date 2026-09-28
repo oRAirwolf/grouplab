@@ -398,6 +398,12 @@ the address), installs the newest GroupLab Dev, starts it, takes screenshots, an
 **Logcat.** Every line the application logs above DEBUG also goes to logcat under the tag `GroupLab`, scrubbed as the log file is: no
 path, no file name, no location. That is how a problem on a tester's phone from Google Play is read, since that copy is not debuggable.
 
+**A picture without the picker** (entry 246): GroupLab Dev reads a picture named by the extra `org.grouplab.test.picture`, a file name in
+its own `files/test` folder, exactly as a chosen photograph, so a device is measured without opening the system's picker, which shows the
+owner's own pictures. Put the file there with `run-as org.grouplab.app.dev`, then `am start -n <its activity> --es
+org.grouplab.test.picture <name>`; the log's `phone.prepare` and `phone.detect` lines give the working size, the most memory held and each
+stage's time. The release build has no such way in.
+
 **The Play copy is needed only to test the Play path itself:** once before the closed test begins, and whenever the release build changes
 in a way the development build would not show (signing, the store's app bundle, what Play strips or adds). Day to day, testing is on
 GroupLab Dev, installed over adb.

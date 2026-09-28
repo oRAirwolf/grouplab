@@ -24,7 +24,10 @@
     "While GroupLab reads a target",
     "On the phone, selections, radio buttons and focus now use",
     "A sheet whose printed code happened to hold certain bytes",
-    "On Android, GroupLab no longer reports that it closed without shutting down"
+    "On Android, GroupLab no longer reports that it closed without shutting down",
+    "On a phone the result is back in its usual order",
+    "The phone's Targets screen now starts on Letter paper",
+    "Opening GroupLab from another application while it is already running"
   ],
   "features": [
     {

@@ -1,6 +1,6 @@
 # Requests for Alan
 
-**Open: 9.** Most urgent: **45**, reconnecting the Fold 7 and the tablet, five minutes. **49** is a choice you can make from your chair: how GroupLab should look on the phone, A, B or C. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **44**, one line read off the Fold 7's screen, a minute. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print). **40** answers your question about the benchmark and **41** reports the Play build on the Fold 7, **42** says GroupLab is back on it, and **43** reports the Tab S8 Ultra; nothing to do for any of them.
+**Open: 8.** Most urgent: none today. **The devices: the first sitting is done (2026-09-28, 18:44 MDT); leave the Fold 7 and the tablet on, with Wireless debugging and Stay awake, for one more short sitting once look B is built, later today; this line will say when you can put them away.** **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **The night of 27 September, in five lines** (entry 243 asked for it; not a request):
 1. Finished: sets of sheets pool into one group; every analysis shows progress and can be canceled; the phone has a Targets screen and a side by side result on big screens.
@@ -95,6 +95,10 @@ A good answer is "both reconnected". Nothing on either is touched except GroupLa
 screen are never read.
 
 ## 44. The survey page: one line from the Fold 7's screen
+
+**Answered 2026-09-28 (entry 246). Nothing to do.** Read over the desk's connection from the Fold's Settings: last run 27 September
+18:22, 2.6 seconds, at most 438 MB, 25 of 25 holes, sent with a report. It is on https://grouplab.org/survey/ beside the desktop and the
+tablet.
 
 **Opened 2026-09-27 (entry 241).** The page is at https://grouplab.org/survey/ once the site has published this entry (about eight
 minutes after the push). It shows your three machines by name as the project's own test devices: the desktop (1.8 s, from the desktop's

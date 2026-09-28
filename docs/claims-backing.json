@@ -2500,6 +2500,18 @@
   "Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come.": {
    "kind": "code",
    "where": ".github/workflows/nightly.yml signs and publishes grouplab-android.apk and grouplab-android-dev.apk; docs/ANDROID.md sections 11 to 14; the Play internal test of entries 231 and 232; the phones of entries 235 and 236"
+  },
+  "Galaxy Z Fold 7 Samsung SM-F966U1, 12 GB of memory, Android 16 2.6 s median of 1 run, GroupLab 0.2.0-nightly.111 At most 438 MB of memory; 25 of its 25 holes found.": {
+   "kind": "measured",
+   "where": "the Fold 7's own Settings screen, read over adb on 2026-09-28 (entry 246); the screenshot is in the local android-dev-246 folder, recorded in website/survey-devices.json"
+  },
+  "Source: read from the phone&#x27;s own Settings screen over the desk&#x27;s connection on 2026-09-28 (entry 246), the run of 27 September at 18:22; it gives the time to a tenth of a second and not the stages.": {
+   "kind": "measured",
+   "where": "the Fold 7's own Settings screen, read over adb on 2026-09-28 (entry 246); the screenshot is in the local android-dev-246 folder, recorded in website/survey-devices.json"
+  },
+  "**A picture without the picker** (entry 246): GroupLab Dev reads a picture named by the extra `org.grouplab.test.picture`, a file name in its own `files/test` folder, exactly as a chosen photograph, so a device is measured without opening the system's picker, which shows the owner's own pictures.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/MainActivity.cs TestPictureExtra and CapturePage.TestPicture, under GROUPLAB_DEV only; PhoneAnalysis's phone.prepare and phone.detect log lines (entry 246)"
   }
  },
  "rules": [

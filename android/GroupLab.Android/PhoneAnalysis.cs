@@ -123,7 +123,8 @@ internal static class PhoneAnalysis
         Cv2.Resize(colour, working, new OpenCvSharp.Size(0, 0), rest, rest, rest < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
         Cv2.ImWrite(image, working, new ImageEncodingParam(ImwriteFlags.JpegQuality, 92));
         double scale = (double)working.Width / bounds.OutWidth;
-        DiagnosticLog.Info("phone.prepare", ("width", bounds.OutWidth), ("height", bounds.OutHeight), ("sample", sample), ("working", $"{working.Width}x{working.Height}"));
+        DiagnosticLog.Info("phone.prepare", ("width", bounds.OutWidth), ("height", bounds.OutHeight), ("sample", sample), ("working", $"{working.Width}x{working.Height}"),
+            ("peakMb", Benchmark.PeakMegabytes()));
         return new WorkingImage(image, WorkingSize.Scaled(original, working.Width, working.Height, scale), bounds.OutWidth, bounds.OutHeight);
     }
 
@@ -223,7 +224,9 @@ internal static class PhoneAnalysis
 
         var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre);
         survey?.Record(new AnalysisFacts(working.OriginalWidth, working.OriginalHeight, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
-        DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds));
+        // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
+        DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),
+            ("peakMb", Benchmark.PeakMegabytes()), ("stages", string.Join(" ", Benchmark.Stages(trace).Select(s => $"{s.Stage}={s.Milliseconds}"))));
         if (result.Failure is not null || result.Scale is null)
         {
             return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null, working);

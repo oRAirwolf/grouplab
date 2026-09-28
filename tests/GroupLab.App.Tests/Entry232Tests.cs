@@ -28,4 +28,28 @@ public class Entry232Tests
             GroupLab.Tests.Support.Temp.Delete(root);
         }
     }
+
+    /// <summary>Entry 246: the phone's Targets screen offers the paper of the phone's region, Letter in the United States and A4 in Britain.</summary>
+    [Theory]
+    [InlineData("US", true)]
+    [InlineData("ca", true)]
+    [InlineData("GB", false)]
+    [InlineData("DE", false)]
+    [InlineData(null, false)]
+    public void ThePaperFollowsTheRegionThePhoneGives(string? region, bool letter)
+    {
+        AppSettingsStore.RegionSource = () => region;
+        try
+        {
+            Assert.Equal(letter, AppSettingsStore.LetterRegion(region));
+            if (region is not null)
+            {
+                Assert.Equal(region, AppSettingsStore.Region());
+            }
+        }
+        finally
+        {
+            AppSettingsStore.RegionSource = null;
+        }
+    }
 }
