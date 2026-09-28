@@ -113,7 +113,8 @@ public partial class ReleaseAssetTests
         Assert.Contains("--prerelease", nightly, StringComparison.Ordinal);
         Assert.Contains("gh release create nightly", nightly, StringComparison.Ordinal);
         Assert.Contains("gh release create \"v$VERSION\"", nightly, StringComparison.Ordinal);
-        Assert.Contains("group: nightly", nightly, StringComparison.Ordinal);
+        // Entry 255: every run that builds shares the one group; a run that will skip has its own, so it cannot cancel a real one.
+        Assert.Contains("&& 'nightly' || format('nightly-skip-{0}', github.run_id)", nightly, StringComparison.Ordinal);
         Assert.Contains("cancel-in-progress: true", nightly, StringComparison.Ordinal);
 
         // No key, no publishing, and it says so before it builds anything.

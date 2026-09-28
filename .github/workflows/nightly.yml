@@ -36,8 +36,15 @@ permissions:
   contents: write
 
 # Two quick pushes must not interleave: the newest wins and the older is cancelled where it has not finished.
+# Entry 255: only a run that will build joins that group. On 2026-09-28 a build-and-test run cancelled by a newer push still started this
+# workflow; the run skipped itself, as it should, but not before its place in the group had cancelled the real nightly for the commit
+# before. A run that is going to skip (a failed or cancelled check, a [notes] or [screens] commit) gets a group of its own.
 concurrency:
-  group: nightly
+  group: >-
+    ${{ (github.event_name == 'schedule' || (github.event.workflow_run.conclusion == 'success'
+    && !startsWith(github.event.workflow_run.head_commit.message, '[notes] ')
+    && !startsWith(github.event.workflow_run.head_commit.message, '[screens] ')))
+    && 'nightly' || format('nightly-skip-{0}', github.run_id) }}
   cancel-in-progress: true
 
 jobs:
