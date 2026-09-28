@@ -24,6 +24,14 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 245: question 63 answered
+
+**Status: done 2026-09-28.**
+
+**Question 63 (bulls on each sheet of the redrawn large format sets):** (a), as built. 2 columns by 4 rows, 8 a sheet, 32 a set, no
+sighters and no load block on the tiles. Say on the Targets screen, beside these sets, that the load is written on the session (or on a
+separate load block sheet if one exists), since the tiles carry none.
+
 ## 2026-09-27, entry 244: the README kept current with every build
 
 **Status: done 2026-09-27, with one reading.** Section 2's Status and near-term plan come from `docs/RELEASE-PLAN.md` and the release notes, not from `docs/notes/STATE.md`, which is written for the two sessions in their own shorthand and would read as jargon to a visitor; the hand-written Status list was brought up to date instead.

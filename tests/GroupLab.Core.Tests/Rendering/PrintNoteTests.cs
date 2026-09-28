@@ -63,6 +63,10 @@ public class PrintNoteTests
         Assert.Contains("300 yd", tiled.Summary, StringComparison.Ordinal);
         Assert.Contains("4 sheets", tiled.Summary, StringComparison.Ordinal);
         Assert.Contains("Letter, 215.9 by 279.4 mm", sheets.Single(s => s.File == "GL-CF25-LTR.gltd.json").Summary, StringComparison.Ordinal);
+
+        // Entry 245: the large format sets say where the load goes, since their sheets carry no load block; a single sheet says nothing of it.
+        Assert.EndsWith(LibrarySheet.NoLoadBlock, sheets.Single(s => s.File == "GL-LR25-T.gltd.json").Summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("load block:", sheets.Single(s => s.File == "GL-CF25-LTR.gltd.json").Summary, StringComparison.Ordinal);
         Assert.Equal("Centerfire load development", sheets[0].Family);
     }
 

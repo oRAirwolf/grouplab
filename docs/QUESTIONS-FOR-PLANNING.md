@@ -14,7 +14,7 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## 2026-09-27, question 63: how many bulls each sheet of the redrawn large format sets carries
 
-Status: open. Nothing waits on it; what is built can be changed without touching anything printed.
+Status: answered 2026-09-28 by NOTES-FROM-PLANNING.md entry 245: (a), as built. Was: open.
 
 Entry 243 section 1.4 (question 62 (a)) says: "Redraw the three large format 5x5 and 5x6 sheets as 2 by 2 Letter and A4 tiles; freeze the
 printed ones so they still read." A set's four sheets are identical in this format (TARGET-SCHEMA.md section 3.12: every tile encodes to

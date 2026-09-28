@@ -26,9 +26,16 @@ public sealed record LibrarySheet(string File, string Family, string? DesignedFo
         }
     }
 
-    /// <summary>The sentence the print screen lists the sheet by.</summary>
+    /// <summary>
+    /// The sentence the print screen lists the sheet by. Entry 245: a set of several sheets with no load block says where the load goes, on
+    /// the session, since no sheet of it has room to write one.
+    /// </summary>
     public string Summary =>
-        $"{Definition.Description}{(DesignedFor is null ? "" : $" Designed for {DesignedFor}.")} {Paper}{(Sheets > 1 ? $", {Sheets.ToString(CultureInfo.InvariantCulture)} sheets that assemble into one target" : "")}.";
+        $"{Definition.Description}{(DesignedFor is null ? "" : $" Designed for {DesignedFor}.")} {Paper}{(Sheets > 1 ? $", {Sheets.ToString(CultureInfo.InvariantCulture)} sheets that assemble into one target" : "")}."
+        + (Sheets > 1 && Definition.DataBlock is null ? NoLoadBlock : "");
+
+    /// <summary>What a set without a load block says about the load.</summary>
+    public const string NoLoadBlock = " The sheets carry no load block: enter the load on the session in GroupLab when you analyze them.";
 }
 
 /// <summary>

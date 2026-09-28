@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-27, after entry 244.
+**Last rewritten:** 2026-09-28, after entry 245.
 
 ---
 
@@ -70,9 +70,8 @@ Open requests in `docs/notes/for-alan.md`: **9** (45 reconnect the Fold 7 and th
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 62 were answered by entry 243.
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 63 were answered by entries 243 and 245.
 
-- **63** how many bulls each sheet of the redrawn large format sets carries (built: 8, 32 a set)
 - **51** which hole centre GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
@@ -91,7 +90,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 62 were answered by entry 24
 they differ. The planning session's files are not committed, so while a run is working through them the
 line reads what the repository holds, and the test fails locally until the last is done.
 
-**Holds:** none
+**Holds:** 246, 247, 248, 249
 
 ## Things that would surprise somebody who was not here yesterday
 

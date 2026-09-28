@@ -59,6 +59,13 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 245: question 63 answered, and where the load goes on a set
+
+(a), as built: 2 by 4, 8 a sheet, 32 a set, no sighters and no load block. `LibrarySheet.Summary`, which the desktop's Targets screen and
+the phone's both show beside a sheet, now ends a set of several sheets with no load block by saying the load is entered on the session in
+GroupLab; no separate load block sheet exists to point to. The 300 yd tile sets say the same, since they carry none either
+(`PrintNoteTests`).
+
 ## The server sitting of 2026-09-27: entry 235 section 3 and entry 241's server half
 
 Every command was written into the panel mirror first. The dry runs were clean. **Request 21:** the server's copy of the grouplab.org
