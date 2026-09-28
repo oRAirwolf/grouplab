@@ -104,4 +104,46 @@ public class CaptureScreenTests
         var tight = CaptureGuidance.JudgeFrame(new GrayImage(render.Width - 200, render.Height - 200, cropped), camera, definition, new OpenCvSharpBackend());
         Assert.Equal(Instruction.MoveBack, tight.Say);
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 259 and 260: the first camera test was a white sheet on an off-white kitchen counter, where the paper's
+    /// edge hardly shows. A frame the size the phone analyzes, 1920 by 1440, with the sheet on a counter only a little darker than its paper,
+    /// names the sheet from its own codes and markers with nothing known beforehand, and is judged ready from them.
+    /// </summary>
+    [Fact]
+    public void ASheetOnAnOffWhiteCounterIsFoundAndReady()
+    {
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        const double dpi = 120;
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], dpi);
+        const int w = 1920, h = 1440;
+        var frame = new byte[w * h];
+        var random = new Random(260);
+        for (int i = 0; i < frame.Length; i++)
+        {
+            frame[i] = (byte)(208 + random.Next(-4, 5));
+        }
+
+        int left = (w - render.Width) / 2, top = (h - render.Height) / 2;
+        for (int y = 0; y < render.Height; y++)
+        {
+            for (int x = 0; x < render.Width; x++)
+            {
+                frame[((top + y) * w) + left + x] = (byte)(render.Pixels[(y * render.Width) + x] * 222 / 255);
+            }
+        }
+
+        var image = new GrayImage(w, h, frame);
+        var library = GroupLab.Core.Registration.SheetIdentification.Candidates([Repo.PathTo("targets")]);
+        var search = LiveSheet.Find(image, library, new OpenCvSharpBackend());
+        // At the analysis frames' size a QR module is about two pixels, so the codes are not read and the sheet is found by its markers'
+        // layout, which the E and C bull variants share; the guidance needs only the geometry, and the picture itself is named from its codes.
+        Assert.NotNull(search.Definition);
+        Assert.Equal(definition.Fiducials!.Markers!.Select(m => (m.X, m.Y)), search.Definition.Fiducials!.Markers!.Select(m => (m.X, m.Y)));
+
+        var camera = new ImageMetadata("YUV", w, h, null, null, "camera", "analysis", 1, null, null);
+        var verdict = CaptureGuidance.JudgeFrame(image, camera, search.Definition, new OpenCvSharpBackend(), search.CodesRead);
+        Assert.True(verdict.SheetInFrame && verdict.Detected, verdict.Words);
+        Assert.Equal(Instruction.Ready, verdict.Say);
+    }
 }
