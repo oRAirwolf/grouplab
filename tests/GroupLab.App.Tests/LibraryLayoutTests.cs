@@ -34,8 +34,9 @@ public class LibraryLayoutTests(ITestOutputHelper output)
         Dispatcher.UIThread.RunJobs();
 
         // Every sheet's name is drawn whole: nothing trimmed, nothing wider than the column it is in.
+        // Only what is on the window: the other screens keep their own rows, the Ballistics screen's among them (entry 247).
         var rows = window.GetLogicalDescendants().OfType<Grid>()
-            .Where(g => g.ColumnDefinitions.Count == 2 && g.Children.Count == 2 && g.Children[0] is TextBlock)
+            .Where(g => TopLevel.GetTopLevel(g) is not null && g.IsEffectivelyVisible && g.ColumnDefinitions.Count == 2 && g.Children.Count == 2 && g.Children[0] is TextBlock)
             .ToList();
         Assert.True(rows.Count >= 20, $"the library listed {rows.Count} sheets, and the built-in library has twenty");
 

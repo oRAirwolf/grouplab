@@ -16,7 +16,7 @@ namespace GroupLab.App;
 /// Hit probability on the Ballistics screen, NOTES-FROM-PLANNING.md entry 156, from the shooter's own measured dispersion. Everything
 /// GroupLab has measured fills itself in: the precision from the group open in the analysis or from a load's sessions pooled, the velocity's
 /// spread from the load, and the zero's error from the uncertainty in the group's center. What nobody can measure is set by a confidence
-/// preset, and each figure can be edited under Advanced, where the true value can be set apart from the believed one. The answer sits with
+/// preset, and each figure can be edited under What you are unsure of, where the true value can be set apart from the believed one. The answer sits with
 /// the dope for the distance, first and second round side by side, each with its interval, with what costs the most beneath it. The model
 /// is written down in <see cref="HitProbability"/>.
 /// </summary>
@@ -48,8 +48,9 @@ public sealed partial class MainWindow
     private readonly TextBox hitTrials = Field(HitProbability.DefaultTrials.ToString(CultureInfo.InvariantCulture));
     private readonly TextBox hitSeed = Field(HitProbability.DefaultSeed.ToString(CultureInfo.InvariantCulture));
     private readonly Dictionary<HitSource, (TextBox Sd, TextBox Bias)> hitErrors = [];
-    private readonly Expander hitAdvanced = new() { Header = "Advanced", HorizontalAlignment = HorizontalAlignment.Stretch };
     private readonly StackPanel hitLines = new() { Spacing = Tokens.Space4 };
+    private readonly StackPanel hitLead = new() { Spacing = Tokens.Space4 };
+    private readonly StackPanel hitCosts = new() { Spacing = Tokens.Space4 };
     private readonly HitScatter hitScatter = new() { HorizontalAlignment = HorizontalAlignment.Left };
     private readonly HitCurve hitCurve = new();
     private bool fillingHit;
@@ -63,21 +64,21 @@ public sealed partial class MainWindow
     /// <summary>The assumptions, entry 156 section 4 item 2, in one short paragraph on the screen.</summary>
     internal const string HitAssumptions = "This assumes the rifle's dispersion is the same from shot to shot, that the error sources are independent of each other, and that the target is engaged from a stable position like the one the group was shot from. The second round assumes the first impact was seen and the whole of its miss was dialed off.";
 
-    private void BuildHit(StackPanel column)
+    /// <summary>
+    /// Entry 247, concept B: the chance of a hit as the screen's second view. Its settings go on the left in three sections, what is being
+    /// shot at, what the shooter is unsure of, and the shot and the simulation, and its answer goes in the middle.
+    /// </summary>
+    private void BuildHit(StackPanel left, StackPanel middle)
     {
-        column.Children.Add(Heading("Hit probability"));
-        column.Children.Add(Line(HitIntroduction));
-        column.Children.Add(Row(FieldLabel("Precision from"), hitFrom, Angled("Rifle precision, per axis SD"), hitPrecision));
-        column.Children.Add(hitFromWords);
-        column.Children.Add(Row(Distanced("At"), hitDistance, FieldLabel("Target"), hitShape, FieldLabel("Size"), hitWidth, hitHeight, hitSizeUnit));
-        column.Children.Add(Row(Measured("Crosswind, full value", BallisticMeasure.WindSpeed), hitWind, FieldLabel("Confidence preset"), hitPreset, FieldLabel("Shots in the string"), hitShots));
-        column.Children.Add(hitPresetWords);
-
-        // Entry 156 section 1: the figures nobody can measure, behind a disclosure so the screen is usable before somebody knows what a wind
-        // call uncertainty is. Section 7 item 1: each has a bias beside its standard deviation, the true value less the believed one.
-        var advanced = new StackPanel { Spacing = Tokens.Space4 };
-        advanced.Children.Add(Line("Each is one standard deviation of how far the truth may lie from what you believe, and a bias, the true value less the believed one, for something you know is off, such as a chronograph reading fast. A confidence preset sets the standard deviations; editing any of them makes it custom."));
-        advanced.Children.Add(Row(HitLabel(HitSource.Velocity, "Velocity SD, per shot"), hitVelocitySd, HitLabel(HitSource.Velocity, "bias"), hitVelocityBias));
+        // Entry 156 section 1: the figures nobody can measure, in a section of their own so the screen is usable before somebody knows what a
+        // wind call uncertainty is. Section 7 item 1: each has a bias beside its standard deviation, the true value less the believed one.
+        var unsure = new List<Control>
+        {
+            SettingRow(FieldLabel("Confidence preset"), hitPreset),
+            hitPresetWords,
+            Line("Each is one standard deviation of how far the truth may lie from what you believe, and a bias, the true value less the believed one, for something you know is off, such as a chronograph reading fast. A confidence preset sets the standard deviations; editing any of them makes it custom."),
+            SettingRow(HitLabel(HitSource.Velocity, "Velocity SD, per shot, and bias"), hitVelocitySd, hitVelocityBias),
+        };
         foreach (var source in HitStringSources)
         {
             var sd = Field();
@@ -98,20 +99,48 @@ public sealed partial class MainWindow
                 };
             }
 
-            advanced.Children.Add(Row(HitLabel(source, HitSourceLabel(source)), sd, HitLabel(source, "bias"), bias));
+            unsure.Add(SettingRow(HitLabel(source, HitSourceLabel(source) + ", and bias"), sd, bias));
         }
 
-        advanced.Children.Add(Row(HitLabel(HitSource.Zero, "Zero error, per axis SD"), hitZero));
-        advanced.Children.Add(Row(FieldLabel("Shot angle, degrees"), hitAngle, FieldLabel("Latitude, degrees"), hitLatitude, FieldLabel("Direction of fire, degrees from north"), hitAzimuth));
-        advanced.Children.Add(Line("Leave the latitude empty to leave the Earth's rotation out."));
-        advanced.Children.Add(Row(FieldLabel("Trials"), hitTrials, FieldLabel("Seed"), hitSeed));
-        advanced.Children.Add(Line("The same seed gives the same answer, so a result can be checked and a screenshot made again."));
-        hitAdvanced.Content = advanced;
-        column.Children.Add(hitAdvanced);
-        column.Children.Add(Row(Button("Work out the chance", FillHit)));
-        column.Children.Add(hitLines);
-        column.Children.Add(hitScatter);
-        column.Children.Add(hitCurve);
+        unsure.Add(SettingRow(HitLabel(HitSource.Zero, "Zero error, per axis SD"), hitZero));
+
+        left.Children.Add(Section("target", "The target", true, () => $"{Or(hitDistance)} {UnitSettings.Symbol(units.Distance)} · {hitShape.SelectedItem} {Or(hitWidth)}",
+            SettingRow(FieldLabel("Precision from"), hitFrom),
+            SettingRow(Angled("Rifle precision, per axis SD"), hitPrecision),
+            hitFromWords,
+            SettingRow(Distanced("At"), hitDistance),
+            SettingRow(FieldLabel("Target"), hitShape),
+            SettingRow(FieldLabel("Size"), hitWidth, hitHeight, hitSizeUnit),
+            SettingRow(Measured("Crosswind, full value", BallisticMeasure.WindSpeed), hitWind),
+            SettingRow(FieldLabel("Shots in the string"), hitShots)));
+        left.Children.Add(Section("unsure", "What you are unsure of", true, () => hitPreset.SelectedItem?.ToString() ?? "", [.. unsure]));
+        left.Children.Add(Section("simulation", "The shot and the simulation", false,
+            () => $"{(string.IsNullOrWhiteSpace(hitLatitude.Text) ? "no Earth rotation" : "Earth rotation")} · {Or(hitTrials)} strings, seed {Or(hitSeed)}",
+            SettingRow(FieldLabel("Shot angle, degrees"), hitAngle),
+            SettingRow(FieldLabel("Latitude, degrees"), hitLatitude),
+            SettingRow(FieldLabel("Direction of fire, degrees from north"), hitAzimuth),
+            Line("Leave the latitude empty to leave the Earth's rotation out."),
+            SettingRow(FieldLabel("Trials"), hitTrials),
+            SettingRow(FieldLabel("Seed"), hitSeed),
+            Line("The same seed gives the same answer, so a result can be checked and a screenshot made again.")));
+
+        middle.Children.Add(Heading("Hit probability"));
+        // Entry 247's addition, item 3: the answer in a card with the first round's chance as its lead value, the simulated first rounds on the
+        // target beside it, and what costs the most under both, largest first.
+        // Nothing is drawn until there is something to say: the card appears with its first line, the scatter with its first impacts.
+        var card = new Border { Child = new StackPanel { Spacing = Tokens.Space8, Children = { hitLead, hitLines } }, IsVisible = false, Classes = { AppStyles.ResultCard } };
+        hitLines.Children.CollectionChanged += (_, _) => card.IsVisible = hitLines.Children.Count > 0;
+        hitScatter.IsVisible = false;
+        hitScatter.Width = 300;
+        hitScatter.VerticalAlignment = VerticalAlignment.Top;
+        var results = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = Tokens.Space16 };
+        Grid.SetColumn(hitScatter, 1);
+        results.Children.Add(card);
+        results.Children.Add(hitScatter);
+        middle.Children.Add(Line(HitIntroduction));
+        middle.Children.Add(results);
+        middle.Children.Add(hitCosts);
+        middle.Children.Add(hitCurve);
 
         hitFrom.SelectionChanged += (_, _) =>
         {
@@ -284,7 +313,7 @@ public sealed partial class MainWindow
         ShowPresetWords();
     }
 
-    /// <summary>True while every figure under Advanced is still the preset's, within what the boxes' rounding and the unit toggle leave.</summary>
+    /// <summary>True while every figure under What you are unsure of is still the preset's, within what the boxes' rounding and the unit toggle leave.</summary>
     private bool MatchesPreset(int index)
     {
         var errors = HitPresets.All[index].Errors(HitYards ?? 600);
@@ -296,8 +325,8 @@ public sealed partial class MainWindow
     }
 
     private void ShowPresetWords() => hitPresetWords.Text = hitPreset.SelectedIndex >= 0 && hitPreset.SelectedIndex < HitPresets.All.Count
-        ? HitPresets.All[hitPreset.SelectedIndex].Situation + " Its figures are under Advanced."
-        : "Custom: one or more of the figures under Advanced has been edited.";
+        ? HitPresets.All[hitPreset.SelectedIndex].Situation + " Its figures are below."
+        : "Custom: one or more of the figures below has been edited.";
 
     /// <summary>Every box on the section that holds a difference, with the kind of quantity it is, so the unit toggle can rewrite it.</summary>
     private IEnumerable<(TextBox Box, HitSource Source)> HitBoxes()
@@ -435,8 +464,11 @@ public sealed partial class MainWindow
     internal void FillHit()
     {
         hitLines.Children.Clear();
+        hitLead.Children.Clear();
+        hitCosts.Children.Clear();
         hitScatter.First = [];
         hitScatter.Second = [];
+        hitScatter.IsVisible = false;
         hitCurve.Points = [];
         hitScatter.InvalidateVisual();
         hitCurve.InvalidateVisual();
@@ -545,6 +577,12 @@ public sealed partial class MainWindow
             hitLines.Children.Add(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
         }
 
+        var (leadValue, leadLower, leadUpper) = HitProbability.Percents(answer.FirstRound);
+        var lead = new TextBlock { Text = leadValue + " %", FontSize = Tokens.LeadValueSize, Classes = { AppStyles.HeadlineFigure } };
+        hitLead.Children.Add(new TextBlock { Text = "First round", Classes = { AppStyles.Label } });
+        hitLead.Children.Add(lead);
+        hitLead.Children.Add(new TextBlock { Text = $"{leadLower} to {leadUpper} percent", Classes = { AppStyles.Label } });
+
         string Points(double half) => HitText(Math.Round(100 * half, half >= 0.1 ? 0 : 1));
         var first = answer.FirstRound;
         string trials = answer.Trials.ToString("N0", CultureInfo.InvariantCulture);
@@ -560,11 +598,21 @@ public sealed partial class MainWindow
         }
 
         // Section 3 item 5: the output a shooter can act on, which input is costing the most.
-        hitLines.Children.Add(FieldLabel("What costs the most"));
+        // Each as a bar against the largest, largest first; those the simulation cannot tell apart from nothing carry no bar and come last.
+        hitCosts.Children.Add(FieldLabel("What costs the most"));
+        double most = answer.Costs.Count > 0 ? Math.Max(answer.Costs[0].Cost, 1e-9) : 1;
         foreach (var cost in answer.Costs)
         {
-            string costs = cost.Cost < first.MonteCarloHalfWidth ? "costs less than the simulation can tell apart" : $"costs {HitProbability.Percent(cost.Cost, first.MonteCarloHalfWidth)} points";
-            hitLines.Children.Add(Line($"{HitSourceName(cost.Source)}, drawn {(cost.PerShot ? "per shot" : "per string")}, {costs}; it spreads the first round {units.Length(cost.UpDownInches)} up and down and {units.Length(cost.AcrossInches)} across."));
+            bool apart = cost.Cost >= first.MonteCarloHalfWidth;
+            string costs = apart ? $"costs {HitProbability.Percent(cost.Cost, first.MonteCarloHalfWidth)} points" : "costs less than the simulation can tell apart";
+            hitCosts.Children.Add(Line($"{HitSourceName(cost.Source)}, drawn {(cost.PerShot ? "per shot" : "per string")}, {costs}; it spreads the first round {units.Length(cost.UpDownInches)} up and down and {units.Length(cost.AcrossInches)} across."));
+            if (apart)
+            {
+                double share = Math.Clamp(cost.Cost / most, 0.02, 1);
+                var bar = new Grid { ColumnDefinitions = new ColumnDefinitions($"{share.ToString("0.###", CultureInfo.InvariantCulture)}*,{(1 - share + 1e-3).ToString("0.###", CultureInfo.InvariantCulture)}*"), Margin = new Avalonia.Thickness(0, 0, 0, Tokens.Space4) };
+                bar.Children.Add(new Border { Height = 6, Classes = { AppStyles.ResultCard, AppStyles.Warn } });
+                hitCosts.Children.Add(bar);
+            }
         }
 
         hitLines.Children.Add(Line($"All together the first round spreads {units.Length(answer.UpDownInches)} up and down and {units.Length(answer.AcrossInches)} across, as standard deviations."));
@@ -576,6 +624,7 @@ public sealed partial class MainWindow
 
         hitLines.Children.Add(Note($"{trials} strings, seed {answer.Seed.ToString(CultureInfo.InvariantCulture)}: the same seed gives the same answer. " + string.Join(" ", BallisticSolver.NotModelled)));
         hitScatter.First = answer.FirstScatter;
+        hitScatter.IsVisible = answer.FirstScatter.Count > 0;
         hitScatter.Second = answer.SecondScatter;
         hitScatter.Target = setup.Target;
         hitScatter.Length = units.Length;
@@ -587,7 +636,7 @@ public sealed partial class MainWindow
     }
 
     /// <summary>What the section shows, for the headless tests.</summary>
-    internal IEnumerable<string> HitShown => hitLines.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+    internal IEnumerable<string> HitShown => new[] { hitLead, hitLines, hitCosts }.SelectMany(p => p.GetLogicalDescendants().OfType<TextBlock>()).Select(t => t.Text ?? "");
 
     /// <summary>What the scatter and the curve say they show, for the headless tests.</summary>
     internal (string Scatter, string Curve) HitDrawings => (hitScatter.Description, hitCurve.Description);

@@ -28,11 +28,12 @@ public class BallisticUnitsTests
     /// <summary>The box that follows a label in its row. Several fields share a row, so the first box in the row is not always the right one.</summary>
     private static TextBox Box(MainWindow window, string label)
     {
-        foreach (var row in window.GetLogicalDescendants().OfType<Avalonia.Controls.WrapPanel>())
+        // Entry 247: a setting is a row of its own now, the label on the left and its box beside it, inside a panel of its own.
+        foreach (var row in window.GetLogicalDescendants().OfType<Avalonia.Controls.Panel>())
         {
             var children = row.Children.ToList();
             int at = children.FindIndex(c => c is TextBlock text && (text.Text ?? "").StartsWith(label, StringComparison.Ordinal));
-            if (at >= 0 && children.Skip(at + 1).OfType<TextBox>().FirstOrDefault() is { } box)
+            if (at >= 0 && children.Skip(at + 1).SelectMany(c => c is TextBox own ? [own] : c.GetLogicalDescendants().OfType<TextBox>()).FirstOrDefault() is { } box)
             {
                 return box;
             }

@@ -57,15 +57,19 @@ source that is not on the list below, or if any test writing into this folder co
 | `compare-light-2560x1440.png` | Alan's own scans, entry 171 |
 | `equipment-dark-1280x720.png` | no sheet at all |
 | `equipment-dark-1400x900.png` | no sheet at all |
+| `equipment-dark-1920x1080.png` | no sheet at all |
 | `equipment-dark-2560x1440.png` | no sheet at all |
 | `equipment-light-1280x720.png` | no sheet at all |
 | `equipment-light-1400x900.png` | no sheet at all |
+| `equipment-light-1920x1080.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
 | `targets-dark-1280x720.png` | built-in library sheet |
 | `targets-dark-1400x900.png` | built-in library sheet |
+| `targets-dark-1920x1080.png` | built-in library sheet |
 | `targets-dark-2560x1440.png` | built-in library sheet |
 | `targets-light-1280x720.png` | built-in library sheet |
 | `targets-light-1400x900.png` | built-in library sheet |
+| `targets-light-1920x1080.png` | built-in library sheet |
 | `targets-light-2560x1440.png` | built-in library sheet |
 | `marking-dark-1280x720.png` | Entry109Tests synthetic sheet |
 | `marking-dark-1400x900.png` | Entry109Tests synthetic sheet |
@@ -93,13 +97,17 @@ source that is not on the list below, or if any test writing into this folder co
 | `settings-light-2560x1440.png` | no sheet at all |
 | `optic-dark-1280x720.png` | sheet made by the generator |
 | `optic-dark-1400x900.png` | sheet made by the generator |
+| `optic-dark-1920x1080.png` | sheet made by the generator |
 | `optic-dark-2560x1440.png` | sheet made by the generator |
 | `optic-light-1280x720.png` | sheet made by the generator |
 | `optic-light-1400x900.png` | sheet made by the generator |
+| `optic-light-1920x1080.png` | sheet made by the generator |
 | `optic-light-2560x1440.png` | sheet made by the generator |
 | `optic-4x-dark-1280x720.png` | sheet made by the generator |
 | `optic-4x-dark-1400x900.png` | sheet made by the generator |
+| `optic-4x-dark-1920x1080.png` | sheet made by the generator |
 | `optic-4x-dark-2560x1440.png` | sheet made by the generator |
 | `optic-4x-light-1280x720.png` | sheet made by the generator |
 | `optic-4x-light-1400x900.png` | sheet made by the generator |
+| `optic-4x-light-1920x1080.png` | sheet made by the generator |
 | `optic-4x-light-2560x1440.png` | sheet made by the generator |

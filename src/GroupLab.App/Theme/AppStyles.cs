@@ -129,6 +129,15 @@ public static class AppStyles
     /// </summary>
     public const string DropTarget = "drop-target";
 
+    /// <summary>
+    /// The chosen button of a switch, entry 247: the amber tint a checked toggle has, so the one solid amber button on a screen stays the
+    /// primary action. The Ballistics screen's units, its two views and the trajectory's series each show their choice this way.
+    /// </summary>
+    public const string Chosen = "chosen";
+
+    /// <summary>A card holding a result on the Ballistics screen's middle, entry 247: the page's own background, a hairline and the radius.</summary>
+    public const string ResultCard = "result-card";
+
     /// <summary>A status word in the review list or on a chip, NOW or NEXT in amber, DONE in teal.</summary>
     public const string StatusWord = "status-word";
 
@@ -221,6 +230,14 @@ public static class AppStyles
         Rule(x => x.OfType<Button>().Class(TableRow), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.CornerRadiusProperty, new CornerRadius(0)), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space4, 2)), (Layoutable.MarginProperty, new Thickness(0)), (TemplatedControl.FontSizeProperty, Tokens.DetailSize)),
         Rule(x => x.OfType<Button>().Class(TableRow).Class(Shaded), (TemplatedControl.BackgroundProperty, Brush(p.Panel2))),
         Rule(x => x.OfType<Button>().Class(TableRow).Class(Warn), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint))),
+
+        // The Ballistics table's rows, entry 247: clear so a click anywhere on one lands, and the chosen range's row in the tint.
+        Rule(x => x.OfType<Border>().Class(TableRow), (Border.BackgroundProperty, Tokens.Clear)),
+        Rule(x => x.OfType<Border>().Class(ResultCard), (Border.BackgroundProperty, Brush(p.Bg)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(1)),
+            (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
+        Rule(x => x.OfType<Border>().Class(ResultCard).Class(Warn), (Border.BackgroundProperty, Brush(p.Amber)), (Border.BorderThicknessProperty, new Thickness(0)),
+            (Border.CornerRadiusProperty, new CornerRadius(2)), (Border.PaddingProperty, new Thickness(0))),
+        Rule(x => x.OfType<Border>().Class(TableRow).Class(Warn), (Border.BackgroundProperty, Brush(p.AmberTint))),
         Rule(x => x.OfType<Border>().Class(ViewCluster), (Border.BackgroundProperty, new SolidColorBrush(p.Panel, 0.92)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space4)), (Layoutable.MarginProperty, new Thickness(Tokens.Space12))),
         Rule(x => x.OfType<Border>().Class(Ruled), (Border.BorderBrushProperty, Brush(p.Line2))),
         Rule(x => x.OfType<TextBlock>().Class(Secondary), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
@@ -251,6 +268,8 @@ public static class AppStyles
         Rule(x => x.OfType<Button>().Class(RailButton), (TemplatedControl.BackgroundProperty, Brush(p.Panel)), (TemplatedControl.BorderBrushProperty, Brush(p.Panel)), (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.FontSizeProperty, Tokens.LabelSize), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space8, Tokens.Space8)), (Layoutable.MarginProperty, new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, 0))),
         Rule(x => x.OfType<Button>().Class(RailButton).Class(Warn), (TemplatedControl.ForegroundProperty, Brush(p.Amber)), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint)), (TemplatedControl.BorderBrushProperty, Brush(p.AmberTintBorder))),
         Rule(x => x.OfType<Border>().Class(Breadcrumb), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)), (Border.BorderThicknessProperty, new Thickness(0, 0, 0, 1)), (Border.PaddingProperty, new Thickness(Tokens.Space12, Tokens.Space8))),
+        Rule(x => x.OfType<Button>().Class(Chosen), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint)), (TemplatedControl.ForegroundProperty, Brush(p.Amber)),
+            (TemplatedControl.BorderBrushProperty, Brush(p.AmberTintBorder))),
         Rule(x => x.OfType<Button>().Class(Primary), (TemplatedControl.BackgroundProperty, Brush(p.Amber)), (TemplatedControl.ForegroundProperty, Brush(p.OnAmber)), (TemplatedControl.BorderBrushProperty, Brush(p.Amber)), (TemplatedControl.FontWeightProperty, FontWeight.SemiBold)),
         Rule(x => x.OfType<Border>().Class(Keycap), (Border.BackgroundProperty, Brush(p.Sunk)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.SurfaceRadius), (Border.PaddingProperty, new Thickness(Tokens.Space4, 0)), (Layoutable.MarginProperty, new Thickness(Tokens.Space8, 0, 0, 0))),
         Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),

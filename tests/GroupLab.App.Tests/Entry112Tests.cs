@@ -395,7 +395,7 @@ public class Entry112Tests
                 (load.MuzzleVelocityFps, load.BallisticCoefficient, load.DragModel, load.BcReference, load.BulletWeightGrains));
 
             var rows = window.DopeRows;
-            Assert.Equal("range, yd | drop, in | elevation, MOA | clicks | 10 mph wind, in | windage, MOA | clicks", rows[0]);
+            Assert.Equal("range, yd | drop, in | elevation, MOA | clicks | 10 mph wind, in | windage, MOA | clicks into wind | velocity, ft/s | energy, ft lb", rows[0]);
             var solver = GroupLab.Core.Ballistics.SolverUse.Dope(GroupLab.Core.Ballistics.SolverUse.Input(rifle, load, new GroupLab.Core.Ballistics.AirInput())!, 600, 100);
             for (int i = 1; i <= 6; i++)
             {

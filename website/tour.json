@@ -371,60 +371,60 @@
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [
-     "Units",
-     "Imperial or metric, for this page."
+     "Along the top",
+     "The rifle and load, chosen from what you recorded on the equipment screen, Imperial or metric, and the one amber button: Work out the table, or Work out the chance in the hit probability view."
     ],
     [
-     "Rifle and Load",
-     "Chosen from what you recorded on the equipment screen. The fields below fill themselves in from those records."
-    ],
-    [
-     "The rifle",
-     "Sight height, zero distance, barrel twist and its direction. Twist is what lets it work out spin drift."
-    ],
-    [
-     "The load",
-     "Muzzle velocity and its standard deviation, ballistic coefficient, drag model and the atmosphere the coefficient was measured in, bullet weight, length and diameter."
-    ],
-    [
-     "The air",
-     "Temperature, station pressure, altitude and humidity. Leave the pressure empty to take it from the altitude."
+     "The rifle, The load, The air, The table",
+     "The settings on the left, in sections that fold and say what they hold in one line when folded. GroupLab remembers which you left open. A field the solver still needs says needed beside it, and its section opens."
     ],
     [
      "Keep these on the records",
      "Writes what you have typed back to the rifle and load, so you do not type it again."
     ],
     [
-     "Dope table",
-     "To what distance, and in what steps. Work out the table fills the chart."
+     "Trajectory or Hit probability",
+     "The two views of the middle, chosen at its top and remembered."
     ],
     [
      "Drop, Wind drift, Velocity, Energy",
-     "Four views of the same trajectory. The chart marks your zero."
+     "Four views of the same trajectory on a large chart. It marks your zero and the range chosen on the right; clicking a point chooses it."
     ],
     [
-     "The analyzed group at another distance",
-     "The group open in the analysis carried through the solver to a distance you name, labeled a prediction, with its sigma there and its interval."
+     "Dope table",
+     "Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step. Clicking a row chooses that range, and its row is highlighted."
+    ],
+    [
+     "At one range",
+     "The right column: the elevation for one range in large amber figures with its clicks and drop, then the wind, velocity, energy, time of flight and stability. Stability says what it needs when the twist is empty."
+    ],
+    [
+     "The analyzed group there",
+     "The group open in the analysis carried through the solver to that range, labeled a prediction, with its sigma there and its interval."
+    ],
+    [
+     "The target, What you are unsure of",
+     "The hit probability view's settings: the target, its distance, which is the range on the right, and where the precision comes from; then a confidence preset for everything nobody can measure, with each figure and a bias beside it for something you know is off."
     ],
     [
      "Hit probability",
-     "The chance of a hit on a circle, a rectangle or an IPSC outline, from the rifle precision you measured, the load's velocity spread and a confidence preset for everything nobody can measure. First and second round sit beside the elevation and wind for the distance, each with its interval."
+     "A card that leads with the first round's chance and its interval, then the second round, corrected from the first, beside the simulated first rounds drawn on the target."
     ],
     [
      "What costs the most",
-     "Every error source by the hits it takes away, so you can see whether the wind call, the load or the range estimate is what to work on."
+     "Every error source by the hits it takes away, largest first with a bar for each, so you can see whether the wind call, the load or the range estimate is what to work on."
     ],
     [
-     "Advanced",
-     "Each uncertainty the preset set, a bias beside it for something you know is off, the zero error, the latitude, and the trials and seed that make a result repeatable."
+     "The shot and the simulation",
+     "Folded until you want it: the shot angle, latitude and direction of fire, and the trials and seed that make a result repeatable."
     ]
    ],
    "steps": [
-    "Choose the rifle and load.",
-    "Fill in anything the record is missing; the page names the field when it cannot solve.",
+    "Choose the rifle and load along the top.",
+    "Fill in anything the record is missing; a field the solver needs says so in its row.",
     "Set the air, or leave the pressure empty and give the altitude.",
-    "Set the distance and step, press Work out the table, and switch between drop, drift, velocity and energy.",
-    "For a hit probability, set the distance and the target, choose the confidence preset closest to your situation, and press Work out the chance."
+    "Set the distance and step, press Work out the table, and click a row or a point on the chart to see that range on the right.",
+    "For a hit probability, switch the middle to Hit probability, set the target, choose the confidence preset closest to your situation, and press Work out the chance."
    ],
    "fits": "Takes its inputs from <a href=\"/tour/equipment/\">equipment</a>. It does not feed back into a marking or an analysis.",
    "links": [

@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1133 |
+| code | 1134 |
 | measured | 1509 |
 | decided | 1201 |
 | unbacked | 0 |
-| **total** | **3843** |
+| **total** | **3844** |
 
-**623** of them were read one sentence at a time and their backing written against the sentence. The other **3220** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**624** of them were read one sentence at a time and their backing written against the sentence. The other **3220** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2911,8 +2911,9 @@ one that matters.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): ![Session records](figures/screens/current/sessions-light-1400x900.png) The analysis's Report button saves the session as a PDF: - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): - **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Two loads compared](figures/screens/current/compare-light-1400x900.png) **The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads.
-- *code* (the Ballistics screen, src/GroupLab.App/MainWindow.Ballistics.cs): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter.
-- *code* (the Ballistics screen's hit probability, src/GroupLab.App/MainWindow.Hit.cs, its costs from HitProbability, entry 156): - **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
+- *code* (src/GroupLab.App/MainWindow.BallisticsLayout.cs BallisticBar, BallisticSection, AtOneRange, ArrangeBallistics; tests/GroupLab.App.Tests/Entry247Tests.cs; entry 247): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **How the screen is laid out.** Three columns, like the analysis: - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes **Work out the chance** in the hit probability view.
+- *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
+- *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): - **What costs the most** lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
 - *code* (src/GroupLab.Core/Marking/SetPool.cs; src/GroupLab.App/MainWindow.Compare.cs PoolChosen; SetPoolTests and PoolSetTests (entry 243 section 3.1)): Analyze each sheet as usual, in any order, then in **Session records** tick them and choose **Pool the chosen**: GroupLab reads them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of the bulls the set holds.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.

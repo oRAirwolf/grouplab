@@ -59,6 +59,33 @@ next desktop work; the Android part with the real application.
 
 **Request 30** asks for the older test phones' models, Android versions and whether they still work.
 
+## Entry 247: the desktop Ballistics screen as concept B
+
+**Layout.** Three columns as on the analysis screen (`MainWindow.BallisticsLayout.cs`). The top bar holds the pickers, the unit switch and
+the one solid amber button; a chosen switch (units, the two views, the chart's series) is the amber tint, a new `chosen` style, so the
+primary stays the only solid amber in every theme (`InEveryThemeThePrimaryIsTheOnlySolidAmber`, dark, light and high contrast). The left
+is labeled rows in sections that fold, remember, and say what they hold in one line; a field the solver needs says "needed" and opens its
+section. The middle is the chart, now clickable, and the table with velocity and energy columns and the chosen row in the tint; the
+windage clicks column holds the count, its direction in the heading. The right is "At one range", elevation at the lead size in amber,
+then figure rows, then the analyzed group carried there. A sentence such as what stability needs reads under its name, not squeezed right.
+
+**The hit probability view.** The middle's second view, remembered. In it the rifle, load and air fold to their summaries and come back as
+left; The target and What you are unsure of open, The shot and the simulation folded. The answer is a card leading with the first round's
+chance, the scatter beside it, and What costs the most under both with a bar for each cost the simulation can tell apart; card and
+scatter appear only once there is something in them. The target's distance and the range on the right are one field in effect. "Advanced"
+no longer exists, so the preset's sentence says its figures are below.
+
+**Held.** Three columns at 1280, 1400, 1920 and 2560, the right under the middle at 960; a needed field marked in its row; a chosen range
+worked out on the right with the hit's distance following; the view switch; the hit view's folding. Nothing the solver or the simulation
+computes changed: `Entry112Tests`, `Entry113Tests` and `Entry156Tests` pass with only the table's heading changed.
+
+**Screenshots.** The walk (`Entry109Tests`) now also makes 1920 by 1080, which the Store listing uses and which had fallen out of it at
+entry 112; the committed 1920 set is current again, eight new with their `SOURCES.md` rows. Before and after in `for-alan.md`. The tour's
+Ballistics page and the user guide's section 8 describe the new layout.
+
+**Also in this commit.** The red CI on 8eb2396 was `StateFileTests.ItsInboxListIsWhatTheInboxHolds`: STATE listed the four uncommitted
+inbox files; it now reads what the repository holds.
+
 ## Entry 245: question 63 answered, and where the load goes on a set
 
 (a), as built: 2 by 4, 8 a sheet, 32 a set, no sighters and no load block. `LibrarySheet.Summary`, which the desktop's Targets screen and

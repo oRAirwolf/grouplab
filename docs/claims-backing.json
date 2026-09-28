@@ -2516,6 +2516,18 @@
   "**Look and icon** (entries 246 and 248): the phone uses the desktop's styles and tokens with look B's cards on top of them, as DESIGN.md section 19 describes, and its icons, GroupLab's dark and GroupLab Dev's light, adaptive with a monochrome layer and PNGs for older launchers, are written by `scripts/android-icons.py` from the desktop's mark.": {
    "kind": "code",
    "where": "android/GroupLab.Android/PhoneStyles.cs and App.cs PhoneStyles.Apply; scripts/android-icons.py and android/GroupLab.Android/Resources/mipmap-*; held by Entry234Tests (entries 246 and 248)"
+  },
+  "![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **How the screen is laid out.** Three columns, like the analysis: - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes **Work out the chance** in the hit probability view.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.BallisticsLayout.cs BallisticBar, BallisticSection, AtOneRange, ArrangeBallistics; tests/GroupLab.App.Tests/Entry247Tests.cs; entry 247"
+  },
+  "**The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs"
+  },
+  "- **What costs the most** lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first"
   }
  },
  "rules": [

@@ -9,15 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 245.
+**Last rewritten:** 2026-09-28, after entry 247.
 
 ---
 
 ## In flight
 
-- Done: everything through entry 244, the server sitting included, apart from what the status lines name: device measurements and
-  tablet screenshots on request 45 (238 to 240, 242, 243 section 3.3), the phone's look on request 49
-  (243 section 3.5), the website generator (question 62 (b), later). 244: the README is generated in part and held by CI.
+- Done: everything through 245, and 247 (the desktop Ballistics screen as concept B, three columns, a Hit probability view).
+  **246 and 248 wait on the second device sitting**: look B on the tablet and both home screens' icons, once nightly 115 carries
+  them; then requests 45 and 49 close. **249** (a Desktop | Mobile switch on the tour and Features page) comes after those screenshots.
 - **Entry 243 built:** pooling a set's sheets, progress and Cancel everywhere, the phone's Targets screen and side by side on big screens,
   E and C bulls beside the usual one (C a diamond standing on a point: the format's first square, rules 20a and 20b), and the large
   format sheets as 2 by 2 Letter and A4 sets (originals frozen in `targets/frozen/large-format-1`; question 63).
@@ -36,8 +36,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Minimums** are in PLATFORM-SUPPORT.md (entry 207): Android 10, 4 GB; the survey (`docs/SURVEY.md`) is open since entry 223.
 - **Android**: the app `org.grouplab.app`, signed in every nightly since 110; detection runs on the Fold 7. Now ships the frozen
   definitions too. **A public Play listing waits on the attorney's review of the GPL app store permission.**
-- **Both devices are off adb until request 45**; GroupLab Dev (`org.grouplab.app.dev`) is built by the nightly from entry 234.
-- **The Fold 7 and the Tab S8 Ultra run nightly 111**, side-loaded (entries 235, 236); the tablet only for layout work.
+- **The first device sitting of 246 ran** (2026-09-28): the Fold's benchmark and memory, GroupLab Dev, look B checked on the Fold.
+  Both run nightly 111 side-loaded; the second sitting installs 115 over it, the same key. The tablet was locked for B.
 - **The Play internal test ran on the Fold 7** (entry 232). Alan installed it from Play too (entry 231); `docs/ANDROID.md` section 12
   has the link, the uninstall-first rule and the symbols zip each nightly now makes. Automatic Play upload waits on request 38.
 - **The survey page is live** (entry 241): grouplab.org/survey/, its worker installed on 2026-09-27; counting restarted under the
@@ -65,8 +65,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 sections 3.2 and 5.** Request 16: the Mac tester's measurement and his name for a thanks.
 
-Open requests in `docs/notes/for-alan.md`: **9** (45 reconnect the Fold 7 and the tablet; 49 choose the phone's look, A, B or C;
-46 one look at the backups on 4 October; 38 the Store; 44 one line off the Fold 7; 33 the Fold 7's camera; then 9, 16 and 20).
+Open requests in `docs/notes/for-alan.md`: **8** (45 and 49 close after the second sitting; 46 the backups on 4 October; 38 the
+Store; 33 the Fold 7's camera; then 9, 16 and 20).
 
 ## Open questions
 
@@ -80,7 +80,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 63 were answered by entries
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.114, from 08dca80: entries 243 and 244, the C bull, and the phone's close report (error issue 6, closed).
+- **Last nightly:** 0.2.0-nightly.114. 115 was skipped: CI on 8eb2396 was red on this file's inbox line, fixed by entry 247's commit.
 - **The site serves the newest commit that touched it.** Notes commits do not start the site workflow; a publish is started by hand.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
@@ -90,7 +90,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md`; 57 to 63 were answered by entries
 they differ. The planning session's files are not committed, so while a run is working through them the
 line reads what the repository holds, and the test fails locally until the last is done.
 
-**Holds:** 246, 247, 248, 249
+**Holds:** none
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -99,7 +99,8 @@ line reads what the repository holds, and the test fails locally until the last 
 - **A QR code's bytes can arrive as UTF-8** from OpenCV; the reader now takes the reading that can be right (entry 243 section 4).
 - **A zeroing grid is now drawn by its style**: style 2's strokes, labels, statement and ruler are fixed by `GridStyle2`, and a
   label breaks the line behind it on purpose.
-- **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted, since the backup rule of entry 222.
+- **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
+- **One solid amber button a screen**: a chosen switch is the tint, `AppStyles.Chosen` (entry 247).
 - **An error GroupLab survives is no longer called a close** (entry 192); each run leaves a marker so a real close is caught.
 - **A size is an angle first** wherever the distance is known, the size on the paper beneath (entry 189).
 - **The upload page asks for one of two consent levels**, and a testing only target can never reach `samples/` or the site (entry 165).

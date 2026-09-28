@@ -208,27 +208,45 @@ All of it is optional. A record without what the solver needs says which field i
 
 ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)
 
-**The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, in the air you enter. Aerodynamic jump is not modeled, and the table says so.
+**How the screen is laid out.** Three columns, like the analysis:
+- **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes
+  **Work out the chance** in the hit probability view.
+- **On the left:** the settings in sections that fold, **The rifle**, **The load**, **The air** and **The table**. A folded section
+  says what it holds in one line, and GroupLab remembers which you left open. A field the solver still needs says "needed" beside it,
+  and its section opens.
+- **In the middle:** **Trajectory** or **Hit probability**, chosen at the top and remembered. The trajectory is a large chart of drop,
+  wind drift, velocity or energy with the zero marked, and the dope table under it.
+- **On the right, At one range:** the elevation for one range in large amber figures, with the clicks and the drop under it, then the
+  wind, velocity, energy, time of flight and stability. Clicking a row of the table or a point on the chart sets the range, and its row
+  is highlighted. Under it, the analyzed group carried to that range.
+
+On a narrow window the side columns shrink, and below that the right column moves under the middle.
+
+**The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter. Aerodynamic jump is not modeled, and the table says so.
 
 **At another distance.** On the analysis, the zero correction can be carried to a second distance, with its uncertainty carried with it. An offset that could not be told from zero is not carried.
 
 The ballistics screen also carries the analyzed group to another distance, as a prediction and never a measurement. With neither a velocity
 spread nor a crosswind uncertainty given, it is the group scaled by angle and nothing more.
 
-**Hit probability.** Below that, the screen works out the chance of a hit on a circle, a rectangle or an IPSC outline at a distance:
+**Hit probability.** The middle's second view works out the chance of a hit on a circle, a rectangle or an IPSC outline at a distance. In
+it the rifle, the load and the air fold to their one-line summaries, and the left holds **The target**, **What you are unsure of** and
+**The shot and the simulation**. The target's distance and the range on the right are the same, so the hold shown and the chance are
+for the same shot:
 - **Rifle precision** fills itself from the group open in the analysis, or from every saved session of the chosen load pooled, or you type
   it. It is the per axis standard deviation of your shots as an angle, which is sigma, never a group size.
 - The muzzle velocity's spread comes from the load, and the **zero error** starts at the uncertainty in your group's center.
 - A **confidence preset** sets everything nobody can measure at once, from a known distance with the air measured to a guessed distance
-  and a guessed wind. Under Advanced each figure can be edited, with a bias for something you know is off, such as a chronograph reading
+  and a guessed wind. Under it each figure can be edited, with a bias for something you know is off, such as a chronograph reading
   fast.
-- The answer sits beside the elevation and the wind for that distance: the **first round**, and the **second round** fired after you saw
+- The answer is a card that leads with the **first round**'s chance in large figures, then the **second round** fired after you saw
   where the first landed and dialed off its miss. Each comes with its interval, and the screen says whether the interval is mostly your
   precision's own uncertainty or the simulation's.
-- **What costs the most** lists every error source by the hits it takes away, so you can tell whether to practice wind calls, work on the
-  load or buy a rangefinder.
+- **What costs the most** lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether
+  to practice wind calls, work on the load or buy a rangefinder.
 - For a string of several shots on one reading it gives the chance of at least one hit and the hits to expect.
-- The simulated impacts are drawn over the target, and a curve shows the chance against distance with its interval as a band.
+- The simulated impacts are drawn over the target beside the card, and a curve shows the chance against distance with its interval as a
+  band.
 
 A wind call is drawn once for a whole string, never per shot, because every shot you fire on one reading shares its error. When the group
 behind the precision is too small to say anything, the screen says so and how many shots would make it mean something. The same seed gives

@@ -24,6 +24,61 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 247: the desktop Ballistics screen redesigned, concept B
+
+**Status: done 2026-09-28.** Every item and the whole addition. Built before entry 246's second device sitting, which waits for nightly 115 to carry look B and the icon, rather than after it as the entry asked: the order changes nothing either depends on.
+
+Alan: the Ballistics screen "is very poorly laid out and wastes horizontal space and has no sections." The planning session drew three
+concepts on a private design page (https://claude.ai/artifact/Je8n3dAoKxwygmviw9UnHR, beside a screenshot of the screen today) and Alan
+chose **B, laid out like the analysis screen**. CLAUDE.md's rule that the look changes only with Alan is met by this choice. Build it on
+the desktop from the existing tokens (DESIGN.md section 19); the concept's colors were drawn from that section by hand, so where a hairline
+or dim text differs, the tokens win.
+
+What B is:
+1. **Top bar:** the breadcrumb, then the Rifle and Load pickers, the Imperial and Metric toggle, and the one amber primary action, "Work out
+   the table".
+2. **Left column (about 300 wide), settings as labeled rows** (dim label left, mono field right), in collapsible sections that remember
+   whether they were open: **The rifle** (sight height, zero, twist and direction), **The load** (muzzle velocity, its SD, BC, drag model,
+   reference atmosphere, weight, length, diameter, and "Keep these on the records"), **The air** (temperature, station pressure, altitude,
+   humidity, with the "leave pressure empty" note), **The table** (to and every). A collapsed section shows a one-line summary ("59 °F ·
+   0 ft · 50 % · pressure from altitude"). A field the solver still needs is marked in its row, and the section it is in opens.
+3. **Middle, the work:** "Trajectory" with the Drop, Wind, Velocity and Energy toggle, a large chart that uses the width, the zero line
+   marked, and the chosen range marked on the curve with its value; under it the full dope table (range, drop, elevation, clicks, 10 mph
+   wind, windage, clicks, velocity, energy), no borders, every other row shaded, the chosen range's row highlighted. The sentences the
+   table carries today (zero, air, clicks, stability, spin drift not in the wind column, what is not modelled) sit under the table.
+4. **Right column (about 330 wide), "At one range":** a range field; **elevation as the lead value in amber** with clicks and drop under it;
+   then wind for 10 mph, velocity, energy, time of flight and stability as figure rows (stability says what it needs when twist is empty).
+   Clicking a table row or a point on the curve sets the range. Below: **"The analyzed group there"**, today's "analyzed group at another
+   distance" (crosswind uncertainty, Work it out, its predicted size and hit probability, "never a measurement").
+5. **Narrow windows:** the same rule as question 58's answer: the side columns shrink toward their minimums, and below that the right
+   column moves under the middle.
+6. Light, dark and high contrast; the screenshots job redoes the Ballistics screenshots at every size; the tour and Features page use the
+   new ones; the user guide's Ballistics section is updated.
+7. Nothing the solver computes changes; headless tests hold the layout at 1280, 1400, 1920 and 2560 and at 960, as the analysis screen's
+   do. Report with before and after screenshots in for-alan.md.
+
+Do it after entry 246's phone and tablet work and design B for the phone, which are separate.
+
+## Addition: where the hit probability calculator goes (Alan asked; drawn as artboard "B: the Hit probability view")
+
+The first B drawing left entry 156's hit probability section out; it is far too large for the right column. In B it becomes a **second
+view of the middle area**, chosen by a two-way switch at the top of the middle, **Trajectory | Hit probability**, remembered between
+sessions:
+1. **Left column, in Hit probability view:** The rifle, The load and The air collapse to their one-line summaries; two sections open:
+   **The target** (distance, target shape, size, precision from, shots in the string, crosswind full value) and **What you are unsure
+   of** (the confidence preset, then each source as a row with its SD and bias side by side), with **The shot and the simulation** (shot
+   angle, latitude, direction of fire, trials, seed) collapsed to a summary.
+2. **Top bar's primary action** becomes "Work out the chance" in this view.
+3. **Middle:** a results card with the first round's chance as the lead value and its interval, then second round corrected, at least one
+   hit in the string, hits expected with interval, and the first round's spread, followed by the sentence that says where most of the
+   interval comes from; beside it, **a picture of where simulated first rounds land on the target outline** (from the simulation's own
+   strings, a few hundred drawn, with the target to scale) if the simulation can give the points without slowing it; and under both,
+   **"What costs the most"** as horizontal bars, largest first, each labeled with its points and the "less than the simulation can tell
+   apart" group last.
+4. **Right column** stays "At one range", and the target's distance follows it, so the hold shown and the chance are for the same shot.
+5. The footer carries the trials and seed sentence.
+Nothing the simulation computes changes. Same themes, narrow-window rule, screenshots and tests as the rest of B.
+
 ## 2026-09-28, entry 245: question 63 answered
 
 **Status: done 2026-09-28.**

@@ -54,7 +54,7 @@ public sealed partial class MainWindow
     private double? carryYards;
     private bool fillingBallistics;
 
-    private static TextBox Field(string text = "") => new() { Width = 110, Text = text };
+    private static TextBox Field(string text = "") => new() { Width = 96, Text = text, HorizontalContentAlignment = HorizontalAlignment.Right };
 
     /// <summary>What a box holds, turned into the imperial value the records and the solver use, or null where it holds nothing usable.</summary>
     private double? Imperial(TextBox box, BallisticMeasure measure) =>
@@ -65,13 +65,9 @@ public sealed partial class MainWindow
 
     private Control BuildBallistics()
     {
-        var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space8, MaxWidth = 1100, HorizontalAlignment = HorizontalAlignment.Left };
-        column.Children.Add(new TextBlock { Text = "Ballistics", Classes = { AppStyles.Title } });
-        column.Children.Add(Line("The solver's trajectory for a rifle and load. What it needs is kept on the records, and all of it is optional: a record without it cannot use the solver, and this says which field is missing."));
-        // Entry 131 section 8: the imperial and metric toggle, at the top where Alan's own calculator has it. It moves the whole
-        // application's units, because a page in one system and a panel in another is how somebody reads a number as the wrong thing.
-        var toggle = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4 };
-        toggle.Children.Add(new TextBlock { Text = "Units", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Label } });
+        // Entry 131 section 8: the imperial and metric toggle. It moves the whole application's units, because a page in one system and a
+        // panel in another is how somebody reads a number as the wrong thing. Entry 247: it sits in the top bar, as concept B has it.
+        var toggle = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 0 };
         foreach (var (name, chosen) in new[] { ("Imperial", UnitSettings.Imperial), ("Metric", UnitSettings.Metric) })
         {
             var button = new Button { Content = name, Name = "BallisticUnits" + name };
@@ -80,8 +76,6 @@ public sealed partial class MainWindow
             toggle.Children.Add(button);
         }
 
-        column.Children.Add(toggle);
-        column.Children.Add(Row(FieldLabel("Rifle"), ballisticRifle, FieldLabel("Load"), ballisticLoad));
         foreach (var combo in new[] { ballisticRifle, ballisticLoad })
         {
             combo.SelectionChanged += (_, _) =>
@@ -93,52 +87,72 @@ public sealed partial class MainWindow
             };
         }
 
-        column.Children.Add(Heading("The rifle"));
-        column.Children.Add(Row(Measured("Sight height", BallisticMeasure.SmallLength), sightHeight, Distanced("Zero distance"), zeroDistance));
-        column.Children.Add(Row(Measured("Twist", BallisticMeasure.SmallLength, " per turn"), twist, twistDirection));
-        column.Children.Add(Heading("The load"));
-        column.Children.Add(Row(Measured("Muzzle velocity", BallisticMeasure.Speed), muzzleVelocity, Measured("Its standard deviation", BallisticMeasure.Speed), muzzleVelocitySd));
-        column.Children.Add(sdFrom);
-        column.Children.Add(Row(FieldLabel("BC"), ballisticCoefficient, FieldLabel("Drag model"), dragModel, FieldLabel("Its reference atmosphere"), bcReference));
-        // Grains stay grains on both sides of the toggle: a reloader weighs in grains whatever else they measure in.
-        column.Children.Add(Row(FieldLabel("Bullet weight, gr"), bulletWeight, Measured("Length", BallisticMeasure.SmallLength), bulletLength, Measured("Diameter", BallisticMeasure.SmallLength), bulletDiameter));
-        column.Children.Add(Row(Button("Keep these on the records", KeepBallistics)));
-        column.Children.Add(Heading("The air"));
-        column.Children.Add(Row(Measured("Temperature", BallisticMeasure.Temperature), airTemperature, Measured("Station pressure", BallisticMeasure.Pressure), airPressure,
-            Measured("Altitude", BallisticMeasure.Altitude), airAltitude, FieldLabel("Humidity, %"), airHumidity));
-        column.Children.Add(Line("Leave the pressure empty to take it from the altitude. The zero correction on the analysis carries in this air too."));
-        column.Children.Add(Heading("Dope table"));
-        column.Children.Add(Row(Distanced("To"), dopeTo, FieldLabel("Every"), dopeStep, Button("Work out the table", FillDope)));
+        // The left: settings as labelled rows in sections that fold, entry 247 item 2. A folded section says what it holds in one line.
+        // The rifle, the load and the air serve both views; the table is the trajectory's and the rest the hit's.
+        sharedLeft.Children.Add(Section("rifle", "The rifle", true, RifleSummary,
+            SettingRow(Measured("Sight height", BallisticMeasure.SmallLength), sightHeight),
+            SettingRow(Distanced("Zero distance"), zeroDistance),
+            SettingRow(Measured("Twist", BallisticMeasure.SmallLength, " per turn"), twist),
+            SettingRow(FieldLabel("Direction"), twistDirection)));
+        sharedLeft.Children.Add(Section("load", "The load", true, LoadSummary,
+            SettingRow(Measured("Muzzle velocity", BallisticMeasure.Speed), muzzleVelocity),
+            SettingRow(Measured("Its standard deviation", BallisticMeasure.Speed), muzzleVelocitySd),
+            sdFrom,
+            SettingRow(FieldLabel("BC"), ballisticCoefficient),
+            SettingRow(FieldLabel("Drag model"), dragModel),
+            SettingRow(FieldLabel("Its reference atmosphere"), bcReference),
 
-        // Entry 131 section 8: the curve beside the table. A table answers "what do I dial at 600" exactly and cannot show shape; the curve
-        // shows where the drop runs away and how far the velocity holds, which is what a person reads a trajectory for.
-        var series = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4 };
+            // Grains stay grains on both sides of the toggle: a reloader weighs in grains whatever else they measure in.
+            SettingRow(FieldLabel("Bullet weight, gr"), bulletWeight),
+            SettingRow(Measured("Length", BallisticMeasure.SmallLength), bulletLength),
+            SettingRow(Measured("Diameter", BallisticMeasure.SmallLength), bulletDiameter),
+            Row(Button("Keep these on the records", KeepBallistics))));
+        sharedLeft.Children.Add(Section("air", "The air", false, AirSummary,
+            SettingRow(Measured("Temperature", BallisticMeasure.Temperature), airTemperature),
+            SettingRow(Measured("Station pressure", BallisticMeasure.Pressure), airPressure),
+            SettingRow(Measured("Altitude", BallisticMeasure.Altitude), airAltitude),
+            SettingRow(FieldLabel("Humidity, %"), airHumidity),
+            Line("Leave the pressure empty to take it from the altitude. The zero correction on the analysis carries in this air too.")));
+        trajectoryLeft.Children.Add(Section("table", "The table", true, TableSummary,
+            SettingRow(Distanced("To"), dopeTo),
+            SettingRow(FieldLabel("Every"), dopeStep)));
+
+        // The middle: the trajectory, entry 247 item 3. Entry 131 section 8: the curve beside the table, because a table answers what to
+        // dial at one range exactly and cannot show shape.
+        var series = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 0 };
         foreach (var which in new[] { TrajectorySeries.Drop, TrajectorySeries.Wind, TrajectorySeries.Velocity, TrajectorySeries.Energy })
         {
             var button = new Button { Content = TrajectoryGraph.Title(which).Split(',')[0], Name = "TrajectorySeries" + which };
-            button.Click += (_, _) =>
-            {
-                trajectory.Series = which;
-                trajectory.InvalidateVisual();
-                ShowTrajectoryTitle();
-            };
+            button.Click += (_, _) => ShowTrajectorySeries(which);
+            seriesButtons.Add(button);
             series.Children.Add(button);
+            button.Classes.Set(AppStyles.Chosen, which == trajectory.Series);
         }
 
-        column.Children.Add(series);
-        column.Children.Add(trajectoryTitle);
-        column.Children.Add(trajectory);
-        column.Children.Add(dopeTable);
+        var seriesRow = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+        Grid.SetColumn(series, 1);
+        seriesRow.Children.Add(trajectoryTitle);
+        seriesRow.Children.Add(series);
+        trajectory.Height = 330;
+        trajectory.RangeChosen += yards => ChooseRange(yards);
+        trajectoryMiddle.Children.Add(seriesRow);
+        trajectoryMiddle.Children.Add(trajectory);
+        trajectoryMiddle.Children.Add(dopeTable);
+        BuildChronograph(trajectoryMiddle);
 
-        // Entry 113 section 3: the analysed group carried to another distance, its hit probability there and its predicted size.
-        column.Children.Add(Heading("The analyzed group at another distance"));
-        column.Children.Add(Line("A prediction from the group open in the analysis, the rifle and load it names, and the air above: its sigma carried through the solver, with the load's velocity SD and the crosswind's uncertainty added where they are given. It is never a measurement."));
-        column.Children.Add(Row(Distanced("At"), projectTo, Measured("Crosswind uncertainty", BallisticMeasure.WindSpeed), windSd, Button("Work it out", FillProjection)));
-        column.Children.Add(projectionLines);
+        // Entry 156: the chance of a hit, the other view, with its own settings on the left and its answer in the middle.
+        BuildHit(hitLeft, hitMiddle);
 
-        // Entry 156: the chance of a hit comes from the simulation below, which carries the errors a string shares as well as the group's own.
-        BuildHit(column);
-        BuildChronograph(column);
+        var left = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, 0, Tokens.Space12, 0), Children = { sharedLeft, trajectoryLeft, hitLeft } };
+        var middle = new StackPanel { Spacing = Tokens.Space12, Children = { ViewSwitch(), trajectoryMiddle, hitMiddle } };
+        ballisticLeftPane = new Border { Child = new ScrollViewer { Content = left }, Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
+        ballisticMiddlePane = new ScrollViewer { Content = new StackPanel { Margin = new Thickness(Tokens.Space20, Tokens.Space12), Spacing = Tokens.Space12, Children = { middle } } };
+        ballisticRightPane = new Border { Child = AtOneRange(), Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
+        Grid.SetColumn(ballisticMiddlePane, 1);
+        ballisticBody = new Grid { Children = { ballisticLeftPane, ballisticMiddlePane } };
+        ballisticBody.SizeChanged += (_, e) => ArrangeBallistics(e.NewSize.Width);
+        ArrangeBallistics(1400);
+
         unitBoxes.AddRange(new (TextBox, BallisticMeasure)[]
         {
             (sightHeight, BallisticMeasure.SmallLength),
@@ -154,7 +168,18 @@ public sealed partial class MainWindow
         });
         RelabelBallistics();
         airTemperature.Text = BallisticMeasures.Text(59, BallisticMeasure.Temperature, units);
-        return new ScrollViewer { Content = column, IsVisible = false };
+        foreach (var box in new[] { sightHeight, zeroDistance, twist, muzzleVelocity, muzzleVelocitySd, ballisticCoefficient, bulletWeight, airTemperature, airPressure, airAltitude, airHumidity, dopeTo, dopeStep })
+        {
+            box.TextChanged += (_, _) => ballisticSections.ForEach(s => s.Refresh());
+        }
+
+        ShowBallisticView(settingsStore.LoadWhyOpen("ballistics.view.hit") ? BallisticView.Hit : BallisticView.Trajectory);
+        var screen = new DockPanel { IsVisible = false };
+        var top = BallisticBar(toggle);
+        DockPanel.SetDock(top, Dock.Top);
+        screen.Children.Add(top);
+        screen.Children.Add(ballisticBody);
+        return screen;
     }
 
     private Rifle? ChosenRifle => ballisticRifle.SelectedIndex > 0 && ballisticRifle.SelectedIndex <= book.Rifles.Count ? book.Rifles[ballisticRifle.SelectedIndex - 1] : null;
@@ -212,7 +237,7 @@ public sealed partial class MainWindow
 
         foreach (var (name, button) in unitButtons)
         {
-            button.Classes.Set(AppStyles.Primary, name == (BallisticMeasures.IsMetric(units) ? "Metric" : "Imperial"));
+            button.Classes.Set(AppStyles.Chosen, name == (BallisticMeasures.IsMetric(units) ? "Metric" : "Imperial"));
         }
     }
 
@@ -351,7 +376,7 @@ public sealed partial class MainWindow
             + $"{air.HumidityPct:0} percent humidity");
     }
 
-    private const string DopeColumns = "90,*,*,*,*,*,*";
+    private const string DopeColumns = "56,*,1.2*,1.5*,1.3*,1.2*,1.3*,*,*";
 
     /// <summary>The dope table for the chosen rifle and load in the stated air, or which fields it still needs.</summary>
     private readonly TrajectoryGraph trajectory = new();
@@ -367,6 +392,11 @@ public sealed partial class MainWindow
     /// <summary>Chooses the graph's series, for the headless tests.</summary>
     internal void ShowTrajectorySeries(TrajectorySeries which)
     {
+        foreach (var button in seriesButtons)
+        {
+            button.Classes.Set(AppStyles.Chosen, button.Name == "TrajectorySeries" + which);
+        }
+
         trajectory.Series = which;
         trajectory.InvalidateVisual();
         ShowTrajectoryTitle();
@@ -380,9 +410,13 @@ public sealed partial class MainWindow
         var rifle = ChosenRifle;
         var load = ChosenLoad;
         var missing = SolverUse.Missing(rifle, load);
+
+        // Entry 247 item 2: a field the solver still needs is marked in its row, and its section opens.
+        MarkNeeded(missing);
         if (missing.Count > 0)
         {
             dopeTable.Children.Add(Line("The solver needs " + Joined(missing) + "."));
+            FillAtRange();
             return;
         }
 
@@ -430,7 +464,8 @@ public sealed partial class MainWindow
         }
 
         string length = UnitSettings.Symbol(units.Linear), angle = UnitSettings.Symbol(units.Angular);
-        var head = Cells([$"range, {UnitSettings.Symbol(units.Distance)}", $"drop, {length}", $"elevation, {angle}", "clicks", $"10 mph wind, {length}", $"windage, {angle}", "clicks"], heading: true);
+        var head = Cells([$"range, {UnitSettings.Symbol(units.Distance)}", $"drop, {length}", $"elevation, {angle}", "clicks", $"10 mph wind, {length}", $"windage, {angle}", "clicks into wind",
+            $"velocity, {BallisticMeasures.Symbol(BallisticMeasure.Speed, units)}", BallisticMeasures.IsMetric(units) ? "energy, J" : "energy, ft lb"], heading: true);
         head.Margin = new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, Tokens.Space4);
         dopeTable.Children.Add(head);
         int index = 0;
@@ -450,11 +485,20 @@ public sealed partial class MainWindow
                     ClickText(point.DropInches, point.DropInches < 0 ? "up" : "down"),
                     units.Number(Math.Abs(point.WindInches)),
                     Angle(point.WindInches),
-                    ClickText(point.WindInches, "into the wind"),
+                    // The direction is in the heading, so the column holds the count alone and fits.
+                    Math.Abs(point.WindInches) < 5e-4 ? "0" : Clicks.For(point.WindInches, range, rifle!, "").Count.ToString(CultureInfo.InvariantCulture),
+                    Speed(point.VelocityFps),
+                    Energy(point.EnergyFtLb).Split(' ')[0],
                 ], heading: false),
                 Padding = new Thickness(Tokens.Space4, 2),
+                Tag = point.RangeYards,
+                Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
                 Classes = { AppStyles.TableRow },
             };
+
+            // Entry 247 item 4: a row clicked is the range on the right.
+            double rowYards = point.RangeYards;
+            row.PointerPressed += (_, _) => ChooseRange(rowYards);
             if (index++ % 2 == 1)
             {
                 row.Classes.Add(AppStyles.Shaded);
@@ -471,6 +515,8 @@ public sealed partial class MainWindow
         {
             dopeTable.Children.Add(new TextBlock { Text = sentence, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
         }
+
+        FillAtRange();
     }
 
     private static string Joined(IReadOnlyList<string> items) => items.Count switch

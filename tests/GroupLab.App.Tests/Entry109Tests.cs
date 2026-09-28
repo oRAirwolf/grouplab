@@ -305,8 +305,9 @@ public class Entry109Tests
             // loose spacing and mixed type sizes show up rather than hiding in a crowd.
             // 1400 by 900 is the size the website shows, and it had fallen out of this walk: the site was serving screenshots from
             // 2026-09-19 of an interface that had changed every day since. Entry 144 section 4 is the job that keeps them current; this is
-            // the size it needs to exist for.
-            foreach (var (width, height) in new[] { (1280, 720), (1400, 900), (2560, 1440) })
+            // the size it needs to exist for. 1920 by 1080 is the Store listing's size (docs/store/LISTING.md), and it had fallen out too,
+            // leaving the listing with the screens as they were at entry 112; entry 247 put it back.
+            foreach (var (width, height) in new[] { (1280, 720), (1400, 900), (1920, 1080), (2560, 1440) })
             {
                 var (window, path, synthetic) = Sheet(width, height);
                 long[]? suppressor = null;

@@ -49,10 +49,37 @@ internal sealed class TrajectoryGraph : Control
     /// <summary>How a distance reads in the person's units, set by the window.</summary>
     public Func<double, string> Distance { get; set; } = yards => string.Create(CultureInfo.InvariantCulture, $"{yards:0} yd");
 
+    /// <summary>
+    /// Entry 247: the range chosen on the screen's right, marked on the curve in amber with its value, the one place besides the zero the
+    /// person asked about. Null draws nothing.
+    /// </summary>
+    public double? ChosenYards { get; set; }
+
+    /// <summary>How the chosen point's value reads beside it, set by the window.</summary>
+    public Func<double, string> ValueText { get; set; } = value => value.ToString("0.#", CultureInfo.InvariantCulture);
+
+    /// <summary>A point on the curve clicked: the range of the row nearest it, in yards.</summary>
+    public event Action<double>? RangeChosen;
+
     public TrajectoryGraph()
     {
         ClipToBounds = true;
         MinHeight = 240;
+        Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand);
+        PointerPressed += (_, e) =>
+        {
+            if (Points.Count < 2 || Bounds.Width <= PadLeft + PadRight)
+            {
+                return;
+            }
+
+            double yards = (e.GetPosition(this).X - PadLeft) / (Bounds.Width - PadLeft - PadRight) * Points[^1].RangeYards;
+            var nearest = Points.Where(p => p.RangeYards > 0).MinBy(p => Math.Abs(p.RangeYards - yards));
+            if (nearest is not null)
+            {
+                RangeChosen?.Invoke(nearest.RangeYards);
+            }
+        };
     }
 
     /// <summary>What this series is called and what its numbers are in, for the axis and the button.</summary>
@@ -160,5 +187,24 @@ internal sealed class TrajectoryGraph : Control
         }
 
         context.DrawGeometry(null, new Pen(Marks.Teal, 2), curve);
+
+        // Entry 247: the chosen range, its line and its point in amber, and what the curve says there.
+        if (ChosenYards is { } chosen && chosen > 0 && chosen <= maxRange && Points.MinBy(p => Math.Abs(p.RangeYards - chosen)) is { } at)
+        {
+            var amber = new SolidColorBrush(palette.Amber);
+            var point = At(at.RangeYards, Value(at, Series));
+            context.DrawLine(new Pen(amber, 1), new Point(point.X, top), new Point(point.X, bottom));
+            context.DrawEllipse(amber, null, point, 5, 5);
+            var text = new FormattedText($"{Distance(at.RangeYards)}, {ValueText(Value(at, Series))}", CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+                new Typeface(Tokens.Mono), Tokens.DetailSize, amber);
+            bool flipped = point.X + 8 + text.Width > right;
+            double x = flipped ? point.X - 8 - text.Width : point.X + 8;
+
+            // Turned to the left, the label goes on the side of the point the curve arrives from least, so the line never runs through it.
+            var before = Points.LastOrDefault(p => p.RangeYards < at.RangeYards);
+            bool below = flipped && before is not null && At(before.RangeYards, Value(before, Series)).Y < point.Y;
+            double y = below ? Math.Min(bottom - text.Height, point.Y + 6) : Math.Max(top, point.Y - text.Height - 4);
+            context.DrawText(text, new Point(x, y));
+        }
     }
 }

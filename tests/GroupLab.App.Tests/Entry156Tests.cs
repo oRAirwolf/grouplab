@@ -17,7 +17,7 @@ public class Entry156Tests
 {
     private static void Settle() => Dispatcher.UIThread.RunJobs();
 
-    private static (MainWindow Window, string Path) Open()
+    internal static (MainWindow Window, string Path) Open()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         var rifle = new Rifle("Tikka T3x", 0.25, AngularUnit.Moa) { SightHeightInches = 1.75, ZeroDistanceYards = 100 };
@@ -37,7 +37,7 @@ public class Entry156Tests
         return (window, path);
     }
 
-    private static void Close(MainWindow window, string path)
+    internal static void Close(MainWindow window, string path)
     {
         window.Close();
         GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);

@@ -9,6 +9,13 @@
 4. Waits on you: **49**, pick the phone's look (A, B or C) from the page it links; **45**, reconnect the Fold 7 and the tablet so the screenshots and measurements can run.
 5. Also done: entry 244 (the README now keeps itself current) and the server sitting (the survey worker installed, request 21 closed).
 
+**The Ballistics screen, laid out as the B you chose** (entry 247; not a request). Before and after, light, 1400 by 900:
+[before](../figures/screens/before/ballistics-light-1400x900.png), [after, the trajectory](../figures/screens/after/ballistics-light-1400x900.png),
+[after, the hit probability view](../figures/screens/after/ballistics-hit-light-1400x900.png). Three columns like the analysis: the
+settings on the left in sections that fold, the chart and the full table in the middle, and the answer at one range on the right, with
+the elevation large in amber; a row or a point on the chart chooses the range. The hit probability calculator is the middle's second
+view, as your addition drew it. Nothing the solver or the simulation computes changed. Dark and high contrast follow the same tokens.
+
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
 **This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->
