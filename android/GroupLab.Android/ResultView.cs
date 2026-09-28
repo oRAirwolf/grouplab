@@ -25,11 +25,10 @@ public sealed class ResultView : UserControl
     private readonly MarkingSession session;
     private readonly TargetDefinition? definition;
     private readonly UnitSettings units;
-    private readonly TextBlock figures = Screens.Dim("");
-
-    /// <summary>Entry 246, look B: the figures as tiles, two to a row, mean radius the amber one.</summary>
-    private readonly ContentControl tiles = new();
     private readonly CompositePlot plot = new() { Height = 360, HorizontalAlignment = HorizontalAlignment.Stretch };
+
+    /// <summary>Entry 259 screen 1: the tiles, the plot with its chips, and the sections that open, from the shared figures.</summary>
+    private readonly FiguresView full;
     private readonly TextBlock saved = Screens.Line("");
     private readonly Button undo = new() { Content = "Undo", MinHeight = Screens.Touch, Margin = new Thickness(4), IsEnabled = false };
     private SheetEditor? editor;
@@ -41,6 +40,7 @@ public sealed class ResultView : UserControl
         definition = result.Definition;
         sessionId = result.SessionId;
         session = new MarkingSession(result.State);
+        full = new FiguresView(result.State, units, plot, ShowShotsToZero);
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title(result.Definition?.Name ?? "The sheet"));
         if (result.Failure is { } failure)
@@ -71,9 +71,7 @@ public sealed class ResultView : UserControl
         var numbers = new StackPanel { Spacing = 12 };
         var picture = new StackPanel { Spacing = 12 };
         var actions = new StackPanel { Spacing = 12 };
-        numbers.Children.Add(tiles);
-        numbers.Children.Add(figures);
-        numbers.Children.Add(Screens.Card(plot));
+        numbers.Children.Add(full);
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
             editor = new SheetEditor(new Bitmap(path), () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));
@@ -99,6 +97,12 @@ public sealed class ResultView : UserControl
             picture.Children.Add(tools);
             picture.Children.Add(toolWords);
             picture.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
+        }
+
+        // Entry 259 screen 2: which bulls were fired at, so each shot is measured from its own.
+        if (session.State.Bulls.Count(b => b.Scoring) > 1)
+        {
+            actions.Children.Add(Screens.Row("Bulls you fired at", AimedBulls.Says(session.State.Rule, session.State.Bulls), ShowBulls));
         }
 
         actions.Children.Add(saved);
@@ -154,7 +158,29 @@ public sealed class ResultView : UserControl
 
         SizeChanged += (_, e) => Arrange(e.NewSize);
         Arrange(Bounds.Size);
-        Content = new ScrollViewer { Content = host, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
+        // The explanation sheet lies over the page at its bottom edge, and closes with its own button.
+        Content = new Grid
+        {
+            Children =
+            {
+                new ScrollViewer { Content = host, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled },
+                full.Sheet,
+            },
+        };
+    }
+
+    /// <summary>Entry 259 screen 2: the bulls fired at, chosen on the sheet's own layout, and back to the result.</summary>
+    private void ShowBulls()
+    {
+        var result = Content;
+        Content = new BullsPage(session, Changed, () => Content = result);
+    }
+
+    /// <summary>Entry 259 screen 3: Shots Needed to Zero as its own page, from this result, and back to it.</summary>
+    private void ShowShotsToZero()
+    {
+        var result = Content;
+        Content = new ShotsToZeroPage(session.State, units, () => Content = result);
     }
 
     /// <summary>The width from which the sheet and the numbers sit side by side in landscape, Material's expanded window class, entry 243 section 3.3.</summary>
@@ -179,14 +205,8 @@ public sealed class ResultView : UserControl
         var labels = ShotLabels.For(state);
         string Label(int id) => labels.FirstOrDefault(l => l.ShotId == id) is { Text: { } text } ? text : id.ToString(CultureInfo.InvariantCulture);
         string Bull(int index) => state.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
-        var all = GroupAnalysis.Analyse(state).AllShots;
-        var shown = Tiles(all, units, state.ShotDistanceInches);
-        tiles.Content = shown.Count > 0 ? Screens.Tiles(shown) : null;
-        figures.Text = shown.Count > 0
-            ? (state.ShotDistanceInches is null ? "Enter the distance on Capture to see the angles." : "")
-            : Figures(all, units, state.ShotDistanceInches);
-        figures.IsVisible = figures.Text.Length > 0;
         plot.Show(state, definition, units, Label, Bull);
+        full.Show(state, units);
         undo.IsEnabled = session.UndoWords is not null;
         saved.Text = sessionId is null ? "This session could not be saved on the phone." : "Saved in Sessions. Every change is saved as you make it.";
         editor?.InvalidateVisual();

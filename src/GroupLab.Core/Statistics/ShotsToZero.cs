@@ -53,6 +53,13 @@ public static class ShotsToZero
     /// <summary>The shot counts the curve is drawn at.</summary>
     public static readonly int[] CurveShots = [1, 2, 3, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 300, 500, 700, 1000];
 
+    /// <summary>
+    /// A group's sigma, one axis, in clicks: the angle it subtends at the distance, over the click's own angle. Shared by the desktop and
+    /// the phone (entry 258), so the two cannot differ.
+    /// </summary>
+    public static double SigmaClicks(double sigmaInches, double distanceInches, AngularUnit clickUnit, double clickValue) =>
+        Angular.Constant(clickUnit) / 2 * Math.Atan(sigmaInches / distanceInches) / clickValue;
+
     /// <summary>One axis's chance, sigma known, for a group of <paramref name="shots"/>: h 0.5 for the closest click, 1.5 for within one.</summary>
     public static double Axis(double sigmaClicks, int shots, double h)
     {

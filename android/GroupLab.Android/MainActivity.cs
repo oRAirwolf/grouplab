@@ -79,6 +79,7 @@ public class MainActivity : AvaloniaMainActivity
         TestPicture(Intent);
         TestShotsToZero(Intent);
         TestCamera(Intent);
+        TestIdle(Intent);
 #endif
     }
 
@@ -92,6 +93,21 @@ public class MainActivity : AvaloniaMainActivity
         TestPicture(intent);
         TestShotsToZero(intent);
         TestCamera(intent);
+        TestIdle(intent);
+    }
+
+    /// <summary>The extra that shows GroupLab Dev's black idle screen (entry 268), with any value.</summary>
+    internal const string TestIdleExtra = "org.grouplab.test.idle";
+
+    /// <summary>GroupLab Dev only: the black idle screen over everything, for an OLED device left on overnight.</summary>
+    private void TestIdle(Intent? intent)
+    {
+        if (intent?.GetStringExtra(TestIdleExtra) is null)
+        {
+            return;
+        }
+
+        StartActivity(new Intent(this, typeof(IdleActivity)));
     }
 
     /// <summary>The extra that asks GroupLab Dev to open the capture screen's camera (entry 260), with any value; "manual" opens it in Manual.</summary>

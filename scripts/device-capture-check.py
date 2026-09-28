@@ -90,6 +90,9 @@ def main() -> int:
     adb(args.serial, "shell", "input", "keyevent", "KEYCODE_BACK")
     adb(args.serial, "shell", "am", "start", "-n", activity(args.serial), "--es", "org.grouplab.test.camera", "guided")
     adb(args.serial, "shell", "input", "keyevent", "KEYCODE_BACK")
+    # Entry 268: the phone and the tablet have OLED screens, so a device is never left showing a lit screen; the check ends on
+    # GroupLab Dev's black idle screen (docs/ANDROID.md section 15).
+    adb(args.serial, "shell", "am", "start", "-n", activity(args.serial), "--es", "org.grouplab.test.idle", "1")
     for line in problems:
         print(f"  {args.label}: {line}")
     print(f"{args.label}: {'capture screen usable' if not problems else f'{len(problems)} problems'}")

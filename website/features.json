@@ -10,6 +10,9 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, the result now opens into every figure the desktop shows",
+    "On the phone, Shots Needed to Zero has a page of its own",
+    "On the phone, you tap the bulls you fired at",
     "On the phone, a sheet with one bull now says 1 bull",
     "The four zeroing grids are redrawn as design C3",
     "In the Targets list, Letter sheets now come before A4",
@@ -89,13 +92,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.66",
       "note": "You can now tell GroupLab which bulls you aimed at",
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
-      "article": "wrong-bull"
+      "article": "wrong-bull",
+      "mobile": {
+        "noPicture": "the bulls page is photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "whole-sheet",
@@ -181,13 +188,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "next",
       "note": "now say how many shots a zeroing group needs",
       "tour": "analysis-open",
       "guide": "5-read-the-analysis",
-      "article": "shots-to-zero"
+      "article": "shots-to-zero",
+      "mobile": {
+        "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "cep",
@@ -198,13 +209,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.111",
       "note": "The analysis screen can now draw and list CEP 99",
       "tour": "analysis-open",
       "guide": "5-read-the-analysis",
-      "article": "cep-explained"
+      "article": "cep-explained",
+      "mobile": {
+        "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "why",
@@ -215,13 +230,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.28",
       "note": "Every figure on the analysis page can now tell you what it means",
       "tour": "analysis-open",
       "guide": "5-read-the-analysis",
-      "article": "how-many-shots"
+      "article": "how-many-shots",
+      "mobile": {
+        "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "compare",
@@ -301,13 +320,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.96",
       "note": "The target library and printing are now one screen, Targets",
       "tour": "targets",
       "guide": "1-print-a-sheet",
-      "article": "printer-true-size"
+      "article": "printer-true-size",
+      "mobile": {
+        "shot": "fold-targets"
+      }
     },
     {
       "key": "optic",
@@ -318,13 +341,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.111",
       "note": "Design your own sheet can now make a sheet for your optic",
       "tour": "optic",
       "guide": "1-print-a-sheet",
-      "article": "can-you-see-the-bull"
+      "article": "can-you-see-the-bull",
+      "mobile": {
+        "shot": "fold-targets"
+      }
     },
     {
       "key": "zero-grids",
@@ -336,12 +363,16 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.111",
       "note": "The four zeroing grids are redrawn to be read through a scope",
       "tour": "targets",
-      "guide": "1-print-a-sheet"
+      "guide": "1-print-a-sheet",
+      "mobile": {
+        "noPicture": "the grid pictures are the sheets as they print, the same on the phone"
+      }
     },
     {
       "key": "large-sheets",

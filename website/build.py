@@ -1926,6 +1926,30 @@ def feature_problems() -> list[str]:
     return found
 
 
+def parity_problems() -> list:
+    """Entry 258: every feature says whether it is on the phone, coming, or left out, in docs/PHONE-PARITY.md, and agrees with features.json."""
+    found = []
+    table = need(REPO / "docs" / "PHONE-PARITY.md").read_text(encoding="utf-8")
+    rows = {}
+    for m in re.finditer(r"^\| [^|]+ \| `([a-z0-9-]+)` \| (on the phone|coming|left out) \| ([^|]*)\|$", table, re.M):
+        if m.group(1) in rows:
+            found.append(f"docs/PHONE-PARITY.md: {m.group(1)} has two rows")
+        rows[m.group(1)] = (m.group(2), m.group(3).strip())
+    for f in features()["features"]:
+        row = rows.pop(f["key"], None)
+        if row is None:
+            found.append(f"docs/PHONE-PARITY.md: {f['key']} has no row saying whether it is on the phone, coming or left out (entry 258)")
+            continue
+        on = "Android" in f["platforms"]
+        if on != (row[0] == "on the phone"):
+            found.append(f"docs/PHONE-PARITY.md: {f['key']} says {row[0]!r} and features.json {'lists' if on else 'does not list'} Android")
+        if row[0] != "on the phone" and not row[1]:
+            found.append(f"docs/PHONE-PARITY.md: {f['key']} is {row[0]} and says no {'stage' if row[0] == 'coming' else 'reason'}")
+    for key in rows:
+        found.append(f"docs/PHONE-PARITY.md: {key} is not a feature in website/features.json")
+    return found
+
+
 def feature_card(f: dict, compact: bool = False) -> str:
     links = []
     if f.get("tour"):
@@ -2894,6 +2918,7 @@ def main() -> None:
     problems += send_problems()
     problems += term_problems()
     problems += _screens_stamp.problems()
+    problems += parity_problems()
     if problems:
         print("\n".join(problems))
         sys.exit("build: checks failed")

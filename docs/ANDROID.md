@@ -435,3 +435,24 @@ difference of 0.015 to 0.027 in, with the odd extra mark going either way. So **
 which works at full size, memory only decides where it must stop: an image larger than half the computer's memory holds at the same costs
 is refused with that reason, below the fixed 400 megapixel cap (`MemoryBudget.DesktopMostMegapixels`); with 12 GB or more that is the cap
 itself. How much time the phone's 50 s spends where waits on the devices (entry 239).
+
+## 15. Device sittings: the black idle screen, and never a lit screen left waiting (entry 268)
+
+Alan: "both my phone and tablet have OLED screens and I don't like keeping them on at the risk of burn in." So, in every device sitting:
+
+- **When Code is not driving a device for more than about a minute, it shows GroupLab Dev's black idle screen** over adb:
+  `adb shell am start -n org.grouplab.app.dev/<main activity> --es org.grouplab.test.idle 1`. It is pure black, with the status and
+  navigation bars hidden by ordinary immersive mode; an OLED screen's black pixels are off, so nothing can burn in, and the device stays
+  awake and unlocked for adb. It is never screen pinning, kiosk or lock task: Home, Back and Recents leave it like any application, and a
+  tap shows one dim line, "GroupLab Dev idle screen, used for overnight testing", and a Close button of 48 dp for four seconds.
+- **The screen shows real content only while work is being done**, batched, and never a static screen (a result, Settings, the camera)
+  while waiting. Brightness is never raised; screenshots over adb do not depend on it.
+- **At the end of the night**, the idle screen is left up and `docs/notes/for-alan.md` says the devices can be picked up. Stay awake is
+  not turned off and the device is not locked, so the next session can reach it; Alan turns Stay awake off.
+- `scripts/device-capture-check.py` ends on the idle screen.
+
+## 16. The torch's strength (entry 262)
+
+Fold 7 (SM-F966U1): Android 16, SDK 36; back camera 0: flash available, strengthMaximumLevel 5, strengthDefaultLevel 1. Read 2026-09-28 11:22 UTC from dumpsys media.camera static metadata. The Tab S8 Ultra's reading follows at the next connection.
+Whether the level can be set during a camera session, and how long exposure takes to settle after each change, are measured with GroupLab
+Dev in a later build.
