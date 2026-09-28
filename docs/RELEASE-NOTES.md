@@ -12,6 +12,28 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.115
+
+**2026-09-28**, commit `f0a8bbb`. Nightly.
+
+**What you will notice**
+
+- On a phone the result is back in its usual order, with Share and Another target below the sheet, and a tablet or unfolded phone puts the sheet beside its numbers only when held in landscape.
+- The phone's Targets screen now starts on Letter paper in the United States and the other countries that use it, where it offered A4.
+- Opening GroupLab from another application while it is already running no longer risks an error on a tablet.
+- The Ballistics screen is laid out in three columns like the analysis: the settings fold on the left, the chart and a fuller table sit in the middle, and the hold for the range you pick is on the right, with the chance of a hit as a second view of the middle.
+- The large format and 300 yard sets now say on the Targets screen that their sheets carry no load block and the load is entered on the session in GroupLab.
+- The phone now looks like the desktop: its colors and type, related things on rounded cards, choices you tap as cards, the group's figures as tiles, and a bottom bar with icons.
+- GroupLab on Android now has its own icon, the desktop's GroupLab mark, instead of Android's generic one.
+
+**Under the hood**
+
+- The development build can now be given a picture to read by a test, and the phone's log records the most memory an analysis held and how long each step took.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.115)
+
+---
+
 ## 0.2.0-nightly.114
 
 **2026-09-27**, commit `08dca80`. Nightly.
