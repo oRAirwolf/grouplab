@@ -4,23 +4,24 @@ Thank you for shooting a sheet for GroupLab. This page goes with the sheet print
 
 ## Print it
 
-- Print the sheet through GroupLab's Print, at actual size, 100 percent, never Fit to page.
-- Measure from the centre of bull 1 to the centre of bull 5 with a ruler. It should be {bull-1-to-5}. If it is not, the printer scaled the sheet: print it again at actual size.
+- Print the sheet at actual size, 100 percent, never Fit to page.
+- {size-check} If it is not, the printer scaled the sheet: print it again at actual size.
 
 ## Mount it
 
-- Mount the sheet flat on a stiff backer, supported all over, with no curl or fold.
+- Mount the sheet on a backer. Flat is best, but GroupLab follows a gentle curl.
 
 ## Shoot it
 
-- One shot per bull, in order, starting at bull 1.
-- Write only in the load block. Put nothing else on the sheet.
+- {how-to-shoot}
+- {what-to-write} Put nothing else on the sheet.
 
 ## Photograph it
 
-- Take four photographs of the whole sheet from about 2.5 ft (75 cm), on the phone's main camera, not its wide or zoom lens.
-- Keep the whole sheet and all its corner squares in every frame.
-- Do not crop them, and do not send them through a messaging app, which shrinks them.
+- In GroupLab on your phone, choose Take a picture. Guided takes the picture itself when everything is right; Manual waits for you.
+- Keep the whole sheet and all its corner squares in view. The torch helps in dim light; Auto turns it on for you.
+- After each picture GroupLab gives it a score and says what it corrected. Take it again only if it asks you to.
+- No GroupLab on your phone? Take two photographs from about 2.5 ft (75 cm) on the main camera, uncropped, and never through a messaging app.
 
 ## Scan it, if you can
 
@@ -28,5 +29,5 @@ Thank you for shooting a sheet for GroupLab. This page goes with the sheet print
 
 ## Send it
 
-- Upload the photographs, and the scan if you made one, at https://grouplab.org/targets.
+- Send it from GroupLab's result, or upload the photographs, and the scan if you made one, at https://grouplab.org/targets.
 - Submitting means following the terms on that page.

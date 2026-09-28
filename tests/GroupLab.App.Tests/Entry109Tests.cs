@@ -536,6 +536,14 @@ public class Entry109Tests
                 Draw(d, 0, g.CentreX - halfX - 130, 40, g.CentreX + halfX + 130, g.CentreY + halfY + 110));
         }
 
+        // Entry 264: every donor sheet whole, small, for the Shoot a target page's picture of the sheet itself.
+        var donor = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(Path.Combine(Repository(), "website", "donor", "sheets.json")))!["sheets"]!.AsArray();
+        foreach (string file in donor.Select(s => (string)s!["letter"]!))
+        {
+            var d = Load(file + ".gltd.json");
+            Save("page-" + file.Replace("GL-", "", StringComparison.Ordinal).ToLowerInvariant(), SceneRasterizer.Rasterize(SceneBuilder.Build(d).Pages[0], 40, words: true));
+        }
+
         // A large format set: its four Letter sheets, whole, side by side as they are laid out to shoot.
         {
             var d = Load("GL-LR25-T.gltd.json");

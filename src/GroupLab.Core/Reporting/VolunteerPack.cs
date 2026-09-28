@@ -40,13 +40,35 @@ public static class VolunteerPack
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 264: the instructions' three lines that depend on the sheet's style. A zeroing grid is checked by its
+    /// printed bar and shot as one group at its diamond, with no load block; a 5x5 sheet by the distance from bull 1 to bull 5, one shot a
+    /// bull, and written on only in its load block where it has one.
+    /// </summary>
+    public static string Filled(string markdown, TargetDefinition definition)
+    {
+        ArgumentNullException.ThrowIfNull(markdown);
+        ArgumentNullException.ThrowIfNull(definition);
+        bool grid = definition.Grids is { Count: > 0 };
+        bool block = definition.DataBlock is not null;
+        string check = grid
+            ? "Measure the bar under the grid with a ruler: it is 4 in, or 10 cm on a metric sheet, as printed beside it."
+            : "Measure from the centre of bull 1 to the centre of bull 5 with a ruler. It should be " + (BullOneToFive(definition) ?? "four times the distance between neighboring bulls") + ".";
+        string shoot = grid
+            ? "Shoot one group at the diamond. Adjust the scope from the grid if you like, and shoot again on a fresh sheet."
+            : "One shot per bull, in order, starting at bull 1.";
+        string write = block ? "Write the load and the date only in the load block." : "Write nothing on this sheet; name the load when you send it.";
+        return markdown.Replace("{size-check}", check, StringComparison.Ordinal).Replace("{how-to-shoot}", shoot, StringComparison.Ordinal)
+            .Replace("{what-to-write}", write, StringComparison.Ordinal).Replace("{bull-1-to-5}", BullOneToFive(definition) ?? "four times the distance between neighboring bulls", StringComparison.Ordinal);
+    }
+
+    /// <summary>
     /// The instruction page for a sheet: the Markdown's title, headings, bullets and paragraphs set in Helvetica on one page of the sheet's
     /// size. A pack that would run past one page is refused, since a volunteer is given one page.
     /// </summary>
     public static Scene Page(TargetDefinition definition, long width, long height, string? markdown = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
-        string text = (markdown ?? Source()).Replace("{bull-1-to-5}", BullOneToFive(definition) ?? "four times the distance between neighboring bulls", StringComparison.Ordinal);
+        string text = Filled(markdown ?? Source(), definition);
         var items = new List<SceneItem>();
         long margin = 3 * Inch / 5, right = width - margin, y = margin;
         var ink = new Rgb(20, 20, 20);

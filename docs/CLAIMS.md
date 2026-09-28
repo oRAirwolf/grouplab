@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1177 |
-| measured | 1549 |
-| decided | 1220 |
+| code | 1182 |
+| measured | 1550 |
+| decided | 1218 |
 | unbacked | 0 |
-| **total** | **3946** |
+| **total** | **3950** |
 
-**685** of them were read one sentence at a time and their backing written against the sentence. The other **3261** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**693** of them were read one sentence at a time and their backing written against the sentence. The other **3257** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3000,12 +3000,8 @@ one that matters.
 
 ### docs/VOLUNTEER-PACK.md
 
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ## Print it - Print the sheet through GroupLab's Print, at actual size, 100 percent, never Fit to page.
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): - Measure from the centre of bull 1 to the centre of bull 5 with a ruler.
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): It should be {bull-1-to-5}.
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ## Mount it - Mount the sheet flat on a stiff backer, supported all over, with no curl or fold.
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ## Shoot it - One shot per bull, in order, starting at bull 1.
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ## Photograph it - Take four photographs of the whole sheet from about 2.5 ft (75 cm), on the phone's main camera, not its wide or zoom lens.
+- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ## Print it - Print the sheet at actual size, 100 percent, never Fit to page.
+- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): Take two photographs from about 2.5 ft (75 cm) on the main camera, uncropped, and never through a messaging app.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ## Scan it, if you can - If you have a flatbed scanner, add one flat scan of the sheet at 600 dpi.
 
 ### docs/WEBSITE.md
@@ -3331,7 +3327,7 @@ one that matters.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.
 - *decided* (README.md, What does not exist yet; the build plan, DESIGN.md section 21 and README's Planned): Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iOS The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.
-- *code* (LICENSE, and the footer in website/build.py shell()): Get the donor pack Instructions and two targets · PDF Free and open source under GPL-3.0.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Get the donor pack One sheet of each, with instructions · PDF Free and open source under GPL-3.0.
 
 ### site:releases/index.html
 
@@ -4163,13 +4159,21 @@ one that matters.
 ### site:shoot-a-target/index.html
 
 - *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.
-- *code* (website/build.py page_shoot(): size and page count read from each file): grouplab-donor-pack.pdf &#183; 4 pages, Letter &#183; 215 KB Download PDF Instructions only The two pages of steps, without the targets.
-- *code* (website/build.py page_shoot(): size and page count read from each file): grouplab-donor-instructions.pdf &#183; 2 pages, Letter &#183; 51 KB Download PDF Target with load block 25 bulls and a block for your load details.
-- *code* (website/build.py page_shoot(): size and page count read from each file): GL-CF25-LTR-D.pdf &#183; 1 page, Letter &#183; 65 KB Download PDF Target with sighters 25 bulls and a row of three sighter bulls.
-- *code* (website/build.py page_shoot(): size and page count read from each file): GL-CF25-LTR.pdf &#183; 1 page, Letter &#183; 99 KB Download PDF 1 Print it at actual size Letter or A4 paper, Actual size or 100 percent.
-- *code* (targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5): It must be 152.0 mm, or 5.98 in 2 Fill in the block At least the date, the distance and the cartridge.
-- *decided* (the volunteer instructions, docs/VOLUNTEER-PACK.md, entry 113): 3 Mount it flat and shoot it Staple or tape it flat onto cardboard at the four corners.
-- *decided* (the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets): 4 Photograph it before you take it down Four photographs on your phone's main camera at 1x: not the wide lens, not zoomed, no flash, your shadow off the sheet.
+- *measured* (scans/phase1/measurements/detection-counts.json rows by definition, 2026-09-28: only GL-CF25-LTR, GL-CF25-LTR-D and one other design, none of the E bull, the C bull or the C3 grids (entry 264)): grouplab-donor-pack.zip &#183; 9 PDFs Download all Most useful right now: The E bull, the C bull and the C3 zeroing grids: GroupLab has no real photographs of any of them yet.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): One sheet of each The E bull, 5x5 The everyday sheet for load development through a scope: a black disc with a white center and a small dot, 25 bulls and three sighters.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF A4 PDF The C bull, 5x5 The same sheet with a diamond standing on its point, whose points sit on a crosshair&#x27;s lines.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF A4 PDF 5x5 with a load block The E bull sheet with a block to write the load in, for a range day with several loads.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF Zeroing grid, MOA at 100 yd Zeroing a scope with quarter-MOA clicks at 100 yards: shoot a group at the diamond and read the correction off the grid.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF Zeroing grid, mil at 100 yd The same for a scope with 0.1 mil clicks.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF Zeroing grid, MOA at 100 m Zeroing with quarter-MOA clicks at 100 meters.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF Zeroing grid, mil at 100 m Zeroing with 0.1 mil clicks at 100 meters.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF 1 Print it at actual size Letter or A4 paper, Actual size or 100 percent.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Then check the size: between the centers of bull 1 and bull 5 on a 5x5 sheet, or the bar under a zeroing grid.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): The page of instructions with each sheet gives its own number 2 Say what you shot On a sheet with a load block, the date, the distance and the cartridge, inside the block only.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): 3 Mount it and shoot it Tape it onto cardboard at the four corners; flat is best, and GroupLab follows a gentle curl.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): On a 5x5 sheet one shot per bull, in number order; on a zeroing grid one group at the diamond.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): 4 Photograph it before you take it down In GroupLab on your phone, Take a picture: Guided takes it when everything is right, Manual when you press, and the torch helps in dim light.
+- *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Without GroupLab, two photographs on the main camera at 1x.
 - *measured* (research/scanner-traps and research/scans-against-photos): 5 Send them as they came off the camera A 600 dpi flatbed scan too, if you have one.
 - *code* (LICENSE, and the footer in website/build.py shell()): Send your target photos JPEG, PNG, HEIC or TIFF Free and open source under GPL-3.0.
 

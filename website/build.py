@@ -205,8 +205,18 @@ def build_images() -> None:
 
 
 def build_downloads() -> None:
-    for pdf in ["grouplab-donor-pack.pdf", "grouplab-donor-instructions.pdf", "GL-CF25-LTR-D.pdf", "GL-CF25-LTR.pdf"]:
+    # Entry 264: one PDF a sheet, each the sheet and its page of instructions, made by `grouplab donor-pack` from the library
+    # (DonorPackTests holds them to it), and the whole pack as one zip with fixed dates, so the same PDFs make the same file.
+    import zipfile
+    files = donor_files()
+    for pdf in files:
         copy(need(DONOR / pdf), f"donor/{pdf}")
+    (OUT / "donor").mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(OUT / "donor" / "grouplab-donor-pack.zip", "w", zipfile.ZIP_DEFLATED) as pack:
+        for pdf in files:
+            info = zipfile.ZipInfo(pdf, date_time=(2026, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            pack.writestr(info, (DONOR / pdf).read_bytes())
     copy(need(REPO / "docs" / "USER-GUIDE.pdf"), "guides/user-guide.pdf")
     copy(need(REPO / "docs" / "TESTING-GUIDE.pdf"), "guides/testing-guide.pdf")
 
@@ -630,7 +640,7 @@ def page_home() -> str:
 <p class="text">GroupLab needs real targets, shot by real people with real rifles, to prove it measures correctly. Print a sheet, shoot it, photograph it before you take it down: about ten minutes on top of the shooting. {"Sending them takes no account, no email address and no follow up." if limits().get("open") else "The page for sending them is built and waiting on one install on the server; keep the files meanwhile."}</p>
 </div>
 <div class="actions col">
-{btn("Get the donor pack", "/shoot-a-target/", True, "Instructions and two targets · PDF")}
+{btn("Get the donor pack", "/shoot-a-target/", True, "One sheet of each, with instructions · PDF")}
 </div>
 </div>
 </section>
@@ -739,6 +749,24 @@ def page_download() -> str:
     return shell("/download/", "Download", "Download the latest GroupLab test build for Windows, Linux or macOS: the installer, the zip, the Linux tarball or an untested Mac build.", body, "Download")
 
 
+def donor() -> dict:
+    return json.loads(need(DONOR / "sheets.json").read_text(encoding="utf-8"))
+
+
+def donor_files() -> list[str]:
+    return [f"{s[paper]}.pdf" for s in donor()["sheets"] for paper in ("letter", "a4") if s.get(paper)]
+
+
+def donor_card(s: dict) -> str:
+    """Entry 264: one donor sheet, its picture (the sheet itself, entry 256), when to use it, and its PDF in Letter and A4."""
+    stem = s["letter"].replace("GL-", "").lower()
+    size = Image.open(need(SCREENS / f"sheet-page-{stem}.png")).size
+    buttons = btn("Letter PDF", f"/donor/{s['letter']}.pdf", True) + (btn("A4 PDF", f"/donor/{s['a4']}.pdf") if s.get("a4") else "")
+    return (f'<article class="panel pad stack tight donor-sheet"><img class="donor-pic" src="/assets/screens/sheet-page-{stem}.webp" alt="{esc(s["name"])}, as it prints" '
+            f'width="{size[0]}" height="{size[1]}" loading="lazy" decoding="async"><h3 class="h4">{esc(s["name"])}</h3><p>{esc(s["use"])}</p>'
+            f'<div class="actions">{buttons}</div></article>')
+
+
 def page_shoot() -> str:
     def pdf(title: str, file: str, desc: str, paper: str, primary: bool = False) -> str:
         # Entry 159 section 5.2: the page count is read from the file, like its size, never typed beside it.
@@ -764,21 +792,28 @@ def page_shoot() -> str:
 {f'<div class="actions">{btn("Send your target", SEND, True, "Already shot one? Send the photos")}</div>' if limits().get("open") else ""}
 </div>
 <div class="stack tight">
-{pdf("Donor pack", "grouplab-donor-pack.pdf", "The instructions and both targets, ready to print.", "Letter", True)}
-{pdf("Instructions only", "grouplab-donor-instructions.pdf", "The two pages of steps, without the targets.", "Letter")}
-{pdf("Target with load block", "GL-CF25-LTR-D.pdf", "25 bulls and a block for your load details.", "Letter")}
-{pdf("Target with sighters", "GL-CF25-LTR.pdf", "25 bulls and a row of three sighter bulls.", "Letter")}
+<div class="panel pdf-row card-rec">
+{ICON_PDF}
+<div class="pdf-text"><strong>The whole donor pack</strong><span>Every sheet below, Letter and A4, each with its page of instructions.</span><span class="mono faint small">grouplab-donor-pack.zip &#183; {len(donor_files())} PDFs</span></div>
+{btn("Download all", "/donor/grouplab-donor-pack.zip", True)}
 </div>
+<p class="small"><strong>Most useful right now:</strong> {esc(donor()["mostUseful"])}</p>
+<p class="small faint">Made for your optic draws a sheet for your own scope and distance: it is on GroupLab's <a href="/tour/optic/">Targets screen</a>, on the desktop and the phone.</p>
+</div>
+</section>
+<section class="wrap section">
+<h2>One sheet of each</h2>
+<div class="grid-2 donor-sheets">{"".join(donor_card(s) for s in donor()["sheets"])}</div>
 </section>
 <section class="wrap section two-col top last">
 <ol class="step-list">
-{st("1", "Print it at actual size", "Letter or A4 paper, Actual size or 100 percent. Never Fit to page. Then measure between the centers of the first and last bull in the top row.", "It must be 152.0 mm, or 5.98 in")}
-{st("2", "Fill in the block", "At least the date, the distance and the cartridge. Write only inside the block: pen marks anywhere else can be mistaken for bullet holes.")}
-{st("3", "Mount it flat and shoot it", "Staple or tape it flat onto cardboard at the four corners. One shot per bull, in number order. A pulled shot or a wrong bull goes in the Notes box.")}
+{st("1", "Print it at actual size", "Letter or A4 paper, Actual size or 100 percent. Never Fit to page. Then check the size: between the centers of bull 1 and bull 5 on a 5x5 sheet, or the bar under a zeroing grid.", "The page of instructions with each sheet gives its own number")}
+{st("2", "Say what you shot", "On a sheet with a load block, the date, the distance and the cartridge, inside the block only. On any other sheet write nothing, and name the load when you send it: pen marks can be mistaken for bullet holes.")}
+{st("3", "Mount it and shoot it", "Tape it onto cardboard at the four corners; flat is best, and GroupLab follows a gentle curl. On a 5x5 sheet one shot per bull, in number order; on a zeroing grid one group at the diamond.")}
 </ol>
 <div class="stack">
 <ol class="step-list" start="4">
-{st("4", "Photograph it before you take it down", "Four photographs on your phone's main camera at 1x: not the wide lens, not zoomed, no flash, your shadow off the sheet. A target still hanging where it was shot is the material the project most needs.")}
+{st("4", "Photograph it before you take it down", "In GroupLab on your phone, Take a picture: Guided takes it when everything is right, Manual when you press, and the torch helps in dim light. It scores each picture and says what it corrected. Without GroupLab, two photographs on the main camera at 1x. A target still hanging where it was shot is the material the project most needs.")}
 {st("5", "Send them as they came off the camera", "A 600 dpi flatbed scan too, if you have one. Do not crop them and do not send them through a messaging app, which shrinks them.", "Send your photos, below" if limits().get("open") else "Sending opens here shortly")}
 </ol>
 <div class="callout small-callout">
@@ -2481,6 +2516,8 @@ a.plain{color:var(--text)}
 img.phone-thumb{object-fit:contain;background:var(--line)}
 /* Entry 256: a bull, grid or sheet as it prints, on its own paper, so one picture reads in both themes. */
 .sheet-pics{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+/* Entry 264: each donor sheet whole, on its own paper. */
+.donor-sheet .donor-pic{width:120px;height:auto;background:#fff;border:1px solid var(--line);border-radius:4px}
 .sheet-pic{margin:0;flex:1 1 140px;max-width:320px}
 .sheet-pic img{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:4px;display:block}
 .sheet-pic figcaption{margin-top:4px}
@@ -2608,7 +2645,7 @@ JS = r"""/* GroupLab theme: follows the system unless the visitor has chosen, an
 # script, but the screenshots, the PDFs and the fonts too, so Cloudflare can never serve a
 # stale file after a publish. A hash in the query string is enough; the file keeps its name,
 # which matters for a PDF somebody saves.
-FINGERPRINTED = {".woff2", ".webp", ".png", ".svg", ".pdf", ".ico", ".css", ".js"}
+FINGERPRINTED = {".woff2", ".webp", ".png", ".svg", ".pdf", ".zip", ".ico", ".css", ".js"}
 
 # Referenced from a page or a stylesheet, so these are the ones worth rewriting.
 REFERENCE = re.compile(r'(?P<url>/(?:assets|donor|guides)/[A-Za-z0-9._/-]+|/favicon\.(?:ico|svg)|/apple-touch-icon\.png)(?P<query>\?v=[A-Za-z0-9]+)?')

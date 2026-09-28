@@ -1,0 +1,50 @@
+{
+  "about": "NOTES-FROM-PLANNING.md entry 264: the donor pack, one sheet of each style, Letter first and A4 beside it where the library has one. Each PDF is the sheet and its one page of instructions, made by `grouplab donor-pack` from the library; DonorPackTests fails when a committed PDF no longer matches what the library makes, and the site's publish runs those tests first. The site build zips the PDFs into the whole pack.",
+  "mostUseful": "The E bull, the C bull and the C3 zeroing grids: GroupLab has no real photographs of any of them yet.",
+  "sheets": [
+    {
+      "key": "e-bull",
+      "name": "The E bull, 5x5",
+      "use": "The everyday sheet for load development through a scope: a black disc with a white center and a small dot, 25 bulls and three sighters.",
+      "letter": "GL-CF25-LTR-E",
+      "a4": "GL-CF25-A4-E"
+    },
+    {
+      "key": "c-bull",
+      "name": "The C bull, 5x5",
+      "use": "The same sheet with a diamond standing on its point, whose points sit on a crosshair's lines.",
+      "letter": "GL-CF25-LTR-C",
+      "a4": "GL-CF25-A4-C"
+    },
+    {
+      "key": "load-block",
+      "name": "5x5 with a load block",
+      "use": "The E bull sheet with a block to write the load in, for a range day with several loads.",
+      "letter": "GL-CF25-LTR-D-E"
+    },
+    {
+      "key": "zero-moa-100y",
+      "name": "Zeroing grid, MOA at 100 yd",
+      "use": "Zeroing a scope with quarter-MOA clicks at 100 yards: shoot a group at the diamond and read the correction off the grid.",
+      "letter": "GL-ZERO-MOA-100Y"
+    },
+    {
+      "key": "zero-mil-100y",
+      "name": "Zeroing grid, mil at 100 yd",
+      "use": "The same for a scope with 0.1 mil clicks.",
+      "letter": "GL-ZERO-MIL-100Y"
+    },
+    {
+      "key": "zero-moa-100m",
+      "name": "Zeroing grid, MOA at 100 m",
+      "use": "Zeroing with quarter-MOA clicks at 100 meters.",
+      "letter": "GL-ZERO-MOA-100M"
+    },
+    {
+      "key": "zero-mil-100m",
+      "name": "Zeroing grid, mil at 100 m",
+      "use": "Zeroing with 0.1 mil clicks at 100 meters.",
+      "letter": "GL-ZERO-MIL-100M"
+    }
+  ]
+}

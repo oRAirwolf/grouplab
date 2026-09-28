@@ -150,3 +150,10 @@ source that is not on the list below, or if any test writing into this folder co
 | `sheet-zero-mil-100y.png` | built-in library sheet |
 | `sheet-zero-moa-100m.png` | built-in library sheet |
 | `sheet-zero-moa-100y.png` | built-in library sheet |
+| `sheet-page-cf25-ltr-c.png` | built-in library sheet |
+| `sheet-page-cf25-ltr-d-e.png` | built-in library sheet |
+| `sheet-page-cf25-ltr-e.png` | built-in library sheet |
+| `sheet-page-zero-mil-100m.png` | built-in library sheet |
+| `sheet-page-zero-mil-100y.png` | built-in library sheet |
+| `sheet-page-zero-moa-100m.png` | built-in library sheet |
+| `sheet-page-zero-moa-100y.png` | built-in library sheet |

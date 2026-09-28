@@ -2844,6 +2844,70 @@
   "The measurement script was a scratch test, run once and deleted; its conditions are listed in section 1 so it can be rebuilt as the scoreboard.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are"
+  },
+  "Get the donor pack One sheet of each, with instructions · PDF Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "grouplab-donor-pack.zip &#183; 9 PDFs Download all Most useful right now: The E bull, the C bull and the C3 zeroing grids: GroupLab has no real photographs of any of them yet.": {
+   "kind": "measured",
+   "where": "scans/phase1/measurements/detection-counts.json rows by definition, 2026-09-28: only GL-CF25-LTR, GL-CF25-LTR-D and one other design, none of the E bull, the C bull or the C3 grids (entry 264)"
+  },
+  "One sheet of each The E bull, 5x5 The everyday sheet for load development through a scope: a black disc with a white center and a small dot, 25 bulls and three sighters.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF A4 PDF The C bull, 5x5 The same sheet with a diamond standing on its point, whose points sit on a crosshair&#x27;s lines.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF A4 PDF 5x5 with a load block The E bull sheet with a block to write the load in, for a range day with several loads.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF Zeroing grid, MOA at 100 yd Zeroing a scope with quarter-MOA clicks at 100 yards: shoot a group at the diamond and read the correction off the grid.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF Zeroing grid, mil at 100 yd The same for a scope with 0.1 mil clicks.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF Zeroing grid, MOA at 100 m Zeroing with quarter-MOA clicks at 100 meters.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF Zeroing grid, mil at 100 m Zeroing with 0.1 mil clicks at 100 meters.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Letter PDF 1 Print it at actual size Letter or A4 paper, Actual size or 100 percent.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Then check the size: between the centers of bull 1 and bull 5 on a 5x5 sheet, or the bar under a zeroing grid.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "The page of instructions with each sheet gives its own number 2 Say what you shot On a sheet with a load block, the date, the distance and the cartridge, inside the block only.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "3 Mount it and shoot it Tape it onto cardboard at the four corners; flat is best, and GroupLab follows a gentle curl.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "On a 5x5 sheet one shot per bull, in number order; on a zeroing grid one group at the diamond.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "4 Photograph it before you take it down In GroupLab on your phone, Take a picture: Guided takes it when everything is right, Manual when you press, and the torch helps in dim light.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
+  },
+  "Without GroupLab, two photographs on the main camera at 1x.": {
+   "kind": "code",
+   "where": "website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)"
   }
  },
  "rules": [

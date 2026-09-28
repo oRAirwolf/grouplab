@@ -77,6 +77,8 @@ return args switch
     ["glossary", var docs] => GroupLab.Cli.GlossaryVerb.Run(docs, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
+    ["donor-pack"] => GroupLab.Cli.DonorPackVerb.Run(".", Console.Out),
+    ["donor-pack", var repository] => GroupLab.Cli.DonorPackVerb.Run(repository, Console.Out),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
