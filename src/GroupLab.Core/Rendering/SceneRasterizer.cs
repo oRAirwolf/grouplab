@@ -11,14 +11,18 @@ public readonly record struct PixelRegion(int Left, int Top, int Width, int Heig
 /// TARGET-SCHEMA.md section 10 requires PDF and raster output to agree within half a device pixel, and with that
 /// established, <c>grouplab selftest</c> runs conformance test 43 on its output without a PDF engine. It draws the same
 /// integer geometry through the same page transform as <see cref="Pdf.PdfWriter"/>, with true circles where the PDF has
-/// Bézier quarters, and draws no text, which positions nothing.
+/// Bézier quarters, and draws no text unless asked, which positions nothing.
+/// <para>
+/// NOTES-FROM-PLANNING.md entry 250 section 1: the Targets screen's preview asks for the words as well, drawn from <see cref="SheetGlyphs"/> at
+/// the PDF's own positions, so it is the sheet as it prints. Everything that measures a render leaves them out, as it always has.
+/// </para>
 /// </summary>
 public static class SceneRasterizer
 {
     /// <summary>Samples per axis on a pixel that a circle's edge crosses.</summary>
     private const int Subsamples = 16;
 
-    public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null)
+    public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null, bool words = false)
     {
         ArgumentNullException.ThrowIfNull(page);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dpi);
@@ -44,6 +48,9 @@ public static class SceneRasterizer
                     // A DiscBand radius in half-dmm is the disc's diameter in dmm, so it scales like any other length.
                     canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * k), band.Outer with { Radius = band.OuterRadius * k },
                         band.Inner with { Radius = band.InnerRadius * k }, luminance);
+                    break;
+                case TextRun text when words:
+                    canvas.FillContours([.. SheetGlyphs.Contours(text).Select(c => c.Select(p => (originX + (p.X * k), originY + (p.Y * k))).ToArray())], luminance);
                     break;
             }
         }
@@ -166,6 +173,79 @@ public static class SceneRasterizer
             }
 
             return inside / (double)(Subsamples * Subsamples);
+        }
+
+        /// <summary>
+        /// Closed outlines filled by the nonzero rule, as a PDF fills a glyph: each pixel row is sampled on <see cref="Subsamples"/> lines,
+        /// and on each line the covered length of every pixel is exact.
+        /// </summary>
+        public void FillContours(IReadOnlyList<(double X, double Y)[]> contours, double luminance)
+        {
+            if (contours.Count == 0)
+            {
+                return;
+            }
+
+            double top = contours.Min(c => c.Min(p => p.Y)), bottom = contours.Max(c => c.Max(p => p.Y));
+            double left = contours.Min(c => c.Min(p => p.X)), right = contours.Max(c => c.Max(p => p.X));
+            int v0 = Math.Max(0, (int)Math.Floor(top)), v1 = Math.Min(Height, (int)Math.Ceiling(bottom));
+            int u0 = Math.Max(0, (int)Math.Floor(left)), u1 = Math.Min(Width, (int)Math.Ceiling(right));
+            if (v0 >= v1 || u0 >= u1)
+            {
+                return;
+            }
+
+            var cover = new double[u1 - u0];
+            var crossings = new List<(double X, int Winding)>();
+            for (int v = v0; v < v1; v++)
+            {
+                Array.Clear(cover);
+                for (int j = 0; j < Subsamples; j++)
+                {
+                    double y = v + ((j + 0.5) / Subsamples);
+                    crossings.Clear();
+                    foreach (var contour in contours)
+                    {
+                        for (int i = 0; i < contour.Length; i++)
+                        {
+                            var a = contour[i];
+                            var b = contour[(i + 1) % contour.Length];
+                            if ((a.Y <= y) == (b.Y <= y))
+                            {
+                                continue;
+                            }
+
+                            crossings.Add((a.X + ((y - a.Y) / (b.Y - a.Y) * (b.X - a.X)), b.Y > a.Y ? 1 : -1));
+                        }
+                    }
+
+                    crossings.Sort((p, q) => p.X.CompareTo(q.X));
+                    int winding = 0;
+                    for (int i = 0; i + 1 < crossings.Count; i++)
+                    {
+                        winding += crossings[i].Winding;
+                        if (winding != 0)
+                        {
+                            Span(cover, u0, crossings[i].X, crossings[i + 1].X);
+                        }
+                    }
+                }
+
+                for (int u = u0; u < u1; u++)
+                {
+                    Blend((v * Width) + u, Math.Min(1, cover[u - u0] / Subsamples), luminance);
+                }
+            }
+        }
+
+        /// <summary>Adds the length of [x0, x1] that falls in each pixel of the row to its coverage.</summary>
+        private static void Span(double[] cover, int u0, double x0, double x1)
+        {
+            int first = Math.Max(u0, (int)Math.Floor(x0)), last = Math.Min(u0 + cover.Length - 1, (int)Math.Floor(x1));
+            for (int u = first; u <= last; u++)
+            {
+                cover[u - u0] += Math.Max(0, Math.Min(u + 1, x1) - Math.Max(u, x0));
+            }
         }
 
         private void Blend(int index, double coverage, double luminance)

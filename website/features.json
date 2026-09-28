@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "In the Targets list, Letter sheets now come before A4",
+    "The preview on the Targets screen now shows every word",
     "The Ballistics screen is laid out in three columns",
     "Opening a second target and analyzing it",
     "On a narrow window or a screen set to 200 percent",

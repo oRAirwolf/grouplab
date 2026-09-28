@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1141 |
+| code | 1146 |
 | measured | 1513 |
 | decided | 1203 |
 | unbacked | 0 |
-| **total** | **3857** |
+| **total** | **3862** |
 
-**633** of them were read one sentence at a time and their backing written against the sentence. The other **3224** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**638** of them were read one sentence at a time and their backing written against the sentence. The other **3224** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -469,6 +469,11 @@ one that matters.
 - *code* (THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts): Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 1.
 - *code* (THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts): ``` Copyright © 2017 IBM Corp.
 - *code* (THIRD-PARTY-NOTICES.md: the notices of the files it names, src/GroupLab.Core/Rendering/Markers/Tag36h11.cs and the bundled fonts): with Reserved Font Name "Plex" ``` They are licensed under the SIL Open Font License, Version 1.1.
+- *code* (src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)): ### Liberation Sans, as outlines `src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs` holds the outlines of the printable ASCII and Latin-1 characters of Liberation Sans Regular 2.1.5, from https://github.com/liberationfonts/liberation-fonts, converted by `scripts/sheet-glyphs.py` to straight and quadratic segments and embedded in `GroupLab.Core`.
+- *code* (src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)): The Targets screen's preview draws a sheet's words with them (NOTES-FROM-PLANNING.md entry 250 section 1); a printed sheet's words are the PDF reader's own Helvetica.
+- *code* (src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)): ``` Digitized data copyright (c) 2010 Google Corporation with Reserved Font Arimo, Tinos and Cousine.
+- *code* (src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)): Copyright (c) 2012 Red Hat, Inc.
+- *code* (src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)): ``` It is licensed under the SIL Open Font License, Version 1.1, whose full text is at the head of the file itself, so it travels wherever the outlines do.
 
 ### docs/ANDROID.md
 

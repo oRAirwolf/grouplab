@@ -2608,6 +2608,26 @@
   "GroupLab on a Galaxy Z Fold 7&#x27;s cover screen, nightly 115.": {
    "kind": "measured",
    "where": "docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246"
+  },
+  "### Liberation Sans, as outlines `src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs` holds the outlines of the printable ASCII and Latin-1 characters of Liberation Sans Regular 2.1.5, from https://github.com/liberationfonts/liberation-fonts, converted by `scripts/sheet-glyphs.py` to straight and quadratic segments and embedded in `GroupLab.Core`.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)"
+  },
+  "The Targets screen's preview draws a sheet's words with them (NOTES-FROM-PLANNING.md entry 250 section 1); a printed sheet's words are the PDF reader's own Helvetica.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)"
+  },
+  "``` Digitized data copyright (c) 2010 Google Corporation with Reserved Font Arimo, Tinos and Cousine.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)"
+  },
+  "Copyright (c) 2012 Red Hat, Inc.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)"
+  },
+  "``` It is licensed under the SIL Open Font License, Version 1.1, whose full text is at the head of the file itself, so it travels wherever the outlines do.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs and its header, written by scripts/sheet-glyphs.py from Liberation Sans 2.1.5 and its LICENSE; SheetGlyphs and SceneRasterizer (entry 250 section 1)"
   }
  },
  "rules": [

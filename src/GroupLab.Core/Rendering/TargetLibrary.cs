@@ -66,8 +66,12 @@ public static class TargetLibrary
     /// <summary>The family shown for a file the catalogue does not list, which a test keeps from happening to a built-in.</summary>
     public const string OtherFamily = "Other";
 
-    /// <summary>Every readable definition in a directory, in the catalogue's order.</summary>
-    public static IReadOnlyList<LibrarySheet> Load(string directory)
+    /// <summary>
+    /// Every readable definition in a directory, family by family in the catalogue's order, and within a family by paper, NOTES-FROM-PLANNING.md
+    /// entry 250 section 2: Alan wants Letter above A4. With <paramref name="letterFirst"/> Letter comes first, then the other US sizes
+    /// (Legal, Tabloid, the rolls), then A4, A3 and A5; without it the ISO sizes lead. Within one size the catalogue's order stands.
+    /// </summary>
+    public static IReadOnlyList<LibrarySheet> Load(string directory, bool letterFirst = true)
     {
         var sheets = new List<(int Order, LibrarySheet Sheet)>();
         foreach (string path in Directory.EnumerateFiles(directory, "*.gltd.json").Order(StringComparer.Ordinal))
@@ -85,6 +89,24 @@ public static class TargetLibrary
             sheets.Add((order < 0 ? int.MaxValue : order, sheet));
         }
 
-        return [.. sheets.OrderBy(s => s.Order).ThenBy(s => s.Sheet.File, StringComparer.Ordinal).Select(s => s.Sheet)];
+        var families = sheets.GroupBy(s => s.Sheet.Family).ToDictionary(g => g.Key, g => g.Min(s => s.Order), StringComparer.Ordinal);
+        return
+        [
+            .. sheets.OrderBy(s => families[s.Sheet.Family]).ThenBy(s => PaperRank(s.Sheet.Definition.Page.Size, letterFirst))
+                .ThenBy(s => s.Order).ThenBy(s => s.Sheet.File, StringComparer.Ordinal).Select(s => s.Sheet),
+        ];
+    }
+
+    /// <summary>Where a paper size falls in a family's list: the one rule for the order, entry 250 section 2.</summary>
+    public static int PaperRank(PageSize size, bool letterFirst = true)
+    {
+        int us = size switch
+        {
+            PageSize.Letter => 0,
+            PageSize.Legal or PageSize.Tabloid or PageSize.Roll24 or PageSize.Roll36 or PageSize.Roll42 => 1,
+            PageSize.A4 or PageSize.A3 or PageSize.A5 => 2,
+            _ => 3,
+        };
+        return letterFirst || us == 3 ? us : us == 2 ? 0 : us + 1;
     }
 }

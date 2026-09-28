@@ -176,7 +176,7 @@ public sealed class PrintPanel : UserControl
         details.Children.Add(status);
         // The pages of a tiled set turn here; the preview itself is the library's, beside this panel, which shows every page this raises.
         details.Children.Add(Row(Button("Previous sheet", () => Turn(-1)), Button("Next sheet", () => Turn(1)), pageCaption));
-        details.Children.Add(new TextBlock { Text = "The preview shows the artwork; its text is drawn in the PDF.", FontSize = Tokens.DetailSize, Opacity = 0.7 });
+        note.IsCheckedChanged += (_, _) => ShowPreview();
         details.Margin = new Thickness(0);
         Content = details;
 
@@ -203,7 +203,8 @@ public sealed class PrintPanel : UserControl
     }
 
     /// <summary>The built-in library beside the application.</summary>
-    internal static IReadOnlyList<LibrarySheet> BuiltIn() => TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets"));
+    internal static IReadOnlyList<LibrarySheet> BuiltIn() =>
+        TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets"), AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
 
     /// <summary>Raised when the designer saves a sheet into the person's own, so the target library can show it.</summary>
     internal event Action? SheetsChanged;
@@ -647,15 +648,18 @@ public sealed class PrintPanel : UserControl
         }
 
         (preview.Source as IDisposable)?.Dispose();
-        preview.Source = Preview(selected.Definition, page);
+        preview.Source = Preview(selected.Definition, page, note.IsChecked == true);
         PageShown?.Invoke(preview.Source as Bitmap);
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
     }
 
-    /// <summary>One sheet's artwork as a bitmap with its longer side near 900 pixels, or null when it has none.</summary>
-    internal static Bitmap? Preview(TargetDefinition definition, int tile = 0)
+    /// <summary>
+    /// One sheet as it prints, words and all (entry 250 section 1), as a bitmap with its longer side near 900 pixels, or null when it has
+    /// none. The actual-size instruction is on it when the PDF will carry it.
+    /// </summary>
+    internal static Bitmap? Preview(TargetDefinition definition, int tile = 0, bool note = true)
     {
-        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: tile));
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: tile, PrintNote: note ? SceneBuilder.ActualSizeNote : null));
         if (scenes.Pages.Count == 0)
         {
             return null;
@@ -663,7 +667,7 @@ public sealed class PrintPanel : UserControl
 
         var scene = scenes.Pages[0];
         double longerInches = Math.Max(scene.Width, scene.Height) / (2.0 * 254);
-        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches));
+        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches), words: true);
         using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
         OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
         using var stream = new MemoryStream(png);

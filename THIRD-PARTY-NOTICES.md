@@ -57,6 +57,22 @@ Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
 
 They are licensed under the SIL Open Font License, Version 1.1. The full text is `src/GroupLab.App/Assets/Fonts/LICENSE.txt`, and it ships beside the application as `IBM-Plex-LICENSE.txt`.
 
+### Liberation Sans, as outlines
+
+`src/GroupLab.Core/Rendering/Glyphs/SheetSans.glyphs` holds the outlines of the printable ASCII and Latin-1 characters of Liberation
+Sans Regular 2.1.5, from https://github.com/liberationfonts/liberation-fonts, converted by `scripts/sheet-glyphs.py` to straight and
+quadratic segments and embedded in `GroupLab.Core`. The Targets screen's preview draws a sheet's words with them (NOTES-FROM-PLANNING.md
+entry 250 section 1); a printed sheet's words are the PDF reader's own Helvetica. Being a modified form, the file does not use the
+reserved name Liberation.
+
+```
+Digitized data copyright (c) 2010 Google Corporation with Reserved Font Arimo, Tinos and Cousine.
+Copyright (c) 2012 Red Hat, Inc. with Reserved Font Name Liberation.
+```
+
+It is licensed under the SIL Open Font License, Version 1.1, whose full text is at the head of the file itself, so it travels wherever
+the outlines do.
+
 ## Package dependencies
 
 | Package | Licence | Used by | Purpose |

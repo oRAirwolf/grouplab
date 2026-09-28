@@ -77,7 +77,7 @@ public sealed class TargetsPage : UserControl
         try
         {
             PhoneAnalysis.Library();
-            sheets = TargetLibrary.Load(Path.Combine(PhoneAnalysis.Files, "targets"));
+            sheets = TargetLibrary.Load(Path.Combine(PhoneAnalysis.Files, "targets"), AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
         }
         catch (IOException e)
         {
@@ -166,7 +166,8 @@ public sealed class TargetsPage : UserControl
     /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>
     private static Bitmap? Preview(TargetDefinition definition)
     {
-        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0));
+        // Entry 250 section 1: the sheet as its PDF prints it, words and the actual-size instruction included.
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote));
         if (scenes.Pages.Count == 0)
         {
             return null;
@@ -174,7 +175,7 @@ public sealed class TargetsPage : UserControl
 
         var scene = scenes.Pages[0];
         double longerInches = Math.Max(scene.Width, scene.Height) / (2.0 * 254);
-        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches));
+        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches), words: true);
         using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
         OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
         using var stream = new MemoryStream(png);
