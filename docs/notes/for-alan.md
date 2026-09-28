@@ -1,10 +1,29 @@
-READY FOR THE PHONE AND TABLET: nightly 118 carries the C3 zeroing grids, Shots Needed to Zero and the camera's new log. On both the Fold 7 and the Tab S8 Ultra: unlock it, turn Wireless debugging off and on again, check Stay awake is on, and leave it on the charger, unlocked, on the same Wi-Fi as the PC. Have a printed GroupLab 5x5 sheet on a table in ordinary room light for the camera test. About thirty minutes, most of it needing nobody; the few steps with the Fold 7 over the sheet will appear here, and this line will say when you can put them away.
-
-NOW, STEP 1 OF 3, THE CAMERA TEST (Fold 7 closed, about five minutes; the tablet needs nothing): GroupLab Dev is on its Capture screen. With the printed 5x5 sheet flat on the table: (a) press Take a picture, allow the camera if asked, hold the phone over the sheet so all of it shows, and follow the words at the top until the shutter fires by itself; (b) then three bad ones on purpose, one at a time, about five seconds each, noting whether the words said what was wrong: the phone tilted well over to one side, far too close so the sheet runs off the screen, and your hand's shadow across the sheet; (c) one more good one from a clearly different height, until the shutter fires by itself. Then say "camera done", and anything that felt wrong. Step 2 will be opening the Fold once for the big-screen pictures.
+GOOD MORNING (the night of 28 September, in five lines; this block is rewritten as the night goes on):
+1. Finished: the phone's camera screen rebuilt so its words, shutter and Back show over the live picture, with Guided and Manual and a check on every picture (entry 260, first part); on the phone, every figure the desktop shows with a tap to explain it, the bulls you fired at, Shots Needed to Zero and Compare loads (entry 259 screens 1 to 4); a black idle screen in GroupLab Dev for your OLED screens (entry 268).
+2. Waiting on you: the camera test with the printed sheet, this morning; its steps go here once the fix is checked on the Fold 7 over adb. One DESIGN NEEDED question below.
+3. Next: the Ballistics tab, the set as a checklist and the scan pill (entry 259 screens 5 to 7), then entries 261, 262 and 264 to 267.
+4. Devices: the Fold 7 answers; the Tab S8 Ultra has not answered adb since 11:19 UTC, retried every 15 minutes.
+5. Updated 2026-09-28 11:36 UTC.
 
 # Requests for Alan
 
-**Open: 7.** Most urgent: **50**, the device sitting now, with the camera test of 33 inside it (the READY line above). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 7.** Most urgent: **50**, the device sitting with the camera test of 33 inside it, paused until the camera fix is checked (the lines above say when). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+
+**Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
+possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
+tuning of today's settings against it; not yet a learned model, because the failures found are not ones it fixes and the labelled holes do
+not exist in the thousands it needs. The first measurement already found something: a sheet with a gentle curl across it (0.05 in) did
+not register at all, while shadows, dim light, blur, noise and JPEG cost at most two or three holes of 25. On your server, whether it has
+room is one read-only command away, which needs your approval in the morning.
+
+**The phone's parity work, in order** (entry 258; not a request). Your "A" choices of entry 259 are the build spec. Each ships in its own
+nightly and is tried at the next sitting. Rough sizes: (1) full figures with the explanation sheet, large; (2) the bulls you fired at,
+medium; (3) Shots Needed to Zero's own page, medium; (4) compare loads, medium; (5) Ballistics as a fifth tab with Dope, Trajectory and
+Hit chance, the largest; (6) the set as a checklist, medium; (7) the scan pill, small. Then marking targets GroupLab did not print, CSV
+through the share sheet, large sheet advice, and opening a picture shared from another app. `docs/PHONE-PARITY.md` lists every feature
+as on the phone, coming or left out, and the site build now fails on a feature with no row.
+
+**DESIGN NEEDED:** nothing open. (Shots Needed to Zero's colours answered by entry 269: within 1 click amber, the closest click teal, everywhere.)
 
 **The Features page shows each new thing itself** (entry 256; not a request). These entries now have their own picture, drawn as the
 sheet prints: **The E bull**, **The C bull** (with its dot), **Zeroing grids read through a scope** (all four C3 sheets, credited to you

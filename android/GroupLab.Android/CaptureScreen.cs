@@ -56,6 +56,7 @@ internal sealed class CaptureScreen : LinearLayout
         camera.AddView(preview, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
 
         var back = Round(context, "‹", BackName, 26);
+        back.Tag = BackName;
         say = new TextView(context) { Text = "Starting the camera…", TextSize = 19, ContentDescription = InstructionName };
         say.SetTextColor(Color.White);
         say.SetTypeface(Typeface.DefaultBold, TypefaceStyle.Bold);
@@ -185,6 +186,33 @@ internal sealed class CaptureScreen : LinearLayout
     }
 
     public void Say(string words) => say.Text = words;
+
+    private string? laidOut;
+
+    /// <summary>
+    /// Entry 260's device check: after each layout, what of the instruction, the shutter and Back can be seen, and where the screen ends,
+    /// written to the log. A UI dump cannot see these, because a native view hosted in an Avalonia screen is not in Avalonia's accessibility
+    /// tree, so scripts/device-capture-check.py reads this line instead.
+    /// </summary>
+    protected override void OnLayout(bool changed, int l, int t, int r, int b)
+    {
+        base.OnLayout(changed, l, t, r, b);
+        string Seen(View? view)
+        {
+            var rect = new Rect();
+            return view is not null && view.IsShown && view.GetGlobalVisibleRect(rect) ? string.Create(CultureInfo.InvariantCulture, $"{rect.Width()}x{rect.Height()}") : "hidden";
+        }
+
+        var screen = new Rect();
+        GetGlobalVisibleRect(screen);
+        string now = string.Join(" ", $"instruction={Seen(say)}", $"shutter={Seen(Shutter)}", $"back={Seen(FindViewWithTag(BackName))}",
+            string.Create(CultureInfo.InvariantCulture, $"bottom={screen.Bottom}"), string.Create(CultureInfo.InvariantCulture, $"window={RootView?.Height}"));
+        if (now != laidOut)
+        {
+            laidOut = now;
+            GroupLab.App.Diagnostics.DiagnosticLog.Info("camera.layout", ("seen", now));
+        }
+    }
 
     private int Dp(float dp) => (int)Math.Round(dp * density);
 

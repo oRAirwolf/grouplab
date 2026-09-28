@@ -1,7 +1,7 @@
 """Whether the phone's capture screen can be seen and used while the camera runs, NOTES-FROM-PLANNING.md entry 260.
 
 On 2026-09-28 the Fold 7's capture screen showed the camera and nothing else: the instruction, the Take button and Back were drawn under
-the preview. This opens GroupLab Dev's camera over adb, with nobody holding the phone, reads the screen's views from a UI dump, and fails
+the preview. This opens GroupLab Dev's camera over adb, with nobody holding the phone, reads what the capture screen reports it shows (a UI dump cannot see native views hosted in Avalonia), and fails
 unless the instruction, the shutter and Back are all on the screen, inside it, at least 44 pixels each way, and the app's own bar along the
 bottom is hidden. It checks Guided and Manual. Run it on each device and each screen and orientation a sitting has.
 
@@ -17,11 +17,9 @@ import re
 import subprocess
 import sys
 import time
-import xml.etree.ElementTree as ET
 
 ADB = r"C:\Dev\tools\android-sdk\platform-tools\adb.exe"
 PACKAGE = "org.grouplab.app.dev"
-NEEDED = {"Instruction": False, "Shutter": True, "Back": True}
 LEAST = 44
 
 
@@ -34,50 +32,46 @@ def activity(serial: str) -> str:
     return out.strip().splitlines()[-1]
 
 
-def dump(serial: str) -> ET.Element:
-    adb(serial, "shell", "uiautomator", "dump", "/data/local/tmp/gl-ui.xml")
-    xml = adb(serial, "shell", "cat", "/data/local/tmp/gl-ui.xml")
-    adb(serial, "shell", "rm", "-f", "/data/local/tmp/gl-ui.xml")
-    return ET.fromstring(xml[xml.index("<?xml"):] if "<?xml" in xml else xml)
+def leave_idle(serial: str) -> None:
+    """The idle screen closed first, as a person would, so the camera opens in the one GroupLab Dev window and not in a second."""
+    top = adb(serial, "shell", "dumpsys", "activity", "activities")
+    if re.search(r"topResumedActivity=[^\n]*IdleActivity", top):
+        adb(serial, "shell", "input", "keyevent", "KEYCODE_BACK")
+        time.sleep(1.5)
 
 
-def bounds(node: ET.Element) -> tuple[int, int, int, int]:
-    x0, y0, x1, y1 = map(int, re.findall(r"\d+", node.get("bounds", "[0,0][0,0]")))
-    return x0, y0, x1, y1
+def layout(serial: str) -> str | None:
+    """The capture screen's last report of what can be seen, from GroupLab Dev's own log (the line CaptureScreen writes after layout)."""
+    logs = adb(serial, "shell", "run-as", PACKAGE, "ls", "-t", "files/logs").split()
+    if not logs:
+        return None
+    text = adb(serial, "shell", "run-as", PACKAGE, "cat", f"files/logs/{logs[0]}")
+    lines = [l for l in text.splitlines() if "camera.layout" in l]
+    return lines[-1] if lines else None
 
 
 def check(serial: str, mode: str) -> list[str]:
+    leave_idle(serial)
+    before = layout(serial)
     adb(serial, "shell", "am", "start", "-n", activity(serial), "--es", "org.grouplab.test.camera", mode)
     time.sleep(7)
-    root = dump(serial)
-    screen = root.find(".//node")
-    sx0, sy0, sx1, sy1 = bounds(screen) if screen is not None else (0, 0, 10**6, 10**6)
+    line = layout(serial)
     found: list[str] = []
-    for name, clickable in NEEDED.items():
-        nodes = [n for n in root.iter("node") if n.get("content-desc") == name and n.get("package") == PACKAGE]
-        if not nodes:
-            found.append(f"{mode}: no {name} on the screen")
+    if line is None or line == before:
+        return [f"{mode}: the capture screen did not report its layout; it may not have opened"]
+    seen = dict(re.findall(r"(\w+)=([0-9x]+|hidden)", line))
+    for name in ("instruction", "shutter", "back"):
+        value = seen.get(name, "hidden")
+        if value == "hidden":
+            found.append(f"{mode}: the {name} cannot be seen")
             continue
-        x0, y0, x1, y1 = bounds(nodes[0])
-        if x1 - x0 < LEAST or y1 - y0 < LEAST:
-            found.append(f"{mode}: {name} is {x1 - x0} by {y1 - y0} pixels, under {LEAST}")
-        if x0 < sx0 or y0 < sy0 or x1 > sx1 or y1 > sy1:
-            found.append(f"{mode}: {name} runs off the screen")
-        if nodes[0].get("visible-to-user", "true") != "true":
-            found.append(f"{mode}: {name} is not visible")
-        if clickable and nodes[0].get("clickable") != "true":
-            found.append(f"{mode}: {name} cannot be pressed")
-        if name == "Instruction" and not nodes[0].get("text", "").strip():
-            found.append(f"{mode}: the instruction says nothing")
-    # Avalonia's own views are not in the dump, so the bar is checked by where the capture screen ends: with the bar hidden it reaches
-    # the bottom of the window, less at most Android's own navigation.
-    capture = [n for n in root.iter("node") if n.get("content-desc") == "Capture screen"]
-    if not capture:
-        found.append(f"{mode}: the capture screen is not showing")
-    elif bounds(capture[0])[3] < 0.9 * sy1:
-        found.append(f"{mode}: the capture screen stops {sy1 - bounds(capture[0])[3]} pixels above the bottom, so the app's bar is showing")
-    words = next((n.get("text") for n in root.iter("node") if n.get("content-desc") == "Instruction"), "")
-    print(f"  {mode}: instruction {words!r}")
+        w, h = map(int, value.split("x"))
+        if name != "instruction" and (w < LEAST or h < LEAST):
+            found.append(f"{mode}: the {name} is {w} by {h} pixels, under {LEAST}")
+    bottom, window = int(seen.get("bottom", "0")), int(seen.get("window", "0") or 0)
+    if window and bottom < 0.9 * window:
+        found.append(f"{mode}: the capture screen stops {window - bottom} pixels above the bottom, so the app's bar is showing")
+    print(f"  {mode}: {line.split('seen=', 1)[-1].strip()}")
     return found
 
 

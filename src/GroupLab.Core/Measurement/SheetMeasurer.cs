@@ -338,6 +338,14 @@ public static class SheetMeasurer
     /// a photograph, DESIGN.md section 11 step 3's lens model fitted to the homography's inliers, with every corner then
     /// reclassified against it. <paramref name="markerSubset"/> refits on some markers only, for measurement 1.
     /// </summary>
+    /// <summary>
+    /// Entry 260: a photograph whose radial fit keeps fewer than this share of the marker corners is taken to show a sheet that is not flat,
+    /// and is registered through every corner by a <see cref="MarkerMesh"/>. A flat sheet keeps nearly all of them; the range photographs
+    /// of 2026-09-20, tilted up to 32 degrees, keep more than half and measure their angle from the radial fit, as before. The bowed sheets
+    /// of entry 261's study kept a fifth or none.
+    /// </summary>
+    public const double BentBelow = 0.5;
+
     public static RegistrationFit? Register(GrayImage image, ImageMetadata metadata, FiducialResult fiducials, MeasureOptions options, IImagingBackend backend, TraceRecorder trace, IReadOnlyCollection<int>? markerSubset = null, TargetDefinition? definition = null)
     {
         ArgumentNullException.ThrowIfNull(image);
@@ -391,16 +399,41 @@ public static class SheetMeasurer
         if (model == RegistrationModel.Radial)
         {
             homographyRms = Rms(mapping, imagePoints, pagePoints, inliers);
+            IPageMapping? radial = null;
+            bool[]? radialInliers = null;
+            string? failure = null;
             try
             {
                 var lens = LensFit.Fit(Select(imagePoints, inliers), Select(pagePoints, inliers), homography.Transform, image.Width, image.Height);
-                inliers = [.. imagePoints.Select((p, i) => Distance(lens.ToPage(p), pagePoints[i]) <= PageRegistration.RansacThreshold)];
-                mapping = LensFit.Fit(Select(imagePoints, inliers), Select(pagePoints, inliers), homography.Transform, image.Width, image.Height);
+                radialInliers = [.. imagePoints.Select((p, i) => Distance(lens.ToPage(p), pagePoints[i]) <= PageRegistration.RansacThreshold)];
+                radial = LensFit.Fit(Select(imagePoints, radialInliers), Select(pagePoints, radialInliers), homography.Transform, image.Width, image.Height);
             }
             catch (InvalidOperationException ex)
             {
-                stage.Done(StageStatus.Failed, ex.Message);
+                failure = ex.Message;
+            }
+
+            // Entry 260: paper that is not flat. A sheet bowed by a few pixels leaves a homography, even with radial distortion, few of
+            // its corners or none, though every marker was read; then the page is registered through every corner by a mesh instead.
+            int keptByRadial = radialInliers?.Count(x => x) ?? 0;
+            if ((radial is null || keptByRadial < BentBelow * imagePoints.Count) && MarkerMesh.Fit(imagePoints, pagePoints) is { } mesh
+                && mesh.Kept.Count(x => x) > keptByRadial)
+            {
+                stage.Decide("model", mesh.Model, string.Create(inv, $"the radial fit kept {keptByRadial} of {imagePoints.Count} corners, so the sheet is not flat"),
+                    "homography with radial distortion");
+                stage.Metric("meshLeaveOneOut", mesh.LeaveOneOutRms / 254, "in");
+                mapping = mesh;
+                inliers = [.. mesh.Kept];
+            }
+            else if (radial is null)
+            {
+                stage.Done(StageStatus.Failed, failure ?? "the radial fit failed");
                 return null;
+            }
+            else
+            {
+                mapping = radial;
+                inliers = radialInliers!;
             }
         }
         else if (model == RegistrationModel.Surface)
@@ -498,6 +531,12 @@ public static class SheetMeasurer
 
         int count = inliers.Count(x => x);
         double rms = Math.Sqrt(sum / count);
+
+        // A mesh passes through every corner it kept, so its own residual says nothing; the error between markers is what it is worth.
+        if (mapping is MarkerMesh throughMarkers)
+        {
+            rms = throughMarkers.LeaveOneOutRms;
+        }
         stage.Metric("markers", matches.Count, "markers");
         stage.Metric("inliers", count, "corners");
         stage.Metric("residualRms", rms / 254, "in");

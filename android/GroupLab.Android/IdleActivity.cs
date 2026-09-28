@@ -37,7 +37,7 @@ public sealed class IdleActivity : Activity
         close.Click += (_, _) => Finish();
         words = new LinearLayout(this) { Orientation = global::Android.Widget.Orientation.Vertical, Visibility = ViewStates.Gone };
         words.SetGravity(GravityFlags.Center);
-        words.AddView(line);
+        words.AddView(line, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
         words.AddView(close, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent) { TopMargin = (int)(16 * density) });
         root.AddView(words, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Center));
         root.Click += (_, _) => Reveal();

@@ -297,8 +297,20 @@ public static class MarkingFile
             ["parameters"] = JsonSerializer.SerializeToNode(s.Parameters, MappingOptions),
             ["page"] = new JsonArray(s.PageBounds.Left, s.PageBounds.Top, s.PageBounds.Right, s.PageBounds.Bottom),
         },
+        // Entry 260: a curled sheet's mesh is kept as the marker corners it passes through, image and page, and fitted again on reading.
+        MarkerMesh m => new JsonObject
+        {
+            ["model"] = "mesh",
+            ["image"] = Points(m.ImagePoints),
+            ["page"] = Points(m.PagePoints),
+            ["leaveOneOutRms"] = m.LeaveOneOutRms,
+        },
         _ => null,
     };
+
+    private static JsonArray Points(IEnumerable<PointD> points) => new([.. points.Select(p => (JsonNode)new JsonArray(p.X, p.Y))]);
+
+    private static List<PointD> Points(JsonNode node) => [.. node.AsArray().Select(p => new PointD((double)p![0]!, (double)p[1]!))];
 
     /// <summary>
     /// What a photograph was taken with and how good it is, never where or when, NOTES-FROM-PLANNING.md entry 157 section 3 item 5: the
@@ -347,6 +359,7 @@ public static class MarkingFile
     {
         "homography" => new HomographyMapping(Matrix(node!["h"]!)),
         "radial" => new RadialHomographyMapping((double)node!["centreX"]!, (double)node["centreY"]!, (double)node["scale"]!, (double)node["k1"]!, (double)node["k2"]!, Matrix(node["h"]!)),
+        "mesh" when node!["image"] is JsonArray image && node["page"] is JsonArray page => MarkerMesh.Rebuild(Points(image), Points(page), (double?)node["leaveOneOutRms"] ?? 0),
         "surface" when node!["page"] is JsonArray page => new SurfaceMapping(node["parameters"].Deserialize<SurfaceModel>(MappingOptions)!, (double)page[0]!, (double)page[1]!, (double)page[2]!, (double)page[3]!),
         _ => null,
     };
