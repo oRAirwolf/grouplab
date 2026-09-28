@@ -56,6 +56,55 @@ public sealed class SessionsPage : UserControl
             column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         }
 
+        // Entry 259 screen 4: two or more sessions compared, one figure at a time.
+        if (saved.Count >= 2)
+        {
+            column.Children.Add(Screens.Choice("Compare loads", () => Content = Choose(saved, [])));
+        }
+
+        return Screens.Page(column);
+    }
+
+    /// <summary>The sessions to compare, each a box to tick; Compare once two or more are ticked.</summary>
+    private Control Choose(IReadOnlyList<SessionSummary> saved, HashSet<long> chosen)
+    {
+        var units = App.Settings.LoadUnits();
+        var column = new StackPanel { Spacing = 8, Children = { Screens.Title("Compare loads"), Screens.Line("Choose two or more sessions.") } };
+        var compare = Screens.Primary("Compare", () =>
+        {
+            var store = PhoneAnalysis.Store();
+            var records = saved.OrderBy(s => s.CreatedUtc, StringComparer.Ordinal).Where(s => chosen.Contains(s.Id)).Select(s => store.Get(s.Id)).OfType<SessionRecord>().ToList();
+            Content = new ComparePage(records, units, () => Content = Choose(saved, chosen));
+        });
+        compare.IsEnabled = chosen.Count >= 2;
+        var rows = new StackPanel { Spacing = 4 };
+        foreach (var s in saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal))
+        {
+            var box = new CheckBox
+            {
+                IsChecked = chosen.Contains(s.Id),
+                MinHeight = Screens.Touch,
+                Content = new StackPanel { Children = { Screens.Line(s.SheetName), Screens.Dim($"{s.ShotDate ?? s.CreatedUtc[..10]} · {s.ShotCount} shots" + (s.MeanRadiusInches is { } mr ? $" · mean radius {units.Length(mr)}" : "")) } },
+            };
+            box.IsCheckedChanged += (_, _) =>
+            {
+                if (box.IsChecked == true)
+                {
+                    chosen.Add(s.Id);
+                }
+                else
+                {
+                    chosen.Remove(s.Id);
+                }
+
+                compare.IsEnabled = chosen.Count >= 2;
+            };
+            rows.Children.Add(box);
+        }
+
+        column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
+        column.Children.Add(compare);
+        column.Children.Add(Screens.Choice("Back to Sessions", () => Content = List()));
         return Screens.Page(column);
     }
 

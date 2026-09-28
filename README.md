@@ -25,7 +25,7 @@ Free, GPL-3.0, no account, no ads, no paid tier. GroupLab is a working name and 
 | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day. |
 | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later. **Run on one real Mac**, by one tester; the Intel build has not been. |
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
-| **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet and reads it with the same engine as the desktop, prints targets and keeps sessions; marking a target by hand is not on the phone yet. |
+| **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; marking a target by hand is not on the phone yet. |
 
 **Every desktop build here is unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
 
@@ -246,7 +246,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet, reads it with the same engine as the desktop, prints targets and keeps sessions; marking a target by hand is not on the phone yet. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; marking a target by hand is not on the phone yet. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
 
 ### Running the macOS build
 
@@ -306,6 +306,13 @@ What exists and is tested:
 - a sheet that names its own definition from its printed codes, so no target has to be named by hand
 - an end-to-end `analyze` command, from photograph to report
 - diagnostic logging, crash records and a report package, with no location data in any of them
+
+New on the phone in the latest builds, as entries 258 and 259 bring it level with the desktop:
+
+- On the phone, the result now opens into every figure the desktop shows, and a tap on a figure's name says what it means.
+- On the phone, Shots Needed to Zero has a page of its own.
+- On the phone, you tap the bulls you fired at on the sheet itself.
+- On the phone, Sessions can compare loads.
 
 What does not exist yet: Garmin Xero import, velocity regression, synchronization, an iOS build, and hand marking on the phone.
 

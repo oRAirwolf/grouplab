@@ -8,6 +8,7 @@ using GroupLab.App.Theme;
 using GroupLab.Core.Ballistics;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Records;
 using GroupLab.Core.Statistics;
 
 namespace GroupLab.App;
@@ -390,7 +391,7 @@ public sealed partial class MainWindow
                 {
                     if (sessions.Get(summary.Id) is { DistanceInches: { } d and > 0 } record)
                     {
-                        var (offsets, _) = KeptOffsets(MarkingFile.Read(record.MarkingJson).State);
+                        var (offsets, _) = CompareSessions.KeptOffsets(MarkingFile.Read(record.MarkingJson).State);
                         if (offsets.Count >= 2)
                         {
                             targets.Add([.. offsets.Select(o => new PointD(o.X * 1000 / d, o.Y * 1000 / d))]);

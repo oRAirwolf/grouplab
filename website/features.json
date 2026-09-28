@@ -13,6 +13,7 @@
     "On the phone, the result now opens into every figure the desktop shows",
     "On the phone, Shots Needed to Zero has a page of its own",
     "On the phone, you tap the bulls you fired at",
+    "On the phone, Sessions can compare loads",
     "On the phone, a sheet with one bull now says 1 bull",
     "The four zeroing grids are redrawn as design C3",
     "In the Targets list, Letter sheets now come before A4",
@@ -251,13 +252,17 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.42",
       "note": "Compare loads now draws each load's mean radius and sigma",
       "tour": "compare",
       "guide": "7-comparing-loads",
-      "article": "pooling-groups"
+      "article": "pooling-groups",
+      "mobile": {
+        "noPicture": "the phone's Compare loads is photographed at the next sitting with the phone"
+      }
     },
     {
       "key": "sessions",

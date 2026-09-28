@@ -2760,6 +2760,10 @@
   "The torch's strength (entry 262) Fold 7 (SM-F966U1): Android 16, SDK 36; back camera 0: flash available, strengthMaximumLevel 5, strengthDefaultLevel 1.": {
    "kind": "measured",
    "where": "adb shell dumpsys media.camera on the Fold 7, 2026-09-28 11:22 UTC (entry 262)"
+  },
+  "Making saved sessions into groups to compare moved from the desktop into `CompareSessions` (entry 258).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/CompareSessions.cs From and KeptOffsets, used by src/GroupLab.App/MainWindow.Compare.cs and android/GroupLab.Android/ComparePage.cs (entry 258)"
   }
  },
  "rules": [

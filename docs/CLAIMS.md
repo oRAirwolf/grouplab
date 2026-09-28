@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1176 |
+| code | 1177 |
 | measured | 1540 |
 | decided | 1211 |
 | unbacked | 0 |
-| **total** | **3927** |
+| **total** | **3928** |
 
-**665** of them were read one sentence at a time and their backing written against the sentence. The other **3262** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**666** of them were read one sentence at a time and their backing written against the sentence. The other **3262** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1714,6 +1714,7 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): # What the phone does, feature by feature NOTES-FROM-PLANNING.md entry 258.
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): **The screens' designs are Alan's choices** (entry 259, "A" for all six, and the scan proposal approved), from the planning session's phone concepts; the build spec is entry 259's own words.
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): **How it is built** (entry 258): what the desktop computes lives in shared code, so the phone and the desktop cannot give different numbers.
+- *code* (src/GroupLab.Core/Records/CompareSessions.cs From and KeptOffsets, used by src/GroupLab.App/MainWindow.Compare.cs and android/GroupLab.Android/ComparePage.cs (entry 258)): Making saved sessions into groups to compare moved from the desktop into `CompareSessions` (entry 258).
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): What is left for the phone is its screens, in entry 259's order, each shipped in its own nightly and tried at the next device sitting.
 
 ### docs/PLATFORM-SUPPORT.md
@@ -3183,7 +3184,7 @@ one that matters.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
 - *code* (src/GroupLab.Core/Statistics/ShotsToZero.cs Work and SigmaClicks, shared by src/GroupLab.App/MainWindow.ShotsToZero.cs and android/GroupLab.Android/ShotsToZeroPage.cs; suggested by Jylee (entries 252, 259)): On the tour · In the user guide · The research behind it Shots Needed to Zero How many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100, from your own group and your scope&#x27;s click value.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): On the tour · In the user guide · The research behind it Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.
 - *code* (tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures and website/features.json zero-grids (entries 251, 256, 258)): On the tour · In the user guide · The research behind it MOA at 100 yd Mil at 100 yd MOA at 100 m Mil at 100 m; design C3, chosen by Alan with Jylee and Unholy Zeroing grids read through a scope Design C3, chosen by Alan with Jylee and Unholy: squares of a scope&#x27;s own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.
 - *code* (tests/GroupLab.App.Tests/Entry109Tests.cs SheetPictures, drawn from targets/GL-CF25-LTR-E, GL-CF25-LTR-C and the four GL-ZERO sheets; the pictures chosen by entry 256, C3 by entry 251): On the tour · In the user guide The E bull as it prints: a black disc, its white center and a small dot The E bull Three sheets carry a bull you can center on through a scope at 10x: a black disc with a white center and a small dot.

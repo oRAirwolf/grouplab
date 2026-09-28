@@ -8,6 +8,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Records;
 using GroupLab.Core.Statistics;
 using GroupLab.Core.Trace;
 using GroupLab.Core.Reporting;
@@ -104,40 +105,18 @@ public sealed partial class MainWindow
             return;
         }
 
+        // Entry 258: the sessions made into groups by the shared code the phone uses too.
         var records = sessions.List().Where(s => sessionChosen.Contains(s.Id)).Reverse().Select(s => sessions.Get(s.Id)!).ToList();
-        var groups = new List<(string, IReadOnlyList<PointD>, string, string?)>();
-        var distances = new List<double?>();
-        foreach (var record in records)
+        var setup = CompareSessions.From(records, units);
+        compareFooting = setup.Footing;
+        compareDistance = setup.Distance;
+        if (setup.Refusal is { } refusal)
         {
-            var state = MarkingFile.Read(record.MarkingJson).State;
-            var (offsets, excluded) = KeptOffsets(state);
-            string name = record.Load ?? record.SheetName;
-            groups.Add((groups.Any(g => g.Item1 == name) ? $"{name}, {record.ShotDate}" : name, offsets,
-                $"{offsets.Count} shots, {record.ShotDate}{(excluded > 0 ? $", {excluded} excluded and left out" : "")}",
-                SpeedOf(record.Load)));
-            distances.Add(record.DistanceInches);
+            ShowComparison([], refusal);
+            return;
         }
 
-        compareFooting = null;
-        compareDistance = distances.FirstOrDefault();
-        if (distances.Distinct().Count() > 1)
-        {
-            if (distances.Any(d => d is null))
-            {
-                ShowComparison([], "One of these sessions has no distance and the others differ, so they cannot be put on one footing. Set the distance on it, accept it again, and compare.");
-                return;
-            }
-
-            double first = distances[0]!.Value;
-            for (int i = 0; i < groups.Count; i++)
-            {
-                double k = first / distances[i]!.Value;
-                groups[i] = (groups[i].Item1, [.. groups[i].Item2.Select(o => new PointD(o.X * k, o.Y * k))], groups[i].Item3 + $", shot at {units.DistanceText(distances[i]!.Value)}", groups[i].Item4);
-            }
-
-            compareFooting = $"These were shot at different distances, so they are compared as angles: every group is scaled to {units.DistanceText(first)}, where its figures are given.";
-        }
-
+        var groups = setup.Groups.Select(g => (g.Name, g.Offsets, g.Detail, SpeedOf(g.Load))).ToList();
         DiagnosticLog.Info("compare.sessions", ("groups", groups.Count));
         ShowComparison(groups, null);
     }
@@ -165,14 +144,6 @@ public sealed partial class MainWindow
         compareDistance = state.ShotDistanceInches;
         DiagnosticLog.Info("compare.subgroups", ("groups", groups.Count));
         ShowComparison(groups, null);
-    }
-
-    private static (IReadOnlyList<PointD> Offsets, int Excluded) KeptOffsets(MarkingState state)
-    {
-        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
-        var shots = state.Shots.Where(s => s.IsShot && !(s.Bull is { } b && sighters.Contains(b))).ToList();
-        var kept = shots.Where(s => s.Exclusion is null).ToList();
-        return (GroupAnalysis.CompositeOffsets(state, kept), shots.Count - kept.Count);
     }
 
     /// <summary>

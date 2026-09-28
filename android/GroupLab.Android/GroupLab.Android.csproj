@@ -65,6 +65,7 @@
     <Compile Include="..\..\src\GroupLab.App\BenchmarkPanel.cs" Link="Shared\BenchmarkPanel.cs" />
     <Compile Include="..\..\src\GroupLab.App\CompositePlot.cs" Link="Shared\CompositePlot.cs" />
     <Compile Include="..\..\src\GroupLab.App\ShotsCurve.cs" Link="Shared\ShotsCurve.cs" />
+    <Compile Include="..\..\src\GroupLab.App\IntervalChart.cs" Link="Shared\IntervalChart.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Marks.cs" Link="Shared\Theme\Marks.cs" />
     <!-- Entry 246, look B: the desktop's styles, icons and faces, so the phone's colors and type come from the same tokens. -->

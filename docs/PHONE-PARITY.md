@@ -14,7 +14,7 @@ concepts; the build spec is entry 259's own words. Anything a chosen concept doe
 **How it is built** (entry 258): what the desktop computes lives in shared code, so the phone and the desktop cannot give different numbers.
 The engines were already shared before this began: the analysis's figures and their explanations (`AnalysisPanel`, `FigureExplanations`),
 the aimed bulls (`AimedBulls`), Shots Needed to Zero (`ShotsToZero`), comparing loads (`LoadComparison`), ballistics and hit probability
-(`HitProbability` and the solver), pooling a set (`SetPool`) and a scan's printed scale (`ScaleReference`). What is left for the phone is
+(`HitProbability` and the solver), pooling a set (`SetPool`) and a scan's printed scale (`ScaleReference`). Making saved sessions into groups to compare moved from the desktop into `CompareSessions` (entry 258). What is left for the phone is
 its screens, in entry 259's order, each shipped in its own nightly and tried at the next device sitting.
 
 | Feature | Key | On the phone | Stage or reason |
@@ -29,7 +29,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures |
 | Every figure explained | `why` | on the phone | entry 259 screen 1, the explanation sheet |
-| Compare loads honestly | `compare` | coming | entry 259 screen 4, one figure at a time |
+| Compare loads honestly | `compare` | on the phone | entry 259 screen 4, one figure at a time; the desktop's chart, not yet in each load's colour |
 | Sessions over time | `sessions` | on the phone | |
 | Ballistics and hit chances | `ballistics` | coming | entry 259 screen 5, its own tab |
 | Shots in and out as CSV | `csv` | coming | after entry 259: through Android's share sheet and file picker |
