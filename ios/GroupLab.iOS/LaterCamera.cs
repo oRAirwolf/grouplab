@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using GroupLab.Mobile;
+using Screens = GroupLab.Mobile.Screens;
 
 namespace GroupLab.iOS;
 

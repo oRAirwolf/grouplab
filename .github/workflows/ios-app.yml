@@ -43,9 +43,14 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
       - name: The .NET iOS workload
         run: |
-          dotnet workload install ios > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       - name: OpenCV for iOS
