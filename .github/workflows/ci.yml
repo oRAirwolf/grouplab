@@ -6,6 +6,9 @@ name: build and test
 
 on:
   push:
+    # Entry 290: the iOS workers' branches run their own iOS workflows; a full build here on every push of theirs queued main's builds
+    # behind them. Their work is checked here when it reaches main.
+    branches-ignore: ['ios/**']
   pull_request:
 
 # Entry 141 section 2.2: a newer push cancels the older run on the same branch. Two pushes a few minutes apart used to build the same code

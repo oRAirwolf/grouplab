@@ -11,6 +11,9 @@ name: phase 0 gate record
 
 on:
   push:
+    # Entry 290: the iOS workers' branches run their own iOS workflows; a full build here on every push of theirs queued main's builds
+    # behind them. Their work is checked here when it reaches main.
+    branches-ignore: ['ios/**']
   pull_request:
   workflow_dispatch:
 
