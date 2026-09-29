@@ -4240,6 +4240,38 @@
   "What is left on the 9 degree picture is two slivers of printed ring about 0.3 in long with no hole in them, and the worst center errors of 0.08 in are one hole 1.3 holes across, below the rule's reach; both are the rings failing to cancel on the side of the sheet farthest from square, and that is the next thing to look at.": {
    "kind": "measured",
    "where": "grouplab scoreboard --synthetic and --corpus on 2026-09-29, before and after the joined-hole rule in src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs JoinedHole; the corpus is local only (entry 291 section 7 item 4)"
+  },
+  "- `release.yml` builds it with the identity Partner Center gave, from the repository's variables, and checks the package's Identity Name, Publisher and PublisherDisplayName against them, failing with the field's name on a mismatch (entry 293).": {
+   "kind": "code",
+   "where": ".github/workflows/release.yml msix job, Check the MSIX; scripts/check-msix.ps1; entry 293 section 1"
+  },
+  "A run by hand with `store_draft` builds only that package, runs the Windows App Certification Kit on it, puts it on a draft release named `store-draft- `, which makes no tag and is never a `v*` name, and proves the Store login with one read of the product, submitting nothing.": {
+   "kind": "code",
+   "where": ".github/workflows/release.yml, the store-draft and store jobs and the store_draft input; scripts/check-msix.ps1; entry 293 sections 1 and 2"
+  },
+  "- **The Store secret expires.** The client secret of the Entra application `grouplab-store-publisher` was made on 2026-09-29 and lasts 24 months, so it expires about 2028-09-28.": {
+   "kind": "decided",
+   "where": "entry 293: the client secret was made on 2026-09-29 for 24 months; scripts/store-login-check.ps1 and release.yml store job, Check the Store login"
+  },
+  "Make a new one in Entra by August 2028 and set it with `gh secret set AZURE_AD_APPLICATION_SECRET -R oRAirwolf/grouplab`.": {
+   "kind": "decided",
+   "where": "entry 293: the client secret was made on 2026-09-29 for 24 months; scripts/store-login-check.ps1 and release.yml store job, Check the Store login"
+  },
+  "The first submission is the draft's `0.2.0.0`, so the next stable release sent to the Store has to be `0.2.1` or later.": {
+   "kind": "decided",
+   "where": "scripts/package-msix.ps1 (release 0.2.0 becomes 0.2.0.0) and Directory.Build.props Version 0.2.0; the Store refuses a version not above the last it accepted; entry 293"
+  },
+  "**The second update, nightly 126 to 127 on the tablet:** found at start, 44.9 MB in 2 s, and when GroupLab left the screen it handed the file to Android with \"no tap needed\", as GroupLab was now its own installer of record; Android still answered that it wanted a tap, and from the background it could not show one, so the update waited for the next start.": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 127: GroupLab Dev log update.install.when silent=True, update.install.start silent=True, install.result status=-1; the fix is the UsesPermission in android/GroupLab.Android/Updates/SelfUpdate.cs; entry 288"
+  },
+  "Android 12 and later honor \"no tap needed\" only from an app that also declares `UPDATE_PACKAGES_WITHOUT_USER_ACTION`; GroupLab Dev did not.": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 127: GroupLab Dev log update.install.when silent=True, update.install.start silent=True, install.result status=-1; the fix is the UsesPermission in android/GroupLab.Android/Updates/SelfUpdate.cs; entry 288"
+  },
+  "It declares it from nightly 128, where the silent update is to be seen again, and the Fold 7's first self-update with it.": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 127: GroupLab Dev log update.install.when silent=True, update.install.start silent=True, install.result status=-1; the fix is the UsesPermission in android/GroupLab.Android/Updates/SelfUpdate.cs; entry 288"
   }
  },
  "rules": [
