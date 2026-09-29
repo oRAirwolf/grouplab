@@ -249,7 +249,7 @@ internal sealed class IosPhone : IPhonePlatform
         DiagnosticLog.Info("ios.print", ("paper", paper.ToString()));
         if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
         {
-            printer.PresentFromRect(Middle(view), view, true, (_, _, _) => { });
+            printer.PresentFromRectInView(Middle(view), view, true, (_, _, _) => { });
         }
         else
         {
@@ -317,7 +317,7 @@ internal sealed class IosPhone : IPhonePlatform
         }
     }
 
-    private static CoreGraphics.CGRect Middle(UIView view) => new(view.Bounds.GetMidX(), view.Bounds.GetMidY(), 1, 1);
+    private static CoreGraphics.CGRect Middle(UIView view) => new(view.Bounds.X + (view.Bounds.Width / 2), view.Bounds.Y + (view.Bounds.Height / 2), 1, 1);
 
     private static string Safe(string name) => string.Concat(name.Select(c => Path.GetInvalidFileNameChars().Contains(c) || c == ' ' ? '-' : c));
 }
