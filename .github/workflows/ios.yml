@@ -1,0 +1,77 @@
+name: ios
+
+# NOTES-FROM-PLANNING.md entry 290 section 2 item 2: OpenCV and OpenCvSharp's native half for iOS, built as a static xcframework on
+# GitHub's macos-26 machine with Xcode 26 (docs/IOS-PLAN.md section 2). The build takes most of an hour, so it is cached and made once
+# for each version of ios/opencv/build-extern.sh. Nothing here is signed or published; the iOS head will be a later job.
+#
+# The cache, for any later job here or in nightly.yml that needs the framework:
+#   uses: actions/cache/restore@v4
+#   with:
+#     path: ${{ runner.temp }}/ios-opencv
+#     key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+# The path has to be written exactly so, on a macOS runner, because the cache's version is worked out from it. It holds
+# OpenCvSharpExtern.xcframework.zip, its .sha256 and link-frameworks.txt. A cache saved on a branch other than main is seen only by that
+# branch; one saved on main is seen by every branch, which is why a push to main that changes the script runs this.
+# The same three files are kept as the artifact ios-opencv for thirty days.
+
+# One push trigger serves main and the branches named ios/..., because a workflow can have only one and its path filter applies to
+# every branch it lists: a push to either runs this when it touches ios/ or this file.
+on:
+  push:
+    branches: [main, 'ios/**']
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  opencv:
+    name: OpenCV for iOS
+    runs-on: macos-26
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+          cmake --version | head -1
+
+      - name: Native library cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: Build OpenCV and OpenCvSharp's native half
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: bash ios/opencv/build-extern.sh "${{ runner.temp }}/ios-opencv-work" "${{ runner.temp }}/ios-opencv"
+
+      - name: Check the checksum
+        working-directory: ${{ runner.temp }}/ios-opencv
+        run: |
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          ls -l
+          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+            echo "### OpenCV for iOS came from the cache: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### OpenCV for iOS was built: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-opencv
+          path: ${{ runner.temp }}/ios-opencv
+          retention-days: 30
+          if-no-files-found: error

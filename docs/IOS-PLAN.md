@@ -33,6 +33,15 @@ Everything below the screen is already platform-free .NET and runs on iOS as it 
 
 About three weeks of work in all, done a piece at a time around the rest of the inbox.
 
+**OpenCV for iOS is built (entry 290 section 2).** `ios/opencv/build-extern.sh` builds OpenCV and opencv_contrib 4.13.0 as static
+libraries, with the same modules as Android and none that need the camera, the screen or the GPU, then OpenCvSharp's native half from the
+same tag as the managed package, cut to the same bindings as on Android and made a static library. It does this twice, for iPhone and
+iPad (iphoneos arm64) and for the simulator on Apple silicon (iphonesimulator arm64), both with iOS 26 as the lowest version, merges each
+into one archive with every third party library OpenCV built, checks that the archive defines the entry points GroupLab calls, and wraps
+the two in `OpenCvSharpExtern.xcframework`, zipped with its SHA-256. The `ios` workflow runs it on `macos-26` with Xcode 26, caches the
+result under a key made from the script, so it is rebuilt only when the script changes, and keeps it as the artifact `ios-opencv` for
+thirty days. The head links it statically and calls it through `__Internal`.
+
 **The lowest iOS version: 26.** Entry 206 section 4 worked the floor out as an iPhone 11 on iOS 26 or later, and it stands: iOS 26 runs on
 every iPhone from the 11 of 2019 on and on the iPad mini (6th generation), which is the test device; one floor lets the camera code use
 one set of AVFoundation calls with no version checks; and nothing older can be tested, since there is no device to test it on.
