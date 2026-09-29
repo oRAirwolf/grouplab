@@ -144,10 +144,11 @@ The analysis has three columns:
 - **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, over the bull's rings drawn as wide gray bands. Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the figures, with its range, and where your shots are too few to reach that far out, fewer than one expected outside the circle, it says the circle is the model's guess rather than something the shots show. Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered. **Group** and **Whole target** beside them frame the group alone or the entire bull with the group inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.
 - **On the right:** the zero correction, the figures and the two judgment cards.
 
-**Tap a number to switch units.** Tap any angle to switch every angle between MOA and mil, any size on the paper to switch between inches
-and centimeters, and any distance to switch between yards and meters: every number of that kind changes at once, on every screen, and
-GroupLab remembers it, because it is the same choice as Units in Settings. Right-click a number, or press and hold it on the phone, to
-choose any unit it can take, SMOA and millimeters included. A figure's name still explains it when you tap it; only the number switches.
+**Tap a number to switch units.** Tap an angle to switch that number between MOA and mil, a size on the paper to switch it between
+inches and centimeters, and a distance to switch it between yards and meters. Only the number you tap changes, and GroupLab remembers
+the unit for that figure, so mean radius in mil stays in mil the next time while extreme spread can stay in MOA; figures you never tap
+follow Units in Settings. Right-click a number, or press and hold it on the phone, to choose any unit it can take, SMOA and millimeters
+included. A figure's name still explains it when you tap it; only the number switches.
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
 
@@ -186,13 +187,15 @@ It says what to dial when the group's center is far enough from the aim to be to
 
 **The full CEP table and the fitted ellipse** are in Advanced, one more click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and the spread on each axis with their intervals, and the error ellipse.
 
+**Fudd buster mode,** Unholy's idea and his name for it, sits beside it from twenty shots: a window that shows, with your own shots, the tightest and the widest three-shot groups among them, what averaging three-shot or five-shot groups would have said against every shot, and the zero chased five shots at a time, with how far each correction was from where the rifle shoots.
+
 **Shots Needed to Zero,** suggested by Jylee, sits under them. From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100. Within one click usually takes a handful of shots; the closest click can take hundreds, because a true zero near the line between two clicks is hard to resolve. The spread measured on a few shots may be larger than it looks, so GroupLab allows for that by simulation, and shows its trials and seed; tick **Treat the measured sigma as exact** to work it out exactly instead.
 
 **Export** writes the complete record as a GroupLab file, or the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it starts from GroupLab's guesses at which column is across, which is up and down, the unit, which way is up, and whether the numbers are measured from the point of aim or from the group's own center, each to check and change, and a choice it cannot guess starts empty and says so; then it shows the analysis. Numbers measured from the group's center say nothing about where the aim was, so then there is no offset from aim. There is no image with an import, so the figures are the whole of it.
 
 ## 6. Sessions and the report
 
-Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. Session records, in the rail, lists them newest first:
+Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. **After that, and after any change, it saves itself**: the status bar says when ("Saved 12 seconds ago in grouplab.db"), that it is safe to close, and **Show in folder** opens the folder that holds every session. In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes. Session records, in the rail, lists them newest first:
 - filter them by rifle and by load;
 - open one back to its analysis, which needs no image;
 - delete one, after GroupLab asks.
@@ -334,5 +337,8 @@ tab of its own: the dope, the trajectory and the chance of a hit. Targets prints
 PDF, and prints the printer check page; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
-Marking a target GroupLab did not print by hand is on the computer only for now.
+**A target GroupLab did not print** is marked by hand: when its codes cannot be read, choose **Not a GroupLab sheet: mark it by hand**. The
+picture moves under a crosshair that stays in the middle: set the two ends of a length you know and type it, set the aim point, then
+**Add hole here** on each hole, with **Undo**. A mark under the crosshair can be removed; once the scale is known the crosshair's ring is
+your bullet's size. **Fudd buster mode**, under a result of twenty shots or more, is the same page as on the computer.
 

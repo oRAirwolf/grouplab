@@ -10,7 +10,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
 **Last rewritten:** 2026-09-29, after entries 281 to 283 (the camera test's fixes, Alan's screenshots, the shutter) and 278 (CSV B, the
-spread audit, a shot left out left out everywhere, the iOS plan). Entries 279 and 280 are next.
+spread audit, a shot left out left out everywhere, the iOS plan) and 279 (the App Store permission, Marking A, Fudd buster mode,
+saving A). Entry 280 is done in part; its screens are next.
 
 ---
 
@@ -39,18 +40,19 @@ spread audit, a shot left out left out everywhere, the iOS plan). Entries 279 an
 
 ## The next three
 
-1. The camera test with Alan, then the device sitting: the phone and tablet pictures (253 section 3), the inner Fold screen (257),
-   torch strength in a session (262), entry 259's screens, and the printer check's card photo on the phone (273).
-2. Entry 258's remaining phone features, in its order.
-3. The outline's gap once Alan answers question 67; the next scheduled consistency audit.
+1. The device sitting on the nightly that carries entries 281 to 283: the camera fixes checked, `scripts/shutter-timing.py` on both
+   devices, the phone and tablet pictures (253 section 3), the inner Fold screen (257), torch strength (262), the card photo (273).
+2. Entry 280 section 2's screens as chosen (Shots A, Share A, several aim points, the report, zero from this group), then the desktop's
+   tabs (entry 281 section 2), then the full CEP table's cells made tappable (entry 280 section 1).
+3. The 2 MOA sheets once planning draws their layout; question 67 from request 53's photographs.
 
 ## Blocked, and on what
 
-- **The tablet** did not answer adb all night (from 11:19 UTC on 2026-09-28): its pictures and torch reading wait for it.
+- **Nothing waits on a device**: both are paired again and their wireless authorizations no longer expire (entry 280 section 4).
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
 - **Entry 166 section 3.2.** Request 16: the Mac tester's trackpad check (his thanks, to Fenix, is in the README since entry 189).
 
-Open requests in `docs/notes/for-alan.md`: **7** (50 the device sitting with the camera test of 33 in it; 46 the backups on 4 October; 38 the Store; then 9, 16 and 20). for-alan.md's own count says the same.
+Open requests in `docs/notes/for-alan.md`: **10** (50 the device sitting; 53 the card outline test pages; 54 a store-bought target; 55 the Apple steps; 46 the backups on 4 October; 38 the Store; then 9, 16 and 20). for-alan.md's own count says the same.
 
 ## Open questions
 

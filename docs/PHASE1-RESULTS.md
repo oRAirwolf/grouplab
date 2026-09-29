@@ -40,6 +40,21 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 280: one number at a time
+
+A tap now switches the number tapped and nothing else, and GroupLab remembers the unit for that figure (`UnitTap`, `UnitSwitch.Convert`,
+held by `UnitTapTests` and `UnitSwitchTests`). Row 10's screens are chosen and come next; the full CEP table's bare cells are not tappable yet.
+
+## Entry 279: the App Store permission, Marking A, and Unholy's requests
+
+LICENSE now opens with a GPLv3 section 7 permission for Apple's App Store and TestFlight. Marking A is on the phone: the scale, the aim
+points and the holes under a fixed crosshair, a ring the bullet's size, Undo, and a template. "Fudd buster mode" (Unholy's idea and name)
+works out, from twenty shots and a seed made from them, the tightest and widest three-shot groups, what averaging three- and five-shot
+groups would have said (biased low and still moving with the split), and the zero chased five at a time (`FuddBusterTests`, 6), shown as
+one page on the phone and a window on the desktop. The desktop now saves by itself once a target is changed or accepted and says when,
+where and that it is safe to close, with a Save button as the other choice in Settings (`Entry278Tests`). The 2 MOA sheets wait for their
+layout, and the tabs are next.
+
 ## Entry 278: Alan's decisions of the evening
 
 CSV B is built (`CsvGuess`, the phone's `CsvImportPage`, the desktop's dialog), with tests for names that say the unit, names that do not,

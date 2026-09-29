@@ -79,6 +79,66 @@ Each fix gets a test where one is possible; the device checks wait for the next 
 - **Knowing it is saved: A, with a setting for A or B.** Default A: saved by itself, with "Saved N seconds ago", where the file is, "Show in folder", and "safe to close". Settings offers B: a Save button, a "Not saved yet" marker, and a question on closing an unsaved target. Both on the desktop; the phone follows A, and B where it applies.
 - **Tabs: OK** as on board Tabs: New target opens a second tab below the controls and the first stays open; tabs appear only once a second target is open; each tab shows its saved mark and closes with its own ×.
 
+## 2026-09-29, entry 280: tap to switch changes one value only; row 10 chosen; "Fudd buster mode" kept; both devices paired
+
+**Status: done 2026-09-29, in part.** 1: a tap switches the number tapped, converted from what it shows (`UnitSwitch.Convert`, a range as a whole), and the unit is remembered for that figure by its name and kind, on both platforms; Settings keeps the units of figures never tapped, press and hold lists every unit for that number, and the hint says "this number"; `UnitTapTests` holds that one tap leaves the others unchanged. 3: "Fudd buster mode" is the name in the application, the Features page and the guide. 4: noted in STATE. Not done: section 2's screens, which are next in STATE's order; and section 1's full CEP table cells, bare numbers under a unit heading, which a tap cannot read a unit from yet.
+
+### 1. Tap to switch units: one value, not every value (changes entry 272's behaviour)
+
+Alan: "when you tap a value, it should only change that individual value and not all of the values displayed on the screen." Today a tap switches every angle (or every size) on the screen at once. Change it so a tap switches only the number tapped. Planning's reading, which Alan may correct: the choice is remembered for that figure, so the same figure shows in the same unit on the next result and wherever that figure appears again (mean radius in mil stays in mil; extreme spread can stay in MOA). Settings keeps the default units for figures never tapped; press and hold still shows every unit for that number; the one-time hint changes its words to say "this number". Both platforms, the desktop's table cells included where entry 273 left them untappable. Update the user guide, the Features page entry, its picture and the tests (a test that tapping one figure leaves the others unchanged).
+
+### 2. Row 10 of the phone parity canvas: Shots A, Share A, rest OK
+
+The entry 278 item 5 screens may now be built as drawn:
+- **Shots A** (board ShotsA; features c and f): a table of every shot with its offset across and up and down from the aim point, the clicks to bring it to the aim point (from the scope's click value), and a switch "Counted" per shot; a left-out shot is struck through in the table and dashed on the picture; the summary line gives the counted figures and says a shot was left out by the shooter; "Share the table (CSV)".
+- **Share A** (board ShareA; features d and g): a results box on the picture, dragged anywhere and resized by pinch or its corner handle, lines chosen by tapping it; chips for the mean radius circle, a label, the box's style and crop; "Save to gallery" and "Share". The mean radius circle is drawn about the group's centre.
+- **Several aim points** (board MultiAim; feature b): a chip per aim point in its own colour, "+ Aim point", holes belonging to an aim point by colour, figures per aim point and pooled when the same load.
+- **The report** (board Report; feature e): one dated Letter page (A4 where set): the picture, a plot centred on the group and scaled to fill with a stated grid, the figures table, the load and equipment line, and the confidence sentence.
+- **Zero from this group** (board ZeroFrom; feature h): the group's centre from the aim point, the clicks with the scope named, how well the centre is known, "Open in Shots Needed to Zero" and "Use as the zero offset in Ballistics".
+Desktop equivalents follow the same content in the desktop's layout. Numbers on the boards are samples.
+
+### 3. The small-samples window keeps Unholy's name: "Fudd buster mode"
+
+Alan's decision; it is the feature's name in the application, the Features page and the guide. Planning draws the window next.
+
+### 4. Both devices are paired, and Alan turned off the automatic revocation of wireless adb authorizations
+
+The Fold 7 and the Tab S8 Ultra are both paired with this computer again, and their authorizations should no longer expire. Note it in STATE's devices section. The camera test is under way on the Fold 7 (entry 277).
+
+## 2026-09-29, entry 279: Alan's follow-ups (App Store permission, Marking A confirmed), and Unholy's request, bug reports and feature idea
+
+**Status: done 2026-09-29, in part.** 1: the section 7 permission heads LICENSE, the README's License section names it and CONTRIBUTING says every contribution is accepted under it. 2: Marking A is built on the phone (`MarkingAPage`), reached from a picture whose codes cannot be read. 3: the 2 MOA sheets are DESIGN NEEDED in `for-alan.md`, with the options; the bug is fixed with entry 278 (a shot left out is out of every figure, `LeftOutShotTests`); saving today and the tabs are answered below; Fudd buster mode's engine (`FuddBuster`, with fixed seeds per result) and, with entry 281 section 2's choices, page A on the phone and a window on the desktop, and saving A with a setting for B on the desktop and A on the phone. How saving worked: the desktop saved a session only on Accept and analyze, to grouplab.db beside settings.json, and asked before leaving a target edited since; nothing on the screen said so; the phone saved on every result and every edit. The tabs: the desktop holds one target (one marking session and its saved state), so two open at once needs that moved into a document the window holds several of, several days of work. Not done: the tabs, which are next; the 2 MOA sheets, which wait for the layout; and the device checks of Marking A and the Fudd page.
+
+### 1. The App Store permission: yes
+
+Add a GPLv3 section 7 additional permission to LICENSE (and name it in the README's License section) allowing GroupLab to be distributed through Apple's App Store and TestFlight under Apple's terms, in the form other GPL projects on the App Store use (Signal, Nextcloud iOS). Alan is the only copyright holder today, so he can grant it; say in CONTRIBUTING that every contribution is accepted under the licence including this permission. The iOS plan of entry 278 item 6 may now include App Store submission once the app is ready; the submission itself still waits for Alan.
+
+### 2. Marking A: confirmed
+
+Build the phone's marking of a target GroupLab did not print as drawn on the phone parity canvas, row 8, boards MarkA1 and MarkA2 (redrawn): three steps, scale, bull, holes; the picture pans and pinches under a crosshair fixed at the screen centre; a button sets the point and counts ("Set end 2 of 2", "Add hole here (6)") with Undo; the crosshair ring drawn at the bullet's real size; holes GroupLab found are marked and numbered, holes the shooter adds are marked differently, a wrong mark is removed by putting the crosshair on it; "Done: measure N shots" and "Keep as a template". The same crosshair marking is feature 5a of entry 278, and correcting a hole on any result uses it too.
+
+The concepts for entry 278 items 5b to 5h are now on the same canvas as row 10; build their screens only after Alan's answer arrives as its own entry.
+
+### 3. From Unholy (he may be credited by that name)
+
+**Request: a target with 2 MOA circles instead of 1 MOA,** "for guns that don't shoot 1 MOA". Find each GroupLab sheet whose circles are 1 MOA and make a 2 MOA variant at each distance it comes in (larger circles; fewer bulls to a page where they would not fit). Credit Unholy on the Features page. If a layout choice arises (how many bulls, which sheets first), post it as DESIGN NEEDED rather than choosing.
+
+**Bug: excluding a shot does not exclude it from the analysis.** Reproduce it on the desktop (and the phone if the phone has the control), find where the exclusion is lost (figures, plot, pooled figures, Shots Needed to Zero, exports, a reopened session), fix it, and add tests that fail today. This overlaps feature 5c (a switch per shot); the rule there holds: the shot stays on the record, shown as left out, and every figure and export respects it.
+
+**Feedback: nothing says when a target is saved, or where.** He sees earlier targets under Sessions but wants an easy way to know the current one is saved and safe to close. Write down exactly how saving works today (automatic or not, when, where the file lives) in the answer, then planning draws the indicator (a concept goes to Alan). Until then, change nothing visible.
+
+**Feedback: "New target" should not close the current target.** He suggests that New target opens the new one alongside, as tabs below the control buttons, and that the tabs appear only once a second target is open. Say in the answer whether the desktop can hold two results open at once today and what it would take; planning draws it for Alan.
+
+**Feature idea (Alan's working title is Unholy's: "Fudd buster mode"; the final name is Alan's).** After an analysis of 20 or more shots, an optional window that uses the shooter's own shots to show why small samples mislead:
+1. Random three-shot samples from his own shots, the tightest and the widest, shown side by side with the line "These shots came from the same gun, with the same ammunition, on the same range trip."
+2. What his "group size" would have been had he averaged three-shot or five-shot groups instead, against the figure from all the shots, and how much that average moves with how the shots are split.
+3. The zero chase: take the shots in order, five at a time; "set the zero" to each five-shot centre in turn, and show how far the correction wandered from the rifle's true centre (the centre of all the shots), and how many clicks each "correction" would have been.
+Build the engine now as pure functions over a result's shots, with a fixed random seed per result so the same result always shows the same examples, and tests. The words must be exactly true (for example, averaging small groups' extreme spreads is biased low and still noisy; say it that way, not that it is "invalid"). The window itself waits for planning's concept and Alan's choice. It serves Alan's standing goal of teaching mean radius and confidence over small-sample extreme spread; the Features page credits the idea to Unholy.
+
+### 4. DESIGN NEEDED
+
+Update the line: the concepts for 5b to 5h are with Alan; planning is drawing the save indicator, the tabs for a second target, and the small-samples window; the 2 MOA sheets may add one of their own.
+
 ## 2026-09-28, entry 278: Alan's decisions of the evening: marking, CSV import, the card outline test, the store-bought target, eight features from the competitor study, and iOS
 
 **Status: done 2026-09-29, in part.** 1: not built, as it says; entry 279 section 2 then confirmed Marking A. 2: CSV B built on the phone (Sessions, Import shots from a CSV file) and the desktop's dialog starting from the same guesses (`CsvGuess`), with numbers measured from the group's center imported with no aim point. 3: the three pages are in `C:\Dev\grouplab-local\scale-test` (`grouplab scale-test-pages`) and request 53 asks for the prints, scans and card photos; the measurement waits for them. 4: request 54. 5: the engine and data work: each aim point's own figures (`GroupAnalysis.ByAimPoint`), each shot's offset and clicks (`ShotOffsets`), and a shot left out left out of every figure, the saved session and what is sent (`GroupReport.Counted`, which is entry 279's bug); 5h's engine was there already. The spread audit found the mean radius explained as the plain average when it is the Rayleigh estimate, 1.2533 sigma, and the 95 percent ellipse claiming 95 percent of later shots; both reworded, and `SpreadFiguresTests` holds a five-shot group worked by hand. 6: `docs/IOS-PLAN.md`, request 55, and iOS as being built everywhere. 7: the DESIGN NEEDED line. Not done: 6.2, the nightly's iOS job, which needs the iOS head of the plan's step 3 to build; the screens of 5a to 5h, which wait for their concepts (entry 280 has since chosen some); and the phone's CSV B checked on a device.

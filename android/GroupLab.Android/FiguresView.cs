@@ -266,11 +266,11 @@ internal sealed class FiguresView : UserControl
 
     private Control Row(ResultFigure figure)
     {
-        var value = UnitTap.Attach(new TextBlock { Text = figure.Value, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, TextAlignment = TextAlignment.Right });
+        var value = UnitTap.Attach(new TextBlock { Text = figure.Value, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, TextAlignment = TextAlignment.Right }, figure.Label);
         var right = new StackPanel { Spacing = 2, Children = { value } };
         if ((figure.Range ?? figure.Beneath) is { } under)
         {
-            right.Children.Add(UnitTap.Attach(Screens.Dim(under)));
+            right.Children.Add(UnitTap.Attach(Screens.Dim(under), figure.Label));
         }
 
         var label = Label(figure.Label, figure.Key, figure);

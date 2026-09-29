@@ -7,7 +7,9 @@ namespace GroupLab.App;
 
 /// <summary>
 /// Tap a number to switch units, NOTES-FROM-PLANNING.md entries 272 and 273, on the desktop and the phone alike: a value on screen becomes
-/// tappable, and a tap switches every number of its kind, everywhere, through the one unit setting Settings shows (<see cref="UnitSwitch"/>).
+/// tappable. Entry 280 section 1, Alan: "when you tap a value, it should only change that individual value and not all of the values
+/// displayed on the screen." A tap switches the number tapped, from what it shows (<see cref="UnitSwitch.Convert"/>), and the unit is
+/// remembered for that figure, so the same figure shows in it wherever it appears again; Settings keeps the units of figures never tapped.
 /// Right-click, or press and hold on a phone, lists every unit the value can take. What kind a value is comes from the unit written after
 /// its number, so a value is tappable exactly when it shows a unit; its label still explains it, and a value is never given the label's
 /// dotted underline or the glossary's tap.
@@ -21,6 +23,15 @@ public static partial class UnitTap
     public static Func<UnitSettings>? Current { get; set; }
 
     public static Action<UnitSettings, UnitKind>? Apply { get; set; }
+
+    /// <summary>The unit remembered for a figure and kind (<see cref="Key"/>), or null: set by the window or the phone's shell.</summary>
+    public static Func<string, string?>? Remembered { get; set; }
+
+    /// <summary>A number was switched: the figure's key where it has a name, the unit now shown, and its kind.</summary>
+    public static Action<string?, string, UnitKind>? Tapped { get; set; }
+
+    /// <summary>What a figure's unit is remembered under: its name and the kind of number, so a size and an angle of one figure keep their own.</summary>
+    public static string Key(string figure, UnitKind kind) => figure + "|" + kind;
 
     /// <summary>The kind of the first number with a unit after it in <paramref name="text"/>, or null where there is none.</summary>
     public static UnitKind? KindOf(string? text)
@@ -42,10 +53,11 @@ public static partial class UnitTap
     private static partial Regex Unit();
 
     /// <summary>
-    /// Makes a value tappable where its text shows a unit: a tap switches its kind, and a right-click or press and hold lists every unit.
-    /// The kind is read from the text when it is tapped, so a value rewritten in other units still switches the right thing.
+    /// Makes a value tappable where its text shows a unit: a tap switches that number, and a right-click or press and hold lists every unit
+    /// for it. Given the <paramref name="figure"/>'s name, the value is shown at once in the unit remembered for that figure, and a switch is
+    /// remembered for it. The kind is read from the text when it is tapped, so a value rewritten in other units still switches the right thing.
     /// </summary>
-    public static T Attach<T>(T block)
+    public static T Attach<T>(T block, string? figure = null)
         where T : TextBlock
     {
         ArgumentNullException.ThrowIfNull(block);
@@ -54,28 +66,39 @@ public static partial class UnitTap
             return block;
         }
 
+        if (figure is not null && Remembered is { } remembered)
+        {
+            foreach (var kind in new[] { UnitKind.Angle, UnitKind.Length, UnitKind.Distance })
+            {
+                if (remembered(Key(figure, kind)) is { } symbol && UnitSwitch.SymbolIn(block.Text, kind) is { } shown && shown != symbol)
+                {
+                    block.Text = UnitSwitch.Convert(block.Text ?? "", kind, symbol);
+                }
+            }
+        }
+
         block.Classes.Add(Value);
         block.Cursor = new Cursor(StandardCursorType.Hand);
         block.Tapped += (_, e) =>
         {
-            if (KindOf(block.Text) is { } kind && Current?.Invoke() is { } now)
+            if (KindOf(block.Text) is { } kind && UnitSwitch.SymbolIn(block.Text, kind) is { } from)
             {
-                Apply?.Invoke(UnitSwitch.Switch(now, kind), kind);
+                Switch(block, figure, kind, UnitSwitch.Next(kind, from));
                 e.Handled = true;
             }
         };
         block.ContextRequested += (_, e) =>
         {
-            if (KindOf(block.Text) is not { } kind || Current?.Invoke() is not { } now)
+            if (KindOf(block.Text) is not { } kind || UnitSwitch.SymbolIn(block.Text, kind) is not { } from)
             {
                 return;
             }
 
             var menu = new MenuFlyout();
-            foreach (var (symbol, units, current) in UnitSwitch.Choices(now, kind))
+            foreach (string symbol in UnitSwitch.Symbols(kind))
             {
-                var item = new MenuItem { Header = current ? symbol + "  (now)" : symbol };
-                item.Click += (_, _) => Apply?.Invoke(units, kind);
+                var item = new MenuItem { Header = symbol == from ? symbol + "  (now)" : symbol };
+                item.Click += (_, _) => Switch(block, figure, kind, symbol);
                 menu.Items.Add(item);
             }
 
@@ -83,5 +106,13 @@ public static partial class UnitTap
             e.Handled = true;
         };
         return block;
+    }
+
+    /// <summary>This number shown in <paramref name="to"/>, and the switch told to the host, which remembers it for the figure.</summary>
+    public static void Switch(TextBlock block, string? figure, UnitKind kind, string to)
+    {
+        ArgumentNullException.ThrowIfNull(block);
+        block.Text = UnitSwitch.Convert(block.Text ?? "", kind, to);
+        Tapped?.Invoke(figure is null ? null : Key(figure, kind), to, kind);
     }
 }

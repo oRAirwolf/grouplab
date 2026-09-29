@@ -380,7 +380,7 @@ public partial class MainWindow
         var leadValue = new TextBlock { Text = Angle(point.DropInches) + (point.DropInches <= -5e-4 ? " up" : point.DropInches >= 5e-4 ? " down" : ""), Classes = { AppStyles.HeadlineFigure } };
         leadValue.FontSize = Tokens.LeadValueSize;
         leadValue.FontFamily = Mono;
-        UnitTap.Attach(leadValue);
+        UnitTap.Attach(leadValue, "Elevation");
         Grid.SetColumn(leadValue, 1);
         lead.Children.Add(leadLabel);
         lead.Children.Add(leadValue);
@@ -435,7 +435,7 @@ public partial class MainWindow
         }
 
         var name = new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Label } };
-        var figure = UnitTap.Attach(new TextBlock { Text = value, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Right, FontFamily = Mono, VerticalAlignment = VerticalAlignment.Center });
+        var figure = UnitTap.Attach(new TextBlock { Text = value, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Right, FontFamily = Mono, VerticalAlignment = VerticalAlignment.Center }, label);
         Grid.SetColumn(figure, 1);
         return new Border
         {

@@ -3256,6 +3256,38 @@
   "Not built yet Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iPhone and iPad, being built The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 278 section 6 (iOS being built) and README phase table"
+  },
+  "After that, and after any change, it saves itself : the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and Show in folder opens the folder that holds every session.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs and the Saving settings (entry 281 section 2)"
+  },
+  "In Settings, under Saving , you can choose a Save button instead; then the bar says Not saved yet until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs and the Saving settings (entry 281 section 2)"
+  },
+  "**With an additional permission under section 7, for Apple's App Store and TestFlight** (entry 279 section 1).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 279 section 1 (Alan: yes to the App Store permission; he is the only copyright holder); LICENSE's preface and CONTRIBUTING.md"
+  },
+  "Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this, so [LICENSE](LICENSE) begins with a permission to convey GroupLab through the App Store and TestFlight under Apple's terms.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 279 section 1 (Alan: yes to the App Store permission; he is the only copyright holder); LICENSE's preface and CONTRIBUTING.md"
+  },
+  "It changes nothing else: whoever gets GroupLab from Apple is still entitled to its source under the GPL.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 279 section 1 (Alan: yes to the App Store permission; he is the only copyright holder); LICENSE's preface and CONTRIBUTING.md"
+  },
+  "Alan is the only copyright holder, which is what lets him grant it, and every contribution is accepted under the license with it (CONTRIBUTING.md).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 279 section 1 (Alan: yes to the App Store permission; he is the only copyright holder); LICENSE's preface and CONTRIBUTING.md"
+  },
+  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and **Show in folder** opens the folder that holds every session.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)"
+  },
+  "In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)"
   }
  },
  "rules": [

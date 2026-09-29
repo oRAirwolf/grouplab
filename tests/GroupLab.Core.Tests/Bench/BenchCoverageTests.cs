@@ -66,6 +66,8 @@ public class BenchCoverageTests
         ["ShotLabels"] = "A few dozen string comparisons inside the analysis, below the resolution of any figure here.",
         ["ChangeWords"] = "The undo tooltip's words, read from two markings once per edit, below the resolution of any figure here.",
         ["ShotCsv"] = "Reading or writing one CSV of shot coordinates when a person asks, a few hundred rows at most.",
+        ["FuddBusterWords"] = "The sentences Fudd buster mode shows, made from numbers already worked out; nothing to time.",
+        ["FuddBuster"] = "The small-sample lessons are arithmetic on one result's shots when a person asks, not the detection the bench times.",
         ["ShotOffsets"] = "Each shot's offset and clicks from its aim point: arithmetic on one group's marks, not the detection the bench times.",
         ["Glossary"] = "One small list read once, and a word search over a label or a line when it is shown.",
         ["Snapping"] = "It runs under a person's finger on the marking canvas, so it is measured as a control and not here.",

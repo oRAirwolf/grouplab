@@ -605,6 +605,20 @@ public sealed partial class MainWindow : Window
         // Entry 273: a tap on any number with a unit switches that kind of unit, here as on the phone.
         UnitTap.Current = () => units ?? UnitSettings.Imperial;
         UnitTap.Apply = TapUnits;
+        // Entry 280 section 1: a tap switches the number tapped and is remembered for its figure, not the setting for every number.
+        UnitTap.Remembered = key => settingsStore.LoadFigureUnit(key);
+        UnitTap.Tapped = (key, symbol, kind) =>
+        {
+            if (key is not null)
+            {
+                settingsStore.SaveFigureUnit(key, symbol);
+            }
+
+            settingsStore.SaveUnitTapped();
+            unitHint.IsVisible = false;
+            status.Text = (key is null ? "This number" : key[..key.LastIndexOf('|')]) + " now in " + symbol + (key is null ? "" : " · remembered");
+            DiagnosticLog.Info("units.tap", ("kind", kind.ToString()), ("to", symbol), ("remembered", key is not null));
+        };
 
         // Before anything is built. The settings page reads these to fill the train and the interval and to say what the last check found,
         // and entry 125 section 3 found it showing the defaults and an empty line because they were loaded after it was built. This is the
@@ -939,6 +953,10 @@ public sealed partial class MainWindow : Window
         var running = new StackPanel { Orientation = Orientation.Horizontal, Children = { detectionProgress, cancelDetection } };
         DockPanel.SetDock(running, Dock.Right);
         statusLine.Children.Add(running);
+        // Entry 279 section 3 and entry 281 section 2: whether the target is saved, where, and whether it is safe to close.
+        var savedLine = BuildSavedLine();
+        DockPanel.SetDock(savedLine, Dock.Right);
+        statusLine.Children.Add(savedLine);
         statusLine.Children.Add(status);
         status.PropertyChanged += (_, e) =>
         {
@@ -1562,7 +1580,7 @@ public sealed partial class MainWindow : Window
         // Entry 189 section 3: the figure's other form, smaller, beneath it: the size on the paper under an angle, or the angle under a size.
         return beneath is null
             ? row
-            : new StackPanel { Children = { row, UnitTap.Attach(new TextBlock { Text = beneath, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, Classes = { AppStyles.Secondary } }) } };
+            : new StackPanel { Children = { row, UnitTap.Attach(new TextBlock { Text = beneath, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Right, Classes = { AppStyles.Secondary } }, name) } };
     }
 
     /// <summary>The smaller line beneath each figure kept in view, for the headless tests.</summary>
@@ -2501,6 +2519,7 @@ public sealed partial class MainWindow : Window
     private void Refresh()
     {
         canvas.InvalidateVisual();
+        SavingAfterChange();
         var state = session.State;
         var report = GroupAnalysis.Analyse(state);
         if (report.AllShots?.Shots is { } shotCount)
@@ -3085,6 +3104,7 @@ public sealed partial class MainWindow : Window
             currentSession = sessions.Save(record);
             // Entry 140 section 1.4: from here the sheet is in a saved session, so leaving it asks nothing until it is edited again.
             MarkingIsSaved();
+            savedAtUtc = DateTime.UtcNow;
             DiagnosticLog.Info("session.save", ("session", currentSession), ("shots", record.ShotCount), ("proof", proof?.Length ?? 0));
         }
         catch (Microsoft.Data.Sqlite.SqliteException ex)
@@ -4971,8 +4991,8 @@ public sealed partial class MainWindow : Window
             figure.Classes.Add(AppStyles.HeadlineFigure);
         }
 
-        // Entry 273: a value with a unit switches its kind's unit when tapped; its label still explains it.
-        UnitTap.Attach(figure);
+        // Entry 273: a value with a unit switches when tapped; its label still explains it. Entry 280: just this one, remembered for it.
+        UnitTap.Attach(figure, label);
 
         var row = new DockPanel();
         DockPanel.SetDock(name, Dock.Left);
@@ -5182,6 +5202,29 @@ public sealed partial class MainWindow : Window
         BuildPrinterSettings(column);
 
         // Entry 42 section 2: dark, light, or following the system, remembered like the units.
+        // Entry 281 section 2: how a target is saved, A by itself (the default) or B with a Save button.
+        column.Children.Add(Ruled("Saving"));
+        var byItself = new RadioButton { GroupName = "saving", Content = Wrapped("By itself, as soon as a target is changed or accepted"), IsChecked = !settings.LoadSaveByHand() };
+        var byHand = new RadioButton { GroupName = "saving", Content = Wrapped("With a Save button, and a question before an unsaved target is left or closed"), IsChecked = settings.LoadSaveByHand() };
+        byItself.IsCheckedChanged += (_, _) =>
+        {
+            if (byItself.IsChecked == true)
+            {
+                settings.SaveSaveByHand(false);
+                ShowSaved();
+            }
+        };
+        byHand.IsCheckedChanged += (_, _) =>
+        {
+            if (byHand.IsChecked == true)
+            {
+                settings.SaveSaveByHand(true);
+                ShowSaved();
+            }
+        };
+        column.Children.Add(byItself);
+        column.Children.Add(byHand);
+
         column.Children.Add(Ruled("Theme"));
         column.Children.Add(themeChoice);
         themeChoice.SelectionChanged += (_, _) =>

@@ -66,6 +66,10 @@ public sealed class ResultView : UserControl
                     column.Children.Add(Screens.Primary("Yes, measure it as that sheet", () => _ = AsSheet(working, likely, setup, again)));
                 }
 
+                // Entry 279 section 2: a target GroupLab did not print is marked by hand, Marking A.
+                var failed = Screens.Page(column);
+                column.Children.Add(Screens.Choice("Not a GroupLab sheet: mark it by hand", () => Content = new MarkingAPage(working.Path, working.Metadata.Orientation, setup, units,
+                    marked => Content = new ResultView(marked, setup, units, again), () => Content = failed)));
                 column.Children.Add(Screens.Line(result.LooksLike is null ? "Which sheet is it?" : "Or another sheet:"));
                 foreach (var sheet in PhoneAnalysis.Library().OrderBy(d => d.Name, StringComparer.CurrentCultureIgnoreCase))
                 {
@@ -143,6 +147,18 @@ public sealed class ResultView : UserControl
             actions.Children.Add(Screens.Row("Bulls you fired at", AimedBulls.Says(session.State.Rule, session.State.Bulls), ShowBulls));
         }
 
+        // Entry 279 section 3 and entry 281 section 2: Unholy's "Fudd buster mode", from twenty shots.
+        if (FuddBusterPage.Shots(session.State).Count >= GroupLab.Core.Statistics.FuddBuster.LeastShots)
+        {
+            actions.Children.Add(Screens.Row(GroupLab.Core.Statistics.FuddBusterWords.Title, "Why a few shots mislead, shown with your own", () =>
+            {
+                var result = Content;
+                Content = new FuddBusterPage(session.State, units, () => Content = result);
+            }));
+        }
+
+        // Entry 281 section 2: the phone follows A, saved by itself, and says so from the start, not only after a change.
+        saved.Text = SavedWords(sessionId);
         actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
         actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
@@ -239,6 +255,11 @@ public sealed class ResultView : UserControl
         Changed();
     };
 
+    /// <summary>Where the result is kept and that it is safe to close, entry 279 section 3 (Unholy) and entry 281 section 2 (A).</summary>
+    private static string SavedWords(long? id) => id is null
+        ? "This session could not be saved on the phone."
+        : "Saved in Sessions on this phone, and every change as you make it: safe to close.";
+
     /// <summary>After a change: the figures and the plot again, and the session saved over itself.</summary>
     private void Changed()
     {
@@ -255,7 +276,7 @@ public sealed class ResultView : UserControl
         plot.Show(state, definition, units, Label, Bull);
         full.Show(state, units);
         undo.IsEnabled = session.UndoWords is not null;
-        saved.Text = sessionId is null ? "This session could not be saved on the phone." : "Saved in Sessions. Every change is saved as you make it.";
+        saved.Text = SavedWords(sessionId);
         editor?.InvalidateVisual();
     }
 

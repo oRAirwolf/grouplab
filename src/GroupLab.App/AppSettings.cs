@@ -219,6 +219,24 @@ public sealed class AppSettingsStore(string path)
 
     public bool SavePrinterOffered() => Save(file => file["printerOffered"] = true);
 
+    /// <summary>
+    /// Entry 281 section 2, Alan's choice: how a target is saved. False, the default, is A: by itself as soon as it is changed or accepted.
+    /// True is B: with a Save button, and a question before an unsaved target is left or closed.
+    /// </summary>
+    public bool LoadSaveByHand() => Read(file => file["saveByHand"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveSaveByHand(bool byHand) => Save(file => file["saveByHand"] = byHand);
+
+    /// <summary>Entry 280 section 1: the unit a figure was last switched to by a tap, by its key, or null where it never was.</summary>
+    public string? LoadFigureUnit(string key) => Read(file => file["figureUnits"] is JsonObject all ? (string?)all[key] : null);
+
+    public bool SaveFigureUnit(string key, string symbol) => Save(file =>
+    {
+        var all = file["figureUnits"] as JsonObject ?? [];
+        all[key] = symbol;
+        file["figureUnits"] = all;
+    });
+
     /// <summary>Entry 273: whether a number has ever been tapped to switch units; the one-time hint shows until one has.</summary>
     public bool LoadUnitTapped() => Read(file => file["unitTapped"]?.GetValueKind() == JsonValueKind.True);
 

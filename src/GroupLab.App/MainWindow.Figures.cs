@@ -116,6 +116,9 @@ public sealed partial class MainWindow
 
         // Entry 252 section 3: in the same disclosure as the full CEP table.
         ShowShotsToZero(state);
+
+        // Entry 279 section 3: Unholy's "Fudd buster mode", from twenty shots.
+        ShowFuddBusterButton(state);
     }
 
     private void FullFigures(IReadOnlyList<PointD> offsets, string heading)

@@ -26,7 +26,7 @@ public class UnitTapTests
         window.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(UnitTap.Value));
 
     [AvaloniaFact]
-    public void TappingAnAngleSwitchesEveryAngleAndIsRemembered()
+    public void TappingANumberSwitchesThatNumberAloneAndIsRememberedForItsFigure()
     {
         string settings = Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json");
         string path = Path.Combine(Path.GetTempPath(), $"grouplab-tap-{Guid.NewGuid():N}.png");
@@ -57,20 +57,29 @@ public class UnitTapTests
             Assert.Equal(UnitKind.Angle, UnitTap.KindOf(mean.Text));
             Assert.DoesNotContain(window.GetLogicalDescendants().OfType<TextBlock>(), t => t.Classes.Contains(UnitTap.Value) && t.Classes.Contains(TermHelp.Class));
 
+            // Entry 280 section 1: the tap switches this number only; the setting and every other angle stay as they were.
             mean.RaiseEvent(new TappedEventArgs(InputElement.TappedEvent, null!));
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal(AngularUnit.Mrad, store.LoadUnits().Angular);
-            Assert.Equal(LinearUnit.Inch, store.LoadUnits().Linear);
-            Assert.Contains(Values(window), t => t.Text!.EndsWith(" mil", StringComparison.Ordinal));
-            Assert.DoesNotContain(Values(window), t => t.Text!.EndsWith(" MOA", StringComparison.Ordinal));
-            Assert.Equal("Angles now in mil everywhere · remembered", window.StatusText);
+            Assert.EndsWith(" mil", mean.Text, StringComparison.Ordinal);
+            Assert.Equal(UnitSettings.Imperial, store.LoadUnits());
+            Assert.Contains(Values(window), t => t != mean && t.Text!.EndsWith(" MOA", StringComparison.Ordinal));
+            Assert.EndsWith(" now in mil · remembered", window.StatusText, StringComparison.Ordinal);
             Assert.True(store.LoadUnitTapped());
 
-            // A size on the paper switches lengths, and only lengths.
-            var paper = Values(window).First(t => UnitTap.KindOf(t.Text) == UnitKind.Length);
+            // Remembered for that figure: the panel drawn again shows it in mil, and the others still in MOA.
+            int mils = Values(window).Count(t => t.Text!.EndsWith(" mil", StringComparison.Ordinal));
+            window.Session.SetShotDistance(3700);
+            window.Session.SetShotDistance(3600);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(mils, Values(window).Count(t => t.Text!.EndsWith(" mil", StringComparison.Ordinal)));
+            Assert.Contains(Values(window), t => t.Text!.EndsWith(" MOA", StringComparison.Ordinal));
+
+            // A size on the paper switches that size alone, to centimeters.
+            var paper = Values(window).First(t => UnitTap.KindOf(t.Text) == UnitKind.Length && UnitSwitch.SymbolIn(t.Text, UnitKind.Length) == "in");
             paper.RaiseEvent(new TappedEventArgs(InputElement.TappedEvent, null!));
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal(new UnitSettings(LinearUnit.Centimetre, AngularUnit.Mrad, DistanceUnit.Yard), store.LoadUnits());
+            Assert.Equal("cm", UnitSwitch.SymbolIn(paper.Text, UnitKind.Length));
+            Assert.Equal(LinearUnit.Inch, store.LoadUnits().Linear);
             window.Close();
         }
         finally

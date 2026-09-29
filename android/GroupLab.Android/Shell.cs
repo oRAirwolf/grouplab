@@ -104,6 +104,19 @@ public sealed class Shell : UserControl
 
         // Entry 273: tap a number to switch units, the same setting everywhere, remembered.
         UnitTap.Current = () => App.Settings.LoadUnits();
+        // Entry 280 section 1: a tap switches the number tapped and is remembered for its figure.
+        UnitTap.Remembered = key => App.Settings.LoadFigureUnit(key);
+        UnitTap.Tapped = (key, symbol, kind) =>
+        {
+            if (key is not null)
+            {
+                App.Settings.SaveFigureUnit(key, symbol);
+            }
+
+            App.Settings.SaveUnitTapped();
+            DiagnosticLog.Info("units.tap", ("kind", kind.ToString()), ("to", symbol), ("remembered", key is not null));
+            Toast((key is null ? "This number" : key[..key.LastIndexOf('|')]) + " now in " + symbol + (key is null ? "" : " · remembered"));
+        };
         UnitTap.Apply = (units, kind) =>
         {
             App.Settings.SaveUnits(units);
@@ -314,8 +327,8 @@ internal static class Screens
                     Children =
                     {
                         new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
-                        UnitTap.Attach(new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } }), // one line on purpose: a figure's number
-                        UnitTap.Attach(new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } }),
+                        UnitTap.Attach(new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } }, label), // one line on purpose: a figure's number
+                        UnitTap.Attach(new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } }, label),
                     },
                 },
                 Classes = { PhoneStyles.Tile },

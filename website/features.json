@@ -17,6 +17,10 @@
     "On the phone, the camera has a bubble level",
     "Photographs whose square codes are small in the picture",
     "On the phone, the picture on the result keeps its shape",
+    "On the phone, a target GroupLab did not print can now be marked by hand",
+    "The status bar now says when the target was saved",
+    "GroupLab's license now allows it to be distributed through Apple's App Store",
+    "A tap on a number now switches that number alone",
     "On the phone, the result now opens into every figure the desktop shows",
     "On the phone, Shots Needed to Zero has a page of its own",
     "On the phone, you tap the bulls you fired at",
@@ -65,13 +69,17 @@
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Any target you already shoot",
-      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand on the computer; place several bulls and keep the layout as a template for the next sheet. Finding the holes by itself on any target is the goal, not yet a feature.",
+      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. Finding the holes by itself on any target is the goal, not yet a feature.",
       "shot": "marking-other",
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
+      "mobile": {
+        "noPicture": "marking by hand on the phone is photographed at the next sitting with the phone"
+      },
       "since": "0.2.0-nightly.111",
       "note": "On a target GroupLab did not print, you can now place each bull by hand",
       "tour": "marking",
@@ -166,7 +174,7 @@
       "key": "unit-tap",
       "group": "The numbers",
       "name": "Tap a number to switch units",
-      "sentence": "Tap any angle to switch MOA and mil, any size on the paper to switch inches and centimeters, any distance to switch yards and meters, everywhere at once and remembered; press and hold for every unit.",
+      "sentence": "Tap an angle to switch that number between MOA and mil, a size on the paper between inches and centimeters, a distance between yards and meters; GroupLab remembers it for that figure, and press and hold gives every unit.",
       "shot": "analysis",
       "platforms": [
         "Windows",
@@ -371,6 +379,26 @@
       "guide": "8-the-zero-correction-at-another-distance-and-the-dope-table",
       "mobile": {
         "noPicture": "the phone's Ballistics tab is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "fudd-buster",
+      "group": "The numbers",
+      "name": "Fudd buster mode",
+      "sentence": "From twenty shots, your own shots show why a few shots mislead: the tightest and the widest three-shot groups among them, what averaging small groups would have said, and the zero chased five shots at a time. Unholy's idea, and his name for it.",
+      "shot": "analysis-open",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "Fudd buster mode",
+      "tour": "analysis-open",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "the phone's Fudd buster page is photographed at the next sitting with the phone"
       }
     },
     {

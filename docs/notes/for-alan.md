@@ -1,9 +1,9 @@
 GOOD MORNING (the night of 28 September, in five lines):
-1. Out in nightly 121 (18:17 UTC), on top of 120's printer check and number taps: the picture score now follows how well a picture measures, and on the phone Paste a picture, a set shared as one large page with cut lines, and glossary words explained by a tap. The site is current, and the day's consistency audit is fixed. Nothing needs you for any of it.
-2. THE CAMERA TEST, ready now: GroupLab Dev nightly 121 is on the Fold 7 (about ten minutes, the Fold 7 closed, a printed 5x5 sheet flat on a table in ordinary light): open GroupLab Dev, Capture, Take a picture. (a) GUIDED: hold it over the sheet and follow the words until the shutter fires by itself, then Use this picture. (b) Three bad ones on purpose, about five seconds each: tilted well over, far too close, your hand's shadow across the sheet; note whether the words said what was wrong. (c) One more good one from another height. (d) Tap MANUAL: one ordinary picture with the shutter, then one deliberately bad one, and read the feedback. Then say "camera done", and anything that felt wrong.
+1. Out in nightly 122 (02:10 UTC): the camera test's fixes (line 2), a shot you leave out now left out of every figure (Unholy's report), CSV import that guesses its columns, exact definitions for mean radius and standard deviation, and the plan for iPhone and iPad (docs/IOS-PLAN.md, and request 55 for the Apple steps). The site is current.
+2. THE CAMERA FIXES are in nightly 122 (on the tablet now, and on the Fold 7 the moment it is back on Wi-Fi): a bubble level in the middle; the torch goes off after the picture; the camera comes back after you leave GroupLab; what you frame is what is saved; the words no longer flip between closer and back; Camera and Result buttons stay in view; the shutter clicks and flashes at once; the picture on the result keeps its shape and stands upright; and a sheet whose codes were too small to read is read by enlarging each code, which named last night's refused picture. Try it when you like, with a printed sheet, and say "camera done" and anything that felt wrong.
 3. The server read is done (request 52, 17:45 UTC): two processors, 10.2 GB of memory free, 36 GB of disk free, load 0.6. It has room to re-read sent targets, capped at one processor.
 4. New tonight (entries 278 and 279), none before the camera test: 53, three test pages to print, scan and photograph with a card (ready in C:\Dev\grouplab-local\scale-test); 54, a store-bought target with five shots; 55, the Apple steps for iOS once your membership is active. The tablet has nightly 121 too and shows the black idle screen.
-5. Updated 2026-09-28 17:50 UTC. Next: the camera test when you are ready (nightly 121 or later), then the device sitting; question 67 (the card outline's gap) is with you through planning.
+5. Updated 2026-09-29 02:17 UTC. Also built tonight: CSV import with guesses (phone and computer), marking a target by hand on the phone, Fudd buster mode, the target saving itself with the time shown, and a tap on a number switching that number alone.
 
 # Requests for Alan
 
@@ -23,10 +23,12 @@ Hit chance, the largest; (6) the set as a checklist, medium; (7) the scan pill, 
 through the share sheet, large sheet advice, and opening a picture shared from another app. `docs/PHONE-PARITY.md` lists every feature
 as on the phone, coming or left out, and the site build now fails on a feature with no row.
 
-**DESIGN NEEDED** (entry 278 section 7; not a request for you; the concepts are with planning and you): marking a target GroupLab
-did not print on the phone, Marking A redrawn with the fixed crosshair; and the screens for the eight features from the competitor study,
-5a to 5h of entry 278. Their engine and data work that decides no look is built: each aim point's own figures, each shot's offset and
-clicks, and every figure without a shot left out. Importing shots from a CSV file on the phone is built as you chose (CSV B).
+**DESIGN NEEDED** (entry 279 section 4; not a request for you; planning, please): **the 2 MOA sheets Unholy asked for.** The sheets with
+1 MOA circles are the 5x5 load development family, a 1.00 in bull (0.95 MOA at 100 yd, 0.87 MOA at 100 m, Letter and A4, plain, C and E),
+and the 5x6, a 0.87 in bull. A 2 MOA bull is 2.09 in at 100 yd and 2.29 in at 100 m, and cannot sit on the 5x5's 38 mm pitch. Options:
+**A**, 3 by 4 on one Letter or A4 page, 12 bulls at about 64 mm; **B**, 5 by 5 as a set of four sheets like the large format sheets, 25
+bulls; **C**, both, B for load development and A for a quick group. Which, and which variants first? Everything else is chosen: Marking
+A, Fudd buster page A and saving A with a setting are built, the tabs are next, and row 10's screens are chosen by entry 280.
 
 **The Features page shows each new thing itself** (entry 256; not a request). These entries now have their own picture, drawn as the
 sheet prints: **The E bull**, **The C bull** (with its dot), **Zeroing grids read through a scope** (all four C3 sheets, credited to you

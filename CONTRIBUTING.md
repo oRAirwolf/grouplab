@@ -2,6 +2,13 @@
 
 Read [DESIGN.md](DESIGN.md) first and [docs/TARGET-SCHEMA.md](docs/TARGET-SCHEMA.md) second. The code implements those documents section by section, and it will not make sense without them.
 
+## The license of a contribution
+
+GroupLab is GPL-3.0 with one additional permission under section 7, for distribution through Apple's App Store and TestFlight, at the
+head of [LICENSE](LICENSE) (NOTES-FROM-PLANNING.md entry 279 section 1). **Every contribution is accepted under the license with that
+permission.** By offering a change you agree that it may be conveyed on those terms; a change that cannot be, because it carries code
+under another license that does not allow it, cannot be taken.
+
 ## Building and testing
 
 You need:

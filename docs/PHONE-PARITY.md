@@ -25,7 +25,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | A sheet shot off by the same amount | `whole-sheet` | on the phone | |
 | Tap a number to switch units | `unit-tap` | on the phone | entry 273: tiles and figure rows, press and hold for every unit, the note at the bottom |
 | Check your printer once, for real inches from photos | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept |
-| Any target you already shoot | `other-targets` | coming | bulls placed by touch, a scale drawn at each, templates: waits for a concept (DESIGN NEEDED) |
+| Any target you already shoot | `other-targets` | on the phone | entry 279 section 2, Marking A: the scale, the aim points and the holes under a fixed crosshair, and a template kept |
 | Open by dropping or pasting | `open-anyhow` | on the phone | entry 258: a picture shared into GroupLab or opened with it from another app, and Paste a picture on Capture |
 | The figures you read off a target | `six-figures` | on the phone | |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page |
@@ -34,6 +34,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Compare loads honestly | `compare` | on the phone | entry 259 screen 4, one figure at a time; the desktop's chart, not yet in each load's colour |
 | Sessions over time | `sessions` | on the phone | |
 | Ballistics and hit chances | `ballistics` | on the phone | entry 259 screen 5, its own tab; printing the dope card is still to come |
+| Fudd buster mode | `fudd-buster` | on the phone | entry 279 section 3 and entry 281 section 2, page A: the same three sections as the desktop's window |
 | Shots in and out as CSV | `csv` | on the phone | out through Android's share sheet since entry 258; in under Sessions since entry 278, CSV B: the group as it will be read and GroupLab's guesses, each tapped to change |
 | The Targets screen | `targets` | on the phone | the phone's Targets screen (entry 243) |
 | Made for your optic | `optic` | on the phone | on the phone's Targets screen |
