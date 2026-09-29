@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 292 section 2.3: the share extension, org.grouplab.app.share, so GroupLab is in the share sheet of Google
+    Photos, Photos and every other app on iPhone and iPad. It only copies what was shared into the app group and opens GroupLab, which reads
+    it (ios/Shared/Handoff.cs); it carries none of GroupLab's own code, so it stays small, as an extension has to. Built inside the
+    application by its reference in ios/GroupLab.iOS/GroupLab.iOS.csproj.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-ios</TargetFramework>
+    <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+    <IsAppExtension>true</IsAppExtension>
+    <ApplicationId>org.grouplab.app.share</ApplicationId>
+    <ApplicationTitle>GroupLab</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
+    <RootNamespace>GroupLab.Share</RootNamespace>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <TrimMode>partial</TrimMode>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+    <UseSystemResourceKeys>false</UseSystemResourceKeys>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Remove="UIKit" />
+    <Using Remove="Foundation" />
+    <Using Remove="CoreGraphics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The one piece shared with the application: where shared pictures wait and how GroupLab is told. -->
+    <Compile Include="..\Shared\Handoff.cs" Link="Handoff.cs" />
+  </ItemGroup>
+
+</Project>

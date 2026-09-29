@@ -161,6 +161,58 @@ public class PhotoIntakeTests
     }
 
     /// <summary>
+    /// Section 2.1: iOS's photo picker downloads a photograph kept only in iCloud whole before it can be read. The line says how far the
+    /// download has got, and Cancel stops the download itself, not only the waiting, so nothing more is fetched.
+    /// </summary>
+    [Fact]
+    public async Task APhotographDownloadedWholeSaysHowFarAndCancelStopsIt()
+    {
+        Assert.Equal("Getting the photo from Photos", PhotoIntake.Downloading("Photos", 0, 1, 0));
+        Assert.Equal("Getting the photo from Photos, 45 percent", PhotoIntake.Downloading("Photos", 0, 1, 0.45));
+        Assert.Equal("Getting photo 2 of 2, 100 percent", PhotoIntake.Downloading(null, 1, 2, 1.2));
+
+        string folder = Folder();
+        byte[] bytes = await File.ReadAllBytesAsync(Photo, TestContext.Current.CancellationToken);
+        var heard = new List<string>();
+        var whole = Handle(bytes, "Photos") with
+        {
+            Download = (done, _) =>
+            {
+                done(0.5);
+                done(1);
+                return Task.FromResult<Stream?>(new MemoryStream(bytes));
+            },
+        };
+
+        var fetched = await PhotoIntake.Fetch(whole, folder, "chosen", 0, 1, heard.Add, CancellationToken.None);
+
+        Assert.NotNull(fetched.Photo);
+        Assert.Equal(bytes, await File.ReadAllBytesAsync(fetched.Photo.Path, TestContext.Current.CancellationToken));
+        Assert.Contains("Getting the photo from Photos, 50 percent", heard);
+
+        // Cancel during the download: the person is back at once and the download is told to stop.
+        var stopped = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var cancel = new CancellationTokenSource();
+        var slow = Handle(bytes, "Photos") with
+        {
+            Download = async (_, token) =>
+            {
+                token.Register(() => stopped.TrySetResult());
+                started.TrySetResult();
+                await Task.Delay(Timeout.Infinite, token);
+                return null;
+            },
+        };
+        var fetching = PhotoIntake.Fetch(slow, folder, "chosen2", 0, 1, null, cancel.Token);
+        await started.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+        await cancel.CancelAsync();
+
+        Assert.True((await fetching.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken)).Canceled);
+        await stopped.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+    }
+
+    /// <summary>
     /// Section 1.3: several pictures shared at once are read one after another as a set, each its own file, and the page the person was on
     /// comes back; a head without pickers of its own (the iOS head until entry 292 section 2) opens nothing without a window.
     /// </summary>

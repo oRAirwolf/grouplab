@@ -307,13 +307,22 @@ internal sealed class IosPhone : IPhonePlatform
         return Task.FromResult<string?>(null);
     }
 
+    /// <summary>
+    /// Entry 292 section 2: Choose a photograph opens the Photos picker, iCloud Photos included and with no permission asked; From another
+    /// app opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox (Photos/PhotoPickers.cs).
+    /// </summary>
+    public Task<IReadOnlyList<PhotoHandle>> PickPhotos(PhotoSource source, Avalonia.Controls.TopLevel? top) => PhotoPickers.Pick(source);
+
+    /// <summary>Whether the device has a way to the internet now, from Network's path monitor; null until it has said (Photos/Connection.cs).</summary>
+    public bool? Online => Connection.Online;
+
     /// <summary>iOS updates GroupLab through TestFlight and the App Store, so there is no updater card.</summary>
     public Avalonia.Controls.Control? UpdateCard() => null;
 
     public bool IsDevBuild => false;
 
     /// <summary>The view controller in front, which a sheet is presented from.</summary>
-    private static UIViewController? Top()
+    internal static UIViewController? Top()
     {
         var window = UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIWindowScene>()
             .SelectMany(s => s.Windows).FirstOrDefault(w => w.IsKeyWindow)

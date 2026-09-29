@@ -42,6 +42,36 @@
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!-- Entry 292 section 2.3: "Open in GroupLab" for any picture, which iOS copies into GroupLab's own files. -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Picture</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+	<!-- Entry 292 section 2.3: the address the share extension opens GroupLab with once the shared pictures are in the app group. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>org.grouplab.app.shared</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>grouplab</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>GroupLab photographs a target to find the holes and measure the group. The picture stays on this device unless you share it.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

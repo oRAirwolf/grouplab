@@ -38,6 +38,8 @@
     <MtouchInterpreter>OpenCvSharp</MtouchInterpreter>
     <!-- An exception says what went wrong in words, in the log and an error report, rather than a resource key. -->
     <UseSystemResourceKeys>false</UseSystemResourceKeys>
+    <!-- Entry 292 section 2.3: the app group the share extension leaves shared pictures in. -->
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,6 +53,18 @@
     <Using Remove="UIKit" />
     <Using Remove="Foundation" />
     <Using Remove="CoreGraphics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Entry 292 section 2.3: the share extension, built and put in the application's PlugIns folder, and where the two meet. Its assembly
+      is not one this application uses, so it is not referenced as one.
+    -->
+    <ProjectReference Include="..\GroupLab.Share\GroupLab.Share.csproj">
+      <IsAppExtension>true</IsAppExtension>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <Compile Include="..\Shared\Handoff.cs" Link="Photos\Handoff.cs" />
   </ItemGroup>
 
   <ItemGroup>

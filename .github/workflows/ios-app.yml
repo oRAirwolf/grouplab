@@ -118,6 +118,15 @@ jobs:
             test -f "$app/$item" || { echo "::error::The application does not carry $item"; exit 1; }
           done
           ls "$app/targets/frozen" | head -3
+          # Entry 292 section 2.3: the share extension inside the application, a share-services extension, and the app group in both.
+          appex="$app/PlugIns/GroupLab.Share.appex"
+          test -d "$appex" || { echo "::error::The application carries no share extension"; ls "$app" | head -40; exit 1; }
+          test "$(plutil -extract NSExtension.NSExtensionPointIdentifier raw "$appex/Info.plist")" = "com.apple.share-services" || { echo "::error::The extension is not a share extension"; exit 1; }
+          plutil -extract CFBundleIdentifier raw "$appex/Info.plist"
+          du -sh "$appex"
+          for signed in "$app" "$appex"; do
+            codesign -d --entitlements - --xml "$signed" 2>/dev/null | grep -c "group.org.grouplab.app" > /dev/null               && echo "app group entitlement in $(basename "$signed")" || echo "::warning::No app group entitlement in the signature of $(basename "$signed")"
+          done
           test -n "$(ls "$app/targets/frozen"/*.gltd.json 2>/dev/null)" || { echo "::error::The application carries no frozen sheets"; exit 1; }
           if [ "${{ steps.opencv.outputs.linked }}" = "true" ]; then
             nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the executable"; exit 1; }
@@ -150,6 +159,9 @@ jobs:
           xcrun simctl terminate "$UDID" org.grouplab.app || true
           data=$(xcrun simctl get_app_container "$UDID" org.grouplab.app data)
           echo "DATA=$data" >> "$GITHUB_ENV"
+          # Entry 292 section 2.3: iOS registered the share extension, so GroupLab is offered in other apps' share sheets.
+          xcrun simctl spawn "$UDID" pluginkit -m -A -v -i org.grouplab.app.share 2>&1 | tee pluginkit.txt
+          grep -q "org.grouplab.app.share" pluginkit.txt && echo "the share extension is registered" || echo "::warning::pluginkit does not list the share extension"
           # The committed sample scan, whose consent is in samples/PROVENANCE.md, put where the self-test reads it.
           mkdir -p "$data/Documents/selftest"
           cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
@@ -174,6 +186,12 @@ jobs:
               printf '%s' "$showing" > "$folder/taken"
               echo "$(( $(date +%s) - start )) s: photographed $showing"
               last="$showing"
+            fi
+            # Entry 292 section 2.3: the address the share extension opens GroupLab with, opened through iOS as the extension opens it.
+            if [ -f "$folder/openurl" ]; then
+              url=$(cat "$folder/openurl")
+              xcrun simctl openurl "$UDID" "$url" && echo "$(( $(date +%s) - start )) s: opened $url"
+              rm -f "$folder/openurl"
             fi
             [ "$status" = "done" ] && break
             if ! kill -0 "$launcher" 2>/dev/null; then
@@ -216,6 +234,7 @@ jobs:
             desktop-results.json
             app-console.log
             app-logs
+            pluginkit.txt
             crashes
             build-*.log
             build-*.binlog
@@ -316,6 +335,8 @@ jobs:
           test -n "$app"
           du -sh "$app"
           lipo -info "$app/GroupLab.iOS"
+          test -d "$app/PlugIns/GroupLab.Share.appex" || { echo "::error::The device build carries no share extension"; exit 1; }
+          lipo -info "$app/PlugIns/GroupLab.Share.appex/GroupLab.Share"
           if [ "${{ steps.opencv.outputs.linked }}" = "true" ]; then
             nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the device executable"; exit 1; }
           fi

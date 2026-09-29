@@ -11,7 +11,7 @@ namespace GroupLab.iOS;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 290 section 2 item 5: what the simulator can prove of the camera, which has no camera. Pressing Take a
-/// picture on the Capture screen must open the files picker in the camera's place without a crash; and a picture the camera gives as HEIC,
+/// picture on the Capture screen must open the Photos picker in the camera's place without a crash; and a picture the camera gives as HEIC,
 /// or as anything but a JPEG, must come out as a JPEG that ImageIO and OpenCV both read at its own size. The rest is for a device
 /// (docs/IOS-PLAN.md, "The first TestFlight sitting").
 /// </summary>
@@ -52,7 +52,14 @@ internal static class CameraSelfTest
             bool taken = picker && await SelfTest.Photographed($"{n:00}-camera-fallback");
             if (picker)
             {
-                await SelfTest.OnUi(() => Presented()?.DismissViewController(false, null));
+                // Closed as its own Cancel closes it, so the Capture screen hears that nothing was chosen (entry 292).
+                await SelfTest.OnUi(() =>
+                {
+                    if (!PhotoPickers.CancelOpen())
+                    {
+                        Presented()?.DismissViewController(false, null);
+                    }
+                });
                 await SelfTest.WaitFor(() => Presented() is null, TimeSpan.FromSeconds(10));
             }
 
@@ -60,7 +67,7 @@ internal static class CameraSelfTest
             check.Passed = pressed && picker && alive;
             check.Detail = !pressed
                 ? "the Take a picture button was not found"
-                : $"no camera on this simulator; Take a picture {(picker ? "opened the files picker (" + kind + ")" : "did not open the files picker")}, {(taken ? "photographed" : "not photographed")}, and the Capture screen {(alive ? "is still there" : "is gone")}";
+                : $"no camera on this simulator; Take a picture {(picker ? "opened the picker (" + kind + ")" : "did not open the picker")}, {(taken ? "photographed" : "not photographed")}, and the Capture screen {(alive ? "is still there" : "is gone")}";
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
@@ -140,7 +147,7 @@ internal static class CameraSelfTest
         return destination.Close() && data.Length > 0 ? data : null;
     }
 
-    /// <summary>The view controller presented over GroupLab's own, which the files picker is.</summary>
+    /// <summary>The view controller presented over GroupLab's own, which a picker is.</summary>
     private static UIViewController? Presented()
     {
         var windows = UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIWindowScene>().SelectMany(s => s.Windows).ToArray();

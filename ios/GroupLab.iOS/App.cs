@@ -26,6 +26,10 @@ public sealed class App : Avalonia.Application
             Console.WriteLine($"{Phone.LogTag} {level.ToString().ToUpperInvariant()} {line}");
         });
 
+        // Entry 292 section 2: pictures opened in GroupLab or shared into it from another app, and whether the device is online.
+        Connection.Start();
+        IncomingPhotos.Listen(this);
+
         base.OnFrameworkInitializationCompleted();
         if (selfTest)
         {
