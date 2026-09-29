@@ -218,7 +218,23 @@ public sealed class Shell : UserControl
     internal void ShowIdle()
     {
         var before = Content;
-        Content = new IdleScreen(() => Content = before);
+
+        // The window behind the safe area too (the status bar's and the home indicator's strips on iOS), black while it shows.
+        var top = TopLevel.GetTopLevel(this);
+        var behind = top?.Background;
+        if (top is not null)
+        {
+            top.Background = Avalonia.Media.Brushes.Black;
+        }
+
+        Content = new IdleScreen(() =>
+        {
+            Content = before;
+            if (top is not null)
+            {
+                top.Background = behind;
+            }
+        });
         DiagnosticLog.Info("app.idle", ("shown", true));
     }
 

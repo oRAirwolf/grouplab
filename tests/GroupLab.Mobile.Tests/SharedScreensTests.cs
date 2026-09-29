@@ -115,10 +115,12 @@ public class SharedScreensTests
         var idle = Assert.IsType<IdleScreen>(shell.Content);
         Assert.Equal(Avalonia.Media.Colors.Black, ((Avalonia.Media.ISolidColorBrush)idle.Background!).Color);
         Assert.False(idle.Speaking);
+        Assert.Same(Avalonia.Media.Brushes.Black, TopLevel.GetTopLevel(shell)!.Background);
         idle.RaiseEvent(new Avalonia.Input.TappedEventArgs(Avalonia.Input.InputElement.TappedEvent, null!));
         Assert.True(idle.Speaking);
         idle.GetVisualDescendants().OfType<Button>().Single().RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         Assert.Same(before, shell.Content);
+        Assert.NotSame(Avalonia.Media.Brushes.Black, TopLevel.GetTopLevel(shell)!.Background);
     }
 
     private static string Words(Button button) =>
