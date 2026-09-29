@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1227 |
-| measured | 1744 |
-| decided | 1272 |
+| measured | 1745 |
+| decided | 1269 |
 | unbacked | 0 |
-| **total** | **4243** |
+| **total** | **4241** |
 
-**931** of them were read one sentence at a time and their backing written against the sentence. The other **3312** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**929** of them were read one sentence at a time and their backing written against the sentence. The other **3312** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -352,9 +352,7 @@ one that matters.
 
 - *code* (src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales); AutomaticMarking.Run on GroupLab sheets; the goal from entry 270 and DETECTION-LEARNING-STUDY.md section 7): # GroupLab **Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth.
 - *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): On Windows, macOS, Linux and Android.
-- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **2** | On the computer, every hole found, then the group with honest ranges.
-- *decided* (NOTES-FROM-PLANNING.md entry 266, the README's new top chosen by Alan; the platforms are docs/PLATFORM-SUPPORT.md's table): | | **3** | On the phone, photograph it at the range.
-- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): | The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting.
+- *measured* (docs/figures/screens/current/made-from.json (the desktop pictures, stamped by scripts/screens-stamp.py --write) and docs/figures/screens/phone/made-from.json (nightly 115)): The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting.
 - *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | [![Session records](docs/figures/screens/current/sessions-dark-1400x900.png)](docs/figures/screens/current/sessions-dark-1400x900.png) | [![Compare loads](docs/figures/screens/current/compare-dark-1400x900.png)](docs/figures/screens/current/compare-dark-1400x900.png) | | **Session records.** Every analyzed sheet, by rifle and load, to open again, compare or pool.
 - *code* (docs/figures/screens/current, written by the screenshot walk (Entry109Tests) every week, entry 146): | | | |---| | [![The analysis screen, light theme](docs/figures/screens/current/analysis-light-1400x900.png)](docs/figures/screens/current/analysis-light-1400x900.png) | | **Light theme.** Dark, light, high contrast, or following the system.
 - *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): | ## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.

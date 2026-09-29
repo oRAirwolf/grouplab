@@ -15,11 +15,9 @@ Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows
   <img src="docs/figures/readme/product-light.png" alt="A shot GroupLab sheet, numbered 1, tilted behind the desktop analysis window, numbered 2, which shows the group plotted with its circles and the figures beside it; the phone's result, numbered 3, overlaps at the right.">
 </picture>
 
-| | |
-|---|---|
-| **1** | Shoot any target, or print a GroupLab sheet that reads itself. |
-| **2** | On the computer, every hole found, then the group with honest ranges. |
-| **3** | On the phone, photograph it at the range. |
+1. Shoot any target, or print a GroupLab sheet that reads itself.
+2. On the computer, every hole found, then the group with honest ranges.
+3. On the phone, photograph it at the range.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/figures/readme/mosaic-dark.png">

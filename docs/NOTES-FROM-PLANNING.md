@@ -24,6 +24,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 285: the README's three-line table under the main picture shows an empty row on GitHub
+
+**Status: done 2026-09-29.** The table is a numbered list, the three sentences word for word; nothing else read the table. Checked on GitHub in light and dark after the push.
+
+Alan, from a screenshot of the repository's front page: "the table below the main image has an empty row in it".
+
+**Why.** README.md lines 18 to 22 are a Markdown table whose header row is blank (`| | |`). GitHub always draws a table's header row, so it shows as an empty bordered row above rows 1 to 3.
+
+**The fix.** Replace the table with a plain numbered list, which matches the 1, 2 and 3 on the picture and has no header to draw:
+
+```
+1. Shoot any target, or print a GroupLab sheet that reads itself.
+2. On the computer, every hole found, then the group with honest ranges.
+3. On the phone, photograph it at the range.
+```
+
+Keep the three sentences word for word. If a test, the consistency audit, or the site's build reads that table, change it in the same commit so they agree (rule c). Check the result on GitHub in both light and dark themes, and say in `for-alan.md` that it is fixed.
+
 ## 2026-09-29, entry 284: the architecture pages ("Behind the curtain"): Alan approved the refined design; build it
 
 **Status: done 2026-09-29.** The four pages are built from `website/how-it-works.json` and the drawings in `website/how-it-works/` by `website/how_it_works.py`, at the paths suggested: `/tour/how-it-works/` and its `opencv/`, `hole-detection/` and `pipeline/`. The map works without JavaScript (every part and step a plain section); the drawings are SVG in the site's own colors, light and dark; the tour, the README's Architecture section and the Features page link to it. All 255 figures are in the data file, each with its source, and the build fails on a figure without one or on a source that is not in the repository. Every one of 321 claims was checked against the code; 63 were corrected, listed in PHASE1-RESULTS.md. The pages at phone width wait for a look on the phone: headless Chrome will not lay out narrower than about 500 pixels.

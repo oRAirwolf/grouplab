@@ -4000,6 +4000,10 @@
   "Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
    "kind": "decided",
    "where": "entry 279 section 2: marking by hand is on the phone (android/GroupLab.Android/MarkingAPage.cs); entry 284 section 2.5 for the link"
+  },
+  "The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting.": {
+   "kind": "measured",
+   "where": "docs/figures/screens/current/made-from.json (the desktop pictures, stamped by scripts/screens-stamp.py --write) and docs/figures/screens/phone/made-from.json (nightly 115)"
   }
  },
  "rules": [

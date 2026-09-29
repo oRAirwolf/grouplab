@@ -40,6 +40,10 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 285: the README's empty table row
+
+The three lines under the main picture are a numbered list, so GitHub draws no empty header row above them.
+
 ## Entry 284: Behind the curtain
 
 The map and three deep dives are built (`website/how_it_works.py`, `website/how-it-works.json`, 20 drawings in `website/how-it-works/`). Of the 321 facts in the approved designs, 248 were confirmed, 63 corrected and 10 reworded because the repository cannot confirm them, each against the repository on 2026-09-29. The corrections that change what a reader learns:
