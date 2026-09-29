@@ -209,6 +209,10 @@ public sealed class SettingsView : UserControl
         column.Children.Add(Screens.Heading("About"));
         var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.Version}"));
         column.Children.Add(about);
+#if GROUPLAB_UPDATER
+        // Entry 288: the updater's version, its train's newest, Update now and the automatic switch.
+        ((StackPanel)about.Child!).Children.Add(Updates.UpdateCard.Build());
+#endif
 #if GROUPLAB_DEV
         // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
         ((StackPanel)about.Child!).Children.Add(Screens.Dim("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));

@@ -4004,6 +4004,30 @@
   "The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting.": {
    "kind": "measured",
    "where": "docs/figures/screens/current/made-from.json (the desktop pictures, stamped by scripts/screens-stamp.py --write) and docs/figures/screens/phone/made-from.json (nightly 115)"
+  },
+  "**The first update of a copy installed by adb needs one tap**, because adb, not GroupLab, is its installer of record; after it GroupLab is.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Updates/AndroidUpdates.cs: MayInstallSilently, held by AndroidUpdatesTests.SilentOnlyFromAndroid12AndOnlyOnceItIsItsOwnInstaller; entry 288"
+  },
+  "On Android 12 and later every update after that is meant to install without a tap once GroupLab has left the screen.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Updates/AndroidUpdates.cs: MayInstallSilently, held by AndroidUpdatesTests.SilentOnlyFromAndroid12AndOnlyOnceItIsItsOwnInstaller; entry 288"
+  },
+  "**GroupLab Dev on Android updates itself.** The Android build installed from its APK looks for a newer nightly when it starts and about every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and that it is signed with the same key as the copy you have before installing it.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/Updates/SelfUpdate.cs and UpdateCard.cs; AndroidUpdates.When, held by AndroidUpdatesTests; entry 288"
+  },
+  "Settings, About shows the version you have, the newest one, **Update now**, and **Install updates automatically**, which you can turn off.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/Updates/SelfUpdate.cs and UpdateCard.cs; AndroidUpdates.When, held by AndroidUpdatesTests; entry 288"
+  },
+  "The Android build installed from its APK looks for a newer nightly when it starts and about every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and that it is signed with the same key as the copy you have before installing it.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/Updates/SelfUpdate.cs and UpdateCard.cs; AndroidUpdates.When, held by AndroidUpdatesTests; entry 288"
+  },
+  "Settings, About shows the version you have, the newest one, Update now , and Install updates automatically , which you can turn off.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/Updates/SelfUpdate.cs and UpdateCard.cs; AndroidUpdates.When, held by AndroidUpdatesTests; entry 288"
   }
  },
  "rules": [

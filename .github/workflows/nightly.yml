@@ -361,6 +361,7 @@ jobs:
           # ends in -dev, which marks its error and survey reports.
           dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-dev-out" \
             -p:GroupLabDev=true -p:AndroidPackageFormat=apk -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION-dev" -p:Version="$VERSION-dev" \
+            -p:GroupLabTrain=nightly \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
             -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
             -p:AndroidSigningStorePass=env:STORE_PASS -p:AndroidSigningKeyPass=env:KEY_PASS
@@ -374,6 +375,17 @@ jobs:
             (cd android/native/symbols && zip -qr "$GITHUB_WORKSPACE/signed/grouplab-android-native-symbols.zip" .)
           fi
           ls -l signed
+          # Entry 288: the AAB goes only to Google Play and must not carry the updater. Its manifest is a protocol buffer in which the
+          # permission's name is plain text, so its absence can be read without any tool; the Dev APK must carry it.
+          if unzip -p signed/grouplab-android.aab base/manifest/AndroidManifest.xml | grep -aq REQUEST_INSTALL_PACKAGES; then
+            echo "::error::the AAB for Google Play asks to install packages, so it carries the updater (entry 288)"
+            exit 1
+          fi
+          if ! unzip -p signed/grouplab-android-dev.apk AndroidManifest.xml | tr -d '\0' | grep -aq REQUEST_INSTALL_PACKAGES; then
+            echo "::error::GroupLab Dev's APK has no updater (entry 288)"
+            exit 1
+          fi
+          echo "the AAB has no updater, and GroupLab Dev's APK has one"
 
       - uses: actions/upload-artifact@v6
         if: steps.key.outputs.present == 'yes'
@@ -501,7 +513,8 @@ jobs:
             --out release/update-manifest.json \
             --asset windows installer release/grouplab-setup-win-x64.exe "$base/grouplab-setup-win-x64.exe" \
             --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
-            --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz"
+            --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz" \
+            $( [ -f release/grouplab-android-dev.apk ] && echo --asset android apk-dev release/grouplab-android-dev.apk "$base/grouplab-android-dev.apk" )
           # Checked with the key compiled into the build being published, not with the key that signed it: that is the stronger question,
           # because a build that cannot verify its own updates is broken however well the manifest was signed. A commit from before the key
           # was set fails here by design, and the message says NoKey.

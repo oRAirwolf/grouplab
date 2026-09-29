@@ -37,7 +37,7 @@ Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows
 
 **Sharing and privacy:** [Send a target to the project](https://grouplab.org/features/#send-targets), [Error reports](https://grouplab.org/features/#error-reports), [The hardware survey](https://grouplab.org/features/#survey), [Words explained where they appear](https://grouplab.org/features/#explain-words).
 
-**Updates and platforms:** [Updates that list what you skipped](https://grouplab.org/features/#updates), [Builds for the Mac](https://grouplab.org/features/#mac), [GroupLab Dev for testers](https://grouplab.org/features/#dev-build) (Android).
+**Updates and platforms:** [Updates that list what you skipped](https://grouplab.org/features/#updates), [Builds for the Mac](https://grouplab.org/features/#mac), [GroupLab Dev for testers](https://grouplab.org/features/#dev-build) (Android), [GroupLab Dev updates itself](https://grouplab.org/features/#android-updates) (Android).
 
 Each one, with its picture, its platforms and the build it arrived in, is on the [Features page](https://grouplab.org/features/).
 <!-- /readme:features -->

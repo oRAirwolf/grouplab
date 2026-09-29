@@ -242,6 +242,7 @@ public class MainActivity : AvaloniaMainActivity
     protected override void OnStart()
     {
         base.OnStart();
+        WorkInProgress.OnScreen = true;
         if (GroupLab.App.Diagnostics.DiagnosticLog.Current is { } log)
         {
             GroupLab.App.Diagnostics.CrashReporter.ResumeRun(log);
@@ -250,6 +251,12 @@ public class MainActivity : AvaloniaMainActivity
 
     protected override void OnStop()
     {
+        // Entry 288: leaving is when an automatic update may install, since nothing then closes under the person.
+        WorkInProgress.OnScreen = false;
+#if GROUPLAB_UPDATER
+        Updates.SelfUpdate.Left();
+#endif
+
         if (GroupLab.App.Diagnostics.DiagnosticLog.Current is { } log)
         {
             GroupLab.App.Diagnostics.CrashReporter.EndRun(log);

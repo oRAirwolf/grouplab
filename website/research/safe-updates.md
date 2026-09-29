@@ -74,6 +74,18 @@ Any secret compiled into an open source program is public the moment it ships. A
 
 That last one exists because the fault was not in the new code. It was in the old code's ability to read what the new code produced, and no test that only runs the current version can see it.
 
+## On Android, one more check
+
+GroupLab Dev, the Android build installed from its APK, updates itself from the same signed manifest (entry 288). An Android package adds
+something the desktop installer does not have: **the key it was signed with.** Android refuses to install an update signed by anybody but
+the signer of the copy already there, and GroupLab checks that itself before handing the file over, as well as the SHA-256. A file that
+fails either check is deleted and never installed, so nobody is asked to install something that would then fail.
+
+It never installs in the middle of work. Replacing an Android application closes it, so an automatic update waits until the camera is
+closed, no sheet is being read, nothing is unsaved, and GroupLab has left the screen. The copy from Google Play has none of this code at all:
+the updater is a separate build, the project refuses to build the Google Play package with it, and the nightly checks that package's
+manifest to make sure.
+
 ## What this means
 
 

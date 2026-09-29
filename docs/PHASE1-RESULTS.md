@@ -40,6 +40,25 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 288: GroupLab Dev updates itself
+
+GroupLab Dev now carries an updater; nightly 125 is the first build with it. It reads the signed second manifest, where the nightly now
+lists GroupLab Dev's APK as `android` `apk-dev`, at launch and every six hours through WorkManager on an unmetered network; downloads
+resumably (`IOutsideWorld.ResumeDownloadAsync`, a range request that carries a part on); checks size, SHA-256 and that the APK's signing
+certificates equal the installed copy's; and installs through a PackageInstaller session with `USER_ACTION_NOT_REQUIRED` from Android 12,
+never while the camera is open, a sheet is being read or a marking page is open, and, when automatic, only once GroupLab has left the
+screen. Settings, About has the card: installed, newest and when checked, Update now, Install updates automatically. A notice along the top
+says when one is downloaded, and after an update "Updated to nightly N" with What changed.
+
+- **Rules in Core:** `AndroidUpdates`, 15 tests in `AndroidUpdatesTests`, including the six the entry names. GroupLab Dev's `-dev` mark is
+  taken off its place in the order, because `0.2.0-nightly.124-dev` read as it stands sorts after `nightly.125`.
+- **The flavor:** `-p:GroupLabUpdater=true`, on only for GroupLab Dev's APK. Built here: the Dev APK's merged manifest has
+  `REQUEST_INSTALL_PACKAGES`, the receiver and WorkManager's job service; the Play AAB's has none of them; an AAB built with the updater
+  stops with an error. The nightly fails if its AAB's manifest asks to install packages. `UpdaterFlavorTests`, 4 tests.
+- **The key:** `apksigner verify --print-certs` on nightly 124's APK and on the copies installed on the Fold 7 and the tablet: one
+  certificate, SHA-256 beginning `98b36d56ef6f3d62`. Both devices are Android 16 (API 36).
+- **Not done yet:** the device check. Nightly 125 goes on both devices over adb once, and the next nightly should arrive by itself.
+
 ## Entry 287: the product picture at the top of the home page
 
 The README's picture and its three lines, from one source, at the top of grouplab.org.

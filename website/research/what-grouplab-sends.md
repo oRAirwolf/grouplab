@@ -41,6 +41,10 @@ It does not send your machine name, your account, your screen, your Windows vers
 
 You can turn it off, and then nothing is sent at all.
 
+**On Android, only GroupLab Dev checks**, the build installed from its APK: the same GET, for the same kind of file, when it starts and
+about every six hours, and the download itself only on Wi-Fi unless you tap Update now. The copy from Google Play never checks; Google
+Play updates it. "Install updates automatically" in Settings, About turns off the installing, not the looking.
+
 ## An error report, and only as you chose
 
 When GroupLab hits an error, or closes without shutting down, it writes a record to a folder on your own machine. The first time it can, it asks whether to send such reports to the project: automatically, only when you say so each time, or never. Until you choose, it asks each time. **This is built but not switched on yet**: until the project's receiver for it opens, GroupLab asks nothing and sends nothing, and a crash is reported by hand as before.

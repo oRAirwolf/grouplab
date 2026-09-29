@@ -69,6 +69,22 @@ public interface IOutsideWorld
     Task<long?> DownloadAsync(string address, string into, IProgress<double>? progress, CancellationToken token);
 
     /// <summary>
+    /// Downloads a file that may already be partly here, NOTES-FROM-PLANNING.md entry 288: the Android update arrives in the background over
+    /// Wi-Fi, which comes and goes, so a part left by a dropped connection is carried on from where it stopped rather than started again. It
+    /// returns the length of the whole file, or null. Whatever it returns is checked against the signed SHA-256 before anything uses it, so
+    /// a part that was carried on wrongly is thrown away rather than trusted. Anything that does not override it starts again every time.
+    /// </summary>
+    Task<long?> ResumeDownloadAsync(string address, string into, IProgress<double>? progress, CancellationToken token)
+    {
+        if (File.Exists(into + ".part"))
+        {
+            File.Delete(into + ".part");
+        }
+
+        return DownloadAsync(address, into, progress, token);
+    }
+
+    /// <summary>
     /// Starts an installer with its own arguments and does not wait. It is separate from <see cref="OpenFile"/> because an installer is
     /// never opened with the shell's idea of what to do with a file: it is run, with the switches that keep it silent.
     /// </summary>
@@ -155,6 +171,59 @@ public sealed class TheOutsideWorld : IOutsideWorld
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or UriFormatException)
         {
+            return null;
+        }
+    }
+
+    public async Task<long?> ResumeDownloadAsync(string address, string into, IProgress<double>? progress, CancellationToken token)
+    {
+        string part = into + ".part";
+        long have = File.Exists(part) ? new FileInfo(part).Length : 0;
+        if (have == 0)
+        {
+            return await DownloadAsync(address, into, progress, token).ConfigureAwait(false);
+        }
+
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, address);
+            request.Headers.UserAgent.ParseAdd(UserAgent);
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(have, null);
+            using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait(false);
+
+            // A server that ignores the range sends the whole file again, and one that has nothing past the end says 416; either way the
+            // part is not carried on, and the download starts again from nothing.
+            if (response.StatusCode != System.Net.HttpStatusCode.PartialContent || response.Content.Headers.ContentRange?.From != have)
+            {
+                File.Delete(part);
+                return await DownloadAsync(address, into, progress, token).ConfigureAwait(false);
+            }
+
+            long? total = response.Content.Headers.ContentRange?.Length;
+            long written = have;
+            await using (var source = await response.Content.ReadAsStreamAsync(token).ConfigureAwait(false))
+            await using (var file = new FileStream(part, FileMode.Append, FileAccess.Write))
+            {
+                byte[] buffer = new byte[128 * 1024];
+                int read;
+                while ((read = await source.ReadAsync(buffer, token).ConfigureAwait(false)) > 0)
+                {
+                    await file.WriteAsync(buffer.AsMemory(0, read), token).ConfigureAwait(false);
+                    written += read;
+                    if (total is > 0)
+                    {
+                        progress?.Report(Math.Clamp(written / (double)total.Value, 0, 1));
+                    }
+                }
+            }
+
+            File.Move(part, into, overwrite: true);
+            progress?.Report(1);
+            return written;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or IOException or UnauthorizedAccessException or InvalidOperationException or UriFormatException)
+        {
+            // The part stays where it is, so the next try carries on from it.
             return null;
         }
     }

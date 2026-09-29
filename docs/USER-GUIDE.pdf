@@ -591,7 +591,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 25 0 R >>
 endobj
 25 0 obj
-<< /Length 6231 >>
+<< /Length 6076 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -645,20 +645,14 @@ BT /F1 71 Tf 1 0 0 -1 381 3860 Tm (closes and reopens GroupLab around the update
 BT /F1 71 Tf 1 0 0 -1 381 3948 Tm (are now on.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4071 Tm (If an update ever fails, the build you had is still installed and still works. Nothing is removed until the new one is in) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4159 Tm (place.) Tj ET
-0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 4366 Tm (10. Comparing several sheets at once) Tj ET
-0.745098 0.745098 0.745098 rg
-381 4396 3556 3 re
-f
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4496 Tm (The sheets of a set pool into one group. When Made for your optic needs several sheets for your shots, each) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4584 Tm (sheet's codes say which of the set it is. Analyze each sheet as usual, in any order, then in Session records tick) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4672 Tm (them and choose Pool the chosen: GroupLab reads them as one group, every shot measured from its own bull,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4760 Tm (and says which sheets of the set are still missing and how many shots it has of the bulls the set holds. A sheet) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4848 Tm (read twice counts once.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4971 Tm (Reading other sheets of one load as one group is not built yet. It is not a matter of adding the numbers up:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5059 Tm (separate sheets shot at one aim point each have their own center, and what a pooled figure means depends on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5147 Tm (which center you measure from, which is still being decided. Meanwhile Compare loads puts the sessions of two) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4282 Tm (GroupLab Dev on Android updates itself. The Android build installed from its APK looks for a newer nightly when) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4370 Tm (it starts and about every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4458 Tm (that it is signed with the same key as the copy you have before installing it. The first time, it asks for Android's) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4546 Tm ("Install unknown apps" permission and opens that page for you, and Android asks you to confirm the first update.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4634 Tm (After that it installs by itself when you leave GroupLab, never while the camera is open, a sheet is being read or a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4722 Tm (change is unsaved, and your sessions and settings stay. Settings, About shows the version you have, the newest) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4810 Tm (one, Update now, and Install updates automatically, which you can turn off. The copy from Google Play has none) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4898 Tm (of this: Google Play updates it.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 11 of 14) Tj ET
 Q
 endstream
@@ -667,56 +661,69 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 27 0 R >>
 endobj
 27 0 obj
-<< /Length 4412 >>
+<< /Length 5700 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (or more loads side by side, each with its own figures and intervals.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 659 Tm (11. If something goes wrong) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 536 Tm (10. Comparing several sheets at once) Tj ET
 0.745098 0.745098 0.745098 rg
-381 689 3556 3 re
+381 566 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 789 Tm (Report a problem is in the settings. It opens the support page, which takes a description and, if you attach one, a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 877 Tm (report package: your log, the crash record and the marking you were working on. Nothing is sent until you press) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 965 Tm (send, and you can see what is in the package before you do.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1088 Tm (GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1176 Tm (reports, you choose automatically, ask each time, or never. A report holds the version, the system, the error and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1264 Tm (the names of the last things done, never anything you typed, and never a photograph, file name or location. That) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1352 Tm (part is built but not switched on yet. Crash records are written to your own machine whether or not you ever send) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1440 Tm (them. They name the version, the build train and the line it happened on, and they never contain a photograph, a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1528 Tm (location or anything read out of one.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1651 Tm (Sending in targets. The page at grouplab.org/targets/ takes scans and photographs of targets that help) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1739 Tm (GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1827 Tm (never published, or may be published in GroupLab's public test data and research. GroupLab can also send a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1915 Tm (target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2003 Tm (time unless you say otherwise in Settings.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 666 Tm (The sheets of a set pool into one group. When Made for your optic needs several sheets for your shots, each) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 754 Tm (sheet's codes say which of the set it is. Analyze each sheet as usual, in any order, then in Session records tick) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 842 Tm (them and choose Pool the chosen: GroupLab reads them as one group, every shot measured from its own bull,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 930 Tm (and says which sheets of the set are still missing and how many shots it has of the bulls the set holds. A sheet) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1018 Tm (read twice counts once.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1141 Tm (Reading other sheets of one load as one group is not built yet. It is not a matter of adding the numbers up:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1229 Tm (separate sheets shot at one aim point each have their own center, and what a pooled figure means depends on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1317 Tm (which center you measure from, which is still being decided. Meanwhile Compare loads puts the sessions of two) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1405 Tm (or more loads side by side, each with its own figures and intervals.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 2210 Tm (12. Settings) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 1612 Tm (11. If something goes wrong) Tj ET
 0.745098 0.745098 0.745098 rg
-381 2240 3556 3 re
+381 1642 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2340 Tm (The gear opens the settings:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2463 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2463 Tm (Units: length, angle and distance, each chosen on its own. They change only how figures are shown.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2551 Tm (Beneath them, a box puts a group's size on the paper before its angle.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2653 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2653 Tm (Theme: dark, light, high contrast, or follow the system.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2755 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2755 Tm (Sharing: the three things GroupLab may send, in the order the first run screen asks them. Sending targets:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2843 Tm (send every target you analyze to the project, ask each time, or never, and which consent goes with them.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2931 Tm (Error reports: send them automatically, ask each time, or never, and what a report holds. Hardware survey:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3019 Tm (take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3107 Tm (random number. The benchmark runs only when you start it, from Run the benchmark now; it shows how far) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3195 Tm (it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3283 Tm (the first run screen, Yes to the survey asks whether to run the benchmark now or later.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3385 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3385 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3487 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3487 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1742 Tm (Report a problem is in the settings. It opens the support page, which takes a description and, if you attach one, a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1830 Tm (report package: your log, the crash record and the marking you were working on. Nothing is sent until you press) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1918 Tm (send, and you can see what is in the package before you do.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2041 Tm (GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under Error) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2129 Tm (reports, you choose automatically, ask each time, or never. A report holds the version, the system, the error and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2217 Tm (the names of the last things done, never anything you typed, and never a photograph, file name or location. That) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2305 Tm (part is built but not switched on yet. Crash records are written to your own machine whether or not you ever send) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2393 Tm (them. They name the version, the build train and the line it happened on, and they never contain a photograph, a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2481 Tm (location or anything read out of one.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2604 Tm (Sending in targets. The page at grouplab.org/targets/ takes scans and photographs of targets that help) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2692 Tm (GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2780 Tm (never published, or may be published in GroupLab's public test data and research. GroupLab can also send a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2868 Tm (target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2956 Tm (time unless you say otherwise in Settings.) Tj ET
+0.078431 0.078431 0.078431 rg
+BT /F1 99 Tf 1 0 0 -1 381 3163 Tm (12. Settings) Tj ET
+0.745098 0.745098 0.745098 rg
+381 3193 3556 3 re
+f
+0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 3293 Tm (The gear opens the settings:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3416 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3416 Tm (Units: length, angle and distance, each chosen on its own. They change only how figures are shown.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3504 Tm (Beneath them, a box puts a group's size on the paper before its angle.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3606 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3606 Tm (Theme: dark, light, high contrast, or follow the system.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3708 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3708 Tm (Sharing: the three things GroupLab may send, in the order the first run screen asks them. Sending targets:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3796 Tm (send every target you analyze to the project, ask each time, or never, and which consent goes with them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3884 Tm (Error reports: send them automatically, ask each time, or never, and what a report holds. Hardware survey:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3972 Tm (take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4060 Tm (random number. The benchmark runs only when you start it, from Run the benchmark now; it shows how far) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4148 Tm (it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4236 Tm (the first run screen, Yes to the survey asks whether to run the benchmark now or later.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4338 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4338 Tm (Log: how much the diagnostic log records, and where it is.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4440 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4440 Tm (Problems: a way to report a problem, and any crash records not yet dealt with.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 12 of 14) Tj ET
 Q
 endstream
@@ -6376,21 +6383,21 @@ xref
 0000046199 00000 n 
 0000049397 00000 n 
 0000049525 00000 n 
-0000055809 00000 n 
-0000055937 00000 n 
-0000060402 00000 n 
-0000060557 00000 n 
-0000064307 00000 n 
-0000064435 00000 n 
-0000066575 00000 n 
-0000346347 00000 n 
-0000544861 00000 n 
-0000814586 00000 n 
-0000919401 00000 n 
-0001051493 00000 n 
-0001245146 00000 n 
+0000055654 00000 n 
+0000055782 00000 n 
+0000061535 00000 n 
+0000061690 00000 n 
+0000065440 00000 n 
+0000065568 00000 n 
+0000067708 00000 n 
+0000347480 00000 n 
+0000545994 00000 n 
+0000815719 00000 n 
+0000920534 00000 n 
+0001052626 00000 n 
+0001246279 00000 n 
 trailer
 << /Size 39 /Root 1 0 R >>
 startxref
-1347140
+1348273
 %%EOF

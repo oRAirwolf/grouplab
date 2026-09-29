@@ -11,12 +11,17 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 **Last rewritten:** 2026-09-29, after entries 281 to 283 (the camera test's fixes, Alan's screenshots, the shutter) and 278 (CSV B, the
 spread audit, a shot left out left out everywhere, the iOS plan) and 279 (the App Store permission, Marking A, Fudd buster mode,
-saving A), 280 in part, 284 (Behind the curtain), 285 (the README's list) 286 (nightly 123 on both devices) and 287 (the product picture on the home page). Entry 280's screens are next.
+saving A), 280 in part, 284 (Behind the curtain), 285 (the README's list) 286 (nightly 123 on both devices), 287 (the product picture on
+the home page) and 288 in part (GroupLab Dev updates itself; its device check waits for two nightlies). Entry 280's screens are next.
 
 ---
 
 ## In flight
 
+- **GroupLab Dev updates itself** (entry 288): `AndroidUpdates` in Core, the `Updates` folder in the Android project compiled only with
+  `-p:GroupLabUpdater=true` (GroupLab Dev's APK only, never the AAB), and the Dev APK listed in the signed manifest as `android apk-dev`.
+  Nightly 125 is the first with it: install it over adb once, then the next nightly should arrive by itself; record the first prompt,
+  whether the second is silent, data kept and minutes from publishing (`update.installed`) in `docs/ANDROID.md` section 17.
 - **The phone's camera screen is rebuilt** (entry 260): a native Capture B over the live preview, Guided and Manual, the quality bar,
   the torch on Auto, and Feedback B checking every picture with a score from 0 to 100 (`PictureCheck`). Alan's camera test on nightly 121 went badly;
   entry 281's fixes (level, torch, lifecycle, one field of view, steady words, Camera and Result buttons, the sheet offered when codes
@@ -40,6 +45,7 @@ saving A), 280 in part, 284 (Behind the curtain), 285 (the README's list) 286 (n
 
 ## The next three
 
+0. Entry 288's device check (above), as soon as nightly 125 and the one after it are out.
 1. The device sitting on the nightly that carries entries 281 to 283: the camera fixes checked, `scripts/shutter-timing.py` on both
    devices, the phone and tablet pictures (253 section 3), the inner Fold screen (257), torch strength (262), the card photo (273).
 2. Entry 280 section 2's remaining screens, Share A and the dated report, and the desktop's equivalents of all five, after the sitting
@@ -68,9 +74,8 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 2
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.121 (23325ec): the recalibrated picture score, and on the phone Paste a picture, a set as one
-  large page with cut lines, and glossary taps; nightly 120 (fc8a902) had the printer check and number taps.
-- **The site follows each push by itself**; it serves fc8a902 and later.
+- **Last nightly:** 0.2.0-nightly.124 (b856d1f), on both devices; nightly 125 will carry the Android updater.
+- **The site follows each push by itself**; it serves b856d1f and later.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
 ## The inbox

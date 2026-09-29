@@ -73,6 +73,11 @@ public sealed class App : Avalonia.Application
             single.MainView = new Shell();
         }
 
+#if GROUPLAB_UPDATER
+        // Entry 288: what was just installed, the six-hourly check, and a look now.
+        Updates.SelfUpdate.Launched();
+#endif
+
         base.OnFrameworkInitializationCompleted();
     }
 

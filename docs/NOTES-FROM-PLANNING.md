@@ -24,6 +24,45 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 288: PRIORITY: GroupLab Dev updates itself on the phone, so installing never depends on adb
+
+**Status: in progress 2026-09-29. Sections 1, 3 and 4 done; section 2's unit tests done; section 2's device check not done yet**, because it
+needs two nightlies with the updater: nightly 125 (this commit) installed over adb once, as the first copy that has an updater, and the next
+nightly after it arriving by itself. The results, the first prompt, whether the second is silent, data kept and the minutes from publishing
+to installing, go into `docs/ANDROID.md` section 17 and `docs/PHASE1-RESULTS.md` when it has happened. Nightly 124 is on both devices.
+The signing key is confirmed the same: nightly 124's APK and the copies installed over adb on both devices carry one certificate.
+WorkManager is used as the entry says (`Xamarin.AndroidX.Work.Runtime` 2.11.2.1, in the updater flavor only).
+
+Alan: "It seems like code has a lot of problems connecting to my fold 7 despite me never turning off wireless debugging or stopping any services on my desktop. It is getting frustrating. Please tell code to make a new auto updater for the android app that if it is installed via adb, it can update itself by downloading a new apk and install it itself or I can press the update button."
+
+Your own finding tonight (adb restarts moving discovery to a backend that finds nothing) is part of the answer and the note you saved stands. This entry removes the dependence altogether: adb stays for testing and logs, never again for getting a build onto the phone.
+
+### 1. What to build
+
+1. **An updater in the sideloaded Android builds**, GroupLab Dev (`org.grouplab.app.dev`) on the nightly train, and later the sideloaded `org.grouplab.app` on its own train. Same trains, same ordering and the same signed `update-manifest.json` as the desktop (`docs/UPDATES.md`): the manifest names the APK, its size and its SHA-256, and its signature is checked against the key built into the app before anything is downloaded.
+2. **Checking:** on launch and about every six hours in the background (WorkManager), one plain HTTPS GET as the desktop does, nothing about the person sent. Offline is silent.
+3. **Downloading:** by default only on Wi-Fi, in the background, resumable. Before installing: the file's SHA-256 matches the signed manifest, and the APK's signing certificate matches the installed app's. Anything that does not verify is deleted and logged, never installed.
+4. **Installing:** through `PackageInstaller` sessions, with `REQUEST_INSTALL_PACKAGES`.
+   - The first time, Android asks Alan to allow "Install unknown apps" for GroupLab Dev. The app explains this in one sentence and opens the right settings page.
+   - **Installed by adb, the first self-update will ask for a tap**, because the installer of record is the shell, not the app. After that the app is its own installer of record, and on Android 12 and later it asks for `USER_ACTION_NOT_REQUIRED`, so later updates can install with no prompt. Say in the results whether the Fold 7 and the tablet then update silently, and on which Android versions they do not.
+   - **Never in the middle of work:** not while the camera is open, an analysis is running, or a change is unsaved. It waits until the app is in the background or idle, or until the person presses the button.
+   - Data is kept: an in-place update, same package, same signing key. Say in the results that the key the nightly signs with is the same key the adb installs used, so the first self-update does not fail on a signature mismatch.
+5. **The button:** Settings, About (or wherever the version is shown): the installed version, the newest on its train, "Update now", and a switch "Install updates automatically" (on by default for GroupLab Dev). A small notice when an update is downloaded and waiting. After an update, a one-line "Updated to nightly N" with a link to its notes.
+6. **Never in a Play build.** Google Play does not allow an app to update itself outside Play, and restricts `REQUEST_INSTALL_PACKAGES`. The updater and the permission exist only in the sideloaded APKs (a build flavor), and the app also turns the updater off if its installer of record is Play. The AAB for Play must not contain it: a test that fails if it does.
+
+### 2. Tests and the device check
+
+- Unit tests: a manifest with a bad signature, a wrong hash, a different signing certificate, an older version, another train, and offline; each refuses or stays silent as the desktop's tests require.
+- On the devices, once: install the nightly with adb, then publish the next nightly and let the app update itself. Record: the prompt the first time, silent or not the second time, data kept, and how long from nightly published to installed.
+
+### 3. Documents, in the same change (rule c)
+
+`docs/UPDATES.md` gains an Android section; `docs/ANDROID.md` says which builds carry the updater; the research article `what-grouplab-sends` and the "safe updates" article cover the phone; the Features page and the user guide say how to update on the phone. `PHONE-PARITY.md`: updates on the phone, yes, except Play builds, which Play updates.
+
+### 4. Order: now, first
+
+Alan, later the same evening: "Can you tell it to start on the new android app now because I can't do the scale test this instant." Start this entry now, before the scale test and before anything else in entry 280. Request 53 stays open for whenever Alan can do it; the phone does not need to wait on its card screen. Install nightly 124 on both devices when it is out, as the last adb install before the updater takes over. Once the updater works, the "install nightly N on the phone" step in future entries means the app does it itself, and adb is only needed for logs and screenshots.
+
 ## 2026-09-29, entry 287: the home page's top picture becomes the README's product picture
 
 **Status: done 2026-09-29.** The home page's top picture is the README's product picture, made into WebP by the site build from `docs/figures/readme/product-*.png` at 1600 by 900, dark and light, with the README's own alt text and its three numbered lines read from README.md, so both change together. The analysis screenshot stays everywhere else. At 500 pixels wide the whole picture shows, the phone uncut; the number badges are small there, and a 390 pixel phone was not checked here because headless Chrome will not go that narrow. The site's screenshot set has no picture of the home page, so none needed catching up.

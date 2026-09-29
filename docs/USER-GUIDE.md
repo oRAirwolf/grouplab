@@ -280,6 +280,14 @@ When you do, GroupLab downloads the installer, checks it against the SHA-256 the
 
 If an update ever fails, the build you had is still installed and still works. Nothing is removed until the new one is in place.
 
+**GroupLab Dev on Android updates itself.** The Android build installed from its APK looks for a newer nightly when it starts and about
+every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and that it is signed with the same key as the copy
+you have before installing it. The first time, it asks for Android's "Install unknown apps" permission and opens that page for you, and
+Android asks you to confirm the first update. After that it installs by itself when you leave GroupLab, never while the camera is open, a
+sheet is being read or a change is unsaved, and your sessions and settings stay. Settings, About shows the version you have, the newest
+one, **Update now**, and **Install updates automatically**, which you can turn off. The copy from Google Play has none of this: Google Play
+updates it.
+
 ## 10. Comparing several sheets at once
 
 **The sheets of a set pool into one group.** When Made for your optic needs several sheets for your shots, each sheet's codes say which of the

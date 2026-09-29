@@ -35,6 +35,28 @@
     <DefineConstants>$(DefineConstants);GROUPLAB_DEV</DefineConstants>
   </PropertyGroup>
 
+  <!--
+    NOTES-FROM-PLANNING.md entry 288: the updater lives in its own flavor, -p:GroupLabUpdater=true, on by default for GroupLab Dev's APK and
+    for nothing else yet (the sideloaded org.grouplab.app comes later). Without it the Updates folder, WorkManager and the permission to
+    install packages are not in the build at all, and an AAB, which only ever goes to Google Play, is refused if it would carry them.
+    UpdaterFlavorTests holds this, and the nightly checks the published AAB's manifest.
+  -->
+  <PropertyGroup>
+    <GroupLabUpdater Condition="'$(GroupLabUpdater)' == '' and '$(GroupLabDev)' == 'true' and '$(AndroidPackageFormat)' != 'aab'">true</GroupLabUpdater>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GroupLabUpdater)' == 'true'">
+    <DefineConstants>$(DefineConstants);GROUPLAB_UPDATER</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(GroupLabUpdater)' != 'true'">
+    <Compile Remove="Updates\**" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(GroupLabUpdater)' == 'true'">
+    <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.11.2.1" />
+  </ItemGroup>
+  <Target Name="NoUpdaterInAnAab" BeforeTargets="Build" Condition="'$(GroupLabUpdater)' == 'true' and '$(AndroidPackageFormat)' == 'aab'">
+    <Error Text="Entry 288: an AAB goes only to Google Play and must never carry the updater. Build it without -p:GroupLabUpdater=true." />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Avalonia.Android" Version="12.1.2" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />

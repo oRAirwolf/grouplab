@@ -158,6 +158,8 @@ internal static class PhoneAnalysis
     /// </summary>
     public static PhoneResult Run(string photo, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null, bool torch = false)
     {
+        // Entry 288: an update never installs while a sheet is being read.
+        using var running = WorkInProgress.Analysis();
         progress?.Invoke(GroupLab.Core.Trace.StageWords.Starting);
         if (Prepare(photo) is not { } working)
         {

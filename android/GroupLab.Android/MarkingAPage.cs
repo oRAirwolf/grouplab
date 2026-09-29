@@ -51,6 +51,7 @@ internal sealed class MarkingAPage : UserControl
     /// <param name="existing">A marking to go on with, entry 280 section 2's "+ Aim point": its scale kept, starting at the aim points.</param>
     public MarkingAPage(string imagePath, int? exifOrientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel, MarkingState? existing = null, long? sessionId = null)
     {
+        WorkInProgress.HoldWhileShown(this);
         this.sessionId = sessionId;
         this.units = units;
         this.done = done;

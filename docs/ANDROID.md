@@ -473,3 +473,19 @@ The script presses the shutter through GroupLab Dev's own path, waits for each r
 each step as a table for this section. **Not measured yet:** it needs the build that carries the timings, on the Fold 7 and the Tab S8
 Ultra, torch off and on, Guided and Manual, at the next sitting.
 
+
+## 17. GroupLab Dev updates itself (entry 288)
+
+GroupLab Dev keeps itself on the newest nightly with no adb and no file to open: it checks the signed manifest at launch and about every
+six hours, downloads on Wi-Fi in the background, checks the SHA-256 and that the APK is signed like the installed copy, and installs
+through a PackageInstaller session, never while the camera is open, a sheet is being read or a change is unsaved. `docs/UPDATES.md`, "On
+Android", has the whole of it. The code is `AndroidUpdates` in Core, which holds the rules and their tests, and the `Updates` folder of this
+project, compiled only with `-p:GroupLabUpdater=true`, which only GroupLab Dev's APK has.
+
+**The first update of a copy installed by adb needs one tap**, because adb, not GroupLab, is its installer of record; after it GroupLab is.
+On Android 12 and later every update after that is meant to install without a tap once GroupLab has left the screen. Whether the Fold 7
+and the Tab S8 Ultra, both on Android 16 (API 36), do so is recorded here after the first nightly that carries the updater has been installed over adb and
+the one after it has arrived by itself: the first prompt, whether the second is silent, that sessions and settings are kept, and the time
+from publishing to installing (the log's `update.installed` line carries `minutesFromPublish`).
+
+**adb stays for tests and logs only.** Installing a nightly over adb is still how a sitting starts on a device that has no updater yet.

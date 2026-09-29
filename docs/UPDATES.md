@@ -170,3 +170,47 @@ The reason the workflow-level `permissions:` block is not enough is that it can 
 ## Where your things are
 
 Updating never touches `%APPDATA%\GroupLab`: your settings, your sessions database, your own sheets and the log stay where they are, before and after. Removing GroupLab leaves that folder too; delete it when you want the data gone.
+
+## On Android
+
+`NOTES-FROM-PLANNING.md` entry 288. The sideloaded Android builds update themselves the same way: the same trains, the same ordering and the
+same signed manifest. Today that is GroupLab Dev, on the nightly train; a sideloaded APK of GroupLab itself, with the same package as
+the copy from Google Play, comes later. The copy from Google Play never has any of this, because Google Play updates it.
+
+**What it reads.** One plain HTTPS GET of the second manifest, `update-manifest-2.json`, at launch and about every six hours, with the
+same User-Agent and nothing else. The nightly lists GroupLab Dev's APK in it as platform `android`, kind `apk-dev`, with its size and
+SHA-256, at a fixed address beside the desktop files. The signature is verified over the bytes as they arrived before anything reads them.
+Offline is silent, as on the desktop: a line in the log and nothing on screen.
+
+**How it downloads.** On Wi-Fi only by default (an unmetered network, which is what Android calls it), in the background, through
+WorkManager, and resumably: a download a lost connection broke carries on from where it stopped, and the finished file is checked against
+the signed size and SHA-256 all the same. "Update now" downloads on any network, because the person chose to.
+
+**What it checks before installing.** The SHA-256 again, and that the APK is signed by exactly the certificates the installed copy was
+signed with. Anything that fails either check is deleted, logged and never installed. Android would refuse a different signer itself;
+checking first means nobody is asked to install something that then fails.
+
+**How it installs.** Through a PackageInstaller session, which needs the "Install unknown apps" permission for GroupLab. The first time,
+GroupLab says in one sentence why it wants it and opens that settings page. A copy installed by adb, or by opening the APK, has another
+installer of record, so Android asks for one tap to confirm its first self-update. From then on GroupLab is its own installer of
+record, and on Android 12 and later it asks Android to install without a tap (`USER_ACTION_NOT_REQUIRED`). Before Android 12 every
+update asks once.
+
+**Never in the middle of work.** Not while the camera is open, a sheet is being read or a change is unsaved (marking by hand, a CSV being
+imported). An automatic update that installs without a tap waits until GroupLab leaves the screen, so nothing closes under anybody; "Update
+now" installs at once unless something is open. It is an in-place update, so sessions, settings and pictures stay.
+
+**What it shows.** Settings, About: the installed version, the newest on its train and when that was checked, **Update now**, and the switch
+**Install updates automatically**, on by default for GroupLab Dev. A notice when an update is downloaded, and after it installs,
+"Updated to nightly N" with a link to that build's notes.
+
+**Never in a Play build.** The updater is its own build flavor, `-p:GroupLabUpdater=true`, on by default only for GroupLab Dev's APK.
+Without it the updater's code, WorkManager and the permission to install packages are not in the build at all; the project refuses to
+build an AAB with it; the nightly fails if the AAB's manifest asks to install packages; and a copy whose installer of record is Google Play
+turns the updater off in case one ever arrives there another way. `UpdaterFlavorTests` holds all of it, and `AndroidUpdatesTests` holds the
+rules: a bad signature, a wrong hash, a different certificate, an older version, another train and offline.
+
+**The key.** The nightly signs GroupLab Dev's APK with the upload key, and the copies installed over adb were those nightly APKs. Checked
+on 2026-09-29 with `apksigner verify --print-certs`: nightly 124's APK and the copies installed on the Fold 7 and the tablet carry the same
+certificate (SHA-256 beginning `98b36d56ef6f3d62`), so an adb-installed copy and its self-update have the same signer. adb stays for
+tests and logs only.

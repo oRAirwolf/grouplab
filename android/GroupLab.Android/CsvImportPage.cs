@@ -28,6 +28,7 @@ internal sealed class CsvImportPage : UserControl
 
     public CsvImportPage(CsvTable table, string name, Action back, Action<PhoneResult> imported)
     {
+        WorkInProgress.HoldWhileShown(this);
         this.table = table;
         this.name = name;
         this.back = back;

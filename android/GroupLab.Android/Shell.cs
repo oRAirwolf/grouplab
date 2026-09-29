@@ -49,6 +49,9 @@ public sealed class Shell : UserControl
 
     private readonly Border toast;
 
+    /// <summary>A note that stays until it is closed, along the top: an update downloaded, or the one just installed (entry 288).</summary>
+    private readonly Border notice = new() { IsVisible = false, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(16, 12, 16, 0), Classes = { PhoneStyles.Card } };
+
     /// <summary>Entry 273: the units changed by a tap on a number; every page showing figures shows them again.</summary>
     internal static event Action? UnitsChanged;
 
@@ -100,7 +103,7 @@ public sealed class Shell : UserControl
             Margin = new Thickness(16, 0, 16, 20),
             Classes = { PhoneStyles.Card },
         };
-        frame.Children.Add(new Grid { Children = { page, toast } });
+        frame.Children.Add(new Grid { Children = { page, toast, notice } });
 
         // Entry 273: tap a number to switch units, the same setting everywhere, remembered.
         UnitTap.Current = () => App.Settings.LoadUnits();
@@ -183,6 +186,29 @@ public sealed class Shell : UserControl
                 toast.IsVisible = false;
             }
         }, TimeSpan.FromSeconds(3));
+    }
+
+    /// <summary>
+    /// A note along the top that stays until it is closed or acted on, entry 288: "Updated to nightly N" with a way to its notes, or an
+    /// update downloaded and waiting. One at a time; a new one replaces the last.
+    /// </summary>
+    internal void Notice(string words, string? action = null, Action? acted = null)
+    {
+        var column = new StackPanel { Spacing = 8, Children = { Screens.Line(words) } };
+        var buttons = new WrapPanel();
+        if (action is not null && acted is not null)
+        {
+            buttons.Children.Add(Screens.Primary(action, () =>
+            {
+                notice.IsVisible = false;
+                acted();
+            }));
+        }
+
+        buttons.Children.Add(Screens.Choice("Close", () => notice.IsVisible = false));
+        column.Children.Add(buttons);
+        notice.Child = column;
+        notice.IsVisible = true;
     }
 
     /// <summary>Hides the bar along the bottom, or shows it again.</summary>

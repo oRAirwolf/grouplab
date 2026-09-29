@@ -30,7 +30,8 @@ public sealed class AndroidSharingTests
     public void EveryFileTheApplicationSharesWithTheDesktopExists()
     {
         var project = XDocument.Load(Path.Combine(Android, "GroupLab.Android.csproj"));
-        var linked = project.Descendants("Compile").Select(c => (string)c.Attribute("Include")!).Where(i => !i.Contains('*', StringComparison.Ordinal)).ToList();
+        var linked = project.Descendants("Compile").Select(c => (string?)c.Attribute("Include"))
+            .OfType<string>().Where(i => !i.Contains('*', StringComparison.Ordinal)).ToList(); // a Remove, as the updater flavor's (entry 288), names no file
         Assert.Contains(linked, l => l.EndsWith("SharingWords.cs", StringComparison.Ordinal));
         Assert.Contains(linked, l => l.EndsWith("AppSettings.cs", StringComparison.Ordinal));
         Assert.Contains(linked, l => l.EndsWith("ErrorQueue.cs", StringComparison.Ordinal));
