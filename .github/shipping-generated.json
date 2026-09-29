@@ -11,6 +11,7 @@
     "THIRD-PARTY-NOTICES.md",
     "android/GroupLab.Android/",
     "docs/VOLUNTEER-PACK.md",
+    "mobile/GroupLab.Mobile/",
     "nuget.config",
     "packaging/",
     "samples/PROVENANCE.md",
