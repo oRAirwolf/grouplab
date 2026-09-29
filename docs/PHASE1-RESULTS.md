@@ -54,6 +54,18 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 - **5.2:** a printer check now carries its date on every result it corrects; Settings can mark a printer calibrated or serviced, and a
   marked or six-month-old check says so and offers a new one (`PrinterProfile.Stale`, `PrinterChangedTests`).
 
+## Entry 292, Android: pictures from any photo app
+
+- **Choose a photograph** opens the system photo picker (images only, no storage permission, cloud photos where Google Photos provides
+  them), or the apps chooser on a phone without one. **From another app** lists every app answering image/* by name.
+- **Received:** SEND, SEND_MULTIPLE, VIEW and EDIT of image/*; several shared at once are read in turn as a set.
+- **Cloud photos** are fetched through their content stream with a line naming the app ("Getting the photo from Google Photos, 2.1 of
+  6.4 MB") and a Cancel that returns at once; a failed fetch says the phone is offline where Android says so. A reduced copy is detected
+  against the app's stated size or the size the camera recorded (EXIF PixelX/YDimension; the GPS block is never followed) and said.
+- **Play services:** nothing GroupLab needs depends on them but the picker's Android 10 backport; the update check runs at launch as well
+  as in the background.
+- Tests: `PhotoIntakeTests` (10). Both the Dev APK and the Play AAB build with no storage permission. The iOS half waits for the head.
+
 ## Entry 291 section 7: the detection scoreboard
 
 - **Built** (entry 261 option a): `Scoreboard` in Core, `grouplab scoreboard` on the command line (`--synthetic`, `--corpus`, and `truth`
