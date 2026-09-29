@@ -4036,6 +4036,14 @@
   "**Moved (entry 290):** they are in `mobile/GroupLab.Mobile`, a plain .NET library the Android head links and the iOS head will, and the few Android calls in them are behind one interface, `IPhonePlatform`: the app's folders, the bundled sheets, a reduced decode, the memory budget, the camera, sharing, printing, pasting, and the update card.": {
    "kind": "code",
    "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
+  },
+  "**The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and whether its shape is right, never a value.": {
+   "kind": "code",
+   "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
+  },
+  "None set: the build is not signed and nothing is sent, exit 3.": {
+   "kind": "code",
+   "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
   }
  },
  "rules": [

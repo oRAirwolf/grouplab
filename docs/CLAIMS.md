@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1251 |
+| code | 1253 |
 | measured | 1747 |
 | decided | 1269 |
 | unbacked | 0 |
-| **total** | **4267** |
+| **total** | **4269** |
 
-**937** of them were read one sentence at a time and their backing written against the sentence. The other **3330** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**939** of them were read one sentence at a time and their backing written against the sentence. The other **3330** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1102,6 +1102,8 @@ one that matters.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): **Moved (entry 290):** they are in `mobile/GroupLab.Mobile`, a plain .NET library the Android head links and the iOS head will, and the few Android calls in them are behind one interface, `IPhonePlatform`: the app's folders, the bundled sheets, a reduced decode, the memory budget, the camera, sharing, printing, pasting, and the update card.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): Building without a Mac The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The signing material and the key are secrets Alan sets himself with `gh secret set`, request 55 in `docs/notes/for-alan.md` says how; neither session ever sees them.
+- *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): **The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and whether its shape is right, never a value.
+- *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): None set: the build is not signed and nothing is sent, exit 3.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The App Store, and the licence Entry 279 section 1 adds to LICENSE a GPLv3 section 7 additional permission for distribution through Apple's App Store and TestFlight under Apple's terms, and CONTRIBUTING says that every contribution is accepted under the licence with it.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): No other project's GPL code enters the iOS build: the AprilTag code table is BSD-2-Clause, the fonts are under the SIL Open Font License, the packages are MIT or Apache-2.0, and OpenCV, opencv_contrib and OpenCvSharp are Apache-2.0 (`THIRD-PARTY-NOTICES.md`).
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The secrets and the app record (request 55), which need only Alan and can happen first.
