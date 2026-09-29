@@ -23,7 +23,7 @@ number is never reused and a question is never lost:
 
 ## 2026-09-29, question 74: the card check's thickness correction reads the print about 0.3% too large
 
-**Status: open.** Nothing waits on it; request 56 has Alan use a scan meanwhile. Entry 291's scale test: three 600 dpi scans of the printed
+**Status: answered 2026-09-29.** Alan: "Q74: A." As built. Nothing waits on it; request 56 has Alan use a scan meanwhile. Entry 291's scale test: three 600 dpi scans of the printed
 check pages read 100.01 to 100.07% (GroupLab's own scan path), so the printer printed true size. The six card photos, read by the phone's
 own code at 8 MP, with the thickness correction the app applied (0.48%): errors +0.35 to +0.80% on most photos; with no thickness
 correction, A and C agree with their scans to about 0.2% (mean error A 0.20%, C 0.13%; B 0.44%). From the page's size in the frame the
@@ -37,7 +37,7 @@ cards. I would try A, measured against these scans, and choose outline C over A 
 
 ## 2026-09-29, question 73: the 2 MOA set's load block names six fields; the format carries the standard nine
 
-**Status: open.** Nothing waits on it: the sheets carry the standard nine-field load block (entry 289 section 1: "date, distance, rifle,
+**Status: answered 2026-09-29.** Alan: "Q73: A." As built. Nothing waits on it: the sheets carry the standard nine-field load block (entry 289 section 1: "date, distance, rifle,
 caliber, load, notes"). A custom field set has no encoding in GLTD-B, so a sheet that declared six named fields could not be read back from
 its codes. **The options.** A: keep the nine standard fields (as built). B: add a field-set encoding to the format, which old builds would
 refuse. I would keep A.
@@ -46,7 +46,7 @@ refuse. I would keep A.
 
 ## 2026-09-29, question 72: the 2 MOA set numbers its bulls 1 to 9 on every page, not 1 to 25 with S1 and S2
 
-**Status: open.** Nothing waits on it. Entry 289 section 2.2 asks for "bulls numbered 1 to 25 across the set, and bulls 8 and 9 of the third
+**Status: answered 2026-09-29.** Alan: "Q72: A." As built. Nothing waits on it. Entry 289 section 2.2 asks for "bulls numbered 1 to 25 across the set, and bulls 8 and 9 of the third
 page as sighters S1 and S2". A tiled set shares one definition, and labels other than the default need the label block, which has no byte
 layout yet (question 10 of the schema, `docs/SPEC-ERRATA.md`). **Built:** every page is numbered 1 to 9, the set pools all 27 bulls by tile
 index, and a missing page is reported. **The options.** A: as built. B: give the label block a byte layout so a tile can carry its own
@@ -57,7 +57,7 @@ tile index. I would choose A now and B when the label block is designed.
 
 ## 2026-09-29, question 71: the 2 MOA sheets carry two corner codes, not four
 
-**Status: open.** Nothing waits on it. Entry 289 section 1: "the four corner codes as on every sheet ... load block between the bottom
+**Status: answered 2026-09-29.** Alan: "Q71: A." As built. Nothing waits on it. Entry 289 section 1: "the four corner codes as on every sheet ... load block between the bottom
 codes". `corners-1` lifts the bottom codes above any load block, and explicit code placement cannot be encoded (schema question 13), so a
 bottom pair beside the load block has no encoding; on Letter the bottom pair does not fit at all, and on A4 it would take two markers,
 after which 12 markers failed the registration gate once a quarter of them were lost. **Built:** every page carries the top pair only, as

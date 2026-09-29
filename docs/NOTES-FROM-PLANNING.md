@@ -24,6 +24,66 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 296: the iOS push goes on, with a leaner way of spending
+
+**Status: in force until 2026-10-01 02:00 UTC; section 1 done 2026-09-29.** The uncommitted work was committed (the updater's
+remembered tap, entry 294's fold, the screenshots, PDFs and claims regenerated once); entries 291, 293, 294 and 295 and the iOS app,
+camera and nightly job reached main as d05e112. Ten merged worktrees removed, none with uncommitted work; `ios/photos` kept (unfinished).
+Alan answered questions 71 to 74: A to each.
+
+From planning, 2026-09-29, for Alan. This changes how entry 290 is carried out, not what it asks for. The deadline, the priority on iOS and
+"never idle" all stand (Wednesday 2026-09-30 20:00 Mountain, 2026-10-01 02:00 UTC).
+
+## Why
+
+The session stopped at about 13:35 UTC with 55 files changed and not committed, most likely at a usage limit. Seven hours were lost. Alan
+wants the work to stay parallel and fast, but without spending on things that do not move the app forward.
+
+## 1. Before anything else
+
+1. Commit the uncommitted work as it stands: the self-updater fix (`SelfUpdate.cs`, `InstallResultReceiver.cs`), the notes and for-alan
+   line. Check the regenerated screenshots, mosaic and guide PDF first; commit them only if they reflect a real change, otherwise restore them.
+2. Note for Code: planning found a stale empty `.git/index.lock` at 20:58 UTC (planning's own status check caused it) and renamed it to
+   `.git/index.lock.stale-planning-20260929`. Nothing else in `.git` was touched.
+3. Prune worktrees under `.claude/worktrees/` (13 now) whose branches are merged. Keep a backup of anything unmerged.
+
+## 2. The spending rules until the deadline
+
+1. **At most three workers at once**, each on a separate area (for example: iOS, entry 295, entry 293). Not a dozen.
+2. **Mechanical work goes to a smaller model.** Screenshot and PDF regeneration, doc passes, searches, renaming, the site's consistency
+   audit: Sonnet or Haiku. Design, detection, the camera and the iOS platform code: the main model.
+3. **Narrow worker prompts.** Give each worker the files and the goal. Workers do not re-read the whole repository, STATE, or the long
+   notes files; they read the section they need.
+4. **Screenshots, the README mosaic, the guide PDF and the claims backing are regenerated once per nightly**, at the end, not after each entry.
+5. **Tests where the change is.** Run the tests for the area changed locally; let CI run the full suite and the iOS simulator. When waiting on
+   CI, sleep in long steps (five minutes or more), do not poll every minute, and do other work meanwhile.
+6. **Commit small and often**, at least after every finished item, so a stop never strands work again.
+7. **Short reports.** One line per item in for-alan.md and panel.md. No rewrites of long documents unless the entry asks for it.
+8. **No scoreboard re-reads of every sitting** on each change; run the scoreboard once per nightly, or when detection code changes.
+
+## 3. The order
+
+1. Entry 295 (Compare loads, the verdict card, All figures, sessions named by sheet name). Alan sees these on his phone now.
+2. Entry 290 iOS, items 3 (joining the nightly), 6 (files, sharing, printing, the idle screen), then the self-test. The TestFlight job waits
+   only on Alan's Apple secrets; build everything around it.
+3. Entry 293, the draft MSIX and the read-only authentication check. No submission.
+4. Entry 294, the guide and site pass.
+5. The nightly, then one screenshot, guide and site refresh.
+
+## 4. If a limit is hit again
+
+Write one line to for-alan.md with the time and what was in progress, commit, and stop cleanly. On restart, read that line first.
+
+## 5. What Alan's usage log shows (added 23:10 UTC)
+
+Alan ran ccusage. Almost all of the tokens since 12 September are cache reads (9.74 billion of 9.83 billion): the conversation being sent
+again on every step. Output is under 0.2%. On 29 September (Mountain time), in about seven and a half hours before the stop, cache creation
+was 27.4 million tokens, five times any earlier full day, which is the mark of many fresh workers each loading their context. So:
+
+1. The cost is context size times the number of steps. Keep contexts small (compact the main session after each finished item; workers
+   read only what they need) and steps few (no minute-by-minute polling, no rebuild-and-look loops when a test would answer).
+2. Start a new worker only for a separate area of work, and reuse it for follow-ups in that area rather than starting another.
+
 ## 2026-09-29, entry 295: Alan on nightly 126 on the Fold 7: Compare loads draws badly, All figures squeezes its labels, and the result picture is still sideways
 
 **Status: done 2026-09-29 but for section 4 and part of 1.3.** 1: the interval chart (desktop and phone) puts each name on its own
