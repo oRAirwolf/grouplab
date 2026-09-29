@@ -55,9 +55,12 @@ for name in ("Eigen3", "HDF5"):
     line = f"find_package({name} CONFIG REQUIRED)"
     assert text.count(line) == 1, name
     text = text.replace(line, f"# GroupLab iOS: {line} left out")
-# Tesseract and iconv belong to contrib modules not built here; a Homebrew copy found on the Mac would be linked for the wrong platform.
+# Tesseract belongs to a contrib module not built here; a Homebrew copy found on the Mac would be linked for the wrong platform.
 text = text.replace("find_package(Tesseract QUIET)", "set(Tesseract_FOUND OFF)")
-text = text.replace("find_package(Iconv QUIET)", "set(Iconv_FOUND OFF)")
+# wechat_qrcode links iconv from the iOS SDK, and OpenCV's static configuration names it as Iconv::Iconv, which has to exist before that
+# configuration is read. OpenCvSharp looks for it only afterwards.
+assert text.count("find_package(OpenCV REQUIRED)") == 1
+text = text.replace("find_package(OpenCV REQUIRED)", "find_package(Iconv REQUIRED)\nfind_package(OpenCV REQUIRED)")
 cmake.write_text(text)
 header = extern / "include_opencv.h"
 text = header.read_text()
@@ -80,7 +83,7 @@ build_slice() {
   local sdk=$1
   local common=(-G "Unix Makefiles" -Wno-dev
     -D CMAKE_BUILD_TYPE=Release
-    -D CMAKE_SYSTEM_NAME=iOS -D CMAKE_OSX_SYSROOT="$sdk" -D CMAKE_OSX_ARCHITECTURES=arm64
+    -D CMAKE_SYSTEM_NAME=iOS -D CMAKE_SYSTEM_PROCESSOR=arm64 -D CMAKE_OSX_SYSROOT="$sdk" -D CMAKE_OSX_ARCHITECTURES=arm64
     -D CMAKE_OSX_DEPLOYMENT_TARGET=$IOS_MIN)
   local install="$WORK/opencv-install-$sdk"
 
@@ -95,7 +98,7 @@ build_slice() {
     -D WITH_OPENCL=OFF -D WITH_ITT=OFF -D WITH_IPP=OFF -D WITH_EIGEN=OFF -D WITH_LAPACK=OFF -D WITH_KLEIDICV=OFF \
     -D WITH_TBB=OFF -D WITH_OPENMP=OFF -D WITH_AVFOUNDATION=OFF -D WITH_CAP_IOS=OFF \
     -D OPENCV_ENABLE_NONFREE=OFF > "$WORK/opencv-configure-$sdk.log" || { tail -60 "$WORK/opencv-configure-$sdk.log"; exit 1; }
-  grep -E "To be built:|Disabled:|Unavailable:| (ZLib|JPEG|PNG|TIFF|WEBP|JPEG 2000|HAL|Protobuf|Lapack):" "$WORK/opencv-configure-$sdk.log" || true
+  grep -E "To be built:|Baseline:|Dispatched code|Disabled:| (ZLib|JPEG|PNG|TIFF|WEBP|JPEG 2000|HAL|Protobuf|Lapack):" "$WORK/opencv-configure-$sdk.log" || true
   cmake --build "opencv-build-$sdk" --parallel "$JOBS" > "$WORK/opencv-build-$sdk.log" 2>&1 || { grep -E "error|Error" "$WORK/opencv-build-$sdk.log" | head -40; exit 1; }
   cmake --install "opencv-build-$sdk" > /dev/null
 
@@ -135,6 +138,9 @@ build_slice() {
 
   # The Apple frameworks and system libraries OpenCV's static configuration says its modules need, for the head's linker.
   grep -rhoE -- "-framework [A-Za-z]+|lib[a-z0-9+]+\.tbd" "$config" 2>/dev/null >> "$WORK/link-frameworks.raw" || true
+  if grep -rq "Iconv::Iconv" "$config"; then echo "-liconv" >> "$WORK/link-frameworks.raw"; fi
+  # OpenCV and the bindings are C++, and an archive carries no note of the C++ library it needs.
+  echo "-lc++" >> "$WORK/link-frameworks.raw"
 }
 
 rm -f "$WORK/link-frameworks.raw"
