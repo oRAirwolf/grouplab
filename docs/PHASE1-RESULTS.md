@@ -78,7 +78,10 @@ The map and three deep dives are built (`website/how_it_works.py`, `website/how-
 ## Entry 280: one number at a time
 
 A tap now switches the number tapped and nothing else, and GroupLab remembers the unit for that figure (`UnitTap`, `UnitSwitch.Convert`,
-held by `UnitTapTests` and `UnitSwitchTests`). Row 10's screens are chosen and come next; the full CEP table's bare cells are not tappable yet.
+held by `UnitTapTests` and `UnitSwitchTests`). Of row 10's screens, the phone now has Shots A (`ShotsPage`, with the "Left out by the
+shooter" reason), Zero from this group (`ZeroFromPage`, and the offset carried into the Ballistics dope) and several aim points (chips,
+colored rings, "+ Aim point"). Share A, the report and the desktop's equivalents come after the device sitting; the full CEP table's cells
+are question 70.
 
 ## Entry 279: the App Store permission, Marking A, and Unholy's requests
 

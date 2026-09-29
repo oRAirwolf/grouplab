@@ -42,8 +42,9 @@ saving A), 280 in part, 284 (Behind the curtain) and 285 (the README's list). En
 
 1. The device sitting on the nightly that carries entries 281 to 283: the camera fixes checked, `scripts/shutter-timing.py` on both
    devices, the phone and tablet pictures (253 section 3), the inner Fold screen (257), torch strength (262), the card photo (273).
-2. Entry 280 section 2's screens as chosen (Shots A, Share A, several aim points, the report, zero from this group), then the desktop's
-   tabs (entry 281 section 2), then the full CEP table's cells made tappable (entry 280 section 1).
+2. Entry 280 section 2's remaining screens, Share A and the dated report, and the desktop's equivalents of all five, after the sitting
+   confirms the phone screens built tonight (Shots A, zero from this group with the Ballistics offset, several aim points); then the
+   desktop's tabs (entry 281 section 2). Question 70 holds the full CEP table's cells.
 3. The 2 MOA sheets once planning draws their layout; question 67 from request 53's photographs.
 
 ## Blocked, and on what
