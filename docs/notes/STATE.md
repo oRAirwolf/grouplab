@@ -18,10 +18,10 @@ the home page) and 288 in part (GroupLab Dev updates itself; its device check wa
 
 ## In flight
 
-- **iOS until 2026-10-01 02:00 UTC** (entry 290): the phone's screens are in `mobile/GroupLab.Mobile` (plain .NET, both heads link it,
-  `IPhonePlatform` is the only way to the OS), tested headlessly on every machine by `tests/GroupLab.Mobile.Tests`. OpenCV for iOS is
-  built in CI (the `ios` workflow). Workers on branches: the iOS head and simulator job (`ios/head`), the camera (`ios/camera`), entry
-  289's sheets and entry 280's screens; `ci.yml` and the gate record skip `ios/**` branches. The checklist is at the top of `for-alan.md`.
+- **iOS until 2026-10-01 02:00 UTC** (entries 290 and 296): on main, the iOS app (proven on the simulator: every tab, the imaging, the
+  25-shot sample identical to the desktop), the camera (device checks on the TestFlight list), and the nightly's iOS job (unsigned until
+  request 55's secrets). One worker, `ios/photos`: Apple Photos, Files, sharing into GroupLab, and item 6's share, print and paste checks.
+  Entry 296's rules: at most three workers, small commits, CI checked in five-minute steps.
 - **GroupLab Dev updates itself** (entry 288): `AndroidUpdates` in Core, the `Updates` folder in the Android project compiled only with
   `-p:GroupLabUpdater=true` (GroupLab Dev's APK only, never the AAB), and the Dev APK listed in the signed manifest as `android apk-dev`.
   Nightly 125 is the first with it: install it over adb once, then the next nightly should arrive by itself; record the first prompt,
@@ -79,7 +79,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 2
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.124 (b856d1f), on both devices; nightly 125 will carry the Android updater.
+- **Last nightly:** 0.2.0-nightly.129. The next carries the iOS app, the camera and the nightly's iOS job, entries 291, 293, 294 and 295.
 - **The site follows each push by itself**; it serves b856d1f and later.
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
