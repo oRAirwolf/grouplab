@@ -115,6 +115,25 @@ internal static class SelfTest
             });
             if (NativeOpenCv.Linked)
             {
+                checks.Add(SelfTestChecks.Run("native library", check =>
+                {
+                    var (handle, export) = NativeOpenCv.Probe();
+                    check.Numbers["handle"] = handle ? 1 : 0;
+                    check.Numbers["export"] = export ? 1 : 0;
+                    string version = "";
+                    try
+                    {
+                        version = OpenCvSharp.Cv2.GetVersionString() ?? "";
+                    }
+                    finally
+                    {
+                        check.Detail = $"the executable's handle {(handle ? "opened" : "did not open")}, core_Mat_new1 {(export ? "found" : "not found")} in it; "
+                            + $"the resolver was asked {NativeOpenCv.Asked} times, last for {NativeOpenCv.LastAsked ?? "nothing"}";
+                    }
+
+                    check.Passed = handle && export && version.Length > 0;
+                    check.Detail += "; OpenCV " + version;
+                }));
                 checks.AddRange(await Task.Run(SelfTestChecks.Imaging));
                 string sample = Path.Combine(Folder, "sample.png");
                 checks.Add(await Task.Run(() => SelfTestChecks.Pipeline(sample)));
@@ -126,7 +145,7 @@ internal static class SelfTest
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
-            checks.Add(new SelfTestCheck("self-test") { Detail = e.GetType().Name + ": " + e.Message });
+            checks.Add(new SelfTestCheck("self-test") { Detail = SelfTestChecks.Describe(e) });
         }
 
         string results = SelfTestChecks.Json("ios", NativeOpenCv.Linked, budget, checks);
@@ -197,7 +216,7 @@ internal static class SelfTest
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
-            check.Detail = e.GetType().Name + ": " + e.Message;
+            check.Detail = SelfTestChecks.Describe(e);
         }
 
         return check;
@@ -220,7 +239,7 @@ internal static class SelfTest
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
-            check.Detail = e.GetType().Name + ": " + e.Message;
+            check.Detail = SelfTestChecks.Describe(e);
         }
 
         return check;
