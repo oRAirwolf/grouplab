@@ -6,7 +6,7 @@ using Screens = GroupLab.Mobile.Screens;
 namespace GroupLab.iOS;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 290 section 2 item 5: the camera's place where there is no camera, which is the iOS Simulator. The files
+/// NOTES-FROM-PLANNING.md entry 290 section 2 item 5: the camera's place where there is no camera, which is the iOS Simulator. The photos
 /// picker opens at once, and reads the chosen picture exactly as a picture from the camera is read; if the picker is closed, this says
 /// why and offers it again.
 /// </summary>
@@ -22,7 +22,7 @@ internal sealed class NoCamera : UserControl
             Children =
             {
                 Screens.Title("Take a picture"),
-                Screens.Line("This device has no camera GroupLab can use, so the files picker opens instead. Photograph the target with another camera and choose the picture; GroupLab reads it exactly as it would read its own."),
+                Screens.Line("This device has no camera GroupLab can use, so your photos open instead. Photograph the target with another camera and choose the picture; GroupLab reads it exactly as it would read its own."),
                 Screens.Primary("Choose a picture", choose),
                 Screens.Choice("Back", back),
             },

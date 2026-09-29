@@ -111,6 +111,10 @@ internal static class SelfTest
             // shows its start; and the camera's picture written as a JPEG.
             checks.Add(await CameraSelfTest.Fallback(80));
             checks.Add(await CameraSelfTest.Jpeg());
+
+            // Entry 292 sections 2.1 and 2.2: Choose a photograph opens the Photos picker and From another app opens Files; each Cancel comes back.
+            checks.Add(await PhotosSelfTest.Picker(PhotoSource.Photos, "81-photos-picker"));
+            checks.Add(await PhotosSelfTest.Picker(PhotoSource.OtherApp, "82-files-picker"));
             budget = Phone.Platform.MemoryBudgetMegabytes();
             checks.Add(new SelfTestCheck("opencv linked")
             {
@@ -143,6 +147,10 @@ internal static class SelfTest
                 string sample = Path.Combine(Folder, "sample.png");
                 checks.Add(await Task.Run(() => SelfTestChecks.Pipeline(sample)));
                 checks.Add(await Chosen(sample, n));
+
+                // Entry 292 section 2.3: a picture opened in GroupLab from another app, and one shared into it, each read into analysis.
+                checks.Add(await PhotosSelfTest.OpenIn(sample, 60));
+                checks.Add(await PhotosSelfTest.Shared(sample, 61));
             }
 
             // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
@@ -266,7 +274,7 @@ internal static class SelfTest
     private static void Say(string status) => File.WriteAllText(Path.Combine(Folder, "status"), status);
 
     /// <summary>The first control of a kind on screen; on the interface thread only.</summary>
-    private static T? Find<T>()
+    internal static T? Find<T>()
         where T : Control => Shell.Current?.GetVisualDescendants().OfType<T>().FirstOrDefault();
 
     internal static Task OnUi(Action action) => Dispatcher.UIThread.InvokeAsync(action).GetTask();

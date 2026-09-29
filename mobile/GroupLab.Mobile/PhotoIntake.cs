@@ -26,7 +26,15 @@ public enum PhotoSource
 /// A photograph another app has handed over and GroupLab has not read yet: the app's name where Android says it, the size in pixels and in
 /// bytes where the app states them, the file's kind, and how to open it. Nothing about where it was taken is ever part of it.
 /// </summary>
-public sealed record PhotoHandle(string? App, int? Width, int? Height, long? Bytes, string Extension, Func<Task<Stream?>> Open);
+public sealed record PhotoHandle(string? App, int? Width, int? Height, long? Bytes, string Extension, Func<Task<Stream?>> Open)
+{
+    /// <summary>
+    /// Entry 292 section 2.1: where the whole photograph has to arrive before any of it can be read, as iOS's photo picker downloads one
+    /// kept only in iCloud: this hears how far the download has got, from 0 to 1, and is stopped by Cancel. Null where <see cref="Open"/>
+    /// streams the photograph as it arrives, as every Android app does.
+    /// </summary>
+    public Func<Action<double>, CancellationToken, Task<Stream?>>? Download { get; init; }
+}
 
 /// <summary>A photograph read into the cache, and a sentence where the app handed over less than the whole photograph.</summary>
 public sealed record PickedPhoto(string Path, string? Reduced);
@@ -103,6 +111,12 @@ public static class PhotoIntake
             : read > 0 ? string.Create(CultureInfo.CurrentCulture, $", {Megabytes(read)} MB so far") : "";
         return what + from + far;
     }
+
+    /// <summary>
+    /// The line while a photograph is downloaded whole before it can be read (entry 292 section 2.1), where only the share done is known.
+    /// </summary>
+    public static string Downloading(string? app, int index, int count, double done) =>
+        Getting(app, index, count, 0, null) + (done > 0 ? string.Create(CultureInfo.CurrentCulture, $", {Math.Min(done, 1) * 100:0} percent") : "");
 
     private static string Megabytes(long bytes) => (bytes / 1048576.0).ToString("0.0", CultureInfo.CurrentCulture);
 
@@ -210,7 +224,10 @@ public static class PhotoIntake
     {
         try
         {
-            await using var from = await photo.Open().ConfigureAwait(false) ?? throw new IOException("the app gave no stream");
+            var opening = photo.Download is { } download
+                ? download(done => progress?.Invoke(Downloading(photo.App, index, count, done)), cancel)
+                : photo.Open();
+            await using var from = await opening.ConfigureAwait(false) ?? throw new IOException("the app gave no stream");
             await using var registration = cancel.Register(() =>
             {
                 try
@@ -292,7 +309,7 @@ public static class PhotoIntake
 
     /// <summary>
     /// The default for a head without pickers of its own: the system's file picker through Avalonia, as Choose a photograph was before
-    /// entry 292. It reaches the same photographs by either source, and the iOS head replaces it with its own (section 2).
+    /// entry 292. It reaches the same photographs by either source; the iOS head has its own (section 2).
     /// </summary>
     public static async Task<IReadOnlyList<PhotoHandle>> FromFilePicker(TopLevel? top, bool several)
     {

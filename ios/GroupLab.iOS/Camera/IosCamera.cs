@@ -5,7 +5,7 @@ namespace GroupLab.iOS;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 290 section 2 item 5: what <see cref="IosPhone"/> answers for the camera. The back wide camera where there
-/// is one; where there is none, which is the iOS Simulator, the files picker in its place (<see cref="NoCamera"/>).
+/// is one; where there is none, which is the iOS Simulator, the Photos picker in its place (<see cref="NoCamera"/>).
 /// </summary>
 internal static class IosCamera
 {
