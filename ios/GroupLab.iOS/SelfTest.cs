@@ -29,7 +29,14 @@ internal static class SelfTest
 
     internal static bool IdleAsked() => Has(IdleArgument);
 
-    private static bool Has(string argument) => Program.Arguments.Contains(argument) || Environment.GetCommandLineArgs().Contains(argument);
+    /// <summary>
+    /// Whether the application was started with <paramref name="argument"/>: iOS gives the arguments of <c>xcrun simctl launch</c> to
+    /// NSProcessInfo, and not always to Main; GROUPLAB_ARGUMENTS in the environment (SIMCTL_CHILD_GROUPLAB_ARGUMENTS) is read too.
+    /// </summary>
+    private static bool Has(string argument) =>
+        Program.Arguments.Contains(argument) || Environment.GetCommandLineArgs().Contains(argument)
+        || Foundation.NSProcessInfo.ProcessInfo.Arguments.Contains(argument)
+        || (Environment.GetEnvironmentVariable("GROUPLAB_ARGUMENTS") ?? "").Split(' ').Contains(argument);
 
     /// <summary>
     /// A test sitting's idle screen: shown once the application is up, with the screen kept on only while it is showing, since the sitting

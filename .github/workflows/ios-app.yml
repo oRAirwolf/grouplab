@@ -153,28 +153,39 @@ jobs:
           cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
 
       - name: Self-test
+        timeout-minutes: 30
         run: |
           folder="$DATA/Documents/selftest"
           rm -f "$folder/status" "$folder/showing" "$folder/taken" "$folder/results.json"
-          xcrun simctl launch --console-pty "$UDID" org.grouplab.app --self-test > app-console.log 2>&1 &
-          # Each screen the self-test names in showing is photographed, and the name written back in taken, before it moves on.
+          SIMCTL_CHILD_GROUPLAB_ARGUMENTS=--self-test xcrun simctl launch --console-pty "$UDID" org.grouplab.app --self-test > app-console.log 2>&1 &
+          launcher=$!
+          # Each screen the self-test names in showing is photographed, and the name written back in taken, before it moves on. The
+          # launcher ends when the application does, so an application that stopped is seen at once rather than at the time limit.
           last=""
-          for i in $(seq 1 1800); do
+          status=""
+          start=$(date +%s)
+          while [ $(( $(date +%s) - start )) -lt 1500 ]; do
             status=$(cat "$folder/status" 2>/dev/null || true)
             showing=$(cat "$folder/showing" 2>/dev/null || true)
             if [ -n "$showing" ] && [ "$showing" != "$last" ]; then
               xcrun simctl io "$UDID" screenshot "shots/$showing.png" > /dev/null
               printf '%s' "$showing" > "$folder/taken"
-              echo "photographed $showing"
+              echo "$(( $(date +%s) - start )) s: photographed $showing"
               last="$showing"
             fi
             [ "$status" = "done" ] && break
+            if ! kill -0 "$launcher" 2>/dev/null; then
+              echo "::error::The application ended during the self-test (status: $status)"
+              xcrun simctl io "$UDID" screenshot "shots/99-when-it-ended.png" > /dev/null || true
+              break
+            fi
             sleep 1
           done
-          cp "$folder/results.json" ios-results.json 2>/dev/null || { echo "::error::The self-test wrote no results (status: $status)"; tail -60 app-console.log; exit 1; }
+          echo "status after $(( $(date +%s) - start )) s: $status"
           grep "SELFTEST" app-console.log | grep -v SHOWING || true
-          xcrun simctl terminate "$UDID" org.grouplab.app || true
           mkdir -p app-logs && cp -R "$DATA/Documents/logs/." app-logs/ 2>/dev/null || true
+          cp "$folder/results.json" ios-results.json 2>/dev/null || { echo "::error::The self-test wrote no results (status: $status)"; grep -v "^\s*$" app-console.log | tail -60; exit 1; }
+          xcrun simctl terminate "$UDID" org.grouplab.app || true
 
       - name: The desktop's numbers
         if: steps.opencv.outputs.linked == 'true'
