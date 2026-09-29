@@ -79,5 +79,10 @@
       <LinkerFlags>$(GroupLabOpenCvLinkerFlags.Trim())</LinkerFlags>
     </NativeReference>
   </ItemGroup>
+  <!--
+    The link strips every symbol no P/Invoke it knows of names, and OpenCvSharp's P/Invokes name a library, not __Internal, so its entry
+    points are listed for it to keep: ios/opencv-symbols.py writes the list beside the framework.
+  -->
+  <Import Project="$(GroupLabOpenCv)\..\OpenCvSharpExtern.symbols.props" Condition="Exists('$(GroupLabOpenCv)') and Exists('$(GroupLabOpenCv)\..\OpenCvSharpExtern.symbols.props')" />
 
 </Project>
