@@ -12,6 +12,10 @@ using GroupLab.Mobile;
 // Entry 288: only a build with the updater asks for this, so the copy for Google Play never carries it (UpdaterFlavorTests).
 [assembly: UsesPermission(global::Android.Manifest.Permission.RequestInstallPackages)]
 
+// Android 12 and later honor "no tap needed" on a self-update only from an app that also declares this (normal, granted at install). Without
+// it, nightly 126 to 127 on the tablet came back asking for a tap though GroupLab was its own installer of record (entry 288).
+[assembly: UsesPermission("android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION")]
+
 
 namespace GroupLab.Android.Updates;
 
