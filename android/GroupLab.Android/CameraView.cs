@@ -19,6 +19,8 @@ using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using Java.Util.Concurrent;
 
+using GroupLab.Mobile;
+
 namespace GroupLab.Android;
 
 /// <summary>
@@ -138,8 +140,8 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         this.owner = owner;
         this.preview = preview;
         this.screen = screen;
-        manual = App.Settings.LoadCaptureManual();
-        torchChoice = App.Settings.LoadCaptureTorch();
+        manual = Phone.Settings.LoadCaptureManual();
+        torchChoice = Phone.Settings.LoadCaptureTorch();
         screen.ShowMode(manual);
         screen.ShowTorch(torchChoice);
         screen.ShowLens(Lenses[0]);
@@ -150,13 +152,13 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             readyInARow = 0;
             screen.Shutter.Progress = 0;
             screen.ShowMode(manual);
-            App.Settings.SaveCaptureManual(manual);
+            Phone.Settings.SaveCaptureManual(manual);
             DiagnosticLog.Info("camera.mode", ("mode", manual ? "manual" : "guided"));
         };
         screen.TorchPressed += () =>
         {
             torchChoice = (torchChoice + 1) % 3;
-            App.Settings.SaveCaptureTorch(torchChoice);
+            Phone.Settings.SaveCaptureTorch(torchChoice);
             screen.ShowTorch(torchChoice);
             SetTorch(torchChoice == 1);
             DiagnosticLog.Info("camera.torch", ("choice", torchChoice switch { 1 => "on", 2 => "off", _ => "auto" }));

@@ -9,7 +9,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 259 screen 3, "its own page, A" (Alan's choice), suggested by Jylee: a card with the click value as chips
@@ -40,7 +40,7 @@ internal sealed class ShotsToZeroPage : UserControl
         // Entry 273: a tap on any number switches units everywhere; this page shows them again.
         void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            this.units = App.Settings.LoadUnits();
+            this.units = Phone.Settings.LoadUnits();
             Build();
         });
         AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;

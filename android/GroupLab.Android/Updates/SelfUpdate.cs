@@ -7,9 +7,11 @@ using Android.Net;
 using AndroidX.Work;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Updates;
+using GroupLab.Mobile;
 
 // Entry 288: only a build with the updater asks for this, so the copy for Google Play never carries it (UpdaterFlavorTests).
 [assembly: UsesPermission(global::Android.Manifest.Permission.RequestInstallPackages)]
+
 
 namespace GroupLab.Android.Updates;
 

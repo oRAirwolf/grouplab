@@ -4,6 +4,8 @@ using Android.Print;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Gltd.Model;
 
+using GroupLab.Mobile;
+
 namespace GroupLab.Android;
 
 /// <summary>
@@ -51,7 +53,7 @@ internal static class PdfOut
         Directory.CreateDirectory(Shared);
         string path = Path.Combine(Shared, string.Concat(name.Split(Path.GetInvalidFileNameChars())) + ".pdf");
         File.WriteAllBytes(path, pdf);
-        var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(activity, SessionFiles.Authority, new Java.IO.File(path));
+        var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(activity, AndroidPhone.Authority, new Java.IO.File(path));
         var send = new Intent(Intent.ActionSend);
         send.SetType("application/pdf");
         send.PutExtra(Intent.ExtraStream, uri);

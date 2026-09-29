@@ -13,8 +13,11 @@ Everything below the screen is already platform-free .NET and runs on iOS as it 
 - `GroupLab.Core`: the target format, the renderer, detection, registration, the statistics, the ballistics, the picture check, the
   sessions database (SQLite through Microsoft.Data.Sqlite) and every figure and word the phone shows.
 - The phone's screens that are Avalonia controls, not Android ones: the result, the figures, Sessions, Ballistics, Targets, Settings,
-  Compare, Shots Needed to Zero, the first run, the printer check and the CSV import. They move from `android/GroupLab.Android/` to a shared
-  mobile project both heads link, with the few Android calls in them behind small interfaces.
+  Compare, Shots Needed to Zero, the first run, the printer check and the CSV import. **Moved (entry 290):** they are in
+  `mobile/GroupLab.Mobile`, a plain .NET library the Android head links and the iOS head will, and the few Android calls in them are behind one interface,
+  `IPhonePlatform`: the app's folders, the bundled sheets, a reduced decode, the memory budget, the camera, sharing, printing, pasting,
+  and the update card. Because it is plain .NET it builds and is tested on any machine; `MobileProjectTests` holds it free of Android
+  and iOS calls.
 - The desktop's shared pieces the phone already links: settings, the plot, the curves, unit taps, the diagnostic log and error reports.
 
 ## 2. What is new, and how big

@@ -1,6 +1,8 @@
 using Android.Content;
 using Android.Content.PM;
 
+using GroupLab.Mobile;
+
 namespace GroupLab.Android.Updates;
 
 /// <summary>

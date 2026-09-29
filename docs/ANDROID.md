@@ -322,7 +322,10 @@ one instruction, 0.6x, 1x and 3x, tap to focus and lock, the automatic shutter a
 
 ## 11. The application (entry 219 item A3)
 
-`android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`. Four places along the bottom, where a thumb reaches them: Capture,
+`android/GroupLab.Android` is GroupLab itself, `org.grouplab.app`. **Its screens are the shared mobile project's** since entry 290:
+`mobile/GroupLab.Mobile`, a plain .NET library the iOS head is being built to link, holds every Avalonia screen and the desktop files they compile, and
+reaches the phone only through `IPhonePlatform`. This head keeps what is Android's own: the activity, the camera (CameraX), printing and
+sharing through intents, the idle screen, the updater, and `AndroidPhone`, its answers to `IPhonePlatform`. Four places along the bottom, where a thumb reaches them: Capture,
 Sessions, Targets and Settings; Back from any of the others returns to Capture, and Back from Capture leaves. Targets (entry 243 section
 3.4) is the library and "Made for your optic", each sheet printed through Android's own print dialog or shared as the desktop's PDF. On a
 window at least 840 dp wide (entry 243 section 3.3) a result puts the sheet beside its numbers. The first run asks what may be

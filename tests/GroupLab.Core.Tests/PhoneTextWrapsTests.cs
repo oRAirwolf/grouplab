@@ -16,7 +16,8 @@ public partial class PhoneTextWrapsTests
     public void EveryPhoneTextThatTakesItsWordsFromAValueWraps()
     {
         var unwrapped = new List<string>();
-        foreach (string path in Directory.EnumerateFiles(Repo.PathTo("android", "GroupLab.Android"), "*.cs"))
+        // Entry 290: the screens are the shared mobile project's; the Android head keeps its own few.
+        foreach (string path in Directory.EnumerateFiles(Repo.PathTo("android", "GroupLab.Android"), "*.cs").Concat(Directory.EnumerateFiles(Repo.PathTo("mobile", "GroupLab.Mobile"), "*.cs")))
         {
             string code = File.ReadAllText(path);
             foreach (Match m in NewTextBlock().Matches(code))

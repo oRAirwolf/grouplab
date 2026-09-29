@@ -9,7 +9,7 @@ using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 259 screen 6, "the set as a checklist, A" (Alan's choice), for a set of sheets from Made for your optic: the

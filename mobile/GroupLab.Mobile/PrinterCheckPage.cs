@@ -10,7 +10,7 @@ using GroupLab.Core.Gltd.Derivation;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// The printer check on the phone, NOTES-FROM-PLANNING.md entries 272 and 273, the three screens Alan approved: pick a method (name the
@@ -26,7 +26,7 @@ internal sealed class PrinterCheckPage : UserControl
     internal PrinterCheckPage(Action done, string? name = null)
     {
         this.done = done;
-        this.name = name ?? App.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName;
+        this.name = name ?? Phone.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName;
         DiagnosticLog.Info("printer.check", ("step", "start"));
         Start(PrinterMethod.Card);
     }
@@ -116,7 +116,7 @@ internal sealed class PrinterCheckPage : UserControl
             {
                 column.Children.Add(Screens.Primary("Take the picture", () =>
                 {
-                    if (!MainActivity.CameraAllowed())
+                    if (!Phone.Platform.CameraAllowed())
                     {
                         said.Text = "GroupLab needs the camera to take the picture. Allow it, then press Take the picture again.";
                         return;
@@ -124,7 +124,7 @@ internal sealed class PrinterCheckPage : UserControl
 
                     var back = Content;
                     Shell.Current?.Immersive(true);
-                    Content = new CameraView((path, torch) =>
+                    Content = Phone.Platform.Camera((path, torch) =>
                     {
                         Shell.Current?.Immersive(false);
                         Content = back;
@@ -200,7 +200,7 @@ internal sealed class PrinterCheckPage : UserControl
             return;
         }
 
-        string copy = Path.Combine(global::Android.App.Application.Context.CacheDir!.AbsolutePath, "check" + Path.GetExtension(files[0].Name));
+        string copy = Path.Combine(Phone.Platform.CacheFolder, "check" + Path.GetExtension(files[0].Name));
         await using (var from = await files[0].OpenReadAsync())
         await using (var to = File.Create(copy))
         {
@@ -276,7 +276,7 @@ internal sealed class PrinterCheckPage : UserControl
         column.Children.Add(Screens.Dim($"Each result from a photo will say \"{profile.Line}\". You can check again, add another printer, or turn this off in Settings, under Printers."));
         column.Children.Add(Screens.Primary("Save and finish", () =>
         {
-            App.Settings.SavePrinter(profile);
+            Phone.Settings.SavePrinter(profile);
             DiagnosticLog.Info("printer.check", ("step", "saved"), ("method", profile.Method.ToString()));
             done();
         }));

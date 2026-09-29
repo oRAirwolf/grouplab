@@ -186,7 +186,7 @@ public class ClaimsAboutMeasuringTests
     [Fact]
     public void HowAPhotographGetsRealInchesIsSaidFromOneSentence()
     {
-        Assert.Contains("DetectionAdvice.OncePerPrinter", File.ReadAllText(Path.Combine(Repo.Root, "android", "GroupLab.Android", "CapturePage.cs")), StringComparison.Ordinal);
+        Assert.Contains("DetectionAdvice.OncePerPrinter", File.ReadAllText(Path.Combine(Repo.Root, "mobile", "GroupLab.Mobile", "CapturePage.cs")), StringComparison.Ordinal);
         Assert.Contains(DetectionAdvice.OncePerPrinter, File.ReadAllText(Path.Combine(Repo.PathTo("docs"), "WHAT-CAN-BE-MEASURED.md")), StringComparison.Ordinal);
         Assert.Contains(DetectionAdvice.OncePerPrinter, File.ReadAllText(Path.Combine(Repo.PathTo("docs"), "USER-GUIDE.md")), StringComparison.Ordinal);
         using var tour = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repo.PathTo("website"), "tour.json")));

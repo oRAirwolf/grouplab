@@ -1,6 +1,9 @@
 using Avalonia.Controls;
 using GroupLab.Core.Updates;
 
+using GroupLab.Mobile;
+using Screens = GroupLab.Mobile.Screens;
+
 namespace GroupLab.Android.Updates;
 
 /// <summary>

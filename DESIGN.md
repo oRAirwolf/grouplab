@@ -538,7 +538,7 @@ Loads are compared on their own screen, the rail's chart slot, from sessions cho
 
 **The phone takes this language on as look B, "cards for the thumb"** (entry 246, Alan's choice of entry 243 section 3.5's three). It
 applies the desktop's own styles first, so its palette, faces and control states are the desktop's, and adds its own on top
-(`android/GroupLab.Android/PhoneStyles.cs`): a page title at the lead size, related things on rounded panels, choices as cards that turn
+(`mobile/GroupLab.Mobile/PhoneStyles.cs`): a page title at the lead size, related things on rounded panels, choices as cards that turn
 amber when chosen, pill buttons with one amber primary a screen, figures as tiles with mean radius the amber one, and a bottom bar of icons
 with the current place in an amber pill. The radii and the 48 dp touch height are the phone's; every color and size is a token. Its icon
 is the desktop's mark (entry 248).

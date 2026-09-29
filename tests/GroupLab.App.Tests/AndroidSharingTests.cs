@@ -26,10 +26,13 @@ public sealed class AndroidSharingTests
 
     private static string Android => Path.Combine(Root(), "android", "GroupLab.Android");
 
+    /// <summary>Entry 290: the phone's screens, and the desktop files they compile, are the shared mobile project's.</summary>
+    private static string Mobile => Path.Combine(Root(), "mobile", "GroupLab.Mobile");
+
     [Fact]
     public void EveryFileTheApplicationSharesWithTheDesktopExists()
     {
-        var project = XDocument.Load(Path.Combine(Android, "GroupLab.Android.csproj"));
+        var project = XDocument.Load(Path.Combine(Mobile, "GroupLab.Mobile.csproj"));
         var linked = project.Descendants("Compile").Select(c => (string?)c.Attribute("Include"))
             .OfType<string>().Where(i => !i.Contains('*', StringComparison.Ordinal)).ToList(); // a Remove, as the updater flavor's (entry 288), names no file
         Assert.Contains(linked, l => l.EndsWith("SharingWords.cs", StringComparison.Ordinal));
@@ -40,7 +43,7 @@ public sealed class AndroidSharingTests
         Assert.Contains(linked, l => l.EndsWith("SurveyQueue.cs", StringComparison.Ordinal));
         foreach (string include in linked)
         {
-            Assert.True(File.Exists(Path.GetFullPath(Path.Combine(Android, include.Replace('\\', Path.DirectorySeparatorChar)))), $"{include} is gone");
+            Assert.True(File.Exists(Path.GetFullPath(Path.Combine(Mobile, include.Replace('\\', Path.DirectorySeparatorChar)))), $"{include} is gone");
         }
     }
 
@@ -50,6 +53,7 @@ public sealed class AndroidSharingTests
         var words = SharingWords.TargetChoices.Select(c => c.Words).Concat(SharingWords.ErrorChoices.Select(c => c.Words))
             .Append(SharingWords.TargetsQuestion).Append(SharingWords.ErrorsQuestion).Append(SharingWords.LevelHeading).ToList();
         var sources = Directory.GetFiles(Android, "*.cs", SearchOption.AllDirectories)
+            .Concat(Directory.GetFiles(Mobile, "*.cs", SearchOption.AllDirectories))
             .Concat(Directory.GetFiles(Path.Combine(Root(), "src", "GroupLab.App"), "MainWindow*.cs"))
             .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
                 && !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal));
@@ -66,7 +70,7 @@ public sealed class AndroidSharingTests
     [Fact]
     public void ThePhonesFirstRunChoosesNothingForThePerson()
     {
-        string text = File.ReadAllText(Path.Combine(Android, "FirstRunView.cs"));
+        string text = File.ReadAllText(Path.Combine(Mobile, "FirstRunView.cs"));
         var radios = Regex.Matches(text, @"Screens\.Radio\([^;]*\);");
         Assert.Equal(2, radios.Count);
         Assert.All(radios, r => Assert.EndsWith(", false);", r.Value, StringComparison.Ordinal));

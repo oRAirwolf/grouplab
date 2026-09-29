@@ -5,7 +5,7 @@ using Avalonia.Threading;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A4: the first place along the bottom. The caliber and the distance, remembered from the last
@@ -40,12 +40,12 @@ public sealed class CapturePage : UserControl
         TestCamera = manual =>
         {
             Shell.Current?.Show(Shell.Place.Capture);
-            App.Settings.SaveCaptureManual(manual);
+            Phone.Settings.SaveCaptureManual(manual);
             Camera();
         };
 #endif
-        var units = App.Settings.LoadUnits();
-        var (typed, inches) = App.Settings.LoadShotSetup();
+        var units = Phone.Settings.LoadUnits();
+        var (typed, inches) = Phone.Settings.LoadShotSetup();
         calibre.Text = typed ?? "";
         distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}";
         distance.Text = inches is { } d ? UnitSettings.DistanceFromInches(d, units.Distance).ToString("0.#", CultureInfo.CurrentCulture) : "";
@@ -68,7 +68,7 @@ public sealed class CapturePage : UserControl
                 Screens.Card(Screens.Dim("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one.")),
 
                 // Entry 271 section 4: how a photograph gets real inches, and which printer's scale it will be corrected for.
-                Screens.Card(Screens.Dim(DetectionAdvice.OncePerPrinter + (App.Settings.LoadChosenPrinter() is { } printer
+                Screens.Card(Screens.Dim(DetectionAdvice.OncePerPrinter + (Phone.Settings.LoadChosenPrinter() is { } printer
                     ? string.Create(CultureInfo.CurrentCulture, $" Photographs are corrected for {printer.Name}'s {printer.Scale * 100:0.0} percent.")
                     : ""))),
             },
@@ -79,7 +79,7 @@ public sealed class CapturePage : UserControl
     /// <summary>The caliber and distance as typed, remembered for the next target; null where the caliber cannot be read, with why.</summary>
     private ShotSetup? Setup()
     {
-        var units = App.Settings.LoadUnits();
+        var units = Phone.Settings.LoadUnits();
         var chosen = Calibre.Parse(calibre.Text, out string? why);
         if (why is not null)
         {
@@ -90,7 +90,7 @@ public sealed class CapturePage : UserControl
         double? inches = double.TryParse(distance.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out double value) && value > 0
             ? UnitSettings.DistanceToInches(value, units.Distance)
             : null;
-        App.Settings.SaveShotSetup(calibre.Text, inches);
+        Phone.Settings.SaveShotSetup(calibre.Text, inches);
         return new ShotSetup(chosen, inches);
     }
 
@@ -146,7 +146,7 @@ public sealed class CapturePage : UserControl
             return;
         }
 
-        if (!MainActivity.CameraAllowed())
+        if (!Phone.Platform.CameraAllowed())
         {
             status.Text = "GroupLab needs the camera to take the picture. Allow it, then press Take a picture again.";
             return;
@@ -155,7 +155,7 @@ public sealed class CapturePage : UserControl
         // Entry 260, Capture B: the camera fills the screen and the bar along the bottom is hidden while it does; Back, Android's back and
         // leaving for a photograph all bring them back.
         Shell.Current?.Immersive(true);
-        Content = new CameraView((path, torch) => _ = Analyze(path, setup, torch), () => CloseCamera(), () =>
+        Content = Phone.Platform.Camera((path, torch) => _ = Analyze(path, setup, torch), () => CloseCamera(), () =>
         {
             CloseCamera();
             _ = Choose();
@@ -172,7 +172,7 @@ public sealed class CapturePage : UserControl
     /// <summary>Whether the camera is showing; closes it and returns to the start where it was.</summary>
     internal bool CloseCamera()
     {
-        if (Content is not CameraView)
+        if (!Phone.Platform.IsCamera(Content))
         {
             return false;
         }
@@ -200,7 +200,7 @@ public sealed class CapturePage : UserControl
             return;
         }
 
-        string copy = Path.Combine(global::Android.App.Application.Context.CacheDir!.AbsolutePath, "chosen" + Path.GetExtension(file));
+        string copy = Path.Combine(Phone.Platform.CacheFolder, "chosen" + Path.GetExtension(file));
         File.Copy(file, copy, overwrite: true);
         await Analyze(copy, setup);
     }
@@ -231,24 +231,13 @@ public sealed class CapturePage : UserControl
             return;
         }
 
-        var context = global::Android.App.Application.Context;
-        var clipboard = context.GetSystemService(global::Android.Content.Context.ClipboardService) as global::Android.Content.ClipboardManager;
-        var uri = clipboard?.PrimaryClip is { ItemCount: > 0 } clip ? clip.GetItemAt(0)?.Uri : null;
-        string? type = uri is null ? null : context.ContentResolver?.GetType(uri);
-        if (uri is null || type?.StartsWith("image/", StringComparison.Ordinal) != true || context.ContentResolver?.OpenInputStream(uri) is not { } from)
+        if (await Phone.Platform.PastePicture(Phone.Platform.CacheFolder) is not { } copy)
         {
             status.Text = "There is no picture to paste. Copy one in another app first, then press Paste a picture.";
             return;
         }
 
-        string copy = Path.Combine(context.CacheDir!.AbsolutePath, "pasted" + (type == "image/png" ? ".png" : ".jpg"));
-        await using (from)
-        await using (var to = File.Create(copy))
-        {
-            await from.CopyToAsync(to);
-        }
-
-        DiagnosticLog.Info("phone.paste", ("type", type));
+        DiagnosticLog.Info("phone.paste", ("type", Path.GetExtension(copy)));
         await Analyze(copy, setup);
     }
 
@@ -271,7 +260,7 @@ public sealed class CapturePage : UserControl
         }
 
         // The picker hands a content address, not a path; the picture is copied into the cache, analyzed, and the copy deleted.
-        string copy = Path.Combine(global::Android.App.Application.Context.CacheDir!.AbsolutePath, "chosen" + Path.GetExtension(files[0].Name));
+        string copy = Path.Combine(Phone.Platform.CacheFolder, "chosen" + Path.GetExtension(files[0].Name));
         await using (var from = await files[0].OpenReadAsync())
         await using (var to = File.Create(copy))
         {
@@ -292,11 +281,11 @@ public sealed class CapturePage : UserControl
         };
         Shell.Current?.Immersive(false);
         Content = page;
-        var units = App.Settings.LoadUnits();
+        var units = Phone.Settings.LoadUnits();
         PhoneResult result;
         try
         {
-            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, App.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words), torch));
+            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, Phone.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words), torch));
         }
         catch (OperationCanceledException)
         {

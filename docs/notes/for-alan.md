@@ -1,3 +1,13 @@
+IOS, UNTIL WEDNESDAY 8 PM MOUNTAIN (entry 290; not a request, updated as items land):
+1. The shared mobile project, both phones' screens in one place: built; Android unchanged, checked again on the next nightly.
+2. OpenCV for iOS in CI: being built (its own worker, on a branch).
+3. The iOS build in the nightly: not yet.
+4. It runs on the iOS Simulator in CI (launch, every tab, the imaging, the whole pipeline, a picked picture): not yet.
+5. The camera screen: not yet.
+6. Files, sharing, printing, the idle screen: not yet.
+7. The TestFlight path, ready for request 55's secrets: not yet.
+Also landed: GroupLab Dev updates itself from nightly 125 on (entry 288), and your answers to questions 69 (A) and 70 (B) are recorded.
+
 READY (entry 286, 04:38 UTC): GroupLab Dev nightly 123 is on the Fold 7 (and the tablet), your data kept. The card photo screen opens: Settings, Printers, Add a printer, choose "A card and one photo", Next, then Take the picture. The phone is left on that screen for you.
 
 GOOD MORNING (the night of 28 September, in five lines):

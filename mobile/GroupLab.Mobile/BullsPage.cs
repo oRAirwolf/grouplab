@@ -6,7 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 259 screen 2, "tap the bulls on the sheet, A" (Alan's choice): "Bulls you fired at", reached from the result.

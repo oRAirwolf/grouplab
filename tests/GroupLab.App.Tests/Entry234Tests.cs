@@ -31,7 +31,9 @@ public partial class Entry234Tests
     [Fact]
     public void NothingNamesThePackageSoTheDevelopmentBuildIsItsOwnApplication()
     {
+        // Entry 290: the screens moved to the shared mobile project, which is read too.
         var named = Directory.EnumerateFiles(Android, "*.cs", SearchOption.TopDirectoryOnly)
+            .Concat(Directory.EnumerateFiles(Path.Combine(Root(), "mobile", "GroupLab.Mobile"), "*.cs", SearchOption.TopDirectoryOnly))
             .Where(f => PackageLiteral().IsMatch(File.ReadAllText(f))).Select(Path.GetFileName).ToList();
         Assert.Empty(named);
 

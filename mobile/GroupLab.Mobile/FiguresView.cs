@@ -9,7 +9,7 @@ using GroupLab.Core.Marking;
 using GroupLab.Core.Reporting;
 using GroupLab.Core.Statistics;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 259 screen 1, "full figures, A" (Alan's choice): look B's four tiles at the top with a units switch (in, MOA,

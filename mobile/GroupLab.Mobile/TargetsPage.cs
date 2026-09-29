@@ -12,7 +12,7 @@ using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
 using RadioButton = Avalonia.Controls.RadioButton;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 243 section 3.4: the Targets screen on the phone. "Made for your optic" first, because on a phone it is the
@@ -154,7 +154,7 @@ public sealed class TargetsPage : UserControl
         {
             Out(sheet, result, print: true);
             // Entry 273: the first time a sheet is printed, the printer check is offered, once, since this printer's sheets are the ones photographed.
-            var settings = App.Settings;
+            var settings = Phone.Settings;
             if (!GroupLab.Core.Marking.PrinterCheck.IsCheckPage(sheet.Definition) && settings.LoadPrinters().Count == 0 && !settings.LoadPrinterOffered())
             {
                 settings.SavePrinterOffered();
@@ -185,7 +185,7 @@ public sealed class TargetsPage : UserControl
             return;
         }
 
-        result.Text = (print ? PdfOut.Print(pdf, sheet.Definition.Name, sheet.Definition.Page.Size) : PdfOut.Share(pdf, sheet.Definition.Name)) ?? "";
+        result.Text = (print ? Phone.Platform.PrintPdf(pdf, sheet.Definition.Name, sheet.Definition.Page.Size) : Phone.Platform.SharePdf(pdf, sheet.Definition.Name)) ?? "";
     }
 
     /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>

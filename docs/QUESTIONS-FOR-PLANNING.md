@@ -23,7 +23,8 @@ number is never reused and a question is never lost:
 
 ## 2026-09-29, question 70: a tap on a bare number in the full CEP table
 
-**Status: open.** Nothing waits on it: the table's cells stay untappable, as entry 273 left them.
+**Status: answered 2026-09-29.** Alan: "Question 70: B." Each cell of the full CEP table shows its own unit and switches alone,
+remembered for its figure, and the heading loses its unit.
 
 Entry 280 section 1: "when you tap a value, it should only change that individual value and not all of the values displayed on the
 screen", and "the desktop's table cells included where entry 273 left them untappable". The full CEP table's cells are bare numbers under
@@ -37,7 +38,10 @@ unit (a wider table). C: leave the table as it is; it is a reference, and the fi
 
 ## 2026-09-29, question 69: may a picture whose codes cannot be read be named by its markers without asking?
 
-**Status: open, and smaller since entry 282.** Nothing waits on it: GroupLab asks, as built. Entry 282 section 5 found why the codes failed (a module of about 3.1 pixels, which reads enlarged three times), and codes cut out where the markers put them and read enlarged now name the refused picture from its codes, so the offer is for what is left. Entry 282 section 4, Alan: a picture whose markers are read "must still be measured: identify the sheet from its markers' layout or ask which sheet it is"; asking is what is built.
+**Status: answered 2026-09-29.** Alan: "Question 69: A." As built: the sheet the markers and the drawing point to is offered first,
+and the person confirms it with one press. Nothing is taken without asking.
+
+Before the answer: open, and smaller since entry 282. Nothing waited on it: GroupLab asks, as built. Entry 282 section 5 found why the codes failed (a module of about 3.1 pixels, which reads enlarged three times), and codes cut out where the markers put them and read enlarged now name the refused picture from its codes, so the offer is for what is left. Entry 282 section 4, Alan: a picture whose markers are read "must still be measured: identify the sheet from its markers' layout or ask which sheet it is"; asking is what is built.
 
 `SheetIdentification` says: "The markers cannot do this: the built-in definitions share marker ids, and registering against the wrong
 definition can look plausible ... Nothing is guessed." In the camera test (entry 281) three of six pictures were refused because a code's

@@ -9,7 +9,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Publication;
 using RadioButton = Avalonia.Controls.RadioButton;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A3: the application's frame. Three places along the bottom, where a thumb reaches them on a phone
@@ -106,24 +106,24 @@ public sealed class Shell : UserControl
         frame.Children.Add(new Grid { Children = { page, toast, notice } });
 
         // Entry 273: tap a number to switch units, the same setting everywhere, remembered.
-        UnitTap.Current = () => App.Settings.LoadUnits();
+        UnitTap.Current = () => Phone.Settings.LoadUnits();
         // Entry 280 section 1: a tap switches the number tapped and is remembered for its figure.
-        UnitTap.Remembered = key => App.Settings.LoadFigureUnit(key);
+        UnitTap.Remembered = key => Phone.Settings.LoadFigureUnit(key);
         UnitTap.Tapped = (key, symbol, kind) =>
         {
             if (key is not null)
             {
-                App.Settings.SaveFigureUnit(key, symbol);
+                Phone.Settings.SaveFigureUnit(key, symbol);
             }
 
-            App.Settings.SaveUnitTapped();
+            Phone.Settings.SaveUnitTapped();
             DiagnosticLog.Info("units.tap", ("kind", kind.ToString()), ("to", symbol), ("remembered", key is not null));
             Toast((key is null ? "This number" : key[..key.LastIndexOf('|')]) + " now in " + symbol + (key is null ? "" : " · remembered"));
         };
         UnitTap.Apply = (units, kind) =>
         {
-            App.Settings.SaveUnits(units);
-            App.Settings.SaveUnitTapped();
+            Phone.Settings.SaveUnits(units);
+            Phone.Settings.SaveUnitTapped();
             DiagnosticLog.Info("units.tap", ("kind", kind.ToString()), ("linear", units.Linear.ToString()), ("angular", units.Angular.ToString()), ("distance", units.Distance.ToString()));
             UnitsChanged?.Invoke();
             Toast(GroupLab.Core.Marking.UnitSwitch.Said(units, kind) + " · remembered");
@@ -136,9 +136,9 @@ public sealed class Shell : UserControl
             }
         };
 
-        if (FirstRunView.Due(App.Settings))
+        if (FirstRunView.Due(Phone.Settings))
         {
-            Content = new FirstRunView(App.Settings, () =>
+            Content = new FirstRunView(Phone.Settings, () =>
             {
                 Content = frame;
                 Show(Place.Capture);
@@ -168,7 +168,7 @@ public sealed class Shell : UserControl
     /// <summary>A name for another printer: "My printer" where none has it, else "Printer 2" and on.</summary>
     private static string PrinterProfileNewName()
     {
-        var taken = App.Settings.LoadPrinters().Select(p => p.Name).ToHashSet(StringComparer.Ordinal);
+        var taken = Phone.Settings.LoadPrinters().Select(p => p.Name).ToHashSet(StringComparer.Ordinal);
         return taken.Contains(GroupLab.Core.Marking.PrinterProfile.DefaultName)
             ? Enumerable.Range(2, 99).Select(n => $"Printer {n}").First(n => !taken.Contains(n))
             : GroupLab.Core.Marking.PrinterProfile.DefaultName;
@@ -226,7 +226,7 @@ public sealed class Shell : UserControl
         DiagnosticLog.Info("ui.place", ("place", place.ToString()));
         page.Content = place switch
         {
-            Place.Settings => new SettingsView(App.Settings),
+            Place.Settings => new SettingsView(Phone.Settings),
             Place.Sessions => new SessionsPage(),
             Place.Targets => new TargetsPage(),
             Place.Ballistics => new BallisticsPage(),

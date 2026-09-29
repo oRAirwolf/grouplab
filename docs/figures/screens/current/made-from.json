@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 122,
+  "afterNightly": 124,
   "screens": {
     "analysis": "18da72717232829a6d68bb53adfa7275d02c4017a48824b3de6ae9c06d2b4fa3",
     "analysis-open": "16f5df7ff694117dd1fada32aa82428f6d4f033c220c646140051fa46f7aadc4",
@@ -14,7 +14,7 @@
     "optic": "51f3fdcc6f3445913560acd2b00a4347d24cd8c4d0941d6155efc342dc965bfd",
     "optic-4x": "51f3fdcc6f3445913560acd2b00a4347d24cd8c4d0941d6155efc342dc965bfd",
     "sessions": "bb33bef2a0c25550c7febb6ac7c397aabf7fbf18e852cd0f75f7f1e968d2dcba",
-    "settings": "6e37b9464d2ab0c05e1764cf189bd063b384272ac3f47483a6c81c73e0fe588a",
+    "settings": "de585a2aaf58b446577465b19b43dc8f3bf0c9c291d6b626eace5a7c178c4a59",
     "sheet-c-bull": "44619e0746a39bebbba03534e87376db10eb0ff385c09c89d1edf2479b71ee75",
     "sheet-e-bull": "d63b10991785a6ee2a5aa1290cf5455edf12e1db6a4da1595a19e40fc5df3f4e",
     "sheet-large-set": "4db08443beaa0a1ba3c72eca5c970f3c5e0ca688e50ac2ef589dcc13d617b661",

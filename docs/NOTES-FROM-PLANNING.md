@@ -24,6 +24,74 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 290: PRIORITY, the whole window: iOS until Wednesday 30 September, 20:00 Mountain (2026-10-01 02:00 UTC)
+
+**Status: in progress, the window runs to 2026-10-01 02:00 UTC.** Section 2 item 1, the shared mobile project, is built: the screens are
+in `mobile/GroupLab.Mobile`, a plain .NET library, and the Android head answers `IPhonePlatform`. Item 2, OpenCV for iOS in CI, is being
+built by a worker on the branch `ios/opencv`; items 3 to 7 and section 6's parity follow. Entry 289 (the 2 MOA sheets) runs alongside in
+its own worker. The iOS checklist is at the top of `docs/notes/for-alan.md`.
+
+Alan: "I just reset my claude usage for the week and back to zero percent. Please have code use this time between now and Weds at 8pm mountain to dedicate as much power and tokens as possible to getting the iOS build in a good state."
+
+### 1. What this changes
+
+- **From now until 2026-10-01 02:00 UTC, iOS gets the most effort, but not all of it.** Alan, later: "I want code to work on the iOS build as much as possible, but it doesn't necessarily have to do this in front of Android and Desktop things." So Android and desktop work continues alongside: entry 288 (the Android updater), entry 280's remaining screens after the sitting, entry 289 (the 2 MOA sheets), and anything Alan brings back from the printer check and his group photos. Give iOS the parallel capacity (its own subagents and worktrees, running continuously); keep one line of work on the rest of the inbox. An Android or desktop item Alan is waiting on goes first in that line.
+- **Use the capacity.** Work continuously through the window. Split independent pieces across parallel subagents in their own worktrees (for example: the OpenCV iOS build, the shared mobile project, the AVFoundation camera, the CI job), and merge each only when its tests pass. Do not stop after each piece to report and wait: record progress in `for-alan.md` as you go and carry on. Stop to ask only where every path needs a decision from Alan, and even then keep working on the pieces that do not.
+- **The plan is `docs/IOS-PLAN.md`,** sections 2, 3 and 5. Follow its order where it can be followed; where a piece is blocked, move to the next.
+
+### 2. "A good state" by Wednesday evening, in order of value
+
+1. **The shared mobile project.** The Avalonia screens move out of `android/GroupLab.Android/` into one project both heads link, with the Android-only calls behind small interfaces. **Android must stay exactly as good as it is** (rule b, phone parity): its tests pass, the nightly's android job stays green, and nightly 124 or later on the Fold 7 behaves as 123 did. A regression on Android is a stop-and-fix before anything else.
+2. **OpenCV for iOS in CI.** OpenCV and opencv_contrib 4.13.0 with OpenCvSharp's native half, the same modules as `android/opencv/build-extern.sh`, built as a static xcframework for iOS arm64 and the arm64 simulator on `macos-26` with Xcode 26, linked through `__Internal`. Cache it or publish it as a build asset with its checksum, so every nightly does not rebuild it.
+3. **The iOS head builds in the nightly**, `ios/GroupLab.iOS`, bundle ID `org.grouplab.app`, iOS 26 and later, iPhone and iPad, unsigned until the secrets exist, as section 3 says (a nightly never fails for want of them).
+4. **It runs, proven on the iOS Simulator in CI:**
+   - it launches to the first screen and every tab opens;
+   - the imaging backend works on iOS: markers, homography, morphology, blobs, phase correlation and the QR codes on a rendered GroupLab sheet;
+   - the whole pipeline on a committed sample scan gives the same shots and figures as the desktop, within the gate record's tolerances;
+   - a picture chosen with the files picker is analyzed end to end.
+   Save simulator screenshots of the main screens as a CI artifact for planning to look at. Only the app's own screens, no photographs from `camera-0929` or anything "testing only".
+5. **The camera screen**, AVFoundation, Capture B as on Android: preview, 4:3 throughout, photo output, live analysis at 1920 by 1440, Guided and Manual, the level from Core Motion, the torch off after the picture, the camera released and taken again on background and foreground. It can only be proven on a device; build it so the simulator falls back to the files picker, and list what the first TestFlight sitting must check.
+6. **Files, sharing, printing, and the OLED rules** (IOS-PLAN section 2).
+7. **The TestFlight path ready:** when Alan's seven secrets appear (request 55), the nightly signs and uploads with no code change. Prove the unsigned path now, and the signing step's logic with a check that fails loudly and clearly if a secret is malformed, never printing it.
+
+### 3. What waits on Alan
+
+- **Enrolment.** The build to TestFlight and any install on the iPad mini need the Apple Developer Program membership and request 55's secrets. Apple can take up to two days to activate a new membership, so the simulator is the proof for this window if they are not there. Do not ask Alan for anything else about Apple; request 55 already says it all.
+
+### 4. What does not change
+
+Every standing rule holds: never see or print the Apple secrets or open `C:\Dev\keys`; no repository settings changes; no v* tags but the nightly's; nothing submitted to the App Store; the LICENSE permission of entry 279 already covers TestFlight; README, site and docs updated in the same change (rule c), with the platform line saying iOS is being built, and the Features page and `PHONE-PARITY.md` saying what the iOS build does so far; THIRD-PARTY-NOTICES for anything new.
+
+### 6. Alan, a minute later: parity, and no waiting on him
+
+"It should go through as many iterations as possible without needing anything from me. Lets get the app up and running and on par with the android build if possible."
+
+- **The target is parity with the Android build**, not only section 2's minimum. Once items 1 to 4 are proven, go screen by screen through `docs/PHONE-PARITY.md` and bring each Android feature to iOS: capture, the result and figures, Sessions, Targets and printing, the printer check, Ballistics, Compare, Shots Needed to Zero, CSV import, hand marking, Fudd buster mode, units by tap, saving, error reports, the survey. Add an iOS column to `PHONE-PARITY.md` and keep it true as each lands.
+- **Iterate without him.** Build, run on the simulator in CI, read the screenshots and logs, fix, and go again, as many rounds as the window allows. Never wait for Alan inside the window: anything that truly needs him (the Apple secrets, a device sitting, a visual choice) goes on the list in `for-alan.md`, and the work moves on around it. Where a visual choice comes up, follow the Android screen as it is; planning will raise anything that needs a concept afterwards.
+- **Only on a real device** (the camera, the torch, the level, printing to a real printer): build it fully, prove what the simulator can, and put the rest on the first TestFlight sitting's checklist.
+
+### 7. Alan, again: never idle
+
+"Basically, code should never be pausing for anything when it could be using that time to work on iOS stuff. If it can multitask, that would be great."
+
+- **No idle waits.** Whenever the main line would wait (CI, a nightly build, a device, an install, a reply from Alan, a report that has been written), it picks up the next iOS piece instead. A wait is never a reason to stop working; a written report is never a reason to end the turn.
+- **Multitask.** Run the iOS pieces in parallel background subagents in their own worktrees, and keep them fed: when one finishes, start the next from section 2 and the parity list of section 6. Watch CI runs in the background rather than blocking on them.
+- **The only stops:** a genuine blocker on every piece at once, or the end of the window. Even Android or desktop work Alan is waiting on runs alongside iOS, not instead of it.
+- **Outside the window**, after 2026-10-01 02:00 UTC, this standing rule still holds in spirit: spare time goes to iOS until Alan says otherwise.
+
+### 8. Alan, again: spend freely until the deadline
+
+"I highly doubt it would be possible to run out of tokens before weds at 8 so burn through them and ignore the token savings we have talked about until then if it will help speed along the process."
+
+- **Until 2026-10-01 02:00 UTC, the token-saving rules are suspended** wherever they slow the work: read whole files when it helps, run more parallel subagents, re-run CI and the simulator as often as it is useful, take and read as many simulator screenshots as the iterations need, and review your own changes with a second agent before merging. Speed and quality of the iOS build come first; cost does not count.
+- **What stays:** every safety rule in section 4 (secrets, keys, repository settings, tags, backups before deleting, no App Store submission), and Android staying as good as it is.
+- **After the deadline** the usual token care returns.
+
+### 5. Reporting
+
+- Keep a short iOS checklist at the top of `for-alan.md` (the seven items of section 2, each built, proven, or not yet) and update it as items land.
+- At the end of the window, 2026-10-01 02:00 UTC, write a summary: what works, what is proven and how, what is left with sizes, and what the first TestFlight sitting on the iPad mini will check. Then return to the order in section 1.
+
 ## 2026-09-29, entry 288: PRIORITY: GroupLab Dev updates itself on the phone, so installing never depends on adb
 
 **Status: in progress 2026-09-29. Sections 1, 3 and 4 done; section 2's unit tests done; section 2's device check not done yet**, because it

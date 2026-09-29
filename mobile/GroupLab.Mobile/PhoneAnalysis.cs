@@ -12,7 +12,7 @@ using GroupLab.Core.Trace;
 using OpenCvSharp;
 using LogLevel = GroupLab.App.Diagnostics.LogLevel;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>The working copy of a photograph: the session's own image, its metadata at that size, and the photograph's own size.</summary>
 internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int OriginalWidth, int OriginalHeight);
@@ -35,7 +35,7 @@ internal static class PhoneAnalysis
 {
     private static IReadOnlyList<TargetDefinition>? library;
 
-    internal static string Files => global::Android.App.Application.Context.FilesDir!.AbsolutePath;
+    internal static string Files => Phone.Platform.FilesFolder;
 
     /// <summary>Where each session's working image lives, one folder a session.</summary>
     internal static string SessionsFolder => System.IO.Path.Combine(Files, "sessions");
@@ -59,21 +59,10 @@ internal static class PhoneAnalysis
             return known;
         }
 
-        var context = global::Android.App.Application.Context;
         string folder = System.IO.Path.Combine(Files, "targets");
 
         // The frozen definitions too (entry 226 section 1): a sheet printed before the zeroing grids were redrawn is still identified.
-        foreach (string assets in (string[])["targets", "targets/frozen"])
-        {
-            string into = System.IO.Path.Combine(Files, assets);
-            Directory.CreateDirectory(into);
-            foreach (string name in (context.Assets!.List(assets) ?? []).Where(n => n.EndsWith(".gltd.json", StringComparison.Ordinal)))
-            {
-                using var from = context.Assets.Open($"{assets}/{name}");
-                using var file = File.Create(System.IO.Path.Combine(into, name));
-                from.CopyTo(file);
-            }
-        }
+        Phone.Platform.CopyBundledTargets(Files);
 
         return library = SheetIdentification.Candidates([folder]);
     }
@@ -87,35 +76,15 @@ internal static class PhoneAnalysis
     public static WorkingImage? Prepare(string photo)
     {
         var original = ImageMetadataReader.Read(File.ReadAllBytes(photo));
-        var bounds = new global::Android.Graphics.BitmapFactory.Options { InJustDecodeBounds = true };
-        global::Android.Graphics.BitmapFactory.DecodeFile(photo, bounds);
-        if (bounds.OutWidth <= 0 || bounds.OutHeight <= 0)
+        double most = MemoryBudget.PhoneWorkingMegapixels(Budget());
+        if (Phone.Platform.DecodeReduced(photo, most) is not { } decoded)
         {
             return null;
         }
 
-        double most = MemoryBudget.PhoneWorkingMegapixels(Budget());
-        int sample = WorkingSize.SampleFor(bounds.OutWidth, bounds.OutHeight, most);
-        using var colour = new Mat();
-        using (var bitmap = global::Android.Graphics.BitmapFactory.DecodeFile(photo, new global::Android.Graphics.BitmapFactory.Options { InSampleSize = sample, InPreferredConfig = global::Android.Graphics.Bitmap.Config.Argb8888, InScaled = false }))
-        {
-            if (bitmap is null)
-            {
-                return null;
-            }
-
-            IntPtr pixels = bitmap.LockPixels();
-            try
-            {
-                using var rgba = Mat.FromPixelData(bitmap.Height, bitmap.Width, MatType.CV_8UC4, pixels, bitmap.RowBytes);
-                Cv2.CvtColor(rgba, colour, ColorConversionCodes.RGBA2BGR);
-            }
-            finally
-            {
-                bitmap.UnlockPixels();
-                bitmap.Recycle();
-            }
-        }
+        using var colour = decoded.Colour;
+        var bounds = (OutWidth: decoded.Width, OutHeight: decoded.Height);
+        int sample = decoded.Sample;
 
         string folder = System.IO.Path.Combine(SessionsFolder, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
         Directory.CreateDirectory(folder);
@@ -135,22 +104,7 @@ internal static class PhoneAnalysis
     /// its low memory threshold (<c>ActivityManager.getMemoryInfo</c>), the floor when it says memory is low. Logged with the device's memory
     /// classes, so a report says what the phone allowed.
     /// </summary>
-    public static double Budget()
-    {
-        var activity = (global::Android.App.ActivityManager?)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.ActivityService);
-        if (activity is null)
-        {
-            return MemoryBudget.FloorMegabytes;
-        }
-
-        var info = new global::Android.App.ActivityManager.MemoryInfo();
-        activity.GetMemoryInfo(info);
-        const double Mb = 1024.0 * 1024;
-        double budget = MemoryBudget.Phone(info.TotalMem / Mb, info.AvailMem / Mb, info.Threshold / Mb, info.LowMemory);
-        DiagnosticLog.Info("memory.budget", ("totalMb", (long)(info.TotalMem / Mb)), ("availableMb", (long)(info.AvailMem / Mb)), ("low", info.LowMemory),
-            ("class", activity.MemoryClass), ("largeClass", activity.LargeMemoryClass), ("budgetMb", (long)budget));
-        return budget;
-    }
+    public static double Budget() => Phone.Platform.MemoryBudgetMegabytes();
 
     /// <summary>
     /// A photograph, prepared and analyzed. Entry 243 section 3.2: <paramref name="progress"/> hears what it is doing, a step at a time, and a
@@ -241,7 +195,7 @@ internal static class PhoneAnalysis
             return new PhoneResult(session.State, definition, "This is the printer check page. To measure your printer with it, open Settings, then Printers, then Add a printer or Check again.", null, working);
         }
 
-        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre, printer: App.Settings.PrinterForPhotos());
+        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre, printer: Phone.Settings.PrinterForPhotos());
         survey?.Record(new AnalysisFacts(working.OriginalWidth, working.OriginalHeight, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
         // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
         DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),

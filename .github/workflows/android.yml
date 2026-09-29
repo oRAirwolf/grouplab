@@ -16,6 +16,7 @@ on:
       - 'src/GroupLab.App/Diagnostics/**'
       - 'targets/**'
       - 'android/**'
+      - 'mobile/**'
       - '.github/workflows/android.yml'
   workflow_dispatch:
 

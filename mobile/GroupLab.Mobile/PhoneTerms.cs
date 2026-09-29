@@ -5,7 +5,7 @@ using Avalonia.Media;
 using GroupLab.App;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// Words explained where they appear, on the phone, NOTES-FROM-PLANNING.md entries 154 and 258: a line of the phone's secondary text that

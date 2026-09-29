@@ -18,6 +18,9 @@ the home page) and 288 in part (GroupLab Dev updates itself; its device check wa
 
 ## In flight
 
+- **iOS until 2026-10-01 02:00 UTC** (entry 290): the phone's screens are in `mobile/GroupLab.Mobile` (plain .NET, both heads link it,
+  `IPhonePlatform` is the only way to the OS). OpenCV for iOS is being built on the branch `ios/opencv` by a worker; the iOS head and the
+  simulator job come next, then section 6's parity, screen by screen. The checklist is at the top of `for-alan.md`.
 - **GroupLab Dev updates itself** (entry 288): `AndroidUpdates` in Core, the `Updates` folder in the Android project compiled only with
   `-p:GroupLabUpdater=true` (GroupLab Dev's APK only, never the AAB), and the Dev APK listed in the signed manifest as `android apk-dev`.
   Nightly 125 is the first with it: install it over adb once, then the next nightly should arrive by itself; record the first prompt,
@@ -45,12 +48,13 @@ the home page) and 288 in part (GroupLab Dev updates itself; its device check wa
 
 ## The next three
 
-0. Entry 288's device check (above), as soon as nightly 125 and the one after it are out.
+0. Entry 290 (iOS) has most of the effort until Wednesday 8 pm Mountain; entry 289's 2 MOA sheets run in their own worker; entry 288's
+   device check as soon as nightly 125 and the one after it are out.
 1. The device sitting on the nightly that carries entries 281 to 283: the camera fixes checked, `scripts/shutter-timing.py` on both
    devices, the phone and tablet pictures (253 section 3), the inner Fold screen (257), torch strength (262), the card photo (273).
 2. Entry 280 section 2's remaining screens, Share A and the dated report, and the desktop's equivalents of all five, after the sitting
    confirms the phone screens built tonight (Shots A, zero from this group with the Ballistics offset, several aim points); then the
-   desktop's tabs (entry 281 section 2). Question 70 holds the full CEP table's cells.
+   desktop's tabs (entry 281 section 2). Question 70 is answered B: each CEP table cell shows and switches its own unit.
 3. The 2 MOA sheets once planning draws their layout; question 67 from request 53's photographs.
 
 ## Blocked, and on what

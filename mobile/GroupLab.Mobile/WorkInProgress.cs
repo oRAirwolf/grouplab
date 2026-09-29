@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// What the person is in the middle of, NOTES-FROM-PLANNING.md entry 288: the updater never replaces GroupLab while the camera is open, an
@@ -15,7 +15,7 @@ internal static class WorkInProgress
     /// <summary>Whether GroupLab is on screen: between the activity's start and its stop.</summary>
     internal static bool OnScreen { get; set; }
 
-    internal static bool CameraOpen => CameraSession.Active is not null;
+    internal static bool CameraOpen => Phone.Platform.CameraOpen;
 
     internal static bool Analysing => Volatile.Read(ref analysing) > 0;
 

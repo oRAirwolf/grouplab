@@ -7,7 +7,7 @@ using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
 using GroupLab.Core.Statistics;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 259 screen 4, "one figure at a time, A" (Alan's choice), reached from Sessions: a figure picker as chips
@@ -29,7 +29,7 @@ internal sealed class ComparePage : UserControl
         // Entry 273: a tap on any number switches units everywhere; this page shows them again.
         void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            this.units = App.Settings.LoadUnits();
+            this.units = Phone.Settings.LoadUnits();
             Draw();
         });
         AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;

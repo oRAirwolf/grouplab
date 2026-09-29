@@ -5,7 +5,7 @@ using Avalonia.Media;
 using GroupLab.App;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// Shots A, NOTES-FROM-PLANNING.md entry 280 section 2 (entry 278 features c and f): every shot with its offset across and up and down from

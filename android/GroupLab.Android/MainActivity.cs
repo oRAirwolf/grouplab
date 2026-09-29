@@ -6,6 +6,8 @@ using Android.Runtime;
 using Avalonia;
 using Avalonia.Android;
 
+using GroupLab.Mobile;
+
 namespace GroupLab.Android;
 
 /// <summary>

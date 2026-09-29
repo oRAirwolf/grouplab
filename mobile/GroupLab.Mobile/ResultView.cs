@@ -12,7 +12,7 @@ using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using Button = Avalonia.Controls.Button;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A4: what a photograph came to, on the phone. The group's figures in the person's own units, the
@@ -40,7 +40,7 @@ public sealed class ResultView : UserControl
         // Entry 273: a tap on any number switches units everywhere; this result shows them again.
         void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            this.units = App.Settings.LoadUnits();
+            this.units = Phone.Settings.LoadUnits();
             Refresh();
         });
         AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;
@@ -102,7 +102,7 @@ public sealed class ResultView : UserControl
         }
 
         // Entry 273: the one-time hint card, until a number has been tapped once.
-        if (!App.Settings.LoadUnitTapped())
+        if (!Phone.Settings.LoadUnitTapped())
         {
             numbers.Children.Add(Screens.Card(Screens.Line(GroupLab.Core.Marking.UnitSwitch.Hint + "."), Screens.Dim(GroupLab.Core.Marking.UnitSwitch.HintMore)));
         }
@@ -364,7 +364,7 @@ public sealed class ResultView : UserControl
         Content = page;
         try
         {
-            var result = await Task.Run(() => PhoneAnalysis.Detect(working, sheet, setup, units, App.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
+            var result = await Task.Run(() => PhoneAnalysis.Detect(working, sheet, setup, units, Phone.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
             Dispatcher.UIThread.Post(() => Content = new ResultView(result, setup, units, again));
         }
         catch (OperationCanceledException)

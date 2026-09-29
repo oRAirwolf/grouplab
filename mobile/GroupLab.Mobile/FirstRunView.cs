@@ -4,7 +4,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Publication;
 using GroupLab.Core.Survey;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A3 and entry 208: the first run's questions, together on one screen, in the desktop's order and
@@ -24,7 +24,7 @@ public sealed class FirstRunView : UserControl
     private static bool ErrorsDue(AppSettingsStore settings) => Shell.ErrorsOpen && settings.LoadErrorChoice() == ErrorReportChoice.Unset;
 
     /// <summary>Sends the survey report when one is due, after a benchmark the person ran.</summary>
-    internal static Task SendSurvey() => App.Survey?.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None) ?? Task.CompletedTask;
+    internal static Task SendSurvey() => Phone.Survey?.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None) ?? Task.CompletedTask;
 
     public FirstRunView(AppSettingsStore settings, Action done)
     {
@@ -97,7 +97,7 @@ public sealed class FirstRunView : UserControl
                 settings.SaveErrorChoice(choice);
                 DiagnosticLog.Info("errors.first-run", ("choice", choice.ToString()));
                 errors.IsVisible = false;
-                _ = App.SendWaitingErrorsAsync();
+                _ = Phone.SendWaitingErrorsAsync();
                 Answered();
             }));
         }
@@ -126,7 +126,7 @@ public sealed class FirstRunView : UserControl
                 settings.SaveSurveyChoice(choice);
                 if (choice != SurveyChoice.Yes)
                 {
-                    App.Survey?.Forget();
+                    Phone.Survey?.Forget();
                 }
 
                 DiagnosticLog.Info("survey.first-run", ("choice", choice.ToString()));

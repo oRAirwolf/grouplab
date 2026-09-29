@@ -1,13 +1,12 @@
 using System.Globalization;
 using System.Text.Json.Nodes;
-using Android.Content;
 using GroupLab.App.Diagnostics;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A5, docs/ANDROID.md section 8 stage A: a session shared by hand through Android's share sheet,
@@ -21,16 +20,15 @@ internal static class SessionFiles
     /// The file provider's authority, the application's own id and <c>.files</c>, as the manifest declares it with <c>${applicationId}</c>,
     /// so the development build of entry 234 is its own application in this too.
     /// </summary>
-    internal static string Authority => global::Android.App.Application.Context.PackageName + ".files";
 
-    private static string Shared => Path.Combine(global::Android.App.Application.Context.CacheDir!.AbsolutePath, "shared");
+    private static string Shared => Path.Combine(Phone.Platform.CacheFolder, "shared");
 
-    private static string DeviceWords => "GroupLab " + AppInfo.Version + " on " + global::Android.OS.Build.Manufacturer + " " + global::Android.OS.Build.Model;
+    private static string DeviceWords => Phone.Platform.DeviceWords;
 
     /// <summary>Writes the session to a file and offers it to the share sheet. Returns why not, or null when the sheet opened.</summary>
     public static string? Share(MarkingState state, TargetDefinition? definition, UnitSettings units)
     {
-        if (state.ImagePath is not { } image || !File.Exists(image) || CleanImage.From(image) is not { } clean || MainActivity.Current is not { } activity)
+        if (state.ImagePath is not { } image || !File.Exists(image) || CleanImage.From(image) is not { } clean)
         {
             return "This session's picture is not on the phone, so there is nothing to share.";
         }
@@ -50,12 +48,11 @@ internal static class SessionFiles
             SessionPackage.Write(to, state, definition, units, clean.Bytes, clean.Extension, DeviceWords, revision, DateTime.UtcNow);
         }
 
-        var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(activity, Authority, new Java.IO.File(path));
-        var send = new Intent(Intent.ActionSend);
-        send.SetType("application/octet-stream");
-        send.PutExtra(Intent.ExtraStream, uri);
-        send.AddFlags(ActivityFlags.GrantReadUriPermission);
-        activity.StartActivity(Intent.CreateChooser(send, "Share the session"));
+        if (Phone.Platform.ShareFile(path, "application/octet-stream", "Share the session") is { } failed)
+        {
+            return failed;
+        }
+
         DiagnosticLog.Info("session.share", ("revision", revision), ("shots", state.Shots.Count));
         return null;
     }
@@ -66,11 +63,6 @@ internal static class SessionFiles
     /// </summary>
     public static string? ShareCsv(MarkingState state, TargetDefinition? definition)
     {
-        if (MainActivity.Current is not { } activity)
-        {
-            return "The share sheet is not available.";
-        }
-
         if (!state.Shots.Any(s => s.IsShot))
         {
             return "There are no shots to share.";
@@ -84,12 +76,11 @@ internal static class SessionFiles
         Directory.CreateDirectory(Shared);
         string path = Path.Combine(Shared, (definition?.Name ?? "shots") + " " + DateTime.Now.ToString("yyyy-MM-dd HHmm", CultureInfo.InvariantCulture) + ".csv");
         File.WriteAllText(path, ShotCsv.Write(state));
-        var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(activity, Authority, new Java.IO.File(path));
-        var send = new Intent(Intent.ActionSend);
-        send.SetType("text/csv");
-        send.PutExtra(Intent.ExtraStream, uri);
-        send.AddFlags(ActivityFlags.GrantReadUriPermission);
-        activity.StartActivity(Intent.CreateChooser(send, "Share the shots as CSV"));
+        if (Phone.Platform.ShareFile(path, "text/csv", "Share the shots as CSV") is { } failed)
+        {
+            return failed;
+        }
+
         DiagnosticLog.Info("session.csv", ("shots", state.Shots.Count(s => s.IsShot)));
         return null;
     }

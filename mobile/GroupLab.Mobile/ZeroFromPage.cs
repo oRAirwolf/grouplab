@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using GroupLab.App;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// Zero from this group, NOTES-FROM-PLANNING.md entry 280 section 2 (entry 278 feature h, board ZeroFrom): the group's center from the aim

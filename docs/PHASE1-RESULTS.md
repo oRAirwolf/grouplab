@@ -40,6 +40,19 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 290: iOS, the shared mobile project first
+
+**The shared mobile project is built** (section 2 item 1). Every Avalonia screen of the phone, 26 files, moved from the Android head to
+`mobile/GroupLab.Mobile`, a plain `net10.0` library that also compiles the desktop files the phone shares (settings, the plot, the curves,
+unit taps, the log and error reports, the imaging backend and the target generator). It reaches the phone only through `IPhonePlatform`
+(16 members: the app's folders, the bundled sheets, a reduced decode, the memory budget, the camera, sharing, printing, pasting, the update
+card, the Dev flag); `AndroidPhone` answers it with exactly the code the screens ran before. `Phone.Start` is the start both heads call.
+Because the library is plain .NET, it builds on any machine, and `MobileProjectTests` holds it free of Android and iOS calls.
+
+- **Android stays as it was:** GroupLab Dev's APK and the Play AAB both build; the Core and App suites pass. The nightly's APK goes on
+  the Fold 7 at the next install to confirm it behaves as nightly 124 did.
+- **One desktop file changed:** `AppSettings`' phone branch now keys on `GROUPLAB_MOBILE`, which the shared project defines.
+
 ## Entry 288: GroupLab Dev updates itself
 
 GroupLab Dev now carries an updater; nightly 125 is the first build with it. It reads the signed second manifest, where the nightly now

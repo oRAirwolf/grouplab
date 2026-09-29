@@ -6,7 +6,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GroupLab.Core.Capture;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 260, Feedback B: what GroupLab thought of the picture, before the result. The photograph large with each note's

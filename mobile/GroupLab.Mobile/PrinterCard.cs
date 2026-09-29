@@ -2,7 +2,7 @@ using System.Globalization;
 using Avalonia.Controls;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// Real inches on photographs, NOTES-FROM-PLANNING.md entry 271, on the phone's result: the one line that says what the figures are measured
@@ -24,20 +24,20 @@ internal static class PrinterCard
         said.IsVisible = said.Text!.Length > 0;
         var card = new StackPanel { Spacing = 8, Children = { said } };
         // Entry 273 section 5: the paper's own edge, as a check on the profile or on a sheet printed with Fit to page.
-        if (PaperEdgeCheck.Advice(result.Paper, App.Settings.PrinterForPhotos()) is { } edge)
+        if (PaperEdgeCheck.Advice(result.Paper, Phone.Settings.PrinterForPhotos()) is { } edge)
         {
             card.Children.Add(Screens.Line(edge));
         }
 
         if (PrinterProfile.FromScan(null, result.Measured, Today()) is { } measured)
         {
-            var name = new TextBox { MinHeight = Screens.Touch, Text = App.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName };
+            var name = new TextBox { MinHeight = Screens.Touch, Text = Phone.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName };
             var offer = Screens.Line(PrinterProfile.Offer(measured.Scale));
             Button? use = null;
             use = Screens.Choice("Use it for photos", () =>
             {
                 var kept = measured with { Name = string.IsNullOrWhiteSpace(name.Text) ? PrinterProfile.DefaultName : name.Text.Trim() };
-                App.Settings.SavePrinter(kept);
+                Phone.Settings.SavePrinter(kept);
                 offer.Text = string.Create(CultureInfo.CurrentCulture, $"Kept. Photographs of sheets from {kept.Name} are now corrected for its {kept.Scale * 100:0.0} percent.");
                 name.IsVisible = use!.IsVisible = false;
             });
@@ -52,7 +52,7 @@ internal static class PrinterCard
             var form = new StackPanel { Spacing = 8, IsVisible = false };
             var reading = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "5 3/4 or 146 mm" };
             var keep = new CheckBox { Content = "Keep it for photos of sheets from this printer", IsChecked = true, MinHeight = Screens.Touch };
-            var name = new TextBox { MinHeight = Screens.Touch, Text = App.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName };
+            var name = new TextBox { MinHeight = Screens.Touch, Text = Phone.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName };
             var wrong = Screens.Dim("");
             wrong.IsVisible = false;
             Button? open = null;
@@ -88,7 +88,7 @@ internal static class PrinterCard
                     : string.Create(CultureInfo.CurrentCulture, $"Corrected for this sheet, {profile.Percentages}, measured with a ruler");
                 if (kept)
                 {
-                    App.Settings.SavePrinter(profile);
+                    Phone.Settings.SavePrinter(profile);
                 }
 
                 if (session.State.Scale is SheetReference current)

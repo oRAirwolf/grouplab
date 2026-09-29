@@ -4,7 +4,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Publication;
 using GroupLab.Core.Survey;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A3 and entry 208 section 4: Settings, with the first run's questions together under Sharing, in
@@ -115,7 +115,7 @@ public sealed class SettingsView : UserControl
                     {
                         settings.SaveErrorChoice(value);
                         DiagnosticLog.Info("errors.choice", ("choice", value.ToString()));
-                        _ = App.SendWaitingErrorsAsync();
+                        _ = Phone.SendWaitingErrorsAsync();
                     }
                 };
                 column.Children.Add(radio);
@@ -146,7 +146,7 @@ public sealed class SettingsView : UserControl
                         settings.SaveSurveyChoice(value);
                         if (value != SurveyChoice.Yes)
                         {
-                            App.Survey?.Forget();
+                            Phone.Survey?.Forget();
                         }
 
                         DiagnosticLog.Info("survey.choice", ("choice", value.ToString()));
@@ -198,7 +198,7 @@ public sealed class SettingsView : UserControl
             }));
             async Task Delete()
             {
-                bool taken = App.Survey is { } queue && await queue.DeleteAsync(Shell.SurveyOpen, CancellationToken.None);
+                bool taken = Phone.Survey is { } queue && await queue.DeleteAsync(Shell.SurveyOpen, CancellationToken.None);
                 said.Text = taken ? SharingWords.DeleteReportsSaid : SharingWords.DeleteReportsFailed;
             }
 
@@ -209,14 +209,17 @@ public sealed class SettingsView : UserControl
         column.Children.Add(Screens.Heading("About"));
         var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.Version}"));
         column.Children.Add(about);
-#if GROUPLAB_UPDATER
-        // Entry 288: the updater's version, its train's newest, Update now and the automatic switch.
-        ((StackPanel)about.Child!).Children.Add(Updates.UpdateCard.Build());
-#endif
-#if GROUPLAB_DEV
-        // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
-        ((StackPanel)about.Child!).Children.Add(Screens.Dim("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
-#endif
+        // Entry 288: the updater's version, its train's newest, Update now and the automatic switch, in a build that has one.
+        if (Phone.Platform.UpdateCard() is { } updates)
+        {
+            ((StackPanel)about.Child!).Children.Add(updates);
+        }
+
+        if (Phone.Platform.IsDevBuild)
+        {
+            // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
+            ((StackPanel)about.Child!).Children.Add(Screens.Dim("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+        }
         Content = Screens.Page(column);
     }
 }

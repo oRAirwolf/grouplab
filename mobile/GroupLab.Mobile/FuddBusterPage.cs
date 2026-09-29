@@ -6,7 +6,7 @@ using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// "Fudd buster mode", NOTES-FROM-PLANNING.md entry 279 section 3 (Unholy's idea and name, kept by Alan in entry 280 section 3) as page A of

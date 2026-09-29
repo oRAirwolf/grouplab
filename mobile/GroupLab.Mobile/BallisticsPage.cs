@@ -11,7 +11,7 @@ using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
 using GroupLab.Core.Statistics;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 259 screen 5, "its own tab, A" (Alan's choice): a large title, three summary chips (Rifle, Load, Air) each
@@ -25,7 +25,7 @@ namespace GroupLab.Android;
 internal sealed class BallisticsPage : UserControl
 {
     private readonly SessionStore store = PhoneAnalysis.Store();
-    private UnitSettings units = App.Settings.LoadUnits();
+    private UnitSettings units = Phone.Settings.LoadUnits();
     private readonly StackPanel column = new() { Spacing = 12 };
     private readonly ContentControl form = new();
     private readonly ContentControl body = new();
@@ -66,7 +66,7 @@ internal sealed class BallisticsPage : UserControl
         // Entry 273: a tap on any number switches units everywhere; this page shows them again.
         void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            this.units = App.Settings.LoadUnits();
+            this.units = Phone.Settings.LoadUnits();
             Build();
         });
         AttachedToVisualTree += (_, _) => Shell.UnitsChanged += Follow;

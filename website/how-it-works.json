@@ -1093,7 +1093,7 @@
       "sub": "phone and tablet",
       "path": "android/GroupLab.Android",
       "summary": [
-       "The same Core on the phone, with OpenCV built from source for arm64. The camera screen analyzes a {fig:android-stream} stream live (CameraX's default is {fig:camerax-default}, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires after {fig:ready-frames} ready frames in a row. Every picture is then checked and scored."
+       "The same Core on the phone, with OpenCV built from source for arm64. The camera screen analyzes a {fig:android-stream} stream live (CameraX's default is {fig:camerax-default}, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires after {fig:ready-frames} ready frames in a row. Every picture is then checked and scored. Its screens are one shared project, mobile/GroupLab.Mobile, a plain .NET library the iPhone and iPad build links too, and only the camera, printing, sharing and updating are Android's own."
       ],
       "numbers": [
        {
@@ -1118,6 +1118,10 @@
        {
         "label": "android/GroupLab.Android",
         "href": "https://github.com/oRAirwolf/grouplab/tree/main/android/GroupLab.Android"
+       },
+       {
+        "label": "mobile/GroupLab.Mobile",
+        "href": "https://github.com/oRAirwolf/grouplab/tree/main/mobile/GroupLab.Mobile"
        },
        {
         "label": "android/opencv/build-extern.sh",

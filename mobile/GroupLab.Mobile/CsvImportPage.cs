@@ -6,7 +6,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// Shots from a CSV file on the phone, NOTES-FROM-PLANNING.md entry 278 section 2 (CSV B, as drawn on the phone parity canvas): once a file
@@ -22,7 +22,7 @@ internal sealed class CsvImportPage : UserControl
     private readonly string name;
     private readonly Action back;
     private readonly Action<PhoneResult> imported;
-    private readonly UnitSettings units = App.Settings.LoadUnits();
+    private readonly UnitSettings units = Phone.Settings.LoadUnits();
     private readonly TextBox distance = new() { MinHeight = Screens.Touch };
     private CsvGuess guess;
 

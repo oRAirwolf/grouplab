@@ -6,6 +6,8 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 
+using GroupLab.Mobile;
+
 namespace GroupLab.Android;
 
 /// <summary>

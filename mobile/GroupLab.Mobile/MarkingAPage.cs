@@ -10,7 +10,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// Marking a target GroupLab did not print, on the phone, NOTES-FROM-PLANNING.md entry 279 section 2: Marking A as drawn on the phone parity
@@ -227,7 +227,7 @@ internal sealed class MarkingAPage : UserControl
     {
         if (BullTemplate.From(string.Create(CultureInfo.CurrentCulture, $"{session.State.Bulls.Count} aim points, {DateTime.Now:d MMM yyyy}"), session.State) is { } kept)
         {
-            App.Settings.SaveBullTemplate(kept);
+            Phone.Settings.SaveBullTemplate(kept);
             words.Text = "Kept: the next sheet of this target needs only its first two aim points set.";
         }
     }

@@ -7,7 +7,7 @@ using Avalonia.Styling;
 using GroupLab.App.Theme;
 using RadioButton = Avalonia.Controls.RadioButton;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 246, answering request 49: look B, "cards for the thumb". The desktop's own styles come first

@@ -74,37 +74,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\GroupLab.Core\GroupLab.Core.csproj" />
-    <!-- The engine's imaging, and the desktop's settings, sharing words and error report code, compiled here as they are. -->
-    <Compile Include="..\..\src\GroupLab.Cli\Imaging\*.cs" LinkBase="Shared\Imaging" />
-    <!-- Entry 243 section 3.4: the Targets screen's "Made for your optic", the desktop's generator and the layout rules it designs with. -->
-    <Compile Include="..\..\src\GroupLab.Cli\Library\TargetGenerator.cs" Link="Shared\Library\TargetGenerator.cs" />
-    <Compile Include="..\..\src\GroupLab.Cli\Library\ParametricSheet.cs" Link="Shared\Library\ParametricSheet.cs" />
-    <Compile Include="..\..\src\GroupLab.Cli\Library\LibraryBuilder.cs" Link="Shared\Library\LibraryBuilder.cs" />
-    <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
-    <Compile Include="..\..\src\GroupLab.App\UnitTap.cs" Link="Shared\UnitTap.cs" />
-    <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
-    <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />
-    <Compile Include="..\..\src\GroupLab.App\BenchmarkPanel.cs" Link="Shared\BenchmarkPanel.cs" />
-    <Compile Include="..\..\src\GroupLab.App\CompositePlot.cs" Link="Shared\CompositePlot.cs" />
-    <Compile Include="..\..\src\GroupLab.App\ShotsCurve.cs" Link="Shared\ShotsCurve.cs" />
-    <Compile Include="..\..\src\GroupLab.App\IntervalChart.cs" Link="Shared\IntervalChart.cs" />
-    <Compile Include="..\..\src\GroupLab.App\HitGraphs.cs" Link="Shared\HitGraphs.cs" />
-    <Compile Include="..\..\src\GroupLab.App\TrajectoryGraph.cs" Link="Shared\TrajectoryGraph.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Theme\Marks.cs" Link="Shared\Theme\Marks.cs" />
-    <!-- Entry 246, look B: the desktop's styles, icons and faces, so the phone's colors and type come from the same tokens. -->
-    <Compile Include="..\..\src\GroupLab.App\Theme\AppStyles.cs" Link="Shared\Theme\AppStyles.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Theme\Icons.cs" Link="Shared\Theme\Icons.cs" />
-    <AvaloniaResource Include="..\..\src\GroupLab.App\Assets\Fonts\*.ttf" Link="Assets\Fonts\%(Filename)%(Extension)" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ErrorReports.cs" Link="Shared\Diagnostics\ErrorReports.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\DiagnosticLog.cs" Link="Shared\Diagnostics\DiagnosticLog.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\AppInfo.cs" Link="Shared\Diagnostics\AppInfo.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\LogDirectory.cs" Link="Shared\Diagnostics\LogDirectory.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ErrorQueue.cs" Link="Shared\Diagnostics\ErrorQueue.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\CrashReporter.cs" Link="Shared\Diagnostics\CrashReporter.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ReportPackage.cs" Link="Shared\Diagnostics\ReportPackage.cs" />
-    <Compile Include="..\..\src\GroupLab.App\Diagnostics\ImageFacts.cs" Link="Shared\Diagnostics\ImageFacts.cs" />
+    <!--
+      Entry 290 section 2 item 1: the phone's screens, and the desktop files they compile, are the shared mobile project's, which the
+      iOS head links too. This head keeps only what is Android's own: the activity, the camera, printing, sharing and the updater.
+    -->
+    <ProjectReference Include="..\..\mobile\GroupLab.Mobile\GroupLab.Mobile.csproj" />
   </ItemGroup>
 
   <ItemGroup>

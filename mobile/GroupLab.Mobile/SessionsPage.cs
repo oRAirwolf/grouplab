@@ -6,7 +6,7 @@ using GroupLab.Core.Gltd.Json;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
 
-namespace GroupLab.Android;
+namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A4: every session saved on this phone, newest first, from the desktop's own database. A tap opens
@@ -44,7 +44,7 @@ public sealed class SessionsPage : UserControl
         }
 
         // Entry 246, look B: the sessions as rows on one card, the sheet's name and beneath it the date, the shots and the mean radius.
-        var units = App.Settings.LoadUnits();
+        var units = Phone.Settings.LoadUnits();
         var rows = new StackPanel();
         foreach (var s in saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal))
         {
@@ -69,7 +69,7 @@ public sealed class SessionsPage : UserControl
     /// <summary>The sessions to compare, each a box to tick; Compare once two or more are ticked.</summary>
     private Control Choose(IReadOnlyList<SessionSummary> saved, HashSet<long> chosen)
     {
-        var units = App.Settings.LoadUnits();
+        var units = Phone.Settings.LoadUnits();
         var column = new StackPanel { Spacing = 8, Children = { Screens.Title("Compare loads"), Screens.Line("Choose two or more sessions.") } };
         var compare = Screens.Primary("Compare", () =>
         {
@@ -127,7 +127,7 @@ public sealed class SessionsPage : UserControl
         using var copy = new MemoryStream();
         await from.CopyToAsync(copy);
         copy.Position = 0;
-        var units = App.Settings.LoadUnits();
+        var units = Phone.Settings.LoadUnits();
         var (result, why) = SessionFiles.Open(copy, units);
         if (result is null)
         {
@@ -165,7 +165,7 @@ public sealed class SessionsPage : UserControl
             return;
         }
 
-        var units = App.Settings.LoadUnits();
+        var units = Phone.Settings.LoadUnits();
         Content = new CsvImportPage(table, files[0].Name, () => Content = List(),
             result => Content = new ResultView(result, new ShotSetup(null, result.State.ShotDistanceInches), units, () => Content = List()));
     }
@@ -190,6 +190,6 @@ public sealed class SessionsPage : UserControl
 
         var definition = record.DefinitionJson is { } json ? GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
         DiagnosticLog.Info("session.open", ("session", id.ToString(CultureInfo.InvariantCulture)));
-        Content = new ResultView(new PhoneResult(state, definition, null, id), new ShotSetup(state.Calibre, state.ShotDistanceInches), App.Settings.LoadUnits(), () => Content = List());
+        Content = new ResultView(new PhoneResult(state, definition, null, id), new ShotSetup(state.Calibre, state.ShotDistanceInches), Phone.Settings.LoadUnits(), () => Content = List());
     }
 }

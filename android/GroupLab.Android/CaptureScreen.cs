@@ -8,6 +8,8 @@ using Android.Widget;
 using AndroidX.Camera.View;
 using GroupLab.Core.Capture;
 
+using GroupLab.Mobile;
+
 namespace GroupLab.Android;
 
 /// <summary>
