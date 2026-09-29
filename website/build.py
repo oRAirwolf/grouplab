@@ -185,6 +185,13 @@ def build_images() -> None:
     icon = Image.open(need(ASSETS / "icons" / "linux" / "grouplab-256.png")).convert("RGBA")
     icon.resize((180, 180), Image.LANCZOS).save(OUT / "apple-touch-icon.png", optimize=True)
 
+    # Entry 287: the README's product picture, both themes, as WebP for the home page's top.
+    for theme in ("dark", "light"):
+        img = Image.open(need(REPO / "docs" / "figures" / "readme" / f"product-{theme}.png")).convert("RGB")
+        dst = OUT / "assets" / "img" / f"product-{theme}.webp"
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        img.save(dst, "WEBP", quality=90, method=6)
+
     # Every screen in both themes at 1400 by 900, as WebP.
     for png in sorted(SCREENS.glob("*-1400x900.png")):
         img = Image.open(png).convert("RGB")
@@ -508,6 +515,33 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 """
 
 
+# Entry 287: the home page's top picture is the README's product picture, from the same source, with the README's own alt text and its three
+# numbered lines, so a regenerated picture or a reworded line changes both.
+README_FILE = REPO / "README.md"
+
+
+def product_alt() -> str:
+    m = re.search(r'<img src="docs/figures/readme/product-light\.png" alt="([^"]+)"', README_FILE.read_text(encoding="utf-8"))
+    if m is None:
+        raise SystemExit("README.md: the product picture's img and alt text were not found")
+    return html.unescape(m.group(1))
+
+
+def product_steps() -> list[str]:
+    text = README_FILE.read_text(encoding="utf-8")
+    start = text.index("docs/figures/readme/product-light.png")
+    steps = re.findall(r"^\d\. (.+)$", text[start:start + 2000], re.M)[:3]
+    if len(steps) != 3:
+        raise SystemExit("README.md: the three numbered lines under the product picture were not found")
+    return steps
+
+
+def product_picture() -> str:
+    alt = esc(product_alt())
+    return (f'<img class="shot only-dark" src="/assets/img/product-dark.webp" alt="{alt}" width="1600" height="900" fetchpriority="high" decoding="async">'
+            f'<img class="shot only-light" src="/assets/img/product-light.webp" alt="{alt}" width="1600" height="900" loading="lazy" decoding="async">')
+
+
 def screen(name: str, alt: str, eager: bool = False, cls: str = "shot") -> str:
     """A screenshot in both themes; CSS shows the one that matches the page."""
     base = name.replace("-dark", "").replace("-light", "")
@@ -580,8 +614,8 @@ def page_home() -> str:
 <p class="fine mono">Unsigned and rebuilt after every change that passes its tests. It may be broken. <a href="/download/">Other downloads and what to expect</a></p>
 </div>
 <figure class="hero-shot">
-{screen("analysis", "GroupLab's analysis screen: twenty-four shots composited onto one bull, with mean radius, sigma, extreme spread and CEP, each with its interval", eager=True)}
-<figcaption class="fine mono">The analysis screen, rendered from the current build. The sheet is a synthetic test sheet, not anybody's target.</figcaption>
+{product_picture()}
+<figcaption><ol class="hero-steps">{"".join(f"<li>{esc(s)}</li>" for s in product_steps())}</ol></figcaption>
 </figure>
 </section>
 
@@ -2497,6 +2531,7 @@ p.text,.text p,.text{color:var(--text)}
 .pdf-text span{font-size:14px;color:var(--dim)}
 .step-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .step{display:flex;gap:24px;padding:24px 0;border-top:1px solid var(--line)}
+.hero-steps{margin:12px 0 0;padding-left:1.4em;font-size:15px;line-height:1.5;color:var(--dim)}.hero-steps li{margin:2px 0}
 .step-n{font-size:28px;color:var(--amber);width:48px;flex-shrink:0;line-height:1}
 .step div{display:flex;flex-direction:column;gap:8px}
 .two-col.top{align-items:start}

@@ -11,7 +11,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 **Last rewritten:** 2026-09-29, after entries 281 to 283 (the camera test's fixes, Alan's screenshots, the shutter) and 278 (CSV B, the
 spread audit, a shot left out left out everywhere, the iOS plan) and 279 (the App Store permission, Marking A, Fudd buster mode,
-saving A), 280 in part, 284 (Behind the curtain), 285 (the README's list) and 286 (nightly 123 on both devices). Entry 280's screens are next.
+saving A), 280 in part, 284 (Behind the curtain), 285 (the README's list) 286 (nightly 123 on both devices) and 287 (the product picture on the home page). Entry 280's screens are next.
 
 ---
 

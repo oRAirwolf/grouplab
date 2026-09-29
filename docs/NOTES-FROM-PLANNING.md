@@ -24,6 +24,22 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 287: the home page's top picture becomes the README's product picture
+
+**Status: done 2026-09-29.** The home page's top picture is the README's product picture, made into WebP by the site build from `docs/figures/readme/product-*.png` at 1600 by 900, dark and light, with the README's own alt text and its three numbered lines read from README.md, so both change together. The analysis screenshot stays everywhere else. At 500 pixels wide the whole picture shows, the phone uncut; the number badges are small there, and a 390 pixel phone was not checked here because headless Chrome will not go that narrow. The site's screenshot set has no picture of the home page, so none needed catching up.
+
+Alan: "I think the picture at the top of the grouplab.org page should be the one used on the github page that shows the target, the application, and the mobile app."
+
+1. **Replace the hero on grouplab.org's home page** (today `analysis-dark-1400x900.webp` and `analysis-light-1400x900.webp`) with the README's product picture: `docs/figures/readme/product-dark.png` and `product-light.png`, the shot sheet numbered 1, the desktop analysis numbered 2 and the phone result numbered 3. Dark and light follow the site's theme as the current hero does.
+2. **Keep the numbers meaningful.** Put the README's three lines under it on the home page, word for word, as a numbered list, so 1, 2 and 3 on the picture are explained there too:
+   1. Shoot any target, or print a GroupLab sheet that reads itself.
+   2. On the computer, every hole found, then the group with honest ranges.
+   3. On the phone, photograph it at the range.
+3. **One source.** The site and the README use the same picture from the same source, so a regenerated product picture updates both (rule c). Serve a web-sized copy (webp, with width and height set, `fetchpriority="high"` on the first, the dark and light pair as now), and keep the README's alt text.
+4. **Phones.** Check the home page at phone width: the picture scales down without cropping away the phone at the right, and the numbers stay readable. If they do not, say so in `for-alan.md` rather than cropping.
+5. The analysis screenshot that was the hero stays wherever else it is used; do not delete it.
+6. Screenshots of the home page (the site's own `docs/figures/screens` set) catch up in the same change, and say in `for-alan.md` that it is live.
+
 ## 2026-09-29, entry 286: PRIORITY: put the newest GroupLab Dev on the Fold 7 now; Alan is printing request 53's pages
 
 **Status: done 2026-09-29.** Nightly 123 is on the Fold 7 and the tablet, installed over the existing app. The Fold had dropped off adb because I had restarted the adb server on a discovery backend that finds nothing on this PC; back on the default one it was seen again, and Alan paired it once more. The card photo screen opens (Settings, Printers, Add a printer, A card and one photo, Next); request 53's wording is corrected to that path.
