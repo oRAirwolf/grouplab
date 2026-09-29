@@ -21,6 +21,20 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-09-29, question 70: a tap on a bare number in the full CEP table
+
+**Status: open.** Nothing waits on it: the table's cells stay untappable, as entry 273 left them.
+
+Entry 280 section 1: "when you tap a value, it should only change that individual value and not all of the values displayed on the
+screen", and "the desktop's table cells included where entry 273 left them untappable". The full CEP table's cells are bare numbers under
+a heading that names the unit ("CEP, in"). **Built:** every value that shows its own unit switches alone and is remembered for its figure.
+**Not built, and why:** a bare cell switched alone would sit under a heading naming the old unit, so the table would say the wrong unit for
+that cell. **The options.** A: a tap on a cell switches its whole column and the heading with it, remembered for that column (one tap,
+several numbers, against the letter of entry 280). B: each cell shows its own unit ("0.415 in") and switches alone, the heading losing its
+unit (a wider table). C: leave the table as it is; it is a reference, and the figures above it switch. I would choose B.
+
+---
+
 ## 2026-09-29, question 69: may a picture whose codes cannot be read be named by its markers without asking?
 
 **Status: open, and smaller since entry 282.** Nothing waits on it: GroupLab asks, as built. Entry 282 section 5 found why the codes failed (a module of about 3.1 pixels, which reads enlarged three times), and codes cut out where the markers put them and read enlarged now name the refused picture from its codes, so the offer is for what is left. Entry 282 section 4, Alan: a picture whose markers are read "must still be measured: identify the sheet from its markers' layout or ask which sheet it is"; asking is what is built.

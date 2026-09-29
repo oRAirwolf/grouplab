@@ -94,6 +94,13 @@ public sealed class ResultView : UserControl
         var picture = new StackPanel { Spacing = 12 };
         var actions = new StackPanel { Spacing = 12 };
         numbers.Children.Add(full);
+        // Entry 280 section 2, board MultiAim: on a target GroupLab did not print, a chip per aim point in its own color, its own figures,
+        // and "+ Aim point"; the figures above stay the pooled ones.
+        if (AimPoints(result, setup, again) is { } aims)
+        {
+            numbers.Children.Add(aims);
+        }
+
         // Entry 273: the one-time hint card, until a number has been tapped once.
         if (!App.Settings.LoadUnitTapped())
         {
@@ -107,7 +114,8 @@ public sealed class ResultView : UserControl
 
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
-            editor = new SheetEditor(new Bitmap(path), result.State.ViewQuarterTurns, () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));
+            editor = new SheetEditor(new Bitmap(path), result.State.ViewQuarterTurns, () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session),
+                definition is null && AimedByHand(result.State) ? shot => AimColour(session.State, shot.Bull) : null);
             var tools = new WrapPanel { HorizontalAlignment = HorizontalAlignment.Center };
             var toolWords = Screens.Line(SheetEditor.Say(SheetEditor.Tool.Move));
             foreach (var (tool, words) in new[] { (SheetEditor.Tool.Move, "Move"), (SheetEditor.Tool.Add, "Add a hole"), (SheetEditor.Tool.Remove, "Remove") })
@@ -273,6 +281,52 @@ public sealed class ResultView : UserControl
         Changed();
     };
 
+    /// <summary>Whether the aim points were placed by hand on a target GroupLab did not print, where each has a color.</summary>
+    internal static bool AimedByHand(MarkingState state) =>
+        state.Bulls.Count > 0 && state.Scale is not GroupLab.Core.Marking.SheetReference && state.Bulls.All(b => b.Declared is null);
+
+    /// <summary>An aim point's color, the desktop's own (Tokens.BullMarks), by its place among the aim points.</summary>
+    internal static IBrush AimColour(MarkingState state, int? bull)
+    {
+        int at = bull is { } b ? state.Bulls.FindIndex(x => x.Index == b) : -1;
+        var marks = GroupLab.App.Theme.Tokens.BullMarks;
+        return at < 0 ? Brushes.OrangeRed : new SolidColorBrush(marks[at % marks.Count]);
+    }
+
+    private Control? AimPoints(PhoneResult result, ShotSetup setup, Action again)
+    {
+        var state = session.State;
+        if (definition is not null || !AimedByHand(state) || result.State.ImagePath is not { } path)
+        {
+            return null;
+        }
+
+        var figures = GroupAnalysis.ByAimPoint(state);
+        var said = Screens.Line("Tap an aim point for its own figures.");
+        var chips = new WrapPanel();
+        foreach (var (aim, own) in figures)
+        {
+            var dot = new Avalonia.Controls.Shapes.Ellipse { Width = 12, Height = 12, Fill = AimColour(state, aim.Index), Margin = new Thickness(0, 0, 6, 0) };
+            var chip = new Button { Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { dot, new TextBlock { Text = "Aim " + aim.Label } } }, MinHeight = Screens.Touch, Margin = new Thickness(0, 0, 6, 6) };
+            chip.Click += (_, _) => said.Text = own is null
+                ? $"Aim {aim.Label}: no shots yet."
+                : $"Aim {aim.Label}: {own.Shots} shots"
+                  + (own.MeanRadius is { } mr ? ", mean radius " + units.Length(mr.Value) : "")
+                  + (own.ExtremeSpread is { } es ? ", extreme spread " + units.Length(es.Value) : "")
+                  + (own.CentreFromAim is { } c ? ", center " + units.Length(Math.Sqrt((c.X * c.X) + (c.Y * c.Y))) + " from its aim" : "") + ".";
+            chips.Children.Add(chip);
+        }
+
+        var add = Screens.Choice("+ Aim point", () =>
+        {
+            var here = Content;
+            Content = new MarkingAPage(path, session.State.ExifOrientation, setup, units,
+                marked => Content = new ResultView(marked, setup, units, again), () => Content = here, session.State, sessionId);
+        });
+        return Screens.Card(Screens.Heading("Aim points"), chips, said, add,
+            Screens.Dim("The figures above pool every aim point's shots, each measured from its own aim point."));
+    }
+
     /// <summary>Where the result is kept and that it is safe to close, entry 279 section 3 (Unholy) and entry 281 section 2 (A).</summary>
     private static string SavedWords(long? id) => id is null
         ? "This session could not be saved on the phone."
@@ -385,7 +439,7 @@ public sealed class ResultView : UserControl
     /// (<see cref="ViewRotation"/>), with every ring and the magnifier turned with it; the positions themselves stay in the stored pixels.
     /// </para>
     /// </summary>
-    private sealed class SheetEditor(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Action<Action<MarkingSession>> edit) : Control
+    private sealed class SheetEditor(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Action<Action<MarkingSession>> edit, Func<MarkedShot, IBrush?>? colour = null) : Control
     {
         internal enum Tool
         {
@@ -508,7 +562,8 @@ public sealed class ResultView : UserControl
             foreach (var shot in shots())
             {
                 var at = shot.Id == dragging && finger is { } f ? f : ToScreen(shot.Image);
-                context.DrawEllipse(null, shot.Exclusion is null ? pen : leftOut, at, 9, 9);
+                var ring = colour?.Invoke(shot) is { } brush ? new Pen(brush, 2, shot.Exclusion is null ? null : new DashStyle([2, 2], 0)) : shot.Exclusion is null ? pen : leftOut;
+                context.DrawEllipse(null, ring, at, 9, 9);
             }
 
             if (finger is not { } held)

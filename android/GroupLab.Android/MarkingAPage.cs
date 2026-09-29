@@ -46,15 +46,27 @@ internal sealed class MarkingAPage : UserControl
     private readonly Button template = Screens.Choice("Keep as a template", () => { });
     private readonly List<PointD> ends = [];
     private Step step = Step.Scale;
+    private readonly long? sessionId;
 
-    public MarkingAPage(string imagePath, int? exifOrientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel)
+    /// <param name="existing">A marking to go on with, entry 280 section 2's "+ Aim point": its scale kept, starting at the aim points.</param>
+    public MarkingAPage(string imagePath, int? exifOrientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel, MarkingState? existing = null, long? sessionId = null)
     {
+        this.sessionId = sessionId;
         this.units = units;
         this.done = done;
         this.cancel = cancel;
-        session.Open(imagePath, exifOrientation);
-        session.SetCalibre(setup.Calibre);
-        session.SetShotDistance(setup.DistanceInches);
+        if (existing is { Scale: not null })
+        {
+            session.Load(existing);
+            step = Step.Aim;
+        }
+        else
+        {
+            session.Open(imagePath, exifOrientation);
+            session.SetCalibre(setup.Calibre);
+            session.SetShotDistance(setup.DistanceInches);
+        }
+
         viewer = new Viewer(new Bitmap(imagePath), session, ends) { Height = 420 };
         viewer.Moved += Show;
         length.PlaceholderText = $"The length between the two ends, in {UnitSettings.Symbol(units.Linear)}";
@@ -201,7 +213,7 @@ internal sealed class MarkingAPage : UserControl
                 break;
             default:
                 var state = session.State;
-                long? id = PhoneAnalysis.Save(state, null, units, null);
+                long? id = PhoneAnalysis.Save(state, null, units, sessionId);
                 DiagnosticLog.Info("marking.byhand", ("shots", Shots), ("aims", state.Bulls.Count));
                 done(new PhoneResult(state, null, null, id));
                 return;

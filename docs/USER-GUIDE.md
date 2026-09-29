@@ -345,4 +345,6 @@ your bullet's size. **Fudd buster mode**, under a result of twenty shots or more
 clicks to bring it onto the aim; its **Counted** switch leaves a shot out of every figure, struck through in the list and dashed on the
 picture, and still on the record. **Zero from this group** says where the group sits, the clicks, whether that is worth dialing at
 this many shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then includes it at every range.
+On a target GroupLab did not print, **Aim points** gives each aim point a chip in its own color, its holes ringed in the same color:
+tap a chip for that aim point's own figures, or **+ Aim point** to set another; the figures above pool them all.
 
