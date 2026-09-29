@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1279 |
+| code | 1280 |
 | measured | 1747 |
 | decided | 1269 |
 | unbacked | 0 |
-| **total** | **4295** |
+| **total** | **4296** |
 
-**942** of them were read one sentence at a time and their backing written against the sentence. The other **3353** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**943** of them were read one sentence at a time and their backing written against the sentence. The other **3353** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3111,7 +3111,8 @@ one that matters.
 - *code* (src/GroupLab.Core/Marking/CsvGuess.cs CsvGuess.For, src/GroupLab.App/MainWindow.CsvImport.cs ShowMapping, mobile/GroupLab.Mobile/CsvImportPage.cs; tests CsvGuessTests and Entry278Tests (entry 278 section 2); android/GroupLab.Android/CaptureScreen.cs BubbleView and CapturePage.cs WithBar, PhoneAnalysis.cs LooksLike (entry 281)): **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it starts from GroupLab's guesses at which column is across, which is up and down, the unit, which way is up, and whether the numbers are measured from the point of aim or from the group's own center, each to check and change, and a choice it cannot guess starts empty and says so; then it shows the analysis.
 - *code* (src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)): **After that, and after any change, it saves itself**: the status bar says when ("Saved 12 seconds ago in grouplab.db"), that it is safe to close, and **Show in folder** opens the folder that holds every session.
 - *code* (src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)): In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes.
-- *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): ![Session records](figures/screens/current/sessions-light-1400x900.png) The analysis's Report button saves the session as a PDF: - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
+- *code* (ReportButton in src/GroupLab.App/MainWindow.GroupTools.cs: Full report and One-page report (entry 280 section 2)): ![Session records](figures/screens/current/sessions-light-1400x900.png) The analysis's **Report** button saves the session as a PDF, the full report or one page.
+- *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): **Full report:** - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): - **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Two loads compared](figures/screens/current/compare-light-1400x900.png) **The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads.
 - *code* (src/GroupLab.App/MainWindow.BallisticsLayout.cs BallisticBar, BallisticSection, AtOneRange, ArrangeBallistics; tests/GroupLab.App.Tests/Entry247Tests.cs; entry 247): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **How the screen is laid out.** Three columns, like the analysis: - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes **Work out the chance** in the hit probability view.

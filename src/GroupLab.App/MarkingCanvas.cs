@@ -295,6 +295,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         InvalidateVisual();
     }
 
+    /// <summary>
+    /// The picture shown and the frame every mark is measured in, which is the working copy's size where the picture was read reduced: Share
+    /// A draws the same picture over the same marks (NOTES-FROM-PLANNING.md entry 280 section 2).
+    /// </summary>
+    internal (Bitmap? Picture, double Width, double Height) Frame => (bitmap, imageWidth, imageHeight);
+
     public void SetImage(Bitmap? image, GrayImage? valueImage)
     {
         bitmap?.Dispose();

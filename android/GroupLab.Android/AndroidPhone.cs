@@ -135,6 +135,51 @@ internal sealed class AndroidPhone : IPhonePlatform
     public string? SharePdf(byte[] pdf, string name) => PdfOut.Share(pdf, name);
 
     /// <summary>
+    /// Entry 280 section 2, Share A's "Save to gallery": the picture goes into the phone's own Pictures/GroupLab through MediaStore, which on
+    /// Android 10 and later (the least this application runs on) needs no permission for a file the application adds itself. It is written
+    /// while marked pending, so the gallery never shows half a picture.
+    /// </summary>
+    public string? SaveToGallery(string path, string mimeType)
+    {
+        try
+        {
+            var resolver = Context.ContentResolver!;
+            var values = new ContentValues();
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.DisplayName, Path.GetFileName(path));
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.MimeType, mimeType);
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.RelativePath, global::Android.OS.Environment.DirectoryPictures + "/GroupLab");
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.IsPending, 1);
+            var collection = global::Android.Provider.MediaStore.Images.Media.GetContentUri(global::Android.Provider.MediaStore.VolumeExternalPrimary)!;
+            if (resolver.Insert(collection, values) is not { } uri)
+            {
+                return "The gallery would not take the picture.";
+            }
+
+            using (var to = resolver.OpenOutputStream(uri))
+            using (var from = File.OpenRead(path))
+            {
+                if (to is null)
+                {
+                    return "The gallery would not take the picture.";
+                }
+
+                from.CopyTo(to);
+            }
+
+            values.Clear();
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.IsPending, 0);
+            resolver.Update(uri, values, null, null);
+            DiagnosticLog.Info("share.gallery", ("bytes", new FileInfo(path).Length));
+            return null;
+        }
+        catch (Exception ex) when (ex is Java.Lang.Exception or IOException)
+        {
+            DiagnosticLog.Exception(GroupLab.App.Diagnostics.LogLevel.Warn, "share.gallery", ex);
+            return "The picture could not be saved to the gallery.";
+        }
+    }
+
+    /// <summary>
     /// Entry 258: Paste a picture. Android lets an application read the clipboard only while it is in front, which it is when the button is
     /// pressed; the clipboard holds its content address; the picture is copied into <paramref name="folder"/>.
     /// </summary>

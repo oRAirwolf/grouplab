@@ -57,6 +57,12 @@ public interface IPhonePlatform
     /// <summary>Shares a PDF; a sentence where it could not, else null.</summary>
     string? SharePdf(byte[] pdf, string name);
 
+    /// <summary>
+    /// Saves a picture into the device's own gallery, entry 280 section 2 (Share A, "Save to gallery"); a sentence where it could not, else
+    /// null. A head that has no gallery yet keeps this default, which says so, so the screens build against every head.
+    /// </summary>
+    string? SaveToGallery(string path, string mimeType) => "Saving to the gallery is not available on this device yet; use Share instead.";
+
     /// <summary>Copies a picture on the clipboard into <paramref name="folder"/> and returns its path, or null where there is none.</summary>
     Task<string?> PastePicture(string folder);
 

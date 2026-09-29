@@ -1,4 +1,3 @@
-using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -36,25 +35,20 @@ internal sealed class ShotsPage : UserControl
         var state = session.State;
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title("Shots"));
-        var report = GroupAnalysis.Analyse(state);
-        if (report.Counted is { } counted)
+        // Entry 280 section 2: the words are the desktop window's own (ResultWords).
+        if (ResultWords.ShotsSummary(GroupAnalysis.Analyse(state), units) is { } summary)
         {
-            string left = report.Excluded == 0 ? "" : string.Create(CultureInfo.CurrentCulture,
-                $"; {report.Excluded} left out by the shooter, still on the record");
-            string radius = counted.MeanRadius is { } mr ? ", mean radius " + units.Length(mr.Value) : "";
-            column.Children.Add(Screens.Line(string.Create(CultureInfo.CurrentCulture, $"{counted.Shots} shots counted{radius}{left}.")));
+            column.Children.Add(Screens.Line(summary));
         }
 
         var rows = ShotOffsets.Table(state);
         if (rows.Count == 0)
         {
-            column.Children.Add(Screens.Line("These shots have no aim point to measure from, so there are no offsets to show."));
+            column.Children.Add(Screens.Line(ResultWords.NoOffsets));
         }
         else
         {
-            column.Children.Add(Screens.Dim(state.Rifle is null || state.ShotDistanceInches is null
-                ? "Across and up from the aim point. With a rifle's click value and the distance, each shot also shows its clicks."
-                : $"Across and up from the aim point, and the clicks that would bring each shot onto it, at {state.Rifle.DescribeClick()}."));
+            column.Children.Add(Screens.Dim(ResultWords.ShotsIntro(state)));
             var table = new StackPanel();
             foreach (var row in rows)
             {
@@ -73,14 +67,11 @@ internal sealed class ShotsPage : UserControl
 
     private Control Row(ShotOffsetRow row)
     {
-        static string Way(double inches, string positive, string negative) => inches >= 0 ? positive : negative;
-        string across = units.Length(Math.Abs(row.AcrossInches)) + " " + Way(row.AcrossInches, "right", "left");
-        string up = units.Length(Math.Abs(row.UpInches)) + " " + Way(row.UpInches, "up", "down");
-        string clicks = string.Join(", ", new[] { row.AcrossClicks?.Describe(), row.UpClicks?.Describe() }.Where(c => c is not null));
+        string clicks = ResultWords.Clicks(row);
         var decoration = row.LeftOut ? TextDecorations.Strikethrough : null;
         var words = new StackPanel { Spacing = 2 };
         words.Children.Add(new TextBlock { Text = "Shot " + row.Label, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, TextDecorations = decoration });
-        words.Children.Add(new TextBlock { Text = across + ", " + up, TextWrapping = TextWrapping.Wrap, TextDecorations = decoration, Classes = { PhoneStyles.Dim } });
+        words.Children.Add(new TextBlock { Text = ResultWords.Offset(row, units), TextWrapping = TextWrapping.Wrap, TextDecorations = decoration, Classes = { PhoneStyles.Dim } });
         if (clicks.Length > 0)
         {
             words.Children.Add(new TextBlock { Text = clicks, TextWrapping = TextWrapping.Wrap, TextDecorations = decoration, Classes = { PhoneStyles.Dim } });

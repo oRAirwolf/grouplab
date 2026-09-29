@@ -224,7 +224,7 @@
     ],
     [
      "Zero correction",
-     "How far the group center is from where you aimed, across and up and down, in inches, MOA and mil side by side, and the distance the correction is for. Beneath it one line says what to dial, in clicks of your scope with the click value, or that the offset cannot yet be told from chance. Its why holds the give or take."
+     "How far the group center is from where you aimed, across and up and down, in inches, MOA and mil side by side, and the distance the correction is for. Beneath it one line says what to dial, in clicks of your scope with the click value, or that the offset cannot yet be told from chance. Its why holds the give or take. Zero from this group opens the same in a window, with how well the center is known, and carries the offset into Ballistics."
     ],
     [
      "Group",
@@ -244,11 +244,11 @@
     ],
     [
      "Shots, from their own bull",
-     "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold."
+     "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold. Shots and clicks beneath it lists each shot with its clicks and a Counted tick, and Share a picture puts a results box and the mean radius circle on the photograph."
     ],
     [
      "Own window, Show work, Report and Export",
-     "Own window moves the figures to a window of their own for a second monitor. Show work opens how the sheet was read. Report makes a printable page. Export writes the complete record, or the shot coordinates as CSV for a spreadsheet."
+     "Own window moves the figures to a window of their own for a second monitor. Show work opens how the sheet was read. Report makes the full report or a one-page report. Export writes the complete record, or the shot coordinates as CSV for a spreadsheet."
     ]
    ],
    "steps": [

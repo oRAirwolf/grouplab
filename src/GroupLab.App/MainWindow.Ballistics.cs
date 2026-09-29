@@ -469,9 +469,12 @@ public sealed partial class MainWindow
         head.Margin = new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, Tokens.Space4);
         dopeTable.Children.Add(head);
         int index = 0;
-        foreach (var point in table.Points.Where(p => p.RangeYards > 0))
+        // Entry 280 section 2: a group's zero offset carried in from Zero from this group, the same angle up or down at every range.
+        var carriedZero = ballisticsZeroOffset;
+        foreach (var solved in table.Points.Where(p => p.RangeYards > 0))
         {
-            double range = point.RangeYards * 36;
+            double range = solved.RangeYards * 36;
+            var point = carriedZero is null ? solved : solved with { DropInches = solved.DropInches - carriedZero.UpInchesAt(range) };
             string Angle(double inches) => units.Angle(Math.Abs(inches), range) is { } a ? a.ToString("0.00", CultureInfo.InvariantCulture) : "";
             // Anything under the display's resolution is zero, with no direction to dial.
             string ClickText(double inches, string direction) => Math.Abs(inches) < 5e-4 ? "0" : Clicks.For(inches, range, rifle!, direction).Describe();
@@ -505,6 +508,16 @@ public sealed partial class MainWindow
             }
 
             dopeTable.Children.Add(row);
+        }
+
+        if (carriedZero is not null)
+        {
+            dopeTable.Children.Add(new TextBlock { Text = carriedZero.Words + " The elevation column includes it; hold or dial the across part at every range too.", FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
+            dopeTable.Children.Add(Row(Button("Stop using the group's zero offset", () =>
+            {
+                ballisticsZeroOffset = null;
+                FillDope();
+            })));
         }
 
         dopeTable.Children.Add(Line($"Zeroed at {units.DistanceText(input.ZeroRangeYards * 36)}, sight height {units.Length(input.SightHeightInches)}, in {AirWords(air)}. Drop is below the line of sight when negative; the clicks are {rifle!.Name}'s, {rifle.DescribeClick()}."));

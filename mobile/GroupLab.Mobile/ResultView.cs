@@ -173,6 +173,23 @@ public sealed class ResultView : UserControl
             Content = new ZeroFromPage(session.State, units, ShowShotsToZero, () => Content = result);
         }));
 
+        // Entry 280 section 2, board ShareA: the picture with a results box on it, saved to the gallery or shared.
+        if (result.State.ImagePath is { } shared && File.Exists(shared))
+        {
+            actions.Children.Add(Screens.Row("Share a picture", "The target with its results box and the mean radius circle", () =>
+            {
+                var result = Content;
+                Content = new SharePage(session.State, Title(), Date(), units, () => Content = result);
+            }));
+        }
+
+        // Entry 280 section 2, board Report: one dated page, shared or printed.
+        actions.Children.Add(Screens.Row("Report", "One dated page: the picture, the plot, the figures and how sure", () =>
+        {
+            var result = Content;
+            Content = new OnePageReportPage(session.State, Title(), Date(), units, () => Content = result);
+        }));
+
         // Entry 279 section 3 and entry 281 section 2: Unholy's "Fudd buster mode", from twenty shots.
         if (FuddBusterPage.Shots(session.State).Count >= GroupLab.Core.Statistics.FuddBuster.LeastShots)
         {
@@ -250,6 +267,13 @@ public sealed class ResultView : UserControl
         };
     }
 
+    /// <summary>What the shared picture and the report are named by: the sheet, and the sheet's own label where it has one.</summary>
+    private string Title() => (definition?.Name ?? "Marked by hand") + (session.State.SheetLabel is { Length: > 0 } label ? ", " + label : "");
+
+    /// <summary>The day the target was shot, as the session keeps it, or today.</summary>
+    private string Date() =>
+        (sessionId is { } id ? PhoneAnalysis.Store().Get(id)?.ShotDate : null) ?? DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+
     /// <summary>Entry 259 screen 6: the set this sheet belongs to, as a checklist; photographing the next sheet goes to the camera.</summary>
     private void ShowSet()
     {
@@ -282,8 +306,7 @@ public sealed class ResultView : UserControl
     };
 
     /// <summary>Whether the aim points were placed by hand on a target GroupLab did not print, where each has a color.</summary>
-    internal static bool AimedByHand(MarkingState state) =>
-        state.Bulls.Count > 0 && state.Scale is not GroupLab.Core.Marking.SheetReference && state.Bulls.All(b => b.Declared is null);
+    internal static bool AimedByHand(MarkingState state) => ResultWords.AimedByHand(state);
 
     /// <summary>An aim point's color, the desktop's own (Tokens.BullMarks), by its place among the aim points.</summary>
     internal static IBrush AimColour(MarkingState state, int? bull)
@@ -308,12 +331,7 @@ public sealed class ResultView : UserControl
         {
             var dot = new Avalonia.Controls.Shapes.Ellipse { Width = 12, Height = 12, Fill = AimColour(state, aim.Index), Margin = new Thickness(0, 0, 6, 0) };
             var chip = new Button { Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { dot, new TextBlock { Text = "Aim " + aim.Label } } }, MinHeight = Screens.Touch, Margin = new Thickness(0, 0, 6, 6) };
-            chip.Click += (_, _) => said.Text = own is null
-                ? $"Aim {aim.Label}: no shots yet."
-                : $"Aim {aim.Label}: {own.Shots} shots"
-                  + (own.MeanRadius is { } mr ? ", mean radius " + units.Length(mr.Value) : "")
-                  + (own.ExtremeSpread is { } es ? ", extreme spread " + units.Length(es.Value) : "")
-                  + (own.CentreFromAim is { } c ? ", center " + units.Length(Math.Sqrt((c.X * c.X) + (c.Y * c.Y))) + " from its aim" : "") + ".";
+            chip.Click += (_, _) => said.Text = ResultWords.AimPoint(aim, own, units);
             chips.Children.Add(chip);
         }
 
@@ -324,7 +342,7 @@ public sealed class ResultView : UserControl
                 marked => Content = new ResultView(marked, setup, units, again), () => Content = here, session.State, sessionId);
         });
         return Screens.Card(Screens.Heading("Aim points"), chips, said, add,
-            Screens.Dim("The figures above pool every aim point's shots, each measured from its own aim point."));
+            Screens.Dim(ResultWords.AimPointsPooled));
     }
 
     /// <summary>Where the result is kept and that it is safe to close, entry 279 section 3 (Unholy) and entry 281 section 2 (A).</summary>

@@ -4072,6 +4072,18 @@
   "The 2 MOA sheets, requested by Unholy, are under centerfire load development: nine 2.00 in bulls on a page, one page for a quick group or a zero check, or a set of three pages for load development that GroupLab pools and that says which page is missing.": {
    "kind": "code",
    "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets and TwoMoa, targets/GL-CF9-*.gltd.json; src/GroupLab.Core/Rendering/TargetLibrary.cs Catalogue GL-CF9-; src/GroupLab.Core/Marking/SetPool.cs; held by TwoMoaSheetTests (entry 289)"
+  },
+  "![Session records](figures/screens/current/sessions-light-1400x900.png) The analysis's **Report** button saves the session as a PDF, the full report or one page.": {
+   "kind": "code",
+   "where": "ReportButton in src/GroupLab.App/MainWindow.GroupTools.cs: Full report and One-page report (entry 280 section 2)"
+  },
+  "**Full report:** - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.": {
+   "kind": "code",
+   "where": "SessionReport in src/GroupLab.App/MainWindow.Report.cs"
+  },
+  "Full report: Page 1: the particulars, the plot, the figures with their intervals, the zero correction and the cards.": {
+   "kind": "code",
+   "where": "SessionReport in src/GroupLab.App/MainWindow.Report.cs"
   }
  },
  "rules": [

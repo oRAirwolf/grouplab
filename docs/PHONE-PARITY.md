@@ -61,6 +61,11 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Guided or Manual on the camera | `capture-modes` | on the phone | | not yet |
 | Every picture checked | `picture-check` | on the phone | | not yet |
 | The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | not yet |
+| Every shot, and which count | `shots-table` | on the phone | entry 280 section 2, Shots A: the Shots page from a result; on the computer, Shots and clicks under the shot table | not yet |
+| Zero from this group | `zero-from` | on the phone | entry 280 section 2, board ZeroFrom: its own page, and the offset handed to Ballistics; a window on the computer | not yet |
+| Several aim points on one target | `aim-points` | on the phone | entry 280 section 2, board MultiAim: a chip per aim point in its own color and "+ Aim point" | not yet |
+| A picture to share | `share-picture` | on the phone | entry 280 section 2, Share A: Save to gallery (Pictures, GroupLab) and Share; Save picture on the computer | not yet |
+| The one-page report | `one-page-report` | on the phone | entry 280 section 2, board Report: shared or printed through Android's own dialogs | not yet |
 
 **iPhone and iPad** (entry 290 section 6). The last column says where each feature stands on iOS: **on iOS** where it runs there and
 has been seen to, **not yet** while the iOS build is being made, **on a device** where it is built but only an iPhone or iPad can prove it

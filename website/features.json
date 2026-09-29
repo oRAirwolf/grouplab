@@ -900,6 +900,106 @@
       "mobile": {
         "noPicture": "the check after a picture is photographed at the next sitting with the phone"
       }
+    },
+    {
+      "key": "shots-table",
+      "group": "The numbers",
+      "name": "Every shot, and which count",
+      "sentence": "Every shot's offset across and up from its aim point, the clicks that would bring it onto the aim at your scope's click value, and a Counted switch that leaves a shot out of every figure while it stays on the record, struck through.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "Shots and clicks",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "the phone's Shots page is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "zero-from",
+      "group": "The numbers",
+      "name": "Zero from this group",
+      "sentence": "Where the group's center sits from the aim point, the clicks with your scope named, how well the center is known at this many shots, and the offset carried into Ballistics or on to Shots Needed to Zero.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "Zero from this group window",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "the phone's Zero from this group page is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "aim-points",
+      "group": "The numbers",
+      "name": "Several aim points on one target",
+      "sentence": "On a target GroupLab did not print, each aim point you place has its own color, its holes marked in it, and its own figures, while the figures above pool every aim point's shots, each measured from its own.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "aim point colors",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "the phone's aim point chips are photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "share-picture",
+      "group": "Sharing and privacy",
+      "name": "A picture to share",
+      "sentence": "The target with a results box on it, dragged anywhere and resized, its lines chosen, with the mean radius circle drawn about the group's center, a label, the box's style and a crop around the group; saved to the gallery or shared from the phone, saved as a picture on the computer.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "a picture to share with its results box",
+      "tour": "analysis",
+      "guide": "6-sessions-and-the-report",
+      "mobile": {
+        "noPicture": "the phone's Share a picture page is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "one-page-report",
+      "group": "Sharing and privacy",
+      "name": "The one-page report",
+      "sentence": "One dated page on Letter or A4: the picture, a plot centered on the group with its grid stated, the figures, the load and equipment, and how sure the mean radius is at this many shots, beside the full report on the computer and shared or printed from the phone.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "a one-page report",
+      "tour": "analysis",
+      "guide": "6-sessions-and-the-report",
+      "mobile": {
+        "noPicture": "the phone's Report page is photographed at the next sitting with the phone"
+      }
     }
   ]
 }

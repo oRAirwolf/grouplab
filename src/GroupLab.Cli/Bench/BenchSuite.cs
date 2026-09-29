@@ -443,6 +443,19 @@ public static class BenchSuite
             },
             ["VolunteerPack"]);
 
+        // Entry 280 section 2: the one-page report with its picture, and the words and circle of a picture to share, as a result asks for them.
+        yield return new BenchCase("documents", "the one-page report", "One result's one-page report with its picture, and the box's lines and mean radius circle of a shared picture.",
+            _ =>
+            {
+                var state = ShotCsv.Marking([.. Enumerable.Range(0, 10).Select(i => new PointD(0.4 * Math.Cos(i * 2.1), 0.4 * Math.Sin(i * 1.3)))], 3600);
+                var report = OnePageReports.For(state, "Bench", "2026-09-29", UnitSettings.Imperial, GroupLab.Core.Gltd.Model.PageSize.Letter, ReportPicture.From(m.GeneratedSheet, 0), "GroupLab");
+                byte[] pdf = OnePageReports.Write(report);
+                int lines = ShareCard.Lines(state, "Bench", "2026-09-29", UnitSettings.Imperial).Count + ShareCard.Circles(state).Count
+                    + ResultWords.ZeroFrom(state, UnitSettings.Imperial).Axes.Count;
+                return string.Create(CultureInfo.InvariantCulture, $"{pdf.Length / 1024} kB, {lines} lines");
+            },
+            ["OnePageReports", "ShareCard", "ResultWords"]);
+
         static BenchCase Guide(BenchMaterial m, string name) =>
             new("documents", name.ToLowerInvariant() + " PDF", $"Laying {name}.md out and writing it as a PDF, pictures and all.",
                 _ =>

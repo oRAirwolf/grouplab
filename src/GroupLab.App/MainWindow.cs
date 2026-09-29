@@ -919,7 +919,8 @@ public sealed partial class MainWindow : Window
         var ownWindow = Button("Own window", PopOutFigures);
         ToolTip.SetTip(ownWindow, "Open the figures in a window of their own, for a second monitor");
         analysisActions.Children.Add(ownWindow);
-        analysisActions.Children.Add(Button("Report", async () => await ReportDialog()));
+        // Entry 280 section 2, board Report: the one-page report beside the full one.
+        analysisActions.Children.Add(ReportButton());
         analysisActions.Children.Add(Button("Export", async () => await ExportDialog()));
         analysisActions.Children.Add(Overflow());
         actions.Children.Add(editorActions);
@@ -1081,6 +1082,8 @@ public sealed partial class MainWindow : Window
         shotsColumn.Children.Add(offsetTable);
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
         BuildFigureExtras(shotsColumn, figures);
+        // Entry 280 section 2: Shots A, Share A, the aim points and Zero from this group, the phone's row 10 in the desktop's layout.
+        BuildGroupTools(shotsColumn, figures);
         outlinesBox.MinHeight = 44;
         outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { groupView, wholeView, outlinesBox, cep50Box, cep90Box, cep95Box, cep99Box, spreadBox } };
         bool wholeChosen = settingsStore.LoadPlotWholeTarget();
@@ -3031,6 +3034,7 @@ public sealed partial class MainWindow : Window
         }
 
         ShowThumbnail(state);
+        ShowAimPoints(state);
         ShowFullFigures(state);
         ShowBullLoads(state);
     }

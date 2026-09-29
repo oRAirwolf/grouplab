@@ -170,6 +170,16 @@ Every edit shows a small message at the bottom of the screen saying what changed
 
 **Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
 
+**Under the shot table,** **Shots and clicks** opens every shot with its offset across and up from the aim point, the clicks that would
+bring it onto the aim at your rifle's click value, and a **Counted** tick: untick it and the shot is left out of every figure, struck
+through in the list and hollow on the plot, and still on the record. **Share a picture** puts a results box on the photograph: drag it
+anywhere, drag its corner to resize it, and tick the lines it carries; the mean radius circle is drawn about the group's center, and a
+label, the box's style and a crop around the group are beside it; **Save picture** writes it as a PNG. On a target GroupLab did not
+print, **Aim points** lists each aim point in its own color with its own figures, and **+ Aim point** goes back to the sheet to place
+another; the figures above pool them all. **Zero from this group,** under the zero correction, says where the group sits, the clicks
+with the scope named and how well the center is known at this many shots, and opens Shots Needed to Zero or carries the offset into
+Ballistics, whose dope then includes it at every range until you stop it.
+
 **The zero correction** gives the group center's offset across and up and down in your length unit, MOA and mil side by side, whichever your scope is marked in, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
 
 It says what to dial when the group's center is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialing an offset nobody can distinguish from zero only chases noise.
@@ -202,11 +212,15 @@ Accept and analyze saves the sheet as a session: the marking with every edit, it
 
 ![Session records](figures/screens/current/sessions-light-1400x900.png)
 
-The analysis's Report button saves the session as a PDF:
+The analysis's **Report** button saves the session as a PDF, the full report or one page. **Full report:**
 - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 
 Every line on it is one the screen shows.
+
+**One-page report** is one dated page, on Letter or on A4 as your region prints: the picture, a plot centered on the group and scaled to
+fill it with its grid stated, the figures table, the load and equipment, and a sentence saying how sure the mean radius is at this many
+shots. The phone makes the same page.
 
 ## 7. Comparing loads
 
@@ -355,4 +369,8 @@ picture, and still on the record. **Zero from this group** says where the group 
 this many shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then includes it at every range.
 On a target GroupLab did not print, **Aim points** gives each aim point a chip in its own color, its holes ringed in the same color:
 tap a chip for that aim point's own figures, or **+ Aim point** to set another; the figures above pool them all.
+**Share a picture**, under a result, puts a results box on the picture: drag it anywhere, pinch it or drag its corner to resize it, and
+tap it to choose its lines. Chips turn the mean radius circle (drawn about the group's center) and a label on and off, and set the box's
+style and the crop; then **Save to gallery**, which keeps it in Pictures, GroupLab, or **Share**. **Report**, under a result, makes the
+one-page report, to share or print.
 

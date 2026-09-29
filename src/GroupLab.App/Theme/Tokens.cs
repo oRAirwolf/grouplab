@@ -330,6 +330,29 @@ public static class Tokens
     public static Color MarkPlaced { get; } = Hex(0xe6e8ea);
 
     /// <summary>
+    /// Share A, NOTES-FROM-PLANNING.md entry 280 section 2: the picture to share is a photograph, the same in either theme, so its inks are
+    /// fixed. The mean radius circle bright green over a dark halo, the results box dark or light and see-through, its words white or black,
+    /// the label's shade, and the corner handle in the application's amber.
+    /// </summary>
+    public static Color ShareRing { get; } = Hex(0x39d98a);
+
+    public static Color ShareHalo { get; } = Color.FromArgb(160, 0, 0, 0);
+
+    public static Color ShareShade { get; } = Color.FromArgb(170, 0, 0, 0);
+
+    public static Color ShareBoxDark { get; } = Color.FromArgb(190, 16, 16, 16);
+
+    public static Color ShareBoxLight { get; } = Color.FromArgb(225, 255, 255, 255);
+
+    public static Color ShareBoxEdge { get; } = Color.FromArgb(120, 255, 255, 255);
+
+    public static Color ShareInkLight { get; } = Hex(0xffffff);
+
+    public static Color ShareInkDark { get; } = Hex(0x000000);
+
+    public static Color ShareHandle { get; } = Hex(0xf2a900);
+
+    /// <summary>
     /// The document's paper, entry 93 section 2 and entry 97 section 1: the document is light and the application is dark. The concept's
     /// sheet is this warm off-white inset in the dark canvas with a one pixel edge, in every theme, because a sheet of paper does not change
     /// colour when the application does.

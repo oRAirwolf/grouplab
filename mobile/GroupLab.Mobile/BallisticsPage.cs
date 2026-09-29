@@ -54,13 +54,10 @@ internal sealed class BallisticsPage : UserControl
     /// <param name="useZeroOffset">Carry the group's offset from its aim point into the dope as the zero offset.</param>
     public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false)
     {
-        if (useZeroOffset && carried is { ShotDistanceInches: { } shotAt } && Zeroing.For(carried) is { } zero)
+        // Entry 280 section 2: the offset and its sentence are the desktop's own (ResultWords.ZeroOffsetFor).
+        if (useZeroOffset && carried is not null && ResultWords.ZeroOffsetFor(carried) is { } offset)
         {
-            double Angle(ZeroAxis axis) => Angular.Constant(AngularUnit.Moa) / 2 * Math.Atan(Math.Abs(axis.OffsetInches) / shotAt);
-            double up = zero.Elevation.Dial == "up" ? Angle(zero.Elevation) : -Angle(zero.Elevation);
-            double left = zero.Windage.Dial == "left" ? Angle(zero.Windage) : -Angle(zero.Windage);
-            zeroOffset = (up, left, string.Create(CultureInfo.CurrentCulture,
-                $"With the zero offset of the group you carried in, {Math.Abs(up):0.00} MOA {(up >= 0 ? "up" : "down")} and {Math.Abs(left):0.00} MOA {(left >= 0 ? "left" : "right")} at every range, from {zero.Shots} shots{(zero.Worth ? "" : "; at this many shots it is not yet worth dialing")}."));
+            zeroOffset = (offset.UpMoa, offset.LeftMoa, offset.Words);
         }
 
         // Entry 273: a tap on any number switches units everywhere; this page shows them again.

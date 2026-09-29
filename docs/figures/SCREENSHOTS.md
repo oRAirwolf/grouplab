@@ -110,6 +110,11 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Words explained where they appear | the analysis | a word's explanation open |
 | Pool the sheets of a set | Session records | a pooled set with a missing sheet named |
 | Tap a number to switch units | the analysis, with the one-time hint | a figure switched, with the note at the bottom |
+| Every shot, and which count | the analysis, with Shots and clicks | the Shots window with a shot left out |
+| Zero from this group | the analysis, with its button | the Zero from this group window |
+| Several aim points on one target | the analysis | aim points placed by hand, each in its color with its figures |
+| A picture to share | the analysis, with Share a picture | the Share a picture window with its results box |
+| The one-page report | the analysis | the one-page report itself |
 
 ## Not published
 
