@@ -28,6 +28,7 @@
   },
   "checked": {
     "android": "the rest of android/: the spike and the native OpenCV build's scripts; android/GroupLab.Android/ ships, listed under ships-packaging",
+    "ios": "the iOS build: the native OpenCV build's script (entry 290); nothing here is in a published build yet",
     ".gitattributes": "line endings at checkout; a test has failed over CRLF on a Windows runner, so CI runs, and nothing ships",
     ".github": "the workflows: CI runs on a change to them, and only package.yml, listed above, changes a package",
     "Directory.Build.props": "listed here for its top level class; it ships through ships-packaging",
