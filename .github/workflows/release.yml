@@ -13,6 +13,10 @@
 # release. ReleaseAssetTests holds the README's links to the names below.
 #
 # The macOS build stays out until somebody can run it: the gate record passes there, and nobody has opened the application on a Mac.
+#
+# Entry 293: a run by hand with store_draft builds only the Microsoft Store package, checks its identity against the repository's
+# variables, runs the Windows App Certification Kit, attaches it to a draft release named store-draft-<version>, which is never a v* tag,
+# and proves the Store login with one read. Nothing is submitted to the Store, and no other package, release or commit is made.
 name: release
 
 on:
@@ -25,6 +29,11 @@ on:
         description: 'Version to name the assets by, such as 0.1.0'
         required: false
         default: ''
+      store_draft:
+        description: 'Only the Microsoft Store package, as a draft release, and a Store login check that submits nothing (entry 293)'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: write
@@ -50,6 +59,7 @@ jobs:
   package:
     name: package
     needs: work-out-the-version
+    if: ${{ !inputs.store_draft }}
     uses: ./.github/workflows/package.yml
     with:
       ref: ${{ github.sha }}
@@ -78,6 +88,8 @@ jobs:
           else
             echo "present=no" >> "$GITHUB_OUTPUT"
             echo "### No Store identity in the repository's variables yet, so no Store package (request 38)." >> "$GITHUB_STEP_SUMMARY"
+            # A run asked for the Store package alone has nothing else to do, so there it is a failure.
+            if [ "${{ inputs.store_draft }}" = "true" ]; then echo "::error::STORE_IDENTITY_NAME, STORE_PUBLISHER and STORE_PUBLISHER_DISPLAY_NAME must all be set"; exit 1; fi
           fi
 
       - uses: actions/checkout@v5
@@ -93,6 +105,12 @@ jobs:
         shell: pwsh
         run: ./scripts/package-msix.ps1 -Version '${{ needs.work-out-the-version.outputs.version }}' -Train release -IdentityName $env:STORE_IDENTITY_NAME -Publisher $env:STORE_PUBLISHER -PublisherDisplayName $env:STORE_PUBLISHER_DISPLAY_NAME
 
+      # Entry 293 section 1: the manifest's identity against the variables, every time, and the certification kit on a store_draft run.
+      - name: Check the MSIX
+        if: steps.identity.outputs.present == 'yes'
+        shell: pwsh
+        run: ./scripts/check-msix.ps1 -Msix out/package/grouplab-win-x64.msix -Report out/wack/wack-report.xml ${{ inputs.store_draft && '-Certify' || '' }}
+
       - uses: actions/upload-artifact@v6
         if: steps.identity.outputs.present == 'yes'
         with:
@@ -100,11 +118,64 @@ jobs:
           path: out/package/grouplab-win-x64.msix
           retention-days: 7
 
+      - uses: actions/upload-artifact@v6
+        if: ${{ always() && inputs.store_draft && steps.identity.outputs.present == 'yes' }}
+        with:
+          name: wack-report
+          path: out/wack/
+          if-no-files-found: ignore
+          retention-days: 30
+
+  # Entry 293 section 1: the package the first, hand-made submission uploads (request 38, Part B), on a draft release. A draft makes no tag
+  # until it is published, and its name is store-draft-<version>, never v*, so nothing here can start a release or look like one.
+  store-draft:
+    name: the Store package as a draft release
+    needs: [work-out-the-version, msix]
+    if: ${{ inputs.store_draft && needs.msix.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: store-draft-${{ needs.work-out-the-version.outputs.version }}
+      VERSION: ${{ needs.work-out-the-version.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: windows-msix
+          path: msix
+
+      - name: Make the draft
+        run: |
+          set -euo pipefail
+          file=msix/grouplab-win-x64.msix
+          size=$(stat -c %s "$file")
+          sha=$(sha256sum "$file" | cut -d' ' -f1)
+          # A draft of the same name is replaced, so there is one per version; a published release of that name is never touched.
+          was=$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>/dev/null || true)
+          if [ "$was" = "false" ]; then echo "::error::$TAG is a published release, which this never replaces"; exit 1; fi
+          if [ "$was" = "true" ]; then gh release delete "$TAG" -R "$GITHUB_REPOSITORY" --yes; fi
+          {
+            echo "The Microsoft Store package of GroupLab $VERSION, from commit $GITHUB_SHA, for the first submission in Partner Center (request 38, Part B)."
+            echo
+            echo "It is unsigned, because the Store signs what it distributes, so Windows will not install this file directly. For GroupLab itself, use the installer or the zip from the newest nightly."
+            echo
+            echo "$size bytes, SHA-256 $sha."
+          } > notes.md
+          gh release create "$TAG" "$file" -R "$GITHUB_REPOSITORY" --draft --target "$GITHUB_SHA" --title "GroupLab $VERSION for the Microsoft Store, draft" --notes-file notes.md
+          # A draft makes no tag; if GitHub ever did, this says so rather than leaving a tag behind unnoticed.
+          tags=$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/tags/$TAG" --jq length)
+          url=$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json url --jq .url)
+          {
+            echo "### The Store package is on a draft release: $url"
+            echo "grouplab-win-x64.msix, $size bytes, SHA-256 $sha. Tags named $TAG in the repository: $tags."
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$tags" != "0" ]; then echo "::error::the draft made a tag named $TAG"; exit 1; fi
+
   release:
     name: release
     needs: [work-out-the-version, package, msix]
     # The Store package is never a condition: a release without it is still a release.
-    if: ${{ !cancelled() && needs.package.result == 'success' }}
+    if: ${{ !cancelled() && !inputs.store_draft && needs.package.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -191,10 +262,12 @@ jobs:
   # NOTES-FROM-PLANNING.md entry 224 section 3.2: a tagged stable release goes to the Store's public listing by itself. The Store's own
   # tooling, authenticated as the Entra application Partner Center trusts as a Manager; the four values are repository secrets Alan sets.
   # It needs the app already live in the Store, which the first, hand-made submission does. Nightlies never come here.
+  # Entry 293 section 2: every run here first proves the login with one read, so an expired secret fails in plain words; a store_draft run
+  # stops there and submits nothing.
   store:
     name: publish to the Microsoft Store
     needs: [work-out-the-version, msix, release]
-    if: ${{ !cancelled() && github.ref_type == 'tag' && needs.msix.result == 'success' }}
+    if: ${{ !cancelled() && (github.ref_type == 'tag' || inputs.store_draft) && needs.msix.result == 'success' }}
     runs-on: windows-latest
     timeout-minutes: 30
     env:
@@ -213,21 +286,32 @@ jobs:
           else
             echo "present=no" >> "$GITHUB_OUTPUT"
             echo "### The Store's credentials are not all set, so this release was not sent to the Store (request 38)." >> "$GITHUB_STEP_SUMMARY"
+            if [ "${{ inputs.store_draft }}" = "true" ]; then echo "::error::the Store's four secrets and STORE_PRODUCT_ID must all be set to check the login"; exit 1; fi
           fi
 
-      - uses: actions/download-artifact@v6
+      - uses: actions/checkout@v5
         if: steps.store.outputs.present == 'yes'
+
+      # One read of the product, which changes nothing; if Entra refuses, it says the Store secret may have expired.
+      - name: Check the Store login
+        if: steps.store.outputs.present == 'yes'
+        shell: pwsh
+        run: ./scripts/store-login-check.ps1
+
+      - uses: actions/download-artifact@v6
+        if: steps.store.outputs.present == 'yes' && github.ref_type == 'tag'
         with:
           name: windows-msix
           path: msix
 
       - uses: microsoft/microsoft-store-apppublisher@v1.1
-        if: steps.store.outputs.present == 'yes'
+        if: steps.store.outputs.present == 'yes' && github.ref_type == 'tag'
 
       - name: Publish the package
-        if: steps.store.outputs.present == 'yes'
+        if: steps.store.outputs.present == 'yes' && github.ref_type == 'tag'
         shell: pwsh
         run: |
           msstore reconfigure --tenantId $env:TENANT --sellerId $env:SELLER --clientId $env:CLIENT --clientSecret $env:SECRET
+          if ($LASTEXITCODE -ne 0) { throw 'The Store tooling could not sign in: the Store secret may have expired, or the seller ID may be wrong (request 38).' }
           msstore publish (Resolve-Path msix/grouplab-win-x64.msix) -id $env:PRODUCT
           "### Sent GroupLab ${{ needs.work-out-the-version.outputs.version }} to the Microsoft Store; it appears once certification passes." | Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY

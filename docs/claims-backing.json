@@ -4220,6 +4220,26 @@
   "The one use of Google Play services is the photo picker's backport to Android 10, and a phone without it gets the apps instead.": {
    "kind": "code",
    "where": "the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml and PhotoIntake.Opens (entry 292 section 4.3)"
+  },
+  "- `release.yml` builds it with the identity Partner Center gave, from the repository's variables, and checks the package's Identity Name, Publisher and PublisherDisplayName against them, failing with the field's name on a mismatch (entry 293).": {
+   "kind": "code",
+   "where": ".github/workflows/release.yml msix job, Check the MSIX; scripts/check-msix.ps1; entry 293 section 1"
+  },
+  "A run by hand with `store_draft` builds only that package, runs the Windows App Certification Kit on it, puts it on a draft release named `store-draft- `, which makes no tag and is never a `v*` name, and proves the Store login with one read of the product, submitting nothing.": {
+   "kind": "code",
+   "where": ".github/workflows/release.yml, the store-draft and store jobs and the store_draft input; scripts/check-msix.ps1; entry 293 sections 1 and 2"
+  },
+  "- **The Store secret expires.** The client secret of the Entra application `grouplab-store-publisher` was made on 2026-09-29 and lasts 24 months, so it expires about 2028-09-28.": {
+   "kind": "decided",
+   "where": "entry 293: the client secret was made on 2026-09-29 for 24 months; scripts/store-login-check.ps1 and release.yml store job, Check the Store login"
+  },
+  "Make a new one in Entra by August 2028 and set it with `gh secret set AZURE_AD_APPLICATION_SECRET -R oRAirwolf/grouplab`.": {
+   "kind": "decided",
+   "where": "entry 293: the client secret was made on 2026-09-29 for 24 months; scripts/store-login-check.ps1 and release.yml store job, Check the Store login"
+  },
+  "The first submission is the draft's `0.2.0.0`, so the next stable release sent to the Store has to be `0.2.1` or later.": {
+   "kind": "decided",
+   "where": "scripts/package-msix.ps1 (release 0.2.0 becomes 0.2.0.0) and Directory.Build.props Version 0.2.0; the Store refuses a version not above the last it accepted; entry 293"
   }
  },
  "rules": [

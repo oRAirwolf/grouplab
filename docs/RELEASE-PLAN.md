@@ -27,9 +27,19 @@ Alan wants GroupLab in the Microsoft Store, with new releases pushed to it autom
 - `scripts/package-msix.ps1` makes an MSIX of the same self-contained build as the zip and the installer, stamped as the Store's copy, in
   which GroupLab's own updater is off and Settings says the Store keeps it up to date. The Store signs it on submission, so no certificate is
   needed. CI builds it on every push with a stand-in identity and checks what it holds.
-- `release.yml` builds it with the identity Partner Center gave, from the repository's variables. A run by hand makes a draft release
-  carrying it, which is what the first submission uploads by hand. **After that, every tagged stable release is sent to the Store by
-  itself**, with Microsoft's own Store tooling, as the Entra application Partner Center trusts as a Manager.
+- `release.yml` builds it with the identity Partner Center gave, from the repository's variables, and checks the package's Identity Name,
+  Publisher and PublisherDisplayName against them, failing with the field's name on a mismatch (entry 293). A run by hand with
+  `store_draft` builds only that package, runs the Windows App Certification Kit on it, puts it on a draft release named
+  `store-draft-<version>`, which makes no tag and is never a `v*` name, and proves the Store login with one read of the product, submitting
+  nothing. That draft is what the first submission uploads by hand. **After that, every tagged stable release is sent to the Store by
+  itself**, with Microsoft's own Store tooling, as the Entra application Partner Center trusts as a Manager, and the same login check runs
+  first.
+- **The Store secret expires.** The client secret of the Entra application `grouplab-store-publisher` was made on 2026-09-29 and lasts 24
+  months, so it expires about 2028-09-28. Make a new one in Entra by August 2028 and set it with
+  `gh secret set AZURE_AD_APPLICATION_SECRET -R oRAirwolf/grouplab`. Until then, a release whose Store login fails says "the Store secret may
+  have expired", with Entra's error code, and never the secret.
+- **Versions only go up.** The Store refuses a package whose version is not above the last one it accepted. The first submission is the
+  draft's `0.2.0.0`, so the next stable release sent to the Store has to be `0.2.1` or later.
 - **What goes where:** stable releases go to the Store's public listing when Alan asks for one by name, as today. Nightlies stay on GitHub
   only. If a beta train exists later, its builds can go to a Store package flight for testers; nothing is built for that until it exists.
 - The Store needs Windows 10 version 1809 or later for an MSIX, later than the downloaded version's 1607, and the minimums table says so.
