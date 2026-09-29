@@ -847,64 +847,69 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 35 0 R >>
 endobj
 35 0 obj
-<< /Length 6974 >>
+<< /Length 7691 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (Updates on phones that stop apps in the background. GroupLab Dev looks for an update every time it opens, as) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (well as about every six hours, so an update is late at worst and never missed. Many phones stop that six-hourly) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (check to save battery unless you allow it \(the names differ a little between versions\):) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 751 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 751 Tm (Xiaomi, Redmi and POCO: Settings, Apps, GroupLab Dev, Battery saver, No restrictions, and turn on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 839 Tm (Autostart.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 941 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 941 Tm (OPPO, OnePlus and realme: Settings, Apps, GroupLab Dev, Battery usage, Allow background activity.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1043 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1043 Tm (vivo: Settings, Battery, Background power consumption management, GroupLab Dev, Allow high background) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1131 Tm (power consumption.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1233 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1233 Tm (Honor: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1335 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1335 Tm (Huawei: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1437 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1437 Tm (Samsung: Settings, Apps, GroupLab Dev, Battery, Unrestricted.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1539 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1539 Tm (Motorola: Settings, Apps, GroupLab Dev, App battery usage, Unrestricted.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1641 Tm (The picture check. Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1729 Tm (and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1817 Tm (time. Use it, or take it again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1940 Tm (The result. The same figures as the computer: tap a figure's name for what it means and what your number of) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2028 Tm (shots can tell, and tap a number to switch its units. The picture of the sheet stands upright across the screen,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2116 Tm (with a ring on every hole, and is for looking only. Fix holes opens it under a crosshair fixed in the middle: pinch to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2204 Tm (zoom and drag the picture until the crosshair is on a hole, then Add a hole here, or Move this hole and Put the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2292 Tm (hole here, or Remove this hole, with Undo for each. Done takes the changes back to the result, which measures) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2380 Tm (again; leaving any other way asks whether to keep them. From the result: the bulls you fired at, Shots Needed to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2468 Tm (Zero, Ballistics with the group carried in, sharing the session, and sharing the shots as a CSV file. Import shots) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2556 Tm (from a CSV file, under Sessions, shows the group as it will be read and a card of GroupLab's guesses at what) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2644 Tm (each column is, each line tapped to change, then Import and the result.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2767 Tm (Sessions, Ballistics and Targets. Sessions keeps every result, each named by its load, date and time; tick two or) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2855 Tm (more to compare loads, one figure at a time: each load's name on a line of its own, and its range and value) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2943 Tm (beneath. Extreme spread has no range there, so it says so and points you to mean radius. In All figures, a value) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3031 Tm (too long to sit beside its name goes on the line under it. Ballistics is a tab of its own: the dope, the trajectory and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3119 Tm (the chance of a hit. Targets prints a sheet through Android's print dialog or shares its PDF, and prints the printer) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3207 Tm (check page; Settings, under Printers, checks your printer. On a large screen, such as the Tab S8 Ultra or the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3295 Tm (Fold 7 opened, the result shows the sheet beside the numbers.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3418 Tm (A target GroupLab did not print is marked by hand: when its codes cannot be read, choose Not a GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3506 Tm (sheet: mark it by hand. The picture moves under a crosshair that stays in the middle: set the two ends of a length) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3594 Tm (you know and type it, set the aim point, then Add hole here on each hole, with Undo. A mark under the crosshair) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3682 Tm (can be removed; once the scale is known the crosshair's ring is your bullet's size. Fudd buster mode, under a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3770 Tm (result of twenty shots or more, is the same page as on the computer. Shots, under a result, lists every shot with) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3858 Tm (its offset across and up from the aim point and, with your rifle's click value, the clicks to bring it onto the aim; its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3946 Tm (Counted switch leaves a shot out of every figure, struck through in the list and dashed on the picture, and still on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4034 Tm (the record. Zero from this group says where the group sits, the clicks, whether that is worth dialing at this many) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4122 Tm (shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then includes it at every) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4210 Tm (range. On a target GroupLab did not print, Aim points gives each aim point a chip in its own color, its holes ringed) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4298 Tm (in the same color: tap a chip for that aim point's own figures, or + Aim point to set another; the figures above pool) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4386 Tm (them all. Share a picture, under a result, puts a results box on the picture: drag it anywhere, pinch it or drag its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4474 Tm (corner to resize it, and tap it to choose its lines. Chips turn the mean radius circle \(drawn about the group's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4562 Tm (center\) and a label on and off, and set the box's style and the crop; then Save to gallery, which keeps it in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4650 Tm (Pictures, GroupLab, or Share. Report, under a result, makes the one-page report, to share or print.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (On iPhone and iPad \(being built, and not yet installable\): Choose a photograph opens Photos, iCloud Photos) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (included, with no question about access, and From another app opens Files, which reaches iCloud Drive, Google) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (Drive, OneDrive and Dropbox. iOS lets no app open another app's library, so a Google Photos picture is shared) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (into GroupLab: in Google Photos, Share, then GroupLab. The same works from Photos and any other app, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 804 Tm (Open in GroupLab from Files; the picture opens straight into analysis.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 927 Tm (Updates on phones that stop apps in the background. GroupLab Dev looks for an update every time it opens, as) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1015 Tm (well as about every six hours, so an update is late at worst and never missed. Many phones stop that six-hourly) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1103 Tm (check to save battery unless you allow it \(the names differ a little between versions\):) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1226 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1226 Tm (Xiaomi, Redmi and POCO: Settings, Apps, GroupLab Dev, Battery saver, No restrictions, and turn on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1314 Tm (Autostart.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1416 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1416 Tm (OPPO, OnePlus and realme: Settings, Apps, GroupLab Dev, Battery usage, Allow background activity.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1518 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1518 Tm (vivo: Settings, Battery, Background power consumption management, GroupLab Dev, Allow high background) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1606 Tm (power consumption.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1708 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1708 Tm (Honor: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1810 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1810 Tm (Huawei: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1912 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1912 Tm (Samsung: Settings, Apps, GroupLab Dev, Battery, Unrestricted.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2014 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2014 Tm (Motorola: Settings, Apps, GroupLab Dev, App battery usage, Unrestricted.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2116 Tm (The picture check. Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2204 Tm (and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2292 Tm (time. Use it, or take it again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2415 Tm (The result. The same figures as the computer: tap a figure's name for what it means and what your number of) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2503 Tm (shots can tell, and tap a number to switch its units. The picture of the sheet stands upright across the screen,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2591 Tm (with a ring on every hole, and is for looking only. Fix holes opens it under a crosshair fixed in the middle: pinch to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2679 Tm (zoom and drag the picture until the crosshair is on a hole, then Add a hole here, or Move this hole and Put the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2767 Tm (hole here, or Remove this hole, with Undo for each. Done takes the changes back to the result, which measures) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2855 Tm (again; leaving any other way asks whether to keep them. From the result: the bulls you fired at, Shots Needed to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2943 Tm (Zero, Ballistics with the group carried in, sharing the session, and sharing the shots as a CSV file. Import shots) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3031 Tm (from a CSV file, under Sessions, shows the group as it will be read and a card of GroupLab's guesses at what) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3119 Tm (each column is, each line tapped to change, then Import and the result.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3242 Tm (Sessions, Ballistics and Targets. Sessions keeps every result, each named by its load, date and time; tick two or) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3330 Tm (more to compare loads, one figure at a time: each load's name on a line of its own, and its range and value) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3418 Tm (beneath. Extreme spread has no range there, so it says so and points you to mean radius. In All figures, a value) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3506 Tm (too long to sit beside its name goes on the line under it. Ballistics is a tab of its own: the dope, the trajectory and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3594 Tm (the chance of a hit. Targets prints a sheet through Android's print dialog or shares its PDF, and prints the printer) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3682 Tm (check page; Settings, under Printers, checks your printer. On a large screen, such as the Tab S8 Ultra or the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3770 Tm (Fold 7 opened, the result shows the sheet beside the numbers.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3893 Tm (A target GroupLab did not print is marked by hand: when its codes cannot be read, choose Not a GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3981 Tm (sheet: mark it by hand. The picture moves under a crosshair that stays in the middle: set the two ends of a length) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4069 Tm (you know and type it, set the aim point, then Add hole here on each hole, with Undo. A mark under the crosshair) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4157 Tm (can be removed; once the scale is known the crosshair's ring is your bullet's size. Fudd buster mode, under a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4245 Tm (result of twenty shots or more, is the same page as on the computer. Shots, under a result, lists every shot with) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4333 Tm (its offset across and up from the aim point and, with your rifle's click value, the clicks to bring it onto the aim; its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4421 Tm (Counted switch leaves a shot out of every figure, struck through in the list and dashed on the picture, and still on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4509 Tm (the record. Zero from this group says where the group sits, the clicks, whether that is worth dialing at this many) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4597 Tm (shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then includes it at every) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4685 Tm (range. On a target GroupLab did not print, Aim points gives each aim point a chip in its own color, its holes ringed) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4773 Tm (in the same color: tap a chip for that aim point's own figures, or + Aim point to set another; the figures above pool) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4861 Tm (them all. Share a picture, under a result, puts a results box on the picture: drag it anywhere, pinch it or drag its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4949 Tm (corner to resize it, and tap it to choose its lines. Chips turn the mean radius circle \(drawn about the group's) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5037 Tm (center\) and a label on and off, and set the box's style and the crop; then Save to gallery, which keeps it in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5125 Tm (Pictures, GroupLab, or Share. Report, under a result, makes the one-page report, to share or print.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 16 of 16) Tj ET
 Q
 endstream
@@ -6846,15 +6851,15 @@ xref
 0000068028 00000 n 
 0000071826 00000 n 
 0000071954 00000 n 
-0000078981 00000 n 
-0000364655 00000 n 
-0000562870 00000 n 
-0000830410 00000 n 
-0000935327 00000 n 
-0001077971 00000 n 
-0001270972 00000 n 
+0000079698 00000 n 
+0000365372 00000 n 
+0000563587 00000 n 
+0000831127 00000 n 
+0000936044 00000 n 
+0001078688 00000 n 
+0001271689 00000 n 
 trailer
 << /Size 43 /Root 1 0 R >>
 startxref
-1379977
+1380694
 %%EOF
