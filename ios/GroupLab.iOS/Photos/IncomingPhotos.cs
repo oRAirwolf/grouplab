@@ -22,7 +22,7 @@ internal static class IncomingPhotos
     /// <summary>Listens to the application's activations: an address it was opened with, and every return to the front.</summary>
     internal static void Listen(Avalonia.Application application)
     {
-        if (application.TryGetFeature<IActivatableLifetime>() is not { } lifetime)
+        if (application.TryGetFeature(typeof(IActivatableLifetime)) is not IActivatableLifetime lifetime)
         {
             DiagnosticLog.Info("ios.incoming", ("listening", false));
             return;

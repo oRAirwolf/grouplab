@@ -377,6 +377,11 @@ the same way, and several shared at once are read one after another as a set, on
 downloaded first, with a line saying which app it is coming from and a **Cancel**; the phone has to be online for that. GroupLab always
 reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
 
+**On iPhone and iPad** (being built, and not yet installable): **Choose a photograph** opens Photos, iCloud Photos included, with no
+question about access, and **From another app** opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox. iOS lets no
+app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
+works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis.
+
 **Updates on phones that stop apps in the background.** GroupLab Dev looks for an update every time it opens, as well as about every six
 hours, so an update is late at worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it (the
 names differ a little between versions):

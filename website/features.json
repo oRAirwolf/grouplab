@@ -928,7 +928,7 @@
       "key": "any-photo-app",
       "group": "Photos and the phone",
       "name": "Pictures from any photo app",
-      "sentence": "Choose a photograph from Android's photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker's own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files. Or share one or several into GroupLab from any of them; a cloud photo downloads with its progress shown, and a smaller copy is said to be one.",
+      "sentence": "Choose a photograph from Android's photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker's own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files. Or share one or several into GroupLab from any of them; a cloud photo downloads with its progress shown, and a smaller copy is said to be one. On iPhone and iPad, still being built, Photos and Files open from GroupLab, and a Google Photos picture is shared into GroupLab, because iOS lets no app open another app's library.",
       "shot": null,
       "platforms": [
         "Android"

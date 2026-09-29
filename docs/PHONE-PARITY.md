@@ -28,7 +28,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Check your printer once, for real inches from photos | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept | not yet |
 | Any target you already shoot | `other-targets` | on the phone | entry 279 section 2, Marking A: the scale, the aim points and the holes under a fixed crosshair, and a template kept | not yet |
 | Open by dropping or pasting | `open-anyhow` | on the phone | entry 258: a picture shared into GroupLab or opened with it from another app, and Paste a picture on Capture | not yet |
-| Pictures from any photo app | `any-photo-app` | on the phone | entry 292: Android's photo picker, From another app, and sharing one or several from any app; the phone's own, so the computer's row is Open by dropping or pasting | not yet |
+| Pictures from any photo app | `any-photo-app` | on the phone | entry 292: Android's photo picker, From another app, and sharing one or several from any app; the phone's own, so the computer's row is Open by dropping or pasting. On iPhone and iPad: the Photos picker, Files, and a share extension, since iOS lets no app into Google Photos' library; the simulator proves the pickers open and a shared or opened picture is read, and choosing, iCloud and the share sheet wait for the TestFlight sitting | on a device |
 | The figures you read off a target | `six-figures` | on the phone | | not yet |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page | not yet |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures | not yet |

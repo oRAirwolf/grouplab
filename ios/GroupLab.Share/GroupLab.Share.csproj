@@ -17,6 +17,11 @@
     <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
     <RootNamespace>GroupLab.Share</RootNamespace>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <!--
+      Entitlements would make the build ask for a provisioning profile even for the simulator, which needs none: there it is signed ad hoc
+      with the entitlements in the signature, which is how the simulator grants the app group.
+    -->
+    <CodesignRequireProvisioningProfile Condition="'$(CodesignRequireProvisioningProfile)' == '' and $(RuntimeIdentifier.StartsWith('iossimulator'))">false</CodesignRequireProvisioningProfile>
     <TrimMode>partial</TrimMode>
     <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
     <UseSystemResourceKeys>false</UseSystemResourceKeys>
