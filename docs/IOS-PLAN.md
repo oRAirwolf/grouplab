@@ -62,6 +62,11 @@ for the reason Android's is Android's. The iPad mini has one camera at the back,
 no permission, so the only question iOS asks is the camera's. On the simulator, which has no camera, Take a picture opens the files
 picker instead, and the self-test proves that it does and that a picture which is not a JPEG comes out as one.
 
+**Sharing, printing, pasting and the idle screen (entry 290 section 2 item 6):** the simulator's self-test hands a GroupLab PDF of the
+sample sheet to Share and to Print and checks that iOS's share sheet and print sheet each open and close with GroupLab still there, puts
+the sample scan on the pasteboard and presses Paste a picture on Capture through to a saved session, and `ios/selftest.py` reads the idle
+screen's screenshot and fails unless it is black to every edge, the strips behind the status bar and the home indicator included.
+
 **Pictures from anywhere (entry 292 section 2):** built in `ios/GroupLab.iOS/Photos` and `ios/GroupLab.Share`. **Choose a photograph**
 opens the Photos picker (`PHPickerViewController`, images only), which shows the whole library, photographs kept only in iCloud Photos
 included, and asks for no permission, since GroupLab sees only what is chosen. It asks for the photograph as it was taken (the current
