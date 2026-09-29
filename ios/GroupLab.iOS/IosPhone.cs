@@ -131,11 +131,46 @@ internal sealed class IosPhone : IPhonePlatform
         var colour = Cv2.ImRead(photo, mode | ImreadModes.IgnoreOrientation);
         if (colour.Empty())
         {
+            // OpenCV on iOS reads JPEG and PNG only; an iPhone's own HEIC photograph is decoded by ImageIO instead, at the same fraction.
             colour.Dispose();
-            return null;
+            return ImageIoDecode(photo, Math.Max(width, height) / sample) is { } decoded ? (decoded, width, height, sample) : null;
         }
 
         return (colour, width, height, sample);
+    }
+
+    /// <summary>
+    /// A picture OpenCV cannot read, such as HEIC, decoded by ImageIO no larger than <paramref name="longest"/> pixels along its longer side,
+    /// as BGR. Like the OpenCV decode, it leaves the orientation flag to the marking.
+    /// </summary>
+    private static Mat? ImageIoDecode(string photo, int longest)
+    {
+        using var url = NSUrl.FromFilename(photo);
+        using var source = CGImageSource.FromUrl(url);
+        if (source is null || source.ImageCount < 1)
+        {
+            return null;
+        }
+
+        var options = new CGImageThumbnailOptions { CreateThumbnailFromImageAlways = true, CreateThumbnailWithTransform = false, MaxPixelSize = longest, ShouldCache = false };
+        using var image = source.CreateThumbnail(0, options);
+        if (image is null)
+        {
+            return null;
+        }
+
+        int w = (int)image.Width, h = (int)image.Height;
+        using var rgba = new Mat(h, w, MatType.CV_8UC4, Scalar.All(255));
+        using (var space = CoreGraphics.CGColorSpace.CreateDeviceRGB())
+        using (var context = new CoreGraphics.CGBitmapContext(rgba.Data, w, h, 8, (nint)rgba.Step(), space, CoreGraphics.CGImageAlphaInfo.PremultipliedLast))
+        {
+            context.DrawImage(new CoreGraphics.CGRect(0, 0, w, h), image);
+        }
+
+        var colour = new Mat();
+        Cv2.CvtColor(rgba, colour, ColorConversionCodes.RGBA2BGR);
+        DiagnosticLog.Info("ios.decode", ("by", "imageio"), ("working", $"{w}x{h}"));
+        return colour;
     }
 
     /// <summary>The picture's width and height from its header, through ImageIO; zero where it is not an image.</summary>
@@ -260,13 +295,13 @@ internal sealed class IosPhone : IPhonePlatform
     }
 
     /// <summary>
-    /// Entry 258 on iOS: a picture copied in another application, from the pasteboard as the bytes it was copied as where it says what they
-    /// are, and as a JPEG made from the image where it does not. iOS asks the person the first time an application pastes.
+    /// Entry 258 on iOS: a picture copied in another application, from the pasteboard as the bytes it was copied as where they are JPEG or PNG,
+    /// and as a JPEG made from the image otherwise, since OpenCV on iOS reads no HEIC. iOS asks the person the first time an application pastes.
     /// </summary>
     public Task<string?> PastePicture(string folder)
     {
         var board = UIPasteboard.General;
-        foreach (var (type, extension) in (ReadOnlySpan<(string, string)>)[("public.jpeg", ".jpg"), ("public.png", ".png"), ("public.heic", ".heic")])
+        foreach (var (type, extension) in (ReadOnlySpan<(string, string)>)[("public.jpeg", ".jpg"), ("public.png", ".png")])
         {
             if (board.DataForPasteboardType(type) is { Length: > 0 } data)
             {
