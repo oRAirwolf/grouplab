@@ -616,7 +616,7 @@
   "settings": {
    "name": "Settings",
    "blurb": "Units, theme, which builds it offers you, and the log. Every choice here is remembered.",
-   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record. Printers lists every printer you have checked, with how large it prints across and down and when it was measured; the one chosen corrects photographs of its sheets to real inches, and Check again, Add a printer and a switch to turn the correction off are beside it. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
+   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record. Printers lists every printer you have checked, with how large it prints across and down and when it was measured; the one chosen corrects photographs of its sheets to real inches, and Check again, Printer calibrated or serviced, Add a printer and a switch to turn the correction off are beside it. A check that may no longer hold, because the printer was calibrated or serviced since or the check is about six months old, says so under its printer. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [

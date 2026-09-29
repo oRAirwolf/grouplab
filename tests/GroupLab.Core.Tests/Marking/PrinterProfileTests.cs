@@ -50,7 +50,7 @@ public class PrinterProfileTests
         var sheet = Assert.IsType<SheetReference>(result.Scale);
         Assert.Equal(Printed, sheet.PrintScale);
         Assert.True(sheet.RealInches);
-        Assert.Equal("Corrected for My printer, 96.2%", sheet.ScaleFrom);
+        Assert.Equal("Corrected for My printer, 96.2%, checked 28 September", sheet.ScaleFrom);
         Assert.Equal(sheet.ScaleFrom, DetectionAdvice.PrintScale(result.Measurement, sheet.ScaleFrom));
         Assert.InRange(Between(result, 0, 4), (Drawn(result, 0, 4) * Printed) - 0.002, (Drawn(result, 0, 4) * Printed) + 0.002);
     }
@@ -94,7 +94,7 @@ public class PrinterProfileTests
         var ruler = PrinterProfile.FromRuler("My printer", read, span.DrawnInches, Today);
         Assert.NotNull(ruler);
         Assert.True(scan.AgreesWith(ruler), $"scan {scan.Scale:0.0000} ± {scan.Uncertainty:0.0000}, ruler {ruler.Scale:0.0000} ± {ruler.Uncertainty:0.0000}");
-        Assert.Equal(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"Corrected for My printer, {ruler.Scale * 100:0.0}%"), ruler.Line);
+        Assert.Equal(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"Corrected for My printer, {ruler.Scale * 100:0.0}%, checked 28 September"), ruler.Line);
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ public class PrinterProfileTests
         var at = sheet.ToTarget(new PointD(2540, 2540));
         Assert.Equal(9.92, at.X, 9);
         Assert.Equal(9.94, at.Y, 9);
-        Assert.Equal("Corrected for My printer, 99.2 by 99.4%", sheet.ScaleFrom);
+        Assert.Equal("Corrected for My printer, 99.2 by 99.4%, checked 28 September", sheet.ScaleFrom);
         Assert.Equal("My printer prints at 99.2% across and 99.4% down (plus or minus 0.3%)", printer.Result);
         Assert.Equal("My printer prints a little small", printer.Headline);
     }
@@ -178,6 +178,58 @@ public class PrinterProfileTests
         damaged["across"] = 2.5;
         Assert.Null(PrinterProfile.FromJson(damaged));
         Assert.Null(PrinterProfile.FromJson(null));
+        var changed = profile.Changed(Today.AddDays(3));
+        Assert.Equal(changed, PrinterProfile.FromJson(changed.ToJson()));
+        Assert.Null(profile.ToJson()["changedOn"]);
+    }
+
+    /// <summary>
+    /// Entry 291 section 5.2: a check measures the sheets printed before it. Once the person says the printer was calibrated or serviced, or
+    /// the check is more than about six months old, the result says so and offers another check; a fresh check is trusted.
+    /// </summary>
+    [Fact]
+    public void ACheckIsTiedToThePrintsItMeasured()
+    {
+        var profile = new PrinterProfile("My printer", 1.0048, 1.0038, PrinterMethod.Card, new DateOnly(2026, 9, 29), PrinterProfile.CardUncertainty);
+        Assert.Null(profile.Stale(new DateOnly(2026, 9, 29)));
+        Assert.Null(profile.Stale(new DateOnly(2027, 3, 1)));
+        Assert.Equal("Corrected for My printer, 100.5 by 100.4%, checked 29 September", profile.Line);
+
+        var calibrated = profile.Changed(new DateOnly(2026, 9, 29));
+        Assert.Equal(
+            "My printer was calibrated or serviced on 29 September, after its check on 29 September. Sheets printed before then are still corrected rightly; for sheets printed since, check it again on a sheet printed now.",
+            calibrated.Stale(new DateOnly(2026, 9, 30)));
+
+        // The correction itself does not change: sheets printed before the calibration still print at the size it measured.
+        Assert.Equal(profile.Scale, calibrated.Scale);
+
+        Assert.Equal(
+            "My printer was last checked on 29 September, more than six months ago. A printer can drift; check it again on a sheet printed now.",
+            profile.Stale(new DateOnly(2027, 4, 1)));
+
+        // A check made after the change is fresh again.
+        var again = calibrated with { MeasuredOn = new DateOnly(2026, 10, 2), ChangedOn = null };
+        Assert.Null(again.Stale(new DateOnly(2026, 10, 2)));
+    }
+
+    /// <summary>Entry 291 section 5.2: both Settings screens say a check may be stale, offer to mark the printer changed, and so do both results.</summary>
+    [Fact]
+    public void BothSettingsScreensAndBothResultsOfferANewCheck()
+    {
+        foreach (var file in new[] { Path.Combine("src", "GroupLab.App", "MainWindow.Printer.cs"), Path.Combine("mobile", "GroupLab.Mobile", "SettingsView.cs") })
+        {
+            string text = File.ReadAllText(Path.Combine(Repo.Root, file));
+            Assert.Contains("PrinterProfile.ChangedWords", text, StringComparison.Ordinal);
+            Assert.Contains("MarkPrinterChanged", text, StringComparison.Ordinal);
+            Assert.Contains(".Stale(", text, StringComparison.Ordinal);
+        }
+
+        foreach (var file in new[] { Path.Combine("src", "GroupLab.App", "MainWindow.Printer.cs"), Path.Combine("mobile", "GroupLab.Mobile", "PrinterCard.cs") })
+        {
+            string text = File.ReadAllText(Path.Combine(Repo.Root, file));
+            Assert.Contains("from == printer.Line && printer.Stale(Today())", text, StringComparison.Ordinal);
+            Assert.Contains("\"Check your printer\"", text, StringComparison.Ordinal);
+        }
     }
 
     /// <summary>A saved session says which printer's scale corrected it.</summary>

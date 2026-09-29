@@ -151,7 +151,8 @@ internal sealed class FiguresView : UserControl
     /// <summary>
     /// Entry 259 screen 7, approved: on a result from a scan, a teal pill saying how the sheet was printed and that every size is corrected,
     /// which opens a card with the plain sentence, the markers' distance as drawn and as printed, the correction in amber, and why a
-    /// photograph cannot do this. Null on a photograph or where the scan's scale was not believed (<see cref="SheetReference.PrintScale"/>).
+    /// photograph cannot do this. On a photograph corrected by a printer check (entry 271), the card names the check instead (entry 291
+    /// section 5.2). Null where nothing measured the scale (<see cref="SheetReference.PrintScale"/>).
     /// </summary>
     private Control? Printed()
     {
@@ -184,8 +185,11 @@ internal sealed class FiguresView : UserControl
         if (scaleOpen)
         {
             var card = new StackPanel { Spacing = 6 };
-            card.Children.Add(Screens.Line(string.Create(CultureInfo.CurrentCulture,
-                $"This sheet was printed at {k * 100:0.0} percent of its intended size. The scan measured that, so every size here is corrected to real inches.")));
+            // Entry 291 section 5.2: on a photograph the figure is the printer check's, not this picture's, and the card says which check.
+            string? from = (state.Scale as SheetReference)?.ScaleFrom;
+            card.Children.Add(Screens.Line(from is null
+                ? string.Create(CultureInfo.CurrentCulture, $"This sheet was printed at {k * 100:0.0} percent of its intended size. The scan measured that, so every size here is corrected to real inches.")
+                : string.Create(CultureInfo.CurrentCulture, $"{from}. That check measured this printer's sheets at {k * 100:0.0} percent of their intended size, so every size here is corrected by it.")));
             if (Definition?.Fiducials?.Markers is { Count: >= 2 } markers)
             {
                 var (a, b) = markers.SelectMany(m => markers.Select(n => (m, n))).MaxBy(p => ((p.m.X - p.n.X) * (p.m.X - p.n.X)) + ((p.m.Y - p.n.Y) * (p.m.Y - p.n.Y)));
@@ -200,7 +204,9 @@ internal sealed class FiguresView : UserControl
                 FontWeight = FontWeight.SemiBold,
                 Foreground = new SolidColorBrush(Color.FromRgb(232, 150, 46)),
             });
-            card.Children.Add(Screens.Dim("A phone photograph cannot measure this, because it has no absolute ruler: its figures stay in the sheet's own inches. A scan states its resolution, which is one."));
+            card.Children.Add(Screens.Dim(from is null
+                ? "A phone photograph cannot measure this, because it has no absolute ruler: its figures stay in the sheet's own inches. A scan states its resolution, which is one."
+                : "A photograph has no absolute ruler, so this figure comes from the printer check, not from this picture. It holds for sheets printed before the printer was calibrated, serviced or set differently; after that, check the printer again."));
             holder.Children.Add(Screens.Card(card));
         }
 

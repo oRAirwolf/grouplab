@@ -3017,6 +3017,14 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, CardCheck.cs, PaperEdgeCheck.cs (Disagrees 0.015, LooksFitToPage), PrinterCheck.cs; MainWindow.PrinterWizard.cs; entry 273"
   },
+  "Photographs of that printer's sheets are then corrected, and each result says so in one line, such as \"Corrected for My printer, 99.2 by 99.4%, checked 28 September\".": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs (Line, Stale, StaleAfterDays 182, ChangedWords); AppSettings.cs MarkPrinterChanged; entries 273 and 291"
+  },
+  "Stable is not permanent: a calibration, a service or a changed setting can move it, and no photograph can say when its sheet was printed, so a check holds for the sheets printed before such a change and GroupLab offers a new one once the person says the printer changed, or after about six months (entry 291).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs (Stale, StaleAfterDays 182); AppSettings.cs MarkPrinterChanged; entry 291 section 5.2"
+  },
   "Photographs of that printer's sheets are then corrected, and each result says so in one line, such as \"Corrected for My printer, 99.2 by 99.4%\".": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, CardCheck.cs, PaperEdgeCheck.cs (Disagrees 0.015, LooksFitToPage), PrinterCheck.cs; MainWindow.PrinterWizard.cs; entry 273"

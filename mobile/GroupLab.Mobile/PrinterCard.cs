@@ -45,6 +45,12 @@ internal static class PrinterCard
             card.Children.Add(name);
             card.Children.Add(use);
         }
+        else if (sheet.ScaleFrom is { } from && Phone.Settings.PrinterForPhotos() is { } printer && from == printer.Line && printer.Stale(Today()) is { } stale)
+        {
+            // Entry 291 section 5.2: corrected by a check the printer may have outgrown, which the result says, with the check beside it.
+            card.Children.Add(Screens.Line(stale));
+            card.Children.Add(Screens.Choice("Check your printer", () => Shell.Current?.ShowPrinterCheck(printer.Name)));
+        }
         else if (!sheet.RealInches && RulerSpan.Of(definition) is { } span)
         {
             // Entry 273 section 5: "Measured in the sheet's own inches", with the way to real inches beside it.

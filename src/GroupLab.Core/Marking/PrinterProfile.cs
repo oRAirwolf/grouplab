@@ -40,6 +40,23 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     public const string DefaultName = "My printer";
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 5.2: how long a check is trusted before GroupLab offers another, about six months. Nothing
+    /// measured sets it: a printer's scale is stable from week to week, but a new cartridge, a firmware update or a service can move it, and a
+    /// check a person is reminded of twice a year costs them a minute.
+    /// </summary>
+    public const int StaleAfterDays = 182;
+
+    /// <summary>
+    /// Entry 291 section 5.2: the day the person said this printer was calibrated, serviced or set differently after it was checked, or null
+    /// where they have not. A check measures the sheets printed before it; one printed after such a change may print at another size, and no
+    /// photograph can tell when its sheet was printed, so the correction stays and the result says so, with the check beside it.
+    /// </summary>
+    public DateOnly? ChangedOn { get; init; }
+
+    /// <summary>The button under a printer in Settings that says it was changed, entry 291 section 5.2.</summary>
+    public const string ChangedWords = "Printer calibrated or serviced";
+
+    /// <summary>
     /// A scan's uncertainty: a flatbed's stated resolution is good to about a tenth of a percent overall, but its own two axes can differ
     /// by about two tenths, which is the size of what a scan says about across against down.
     /// </summary>
@@ -113,15 +130,39 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     };
 
     /// <summary>How it was measured and when: "with a card on 28 September".</summary>
-    public string How => string.Create(CultureInfo.InvariantCulture, $"{MethodWords} on {MeasuredOn.ToString("d MMMM", CultureInfo.InvariantCulture)}");
+    public string How => $"{MethodWords} on {Day(MeasuredOn)}";
 
     /// <summary>The two percentages, "99.2 by 99.4%", or one where they round the same.</summary>
     public string Percentages => Math.Round(Across * 1000) == Math.Round(Down * 1000)
         ? string.Create(CultureInfo.InvariantCulture, $"{Across * 100:0.0}%")
         : string.Create(CultureInfo.InvariantCulture, $"{Across * 100:0.0} by {Down * 100:0.0}%");
 
-    /// <summary>The one line a photograph's result carries once this profile has corrected it, entry 273 section 5, word for word.</summary>
-    public string Line => $"Corrected for {Name}, {Percentages}";
+    /// <summary>
+    /// The one line a photograph's result carries once this profile has corrected it, entry 273 section 5, with the day of the check (entry 291
+    /// section 5.2) so a result says which correction it used: "Corrected for My printer, 99.2 by 99.4%, checked 28 September".
+    /// </summary>
+    public string Line => $"Corrected for {Name}, {Percentages}, checked {Day(MeasuredOn)}";
+
+    /// <summary>This profile, with the day the person said the printer was calibrated, serviced or set differently.</summary>
+    public PrinterProfile Changed(DateOnly on) => this with { ChangedOn = on };
+
+    /// <summary>
+    /// Why this check may no longer hold for sheets printed now, entry 291 section 5.2, or null where it still does: the printer was calibrated,
+    /// serviced or set differently since, or the check is more than <see cref="StaleAfterDays"/> days old.
+    /// </summary>
+    public string? Stale(DateOnly today)
+    {
+        if (ChangedOn is { } changed && changed >= MeasuredOn)
+        {
+            return $"{Name} was calibrated or serviced on {Day(changed)}, after its check on {Day(MeasuredOn)}. Sheets printed before then are still corrected rightly; for sheets printed since, check it again on a sheet printed now.";
+        }
+
+        return today.DayNumber - MeasuredOn.DayNumber > StaleAfterDays
+            ? $"{Name} was last checked on {Day(MeasuredOn)}, more than six months ago. A printer can drift; check it again on a sheet printed now."
+            : null;
+    }
+
+    private static string Day(DateOnly day) => day.ToString("d MMMM", CultureInfo.InvariantCulture);
 
     /// <summary>The wizard's result, entry 272: "My printer prints at 99.2% across and 99.4% down (plus or minus 0.3%)".</summary>
     public string Result => string.Create(CultureInfo.InvariantCulture,
@@ -136,15 +177,24 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     public static string Offer(double scale) => string.Create(CultureInfo.InvariantCulture,
         $"Your printer printed this sheet at {scale * 100:0.0} percent. Use this for photos of sheets from the same printer?");
 
-    public JsonObject ToJson() => new()
+    public JsonObject ToJson()
     {
-        ["name"] = Name,
-        ["across"] = Across,
-        ["down"] = Down,
-        ["method"] = Method.ToString().ToLowerInvariant(),
-        ["measuredOn"] = MeasuredOn.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-        ["uncertainty"] = Uncertainty,
-    };
+        var json = new JsonObject
+        {
+            ["name"] = Name,
+            ["across"] = Across,
+            ["down"] = Down,
+            ["method"] = Method.ToString().ToLowerInvariant(),
+            ["measuredOn"] = MeasuredOn.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            ["uncertainty"] = Uncertainty,
+        };
+        if (ChangedOn is { } changed)
+        {
+            json["changedOn"] = changed.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        }
+
+        return json;
+    }
 
     /// <summary>A profile read back, or null where anything in it is missing or beyond belief. Entry 271's one "scale" reads as both.</summary>
     public static PrinterProfile? FromJson(JsonNode? node)
@@ -160,7 +210,9 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
                 return null;
             }
 
-            return new PrinterProfile(Named(name), across, down, method, on, uncertainty);
+            // Entry 291 section 5.2: a profile saved before a printer could be marked changed reads as never changed.
+            DateOnly? changed = DateOnly.TryParseExact((string?)o["changedOn"], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var c) ? c : null;
+            return new PrinterProfile(Named(name), across, down, method, on, uncertainty) { ChangedOn = changed };
         }
         catch (Exception ex) when (ex is InvalidOperationException or FormatException)
         {

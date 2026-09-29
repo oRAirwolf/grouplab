@@ -46,6 +46,15 @@ public sealed partial class MainWindow
             return;
         }
 
+        // Entry 291 section 5.2: corrected by a check the printer may have outgrown, which the result says, with the check beside it.
+        if (result.Scale is SheetReference { ScaleFrom: { } from } && settingsStore.PrinterForPhotos() is { } printer && from == printer.Line && printer.Stale(Today()) is { } stale)
+        {
+            printerPanel.Children.Add(Line(stale));
+            printerPanel.Children.Add(Row(Button("Check your printer", () => OpenPrinterCheck(printer.Name))));
+            printerPanel.IsVisible = true;
+            return;
+        }
+
         if (RulerSpan.Of(definition) is { } span)
         {
             // Entry 273 section 5: in the sheet's own inches, with the way to real inches beside it.
@@ -151,8 +160,19 @@ public sealed partial class MainWindow
                 }
             };
             printerList.Children.Add(use);
+            // Entry 291 section 5.2: a check holds for the sheets printed before the printer changed, and says so once it may not.
+            if (p.Stale(Today()) is { } stale)
+            {
+                printerList.Children.Add(Line(stale));
+            }
+
             printerList.Children.Add(Row(
                 Button("Check again", () => OpenPrinterCheck(p.Name)),
+                Button(PrinterProfile.ChangedWords, () =>
+                {
+                    settingsStore.MarkPrinterChanged(p.Name, Today());
+                    ShowPrinters();
+                }),
                 Button("Delete", () =>
                 {
                     settingsStore.DeletePrinter(p.Name);

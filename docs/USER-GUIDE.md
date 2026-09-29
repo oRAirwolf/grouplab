@@ -80,8 +80,11 @@ The easiest way is the printer check, offered the first time GroupLab opens and 
 **Printers**. Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its
 outline and take one photo (about 0.3 percent), measure between its crosshairs with a digital caliper (about 0.1 percent), measure its
 two long lines with a ruler or tape, or scan it. GroupLab shows how large the printer prints across and down and saves it. Photographs of
-that printer's sheets are then corrected, and each result says so in one line, such as "Corrected for My printer, 99.2 by 99.4%". The
-paper's own edge is checked on every photo too: GroupLab says when it disagrees with the printer's figures by more than about 1.5 percent,
+that printer's sheets are then corrected, and each result says so in one line, such as "Corrected for My printer, 99.2 by 99.4%, checked
+28 September". A check measures the sheets printed before it. If you calibrate or service the printer, or change its settings, press
+**Printer calibrated or serviced** under that printer in Settings: sheets printed before stay corrected by the old check, and every result
+it corrects says so and offers **Check your printer** again, which is worth doing on a sheet printed now. GroupLab offers the same after
+about six months. The paper's own edge is checked on every photo too: GroupLab says when it disagrees with the printer's figures by more than about 1.5 percent,
 or when a sheet looks printed with Fit to page. On any one photograph, **Measure this sheet with a ruler** corrects just that sheet.
 
 ## 4. Mark it and settle the review queue

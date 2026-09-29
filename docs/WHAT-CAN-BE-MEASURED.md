@@ -81,7 +81,9 @@ the difference between two good loads.
 1. **It matters for photographs, because a photograph cannot measure the print scale; a scan can and corrects for it.** On a photograph a sheet printed small makes every group
    read large by the same fraction, and nothing on the photograph can tell you how much. Print scale belongs to the printer,
    though, and it is stable (NOTES-FROM-PLANNING.md entry 271). For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it. The photograph's result
-   then says whose scale corrected it and how that scale was measured.
+   then says whose scale corrected it and on which day it was checked. Stable is not permanent: a calibration, a service or a changed
+   setting can move it, and no photograph can say when its sheet was printed, so a check holds for the sheets printed before such a
+   change and GroupLab offers a new one once the person says the printer changed, or after about six months (entry 291).
 2. **A shrunk sheet is a different sheet.** The bulls are closer together and smaller than the sheet was
    designed for, which is a fact about the shooting rather than the measurement.
 3. **Scaling that is not uniform is not recoverable even in principle.** The registration fits a planar

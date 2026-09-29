@@ -261,6 +261,17 @@ public sealed class AppSettingsStore(string path)
         }
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 5.2: the person says a printer was calibrated, serviced or set differently on
+    /// <paramref name="on"/>. Its check is kept, because the sheets printed before still print at the size it measured, and marked, so every
+    /// result it corrects says so and offers another check.
+    /// </summary>
+    public bool MarkPrinterChanged(string name, DateOnly on) => Save(file =>
+    {
+        var all = file["printers"] is JsonArray saved ? saved.Select(PrinterProfile.FromJson).OfType<PrinterProfile>().ToList() : [];
+        file["printers"] = new JsonArray([.. all.Select(p => (JsonNode)(p.Name == name ? p.Changed(on) : p).ToJson())]);
+    });
+
     /// <summary>Chooses a saved profile by name, or none, which leaves photographs in the sheet's own inches.</summary>
     public bool ChoosePrinter(string? name) => Save(file => file["printer"] = name);
 

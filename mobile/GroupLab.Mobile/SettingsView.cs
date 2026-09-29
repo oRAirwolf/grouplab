@@ -46,7 +46,18 @@ public sealed class SettingsView : UserControl
                 }
             };
             column.Children.Add(use);
+            // Entry 291 section 5.2: a check holds for the sheets printed before the printer changed, and says so once it may not.
+            if (p.Stale(DateOnly.FromDateTime(DateTime.Now)) is { } stale)
+            {
+                column.Children.Add(Screens.Line(stale));
+            }
+
             column.Children.Add(Screens.Choice("Check again", () => Shell.Current?.ShowPrinterCheck(p.Name)));
+            column.Children.Add(Screens.Choice(GroupLab.Core.Marking.PrinterProfile.ChangedWords, () =>
+            {
+                settings.MarkPrinterChanged(p.Name, DateOnly.FromDateTime(DateTime.Now));
+                Shell.Current?.Show(Shell.Place.Settings);
+            }));
             column.Children.Add(Screens.Choice("Delete " + p.Name, () =>
             {
                 settings.DeletePrinter(p.Name);
