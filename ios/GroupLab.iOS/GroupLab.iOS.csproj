@@ -19,8 +19,7 @@
     <RootNamespace>GroupLab.iOS</RootNamespace>
     <!-- The icon, from the desktop's mark by scripts/ios-icons.py. -->
     <AppIcon>AppIcon</AppIcon>
-    <!-- Unsigned until the signing secrets exist (request 55); the simulator never needs signing. -->
-    <EnableCodeSigning Condition="'$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
+    <!-- The simulator's build is signed ad hoc, which needs no certificate; a device build is unsigned until the secrets exist (request 55). -->
     <!--
       The trimmer. GroupLab's settings, records, error reports and markings are written with System.Text.Json's reflection, and its build
       stamp is read from assembly metadata, as on the desktop and Android. So only the SDK is trimmed (partial), JSON's reflection stays on,
@@ -76,8 +75,8 @@
       <ForceLoad>true</ForceLoad>
       <IsCxx>true</IsCxx>
       <SmartLink>false</SmartLink>
-      <Frameworks>$(GroupLabOpenCvFrameworks)</Frameworks>
-      <LinkerFlags>$(GroupLabOpenCvLinkerFlags)</LinkerFlags>
+      <Frameworks>$(GroupLabOpenCvFrameworks.Trim())</Frameworks>
+      <LinkerFlags>$(GroupLabOpenCvLinkerFlags.Trim())</LinkerFlags>
     </NativeReference>
   </ItemGroup>
 

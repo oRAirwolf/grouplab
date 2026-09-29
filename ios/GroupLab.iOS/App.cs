@@ -31,5 +31,9 @@ public sealed class App : Avalonia.Application
         {
             SelfTest.Start();
         }
+        else if (SelfTest.IdleAsked())
+        {
+            SelfTest.StartIdle();
+        }
     }
 }
