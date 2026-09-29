@@ -28,9 +28,12 @@ namespace GroupLab.Android;
         | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
 
 // Entry 258: a picture shared into GroupLab from another application, or opened with it, is read as a chosen photograph: the phone's
-// version of dropping a file on the desktop's window.
+// version of dropping a file on the desktop's window. Entry 292 section 1.3: from any app, several at once as a set, and from an app's
+// Edit with list too, so GroupLab appears wherever a photo editor does; it reads the picture and never writes it back.
 [IntentFilter([Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
+[IntentFilter([Intent.ActionSendMultiple], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
 [IntentFilter([Intent.ActionView], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
+[IntentFilter([Intent.ActionEdit], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
 public class MainActivity : AvaloniaMainActivity
 {
     /// <summary>The name under the icon, entry 234: the development build says it is one there too.</summary>
@@ -92,41 +95,80 @@ public class MainActivity : AvaloniaMainActivity
     }
 
     /// <summary>
-    /// Entry 258: a picture sent or opened from another application. Android hands a content address, not a path, so the picture is copied
-    /// into the cache and read as a chosen photograph once the Capture screen is there. Nothing about where it came from is kept.
+    /// Entry 258: a picture sent or opened from another application. Android hands a content address, not a path. Entry 292 sections 1.3 and
+    /// 1.4: several at once are a set, and each is fetched by the Capture screen with a progress line once it is there, never on this thread,
+    /// so a picture kept only in the cloud cannot stop the application while it downloads. Nothing about where it came from is kept.
     /// </summary>
     private void Shared(Intent? intent)
     {
-        if (intent?.Action is not (Intent.ActionSend or Intent.ActionView) || intent.Type?.StartsWith("image/", StringComparison.Ordinal) != true)
+        if (intent is null || !PhotoIntake.IsIncoming(intent.Action, intent.Type))
         {
             return;
         }
 
-        var uri = intent.Action == Intent.ActionSend
-            ? (OperatingSystem.IsAndroidVersionAtLeast(33) ? intent.GetParcelableExtra(Intent.ExtraStream, Java.Lang.Class.FromType(typeof(global::Android.Net.Uri))) as global::Android.Net.Uri : null)
-                ?? GetStream(intent)
-            : intent.Data;
-        if (uri is null || ContentResolver?.OpenInputStream(uri) is not { } from)
+        var uris = PhotoPickers.Shared(intent);
+        if (uris.Count == 0)
         {
             return;
         }
 
-        string copy = Path.Combine(CacheDir!.AbsolutePath, "shared" + (intent.Type == "image/png" ? ".png" : ".jpg"));
-        using (from)
-        using (var to = File.Create(copy))
+        GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.shared", ("action", intent.Action switch
         {
-            from.CopyTo(to);
-        }
-
-        GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.shared", ("action", intent.Action == Intent.ActionSend ? "send" : "view"));
-        Avalonia.Threading.DispatcherTimer.RunOnce(() => CapturePage.SharedPicture?.Invoke(copy), TimeSpan.FromSeconds(1));
+            Intent.ActionSend => "send",
+            Intent.ActionSendMultiple => "send several",
+            Intent.ActionEdit => "edit",
+            _ => "view",
+        }), ("pictures", uris.Count));
+        Task.Run(() => PhotoPickers.Handles(this, uris)).ContinueWith(
+            handed =>
+            {
+                if (handed.IsCompletedSuccessfully)
+                {
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                        Avalonia.Threading.DispatcherTimer.RunOnce(() => CapturePage.SharedPicture?.Invoke(handed.Result), TimeSpan.FromSeconds(1)));
+                }
+            },
+            TaskScheduler.Default);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1422", Justification = "The typed call is used from Android 13; this is the older form for Android 10 to 12.")]
-    private static global::Android.Net.Uri? GetStream(Intent intent) =>
-#pragma warning disable CA1422
-        intent.GetParcelableExtra(Intent.ExtraStream) as global::Android.Net.Uri;
-#pragma warning restore CA1422
+    /// <summary>The pickers waiting for their answer, by request (entry 292).</summary>
+    private readonly Dictionary<int, TaskCompletionSource<Intent?>> waiting = [];
+
+    /// <summary>Starts a picker and hears what it chose: its answer, or null where the person came back without choosing.</summary>
+    internal Task<Intent?> ForResult(Intent intent, int request)
+    {
+        var done = new TaskCompletionSource<Intent?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (waiting.Remove(request, out var earlier))
+        {
+            earlier.TrySetResult(null);
+        }
+
+        waiting[request] = done;
+        try
+        {
+#pragma warning disable CS0618, CA1422 // The activity result API wants a launcher registered at creation; one call from the screens is this.
+            StartActivityForResult(intent, request);
+#pragma warning restore CS0618, CA1422
+        }
+        catch
+        {
+            waiting.Remove(request);
+            throw;
+        }
+
+        return done.Task;
+    }
+
+#pragma warning disable CS0618, CA1422 // Avalonia's own storage provider hears its answers here too, through the base.
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
+#pragma warning restore CS0618, CA1422
+    {
+        base.OnActivityResult(requestCode, resultCode, data);
+        if (waiting.Remove(requestCode, out var done))
+        {
+            done.TrySetResult(resultCode == Result.Ok ? data : null);
+        }
+    }
 
 #if !GROUPLAB_DEV
     protected override void OnNewIntent(Intent? intent)

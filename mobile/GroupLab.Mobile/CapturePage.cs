@@ -1,6 +1,5 @@
 using System.Globalization;
 using Avalonia.Controls;
-using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
@@ -29,11 +28,12 @@ public sealed class CapturePage : UserControl
 
     public CapturePage()
     {
-        // Entry 258: a picture shared into GroupLab from another application is read as a chosen one.
-        SharedPicture = file =>
+        // Entry 258: a picture shared into GroupLab from another application is read as a chosen one; entry 292 section 1.3, several at
+        // once are a set, one per sheet.
+        SharedPicture = photos =>
         {
             Shell.Current?.Show(Shell.Place.Capture);
-            _ = Opened(file);
+            _ = Opened(photos);
         };
 #if GROUPLAB_DEV
         TestPicture = file => _ = Picked(file);
@@ -61,6 +61,9 @@ public sealed class CapturePage : UserControl
                 Screens.Card(Screens.Dim("The caliber and the distance"), calibre, distance),
                 Screens.Primary("Take a picture", Camera),
                 Screens.Choice("Choose a photograph", () => _ = Choose()),
+
+                // Entry 292 section 1.2: every app that offers pictures, by name, as a photo editor reaches them.
+                Screens.Choice("From another app", () => _ = Choose(PhotoSource.OtherApp)),
                 Screens.Choice("Paste a picture", () => _ = Paste()),
                 status,
 
@@ -206,18 +209,21 @@ public sealed class CapturePage : UserControl
     }
 #endif
 
-    /// <summary>Entry 258: set by the Capture page, for a picture shared into GroupLab from another application.</summary>
-    internal static Action<string>? SharedPicture { get; private set; }
+    /// <summary>Entry 258: set by the Capture page, for pictures shared into GroupLab from another application or opened with it.</summary>
+    internal static Action<IReadOnlyList<PhotoHandle>>? SharedPicture { get; private set; }
 
-    /// <summary>A picture that arrived from another application, read as a chosen photograph with the caliber and distance as typed.</summary>
-    private async Task Opened(string file)
+    /// <summary>
+    /// Pictures that arrived from another application, fetched with a progress line (entry 292 section 1.4) and read as chosen photographs
+    /// with the caliber and distance as typed.
+    /// </summary>
+    private async Task Opened(IReadOnlyList<PhotoHandle> photos)
     {
-        if (Setup() is not { } setup || !File.Exists(file))
+        if (Setup() is not { } setup)
         {
             return;
         }
 
-        await Analyze(file, setup);
+        await AnalyzeAll(await PhotoPages.Read(this, photos, "shared", words => status.Text = words), setup);
     }
 
     /// <summary>
@@ -241,33 +247,81 @@ public sealed class CapturePage : UserControl
         await Analyze(copy, setup);
     }
 
-    private async Task Choose()
-    {
-        if (Setup() is not { } setup || TopLevel.GetTopLevel(this)?.StorageProvider is not { } storage)
-        {
-            return;
-        }
+    /// <summary>Entry 292 section 1.1: Choose a photograph opens the system photo picker, or the apps that offer pictures where there is none.</summary>
+    private Task Choose() => Choose(PhotoSource.Photos);
 
-        var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            Title = "Choose a photograph of a target",
-            AllowMultiple = false,
-            FileTypeFilter = [FilePickerFileTypes.ImageAll],
-        });
-        if (files.Count == 0)
+    private async Task Choose(PhotoSource source)
+    {
+        if (Setup() is not { } setup)
         {
             return;
         }
 
         // The picker hands a content address, not a path; the picture is copied into the cache, analyzed, and the copy deleted.
-        string copy = Path.Combine(Phone.Platform.CacheFolder, "chosen" + Path.GetExtension(files[0].Name));
-        await using (var from = await files[0].OpenReadAsync())
-        await using (var to = File.Create(copy))
-        {
-            await from.CopyToAsync(to);
-        }
+        status.Text = "";
+        await AnalyzeAll(await PhotoPages.Pick(this, source, "chosen", words => status.Text = words), setup);
+    }
 
-        await Analyze(copy, setup);
+    /// <summary>
+    /// Entry 292 section 1.3: several pictures at once are a set, one per sheet. Each is read and saved in turn and the last one's result
+    /// shown, which leads to the set where they are its sheets. A reduced copy is said to be one before it is read (section 1.4).
+    /// </summary>
+    private async Task AnalyzeAll(IReadOnlyList<PickedPhoto> photos, ShotSetup setup)
+    {
+        for (int i = 0; i < photos.Count; i++)
+        {
+            if (photos[i].Reduced is { } words && !await PhotoPages.UseReduced(this, words))
+            {
+                PhotoPages.Forget(photos.Skip(i));
+                status.Text = "Share the photo into GroupLab from the app that keeps it, or download it to the phone and choose it again.";
+                return;
+            }
+
+            if (i == photos.Count - 1)
+            {
+                await Analyze(photos[i].Path, setup);
+            }
+            else if (!await ReadAhead(photos[i].Path, setup, i, photos.Count))
+            {
+                PhotoPages.Forget(photos.Skip(i + 1));
+                return;
+            }
+        }
+    }
+
+    /// <summary>One sheet of several read and saved without showing its result, with its own progress and Cancel; false where canceled.</summary>
+    private async Task<bool> ReadAhead(string photo, ShotSetup setup, int index, int count)
+    {
+        using var cancel = new CancellationTokenSource();
+        var (page, line, stop) = Screens.Progress(string.Create(CultureInfo.CurrentCulture, $"Reading sheet {index + 1} of {count}"));
+        stop.Click += (_, _) =>
+        {
+            cancel.Cancel();
+            line.Text = "Canceling…";
+        };
+        var before = Content;
+        Content = page;
+        var units = Phone.Settings.LoadUnits();
+        try
+        {
+            var result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, Phone.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
+            DiagnosticLog.Info("phone.set.read", ("sheet", index + 1), ("of", count), ("found", result.Definition is not null));
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            Content = before;
+            return false;
+        }
+        catch (Exception e) when (e is IOException or InvalidOperationException or OpenCvSharp.OpenCVException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "phone.set.read", e);
+            return true;
+        }
+        finally
+        {
+            File.Delete(photo);
+        }
     }
 
     private async Task Analyze(string photo, ShotSetup setup, bool torch = false)

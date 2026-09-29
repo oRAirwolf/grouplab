@@ -4180,6 +4180,46 @@
   "The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth files before they can be scored the same way.": {
    "kind": "decided",
    "where": "entry 291 section 7; tests/GroupLab.Core.Tests/Analysis/range-scan-counts.json holds counts per sheet, not holes"
+  },
+  "## Phones sold outside America (entry 292 section 4) Alan: \"This may be especially important for europeans that have access to a lot of phones that are not available in america.\" Europe and South America buy far more of these than the US does.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 292 section 4, Alan's words"
+  },
+  "**A photograph kept only in the cloud** is fetched through its `content://` stream a piece at a time on a worker thread, with a line saying which app it comes from where Android says so (\"Getting the photo from Google Photos, 2.1 of 6.4 MB\") and a Cancel that returns at once, even from a download that has stalled.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/PhotoIntake.cs Fetch and Getting; tests/GroupLab.Mobile.Tests/PhotoIntakeTests.cs CancelReturnsAtOnceEvenFromAStalledDownload and TheProgressLineSaysWhichAppAndHowFar (entry 292 section 1.4)"
+  },
+  "GroupLab always reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/PhotoIntake.cs Reduced and Fetch, PhotoPages.UseReduced; tests/GroupLab.Mobile.Tests/PhotoIntakeTests.cs AReducedCopyIsSaidToBeOne (entry 292 section 1.4)"
+  },
+  "GroupLab reads the picture and never writes it back.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/MainActivity.cs Shared and PhotoPickers.Handles open the picture only for reading (entry 292 section 1.3)"
+  },
+  "GroupLab writes nothing for any one brand: their galleries answer the standard Android requests that Choose a photograph, From another app and sharing use (`docs/ANDROID.md` section 18), and their clouds hand a photograph over through the gallery's own stream, with the same progress, offline and whole-photograph rules.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 292 section 4 item 1; android/GroupLab.Android/PhotoPickers.cs uses only the standard requests"
+  },
+  "It is built into Android 13 and later and added to Android 11 and 12 by Google Play system updates; the manifest asks Google Play services to add it to Android 10.": {
+   "kind": "code",
+   "where": "AndroidX Activity PickVisualMedia.isPhotoPickerAvailable, used by android/GroupLab.Android/PhotoPickers.cs; the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml (entry 292 section 1.1)"
+  },
+  "Nothing else GroupLab needs depends on Google Play services, checked against the packages the build restores on 2026-09-29: the camera is CameraX over Camera2, OpenCV is built into the application, SQLite is the bundled `e_sqlite3`, and the updater's WorkManager runs on Android's own JobScheduler.": {
+   "kind": "measured",
+   "where": "android/GroupLab.Android/obj/project.assets.json, 2026-09-29: no Google Play services package among those restored; CameraX, e_sqlite3, WorkManager (entry 292 section 4.3)"
+  },
+  "Now there are three ways in, and none of them asks for a storage permission, because the picker or the app grants GroupLab the one picture chosen and nothing more: 1.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/PhotoPickers.cs and Properties/AndroidManifest.xml: no storage permission in the merged manifest, checked 2026-09-29 (entry 292)"
+  },
+  "Pictures from any photo app (entry 292) Alan: \"It is important that it can access cloud stored photos and not just ones local to the phone.\" Before entry 292, **Choose a photograph** opened the documents picker, which reached Drive and Images and nothing else.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 292, Alan's words and section 1"
+  },
+  "The one use of Google Play services is the photo picker's backport to Android 10, and a phone without it gets the apps instead.": {
+   "kind": "code",
+   "where": "the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml and PhotoIntake.Opens (entry 292 section 4.3)"
   }
  },
  "rules": [

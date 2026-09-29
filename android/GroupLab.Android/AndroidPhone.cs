@@ -180,6 +180,58 @@ internal sealed class AndroidPhone : IPhonePlatform
     }
 
     /// <summary>
+    /// Entry 292 sections 1.1, 1.2 and 4.3: the system photo picker, images only, or the chooser of every app that offers pictures, which is
+    /// also where Choose a photograph goes on a phone with no photo picker. What comes back is fetched by the shared screens.
+    /// </summary>
+    public async Task<IReadOnlyList<PhotoHandle>> PickPhotos(PhotoSource source, TopLevel? top)
+    {
+        if (MainActivity.Current is not { } activity)
+        {
+            return [];
+        }
+
+        bool picker = PhotoPickers.PhotoPickerAvailable(activity);
+        var opens = PhotoIntake.Opens(source, picker);
+        DiagnosticLog.Info("phone.pick.open", ("asked", source.ToString()), ("opens", opens.ToString()), ("photoPicker", picker));
+        Intent? data;
+        try
+        {
+            data = await activity.ForResult(PhotoPickers.For(activity, opens), PhotoPickers.PickRequest);
+        }
+        catch (ActivityNotFoundException) when (opens == PhotoSource.Photos)
+        {
+            // A phone that says it has a photo picker and then has none gets the apps instead, never an error.
+            DiagnosticLog.Info("phone.pick.open", ("asked", source.ToString()), ("opens", nameof(PhotoSource.OtherApp)), ("photoPicker", "missing"));
+            data = await activity.ForResult(PhotoPickers.For(activity, PhotoSource.OtherApp), PhotoPickers.PickRequest);
+        }
+
+        var uris = PhotoPickers.Returned(data);
+        return uris.Count == 0 ? [] : await Task.Run(() => (IReadOnlyList<PhotoHandle>)PhotoPickers.Handles(activity, uris));
+    }
+
+    /// <summary>
+    /// Entry 292 section 1.4: whether the phone is online, from the connectivity service. The permission to ask is already in the manifest,
+    /// merged in from the AndroidX libraries; where the phone refuses, GroupLab says it cannot tell.
+    /// </summary>
+    public bool? Online
+    {
+        get
+        {
+            try
+            {
+                var connectivity = (global::Android.Net.ConnectivityManager?)Context.GetSystemService(Context.ConnectivityService);
+                var network = connectivity?.ActiveNetwork;
+                return network is not null
+                    && connectivity!.GetNetworkCapabilities(network)?.HasCapability(global::Android.Net.NetCapability.Internet) == true;
+            }
+            catch (Java.Lang.SecurityException)
+            {
+                return null;
+            }
+        }
+    }
+
+    /// <summary>
     /// Entry 258: Paste a picture. Android lets an application read the clipboard only while it is in front, which it is when the button is
     /// pressed; the clipboard holds its content address; the picture is copied into <paramref name="folder"/>.
     /// </summary>

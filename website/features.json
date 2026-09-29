@@ -902,6 +902,22 @@
       }
     },
     {
+      "key": "any-photo-app",
+      "group": "Photos and the phone",
+      "name": "Pictures from any photo app",
+      "sentence": "Choose a photograph from Android's photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker's own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files. Or share one or several into GroupLab from any of them; a cloud photo downloads with its progress shown, and a smaller copy is said to be one.",
+      "shot": null,
+      "platforms": [
+        "Android"
+      ],
+      "since": "next",
+      "guide": "13-on-the-phone",
+      "note": "from any photo app",
+      "mobile": {
+        "noPicture": "the photo picker and the list of apps are Android's own screens, photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "shots-table",
       "group": "The numbers",
       "name": "Every shot, and which count",

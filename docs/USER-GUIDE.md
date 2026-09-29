@@ -345,9 +345,28 @@ other, because they are signed with different keys. It uses the same engine as t
 checks beneath it (focus, light, the tags and codes read) and a bar that forecasts the picture's quality. In **Guided** it takes the
 picture by itself once everything holds; in **Manual** you press the shutter when you choose. The level in the middle is a crosshair
 with a dot that drifts toward the raised side like a bubble, and turns green when the phone is flat. **Camera** and **Result**, above the
-page, take you to either in one press, and the camera has its own **Result** button. **Choose a photograph** reads one already on
-the phone, and a picture shared into GroupLab from another app is read the same way. When a picture's square codes cannot be read,
+page, take you to either in one press, and the camera has its own **Result** button. When a picture's square codes cannot be read,
 GroupLab says which sheet it looks like, for you to confirm or choose another.
+
+**A photograph from any photo app.** **Choose a photograph** opens Android's photo picker, which shows the photographs in your photo apps,
+those kept only in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone without one
+offers the apps instead. **From another app** lists every app that offers pictures by name: Google Photos, Samsung Gallery, your phone
+maker's own gallery, Drive, OneDrive, Dropbox and Files. A picture shared into GroupLab from any app, or opened or edited with it, is read
+the same way, and several shared at once are read one after another as a set, one per sheet. A photograph kept only in the cloud is
+downloaded first, with a line saying which app it is coming from and a **Cancel**; the phone has to be online for that. GroupLab always
+reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
+
+**Updates on phones that stop apps in the background.** GroupLab Dev looks for an update every time it opens, as well as about every six
+hours, so an update is late at worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it (the
+names differ a little between versions):
+
+- **Xiaomi, Redmi and POCO:** Settings, Apps, GroupLab Dev, Battery saver, No restrictions, and turn on Autostart.
+- **OPPO, OnePlus and realme:** Settings, Apps, GroupLab Dev, Battery usage, Allow background activity.
+- **vivo:** Settings, Battery, Background power consumption management, GroupLab Dev, Allow high background power consumption.
+- **Honor:** Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.
+- **Huawei:** Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.
+- **Samsung:** Settings, Apps, GroupLab Dev, Battery, Unrestricted.
+- **Motorola:** Settings, Apps, GroupLab Dev, App battery usage, Unrestricted.
 
 **The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the
 picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.

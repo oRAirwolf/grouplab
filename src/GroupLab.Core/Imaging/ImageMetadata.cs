@@ -23,8 +23,17 @@ public sealed record ImageMetadata(
     double? DigitalZoomRatio = null,
     string? LensModel = null,
     int? IsoSpeed = null,
-    double? ExposureTimeSeconds = null)
+    double? ExposureTimeSeconds = null,
+    int? RecordedWidth = null,
+    int? RecordedHeight = null)
 {
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 292 section 1.4: <see cref="RecordedWidth"/> and <see cref="RecordedHeight"/> are the size the camera
+    /// wrote in the EXIF block (PixelXDimension and PixelYDimension), which a copy an app reduced and left its EXIF on still states, so a
+    /// photograph handed over smaller than it was taken can be told apart. The GPS block is never followed.
+    /// </summary>
+    public bool StatesRecordedSize => RecordedWidth is > 0 && RecordedHeight is > 0;
+
     /// <summary>
     /// The key frames must share before one joint lens fit covers them: physical focal length, f-number, 35 mm equivalent, stored size
     /// and digital zoom (NOTES-FROM-PLANNING.md entry 16 section 2, amended by entry 27 section 2). Digital zoom is in it because a phone
@@ -81,7 +90,7 @@ public static class ImageMetadataReader
         bool camera = m.Focal is not null;
         double? dpiX = camera ? null : m.PngDpiX ?? m.JfifX ?? ExifDpi(m.ExifX, m.ResolutionUnit);
         double? dpiY = camera ? null : m.PngDpiY ?? m.JfifY ?? ExifDpi(m.ExifY, m.ResolutionUnit);
-        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber, m.DigitalZoom, m.LensModel, m.Iso, m.Exposure);
+        return new ImageMetadata(m.Format, m.Width, m.Height, dpiX, dpiY, m.Make, m.Model, m.Orientation, m.Focal, m.Focal35, m.FNumber, m.DigitalZoom, m.LensModel, m.Iso, m.Exposure, m.PixelX, m.PixelY);
     }
 
     private static double? ExifDpi(double? value, int? unit) => value is { } v && v > 0
@@ -246,6 +255,12 @@ public static class ImageMetadataReader
                 case 0x829A:
                     m.Exposure = Rational(t, e, little);
                     break;
+                case 0xA002:
+                    m.PixelX = type == 4 ? (int)U32(t, e + 8, little) : U16(t, e + 8, little);
+                    break;
+                case 0xA003:
+                    m.PixelY = type == 4 ? (int)U32(t, e + 8, little) : U16(t, e + 8, little);
+                    break;
             }
         }
     }
@@ -325,5 +340,9 @@ public static class ImageMetadataReader
         public int? Iso { get; set; }
 
         public double? Exposure { get; set; }
+
+        public int? PixelX { get; set; }
+
+        public int? PixelY { get; set; }
     }
 }

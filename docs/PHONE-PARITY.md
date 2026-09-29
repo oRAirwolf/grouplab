@@ -27,6 +27,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Check your printer once, for real inches from photos | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept | not yet |
 | Any target you already shoot | `other-targets` | on the phone | entry 279 section 2, Marking A: the scale, the aim points and the holes under a fixed crosshair, and a template kept | not yet |
 | Open by dropping or pasting | `open-anyhow` | on the phone | entry 258: a picture shared into GroupLab or opened with it from another app, and Paste a picture on Capture | not yet |
+| Pictures from any photo app | `any-photo-app` | on the phone | entry 292: Android's photo picker, From another app, and sharing one or several from any app; the phone's own, so the computer's row is Open by dropping or pasting | not yet |
 | The figures you read off a target | `six-figures` | on the phone | | not yet |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page | not yet |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures | not yet |
@@ -73,3 +74,30 @@ has been seen to, **not yet** while the iOS build is being made, **on a device**
 shared project the Android and iOS heads both link (`mobile/GroupLab.Mobile`), so a feature on Android is most of the way to iOS; what is
 left is the head's own part and proving it on the iOS Simulator. `docs/IOS-PLAN.md` has the plan, and the site build holds this column
 to those four words.
+
+## Phones sold outside America (entry 292 section 4)
+
+Alan: "This may be especially important for europeans that have access to a lot of phones that are not available in america." Europe and
+South America buy far more of these than the US does. GroupLab writes nothing for any one brand: their galleries answer the standard
+Android requests that Choose a photograph, From another app and sharing use (`docs/ANDROID.md` section 18), and their clouds hand a
+photograph over through the gallery's own stream, with the same progress, offline and whole-photograph rules. Something brand-specific is
+written only when a test on that brand shows it is needed. Where a phone has no Google Play services, Choose a photograph offers the apps
+instead of the photo picker, and nothing else GroupLab needs depends on Google Play services.
+
+Which brands a real person has tried, and which are reached only by the standard requests so far:
+
+| Brand | Its gallery and cloud | Tried by a person | On iPhone and iPad |
+|---|---|---|---|
+| Samsung (One UI) | Samsung Gallery, Samsung Cloud and OneDrive | yes, on the Galaxy Z Fold 7 and Tab S8 Ultra; entry 292's pickers at the next sitting | not yet |
+| Google Pixel | Google Photos | not yet: the standard requests only | not yet |
+| Xiaomi, Redmi and POCO (HyperOS, MIUI) | Gallery, Xiaomi Cloud | not yet: the standard requests only | not yet |
+| OPPO, OnePlus and realme (ColorOS, OxygenOS, realme UI) | Photos, HeyTap Cloud | not yet: the standard requests only | not yet |
+| vivo (OriginOS, Funtouch OS) | Albums, vivo Cloud | not yet: the standard requests only | not yet |
+| Honor (MagicOS) | Gallery, Honor Cloud | not yet: the standard requests only | not yet |
+| Nubia and RedMagic | Gallery | not yet: the standard requests only | not yet |
+| Motorola | Google Photos, Gallery | not yet: the standard requests only | not yet |
+| Huawei (EMUI, HarmonyOS) | Gallery, Huawei Cloud; no Google Play services | not yet: the standard requests only; the Android emulator without Google Play is the stand-in | not yet |
+
+The user guide says, one line a brand, how to let GroupLab Dev run in the background, because these phones' battery managers stop
+background work; the update check also runs at every launch, so it never depends on background work alone. The device survey
+(`docs/SURVEY.md`) says which of these brands testers actually use, and a tester who tries one is added to this table.
