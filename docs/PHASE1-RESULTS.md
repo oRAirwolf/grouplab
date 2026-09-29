@@ -52,6 +52,15 @@ Because the library is plain .NET, it builds on any machine, and `MobileProjectT
 - **Android stays as it was:** GroupLab Dev's APK and the Play AAB both build; the Core and App suites pass. The nightly's APK goes on
   the Fold 7 at the next install to confirm it behaves as nightly 124 did.
 - **One desktop file changed:** `AppSettings`' phone branch now keys on `GROUPLAB_MOBILE`, which the shared project defines.
+- **OpenCV for iOS is built in CI** (item 2): `ios/opencv/build-extern.sh` builds OpenCV 4.13.0 with the Android module list and
+  OpenCvSharpExtern as static libraries for iphoneos arm64 and the arm64 simulator, merges each slice into one archive and wraps them in
+  `OpenCvSharpExtern.xcframework` (21,892,888 bytes zipped). The `ios` workflow's `opencv` job on macos-26 builds it once per change of the
+  script (cache key `ios-opencv-<hash of the script>`; a rerun restored it in 42 s against 8 min 50 s), checks the SHA-256 and that 19
+  OpenCvSharpExtern entry points the .NET code calls are in both archives, and keeps it as the artifact `ios-opencv`. OpenCV reads no HEIC,
+  so the head hands it JPEG or PNG.
+- **The signing check is built** (item 7): `scripts/ios-signing.py` signs only with all seven secrets set and well formed, builds unsigned
+  with none, and fails naming a malformed one, never printing a value; its self-test runs in every build.
+- **Question 70, answered B:** each cell of the desktop's full CEP table shows its own unit and switches alone.
 
 ## Entry 288: GroupLab Dev updates itself
 
