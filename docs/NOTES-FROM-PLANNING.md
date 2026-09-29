@@ -24,6 +24,51 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 292: pictures from anywhere on the phone: Google Photos, Samsung Gallery, the maker's own photo app, and the cloud, on Android and on iOS
+
+**Status: in progress 2026-09-29. Sections 1, 3 and 4 (Android) done; section 2 (iOS: PHPicker with iCloud Photos, the document picker, a
+Share Extension and "Open in GroupLab") not done yet**, part of entry 290's iOS work once the iOS head is merged. Android: the system photo
+picker first (no storage permission), "From another app" (every app answering image/* by name), SEND, SEND_MULTIPLE, VIEW and EDIT
+received (several become a set), cloud photos fetched with progress naming the app and a Cancel, offline said as offline, a reduced copy
+detected and said. No Google Play services dependency but the picker's Android 10 backport; the update check runs at launch too. Only
+Samsung has been tried by a person; the other brands by the standard intents.
+
+Alan, from the same sitting: "GroupLab on Android does not have access to Google photos. It seems to only have access to drive and images. Make sure iOS version has access to it's version of photos as well as Google photos if it is installed. It is important that it can access cloud stored photos and not just ones local to the phone." And: "It should also have access to any photo applications that you would normally see in a photo editor like samsung photos or applications that other phone manufacturers include in place of a product like google photos on a pixel phone."
+
+The rule: **a person can reach any photograph they can see in their phone's photo apps, whichever app keeps it and whether it is on the phone or only in the cloud**, the way a photo editor can. Android goes first in the Android line (after entry 291); the iOS half joins entry 290's iOS work.
+
+### 1. Android
+
+Today's "choose a photograph" reaches only the documents picker (Drive and Images). Offer all of these:
+
+1. **The system photo picker** (`PickVisualMedia`, images only) as the first choice. On devices where Google Photos is the cloud media provider it shows cloud-only photos too; it needs no storage permission.
+2. **"From another app"**: an `ACTION_GET_CONTENT` chooser for `image/*`, so every app that offers pictures appears by name: Google Photos, Samsung Gallery, the maker's own gallery on other phones (Xiaomi, OnePlus, Motorola and so on), Drive, OneDrive, Dropbox, Files. This is how a photo editor reaches them, and it is the path that lists Samsung Gallery and Google Photos by name on the Fold 7.
+3. **Receiving a picture from any app:** GroupLab (and GroupLab Dev) appear in the share sheet and in "Open with" for images: intent filters for `ACTION_SEND` and `ACTION_SEND_MULTIPLE` with `image/*`, and `ACTION_VIEW` (and `ACTION_EDIT` if it fits) with `image/*`. A shared or opened picture goes straight to analysis, as if taken in GroupLab. Several pictures shared at once become a set, one per sheet.
+4. **Cloud-only photos:** a picture that is not on the phone is downloaded through its `content://` stream with a progress line ("Getting the photo from Google Photos"), cancelable, and a clear message if the phone is offline. **Always the full original**, never a thumbnail or a reduced copy: check the resolution received against what the provider reports, and if an app hands back a reduced copy, say so and suggest another way (the result's picture check already scores resolution).
+5. **Orientation and metadata:** as for camera pictures, the picture is stood upright from its own data, and location metadata is never read, logged or kept.
+6. **Tests and the sitting:** unit tests for each entry path; on the Fold 7, one picture each from Google Photos (a cloud-only one), Samsung Gallery, Drive, and one shared from Google Photos and from Samsung Gallery. Say in `for-alan.md` what to try.
+
+### 2. iOS (part of entry 290's parity work)
+
+1. **Apple Photos, including iCloud Photos:** `PHPickerViewController`, images only, needing no photo library permission. Photos kept only in iCloud download on demand through the item provider, with progress, and always at full resolution (request the original file, not a display copy); HEIC is decoded as the pipeline's S0 already specifies.
+2. **Files:** the document picker (`UIDocumentPickerViewController`) for `public.image`, which reaches iCloud Drive, Google Drive, OneDrive, Dropbox and any other Files provider installed.
+3. **Google Photos and other photo apps:** iOS has no system way for one app to browse another's library, so Google Photos reaches GroupLab by **sharing**: a **Share Extension** so GroupLab appears in the share sheet of Google Photos, Photos and every other app, plus document types so "Open in GroupLab" works. The shared picture opens straight into analysis. Say plainly on the Features page that on iPhone and iPad a Google Photos picture is shared into GroupLab.
+4. The same full-original, progress, offline and metadata rules as Android.
+
+### 4. Phones sold outside America (Alan: "This may be especially important for europeans that have access to a lot of phones that are not available in america like chinese brands like oppo, redmi, Xiaomi, vivo, honor, redmagic, etc")
+
+Europe and South America buy far more of these than the US (the device study, `claude/mobile-device-study.md`, has Xiaomi, Redmi and Motorola among Latin America's best sellers). Treat them as first-class:
+
+1. **Their own galleries must appear by name** in "From another app" and must be able to share into GroupLab: Xiaomi and Redmi Gallery (HyperOS, MIUI), OPPO and OnePlus Photos (ColorOS, OxygenOS), realme, vivo Albums (OriginOS, Funtouch), Honor Gallery (MagicOS), Nubia and RedMagic, Motorola, and Huawei Gallery. The standard intents of section 1 are what these apps answer; nothing brand-specific is written unless a test shows a brand needs it.
+2. **Their clouds** (Xiaomi Cloud, HeyTap and OPPO Cloud, vivo Cloud, Honor Cloud, Huawei Cloud): a photo the gallery shows but keeps only in the cloud arrives through the gallery's `content://` stream; the download, progress, offline and full-original rules of section 1 item 4 apply unchanged.
+3. **Phones without Google Play services** (Huawei, and some phones sold with Chinese-market software): the system photo picker may be missing or limited there, so when it is not available GroupLab goes straight to the `ACTION_GET_CONTENT` chooser, never to an error. Check that nothing else GroupLab needs (the camera, OpenCV, SQLite, the updater of entry 288) depends on Play services, and list anything that does.
+4. **Aggressive battery managers** on these phones stop background work: entry 288's six-hourly update check must be checked on launch as well, and must not rely on background work alone. Say so in the user guide for these brands (how to allow GroupLab to run in the background, per brand, in one line each).
+5. **Testing without the phones:** the Android emulator for the no-Play-services path, the device survey (docs/SURVEY.md) to learn which of these brands people actually use, and a short "tried it on your phone?" note for testers on the Discord. Record in `PHONE-PARITY.md` which brands have been tried by a real person and which only by the standard intents.
+
+### 3. In the same change (rule c)
+
+The user guide, the Features page, `PHONE-PARITY.md` (both columns), and `what-grouplab-sends` if anything about permissions changes (the photo picker needs no storage permission; say so).
+
 ## 2026-09-29, entry 289: the 2 MOA sheets: Alan chose C with 2.00 in bulls
 
 **Status: done 2026-09-29, with three parts the format cannot carry, raised as questions 71 to 73.** Twelve sheets: `GL-CF9-LTR` and
