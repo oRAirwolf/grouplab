@@ -112,7 +112,7 @@ public class Entry113Tests
             Assert.Equal("These two loads are not distinguishable on this evidence.", report.Headline);
             var text = window.CompareText.ToList();
             Assert.Contains(report.Headline, text);
-            Assert.Contains(text, t => t.StartsWith("The sigma intervals overlap, so the data do not separate them.", StringComparison.Ordinal));
+            Assert.Contains(text, t => t.StartsWith("Each load's spread could really be anywhere in a range, and those ranges overlap (the sigma intervals)", StringComparison.Ordinal));
             Assert.All(report.Tests, t => Assert.Contains(t.Power, text));
             Assert.Contains("Tests run", text);
             Assert.Contains("10 percent", text);

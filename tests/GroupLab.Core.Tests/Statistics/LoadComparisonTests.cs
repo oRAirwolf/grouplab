@@ -28,7 +28,7 @@ public class LoadComparisonTests
         Assert.True(report.Groups[0].Rayleigh.Sigma.Value > report.Groups[1].Rayleigh.Sigma.Value);
         Assert.Equal("These two loads are not distinguishable on this evidence.", report.Headline);
         Assert.True(report.IntervalsOverlap);
-        Assert.Contains(report.Explanation, e => e.StartsWith("The sigma intervals overlap, so the data do not separate them.", StringComparison.Ordinal));
+        Assert.Contains(report.Explanation, e => e.StartsWith("Each load's spread could really be anywhere in a range, and those ranges overlap (the sigma intervals)", StringComparison.Ordinal));
 
         string detectable = (100 * (SampleSize.MinimumDetectableRatio(10) - 1)).ToString("0", CultureInfo.InvariantCulture);
         Assert.Equal($"With 10 shots a load, this test detects a difference in dispersion of about {detectable} percent or more 80 percent of the time, at the 5 percent level; smaller differences it will usually miss.", report.Tests[0].Power);
@@ -60,5 +60,80 @@ public class LoadComparisonTests
         Assert.Contains(report.Explanation, e => e.Contains("Holm's method", StringComparison.Ordinal));
         Assert.Throws<ArgumentException>(() => LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 2, 0.1))], Inches));
         Assert.Throws<ArgumentException>(() => LoadComparison.Compare([("a", Group(5, 8, 0.1))], Inches));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 295 section 1.4: on the phone the extreme spread chart said "there is a difference these shots can see"
+    /// over a card saying "These two loads are not distinguishable on this evidence". The chart's sentence and the verdict are one decision
+    /// now, and across many comparisons, of two loads and of three, alike and far apart, in size and in where they group, they never
+    /// disagree; a figure drawn with no range says it has none and points to mean radius; and the ranges drawn for mean radius and CEP 90
+    /// overlap exactly when the sigma intervals the verdict reads do.
+    /// </summary>
+    [Fact]
+    public void TheChartsSentenceNeverDisagreesWithTheVerdict()
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        int seed = 0;
+        foreach (int shots in (int[])[5, 10, 25])
+        {
+            foreach (double ratio in (double[])[1, 1.3, 2, 3.5])
+            {
+                foreach (double shift in (double[])[0, 0.6])
+                {
+                    for (int repeat = 0; repeat < 6; repeat++)
+                    {
+                        var two = LoadComparison.Compare([("a", Group(++seed, shots, 0.1)), ("b", Group(++seed, shots, 0.1 * ratio, shift))], Inches);
+                        var three = LoadComparison.Compare(
+                            [("a", Group(++seed, shots, 0.1)), ("b", Group(++seed, shots, 0.1 * ratio, shift)), ("c", Group(++seed, shots, 0.1))], Inches);
+                        Agrees(two, seen);
+                        Agrees(three, seen);
+                    }
+                }
+            }
+        }
+
+        // The run reached both sides of the question, or it proved nothing.
+        Assert.Contains("do not tell them apart", seen);
+        Assert.Contains("a difference these shots can see", seen);
+    }
+
+    private static void Agrees(LoadComparisonReport report, HashSet<string> seen)
+    {
+        bool differs = report.Headline.Contains("differ in dispersion", StringComparison.Ordinal);
+        bool placed = report.Headline.Contains("different places", StringComparison.Ordinal);
+        foreach (string figure in (string[])["Mean radius", "CEP 90"])
+        {
+            string says = LoadComparison.ChartSays(report, figure, hasRange: true);
+            foreach (string phrase in (string[])["do not tell them apart", "a difference these shots can see"])
+            {
+                if (says.Contains(phrase, StringComparison.Ordinal))
+                {
+                    seen.Add(phrase);
+                }
+            }
+
+            if (says.Contains("a difference these shots can see", StringComparison.Ordinal) || says.Contains("finds a difference", StringComparison.Ordinal))
+            {
+                Assert.True(differs, $"the chart sees a difference and the verdict says \"{report.Headline}\"");
+            }
+
+            if (says.Contains("do not tell them apart", StringComparison.Ordinal) || says.Contains("finds no difference", StringComparison.Ordinal))
+            {
+                Assert.False(differs, $"the chart sees none and the verdict says \"{report.Headline}\"");
+            }
+
+            Assert.False(placed && says.EndsWith("do not tell them apart.", StringComparison.Ordinal),
+                "the chart says the loads are not told apart and the verdict places them differently");
+            Assert.Equal(report.IntervalsOverlap, says.Contains("overlaps every other", StringComparison.Ordinal) || says.StartsWith("These ranges overlap", StringComparison.Ordinal));
+
+            // The ranges the chart draws are the ones the verdict reads.
+            var ranges = report.Groups.Select(g => figure == "CEP 90" ? g.Rayleigh.Cep(0.9) : g.MeanRadius).ToList();
+            Assert.Equal(report.IntervalsOverlap, ranges.Max(r => r.Lower) <= ranges.Min(r => r.Upper));
+        }
+
+        string spread = LoadComparison.ChartSays(report, "Extreme spread", hasRange: false);
+        Assert.Contains("no range to compare", spread, StringComparison.Ordinal);
+        Assert.Contains("mean radius", spread, StringComparison.Ordinal);
+        Assert.DoesNotContain("difference these shots can see", spread, StringComparison.Ordinal);
     }
 }

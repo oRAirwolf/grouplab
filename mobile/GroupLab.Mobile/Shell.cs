@@ -291,6 +291,12 @@ internal static class Screens
     // Entry 258: a secondary line that names a glossary word explains it when tapped, as on the desktop.
     public static TextBlock Dim(string text) => PhoneTerms.Explain(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } });
 
+    /// <summary>
+    /// A dim line of names, a session's sheet and date, that is never explained: entry 295 found "Load" in "GroupLab 5x5 Load Development
+    /// with Load Block, Letter" underlining a whole line of names as though it explained a word.
+    /// </summary>
+    public static TextBlock Quiet(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } };
+
     public static Button Choice(string words, Action chosen) => Pill(words, chosen, primary: false);
 
     /// <summary>The one thing a screen is for, in amber, as the desktop's primary action is.</summary>
@@ -313,12 +319,12 @@ internal static class Screens
     }
 
     /// <summary>A row of a list on a card: what it is, a dim line beneath, and a chevron that says it opens.</summary>
-    public static Button Row(string words, string? detail, Action chosen)
+    public static Button Row(string words, string? detail, Action chosen, bool explain = true)
     {
         var text = new StackPanel { Spacing = 2, Children = { Line(words) } };
         if (detail is not null)
         {
-            text.Children.Add(Dim(detail));
+            text.Children.Add(explain ? Dim(detail) : Quiet(detail));
         }
 
         var chevron = new TextBlock { Text = "›", VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Heading } };

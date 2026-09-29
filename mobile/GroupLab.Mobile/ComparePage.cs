@@ -69,7 +69,7 @@ internal sealed class ComparePage : UserControl
             var list = new StackPanel { Spacing = 6 };
             foreach (var (group, detail) in report.Groups.Zip(setup.Groups, (g, s) => (g, s.Detail)))
             {
-                list.Children.Add(new StackPanel { Spacing = 2, Children = { Screens.Line(group.Name), Screens.Dim(detail) } });
+                list.Children.Add(new StackPanel { Spacing = 2, Children = { Screens.Line(group.Name), Screens.Quiet(detail) } });
             }
 
             column.Children.Add(Screens.Card(list));
@@ -107,7 +107,7 @@ internal sealed class ComparePage : UserControl
         }
 
         var chips = new WrapPanel();
-        foreach (string name in new[] { "Mean radius", "Extreme spread", "CEP 90" })
+        foreach (string name in Figures)
         {
             var chip = new Button { Content = name, MinHeight = Screens.Touch, Margin = new Thickness(0, 0, 6, 6) };
             if (name == figure)
@@ -123,15 +123,31 @@ internal sealed class ComparePage : UserControl
             chips.Children.Add(chip);
         }
 
+        var chart = Chart(report, figure, Size);
+        int at = column.Children.IndexOf(column.Children.OfType<ContentControl>().First());
+        column.Children[at] = new ContentControl { Content = chips };
+        // Extreme spread has no range here, so its heading does not promise one (entry 295 section 1.4).
+        string heading = chart.HasRanges ? figure + ", with the range each could really be" : figure + ", as measured";
+        column.Children[at + 1] = Screens.Card(Screens.Heading(heading), chart, Screens.Dim(chart.Description));
+    }
+
+    /// <summary>
+    /// The chart of one figure, entry 295 section 1: each load's name on its own line with its range and value beneath, at the phone's
+    /// secondary text size, as tall as its rows and no taller, and saying in words only what the verdict card agrees with.
+    /// </summary>
+    internal static IntervalChart Chart(LoadComparisonReport report, string figure, Func<double, string> size, double textSize = GroupLab.App.Theme.Tokens.HeadingSize)
+    {
         var rows = report.Groups.Select(g => figure switch
         {
             "Extreme spread" => new IntervalRow(g.Name, g.ExtremeSpread, null, null),
             "CEP 90" when g.Rayleigh.Cep(0.9) is var cep => new IntervalRow(g.Name, cep.Value, cep.Lower, cep.Upper),
             _ => new IntervalRow(g.Name, g.MeanRadius.Value, g.MeanRadius.Lower, g.MeanRadius.Upper),
         }).ToList();
-        var chart = new IntervalChart { Rows = rows, Length = Size, Height = 60 + (44 * rows.Count) };
-        int at = column.Children.IndexOf(column.Children.OfType<ContentControl>().First());
-        column.Children[at] = new ContentControl { Content = chips };
-        column.Children[at + 1] = Screens.Card(Screens.Heading(figure + ", with the range each could really be"), chart, Screens.Dim(chart.Description));
+        var chart = new IntervalChart { Rows = rows, Length = size, TextSize = textSize, Margin = new Thickness(0, 4) };
+        chart.Says = LoadComparison.ChartSays(report, figure, chart.HasRanges);
+        return chart;
     }
+
+    /// <summary>The figures the chips offer, in their order.</summary>
+    internal static readonly string[] Figures = ["Mean radius", "Extreme spread", "CEP 90"];
 }

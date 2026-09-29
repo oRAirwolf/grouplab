@@ -45,6 +45,7 @@ public class BenchCoverageTests
     {
         ["GridStyle2"] = "The zeroing grid's fixed numbers and its three sentences of scale. Drawing the grid is measured, in rendering the sheet.",
         ["GridStyle3"] = "The C3 zeroing grid's fixed numbers, its numbers' wording and its legend. Drawing it is rendering a sheet, which is measured.",
+        ["SessionNames"] = "What a saved session is called on screen, from its load, date and time: words, not a measurement. Entry 295 section 3.",
         ["ShotsToZero"] = "Shots Needed to Zero is arithmetic on one group, not the detection the bench times; its own test holds it to entry 252's half-second budget.",
         ["SheetGlyphs"] = "The outlines the Targets preview draws a sheet's words with; only a preview asks for them, and nothing that measures a render does.",
         ["ResultFigures"] = "The phone's figures laid out from the shared analysis, which is what the bench times; laying them out is formatting.",

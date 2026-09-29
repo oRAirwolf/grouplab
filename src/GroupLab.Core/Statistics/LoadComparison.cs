@@ -145,11 +145,12 @@ public static class LoadComparison
         };
         if (overlap && !dispersionDiffers)
         {
-            explanation.Add("The sigma intervals overlap, so the data do not separate them. Ordering them by their point estimates would be reading noise.");
+            // Entry 295 section 1.5: in plain words, with the statistician's name for the ranges kept in brackets, for its explanation.
+            explanation.Add("Each load's spread could really be anywhere in a range, and those ranges overlap (the sigma intervals), so these shots do not separate them. Ranking them by the measured numbers alone would be reading noise.");
         }
         else if (overlap)
         {
-            explanation.Add("Each load's own sigma interval overlaps the other's, which a real but modest difference often does; the ratio's interval is the comparison, and it excludes 1.");
+            explanation.Add("Each load's range overlaps the other's (the sigma intervals), which a real but modest difference often does; the range of the ratio between them is the comparison, and it leaves out 1, so the spreads do differ.");
         }
 
         if (compared.Count == 2)
@@ -165,5 +166,36 @@ public static class LoadComparison
         explanation.Add($"To resolve a difference of 10 percent, with 80 percent power at the 5 percent level, takes {SampleSize.ShotsPerLoad(1.10)} shots per load. These groups have {string.Join(", ", compared.Select(g => g.Shots))}.");
         var resolve = new[] { 1.10, 1.25, 1.50 }.Select(k => new ResolveRow(k, SampleSize.ShotsPerLoad(k))).ToList();
         return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve);
+    }
+
+    /// <summary>
+    /// What the chart of one figure says in words beneath it, NOTES-FROM-PLANNING.md entry 295 section 1.4: never anything the verdict
+    /// disagrees with. The ranges drawn for mean radius and every CEP are sigma's range scaled, so they overlap exactly when the sigma
+    /// intervals do, and the sentence follows the same dispersion test the headline does. A figure drawn with no range, such as extreme
+    /// spread, has nothing to compare and says so, pointing to mean radius, rather than reading "no overlap" into dots that have no range.
+    /// </summary>
+    /// <param name="report">The comparison the chart is drawn from.</param>
+    /// <param name="figure">The figure's name as the chart's heading has it.</param>
+    /// <param name="hasRange">Whether the chart draws each load's range for this figure.</param>
+    public static string ChartSays(LoadComparisonReport report, string figure, bool hasRange)
+    {
+        ArgumentNullException.ThrowIfNull(report);
+        ArgumentNullException.ThrowIfNull(figure);
+        if (!hasRange)
+        {
+            return $"{figure} has no range to compare here, so it cannot say whether these loads differ; mean radius has one, and is the figure to compare them on.";
+        }
+
+        bool differs = report.Tests.Count > 0 && report.Tests[0].PValue < 0.05;
+        bool apart = report.Tests.Count > 1 && report.Tests[1].PValue < 0.05;
+        return (report.IntervalsOverlap, differs) switch
+        {
+            // Where the centers differ the headline says so, and "not told apart" would contradict it unless it says by what.
+            (true, false) when apart => "Every one of these overlaps every other, so these shots do not tell them apart by this figure; where they group is another matter, in the card below.",
+            (true, false) => "Every one of these overlaps every other, so these shots do not tell them apart.",
+            (true, true) => "These ranges overlap, but the test on the spreads themselves finds a difference beyond chance; the card below says how large.",
+            (false, true) => "Some of these do not overlap, so there is a difference these shots can see.",
+            (false, false) => "Some of these do not overlap, but the test on all the spreads together finds no difference beyond chance, so these shots do not settle it.",
+        };
     }
 }

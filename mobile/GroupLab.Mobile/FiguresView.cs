@@ -280,9 +280,7 @@ internal sealed class FiguresView : UserControl
         }
 
         var label = Label(figure.Label, figure.Key, figure);
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 12, Children = { label, right } };
-        Grid.SetColumn(right, 1);
-        return grid;
+        return new FigureRow { Children = { label, right } };
     }
 
     /// <summary>A figure's name, dotted-underlined, that opens the explanation sheet when tapped.</summary>
@@ -346,5 +344,92 @@ internal sealed class FiguresView : UserControl
 
         chip.Click += (_, _) => chosen();
         return chip;
+    }
+}
+
+/// <summary>
+/// A figure's name with its value and note, NOTES-FROM-PLANNING.md entry 295 section 2: beside each other where both fit on one line, and
+/// otherwise the value and its note on the line under the name, across the full width. A grid gave the value its whole width first, so a
+/// long note ("too small to dial yet; about 44 shots would settle it") squeezed "Zero, elevation" to a letter a line. The name is never
+/// given less than the whole width when it does not fit beside the value, so it wraps only between words.
+/// </summary>
+internal sealed class FigureRow : Panel
+{
+    private const double Gap = 12;
+
+    /// <summary>Whether the value went under the name at the last layout, for the headless tests.</summary>
+    public bool Stacked { get; private set; }
+
+    private Control? LabelPart => Children.Count > 0 ? Children[0] : null;
+
+    private Control? ValuePart => Children.Count > 1 ? Children[1] : null;
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        if (LabelPart is not { } label || ValuePart is not { } value)
+        {
+            return default;
+        }
+
+        double width = availableSize.Width;
+        label.Measure(Size.Infinity);
+        value.Measure(Size.Infinity);
+        double labelWidth = label.DesiredSize.Width, valueWidth = value.DesiredSize.Width;
+        Stacked = double.IsFinite(width) && Math.Ceiling(labelWidth) + Gap + Math.Ceiling(valueWidth) > width;
+        Align(value, Stacked ? HorizontalAlignment.Left : HorizontalAlignment.Right);
+        if (Stacked)
+        {
+            label.Measure(new Size(width, double.PositiveInfinity));
+            value.Measure(new Size(width, double.PositiveInfinity));
+            return new Size(width, label.DesiredSize.Height + 2 + value.DesiredSize.Height);
+        }
+
+        // Both fit on one line: the name keeps its own width and the value has all the rest, so rounding a width down never wraps either.
+        labelSpace = Math.Ceiling(labelWidth);
+        double rest = double.IsFinite(width) ? Math.Max(valueWidth, width - labelSpace - Gap) : valueWidth;
+        label.Measure(new Size(labelSpace, double.PositiveInfinity));
+        value.Measure(new Size(rest, double.PositiveInfinity));
+        return new Size(double.IsFinite(width) ? width : labelSpace + Gap + rest, Math.Max(label.DesiredSize.Height, value.DesiredSize.Height));
+    }
+
+    private double labelSpace;
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        if (LabelPart is not { } label || ValuePart is not { } value)
+        {
+            return finalSize;
+        }
+
+        if (Stacked)
+        {
+            label.Arrange(new Rect(0, 0, finalSize.Width, label.DesiredSize.Height));
+            value.Arrange(new Rect(0, label.DesiredSize.Height + 2, finalSize.Width, value.DesiredSize.Height));
+            return finalSize;
+        }
+
+        double left = Math.Min(labelSpace, finalSize.Width);
+        label.Arrange(new Rect(0, 0, left, label.DesiredSize.Height));
+        double from = Math.Min(finalSize.Width, left + Gap);
+        value.Arrange(new Rect(from, 0, finalSize.Width - from, value.DesiredSize.Height));
+        return finalSize;
+    }
+
+    /// <summary>The value's lines to the right beside the name, or to the left under it, where they read on from the name.</summary>
+    private static void Align(Control value, HorizontalAlignment side)
+    {
+        var alignment = side == HorizontalAlignment.Left ? TextAlignment.Left : TextAlignment.Right;
+        foreach (var text in (value is Panel panel ? panel.Children : [value]).OfType<TextBlock>())
+        {
+            if (text.HorizontalAlignment != side)
+            {
+                text.HorizontalAlignment = side;
+            }
+
+            if (text.TextAlignment != alignment)
+            {
+                text.TextAlignment = alignment;
+            }
+        }
     }
 }

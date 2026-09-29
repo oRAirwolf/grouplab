@@ -13,6 +13,9 @@ namespace GroupLab.App;
 /// <param name="Upper">The top of its interval.</param>
 internal sealed record IntervalRow(string Label, double Value, double? Lower, double? Upper);
 
+/// <summary>Where one row's parts are drawn: its name, its value, and the line its dot and range sit on.</summary>
+internal sealed record IntervalRowPlace(Rect Name, Rect Value, Rect Bar);
+
 /// <summary>
 /// Mean radius and sigma as dots with their intervals, NOTES-FROM-PLANNING.md entry 131 section 10.
 /// <para>
@@ -24,29 +27,52 @@ internal sealed record IntervalRow(string Label, double Value, double? Lower, do
 /// So the whiskers are the point and the dot is the detail, which is the opposite of how these charts are usually read. Where every interval
 /// overlaps every other, the chart says so in words underneath rather than leaving a reader to measure it by eye.
 /// </para>
+/// <para>
+/// Entry 295 section 1: each row's name has a line of its own, wrapped across the full width, and the range and its value share the line
+/// beneath, the value in a column of its own at the right. Nothing is drawn over anything else at any width or text size, and the chart is
+/// exactly as tall as its rows. On the phone a name drawn in the range's row sat under the bar, the dot and the value.
+/// </para>
 /// </summary>
 internal sealed class IntervalChart : Control
 {
-    private const double RowHeight = 34;
+    /// <summary>Space between a row's name and its range, and between one row and the next.</summary>
+    private const double NameGap = 2;
 
-    private const double PadLeft = 110;
+    private const double RowGap = 10;
 
-    private const double PadRight = 16;
+    /// <summary>How far a whisker's end reaches above and below its line.</summary>
+    private const double Whisker = 5;
 
-    private const double PadTop = 10;
+    /// <summary>Space between the range and the value column.</summary>
+    private const double ValueGap = 10;
+
+    /// <summary>The narrowest a range may be drawn beside its value; narrower, and the value goes on a line of its own.</summary>
+    private const double NarrowestBar = 60;
 
     public IReadOnlyList<IntervalRow> Rows { get; set; } = [];
 
     /// <summary>How a value reads in the person's units, set by the window.</summary>
     public Func<double, string> Length { get; set; } = inches => string.Create(CultureInfo.InvariantCulture, $"{inches:0.000} in");
 
+    /// <summary>The size the names and values are drawn at: the desktop's secondary size unless the screen asks for another.</summary>
+    public double TextSize { get; set; } = Tokens.SecondarySize;
+
+    /// <summary>
+    /// What the comparison says this chart shows, from <c>LoadComparison.ChartSays</c>, so the sentence and the verdict are one decision
+    /// (entry 295 section 1.4). Without one the chart reads its own rows.
+    /// </summary>
+    public string? Says { get; set; }
+
     public IntervalChart()
     {
         ClipToBounds = true;
     }
 
-    protected override Size MeasureOverride(Size availableSize) =>
-        new(availableSize.Width, (Rows.Count * RowHeight) + (2 * PadTop));
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        double width = double.IsFinite(availableSize.Width) ? availableSize.Width : 400;
+        return new Size(width, Places(width).Height);
+    }
 
     /// <summary>
     /// Whether every interval here overlaps every other, which is the case worth saying out loud: the measurements differ and the evidence
@@ -67,23 +93,80 @@ internal sealed class IntervalChart : Control
         }
     }
 
+    /// <summary>Whether the rows have ranges to compare at all: two or more of them with an interval.</summary>
+    public bool HasRanges => Rows.Count(r => r.Lower is not null && r.Upper is not null) >= 2;
+
     /// <summary>What the chart says in words, for a screen reader and for the headless tests.</summary>
-    public string Description => Rows.Count == 0
+    public string Description => Says ?? (Rows.Count == 0
         ? "Nothing to compare yet."
-        : AllOverlap
-            ? "Every one of these overlaps every other, so these shots do not tell them apart."
-            : "Some of these do not overlap, so there is a difference these shots can see.";
+        : !HasRanges
+            ? "These have no range to compare, so this chart cannot say whether they differ."
+            : AllOverlap
+                ? "Every one of these overlaps every other, so these shots do not tell them apart."
+                : "Some of these do not overlap, so there is a difference these shots can see.");
+
+    private FormattedText NameText(string words, double width, IBrush? brush) =>
+        new(words, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), TextSize, brush) { MaxTextWidth = Math.Max(1, width) };
+
+    private FormattedText ValueText(double value, IBrush? brush) =>
+        new(Length(value), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Mono), TextSize, brush);
+
+    /// <summary>
+    /// Where every row's parts go at this width, and the height they take: each name on its own line or lines, and under it the range with
+    /// the value in a column at the right, all rows sharing one scale; where the range would be too short beside the value, the value goes
+    /// on a line of its own beneath it.
+    /// </summary>
+    internal (IReadOnlyList<IntervalRowPlace> Rows, double Height) Places(double width)
+    {
+        var places = new List<IntervalRowPlace>();
+        if (Rows.Count == 0)
+        {
+            return (places, 0);
+        }
+
+        double column = Rows.Max(r => ValueText(r.Value, null).WidthIncludingTrailingWhitespace);
+        bool beside = width - column - ValueGap >= NarrowestBar;
+        double barRight = beside ? width - column - ValueGap : width;
+        double y = 0;
+        foreach (var row in Rows)
+        {
+            var name = NameText(row.Label, width, null);
+            var nameBox = new Rect(0, y, Math.Min(width, name.WidthIncludingTrailingWhitespace), name.Height);
+            y += name.Height + NameGap;
+            var value = ValueText(row.Value, null);
+            double line = Math.Max(2 * Whisker + 2, beside ? value.Height : 0);
+            var bar = new Rect(0, y, barRight, line);
+            Rect valueBox;
+            if (beside)
+            {
+                valueBox = new Rect(width - value.WidthIncludingTrailingWhitespace, y + ((line - value.Height) / 2), value.WidthIncludingTrailingWhitespace, value.Height);
+                y += line;
+            }
+            else
+            {
+                y += line + NameGap;
+                valueBox = new Rect(0, y, Math.Min(width, value.WidthIncludingTrailingWhitespace), value.Height);
+                y += value.Height;
+            }
+
+            places.Add(new IntervalRowPlace(nameBox, valueBox, bar));
+            y += RowGap;
+        }
+
+        return (places, y - RowGap);
+    }
 
     public override void Render(DrawingContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        if (Rows.Count == 0 || Bounds.Width < PadLeft + PadRight + 40)
+        if (Rows.Count == 0 || Bounds.Width < 40)
         {
             return;
         }
 
         var palette = Tokens.For(ActualThemeVariant);
-        double left = PadLeft, right = Bounds.Width - PadRight;
+        var dim = new SolidColorBrush(palette.Dim);
+        var (places, _) = Places(Bounds.Width);
 
         double lo = Rows.Min(r => Math.Min(r.Value, r.Lower ?? r.Value));
         double hi = Rows.Max(r => Math.Max(r.Value, r.Upper ?? r.Value));
@@ -97,15 +180,15 @@ internal sealed class IntervalChart : Control
         lo -= pad;
         hi += pad;
 
-        double At(double value) => left + (((value - lo) / (hi - lo)) * (right - left));
-
         for (int i = 0; i < Rows.Count; i++)
         {
             var row = Rows[i];
-            double y = PadTop + (i * RowHeight) + (RowHeight / 2);
+            var place = places[i];
+            double left = place.Bar.Left + Whisker, right = place.Bar.Right - Whisker;
+            double At(double value) => left + (((value - lo) / (hi - lo)) * (right - left));
+            double y = place.Bar.Center.Y;
 
-            var name = new FormattedText(row.Label, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(palette.Dim));
-            context.DrawText(name, new Point(0, y - (name.Height / 2)));
+            context.DrawText(NameText(row.Label, Bounds.Width, dim), place.Name.TopLeft);
 
             // The interval first and heavier than the dot, because the interval is the thing that decides whether a comparison means
             // anything and the dot is only where the measurement happened to land.
@@ -113,14 +196,12 @@ internal sealed class IntervalChart : Control
             {
                 double a = At(low), b = At(high);
                 Marks.Line(context, Marks.Teal, new Point(a, y), new Point(b, y), 2.5);
-                Marks.Line(context, Marks.Teal, new Point(a, y - 5), new Point(a, y + 5), 1.5);
-                Marks.Line(context, Marks.Teal, new Point(b, y - 5), new Point(b, y + 5), 1.5);
+                Marks.Line(context, Marks.Teal, new Point(a, y - Whisker), new Point(a, y + Whisker), 1.5);
+                Marks.Line(context, Marks.Teal, new Point(b, y - Whisker), new Point(b, y + Whisker), 1.5);
             }
 
             Marks.Dot(context, Marks.Impact, new Point(At(row.Value), y), 4);
-
-            var value = new FormattedText(Length(row.Value), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Mono), Tokens.DetailSize, new SolidColorBrush(palette.Dim));
-            context.DrawText(value, new Point(Math.Min(right - value.Width, At(row.Value) + 8), y - (value.Height) - 2));
+            context.DrawText(ValueText(row.Value, dim), place.Value.TopLeft);
         }
     }
 }

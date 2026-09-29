@@ -3312,13 +3312,15 @@ public sealed partial class MainWindow : Window
         heading.Children.Add(head);
         sessionRows.Children.Add(heading);
         int index = 0;
-        foreach (var s in list)
+        // Entry 295 section 3: a session is called what tells it from the others, and the date column gains the time where two would read the same.
+        var named = SessionNames.For(list);
+        foreach (var (s, name) in list.Zip(named))
         {
             string distance = s.DistanceInches is { } d ? string.Create(CultureInfo.InvariantCulture, $"{UnitSettings.DistanceFromInches(d, units.Distance):0} {UnitSettings.Symbol(units.Distance)}") : "";
             string radius = s.MeanRadiusInches is { } r
                 ? units.Length(r) + (s.MeanRadiusLowerInches is { } lo && s.MeanRadiusUpperInches is { } hi ? $" ({units.Number(lo)} to {units.Number(hi)})" : "")
                 : "";
-            var cells = Cells([s.ShotDate ?? s.CreatedUtc[..10], s.SheetName, s.Rifle ?? "", s.Load ?? "", distance, s.ShotCount.ToString(CultureInfo.InvariantCulture), radius], heading: false);
+            var cells = Cells([name.When, s.SheetName, s.Rifle ?? "", s.Load ?? "", distance, s.ShotCount.ToString(CultureInfo.InvariantCulture), radius], heading: false);
             long id = s.Id;
             var open = new Button { Content = cells, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch, Classes = { AppStyles.TableRow } };
             if (index++ % 2 == 1)
@@ -3326,7 +3328,7 @@ public sealed partial class MainWindow : Window
                 open.Classes.Add(AppStyles.Shaded);
             }
 
-            ToolTip.SetTip(open, $"Open the session of {s.ShotDate}, {s.SheetName}");
+            ToolTip.SetTip(open, $"Open the session {name.Name}, {s.SheetName}");
             open.Click += (_, _) => Leaving(() => OpenSession(id));
             var delete = Button("Delete", () => { });
             delete.Width = SessionDeleteWidth;
@@ -3334,7 +3336,7 @@ public sealed partial class MainWindow : Window
             var choose = new CheckBox { IsChecked = sessionChosen.Contains(id), VerticalAlignment = VerticalAlignment.Center, Width = SessionBoxWidth };
             choose.IsCheckedChanged += (_, _) => ChooseSession(id, choose.IsChecked == true);
             ToolTip.SetTip(choose, "Choose for comparing");
-            Avalonia.Automation.AutomationProperties.SetName(choose, $"Compare the session of {s.ShotDate}, {s.SheetName}");
+            Avalonia.Automation.AutomationProperties.SetName(choose, $"Compare the session {name.Name}, {s.SheetName}");
             DockPanel.SetDock(choose, Dock.Left);
             DockPanel.SetDock(delete, Dock.Right);
             row.Children.Add(choose);

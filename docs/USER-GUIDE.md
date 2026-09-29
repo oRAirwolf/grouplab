@@ -232,7 +232,9 @@ Tick two or more sessions in Session records and press Compare the chosen. They 
 
 ![Two loads compared](figures/screens/current/compare-light-1400x900.png)
 
-**The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads. Every test also says what it could have detected, and the table at the foot gives the shots per load it takes to resolve a smaller difference. Sessions shot at different distances are compared as angles, and the screen says so.
+**The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads. The sentence under each chart and the verdict are one decision, so they never disagree. Every test also says what it could have detected, and the table at the foot gives the shots per load it takes to resolve a smaller difference. Sessions shot at different distances are compared as angles, and the screen says so.
+
+**Each session is named by what tells it apart:** its load where you gave one, then its date where two would read the same, then its time, with the sheet's name beneath. Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 
 ## 8. The zero correction at another distance, and the dope table
 
@@ -377,7 +379,9 @@ number to switch its units. From the result: the bulls you fired at, Shots Neede
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result.
 
-**Sessions, Ballistics and Targets.** Sessions keeps every result; tick two or more to compare loads, one figure at a time. Ballistics is a
+**Sessions, Ballistics and Targets.** Sessions keeps every result, each named by its load, date and time; tick two or more to compare
+loads, one figure at a time: each load's name on a line of its own, and its range and value beneath. Extreme spread has no range there,
+so it says so and points you to mean radius. In **All figures**, a value too long to sit beside its name goes on the line under it. Ballistics is a
 tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
 PDF, and prints the printer check page; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.

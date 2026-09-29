@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1313 |
+| code | 1314 |
 | measured | 1774 |
 | decided | 1279 |
 | unbacked | 0 |
-| **total** | **4366** |
+| **total** | **4367** |
 
-**990** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**991** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3172,6 +3172,7 @@ one that matters.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): **Full report:** - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): - **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Two loads compared](figures/screens/current/compare-light-1400x900.png) **The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads.
+- *code* (src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes): Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 - *code* (src/GroupLab.App/MainWindow.BallisticsLayout.cs BallisticBar, BallisticSection, AtOneRange, ArrangeBallistics; tests/GroupLab.App.Tests/Entry247Tests.cs; entry 247): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **How the screen is laid out.** Three columns, like the analysis: - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes **Work out the chance** in the hit probability view.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): - **What costs the most** lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.

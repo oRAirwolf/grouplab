@@ -15,8 +15,8 @@ public sealed record CompareSetup(IReadOnlyList<CompareGroup> Groups, double? Di
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 258: saved sessions made into groups to compare, moved out of the desktop's Compare screen so the phone
 /// compares the same shots the same way. Each session's kept shots about their own bulls, sighters left out and excluded shots counted; two
-/// sessions of one load told apart by their dates; and sessions shot at different distances scaled to the first's, so they are compared as
-/// angles, or refused where one has no distance to scale by.
+/// sessions told apart by their loads, dates and times (entry 295, SessionNames); and sessions shot at different distances scaled to the
+/// first's, so they are compared as angles, or refused where one has no distance to scale by.
 /// </summary>
 public static class CompareSessions
 {
@@ -37,13 +37,15 @@ public static class CompareSessions
         ArgumentNullException.ThrowIfNull(units);
         var groups = new List<CompareGroup>();
         var distances = new List<double?>();
-        foreach (var record in records)
+        // Entry 295 section 3: named by the load, the date and the time, as far as it takes to tell them apart, with the sheet beneath.
+        var names = SessionNames.For(records);
+        foreach (var (record, name) in records.Zip(names))
         {
             var state = MarkingFile.Read(record.MarkingJson).State;
             var (offsets, excluded) = KeptOffsets(state);
-            string name = record.Load ?? record.SheetName;
-            groups.Add(new CompareGroup(groups.Any(g => g.Name == name) ? $"{name}, {record.ShotDate}" : name, offsets,
-                string.Create(CultureInfo.InvariantCulture, $"{offsets.Count} shots, {record.ShotDate}{(excluded > 0 ? $", {excluded} excluded and left out" : "")}"),
+            string when = name.Name.Contains(name.When, StringComparison.Ordinal) ? "" : $", {name.When}";
+            groups.Add(new CompareGroup(name.Name, offsets,
+                string.Create(CultureInfo.InvariantCulture, $"{offsets.Count} shots{when}, {name.Sheet}{(excluded > 0 ? $", {excluded} excluded and left out" : "")}"),
                 record.Load));
             distances.Add(record.DistanceInches);
         }

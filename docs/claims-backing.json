@@ -4272,6 +4272,10 @@
   "It declares it from nightly 128, where the silent update is to be seen again, and the Fold 7's first self-update with it.": {
    "kind": "measured",
    "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 127: GroupLab Dev log update.install.when silent=True, update.install.start silent=True, install.result status=-1; the fix is the UsesPermission in android/GroupLab.Android/Updates/SelfUpdate.cs; entry 288"
+  },
+  "Two sessions shot on one sheet on one day read \"2026-09-29, 04:40\" and \"2026-09-29, 05:01\", not the sheet's name twice.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes"
   }
  },
  "rules": [

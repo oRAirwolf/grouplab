@@ -287,7 +287,8 @@ public sealed partial class MainWindow
         })
         {
             // Entry 189 section 3: the charts read in the same order as the cards, as angles where there is a distance.
-            var chart = new IntervalChart { Rows = rows, Length = inches => Sized(inches, compareDistance).Value };
+            // Entry 295 section 1.4: the sentence beneath is the comparison's own, so it can never disagree with the verdict.
+            var chart = new IntervalChart { Rows = rows, Length = inches => Sized(inches, compareDistance).Value, Says = LoadComparison.ChartSays(report, title, hasRange: true) };
             compareCharts[title] = chart;
             compareColumn.Children.Add(Ruled(title + ", with the range each could really be"));
             compareColumn.Children.Add(chart);

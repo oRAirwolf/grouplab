@@ -438,11 +438,11 @@
     ],
     [
      "Mean radius, with the range each could really be",
-     "A line per load showing the whole interval, with the measured value marked on it. Two lines that overlap are two loads these shots cannot separate."
+     "Each load's name on a line of its own, and under it a line showing the whole interval with the measured value marked on it and written at the right. Two lines that overlap are two loads these shots cannot separate."
     ],
     [
      "The sentence underneath",
-     "The conclusion in plain words. Here: every one of these overlaps every other, so these shots do not tell them apart."
+     "The conclusion in plain words, and never one the verdict below disagrees with. Here: every one of these overlaps every other, so these shots do not tell them apart by this figure; where they group is another matter, in the card below."
     ],
     [
      "Sigma, with the range each could really be",

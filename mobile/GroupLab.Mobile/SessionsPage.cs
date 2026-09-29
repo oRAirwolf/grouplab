@@ -43,13 +43,13 @@ public sealed class SessionsPage : UserControl
             column.Children.Add(Screens.Line("Each target you analyze on this phone is kept here, to open again. There are none yet."));
         }
 
-        // Entry 246, look B: the sessions as rows on one card, the sheet's name and beneath it the date, the shots and the mean radius.
+        // Entry 246, look B: the sessions as rows on one card. Entry 295 section 3: each named by what tells it from the others, its load, its
+        // date and where needed its time, and beneath it the sheet's name, the shots and the mean radius.
         var units = Phone.Settings.LoadUnits();
         var rows = new StackPanel();
-        foreach (var s in saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal))
+        foreach (var (s, name) in Named(saved))
         {
-            string detail = $"{s.ShotDate ?? s.CreatedUtc[..10]} · {s.ShotCount} shots" + (s.MeanRadiusInches is { } mr ? $" · mean radius {units.Length(mr)}" : "");
-            rows.Children.Add(Screens.Row(s.SheetName, detail, () => Open(s.Id)));
+            rows.Children.Add(Screens.Row(name.Name, Detail(s, name, units), () => Open(s.Id), explain: false));
         }
 
         if (rows.Children.Count > 0)
@@ -67,6 +67,22 @@ public sealed class SessionsPage : UserControl
     }
 
     /// <summary>The sessions to compare, each a box to tick; Compare once two or more are ticked.</summary>
+    private static IEnumerable<(SessionSummary Session, SessionName Name)> Named(IReadOnlyList<SessionSummary> saved)
+    {
+        var newest = saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal).ToList();
+        return newest.Zip(SessionNames.For(newest));
+    }
+
+    /// <summary>The line beneath a session's name: the date where the name does not already carry it, the sheet, the shots, the mean radius.</summary>
+    internal static string Detail(SessionSummary s, SessionName name, UnitSettings units) =>
+        string.Join(" · ", new[]
+        {
+            name.Name.Contains(name.When, StringComparison.Ordinal) ? null : name.When,
+            name.Sheet,
+            s.ShotCount.ToString(CultureInfo.InvariantCulture) + " shots",
+            s.MeanRadiusInches is { } mr ? "mean radius " + units.Length(mr) : null,
+        }.OfType<string>());
+
     private Control Choose(IReadOnlyList<SessionSummary> saved, HashSet<long> chosen)
     {
         var units = Phone.Settings.LoadUnits();
@@ -79,13 +95,13 @@ public sealed class SessionsPage : UserControl
         });
         compare.IsEnabled = chosen.Count >= 2;
         var rows = new StackPanel { Spacing = 4 };
-        foreach (var s in saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal))
+        foreach (var (s, name) in Named(saved))
         {
             var box = new CheckBox
             {
                 IsChecked = chosen.Contains(s.Id),
                 MinHeight = Screens.Touch,
-                Content = new StackPanel { Children = { Screens.Line(s.SheetName), Screens.Dim($"{s.ShotDate ?? s.CreatedUtc[..10]} · {s.ShotCount} shots" + (s.MeanRadiusInches is { } mr ? $" · mean radius {units.Length(mr)}" : "")) } },
+                Content = new StackPanel { Children = { Screens.Line(name.Name), Screens.Quiet(Detail(s, name, units)) } },
             };
             box.IsCheckedChanged += (_, _) =>
             {
