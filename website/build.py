@@ -2070,10 +2070,13 @@ def parity_problems() -> list:
     found = []
     table = need(REPO / "docs" / "PHONE-PARITY.md").read_text(encoding="utf-8")
     rows = {}
-    for m in re.finditer(r"^\| [^|]+ \| `([a-z0-9-]+)` \| (on the phone|coming|left out) \| ([^|]*)\|$", table, re.M):
+    # Entry 290 section 6: a fifth column says where each feature stands on iPhone and iPad, in one of four words.
+    for m in re.finditer(r"^\| [^|]+ \| `([a-z0-9-]+)` \| (on the phone|coming|left out) \| ([^|]*)\| ([^|]*)\|$", table, re.M):
         if m.group(1) in rows:
             found.append(f"docs/PHONE-PARITY.md: {m.group(1)} has two rows")
         rows[m.group(1)] = (m.group(2), m.group(3).strip())
+        if m.group(4).strip() not in ("on iOS", "not yet", "on a device", "left out"):
+            found.append(f"docs/PHONE-PARITY.md: {m.group(1)} says {m.group(4).strip()!r} for iPhone and iPad, not one of on iOS, not yet, on a device, left out")
     for f in features()["features"]:
         row = rows.pop(f["key"], None)
         if row is None:

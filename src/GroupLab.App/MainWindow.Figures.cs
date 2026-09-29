@@ -127,7 +127,9 @@ public sealed partial class MainWindow
         var rayleigh = GroupStatistics.Rayleigh(offsets);
         var (xx, xy, yy) = GroupStatistics.Covariance(offsets);
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("44,*,*,*") };
-        void Cell(string text, int row, int column, bool heading)
+        // Question 70, answered B (entry 290): each value shows its own unit and switches alone, remembered for its cell, so a tapped cell never
+        // sits under a heading naming another unit.
+        void Cell(string text, int row, int column, bool heading, string? figure = null)
         {
             var cell = new TextBlock
             {
@@ -142,7 +144,7 @@ public sealed partial class MainWindow
             };
             Grid.SetRow(cell, row);
             Grid.SetColumn(cell, column);
-            grid.Children.Add(cell);
+            grid.Children.Add(figure is null ? cell : UnitTap.Attach(cell, figure));
         }
 
         double[] levels = [0.5, 0.9, 0.95, 0.99];
@@ -158,9 +160,10 @@ public sealed partial class MainWindow
             double q = levels[r];
             var circular = rayleigh.Cep(q);
             Cell(string.Create(CultureInfo.InvariantCulture, $"{100 * q:0}"), r + 1, 0, heading: false);
-            Cell($"{units.Number(circular.Value)} ({units.Number(circular.Lower)} to {units.Number(circular.Upper)})", r + 1, 1, heading: false);
-            Cell(units.Number(GroupStatistics.CepCorrNormal(xx, xy, yy, q)), r + 1, 2, heading: false);
-            Cell(units.Number(GroupStatistics.CepGrubbsPatnaik(xx, xy, yy, q)), r + 1, 3, heading: false);
+            string level = string.Create(CultureInfo.InvariantCulture, $"{100 * q:0}");
+            Cell($"{units.Length(circular.Value)} ({units.Number(circular.Lower)} to {units.Length(circular.Upper)})", r + 1, 1, heading: false, "cepTable.circular." + level);
+            Cell(units.Length(GroupStatistics.CepCorrNormal(xx, xy, yy, q)), r + 1, 2, heading: false, "cepTable.correlated." + level);
+            Cell(units.Length(GroupStatistics.CepGrubbsPatnaik(xx, xy, yy, q)), r + 1, 3, heading: false, "cepTable.grubbs." + level);
         }
 
         fullFigures.Children.Add(grid);
@@ -196,4 +199,7 @@ public sealed partial class MainWindow
     internal Expander FullFiguresPanel => fullFiguresPanel;
 
     internal IEnumerable<string> FullFiguresText => fullFigures.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
+
+    /// <summary>The full figures' text blocks, for the headless tests.</summary>
+    internal IEnumerable<TextBlock> FullFiguresBlocks => fullFigures.GetLogicalDescendants().OfType<TextBlock>();
 }

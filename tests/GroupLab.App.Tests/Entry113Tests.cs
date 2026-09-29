@@ -50,7 +50,14 @@ public class Entry113Tests
             var text = window.FullFiguresText.ToList();
             Assert.Contains("Grubbs-Patnaik", text);
             Assert.Contains(text, t => t.StartsWith("correlation across with up ", StringComparison.Ordinal));
-            Assert.Contains(text, t => t.StartsWith(UnitSettings.Imperial.Number(window.Plot.Cep50Inches!.Value) + " (", StringComparison.Ordinal));
+            // Question 70, answered B: each cell carries its own unit.
+            Assert.Contains(text, t => t.StartsWith(UnitSettings.Imperial.Length(window.Plot.Cep50Inches!.Value) + " (", StringComparison.Ordinal));
+            var cell = window.FullFiguresBlocks.First(b => b.Text?.StartsWith(UnitSettings.Imperial.Length(window.Plot.Cep50Inches!.Value) + " (", StringComparison.Ordinal) == true);
+            Assert.Contains(UnitTap.Value, cell.Classes);
+            string before = window.FullFiguresBlocks.First(b => b.Classes.Contains(UnitTap.Value) && b != cell).Text ?? "";
+            UnitTap.Switch(cell, "cepTable.circular.50", UnitKind.Length, "cm");
+            Assert.Contains(" cm", cell.Text, StringComparison.Ordinal);
+            Assert.Equal(before, window.FullFiguresBlocks.First(b => b.Classes.Contains(UnitTap.Value) && b != cell).Text);
             Assert.DoesNotContain(text, t => t.StartsWith("Without exclusions", StringComparison.Ordinal));
 
             window.BackToEditor();
