@@ -513,8 +513,11 @@ failure, so the pending version was forgotten and the "Updated to nightly N" not
 nightly 127. **The second update, nightly 126 to 127 on the tablet:** found at start, 44.9 MB in 2 s, and when GroupLab left the screen it handed
 the file to Android with "no tap needed", as GroupLab was now its own installer of record; Android still answered that it wanted a tap,
 and from the background it could not show one, so the update waited for the next start. Android 12 and later honor "no tap needed" only
-from an app that also declares `UPDATE_PACKAGES_WITHOUT_USER_ACTION`; GroupLab Dev did not. It declares it from nightly 128, where the
-silent update is to be seen again, and the Fold 7's first self-update with it.
+from an app that also declares `UPDATE_PACKAGES_WITHOUT_USER_ACTION`; GroupLab Dev did not. It declares it from nightly 128. **Nightly 126 to 128** still needed a tap, because it is the installing build's own declaration
+that counts and 126 had none; asked from the background, Android showed nothing, and every later start tried the silent way again, so
+the tap was given through the notice's "Install now" (Android's one question, then Update). Nightly 128 on the tablet holds the
+permission (granted at install) and is its own installer of record, so 128 to 129 is the no-tap test. From 129 a tap Android wants in
+the background is remembered and asked for on screen at the next start.
 
 **adb stays for tests and logs only.** Installing a nightly over adb is still how a sitting starts on a device that has no updater yet.
 

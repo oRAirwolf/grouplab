@@ -22,7 +22,8 @@ public sealed class InstallResultReceiver : BroadcastReceiver
         int status = intent.GetIntExtra(PackageInstaller.ExtraStatus, -999);
         if (status == (int)PackageInstallStatus.PendingUserAction)
         {
-            if (Confirm(intent) is { } confirm)
+            // From the background Android shows nothing; SelfUpdate.Installed remembers the tap is needed and the next start asks.
+            if (WorkInProgress.OnScreen && Confirm(intent) is { } confirm)
             {
                 confirm.AddFlags(ActivityFlags.NewTask);
                 context.StartActivity(confirm);

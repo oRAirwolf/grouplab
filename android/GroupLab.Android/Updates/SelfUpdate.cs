@@ -111,7 +111,13 @@ internal static class SelfUpdate
         : null;
 
     /// <summary>Whether Android will install the next update with no tap.</summary>
-    internal static bool Silent => AndroidUpdates.MayInstallSilently((int)global::Android.OS.Build.VERSION.SdkInt, InstallerOfRecord, Context.PackageName!);
+    /// <remarks>
+    /// Android can still want a tap (on the tablet, nightly 126 to 127 and 126 to 128: the installing build did not yet declare the
+    /// permission that lets it skip one). Asked from the background, it shows nothing, so that is remembered and the next start asks on
+    /// screen instead of trying the silent way again.
+    /// </remarks>
+    internal static bool Silent => !Prefs.GetBoolean("tapNeeded", false)
+        && AndroidUpdates.MayInstallSilently((int)global::Android.OS.Build.VERSION.SdkInt, InstallerOfRecord, Context.PackageName!);
 
     /// <summary>Whether "Install unknown apps" is allowed for GroupLab, without which Android installs nothing it hands over.</summary>
     internal static bool MayInstall => Context.PackageManager!.CanRequestPackageInstalls();
@@ -353,6 +359,12 @@ internal static class SelfUpdate
     {
         // Android asking for the tap is not a failure: the install is still pending, and the version it will be must be remembered so the
         // next start says "Updated to nightly N" (found on the tablet with nightly 125 to 126, entry 288).
+        if (status == (int)PackageInstallStatus.PendingUserAction && !WorkInProgress.OnScreen)
+        {
+            Prefs.Edit()!.PutBoolean("tapNeeded", true)!.Apply();
+            Say("Android wants a tap to install this update; GroupLab asks for it next time you open it.");
+        }
+
         if (status == (int)PackageInstallStatus.PendingUserAction || status == (int)PackageInstallStatus.Success)
         {
             Log("update.install.result", ("status", status), ("message", message));
@@ -381,7 +393,7 @@ internal static class SelfUpdate
         Log("update.installed", ("version", installing), ("from", Prefs.GetString("installingFrom", null)), ("silent", Prefs.GetBoolean("installingSilent", false)),
             ("minutesFromPublish", minutes), ("installer", InstallerOfRecord ?? "none"));
         Forget();
-        Prefs.Edit()!.Remove("installing")!.Remove("installingFrom")!.Remove("installingPublished")!.Remove("installingSilent")!.Apply();
+        Prefs.Edit()!.Remove("installing")!.Remove("installingFrom")!.Remove("installingPublished")!.Remove("installingSilent")!.Remove("tapNeeded")!.Apply();
         string words = AndroidUpdates.UpdatedTo(Build.Version);
         Say(words + ".");
         Avalonia.Threading.Dispatcher.UIThread.Post(() => Shell.Current?.Notice(words + ".", "What changed", () => OpenNotes(installing)));
