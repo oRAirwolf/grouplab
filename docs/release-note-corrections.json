@@ -9,6 +9,31 @@
           "kind": "changed"
         }
       ]
+    },
+    "9a41376b9ca332cf62d723afe27071067158f41a": {
+      "why": "Entries 279 and 280's licence note named Apple's testing service by its product name, which the note check reads as a name only this repository knows; nightly 123 refused it.",
+      "notes": [
+        {
+          "note": "Fudd buster mode, Unholy's idea, shows with your own shots why a few shots mislead: the tightest and widest three-shot groups among them, what averaging small groups would have said, and the zero chased five shots at a time. (Entry 279, 3)",
+          "kind": "new"
+        },
+        {
+          "note": "On the phone, a target GroupLab did not print can now be marked by hand: set a known length and the aim point, then add each hole under a crosshair that stays in the middle. (Entry 279, 2)",
+          "kind": "changed"
+        },
+        {
+          "note": "The status bar now says when the target was saved and where, with Show in folder, and it saves by itself once you change or accept it; Settings can switch to a Save button instead. (Entries 279 and 281)",
+          "kind": "changed"
+        },
+        {
+          "note": "A tap on a number now switches that number alone, and GroupLab remembers the unit for that figure; the others follow Settings as before. (Entry 280, 1)",
+          "kind": "changed"
+        },
+        {
+          "note": "GroupLab's license now allows it to be distributed through Apple's App Store and its test service, as work on an iPhone and iPad version begins. (Entry 279, 1)",
+          "kind": "changed"
+        }
+      ]
     }
   }
 }
