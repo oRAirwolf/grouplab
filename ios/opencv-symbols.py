@@ -55,6 +55,10 @@ def main(argv: list[str]) -> int:
                         + "".join(f'    <ReferenceNativeSymbol Include="{name}" SymbolType="Function" />\n' for name in keep)
                         + "  </ItemGroup>\n</Project>\n").encode())
     print(f"{len(keep)} OpenCV entry points kept, of {len(common)} C functions the framework defines in both slices")
+    # What OpenCvSharp names in the families GroupLab's modules build and the framework does not define: called, they would fail.
+    families = re.compile(r"^(core|imgproc|imgcodecs|calib3d|features2d|flann|objdetect|dnn|aruco|wechat_qrcode|vector|std|string)_[A-Za-z0-9_]+$")
+    absent = sorted(n for n in named(assembly) if families.match(n) and n not in common)
+    print(f"{len(absent)} such names in OpenCvSharp are not in the framework, for example: " + ", ".join(absent[:40]))
     return 0
 
 
