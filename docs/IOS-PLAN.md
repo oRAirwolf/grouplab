@@ -62,6 +62,24 @@ for the reason Android's is Android's. The iPad mini has one camera at the back,
 no permission, so the only question iOS asks is the camera's. On the simulator, which has no camera, Take a picture opens the files
 picker instead, and the self-test proves that it does and that a picture which is not a JPEG comes out as one.
 
+**Pictures from anywhere (entry 292 section 2):** built in `ios/GroupLab.iOS/Photos` and `ios/GroupLab.Share`. **Choose a photograph**
+opens the Photos picker (`PHPickerViewController`, images only), which shows the whole library, photographs kept only in iCloud Photos
+included, and asks for no permission, since GroupLab sees only what is chosen. It asks for the photograph as it was taken (the current
+representation, the file itself, never a copy made for the screen); one kept only in iCloud downloads through the item provider, whose
+progress is the same progress line and **Cancel** as on Android, and Cancel stops the download. **From another app** opens Files
+(`UIDocumentPickerViewController` for `public.image`), which reaches iCloud Drive, Google Drive, OneDrive, Dropbox and every other
+installed Files provider, and downloads a cloud file itself before handing it over. iOS gives no app a way into another app's library, so
+**Google Photos reaches GroupLab by sharing**: a share extension, `org.grouplab.app.share`, puts GroupLab in the share sheet of Google
+Photos, Photos and every other app, copies each shared picture whole into the app group `group.org.grouplab.app`, and opens GroupLab at
+`grouplab://shared`; document types make **Open in GroupLab** work from Files and other apps. Either way the picture goes straight into
+analysis, several shared at once as a set, one per sheet; a share the extension could not open GroupLab for waits and is read the next
+time GroupLab opens. A HEIC photograph is written as a JPEG for OpenCV, at full size and without its location. Whether the device is
+online comes from Network's path monitor, so a photograph that could not be fetched is said to be for that reason. The simulator's
+self-test opens and cancels both pickers, reads the sample scan into analysis through **Open in**, and through a share left in the app
+group as the extension leaves one and opened by the simulator at `grouplab://shared`; the workflow checks that the extension is inside the
+application and that iOS registered it. The signed build will need a second provisioning profile, for `org.grouplab.app.share`, and the
+app group registered on both identifiers; `scripts/ios-signing.py` checks only the application's today.
+
 ## The first TestFlight sitting
 
 What only a device can prove, checked on the iPad mini with the first TestFlight build that carries the camera. Each line is a yes or a
@@ -88,6 +106,16 @@ no, and a no comes back as a note with what was seen.
     result follows as soon as the reading allows. Measured from a screen recording started in Control Center, frame by frame from the
     press to the flash and to the result; the log's `camera.shutter` lines hold the same steps, but the iPad cannot hand its log over yet.
 11. **Tap to focus.** A tap on the preview sharpens that part of the sheet and holds it until the next tap.
+12. **The Photos picker (entry 292).** Choose a photograph opens Photos with no question about access; a photograph on the iPad is read
+    at its full size, and a HEIC one reads the right way up.
+13. **A photograph kept only in iCloud.** With Optimize iPad Storage on, a photograph not on the iPad downloads with the line saying how
+    far it has got, and Cancel stops it and returns to Capture. The same with Wi-Fi off says the iPad is offline.
+14. **Files.** From another app opens Files; a picture from iCloud Drive and one from Google Drive or OneDrive, where installed, are read.
+15. **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight
+    into analysis. The same from Photos, and with three shared at once, which are read as a set.
+16. **Open in GroupLab.** From Files, Share, then GroupLab in the row of apps (or Open in), opens GroupLab and reads the picture.
+17. **A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it. If iOS will not let the share
+    sheet open GroupLab, the sheet says the picture is waiting, and opening GroupLab reads it.
 
 ## 3. Building without a Mac
 

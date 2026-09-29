@@ -40,6 +40,11 @@
     <UseSystemResourceKeys>false</UseSystemResourceKeys>
     <!-- Entry 292 section 2.3: the app group the share extension leaves shared pictures in. -->
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <!--
+      Entitlements would make the build ask for a provisioning profile even for the simulator, which needs none: there it is signed ad hoc
+      with the entitlements in the signature, which is how the simulator grants the app group.
+    -->
+    <CodesignRequireProvisioningProfile Condition="'$(CodesignRequireProvisioningProfile)' == '' and $(RuntimeIdentifier.StartsWith('iossimulator'))">false</CodesignRequireProvisioningProfile>
   </PropertyGroup>
 
   <ItemGroup>
