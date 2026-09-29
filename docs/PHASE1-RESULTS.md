@@ -54,6 +54,20 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 - **5.2:** a printer check now carries its date on every result it corrects; Settings can mark a printer calibrated or serviced, and a
   marked or six-month-old check says so and offers a new one (`PrinterProfile.Stale`, `PrinterChangedTests`).
 
+## Entry 291 section 7: the detection scoreboard
+
+- **Built** (entry 261 option a): `Scoreboard` in Core, `grouplab scoreboard` on the command line (`--synthetic`, `--corpus`, and `truth`
+  from a scan), the baseline in `docs/scoreboard/synthetic-baseline.json`, and `ScoreboardTests` in every build (36 s in Release). A drop
+  beyond the margin (1 hole, 1 false mark, 0.005 in median centre error) fails the build and names the condition.
+- **Synthetic,** two seeds, 13 conditions: 48 to 50 of 50 holes on every line but a hand's shadow (44) and glare (45); one false mark in
+  650 readings; median centre error 0.006 to 0.008 in. Curl now registers (49 of 50, against 0 of 50 on 2026-09-28, since entry 260),
+  with bulls up to 0.033 in off. Glare, clipped as a camera clips it, reproduces the study's 22 and 23.
+- **Real, local only:** 7 photographs of three sheets against their 600 dpi scans, hole by hole: 169 of 173 found, 6 false marks,
+  median centre error 0.012 to 0.026 in, worst 0.086 in, about 1 s a picture. Square-on pictures are clean; at 9 and 15 degrees off square
+  the losses and false marks are all in the right-hand column, a hole and the paper beside it read as one 0.3 to 0.5 in blob.
+- **Proposed next, not done:** send a mark of twice the calibre or more to review instead of placing it; a local paper level per bull for
+  shadow edges; a glare hot-spot mask; the mesh's interpolation between markers on a curled sheet. No detection parameter was changed.
+
 ## Entry 280 section 2: row 10 on both platforms
 
 - **Phone:** Share a picture (the results box dragged, pinched or corner-resized, lines chosen by a tap; chips for the mean radius circle,
