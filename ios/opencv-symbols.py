@@ -30,8 +30,16 @@ def defined(archive: Path) -> set[str]:
 
 
 def named(assembly: Path) -> set[str]:
-    """Every identifier in the assembly's metadata strings: its P/Invokes' entry points among them."""
-    return set(m.decode() for m in re.findall(rb"[A-Za-z_][A-Za-z0-9_]{2,}", assembly.read_bytes()))
+    """
+    Every identifier in the assembly's metadata strings, and every tail of each: its P/Invokes' entry points among them. The compiler
+    stores a name that ends another only once, inside the longer one, so vector_Point2f_delete is found only as the tail of
+    vector_vector_Point2f_delete; reading whole strings alone missed it, and the QR reader stopped on it on the simulator.
+    """
+    names = set()
+    for m in re.findall(rb"[A-Za-z_][A-Za-z0-9_]{2,}", assembly.read_bytes()):
+        word = m.decode()
+        names.update(word[i:] for i in range(len(word) - 2))
+    return names
 
 
 def main(argv: list[str]) -> int:
@@ -46,7 +54,8 @@ def main(argv: list[str]) -> int:
     common = set.intersection(*(defined(s) for s in slices))
     keep = sorted(common & named(assembly))
     # A few names every build needs, checked so a change of OpenCvSharp that renamed them is seen here rather than on a phone.
-    for needed in ("core_Mat_new1", "imgproc_phaseCorrelate", "aruco_ArucoDetector_detectMarkers", "wechat_qrcode_WeChatQRCode_detectAndDecode"):
+    for needed in ("core_Mat_new1", "imgproc_phaseCorrelate", "aruco_ArucoDetector_detectMarkers", "wechat_qrcode_WeChatQRCode_detectAndDecode",
+                   "vector_Point2f_delete"):
         if needed not in keep:
             print(f"::error::{needed} is not among the entry points kept")
             return 1
