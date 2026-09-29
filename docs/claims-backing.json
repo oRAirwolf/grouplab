@@ -4220,6 +4220,26 @@
   "The one use of Google Play services is the photo picker's backport to Android 10, and a phone without it gets the apps instead.": {
    "kind": "code",
    "where": "the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml and PhotoIntake.Opens (entry 292 section 4.3)"
+  },
+  "**The first proposed fix, made** (entry 291 section 7 item 4).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 291 section 7 item 4"
+  },
+  "The four marks behind those failures measured 2.1 to 2.3 single holes across, wider than any merge of whole holes, and in each the hole was the one part of it a disc 0.35 to 0.45 of a hole across could fill; the rings' slivers could not hold it.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic and --corpus on 2026-09-29, before and after the joined-hole rule in src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs JoinedHole; the corpus is local only (entry 291 section 7 item 4)"
+  },
+  "So the data supported something better than holding the mark back: a mark twice a hole across or more is opened that way, and where one hole-sized part is left the shot is placed on it and raised for review with the whole mark's size (docs/DETECTION-PIPELINE.md, S8).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs RenderDifferenceOptions.JoinedDiameters and JoinedHole, tests/GroupLab.Core.Tests/Detection/JoinedHoleTests.cs (entry 291 section 7 item 4)"
+  },
+  "On the synthetic board every line is as it was except a hand's shadow, which gained one hole (44 to 45 of 50, the second seed 22 to 23): a hole joined to the shadow's edge and refused as not compact is now placed on its hole.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic and --corpus on 2026-09-29, before and after the joined-hole rule in src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs JoinedHole; the corpus is local only (entry 291 section 7 item 4)"
+  },
+  "What is left on the 9 degree picture is two slivers of printed ring about 0.3 in long with no hole in them, and the worst center errors of 0.08 in are one hole 1.3 holes across, below the rule's reach; both are the rings failing to cancel on the side of the sheet farthest from square, and that is the next thing to look at.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic and --corpus on 2026-09-29, before and after the joined-hole rule in src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs JoinedHole; the corpus is local only (entry 291 section 7 item 4)"
   }
  },
  "rules": [

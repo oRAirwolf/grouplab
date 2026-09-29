@@ -230,14 +230,16 @@ public static class AutomaticMarking
             }
 
             int merges = holes.Holes.Count(h => h.PossibleMerge), oversized = holes.Holes.Count(h => h.Oversized), vetoed = holes.Holes.Count(h => h.SplitVetoed);
+            int joined = holes.Holes.Count(h => h.JoinedHoles is not null);
             int residue = holes.Rejected.Count(r => r.Reason.StartsWith("residue", StringComparison.Ordinal));
             stage.Metric("splits the hole size stopped", vetoed, "count");
             stage.Metric("residue refused", residue, "count");
             stage.Metric("split halves", merges, "count");
             stage.Metric("oversized", oversized, "count");
+            stage.Metric("placed on the hole inside a larger mark", joined, "count");
             stage.Artefact(() => holes.Residual is { } residual ? new ResidualArtefact(residual) : null);
             stage.Done(StageStatus.Ok, string.Create(CultureInfo.InvariantCulture,
-                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}{(vetoed > 0 ? $", {vetoed} kept whole by their size" : "")}{(residue > 0 ? $", {residue} refused as residue" : "")}"));
+                $"{holes.Holes.Count} holes inside the registered sheet, {holes.Rejected.Count} candidates rejected, {swallowed.Count} of them hole-sized inside exclusion zones{(merges > 0 ? $", {merges} from split merges" : "")}{(oversized > 0 ? $", {oversized} oversized" : "")}{(joined > 0 ? $", {joined} placed on the hole inside a larger mark" : "")}{(vetoed > 0 ? $", {vetoed} kept whole by their size" : "")}{(residue > 0 ? $", {residue} refused as residue" : "")}"));
         }
 
         // Entry 70 section 5: two nearly identical positions, kept apart on purpose. A shot's offset is a measurement, and the shooter aimed
@@ -282,7 +284,9 @@ public static class AutomaticMarking
         }
 
         var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches * printScale,
-            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB, h.CalibreHoles) : null,
+            h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB, h.CalibreHoles)
+                : h.JoinedHoles is { } whole ? new DetectedOversize(whole, false, CalibreHoles: h.CalibreHoles, Joined: true)
+                : null,
             h.SizeHoles is { } size && !h.PossibleMerge ? new MarkSize(size, h.SplitA, h.SplitB) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 

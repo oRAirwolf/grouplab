@@ -88,21 +88,21 @@
       "pictures": 2,
       "registered": 2,
       "holes": 50,
-      "marks": 44,
-      "found": 44,
+      "marks": 45,
+      "found": 45,
       "falseMarks": 0,
-      "medianCentreInches": 0.0067,
+      "medianCentreInches": 0.0068,
       "worstCentreInches": 0.0737,
       "medianRegistrationInches": 0.0001,
       "worstRegistrationInches": 0.0003,
-      "medianMilliseconds": 1174,
+      "medianMilliseconds": 920,
       "foundPerPicture": [
         22,
-        22
+        23
       ],
-      "recall": 0.88,
+      "recall": 0.9,
       "expectedToFail": false,
-      "note": "the soft edge of the shadow crosses bulls and costs three holes a picture; the study placed its ellipse elsewhere and lost at most one"
+      "note": "the soft edge of the shadow crosses bulls and costs two or three holes a picture; the study placed its ellipse elsewhere and lost at most one. Entry 291 section 7 item 4 moved it from 44 to 45: one hole joined to the shadow's edge, refused as not compact, is now placed on its hole-sized part"
     },
     {
       "condition": "dim",

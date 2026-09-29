@@ -2748,7 +2748,10 @@ public sealed partial class MainWindow : Window
             {
                 flags.Children.Add(new Expander
                 {
-                    Header = flagged.Children.Count == 1 ? "1 mark flagged as possibly two holes" : $"{flagged.Children.Count} marks flagged as possibly two holes",
+                    // Entry 291 section 7 item 4: a shot placed on the hole inside a larger mark is flagged too, and is not possibly two holes.
+                    Header = state.Shots.Any(s => s.IsShot && s.Oversize is { Joined: true })
+                        ? (flagged.Children.Count == 1 ? "1 mark flagged for its size" : $"{flagged.Children.Count} marks flagged for their size")
+                        : flagged.Children.Count == 1 ? "1 mark flagged as possibly two holes" : $"{flagged.Children.Count} marks flagged as possibly two holes",
                     Content = flagged,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                 });
@@ -4120,6 +4123,7 @@ public sealed partial class MainWindow : Window
     {
         ReviewKind.Contested => "Contested assignment",
         ReviewKind.Oversized => "Possibly two holes",
+        ReviewKind.Joined => "Hole read with what is beside it",
         ReviewKind.Doubled => "Two shots on one bull",
         ReviewKind.Unassigned => "No bull",
         ReviewKind.Count => "Count differs from rounds fired",

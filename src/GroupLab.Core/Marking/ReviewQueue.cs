@@ -12,6 +12,12 @@ public enum ReviewKind
     /// <summary>A shot the detector flagged as covering about two holes' area.</summary>
     Oversized,
 
+    /// <summary>
+    /// A shot placed on the hole-sized part of a mark twice a hole across or more, a hole read together with what lies beside it
+    /// (NOTES-FROM-PLANNING.md entry 291 section 7 item 4).
+    /// </summary>
+    Joined,
+
     /// <summary>A scoring bull holding more than one shot.</summary>
     Doubled,
 
@@ -55,8 +61,8 @@ public enum ReviewAction
 }
 
 /// <summary>
-/// The review queue: every item the marking wants a person to look at, contested assignments first, then oversized marks, doubled bulls,
-/// shots with no bull, and refused candidates in empty scoring bulls, each in the sheet's order. An item is resolved once a person has
+/// The review queue: every item the marking wants a person to look at, contested assignments first, then oversized marks, shots placed
+/// on the hole-sized part of a larger mark, doubled bulls, shots with no bull, and refused candidates in empty scoring bulls, each in the sheet's order. An item is resolved once a person has
 /// decided it: chosen the shot's bull, marked it not a shot, or said to keep it. <see cref="Apply"/> carries out a choice.
 /// </summary>
 public static class ReviewQueue
@@ -149,7 +155,8 @@ public static class ReviewQueue
         // wrong, not the holes. Alan opened a 6.5 mm sheet after a smaller one, the calibre followed him across, and all fifteen holes were
         // flagged at 2.0 to 2.36 holes' area: sixteen items on a sheet with nothing wrong with it. A queue that cries wolf teaches people to
         // ignore it, so this raises one question about the calibre instead of one item a shot.
-        var flagged = shots.Where(s => s.Oversize is not null && !OnlySighters(s.Bull)).ToList();
+        // A joined mark is placed on one hole and says nothing about the caliber, so it is neither counted here nor raised as possibly two.
+        var flagged = shots.Where(s => s.Oversize is { Joined: false } && !OnlySighters(s.Bull)).ToList();
         var judged = shots.Where(s => !OnlySighters(s.Bull)).ToList();
         if (flagged.Count >= MostOfThem && judged.Count > 0 && flagged.Count >= judged.Count * MostOfThemShare)
         {
@@ -181,6 +188,15 @@ public static class ReviewQueue
 
             choices.Add(new ReviewChoice("Not a shot", ReviewAction.NotAShot));
             items.Add(new ReviewItem(key, ReviewKind.Oversized, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]), choices, Dismissed(key)));
+        }
+
+        // Entry 291 section 7 item 4: a shot placed on the hole-sized part of a larger mark is counted where it was placed, and shown so a
+        // person can check it sits on the hole.
+        foreach (var shot in shots.Where(s => s.Oversize is { Joined: true } && !OnlySighters(s.Bull)))
+        {
+            string key = $"joined:{shot.Id}";
+            items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]),
+                [new ReviewChoice("It is on the hole", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
         }
 
         // Entry 113 section 4: a bull the marking says holds more than one, or a sheet read by nearest bull, is not doubled by holding them.

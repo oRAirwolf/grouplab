@@ -260,6 +260,28 @@ Every candidate carries a score. The signatures below replace those in DESIGN.md
 
 **Sub-pixel centroids** are computed for accepted holes. Given the measured raggedness, the centroid must be **intensity-weighted over the whole disturbed region**, not a fitted circle centre. Fitting a circle to a lobed star puts the centre wherever the lobes happen to be distributed.
 
+**A hole joined to what lies beside it is placed on the hole and shown for review** (NOTES-FROM-PLANNING.md entry 291 section 7 item 4,
+the detection scoreboard's first proposed fix). On the two photographs of one sheet taken 9 and 15 degrees off square, every miss and false
+mark was one mark 2.1 to 2.3 holes across: a hole and the printed rings beside it read as one, where the rings did not quite cancel. Such a
+mark was placed up to 0.18 in off its hole, cut into two shots, or refused as not compact. No merge of whole holes is that wide (two
+touching holes measure about 1.8 holes across by their hull, three about 1.9), so a mark twice a hole across or more, and at most three, is
+opened with a disc 0.35 to 0.45 of a hole across, the smallest that works: a hole survives it and a ring's line does not. Where exactly one
+part is left, holding half a hole to 1.6 holes and no more than three quarters of the mark, the shot is placed on that part's weighted
+center and raised in the review queue as a hole read with what is beside it, with the whole mark's size. Anything else is judged as it
+always was, so merged holes are still split or flagged as possibly two. The size of a hole is the sheet's own, or the caliber's where the
+sheet has too few marks; with neither, nothing is opened. Measured with `grouplab scoreboard` on 2026-09-29:
+
+| Picture | Found, before | False marks, before | Found, after | False marks, after |
+|---|---|---|---|---|
+| Real, 9 degrees off square | 23 of 25 | 3 | 25 of 25 | 2 |
+| Real, 15 degrees off square | 24 of 25 | 1 | 25 of 25 | 0 |
+| Real, the other five pictures | 122 of 123 | 2 | 122 of 123 | 2 |
+| Synthetic, a hand's shadow, two seeds | 44 of 50 | 0 | 45 of 50 | 0 |
+| Synthetic, the other twelve conditions | unchanged | unchanged | unchanged | unchanged |
+
+The two false marks left on the 9 degree picture are slivers of the same rings about 0.3 in long with no hole in them; they are a different
+failure and are not touched here.
+
 **Caliber estimation** follows DESIGN.md section 12, with the measured calibration now available. Median hull diameter over all detections, then divide by the measured ratio to recover caliber:
 
 | Caliber | Nominal | n | Mean hull diameter | Ratio | Deficit |

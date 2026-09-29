@@ -26,11 +26,19 @@ public sealed record MarkSize(double Holes, PointD? SplitA = null, PointD? Split
 /// tap on the image: NOTES-FROM-PLANNING.md entry 94 section 4 found the two-minute loop breaking at exactly the item the flag exists to
 /// raise, because the only way to add the second shot was the mouse.
 /// </para>
+/// <para>
+/// <see cref="Joined"/> marks a shot placed on the one hole-sized part of a mark twice a hole across or more, NOTES-FROM-PLANNING.md entry
+/// 291 section 7 item 4: a hole read together with the printed rings or paper beside it. <see cref="Holes"/> is then the whole mark's area in
+/// holes, and the shot itself is a single hole where it was placed, so it is shown for review rather than offered as two shots.
+/// </para>
 /// </summary>
-public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null, double? CalibreHoles = null)
+public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null, double? CalibreHoles = null, bool Joined = false)
 {
     /// <summary>The sentence for a shot, in plain words and without naming one cause.</summary>
-    public string Describe(string shot) => Tentative
+    public string Describe(string shot) => Joined
+        ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            $"Shot {shot} was read as one mark about {Holes:0.0} holes' area, a hole joined to the print or paper beside it, and was placed on the part the size of one hole. Check it sits on the hole, and move it if it does not.")
+        : Tentative
         ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Look at it, and name the caliber if it is not named.{More}")
         : string.Create(System.Globalization.CultureInfo.InvariantCulture,

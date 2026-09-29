@@ -66,7 +66,31 @@ public sealed record RenderDifferenceOptions(
     /// inside the sheet. It raised the paper level beside it, the paper next to it read darker than it should, and every photograph gained
     /// two holes that were plain paper. Holes are still looked for in the band: a flyer can land there, and entry 130 section 2b.4 keeps it.
     /// </summary>
-    double EdgeBandInches = 0.15);
+    double EdgeBandInches = 0.15,
+    /// <summary>
+    /// How many single holes across a mark must be before it is examined as a hole joined to what lies beside it, NOTES-FROM-PLANNING.md
+    /// entry 291 section 7 item 4. Two holes merged into one mark measure at most about 1.8 holes across by their hull, and three about 1.9,
+    /// so a mark twice a hole across or more is not a merge of whole holes. On the photographs taken 9 and 15 degrees off square, every miss
+    /// and false mark was such a mark, 2.1 to 2.3 holes across: a hole joined to the printed rings beside it, placed up to 0.18 in off it.
+    /// </summary>
+    double JoinedDiameters = 2.0,
+    /// <summary>The largest mark, in single holes across, examined for a joined hole; beyond it a hole-sized part is as likely a shadow's.</summary>
+    double JoinedMostDiameters = 3.0,
+    /// <summary>
+    /// The radius of the opening that keeps only what a hole could fill, as a fraction of a single hole across: a ring's line and the paper
+    /// beside a hole are narrower than 0.7 of a hole, and a hole survives it whole.
+    /// </summary>
+    double JoinedOpening = 0.35,
+    /// <summary>
+    /// The widest opening tried, as a fraction of a single hole across, in steps of 0.05 from <see cref="JoinedOpening"/>. Where a hole meets
+    /// a ring the neck between them can be two thirds of a hole wide, and one of the four joined marks measured needed 0.45 to cut it.
+    /// </summary>
+    double JoinedOpeningMost = 0.45,
+    /// <summary>
+    /// The most of the mark's own area the hole-sized part may keep. Holes merged with each other survive the opening nearly whole, so a
+    /// part that keeps more than this is the mark itself, and it is judged as it always was.
+    /// </summary>
+    double JoinedKeepsAtMost = 0.75);
 
 /// <summary>Where the size of a single hole came from, NOTES-FROM-PLANNING.md entry 82.</summary>
 public enum HoleSizeSource
@@ -119,11 +143,15 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// <para>
 /// A split half carries its parent blob's geometry, as it already does for the diameter, because a half has no separate hull.
 /// </para>
+/// <para>
+/// <see cref="JoinedHoles"/> is set on a hole found inside a mark twice a hole across or more, NOTES-FROM-PLANNING.md entry 291 section 7
+/// item 4: the whole mark's own area in single holes. The hole's geometry is the hole-sized part's, and the mark is shown for review.
+/// </para>
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
     double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN,
-    double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null);
+    double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null, double? JoinedHoles = null);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -271,6 +299,7 @@ public static class RenderDifferenceHoleDetector
         var holes = new List<RenderDifferenceHole>();
         var rejected = new List<RejectedBlob>();
         var elongatedBlobs = new List<(ImageBlob Blob, BlobMoments Moments, double AreaInches, double MarkAreaInches, double Hx, double Hy, double DiameterInches, double Solidity, double Closure, double? CalibreHoles)>();
+        var large = new List<(ImageBlob Blob, double Hx, double Hy, double Ppi, double MarkAreaInches)>();
         foreach (var blob in backend.FilledBlobs(closed))
         {
             var (area, hx, hy) = Polygon(blob.Hull);
@@ -319,6 +348,13 @@ public static class RenderDifferenceHoleDetector
                 ?? (zone is not null ? $"inside {zone.Name}"
                 : !nearTheGrid ? OutsideTheGrid.TooFarOut
                 : null);
+
+            // Entry 291 section 7 item 4: a mark large enough that it may be a hole joined to what lies beside it is kept aside, whatever its
+            // shape made of it, and looked at again once the size of a single hole is known.
+            if (!tooSmall && zone is null && nearTheGrid && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
+            {
+                large.Add((blob, hx, hy, ppi, markAreaIn));
+            }
             if (why is not null)
             {
                 rejected.Add(new RejectedBlob(hx, hy, diameterIn, why, shape is null ? zone?.Name : null));
@@ -387,6 +423,30 @@ public static class RenderDifferenceHoleDetector
             {
                 holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
                     AreaInches: markAreaIn, Aspect: BoxAspect(blob), HullAreaInches: areaIn));
+            }
+        }
+
+        // S8, a hole joined to what lies beside it, NOTES-FROM-PLANNING.md entry 291 section 7 item 4. On photographs taken 9 and 15 degrees
+        // off square, every miss and false mark was one mark 2.1 to 2.3 holes across: a hole and the printed rings or paper beside it read as
+        // one, its centre placed up to 0.18 in off the hole or the mark refused as not compact. No merge of whole holes is that wide. So a mark
+        // twice a hole across or more is opened with a disc a hole can fill and a ring's line cannot, and where exactly one hole-sized part is
+        // left, and it is less than most of the mark, the shot is placed on that part and shown for review with the mark's size. Otherwise the
+        // mark is judged as it always was: holes merged with each other survive the opening whole.
+        if ((reference.FlagInches ?? options.CalibreInches) is { } single)
+        {
+            foreach (var (blob, hx, hy, ppi, markAreaIn) in large)
+            {
+                double across = 2 * Math.Sqrt(Polygon(blob.Hull).Area / Math.PI) / ppi;
+                if (across < options.JoinedDiameters * single || across > options.JoinedMostDiameters * single
+                    || JoinedHole(closed.Pixels, binary, residual, expected, width, height, blob, ppi, single, markAreaIn, options, backend) is not { } joined)
+                {
+                    continue;
+                }
+
+                int at = holes.FindIndex(h => h.HullX == hx && h.HullY == hy);
+                holes.RemoveAll(h => h.HullX == hx && h.HullY == hy);
+                rejected.RemoveAll(r => r.X == hx && r.Y == hy);
+                holes.Insert(at >= 0 ? at : holes.Count, joined);
             }
         }
 
@@ -1046,6 +1106,156 @@ public static class RenderDifferenceHoleDetector
         }
 
         return centres;
+    }
+
+    /// <summary>
+    /// The one hole-sized part of a mark joined to what lies beside it, or null, entry 291 section 7 item 4. The mark's own pixels, filled, are
+    /// opened with a disc <see cref="RenderDifferenceOptions.JoinedOpening"/> of a hole across, widened in steps to
+    /// <see cref="RenderDifferenceOptions.JoinedOpeningMost"/> until it works: a hole survives it and a ring's line or a strip of paper does
+    /// not. A hole is returned only where exactly one part of at least a quarter of a hole survives, it holds half a hole
+    /// to 1.6 holes, and it keeps no more than <see cref="RenderDifferenceOptions.JoinedKeepsAtMost"/> of the mark; its centre is the residual
+    /// weighted centroid over its own hull, and it carries the whole mark's area in holes as <see cref="RenderDifferenceHole.JoinedHoles"/>.
+    /// </summary>
+    private static RenderDifferenceHole? JoinedHole(byte[] closed, byte[] binary, byte[] residual, GrayImage expected, int width, int height, ImageBlob blob,
+        double ppi, double single, double markAreaIn, RenderDifferenceOptions options, IImagingBackend backend)
+    {
+        int pad = (int)Math.Ceiling(options.JoinedOpeningMost * single * ppi) + 2;
+        int left = Math.Max(0, blob.Left - pad), top = Math.Max(0, blob.Top - pad);
+        int w = Math.Min(width, blob.Left + blob.Width + pad) - left, h = Math.Min(height, blob.Top + blob.Height + pad) - top;
+        var mask = new byte[w * h];
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                if (closed[((top + y) * width) + left + x] != 0 && Inside(blob.Hull, left + x, top + y))
+                {
+                    mask[(y * w) + x] = 1;
+                }
+            }
+        }
+
+        mask = LargestFilled(mask, w, h);
+        int total = mask.Count(v => v != 0);
+        double oneHole = Math.PI * Math.Pow(single / 2, 2);
+        ImageBlob? part = null;
+        // The smallest opening that leaves one hole-sized part: a wider neck where the hole meets a ring needs a wider disc to cut.
+        for (double fraction = options.JoinedOpening; part is null && total > 0 && fraction <= options.JoinedOpeningMost + 1e-9; fraction += 0.05)
+        {
+            int radius = Math.Max(2, (int)Math.Round(fraction * single * ppi));
+            var opened = backend.Morphology(new GrayImage(w, h, mask), MorphologyOperation.Open, radius);
+            var parts = backend.FilledBlobs(opened).Where(p => p.Area / (ppi * ppi) >= 0.25 * oneHole).ToList();
+            if (parts.Count == 0)
+            {
+                break;
+            }
+
+            double holesOf = parts[0].Area / (ppi * ppi) / oneHole;
+            if (parts.Count == 1 && holesOf >= 0.5 && holesOf <= 1.6 && parts[0].Area <= options.JoinedKeepsAtMost * total)
+            {
+                part = parts[0];
+            }
+        }
+
+        if (part is null)
+        {
+            return null;
+        }
+        var placed = new ImageBlob(part.Area, part.Left + left, part.Top + top, part.Width, part.Height, [.. part.Hull.Select(q => new PointD(q.X + left, q.Y + top))]);
+        var (area, hx, hy) = Polygon(placed.Hull);
+        if (area <= 0)
+        {
+            return null;
+        }
+
+        var moments = Moments(residual, expected, width, placed);
+        double diameter = 2 * Math.Sqrt(area / Math.PI), partAreaIn = placed.Area / (ppi * ppi);
+        double? calibreHoles = options.CalibreInches is { } calibre ? partAreaIn / (Math.PI * Math.Pow(calibre / 2, 2)) : null;
+        return new RenderDifferenceHole(moments.X, moments.Y, hx, hy, diameter / ppi, placed.Area / area, moments.Ink > 0.3,
+            Closure(binary, width, height, moments.X, moments.Y, diameter), moments.Elongation, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
+            AreaInches: partAreaIn, Aspect: BoxAspect(placed), HullAreaInches: area / (ppi * ppi), JoinedHoles: markAreaIn / oneHole);
+    }
+
+    /// <summary>The largest 8-connected part of a 0/1 mask, with every gap inside it that the border cannot reach filled.</summary>
+    private static byte[] LargestFilled(byte[] mask, int w, int h)
+    {
+        var label = new int[w * h];
+        int best = 0, bestCount = 0, next = 0;
+        var queue = new Queue<int>();
+        for (int start = 0; start < mask.Length; start++)
+        {
+            if (mask[start] == 0 || label[start] != 0)
+            {
+                continue;
+            }
+
+            int count = 0;
+            label[start] = ++next;
+            queue.Enqueue(start);
+            while (queue.Count > 0)
+            {
+                int i = queue.Dequeue();
+                count++;
+                int x = i % w, y = i / w;
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    for (int dx = -1; dx <= 1; dx++)
+                    {
+                        int nx = x + dx, ny = y + dy;
+                        if (nx < 0 || ny < 0 || nx >= w || ny >= h)
+                        {
+                            continue;
+                        }
+
+                        int j = (ny * w) + nx;
+                        if (mask[j] != 0 && label[j] == 0)
+                        {
+                            label[j] = next;
+                            queue.Enqueue(j);
+                        }
+                    }
+                }
+            }
+
+            if (count > bestCount)
+            {
+                (best, bestCount) = (next, count);
+            }
+        }
+
+        // Background the border reaches, 4-connected, stays background; everything else is the part, its gaps filled.
+        var outside = new bool[w * h];
+        for (int i = 0; i < mask.Length; i++)
+        {
+            int x = i % w, y = i / w;
+            if ((x == 0 || y == 0 || x == w - 1 || y == h - 1) && label[i] != best)
+            {
+                outside[i] = true;
+                queue.Enqueue(i);
+            }
+        }
+
+        while (queue.Count > 0)
+        {
+            int i = queue.Dequeue();
+            int x = i % w, y = i / w;
+            Span<int> near = [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1];
+            foreach (int j in near)
+            {
+                if (j >= 0 && !outside[j] && label[j] != best)
+                {
+                    outside[j] = true;
+                    queue.Enqueue(j);
+                }
+            }
+        }
+
+        var filled = new byte[w * h];
+        for (int i = 0; i < filled.Length; i++)
+        {
+            filled[i] = best != 0 && !outside[i] ? (byte)1 : (byte)0;
+        }
+
+        return filled;
     }
 
     /// <summary>The fraction of 360 rays from the centre, one pixel steps, that meet a foreground pixel of <paramref name="binary"/> within <paramref name="reach"/> pixels.</summary>

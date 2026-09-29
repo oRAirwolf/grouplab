@@ -247,5 +247,27 @@ holes and make false marks, all in the right-hand column of bulls, where the str
 beside it read as one, placed up to 0.18 in from the hole. A mark twice the calibre and more is not a single hole, and it should be shown
 for review rather than placed. That is a measured change to propose, not one made here.
 
+**The first proposed fix, made** (entry 291 section 7 item 4). The four marks behind those failures measured 2.1 to 2.3 single holes
+across, wider than any merge of whole holes, and in each the hole was the one part of it a disc 0.35 to 0.45 of a hole across could fill;
+the rings' slivers could not hold it. So the data supported something better than holding the mark back: a mark twice a hole across or
+more is opened that way, and where one hole-sized part is left the shot is placed on it and raised for review with the whole mark's size
+(docs/DETECTION-PIPELINE.md, S8). Before and after, each picture against its scan:
+
+| Picture | Found, before | False marks, before | Worst center error, before | Found, after | False marks, after | Worst center error, after |
+|---|---|---|---|---|---|---|
+| 2026-09-29, 2 degrees off square | 25 of 25 | 0 | 0.025 in | 25 of 25 | 0 | 0.025 in |
+| 2026-09-29, 1 degree | 25 of 25 | 0 | 0.045 in | 25 of 25 | 0 | 0.045 in |
+| 2026-09-29, 9 degrees | 23 of 25 | 3 | 0.081 in | 25 of 25 | 2 | 0.081 in |
+| 2026-09-29, 15 degrees | 24 of 25 | 1 | 0.086 in | 25 of 25 | 0 | 0.083 in |
+| 2026-09-26, 6 ARC, Dominus K | 25 of 25 | 0 | 0.034 in | 25 of 25 | 0 | 0.034 in |
+| 2026-09-26, 6 ARC, Magnus S | 25 of 25 | 1 | 0.037 in | 25 of 25 | 1 | 0.037 in |
+| 2026-09-26, 6.5 Creedmoor | 22 of 23 | 1 | 0.055 in | 22 of 23 | 1 | 0.055 in |
+
+Together: 172 of 173 holes found where it was 169, and 4 false marks where it was 6. On the synthetic board every line is as it was except
+a hand's shadow, which gained one hole (44 to 45 of 50, the second seed 22 to 23): a hole joined to the shadow's edge and refused as not
+compact is now placed on its hole. The baseline moved with it. What is left on the 9 degree picture is two slivers of printed ring about
+0.3 in long with no hole in them, and the worst center errors of 0.08 in are one hole 1.3 holes across, below the rule's reach; both are
+the rings failing to cancel on the side of the sheet farthest from square, and that is the next thing to look at.
+
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.
