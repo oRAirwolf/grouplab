@@ -22,9 +22,40 @@ internal static class SelfTest
 
     private static string Folder => Path.Combine(IosPhone.Documents, "selftest");
 
-    internal static bool Asked() =>
-        Program.Arguments.Contains(Argument) || Environment.GetCommandLineArgs().Contains(Argument)
-        || Environment.GetEnvironmentVariable("GROUPLAB_SELFTEST") == "1";
+    /// <summary>The launch argument that shows the black idle screen (entry 268, entry 290 section 2 item 6), for a sitting on the iPad.</summary>
+    internal const string IdleArgument = "--idle";
+
+    internal static bool Asked() => Has(Argument) || Environment.GetEnvironmentVariable("GROUPLAB_SELFTEST") == "1";
+
+    internal static bool IdleAsked() => Has(IdleArgument);
+
+    private static bool Has(string argument) => Program.Arguments.Contains(argument) || Environment.GetCommandLineArgs().Contains(argument);
+
+    /// <summary>
+    /// A test sitting's idle screen: shown once the application is up, with the screen kept on only while it is showing, since the sitting
+    /// watches it; once it is closed, iOS may dim and lock the screen again as it always does.
+    /// </summary>
+    internal static void StartIdle() => DispatcherTimer.RunOnce(() =>
+    {
+        Shell.Current?.ShowIdle();
+        KeepAwakeWhile(() => Find<IdleScreen>() is not null);
+    }, TimeSpan.FromSeconds(2));
+
+    /// <summary>Keeps the screen from dimming while <paramref name="driving"/> holds, and gives the choice back to iOS the moment it does not.</summary>
+    private static void KeepAwakeWhile(Func<bool> driving)
+    {
+        UIKit.UIApplication.SharedApplication.IdleTimerDisabled = true;
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+        timer.Tick += (_, _) =>
+        {
+            if (!driving())
+            {
+                UIKit.UIApplication.SharedApplication.IdleTimerDisabled = false;
+                timer.Stop();
+            }
+        };
+        timer.Start();
+    }
 
     /// <summary>Before the start: the first run's questions answered no, imperial units, and the sample's caliber and distance typed in.</summary>
     internal static void Prepare()
@@ -46,6 +77,10 @@ internal static class SelfTest
     {
         var checks = new List<SelfTestCheck>();
         double budget = 0;
+
+        // The self-test is a sitting: the screen stays on while it runs, and only then.
+        bool running = true;
+        await OnUi(() => KeepAwakeWhile(() => running));
         try
         {
             Say("running");
@@ -78,6 +113,9 @@ internal static class SelfTest
                 checks.Add(await Task.Run(() => SelfTestChecks.Pipeline(sample)));
                 checks.Add(await Chosen(sample, n));
             }
+
+            // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
+            checks.Add(await OnScreen(() => Shell.Current!.ShowIdle(), () => Find<IdleScreen>() is not null, "90-idle", "idle screen", words: false));
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
@@ -92,6 +130,7 @@ internal static class SelfTest
             DiagnosticLog.Info("selftest.check", ("name", check.Name), ("passed", check.Passed), ("skipped", check.Skipped));
         }
 
+        running = false;
         Say("done");
     }
 
@@ -158,19 +197,19 @@ internal static class SelfTest
     }
 
     /// <summary>Shows something, checks it is there, and waits while the workflow photographs it.</summary>
-    private static async Task<SelfTestCheck> OnScreen(Action show, Func<bool> shown, string picture, string name)
+    private static async Task<SelfTestCheck> OnScreen(Action show, Func<bool> shown, string picture, string name, bool words = true)
     {
         var check = new SelfTestCheck(name);
         try
         {
             await OnUi(show);
             await Task.Delay(TimeSpan.FromSeconds(2));
-            int words = await OnUi(() => Shell.Current!.GetVisualDescendants().OfType<TextBlock>().Count(t => t.IsEffectivelyVisible && !string.IsNullOrWhiteSpace(t.Text)));
+            int texts = await OnUi(() => Shell.Current!.GetVisualDescendants().OfType<TextBlock>().Count(t => t.IsEffectivelyVisible && !string.IsNullOrWhiteSpace(t.Text)));
             bool there = await OnUi(shown);
-            check.Numbers["texts"] = words;
+            check.Numbers["texts"] = texts;
             bool taken = await Photographed(picture);
-            check.Passed = there && words > 5;
-            check.Detail = $"{(there ? "opened" : "did not open")}, {words} lines of text on screen, {(taken ? "photographed" : "not photographed")} as {picture}.png";
+            check.Passed = there && (!words || texts > 5);
+            check.Detail = $"{(there ? "opened" : "did not open")}, {texts} lines of text on screen, {(taken ? "photographed" : "not photographed")} as {picture}.png";
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {

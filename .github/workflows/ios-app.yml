@@ -53,17 +53,29 @@ jobs:
           dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
       - name: OpenCV for iOS
         id: opencv
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          run=""
-          for branch in ios/opencv main; do
-            run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
-            [ -n "$run" ] && break
-          done
-          if [ -z "$run" ] || ! gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv"; then
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
             echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
             echo "linked=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -81,14 +93,15 @@ jobs:
           echo "linker flags: $flags"
           echo "linked=true" >> "$GITHUB_OUTPUT"
           echo "run=$run" >> "$GITHUB_OUTPUT"
-          echo "frameworks=Accelerate CoreFoundation CoreGraphics Foundation $frameworks" >> "$GITHUB_OUTPUT"
-          echo "flags=-lc++ $flags" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
 
       - name: Build for the simulator
         run: |
           dotnet build ios/GroupLab.iOS --configuration Release -r iossimulator-arm64 \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
-            -v:minimal -clp:ErrorsOnly > build-simulator.log 2>&1 || { grep -E "error|Error" build-simulator.log | sort -u | head -60; exit 1; }
+            -bl:build-simulator.binlog -v:minimal -clp:ErrorsOnly > build-simulator.log 2>&1 || { grep -E "error" build-simulator.log | head -60; exit 1; }
           app=$(find ios/GroupLab.iOS/bin/Release -path '*iossimulator-arm64*' -name 'GroupLab.iOS.app' -type d | head -1)
           test -n "$app"
           echo "APP=$app" >> "$GITHUB_ENV"
@@ -185,15 +198,95 @@ jobs:
             app-console.log
             app-logs
             crashes
+            build-*.log
+            build-*.binlog
           retention-days: 14
           if-no-files-found: warn
 
+  # The device build in its own job, beside the simulator's, since each takes a quarter of an hour.
+  device:
+    name: iOS device, unsigned
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+
+      # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
+      - name: The .NET iOS workload
+        run: |
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload list | grep -i ios
+
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: OpenCV for iOS
+        id: opencv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
+            echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/ios-opencv"
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          mkdir -p "$GITHUB_WORKSPACE/ios/native"
+          unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
+          ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
+          frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
+          flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
+          echo "OpenCV for iOS from run $run: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)"
+          echo "frameworks: $frameworks"
+          echo "linker flags: $flags"
+          echo "linked=true" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+
+      # Unsigned until the signing secrets exist (request 55): this proves the device build compiles and links, and uploads nothing.
       - name: Build for a device, unsigned
-        if: always() && steps.opencv.conclusion == 'success'
         run: |
           dotnet build ios/GroupLab.iOS --configuration Release -r ios-arm64 \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
-            -v:minimal -clp:ErrorsOnly > build-device.log 2>&1 || { grep -E "error|Error" build-device.log | sort -u | head -60; exit 1; }
+            -p:EnableCodeSigning=false -bl:build-device.binlog \
+            -v:minimal -clp:ErrorsOnly > build-device.log 2>&1 || { grep -E "error" build-device.log | head -60; exit 1; }
           app=$(find ios/GroupLab.iOS/bin/Release -path '*ios-arm64*' -not -path '*simulator*' -name 'GroupLab.iOS.app' -type d | head -1)
           test -n "$app"
           du -sh "$app"
@@ -201,3 +294,12 @@ jobs:
           if [ "${{ steps.opencv.outputs.linked }}" = "true" ]; then
             nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the device executable"; exit 1; }
           fi
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-device-build
+          path: |
+            build-device.log
+            build-device.binlog
+          retention-days: 7
