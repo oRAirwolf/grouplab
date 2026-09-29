@@ -12,6 +12,28 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.122
+
+**2026-09-29**, commit `78ee351`. Nightly.
+
+**What you will notice**
+
+- A shot you leave out of the figures is now left out of every figure shown, the report, the saved session and what is sent, with the figure for every shot still beside each one, as Unholy reported.
+- On the phone, the camera's words no longer flip between move closer and move back, the torch goes off after the picture, the camera starts again when you come back to GroupLab, and what you frame is what is saved.
+- Photographs whose square codes are small in the picture are now named by reading each code enlarged where the sheet's markers put it, instead of being refused.
+- On the phone, the picture on the result keeps its shape and stands upright, a picture check's notes wrap, the zero's windage shows its amount, and a picture with notes no longer scores 100.
+- Importing shots from a CSV file now starts from GroupLab's guesses at which column is across, the unit, which way is up and whether the numbers are measured from the aim point or the group's center; on the phone it is under Sessions.
+- The glossary now says exactly how mean radius, standard deviation and extreme spread are worked out, and the full figures no longer claim their 95% ellipse holds 95% of later shots.
+- On the phone, the camera has a bubble level, Camera and Result buttons stay in view, and the shutter answers at once with a sound and a flash.
+
+**Under the hood**
+
+- Each aim point's own figures and each shot's offset and clicks are worked out, ready for the screens being drawn, and the test build times the shutter step by step.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.122)
+
+---
+
 ## 0.2.0-nightly.121
 
 **2026-09-28**, commit `23325ec`. Nightly.
