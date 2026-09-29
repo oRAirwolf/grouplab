@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1314 |
+| code | 1317 |
 | measured | 1774 |
 | decided | 1279 |
 | unbacked | 0 |
-| **total** | **4367** |
+| **total** | **4370** |
 
-**991** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**994** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1145,6 +1145,8 @@ one that matters.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): **OpenCV for iOS is built (entry 290 section 2).** `ios/opencv/build-extern.sh` builds OpenCV and opencv_contrib 4.13.0 as static libraries, with the same modules as Android and none that need the camera, the screen or the GPU, then OpenCvSharp's native half from the same tag as the managed package, cut to the same bindings as on Android and made a static library.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): It does this twice, for iPhone and iPad (iphoneos arm64) and for the simulator on Apple silicon (iphonesimulator arm64), both with iOS 26 as the lowest version, merges each into one archive with every third party library OpenCV built, checks that the archive defines the entry points GroupLab calls, and wraps the two in `OpenCvSharpExtern.xcframework`, zipped with its SHA-256.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): The `ios` workflow runs it on `macos-26` with Xcode 26, caches the result under a key made from the script, so it is rebuilt only when the script changes, and keeps it as the artifact `ios-opencv` for thirty days.
+- *code* (ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4): **What is built (entry 290 section 2 items 3 and 4):** the head, `ios/GroupLab.iOS`, with the shared screens, the sheets in its bundle, the icon from the desktop's mark, OpenCV linked statically, and the camera's place holding the files picker until the camera arrives.
+- *code* (ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4): The workflow `ios app` builds it for the simulator and for a device, unsigned, and runs a self-test on an iOS 26 simulator: every place along the bottom is opened and photographed, the imaging is checked on a rendered sheet, and the committed sample scan is analyzed through the phone's own pipeline and compared with the desktop running the same checks in the same job.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): Building without a Mac The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The signing material and the key are secrets Alan sets himself with `gh secret set`, request 55 in `docs/notes/for-alan.md` says how; neither session ever sees them.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): **The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and whether its shape is right, never a value.
@@ -3508,6 +3510,7 @@ one that matters.
 - *code* (src/GroupLab.App/MainWindow.Saving.cs and the Saving settings (entry 281 section 2)): In Settings, under Saving , you can choose a Save button instead; then the bar says Not saved yet until you press it, and GroupLab asks before you leave or close a target with unsaved changes.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Full report: Page 1: the particulars, the plot, the figures with their intervals, the zero correction and the cards.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Page 2: the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
+- *code* (src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes): Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): What costs the most lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.

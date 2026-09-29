@@ -4276,6 +4276,14 @@
   "Two sessions shot on one sheet on one day read \"2026-09-29, 04:40\" and \"2026-09-29, 05:01\", not the sheet's name twice.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes"
+  },
+  "**What is built (entry 290 section 2 items 3 and 4):** the head, `ios/GroupLab.iOS`, with the shared screens, the sheets in its bundle, the icon from the desktop's mark, OpenCV linked statically, and the camera's place holding the files picker until the camera arrives.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4"
+  },
+  "The workflow `ios app` builds it for the simulator and for a device, unsigned, and runs a self-test on an iOS 26 simulator: every place along the bottom is opened and photographed, the imaging is checked on a rendered sheet, and the committed sample scan is analyzed through the phone's own pipeline and compared with the desktop running the same checks in the same job.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4"
   }
  },
  "rules": [

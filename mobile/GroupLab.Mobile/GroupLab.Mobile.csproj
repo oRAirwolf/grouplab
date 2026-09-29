@@ -23,6 +23,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="GroupLab.Android" />
     <InternalsVisibleTo Include="GroupLab.iOS" />
+    <!-- Entry 290 section 2 item 4: the desktop side of the iOS self-test, which runs the head's checks against the same code. -->
+    <InternalsVisibleTo Include="GroupLab.iOS.SelfTestReference" />
     <InternalsVisibleTo Include="GroupLab.App.Tests" />
     <InternalsVisibleTo Include="GroupLab.Core.Tests" />
     <InternalsVisibleTo Include="GroupLab.Mobile.Tests" />

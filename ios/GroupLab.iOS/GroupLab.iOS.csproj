@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 290 section 2 item 3: the iPhone and iPad application, org.grouplab.app, the same id as on Android. The
+    screens are the shared mobile project's (mobile/GroupLab.Mobile); this head answers IPhonePlatform with UIKit, ImageIO and OpenCV linked
+    statically. Not in GroupLab.slnx: the desktop never needs the iOS workload. .github/workflows/ios-app.yml builds it for the simulator and
+    for a device, unsigned until the Apple secrets exist (docs/IOS-PLAN.md section 3).
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-ios</TargetFramework>
+    <!-- Entry 206 section 4 and docs/IOS-PLAN.md: iOS 26, an iPhone 11 or later and the iPad mini (6th generation). -->
+    <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+    <ApplicationId>org.grouplab.app</ApplicationId>
+    <ApplicationTitle>GroupLab</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
+    <RootNamespace>GroupLab.iOS</RootNamespace>
+    <!-- The icon, from the desktop's mark by scripts/ios-icons.py. -->
+    <AppIcon>AppIcon</AppIcon>
+    <!-- Unsigned until the signing secrets exist (request 55); the simulator never needs signing. -->
+    <EnableCodeSigning Condition="'$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.iOS" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+    <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Each file names the Apple namespaces it uses, so an Avalonia or OpenCV name is never read as a UIKit one. -->
+    <Using Remove="UIKit" />
+    <Using Remove="Foundation" />
+    <Using Remove="CoreGraphics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Entry 290 section 2 item 1: the phone's screens, and the desktop files they compile, shared with the Android head. -->
+    <ProjectReference Include="..\..\mobile\GroupLab.Mobile\GroupLab.Mobile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The sheets, in the application bundle under targets/ and targets/frozen/, copied into the application's files at first use. -->
+    <BundleResource Include="..\..\targets\*.gltd.json" Link="targets\%(Filename)%(Extension)" LogicalName="targets/%(Filename)%(Extension)" />
+    <!-- Entry 226 section 1: the definitions sheets were printed from before a redesign, so an old printout is still identified. -->
+    <BundleResource Include="..\..\targets\frozen\**\*.gltd.json" Link="targets\frozen\%(Filename)%(Extension)" LogicalName="targets/frozen/%(Filename)%(Extension)" />
+    <ImageAsset Include="Assets.xcassets\**\*" />
+  </ItemGroup>
+
+  <!--
+    OpenCV and OpenCvSharp's native half, built by ios/opencv/build-extern.sh as a static xcframework. CI puts it in ios/native; a build
+    without it still compiles and links, and the imaging then says it is missing. OpenCvSharp calls the library by name, and NativeOpenCv
+    points that name at the application itself, where this links it.
+  -->
+  <PropertyGroup>
+    <GroupLabOpenCv Condition="'$(GroupLabOpenCv)' == ''">$(MSBuildThisFileDirectory)..\native\OpenCvSharpExtern.xcframework</GroupLabOpenCv>
+    <!-- The Apple frameworks and libraries OpenCV's static configuration names (link-frameworks.txt); CI passes what the build wrote. -->
+    <GroupLabOpenCvFrameworks Condition="'$(GroupLabOpenCvFrameworks)' == ''">Accelerate CoreFoundation CoreGraphics Foundation</GroupLabOpenCvFrameworks>
+    <GroupLabOpenCvLinkerFlags Condition="'$(GroupLabOpenCvLinkerFlags)' == ''">-liconv -lz -lc++</GroupLabOpenCvLinkerFlags>
+    <DefineConstants Condition="Exists('$(GroupLabOpenCv)')">$(DefineConstants);GROUPLAB_OPENCV</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(GroupLabOpenCv)')">
+    <NativeReference Include="$(GroupLabOpenCv)">
+      <Kind>Static</Kind>
+      <ForceLoad>true</ForceLoad>
+      <IsCxx>true</IsCxx>
+      <SmartLink>false</SmartLink>
+      <Frameworks>$(GroupLabOpenCvFrameworks)</Frameworks>
+      <LinkerFlags>$(GroupLabOpenCvLinkerFlags)</LinkerFlags>
+    </NativeReference>
+  </ItemGroup>
+
+</Project>

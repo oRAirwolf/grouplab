@@ -46,6 +46,12 @@ thirty days. The head links it statically and calls it through `__Internal`.
 every iPhone from the 11 of 2019 on and on the iPad mini (6th generation), which is the test device; one floor lets the camera code use
 one set of AVFoundation calls with no version checks; and nothing older can be tested, since there is no device to test it on.
 
+**What is built (entry 290 section 2 items 3 and 4):** the head, `ios/GroupLab.iOS`, with the shared screens, the sheets in its bundle,
+the icon from the desktop's mark, OpenCV linked statically, and the camera's place holding the files picker until the camera arrives. The
+workflow `ios app` builds it for the simulator and for a device, unsigned, and runs a self-test on an iOS 26 simulator: every place along
+the bottom is opened and photographed, the imaging is checked on a rendered sheet, and the committed sample scan is analyzed through the
+phone's own pipeline and compared with the desktop running the same checks in the same job.
+
 ## 3. Building without a Mac
 
 The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26. It builds the head,
