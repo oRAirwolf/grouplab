@@ -233,7 +233,7 @@ public static class GltdValidator
 
         private void CheckPitch(ParametricLayout? layout)
         {
-            if (d.Fiducials?.Scheme is not ("grid-boundary-1" or "grid-boundary-half-1") || (d.Cells?.Grid is null && layout is null))
+            if (d.Fiducials?.Scheme is not ("grid-boundary-1" or "grid-boundary-half-1" or "grid-boundary-edge-1") || (d.Cells?.Grid is null && layout is null))
             {
                 return;
             }

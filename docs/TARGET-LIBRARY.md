@@ -364,6 +364,69 @@ The `roll-24`, `roll-36` and `roll-42` page presets fix the width and leave the 
 
 **A note on how wide is too wide.** GL-LR300-R42 spans 11.5 MOA of windage at 300 yards, which is the widest sight picture in the library. That is a shooting ergonomics question rather than a measurement one, and section 7 works through why.
 
+### 4.6 The 2 MOA sheets
+
+**Added on 2026-09-29** (NOTES-FROM-PLANNING.md entry 289), at Unholy's request, as Alan chose them: nine 2.00 in bulls, 3 by 3, with
+a load block. The 1 MOA sheets use a 1.00 in bull and call it 1 MOA, so the 2.00 in bull is 2 MOA in the same sense: **1.91 MOA at 100
+yd and 1.75 MOA at 100 m**. It has an inner ring at 1.00 in and a 5 mm center dot, and both rings are 0.8 mm wide, as the 1 MOA sheets'
+outer ring is. Neighboring bulls are 12.6 mm apart, as on the 1 MOA sheets. Twelve sheets:
+
+| Sheet | Identifier stem | Bull |
+|---|---|---|
+| The single page, Letter or A4: nine scoring bulls, for a quick group or a zero check | GL-CF9-LTR, GL-CF9-A4 | plain; `-C` and `-E` for the C and E bulls |
+| The set of three, Letter or A4: the same page three times as a tiled set, 27 scoring bulls, for load development | GL-CF9-T, GL-CF9-TA4 | plain; `-C` and `-E` |
+
+```
+GL-CF9-LTR    letter
+columns x 446, 1080, 1714                    pitch 634 dmm = 63.4 mm = 2.496 in
+rows    y 738, 1372, 2006
+discs     508 / 492 / 254 / 238 / 50 dmm
+codes     2, top corners only
+data block  x 120, y 2364, 1919 x 310 dmm, nine fields, 280 dmm code reserve
+fiducials 26 markers, grid-boundary-edge-1: 14 lattice intersections and 12 outer edge midpoints
+
+GL-CF9-A4     a4
+columns x 416, 1050, 1684                    pitch 634 dmm
+rows    y 826, 1460, 2094
+data block  x 120, y 2540, 1860 x 310 dmm
+fiducials 28 markers: all 16 intersections and 12 outer edge midpoints
+```
+
+**Why 3 by 3 and not 3 by 4.** Twelve 2 in bulls on a 2.5 in grid fill a Letter page: the grid is 7.5 by 10 in, and the first and last
+bulls would overlap the corner codes by more than half an inch. Nine leave a band at the top for the codes and the name and one at the
+foot for the load block.
+
+**The pitch is 63.4 mm, not 63.5.** The even-pitch rule of section 4.1 takes 0.1 mm off 2.5 in, as it takes 0.1 mm off the 5x5's 1.5 in.
+
+**Why two codes.** The load block owns the bottom band, as on GL-CF25-LTR-D. On Letter the bottom pair of codes does not fit above it. On
+A4 it would, but it would take the lattice's two bottom corners, so A4 keeps the top pair too, the grid sits lower, and all sixteen
+intersections carry a marker. Two replicated codes still mean either one alone reconstructs the definition.
+
+**Why the edge midpoints carry markers.** The lattice's intersections leave fourteen markers on Letter. Photographed synthetically, 30
+flat frames and 30 bowed a quarter inch with the main camera's lens and the measured corner noise, fourteen kept every flat frame within
+the 0.005 in photograph gate, but three of the thirty bowed frames missed it, where the 5x5 misses none. `grid-boundary-edge-1`
+(TARGET-SCHEMA.md section 3.7) adds the midpoints of the outer cell edges, twelve more; the midpoints between neighboring bulls stay free.
+With them every frame is within the gate on Letter and on A4, the worst bull 0.0015 in flat and 0.0020 in bowed on Letter, against the
+5x5's 0.0014 and 0.0023; with the intersections alone the bowed frames' median was 0.0024 in and the worst 0.0060 in.
+
+**The bull styles.** The E bull is twice the 1 MOA sheets' E in every part: a 2.00 in black disc, a 0.72 in white center and a 5 mm dot,
+so the 2 MOA sheet at 200 yd looks through the scope as the 1 MOA sheet does at 100. The C diamond is 2.00 in point to point. Twice the 1
+MOA sheets' 1.25 in would reach past the cell, and a diamond over 2.18 in would take the edge midpoints' markers, which its points face.
+
+**The set of three** is one definition printed three times with the tile index in its codes, as the large format sets are: each page
+reads itself, GroupLab pools them by tile index into one group, and a missing page is named. Every page is numbered 1 to 9. **Entry 289
+asked for bulls numbered 1 to 25 across the set, with bulls 8 and 9 of the third page as sighters S1 and S2; the format cannot carry
+that.** A tiled set shares one body, so every page has the same bulls, the same scoring flags and the same labels, and a label that is
+not the default 1 to 9 needs the label block, which has no byte layout yet (question 10). Shoot 25 and leave two, or use two as sighters
+and leave them out of the group.
+
+**The load block** is the standard nine-field block of section 6 and a declared exclusion zone, as on every sheet with one. The entry
+asked for date, distance, rifle, caliber, load and notes; an explicit field set has no byte layout, so the sheet carries the standard
+nine: date, distance, cartridge, bullet, powder and charge, brass, primer, seating depth and notes.
+
+**A4 margins.** On A4 the grid sits 9.9 mm from the side edges and the nearest ink, a marker, 7.9 mm; the 5x5 on A4 has 8.0 mm, and the
+printer check page 5.8 mm. Nothing had to shrink.
+
 ---
 
 ## 5. The zeroing sheets

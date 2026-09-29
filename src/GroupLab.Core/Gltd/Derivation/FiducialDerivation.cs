@@ -10,7 +10,7 @@ public sealed record DerivationResult(DerivedMarkers? Markers, string? Error);
 
 /// <summary>
 /// The fiducial derivation rules of TARGET-SCHEMA.md section 3.7, ported exactly from the validated solvers:
-/// <c>grid-boundary-1</c> and <c>grid-boundary-half-1</c> from <c>tools/layout/layout.py</c>, and
+/// <c>grid-boundary-1</c> and <c>grid-boundary-half-1</c> from <c>tools/layout/layout.py</c>, <c>grid-boundary-edge-1</c> (entry 289), and
 /// <c>field-ring-1</c> from <c>tools/layout/zero.py</c>. The drop test is part of each rule.
 /// </summary>
 public static class FiducialDerivation
@@ -36,6 +36,7 @@ public static class FiducialDerivation
         {
             "grid-boundary-1" => GridBoundary(definition, f, halfPitch: false),
             "grid-boundary-half-1" => GridBoundary(definition, f, halfPitch: true),
+            "grid-boundary-edge-1" => GridBoundary(definition, f, halfPitch: false, edges: true),
             "field-ring-1" => FieldRing(definition, f),
             _ => new DerivationResult(null, $"\"{f.Scheme}\" is not a derivation rule this implementation knows."),
         };
@@ -128,7 +129,13 @@ public static class FiducialDerivation
         }
     }
 
-    private static DerivationResult GridBoundary(TargetDefinition d, Fiducials f, bool halfPitch)
+    /// <summary>
+    /// <c>grid-boundary-1</c>, <c>grid-boundary-half-1</c>, and <c>grid-boundary-edge-1</c>, NOTES-FROM-PLANNING.md entry 289: the cell
+    /// boundaries' intersections and, in addition, the midpoint of every cell edge on the lattice's outer boundary, for a grid of few large
+    /// cells whose intersections alone are too few to fit a bent sheet. The midpoints between neighboring bulls stay free, so a shot that
+    /// strays toward the next bull never lands in a marker.
+    /// </summary>
+    private static DerivationResult GridBoundary(TargetDefinition d, Fiducials f, bool halfPitch, bool edges = false)
     {
         if (BullLayout.Recognise(d) is not { } layout)
         {
@@ -163,31 +170,37 @@ public static class FiducialDerivation
             }
         }
 
+        var candidates = xs.SelectMany(x => ys.Select(y => new PointDmm(x, y))).ToList();
+        if (edges)
+        {
+            int left = g.OriginX - (g.PitchX / 2), right = left + (g.Cols * g.PitchX);
+            int top = g.OriginY - (g.PitchY / 2), bottom = top + (g.Rows * g.PitchY);
+            candidates.AddRange(Enumerable.Range(0, g.Cols).SelectMany(i => new[] { new PointDmm(g.OriginX + (i * g.PitchX), top), new PointDmm(g.OriginX + (i * g.PitchX), bottom) }));
+            candidates.AddRange(Enumerable.Range(0, g.Rows).SelectMany(j => new[] { new PointDmm(left, g.OriginY + (j * g.PitchY)), new PointDmm(right, g.OriginY + (j * g.PitchY)) }));
+        }
+
         var codes = CodeBoxes(d);
         var rings = RingBoxes(d);
         Box2? dataBlock = d.DataBlock is { } b ? Box2.FromRect(b.X, b.Y, b.Width, b.Height) : null;
         var kept = new List<PointDmm>();
         int dropped = 0;
-        foreach (int x in xs)
+        foreach (var p in candidates)
         {
-            foreach (int y in ys)
+            var box = Box2.Square(p.X, p.Y, footprint);
+            if (box.X0 < 2 * SafeEdge || box.Y0 < 2 * SafeEdge
+                || box.X1 > 2L * (d.Page.Width - SafeEdge) || box.Y1 > 2L * (d.Page.Height - SafeEdge)
+                || codes.Any(c => box.Overlaps(c, CodeGap))
+                || rings.Any(r => r.Clashes(box, RingGap))
+                || (dataBlock is { } block && box.Overlaps(block, DataBlockGap)))
             {
-                var box = Box2.Square(x, y, footprint);
-                if (box.X0 < 2 * SafeEdge || box.Y0 < 2 * SafeEdge
-                    || box.X1 > 2L * (d.Page.Width - SafeEdge) || box.Y1 > 2L * (d.Page.Height - SafeEdge)
-                    || codes.Any(c => box.Overlaps(c, CodeGap))
-                    || rings.Any(r => r.Clashes(box, RingGap))
-                    || (dataBlock is { } block && box.Overlaps(block, DataBlockGap)))
-                {
-                    dropped++;
-                    continue;
-                }
-
-                kept.Add(new PointDmm(x, y));
+                dropped++;
+                continue;
             }
+
+            kept.Add(p);
         }
 
-        return new DerivationResult(new DerivedMarkers(Raster(kept), xs.Count * ys.Count, dropped), null);
+        return new DerivationResult(new DerivedMarkers(Raster(kept), candidates.Count, dropped), null);
     }
 
     private static DerivationResult FieldRing(TargetDefinition d, Fiducials f)

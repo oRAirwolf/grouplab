@@ -306,8 +306,11 @@ When `scheme` names a derivation rule, the marker list is **computed from the gr
 | `grid-boundary-1` | cell boundaries: the bull lattice offset by half a pitch in both axes | the sheets at 25.4 to 50.8 mm pitch, except GL-CF25-100M-A4; and GL-LR300-R42 |
 | `grid-boundary-half-1` | as above, subdivided to half-pitch steps in both axes | coarse-pitch sheets, 101.6 mm and above, except GL-LR300-R42; and GL-CF25-100M-A4, whose outer bull columns `grid-boundary-1` leaves outside the lattice |
 | `field-ring-1` | a ring of positions in the clear band around a declared measurement grid, on its major lines | the zeroing sheets |
+| `grid-boundary-edge-1` | the `grid-boundary-1` lattice and, in addition, the midpoint of every cell edge on the lattice's outer boundary | the 2 MOA sheets, GL-CF9 |
 
 In every derived rule, a candidate position is **dropped** if it would fall outside the safe margin, or within a clearance of a bull's outermost disc, a code, or another marker. A circle's clearance is measured to its bounding box, as `layout.py` does; a square's to the square itself (entry 243 section 4), because the box round a diamond covers the paper on its diagonals, which is where the markers of a 1.5 in grid sit. The drop test is part of the rule and is therefore versioned with it, which is what makes recomputation deterministic.
+
+`grid-boundary-edge-1` exists for a grid of few large cells (NOTES-FROM-PLANNING.md entry 289). The 2 MOA sheets' 3 by 3 grid of 63.4 mm cells offers sixteen intersections, and the top codes take two, leaving fourteen on Letter. Fourteen kept thirty flat synthetic photographs within the 0.005 in photograph gate, but a sheet bowed a quarter inch missed it on three frames in thirty, where the 5x5 misses none. The midpoints bring the bowed frames' worst bull to 0.0020 in, the 5x5's level. The midpoints of the outer cell edges add twelve, 26 on Letter and 28 on A4. The midpoints between neighboring bulls are left free, unlike `grid-boundary-half-1`, so a shot that strays toward the next bull never lands in a marker. The candidates are the intersections in raster order followed by the midpoints, top and bottom edge for each column, then left and right edge for each row; the surviving markers are sorted into raster order before ids are assigned, as in every rule. The pitch must be even, as for `grid-boundary-1`.
 
 `grid-boundary-half-1` exists because `grid-boundary-1` degenerates at coarse pitch. On the 300 yard tile, a 101.6 mm pitch over a 2 by 3 grid offers only 12 lattice positions and the 38.1 mm rings knock out all but two of them. Two markers is not a usable registration. Subdividing to half-pitch raises the candidate count to 35 and leaves **nine** surviving markers, well spread. The half rule requires the pitch to be divisible by 4 dmm so that the quarter-pitch offsets stay integer, which the validator asserts.
 
@@ -856,7 +859,8 @@ Sighter block                              1 + 8s bytes
 Fiducial block                                      6 bytes
   scheme      1 byte   0 = explicit, 1 = grid-boundary-1,
                        2 = grid-boundary-half-1,
-                       3 = field-ring-1
+                       3 = field-ring-1,
+                       4 = grid-boundary-edge-1
   family      1 byte   see table in 5.5
   markerSize  2 bytes  uint16 quanta
   quietZone   1 byte   uint8 quanta

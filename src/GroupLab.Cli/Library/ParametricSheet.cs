@@ -18,8 +18,10 @@ namespace GroupLab.Cli.Library;
 /// <param name="SetSheets">How many sheets of this design make one set: more than one prints them as a tiled assembly, so each sheet's codes
 /// carry its place in the set and the set's size.</param>
 /// <param name="HalfPitchMarkers">Markers at half the pitch, <c>grid-boundary-half-1</c>, which a coarse pitch needs to keep enough of them.</param>
+/// <param name="TopCodesOnly">With a load block, the top pair of codes only, even where the bottom pair would fit above the block, so the
+/// grid sits lower and keeps the markers the bottom pair would take (entry 289: the 2 MOA sheets on A4).</param>
 public sealed record SheetSpec(string Name, string Page, int Columns, int Rows, double PitchInches, int RingDmm, int Sighters, bool LoadBlock,
-    IReadOnlyList<Disc>? Discs = null, int SetSheets = 1, bool HalfPitchMarkers = false);
+    IReadOnlyList<Disc>? Discs = null, int SetSheets = 1, bool HalfPitchMarkers = false, bool TopCodesOnly = false);
 
 /// <summary>How a check stands: fine, a warning that leaves the decision with the person, or a refusal because the sheet cannot work.</summary>
 public enum CheckLevel
@@ -152,7 +154,7 @@ public static class ParametricSheet
             : [conventional];
         string? shortOfRoom = null;
         (TargetDefinition Finished, List<Diagnostic> Errors)? firstInvalid = null;
-        foreach (int codes in spec.LoadBlock ? new[] { 4, 2 } : [4])
+        foreach (int codes in spec.LoadBlock ? spec.TopCodesOnly ? new[] { 2 } : [4, 2] : [4])
         {
             foreach (int gap in gaps)
             {

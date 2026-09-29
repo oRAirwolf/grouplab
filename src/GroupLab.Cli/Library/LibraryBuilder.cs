@@ -28,6 +28,10 @@ public static class LibraryBuilder
         [356] = [356, 342, 178, 166, 36],
         [320] = [320, 312, 160, 154, 32],
         [635] = [635, 613, 318, 302, 64],
+
+        // Entry 289: the 2 MOA bull, twice the 1 MOA sheets' 1.00 in bull, an inner ring at 1.00 in, both rings 0.8 mm as the 1 MOA outer
+        // ring, and a 5 mm dot, as the design drew it.
+        [508] = [508, 492, 254, 238, 50],
     };
 
     private static readonly Dictionary<string, (PageSize Size, int Width, int Height)> Pages = new(StringComparer.Ordinal)
@@ -302,6 +306,7 @@ public static class LibraryBuilder
             added.Add(Tiles(built.Single(t => t.FileName == source + ".gltd.json"), stem, name, page));
         }
 
+        added.AddRange(TwoMoa());
         added.Add(CheckPage("GL-SCALE-LTR-1", "GroupLab Printer Check, Letter", "letter"));
         added.Add(CheckPage("GL-SCALE-A4-1", "GroupLab Printer Check, A4", "a4"));
         return added;
@@ -340,6 +345,100 @@ public static class LibraryBuilder
             [grid],
             []);
         return Finish(name, stem, definition);
+    }
+
+    internal const string TwoMoaCreated = "2026-09-29";
+
+    /// <summary>The 2 MOA bull, 2.00 in: 1.91 MOA at 100 yd and 1.75 MOA at 100 m.</summary>
+    public const int TwoMoaRing = 508;
+
+    /// <summary>
+    /// The 2 MOA sheets' pitch, 63.4 mm: 2.5 in less the 0.1 mm the even-pitch rule takes, as the 5x5's 38.0 mm is 1.5 in less it, so
+    /// neighboring bulls are 12.6 mm apart as on the 1 MOA sheets.
+    /// </summary>
+    public const int TwoMoaPitch = 634;
+
+    /// <summary>
+    /// The C diamond on the 2 MOA sheets, 2.00 in point to point, the size of the plain and E bulls. Twice the 1 MOA sheets' 1.25 in would
+    /// reach past the cell, and anything over 2.18 in would take the markers at the midpoints of the outer cell edges, which its points
+    /// face.
+    /// </summary>
+    public const int TwoMoaCDiagonal = TwoMoaRing;
+
+    /// <summary>The E bull on the 2 MOA sheets, twice the 1 MOA sheets' in every part: a 2.00 in disc, a 0.72 in white center and a 5 mm dot.</summary>
+    public static List<Disc> TwoMoaEDiscs() => [new Disc(TwoMoaRing, "black"), new Disc(182, "paper"), new Disc(50, "black")];
+
+    /// <summary>The 2 MOA sheets, their identifiers and names: page, whether a set of three, bull style.</summary>
+    public static readonly (string Stem, string Page, bool Set, char Style, string Name)[] TwoMoaSheets =
+    [
+        ("GL-CF9-LTR", "letter", false, 'P', "GroupLab 3x3 2 MOA, Letter"),
+        ("GL-CF9-LTR-C", "letter", false, 'C', "GroupLab 3x3 2 MOA, C Bull, Letter"),
+        ("GL-CF9-LTR-E", "letter", false, 'E', "GroupLab 3x3 2 MOA, E Bull, Letter"),
+        ("GL-CF9-A4", "a4", false, 'P', "GroupLab 3x3 2 MOA, A4"),
+        ("GL-CF9-A4-C", "a4", false, 'C', "GroupLab 3x3 2 MOA, C Bull, A4"),
+        ("GL-CF9-A4-E", "a4", false, 'E', "GroupLab 3x3 2 MOA, E Bull, A4"),
+        ("GL-CF9-T", "letter", true, 'P', "GroupLab 3x3 2 MOA, Set of 3 Letter Sheets"),
+        ("GL-CF9-T-C", "letter", true, 'C', "GroupLab 3x3 2 MOA, C Bull, Set of 3 Letter Sheets"),
+        ("GL-CF9-T-E", "letter", true, 'E', "GroupLab 3x3 2 MOA, E Bull, Set of 3 Letter Sheets"),
+        ("GL-CF9-TA4", "a4", true, 'P', "GroupLab 3x3 2 MOA, Set of 3 A4 Sheets"),
+        ("GL-CF9-TA4-C", "a4", true, 'C', "GroupLab 3x3 2 MOA, C Bull, Set of 3 A4 Sheets"),
+        ("GL-CF9-TA4-E", "a4", true, 'E', "GroupLab 3x3 2 MOA, E Bull, Set of 3 A4 Sheets"),
+    ];
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 289, Unholy's request, answered by Alan with design C and 2.00 in bulls: nine 2.00 in bulls 3 by 3 on a
+    /// 63.4 mm grid with a load block, as one page and as a set of three, on Letter and A4, with the plain, C and E bulls. Each page is laid
+    /// out by the designer's own rule. The load block owns the bottom band, so each page carries the top pair of codes, as GL-CF25-LTR-D
+    /// does: on Letter the bottom pair does not fit, and on A4 it would take two of the lattice's corners. The markers are
+    /// <c>grid-boundary-edge-1</c>: the lattice's intersections left fourteen on Letter, and a photograph of a sheet bowed a quarter inch
+    /// then missed the photograph gate on one frame in ten, so the midpoints of the outer cell edges carry markers too, as the entry allowed.
+    /// The C and E sheets take the plain sheet's positions.
+    /// </summary>
+    private static IEnumerable<BuiltInTarget> TwoMoa()
+    {
+        foreach (var (stem, page, set, style, name) in TwoMoaSheets)
+        {
+            var design = ParametricSheet.Design(new SheetSpec(name, page, 3, 3, TwoMoaPitch / 254.0, TwoMoaRing, 0, true, TopCodesOnly: true));
+            if (design is not { Printable: true, Definition: { } drawn })
+            {
+                throw new InvalidOperationException($"{name} does not lay out: {string.Join(" ", design.Checks.Select(c => c.Sentence))}");
+            }
+
+            var (_, width, height) = Pages[page];
+            string what = set
+                ? "One sheet of a set of three, the 2 MOA sheets requested by Unholy: nine scoring 2.00 in bulls a sheet, 27 in the set, 3 by 3 on a 63.4 mm grid, each sheet with a nine-field load block."
+                : "Nine scoring 2.00 in bulls, 3 by 3 on a 63.4 mm grid, with a nine-field load block: the 2 MOA sheet requested by Unholy.";
+            string use = set
+                ? " For load development: each sheet reads itself, and GroupLab pools the set and says which sheet is still missing."
+                : " For a quick group or a zero check.";
+            string bull = style switch
+            {
+                'C' => " Each bull is a black diamond standing on a point, 2.00 in point to point, with a white diamond center and a small dot, the C bull of the aim point test.",
+                'E' => " Each bull is a black disc with a 0.72 in white center and a small dot, the E bull of the aim point test at twice the 1 MOA sheets' size.",
+                _ => " Each bull has an inner ring at 1.00 in and a center dot.",
+            };
+            var ringSet = style switch
+            {
+                'C' => new RingSet("c", CDiscs(TwoMoaCDiagonal)),
+                'E' => new RingSet("e", TwoMoaEDiscs()),
+                _ => new RingSet("std", Discs(TwoMoaRing)),
+            };
+            var definition = drawn with
+            {
+                Id = null,
+                Name = name,
+                Description = what + " The bull is twice the 1 MOA sheets' 1.00 in bull: 1.91 MOA at 100 yd and 1.75 MOA at 100 m." + bull + use,
+                Author = "GroupLab built-in library",
+                Licence = "CC0-1.0",
+                Created = TwoMoaCreated,
+                Print = Print,
+                RingSets = [ringSet],
+                Bulls = [.. drawn.Bulls.Select(b => b with { RingSet = ringSet.Key })],
+                Tiling = set ? new Tiling(3, 1, width, height, 0) : null,
+                Fiducials = drawn.Fiducials! with { Scheme = "grid-boundary-edge-1", Markers = null },
+            };
+            yield return Finish(name, stem, definition);
+        }
     }
 
     /// <summary>

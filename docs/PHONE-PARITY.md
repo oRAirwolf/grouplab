@@ -60,6 +60,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Print a sheet from the phone | `phone-targets` | on the phone | | not yet |
 | Guided or Manual on the camera | `capture-modes` | on the phone | | not yet |
 | Every picture checked | `picture-check` | on the phone | | not yet |
+| The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | not yet |
 
 **iPhone and iPad** (entry 290 section 6). The last column says where each feature stands on iOS: **on iOS** where it runs there and
 has been seen to, **not yet** while the iOS build is being made, **on a device** where it is built but only an iPhone or iPad can prove it

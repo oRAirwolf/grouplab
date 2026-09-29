@@ -155,6 +155,8 @@ source that is not on the list below, or if any test writing into this folder co
 | `sheet-e-bull.png` | built-in library sheet |
 | `sheet-scale-check.png` | built-in library sheet |
 | `sheet-large-set.png` | built-in library sheet |
+| `sheet-two-moa.png` | built-in library sheet |
+| `sheet-two-moa-set.png` | built-in library sheet |
 | `sheet-zero-mil-100m.png` | built-in library sheet |
 | `sheet-zero-mil-100y.png` | built-in library sheet |
 | `sheet-zero-moa-100m.png` | built-in library sheet |

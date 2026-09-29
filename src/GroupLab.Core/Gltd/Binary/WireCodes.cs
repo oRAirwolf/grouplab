@@ -19,7 +19,7 @@ internal static class WireCodes
     public const byte PaperInk = 15;
 
     /// <summary>Scheme byte values 0 to 3, section 5.2.</summary>
-    public static readonly string[] Schemes = ["explicit", "grid-boundary-1", "grid-boundary-half-1", "field-ring-1"];
+    public static readonly string[] Schemes = ["explicit", "grid-boundary-1", "grid-boundary-half-1", "field-ring-1", "grid-boundary-edge-1"];
 
     /// <summary>Quantum byte values 0 to 3 in dmm, section 5.4.</summary>
     public static readonly int[] QuantumDmm = [1, 2, 5, 10];

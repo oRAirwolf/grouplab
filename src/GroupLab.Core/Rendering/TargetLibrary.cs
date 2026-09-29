@@ -50,6 +50,8 @@ public static class TargetLibrary
         ("GL-CF25-100M-", "Centerfire load development", "100 m"),
         ("GL-CF25-", "Centerfire load development", "100 yd"),
         ("GL-CF30-", "Centerfire load development", "100 yd"),
+        // Entry 289: the 2 MOA sheets, 2.00 in bulls 3 by 3, one page or a set of three.
+        ("GL-CF9-", "Centerfire load development", "100 yd"),
         ("GL-RF25-A4", "Rimfire", "50 m"),
         ("GL-RF25-", "Rimfire", "50 yd"),
         ("GL-RF36-", "Rimfire", "50 yd"),

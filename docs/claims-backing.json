@@ -4056,6 +4056,22 @@
   "The `ios` workflow runs it on `macos-26` with Xcode 26, caches the result under a key made from the script, so it is rebuilt only when the script changes, and keeps it as the artifact `ios-opencv` for thirty days.": {
    "kind": "code",
    "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
+  },
+  "- **Done.** A validator, and 38 built-in target sheets.": {
+   "kind": "code",
+   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289)"
+  },
+  "01 Print a GroupLab sheet Thirty-eight built-in sheets, printed at actual size.": {
+   "kind": "code",
+   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289)"
+  },
+  "The sheets that come with GroupLab cannot be edited.": {
+   "kind": "code",
+   "where": "the library, src/GroupLab.App/MainWindow.Library.cs"
+  },
+  "The 2 MOA sheets, requested by Unholy, are under centerfire load development: nine 2.00 in bulls on a page, one page for a quick group or a zero check, or a set of three pages for load development that GroupLab pools and that says which page is missing.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets and TwoMoa, targets/GL-CF9-*.gltd.json; src/GroupLab.Core/Rendering/TargetLibrary.cs Catalogue GL-CF9-; src/GroupLab.Core/Marking/SetPool.cs; held by TwoMoaSheetTests (entry 289)"
   }
  },
  "rules": [

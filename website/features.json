@@ -782,6 +782,30 @@
       }
     },
     {
+      "key": "two-moa",
+      "group": "Sheets and printing",
+      "name": "The 2 MOA sheets",
+      "sentence": "Nine 2.00 in bulls on a Letter or A4 page, 1.91 MOA at 100 yd and 1.75 MOA at 100 m, with a load block: one page for a quick group or a zero check, or a set of three pages that GroupLab pools for load development, with the plain, C or E bull. Requested by Unholy.",
+      "shot": "targets",
+      "sheets": [
+        ["two-moa", "The 2 MOA page as it prints on Letter: nine 2.00 in bulls, 3 by 3, and the load block"],
+        ["two-moa-set", "The set of three Letter pages, each reading itself, pooled as one group; requested by Unholy"]
+      ],
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "2 MOA sheets",
+      "tour": "targets",
+      "guide": "1-print-a-sheet",
+      "mobile": {
+        "noPicture": "the sheets are pictured as they print, the same on the phone"
+      }
+    },
+    {
       "key": "dev-build",
       "group": "Updates and platforms",
       "name": "GroupLab Dev for testers",

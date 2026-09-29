@@ -630,12 +630,12 @@ public class Entry109Tests
         // Entry 273: the printer check page, whole, as it prints on Letter.
         Save("scale-check", SceneRasterizer.Rasterize(SceneBuilder.Build(Load("GL-SCALE-LTR-1.gltd.json")).Pages[0], 60, words: true));
 
-        // A large format set: its four Letter sheets, whole, side by side as they are laid out to shoot.
+        // A set of sheets, whole, side by side as they are laid out to shoot.
+        void SetPicture(string name, string file, double dpi)
         {
-            var d = Load("GL-LR25-T.gltd.json");
+            var d = Load(file);
             var pages = SceneBuilder.Build(d).Pages;
-            const double small = 40;
-            var drawn = pages.Select(p => SceneRasterizer.Rasterize(p, small, words: true)).ToList();
+            var drawn = pages.Select(p => SceneRasterizer.Rasterize(p, dpi, words: true)).ToList();
             int cols = d.Tiling!.Cols, rows = d.Tiling.Rows, gap = 12, w = drawn[0].Width, h = drawn[0].Height;
             var all = new byte[((cols * w) + ((cols - 1) * gap)) * ((rows * h) + ((rows - 1) * gap))];
             Array.Fill(all, (byte)200);
@@ -649,7 +649,14 @@ public class Entry109Tests
                 }
             }
 
-            Save("large-set", new GrayImage(width, (rows * h) + ((rows - 1) * gap), all));
+            Save(name, new GrayImage(width, (rows * h) + ((rows - 1) * gap), all));
         }
+
+        // A large format set: its four Letter sheets.
+        SetPicture("large-set", "GL-LR25-T.gltd.json", 40);
+
+        // Entry 289: the 2 MOA page, whole, as it prints on Letter, and its set of three pages.
+        Save("two-moa", SceneRasterizer.Rasterize(SceneBuilder.Build(Load("GL-CF9-LTR.gltd.json")).Pages[0], 60, words: true));
+        SetPicture("two-moa-set", "GL-CF9-T.gltd.json", 40);
     }
 }

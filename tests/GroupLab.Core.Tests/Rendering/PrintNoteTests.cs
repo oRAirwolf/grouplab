@@ -50,7 +50,7 @@ public class PrintNoteTests
     {
         var sheets = TargetLibrary.Load(Repo.PathTo("targets"));
         Assert.Equal(BuiltIns.Files.Count(), sheets.Count);
-        Assert.Equal(30, sheets.Count); // entry 243 added the three E bull sheets and the three C bull sheets; entry 273 the two printer check pages
+        Assert.Equal(42, sheets.Count); // entry 243 added the three E bull sheets and the three C bull sheets; entry 273 the two printer check pages; entry 289 the twelve 2 MOA sheets
         Assert.All(sheets, s =>
         {
             Assert.NotEqual(TargetLibrary.OtherFamily, s.Family);
