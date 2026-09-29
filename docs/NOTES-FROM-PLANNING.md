@@ -24,6 +24,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 293: request 38, the Microsoft Store: Part A is done
+
+**Status: done 2026-09-29.** 1: the draft `store-draft-0.2.0` (`grouplab-win-x64.msix`, 92,035,133 bytes, version 0.2.0.0, SHA-256
+`34c6db9f...ef999b`, no tag made), built by `release.yml` with the new `store_draft` input; the manifest's identity matches the four
+variables (`scripts/check-msix.ps1`, on every build); the certification kit ran: WARNING, 24 tests, only the optional "blocked
+executables" failing, and a DPI-awareness warning for later. 2: the Store login (`scripts/store-login-check.ps1`) answered 200 with the
+product "GroupLab"; nothing submitted. 3 and 4: request 38's Part A closed in for-alan.md; the secret's expiry, about 2028-09-28, is in
+`docs/RELEASE-PLAN.md`, and a failed login says the Store secret may have expired.
+
+Alan finished Part A of request 38 with planning, step by step, on 2026-09-29.
+
+**Set, and checked with `gh variable list` and `gh secret list`:**
+- Variables: `STORE_IDENTITY_NAME`, `STORE_PUBLISHER` (it matches the Windows publisher ID on Partner Center's Identifiers page), `STORE_PUBLISHER_DISPLAY_NAME`, `STORE_PRODUCT_ID`. The name reserved is `GroupLab`.
+- Secrets: `AZURE_AD_TENANT_ID`, `AZURE_AD_APPLICATION_CLIENT_ID`, `AZURE_AD_APPLICATION_SECRET`, `SELLER_ID`.
+
+**How it is set up:** a new Microsoft Entra tenant made for GroupLab alone (`GroupLab.onmicrosoft.com`), separate from any work tenant, associated with Alan's Partner Center account; an app registration `grouplab-store-publisher` in it, single tenant, with a client secret that expires in 24 months; the app added in Partner Center under Microsoft Entra applications with the Manager (Windows) role. The client secret was made again after the first one was exposed in a chat, and Alan has deleted the first in Entra (confirmed 2026-09-29); neither session has seen the current one. **Note in `docs/store/` or `docs/RELEASE-PLAN.md` that the client secret expires about 2028-09-28**, so a reminder to renew it lands well before, and a release that fails to authenticate says "the Store secret may have expired" in its error.
+
+**What Code does now** (Part A's "I then build the first package with your identity as a draft release"), on the Android and desktop line alongside entry 290's iOS work:
+1. Build the Store package with this identity (`grouplab-win-x64.msix`) as a **draft** GitHub release. Validate it with the Windows App Certification Kit if the runner has it, and check the manifest's identity against the four variables.
+2. Check that `release.yml` can authenticate to the Store with the four secrets **without submitting anything** (a read-only call, such as listing the product's submissions), and report the result. Nothing is submitted until Alan does Part B by hand.
+3. Tell Alan in `for-alan.md` that the draft is ready, with the link, and planning walks him through Part B (the first submission: pricing, properties, age rating, the package, the listing from `docs/store/LISTING.md` and its screenshots).
+4. Close Part A of request 38 in `for-alan.md`.
+
 ## 2026-09-29, entry 292: pictures from anywhere on the phone: Google Photos, Samsung Gallery, the maker's own photo app, and the cloud, on Android and on iOS
 
 **Status: in progress 2026-09-29. Sections 1, 3 and 4 (Android) done; section 2 (iOS: PHPicker with iCloud Photos, the document picker, a

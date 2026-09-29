@@ -54,6 +54,17 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 - **5.2:** a printer check now carries its date on every result it corrects; Settings can mark a printer calibrated or serviced, and a
   marked or six-month-old check says so and offers a new one (`PrinterProfile.Stale`, `PrinterChangedTests`).
 
+## Entry 293: the Microsoft Store draft, and a login that submits nothing
+
+- `release.yml` run by hand with `store_draft` builds `grouplab-win-x64.msix` with the identity from the four variables, checks the
+  manifest's Identity Name, Publisher and PublisherDisplayName against them (a mismatch fails naming the field), runs the certification kit
+  and keeps the package on the draft `store-draft-0.2.0`: 92,035,133 bytes, version 0.2.0.0, no tag made.
+- The kit: WARNING, 24 tests, one optional test failed ("blocked executables", on .NET, Avalonia and OpenCV files), and a warning that the
+  executable does not declare PerMonitorV2 DPI awareness.
+- The Store login with the four secrets answered 200 and read the product back as "GroupLab"; nothing was submitted. A refused login says
+  the Store secret may have expired, never the secret. The secret expires about 2028-09-28.
+- The Store takes only higher versions after the first submission (0.2.0.0), so the first stable release it gets by itself is 0.2.1 or later.
+
 ## Entry 292, Android: pictures from any photo app
 
 - **Choose a photograph** opens the system photo picker (images only, no storage permission, cloud photos where Google Photos provides

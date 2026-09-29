@@ -409,6 +409,15 @@ the policy gets checked.
 
 ## 38. The Microsoft Store: your account, the name, and the keys that let releases go there by themselves
 
+**Opened 2026-09-25. Being applied: Part A answered 2026-09-29 (entry 293); Part B, the first submission, is yours with planning.** Everything you set works.
+The Store package is built with your identity as a draft release, "GroupLab 0.2.0 for the Microsoft Store, draft", on
+github.com/oRAirwolf/grouplab/releases (drafts are visible only to you): `grouplab-win-x64.msix`, 87.8 MB, version 0.2.0.0. Its identity
+matches the four variables. Microsoft's certification kit passed it with warnings only, none blocking. GroupLab's release process signed
+in to the Store and read the product back as "GroupLab" without submitting anything. The Store secret expires about 2028-09-28; a
+reminder goes in well before, and a release that cannot sign in says the secret may have expired. One thing to know for Part B: the first
+submission is version 0.2.0.0, and the Store only takes higher versions after it, so the first stable release sent to it by itself will be
+0.2.1 or later.
+
 **Opened 2026-09-25. Entry 224 section 3.** The Store package is built (CI makes it on every push) and `release.yml` sends each tagged
 stable release to the Store by itself once these are in place. Part A is one sitting, about thirty minutes, mostly Microsoft's identity
 check. Part B comes after I reply that the first package is ready, and is the Store's one hand-made first submission.
