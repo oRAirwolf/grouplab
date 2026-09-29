@@ -24,6 +24,12 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-28, entry 277: PRIORITY, before anything else: GroupLab Dev on the Fold 7 for the camera test, now
+
+**Status: done 2026-09-28.** GroupLab Dev nightly 121 (the build with the camera screen and the recalibrated picture score) is on the Fold 7, installed from the nightly's own signed APK over the old 119, and it opens to Capture. The phone first showed offline and then vanished from wireless debugging; the line at the top of `for-alan.md` asked Alan to turn it off and on, and it came back without pairing again. A build made locally could not replace the nightly's, being version 1 against 119, so the nightly's asset is the one to install.
+
+Alan is doing the camera test now (request 50, line 2 of for-alan.md). Before any other entry: install the newest GroupLab Dev (nightly 121 or later, whichever build carries the camera screen and the recalibrated picture score) on the Fold 7 over wireless debugging, the way you did for the earlier sittings. Only GroupLab Dev is touched; nothing else on the phone. If the phone does not answer adb, write one line at the top of for-alan.md saying exactly what Alan must do (for example "turn Wireless debugging off and on and read me the address and port"), and tell him in the panel. When it is installed and opens to Capture, say so in the panel in one line: "GroupLab Dev nightly N is on the Fold 7: go ahead with the camera test." Then continue with the rest of the inbox in number order.
+
 ## 2026-09-28, entry 276: answer to question 68 ("Apple mobile")
 
 **Status: done 2026-09-28.** Question 68 closed as answered; the paragraph is listed under "settled" in `docs/RETIRED-WORDING.json`, which the audit's reader and `scripts/consistency.py` share, so it is not reported again.

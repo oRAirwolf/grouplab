@@ -40,6 +40,10 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 277: GroupLab Dev nightly 121 on the Fold 7 for the camera test
+
+Installed at 18:01 MDT from the nightly's signed `android-dev` APK, replacing nightly 119; the running activity is GroupLab Dev's and it opens to Capture. The phone had dropped off wireless debugging and came back once Alan turned it off and on. A local build cannot replace a nightly on the phone (version code 1 against 119), so a sitting installs the nightly's asset. Nothing else on the phone was touched.
+
 ## Entry 261, continued: the server's capacity read
 
 Section 6's one read-only command ran at 17:45 UTC with Alan's approval (request 52): two processors, 11.9 GB of memory with 10.2 GB available and no swap, 36 GB free of 45 GB, load 0.64. The re-reading loop fits at tens of submissions a day as one more worker capped at one processor and about 1.5 GB; with no swap the memory cap is required. `docs/DETECTION-LEARNING-STUDY.md` section 6 has it. Nothing on the server changed.
