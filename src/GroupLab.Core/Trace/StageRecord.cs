@@ -114,7 +114,17 @@ public sealed class TraceRecorder
     /// </summary>
     public bool KeepArtefacts { get; set; }
 
-    public StageScope Begin(string stage) => new(this, new StageRecord(stage, ++_sequence, DateTime.UtcNow));
+    public StageScope Begin(string stage)
+    {
+        Begun?.Invoke(stage);
+        return new(this, new StageRecord(stage, ++_sequence, DateTime.UtcNow));
+    }
+
+    /// <summary>
+    /// Raised as each stage starts, with its name, NOTES-FROM-PLANNING.md entry 291 section 3.1: a waiting line names the step it is on,
+    /// not the one before it. The phone said "Loading the picture" for the 30 seconds the codes of an off-axis picture took to read.
+    /// </summary>
+    public event Action<string>? Begun;
 
     /// <summary>
     /// Raised as each stage files its record, on the thread that ran it, DESIGN.md section 19 [r3]: a live run shows each stage as it lands.

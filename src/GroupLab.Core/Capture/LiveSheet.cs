@@ -22,6 +22,18 @@ public sealed record LiveSearch(TargetDefinition? Definition, bool FromCodes, in
 /// most closely is taken. Sheets that share ids share their layout, so the one chosen is the right shape to guide the camera by; the picture
 /// itself is identified from its codes at full resolution afterwards.
 /// </summary>
+/// <summary>A code of a picture turned square on (<see cref="LiveSheet.CodeViews"/>), with where its centre is in the picture and its width there, in pixels.</summary>
+public sealed record CodeView(GrayImage Image, PointD Centre, double Side)
+{
+    /// <summary>Whether <paramref name="other"/> shows the same code: its centre lies within a code's width of this one's, where a sheet's codes are a page apart.</summary>
+    public bool SameCodeAs(CodeView other)
+    {
+        ArgumentNullException.ThrowIfNull(other);
+        double dx = other.Centre.X - Centre.X, dy = other.Centre.Y - Centre.Y;
+        return (dx * dx) + (dy * dy) < Side * Side;
+    }
+}
+
 public static class LiveSheet
 {
     /// <summary>The fewest markers a layout is fitted from.</summary>
@@ -109,19 +121,89 @@ public static class LiveSheet
     /// </summary>
     public static IReadOnlyList<GrayImage> CodeCrops(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend)
     {
+        var crops = new List<GrayImage>();
+        foreach (var (pageToImage, at, side, _) in CodePlaces(image, candidates, backend))
+        {
+            var corners = new[] { new PointD(at.X - CodeMarginDmm, at.Y - CodeMarginDmm), new PointD(at.X + side + CodeMarginDmm, at.Y - CodeMarginDmm),
+                new PointD(at.X + side + CodeMarginDmm, at.Y + side + CodeMarginDmm), new PointD(at.X - CodeMarginDmm, at.Y + side + CodeMarginDmm) }.Select(pageToImage.Apply).ToList();
+            int x0 = (int)Math.Max(0, corners.Min(c => c.X)), y0 = (int)Math.Max(0, corners.Min(c => c.Y));
+            int x1 = (int)Math.Min(image.Width, Math.Ceiling(corners.Max(c => c.X))), y1 = (int)Math.Min(image.Height, Math.Ceiling(corners.Max(c => c.Y)));
+            if (x1 - x0 < 16 || y1 - y0 < 16)
+            {
+                continue;
+            }
+
+            var pixels = new byte[(x1 - x0) * (y1 - y0)];
+            for (int y = y0; y < y1; y++)
+            {
+                Array.Copy(image.Pixels, (y * image.Width) + x0, pixels, (y - y0) * (x1 - x0), x1 - x0);
+            }
+
+            crops.Add(new GrayImage(x1 - x0, y1 - y0, pixels));
+        }
+
+        return crops;
+    }
+
+    /// <summary>The pixels a code's module gets in <see cref="CodeViews"/>: twice the three a phone picture gives, and what a QR reader reads best.</summary>
+    public const int ViewPixelsPerModule = 6;
+
+    /// <summary>The room kept around a code in <see cref="CodeViews"/>, in modules on every side: its quiet zone of four and the fit's error.</summary>
+    public const int ViewMarginModules = 16;
+
+    /// <summary>The markers nearest a code whose corners place it for <see cref="CodeViews"/>.</summary>
+    public const int NearestMarkers = 6;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 3.1: each code of a picture, cut out where the markers say it is and turned square on, at
+    /// <see cref="ViewPixelsPerModule"/> pixels a module. A picture taken at an angle drew its codes as trapezia a few pixels a module, which
+    /// the reader missed in the whole picture at four resolutions and found only in <see cref="CodeCrops"/> enlarged: 20 to 22 seconds on
+    /// this computer and 14 to 30 on the Fold 7. Square on and small, each code is read once, in tens of milliseconds. Each view says where
+    /// in the picture it was taken and how wide the code is there, so views of one code, from sheets that share a layout, count once.
+    /// </summary>
+    public static IReadOnlyList<CodeView> CodeViews(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend)
+    {
+        var views = new List<CodeView>();
+        foreach (var (pageToImage, at, side, module) in CodePlaces(image, candidates, backend))
+        {
+            double margin = ViewMarginModules * module;
+            double perDmm = (double)ViewPixelsPerModule / module;
+            int size = (int)Math.Ceiling((side + (2 * margin)) * perDmm);
+            var viewToPage = new Homography([1 / perDmm, 0, at.X - margin, 0, 1 / perDmm, at.Y - margin, 0, 0, 1]);
+            var viewToImage = Homography.Compose(viewToPage, pageToImage);
+            var centre = viewToImage.Apply(new PointD(size / 2.0, size / 2.0));
+            if (centre.X < 0 || centre.Y < 0 || centre.X >= image.Width || centre.Y >= image.Height)
+            {
+                continue;
+            }
+
+            double across = Math.Sqrt(Squared(pageToImage.Apply(at), pageToImage.Apply(new PointD(at.X + side, at.Y))));
+            views.Add(new CodeView(backend.WarpPerspective(image, viewToImage.Inverse(), size, size), centre, across));
+        }
+
+        return views;
+    }
+
+    /// <summary>
+    /// Where each code of every sheet sharing the layout the markers fit lies: the page-to-picture transform fitted from the markers, the
+    /// code's corner and side on the page, and its module, in dmm. Variants of one layout put their codes in the same places, so each place
+    /// is given once.
+    /// </summary>
+    private static List<(Homography PageToImage, PointD At, int Side, int Module)> CodePlaces(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend)
+    {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
         ArgumentNullException.ThrowIfNull(backend);
+        var places = new List<(Homography, PointD, int, int)>();
         var sameLayout = SheetsByMarkers(image, candidates, backend);
         if (sameLayout.Count == 0)
         {
-            return [];
+            return places;
         }
 
         double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
         var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
-        var crops = new List<GrayImage>();
-        var done = new HashSet<(int, int, int)>();
+        var done = new List<(PointD Centre, double Side)>();
         foreach (var candidate in sameLayout)
         {
             if (candidate.Codes is not { } codes)
@@ -129,7 +211,8 @@ public static class LiveSheet
                 continue;
             }
 
-            var byId = (candidate.Fiducials?.Markers ?? []).GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());
+            // Where the sheet prints its markers and codes, as registration and the renderer derive them.
+            var (byId, positions) = Printed(candidate, found);
             var page = new List<PointD>();
             var seen = new List<PointD>();
             foreach (var marker in found.Where(m => byId.ContainsKey(m.Id)))
@@ -143,34 +226,35 @@ public static class LiveSheet
                 continue;
             }
 
+            // A code sits in a corner, outside the markers, where a fit to the whole sheet is extrapolated. So each code is placed by the
+            // corners of the markers nearest it, and the whole fit is kept only where those give none.
+            double half = (candidate.Fiducials?.MarkerSize ?? 40) / 2.0;
+            var matched = found.Where(m => byId.ContainsKey(m.Id) && m.Corners.Count == 4).ToList();
             int side = (codes.Version is { } v ? (4 * v) + 17 : 57) * codes.ModuleSize;
-            foreach (var at in codes.Positions)
+            foreach (var at in positions)
             {
-                if (!done.Add((at.X, at.Y, side)))
+                var near = matched.OrderBy(m => Squared(new PointD(byId[m.Id].X, byId[m.Id].Y), new PointD(at.X, at.Y))).Take(NearestMarkers).ToList();
+                var nearPage = near.SelectMany(m => new[] { new PointD(byId[m.Id].X - half, byId[m.Id].Y - half), new PointD(byId[m.Id].X + half, byId[m.Id].Y - half),
+                    new PointD(byId[m.Id].X + half, byId[m.Id].Y + half), new PointD(byId[m.Id].X - half, byId[m.Id].Y + half) }).ToList();
+                var nearSeen = near.SelectMany(m => m.Corners).ToList();
+                var fit = (near.Count >= NearestMarkers ? HomographyEstimate.Fit(nearPage, nearSeen) : null) ?? pageToImage;
+
+                // Entry 291 section 3.1: sheets sharing a layout share their markers' ids and spacing, not where their codes sit beside them:
+                // the frozen Phase 0 sheet fits the same markers as sheets whose codes are 7 mm higher. So a place is the same place only where
+                // it lands on the same part of the picture.
+                var centre = fit.Apply(new PointD(at.X, at.Y));
+                double across = Math.Sqrt(Squared(fit.Apply(new PointD(at.X - (side / 2.0), at.Y)), fit.Apply(new PointD(at.X + (side / 2.0), at.Y))));
+                if (done.Any(d => Squared(d.Centre, centre) < 0.0625 * d.Side * d.Side))
                 {
                     continue;
                 }
 
-                var corners = new[] { new PointD(at.X - CodeMarginDmm, at.Y - CodeMarginDmm), new PointD(at.X + side + CodeMarginDmm, at.Y - CodeMarginDmm),
-                    new PointD(at.X + side + CodeMarginDmm, at.Y + side + CodeMarginDmm), new PointD(at.X - CodeMarginDmm, at.Y + side + CodeMarginDmm) }.Select(pageToImage.Apply).ToList();
-                int x0 = (int)Math.Max(0, corners.Min(c => c.X)), y0 = (int)Math.Max(0, corners.Min(c => c.Y));
-                int x1 = (int)Math.Min(image.Width, Math.Ceiling(corners.Max(c => c.X))), y1 = (int)Math.Min(image.Height, Math.Ceiling(corners.Max(c => c.Y)));
-                if (x1 - x0 < 16 || y1 - y0 < 16)
-                {
-                    continue;
-                }
-
-                var pixels = new byte[(x1 - x0) * (y1 - y0)];
-                for (int y = y0; y < y1; y++)
-                {
-                    Array.Copy(image.Pixels, (y * image.Width) + x0, pixels, (y - y0) * (x1 - x0), x1 - x0);
-                }
-
-                crops.Add(new GrayImage(x1 - x0, y1 - y0, pixels));
+                done.Add((centre, across));
+                places.Add((fit, new PointD(at.X - (side / 2.0), at.Y - (side / 2.0)), side, codes.ModuleSize));
             }
         }
 
-        return crops;
+        return places;
     }
 
     /// <summary>The resolution the candidates are compared at, dots an inch: enough to tell a bull's artwork and a load block apart.</summary>
@@ -285,6 +369,31 @@ public static class LiveSheet
     }
 
     private static double Squared(PointD a, PointD b) => ((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y));
+
+    /// <summary>
+    /// The markers, by id, and the code centres a sheet prints, in dmm: derived where the definition derives them (TARGET-SCHEMA.md sections
+    /// 3.7 and 3.8), for the tile whose ids the found markers carry most of.
+    /// </summary>
+    public static (IReadOnlyList<Marker> Markers, IReadOnlyList<PointDmm> Codes) Printed(TargetDefinition definition)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        var markers = PageRegistration.ExpectedMarkers(definition, 0);
+        return (markers, CodeCentres(definition));
+    }
+
+    private static IReadOnlyList<PointDmm> CodeCentres(TargetDefinition definition) => definition.Codes is not { } c ? []
+        : c.Placement == CodePlacement.Corners1
+            ? Gltd.Derivation.Corners1.Positions(definition.Page.Width, definition.Page.Height, definition.DataBlock?.Height ?? 0, c.Count, c.ModuleSize)
+            : c.Positions;
+
+    private static (Dictionary<int, Marker> ById, IReadOnlyList<PointDmm> Codes) Printed(TargetDefinition definition, IReadOnlyList<DetectedMarker> found)
+    {
+        int tiles = definition.Tiling is { } t ? Math.Max(1, t.Cols * t.Rows) : 1;
+        var ids = found.Select(m => m.Id).ToHashSet();
+        var markers = Enumerable.Range(0, tiles).Select(i => PageRegistration.ExpectedMarkers(definition, i)).MaxBy(e => e.Count(m => ids.Contains(m.Id))) ?? [];
+        var byId = markers.GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());
+        return (byId, CodeCentres(definition));
+    }
 
     private static PointD Centre(DetectedMarker marker) =>
         new(marker.Corners.Average(c => c.X), marker.Corners.Average(c => c.Y));

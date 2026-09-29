@@ -22,6 +22,25 @@ public static class StageWords
         };
     }
 
+    /// <summary>
+    /// What is being done while <paramref name="stage"/> runs, or null where a stage is too short to name, NOTES-FROM-PLANNING.md entry
+    /// 291 section 3.1: the line names the step it is on.
+    /// </summary>
+    public static string? During(string stage)
+    {
+        ArgumentNullException.ThrowIfNull(stage);
+        return stage switch
+        {
+            "S0.decode" => Starting,
+            "S0.identify" => "Reading the sheet's codes…",
+            "S2.fiducials" or "S3.register" => "Finding the sheet from its markers…",
+            "P0.bulls" => "Finding the bulls…",
+            "S5-S8.holes" => "Finding the holes…",
+            "S9.assign" or "S10.group" => "Measuring the group…",
+            _ => null,
+        };
+    }
+
     /// <summary>The first line, before any stage has finished.</summary>
     public const string Starting = "Loading the picture…";
 }

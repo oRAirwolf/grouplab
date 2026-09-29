@@ -55,6 +55,48 @@ public static class SheetIdentification
         stage.Parameter("candidates", string.Create(inv, $"{candidates.Count} definitions"));
         stage.Parameter("resolutions", string.Join(", ", Scales.Select(s => s.ToString("0.##", inv))));
         int read = 0;
+
+        // Entry 291 section 3.1: the codes turned square on where the markers put them, first. An off-axis picture's codes read nowhere in
+        // the whole picture and only enlarged in the cut-outs, after 20 seconds of looking; square on, each is read once in milliseconds.
+        // Where the markers fit no layout, or nothing square on reads, the whole picture is read as before.
+        cancellation.ThrowIfCancellationRequested();
+        long viewsBegan = System.Diagnostics.Stopwatch.GetTimestamp();
+        var views = Capture.LiveSheet.CodeViews(image, candidates, backend);
+        if (views.Count > 0)
+        {
+            // One read for each code: a view of a code already read, from a sheet sharing the layout, is not read again.
+            var squareOn = new List<byte[]>();
+            var readAt = new List<Capture.CodeView>();
+            foreach (var view in views)
+            {
+                cancellation.ThrowIfCancellationRequested();
+                if (readAt.Any(r => r.SameCodeAs(view)))
+                {
+                    continue;
+                }
+
+                var found = backend.ReadCodes(view.Image, 1.0);
+                if (found.Count > 0)
+                {
+                    squareOn.Add(found[0]);
+                    readAt.Add(view);
+                }
+            }
+
+            read += squareOn.Count;
+            var viewFrames = squareOn.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
+            stage.Detail(string.Create(inv, $"square on where the markers put them: {views.Count} places, {squareOn.Count} codes read, {viewFrames.Count} valid frames, {(long)System.Diagnostics.Stopwatch.GetElapsedTime(viewsBegan).TotalMilliseconds} ms"));
+            var viewIds = viewFrames.Select(f => f.DefinitionId!).Distinct(StringComparer.Ordinal).ToList();
+            var viewTiles = viewFrames.Select(f => (int)f.TileIndex).Distinct().ToList();
+            if (viewIds.Count == 1 && viewTiles.Count == 1 && candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == viewIds[0]) is { } viewMatch)
+            {
+                stage.Parameter("definition", viewIds[0]);
+                stage.Metric("codes decoded", viewFrames.Count, "count");
+                stage.Done(StageStatus.Ok, string.Create(inv, $"{viewIds[0]}{(viewMatch.Tiling is null ? "" : $", tile {viewTiles[0]}")}, from {viewFrames.Count} codes square on where the markers put them"));
+                return new SheetIdentity(viewMatch, viewIds[0], viewTiles[0], read, null, null);
+            }
+        }
+
         foreach (double scale in Scales)
         {
             cancellation.ThrowIfCancellationRequested();
@@ -64,10 +106,12 @@ public static class SheetIdentification
                 continue;
             }
 
+            long began = System.Diagnostics.Stopwatch.GetTimestamp();
             var payloads = backend.ReadCodes(image, scale);
+            long took = (long)System.Diagnostics.Stopwatch.GetElapsedTime(began).TotalMilliseconds;
             read += payloads.Count;
             var frames = payloads.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
-            stage.Detail(string.Create(inv, $"at {scale:0.##} times full resolution: {payloads.Count} codes read, {frames.Count} valid frames"));
+            stage.Detail(string.Create(inv, $"at {scale:0.##} times full resolution: {payloads.Count} codes read, {frames.Count} valid frames, {took} ms"));
             if (frames.Count == 0)
             {
                 continue;
@@ -117,6 +161,7 @@ public static class SheetIdentification
         // got about 3.1 pixels and read only at three times, which the whole picture cannot be.
         cancellation.ThrowIfCancellationRequested();
         var near = new List<byte[]>();
+        long cutBegan = System.Diagnostics.Stopwatch.GetTimestamp();
         foreach (var crop in Capture.LiveSheet.CodeCrops(image, candidates, backend))
         {
             foreach (double scale in CropScales)
@@ -132,7 +177,7 @@ public static class SheetIdentification
 
         read += near.Count;
         var nearFrames = near.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
-        stage.Detail(string.Create(inv, $"cut out where the markers put them and enlarged: {near.Count} codes read, {nearFrames.Count} valid frames"));
+        stage.Detail(string.Create(inv, $"cut out where the markers put them and enlarged: {near.Count} codes read, {nearFrames.Count} valid frames, {(long)System.Diagnostics.Stopwatch.GetElapsedTime(cutBegan).TotalMilliseconds} ms"));
         var nearIds = nearFrames.Select(f => f.DefinitionId!).Distinct(StringComparer.Ordinal).ToList();
         var nearTiles = nearFrames.Select(f => (int)f.TileIndex).Distinct().ToList();
         if (nearIds.Count == 1 && nearTiles.Count == 1 && candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == nearIds[0]) is { } nearMatch)
