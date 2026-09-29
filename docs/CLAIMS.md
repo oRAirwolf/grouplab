@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1317 |
+| code | 1319 |
 | measured | 1774 |
-| decided | 1279 |
+| decided | 1280 |
 | unbacked | 0 |
-| **total** | **4370** |
+| **total** | **4373** |
 
-**994** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**997** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1147,6 +1147,9 @@ one that matters.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): The `ios` workflow runs it on `macos-26` with Xcode 26, caches the result under a key made from the script, so it is rebuilt only when the script changes, and keeps it as the artifact `ios-opencv` for thirty days.
 - *code* (ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4): **What is built (entry 290 section 2 items 3 and 4):** the head, `ios/GroupLab.iOS`, with the shared screens, the sheets in its bundle, the icon from the desktop's mark, OpenCV linked statically, and the camera's place holding the files picker until the camera arrives.
 - *code* (ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4): The workflow `ios app` builds it for the simulator and for a device, unsigned, and runs a self-test on an iOS 26 simulator: every place along the bottom is opened and photographed, the imaging is checked on a rendered sheet, and the committed sample scan is analyzed through the phone's own pipeline and compared with the desktop running the same checks in the same job.
+- *code* (ios/GroupLab.iOS/Camera: CameraSession.Configure and Judge, StillFile.WriteJpeg, IosCamera.Screen, NoCamera, CaptureScreen; src/GroupLab.Core/Capture/PhoneCamera.cs ChooseMode and LevelFromGravity, tested by PhoneCameraTests; ios/GroupLab.iOS/Camera/CameraSelfTest.cs on the simulator; entry 290 section 2 item 5): **The camera (entry 290 section 2 item 5):** built in `ios/GroupLab.iOS/Camera`, Capture B as on Android.
+- *code* (a check to be made on the iPad mini, entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CaptureScreen.cs (ResizeAspect) and CameraSession.Orient with PhoneCamera.RotationDegrees): **The preview fills 4:3.** The whole picture is shown, nothing cut from its edges, with black bars rather than a stretch, upright and in portrait, in both landscapes and upside down.
+- *decided* (entry 283, the shutter's target of about 0.3 s (docs/ANDROID.md, The shutter), and entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CameraSession.cs Take logs camera.shutter): **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the result follows as soon as the reading allows.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): Building without a Mac The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The signing material and the key are secrets Alan sets himself with `gh secret set`, request 55 in `docs/notes/for-alan.md` says how; neither session ever sees them.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): **The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and whether its shape is right, never a value.
