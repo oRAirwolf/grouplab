@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 290 section 2 item 4: the desktop's side of the iOS self-test. It compiles the head's own checks
+    (ios/GroupLab.iOS/SelfTestChecks.cs) against the shared mobile project with a desktop platform underneath, so the numbers the simulator
+    measures are compared with the numbers the desktop measures, from the same code and the same files, in the same CI job
+    (.github/workflows/ios-app.yml). It ships nothing and is not in GroupLab.slnx.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>GroupLab.iOS</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="OpenCvSharp4.official.runtime.linux-x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.arm64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\mobile\GroupLab.Mobile\GroupLab.Mobile.csproj" />
+    <Compile Include="..\GroupLab.iOS\SelfTestChecks.cs" Link="SelfTestChecks.cs" />
+  </ItemGroup>
+
+</Project>

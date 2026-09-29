@@ -25,12 +25,13 @@
     "nuget.config": "where the packages the executable contains are restored from",
     "src/GroupLab.App/Assets/icons/grouplab.icns": "copied into the macOS application bundle by scripts/macos-bundle.py",
     "android/GroupLab.Android/": "the Android application, published in every nightly as the APK and GroupLab Dev (entry 275: an Android-only change is a change to what ships)",
-    "mobile/GroupLab.Mobile/": "the phone's screens, shared by the Android and iOS applications, so a change to them is a change to the APK and GroupLab Dev (entry 290)"
+    "mobile/GroupLab.Mobile/": "the phone's screens, shared by the Android and iOS applications, so a change to them is a change to the APK and GroupLab Dev (entry 290)",
+    "ios/GroupLab.iOS/": "the iPhone and iPad application, built for the simulator and a device by ios-app.yml and, once signed, sent to TestFlight (entry 290)"
   },
   "checked": {
     "mobile": "listed here for its top level class; mobile/GroupLab.Mobile/ ships, listed under ships-packaging",
+    "ios": "the rest of ios/: the native OpenCV build's script, the self-test's desktop reference and its verdict; ios/GroupLab.iOS/ ships, listed under ships-packaging",
     "android": "the rest of android/: the spike and the native OpenCV build's scripts; android/GroupLab.Android/ ships, listed under ships-packaging",
-    "ios": "the iOS build: the native OpenCV build's script (entry 290); nothing here is in a published build yet",
     ".gitattributes": "line endings at checkout; a test has failed over CRLF on a Windows runner, so CI runs, and nothing ships",
     ".github": "the workflows: CI runs on a change to them, and only package.yml, listed above, changes a package",
     "Directory.Build.props": "listed here for its top level class; it ships through ships-packaging",
