@@ -40,6 +40,10 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 286: nightly 123 on the Fold 7 for request 53
+
+Installed over the existing app on both devices; the card photo screen opens on the Fold 7.
+
 ## Entry 285: the README's empty table row
 
 The three lines under the main picture are a numbered list, so GitHub draws no empty header row above them.

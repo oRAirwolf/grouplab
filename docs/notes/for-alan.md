@@ -1,4 +1,4 @@
-NOW (entry 286): the Fold 7 cannot be reached, so GroupLab Dev is not on it yet. On the phone: Wi-Fi on, then Settings, Developer options, Wireless debugging on. If it still does not appear, tap "Pair device with pairing code" and in PowerShell run `C:\Dev\tools\android-sdk\platform-tools\adb.exe pair <the address:port under the code>` and type the six-digit code when asked; then close that box and run `C:\Dev\tools\android-sdk\platform-tools\adb.exe connect <the IP address & Port at the top of Wireless debugging>`. Or just type those numbers in the chat and I run them. Say "phone ready" and I install nightly 122 (123 if it is out) and check the card photo screen for request 53. (04:08 UTC)
+READY (entry 286, 04:38 UTC): GroupLab Dev nightly 123 is on the Fold 7 (and the tablet), your data kept. The card photo screen opens: Settings, Printers, Add a printer, choose "A card and one photo", Next, then Take the picture. The phone is left on that screen for you.
 
 GOOD MORNING (the night of 28 September, in five lines):
 1. Out in nightly 122 (02:10 UTC): the camera test's fixes (line 2), a shot you leave out now left out of every figure (Unholy's report), CSV import that guesses its columns, exact definitions for mean radius and standard deviation, and the plan for iPhone and iPad (docs/IOS-PLAN.md, and request 55 for the Apple steps). The site is current.
@@ -153,7 +153,7 @@ done", and the distance and caliber if you know them.
 2. Scan each printed page on the Brother flatbed at **600 dpi**, the whole page, before anything is laid on it. Save as `scan-A.png`,
    `scan-B.png`, `scan-C.png` (or .jpg, .tif) in the same folder. These scans are the truth for each page's real print scale.
 3. On each page lay a **new** card (any bank or ID card) in its outline and take the printer check's card photo in GroupLab Dev
-   (Settings, Printers, Check your printer, Card). Then do the same with an **old, worn** card, and with a **dark** card if you have one.
+   (Settings, Printers, Add a printer, "A card and one photo", Next, Take the picture; once a printer is saved the button reads Check again). Then do the same with an **old, worn** card, and with a **dark** card if you have one.
    If GroupLab Dev cannot read page B or C, take ordinary phone photos instead, straight down, in room light, the whole page in view.
 4. Copy the photos from the phone into the same folder named `A-new.jpg`, `A-old.jpg`, `A-dark.jpg`, `B-new.jpg` and so on.
 

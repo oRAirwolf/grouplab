@@ -24,6 +24,18 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 286: PRIORITY: put the newest GroupLab Dev on the Fold 7 now; Alan is printing request 53's pages
+
+**Status: done 2026-09-29.** Nightly 123 is on the Fold 7 and the tablet, installed over the existing app. The Fold had dropped off adb because I had restarted the adb server on a discovery backend that finds nothing on this PC; back on the default one it was seen again, and Alan paired it once more. The card photo screen opens (Settings, Printers, Add a printer, A card and one photo, Next); request 53's wording is corrected to that path.
+
+Alan: "Can you have code move the new version to my phone and I will print the 3 pages."
+
+1. **Before anything else in the inbox**, install the newest published GroupLab Dev (`org.grouplab.app.dev`) on the Fold 7 over wireless adb: nightly 123 if it has published by the time this is read, otherwise nightly 122. Install over the existing app so its data stays. Touch only GroupLab Dev; put back any setting changed; do not read lock-screen notifications.
+2. **If the Fold 7 is not reachable** (it may still be off Wi-Fi, or the pairing may have lapsed), put one line at the very top of `for-alan.md` saying so, with the exact steps: Wi-Fi on, then `adb pair` and `adb connect` from `C:\Dev\tools\android-sdk\platform-tools\adb.exe`, as in entry 277. Then try again when he says it is back.
+3. **When it is installed**, say so at the top of `for-alan.md` with the nightly number, and confirm that Settings, Printers, Check your printer, Card opens on the phone, because request 53 step 3 uses it for the card photos.
+4. The tablet already has nightly 122; bring it to 123 as well if 123 is out, in the same sitting.
+5. Then carry on with entry 280 section 2.
+
 ## 2026-09-29, entry 285: the README's three-line table under the main picture shows an empty row on GitHub
 
 **Status: done 2026-09-29.** The table is a numbered list, the three sentences word for word; nothing else read the table. Checked on GitHub in light and dark after the push.
