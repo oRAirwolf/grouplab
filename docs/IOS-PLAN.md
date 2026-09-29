@@ -98,6 +98,9 @@ says how; neither session ever sees them. Until all seven are there, the job bui
 never fails for want of them. The secrets it reads: `APPLE_TEAM_ID`, `IOS_DIST_CERT_P12`, `IOS_DIST_CERT_PASSWORD`, `IOS_PROFILE`,
 `APPLE_API_ISSUER_ID`, `APPLE_API_KEY_ID` and `APPLE_API_KEY_P8`.
 
+**In every nightly (entry 290):** the nightly's `ios` job builds GroupLab for iPhone and iPad with the nightly's version on `macos-26`,
+with OpenCV from the `ios` workflow's cache. It is not among the jobs publishing waits for, so the other builds are never held up by it.
+
 **The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and
 whether its shape is right, never a value. None set: the build is not signed and nothing is sent, exit 3. All seven set and right: it
 signs. Some set, or one malformed: it fails, naming the secret and what is wrong with it (a team ID that is not ten capitals and digits, a

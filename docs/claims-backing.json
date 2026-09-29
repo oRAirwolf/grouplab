@@ -4296,6 +4296,10 @@
   "**The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the result follows as soon as the reading allows.": {
    "kind": "decided",
    "where": "entry 283, the shutter's target of about 0.3 s (docs/ANDROID.md, The shutter), and entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CameraSession.cs Take logs camera.shutter"
+  },
+  "**In every nightly (entry 290):** the nightly's `ios` job builds GroupLab for iPhone and iPad with the nightly's version on `macos-26`, with OpenCV from the `ios` workflow's cache.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml job ios; held by IosSigningTests.TheNightlyBuildsIosSignsOnlyOnTheChecksWordAndNeverHoldsUpPublishing; entry 290"
   }
  },
  "rules": [

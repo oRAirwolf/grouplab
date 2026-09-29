@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1319 |
+| code | 1320 |
 | measured | 1774 |
 | decided | 1280 |
 | unbacked | 0 |
-| **total** | **4373** |
+| **total** | **4374** |
 
-**997** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**998** of them were read one sentence at a time and their backing written against the sentence. The other **3376** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1152,6 +1152,7 @@ one that matters.
 - *decided* (entry 283, the shutter's target of about 0.3 s (docs/ANDROID.md, The shutter), and entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CameraSession.cs Take logs camera.shutter): **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the result follows as soon as the reading allows.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): Building without a Mac The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The signing material and the key are secrets Alan sets himself with `gh secret set`, request 55 in `docs/notes/for-alan.md` says how; neither session ever sees them.
+- *code* (.github/workflows/nightly.yml job ios; held by IosSigningTests.TheNightlyBuildsIosSignsOnlyOnTheChecksWordAndNeverHoldsUpPublishing; entry 290): **In every nightly (entry 290):** the nightly's `ios` job builds GroupLab for iPhone and iPad with the nightly's version on `macos-26`, with OpenCV from the `ios` workflow's cache.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): **The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and whether its shape is right, never a value.
 - *code* (ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2): None set: the build is not signed and nothing is sent, exit 3.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The App Store, and the licence Entry 279 section 1 adds to LICENSE a GPLv3 section 7 additional permission for distribution through Apple's App Store and TestFlight under Apple's terms, and CONTRIBUTING says that every contribution is accepted under the licence with it.

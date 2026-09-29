@@ -45,6 +45,23 @@ public class IosSigningTests
     }
 
     [Fact]
+    public void TheNightlyBuildsIosSignsOnlyOnTheChecksWordAndNeverHoldsUpPublishing()
+    {
+        string nightly = File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml")).ReplaceLineEndings("\n");
+        int ios = nightly.IndexOf("\n  ios:\n", StringComparison.Ordinal);
+        int publish = nightly.IndexOf("\n  publish:\n", StringComparison.Ordinal);
+        Assert.True(ios > 0 && publish > ios, "the nightly has an ios job before publish");
+        string job = nightly[ios..publish];
+        Assert.Contains("runs-on: macos-26", job, StringComparison.Ordinal);
+        Assert.Contains("continue-on-error: true", job, StringComparison.Ordinal);
+        Assert.Contains("python3 scripts/ios-signing.py --check", job, StringComparison.Ordinal);
+        Assert.Contains("if: steps.signing.outputs.sign == 'true'", job, StringComparison.Ordinal);
+        Assert.Contains("-p:EnableCodeSigning=false", job, StringComparison.Ordinal);
+        string needs = nightly[publish..].Split('\n').First(l => l.TrimStart().StartsWith("needs:", StringComparison.Ordinal));
+        Assert.DoesNotContain("ios", needs, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void TheCheckNamesTheSevenSecretsTheSigningPlanNames()
     {
         string script = File.ReadAllText(Repo.PathTo("scripts", "ios-signing.py"));
