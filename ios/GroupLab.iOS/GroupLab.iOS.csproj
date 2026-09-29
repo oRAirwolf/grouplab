@@ -63,12 +63,9 @@
   <ItemGroup>
     <!--
       Entry 292 section 2.3: the share extension, built and put in the application's PlugIns folder, and where the two meet. Its assembly
-      is not one this application uses, so it is not referenced as one.
+      stays referenced: the iOS workload held here embeds an extension only when it is (dotnet/macios 26453, fixed in a later workload).
     -->
-    <ProjectReference Include="..\GroupLab.Share\GroupLab.Share.csproj">
-      <IsAppExtension>true</IsAppExtension>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
+    <ProjectReference Include="..\GroupLab.Share\GroupLab.Share.csproj" IsAppExtension="true" />
     <Compile Include="..\Shared\Handoff.cs" Link="Photos\Handoff.cs" />
   </ItemGroup>
 
