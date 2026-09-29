@@ -54,6 +54,10 @@ The approved Compare design (entry 259 screen 4, "one figure at a time") has onl
 and "each load in its own color" is not built either. Planning, please draw the two groups for the phone (side by side, or overlaid in
 two colors); everything else in entry 295 section 1 is built.
 
+**THE RESULT SCREEN AND THE CAMERA, FIXED (entry 291, not a request; in the next nightly):** the picture now stands upright and fills the width with no empty space; holes are fixed on their own page ("Fix holes": pinch to zoom, move, add, remove, undo, and it asks before throwing changes away), and the picture on the result can no longer be nudged by accident; the Camera or Result button you are on looks selected. An angled picture is read in about a second instead of up to thirty. The camera says "Move back" only when the printing runs out of the frame, "Move closer" when the codes are too small to read, and "Hold steadier" only when the frame is really blurred; the whole crosshair turns green when level. GroupLab Dev now keeps every picture of a sitting on the phone (a switch under About turns it off and deletes them). **At the next sitting:** about ten target pictures (filling the frame, far, off square, and two or three deliberately shaken), then Fix holes, the picture with the phone held four ways, and the green crosshair.
+
+**DESIGN NEEDED** (entry 291 section 2.2; not a request for you; planning, please): **Move in Fix holes, under a fixed crosshair.** Marking A has only Add and Remove. Built meanwhile: "Move this hole" picks the hole up, the picture pans under it, "Put the hole here" drops it; "Add a hole here" full width under the picture, Move and Remove side by side, Undo and Done side by side, then "Back to the result".
+
 **COMPARE AND ALL FIGURES, FIXED (entry 295, not a request; in the next nightly):** on the Fold 7, look at: the Sessions list, where each
 row is named by its load, or by date and time where there is no load, with the sheet's name beneath (your two 5x5 sessions should read
 by their times); Compare loads, Mean radius and CEP 90, where each name has its own line and the range and value sit beneath with nothing

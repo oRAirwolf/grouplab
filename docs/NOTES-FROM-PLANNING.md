@@ -87,6 +87,72 @@ Alan finished Part A of request 38 with planning, step by step, on 2026-09-29.
 3. Tell Alan in `for-alan.md` that the draft is ready, with the link, and planning walks him through Part B (the first submission: pricing, properties, age rating, the package, the listing from `docs/store/LISTING.md` and its screenshots).
 4. Close Part A of request 38 in `for-alan.md`.
 
+## 2026-09-29, entry 291: PRIORITY on the Android line: Alan's second camera sitting (nightly 123 on the Fold 7), and the scale test's card photos
+
+**Status: done 2026-09-29 but for the device checks at the next sitting and one DESIGN NEEDED.** Sections 1, 5 and 6, the scale test:
+the printer printed true size within 0.1%; the saved card correction is about 0.4% too large, most of it the card-thickness correction
+(question 74); outline B ruled out, A and C not separable on two cards; the Guided picture was page A with card 1; request 56 asks for one
+scan. 5.2: a printer check carries its date, can be marked calibrated or serviced, and a stale one says so. 2: the result picture upright
+from the registration, full width, no empty area; holes fixed on their own page ("Fix holes", Marking A, undo, a keep-changes question);
+the selected Camera or Result button shown selected. 3.1: naming an off-square picture took 4.2 to 30.0 s on the Fold 7 and now about
+1.3 s (codes read square on, placed by the nearest markers). 3.2: "Move back" only when the printing leaves the frame, "Move closer" below
+2.4 px a code module. 3.3: the live frame foretells the picture's marker count (same 4:3 view, 2.27 times the pixels). 3.4: the whole
+crosshair turns green. 3.5: "Hold steadier" only on measured shake (from 0.6 px; the stream's own blur, 0.3 px, is an allowance until the
+next sitting measures it). 7: the scoreboard in every build and on a local corpus (169 of 173 real holes, then 172 of 173 with 4 false
+marks after the joined-hole fix); GroupLab Dev keeps every picture of a sitting. DESIGN NEEDED: Move under a fixed crosshair in Fix holes.
+
+Runs alongside entry 290's iOS work, first in the Android and desktop line (entry 290 section 1: work Alan is waiting on goes first there). Alan, after a sitting with nightly 123: "I took some target photos from odd angles and tested the camera. It is working better now." Then the faults below, in his words where they are his.
+
+**Screenshots:** six, local only, in `C:\Dev\grouplab-local\camera-0929\screenshots-alan-2\` (metadata stripped). Never committed, never in a public log: they are the app's own screens, but the rule for this folder stands. Pull the logs of this sitting from the Fold 7 into `C:\Dev\grouplab-local\camera-0929\sitting-2\` before anything else, never committed.
+
+### 1. The scale test (request 53): pull the card photos from the phone
+
+Alan: "I have taken pictures of all 3 pages with 2 cards in the grouplab app." The photos are in GroupLab Dev on the Fold 7, taken through Settings, Printers, Add a printer, "A card and one photo". Pull them (and whatever the app measured from each) into `C:\Dev\grouplab-local\scale-test\` with names saying the page and the card (`A-card1`, `A-card2`, ...). **The 600 dpi scans have not arrived yet**: planning has asked Alan where the scanner saved them. Measure what can be measured now (each card photo's own reading, and how the three outlines compare with each other), and the comparison against the scans when they come. Report in `for-alan.md`.
+
+### 2. The result screen
+
+1. **The photo is always shown sideways, with a large empty space below it.** "The photo of the target seems to always be oriented horizontally in the app and there is a ton of blank space below the photo." Screenshot `..._011515` shows a portrait Letter sheet drawn turned 90 degrees in a landscape box, and `..._011526` a screen-high empty area below it. Show the picture upright as the sheet is (a portrait sheet portrait, from the registration, not the file's tags), filling the width, and no empty area after it. A test at each of the four ways the phone can be held.
+2. **Editing holes moves to its own page.** "It gives you the option on the analysis page to move the holes. This should probably be moved to a separate page with a better interface. There is no option to zoom into the photo and accidentally touching one of the holes moves it and screws up everything."
+   - The result's picture becomes view only: no touch moves a hole there.
+   - A button on the result, "Fix holes" (or the wording already used for it), opens a page built on **Marking A**, the fixed-crosshair pattern Alan approved for hand marking (entries 278 and 279): pinch to zoom, drag to pan the picture under a fixed crosshair; Move, Add and Remove act on the hole under the crosshair; Undo; Done returns to the result, which recomputes.
+   - A mistaken change is always undoable, and leaving the page without Done asks whether to keep the changes.
+   - If the page needs a layout choice Marking A does not settle, post a DESIGN NEEDED line and planning draws it; build the rest meanwhile.
+3. The **Camera and Result** buttons: in the screenshots Result looks greyed out while the result is showing. The one showing should look selected, not disabled.
+
+### 3. The camera screen
+
+1. **Off-axis pictures wait a long time before analysis starts.** "When taking an off-axis photo, it says it is loading the target or photo for a long time before starting analysis." Time each step of an off-axis picture on the Fold 7 (the same timing script as entry 283), find the slow step, and make it fast. Meanwhile, the waiting text names the step it is on.
+2. **The distance guidance is wrong.** "The helper also kept telling me to move back until it could no longer read the target at all." And: "when I appeared to have the phone held at the correct distance according to the helper, it had worse detection than if I held it closer." "Move back" may only be said when the sheet actually runs out of the frame. "Move closer" and the right distance come from what the live frame can read (markers decoded and the QR code's module size in pixels), not from the sheet's size in the frame. The distance the guide calls good must be the distance where detection is best; measure that on the Fold 7 at several distances and show the numbers.
+3. **The viewfinder still does not see what the picture sees.** "The image the viewfinder is seeing also appears to still not be what the application takes in the end because it was not detecting the same amount of tags on the viewfinder page versus the final image." Log, for each picture, the markers read in the last live frame and in the final picture, with each one's field of view and resolution. They should read the same markers, or the live count should honestly predict the final one. Fix the field-of-view or resolution difference that is left.
+4. **The level:** "When the crosshair level is perfectly level, the whole crosshair should go green instead of just the dot in the center so you know when it is perfectly flat."
+5. **"Hold steadier" asks for the impossible.** "The helper would say to hold the phone steadier when I was already holding my breath and doing everything humanly possible to hold still." Recalibrate the steadiness and focus check against real handheld frames from the Fold 7: judge the sharpness the analysis actually needs (the markers' edges), not a threshold a steady hand cannot meet. Say "hold steadier" only when a frame is too blurred to measure. Show the before and after thresholds with the measured blur of Alan's frames.
+
+### 5. Alan, two more facts from the same sitting
+
+1. **Guided mode fired by itself on one scale-test page.** "At one point, grouplab did take a picture of one of the printer scaling pages automatically, which I assume means everything was aligned as best as possible." Find that picture among the card photos pulled in section 1, say which page it was and whether a card was on it, and do not count it as a card photo if it has none. Note it as a good sign for Guided mode (every condition held), and keep its readings.
+2. **Alan has since calibrated his printer.** "I just calibrated my printer and hopefully made it slightly more accurate."
+   - **The scale test is unaffected** as long as the scans are of the same printed pages the card photos were taken on. Planning has told Alan not to reprint them.
+   - **The saved printer correction is now probably stale.** The result in screenshot `..._011445` says "Printed 0.4% large, every size corrected". Sheets printed before the calibration are still 0.4% large; sheets printed after it may not be. Check how GroupLab applies a printer's saved correction: if it applies to every sheet from that printer regardless of when it was printed, that is now wrong for new prints. Tie a correction to the prints it was measured on (a printer check dated, and sheets printed after it using it), offer a new printer check when the printer's correction may have changed, and say in `for-alan.md` what Alan should do (most likely: run the printer check once more on a sheet printed now).
+
+### 6. The scans have arrived
+
+The three 600 dpi scans of the same printed pages the card photos were taken on are now in `C:\Dev\grouplab-local\scale-test\` as `scan-A.png`, `scan-B.png` and `scan-C.png` (4958 by 6458 px, 600 dpi, the scanner's text metadata stripped; each page's label checked). Scanned after the photos and before any reprint; the printer was calibrated after these pages were printed, which does not matter for this test. Run the full comparison of section 1 now: each card photo's print-scale reading against its page's scan, new card and old, A against B against C, and report which outline reads most accurately and most consistently, with the numbers.
+
+### 7. Every picture from a sitting becomes a measured test case (Alan: "Will code look at every photo that was taken and learn from them and refine the scaling, camera, and hole detection?")
+
+Today the answer is "only the ones an entry names", and the scoreboard of `docs/DETECTION-LEARNING-STUDY.md` (entry 261, option a) is not built. Make the answer yes, in the study's own terms: measured tuning of the classical rules, each change with its reason, no learned model.
+
+1. **Pull everything from this sitting**, not only the card photos: every target photo (the odd angles included), each with its live-frame record and analysis trace, into a local corpus, `C:\Dev\grouplab-local\corpus\sitting-2026-09-29\`, metadata stripped (no GPS, no timestamps kept in the files). Alan's standing consent of 2026-09-24 covers his own sheets for testing; they still never go into the public repository, a public CI log or a public artifact. Real-photo runs happen locally or in the private archive repository's Actions, as the study says.
+2. **Truth for each photo.** Where the same sheet was scanned (the three 25-shot load sheets of 2026-09-26, and any other), the scan's hand-checked holes are the truth for the photo: hole by hole, recall, false marks and centre error, and the registration error at every bull. Where no scan exists, the shot count Alan wrote on the sheet is the truth for the count, and the photo is marked as count-only.
+3. **Build the scoreboard now** (entry 261 option a), fed by this corpus and the synthetic degradations: every build re-reads them and records recall, false marks, centre error, registration error and time per picture, by condition (angle, distance, light, blur). A drop beyond a set margin fails loudly. Every future sitting's pictures are added the same way.
+4. **Use it for this entry's fixes:** the distance guidance (section 3.2), the steadiness threshold (3.5) and the live-versus-final tag counts (3.3) are tuned against these real frames, and the scale test (section 1) against the scans. Each tuned number is written down with the pictures that set it.
+5. **So nothing is lost next time:** GroupLab Dev (only Dev, never the release or Play builds) keeps every picture it takes, with its live-frame record and analysis trace, on the phone in its own folder, so Code can pull a whole sitting at once. Nothing is sent anywhere; a setting in Dev turns it off and clears it; a line in `for-alan.md` says it is on.
+6. **Report** the scoreboard's first full table in `for-alan.md` in plain words: how many holes were found on the real photos, how many false marks, how far off, and what changed because of them.
+
+### 4. Done when
+
+Each item above tested where a test can hold it, shipped in the next nightly, and installed on the Fold 7 (by adb until entry 288's updater exists). Say in `for-alan.md` what to try at the next sitting. Then back to the iOS work of entry 290, which runs alongside all of this.
+
 ## 2026-09-29, entry 292: pictures from anywhere on the phone: Google Photos, Samsung Gallery, the maker's own photo app, and the cloud, on Android and on iOS
 
 **Status: in progress 2026-09-29. Sections 1, 3 and 4 (Android) done; section 2 (iOS: PHPicker with iCloud Photos, the document picker, a

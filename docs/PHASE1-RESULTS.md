@@ -40,6 +40,25 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 291 sections 2, 3 and 7.5: the result screen and the camera's words
+
+- **3.1:** naming an off-square picture from its codes took 5.1, 13.7, 4.2 and 30.0 s on the Fold 7: the whole picture was read at four
+  scales with corner searches after each failure, and the cut-outs took a code's centre for its corner. Codes are now read square on at 6
+  px a module, each placed by its six nearest markers: 1.2 / 8.3 / 6.9 / 22.5 s became 1.5 / 1.1 / 1.3 / 1.3 s on the desktop. The waiting
+  line names the step in progress.
+- **2.1 to 2.3:** the result picture is upright from the registration, full width, no empty area (tested at the four holds); holes are
+  fixed on their own Marking A page with zoom, undo and a keep-changes question; the selected Camera or Result button shows as selected.
+- **3.2:** "Move back" only when the printing leaves the frame (the paper's corner touching the edge said it 15 times in the sitting);
+  "Move closer" below 2.4 px a code module in the picture, leaving at 2.1, set from the four pictures shrunk in seven steps (all read and
+  named down to 1.6 to 2.1 px, failures from 1.9 or less); a rendered sheet agrees.
+- **3.3:** the last live frames read 5 to 25 markers and the pictures 34, with the same 4:3 view at 2.27 times the pixels; the live frame now
+  foretells the picture's count (markers readable from 14 picture px), logged as `camera.live` against `phone.markers`.
+- **3.5:** every "Hold steadier" of the sitting came from the live markers-read rule. Now only measured shake says it: from 0.6 picture px,
+  steady under 0.45, between a 1 px blur (all read) and 1.5 px (two of three failed). The stream's own blur is a 0.3 px allowance until
+  the next sitting measures it. **3.4:** the whole crosshair turns green. **7.5:** GroupLab Dev keeps each picture of a sitting, its live
+  record and trace, with a switch that turns it off and deletes it. `grouplab capture-tune` reruns the tables (docs/MOBILE-CAPTURE.md
+  section 8).
+
 ## Entry 291: the scale test, and a printer check tied to its prints
 
 - **The photos:** six printer-check photos from the Fold 7 (pages A, B, C; card 1 a new silver card, card 2 an older dark one), kept
