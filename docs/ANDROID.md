@@ -491,4 +491,15 @@ and the Tab S8 Ultra, both on Android 16 (API 36), do so is recorded here after 
 the one after it has arrived by itself: the first prompt, whether the second is silent, that sessions and settings are kept, and the time
 from publishing to installing (the log's `update.installed` line carries `minutesFromPublish`).
 
+**The first self-update, measured on the Tab S8 Ultra (Android 16) on 2026-09-29.** Nightly 125 was installed over adb (installer of record:
+none). Nightly 126 was published at 10:00 UTC; at the next start GroupLab Dev found it, downloaded its 44,884,287 bytes over Wi-Fi in
+2 seconds, and checked the hash and the signing certificate. It then showed its one sentence about "Install unknown apps" with "Open the
+setting", which opened Android's page for GroupLab Dev; after the permission was allowed, the next start handed the file to Android, which
+asked "Do you want to update this app?" once. One tap on Update installed nightly 126 in place at 10:56 UTC, 56 minutes after publishing
+(most of that the time until the app was next opened). The sessions were still there afterwards, and the installer of record became
+GroupLab Dev itself, which is what lets the next update go without a tap. **Found on the way:** Android asking for the tap was treated as a
+failure, so the pending version was forgotten and the "Updated to nightly N" notice did not appear after the tapped install; fixed for
+nightly 127. **Still to see:** whether nightly 127 installs on the tablet with no tap once GroupLab has left the screen, and the Fold 7,
+which was dozing, on its first self-update.
+
 **adb stays for tests and logs only.** Installing a nightly over adb is still how a sitting starts on a device that has no updater yet.

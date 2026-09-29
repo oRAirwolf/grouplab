@@ -347,14 +347,19 @@ internal static class SelfUpdate
     /// <summary>What the installer said, from <see cref="InstallResultReceiver"/>. A success ends this process, so it is logged by the next launch.</summary>
     internal static void Installed(int status, string? message)
     {
-        Warn("update.install.result", ("status", status), ("message", message));
-        if (status != (int)PackageInstallStatus.Success)
+        // Android asking for the tap is not a failure: the install is still pending, and the version it will be must be remembered so the
+        // next start says "Updated to nightly N" (found on the tablet with nightly 125 to 126, entry 288).
+        if (status == (int)PackageInstallStatus.PendingUserAction || status == (int)PackageInstallStatus.Success)
         {
-            Prefs.Edit()!.Remove("installing")!.Apply();
-            Say(status == (int)PackageInstallStatus.FailureAborted
-                ? "The update was not installed. It stays downloaded; tap Update now when you want it."
-                : "Android did not install the update. GroupLab is unchanged; it tries again later.");
+            Log("update.install.result", ("status", status), ("message", message));
+            return;
         }
+
+        Warn("update.install.result", ("status", status), ("message", message));
+        Prefs.Edit()!.Remove("installing")!.Apply();
+        Say(status == (int)PackageInstallStatus.FailureAborted
+            ? "The update was not installed. It stays downloaded; tap Update now when you want it."
+            : "Android did not install the update. GroupLab is unchanged; it tries again later.");
     }
 
     /// <summary>After an update: "Updated to nightly N", its notes a tap away, and the time from publishing to installing in the log.</summary>

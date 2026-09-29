@@ -128,7 +128,11 @@ says when one is downloaded, and after an update "Updated to nightly N" with Wha
   stops with an error. The nightly fails if its AAB's manifest asks to install packages. `UpdaterFlavorTests`, 4 tests.
 - **The key:** `apksigner verify --print-certs` on nightly 124's APK and on the copies installed on the Fold 7 and the tablet: one
   certificate, SHA-256 beginning `98b36d56ef6f3d62`. Both devices are Android 16 (API 36).
-- **Not done yet:** the device check. Nightly 125 goes on both devices over adb once, and the next nightly should arrive by itself.
+- **The device check, first half** (Tab S8 Ultra, Android 16): nightly 125 over adb, then nightly 126 by itself: found at the next
+  start, 44.9 MB in 2 s on Wi-Fi, hash and certificate checked, the "Install unknown apps" sentence and page, then Android's one "Do you
+  want to update this app?"; one tap installed it in place, sessions kept, 56 minutes after publishing; the installer of record is now
+  GroupLab Dev. A pending tap was taken for a failure, which lost the "Updated to nightly N" notice; fixed for nightly 127, where the
+  silent second update is to be seen.
 
 ## Entry 287: the product picture at the top of the home page
 
