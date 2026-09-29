@@ -12,6 +12,16 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.129
+
+**2026-09-29**, commit `6cf5d40`. Nightly.
+
+This build has no change to the application; it behaves exactly as nightly 128 does.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.129)
+
+---
+
 ## 0.2.0-nightly.128
 
 **2026-09-29**, commit `6cf5d40`. Nightly.
