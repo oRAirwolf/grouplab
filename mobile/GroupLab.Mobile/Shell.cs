@@ -211,6 +211,17 @@ public sealed class Shell : UserControl
         notice.IsVisible = true;
     }
 
+    /// <summary>
+    /// The black idle screen over everything (entry 268), for a head with no native one: iOS (entry 290 section 2 item 6). Close gives the
+    /// screen back as it was.
+    /// </summary>
+    internal void ShowIdle()
+    {
+        var before = Content;
+        Content = new IdleScreen(() => Content = before);
+        DiagnosticLog.Info("app.idle", ("shown", true));
+    }
+
     /// <summary>Hides the bar along the bottom, or shows it again.</summary>
     internal void Immersive(bool on) => nav.IsVisible = !on;
 

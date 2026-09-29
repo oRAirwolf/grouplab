@@ -104,6 +104,23 @@ public class SharedScreensTests
         window.Content = shell;
     }
 
+    /// <summary>Entry 268 on a head with no native idle screen: black over everything, and Close gives the screen back.</summary>
+    [AvaloniaFact]
+    public void TheIdleScreenIsBlackAndGivesTheScreenBack()
+    {
+        var shell = Started();
+        var before = shell.Content;
+        shell.ShowIdle();
+        Dispatcher.UIThread.RunJobs();
+        var idle = Assert.IsType<IdleScreen>(shell.Content);
+        Assert.Equal(Avalonia.Media.Colors.Black, ((Avalonia.Media.ISolidColorBrush)idle.Background!).Color);
+        Assert.False(idle.Speaking);
+        idle.RaiseEvent(new Avalonia.Input.TappedEventArgs(Avalonia.Input.InputElement.TappedEvent, null!));
+        Assert.True(idle.Speaking);
+        idle.GetVisualDescendants().OfType<Button>().Single().RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Assert.Same(before, shell.Content);
+    }
+
     private static string Words(Button button) =>
         string.Join(" ", button.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).Where(t => !string.IsNullOrWhiteSpace(t)));
 }
