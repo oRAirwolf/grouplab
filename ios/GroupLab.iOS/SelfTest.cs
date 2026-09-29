@@ -177,9 +177,10 @@ internal static class SelfTest
         try
         {
             long before = PhoneAnalysis.Store().List().Select(s => s.Id).DefaultIfEmpty(0).Max();
-            string copy = Path.Combine(Phone.Platform.CacheFolder, "shared" + Path.GetExtension(sample));
-            File.Copy(sample, copy, overwrite: true);
-            await OnUi(() => CapturePage.SharedPicture?.Invoke(copy));
+            // Handed over as the files picker hands a picture over (PhotoIntake.FromFilePicker): unread, with its size and kind.
+            var handle = new PhotoHandle(null, null, null, new FileInfo(sample).Length, Path.GetExtension(sample).ToLowerInvariant(),
+                () => Task.FromResult<Stream?>(File.OpenRead(sample)));
+            await OnUi(() => CapturePage.SharedPicture?.Invoke([handle]));
             bool checkShown = await WaitFor(() => Find<FeedbackView>() is not null || Find<ResultView>() is not null, TimeSpan.FromMinutes(5));
             check.Numbers["pictureCheckShown"] = checkShown ? 1 : 0;
             if (checkShown && await OnUi(() => Find<FeedbackView>() is not null))
