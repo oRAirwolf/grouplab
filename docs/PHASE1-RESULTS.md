@@ -40,6 +40,21 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 280 section 2: row 10 on both platforms
+
+- **Phone:** Share a picture (the results box dragged, pinched or corner-resized, lines chosen by a tap; chips for the mean radius circle,
+  a label, the style and the crop; Save to gallery through MediaStore into Pictures/GroupLab, with no new permission, and Share) and the
+  one-page Report (one dated Letter or A4 page, shared or printed). `IPhonePlatform.SaveToGallery` has a default, so the iOS head builds.
+- **Desktop:** "Shots and clicks..." and "Share a picture..." under the shot table, an Aim points section with "+ Aim point", "Zero from
+  this group..." under the zero correction (its offset carried into Ballistics' dope until stopped), and Report as a menu of the full and
+  the one-page reports.
+- **Shared, so the two cannot differ:** the words (`ResultWords`), the picture's box and circle (`ShareCard`), the page
+  (`OnePageReport`: the picture, a plot centered on the counted shots with whole grid steps stated, the figures, the load and equipment
+  line, and the mean radius interval as the confidence sentence), the picture re-encoded without its metadata, and the `SharePicture`
+  control. Tests: `OnePageReportTests`, `ResultWordsTests`, `Entry280Tests`.
+- **Not done:** the device check and the phone photographs (next sitting); the five desktop windows' own Features pictures (listed in
+  `docs/figures/SCREENSHOTS.md`).
+
 ## Entry 289: the 2 MOA sheets
 
 Twelve sheets for Unholy's request: `GL-CF9-LTR` and `GL-CF9-A4` (one page), `GL-CF9-T` and `GL-CF9-TA4` (a set of three pooled by tile
