@@ -508,7 +508,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 - The target library and printing are now one screen, Targets: choose a sheet and everything it takes to print it is beside the list, with no second window. (Entry 155)
 - The cartridge list shows .22 centerfire, and the target library's families are spelled the same American way as everything else. (Entry 159)
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.96)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
