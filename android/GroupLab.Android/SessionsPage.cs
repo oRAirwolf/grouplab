@@ -25,6 +25,7 @@ public sealed class SessionsPage : UserControl
         column.Children.Add(Screens.Title("Sessions"));
         var said = Screens.Line("");
         column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)));
+        column.Children.Add(Screens.Choice("Import shots from a CSV file", () => _ = ImportCsv(said)));
         column.Children.Add(said);
         IReadOnlyList<SessionSummary> saved;
         try
@@ -135,6 +136,38 @@ public sealed class SessionsPage : UserControl
         }
 
         Content = new ResultView(result, new ShotSetup(result.State.Calibre, result.State.ShotDistanceInches), units, () => Content = List());
+    }
+
+    /// <summary>Entry 278 section 2: shots from any program's CSV, through GroupLab's guesses at what each column is.</summary>
+    private async Task ImportCsv(TextBlock said)
+    {
+        if (TopLevel.GetTopLevel(this)?.StorageProvider is not { } storage)
+        {
+            return;
+        }
+
+        var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions { Title = "Import shots from a CSV file", AllowMultiple = false });
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        CsvTable table;
+        try
+        {
+            await using var from = await files[0].OpenReadAsync();
+            using var reader = new StreamReader(from);
+            table = ShotCsv.Read(await reader.ReadToEndAsync());
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
+        {
+            said.Text = "That file could not be read as CSV: " + e.Message;
+            return;
+        }
+
+        var units = App.Settings.LoadUnits();
+        Content = new CsvImportPage(table, files[0].Name, () => Content = List(),
+            result => Content = new ResultView(result, new ShotSetup(null, result.State.ShotDistanceInches), units, () => Content = List()));
     }
 
     private void Open(long id)

@@ -93,7 +93,15 @@ public sealed record GroupReport(
     bool ScaleAssumesSquareOn,
     string? Problem,
     int SighterShots = 0,
-    string? Detection = null);
+    string? Detection = null)
+{
+    /// <summary>
+    /// The figures GroupLab reports: those of the shots that count, without any the person left out. NOTES-FROM-PLANNING.md entry 278
+    /// section 5c and entry 279 section 3 (Unholy's report): a shot left out is left out of every figure, while it stays on the record and
+    /// is shown as left out; <see cref="AllShots"/> keeps the figures with every shot, for the line that says what leaving it out changed.
+    /// </summary>
+    public GroupFigures? Counted => Excluded > 0 ? WithoutExclusions : AllShots;
+}
 
 /// <summary>
 /// One subgroup of a sheet, NOTES-FROM-PLANNING.md entry 94 section 2: its name, the bulls that hold it, and its own figures, computed
@@ -421,6 +429,18 @@ public static class GroupAnalysis
         ExpectedWorstInMeanRadii: null,
         ExpectedWorstInMeanRadiiUnavailable: reason,
         DispersionWithheld: sentence);
+
+    /// <summary>
+    /// Each aim point's own figures, NOTES-FROM-PLANNING.md entry 278 section 5b: on a photograph with several aim points, whether a GroupLab
+    /// sheet's bulls or aim points placed by hand on another target, every scoring aim point with the figures of its own shots, measured from it
+    /// exactly as a whole group is, without any shot left out. The pooled figures stay <see cref="Analyse"/>'s. An aim point with no shots has
+    /// null figures. The screen that shows them waits for planning's concept.
+    /// </summary>
+    public static IReadOnlyList<(BullAim Aim, GroupFigures? Figures)> ByAimPoint(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        return [.. state.Bulls.Where(b => b.Scoring).Select(b => (b, Figures(state, [.. state.Shots.Where(s => s.IsShot && s.Exclusion is null && s.Bull == b.Index)])))];
+    }
 
     private static GroupFigures? Figures(MarkingState state, IReadOnlyList<MarkedShot> shots)
     {

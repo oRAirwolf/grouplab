@@ -2585,15 +2585,17 @@ public sealed partial class MainWindow : Window
             statistics.Children.Add(Note(oneScale));
         }
 
-        if (report.AllShots is { } all)
+        if (report.AllShots is { } everyShot && report.Counted is { } all)
         {
-            var reduced = report.WithoutExclusions!;
+            // Entry 278 section 5c and entry 279 section 3: the figures are those of the shots that count; with any left out, each figure's
+            // detail gives it again with every shot, so the judgement stays in view without deciding the numbers.
+            var reduced = everyShot;
             bool excluded = report.Excluded > 0;
             // Entry 46 section 3: where a human judgement entered the measurement, as the first row's detail. Entry 109 section 3: every figure
             // is one row of one shape, the label left, the value right in mono, one detail line beneath and a hairline under it.
             // Entry 111 section 3: the count once, in the sentence that also says how the shots were placed.
-            statistics.Children.Add(Rowed(Line(PlacedLine(all.Shots, report.Automatic, report.Corrected, report.Manual)
-                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {reduced.Shots} without the {report.Excluded} excluded" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}."))));
+            statistics.Children.Add(Rowed(Line(PlacedLine(everyShot.Shots, report.Automatic, report.Corrected, report.Manual)
+                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {all.Shots} counted, {report.Excluded} left out" : "")}{(report.NotShots > 0 ? $"; {report.NotShots} marked not a shot" : "")}."))));
             statistics.Children.Add(Rowed(all.CentreFromAim is { } offsetFromAim && AsDisplayed(offsetFromAim) is var centre
                 ? CentreRow(centre)
                 : Line($"Center from aim: {all.CentreFromAimUnavailable}.")));
@@ -4783,8 +4785,8 @@ public sealed partial class MainWindow : Window
         if (reduced is not null)
         {
             lines.Add(pick(reduced) is { } r
-                ? $"without exclusions: {units.Length(r.Value)}, {Interval(r)}"
-                : "without exclusions: " + reduced.DispersionWithheld);
+                ? $"with every shot: {units.Length(r.Value)}, {Interval(r)}"
+                : "with every shot: " + reduced.DispersionWithheld);
         }
 
         return lines;
@@ -4797,8 +4799,8 @@ public sealed partial class MainWindow : Window
         if (reduced is not null)
         {
             lines.Add(reduced is { Cep90: { } r90, Cep50: { } r50, Cep95: { } r95 }
-                ? $"without exclusions: CEP 90 {units.Length(r90.Value)}, CEP 50 {units.Length(r50.Value)}, CEP 95 {units.Length(r95.Value)}"
-                : "without exclusions: " + (reduced.DispersionWithheld ?? "no CEP"));
+                ? $"with every shot: CEP 90 {units.Length(r90.Value)}, CEP 50 {units.Length(r50.Value)}, CEP 95 {units.Length(r95.Value)}"
+                : "with every shot: " + (reduced.DispersionWithheld ?? "no CEP"));
         }
 
         return lines;
@@ -4904,8 +4906,8 @@ public sealed partial class MainWindow : Window
         if (reduced is not null)
         {
             lines.Add(SizeValue(reduced) is { } size
-                ? $"without exclusions: {size}, {Sd(reduced).Replace("  \u00b7  ", ", ", StringComparison.Ordinal)}"
-                : "without exclusions: " + (reduced.DispersionWithheld ?? "no width or height"));
+                ? $"with every shot: {size}, {Sd(reduced).Replace("  \u00b7  ", ", ", StringComparison.Ordinal)}"
+                : "with every shot: " + (reduced.DispersionWithheld ?? "no width or height"));
         }
 
         return lines;

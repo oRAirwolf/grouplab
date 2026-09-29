@@ -75,6 +75,8 @@ return args switch
     ["build-stamp", var assembly, "--expect", var train] => GroupLab.Cli.BuildStampVerb.Run(assembly, train, Console.Out, Console.Error),
     ["glossary"] => GroupLab.Cli.GlossaryVerb.Run("docs", Console.Out, Console.Error),
     ["glossary", var docs] => GroupLab.Cli.GlossaryVerb.Run(docs, Console.Out, Console.Error),
+    ["scale-test-pages", var outDir] => GroupLab.Cli.ScaleTestVerb.Run(outDir, false, Console.Out, Console.Error),
+    ["scale-test-pages", var outDir, "--preview"] => GroupLab.Cli.ScaleTestVerb.Run(outDir, true, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
     ["donor-pack"] => GroupLab.Cli.DonorPackVerb.Run(".", Console.Out),

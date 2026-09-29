@@ -196,14 +196,14 @@ public static class AnalyzeVerb
 
     private static void WriteGroup(TextWriter output, GroupReport report)
     {
-        if (report.AllShots is not { } all)
+        if (report.Counted is not { } all)
         {
             output.WriteLine("group: " + (report.Problem ?? "no shots"));
             return;
         }
 
         var inv = CultureInfo.InvariantCulture;
-        output.WriteLine(string.Create(inv, $"group: {all.Shots} shots, pooled about their own bulls{(report.SighterShots > 0 ? $", {report.SighterShots} sighter shots left out" : "")}; scale from {report.Scale}"));
+        output.WriteLine(string.Create(inv, $"group: {all.Shots} shots, pooled about their own bulls{(report.SighterShots > 0 ? $", {report.SighterShots} sighter shots left out" : "")}{(report.Excluded > 0 ? $", {report.Excluded} left out by hand" : "")}; scale from {report.Scale}"));
         if (report.Detection is { } detection)
         {
             output.WriteLine("  " + detection);

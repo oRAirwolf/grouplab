@@ -28,7 +28,7 @@ public static class ResultFigures
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
         var report = GroupAnalysis.Analyse(state);
-        var all = report.AllShots;
+        var all = report.Counted; // entry 278 section 5c: a shot left out is out of every figure
         double? distance = state.ShotDistanceInches;
         var shown = angle is { } a && distance is not null ? units with { Angular = a } : null;
         string Size(double inches) => shown?.Angle(inches, distance) is { } v

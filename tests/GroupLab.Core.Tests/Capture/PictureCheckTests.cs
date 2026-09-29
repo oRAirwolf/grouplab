@@ -125,6 +125,8 @@ public class PictureCheckTests
         Assert.NotNull(note.Outline);
         Assert.DoesNotContain("light even", verdict.Fine);
         Assert.Equal("Good with notes", verdict.Verdict);
+        // Entry 282 section 6: a picture with notes is not a perfect one, and the score says so.
+        Assert.True(verdict.Score <= PictureCheck.WithNotesMost, verdict.Describe());
     }
 
     /// <summary>With no sheet named, the only verdict is a retake, in red, and it says what to do.</summary>

@@ -150,6 +150,26 @@ public class AnalysisPanelTests
         Assert.DoesNotContain("click", elevation.Interval ?? "", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Entry 282 section 7: on the Fold 7 the windage row said "right" and "left" and no number. Both axes give their amount, whether or not it
+    /// is worth dialling, and one too small to dial says so.
+    /// </summary>
+    [Fact]
+    public void BothAxesOfTheZeroGiveTheirAmount()
+    {
+        var zero = AnalysisPanel.Build(Group(), UnitSettings.Imperial).Blocks.Single(b => b.Key == "zero");
+        foreach (string axis in new[] { "Elevation", "Windage" })
+        {
+            var row = zero.Figures.First(f => f.Label == axis);
+            Assert.Matches(@"\d", row.Value);
+            Assert.Contains("MOA", row.Value, StringComparison.Ordinal);
+            if (row.Withheld)
+            {
+                Assert.Contains("too small to dial", row.Interval!, StringComparison.Ordinal);
+            }
+        }
+    }
+
     /// <summary>A marking with no distance has no zero block at all, rather than a heading over four rows of "needs the shot distance".</summary>
     [Fact]
     public void WithNoDistanceThereIsNoZeroBlock()

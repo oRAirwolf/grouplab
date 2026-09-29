@@ -165,6 +165,12 @@ public class MainActivity : AvaloniaMainActivity
     /// <summary>The extra that asks GroupLab Dev to open the capture screen's camera (entry 260), with any value; "manual" opens it in Manual.</summary>
     internal const string TestCameraExtra = "org.grouplab.test.camera";
 
+    /// <summary>The extra that picks the capture mode for a timing run (entry 283): "quality", or anything else for minimum latency.</summary>
+    internal const string TestCaptureModeExtra = "org.grouplab.test.capturemode";
+
+    /// <summary>The extra that presses the shutter this many seconds after the camera starts, through the same path as a finger (entry 283).</summary>
+    internal const string TestPressExtra = "org.grouplab.test.press";
+
     /// <summary>
     /// GroupLab Dev only: opens the camera as Take a picture does, so the device check (scripts/device-capture-check.py) can read the capture
     /// screen with nobody holding the phone.
@@ -176,6 +182,9 @@ public class MainActivity : AvaloniaMainActivity
             return;
         }
 
+        // Entry 283: "quality" as the second word takes the picture in the maximum quality mode, to time it against minimum latency.
+        CameraSession.QualityMode = intent.GetStringExtra(TestCaptureModeExtra) == "quality";
+        CameraSession.TestPressAfterSeconds = double.TryParse(intent.GetStringExtra(TestPressExtra), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double after) ? after : 0;
         Avalonia.Threading.DispatcherTimer.RunOnce(() => CapturePage.TestCamera?.Invoke(mode == "manual"), TimeSpan.FromSeconds(2));
     }
 
@@ -247,6 +256,38 @@ public class MainActivity : AvaloniaMainActivity
         }
 
         base.OnStop();
+    }
+
+    /// <summary>
+    /// Entry 281 section 1.5: after GroupLab was minimized and opened again, the camera did not start. The camera is let go when the
+    /// application leaves the screen, the torch with it, and taken again when it comes back.
+    /// </summary>
+    protected override void OnPause()
+    {
+        CameraSession.Active?.Pause();
+        base.OnPause();
+    }
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+        CameraSession.Active?.Resume();
+
+        // Entry 282 section 3: after a return the Retake screen's buttons were blank and the bar's names gone, the icons half drawn. The
+        // whole screen is laid out and drawn again, every text with it, and not only the camera taken back.
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime { MainView: { } view })
+            {
+                foreach (var visual in Avalonia.VisualTree.VisualExtensions.GetSelfAndVisualDescendants(view))
+                {
+                    (visual as Avalonia.Layout.Layoutable)?.InvalidateMeasure();
+                    visual.InvalidateVisual();
+                }
+
+                GroupLab.App.Diagnostics.DiagnosticLog.Info("app.resume.redraw");
+            }
+        });
     }
 }
 

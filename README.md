@@ -245,7 +245,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ### Apple mobile
 
-iOS is not planned. An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+An iOS version of GroupLab is being built. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
 
 ### Other Linux builds
 
@@ -338,7 +338,7 @@ New on the phone in the latest builds, as entries 258 and 259 bring it level wit
 - On the phone, a set of sheets is a checklist: the sheets read so far pooled into one group, and those still to read.
 - On the phone, a scan says how it was printed, and every size is corrected to real inches.
 
-What does not exist yet: Garmin Xero import, velocity regression, synchronization, an iOS build, and hand marking on the phone.
+What does not exist yet: Garmin Xero import, velocity regression, synchronization, the iOS build (being built), and hand marking on the phone.
 
 #### Before the first beta or stable release
 
@@ -387,7 +387,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 | **5. Chronograph, solver, and comparison** | **In progress** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots |
 | **6. Android** | **In progress** | camera capture and lens distortion fitted on the device |
 | **7. Synchronization** | **Not started** | cloud provider adapters over three-tier storage |
-| **8. iOS** | **Not started** | built and signed on CI |
+| **8. iOS** | **In progress** | built and signed on CI |
 | **9. Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
 
 Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started.
@@ -445,7 +445,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Done.** The analysis screen shown above: the editor and the analysis as two states of one document, forward by Accept and analyze and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the caliber, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; the two judgment cards, round and flyer, each naming its test; the sheet's thumbnail, drawn from its definition with every shot on it, where a click on a bull selects its shots; and the full CEP table and bivariate fit behind one disclosure that remembers it was opened.
 - **Not started.** Hole detection on blank paper, with no definition to difference against. Its gate names the material it needs, one photograph at a known scale of plain paper with real holes in it, and no image in the corpus is that.
 - **Built, not proven.** Session records in one SQLite database with a documented, versioned schema and full JSON export and import: Accept and analyze saves the session, with its marking, figures, definition and a 150 dpi proof image, and the Session records screen lists them newest first, filters by rifle and load, opens one back to its analysis with no image needed, and asks before deleting one.
-- **Built, not proven.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval and without exclusions, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every "why", and the version and identifiers on page 2. Every line on it is one the analysis screen shows.
+- **Built, not proven.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval, without any shot left out and with every shot beside it, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every "why", and the version and identifiers on page 2. Every line on it is one the analysis screen shows.
 - **Built, not proven.** The target library: the built-in sheets, read only, and your own sheets from the designer, saved as GLTD files in the data folder, renamed, duplicated from any sheet, and deleted after asking. The print screen lists both. A session keeps its own copy of the sheet it was analyzed against, so deleting a sheet never makes a session unreadable.
 - **Done.** Records for rifles, barrels and loads, kept small: a rifle's scope click, a barrel's round count, a load's components.
 - **Done.** The stage timeline that shows the analysis doing its work, as `DESIGN.md` section 19 describes it. During a live run each stage lands on the timeline with its own picture as it files: the markers found light up, the registration's corners are ringed by their residual, and the residual shows the artwork gone and the holes left. The timeline scrubs by slider or button, and a rejection clicked is found on the image. A batch run builds no pictures.
@@ -474,7 +474,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Not started.** Cloud provider adapters over three-tier storage.
 
 **Phase 8. iOS.**
-- **Not started.** A CI build, signed. Not pursued now: iOS is not planned, and the app-store permission under License would be revisited only before an iOS release.
+- **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Submission to the App Store waits for Alan.
 
 **Phase 9. Performance.**
 - **Not started.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. It starts only when the application works as intended, because a fast wrong answer is worthless.
@@ -508,7 +508,7 @@ it.
 **The developer works on Windows.** Targets are printed, shot, photographed and marked there, so that is where the application meets real
 data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
-**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8 and would need the GPL section 7 additional permission described under License, which is not in force and not pursued now. The permission gates distribution through the App Store, not development. Building and testing on a device can proceed without it.
+**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8, and being built: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines. The App Store needs the GPL section 7 additional permission described under License; building and testing on a device do not.
 
 </details>
 
@@ -563,7 +563,7 @@ flowchart TB
         APP["Desktop<br/>Avalonia"]
         CLI["Command line<br/>grouplab"]
         AND["Android<br/>in testing"]
-        IOS["iOS<br/>not planned"]
+        IOS["iOS<br/>being built"]
     end
 
     subgraph img["Imaging backend"]

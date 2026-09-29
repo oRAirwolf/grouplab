@@ -94,6 +94,51 @@ public sealed class CapturePage : UserControl
         return new ShotSetup(chosen, inches);
     }
 
+    /// <summary>The last result on this tab, which the Result button returns to (entry 281 section 1.3).</summary>
+    private Control? lastResult;
+
+    /// <summary>
+    /// Entry 281 section 1.3: Capture and the result as two buttons always in view above the page, so the camera and the last result are
+    /// each one press away and the result never hides the way back to the camera behind a scroll. The page under them scrolls on its own.
+    /// </summary>
+    private DockPanel WithBar(Control page, bool onResult)
+    {
+        if (page.Parent is Panel old)
+        {
+            old.Children.Remove(page);
+        }
+
+        var camera = Screens.Choice("Camera", Camera);
+        var result = Screens.Choice("Result", () =>
+        {
+            if (lastResult is { } shown)
+            {
+                Content = WithBar(shown, true);
+            }
+        });
+        result.IsEnabled = lastResult is not null && !onResult;
+        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Margin = new Avalonia.Thickness(12, 8, 12, 4) };
+        Grid.SetColumn(result, 1);
+        bar.Children.Add(camera);
+        bar.Children.Add(result);
+        var dock = new DockPanel();
+        DockPanel.SetDock(bar, Dock.Top);
+        dock.Children.Add(bar);
+        dock.Children.Add(page);
+        return dock;
+    }
+
+    /// <summary>The start of the tab, with the two buttons above it once there is a result to go back to.</summary>
+    private void ShowStart() => Content = lastResult is null ? start : WithBar(start, false);
+
+    /// <summary>A result shown, and kept as the one the Result button returns to.</summary>
+    private void ShowResult(Control result)
+    {
+        lastResult = result;
+        Content = WithBar(result, true);
+        DiagnosticLog.Info("camera.shutter", ("step", "shown")); // entry 283: the last step, timed by the log's own clock
+    }
+
     private void Camera()
     {
         if (Setup() is not { } setup)
@@ -114,6 +159,13 @@ public sealed class CapturePage : UserControl
         {
             CloseCamera();
             _ = Choose();
+        }, lastResult is null ? null : () =>
+        {
+            CloseCamera();
+            if (lastResult is { } shown)
+            {
+                Content = WithBar(shown, true);
+            }
         });
     }
 
@@ -126,7 +178,7 @@ public sealed class CapturePage : UserControl
         }
 
         Shell.Current?.Immersive(false);
-        Content = start;
+        ShowStart();
         return true;
     }
 
@@ -251,7 +303,7 @@ public sealed class CapturePage : UserControl
             // Entry 243 section 3.2: nothing from a canceled analysis is kept; the photograph goes below, the working copy went with the cancel.
             DiagnosticLog.Info("phone.detect.cancel");
             File.Delete(photo);
-            Dispatcher.UIThread.Post(() => Content = start);
+            Dispatcher.UIThread.Post(ShowStart);
             return;
         }
         catch (Exception e) when (e is IOException or InvalidOperationException or OpenCvSharp.OpenCVException)
@@ -266,7 +318,8 @@ public sealed class CapturePage : UserControl
         }
 
         // Entry 260, Feedback B: every picture is checked before its result, taken or chosen; taking it again forgets this one.
-        void Show() => Content = new ResultView(result, setup, units, () => Content = start);
+        void Show() => ShowResult(new ResultView(result, setup, units, ShowStart));
+        DiagnosticLog.Info("camera.shutter", ("step", "analyzed"));
         Dispatcher.UIThread.Post(() => Content = result.Check is { } check
             ? new FeedbackView(check, result.Image?.Path, Show, () =>
             {
@@ -278,7 +331,14 @@ public sealed class CapturePage : UserControl
                 PhoneAnalysis.Discard(result.Image);
                 DiagnosticLog.Info("phone.retake", ("score", check.Score));
                 Camera();
-            })
-            : new ResultView(result, setup, units, () => Content = start));
+            }, result.State.ViewQuarterTurns)
+            : WithResult(new ResultView(result, setup, units, ShowStart)));
+
+        Control WithResult(ResultView view)
+        {
+            DiagnosticLog.Info("camera.shutter", ("step", "shown"));
+            lastResult = view;
+            return WithBar(view, true);
+        }
     }
 }

@@ -139,6 +139,8 @@ An oval drawn to hold a given share of the shots, stretched and turned to follow
 
 The distance between the two shots furthest apart. It is the number most people quote, and the least reliable one, because it uses only two shots and throws the rest away. Adding shots can only make it larger, so groups of different sizes cannot be compared by it at all.
 
+*Precisely:* The largest center-to-center distance between any two shots in the group.
+
 More in [the research article](https://grouplab.org/research/wind-or-rifle/).
 
 ## F test
@@ -213,7 +215,7 @@ More in [the research article](https://grouplab.org/research/choosing-the-marker
 
 The average distance from each shot to the center of the group. It uses every shot, so it is the steadiest measure of how well a rifle and load shoot, and it changes less from group to group than the extreme spread does. With few shots it is still an estimate: the interval beside it says how much it could move if you shot the same group again.
 
-*Precisely:* The arithmetic mean of each shot's radial distance from the group's own center.
+*Precisely:* Sigma times the square root of pi over 2, about 1.2533 sigma, under a circular normal model: an estimate of the average distance of the rifle's shots from the group's center, rather than the plain average of these shots' distances. The two agree closely on a round group of many shots.
 
 ## Mil
 
@@ -344,6 +346,8 @@ The spread of the shots around their center, in the same units as the group. It 
 <a id="standard-deviation"></a>
 
 A measure of how far values typically sit from their average. For shots it is worked out along one direction at a time, across or up and down. A small one means the values bunch together.
+
+*Precisely:* For shots, the sample standard deviation along one axis about the group's own center, with n minus 1 in the denominator.
 
 ## String
 

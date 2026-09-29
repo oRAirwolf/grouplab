@@ -244,3 +244,60 @@ written beside the bar.
 
 `PictureCheckTests`: a clean sheet is green; a shadow across the bottom row is named, "21 to 25", and stays out of the red; an unread
 sheet is a red retake.
+
+## 7. The camera test of 2026-09-29, and what changed (entry 281)
+
+Alan ran the camera test on the Fold 7 with GroupLab Dev nightly 121. The two logs, 00:01 and 00:19 UTC, and the three saved pictures
+say:
+
+| | What the logs show |
+|---|---|
+| Live finding | 0 codes read on every one of 40 instructions; 0 to 30 of the sheet's 34 markers; 0.2 to 2.3 s a frame at 1920 by 1440 |
+| The pictures | six taken, every one by pressing the shutter; three named by their codes (scores 100, 100, 74; 24, 24 and 25 holes) and three refused because no code could be read, after 12 to 45 s |
+| Distance | "Move closer" and "Move back" took turns more than twenty times, some within 0.2 s |
+| Torch | Auto turned it on in every session; four of the six pictures were taken with it on |
+| Leaving the application | at 00:18:49 GroupLab came back to Capture and the camera never started |
+| After the picture | two frames analyzed after every picture, each an error, because the camera was never let go |
+
+**Why the codes failed.** A code's module is 0.4 mm. Where the whole sheet fits with room around it, the phone's working copy, 3266 by
+2449, gives a module about 3 pixels, and neither the phone nor the desktop reads it: the refused picture of 00:15:49 gives the desktop no
+code either. So the codes cannot be what names the sheet at a sensible distance. When they fail, the sheet the picture looks most like is
+offered first to confirm: every library sheet whose markers fit the picture equally (seven share the 5x5 layout) is laid onto the page
+through the markers and compared with the picture by correlation at 40 dpi (`LiveSheet.MostAlike`), and one that beats the next by 0.03 is
+offered. On the three saved pictures it names the sheet they show, the refused one included. It is offered, not taken: the markers never
+name a sheet by themselves (question 69).
+
+**Why the words flipped.** Resolution was judged at the analysis stream's size, 1920 across, less than half the picture's, so at the
+distance where the sheet fits with room the stream said "closer" while the frame's edge said "back"; and a frame that failed to register
+fell back to the paper's outline, which a sheet on an off-white counter does not show, and said "back". `GuidanceSteadier` now holds:
+
+| Band | Good from | Still good until |
+|---|---|---|
+| Resolution, at the size the picture is measured at, worst corner | 150 pixels an inch | 120 |
+| Room beyond the sheet's nearest corner, share of the frame's long side | 2 percent | 1 percent past the edge |
+| Angle | 37 degrees | 41 degrees |
+
+and the words change only when a new instruction has held for 500 ms; a frame that fails to register within 1.5 s of one that did
+changes nothing. On the 3266 by 2449 working copy a Letter sheet reaches 150 pixels an inch when its 11 inches take half the picture's
+long side. The live stream stays at 1920 by 1440, analyzed as fast as the phone keeps up (only the newest frame is kept); the logs showed
+the live readings and the picture's disagreeing because of the scale, not the stream's resolution. Not in the logs, and so not chosen from
+them: the sheet's share of the frame, which the next sitting's log records.
+
+**The rest.** The level is Alan's crosshair with a bubble dot, green within 3 degrees of flat and at the arm's end at 15. The torch goes
+off the moment the picture is taken, and the camera is let go then and whenever GroupLab leaves the screen, and taken again when it comes
+back. Preview, analysis and picture are all 4:3 and the preview shows the whole frame, so what is framed is what is saved. The picture
+on the result and on the check keeps its shape and is turned upright. Capture has Camera and Result buttons above the page, and the camera
+a Result button, so either is one press away. These need the phone to check; the next sitting does.
+
+**Entries 282 and 283, with Alan's eight screenshots.** The notes under the score ran off the card and a section heading was cut short;
+every phone text taking its words from a value now wraps, and `PhoneTextWrapsTests` reads the phone's code for one that does not. The
+codes: each module got about 3.1 pixels, and neither code read at the picture's size or doubled, while both read enlarged three times,
+which the whole picture cannot be (the identification stops at 8000 pixels). So when the whole picture gives none, or fewer than the sheet
+has, each code is cut out where the markers put it and read at two, three and four times (`LiveSheet.CodeCrops`). The picture of 00:15:49
+that was refused is now named by its codes, and a good one reads 2 of 2. A picture with any note now scores at most 95, the markers note
+appears only where the missing markers cost something, and "Move closer" says so in a shooter's words. The zero's windage, too close to
+center to dial, now gives its amount with "too small to dial yet". After a return to the application the whole screen is laid out and drawn
+again. The shutter answers at once with a sound and a flash, the live analysis stands aside until the picture is saved, the picture is
+taken in the minimum latency mode, and every step from the press to the first result is in the log; `scripts/shutter-timing.py` times
+twenty presses on a phone, and the numbers go in `docs/ANDROID.md` at the next sitting.
+

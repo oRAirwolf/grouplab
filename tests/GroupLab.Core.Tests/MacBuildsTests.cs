@@ -202,7 +202,8 @@ public partial class MacBuildsTests
         "These builds are an experiment rather than a release.",
         "does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own",
         "donate a Mac for testing and cover the developer fees",
-        "The hardware to test it exists; the machine to build it does not.",
+        // Entry 278 section 6: Alan's decision that iOS is being built replaced entry 147's "the machine to build it does not".
+        "built and signed on GitHub's Mac machines",
     ];
 
     /// <summary>

@@ -34,7 +34,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Compare loads honestly | `compare` | on the phone | entry 259 screen 4, one figure at a time; the desktop's chart, not yet in each load's colour |
 | Sessions over time | `sessions` | on the phone | |
 | Ballistics and hit chances | `ballistics` | on the phone | entry 259 screen 5, its own tab; printing the dope card is still to come |
-| Shots in and out as CSV | `csv` | coming | out through Android's share sheet since entry 258; in through the file picker needs a screen to say which column is which (DESIGN NEEDED) |
+| Shots in and out as CSV | `csv` | on the phone | out through Android's share sheet since entry 258; in under Sessions since entry 278, CSV B: the group as it will be read and GroupLab's guesses, each tapped to change |
 | The Targets screen | `targets` | on the phone | the phone's Targets screen (entry 243) |
 | Made for your optic | `optic` | on the phone | on the phone's Targets screen |
 | Zeroing grids read through a scope | `zero-grids` | on the phone | in the phone's Targets library, previewed with their words |
@@ -58,3 +58,6 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Print a sheet from the phone | `phone-targets` | on the phone | |
 | Guided or Manual on the camera | `capture-modes` | on the phone | |
 | Every picture checked | `picture-check` | on the phone | |
+
+**iPhone and iPad.** Being built (entry 278 section 6): the screens this table lists move into a project the Android and iOS heads share, so
+parity with the phone is parity with both. `docs/IOS-PLAN.md` has the plan.

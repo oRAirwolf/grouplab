@@ -10,6 +10,13 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "A shot you leave out of the figures is now left out of every figure",
+    "Importing shots from a CSV file now starts from GroupLab's guesses",
+    "The glossary now says exactly how mean radius",
+    "On the phone, the camera's words no longer flip",
+    "On the phone, the camera has a bubble level",
+    "Photographs whose square codes are small in the picture",
+    "On the phone, the picture on the result keeps its shape",
     "On the phone, the result now opens into every figure the desktop shows",
     "On the phone, Shots Needed to Zero has a page of its own",
     "On the phone, you tap the bulls you fired at",
@@ -370,14 +377,18 @@
       "key": "csv",
       "group": "The numbers",
       "name": "Shots in and out as CSV",
-      "sentence": "Shot coordinates export as a CSV file for a spreadsheet, and import from other target software's CSV.",
+      "sentence": "Shot coordinates export as a CSV file for a spreadsheet, and import from other target software's CSV, starting from GroupLab's guesses at which column is which.",
       "shot": "analysis",
       "platforms": [
         "Windows",
         "macOS",
-        "Linux"
+        "Linux",
+        "Android"
       ],
       "since": "0.2.0-nightly.95",
+      "mobile": {
+        "noPicture": "the phone's CSV import is photographed at the next sitting with the phone"
+      },
       "note": "Shot coordinates can be exported as a CSV file",
       "tour": "analysis",
       "guide": "6-sessions-and-the-report"

@@ -62,13 +62,194 @@ public static class LiveSheet
     }
 
     /// <summary>The candidate whose marker layout fits the found markers best: most markers fitted, then the closest fit.</summary>
-    public static TargetDefinition? ByLayout(IReadOnlyList<DetectedMarker> found, double sidePixels, IReadOnlyList<TargetDefinition> candidates)
+    public static TargetDefinition? ByLayout(IReadOnlyList<DetectedMarker> found, double sidePixels, IReadOnlyList<TargetDefinition> candidates) =>
+        Fits(found, sidePixels, candidates).OrderByDescending(f => f.Count).ThenBy(f => f.Residual).Select(f => f.Definition).FirstOrDefault();
+
+    /// <summary>How much further than the best a fit may be and still count as the same layout: sheets sharing a layout fit identically.</summary>
+    public const double SameLayoutResidual = 0.02;
+
+    /// <summary>
+    /// Entry 281: the sheets a picture's markers name when its codes cannot be read. The camera test of 2026-09-29 had three pictures of six
+    /// refused because a code's 0.4 mm modules got about 3 pixels each, while the markers named the sheet on every frame. Every candidate that
+    /// fits as many markers as the best and as closely, within <see cref="SameLayoutResidual"/>: one where the layout is the sheet's own,
+    /// several where variants share a layout, and then the person chooses among those.
+    /// </summary>
+    public static IReadOnlyList<TargetDefinition> SheetsByMarkers(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(candidates);
+        ArgumentNullException.ThrowIfNull(backend);
+        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
+        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        if (found.Count < LeastMarkers)
+        {
+            return [];
+        }
+
+        double median = found.Select(Side).Order().ElementAt(found.Count / 2);
+        var fits = Fits(found, median, candidates);
+        if (fits.Count == 0)
+        {
+            return [];
+        }
+
+        int most = fits.Max(f => f.Count);
+        double closest = fits.Where(f => f.Count == most).Min(f => f.Residual);
+        return [.. fits.Where(f => f.Count == most && f.Residual <= closest + SameLayoutResidual).Select(f => f.Definition)];
+    }
+
+    /// <summary>The room cut around a code, in dmm beyond its own corner on every side: its quiet zone and the registration's error.</summary>
+    public const int CodeMarginDmm = 250;
+
+    /// <summary>
+    /// Entry 282 section 5: each code of a picture, cut out where the markers say it is. In the camera test a code's module got about 3.1
+    /// pixels, too few to read at the picture's size or doubled, and both codes read at three times; the whole picture cannot be tripled,
+    /// which would pass <see cref="Registration.SheetIdentification.MaximumWorkingSide"/>, so only the codes are. The places come from every
+    /// sheet sharing the layout the markers fit, since variants of one layout put their codes in the same places.
+    /// </summary>
+    public static IReadOnlyList<GrayImage> CodeCrops(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(candidates);
+        ArgumentNullException.ThrowIfNull(backend);
+        var sameLayout = SheetsByMarkers(image, candidates, backend);
+        if (sameLayout.Count == 0)
+        {
+            return [];
+        }
+
+        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
+        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        var crops = new List<GrayImage>();
+        var done = new HashSet<(int, int, int)>();
+        foreach (var candidate in sameLayout)
+        {
+            if (candidate.Codes is not { } codes)
+            {
+                continue;
+            }
+
+            var byId = (candidate.Fiducials?.Markers ?? []).GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());
+            var page = new List<PointD>();
+            var seen = new List<PointD>();
+            foreach (var marker in found.Where(m => byId.ContainsKey(m.Id)))
+            {
+                page.Add(new PointD(byId[marker.Id].X, byId[marker.Id].Y));
+                seen.Add(Centre(marker));
+            }
+
+            if (page.Count < LeastMarkers || HomographyEstimate.Fit(page, seen) is not { } pageToImage)
+            {
+                continue;
+            }
+
+            int side = (codes.Version is { } v ? (4 * v) + 17 : 57) * codes.ModuleSize;
+            foreach (var at in codes.Positions)
+            {
+                if (!done.Add((at.X, at.Y, side)))
+                {
+                    continue;
+                }
+
+                var corners = new[] { new PointD(at.X - CodeMarginDmm, at.Y - CodeMarginDmm), new PointD(at.X + side + CodeMarginDmm, at.Y - CodeMarginDmm),
+                    new PointD(at.X + side + CodeMarginDmm, at.Y + side + CodeMarginDmm), new PointD(at.X - CodeMarginDmm, at.Y + side + CodeMarginDmm) }.Select(pageToImage.Apply).ToList();
+                int x0 = (int)Math.Max(0, corners.Min(c => c.X)), y0 = (int)Math.Max(0, corners.Min(c => c.Y));
+                int x1 = (int)Math.Min(image.Width, Math.Ceiling(corners.Max(c => c.X))), y1 = (int)Math.Min(image.Height, Math.Ceiling(corners.Max(c => c.Y)));
+                if (x1 - x0 < 16 || y1 - y0 < 16)
+                {
+                    continue;
+                }
+
+                var pixels = new byte[(x1 - x0) * (y1 - y0)];
+                for (int y = y0; y < y1; y++)
+                {
+                    Array.Copy(image.Pixels, (y * image.Width) + x0, pixels, (y - y0) * (x1 - x0), x1 - x0);
+                }
+
+                crops.Add(new GrayImage(x1 - x0, y1 - y0, pixels));
+            }
+        }
+
+        return crops;
+    }
+
+    /// <summary>The resolution the candidates are compared at, dots an inch: enough to tell a bull's artwork and a load block apart.</summary>
+    public const double CompareDpi = 40;
+
+    /// <summary>How much better the most alike must correlate than the next for GroupLab to choose it rather than ask.</summary>
+    public const double ClearlyMoreAlike = 0.03;
+
+    /// <summary>
+    /// Entry 281: among sheets that share a marker layout, the one a picture shows. On the camera test's pictures seven library sheets
+    /// fitted the markers equally (the 5x5 sheets with and without the load block, their C and E bull versions, and the 5x6), so the markers
+    /// cannot choose. The picture is laid onto the page through the markers they share and compared with each candidate's own drawing at
+    /// <see cref="CompareDpi"/>, by correlation; the most alike is returned where it beats the next by <see cref="ClearlyMoreAlike"/>, and
+    /// null otherwise, when the person chooses. Holes and handwriting are in the picture and in no drawing, so they cost every candidate alike.
+    /// </summary>
+    public static TargetDefinition? MostAlike(GrayImage image, IReadOnlyList<TargetDefinition> sameLayout, IImagingBackend backend)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(sameLayout);
+        ArgumentNullException.ThrowIfNull(backend);
+        if (sameLayout.Count <= 1)
+        {
+            return sameLayout.FirstOrDefault();
+        }
+
+        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
+        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        var scored = new List<(TargetDefinition Definition, double Correlation)>();
+        foreach (var candidate in sameLayout)
+        {
+            var byId = (candidate.Fiducials?.Markers ?? []).GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());
+            var page = new List<PointD>();
+            var seen = new List<PointD>();
+            foreach (var marker in found.Where(m => byId.ContainsKey(m.Id)))
+            {
+                page.Add(new PointD(byId[marker.Id].X, byId[marker.Id].Y));
+                seen.Add(Centre(marker));
+            }
+
+            if (page.Count < LeastMarkers || HomographyEstimate.Fit(page, seen) is not { } pageToImage)
+            {
+                continue;
+            }
+
+            double dmmPerPixel = 254 / CompareDpi;
+            int w = (int)(candidate.Page.Width / dmmPerPixel), h = (int)(candidate.Page.Height / dmmPerPixel);
+            var toRectified = Homography.Compose(pageToImage.Inverse(), new Homography([1 / dmmPerPixel, 0, 0, 0, 1 / dmmPerPixel, 0, 0, 0, 1]));
+            var rectified = PortableImaging.WarpPerspective(image, toRectified, w, h);
+            var drawing = Rendering.SceneRasterizer.Rasterize(Rendering.SceneBuilder.Build(candidate).Pages[0], CompareDpi);
+            scored.Add((candidate, Correlation(rectified, drawing)));
+        }
+
+        var ranked = scored.OrderByDescending(s => s.Correlation).ToList();
+        return ranked.Count > 0 && (ranked.Count == 1 || ranked[0].Correlation - ranked[1].Correlation >= ClearlyMoreAlike) ? ranked[0].Definition : null;
+    }
+
+    private static double Correlation(GrayImage a, GrayImage b)
+    {
+        int w = Math.Min(a.Width, b.Width), h = Math.Min(a.Height, b.Height);
+        double sa = 0, sb = 0, saa = 0, sbb = 0, sab = 0;
+        int n = w * h;
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                double p = a.Pixels[(y * a.Width) + x], q = b.Pixels[(y * b.Width) + x];
+                (sa, sb, saa, sbb, sab) = (sa + p, sb + q, saa + (p * p), sbb + (q * q), sab + (p * q));
+            }
+        }
+
+        double cov = sab - (sa * sb / n), va = saa - (sa * sa / n), vb = sbb - (sb * sb / n);
+        return va > 0 && vb > 0 ? cov / Math.Sqrt(va * vb) : 0;
+    }
+
+    private static List<(TargetDefinition Definition, int Count, double Residual)> Fits(IReadOnlyList<DetectedMarker> found, double sidePixels, IReadOnlyList<TargetDefinition> candidates)
     {
         ArgumentNullException.ThrowIfNull(found);
         ArgumentNullException.ThrowIfNull(candidates);
-        TargetDefinition? best = null;
-        int bestCount = 0;
-        double bestResidual = double.MaxValue;
+        var fits = new List<(TargetDefinition, int, double)>();
         foreach (var candidate in candidates)
         {
             if (candidate.Fiducials?.Markers is not { Count: > 0 } markers)
@@ -94,13 +275,13 @@ public static class LiveSheet
             }
 
             double residual = Math.Sqrt(page.Select((p, i) => Squared(fit.Apply(p), image[i])).Average()) / Math.Max(1, sidePixels);
-            if (residual <= FitWithinSides && (page.Count > bestCount || (page.Count == bestCount && residual < bestResidual)))
+            if (residual <= FitWithinSides)
             {
-                (best, bestCount, bestResidual) = (candidate, page.Count, residual);
+                fits.Add((candidate, page.Count, residual));
             }
         }
 
-        return best;
+        return fits;
     }
 
     private static double Squared(PointD a, PointD b) => ((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y));

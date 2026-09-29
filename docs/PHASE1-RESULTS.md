@@ -40,6 +40,39 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 278: Alan's decisions of the evening
+
+CSV B is built (`CsvGuess`, the phone's `CsvImportPage`, the desktop's dialog), with tests for names that say the unit, names that do not,
+millimeters, centimeters, MOA, mil and a flipped vertical (`CsvGuessTests`, `Entry278Tests`). The three card-outline test pages are made
+locally (`grouplab scale-test-pages`, held by `ScaleTestPagesTests`), and requests 53, 54 and 55 ask Alan for the prints, the store-bought
+target and the Apple steps. The spread audit: every figure is what its name says once the glossary says the mean radius is sigma times
+root(pi / 2), an estimate and not the plain average (64/35 in against 1.6 in on the hand-worked plus of five shots), and the full figures
+no longer say their 95 percent ellipse holds 95 percent of later shots. A shot left out is out of every figure (`LeftOutShotTests`, which
+failed before); each aim point has its own figures (`ByAimPointTests`); each shot has its offset and clicks (`ShotOffsetsTests`).
+`docs/IOS-PLAN.md` sizes the iOS build at about three weeks, with the floor at iOS 26 as entry 206 found it.
+
+## Entries 282 and 283: Alan's screenshots, and the shutter
+
+Alan's eight screenshots of the camera test (local only) added nine items to entry 281's. The codes: a module got about 3.1 pixels and read
+only enlarged three times, so each code is now cut out where the markers put it and read at two to four times (`LiveSheet.CodeCrops`):
+the refused picture of 00:15:49 is named by its codes and a good one reads 2 of 2 (`SheetsByMarkersTests`, the CLI on the saved
+pictures). Every phone text taking its words from a value wraps (`PhoneTextWrapsTests`); a picture with notes scores at most 95
+(`PictureCheckTests`); the windage gives its amount (`AnalysisPanelTests`); the screen is drawn again on a return. The shutter: every step
+from the press to the first result is logged, the press answers with a sound and a flash, the live analysis stands aside, the capture is
+minimum latency, and `scripts/shutter-timing.py` is the repeatable device test; the numbers wait for the next sitting.
+
+## Entry 281: the camera test's fixes
+
+The logs of Alan's camera test (Fold 7, nightly 121, 2026-09-29 00:01 to 00:21 UTC) are read in `docs/MOBILE-CAPTURE.md` section 7: 0 codes
+read live on every frame, six pictures all taken by pressing, three refused for unreadable codes, "Move closer" and "Move back" alternating
+more than twenty times, the torch left on, and the camera not starting after the application came back. Built: the bubble level
+(`BubbleLevel`, green within 3 degrees), the torch off at the picture and whenever the camera is let go, the camera let go on pause and
+taken again on resume, one 4:3 field of view shown whole, the picture kept in shape and upright on the result and the check, Camera and
+Result buttons always in view, the words held by `GuidanceSteadier` (resolution judged at the working copy's size, three two-edged bands,
+500 ms), and a picture with unreadable codes offered the sheet it looks most like (`LiveSheet.MostAlike`, question 69), which named the
+right sheet on all three saved pictures. Tests: `GuidanceSteadierTests` (5), `BubbleLevelTests` (3), `SheetsByMarkersTests` (2). The
+device checks wait for the nightly that carries them.
+
 ## Entry 277: GroupLab Dev nightly 121 on the Fold 7 for the camera test
 
 Installed at 18:01 MDT from the nightly's signed `android-dev` APK, replacing nightly 119; the running activity is GroupLab Dev's and it opens to Capture. The phone had dropped off wireless debugging and came back once Alan turned it off and on. A local build cannot replace a nightly on the phone (version code 1 against 119), so a sitting installs the nightly's asset. Nothing else on the phone was touched.

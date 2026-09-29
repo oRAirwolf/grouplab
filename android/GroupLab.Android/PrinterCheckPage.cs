@@ -75,7 +75,7 @@ internal sealed class PrinterCheckPage : UserControl
                 GroupName = "printerMethod",
                 IsChecked = m == method,
                 MinHeight = Screens.Touch,
-                Content = new StackPanel { Children = { new TextBlock { Text = title, FontWeight = FontWeight.SemiBold }, Screens.Dim(detail) } },
+                Content = new StackPanel { Children = { new TextBlock { Text = title, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold }, Screens.Dim(detail) } },
             };
             radio.IsCheckedChanged += (_, _) =>
             {

@@ -30,7 +30,7 @@ public enum Instruction
 /// </summary>
 public sealed record FrameVerdict(Instruction Say, string Words, bool SheetInFrame, bool Detected, bool AngleWithin, bool InFocus, bool ExposureWithin, bool MarkingsRead,
     CaptureQuality? Quality = null, int? MarkersRead = null, int? MarkersExpected = null, int? CodesRead = null, int? CodesExpected = null, double? Evenness = null,
-    Registration.IPageMapping? Mapping = null, double? PixelsPerMm = null);
+    Registration.IPageMapping? Mapping = null, double? PixelsPerMm = null, double? EdgeRoom = null);
 
 /// <summary>
 /// docs/MOBILE-CAPTURE.md items C1 to C3, entry 219 item A2: the capture screen's conditions, all judged from one frame, and **one**
@@ -69,7 +69,7 @@ public static class CaptureGuidance
         var measurement = SheetMeasurer.Measure(frame, metadata, definition, new MeasureOptions(), backend, new TraceRecorder());
         CaptureQuality? quality = null;
         bool? cornersIn = null;
-        double? evenness = null;
+        double? evenness = null, edgeRoom = null;
         int? read = null, expected = null;
         if (measurement.Registration is { } registration && measurement.Fiducials is { } markers)
         {
@@ -78,8 +78,11 @@ public static class CaptureGuidance
                 markers.Expected, measurement.Lens?.K1, measurement.Lens?.K2).Quality;
             var pageToImage = CaptureRecord.PageToImage(registration.Mapping, definition.Page.Width, definition.Page.Height);
             double w = definition.Page.Width / 254.0, h = definition.Page.Height / 254.0;
-            cornersIn = new PointD[] { new(0, 0), new(w, 0), new(w, h), new(0, h) }.Select(pageToImage.Apply)
-                .All(c => c.X >= 0 && c.Y >= 0 && c.X <= frame.Width - 1 && c.Y <= frame.Height - 1);
+            var corners = new PointD[] { new(0, 0), new(w, 0), new(w, h), new(0, h) }.Select(pageToImage.Apply).ToList();
+            cornersIn = corners.All(c => c.X >= 0 && c.Y >= 0 && c.X <= frame.Width - 1 && c.Y <= frame.Height - 1);
+            // Entry 281: how much of the frame is left clear beyond the sheet's nearest corner, as a share of the frame's longer side, negative
+            // past the edge, so the guidance can hold a band rather than flip at the edge.
+            edgeRoom = corners.Min(c => Math.Min(Math.Min(c.X, frame.Width - 1 - c.X), Math.Min(c.Y, frame.Height - 1 - c.Y))) / Math.Max(frame.Width, frame.Height);
             evenness = PictureCheck.Evenness(PictureCheck.BullPaper(frame, pageToImage, definition));
         }
 
@@ -93,6 +96,7 @@ public static class CaptureGuidance
             // Entry 273: the frame's registration, for the printer check's card, which is looked for on the check page only.
             Mapping = measurement.Registration?.Mapping,
             PixelsPerMm = measurement.Scale is { } s ? s.PixelsPerDmmArea * 10 : null,
+            EdgeRoom = edgeRoom,
         };
     }
 

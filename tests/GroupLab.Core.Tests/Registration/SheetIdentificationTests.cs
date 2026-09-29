@@ -95,18 +95,20 @@ public class SheetIdentificationTests
         Assert.Equal("no code on the sheet held a valid GroupLab frame", identity.Failure);
         var stage = Assert.Single(trace.Records);
         Assert.Equal(StageStatus.Failed, stage.Status);
-        Assert.Equal(SheetIdentification.Scales.Count, stage.Details.Count);
+        // Every resolution, then entry 282's codes cut out where the markers put them, which on a picture with no markers is nothing.
+        Assert.Equal(SheetIdentification.Scales.Count + 1, stage.Details.Count);
 
         var none = SheetIdentification.Identify(blank, Library, new Codes(), new TraceRecorder());
         Assert.Equal("no code on the sheet could be read", none.Failure);
     }
 
-    /// <summary>A backend whose only ability is to return the given code payloads at every resolution.</summary>
+    /// <summary>A backend whose only ability is to return the given code payloads at every resolution; it sees no markers.</summary>
     private sealed class Codes(params byte[][] payloads) : IImagingBackend
     {
         public IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale) => payloads;
 
-        public MarkerDetection DetectMarkers(GrayImage image, MarkerDetectionOptions options) => throw new NotSupportedException();
+        // No markers: entry 282's second look, codes cut out where the markers put them, finds nothing to cut.
+        public MarkerDetection DetectMarkers(GrayImage image, MarkerDetectionOptions options) => new([], [], []);
 
         public HomographyFit FindHomography(IReadOnlyList<PointD> source, IReadOnlyList<PointD> destination, double ransacThreshold) => throw new NotSupportedException();
 

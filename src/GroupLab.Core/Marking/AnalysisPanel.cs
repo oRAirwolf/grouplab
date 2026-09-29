@@ -76,7 +76,8 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
     private static PanelBlock Group(GroupReport report, UnitSettings units, bool sitePublished)
     {
         var rows = ImmutableList.CreateBuilder<PanelFigure>();
-        var figures = report.AllShots;
+        // Entry 278 section 5c: the figures of the shots that count, without any left out.
+        var figures = report.Counted;
         rows.Add(new PanelFigure("shots", "Shots", (figures?.Shots ?? 0).ToString(CultureInfo.InvariantCulture)));
 
         rows.Add(Measure("meanRadius", "Mean radius", figures?.MeanRadius, figures?.MeanRadiusUnavailable, units, sitePublished, headline: true));
@@ -86,7 +87,7 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
         string? note = report.Problem ?? figures?.DispersionWithheld;
         if (report.Excluded > 0)
         {
-            string left = string.Create(CultureInfo.InvariantCulture, $"{report.Excluded} shot{(report.Excluded == 1 ? " is" : "s are")} left out of the reduced figures.");
+            string left = string.Create(CultureInfo.InvariantCulture, $"{report.Excluded} shot{(report.Excluded == 1 ? " is" : "s are")} left out: the figures are without {(report.Excluded == 1 ? "it" : "them")}.");
             note = note is null ? left : note + " " + left;
         }
 
@@ -117,12 +118,17 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
                 yards,
                 FourUnits.Clicks(Math.Abs(axis.OffsetInches), yards, scope, state.Rifle?.ClickValue));
 
+            // Entry 282 section 7: an axis too close to center to dial showed only "right" above "left", with no number. It gives the
+            // amount and where the group sits, and says it is too small to dial yet, with the shots that would settle it where known.
+            string tooSmall = axis.ShotsToSettle is { } settle
+                ? string.Create(CultureInfo.InvariantCulture, $"too small to dial yet; about {settle} shots would settle it")
+                : "too small to dial at this many shots";
             rows.Add(new PanelFigure(
                 "zero",
                 label,
-                axis.Distinguishable ? four.Say(headline) : axis.Sits,
+                axis.Distinguishable ? four.Say(headline) : four.Say(headline) + " " + axis.Sits,
                 Unit: null,
-                Interval: four.Clicks is { } clicks ? axis.Dial + ", " + clicks : axis.Dial,
+                Interval: !axis.Distinguishable ? tooSmall : four.Clicks is { } clicks ? axis.Dial + ", " + clicks : axis.Dial,
                 Explanation: FigureExplanations.For("zero")?.Plain,
                 More: FigureExplanations.MoreAbout("zero-correction", sitePublished),
                 Headline: label == "Elevation",

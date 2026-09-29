@@ -25,7 +25,7 @@ internal static class PhoneTerms
 
         block.TextDecorations = [new TextDecoration { Location = TextDecorationLocation.Underline, StrokeDashArray = new AvaloniaList<double> { 1, 2 }, StrokeThickness = 1 }];
         var inside = new StackPanel { Spacing = 8, MaxWidth = 320 };
-        inside.Children.Add(new TextBlock { Text = term.Name, FontWeight = FontWeight.SemiBold });
+        inside.Children.Add(new TextBlock { Text = term.Name, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
         inside.Children.Add(new TextBlock { Text = term.Plain, TextWrapping = TextWrapping.Wrap });
         if (term.Precise is { } precise)
         {

@@ -21,9 +21,27 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-09-29, question 69: may a picture whose codes cannot be read be named by its markers without asking?
+
+**Status: open, and smaller since entry 282.** Nothing waits on it: GroupLab asks, as built. Entry 282 section 5 found why the codes failed (a module of about 3.1 pixels, which reads enlarged three times), and codes cut out where the markers put them and read enlarged now name the refused picture from its codes, so the offer is for what is left. Entry 282 section 4, Alan: a picture whose markers are read "must still be measured: identify the sheet from its markers' layout or ask which sheet it is"; asking is what is built.
+
+`SheetIdentification` says: "The markers cannot do this: the built-in definitions share marker ids, and registering against the wrong
+definition can look plausible ... Nothing is guessed." In the camera test (entry 281) three of six pictures were refused because a code's
+0.4 mm module got about 3 pixels at the distance the whole sheet fits. **What I built:** where the codes fail, the phone says "It looks like" and the sheet's
+name, and offers it first, with the others below. The sheet is found by the markers (seven library sheets share the 5x5 layout), then
+by laying the picture onto each of those through the markers and correlating it with the sheet's own drawing at 40 dpi
+(`LiveSheet.MostAlike`), offered only where it beats the next by 0.03. It named the right sheet on all three saved pictures, and on every
+5x5 sheet rendered (`SheetsByMarkersTests`).
+
+**The options.** A, as built: offer it, the person confirms, one press. B: take it without asking where it beats the next by a wide
+margin, and say so on the result. C: also move the camera closer when the codes matter, which costs the room around the sheet that
+entry 281 asked for. I would keep A until B has a measured error rate on real pictures of every variant, and never do C.
+
+---
+
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
-**Status: open, with Alan (entry 274):** planning has drawn three options on the canvas and recommended A, the gap as built; nothing waits on it.
+**Status: open, being tested (entry 278 section 3):** Alan chose to test rather than choose. The three pages, A as built, B a hairline on the card's edge and C corner marks, are made; request 53 asks for them printed, scanned and photographed with a card, and the answer comes from measuring those photographs. A stays built until then.
 
 Entry 273 says the check page "is built from a definition in the library like any sheet, so it reads itself from a photo or scan." The
 format had no way to say "this is a check page" or to print its crosshairs, rulers, card outline and words, and it requires at least one

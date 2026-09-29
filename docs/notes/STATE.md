@@ -9,15 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-28, after entry 277 (GroupLab Dev nightly 121 on the Fold 7 for the camera test); request 52 answered before it.
+**Last rewritten:** 2026-09-29, after entries 281 to 283 (the camera test's fixes, Alan's screenshots, the shutter) and 278 (CSV B, the
+spread audit, a shot left out left out everywhere, the iOS plan). Entries 279 and 280 are next.
 
 ---
 
 ## In flight
 
 - **The phone's camera screen is rebuilt** (entry 260): a native Capture B over the live preview, Guided and Manual, the quality bar,
-  the torch on Auto, and Feedback B checking every picture with a score from 0 to 100 (`PictureCheck`). Nightly 121 carries it with the
-  recalibrated score and is on the Fold 7 (entry 277). **The camera test with Alan** (request 33, entry 255) is under way.
+  the torch on Auto, and Feedback B checking every picture with a score from 0 to 100 (`PictureCheck`). Alan's camera test on nightly 121 went badly;
+  entry 281's fixes (level, torch, lifecycle, one field of view, steady words, Camera and Result buttons, the sheet offered when codes
+  fail) are built and wait for a device check on the next nightly.
 - **A curled sheet is registered through every marker** (`MarkerMesh`, a thin-plate spline) when the radial fit keeps fewer than half
   the corners; a saved session keeps the mesh as its corners (entry 260).
 - **The printer check** (entries 271 to 273): the check page (`GL-SCALE-LTR-1`, `GL-SCALE-A4-1`, grid style 4, question 67), the

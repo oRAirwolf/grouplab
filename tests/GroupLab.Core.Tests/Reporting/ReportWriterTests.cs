@@ -19,7 +19,7 @@ public class ReportWriterTests
             [.. Enumerable.Range(1, shots).Select(i => new ReportShot(i.ToString(System.Globalization.CultureInfo.InvariantCulture), new PointD(Math.Cos(i) * 0.3, Math.Sin(i) * 0.3), i == 3))],
             0.308, new PointD(0.01, -0.02), 0.2, 0.4, "caption"),
         ["summary"],
-        [new ReportFigure("Mean radius", "0.132 in", ["94.9% interval 0.110 to 0.166 in", "without exclusions: 0.127 in"])],
+        [new ReportFigure("Mean radius", "0.132 in", ["94.9% interval 0.110 to 0.166 in", "with every shot: 0.127 in"])],
         new ReportCard("Zero correction", "Not distinguishable from zero at 23 shots.", ["give or take"], ["why"]),
         [new ReportCard("Shape", "Round, as far as 24 shots can tell.", ["p = 0.549"], [])],
         ["shot", "bull", "standing"],

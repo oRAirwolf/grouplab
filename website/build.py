@@ -643,7 +643,7 @@ def page_home() -> str:
 <h3>What it is today</h3>
 <p>Test builds for Windows, macOS, Linux and Android. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
 <p class="mono dim small">Not built yet</p>
-<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone</p>
+<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iPhone and iPad, being built</p>
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
 </div>
 </div>

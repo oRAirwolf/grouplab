@@ -154,7 +154,7 @@ choose any unit it can take, SMOA and millimeters included. A figure's name stil
 **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:
 - **Sighter**, which sets it aside from the group, as a shot on a sighter bull already is;
 - **Flyer**, which calls it out on the sheet and in the list and **changes no figure**;
-- **Leave out of the figures**, which does change them, and needs a reason;
+- **Leave out of the figures**, which does change them, and needs a reason: every figure, the report and the saved session then leave the shot out, it stays on the sheet drawn hollow, and each figure's detail gives the figure again with every shot;
 - **Not a shot**, for a staple, a tear or a pen mark.
 
 Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are two different decisions, and GroupLab will not quietly make the second one for you because you made the first.
@@ -188,7 +188,7 @@ It says what to dial when the group's center is far enough from the aim to be to
 
 **Shots Needed to Zero,** suggested by Jylee, sits under them. From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100. Within one click usually takes a handful of shots; the closest click can take hundreds, because a true zero near the line between two clicks is hard to resolve. The spread measured on a few shots may be larger than it looks, so GroupLab allows for that by simulation, and shows its trials and seed; tick **Treat the measured sigma as exact** to work it out exactly instead.
 
-**Export** writes the complete record as a GroupLab file, or the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it asks which column is across, which is up and down, and what unit they are in, then shows the analysis. There is no image with an import, so the figures are the whole of it.
+**Export** writes the complete record as a GroupLab file, or the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it starts from GroupLab's guesses at which column is across, which is up and down, the unit, which way is up, and whether the numbers are measured from the point of aim or from the group's own center, each to check and change, and a choice it cannot guess starts empty and says so; then it shows the analysis. Numbers measured from the group's center say nothing about where the aim was, so then there is no offset from aim. There is no image with an import, so the figures are the whole of it.
 
 ## 6. Sessions and the report
 
@@ -315,20 +315,24 @@ other, because they are signed with different keys. It uses the same engine as t
 
 **Capture.** Type the caliber and the distance, then **Take a picture**. The camera fills the screen with the instruction at the top, the
 checks beneath it (focus, light, the tags and codes read) and a bar that forecasts the picture's quality. In **Guided** it takes the
-picture by itself once everything holds; in **Manual** you press the shutter when you choose. **Choose a photograph** reads one already on
-the phone, and a picture shared into GroupLab from another app is read the same way.
+picture by itself once everything holds; in **Manual** you press the shutter when you choose. The level in the middle is a crosshair
+with a dot that drifts toward the raised side like a bubble, and turns green when the phone is flat. **Camera** and **Result**, above the
+page, take you to either in one press, and the camera has its own **Result** button. **Choose a photograph** reads one already on
+the phone, and a picture shared into GroupLab from another app is read the same way. When a picture's square codes cannot be read,
+GroupLab says which sheet it looks like, for you to confirm or choose another.
 
 **The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the
 picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.
 
 **The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
 number to switch its units. From the result: the bulls you fired at, Shots Needed to Zero, Ballistics with the group carried in, sharing
-the session, and sharing the shots as a CSV file.
+the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
+and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result.
 
 **Sessions, Ballistics and Targets.** Sessions keeps every result; tick two or more to compare loads, one figure at a time. Ballistics is a
 tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
 PDF, and prints the printer check page; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
-Marking a target GroupLab did not print by hand, and importing shots from a CSV file, are on the computer only for now.
+Marking a target GroupLab did not print by hand is on the computer only for now.
 

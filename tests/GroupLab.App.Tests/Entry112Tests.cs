@@ -229,15 +229,15 @@ public class Entry112Tests
                 var withBoth = report.Figures.Where(f => f.Label != "Center from aim").ToList();
                 if (withExclusion)
                 {
-                    Assert.All(withBoth, f => Assert.Contains(f.Details, d => d.StartsWith("without exclusions: ", StringComparison.Ordinal)));
+                    Assert.All(withBoth, f => Assert.Contains(f.Details, d => d.StartsWith("with every shot: ", StringComparison.Ordinal)));
                     Assert.Contains("Pulled shot", Assert.Single(report.Exclusions), StringComparison.Ordinal);
                     Assert.Equal("excluded: pulled shot", Assert.Single(report.Shots, r => r.Struck).Cells[^1]);
                     Assert.Single(report.Plot.Shots, s => s.Excluded);
-                    Assert.Contains("without exclusions", one, StringComparison.Ordinal);
+                    Assert.Contains("with every shot", one, StringComparison.Ordinal);
                 }
                 else
                 {
-                    Assert.All(withBoth, f => Assert.DoesNotContain(f.Details, d => d.Contains("without exclusions", StringComparison.Ordinal)));
+                    Assert.All(withBoth, f => Assert.DoesNotContain(f.Details, d => d.Contains("with every shot", StringComparison.Ordinal)));
                     Assert.Empty(report.Exclusions);
                     Assert.DoesNotContain(report.Shots, r => r.Struck);
                     Assert.Contains("None. Every shot counts.", rest, StringComparison.Ordinal);

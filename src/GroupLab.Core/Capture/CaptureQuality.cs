@@ -61,6 +61,10 @@ public static class CaptureQualities
     /// </summary>
     public const double FineDegrees = 25;
     public const double FinePixelsPerInch = 150;
+
+    /// <summary>The resolution part at <paramref name="pixelsPerInch"/>, from 0 at <see cref="UselessPixelsPerInch"/> to 1 at <see cref="FinePixelsPerInch"/>.</summary>
+    public static double ResolutionPart(double pixelsPerInch) => Math.Clamp((pixelsPerInch - UselessPixelsPerInch) / (FinePixelsPerInch - UselessPixelsPerInch), 0, 1);
+
     public const double UselessPixelsPerInch = 50;
     public const double FineMarkings = 0.9;
     public const double UselessMarkings = 0.5;

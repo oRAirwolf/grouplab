@@ -166,7 +166,7 @@ public sealed partial class MainWindow
         }
 
         var analysis = GroupAnalysis.Analyse(state);
-        var all = analysis.AllShots;
+        var all = analysis.Counted; // entry 278 section 5c: the figures shown, without the shots left out
         var told = new JsonObject
         {
             ["calibreTyped"] = calibreBox.Text,

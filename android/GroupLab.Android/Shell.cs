@@ -77,7 +77,7 @@ public sealed class Shell : UserControl
                     Children =
                     {
                         new Border { Child = GroupLab.App.Theme.Icons.Draw(Icon(place), 20), Classes = { PhoneStyles.NavPill } },
-                        new TextBlock { Text = place.ToString(), HorizontalAlignment = HorizontalAlignment.Center, Classes = { PhoneStyles.NavLabel } },
+                        new TextBlock { Text = place.ToString(), HorizontalAlignment = HorizontalAlignment.Center, Classes = { PhoneStyles.NavLabel } }, // one line on purpose: a tab's one-word name
                     },
                 },
                 MinHeight = 56,
@@ -314,7 +314,7 @@ internal static class Screens
                     Children =
                     {
                         new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
-                        UnitTap.Attach(new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } }),
+                        UnitTap.Attach(new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } }), // one line on purpose: a figure's number
                         UnitTap.Attach(new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } }),
                     },
                 },

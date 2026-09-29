@@ -19,7 +19,8 @@ internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int Ori
 
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
 internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
-    GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null, PaperEdge? Paper = null);
+    GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null, PaperEdge? Paper = null,
+    TargetDefinition? LooksLike = null);
 
 /// <summary>What the person said about the shooting: the caliber, which changes what GroupLab finds, and the distance.</summary>
 internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
@@ -221,10 +222,14 @@ internal static class PhoneAnalysis
         {
             // Entry 260: every picture is checked, a picture that names no sheet included.
             var unread = GroupLab.Core.Capture.PictureCheck.Of(grey, null, null, codesRead, torch);
-            DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds), ("check", unread.Describe()));
+            // Entry 281: the codes' 0.4 mm modules get about 3 pixels each at the distance the whole sheet fits, so three of six pictures in
+            // the camera test were refused here while the markers had named the layout on every frame. The markers never name a sheet by
+            // themselves (SheetIdentification), so the sheet the picture looks most like is offered first, for the person to confirm.
+            var looksLike = GroupLab.Core.Capture.LiveSheet.MostAlike(grey, GroupLab.Core.Capture.LiveSheet.SheetsByMarkers(grey, Library(), backend), backend);
+            DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds), ("looksLike", looksLike?.Name), ("check", unread.Describe()));
             return new PhoneResult(session.State, null,
                 "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
-                null, working, AskWhichSheet: true, Check: unread);
+                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike);
         }
 
         // Entry 271: a photograph is corrected for the printer chosen, where one has been measured.

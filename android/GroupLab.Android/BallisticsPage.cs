@@ -287,7 +287,8 @@ internal sealed class BallisticsPage : UserControl
             }
 
             var (value, lower, upper) = HitProbability.Percents(result.FirstRound);
-            var big = new TextBlock { Text = value, FontSize = 44, FontWeight = FontWeight.SemiBold, Foreground = new SolidColorBrush(Color.FromRgb(232, 150, 46)) };
+            var big = new TextBlock { Text = value, FontSize = 44, // one line on purpose: a percentage
+                FontWeight = FontWeight.SemiBold, Foreground = new SolidColorBrush(Color.FromRgb(232, 150, 46)) };
             answer.Children.Add(Screens.Card(big, Screens.Line($"First round on a {units.Length(size.Value)} circle at {units.DistanceText(yards.Value * 36)}: {value}, {lower} to {upper}.")));
             answer.Children.Add(Screens.Card(Screens.Dim("The chance by range, the chosen range marked"),
                 new HitCurve { Points = curve, MarkYards = yards, Height = 200, Distance = y => units.DistanceText(y * 36) }));

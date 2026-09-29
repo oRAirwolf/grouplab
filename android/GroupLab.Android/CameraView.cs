@@ -34,13 +34,14 @@ public sealed class CameraView : UserControl
     /// <param name="taken">The still's path and whether the torch was on when it was taken.</param>
     /// <param name="back">Leave the camera.</param>
     /// <param name="pick">Leave the camera for a photograph already on the phone.</param>
-    public CameraView(Action<string, bool> taken, Action back, Action pick)
+    /// <param name="result">Back to the last result, where there is one (entry 281 section 1.3).</param>
+    public CameraView(Action<string, bool> taken, Action back, Action pick, Action? result = null)
     {
-        Content = new CameraHost(taken, back, pick);
+        Content = new CameraHost(taken, back, pick, result);
     }
 
     /// <summary>The native screen inside the Avalonia one, filling it.</summary>
-    private sealed class CameraHost(Action<string, bool> taken, Action back, Action pick) : NativeControlHost
+    private sealed class CameraHost(Action<string, bool> taken, Action back, Action pick, Action? result) : NativeControlHost
     {
         private CameraSession session;
 
@@ -53,6 +54,8 @@ public sealed class CameraView : UserControl
             session.Taken += (path, torch) => activity.RunOnUiThread(() => taken(path, torch));
             screen.BackPressed += () => back();
             screen.PickerPressed += () => pick();
+            screen.ShowResultButton(result is not null);
+            screen.ResultPressed += () => result?.Invoke();
             preview.Touch += (_, e) =>
             {
                 if (e.Event?.Action == global::Android.Views.MotionEventActions.Up)
@@ -108,6 +111,26 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     private int? codesRead;
     private Instruction? lastSay;
     private long readySince;
+    private readonly GuidanceSteadier steadier = new();
+    private ProcessCameraProvider provider;
+    private ImageAnalysis analysis;
+    private volatile bool stopped;
+    private volatile bool capturing;
+    private long pressedAt;
+    private readonly global::Android.Media.MediaActionSound shutterSound = new();
+
+    /// <summary>
+    /// Entry 283: the capture mode. Maximum quality runs the phone's multi-frame processing after the press, which is where Alan's lag was
+    /// suspected; minimum latency takes the frame at the press. GroupLab Dev can be started with the quality mode instead, so the two can be
+    /// timed against each other on the same phone (scripts/shutter-timing.py).
+    /// </summary>
+    public static bool QualityMode { get; set; }
+
+    /// <summary>GroupLab Dev's timing run (entry 283): press the shutter this long after the camera starts; 0 leaves it to a finger.</summary>
+    public static double TestPressAfterSeconds { get; set; }
+
+    /// <summary>The camera showing now, which the activity pauses and resumes with the application (entry 281 section 1.5).</summary>
+    public static CameraSession Active { get; private set; }
 
     public CameraSession(Context context, ILifecycleOwner owner, PreviewView preview, CaptureScreen screen)
     {
@@ -145,7 +168,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             screen.ShowLens(Lenses[lens]);
         };
         sensors = (SensorManager)context.GetSystemService(Context.SensorService);
-        level = new Level(degrees => screen.Post(() => screen.ShowLevel(degrees)));
+        level = new Level((x, y, z) => screen.Post(() => screen.ShowLevel(x, y, z)));
     }
 
     /// <summary>A still saved: its path in the application's cache, and whether the torch was on.</summary>
@@ -153,38 +176,105 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
 
     public void Start()
     {
+        Active = this;
+        stopped = false;
         if (sensors?.GetDefaultSensor(SensorType.Gravity) is { } gravity)
         {
             sensors.RegisterListener(level, gravity, SensorDelay.Ui);
         }
 
+        // Entry 281 section 1.6: what the shooter framed is what is saved. Preview, analysis and picture are all 4:3, the sensor's own shape,
+        // and the preview shows the whole frame (fit, not fill), so nothing the picture holds is cut from the preview or the other way round;
+        // the viewport, where the preview has one, crops all three alike.
+        preview.SetScaleType(PreviewView.ScaleType.FitCenter);
         var future = ProcessCameraProvider.GetInstance(context);
         future.AddListener(new Java.Lang.Runnable(() =>
         {
-            var provider = (ProcessCameraProvider)future.Get()!;
-            var show = new AndroidX.Camera.Core.Preview.Builder().Build();
+            if (stopped)
+            {
+                return;
+            }
+
+            provider = (ProcessCameraProvider)future.Get()!;
+            var fourByThree = new ResolutionSelector.Builder().SetAspectRatioStrategy(AspectRatioStrategy.Ratio43FallbackAutoStrategy).Build();
+            var show = new AndroidX.Camera.Core.Preview.Builder().SetResolutionSelector(fourByThree).Build();
             show.SetSurfaceProvider(ContextCompat.GetMainExecutor(context), preview.SurfaceProvider);
-            still = new ImageCapture.Builder().SetCaptureMode(ImageCapture.CaptureModeMaximizeQuality).Build();
+            still = new ImageCapture.Builder()
+                .SetCaptureMode(QualityMode ? ImageCapture.CaptureModeMaximizeQuality : ImageCapture.CaptureModeMinimizeLatency)
+                .SetJpegQuality(95)
+                .SetResolutionSelector(fourByThree)
+                .Build();
             var size = new ResolutionSelector.Builder()
+                .SetAspectRatioStrategy(AspectRatioStrategy.Ratio43FallbackAutoStrategy)
                 .SetResolutionStrategy(new ResolutionStrategy(AnalysisSize, ResolutionStrategy.FallbackRuleClosestHigherThenLower))
                 .Build();
-            var analysis = new ImageAnalysis.Builder()
+            analysis = new ImageAnalysis.Builder()
                 .SetResolutionSelector(size)
                 .SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest)
                 .SetOutputImageFormat(ImageAnalysis.OutputImageFormatYuv420888)
                 .Build();
             analysis.SetAnalyzer(analysisThread, this);
             provider.UnbindAll();
-            camera = provider.BindToLifecycle(owner, CameraSelector.DefaultBackCamera, show, still, analysis);
+            var group = new UseCaseGroup.Builder().AddUseCase(show).AddUseCase(still).AddUseCase(analysis);
+            if (preview.ViewPort is { } viewPort)
+            {
+                group.SetViewPort(viewPort);
+            }
+
+            camera = provider.BindToLifecycle(owner, CameraSelector.DefaultBackCamera, group.Build());
+            torchOn = false;
             SetTorch(torchChoice == 1);
-            DiagnosticLog.Info("camera.start", ("mode", manual ? "manual" : "guided"), ("torch", torchChoice));
+            if (TestPressAfterSeconds > 0)
+            {
+                double after = TestPressAfterSeconds;
+                TestPressAfterSeconds = 0;
+                screen.PostDelayed(() => Take("test press"), (long)(after * 1000));
+            }
+
+            DiagnosticLog.Info("camera.start", ("mode", manual ? "manual" : "guided"), ("torch", torchChoice),
+                ("analysis", analysis.ResolutionInfo?.Resolution?.ToString()), ("still", still.ResolutionInfo?.Resolution?.ToString()));
         }), ContextCompat.GetMainExecutor(context));
     }
 
+    /// <summary>
+    /// The camera let go: the torch off, the analysis stopped and every use case unbound. Entry 281 sections 1.2 and 1.5: the torch stayed
+    /// on after the picture, frames were still analyzed after the camera had closed, and after the application was minimized and opened
+    /// again the camera never started.
+    /// </summary>
     public void Stop()
     {
+        stopped = true;
         sensors?.UnregisterListener(level);
         SetTorch(false);
+        analysis?.ClearAnalyzer();
+        provider?.UnbindAll();
+        camera = null;
+        if (Active == this)
+        {
+            Active = null;
+        }
+    }
+
+    /// <summary>The application went to the background: let the camera go, and remember to take it again.</summary>
+    public void Pause()
+    {
+        Stop();
+        Active = this;
+        DiagnosticLog.Info("camera.pause");
+    }
+
+    /// <summary>The application came back: take the camera again, as it was.</summary>
+    public void Resume()
+    {
+        if (!stopped)
+        {
+            return;
+        }
+
+        steadier.Reset();
+        readyInARow = 0;
+        Start();
+        DiagnosticLog.Info("camera.resume");
     }
 
     /// <summary>The lens by zoom: 0.6 the ultrawide, 1 the wide, 3 the telephoto, where the phone has them.</summary>
@@ -223,6 +313,13 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     /// </summary>
     public void Analyze(IImageProxy image)
     {
+        // Entry 283: from the press to the saved picture the live analysis stands aside, so it does not compete for the camera or the processor.
+        if (stopped || capturing)
+        {
+            image.Close();
+            return;
+        }
+
         try
         {
             var frameClock = System.Diagnostics.Stopwatch.StartNew();
@@ -263,6 +360,8 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             }
 
             long now = clock.ElapsedMilliseconds;
+            // Entry 281 section 1.4: the words held steady, with resolution judged at the size the picture is measured at.
+            verdict = steadier.Next(verdict, now, MeasuredScale(grey));
             if (verdict.Say != lastSay)
             {
                 lastSay = verdict.Say;
@@ -306,6 +405,21 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         }
     }
 
+    /// <summary>
+    /// The picture's pixels, as the phone measures it, per pixel of this analysis frame: the still's size, cut to the phone's working copy
+    /// (<see cref="WorkingSize.PhoneMegapixels"/>), over the frame's.
+    /// </summary>
+    private double MeasuredScale(GrayImage frame)
+    {
+        if (still?.ResolutionInfo?.Resolution is not { } size)
+        {
+            return 1;
+        }
+
+        double working = Math.Max(size.Width, size.Height) * Math.Min(1, WorkingSize.Scale(size.Width, size.Height, WorkingSize.PhoneMegapixels));
+        return working / Math.Max(frame.Width, frame.Height);
+    }
+
     public void Take(string why)
     {
         if (still is null || taking)
@@ -314,10 +428,20 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         }
 
         taking = true;
-        screen.Post(() => screen.Say("Taking the picture…"));
+        capturing = true;
+        pressedAt = clock.ElapsedMilliseconds;
+        // Entry 283: the shutter answers at once, a sound and a flash, and the reading follows with its progress shown.
+        screen.Post(() =>
+        {
+            shutterSound.Play(global::Android.Media.MediaActionSoundType.ShutterClick);
+            screen.Flash();
+            screen.Say("Taking the picture…");
+        });
+        DiagnosticLog.Info("camera.shutter", ("step", "press"), ("ms", 0), ("mode", QualityMode ? "quality" : "latency"), ("torch", torchOn), ("guided", !manual));
         string path = Path.Combine(context.CacheDir!.AbsolutePath, $"still-{DateTime.Now:HHmmss}.jpg");
         var options = new ImageCapture.OutputFileOptions.Builder(new Java.IO.File(path)).Build();
         still.TakePicture(options, analysisThread, new Saved(this, path, why));
+        DiagnosticLog.Info("camera.shutter", ("step", "requested"), ("ms", clock.ElapsedMilliseconds - pressedAt));
     }
 
     private static GrayImage Luminance(IImageProxy image)
@@ -338,16 +462,27 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
 
     private sealed class Saved(CameraSession session, string path, string why) : Java.Lang.Object, ImageCapture.IOnImageSavedCallback
     {
+        public void OnCaptureStarted()
+        {
+            DiagnosticLog.Info("camera.shutter", ("step", "exposed"), ("ms", session.clock.ElapsedMilliseconds - session.pressedAt));
+        }
+
         public void OnImageSaved(ImageCapture.OutputFileResults output)
         {
+            DiagnosticLog.Info("camera.shutter", ("step", "saved"), ("ms", session.clock.ElapsedMilliseconds - session.pressedAt));
             session.taking = false;
-            DiagnosticLog.Info("camera.take", ("how", why), ("mode", session.manual ? "manual" : "guided"), ("torch", session.torchOn));
-            session.Taken?.Invoke(path, session.torchOn);
+            session.capturing = false;
+            bool torch = session.torchOn;
+            DiagnosticLog.Info("camera.take", ("how", why), ("mode", session.manual ? "manual" : "guided"), ("torch", torch));
+            // Entry 281 section 1.2: the torch goes off the moment the picture is taken, and the camera is let go before the result.
+            ContextCompat.GetMainExecutor(session.context).Execute(new Java.Lang.Runnable(session.Stop));
+            session.Taken?.Invoke(path, torch);
         }
 
         public void OnError(ImageCaptureException exception)
         {
             session.taking = false;
+            session.capturing = false;
             DiagnosticLog.Info("camera.take", ("how", why), ("error", exception.Message));
         }
     }

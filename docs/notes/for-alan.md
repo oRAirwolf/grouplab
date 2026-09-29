@@ -2,12 +2,12 @@ GOOD MORNING (the night of 28 September, in five lines):
 1. Out in nightly 121 (18:17 UTC), on top of 120's printer check and number taps: the picture score now follows how well a picture measures, and on the phone Paste a picture, a set shared as one large page with cut lines, and glossary words explained by a tap. The site is current, and the day's consistency audit is fixed. Nothing needs you for any of it.
 2. THE CAMERA TEST, ready now: GroupLab Dev nightly 121 is on the Fold 7 (about ten minutes, the Fold 7 closed, a printed 5x5 sheet flat on a table in ordinary light): open GroupLab Dev, Capture, Take a picture. (a) GUIDED: hold it over the sheet and follow the words until the shutter fires by itself, then Use this picture. (b) Three bad ones on purpose, about five seconds each: tilted well over, far too close, your hand's shadow across the sheet; note whether the words said what was wrong. (c) One more good one from another height. (d) Tap MANUAL: one ordinary picture with the shutter, then one deliberately bad one, and read the feedback. Then say "camera done", and anything that felt wrong.
 3. The server read is done (request 52, 17:45 UTC): two processors, 10.2 GB of memory free, 36 GB of disk free, load 0.6. It has room to re-read sent targets, capped at one processor.
-4. Devices: both show the black idle screen and can be picked up. The Tab S8 Ultra never answered adb overnight, so its pictures and torch reading wait for the next sitting.
+4. New tonight (entries 278 and 279), none before the camera test: 53, three test pages to print, scan and photograph with a card (ready in C:\Dev\grouplab-local\scale-test); 54, a store-bought target with five shots; 55, the Apple steps for iOS once your membership is active. The tablet has nightly 121 too and shows the black idle screen.
 5. Updated 2026-09-28 17:50 UTC. Next: the camera test when you are ready (nightly 121 or later), then the device sitting; question 67 (the card outline's gap) is with you through planning.
 
 # Requests for Alan
 
-**Open: 7.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 10.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). Then **53**, the three test pages, ready now. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -23,11 +23,10 @@ Hit chance, the largest; (6) the set as a checklist, medium; (7) the scan pill, 
 through the share sheet, large sheet advice, and opening a picture shared from another app. `docs/PHONE-PARITY.md` lists every feature
 as on the phone, coming or left out, and the site build now fails on a feature with no row.
 
-**DESIGN NEEDED:** two phone screens entry 258 asks for, which no concept covers yet (not a request for you; planning, please):
-(1) marking a target GroupLab did not print by touch: placing bulls, drawing a scale at a bull, keeping a template, as the desktop's
-marking screen does; (2) importing shots from a CSV file: choosing which column is across, which is up and down, and the unit, as the
-desktop's import dialog does. Everything else in entry 258 that needs no new screen is built. (Shots Needed to Zero's colours were
-answered by entry 269.)
+**DESIGN NEEDED** (entry 278 section 7; not a request for you; the concepts are with planning and you): marking a target GroupLab
+did not print on the phone, Marking A redrawn with the fixed crosshair; and the screens for the eight features from the competitor study,
+5a to 5h of entry 278. Their engine and data work that decides no look is built: each aim point's own figures, each shot's offset and
+clicks, and every figure without a shot left out. Importing shots from a CSV file on the phone is built as you chose (CSV B).
 
 **The Features page shows each new thing itself** (entry 256; not a request). These entries now have their own picture, drawn as the
 sheet prints: **The E bull**, **The C bull** (with its dot), **Zeroing grids read through a scope** (all four C3 sheets, credited to you
@@ -88,6 +87,71 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 55. iOS: the Apple steps after you enrol, about forty minutes, once (entry 278 item 6)
+
+**Opened 2026-09-28 (entry 278 item 6, entry 279 item 1).** **Not before** your Apple Developer Program membership (individual) shows as
+active in the Apple Developer app. **Why:** the nightly's iOS job builds on GitHub's Mac machines and sends each build to TestFlight, and
+for that it needs four things only you can make: an app identifier, a distribution certificate, a provisioning profile and an App Store
+Connect API key. They go straight from your computer into GitHub's secrets with `gh secret set`; nobody else ever sees them, me included.
+Keep every file below in `C:\Dev\keys\apple\`, which I never open. **Needed, in order** (the shell is Git Bash in MobaXterm, in
+`C:\Dev\keys\apple`):
+
+1. **Team ID.** developer.apple.com, Account, Membership details: copy the Team ID (ten letters and digits). Then
+   `gh secret set APPLE_TEAM_ID -R oRAirwolf/grouplab` and paste it when asked. Done: `gh secret list -R oRAirwolf/grouplab` lists it.
+2. **The app identifier.** developer.apple.com, Certificates, Identifiers & Profiles, Identifiers, the + button, App IDs, App. Description
+   `GroupLab`, Bundle ID **Explicit** `org.grouplab.app`, no capabilities ticked, Continue, Register. Done: it is in the Identifiers list.
+3. **A certificate request, made on Windows.** In Git Bash, with your Apple ID's email in place of the words:
+   `openssl req -new -newkey rsa:2048 -nodes -keyout grouplab-dist.key -out grouplab-dist.csr -subj "/emailAddress=YOUR-APPLE-ID-EMAIL/CN=Alan Hayes/C=US"`
+   Done: two new files, `grouplab-dist.key` (never share it) and `grouplab-dist.csr`.
+4. **The distribution certificate.** Certificates, the + button, **Apple Distribution**, Continue, choose `grouplab-dist.csr`, Continue,
+   Download. Save the downloaded `distribution.cer` in the same folder. Then, choosing a password when asked:
+   `openssl x509 -inform DER -in distribution.cer -out distribution.pem && openssl pkcs12 -export -inkey grouplab-dist.key -in distribution.pem -out grouplab-dist.p12 -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1`
+   then `base64 -w0 grouplab-dist.p12 | gh secret set IOS_DIST_CERT_P12 -R oRAirwolf/grouplab` and
+   `gh secret set IOS_DIST_CERT_PASSWORD -R oRAirwolf/grouplab` (paste the password). Done: both listed.
+5. **The provisioning profile.** Profiles, the + button, Distribution, **App Store Connect**, Continue, App ID `org.grouplab.app`, the
+   certificate from step 4, name `GroupLab App Store`, Generate, Download. Then
+   `base64 -w0 GroupLab_App_Store.mobileprovision | gh secret set IOS_PROFILE -R oRAirwolf/grouplab` (use the downloaded file's name if
+   it differs). Done: listed.
+6. **The API key.** appstoreconnect.apple.com, Users and Access, Integrations, App Store Connect API, Team Keys, the + button. Name
+   `GroupLab CI`, Access **App Manager**, Generate. Copy the **Issuer ID** (above the table) and the **Key ID** (in the row), and Download
+   the key: `AuthKey_<KeyID>.p8`, which Apple lets you download **once**. Then `gh secret set APPLE_API_ISSUER_ID -R oRAirwolf/grouplab`,
+   `gh secret set APPLE_API_KEY_ID -R oRAirwolf/grouplab` (paste each), and `gh secret set APPLE_API_KEY_P8 -R oRAirwolf/grouplab < AuthKey_<KeyID>.p8`.
+   Done: all three listed.
+7. **The app record.** App Store Connect, Apps, the + button, New App: Platforms iOS, Name `GroupLab` (if Apple says it is taken, try
+   `GroupLab Targets` and tell me which), Primary Language English (U.S.), Bundle ID `org.grouplab.app`, SKU `grouplab-ios`, User Access
+   Full Access, Create. Done: the app page opens with a TestFlight tab.
+
+**A good answer:** "Apple steps done", and the app name if it is not GroupLab. The seven secret names above are what the nightly's iOS job
+reads; until they are all there it builds without signing and uploads nothing. Nothing here submits anything to the App Store.
+
+## 54. A store-bought target, five shots, for the home page (entry 278 item 4), about fifteen minutes at the range
+
+**Opened 2026-09-28 (entry 278 item 4, question 66).** **Needed:** a plain store-bought target that carries nobody's design (a simple
+bullseye or square), five shots at any distance, then photographed flat in good light, straight down, the whole sheet in the picture;
+if it is convenient, also scanned at 600 dpi on the Brother flatbed. Put the files in `C:\Dev\grouplab-local\store-target\`, any names.
+**Why:** the home page's "Your own targets" and the tour show a sample GroupLab drew itself until a real one exists. I mark yours on the
+desktop's marking screen with the scale set by hand, as a new user would, and it replaces the sample. **A good answer:** "store target
+done", and the distance and caliber if you know them.
+
+## 53. Question 67 tested: three check pages, one scan each, card photos (entry 278 item 3), about thirty minutes
+
+**Opened 2026-09-28 (entry 278 item 3). TEST PAGES READY** (made 2026-09-28 by `grouplab scale-test-pages`; the label sits clear of every marker).
+**Needed:**
+
+1. Print `TEST-A.pdf`, `TEST-B.pdf` and `TEST-C.pdf` from `C:\Dev\grouplab-local\scale-test\` in one batch, at **100 percent**
+   ("Actual size", never "Fit"), on Letter, on the same printer. Each says TEST A, B or C in large type and "not for use"; they differ
+   only in the card outline: A the outline 3 mm outside the card (as built), B a hairline on the card's edge, C corner marks only.
+2. Scan each printed page on the Brother flatbed at **600 dpi**, the whole page, before anything is laid on it. Save as `scan-A.png`,
+   `scan-B.png`, `scan-C.png` (or .jpg, .tif) in the same folder. These scans are the truth for each page's real print scale.
+3. On each page lay a **new** card (any bank or ID card) in its outline and take the printer check's card photo in GroupLab Dev
+   (Settings, Printers, Check your printer, Card). Then do the same with an **old, worn** card, and with a **dark** card if you have one.
+   If GroupLab Dev cannot read page B or C, take ordinary phone photos instead, straight down, in room light, the whole page in view.
+4. Copy the photos from the phone into the same folder named `A-new.jpg`, `A-old.jpg`, `A-dark.jpg`, `B-new.jpg` and so on.
+
+**Why:** question 67 asks which outline lets the camera measure the card most accurately. You chose to test rather than choose; I
+measure every card photo against its page's scan and report which outline reads most accurately and most consistently, new card and
+old, with the numbers. **A good answer:** "scale test done", and which cards you used.
 
 ## 52. One approval: a read-only look at the server's size (entry 261 section 6), about one minute
 

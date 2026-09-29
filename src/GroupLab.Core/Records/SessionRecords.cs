@@ -28,7 +28,7 @@ public static class SessionRecords
         SessionRecord? existing, string? imageSha256, byte[]? proof, string? proofType, DateTime utcNow, DateTime localNow)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var figures = GroupAnalysis.Analyse(state).AllShots?.MeanRadius;
+        var figures = GroupAnalysis.Analyse(state).Counted?.MeanRadius; // entry 278 section 5c: without the shots left out
         return new SessionRecord(
             existing?.Id ?? 0,
             existing?.CreatedUtc ?? utcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
@@ -42,7 +42,8 @@ public static class SessionRecords
             state.Load,
             state.Calibre?.DiameterInches,
             MarkingFile.Write(state, units),
-            CountedShots(state, analyseSighters),
+            // Entry 278 section 5c: the count beside the mean radius is the shots it was measured on, without any left out.
+            CountedShots(state, analyseSighters) - state.Shots.Count(s => s.IsShot && s.Exclusion is not null && (analyseSighters || !GroupAnalysis.OnSighter(state, s))),
             figures?.Value,
             figures?.Lower,
             figures?.Upper,

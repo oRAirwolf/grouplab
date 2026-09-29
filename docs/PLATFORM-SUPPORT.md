@@ -8,10 +8,10 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 - `scripts/platform-support.py` writes it into `README.md` between its two markers, and checks that it is current.
 - `.github/workflows/nightly.yml` appends the one line `scripts/platform-support.py --release` makes to a release whose assets include a macOS build.
 
-**iPhone, recorded as a fact and not a plan** (entry 206 section 4). iPhone is about 60 percent of phones in the United States and half in
-the United Kingdom (StatCounter, August 2026). If it were ever reconsidered: the floor would be an iPhone 11 on iOS 26 or later; Avalonia
-runs on iOS; the engine would need OpenCV built for iOS, which GitHub's macOS build machines could do without anyone owning a Mac; and
-distribution would need the paid Apple developer program. It is not planned; that is Alan's decision.
+**iPhone and iPad, being built** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
+about 60 percent of phones in the United States and half in the United Kingdom (StatCounter, August 2026). The floor is an iPhone 11 on
+iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
+a Mac; and distribution needs the paid Apple developer program, which Alan is joining. `docs/IOS-PLAN.md` is the plan.
 
 ---
 
@@ -74,7 +74,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ## Apple mobile
 
-iOS is not planned. An iPad Mini, sixth generation, is available as test hardware, and an iOS version of GroupLab would be tested on it. Building and signing an iOS application requires a Mac and the Apple developer program, so that version cannot be produced at present, for the same reason the macOS build is unsigned. The hardware to test it exists; the machine to build it does not.
+An iOS version of GroupLab is being built. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
 
 ## Other Linux builds
 

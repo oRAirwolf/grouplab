@@ -28,6 +28,8 @@ internal sealed class CaptureScreen : LinearLayout
     public const string LensName = "Lens";
     public const string GuidedName = "Guided mode";
     public const string ManualName = "Manual mode";
+    public const string LevelName = "Level";
+    public const string ResultName = "Result";
 
     private static readonly Color Panel = Color.Argb(214, 16, 20, 24);
     private static readonly Color Ground = Color.Rgb(16, 20, 24);
@@ -40,9 +42,11 @@ internal sealed class CaptureScreen : LinearLayout
     private readonly TextView score;
     private readonly TextView torch;
     private readonly TextView lens;
-    private readonly TextView level;
+    private readonly BubbleView level;
+    private readonly FrameLayout cameraFrame;
     private readonly TextView guided;
     private readonly TextView manual;
+    private readonly TextView result;
 
     public CaptureScreen(Context context, PreviewView preview) : base(context)
     {
@@ -53,6 +57,7 @@ internal sealed class CaptureScreen : LinearLayout
 
         // The camera, with the panel over its top and the level over its bottom edge.
         var camera = new FrameLayout(context);
+        cameraFrame = camera;
         camera.AddView(preview, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
 
         var back = Round(context, "‹", BackName, 26);
@@ -87,13 +92,9 @@ internal sealed class CaptureScreen : LinearLayout
             LeftMargin = Dp(10), RightMargin = Dp(10), TopMargin = Dp(10),
         });
 
-        level = new TextView(context) { TextSize = 13, Text = "", Background = Rounded(Panel, 12) };
-        level.SetTextColor(Color.White);
-        level.SetPadding(Dp(10), Dp(4), Dp(10), Dp(4));
-        camera.AddView(level, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Bottom | GravityFlags.CenterHorizontal)
-        {
-            BottomMargin = Dp(10),
-        });
+        // Entry 281 section 1.1: the level is a crosshair in the middle of the camera with a dot that moves like a bubble.
+        level = new BubbleView(context) { ContentDescription = LevelName };
+        camera.AddView(level, new FrameLayout.LayoutParams(Dp(132), Dp(132), GravityFlags.Center));
         AddView(camera, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, 0, 1f));
 
         // Under the camera: picker, shutter, lens; the modes beneath.
@@ -112,6 +113,10 @@ internal sealed class CaptureScreen : LinearLayout
         modes.SetGravity(GravityFlags.Center);
         modes.AddView(guided, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, Dp(44)));
         modes.AddView(manual, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, Dp(44)) { LeftMargin = Dp(24) });
+        // Entry 281 section 1.3: back to the last result in one press, without leaving through the start of the tab.
+        result = Pill(context, "Result", ResultName);
+        result.Visibility = ViewStates.Gone;
+        modes.AddView(result, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, Dp(44)) { LeftMargin = Dp(24) });
 
         var controls = new LinearLayout(context) { Orientation = global::Android.Widget.Orientation.Vertical };
         controls.SetPadding(Dp(12), Dp(14), Dp(12), Dp(8));
@@ -126,7 +131,13 @@ internal sealed class CaptureScreen : LinearLayout
         Shutter.Click += (_, _) => ShutterPressed?.Invoke();
         guided.Click += (_, _) => ModeChosen?.Invoke(false);
         manual.Click += (_, _) => ModeChosen?.Invoke(true);
+        result.Click += (_, _) => ResultPressed?.Invoke();
     }
+
+    public event Action? ResultPressed;
+
+    /// <summary>Shows the Result button where there is a result to go back to.</summary>
+    public void ShowResultButton(bool shown) => result.Visibility = shown ? ViewStates.Visible : ViewStates.Gone;
 
     public event Action? BackPressed;
 
@@ -181,8 +192,17 @@ internal sealed class CaptureScreen : LinearLayout
 
     public void ShowLens(float ratio) => lens.Text = ratio.ToString("0.#", CultureInfo.InvariantCulture) + "x";
 
-    public void ShowLevel(double degrees) =>
-        level.Text = string.Create(CultureInfo.InvariantCulture, $"Level {degrees:0}°{(degrees > CaptureQualities.FineDegrees ? ", hold it flatter" : "")}");
+    /// <summary>Entry 283: a white flash over the camera the moment the shutter is pressed, so the press is answered at once.</summary>
+    public void Flash()
+    {
+        var white = new View(Context) { Alpha = 0.85f };
+        white.SetBackgroundColor(Color.White);
+        cameraFrame.AddView(white, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
+        white.Animate()!.Alpha(0).SetDuration(180).WithEndAction(new Java.Lang.Runnable(() => cameraFrame.RemoveView(white)))!.Start();
+    }
+
+    /// <summary>The level from the gravity sensor's reading, in the phone's own axes.</summary>
+    public void ShowLevel(double x, double y, double z) => level.Show(x, y, z);
 
     public void ShowMode(bool isManual)
     {
@@ -253,6 +273,42 @@ internal sealed class CaptureScreen : LinearLayout
         view.SetTypeface(Typeface.DefaultBold, TypefaceStyle.Bold);
         view.SetPadding(12, 0, 12, 0);
         return view;
+    }
+}
+
+/// <summary>
+/// Entry 281 section 1.1, Alan's level: four arms and a dot that drifts toward the raised side the way a bubble does, green within
+/// <see cref="GroupLab.Core.Capture.BubbleLevel.ReadyDegrees"/> of flat and white beyond. The arms are thin and half white, so the preview
+/// shows through.
+/// </summary>
+internal sealed class BubbleView(Context context) : View(context)
+{
+    private readonly Paint paint = new(PaintFlags.AntiAlias);
+    private (double Right, double Down) dot;
+    private bool ready;
+
+    public void Show(double x, double y, double z)
+    {
+        dot = GroupLab.Core.Capture.BubbleLevel.Dot(x, y, z);
+        ready = GroupLab.Core.Capture.BubbleLevel.Ready(x, y, z);
+        Invalidate();
+    }
+
+    protected override void OnDraw(Canvas canvas)
+    {
+        ArgumentNullException.ThrowIfNull(canvas);
+        float cx = Width / 2f, cy = Height / 2f, arm = Math.Min(Width, Height) / 2f * 0.86f, dotRadius = arm * 0.16f;
+        paint.SetStyle(Paint.Style.Stroke);
+        paint.StrokeWidth = Math.Max(2, arm * 0.03f);
+        paint.Color = Color.Argb(150, 255, 255, 255);
+        canvas.DrawLine(cx - arm, cy, cx + arm, cy, paint);
+        canvas.DrawLine(cx, cy - arm, cx, cy + arm, paint);
+        // The ready ring: the dot inside it is within the ready tolerance.
+        float ringRadius = (float)(arm * GroupLab.Core.Capture.BubbleLevel.ReadyDegrees / GroupLab.Core.Capture.BubbleLevel.FullScaleDegrees) + dotRadius;
+        canvas.DrawCircle(cx, cy, ringRadius, paint);
+        paint.SetStyle(Paint.Style.Fill);
+        paint.Color = ready ? Color.Rgb(46, 160, 90) : Color.White;
+        canvas.DrawCircle(cx + (float)(dot.Right * arm), cy + (float)(dot.Down * arm), dotRadius, paint);
     }
 }
 
@@ -353,7 +409,7 @@ internal sealed class QualityBar(Context context) : View(context)
 }
 
 /// <summary>How far the phone is from flat, from gravity: 0 when it lies square over a sheet on a table.</summary>
-internal sealed class Level(Action<double> changed) : Java.Lang.Object, ISensorEventListener
+internal sealed class Level(Action<double, double, double> changed) : Java.Lang.Object, ISensorEventListener
 {
     public void OnAccuracyChanged(Sensor? sensor, SensorStatus accuracy)
     {
@@ -366,10 +422,6 @@ internal sealed class Level(Action<double> changed) : Java.Lang.Object, ISensorE
             return;
         }
 
-        double x = v[0], y = v[1], z = v[2], g = Math.Sqrt((x * x) + (y * y) + (z * z));
-        if (g > 0)
-        {
-            changed(Math.Acos(Math.Min(1, Math.Abs(z) / g)) * 180 / Math.PI);
-        }
+        changed(v[0], v[1], v[2]);
     }
 }

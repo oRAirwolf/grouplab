@@ -91,14 +91,63 @@ public static class SheetIdentification
                 return Failed(stage, ids[0], read, string.Create(inv, $"the sheet's codes name {ids[0]}, which is not among the {candidates.Count} definitions searched"));
             }
 
+            // Entry 282 section 5: "1 of 2 codes read" on every good picture of the camera test, because reading stops at the first
+            // resolution that gives one. Where fewer than the sheet has were read, the rest are read cut out where the markers put them, so
+            // the count is true and the second code checks the first.
+            if (match.Codes is { Count: > 1 } all && frames.Count < all.Count)
+            {
+                var more = Capture.LiveSheet.CodeCrops(image, [match], backend)
+                    .Select(crop => CropScales.Select(s => backend.ReadCodes(crop, s)).FirstOrDefault(r => r.Count > 0) ?? [])
+                    .SelectMany(r => r.Take(1)).Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId == ids[0]).ToList();
+                if (more.Count > frames.Count)
+                {
+                    stage.Detail(string.Create(inv, $"cut out where the markers put them: {more.Count} codes of {ids[0]}"));
+                    read = Math.Max(read, more.Count);
+                    frames = more;
+                }
+            }
+
             stage.Parameter("definition", ids[0]);
             stage.Metric("codes decoded", frames.Count, "count");
             stage.Done(StageStatus.Ok, string.Create(inv, $"{ids[0]}{(match.Tiling is null ? "" : $", tile {tiles[0]}")}, from {frames.Count} codes at {scale:0.##} times full resolution"));
             return new SheetIdentity(match, ids[0], tiles[0], read, null, scale);
         }
 
+        // Entry 282 section 5: the codes cut out where the sheet's markers put them, and read enlarged. On the Fold 7's pictures a module
+        // got about 3.1 pixels and read only at three times, which the whole picture cannot be.
+        cancellation.ThrowIfCancellationRequested();
+        var near = new List<byte[]>();
+        foreach (var crop in Capture.LiveSheet.CodeCrops(image, candidates, backend))
+        {
+            foreach (double scale in CropScales)
+            {
+                var found = backend.ReadCodes(crop, scale);
+                if (found.Count > 0)
+                {
+                    near.Add(found[0]); // a cut-out holds one code, however often the reader finds it
+                    break;
+                }
+            }
+        }
+
+        read += near.Count;
+        var nearFrames = near.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
+        stage.Detail(string.Create(inv, $"cut out where the markers put them and enlarged: {near.Count} codes read, {nearFrames.Count} valid frames"));
+        var nearIds = nearFrames.Select(f => f.DefinitionId!).Distinct(StringComparer.Ordinal).ToList();
+        var nearTiles = nearFrames.Select(f => (int)f.TileIndex).Distinct().ToList();
+        if (nearIds.Count == 1 && nearTiles.Count == 1 && candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == nearIds[0]) is { } nearMatch)
+        {
+            stage.Parameter("definition", nearIds[0]);
+            stage.Metric("codes decoded", nearFrames.Count, "count");
+            stage.Done(StageStatus.Ok, string.Create(inv, $"{nearIds[0]}, from {nearFrames.Count} codes cut out where the markers put them"));
+            return new SheetIdentity(nearMatch, nearIds[0], nearTiles[0], read, null, null);
+        }
+
         return Failed(stage, null, read, read == 0 ? "no code on the sheet could be read" : "no code on the sheet held a valid GroupLab frame");
     }
+
+    /// <summary>The enlargements a code cut out of the picture is read at, in order: a phone picture's module of about 3 pixels read at three times.</summary>
+    public static IReadOnlyList<double> CropScales { get; } = [2.0, 3.0, 4.0];
 
     /// <summary>
     /// Every readable definition under the directories, subdirectories included so frozen definitions are found, in path order so the choice

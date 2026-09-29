@@ -63,6 +63,9 @@ public static class PictureCheck
         _ => "Retake",
     };
 
+    /// <summary>The most a picture with any note scores: short of perfect, and still well inside good.</summary>
+    public const int WithNotesMost = 95;
+
     public static PictureBand Band(int score) => score >= CaptureQualities.Good ? PictureBand.Good : score >= CaptureQualities.Usable ? PictureBand.Usable : PictureBand.Retake;
 
     /// <summary>
@@ -192,7 +195,8 @@ public static class PictureCheck
 
             if (quality.ResolutionPart < 1)
             {
-                notes.Add((string.Create(CultureInfo.InvariantCulture, $"Move closer next time: the bulls got {quality.LeastPixelsPerInch:0} pixels an inch at the least, and {CaptureQualities.FinePixelsPerInch:0} measure best."), sheet));
+                // Entry 282 section 6: in a shooter's words; "137 pixels an inch" meant nothing to one.
+                notes.Add(("Move a little closer next time, so the sheet fills more of the picture: GroupLab measures best with a little more detail.", sheet));
             }
 
             if (quality.FocusPart is < 1)
@@ -207,7 +211,8 @@ public static class PictureCheck
                     : "The paper is dim; GroupLab evened it out. More light, or the torch, would help next time.", sheet));
             }
 
-            if (quality.MarkingsRead is { } read && quality.MarkingsExpected is { } expected && read < expected)
+            // Entry 282 section 6: only where the missing markers cost the picture something; the "Fine" line always says how many were read.
+            if (quality.MarkingsRead is { } read && quality.MarkingsExpected is { } expected && read < expected && quality.MarkingsPart is < 1)
             {
                 notes.Add((string.Create(CultureInfo.InvariantCulture, $"{read} of {expected} markers read; GroupLab measured from those it read."),
                     result?.MissingMarkers is { Count: > 0 } missing ? Box(missing.Select(m => (m, 12.0))) : null));
@@ -249,6 +254,12 @@ public static class PictureCheck
         int raw = quality is null ? 0 : (int)Math.Round(Math.Min(Math.Min(quality.Score, 100 * evenPart), 100 * registrationPart), MidpointRounding.AwayFromZero);
         bool can = cannot is null;
         int score = can ? Math.Max(raw, CaptureQualities.Usable) : Math.Min(raw, CaptureQualities.Usable - 1);
+
+        // Entry 282 section 6: "Good with notes" and 100 said two things. A picture with something to note is not a perfect one.
+        if (can && notes.Count > 0)
+        {
+            score = Math.Min(score, WithNotesMost);
+        }
         var band = Band(score);
         if (!can)
         {

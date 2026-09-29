@@ -16,13 +16,14 @@ namespace GroupLab.Android;
 /// </summary>
 internal sealed class FeedbackView : UserControl
 {
-    public FeedbackView(PictureVerdict check, string? photo, Action use, Action again)
+    /// <param name="turns">Quarter turns clockwise that show the picture upright, the marking's view (entry 281 section 1.7).</param>
+    public FeedbackView(PictureVerdict check, string? photo, Action use, Action again, int turns = 0)
     {
         ArgumentNullException.ThrowIfNull(check);
         var column = new StackPanel { Spacing = 12 };
         if (photo is not null && File.Exists(photo))
         {
-            column.Children.Add(Picture(new Bitmap(photo), check.Notes));
+            column.Children.Add(Picture(new Bitmap(photo), check.Notes, turns));
         }
 
         var verdict = Screens.Title(check.Verdict);
@@ -32,12 +33,11 @@ internal sealed class FeedbackView : UserControl
             var notes = new StackPanel { Spacing = 8 };
             foreach (var note in check.Notes)
             {
-                notes.Children.Add(new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    Spacing = 10,
-                    Children = { Badge(note.Number), new TextBlock { Text = note.Words, TextWrapping = TextWrapping.Wrap, MaxWidth = 520 } },
-                });
+                // Entry 282 section 1: the words wrap to the card. A horizontal stack gave them all the width they asked for, so each note ran
+                // off the card's edge; a grid gives the badge its own width and the words the rest.
+                var words = new TextBlock { Text = note.Words, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+                Grid.SetColumn(words, 1);
+                notes.Children.Add(new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*"), ColumnSpacing = 10, Children = { Badge(note.Number), words } });
             }
 
             column.Children.Add(Screens.Card(notes));
@@ -74,7 +74,7 @@ internal sealed class FeedbackView : UserControl
         Grid.SetColumn(mark, 1);
         marks.Children.Add(mark);
         var track = new Grid { VerticalAlignment = VerticalAlignment.Center, Children = { bands, marks } };
-        var words = new TextBlock
+        var words = new TextBlock // one line on purpose: a score and one word
         {
             Text = $"{score} {PictureCheck.BandWord(PictureCheck.Band(score))}",
             VerticalAlignment = VerticalAlignment.Center,
@@ -86,7 +86,7 @@ internal sealed class FeedbackView : UserControl
     }
 
     /// <summary>The photograph, scaled to fit, with each note's outline and number drawn in its own pixels.</summary>
-    private static Control Picture(Bitmap image, IReadOnlyList<PictureNote> notes)
+    private static Control Picture(Bitmap image, IReadOnlyList<PictureNote> notes, int turns)
     {
         double w = image.PixelSize.Width, h = image.PixelSize.Height;
         var canvas = new Canvas { Width = w, Height = h };
@@ -102,7 +102,9 @@ internal sealed class FeedbackView : UserControl
             canvas.Children.Add(badge);
         }
 
-        return new Viewbox { Child = canvas, Stretch = Stretch.Uniform, MaxHeight = 560 };
+        // Turned upright as the picture was taken, and scaled alike across and down.
+        var upright = new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * turns), Child = canvas };
+        return new Viewbox { Child = upright, Stretch = Stretch.Uniform, MaxHeight = 560 };
     }
 
     private static Border Badge(int number, double size = 24) => new()
@@ -112,7 +114,7 @@ internal sealed class FeedbackView : UserControl
         CornerRadius = new CornerRadius(size / 2),
         Background = new SolidColorBrush(Color.FromRgb(232, 150, 46)),
         VerticalAlignment = VerticalAlignment.Top,
-        Child = new TextBlock
+        Child = new TextBlock // one line on purpose: a note's number
         {
             Text = number.ToString(System.Globalization.CultureInfo.InvariantCulture),
             FontSize = size * 0.55,

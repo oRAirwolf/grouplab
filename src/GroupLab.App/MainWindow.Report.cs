@@ -42,12 +42,13 @@ public sealed partial class MainWindow
         var figures = new List<ReportFigure>();
         var cards = new List<ReportCard>();
         var why = new List<ReportSection>();
-        if (analysis.AllShots is { } all)
+        if (analysis.AllShots is { } everyShot && analysis.Counted is { } all)
         {
-            var reduced = analysis.WithoutExclusions!;
+            // Entry 278 section 5c: the report's figures are the screen's, those of the shots that count.
+            var reduced = everyShot;
             bool excluded = analysis.Excluded > 0;
-            summary.Add(PlacedLine(all.Shots, analysis.Automatic, analysis.Corrected, analysis.Manual)
-                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {reduced.Shots} without the {analysis.Excluded} excluded" : "")}{(analysis.NotShots > 0 ? $"; {analysis.NotShots} marked not a shot" : "")}."));
+            summary.Add(PlacedLine(everyShot.Shots, analysis.Automatic, analysis.Corrected, analysis.Manual)
+                + string.Create(CultureInfo.InvariantCulture, $"{(excluded ? $"; {all.Shots} counted, {analysis.Excluded} left out" : "")}{(analysis.NotShots > 0 ? $"; {analysis.NotShots} marked not a shot" : "")}."));
             if (all.CentreFromAim is { } offset)
             {
                 var (value, detail) = CentreTexts(AsDisplayed(offset));

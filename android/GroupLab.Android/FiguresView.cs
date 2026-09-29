@@ -196,6 +196,7 @@ internal sealed class FiguresView : UserControl
             card.Children.Add(new TextBlock
             {
                 Text = string.Create(CultureInfo.CurrentCulture, $"Every size times {k:0.000}"),
+                TextWrapping = TextWrapping.Wrap,
                 FontWeight = FontWeight.SemiBold,
                 Foreground = new SolidColorBrush(Color.FromRgb(232, 150, 46)),
             });
@@ -303,7 +304,7 @@ internal sealed class FiguresView : UserControl
         inside.Children.Add(Screens.Line(figure.Explanation ?? ResultFigures.Explain(figure.Key) ?? "No explanation is written for this one yet."));
         if (figure.ShotsCanSay is { } can)
         {
-            int shots = GroupAnalysis.Analyse(state).AllShots?.Shots ?? 0;
+            int shots = GroupAnalysis.Analyse(state).Counted?.Shots ?? 0;
             inside.Children.Add(new Border
             {
                 Padding = new Thickness(12),
@@ -322,7 +323,7 @@ internal sealed class FiguresView : UserControl
 
     private static Control Section(string heading, bool open, Control body) => new Expander
     {
-        Header = new TextBlock { Text = heading, Classes = { PhoneStyles.Heading } },
+        Header = new TextBlock { Text = heading, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Heading } },
         Content = body,
         IsExpanded = open,
         HorizontalAlignment = HorizontalAlignment.Stretch,

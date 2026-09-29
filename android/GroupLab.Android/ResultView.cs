@@ -59,7 +59,14 @@ public sealed class ResultView : UserControl
             column.Children.Add(Screens.Line(failure));
             if (result.AskWhichSheet && result.Image is { } working)
             {
-                column.Children.Add(Screens.Line("Which sheet is it?"));
+                if (result.LooksLike is { } likely)
+                {
+                    // Entry 281: the sheet the picture looks most like, by its markers and its drawing, to confirm with one press.
+                    column.Children.Add(Screens.Line($"It looks like {likely.Name}."));
+                    column.Children.Add(Screens.Primary("Yes, measure it as that sheet", () => _ = AsSheet(working, likely, setup, again)));
+                }
+
+                column.Children.Add(Screens.Line(result.LooksLike is null ? "Which sheet is it?" : "Or another sheet:"));
                 foreach (var sheet in PhoneAnalysis.Library().OrderBy(d => d.Name, StringComparer.CurrentCultureIgnoreCase))
                 {
                     column.Children.Add(Screens.Choice(sheet.Name, () => _ = AsSheet(working, sheet, setup, again)));
@@ -96,7 +103,7 @@ public sealed class ResultView : UserControl
 
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
-            editor = new SheetEditor(new Bitmap(path), () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));
+            editor = new SheetEditor(new Bitmap(path), result.State.ViewQuarterTurns, () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session));
             var tools = new WrapPanel { HorizontalAlignment = HorizontalAlignment.Center };
             var toolWords = Screens.Line(SheetEditor.Say(SheetEditor.Tool.Move));
             foreach (var (tool, words) in new[] { (SheetEditor.Tool.Move, "Move"), (SheetEditor.Tool.Add, "Add a hole"), (SheetEditor.Tool.Remove, "Remove") })
@@ -333,8 +340,13 @@ public sealed class ResultView : UserControl
     /// The working image fitted to the width, a ring on every hole, and the holes corrected by touch. A touch within 24 dp of a hole is on
     /// it. While a hole is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross at the
     /// point the hole will go, because a finger hides exactly the part that matters.
+    /// <para>
+    /// Entry 281 section 1.7: the picture was stretched to whatever box the page gave it, and shown as the camera's sensor stores it, on its
+    /// side for a picture taken upright. It is now scaled alike across and down, never filled, and turned as the marking's view turns
+    /// (<see cref="ViewRotation"/>), with every ring and the magnifier turned with it; the positions themselves stay in the stored pixels.
+    /// </para>
     /// </summary>
-    private sealed class SheetEditor(Bitmap image, Func<IReadOnlyList<MarkedShot>> shots, Action<Action<MarkingSession>> edit) : Control
+    private sealed class SheetEditor(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Action<Action<MarkingSession>> edit) : Control
     {
         internal enum Tool
         {
@@ -358,22 +370,40 @@ public sealed class ResultView : UserControl
             _ => "Drag a ring to the center of its hole.",
         };
 
-        /// <summary>Screen units per image pixel, and image pixels to the bitmap's own units, which differ where the file carries a dpi.</summary>
-        private double Scale => Bounds.Width / image.PixelSize.Width;
+        private double PixelWidth => image.PixelSize.Width;
 
-        private double Units => image.Size.Width / image.PixelSize.Width;
+        private double PixelHeight => image.PixelSize.Height;
+
+        /// <summary>The picture's size as it is shown, turned.</summary>
+        private (double Width, double Height) Shown => ViewRotation.DisplaySize(turns, PixelWidth, PixelHeight);
+
+        /// <summary>Screen units per image pixel, the same across and down so the picture keeps its shape.</summary>
+        private double Scale => Math.Min(Bounds.Width / Shown.Width, Bounds.Height / Shown.Height);
 
         protected override Size MeasureOverride(Size available)
         {
-            double width = double.IsFinite(available.Width) ? available.Width : image.Size.Width;
-            return new Size(width, width * image.PixelSize.Height / image.PixelSize.Width);
+            double width = double.IsFinite(available.Width) ? available.Width : Shown.Width;
+            return new Size(width, width * Shown.Height / Shown.Width);
         }
 
-        private PointD ToImage(Point p) => new(p.X / Scale, p.Y / Scale);
+        private PointD ToImage(Point p) => ViewRotation.ToImage(new PointD(p.X / Scale, p.Y / Scale), turns, PixelWidth, PixelHeight);
+
+        private Point ToScreen(PointD image)
+        {
+            var shown = ViewRotation.ToDisplay(image, turns, PixelWidth, PixelHeight);
+            return new Point(shown.X * Scale, shown.Y * Scale);
+        }
+
+        /// <summary>Stored pixels to the screen: the turn, then <paramref name="k"/> screen units a pixel, then a shift.</summary>
+        private Matrix Turned(double k, double shiftX, double shiftY)
+        {
+            var (a, b, c, d, e, f) = ViewRotation.Affine(turns, PixelWidth, PixelHeight);
+            return new Matrix(a * k, d * k, b * k, e * k, (c * k) + shiftX, (f * k) + shiftY);
+        }
 
         private int? Nearest(Point p)
         {
-            var near = shots().Select(s => (s.Id, Distance: Math.Sqrt(Math.Pow((s.Image.X * Scale) - p.X, 2) + Math.Pow((s.Image.Y * Scale) - p.Y, 2))))
+            var near = shots().Select(s => (s.Id, Distance: Point.Distance(ToScreen(s.Image), p)))
                 .Where(s => s.Distance <= Reach).OrderBy(s => s.Distance).ToList();
             return near.Count > 0 ? near[0].Id : null;
         }
@@ -427,12 +457,16 @@ public sealed class ResultView : UserControl
 
         public override void Render(DrawingContext context)
         {
-            double scale = Scale;
-            context.DrawImage(image, new Rect(0, 0, Bounds.Width, Bounds.Height));
+            var whole = new Rect(0, 0, PixelWidth, PixelHeight);
+            using (context.PushTransform(Turned(Scale, 0, 0)))
+            {
+                context.DrawImage(image, new Rect(image.Size), whole);
+            }
+
             var pen = new Pen(Brushes.OrangeRed, 2);
             foreach (var shot in shots())
             {
-                var at = shot.Id == dragging && finger is { } f ? f : new Point(shot.Image.X * scale, shot.Image.Y * scale);
+                var at = shot.Id == dragging && finger is { } f ? f : ToScreen(shot.Image);
                 context.DrawEllipse(null, pen, at, 9, 9);
             }
 
@@ -444,12 +478,13 @@ public sealed class ResultView : UserControl
             // The loupe: the corner away from the finger, three times the area under it, and a cross where the hole will go.
             bool left = held.X > Bounds.Width / 2;
             var box = new Rect(left ? 8 : Bounds.Width - Loupe - 8, 8, Loupe, Loupe);
-            double half = Loupe / Magnify / 2 / scale;
-            var centre = ToImage(held);
-            var source = new Rect((centre.X - half) * Units, (centre.Y - half) * Units, 2 * half * Units, 2 * half * Units);
+            // The magnifier turned as the picture is, the point under the finger at its center.
+            double k = Scale * Magnify;
+            var under = ViewRotation.ToDisplay(ToImage(held), turns, PixelWidth, PixelHeight);
             using (context.PushClip(box))
+            using (context.PushTransform(Turned(k, box.Center.X - (under.X * k), box.Center.Y - (under.Y * k))))
             {
-                context.DrawImage(image, source, box);
+                context.DrawImage(image, new Rect(image.Size), whole);
             }
 
             context.DrawRectangle(null, new Pen(Brushes.White, 2), box);

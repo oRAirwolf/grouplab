@@ -128,12 +128,21 @@
       "allowedIn": [
         "docs/RETIRED-WORDING.json"
       ]
+    },
+    {
+      "phrase": "iOS is not planned",
+      "why": "entry 278 section 6: Alan decided on 2026-09-28 that iOS is being built",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/NOTES-FROM-PLANNING.md",
+        "docs/notes/archive",
+        "docs/RELEASE-NOTES.md",
+        "docs/QUESTIONS-FOR-PLANNING.md",
+        "docs/PHASE1-RESULTS.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
-  "settled": [
-    {
-      "where": "docs/PLATFORM-SUPPORT.md, \"Apple mobile\"",
-      "why": "Alan's settled wording (entry 147), held word for word by MacBuildsTests; \"iOS is not planned.\" stands in front of it (entries 275 and 276). A consistency audit does not report it; if Alan wants it reworded, that comes as its own entry."
-    }
-  ]
+  "settled": []
 }

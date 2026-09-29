@@ -176,7 +176,7 @@ public sealed partial class MainWindow
             $"Center {units.Number(cx.Value)} across ({units.Number(cx.Lower)} to {units.Number(cx.Upper)}), {units.Number(-cy.Value)} up ({units.Number(-cy.Upper)} to {units.Number(-cy.Lower)}) {unit}, 95% intervals",
             $"sd across {units.Length(sx.Value)} ({units.Number(sx.Lower)} to {units.Number(sx.Upper)}), sd up and down {units.Length(sy.Value)} ({units.Number(sy.Lower)} to {units.Number(sy.Upper)})",
             string.Create(CultureInfo.InvariantCulture, $"correlation across with up {correlation:0.00}; error ellipse sd {units.Number(Math.Sqrt(ellipse.Shape.Major))} by {units.Length(Math.Sqrt(ellipse.Shape.Minor))}, major axis at {DisplayedAngle(ellipse.Shape.AngleDegrees):0} degrees"),
-            $"95% of shots fall in an ellipse {units.Number(2 * ellipse.SemiMajor)} by {units.Length(2 * ellipse.SemiMinor)} across its axes",
+            $"The 95% ellipse from these shots is {units.Number(2 * ellipse.SemiMajor)} by {units.Length(2 * ellipse.SemiMinor)} across its axes; with few shots it holds fewer than 95% of later shots",
         })
         {
             fullFigures.Children.Add(Detail(line));

@@ -58,14 +58,20 @@ public sealed partial class MainWindow
         await ShowMapping(table, Path.GetFileName(path));
     }
 
-    /// <summary>The mapping step: which column is across, which is up and down, the unit, which way is up, and the distance for an angle.</summary>
+    /// <summary>
+    /// The mapping step: which column is across, which is up and down, the unit, which way is up, where the numbers are measured from, and
+    /// the distance for an angle. Every choice starts from GroupLab's guess (entry 278 section 2, the phone's CSV B), and one it could not
+    /// guess starts empty and says so.
+    /// </summary>
     private async Task ShowMapping(CsvTable table, string name)
     {
+        var guess = CsvGuess.For(table, name);
         var columns = table.Headers.Select((h, i) => string.IsNullOrWhiteSpace(h) ? $"column {i + 1}" : h).ToList();
-        var across = new ComboBox { ItemsSource = columns, SelectedIndex = ShotCsv.Guess(table, across: true) ?? 0, MinWidth = 220 };
-        var upDown = new ComboBox { ItemsSource = columns, SelectedIndex = ShotCsv.Guess(table, across: false) ?? Math.Min(1, columns.Count - 1), MinWidth = 220 };
-        var unit = new ComboBox { ItemsSource = ImportUnits.Select(u => u.Name).ToList(), SelectedIndex = 0, MinWidth = 220 };
-        var upPositive = new CheckBox { Content = Wrapped("A larger number is higher on the target"), IsChecked = true };
+        var across = new ComboBox { ItemsSource = columns, SelectedIndex = guess.Across.Value ?? -1, MinWidth = 220 };
+        var upDown = new ComboBox { ItemsSource = columns, SelectedIndex = guess.UpDown.Value ?? -1, MinWidth = 220 };
+        var unit = new ComboBox { ItemsSource = ImportUnits.Select(u => u.Name).ToList(), SelectedIndex = guess.Unit.Value is { } u ? Array.FindIndex(ImportUnits, x => x.Unit == u) : -1, MinWidth = 220 };
+        var upPositive = new CheckBox { Content = Wrapped("A larger number is higher on the target"), IsChecked = guess.UpIsPositive.Value ?? true };
+        var origin = new ComboBox { ItemsSource = new[] { "the point of aim", "the group's own center" }, SelectedIndex = guess.FromGroupCentre.Value is { } c ? (c ? 1 : 0) : -1, MinWidth = 220 };
         var distance = new TextBox { Text = session.State.ShotDistanceInches is { } d ? (d / 36).ToString("0.#", CultureInfo.InvariantCulture) : "", PlaceholderText = "yards", Width = 100 };
         var problem = new TextBlock { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
         var dialog = new Window
@@ -78,18 +84,26 @@ public sealed partial class MainWindow
 
         var body = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         body.Children.Add(new TextBlock { Text = $"{name}: {table.Rows.Count} rows. Which columns hold the shots?", TextWrapping = TextWrapping.Wrap });
+        body.Children.Add(Note("GroupLab's guesses, to check: " + string.Join(" ", guess.Lines)));
         body.Children.Add(Row(new TextBlock { Text = "Across", Width = 110, VerticalAlignment = VerticalAlignment.Center }, across));
         body.Children.Add(Row(new TextBlock { Text = "Up and down", Width = 110, VerticalAlignment = VerticalAlignment.Center }, upDown));
         body.Children.Add(Row(new TextBlock { Text = "Unit", Width = 110, VerticalAlignment = VerticalAlignment.Center }, unit));
         body.Children.Add(upPositive);
+        body.Children.Add(Row(new TextBlock { Text = "Measured from", Width = 110, VerticalAlignment = VerticalAlignment.Center }, origin));
         body.Children.Add(Row(new TextBlock { Text = "Shot at", Width = 110, VerticalAlignment = VerticalAlignment.Center }, distance, new TextBlock { Text = "yards, needed for MOA or mil", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
-        body.Children.Add(Note("Each row is one shot, measured from the point of aim. Rows without two numbers, such as a total line, are left out and counted."));
+        body.Children.Add(Note("Each row is one shot. Rows without two numbers, such as a total line, are left out and counted."));
         body.Children.Add(problem);
         body.Children.Add(Row(
             Button("Import", () =>
             {
                 double? yards = double.TryParse(distance.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double y) && y > 0 ? y : null;
-                if (ImportShots(table, across.SelectedIndex, upDown.SelectedIndex, ImportUnits[unit.SelectedIndex].Unit, upPositive.IsChecked == true, yards * 36) is { } refused)
+                if (unit.SelectedIndex < 0 || origin.SelectedIndex < 0)
+                {
+                    problem.Text = unit.SelectedIndex < 0 ? "Choose the unit the numbers are in." : "Choose where the numbers are measured from.";
+                    return;
+                }
+
+                if (ImportShots(table, across.SelectedIndex, upDown.SelectedIndex, ImportUnits[unit.SelectedIndex].Unit, upPositive.IsChecked == true, yards * 36, origin.SelectedIndex == 1) is { } refused)
                 {
                     problem.Text = refused;
                     return;
@@ -106,7 +120,7 @@ public sealed partial class MainWindow
     /// Makes a marking from a mapped table and shows its analysis, asking first where the current sheet has unsaved work. Returns why nothing
     /// was imported, or null.
     /// </summary>
-    internal string? ImportShots(CsvTable table, int across, int upDown, CoordinateUnit unit, bool upIsPositive, double? distanceInches)
+    internal string? ImportShots(CsvTable table, int across, int upDown, CoordinateUnit unit, bool upIsPositive, double? distanceInches, bool fromGroupCentre = false)
     {
         if (across < 0 || upDown < 0 || across == upDown)
         {
@@ -131,10 +145,10 @@ public sealed partial class MainWindow
 
         Leaving(() =>
         {
-            ClearSheet(ShotCsv.Marking(offsets, distanceInches));
+            ClearSheet(ShotCsv.Marking(offsets, distanceInches, fromGroupCentre));
             DiagnosticLog.Info("file.import", ("kind", "csv"), ("shots", offsets.Count), ("skipped", skipped));
             Analyse();
-            status.Text = string.Create(CultureInfo.InvariantCulture, $"Imported {offsets.Count} shots") + (skipped > 0 ? string.Create(CultureInfo.InvariantCulture, $", leaving out {skipped} rows without two numbers") : "") + ". There is no image, so the figures are the whole of it.";
+            status.Text = string.Create(CultureInfo.InvariantCulture, $"Imported {offsets.Count} shots") + (skipped > 0 ? string.Create(CultureInfo.InvariantCulture, $", leaving out {skipped} rows without two numbers") : "") + ". There is no image, so the figures are the whole of it" + (fromGroupCentre ? "; measured from the group's center, they say nothing about where it landed from the aim." : ".");
         });
         return null;
     }

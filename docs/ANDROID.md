@@ -23,9 +23,8 @@ for the phone.
 - **The package name is `org.grouplab.app`**, permanent once on Play. The spike uses `org.grouplab.app.spike`, so nothing built from
   it can be taken for the real application.
 - **The path to a public Play listing is Google's own rule** for a new personal developer account: a closed test with at least 12
-  testers for 14 days. Nothing else holds it (entry 267: the GPL section 7 app-store permission concerns Apple's App Store, and is not
-  pursued while iOS is not planned).
-- **iOS is not planned.** The iPad Mini is for testing the website only.
+  testers for 14 days. Nothing else holds it (entry 267: the GPL section 7 app-store permission concerns Apple's App Store, not Google's).
+- **iOS is being built** (entry 278 section 6, `docs/IOS-PLAN.md`), tested on the iPad Mini and built on GitHub's Mac machines.
 
 ## 2. The user interface: Avalonia on .NET Android
 
@@ -457,3 +456,20 @@ Alan: "both my phone and tablet have OLED screens and I don't like keeping them 
 Fold 7 (SM-F966U1): Android 16, SDK 36; back camera 0: flash available, strengthMaximumLevel 5, strengthDefaultLevel 1. Read 2026-09-28 11:22 UTC from dumpsys media.camera static metadata. The Tab S8 Ultra's reading follows at the next connection.
 Whether the level can be set during a camera session, and how long exposure takes to settle after each change, are measured with GroupLab
 Dev in a later build.
+
+## The shutter, from the press to the result (entry 283)
+
+Alan found a long wait between pressing the shutter and the phone answering. Every step is now in GroupLab Dev's log as `camera.shutter`
+with its milliseconds from the press: `press`, `requested`, `exposed` (the sensor started, the moment of the shutter sound on the phone's
+own camera), `saved`; then `phone.prepare` (the working copy), `phone.detect` (the sheet read), `analyzed`, and `shown` (the first result on
+the screen). The press answers at once with the shutter sound and a white flash, the live analysis stands aside until the picture is
+saved, and the picture is taken in CameraX's minimum latency mode rather than maximum quality. The target is a sound and a flash within
+about 0.3 s, and the result as soon as the detector allows.
+
+    python scripts/shutter-timing.py --serial <adb serial> --presses 20 --mode manual --capture latency
+    python scripts/shutter-timing.py --serial <adb serial> --presses 20 --mode manual --capture quality
+
+The script presses the shutter through GroupLab Dev's own path, waits for each result, and prints the median and slowest milliseconds of
+each step as a table for this section. **Not measured yet:** it needs the build that carries the timings, on the Fold 7 and the Tab S8
+Ultra, torch off and on, Guided and Manual, at the next sitting.
+

@@ -146,15 +146,21 @@ public static class ShotCsv
 
     /// <summary>
     /// A marking made from imported offsets: no image, a scale of <see cref="PixelsPerInch"/>, the point of aim at <see cref="Aim"/> and each
-    /// shot placed by hand at its offset, so every figure GroupLab computes works on it as on a marked sheet.
+    /// shot placed by hand at its offset, so every figure GroupLab computes works on it as on a marked sheet. Numbers measured from the
+    /// group's own center (entry 278 section 2) say nothing about where the aim was, so then no point of aim is set and the result shows the
+    /// group's size and shape without an offset from aim.
     /// </summary>
-    public static MarkingState Marking(IReadOnlyList<PointD> offsets, double? distanceInches)
+    public static MarkingState Marking(IReadOnlyList<PointD> offsets, double? distanceInches, bool fromGroupCentre = false)
     {
         ArgumentNullException.ThrowIfNull(offsets);
         var session = new MarkingSession();
         session.Load(MarkingState.Empty with { ShotDistanceInches = distanceInches });
         session.SetScale(new LengthReference(Aim, new PointD(Aim.X + PixelsPerInch, Aim.Y), 1));
-        session.SetPointOfAim(Aim);
+        if (!fromGroupCentre)
+        {
+            session.SetPointOfAim(Aim);
+        }
+
         foreach (var o in offsets)
         {
             session.AddShot(new PointD(Aim.X + (o.X * PixelsPerInch), Aim.Y + (o.Y * PixelsPerInch)));

@@ -24,6 +24,117 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 283: with entries 281 and 282: the shutter is slow to respond; measure it and make it fast
+
+**Status: done 2026-09-29, in part.** Built: every step from the press to the first result in the log, the sound and flash at the press, the live analysis standing aside, the minimum latency capture mode (the quality mode kept for GroupLab Dev's comparison), and `scripts/shutter-timing.py`, the repeatable device test. Not done: sections 1 and 3's numbers, twenty presses on each device, which need the build that carries the timings; they go in `docs/ANDROID.md`.
+
+Alan: there is a lot of lag between pressing the shutter in GroupLab Dev and the phone responding with the shutter sound and starting to read the picture. Treat it as part of the camera work of entry 281.
+
+1. **Measure first.** Instrument the path from the press to each step, with timestamps in the capture log: press received; capture request sent; sensor exposure (the shutter sound); image available; image decoded and rotated; saved; analysis started; first result on screen. Run it on the Fold 7 (and the Tab S8 Ultra at the next sitting), 20 presses each, torch off and on, Guided and Manual, and report the median and slowest for each step in a table in `docs/ANDROID.md` or a benchmark note.
+2. **Then make it fast.** Likely causes to check against the numbers: the capture mode (CameraX `CAPTURE_MODE_MINIMIZE_LATENCY` rather than maximum quality, or zero-shutter-lag where the phone supports it); a torch or autofocus and exposure pre-capture sequence run at every press when the live view has already settled them; decoding a full-resolution JPEG on the UI thread; saving before analysing instead of alongside; the live analysis still running and competing for the camera and the CPU at the moment of capture. The shutter sound and a visible "taken" flash must come at once, and the reading can follow with its progress shown.
+3. **A target to aim for, reported against:** the shutter responds (sound and flash) within about 0.3 s of the press, and the first result appears as soon as the detector allows, with the time for each step shown in the log. Keep the measurement as a repeatable device test so it can be rerun after changes.
+
+## 2026-09-29, entry 282: with entry 281: Alan's eight screenshots of the camera test, and what they show
+
+**Status: done 2026-09-29, in part.** 1: every phone text taking its words from a value wraps, held by `PhoneTextWrapsTests`. 2: with entry 281, the picture kept in shape and turned upright; the saved sessions carry orientation 6, which the display now honours. 3: the whole screen laid out and drawn again on a return. 4 and 5: the codes cut out where the markers put them and read enlarged, which names the refused picture and reads 2 of 2 on a good one; where they still fail the sheet it looks like is offered (question 69). 6: a picture with notes scores at most 95, and the notes are in a shooter's words. 7: the windage gives its amount. Not done: 8, the empty plot, is in the long screenshot only and not in the ordinary one of the same moment, so it looks like the long capture itself; it is checked on the device at the next sitting. 9 goes with entry 280. The device checks of 1 to 3 wait for the next nightly.
+
+Alan's screenshots are in `C:\Dev\grouplab-local\camera-0929\screenshots-alan\` (local only, never committed; the pictures in them show personal papers in the background, so they are never published or put in a public log). Planning read them. In addition to entry 281's list:
+
+1. **Text runs outside its box** (Alan pointed this out). The numbered notes under the score do not wrap; each line is cut off at the card's right edge ("GroupLab could not read the square codes that r…", "32 of 34 markers read; GroupLab measured fron…", "A shadow falls on bull 23, evened out: check its…", "Move closer next time: the bulls got 137 pixels a…"). The section heading "Full CEP table and the fitted" is cut off too. Every text in a card wraps to the card's width, on the phone at every width and font scale; add a layout test that fails on a clipped text.
+2. **The picture on the result is the wrong part of the photograph, and stretched.** Under "Drag a ring to the center of its hole" (181332-long, 181356) the picture shows the wall and the board above the sheet, stretched tall, not the sheet the preview showed. This is entry 281 items 6 and 7 together, and possibly the orientation: the preview in the score card shows the sheet turned a quarter, so check the photograph's rotation from capture to result.
+3. **Blank buttons** (181924): on one Retake screen both buttons are empty and the bottom bar's labels are gone, with the icons half drawn. Alan confirms this is what the screen looks like after minimising the app and reopening it: the same resume fault as entry 281 item 5 (the camera does not restart). On resume, the whole screen must redraw with its text, not only the camera rebind; the lifecycle test must check that the buttons and the bottom bar have their labels after a return.
+4. **A score of 0 when the sheet is plainly readable** (181205, 181924): "GroupLab could not read the square codes", yet the whole sheet is in view and sharp. By Alan's tolerance-first rule a picture whose markers are read must still be measured: when neither code reads, identify the sheet from its markers' layout or ask which sheet it is (the text already starts "or choose wh…"), and score it on what it can measure, not 0.
+5. **Only one of the two codes is ever read** ("1 of 2 codes read" on every good picture). Find why the second code fails (its size, its position near the edge, the torch's glare, the resolution it is read at) and fix it.
+6. **The score says 100 while it lists notes** (181322: "Good with notes", 100, "32 of 34 markers read"). A picture with notes is not a perfect score; make the score and the notes agree, and word it for a shooter: "137 pixels" means nothing to him ("move a little closer next time" does).
+7. **Zero, windage shows no number** (181332-long, All figures): "right" and "left" appear without the value, while elevation shows "0.2 MOA down". Fix it and test both.
+8. **The plot is empty in Alan's scrolling screenshot** (181332-long): only an arc and one ring in the top left, though the ordinary screenshot of the same moment shows the plot correctly. Check whether the plot redraws wrongly when the page scrolls or is captured long; fix it if so.
+9. **The hint still says "everywhere at once"**; entry 280 changes the tap to one number, so its words change with it.
+
+## 2026-09-29, entry 281: PRIORITY: the camera test went badly; pull the logs now, then these fixes before the rest of the inbox
+
+**Status: done 2026-09-29, in part.** Section 0: the logs are in `C:\Dev\grouplab-local\camera-0929`, the pictures stripped of every tag first; what they show, item by item, is `docs/MOBILE-CAPTURE.md` section 7. Section 1: all eight built. Item 3 is two buttons, Camera and Result, above the Capture page and a Result button on the camera, so no DESIGN NEEDED. Item 8: the stream was already 1920 by 1440; the live words and the picture disagreed because resolution was judged at the stream's scale, and the codes fail on the picture too, so a picture whose codes cannot be read now says which sheet it looks like, offered and not taken (question 69). Not done: the device checks, and the results in plain words at the top of `for-alan.md`, which wait for the nightly that carries the fixes; the lifecycle, torch and viewport have no test here because they are Android's own calls. Section 2 is recorded and is actioned with entry 279.
+
+Alan finished the camera test on the Fold 7 with GroupLab Dev nightly 121 at about 00:25 UTC. "It did not go very well." Finish the step you are in the middle of, then do this entry before 278 to 280.
+
+### 0. First, now: pull the logs
+
+Over adb (the Fold 7 is paired and its authorization no longer expires), from GroupLab Dev only (`run-as org.grouplab.app.dev`): the capture log, the per-frame guidance log, the picture scores, the saved pictures of the test and their results. Keep everything under `C:\Dev\grouplab-local\camera-0929\`, never committed. Strip location, time and device metadata from any picture before anything else reads it; the pictures are testing-only and never published or put in a public log. Write in the panel, in one line, that the logs are in. Then read them against the list below and say, for each item, what the logs show.
+
+### 1. What Alan found, and what to do
+
+1. **The level: a four-way crosshair with a dot that moves like a bubble level.** Replace the current level indicator with a crosshair (four arms) and a dot driven by the gravity sensor: the dot sits at the centre when the phone is parallel to the table and drifts toward the high side the way a bubble does. It turns the ready colour inside a small tolerance. This is Alan's own specification; build it as described.
+2. **The torch stays on after the picture.** It must go off as soon as the picture is taken, when the capture screen is left, and when the app goes to the background. Torch Auto, On and Off keep their meaning during capture only.
+3. **Capture and analysis must be two separate buttons.** Going back to the camera now means scrolling to the bottom of the result and pressing Take a new photo. Make Capture and Analysis (the result) two separate, always-visible buttons, so either is one press away without scrolling; the result never hides the way back to the camera. If this needs a layout choice beyond two buttons, post it as DESIGN NEEDED for planning to draw.
+4. **"Move closer" and "move back" are far too sensitive.** They seem to want millimetres. Give the distance guidance a dead zone and hysteresis: an acceptable band of sheet size in the frame rather than a target value; once inside, stay "good" until clearly outside the band; smooth over recent frames and change the words only after a new state has held for about half a second. Do the same for tilt and the other guidance lines. Choose the band from the logs and the synthetic tests, and write down the numbers.
+5. **After minimising and reopening the app, the camera does not start.** Rebind the camera on resume and release it on pause (the lifecycle), with a test that leaves and returns to the capture screen and the app.
+6. **The viewfinder is not the same scale as the saved picture.** The preview and the captured picture must show the same field of view: the same aspect ratio for preview, analysis and capture, and a shared viewport so the capture crops exactly what the preview showed. What the shooter framed is what is saved.
+7. **The picture is stretched on the analysis page.** Keep its aspect ratio everywhere (uniform scaling, never fill), and honour its orientation.
+8. **The live finding of tags is poor, but the taken picture scores much higher.** Alan asks whether the viewfinder image is lower resolution. It very likely is: CameraX's image analysis defaults to about 640 by 480, while the picture is full resolution. Give the live analysis a resolution high enough to find the tags from where people stand (choose from the logs; 1280 by 960 or more), analyse a frame as often as the phone can keep up rather than every frame, and use the same detector settings as the final picture, so the live checks and the final score agree. Report the live and final tag counts from the logs, before and after.
+
+Each fix gets a test where one is possible; the device checks wait for the next sitting, which Alan can do soon now that both devices are paired. Put the results at the top of for-alan.md in plain words when the fixes are in a build.
+
+### 2. Alan's answers to row 11 (they go with entry 279)
+
+- **Fudd buster mode: A**, one page with three sections, as on board FuddA of the phone parity canvas. The desktop shows the same page as a window.
+- **Knowing it is saved: A, with a setting for A or B.** Default A: saved by itself, with "Saved N seconds ago", where the file is, "Show in folder", and "safe to close". Settings offers B: a Save button, a "Not saved yet" marker, and a question on closing an unsaved target. Both on the desktop; the phone follows A, and B where it applies.
+- **Tabs: OK** as on board Tabs: New target opens a second tab below the controls and the first stays open; tabs appear only once a second target is open; each tab shows its saved mark and closes with its own ×.
+
+## 2026-09-28, entry 278: Alan's decisions of the evening: marking, CSV import, the card outline test, the store-bought target, eight features from the competitor study, and iOS
+
+**Status: done 2026-09-29, in part.** 1: not built, as it says; entry 279 section 2 then confirmed Marking A. 2: CSV B built on the phone (Sessions, Import shots from a CSV file) and the desktop's dialog starting from the same guesses (`CsvGuess`), with numbers measured from the group's center imported with no aim point. 3: the three pages are in `C:\Dev\grouplab-local\scale-test` (`grouplab scale-test-pages`) and request 53 asks for the prints, scans and card photos; the measurement waits for them. 4: request 54. 5: the engine and data work: each aim point's own figures (`GroupAnalysis.ByAimPoint`), each shot's offset and clicks (`ShotOffsets`), and a shot left out left out of every figure, the saved session and what is sent (`GroupReport.Counted`, which is entry 279's bug); 5h's engine was there already. The spread audit found the mean radius explained as the plain average when it is the Rayleigh estimate, 1.2533 sigma, and the 95 percent ellipse claiming 95 percent of later shots; both reworded, and `SpreadFiguresTests` holds a five-shot group worked by hand. 6: `docs/IOS-PLAN.md`, request 55, and iOS as being built everywhere. 7: the DESIGN NEEDED line. Not done: 6.2, the nightly's iOS job, which needs the iOS head of the plan's step 3 to build; the screens of 5a to 5h, which wait for their concepts (entry 280 has since chosen some); and the phone's CSV B checked on a device.
+
+Alan answered at about 23:45 UTC. Background for items 5 and 6 is in the planning project doc `competitor-study.md` (Ballistic-X and Hornady Group Analysis, from his own screenshots) and in the planning chat; the essentials are repeated here.
+
+### 1. Marking a target GroupLab did not print (phone): A, step by step, preliminary
+
+Alan chose A (scale, then bull, then holes) as a preliminary answer and asked planning to redraw it first with the fixed crosshair both competitors use: the picture moves under a crosshair fixed at the screen centre, a button places the point and counts ("Mark hole (5)"), with Undo; markers drawn at the bullet's real size and numbered. **Do not build the marking screen yet.** The redrawn concept goes to Alan, and his final answer comes as its own entry. Work that does not decide the look can start (see 5b).
+
+### 2. Importing shots from a CSV file (phone): B, GroupLab guesses and you check
+
+Build CSV B as drawn on the phone parity canvas (board CsvB): after a file is chosen, GroupLab reads the column names and numbers and guesses which column is across, which is up and down, the unit and whether the numbers are measured from the aim point or the group's centre; it shows the group as it will be read and a card of its guesses, each line tappable to change; "Import N shots" and "Show me the whole file". Where it cannot guess a line, that line says so and asks. The desktop's import dialog gains the same guesses as its starting values (parity). Tests with files whose names say the unit (`x_in`), files that do not, millimetres, centimetres, MOA and mil, and a file with the vertical sign flipped.
+
+### 3. Question 67, the card outline: print all three and let a real photograph decide
+
+Alan wants to test rather than choose. Make three printable check pages, Letter, identical except for the card outline, each marked in large type **TEST A**, **TEST B** or **TEST C** and "not for use":
+- **A**: the outline 3 mm outside the card, as built;
+- **B**: a hairline exactly on the card's edge, "edges on the line";
+- **C**: corner marks only, 3 mm outside the card.
+
+Put the three PDFs in `C:\Dev\grouplab-local\scale-test\` (local, never committed). Then write a request for Alan (the next number) with exact steps: print all three in one batch at 100 percent on the same printer; scan each printed page at 600 dpi on the Brother flatbed first (that scan is the truth for each page's real print scale); then on each page lay a new card and, separately, an old worn card, dark cards if he has them, and take the printer check's card photo in GroupLab Dev (or, if B and C cannot be read by the app, ordinary phone photos taken straight down in room light, which you then measure here); where to put the files and what to name them. When the files arrive, measure each card photo against its page's scan and report which outline reads most accurately and most consistently, new card and old, with the numbers, as a question answered in QUESTIONS-FOR-PLANNING. Keep A built until the result is in.
+
+### 4. Question 66: yes, Alan will photograph a plain store-bought target
+
+Keep the generated stand-in (entry 274) until then. Write a request for Alan with exactly what to shoot and photograph: a plain store-bought target that carries no one's design (a simple bullseye or square), five shots at any distance, photographed flat in good light, and, if convenient, scanned at 600 dpi too; where to put the files. When they arrive, mark it on the desktop's marking screen with the scale set by hand, as a new user would, and use that for "Your own targets" on the home page and the tour.
+
+### 5. Eight features from the competitor study: all eight, on the desktop and the phone
+
+Alan said yes to all of them. **Engine, data and file work can start now. Every new screen, overlay, card or report layout waits for planning's concepts and Alan's choice (the visual decisions rule).** Planning will draw them; do not invent layouts.
+
+- **a. Marking with a fixed crosshair and a counting button, with Undo, markers at the bullet's real size and numbered.** Part of item 1; also for correcting a hole the detector missed or added.
+- **b. Several aim points on one photograph**, for targets GroupLab did not print (a GroupLab sheet already knows its bulls): the data model, sessions, exports and figures per aim point, and pooling across them where the rules already allow it.
+- **c. A switch on each shot to leave it out** (a flyer). The shot stays in the record, is shown as left out on the picture and in lists, every figure updates, and sessions, CSV and reports record which shots were left out and that they were. Nothing is ever deleted by the switch.
+- **d. A results box on the picture** that can be moved and resized, with a label, saved as a full-size image (the phone's gallery in a GroupLab album; a file on the desktop) and shared. Mean radius first; units follow the tap-to-switch setting; one unit per kind throughout (never the competitors' mix of MOA, mil and bare numbers).
+- **e. A dated PDF report** of a result: the picture, the figures, and a plot scaled so the group fills it (Ballistic-X's plot is a dot in a black square; do not repeat that).
+- **f. A table of each shot's offset from the aim point**, across and up and down, with scope clicks beside them from the equipment's click value (and in the chosen unit when no scope is set).
+- **g. The mean radius drawn as a circle** about the group's centre on the picture, switchable.
+- **h. The group's offset handed to the ballistics and to Shots Needed to Zero**, so the zero correction comes straight from the result.
+
+While here: Ballistic-X reports a "vertical SD" of 0.051 in for a five-shot group 0.524 in high, which cannot be a sample standard deviation. Check that every spread figure GroupLab shows is exactly what its name and explanation say (sample or population, per axis or radial), and add a test with a hand-worked five-shot example. PHONE-PARITY, the Features page, the user guide and the README change with each feature (entry 267's rule).
+
+### 6. iOS: yes
+
+Alan will enrol in the Apple Developer Program as an **individual** ($99 a year) from the Apple Developer app on his iPad mini (6th generation, iPadOS 26 and 27 supported). He has no Mac and no iPhone; the plan needs neither to start.
+
+1. **Write `docs/IOS-PLAN.md` first**, with sizes: an Avalonia iOS head (bundle ID `org.grouplab.app`, iPhone and iPad, a minimum iOS version you justify); OpenCV built for iOS as a static framework with the same ArUco and AprilTag 36h11 detector the phone uses; a camera screen on AVFoundation with the same Capture B design, Guided and Manual, the picture score, and the torch (iOS allows a torch level while the camera runs); printing, sharing and files; the OLED idle and exit rules. List what carries over unchanged.
+2. **Builds without a Mac:** the nightly workflow gains an iOS job on GitHub's `macos-26` runner (free for this public repository) with Xcode 26, which signs and uploads to TestFlight. Alan installs from TestFlight on the iPad mini; iPhone testing later through TestFlight invitations. Signing material and the App Store Connect API key are secrets Alan sets himself with `gh secret set`; neither you nor planning ever sees them.
+3. **A request for Alan** (the next number) with the Apple steps after enrolment, in order, exact: the App Store Connect API key (Issuer ID, Key ID, the .p8 file) into secrets; the distribution certificate (made from a certificate request generated on Windows with openssl, so no Mac is needed) and its password into secrets; the app record in App Store Connect with the bundle ID. Each step says where to click and what "done" looks like.
+4. **Documents:** iOS moves from "not planned" to "being built" everywhere (README, PLATFORM-SUPPORT, ANDROID.md, the home page's "Not built yet", the diagram, PHONE-PARITY). Alan's decision replaces the settled "Apple mobile" paragraph of entry 147 and question 68: rewrite it to say an iOS version is being built, tested on the iPad mini, built on GitHub's Mac machines, with his tone; change the pinned sentence in `MacBuildsTests` with it.
+5. **Not yet:** no App Store submission and no change to LICENSE. Planning recommended a GPLv3 section 7 additional permission for App Store distribution before any outside contribution; Alan has not answered that. Check that no GPL code from other projects would enter the iOS build and note it in the plan.
+
+### 7. The DESIGN NEEDED line
+
+Change it to say the concepts are with planning and Alan: marking A redrawn with the fixed crosshair, and the screens for items 5a to 5h.
+
 ## 2026-09-28, entry 277: PRIORITY, before anything else: GroupLab Dev on the Fold 7 for the camera test, now
 
 **Status: done 2026-09-28.** GroupLab Dev nightly 121 (the build with the camera screen and the recalibrated picture score) is on the Fold 7, installed from the nightly's own signed APK over the old 119, and it opens to Capture. The phone first showed offline and then vanished from wireless debugging; the line at the top of `for-alan.md` asked Alan to turn it off and on, and it came back without pairing again. A build made locally could not replace the nightly's, being version 1 against 119, so the nightly's asset is the one to install.
