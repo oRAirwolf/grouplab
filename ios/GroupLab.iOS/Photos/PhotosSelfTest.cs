@@ -128,15 +128,20 @@ internal static class PhotosSelfTest
         {
             await SelfTest.OnUi(() => Shell.Current!.Show(Shell.Place.Capture));
             long before = PhoneAnalysis.Store().List().Select(s => s.Id).DefaultIfEmpty(0).Max();
+
+            // The result of the check before may still be on screen: only a picture check or a result made after the handing over counts.
+            var (oldCheck, oldResult) = await SelfTest.OnUi(() => (SelfTest.Find<FeedbackView>(), SelfTest.Find<ResultView>()));
+            bool NewCheck() => SelfTest.Find<FeedbackView>() is { } shown && !ReferenceEquals(shown, oldCheck);
+            bool NewResult() => SelfTest.Find<ResultView>() is { } shown && !ReferenceEquals(shown, oldResult);
             if (await hand() is { } why)
             {
                 check.Detail = why;
                 return check;
             }
 
-            bool checkShown = await SelfTest.WaitFor(() => SelfTest.Find<FeedbackView>() is not null || SelfTest.Find<ResultView>() is not null, TimeSpan.FromMinutes(5));
+            bool checkShown = await SelfTest.WaitFor(() => NewCheck() || NewResult(), TimeSpan.FromMinutes(5));
             check.Numbers["pictureCheckShown"] = checkShown ? 1 : 0;
-            if (checkShown && await SelfTest.OnUi(() => SelfTest.Find<FeedbackView>() is not null))
+            if (checkShown && await SelfTest.OnUi(NewCheck))
             {
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 await SelfTest.OnUi(() =>
@@ -147,7 +152,7 @@ internal static class PhotosSelfTest
                 });
             }
 
-            bool resultShown = await SelfTest.WaitFor(() => SelfTest.Find<ResultView>() is not null, TimeSpan.FromSeconds(60));
+            bool resultShown = await SelfTest.WaitFor(NewResult, TimeSpan.FromSeconds(60));
             check.Numbers["resultShown"] = resultShown ? 1 : 0;
             if (resultShown)
             {
@@ -155,7 +160,9 @@ internal static class PhotosSelfTest
                 await SelfTest.Photographed($"{n:00}-{check.Name.Replace(' ', '-').ToLowerInvariant()}");
             }
 
-            var saved = PhoneAnalysis.Store().List().Where(s => s.Id > before).OrderBy(s => s.Id).LastOrDefault();
+            GroupLab.Core.Records.SessionSummary? saved = null;
+            await SelfTest.WaitFor(() => (saved = PhoneAnalysis.Store().List().Where(s => s.Id > before).OrderBy(s => s.Id).LastOrDefault()) is not null,
+                TimeSpan.FromSeconds(20), onUi: false);
             check.Numbers["shots"] = saved?.ShotCount ?? 0;
             check.Passed = resultShown && saved is { ShotCount: SelfTestChecks.SampleShots };
             check.Detail = saved is null
