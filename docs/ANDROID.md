@@ -503,3 +503,37 @@ nightly 127. **Still to see:** whether nightly 127 installs on the tablet with n
 which was dozing, on its first self-update.
 
 **adb stays for tests and logs only.** Installing a nightly over adb is still how a sitting starts on a device that has no updater yet.
+
+## 18. Pictures from any photo app (entry 292)
+
+Alan: "It is important that it can access cloud stored photos and not just ones local to the phone." Before entry 292, **Choose a
+photograph** opened the documents picker, which reached Drive and Images and nothing else. Now there are three ways in, and none of them
+asks for a storage permission, because the picker or the app grants GroupLab the one picture chosen and nothing more:
+
+1. **Choose a photograph** opens the system photo picker, images only (`PickVisualMedia` from AndroidX Activity). On a phone where Google
+   Photos is the cloud media app it shows cloud-only photos too. It is built into Android 13 and later and added to Android 11 and 12 by
+   Google Play system updates; the manifest asks Google Play services to add it to Android 10.
+2. **From another app** opens a chooser of every app that answers `ACTION_GET_CONTENT` for `image/*`, by name: Google Photos, Samsung
+   Gallery, the maker's own gallery (Xiaomi and Redmi, OPPO and OnePlus, realme, vivo, Honor, Nubia and RedMagic, Motorola, Huawei), Drive,
+   OneDrive, Dropbox and Files. This is how a photo editor reaches them.
+3. **Receiving:** GroupLab and GroupLab Dev answer `ACTION_SEND` and `ACTION_SEND_MULTIPLE` for `image/*`, and `ACTION_VIEW` and
+   `ACTION_EDIT` for `image/*`, so they are in every app's share sheet, Open with and Edit with. GroupLab reads the picture and never writes
+   it back. Several shared at once are read one after another as a set, one per sheet, and the last one's result leads to the set.
+
+**A photograph kept only in the cloud** is fetched through its `content://` stream a piece at a time on a worker thread, with a line saying
+which app it comes from where Android says so ("Getting the photo from Google Photos, 2.1 of 6.4 MB") and a Cancel that returns at once,
+even from a download that has stalled. A fetch that fails says so, and says the phone is offline where Android's connectivity service
+says it is (its permission is already in the manifest, merged in from the AndroidX libraries), with what to do instead. **The whole
+photograph, always:**
+the size received is compared with the size the app states (the `width` and `height` columns, asked for by name, never a whole row) or,
+where it states none, the size the camera recorded in the picture (EXIF `PixelXDimension` and `PixelYDimension`); a smaller copy is said to
+be one before it is read, with the way to the whole one. The picture is stood upright from its own orientation, as a camera picture is, its
+location is never read, and the copy in the cache is deleted once the session has its working copy. `PhotoIntake` in the shared project
+holds these decisions and `PhotoIntakeTests` tests every path off the phone; `PhotoPickers` in this project opens the pickers.
+
+**Phones without Google Play services** (Huawei, and phones sold with Chinese-market software). Where the photo picker is missing, Choose a
+photograph goes straight to the apps chooser, never to an error. Nothing else GroupLab needs depends on Google Play services, checked
+against the packages the build restores on 2026-09-29: the camera is CameraX over Camera2, OpenCV is built into the application, SQLite is
+the bundled `e_sqlite3`, and the updater's WorkManager runs on Android's own JobScheduler. The one use of Google Play services is the photo
+picker's backport to Android 10, and a phone without it gets the apps instead. The updater also checks at every launch, not only in the
+background (`SelfUpdate.Launched`, from `App`), so a battery manager that stops background work delays an update and never loses one.

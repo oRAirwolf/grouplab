@@ -32,6 +32,10 @@ public class ImageMetadataTests
         Assert.Equal(2.2, m.FNumber!.Value, 3);
         Assert.True(m.IsCamera);
         Assert.Null(m.DpiX);
+
+        // Entry 292 section 1.4: the size the camera recorded, which a reduced copy that kept its EXIF still states.
+        Assert.Equal((4000, 3000), (m.RecordedWidth, m.RecordedHeight));
+        Assert.True(m.StatesRecordedSize);
     }
 
     /// <summary>

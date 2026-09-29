@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1294 |
-| measured | 1763 |
-| decided | 1272 |
+| code | 1300 |
+| measured | 1764 |
+| decided | 1275 |
 | unbacked | 0 |
-| **total** | **4329** |
+| **total** | **4339** |
 
-**966** of them were read one sentence at a time and their backing written against the sentence. The other **3363** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**976** of them were read one sentence at a time and their backing written against the sentence. The other **3363** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -609,6 +609,13 @@ one that matters.
 - *measured* (the Tab S8 Ultra, 2026-09-29, nightly 125 to 126: GroupLab Dev log update.downloaded bytes=44884287 seconds=2, update.install.start, INSTALL_SUCCEEDED; release v0.2.0-nightly.126 published 10:00:31 UTC; pm list packages -i installer=org.grouplab.app.dev; entry 288): One tap on Update installed nightly 126 in place at 10:56 UTC, 56 minutes after publishing (most of that the time until the app was next opened).
 - *measured* (the Tab S8 Ultra, 2026-09-29, nightly 125 to 126: GroupLab Dev log update.downloaded bytes=44884287 seconds=2, update.install.start, INSTALL_SUCCEEDED; release v0.2.0-nightly.126 published 10:00:31 UTC; pm list packages -i installer=org.grouplab.app.dev; entry 288): **Found on the way:** Android asking for the tap was treated as a failure, so the pending version was forgotten and the "Updated to nightly N" notice did not appear after the tapped install; fixed for nightly 127.
 - *measured* (the Tab S8 Ultra, 2026-09-29, nightly 125 to 126: GroupLab Dev log update.downloaded bytes=44884287 seconds=2, update.install.start, INSTALL_SUCCEEDED; release v0.2.0-nightly.126 published 10:00:31 UTC; pm list packages -i installer=org.grouplab.app.dev; entry 288): **Still to see:** whether nightly 127 installs on the tablet with no tap once GroupLab has left the screen, and the Fold 7, which was dozing, on its first self-update.
+- *decided* (NOTES-FROM-PLANNING.md entry 292, Alan's words and section 1): Pictures from any photo app (entry 292) Alan: "It is important that it can access cloud stored photos and not just ones local to the phone." Before entry 292, **Choose a photograph** opened the documents picker, which reached Drive and Images and nothing else.
+- *code* (android/GroupLab.Android/PhotoPickers.cs and Properties/AndroidManifest.xml: no storage permission in the merged manifest, checked 2026-09-29 (entry 292)): Now there are three ways in, and none of them asks for a storage permission, because the picker or the app grants GroupLab the one picture chosen and nothing more: 1.
+- *code* (AndroidX Activity PickVisualMedia.isPhotoPickerAvailable, used by android/GroupLab.Android/PhotoPickers.cs; the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml (entry 292 section 1.1)): It is built into Android 13 and later and added to Android 11 and 12 by Google Play system updates; the manifest asks Google Play services to add it to Android 10.
+- *code* (android/GroupLab.Android/MainActivity.cs Shared and PhotoPickers.Handles open the picture only for reading (entry 292 section 1.3)): GroupLab reads the picture and never writes it back.
+- *code* (mobile/GroupLab.Mobile/PhotoIntake.cs Fetch and Getting; tests/GroupLab.Mobile.Tests/PhotoIntakeTests.cs CancelReturnsAtOnceEvenFromAStalledDownload and TheProgressLineSaysWhichAppAndHowFar (entry 292 section 1.4)): **A photograph kept only in the cloud** is fetched through its `content://` stream a piece at a time on a worker thread, with a line saying which app it comes from where Android says so ("Getting the photo from Google Photos, 2.1 of 6.4 MB") and a Cancel that returns at once, even from a download that has stalled.
+- *measured* (android/GroupLab.Android/obj/project.assets.json, 2026-09-29: no Google Play services package among those restored; CameraX, e_sqlite3, WorkManager (entry 292 section 4.3)): Nothing else GroupLab needs depends on Google Play services, checked against the packages the build restores on 2026-09-29: the camera is CameraX over Camera2, OpenCV is built into the application, SQLite is the bundled `e_sqlite3`, and the updater's WorkManager runs on Android's own JobScheduler.
+- *code* (the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml and PhotoIntake.Opens (entry 292 section 4.3)): The one use of Google Play services is the photo picker's backport to Android 10, and a phone without it gets the apps instead.
 
 ### docs/BALLISTICS-VALIDATION.md
 
@@ -1828,6 +1835,8 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): **How it is built** (entry 258): what the desktop computes lives in shared code, so the phone and the desktop cannot give different numbers.
 - *code* (src/GroupLab.Core/Records/CompareSessions.cs and src/GroupLab.Core/Ballistics/HitFromGroup.cs, used by src/GroupLab.App/MainWindow.Compare.cs, MainWindow.Hit.cs and the phone's ComparePage.cs and BallisticsPage.cs (entry 258)): Making saved sessions into groups to compare moved from the desktop into `CompareSessions`, and the hit chance's precision from a marked group into `HitFromGroup` (entry 258).
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): What is left for the phone is its screens, in entry 259's order, each shipped in its own nightly and tried at the next device sitting.
+- *decided* (NOTES-FROM-PLANNING.md entry 292 section 4, Alan's words): ## Phones sold outside America (entry 292 section 4) Alan: "This may be especially important for europeans that have access to a lot of phones that are not available in america." Europe and South America buy far more of these than the US does.
+- *decided* (NOTES-FROM-PLANNING.md entry 292 section 4 item 1; android/GroupLab.Android/PhotoPickers.cs uses only the standard requests): GroupLab writes nothing for any one brand: their galleries answer the standard Android requests that Choose a photograph, From another app and sharing use (`docs/ANDROID.md` section 18), and their clouds hand a photograph over through the gallery's own stream, with the same progress, offline and whole-photograph rules.
 
 ### docs/PLATFORM-SUPPORT.md
 
@@ -3156,6 +3165,7 @@ one that matters.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 - *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): ![The settings](figures/screens/current/settings-light-1400x900.png) ## 13.
 - *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On the phone GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory.
+- *code* (mobile/GroupLab.Mobile/PhotoIntake.cs Reduced and Fetch, PhotoPages.UseReduced; tests/GroupLab.Mobile.Tests/PhotoIntakeTests.cs AReducedCopyIsSaidToBeOne (entry 292 section 1.4)): GroupLab always reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
 - *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): **The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.
 - *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On a large screen, such as the Tab S8 Ultra or the Fold 7 opened, the result shows the sheet beside the numbers.
 

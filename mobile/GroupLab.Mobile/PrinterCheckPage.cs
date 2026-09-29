@@ -182,32 +182,22 @@ internal sealed class PrinterCheckPage : UserControl
         Content = Screens.Page(column);
     }
 
+    /// <summary>Entry 292: the picture of the check page from the system photo picker, or any app that offers pictures where there is none.</summary>
     private async Task Choose(TextBlock said)
     {
-        if (TopLevel.GetTopLevel(this)?.StorageProvider is not { } storage)
+        var picked = await PhotoPages.Pick(this, PhotoSource.Photos, "check", words => said.Text = words);
+        if (picked.Count == 0)
         {
             return;
         }
 
-        var files = await storage.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions
+        if (picked[0].Reduced is { } words && !await PhotoPages.UseReduced(this, words))
         {
-            Title = "The picture of the check page",
-            AllowMultiple = false,
-            FileTypeFilter = [Avalonia.Platform.Storage.FilePickerFileTypes.ImageAll],
-        });
-        if (files.Count == 0)
-        {
+            PhotoPages.Forget(picked);
             return;
         }
 
-        string copy = Path.Combine(Phone.Platform.CacheFolder, "check" + Path.GetExtension(files[0].Name));
-        await using (var from = await files[0].OpenReadAsync())
-        await using (var to = File.Create(copy))
-        {
-            await from.CopyToAsync(to);
-        }
-
-        await Read(copy, said);
+        await Read(picked[0].Path, said);
     }
 
     /// <summary>A picture of the check page measured: by its resolution if it is a scan, by the card if it is a photograph.</summary>

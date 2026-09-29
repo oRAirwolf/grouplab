@@ -63,6 +63,19 @@ public interface IPhonePlatform
     /// </summary>
     string? SaveToGallery(string path, string mimeType) => "Saving to the gallery is not available on this device yet; use Share instead.";
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 292: opens the picker for <paramref name="source"/> and hands back the photographs chosen, unread, so
+    /// the screens fetch each with a progress line that can be canceled. Android opens the system photo picker, or the apps that offer
+    /// pictures by name; a head that has neither yet keeps this default, the system's file picker, so the screens build against every head.
+    /// </summary>
+    Task<IReadOnlyList<PhotoHandle>> PickPhotos(PhotoSource source, TopLevel? top) => PhotoIntake.FromFilePicker(top, several: false);
+
+    /// <summary>
+    /// Whether the phone has a connection to the internet now, so a photograph kept only in the cloud that could not be fetched is said to
+    /// be for that reason (entry 292 section 1.4); null where the head cannot tell, which keeps this default.
+    /// </summary>
+    bool? Online => null;
+
     /// <summary>Copies a picture on the clipboard into <paramref name="folder"/> and returns its path, or null where there is none.</summary>
     Task<string?> PastePicture(string folder);
 

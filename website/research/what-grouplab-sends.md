@@ -110,6 +110,14 @@ That is the part worth trusting more than any promise on this page. A rule a per
 
 GroupLab can open an image you paste with Ctrl+V. It reads the clipboard **only** at that moment, never on its own and never in the background, and the same one-door rule covers it: exactly one file in the program may touch a real clipboard, and the build fails the day a second one learns how.
 
+## Choosing a photograph on the phone
+
+GroupLab for Android asks for no permission to your storage or your photo library. **Choose a photograph** opens Android's own photo
+picker, and **From another app** opens the app you pick, such as Google Photos or Samsung Gallery; either one hands GroupLab only the
+picture you chose, for as long as it takes to read it. A picture shared into GroupLab from another app arrives the same way. GroupLab asks
+the app for the picture's size and nothing else about it, never reads where it was taken, and keeps only the working copy it measures,
+which carries no metadata at all.
+
 ## What this means
 
 **You can read this list and then check it.** The point of the test that fails the build is that the list stays four items long without anybody remembering to keep it that way. If you would rather verify than trust, the test is named in the sources and it is short.
