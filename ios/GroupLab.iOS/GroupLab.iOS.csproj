@@ -29,6 +29,13 @@
     <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
     <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     <_AggressiveAttributeTrimming>false</_AggressiveAttributeTrimming>
+    <!--
+      OpenCvSharp hands OpenCV a lambda for its error callback when it starts, and iOS compiles everything ahead of time, where a callback
+      from native code needs a wrapper made in advance for a method marked for it; this one is not, so OpenCvSharp's start failed with
+      "Attempting to JIT compile method (wrapper native-to-managed)". Its assembly, a thin layer of calls into OpenCV, runs in the
+      interpreter, which makes that wrapper when it is needed; everything else stays compiled ahead of time.
+    -->
+    <MtouchInterpreter>OpenCvSharp</MtouchInterpreter>
     <!-- An exception says what went wrong in words, in the log and an error report, rather than a resource key. -->
     <UseSystemResourceKeys>false</UseSystemResourceKeys>
   </PropertyGroup>
