@@ -52,6 +52,43 @@ workflow `ios app` builds it for the simulator and for a device, unsigned, and r
 the bottom is opened and photographed, the imaging is checked on a rendered sheet, and the committed sample scan is analyzed through the
 phone's own pipeline and compared with the desktop running the same checks in the same job.
 
+**The camera (entry 290 section 2 item 5):** built in `ios/GroupLab.iOS/Camera`, Capture B as on Android. An AVFoundation session on the
+back wide camera in the 4:3 mode whose stream is nearest 1920 by 1440 (`PhoneCamera.ChooseMode` in Core, the rule CameraX follows on
+Android), its preview shown whole, a photo output taking that mode's largest 4:3 picture as a JPEG (a HEIC is turned into a JPEG, since
+OpenCV on iOS reads none), and the stream's luminance judged frame by frame by the same Core rules as on Android. Guided and Manual, the
+torch (off, on or automatic, and always off once the picture is taken), tap to focus, the level from Core Motion's gravity turned with the
+screen, and the camera let go in the background and taken again in the foreground. The overlay is UIKit's own views in one native view,
+for the reason Android's is Android's. The iPad mini has one camera at the back, so there is no lens button. Core Motion's gravity needs
+no permission, so the only question iOS asks is the camera's. On the simulator, which has no camera, Take a picture opens the files
+picker instead, and the self-test proves that it does and that a picture which is not a JPEG comes out as one.
+
+## The first TestFlight sitting
+
+What only a device can prove, checked on the iPad mini with the first TestFlight build that carries the camera. Each line is a yes or a
+no, and a no comes back as a note with what was seen.
+
+1. **The question.** The first Take a picture asks for the camera in iOS's own words and GroupLab's sentence; after Allow, pressing again
+   opens the camera. After Don't Allow, GroupLab says so and does not crash.
+2. **The preview fills 4:3.** The whole picture is shown, nothing cut from its edges, with black bars rather than a stretch, upright and
+   in portrait, in both landscapes and upside down.
+3. **The panel.** Back, the instruction, the torch, the checks line and the quality bar are all visible over the preview and none is
+   under the status bar or the home indicator; the shutter and the two modes are under the camera and answer a tap.
+4. **Guided fires.** Over a printed GroupLab sheet the words settle (no flicker between Move closer and Move back), the ring fills, and
+   the picture is taken by itself after three ready frames.
+5. **Manual shutter.** In Manual the picture is taken only when the shutter is pressed; the mode is remembered after closing GroupLab.
+6. **The torch.** Torch: On lights it while framing, and it goes off the moment the picture is taken; Torch: Auto lights it in a dim
+   room; Torch: Off never does. After Back, and after a picture, it is off.
+7. **The level.** Flat over a sheet on a table the dot sits in the ring and turns green; raising an edge sends it toward that edge, in
+   portrait and in landscape.
+8. **Background and foreground.** With the camera open, go to the Home Screen and come back: the preview runs again, the torch is as
+   chosen, and the analysis carries on. The same with the iPad locked and unlocked, and with Split View or Slide Over opened over it.
+9. **End to end.** The picture taken is read: the picture check shows, then the result with the holes, and the session is saved with
+   the sheet named; a picture taken in landscape is read the right way up.
+10. **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the
+    result follows as soon as the reading allows. Measured from a screen recording started in Control Center, frame by frame from the
+    press to the flash and to the result; the log's `camera.shutter` lines hold the same steps, but the iPad cannot hand its log over yet.
+11. **Tap to focus.** A tap on the preview sharpens that part of the sheet and holds it until the next tap.
+
 ## 3. Building without a Mac
 
 The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26. It builds the head,

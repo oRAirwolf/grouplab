@@ -4100,6 +4100,18 @@
   "The workflow `ios app` builds it for the simulator and for a device, unsigned, and runs a self-test on an iOS 26 simulator: every place along the bottom is opened and photographed, the imaging is checked on a rendered sheet, and the committed sample scan is analyzed through the phone's own pipeline and compared with the desktop running the same checks in the same job.": {
    "kind": "code",
    "where": "ios/GroupLab.iOS (IosPhone, SelfTest, SelfTestChecks), ios/SelfTestReference and .github/workflows/ios-app.yml, entry 290 section 2 items 3 and 4"
+  },
+  "**The camera (entry 290 section 2 item 5):** built in `ios/GroupLab.iOS/Camera`, Capture B as on Android.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/Camera: CameraSession.Configure and Judge, StillFile.WriteJpeg, IosCamera.Screen, NoCamera, CaptureScreen; src/GroupLab.Core/Capture/PhoneCamera.cs ChooseMode and LevelFromGravity, tested by PhoneCameraTests; ios/GroupLab.iOS/Camera/CameraSelfTest.cs on the simulator; entry 290 section 2 item 5"
+  },
+  "**The preview fills 4:3.** The whole picture is shown, nothing cut from its edges, with black bars rather than a stretch, upright and in portrait, in both landscapes and upside down.": {
+   "kind": "code",
+   "where": "a check to be made on the iPad mini, entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CaptureScreen.cs (ResizeAspect) and CameraSession.Orient with PhoneCamera.RotationDegrees"
+  },
+  "**The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the result follows as soon as the reading allows.": {
+   "kind": "decided",
+   "where": "entry 283, the shutter's target of about 0.3 s (docs/ANDROID.md, The shutter), and entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CameraSession.cs Take logs camera.shutter"
   }
  },
  "rules": [

@@ -140,6 +140,10 @@ internal static class SelfTest
                 checks.Add(await Chosen(sample, n));
             }
 
+            // Entry 290 section 2 item 5: the camera's place, which on the simulator is the files picker, and the camera's JPEG.
+            checks.Add(await CameraSelfTest.Jpeg());
+            checks.Add(await CameraSelfTest.Fallback(n + 3));
+
             // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
             checks.Add(await OnScreen(() => Shell.Current!.ShowIdle(), () => Find<IdleScreen>() is not null, "90-idle", "idle screen", words: false));
         }
@@ -249,7 +253,7 @@ internal static class SelfTest
     /// Asks the workflow for a screenshot by naming it in Documents/selftest/showing, and waits until it answers in Documents/selftest/taken.
     /// Without a workflow it goes on after a while, so a self-test started by hand still finishes.
     /// </summary>
-    private static async Task<bool> Photographed(string picture)
+    internal static async Task<bool> Photographed(string picture)
     {
         string taken = Path.Combine(Folder, "taken");
         await File.WriteAllTextAsync(Path.Combine(Folder, "showing"), picture);
@@ -263,11 +267,11 @@ internal static class SelfTest
     private static T? Find<T>()
         where T : Control => Shell.Current?.GetVisualDescendants().OfType<T>().FirstOrDefault();
 
-    private static Task OnUi(Action action) => Dispatcher.UIThread.InvokeAsync(action).GetTask();
+    internal static Task OnUi(Action action) => Dispatcher.UIThread.InvokeAsync(action).GetTask();
 
-    private static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
+    internal static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
 
-    private static async Task<bool> WaitFor(Func<bool> condition, TimeSpan most, bool onUi = true)
+    internal static async Task<bool> WaitFor(Func<bool> condition, TimeSpan most, bool onUi = true)
     {
         var clock = System.Diagnostics.Stopwatch.StartNew();
         while (clock.Elapsed < most)

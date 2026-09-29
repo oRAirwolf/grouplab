@@ -13,7 +13,7 @@ namespace GroupLab.iOS;
 /// <summary>
 /// What the shared phone screens need from iOS, NOTES-FROM-PLANNING.md entry 290 section 2 item 3: the application's folders, the sheets
 /// in its bundle, a reduced decode through OpenCV, the memory budget, the camera's permission, and UIKit's share sheet, print sheet and
-/// pasteboard. The camera itself comes in a later build; until then its place offers the files picker.
+/// pasteboard.
 /// </summary>
 internal sealed class IosPhone : IPhonePlatform
 {
@@ -219,28 +219,14 @@ internal sealed class IosPhone : IPhonePlatform
     [DllImport("/usr/lib/libSystem.dylib", EntryPoint = "os_proc_available_memory")]
     private static extern nuint AvailableMemory();
 
-    /// <summary>Whether the camera may be used; the first time, iOS asks, and the person presses again once they have answered.</summary>
-    public bool CameraAllowed()
-    {
-        var status = AVCaptureDevice.GetAuthorizationStatus(AVAuthorizationMediaType.Video);
-        if (status == AVAuthorizationStatus.Authorized)
-        {
-            return true;
-        }
+    // The camera, entry 290 section 2 item 5: AVFoundation where there is a camera, the files picker where there is none (Camera/IosCamera.cs).
+    public bool CameraAllowed() => IosCamera.Allowed();
 
-        if (status == AVAuthorizationStatus.NotDetermined)
-        {
-            _ = AVCaptureDevice.RequestAccessForMediaTypeAsync(AVAuthorizationMediaType.Video);
-        }
+    public Avalonia.Controls.Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => IosCamera.Screen(taken, back, choose, result);
 
-        return false;
-    }
+    public bool IsCamera(object? content) => IosCamera.IsScreen(content);
 
-    public Avalonia.Controls.Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => new LaterCamera(back, choose);
-
-    public bool IsCamera(object? content) => content is LaterCamera;
-
-    public bool CameraOpen => false;
+    public bool CameraOpen => IosCamera.Open;
 
     public string? ShareFile(string path, string mimeType, string title)
     {
