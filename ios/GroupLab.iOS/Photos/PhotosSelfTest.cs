@@ -129,7 +129,7 @@ internal static class PhotosSelfTest
     /// Hands a picture over by <paramref name="hand"/> and follows it through the picture check to the result, as the chosen picture check
     /// does; passed where a session with the sample's shots was saved. <paramref name="hand"/> returns why it could not, or null.
     /// </summary>
-    private static async Task<SelfTestCheck> Analyzed(SelfTestCheck check, int n, Func<Task<string?>> hand)
+    internal static async Task<SelfTestCheck> Analyzed(SelfTestCheck check, int n, Func<Task<string?>> hand)
     {
         try
         {
@@ -148,9 +148,11 @@ internal static class PhotosSelfTest
 
             bool checkShown = await SelfTest.WaitFor(() => NewCheck() || NewResult(), TimeSpan.FromMinutes(5));
             check.Numbers["pictureCheckShown"] = checkShown ? 1 : 0;
+            string slug = check.Name.Replace(' ', '-').ToLowerInvariant();
             if (checkShown && await SelfTest.OnUi(NewCheck))
             {
                 await Task.Delay(TimeSpan.FromSeconds(2));
+                await SelfTest.Photographed($"{n:00}-{slug}-check");
                 await SelfTest.OnUi(() =>
                 {
                     var use = SelfTest.Find<FeedbackView>()?.GetVisualDescendants().OfType<Button>()
@@ -164,13 +166,18 @@ internal static class PhotosSelfTest
             if (resultShown)
             {
                 await Task.Delay(TimeSpan.FromSeconds(2));
-                await SelfTest.Photographed($"{n:00}-{check.Name.Replace(' ', '-').ToLowerInvariant()}");
+                await SelfTest.Photographed($"{n:00}-{slug}");
             }
 
             GroupLab.Core.Records.SessionSummary? saved = null;
             await SelfTest.WaitFor(() => (saved = PhoneAnalysis.Store().List().Where(s => s.Id > before).OrderBy(s => s.Id).LastOrDefault()) is not null,
                 TimeSpan.FromSeconds(20), onUi: false);
             check.Numbers["shots"] = saved?.ShotCount ?? 0;
+            if (saved?.MeanRadiusInches is { } radius)
+            {
+                check.Numbers["meanRadius"] = Math.Round(radius, 5);
+            }
+
             check.Passed = resultShown && saved is { ShotCount: SelfTestChecks.SampleShots };
             check.Detail = saved is null
                 ? $"no session was saved; the picture check {(checkShown ? "was" : "was not")} shown"

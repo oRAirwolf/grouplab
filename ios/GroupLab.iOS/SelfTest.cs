@@ -115,6 +115,10 @@ internal static class SelfTest
             // Entry 292 sections 2.1 and 2.2: Choose a photograph opens the Photos picker and From another app opens Files; each Cancel comes back.
             checks.Add(await PhotosSelfTest.Picker(PhotoSource.Photos, "81-photos-picker"));
             checks.Add(await PhotosSelfTest.Picker(PhotoSource.OtherApp, "82-files-picker"));
+
+            // Entry 290 section 2 item 6: a GroupLab PDF to iOS's share sheet and to its print sheet, each opened and closed.
+            checks.Add(await SheetsSelfTest.Sheet(print: false, "83-share-sheet"));
+            checks.Add(await SheetsSelfTest.Sheet(print: true, "84-print-sheet"));
             budget = Phone.Platform.MemoryBudgetMegabytes();
             checks.Add(new SelfTestCheck("opencv linked")
             {
@@ -146,6 +150,8 @@ internal static class SelfTest
                 checks.AddRange(await Task.Run(SelfTestChecks.Imaging));
                 string sample = Path.Combine(Folder, "sample.png");
                 checks.Add(await Task.Run(() => SelfTestChecks.Pipeline(sample)));
+                // Entry 290 section 2 item 6: a picture on the pasteboard, pressed in while Capture still shows its start.
+                checks.Add(await SheetsSelfTest.Paste(sample, 59));
                 checks.Add(await Chosen(sample, n));
 
                 // Entry 292 section 2.3: a picture opened in GroupLab from another app, and one shared into it, each read into analysis.
@@ -187,53 +193,16 @@ internal static class SelfTest
             return check;
         }
 
-        try
+        // Handed over as the files picker hands a picture over (PhotoIntake.FromFilePicker): unread, with its size and kind. Followed to
+        // the result as every picture handed over is (PhotosSelfTest.Analyzed), so a result left on screen by the check before is not taken
+        // for this one's.
+        var handle = new PhotoHandle(null, null, null, new FileInfo(sample).Length, Path.GetExtension(sample).ToLowerInvariant(),
+            () => Task.FromResult<Stream?>(File.OpenRead(sample)));
+        return await PhotosSelfTest.Analyzed(check, n, async () =>
         {
-            long before = PhoneAnalysis.Store().List().Select(s => s.Id).DefaultIfEmpty(0).Max();
-            // Handed over as the files picker hands a picture over (PhotoIntake.FromFilePicker): unread, with its size and kind.
-            var handle = new PhotoHandle(null, null, null, new FileInfo(sample).Length, Path.GetExtension(sample).ToLowerInvariant(),
-                () => Task.FromResult<Stream?>(File.OpenRead(sample)));
             await OnUi(() => CapturePage.SharedPicture?.Invoke([handle]));
-            bool checkShown = await WaitFor(() => Find<FeedbackView>() is not null || Find<ResultView>() is not null, TimeSpan.FromMinutes(5));
-            check.Numbers["pictureCheckShown"] = checkShown ? 1 : 0;
-            if (checkShown && await OnUi(() => Find<FeedbackView>() is not null))
-            {
-                await Task.Delay(TimeSpan.FromSeconds(2));
-                await Photographed($"{n++:00}-picture-check");
-                await OnUi(() =>
-                {
-                    var use = Find<FeedbackView>()?.GetVisualDescendants().OfType<Button>()
-                        .FirstOrDefault(b => b.Content is TextBlock { Text: "Use this picture" or "Use it anyway" });
-                    use?.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                });
-            }
-
-            bool resultShown = await WaitFor(() => Find<ResultView>() is not null, TimeSpan.FromSeconds(60));
-            check.Numbers["resultShown"] = resultShown ? 1 : 0;
-            if (resultShown)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(3));
-                await Photographed($"{n++:00}-result");
-            }
-
-            var saved = PhoneAnalysis.Store().List().Where(s => s.Id > before).OrderBy(s => s.Id).LastOrDefault();
-            check.Numbers["shots"] = saved?.ShotCount ?? 0;
-            if (saved?.MeanRadiusInches is { } radius)
-            {
-                check.Numbers["meanRadius"] = Math.Round(radius, 5);
-            }
-
-            check.Passed = resultShown && saved is { ShotCount: SelfTestChecks.SampleShots };
-            check.Detail = saved is null
-                ? "no session was saved"
-                : $"the chosen picture was analyzed and saved as {saved.SheetName}, {saved.ShotCount} shots, mean radius {saved.MeanRadiusInches:0.000} in; result shown: {resultShown}";
-        }
-        catch (Exception e) when (e is not OutOfMemoryException)
-        {
-            check.Detail = SelfTestChecks.Describe(e);
-        }
-
-        return check;
+            return null;
+        });
     }
 
     /// <summary>Shows something, checks it is there, and waits while the workflow photographs it.</summary>
