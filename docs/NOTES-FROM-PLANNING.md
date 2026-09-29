@@ -24,6 +24,46 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 295: Alan on nightly 126 on the Fold 7: Compare loads draws badly, All figures squeezes its labels, and the result picture is still sideways
+
+**Status: done 2026-09-29 but for section 4 and part of 1.3.** 1: the interval chart (desktop and phone) puts each name on its own
+line with the range and value beneath, is as tall as its rows, and its sentence comes from Core (`LoadComparison.ChartSays`), so it cannot
+disagree with the verdict (held over 288 comparisons); extreme spread says it has no range and points to mean radius; the sigma sentence
+is in plain words. 1.3, each load's group drawn: DESIGN NEEDED, since entry 259's Compare design draws no groups. 2: All figures moves a
+value and its note under the label when they do not fit beside it (tested at 320 wide, text size 28). 3: `SessionNames` (load, then date,
+then time as needed, sheet beneath) on both platforms. 4: the result picture is entry 291 section 2's, which is being built. 5: guide,
+PDFs, PHONE-PARITY, tour and the eight Compare screenshots.
+
+On the Android line, first in it after the section of entry 291 already under way (alongside entry 290's iOS work). Five screenshots, local only, metadata stripped: `C:\Dev\grouplab-local\camera-0929\screenshots-alan-3\compare-1.jpg` to `compare-5.jpg`.
+
+Alan: "the compare loads is not rendering correctly. I thought there was supposed to be two groups shown and the graphs are also covering the text. When looking at a single session, [some of] the text is strange, the image is still horizontal, and there is still a lot of blank space."
+
+### 1. Compare loads (compare-1 to compare-3)
+
+1. **The chart's labels and bars overlap.** Each load's name is drawn in the same row as its interval bar and value, so the bar, the dot and "0.72 MOA" sit on top of "GroupLab 5x5 Load Development with Load Block, Letter". Put each load's name on its own line above its bar (or as a short label, section 3), with the bar and value on the line below, across the full width. Nothing may overlap at any font size or phone width; a test that no two text boxes intersect.
+2. **The chart box has a large empty area** under the two rows. Size it to its rows.
+3. **"Two groups shown":** the approved phone design for Compare (phone parity canvas, row of entry 259) shows each load's group itself, not only the interval chart. Check the board: if the design has the two groups drawn (side by side or overlaid in two colors), build that above the chart. If it does not, post a DESIGN NEEDED line and planning draws it.
+4. **Extreme spread contradicts itself.** On compare-3, extreme spread draws dots with no range, says "Some of these do not overlap, so there is a difference these shots can see", and the card below says "These two loads are not distinguishable on this evidence." Extreme spread has no interval here, so it must not claim a difference: say that extreme spread has no range to compare, and point to mean radius. The chart's sentence and the verdict card must never disagree on any figure (a test).
+5. **"The sigma intervals overlap"** in the verdict card is jargon on a phone: plain words, with sigma kept behind the dotted underline as elsewhere.
+
+### 2. A session's All figures (compare-4)
+
+The label column is squeezed to one or two letters wide when the value is long: "Zero, elevation" is drawn one letter per line down the screen. When a value will not fit beside its label, put the value (and its note, "too small to dial yet; about 44 shots would settle it") on the line under the label, full width. Labels never wrap mid-word. A test at the narrowest phone width.
+
+Also: those zero lines read "0.1 MOA high". Entry 294 makes aiming figures follow the scope's unit; this screen is one of them.
+
+### 3. Names in Compare and Sessions
+
+Both loads are named "GroupLab 5x5 Load Development with Load Block, Letter", the sheet's name, so they cannot be told apart (one has ", 2026-09-29" added). Name a session by what distinguishes it: the load or the label the person gave it, then the date and time, with the sheet's name secondary. Where two sessions would still read the same, add the time.
+
+### 4. The result picture (compare-5)
+
+Still sideways, still an empty area below, and the Move, Add and Remove buttons still on the result page: expected, since entry 291 section 2 (upright picture, no empty area, holes edited on their own Marking A page) is not built yet. This screenshot is its evidence too; it stays next in entry 291 once its current section is done.
+
+### 5. Done when
+
+Built, tested, in the next nightly, and on the Fold 7 (by the new updater of entry 288 where it works). Say in `for-alan.md` what to look at.
+
 ## 2026-09-29, entry 293: request 38, the Microsoft Store: Part A is done
 
 **Status: done 2026-09-29.** 1: the draft `store-draft-0.2.0` (`grouplab-win-x64.msix`, 92,035,133 bytes, version 0.2.0.0, SHA-256

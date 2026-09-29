@@ -49,7 +49,19 @@ Hit chance, the largest; (6) the set as a checklist, medium; (7) the scan pill, 
 through the share sheet, large sheet advice, and opening a picture shared from another app. `docs/PHONE-PARITY.md` lists every feature
 as on the phone, coming or left out, and the site build now fails on a feature with no row.
 
-**DESIGN NEEDED** (entry 279 section 4; not a request for you; planning, please): **the 2 MOA sheets Unholy asked for.** The sheets with
+**DESIGN NEEDED** (entry 295 section 1.3; not a request for you; planning, please): **each load's group drawn in Compare on the phone.**
+The approved Compare design (entry 259 screen 4, "one figure at a time") has only the dot-and-range chart, no picture of each load's group,
+and "each load in its own color" is not built either. Planning, please draw the two groups for the phone (side by side, or overlaid in
+two colors); everything else in entry 295 section 1 is built.
+
+**COMPARE AND ALL FIGURES, FIXED (entry 295, not a request; in the next nightly):** on the Fold 7, look at: the Sessions list, where each
+row is named by its load, or by date and time where there is no load, with the sheet's name beneath (your two 5x5 sessions should read
+by their times); Compare loads, Mean radius and CEP 90, where each name has its own line and the range and value sit beneath with nothing
+overlapping and no empty area; Extreme spread, which now says it has no range to compare and points to mean radius; the card below in
+plain words, with the dotted word explaining sigma; and a result's All figures, where "Zero, elevation" reads on one line with its value
+and note underneath. The sideways picture and the hole buttons on the result are still being fixed (entry 291).
+
+**DESIGN NEEDED (answered by entry 289)** (entry 279 section 4; not a request for you; planning, please): **the 2 MOA sheets Unholy asked for.** The sheets with
 1 MOA circles are the 5x5 load development family, a 1.00 in bull (0.95 MOA at 100 yd, 0.87 MOA at 100 m, Letter and A4, plain, C and E),
 and the 5x6, a 0.87 in bull. A 2 MOA bull is 2.09 in at 100 yd and 2.29 in at 100 m, and cannot sit on the 5x5's 38 mm pitch. Options:
 **A**, 3 by 4 on one Letter or A4 page, 12 bulls at about 64 mm; **B**, 5 by 5 as a set of four sheets like the large format sheets, 25

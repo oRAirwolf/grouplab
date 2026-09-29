@@ -54,6 +54,16 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 - **5.2:** a printer check now carries its date on every result it corrects; Settings can mark a printer calibrated or serviced, and a
   marked or six-month-old check says so and offers a new one (`PrinterProfile.Stale`, `PrinterChangedTests`).
 
+## Entry 295: Compare loads, All figures and session names
+
+- **The chart** (desktop and phone): each name on its own line, the range and value beneath, as tall as its rows; `IntervalChartTests`
+  holds that nothing overlaps from 180 to 700 wide at text sizes 11.5 and 28. Its sentence comes from `LoadComparison.ChartSays`, the same
+  test as the verdict, so they never disagree (288 generated comparisons). Extreme spread says it has no range and points to mean radius.
+- **All figures:** a value and its note go under the label when they do not fit beside it; no label breaks mid-word at 320 wide.
+- **Names:** `SessionNames`, the load, then the date and time where needed, the sheet beneath, on both platforms' Compare, the phone's
+  Sessions and the desktop's Session records.
+- **Waiting:** each load's group drawn in Compare (DESIGN NEEDED); the result picture (entry 291 section 2).
+
 ## Entry 293: the Microsoft Store draft, and a login that submits nothing
 
 - `release.yml` run by hand with `store_draft` builds `grouplab-win-x64.msix` with the identity from the four variables, checks the
