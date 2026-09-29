@@ -20,7 +20,6 @@ public sealed class ShareViewController : UIViewController
     {
         Lines = 0,
         TextAlignment = UITextAlignment.Center,
-        Font = UIFont.PreferredBody,
         TranslatesAutoresizingMaskIntoConstraints = false,
     };
 

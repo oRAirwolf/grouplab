@@ -4368,6 +4368,26 @@
   "From 129 a tap Android wants in the background is remembered and asked for on screen at the next start.": {
    "kind": "measured",
    "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 128: update.install.start silent=True then status=-1; the notice Install now, Android asked once; dumpsys package on 128: UPDATE_PACKAGES_WITHOUT_USER_ACTION granted=true, installerPackageName=org.grouplab.app.dev; entry 288"
+  },
+  "**Pictures from anywhere (entry 292 section 2):** built in `ios/GroupLab.iOS/Photos` and `ios/GroupLab.Share`.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/Photos: PhotoPickers.Pick (PHPickerViewController with the current representation, UIDocumentPickerViewController for public.image), PhotoPickers.Load (the item provider's file and progress, canceled by Cancel), PhotoFiles.Readable, IncomingPhotos, Connection; ios/GroupLab.Share/ShareViewController.cs and ios/Shared/Handoff.cs; PhotosSelfTest on the simulator in .github/workflows/ios-app.yml; entry 292 section 2"
+  },
+  "**Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis.": {
+   "kind": "code",
+   "where": "a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs"
+  },
+  "**A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it.": {
+   "kind": "code",
+   "where": "a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/ShareViewController.cs OpenGroupLab and ios/GroupLab.iOS/Photos/IncomingPhotos.cs Listen and Waiting"
+  },
+  "If iOS will not let the share sheet open GroupLab, the sheet says the picture is waiting, and opening GroupLab reads it.": {
+   "kind": "code",
+   "where": "ios/GroupLab.Share/ShareViewController.cs Receive (the sentence when GroupLab cannot be opened) and ios/GroupLab.iOS/Photos/IncomingPhotos.cs Listen and Activated, which read a waiting share at the next start or return to the front; entry 292 section 2.3"
+  },
+  "**The Photos picker (entry 292).** Choose a photograph opens Photos with no question about access; a photograph on the iPad is read at its full size, and a HEIC one reads the right way up.": {
+   "kind": "code",
+   "where": "a check to be made on the iPad mini, entry 292 section 2.1; ios/GroupLab.iOS/Photos/PhotoPickers.cs (PhotosPicker, the current representation) and PhotoFiles.Readable, which keeps the orientation"
   }
  },
  "rules": [
