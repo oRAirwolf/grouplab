@@ -12,6 +12,25 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.128
+
+**2026-09-29**, commit `6cf5d40`. Nightly.
+
+**What you will notice**
+
+- On Android you can now choose a target photo from any photo app, including Google Photos, Samsung Gallery, your phone maker's own gallery and cloud-only photos, or share one or several into GroupLab, with the download shown and a smaller copy called out.
+- On the phone, Sessions can compare loads with each load's name on its own line above its range, every session named by its load, date and time, and long values in All figures moved under their names.
+- GroupLab Dev can now install its own updates without asking you to tap, once it has updated itself the first time.
+- A hole in a photograph taken off square that GroupLab read together with the printed rings beside it is now marked on the hole itself and listed for you to check, instead of being missed, counted twice or marked beside it.
+
+**Under the hood**
+
+- Every build now measures how well hole finding holds up under shadows, glare, curled paper, blur and poor light, and fails if it gets worse.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.128)
+
+---
+
 ## 0.2.0-nightly.127
 
 **2026-09-29**, commit `f7298aa`. Nightly.
