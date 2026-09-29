@@ -186,12 +186,6 @@ jobs:
               echo "$(( $(date +%s) - start )) s: photographed $showing"
               last="$showing"
             fi
-            # Entry 292 section 2.3: the address the share extension opens GroupLab with, opened through iOS as the extension opens it.
-            if [ -f "$folder/openurl" ]; then
-              url=$(cat "$folder/openurl")
-              xcrun simctl openurl "$UDID" "$url" && echo "$(( $(date +%s) - start )) s: opened $url"
-              rm -f "$folder/openurl"
-            fi
             [ "$status" = "done" ] && break
             if ! kill -0 "$launcher" 2>/dev/null; then
               echo "::error::The application ended during the self-test (status: $status)"

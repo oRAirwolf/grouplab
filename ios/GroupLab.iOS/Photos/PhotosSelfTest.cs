@@ -13,13 +13,11 @@ namespace GroupLab.iOS;
 /// picker and From another app opens Files, each without a crash, and each Cancel comes back with nothing; a picture opened in GroupLab from
 /// another app ("Open in GroupLab") is read straight into analysis through the address iOS hands the application; and a picture shared from
 /// another app, left in the app group exactly as the share extension leaves one, is read into analysis when iOS opens
-/// <c>grouplab://shared</c>, which the workflow asks the simulator to do. Choosing a photograph in the pickers, a photograph kept only in
+/// <c>grouplab://shared</c>, opened through iOS as the extension opens it. Choosing a photograph in the pickers, a photograph kept only in
 /// iCloud, and the share sheet itself need a person and a device (docs/IOS-PLAN.md, "The first TestFlight sitting").
 /// </summary>
 internal static class PhotosSelfTest
 {
-    private static string Folder => Path.Combine(IosPhone.Documents, "selftest");
-
     /// <summary>A picker opened from the Capture screen's buttons' own call, photographed, and canceled as its Cancel does.</summary>
     internal static async Task<SelfTestCheck> Picker(PhotoSource source, string picture)
     {
@@ -83,7 +81,7 @@ internal static class PhotosSelfTest
 
     /// <summary>
     /// A picture shared from another app: the sample left in the app group exactly as the share extension leaves one, then
-    /// <c>grouplab://shared</c> opened by the simulator itself, through iOS, as the extension opens it.
+    /// <c>grouplab://shared</c> opened through iOS with the call the extension makes.
     /// </summary>
     internal static async Task<SelfTestCheck> Shared(string sample, int n)
     {
@@ -109,12 +107,21 @@ internal static class PhotosSelfTest
         Handoff.Finish(batch);
         return await Analyzed(check, n, async () =>
         {
-            string asked = Path.Combine(Folder, "openurl");
-            await File.WriteAllTextAsync(asked, Handoff.Address);
+            // Opened through iOS by the call the extension makes, UIApplication's openURL. The simulator's own "simctl openurl" puts up
+            // iOS's "Open in GroupLab?" question, which nothing here can answer; an application opening its own address is not asked.
+            var opened = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            await SelfTest.OnUi(() =>
+            {
+                using var address = new NSUrl(Handoff.Address);
+                bool can = UIApplication.SharedApplication.CanOpenUrl(address);
+                check.Numbers["canOpen"] = can ? 1 : 0;
+                UIApplication.SharedApplication.OpenUrl(address, new UIApplicationOpenUrlOptions(), success => opened.TrySetResult(success));
+            });
             Console.WriteLine("GroupLab SELFTEST OPENURL " + Handoff.Address);
-            bool opened = await SelfTest.WaitFor(() => !File.Exists(asked), TimeSpan.FromSeconds(60), onUi: false);
-            check.Numbers["openedBySimulator"] = opened ? 1 : 0;
-            return opened ? null : "the workflow did not open the address";
+            bool answered = await Task.WhenAny(opened.Task, Task.Delay(TimeSpan.FromSeconds(20))) == opened.Task;
+            bool done = answered && await opened.Task;
+            check.Numbers["openedByIos"] = done ? 1 : 0;
+            return done ? null : "iOS did not open grouplab://shared";
         });
     }
 
