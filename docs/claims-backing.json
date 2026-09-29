@@ -4112,6 +4112,74 @@
   "**Still to see:** whether nightly 127 installs on the tablet with no tap once GroupLab has left the screen, and the Fold 7, which was dozing, on its first self-update.": {
    "kind": "measured",
    "where": "the Tab S8 Ultra, 2026-09-29, nightly 125 to 126: GroupLab Dev log update.downloaded bytes=44884287 seconds=2, update.install.start, INSTALL_SUCCEEDED; release v0.2.0-nightly.126 published 10:00:31 UTC; pm list packages -i installer=org.grouplab.app.dev; entry 288"
+  },
+  "NOTES-FROM-PLANNING.md entry 261, a study.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 261 and 291"
+  },
+  "Option (a), the scoreboard, has since been built (entry 291, section 9); nothing else here is.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 261 and 291"
+  },
+  "Entry 291 rebuilt it as the scoreboard of section 9.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 261 and 291"
+  },
+  "The scoreboard, built (entry 291 section 7) Option (a) now exists.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Evaluation/Scoreboard.cs Scoreboard and src/GroupLab.Cli/ScoreboardVerb.cs (entry 291)"
+  },
+  "The synthetic picture is the one of section 1: GL-CF25-LTR at 300 dpi with one synthetic hole on each of its 25 bulls, two seeds, each condition alone, read as a photograph by the whole pipeline.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Evaluation/Scoreboard.cs Scoreboard and src/GroupLab.Cli/ScoreboardVerb.cs (entry 291)"
+  },
+  "A hole is found when a mark lies within 0.1 in of it, each mark counting for one hole at most; a mark that matches no hole is a false mark.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Evaluation/Scoreboard.cs Scoreboard and src/GroupLab.Cli/ScoreboardVerb.cs (entry 291)"
+  },
+  "The differences, and why: - **Curl: 0 of 50 then, 49 of 50 now.** Entry 260 registered a bent sheet through every marker the day after the study.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)"
+  },
+  "The curl is the one entry 260's own test uses, which reproduced the study's failure.": {
+   "kind": "code",
+   "where": "Scoreboard.Conditions curl 15 px and tests/GroupLab.Core.Tests/Registration/MarkerMeshTests.cs Curled (entries 260 and 291)"
+  },
+  "What remains is geometry: the bulls between the markers are placed up to about 0.03 in off (median 0.014 in), where a flat sheet's are placed to 0.0003 in.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)"
+  },
+  "- **A hand's shadow: 22 of 25 on both seeds, where the study lost at most one.** This ellipse's soft edge crosses bulls; the study's was placed elsewhere.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)"
+  },
+  "It is the local paper level of entry 260 again: a hole just inside a shadow's edge is judged against the paper outside it.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)"
+  },
+  "- **Glare** reproduces the study's 22 and 23 once the hot spot is clipped to white, as a camera clips it; the holes under it are lost.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)"
+  },
+  "- **Soft shadow and uneven light** lose one hole fewer than the study did, **blur 1.5 px** makes one false mark on one seed, and the seeds differ; these are within the margin and are the conditions' exact definitions, not a change in the detector.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)"
+  },
+  "**The first real table** (2026-09-29, seven photographs of three sheets, each against its own 600 dpi scan).": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the local corpus of the 2026-09-29 sitting and the 2026-09-26 photographs against their scans, measured 2026-09-29 (entry 291); local only"
+  },
+  "The four pictures of the second camera sitting are all of one 6 ARC load sheet, taken with the torch at 1, 2, 9 and 15 degrees off square; the three of 2026-09-26 are the kitchen-counter photographs of entry 233.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the local corpus of the 2026-09-29 sitting and the 2026-09-26 photographs against their scans, measured 2026-09-29 (entry 291); local only"
+  },
+  "**What it says:** square-on pictures are clean; the two taken well off square lose holes and make false marks, all in the right-hand column of bulls, where the stray marks are 0.3 to 0.5 in across, a hole and the paper beside it read as one, placed up to 0.18 in from the hole.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the local corpus of the 2026-09-29 sitting and the 2026-09-26 photographs against their scans, measured 2026-09-29 (entry 291); local only"
+  },
+  "The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth files before they can be scored the same way.": {
+   "kind": "decided",
+   "where": "entry 291 section 7; tests/GroupLab.Core.Tests/Analysis/range-scan-counts.json holds counts per sheet, not holes"
   }
  },
  "rules": [

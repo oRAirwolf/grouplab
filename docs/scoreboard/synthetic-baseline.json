@@ -1,0 +1,301 @@
+{
+  "why": [
+    "NOTES-FROM-PLANNING.md entry 291 section 7: the detection scoreboard's synthetic baseline, docs/DETECTION-LEARNING-STUDY.md section 9.",
+    "GL-CF25-LTR at 300 dpi, one synthetic hole on each of its 25 bulls, two seeds, each condition alone, read as a photograph by the whole pipeline.",
+    "ScoreboardTests re-reads every condition in every build and fails on a drop beyond the margin. Written by grouplab scoreboard --synthetic --out;",
+    "when a change makes a line better, move the baseline in the same commit and say why. A line marked expectedToFail is a known failure kept in view."
+  ],
+  "measured": "2026-09-29",
+  "seeds": [
+    291,
+    292
+  ],
+  "margin": {
+    "holes": 1,
+    "falseMarks": 1,
+    "centreInches": 0.005,
+    "worstCentreInches": 0.03,
+    "registrationInches": 0.005
+  },
+  "rows": [
+    {
+      "condition": "clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0059,
+      "worstCentreInches": 0.0732,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1887,
+      "foundPerPicture": [
+        24,
+        25
+      ],
+      "recall": 0.98,
+      "expectedToFail": false,
+      "note": "misses one hole on one seed, as the study of 2026-09-28 found"
+    },
+    {
+      "condition": "hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0059,
+      "worstCentreInches": 0.0732,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1265,
+      "foundPerPicture": [
+        24,
+        25
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "soft shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0059,
+      "worstCentreInches": 0.0739,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1166,
+      "foundPerPicture": [
+        24,
+        25
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "hand shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 44,
+      "found": 44,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0067,
+      "worstCentreInches": 0.0737,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1174,
+      "foundPerPicture": [
+        22,
+        22
+      ],
+      "recall": 0.88,
+      "expectedToFail": false,
+      "note": "the soft edge of the shadow crosses bulls and costs three holes a picture; the study placed its ellipse elsewhere and lost at most one"
+    },
+    {
+      "condition": "dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0059,
+      "worstCentreInches": 0.073,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1471,
+      "foundPerPicture": [
+        24,
+        25
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "uneven",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 50,
+      "found": 50,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0061,
+      "worstCentreInches": 0.0734,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 2440,
+      "foundPerPicture": [
+        25,
+        25
+      ],
+      "recall": 1,
+      "expectedToFail": false
+    },
+    {
+      "condition": "glare",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 45,
+      "found": 45,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0068,
+      "worstCentreInches": 0.0732,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 3364,
+      "foundPerPicture": [
+        22,
+        23
+      ],
+      "recall": 0.9,
+      "expectedToFail": false,
+      "note": "the hot spot is clipped to white, and the holes under it are lost"
+    },
+    {
+      "condition": "curl 15 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.006,
+      "worstCentreInches": 0.0711,
+      "medianRegistrationInches": 0.0135,
+      "worstRegistrationInches": 0.033,
+      "medianMilliseconds": 1831,
+      "foundPerPicture": [
+        25,
+        24
+      ],
+      "recall": 0.98,
+      "expectedToFail": false,
+      "note": "0 of 50 in the study of 2026-09-28, when a bent sheet did not register; registered through every marker since entry 260, with the bulls up to about 0.03 in off"
+    },
+    {
+      "condition": "wave 8 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0062,
+      "worstCentreInches": 0.0684,
+      "medianRegistrationInches": 0.0139,
+      "worstRegistrationInches": 0.0274,
+      "medianMilliseconds": 1561,
+      "foundPerPicture": [
+        25,
+        24
+      ],
+      "recall": 0.98,
+      "expectedToFail": false,
+      "note": "registered through every marker, with the bulls up to about 0.03 in off"
+    },
+    {
+      "condition": "blur 1.5 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 51,
+      "found": 50,
+      "falseMarks": 1,
+      "medianCentreInches": 0.0064,
+      "worstCentreInches": 0.085,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0001,
+      "medianMilliseconds": 1494,
+      "foundPerPicture": [
+        25,
+        25
+      ],
+      "recall": 1,
+      "expectedToFail": false,
+      "note": "one false mark on one seed"
+    },
+    {
+      "condition": "blur 3 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 50,
+      "found": 50,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0082,
+      "worstCentreInches": 0.0197,
+      "medianRegistrationInches": 0.0002,
+      "worstRegistrationInches": 0.0009,
+      "medianMilliseconds": 2757,
+      "foundPerPicture": [
+        25,
+        25
+      ],
+      "recall": 1,
+      "expectedToFail": false
+    },
+    {
+      "condition": "noise 12",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0067,
+      "worstCentreInches": 0.0665,
+      "medianRegistrationInches": 0.0002,
+      "worstRegistrationInches": 0.0004,
+      "medianMilliseconds": 2355,
+      "foundPerPicture": [
+        25,
+        24
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "jpeg 40",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0063,
+      "worstCentreInches": 0.0679,
+      "medianRegistrationInches": 0.0002,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1120,
+      "foundPerPicture": [
+        25,
+        24
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    }
+  ]
+}

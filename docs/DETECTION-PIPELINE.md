@@ -514,6 +514,12 @@ Report every number whatever it is, per DESIGN.md section 21. A published failur
 - **Recall against review-queue size.** A detector at 92 percent recall that flags its own eight percent is better than one at 96 percent that silently misses four. DESIGN.md section 13 already builds the editor first for exactly this reason; this measurement quantifies the trade.
 - **Centroid repeatability.** `retumbo.jpg` and `retumbo.png` are the same scan encoded twice. Re-detecting both gives a direct measurement of centroid noise with no ground truth required. The measurement harness saw 0.008 in and 10 grey levels of spread between them, which is its own noise floor; the production detector should be well inside that.
 
+**The standing evaluation is the detection scoreboard** (entry 291, docs/DETECTION-LEARNING-STUDY.md section 9). Every build reads 13
+synthetic conditions (shadows, dim and uneven light, glare, curl and wave, blur, noise and JPEG) through the whole pipeline and fails when
+recall, false marks, center error or registration error falls beyond a set margin against `docs/scoreboard/synthetic-baseline.json`. Real
+photographs are scored the same way against the scan of the same sheet with `grouplab scoreboard --corpus`, locally only, because they
+never enter the public repository or its logs.
+
 ---
 
 ## 8. Secondary mode

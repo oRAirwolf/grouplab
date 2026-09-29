@@ -1,6 +1,6 @@
 # Is a self-improving detection engine worth building?
 
-NOTES-FROM-PLANNING.md entry 261, a study only: nothing here is built. Alan: "Do you think we need to build an engine that can analyze
+NOTES-FROM-PLANNING.md entry 261, a study. Option (a), the scoreboard, has since been built (entry 291, section 9); nothing else here is. Alan: "Do you think we need to build an engine that can analyze
 photos and refine the detection and machine vision models without relying on claude itself to analyze? Is that possible?"
 
 ## The answer, in short
@@ -134,7 +134,7 @@ hits are bright rings, need their own rule. Tuning (option b) is what gets it fr
 a learned classifier would only be worth it for the kinds of target the tuned detector still cannot read, measured first.
 
 The measurement script was a scratch test, run once and deleted; its conditions are listed in section 1 so it can be rebuilt as the
-scoreboard.
+scoreboard. Entry 291 rebuilt it as the scoreboard of section 9.
 
 ## 8. A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built)
 
@@ -159,3 +159,93 @@ measurement, and nothing is promised until it has been measured on real photogra
 flat on it, in ordinary light, at different heights and angles, with a light card and a dark one. The card's measured size against the
 scan's scale, photograph by photograph, gives the error directly. Entry 271 holds any card or coin detection until Alan's choices on the
 check page arrive, so the photographs are not asked for yet.
+
+## 9. The scoreboard, built (entry 291 section 7)
+
+Option (a) now exists. Every build re-reads the same pictures and records, by condition, how many holes were found, how many false marks
+were made, how far off the found holes were, how far off the registration was at every bull, and how long each picture took. Nothing in it
+tunes anything: it measures, and a person reads it and proposes a change through the usual path.
+
+**What is built.** The scoring and the synthetic conditions are in Core (`Scoreboard`, in `src/GroupLab.Core/Evaluation`); the command
+line adds OpenCV's JPEG encoder and the reading of real photographs (`grouplab scoreboard`, `src/GroupLab.Cli/ScoreboardVerb.cs`).
+The synthetic picture is the one of section 1: GL-CF25-LTR at 300 dpi with one synthetic hole on each of its 25 bulls, two seeds, each
+condition alone, read as a photograph by the whole pipeline. A hole is found when a mark lies within 0.1 in of it, each mark counting for
+one hole at most; a mark that matches no hole is a false mark. The registration error is the distance at every bull between where the truth
+mapping puts it and where the registration put it, so it exists only where the truth mapping is known: the synthetic pictures. On a real
+photograph the table gives the registration's own error between its markers instead.
+
+**In every build.** `ScoreboardTests` reads all 13 conditions on both seeds (about 40 seconds in a Release build) and fails when any line
+falls beyond the margin against `docs/scoreboard/synthetic-baseline.json`, naming the condition and both numbers: more than one hole lost
+over the condition, more than one false mark gained, the median center error grown by more than 0.005 in, the worst by more than 0.03 in,
+or the median registration error by more than 0.005 in. Time is reported and never failed on, because it depends on the machine. A line
+may be marked `expectedToFail` in the baseline, so a known failure stays on the board rather than being hidden, and a fix shows as an
+improvement; when a change makes a line better, the baseline moves in the same commit with the reason.
+
+**The first synthetic table** (2026-09-29, seeds 291 and 292):
+
+| Condition | Found | False marks | Median center error | Worst center error | Registration error at the bulls, median and worst |
+|---|---|---|---|---|---|
+| clean | 24, 25 of 25 | 0 | 0.006 in | 0.073 in | 0.0001, 0.0003 in |
+| hard shadow, lower third at 55 percent | 24, 25 | 0 | 0.006 in | 0.073 in | 0.0001, 0.0003 in |
+| soft shadow, a ramp to 55 percent | 24, 25 | 0 | 0.006 in | 0.074 in | 0.0001, 0.0003 in |
+| a hand's shadow, a tilted ellipse at 50 percent | 22, 22 | 0 | 0.007 in | 0.074 in | 0.0001, 0.0003 in |
+| dim, 45 percent | 24, 25 | 0 | 0.006 in | 0.073 in | 0.0001, 0.0003 in |
+| uneven, a diagonal to 65 percent | 25, 25 | 0 | 0.006 in | 0.073 in | 0.0001, 0.0003 in |
+| glare, clipped to white at its center | 22, 23 | 0 | 0.007 in | 0.073 in | 0.0001, 0.0003 in |
+| curl, 15 px | 25, 24 | 0 | 0.006 in | 0.071 in | 0.014, 0.033 in |
+| wave, 8 px, two waves across | 25, 24 | 0 | 0.006 in | 0.068 in | 0.014, 0.027 in |
+| blur, sigma 1.5 px | 25, 25 | 1 | 0.006 in | 0.085 in | 0.0001, 0.0001 in |
+| blur, sigma 3 px | 25, 25 | 0 | 0.008 in | 0.020 in | 0.0002, 0.0009 in |
+| noise, sd 12 levels | 25, 24 | 0 | 0.007 in | 0.067 in | 0.0002, 0.0004 in |
+| JPEG quality 40 | 25, 24 | 0 | 0.006 in | 0.068 in | 0.0002, 0.0003 in |
+
+**Against section 1's table.** The scratch script of 2026-09-28 was deleted, so the exact geometry of each condition was not kept; the
+scoreboard now fixes it in code. Most lines agree within a hole. The differences, and why:
+
+- **Curl: 0 of 50 then, 49 of 50 now.** Entry 260 registered a bent sheet through every marker the day after the study. The curl is the
+  one entry 260's own test uses, which reproduced the study's failure. What remains is geometry: the bulls between the markers are placed
+  up to about 0.03 in off (median 0.014 in), where a flat sheet's are placed to 0.0003 in.
+- **A hand's shadow: 22 of 25 on both seeds, where the study lost at most one.** This ellipse's soft edge crosses bulls; the study's was
+  placed elsewhere. A hard-edged version of the same ellipse lost seven holes a picture. It is the local paper level of entry 260 again: a
+  hole just inside a shadow's edge is judged against the paper outside it.
+- **Glare** reproduces the study's 22 and 23 once the hot spot is clipped to white, as a camera clips it; the holes under it are lost.
+- **Soft shadow and uneven light** lose one hole fewer than the study did, **blur 1.5 px** makes one false mark on one seed, and the
+  seeds differ; these are within the margin and are the conditions' exact definitions, not a change in the detector.
+
+**The real corpus, local only.** Real photographs are read where they lie, on the machine that has them, and never enter the public
+repository, a public CI log or a public artifact. The corpus lives in `C:\Dev\grouplab-local\corpus\`, one folder per sitting, one folder
+per picture, each holding the picture (no metadata: no GPS, no timestamps), the phone's own marking with its file path removed, the
+picture's live-frame and analysis lines from the phone's log with their times removed, and a `truth.json`. The truth is the scan of the
+same sheet where one exists (every hole, in the sheet's own inches), or the shot count on the sheet (count only), or nothing
+(count unknown). To add a sitting:
+
+1. Pull the phone's `files` folder into `C:\Dev\grouplab-local\camera-<date>\`, and strip any metadata from the pictures.
+2. For each target picture, make a folder under `corpus\sitting-<date>\` with `picture.jpg`, `live.log`, `phone-marking.json` and
+   `truth.json` (`picture`, `sheet`, `calibre`, `truth`, and `shots` in sheet inches or `count`; `condition` names the line it counts in).
+3. Where the sheet was scanned, `grouplab scoreboard truth --scan <scan> --sheet <file.gltd.json> --calibre <in> --out <file>` writes
+   every hole the scan reads, in the sheet's own inches; check it by hand against the scan before trusting it.
+4. `grouplab scoreboard --corpus C:\Dev\grouplab-local\corpus --table <corpus>\scoreboard.md --out <corpus>\scoreboard.json`, and
+   `--baseline` against the last run's file to see what a change did.
+
+**The first real table** (2026-09-29, seven photographs of three sheets, each against its own 600 dpi scan). The four pictures of the
+second camera sitting are all of one 6 ARC load sheet, taken with the torch at 1, 2, 9 and 15 degrees off square; the three of 2026-09-26
+are the kitchen-counter photographs of entry 233.
+
+| Picture | Found | False marks | Median center error | Worst center error | Marker residual | Time |
+|---|---|---|---|---|---|---|
+| 2026-09-29, 2 degrees off square | 25 of 25 | 0 | 0.012 in | 0.025 in | 0.0045 in | 1.0 s |
+| 2026-09-29, 1 degree | 25 of 25 | 0 | 0.013 in | 0.045 in | 0.0041 in | 1.0 s |
+| 2026-09-29, 9 degrees | 23 of 25 | 3 | 0.012 in | 0.081 in | 0.0034 in | 0.8 s |
+| 2026-09-29, 15 degrees | 24 of 25 | 1 | 0.014 in | 0.086 in | 0.0035 in | 1.0 s |
+| 2026-09-26, 6 ARC, Dominus K | 25 of 25 | 0 | 0.015 in | 0.034 in | 0.0038 in | 1.9 s |
+| 2026-09-26, 6 ARC, Magnus S | 25 of 25 | 1 | 0.021 in | 0.037 in | 0.0046 in | 1.2 s |
+| 2026-09-26, 6.5 Creedmoor | 22 of 23 | 1 | 0.026 in | 0.055 in | 0.0037 in | 1.5 s |
+
+Together: 169 of 173 holes found, 6 false marks, a median center error between 0.012 and 0.026 in. The desktop's reading of the four new
+pictures agrees with what the phone found on each. **What it says:** square-on pictures are clean; the two taken well off square lose
+holes and make false marks, all in the right-hand column of bulls, where the stray marks are 0.3 to 0.5 in across, a hole and the paper
+beside it read as one, placed up to 0.18 in from the hole. A mark twice the calibre and more is not a single hole, and it should be shown
+for review rather than placed. That is a measured change to propose, not one made here.
+
+The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
+files before they can be scored the same way.
