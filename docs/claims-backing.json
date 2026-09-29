@@ -4300,6 +4300,10 @@
   "**In every nightly (entry 290):** the nightly's `ios` job builds GroupLab for iPhone and iPad with the nightly's version on `macos-26`, with OpenCV from the `ios` workflow's cache.": {
    "kind": "code",
    "where": ".github/workflows/nightly.yml job ios; held by IosSigningTests.TheNightlyBuildsIosSignsOnlyOnTheChecksWordAndNeverHoldsUpPublishing; entry 290"
+  },
+  "**Correcting the holes** (item A4, second part; entry 291 section 2).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/FixHolesPage.cs and ResultView.SheetPicture, held by tests/GroupLab.Mobile.Tests/ResultScreenTests.cs"
   }
  },
  "rules": [

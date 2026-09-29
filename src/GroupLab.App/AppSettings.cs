@@ -194,6 +194,14 @@ public sealed class AppSettingsStore(string path)
     public bool SaveCaptureTorch(int torch) => Save(file => file["captureTorch"] = torch);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 7.5: whether GroupLab Dev keeps every picture of a sitting on the phone; on until turned off.
+    /// The release and Play builds never keep them, whatever this says.
+    /// </summary>
+    public bool LoadKeepSitting() => Read<bool?>(file => file["keepSitting"]?.GetValueKind() != JsonValueKind.False) ?? true;
+
+    public bool SaveKeepSitting(bool keep) => Save(file => file["keepSitting"] = keep);
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 271: every printer profile saved, by name. A profile measured again under the same name replaces the old.
     /// </summary>
     public IReadOnlyList<PrinterProfile> LoadPrinters() => Read(file => file["printers"] is JsonArray all

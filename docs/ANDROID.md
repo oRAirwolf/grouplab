@@ -346,9 +346,12 @@ itself from its codes, the holes are found by the desktop's own code, and the re
 ring on every hole, and the desktop's composite plot, filled by the same method from the same marking. The session is saved in the
 desktop's own database and format, and **Sessions** lists them, newest first, to open again.
 
-**Correcting by touch** (item A4, second part). Beneath the photograph, **Move**, **Add a hole**, **Remove** and **Undo**. A touch within
-24 dp of a ring is on it; while a ring is dragged, a magnifier in the corner away from the finger shows three times the area under it,
-with a cross where the hole will go. Every change is saved at once and the figures and plot follow it. The **caliber** and the **distance**
+**Correcting the holes** (item A4, second part; entry 291 section 2). The photograph on the result is shown upright as the sheet is,
+turned by where the registration puts the page's top rather than by the file's tags, across the whole width and no taller than itself,
+and it takes no touch. **Fix holes** opens a page built on Marking A: the picture pans and pinches under a crosshair fixed in the middle,
+and **Add a hole here**, or with a ring under the crosshair **Move this hole** (then **Put the hole here**) and **Remove this hole**, act
+on the hole there. **Undo** takes back each change; **Done** returns to the result, which measures again and saves; leaving by **Back to
+the result** or Android's back asks whether to keep the changes. The **caliber** and the **distance**
 are asked on Capture before the picture, remembered for the next target; the caliber goes to detection, as on the desktop, and the
 distance turns the figures into angles. Where the sheet's codes cannot be read, the result asks **which sheet it is** by name and
 detects as that sheet, as the desktop does.
@@ -410,6 +413,14 @@ its own `files/test` folder, exactly as a chosen photograph, so a device is meas
 owner's own pictures. Put the file there with `run-as org.grouplab.app.dev`, then `am start -n <its activity> --es
 org.grouplab.test.picture <name>`; the log's `phone.prepare` and `phone.detect` lines give the working size, the most memory held and each
 stage's time. The release build has no such way in.
+
+**Every picture of a sitting is kept** (entry 291 section 7.5), in GroupLab Dev only: each picture the camera takes goes into its own
+folder under `files/sitting/`, numbered `picture-0001` on, as `picture.jpg` with every metadata segment taken out (no location, no time,
+no camera settings; the picture's own data is copied, not re-encoded), `live.txt` with what the last live frame read before it (the
+markers read and foretold, the module size, the room beyond the printing, the shake, and the frame's and the picture's size and crop), and
+`analysis.txt` with the analysis's trace once the picture is read. Nothing is sent anywhere, and the release and Play builds keep nothing.
+A whole sitting comes off at once with `adb exec-out run-as org.grouplab.app.dev tar c files/sitting > sitting.tar`, into
+`C:\Dev\grouplab-local\`, never the repository. The switch under About in GroupLab Dev's Settings turns it off and deletes what was kept.
 
 **The Play copy is needed only to test the Play path itself:** once before the closed test begins, and whenever the release build changes
 in a way the development build would not show (signing, the store's app bundle, what Play strips or adds). Day to day, testing is on

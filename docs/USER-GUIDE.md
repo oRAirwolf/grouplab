@@ -346,9 +346,12 @@ other, because they are signed with different keys. It uses the same engine as t
 
 **Capture.** Type the caliber and the distance, then **Take a picture**. The camera fills the screen with the instruction at the top, the
 checks beneath it (focus, light, the tags and codes read) and a bar that forecasts the picture's quality. In **Guided** it takes the
-picture by itself once everything holds; in **Manual** you press the shutter when you choose. The level in the middle is a crosshair
-with a dot that drifts toward the raised side like a bubble, and turns green when the phone is flat. **Camera** and **Result**, above the
-page, take you to either in one press, and the camera has its own **Result** button. When a picture's square codes cannot be read,
+picture by itself once everything holds; in **Manual** you press the shutter when you choose. Fill the frame with the sheet: GroupLab
+says **Move back** only when some of the printing runs out of the picture, **Move closer** when the sheet's codes would be too small to
+read, and **Hold steadier** only when a shake has smeared the picture. The level in the middle is a crosshair with a dot that drifts
+toward the raised side like a bubble; when the phone is flat the whole crosshair turns green. **Camera** and **Result**, above the page,
+take you to either in one press, the one showing in the highlight color, and the camera has its own **Result** button. While a picture
+is read, the line under it names the step it is on. When a picture's square codes cannot be read,
 GroupLab says which sheet it looks like, for you to confirm or choose another.
 
 **A photograph from any photo app.** **Choose a photograph** opens Android's photo picker, which shows the photographs in your photo apps,
@@ -375,7 +378,10 @@ names differ a little between versions):
 picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.
 
 **The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
-number to switch its units. From the result: the bulls you fired at, Shots Needed to Zero, Ballistics with the group carried in, sharing
+number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole, and is for looking
+only. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
+then **Add a hole here**, or **Move this hole** and **Put the hole here**, or **Remove this hole**, with **Undo** for each. **Done** takes
+the changes back to the result, which measures again; leaving any other way asks whether to keep them. From the result: the bulls you fired at, Shots Needed to Zero, Ballistics with the group carried in, sharing
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result.
 

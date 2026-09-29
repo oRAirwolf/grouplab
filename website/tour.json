@@ -170,29 +170,33 @@
    ],
    "mobile": {
     "shot": "fold-result-landscape",
-    "caption": "The phone marks the holes on the result screen itself, under the figures, nightly 115.",
+    "caption": "The phone shows the sheet upright under the figures, and Fix holes opens the holes on a page of their own.",
     "parts": [
      [
       "The rings",
-      "One on each hole GroupLab found, on the photograph or scan itself."
+      "One on each hole GroupLab found, on the photograph itself, which is for looking only."
      ],
      [
-      "Move",
-      "Drag a ring to the center of its hole."
+      "Fix holes",
+      "Opens the picture under a crosshair fixed in the middle: pinch to zoom, drag to move the picture."
      ],
      [
-      "Add a hole",
-      "Tap where a hole is that GroupLab missed."
+      "Add a hole here",
+      "Adds a hole where the crosshair is, for one GroupLab missed."
      ],
      [
-      "Remove",
-      "Tap a ring that is not a shot to remove it. Undo takes back the last change."
+      "Move this hole",
+      "With the crosshair on a ring, picks the hole up; bring the crosshair to where it belongs and press Put the hole here."
+     ],
+     [
+      "Remove this hole",
+      "With the crosshair on a ring that is not a shot, takes it away. Undo takes back the last change."
      ]
     ],
     "steps": [
      "Look over the rings on the sheet under the figures.",
-     "Tap Move, Add a hole or Remove, then drag or tap on the sheet.",
-     "The figures above follow every change, and each is saved as you make it."
+     "Press Fix holes, then pinch and drag until the crosshair is on the hole to change.",
+     "Press Done: the figures follow and the change is saved. Leaving any other way asks whether to keep the changes."
     ],
     "note": "Placing bulls by hand and the lasso, for a target GroupLab did not print, are on the desktop only, for now."
    },

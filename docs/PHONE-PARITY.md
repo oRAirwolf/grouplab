@@ -20,7 +20,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Feature | Key | On the phone | Stage or reason | On iPhone and iPad |
 |---|---|---|---|---|
 | A GroupLab sheet reads itself | `reads-itself` | on the phone | | not yet |
-| Every hole found, and every one yours to change | `every-hole` | on the phone | | not yet |
+| Every hole found, and every one yours to change | `every-hole` | on the phone | entry 291 section 2: changed on a page of their own, Fix holes, under a fixed crosshair with zoom and undo; the result's picture takes no touch | not yet |
 | The bulls you aimed at | `aimed-bulls` | on the phone | entry 259 screen 2, "tap the bulls on the sheet" | not yet |
 | A sheet shot off by the same amount | `whole-sheet` | on the phone | | not yet |
 | Tap a number to switch units | `unit-tap` | on the phone | entry 273: tiles and figure rows, press and hold for every unit, the note at the bottom | not yet |
@@ -59,7 +59,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | GroupLab Dev for testers | `dev-build` | on the phone | | not yet |
 | The sheet beside the numbers on a big screen | `big-screen` | on the phone | | not yet |
 | Print a sheet from the phone | `phone-targets` | on the phone | | not yet |
-| Guided or Manual on the camera | `capture-modes` | on the phone | | not yet |
+| Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame | not yet |
 | Every picture checked | `picture-check` | on the phone | | not yet |
 | The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | not yet |
 | Every shot, and which count | `shots-table` | on the phone | entry 280 section 2, Shots A: the Shots page from a result; on the computer, Shots and clicks under the shot table | not yet |

@@ -281,7 +281,7 @@ internal sealed class CaptureScreen : LinearLayout
 /// <summary>
 /// Entry 281 section 1.1, Alan's level: four arms and a dot that drifts toward the raised side the way a bubble does, green within
 /// <see cref="GroupLab.Core.Capture.BubbleLevel.ReadyDegrees"/> of flat and white beyond. The arms are thin and half white, so the preview
-/// shows through.
+/// shows through; within the ready tolerance the arms and the ring turn green with the dot (entry 291 section 3.4).
 /// </summary>
 internal sealed class BubbleView(Context context) : View(context)
 {
@@ -302,14 +302,21 @@ internal sealed class BubbleView(Context context) : View(context)
         float cx = Width / 2f, cy = Height / 2f, arm = Math.Min(Width, Height) / 2f * 0.86f, dotRadius = arm * 0.16f;
         paint.SetStyle(Paint.Style.Stroke);
         paint.StrokeWidth = Math.Max(2, arm * 0.03f);
-        paint.Color = Color.Argb(150, 255, 255, 255);
+        // Entry 291 section 3.4: level, the whole crosshair turns green with the dot, and thicker, so it is plain at a glance.
+        var green = Color.Rgb(46, 160, 90);
+        paint.Color = ready ? green : Color.Argb(150, 255, 255, 255);
+        if (ready)
+        {
+            paint.StrokeWidth = Math.Max(4, arm * 0.06f);
+        }
+
         canvas.DrawLine(cx - arm, cy, cx + arm, cy, paint);
         canvas.DrawLine(cx, cy - arm, cx, cy + arm, paint);
         // The ready ring: the dot inside it is within the ready tolerance.
         float ringRadius = (float)(arm * GroupLab.Core.Capture.BubbleLevel.ReadyDegrees / GroupLab.Core.Capture.BubbleLevel.FullScaleDegrees) + dotRadius;
         canvas.DrawCircle(cx, cy, ringRadius, paint);
         paint.SetStyle(Paint.Style.Fill);
-        paint.Color = ready ? Color.Rgb(46, 160, 90) : Color.White;
+        paint.Color = ready ? green : Color.White;
         canvas.DrawCircle(cx + (float)(dot.Right * arm), cy + (float)(dot.Down * arm), dotRadius, paint);
     }
 }

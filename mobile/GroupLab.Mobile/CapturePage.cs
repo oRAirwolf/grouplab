@@ -119,7 +119,10 @@ public sealed class CapturePage : UserControl
                 Content = WithBar(shown, true);
             }
         });
-        result.IsEnabled = lastResult is not null && !onResult;
+        // Entry 291 section 2.3: the one showing looks selected, in the primary color, and never greyed out as if it could not be pressed.
+        result.IsEnabled = lastResult is not null;
+        (onResult ? result : camera).Classes.Add(PhoneStyles.Primary);
+        Avalonia.Automation.AutomationProperties.SetHelpText(onResult ? result : camera, "Showing now");
         var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Margin = new Avalonia.Thickness(12, 8, 12, 4) };
         Grid.SetColumn(result, 1);
         bar.Children.Add(camera);
@@ -135,7 +138,7 @@ public sealed class CapturePage : UserControl
     private void ShowStart() => Content = lastResult is null ? start : WithBar(start, false);
 
     /// <summary>A result shown, and kept as the one the Result button returns to.</summary>
-    private void ShowResult(Control result)
+    internal void ShowResult(Control result)
     {
         lastResult = result;
         Content = WithBar(result, true);

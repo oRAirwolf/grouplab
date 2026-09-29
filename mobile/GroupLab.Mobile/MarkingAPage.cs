@@ -235,22 +235,26 @@ internal sealed class MarkingAPage : UserControl
     /// <summary>
     /// The picture under a fixed crosshair: one finger pans it, two pinch it about the crosshair. It draws the scale's ends, the aim
     /// points, and the holes, found ones as numbered rings and added ones as rings with a dot, and the crosshair with the bullet's ring.
+    /// Entry 291 section 2.2: Fix holes is built on it too, with the picture turned upright (<paramref name="turns"/>, as
+    /// <see cref="ViewRotation"/>) and a hole being moved drawn under the crosshair.
     /// </summary>
-    private sealed class Viewer : Control
+    internal sealed class Viewer : Control
     {
         private readonly Bitmap image;
         private readonly MarkingSession session;
         private readonly IReadOnlyList<PointD> ends;
+        private readonly int turns;
         private double zoom;
         private Point offset;
         private Point? last;
         private double pinch = 1;
 
-        public Viewer(Bitmap image, MarkingSession session, IReadOnlyList<PointD> ends)
+        public Viewer(Bitmap image, MarkingSession session, IReadOnlyList<PointD> ends, int turns = 0)
         {
             this.image = image;
             this.session = session;
             this.ends = ends;
+            this.turns = ViewRotation.Normalise(turns);
             ClipToBounds = true;
             GestureRecognizers.Add(new PinchGestureRecognizer());
             AddHandler(InputElement.PinchEvent, (_, e) =>
@@ -271,18 +275,53 @@ internal sealed class MarkingAPage : UserControl
         /// <summary>The bullet's diameter in inches, for the crosshair's ring, once the scale is known.</summary>
         public double? RingInches { get; set; }
 
+        /// <summary>The hole being moved, drawn under the crosshair rather than where it was; null while none is.</summary>
+        public int? Held { get; set; }
+
         /// <summary>The image point under the crosshair.</summary>
         public PointD Centre => ToImage(new Point(Bounds.Width / 2, Bounds.Height / 2));
 
-        private PointD ToImage(Point p) => new((p.X - offset.X) / zoom, (p.Y - offset.Y) / zoom);
+        /// <summary>The zoom, screen units a stored pixel, for a test.</summary>
+        internal double Zoom => zoom;
 
-        private Point ToScreen(PointD p) => new((p.X * zoom) + offset.X, (p.Y * zoom) + offset.Y);
+        private double PixelWidth => image.PixelSize.Width;
+
+        private double PixelHeight => image.PixelSize.Height;
+
+        /// <summary>The picture's size as it is shown, turned.</summary>
+        private (double Width, double Height) Shown => ViewRotation.DisplaySize(turns, PixelWidth, PixelHeight);
+
+        private PointD ToImage(Point p) => ViewRotation.ToImage(new PointD((p.X - offset.X) / zoom, (p.Y - offset.Y) / zoom), turns, PixelWidth, PixelHeight);
+
+        private Point ToScreen(PointD p)
+        {
+            var shown = ViewRotation.ToDisplay(p, turns, PixelWidth, PixelHeight);
+            return new((shown.X * zoom) + offset.X, (shown.Y * zoom) + offset.Y);
+        }
+
+        /// <summary>A zoom that makes the picture <paramref name="factor"/> times as large about the crosshair, for a test and a button.</summary>
+        internal void ZoomBy(double factor) => ZoomAboutCentre(factor);
+
+        /// <summary>Moves the picture so the crosshair is on <paramref name="image"/>, as panning to it by hand does.</summary>
+        internal void CentreOn(PointD image)
+        {
+            var at = ToScreen(image);
+            Pan(new Vector((Bounds.Width / 2) - at.X, (Bounds.Height / 2) - at.Y));
+        }
+
+        /// <summary>Moves the picture by <paramref name="by"/> screen units, as a finger dragging it does.</summary>
+        internal void Pan(Vector by)
+        {
+            offset += by;
+            InvalidateVisual();
+            Moved?.Invoke();
+        }
 
         /// <summary>The hole under the crosshair, within <paramref name="reach"/> screen units, if any.</summary>
         public int? MarkUnderCrosshair(double reach)
         {
             var middle = new Point(Bounds.Width / 2, Bounds.Height / 2);
-            return session.State.Shots.Where(s => s.IsShot).Select(s => (s.Id, Distance: Point.Distance(ToScreen(s.Image), middle)))
+            return session.State.Shots.Where(s => s.IsShot && s.Id != Held).Select(s => (s.Id, Distance: Point.Distance(ToScreen(s.Image), middle)))
                 .Where(s => s.Distance <= reach).OrderBy(s => s.Distance).Select(s => (int?)s.Id).FirstOrDefault();
         }
 
@@ -292,18 +331,18 @@ internal sealed class MarkingAPage : UserControl
             if (zoom == 0 && Bounds.Width > 0)
             {
                 // The whole picture in view to start with, centered.
-                zoom = Math.Min(Bounds.Width / image.PixelSize.Width, Bounds.Height / image.PixelSize.Height);
-                offset = new Point((Bounds.Width - (image.PixelSize.Width * zoom)) / 2, (Bounds.Height - (image.PixelSize.Height * zoom)) / 2);
+                zoom = Math.Min(Bounds.Width / Shown.Width, Bounds.Height / Shown.Height);
+                offset = new Point((Bounds.Width - (Shown.Width * zoom)) / 2, (Bounds.Height - (Shown.Height * zoom)) / 2);
                 Moved?.Invoke();
             }
         }
 
         private void ZoomAboutCentre(double factor)
         {
-            double fit = Math.Min(Bounds.Width / image.PixelSize.Width, Bounds.Height / image.PixelSize.Height);
+            double fit = Math.Min(Bounds.Width / Shown.Width, Bounds.Height / Shown.Height);
             double to = Math.Clamp(zoom * factor, fit / 2, 8);
             var middle = new Point(Bounds.Width / 2, Bounds.Height / 2);
-            var under = ToImage(middle);
+            var under = new Point((middle.X - offset.X) / zoom, (middle.Y - offset.Y) / zoom);
             zoom = to;
             offset = new Point(middle.X - (under.X * zoom), middle.Y - (under.Y * zoom));
             InvalidateVisual();
@@ -340,7 +379,12 @@ internal sealed class MarkingAPage : UserControl
         public override void Render(DrawingContext context)
         {
             context.FillRectangle(Brushes.Black, new Rect(Bounds.Size));
-            context.DrawImage(image, new Rect(image.Size), new Rect(offset.X, offset.Y, image.PixelSize.Width * zoom, image.PixelSize.Height * zoom));
+            var (ta, tb, tc, td, te, tf) = ViewRotation.Affine(turns, PixelWidth, PixelHeight);
+            using (context.PushTransform(new Matrix(ta * zoom, td * zoom, tb * zoom, te * zoom, (tc * zoom) + offset.X, (tf * zoom) + offset.Y)))
+            {
+                context.DrawImage(image, new Rect(image.Size), new Rect(0, 0, PixelWidth, PixelHeight));
+            }
+
             var amber = new SolidColorBrush(Color.FromRgb(232, 150, 46));
             foreach (var end in ends)
             {
@@ -366,7 +410,7 @@ internal sealed class MarkingAPage : UserControl
             foreach (var shot in session.State.Shots.Where(s => s.IsShot))
             {
                 number++;
-                var at = ToScreen(shot.Image);
+                var at = shot.Id == Held ? new Point(Bounds.Width / 2, Bounds.Height / 2) : ToScreen(shot.Image);
                 bool byHand = shot.Provenance == ShotProvenance.Manual;
                 context.DrawEllipse(null, byHand ? added : found, at, 9, 9);
                 if (byHand)

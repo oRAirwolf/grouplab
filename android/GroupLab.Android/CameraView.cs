@@ -114,6 +114,9 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     private Instruction? lastSay;
     private long readySince;
     private readonly GuidanceSteadier steadier = new();
+
+    /// <summary>Entry 291 section 3.3: the last frame judged, its size, its crop and the picture's scale to it, for the record kept at the press.</summary>
+    private volatile string lastLive = "no live frame was judged";
     private ProcessCameraProvider provider;
     private ImageAnalysis analysis;
     private volatile bool stopped;
@@ -363,7 +366,9 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
 
             long now = clock.ElapsedMilliseconds;
             // Entry 281 section 1.4: the words held steady, with resolution judged at the size the picture is measured at.
-            verdict = steadier.Next(verdict, now, MeasuredScale(grey));
+            double scale = MeasuredScale(grey);
+            verdict = steadier.Next(verdict, now, scale);
+            lastLive = LiveRecord(verdict, grey, image, scale);
             if (verdict.Say != lastSay)
             {
                 lastSay = verdict.Say;
@@ -422,6 +427,23 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         return working / Math.Max(frame.Width, frame.Height);
     }
 
+    /// <summary>
+    /// Entry 291 section 3.3: what the last live frame read, with its size and field of view, and the markers it foretells the picture will
+    /// read; set beside the picture's own count (phone.markers) in the log, and kept with the picture in GroupLab Dev.
+    /// </summary>
+    private string LiveRecord(FrameVerdict verdict, GrayImage frame, IImageProxy image, double scale)
+    {
+        var inv = CultureInfo.InvariantCulture;
+        var crop = image.CropRect;
+        var stillSize = still?.ResolutionInfo?.Resolution;
+        var stillCrop = still?.ResolutionInfo?.CropRect;
+        return string.Create(inv,
+            $"say={verdict.Say} markers={verdict.MarkersRead} of {verdict.MarkersExpected} inFrame={verdict.MarkersInFrame} predicted={verdict.MarkersPredicted(scale)} codes={verdict.CodesRead} " +
+            $"module={verdict.ModulePixels * scale:0.0}px printedRoom={verdict.PrintedRoom:0.000} shake={(verdict.Quality is { } q ? GuidanceSteadier.ShakePixels(q, scale) : null):0.0}px score={verdict.Quality?.Score} " +
+            $"frame={frame.Width}x{frame.Height} frameCrop={crop?.Left},{crop?.Top},{crop?.Right},{crop?.Bottom} rotation={image.ImageInfo?.RotationDegrees} " +
+            $"still={stillSize?.Width}x{stillSize?.Height} stillCrop={stillCrop?.Left},{stillCrop?.Top},{stillCrop?.Right},{stillCrop?.Bottom} scale={scale:0.00} lens={Lenses[lens]:0.0}");
+    }
+
     public void Take(string why)
     {
         if (still is null || taking)
@@ -440,6 +462,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             screen.Say("Taking the picture…");
         });
         DiagnosticLog.Info("camera.shutter", ("step", "press"), ("ms", 0), ("mode", QualityMode ? "quality" : "latency"), ("torch", torchOn), ("guided", !manual));
+        DiagnosticLog.Info("camera.live", ("frame", lastLive));
         string path = Path.Combine(context.CacheDir!.AbsolutePath, $"still-{DateTime.Now:HHmmss}.jpg");
         var options = new ImageCapture.OutputFileOptions.Builder(new Java.IO.File(path)).Build();
         still.TakePicture(options, analysisThread, new Saved(this, path, why));
@@ -478,6 +501,8 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             DiagnosticLog.Info("camera.take", ("how", why), ("mode", session.manual ? "manual" : "guided"), ("torch", torch));
             // Entry 281 section 1.2: the torch goes off the moment the picture is taken, and the camera is let go before the result.
             ContextCompat.GetMainExecutor(session.context).Execute(new Java.Lang.Runnable(session.Stop));
+            // Entry 291 section 7.5: GroupLab Dev keeps the picture, without its metadata, with what the live frame read before it.
+            SittingRecord.Keep(path, $"taken {why}, torch {(torch ? "on" : "off")}{Environment.NewLine}{session.lastLive}{Environment.NewLine}");
             session.Taken?.Invoke(path, torch);
         }
 

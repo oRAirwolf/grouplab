@@ -301,3 +301,109 @@ again. The shutter answers at once with a sound and a flash, the live analysis s
 taken in the minimum latency mode, and every step from the press to the first result is in the log; `scripts/shutter-timing.py` times
 twenty presses on a phone, and the numbers go in `docs/ANDROID.md` at the next sitting.
 
+
+## 8. The second sitting of 2026-09-29, and what changed (entry 291)
+
+Four target pictures from odd angles and six card pictures were taken with GroupLab Dev nightly 124 on the Fold 7. The measurements below
+come from that sitting's log and from its pictures, which stay on the computer that measured them and are never published; the tables
+are rerun with `grouplab capture-tune`.
+
+| | What the log shows |
+|---|---|
+| Live instructions | 34 changes of words: 15 "Move back", 7 "Hold steadier", 10 finding the sheet, 2 "Hold it there" |
+| Live markers | 0 to 25 of the sheet's 34 at every change; every one of the four target pictures read all 34 |
+| "Hold steadier" | every one at 7 to 13 markers read and a score of 0 to 38: the markers-read rule, not blur |
+| "Move back" | at 14 to 25 markers read, with the printing in view: the paper's white corner touching the frame's edge |
+| Live codes | 0 on every frame, as in the first sitting |
+| Naming the sheet | 5.1, 13.7, 4.2 and 30.0 s on the phone, the longest step of every picture |
+
+**The slow step (section 3.1).** Naming the sheet read the whole picture at four resolutions and then cut the codes out where the markers
+put them and read them enlarged. The cut-outs were placed as if a code's position were its corner; it is its center (TARGET-SCHEMA.md
+section 3.8, `Corners1`), and a margin of 25 mm hid it. Now the codes are cut out first, each placed by the corners of the six markers
+nearest it, turned square on at 6 pixels a module and read once (`LiveSheet.CodeViews`); views of one code from sheets that share a layout
+count once. On this computer, the phone's working copies:
+
+| Picture | Before, s | Codes read before | After, s | Codes read after |
+|---|---|---|---|---|
+| Target 1 | 1.2 | whole picture | 1.5 | 2, square on |
+| Target 2 | 8.3 | whole picture doubled | 1.1 | 2, square on |
+| Target 3 | 6.9 | whole picture doubled | 1.3 | 1, square on |
+| Target 4, the most off square | 22.5 | cut-outs enlarged | 1.3 | 1, square on |
+| Five pictures of 2026-09-27 and 28 | 1.0 to 21.0 | | 0.8 to 1.2 | |
+| Six card pictures | | | 0.23 to 0.37 | |
+
+Meanwhile the waiting line names the step as it starts (`TraceRecorder.Begun`, `StageWords.During`); it named the next step only as the
+last finished, so "Loading the picture" stood through the whole search.
+
+**Distance (section 3.2).** Each target picture was made smaller step by step inside a frame of its own size, as from further back, and
+the live frame taken as that picture at the stream's 1440 pixels. The module size is in pixels of the picture at the sheet's worst corner.
+
+| Picture made | Module, px | Live markers | Picture's markers | Named in | Holes |
+|---|---|---|---|---|---|
+| Target 2, as taken | 4.1 | 34 | 34 | 0.8 s | 23 |
+| Target 2, 0.8 | 3.3 | 27 | 34 | 0.9 s | 25 |
+| Target 2, 0.6 | 2.5 | 8 | 34 | 1.1 s | 24 |
+| Target 3, as taken | 2.6 | 28 | 34 | 0.9 s | 26 |
+| Target 3, 0.6 | 1.6 | 6 | 34 | 1.0 s | 24 |
+| Target 3, 0.5 | 1.3 | none fitted | 33 | 20.5 s | 28 |
+| Target 1, 0.5 | 1.8 | 6 | 33 | 19.6 s | 24 |
+| Target 4, as taken | 1.9 | 21 | 34 | 1.0 s | 25 |
+| Target 4, 0.8 | 1.5 | 11 | 34 | 33.1 s | 28 |
+| A picture of 2026-09-28, 0.9 | 1.9 | none fitted | none | not named | |
+
+A rendered GL-CF25-LTR-D, photographed square on through the same 3266 by 2449 picture with the sheet's long side taking less and less
+of the frame (`grouplab capture-tune --synthetic`):
+
+| Sheet across the frame | Module, px | Live markers | Picture's markers | Named in | Said before | Said now |
+|---|---|---|---|---|---|---|
+| 100 percent | 4.7 | 34 | 34 | 0.9 s | Move back | Hold it there |
+| 90 percent | 4.2 | 34 | 34 | 0.9 s | Move back | Hold it there |
+| 80 percent | 3.7 | 33 | 34 | 1.0 s | Hold it there | Hold it there |
+| 60 percent | 2.8 | 19 | 34 | 0.9 s | Hold steadier | Hold it there |
+| 50 percent | 2.3 | 2, not fitted | 34 | 1.2 s | finding the sheet | Move closer |
+| 40 percent | 1.9 | 3, not fitted | not named | 80 s | finding the sheet | Move closer |
+
+Every picture reads all its markers far past the distance where the stream stops reading them, so the stream's count says nothing about
+distance. What fails first is the codes square on and the holes, from 1.9 pixels a module in one picture and 1.3 in another. So "Move
+closer" is said below 2.4 pixels a module in the picture and not again until under 2.1 (`GuidanceSteadier.EnterModulePixels`), "Move back"
+only when the printing, the markers' corners and the codes, runs out of the frame (`PrintedRoom`), and a frame with markers seen but too
+few or too small to fit says "Move closer", never "Move back". Of the 28 steps of the four pictures, 17 read all 34 markers and were
+named within 2 s; there the old rules said "Hold it there" 3 times, "Hold steadier" 5, "Move back" 3 and "Move closer" 5, and the new
+ones "Hold it there" 10 times, "Move closer" 6 and finding the sheet once. At the 11 steps that read less well, the new rules never say
+"Hold it there". Old and new, on the pictures as taken: target 2 was told "Move back" with
+every marker and code 4 percent inside the frame, and target 4 "Move back" with 7 percent; both are now in the frame.
+
+**Live against the picture (section 3.3).** The stream and the picture both see the sensor's whole 4:3 view: the analysis frame is 1440
+by 1080 and the still 4080 by 3060, measured at 3266 by 2449, so the picture has 2.27 of its pixels for each of the frame's. The last live
+frame before each picture read 25, 5, 20 and 6 markers, and each picture read 34. The difference is resolution, not field of view: a
+marker a live frame cannot read at 8 pixels is 18 in the picture. So the frame now foretells the picture's count: every marker whole
+inside the frame, where a marker will be 14 pixels or more in the picture (all 34 were read at 15.5, 33 at 13.8), and otherwise only those
+it read (`FrameVerdict.MarkersPredicted`). At the press the log's `camera.live` line gives the frame's markers read and foretold, its size
+and crop and the still's, and `phone.markers` the picture's count at its size.
+
+**Steadiness (section 3.5).** Before, "Hold steadier" came from the focus part, blur under 0.0095 in on the sheet rectified at its least
+resolution, which a far sheet's soft pixels failed without any shake, and from the markers read, under 70 percent of the sheet's, which
+the stream missed at any distance a sheet fits: every "Hold steadier" of the sitting was the markers-read rule. Now it comes only from a
+shake: the frame's blur in the worse direction (`CaptureQualities.DirectionalBlur`, since a shake smears one way and leaves the steepest
+edges sharp), measured on the frame itself, less 0.3 pixel of the stream's own softness, in pixels of the picture. Measured on the sheet
+rectified at its least resolution instead, a shake of 8 pixels in a far picture read 0.38 and a shake of 4 read 0.00, so that measure is
+not used. Three target pictures, blurred and then made as small as the stream:
+
+| Blur put in the picture | Frame's blur, px | Shake, picture px | Picture read |
+|---|---|---|---|
+| none | 0.00 | 0 | 34 markers, named in about a second, 23 to 26 holes |
+| Gaussian 1 px | 0.24 to 0.26 | 0 | named; the most off square read 31 markers and took 45 s |
+| Shake of 4 px | 0.33 to 0.34 | 0.3 to 0.4 | named, 29 to 34 markers |
+| Gaussian 1.5 px | 0.46 to 0.48 | 0.8 | one named after 41 s, one with 21 markers after 39 s, one not named |
+| Shake of 6 px | 0.67 to 0.70 | 1.4 | one named after 35 s, two not named |
+| Gaussian 2 px, shake of 8 px | 0.64 to 1.03 | 1.3 to 2.2 | not named |
+
+"Hold steadier" is said from 0.6 and not again until under 0.45, between the last blur every picture survived and the first that two of
+three did not. A frame too smeared to fit the markers at all is judged the same way, and is never told "Move back". The stream's own
+softness is not measured yet, since no stream frame was kept: the next sitting's `live.txt` records the shake beside each picture's
+result and sets it. The four pictures as taken measure 0.00: none of them was shaken.
+
+**The rest.** The result's picture stands upright from the registration, across the width and no taller than itself; it was turned twice,
+by itself and by the box around it, which also stood a screen high. The holes are fixed on a page of their own (ANDROID.md section 11).
+Camera and Result show which is on screen in the highlight color, never greyed. The level's whole crosshair turns green when flat. GroupLab
+Dev keeps every picture of a sitting with its live record and trace (ANDROID.md section 13).

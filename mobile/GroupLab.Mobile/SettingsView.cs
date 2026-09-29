@@ -230,7 +230,33 @@ public sealed class SettingsView : UserControl
         {
             // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
             ((StackPanel)about.Child!).Children.Add(Screens.Dim("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+
+            // Entry 291 section 7.5: every picture of a sitting kept on the phone, for the developer to pull; off, and it is deleted.
+            var keeping = new CheckBox { Content = "Keep every picture taken, on this phone only", IsChecked = settings.LoadKeepSitting(), MinHeight = Screens.Touch };
+            var kept = Screens.Dim(KeptWords());
+            keeping.IsCheckedChanged += (_, _) =>
+            {
+                settings.SaveKeepSitting(keeping.IsChecked == true);
+                if (keeping.IsChecked != true)
+                {
+                    SittingRecord.Clear();
+                }
+
+                kept.Text = KeptWords();
+            };
+            ((StackPanel)about.Child!).Children.Add(keeping);
+            ((StackPanel)about.Child!).Children.Add(kept);
         }
         Content = Screens.Page(column);
+    }
+
+    /// <summary>What GroupLab Dev keeps of a sitting, in a line under its switch.</summary>
+    private static string KeptWords()
+    {
+        int count = SittingRecord.Count();
+        string now = count == 1 ? "1 picture is" : $"{count} pictures are";
+        return SittingRecord.On
+            ? $"Each picture is kept with what the camera read before it and how it was analyzed, in the application's own folder, and sent nowhere. {now} kept now. Turning this off deletes them."
+            : "Pictures are not kept.";
     }
 }

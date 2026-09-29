@@ -16,9 +16,10 @@ namespace GroupLab.Mobile;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A4: what a photograph came to, on the phone. The group's figures in the person's own units, the
-/// desktop's composite plot filled the same way from the same marking, and the photograph with every hole GroupLab found, corrected by
-/// touch (entry 199: 48 dp targets and a magnifier under the finger): move a hole, add one it missed, remove one that is not a shot, and
-/// undo. Every change is saved at once. Where the sheet could not be read, the reason and what to do next, never a blank screen.
+/// desktop's composite plot filled the same way from the same marking, and the photograph with every hole GroupLab found. Entry 291
+/// section 2: the photograph is shown upright as the sheet is and is for looking only; the holes are corrected on a page of their own, Fix
+/// holes, where nothing moves by accident. Every change is saved at once. Where the sheet could not be read, the reason and what to do
+/// next, never a blank screen.
 /// </summary>
 public sealed class ResultView : UserControl
 {
@@ -30,8 +31,7 @@ public sealed class ResultView : UserControl
     /// <summary>Entry 259 screen 1: the tiles, the plot with its chips, and the sections that open, from the shared figures.</summary>
     private readonly FiguresView full;
     private readonly TextBlock saved = Screens.Line("");
-    private readonly Button undo = new() { Content = "Undo", MinHeight = Screens.Touch, Margin = new Thickness(4), IsEnabled = false };
-    private SheetEditor? editor;
+    private SheetPicture? picturePane;
     private long? sessionId;
     private readonly Action again;
 
@@ -114,30 +114,27 @@ public sealed class ResultView : UserControl
 
         if (result.State.ImagePath is { } path && File.Exists(path))
         {
-            editor = new SheetEditor(new Bitmap(path), result.State.ViewQuarterTurns, () => session.State.Shots.Where(s => s.IsShot).ToList(), Edited(session),
+            var bitmap = new Bitmap(path);
+            int turns = ViewRotation.Upright(result.State.Scale, bitmap.PixelSize.Width, bitmap.PixelSize.Height, result.State.ViewQuarterTurns);
+            picturePane = new SheetPicture(bitmap, turns, () => session.State.Shots.Where(s => s.IsShot).ToList(),
                 definition is null && AimedByHand(result.State) ? shot => AimColour(session.State, shot.Bull) : null);
-            var tools = new WrapPanel { HorizontalAlignment = HorizontalAlignment.Center };
-            var toolWords = Screens.Line(SheetEditor.Say(SheetEditor.Tool.Move));
-            foreach (var (tool, words) in new[] { (SheetEditor.Tool.Move, "Move"), (SheetEditor.Tool.Add, "Add a hole"), (SheetEditor.Tool.Remove, "Remove") })
-            {
-                var b = new Button { Content = words, MinHeight = Screens.Touch, Margin = new Thickness(4) };
-                b.Click += (_, _) =>
-                {
-                    editor.Mode = tool;
-                    toolWords.Text = SheetEditor.Say(tool);
-                };
-                tools.Children.Add(b);
-            }
 
-            undo.Click += (_, _) =>
+            // Entry 291 section 2.2: the holes are fixed on their own page, and the result measures again when it comes back.
+            picture.Children.Add(Screens.Primary("Fix holes", () =>
             {
-                session.Undo();
-                Changed();
-            };
-            tools.Children.Add(undo);
-            picture.Children.Add(tools);
-            picture.Children.Add(toolWords);
-            picture.Children.Add(new LayoutTransformControl { LayoutTransform = new RotateTransform(90 * result.State.ViewQuarterTurns), Child = editor });
+                var here = Content;
+                Content = new FixHolesPage(session.State, turns, fixedState =>
+                {
+                    Content = here;
+                    if (fixedState is not null)
+                    {
+                        session.Load(fixedState);
+                        Changed();
+                    }
+                });
+            }));
+            picture.Children.Add(Screens.Dim("Move, add or remove a hole under a crosshair, with zoom and undo."));
+            picture.Children.Add(picturePane);
         }
 
         // Entry 259 screen 6: a sheet of a set from Made for your optic leads to the set, pooled so far, and the sheets still to read.
@@ -299,12 +296,6 @@ public sealed class ResultView : UserControl
     /// <summary>The width from which the sheet and the numbers sit side by side in landscape, Material's expanded window class, entry 243 section 3.3.</summary>
     internal const double ExpandedWidth = 840;
 
-    private Action<Action<MarkingSession>> Edited(MarkingSession s) => change =>
-    {
-        change(s);
-        Changed();
-    };
-
     /// <summary>Whether the aim points were placed by hand on a target GroupLab did not print, where each has a color.</summary>
     internal static bool AimedByHand(MarkingState state) => ResultWords.AimedByHand(state);
 
@@ -365,9 +356,8 @@ public sealed class ResultView : UserControl
         string Bull(int index) => state.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
         plot.Show(state, definition, units, Label, Bull);
         full.Show(state, units);
-        undo.IsEnabled = session.UndoWords is not null;
         saved.Text = SavedWords(sessionId);
-        editor?.InvalidateVisual();
+        picturePane?.InvalidateVisual();
     }
 
     private async Task AsSheet(WorkingImage working, TargetDefinition sheet, ShotSetup setup, Action again)
@@ -427,7 +417,7 @@ public sealed class ResultView : UserControl
     {
         if (figures is null || figures.Shots == 0)
         {
-            return "No holes were found on this sheet. Add them by touch below, or take the picture again closer.";
+            return "No holes were found on this sheet. Add them with Fix holes below, or take the picture again closer.";
         }
 
         string Size(double inches) => units.Angle(inches, distanceInches) is { } angle
@@ -448,45 +438,21 @@ public sealed class ResultView : UserControl
     }
 
     /// <summary>
-    /// The working image fitted to the width, a ring on every hole, and the holes corrected by touch. A touch within 24 dp of a hole is on
-    /// it. While a hole is dragged, a magnifier in the corner away from the finger shows three times the area under it, with a cross at the
-    /// point the hole will go, because a finger hides exactly the part that matters.
-    /// <para>
-    /// Entry 281 section 1.7: the picture was stretched to whatever box the page gave it, and shown as the camera's sensor stores it, on its
-    /// side for a picture taken upright. It is now scaled alike across and down, never filled, and turned as the marking's view turns
-    /// (<see cref="ViewRotation"/>), with every ring and the magnifier turned with it; the positions themselves stay in the stored pixels.
-    /// </para>
+    /// The working image across the whole width and exactly as tall as it needs, turned upright as the sheet is, with a ring on every hole.
+    /// Entry 291 section 2: it takes no touches. Entry 281 section 1.7 already scaled it alike across and down and turned it with the
+    /// marking's view; entry 291 found it turned twice, by itself and again by the box it sat in, which also stood a screen high and empty.
     /// </summary>
-    private sealed class SheetEditor(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Action<Action<MarkingSession>> edit, Func<MarkedShot, IBrush?>? colour = null) : Control
+    internal sealed class SheetPicture(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Func<MarkedShot, IBrush?>? colour = null) : Control
     {
-        internal enum Tool
-        {
-            Move,
-            Add,
-            Remove,
-        }
-
-        private const double Reach = 24;
-        private const double Loupe = 140;
-        private const double Magnify = 3;
-        private int? dragging;
-        private Point? finger;
-
-        public Tool Mode { get; set; } = Tool.Move;
-
-        internal static string Say(Tool tool) => tool switch
-        {
-            Tool.Add => "Tap where a hole is that GroupLab missed.",
-            Tool.Remove => "Tap a ring that is not a shot to remove it.",
-            _ => "Drag a ring to the center of its hole.",
-        };
+        /// <summary>The quarter turns the picture is shown by.</summary>
+        internal int Turns => ViewRotation.Normalise(turns);
 
         private double PixelWidth => image.PixelSize.Width;
 
         private double PixelHeight => image.PixelSize.Height;
 
         /// <summary>The picture's size as it is shown, turned.</summary>
-        private (double Width, double Height) Shown => ViewRotation.DisplaySize(turns, PixelWidth, PixelHeight);
+        internal (double Width, double Height) Shown => ViewRotation.DisplaySize(turns, PixelWidth, PixelHeight);
 
         /// <summary>Screen units per image pixel, the same across and down so the picture keeps its shape.</summary>
         private double Scale => Math.Min(Bounds.Width / Shown.Width, Bounds.Height / Shown.Height);
@@ -497,81 +463,19 @@ public sealed class ResultView : UserControl
             return new Size(width, width * Shown.Height / Shown.Width);
         }
 
-        private PointD ToImage(Point p) => ViewRotation.ToImage(new PointD(p.X / Scale, p.Y / Scale), turns, PixelWidth, PixelHeight);
-
         private Point ToScreen(PointD image)
         {
             var shown = ViewRotation.ToDisplay(image, turns, PixelWidth, PixelHeight);
             return new Point(shown.X * Scale, shown.Y * Scale);
         }
 
-        /// <summary>Stored pixels to the screen: the turn, then <paramref name="k"/> screen units a pixel, then a shift.</summary>
-        private Matrix Turned(double k, double shiftX, double shiftY)
-        {
-            var (a, b, c, d, e, f) = ViewRotation.Affine(turns, PixelWidth, PixelHeight);
-            return new Matrix(a * k, d * k, b * k, e * k, (c * k) + shiftX, (f * k) + shiftY);
-        }
-
-        private int? Nearest(Point p)
-        {
-            var near = shots().Select(s => (s.Id, Distance: Point.Distance(ToScreen(s.Image), p)))
-                .Where(s => s.Distance <= Reach).OrderBy(s => s.Distance).ToList();
-            return near.Count > 0 ? near[0].Id : null;
-        }
-
-        protected override void OnPointerPressed(PointerPressedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            var p = e.GetPosition(this);
-            switch (Mode)
-            {
-                case Tool.Add:
-                    edit(s => s.AddShot(ToImage(p)));
-                    break;
-                case Tool.Remove when Nearest(p) is { } gone:
-                    edit(s => s.DeleteShot(gone));
-                    break;
-                case Tool.Move when Nearest(p) is { } held:
-                    dragging = held;
-                    finger = p;
-                    e.Pointer.Capture(this);
-                    InvalidateVisual();
-                    break;
-            }
-
-            e.Handled = true;
-        }
-
-        protected override void OnPointerMoved(PointerEventArgs e)
-        {
-            base.OnPointerMoved(e);
-            if (dragging is not null)
-            {
-                finger = e.GetPosition(this);
-                InvalidateVisual();
-                e.Handled = true;
-            }
-        }
-
-        protected override void OnPointerReleased(PointerReleasedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            if (dragging is { } id && finger is { } at)
-            {
-                dragging = null;
-                finger = null;
-                e.Pointer.Capture(null);
-                edit(s => s.MoveShot(id, ToImage(at)));
-                e.Handled = true;
-            }
-        }
-
         public override void Render(DrawingContext context)
         {
-            var whole = new Rect(0, 0, PixelWidth, PixelHeight);
-            using (context.PushTransform(Turned(Scale, 0, 0)))
+            var (a, b, c, d, e, f) = ViewRotation.Affine(turns, PixelWidth, PixelHeight);
+            double k = Scale;
+            using (context.PushTransform(new Matrix(a * k, d * k, b * k, e * k, c * k, f * k)))
             {
-                context.DrawImage(image, new Rect(image.Size), whole);
+                context.DrawImage(image, new Rect(image.Size), new Rect(0, 0, PixelWidth, PixelHeight));
             }
 
             var pen = new Pen(Brushes.OrangeRed, 2);
@@ -579,33 +483,9 @@ public sealed class ResultView : UserControl
             var leftOut = new Pen(Brushes.OrangeRed, 2, new DashStyle([2, 2], 0));
             foreach (var shot in shots())
             {
-                var at = shot.Id == dragging && finger is { } f ? f : ToScreen(shot.Image);
                 var ring = colour?.Invoke(shot) is { } brush ? new Pen(brush, 2, shot.Exclusion is null ? null : new DashStyle([2, 2], 0)) : shot.Exclusion is null ? pen : leftOut;
-                context.DrawEllipse(null, ring, at, 9, 9);
+                context.DrawEllipse(null, ring, ToScreen(shot.Image), 9, 9);
             }
-
-            if (finger is not { } held)
-            {
-                return;
-            }
-
-            // The loupe: the corner away from the finger, three times the area under it, and a cross where the hole will go.
-            bool left = held.X > Bounds.Width / 2;
-            var box = new Rect(left ? 8 : Bounds.Width - Loupe - 8, 8, Loupe, Loupe);
-            // The magnifier turned as the picture is, the point under the finger at its center.
-            double k = Scale * Magnify;
-            var under = ViewRotation.ToDisplay(ToImage(held), turns, PixelWidth, PixelHeight);
-            using (context.PushClip(box))
-            using (context.PushTransform(Turned(k, box.Center.X - (under.X * k), box.Center.Y - (under.Y * k))))
-            {
-                context.DrawImage(image, new Rect(image.Size), whole);
-            }
-
-            context.DrawRectangle(null, new Pen(Brushes.White, 2), box);
-            var mid = box.Center;
-            var cross = new Pen(Brushes.OrangeRed, 1.5);
-            context.DrawLine(cross, new Point(mid.X - 12, mid.Y), new Point(mid.X + 12, mid.Y));
-            context.DrawLine(cross, new Point(mid.X, mid.Y - 12), new Point(mid.X, mid.Y + 12));
         }
     }
 }

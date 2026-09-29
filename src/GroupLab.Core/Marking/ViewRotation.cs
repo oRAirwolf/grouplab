@@ -59,6 +59,35 @@ public static class ViewRotation
     };
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 2.1: the quarter turns that show a registered sheet upright, its top at the top, from where
+    /// the registration puts the page's "down" in the picture rather than from the file's tags. The phone's pictures reach the analysis
+    /// with no orientation tag, so a portrait sheet photographed upright was shown on its side in a landscape box. Where the scale is not
+    /// a registered sheet's, <paramref name="fallback"/>, the turns the marking already had, is kept.
+    /// </summary>
+    public static int Upright(ScaleReference? scale, double width, double height, int fallback)
+    {
+        if (scale is not SheetReference sheet || width <= 0 || height <= 0)
+        {
+            return Normalise(fallback);
+        }
+
+        var centre = new PointD(width / 2, height / 2);
+        var t0 = sheet.ToTarget(centre);
+        var tx = sheet.ToTarget(new PointD(centre.X + 1, centre.Y));
+        var ty = sheet.ToTarget(new PointD(centre.X, centre.Y + 1));
+        double a = tx.X - t0.X, b = ty.X - t0.X, c = tx.Y - t0.Y, d = ty.Y - t0.Y;
+        double determinant = (a * d) - (b * c);
+        if (!double.IsFinite(determinant) || Math.Abs(determinant) < 1e-15)
+        {
+            return Normalise(fallback);
+        }
+
+        // The picture's direction that moves one unit down the page and none across it.
+        var down = new PointD(-b / determinant, a / determinant);
+        return Enumerable.Range(0, 4).MaxBy(k => VectorToDisplay(down, k).Y);
+    }
+
+    /// <summary>
     /// The map from stored pixels to the turned frame as affine coefficients, display x = A x + B y + C and display y = D x + E y + F,
     /// so the screen can draw the image and its marks through one transform.
     /// </summary>

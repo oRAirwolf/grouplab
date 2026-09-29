@@ -244,7 +244,8 @@ public static class MarkingFile
                         (double?)quality["resolutionPart"] ?? 0,
                         (int?)quality["markingsRead"],
                         (int?)quality["markingsExpected"],
-                        (double?)quality["markingsPart"]))
+                        (double?)quality["markingsPart"],
+                        (double?)quality["worstBlurInches"]))
                 : null,
             Dismissed: file["reviewKept"] is JsonArray kept ? [.. kept.Select(k => (string)k!)] : null,
             ExpectedShots: (int?)file["expectedShots"],
@@ -345,6 +346,7 @@ public static class MarkingFile
                 markingsRead = capture.Quality.MarkingsRead,
                 markingsExpected = capture.Quality.MarkingsExpected,
                 markingsPart = capture.Quality.MarkingsPart,
+                worstBlurInches = capture.Quality.WorstBlurInches,
                 description = capture.Quality.Describe(),
             },
         };

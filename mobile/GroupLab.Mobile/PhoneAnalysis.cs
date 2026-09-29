@@ -123,7 +123,7 @@ internal static class PhoneAnalysis
         try
         {
             token.ThrowIfCancellationRequested();
-            return Detect(working, null, setup, units, survey, token, progress, torch);
+            return Detect(working, null, setup, units, survey, token, progress, torch, photo);
         }
         catch (OperationCanceledException)
         {
@@ -152,18 +152,21 @@ internal static class PhoneAnalysis
     /// The working image analyzed: as the sheet its codes name, or as <paramref name="chosen"/> where the person named it because the codes
     /// could not be read (entry 115 section 4, as the desktop asks).
     /// </summary>
-    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null, bool torch = false)
+    /// <param name="picture">The picture as the camera saved it, where GroupLab Dev keeps it with its trace (entry 291 section 7.5).</param>
+    public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null, bool torch = false, string? picture = null)
     {
         var clock = Stopwatch.StartNew();
         var (grey, _) = ImageLoader.Load(working.Path);
         var (value, _) = ImageLoader.LoadMaxChannel(working.Path);
         var backend = new OpenCvSharpBackend();
         var trace = new TraceRecorder();
-        trace.Filed += record =>
+
+        // Entry 291 section 3.1: the line names the step being done as it starts, where it named the next step only as the last finished.
+        trace.Begun += stage =>
         {
-            if (GroupLab.Core.Trace.StageWords.After(record.Stage) is { } next)
+            if (GroupLab.Core.Trace.StageWords.During(stage) is { } now)
             {
-                progress?.Invoke(next);
+                progress?.Invoke(now);
             }
         };
         var session = new MarkingSession();
@@ -183,6 +186,11 @@ internal static class PhoneAnalysis
             // themselves (SheetIdentification), so the sheet the picture looks most like is offered first, for the person to confirm.
             var looksLike = GroupLab.Core.Capture.LiveSheet.MostAlike(grey, GroupLab.Core.Capture.LiveSheet.SheetsByMarkers(grey, Library(), backend), backend);
             DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds), ("looksLike", looksLike?.Name), ("check", unread.Describe()));
+            if (picture is not null)
+            {
+                SittingRecord.Analyzed(picture, trace, "No sheet was named: " + (identity?.Failure ?? "none chosen"));
+            }
+
             return new PhoneResult(session.State, null,
                 "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
                 null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike);
@@ -200,14 +208,31 @@ internal static class PhoneAnalysis
         // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
         DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),
             ("peakMb", Benchmark.PeakMegabytes()), ("stages", string.Join(" ", Benchmark.Stages(trace).Select(s => $"{s.Stage}={s.Milliseconds}"))));
+        // Entry 291 section 3.3: the markers the picture read, at its own size and field of view, against those the last live frame read and
+        // foretold (camera.live), so the two can be compared picture by picture.
+        DiagnosticLog.Info("phone.markers", ("read", result.Measurement.Fiducials?.Matches.Count), ("of", result.Measurement.Fiducials?.Expected),
+            ("codes", codesRead), ("picture", $"{working.OriginalWidth}x{working.OriginalHeight}"), ("measured", $"{grey.Width}x{grey.Height}"));
         var check = GroupLab.Core.Capture.PictureCheck.Of(grey, definition, result, codesRead, torch);
         DiagnosticLog.Info("phone.check", ("check", check.Describe()), ("torch", torch));
+        if (picture is not null)
+        {
+            SittingRecord.Analyzed(picture, trace, $"{definition.Name}: {result.Detections.Count} holes, {result.Measurement.Fiducials?.Matches.Count} of {result.Measurement.Fiducials?.Expected} markers, {codesRead} codes; {check.Describe()}");
+        }
+
         if (result.Failure is not null || result.Scale is null)
         {
             return new PhoneResult(session.State, definition, (result.Failure ?? "The sheet's markers could not be matched").TrimEnd('.') + ".", null, working, Check: check);
         }
 
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture, result.SetSheet);
+
+        // Entry 291 section 2.1: the sheet shown upright as the registration finds it, on the result, the shared picture and the report.
+        int upright = ViewRotation.Upright(session.State.Scale, grey.Width, grey.Height, session.State.ViewQuarterTurns);
+        if (upright != session.State.ViewQuarterTurns)
+        {
+            session.Load(session.State with { ViewQuarterTurns = upright });
+        }
+
         long? id = Save(session.State, definition, units, null);
         return new PhoneResult(session.State, definition, null, id, working, Check: check, Measured: result.Measurement.Scale, Paper: result.Paper);
     }

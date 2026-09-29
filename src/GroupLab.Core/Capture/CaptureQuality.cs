@@ -22,7 +22,8 @@ public sealed record CaptureQuality(
     double ResolutionPart,
     int? MarkingsRead,
     int? MarkingsExpected,
-    double? MarkingsPart)
+    double? MarkingsPart,
+    double? WorstBlurInches = null)
 {
     /// <summary>The part that set the score, in words, for a person who wants to know why.</summary>
     public string Weakest => new (string Name, double? Part)[]
@@ -89,12 +90,13 @@ public static class CaptureQualities
         // The sheet rectified at no more than its own least resolution, a margin of 3 percent left off every edge.
         double inset = 0.03 * Math.Min(widthInches, heightInches);
         int w = (int)((widthInches - (2 * inset)) * ppi), h = (int)((heightInches - (2 * inset)) * ppi);
-        double? blur = null, clipped = null, level = null;
+        double? blur = null, clipped = null, level = null, worst = null;
         if (w >= 40 && h >= 40)
         {
             var toRectified = Homography.Compose(pageToImage.Inverse(), new Homography([ppi, 0, -inset * ppi, 0, ppi, -inset * ppi, 0, 0, 1]));
             var sheet = PortableImaging.WarpPerspective(image, toRectified, w, h);
             blur = Blur(sheet) is var sigma && !double.IsNaN(sigma) ? sigma / ppi : null;
+            worst = DirectionalBlur(sheet) is var along && !double.IsNaN(along) ? along / ppi : null;
             (clipped, level) = Exposure(sheet);
         }
 
@@ -108,7 +110,7 @@ public static class CaptureQualities
         double? markings = markingsRead is { } r && markingsExpected is { } e && e > 0 ? Part((double)r / e, FineMarkings, UselessMarkings) : null;
         double weakest = new[] { focus, exposure, angle, resolution, markings }.Where(p => p is not null).Min()!.Value;
         int score = (int)Math.Round(100 * weakest, MidpointRounding.AwayFromZero);
-        return new CaptureQuality(score, Words(score), blur, focus, clipped, level, exposure, offAxisDegrees, angle, least, resolution, markingsRead, markingsExpected, markings);
+        return new CaptureQuality(score, Words(score), blur, focus, clipped, level, exposure, offAxisDegrees, angle, least, resolution, markingsRead, markingsExpected, markings, worst);
     }
 
     /// <summary>A score as a person is shown it: good, usable or poor, never the number.</summary>
@@ -184,6 +186,64 @@ public static class CaptureQualities
         sigmas.Sort();
         double median = sigmas[sigmas.Count / 2], floor = 2 / Math.Sqrt(2 * Math.PI);
         return Math.Sqrt(Math.Max(0, (median * median) - (floor * floor)));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 3.5: the blur as <see cref="Blur"/> measures it, taken apart by the edges' direction, and the
+    /// worse of the two. A hand's shake smears a picture one way: edges along the shake stay sharp and are the steepest in the picture, so
+    /// the median of the steepest, which <see cref="Blur"/> takes, barely sees it. Here the edges that face across and those that face down
+    /// are measured apart, each the same way, and the blurrier is the answer; NaN where either has too few edges.
+    /// </summary>
+    public static double DirectionalBlur(GrayImage image)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        int w = image.Width, h = image.Height;
+        var across = new List<(double Slope, int X, int Y)>();
+        var down = new List<(double Slope, int X, int Y)>();
+        for (int y = 5; y < h - 5; y++)
+        {
+            for (int x = 5; x < w - 5; x++)
+            {
+                double gx = (image[x + 1, y] - image[x - 1, y]) / 2.0, gy = (image[x, y + 1] - image[x, y - 1]) / 2.0;
+                double ax = Math.Abs(gx), ay = Math.Abs(gy);
+                if (ax >= 12 && ax >= 2 * ay)
+                {
+                    across.Add((ax, x, y));
+                }
+                else if (ay >= 12 && ay >= 2 * ax)
+                {
+                    down.Add((ay, x, y));
+                }
+            }
+        }
+
+        double Sigma(List<(double Slope, int X, int Y)> slopes)
+        {
+            if (slopes.Count < 50)
+            {
+                return double.NaN;
+            }
+
+            var sigmas = new List<double>();
+            foreach (var (slope, x, y) in slopes.OrderByDescending(s => s.Slope).Take(Math.Max(50, slopes.Count / 50)))
+            {
+                int low = 255, high = 0;
+                for (int d = -4; d <= 4; d++)
+                {
+                    int v = ReferenceEquals(slopes, across) ? image[x + d, y] : image[x, y + d];
+                    low = Math.Min(low, v);
+                    high = Math.Max(high, v);
+                }
+
+                sigmas.Add((high - low) / (slope * Math.Sqrt(2 * Math.PI)));
+            }
+
+            sigmas.Sort();
+            double median = sigmas[sigmas.Count / 2], floor = 2 / Math.Sqrt(2 * Math.PI);
+            return Math.Sqrt(Math.Max(0, (median * median) - (floor * floor)));
+        }
+
+        return Math.Max(Sigma(across), Sigma(down));
     }
 
     /// <summary>The share of the paper's pixels at 250 or above, and the paper's median level: the paper being the light side of Otsu's threshold.</summary>

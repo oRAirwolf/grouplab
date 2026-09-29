@@ -98,7 +98,7 @@ internal sealed class TestPhone : IPhonePlatform
 
     public Control? UpdateCard() => null;
 
-    public bool IsDevBuild => false;
+    public bool IsDevBuild { get; set; }
 }
 
 /// <summary>The repository's root, found from the test's own folder.</summary>

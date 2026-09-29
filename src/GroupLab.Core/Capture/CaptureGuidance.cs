@@ -30,7 +30,19 @@ public enum Instruction
 /// </summary>
 public sealed record FrameVerdict(Instruction Say, string Words, bool SheetInFrame, bool Detected, bool AngleWithin, bool InFocus, bool ExposureWithin, bool MarkingsRead,
     CaptureQuality? Quality = null, int? MarkersRead = null, int? MarkersExpected = null, int? CodesRead = null, int? CodesExpected = null, double? Evenness = null,
-    Registration.IPageMapping? Mapping = null, double? PixelsPerMm = null, double? EdgeRoom = null);
+    Registration.IPageMapping? Mapping = null, double? PixelsPerMm = null, double? EdgeRoom = null,
+    double? PrintedRoom = null, double? ModulePixels = null, double? MarkerPixels = null, int? MarkersInFrame = null, double? FrameBlurPixels = null)
+{
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 291 section 3.3: the markers the picture will read, from this frame, where the picture has
+    /// <paramref name="measuredScale"/> of its pixels to each of the frame's. Every marker of the sheet that lies whole inside the frame, where
+    /// a marker will be at least <see cref="CaptureGuidance.ReadableMarkerPixels"/> across in the picture; otherwise only those this frame read.
+    /// The frame reads fewer than the picture because it has less than half the picture's pixels, not because it sees less: both are the
+    /// sensor's whole 4:3 view.
+    /// </summary>
+    public int? MarkersPredicted(double measuredScale) =>
+        MarkersInFrame is { } inFrame && MarkerPixels is { } side ? (side * measuredScale >= CaptureGuidance.ReadableMarkerPixels ? inFrame : MarkersRead) : MarkersRead;
+}
 
 /// <summary>
 /// docs/MOBILE-CAPTURE.md items C1 to C3, entry 219 item A2: the capture screen's conditions, all judged from one frame, and **one**
@@ -70,7 +82,8 @@ public static class CaptureGuidance
         CaptureQuality? quality = null;
         bool? cornersIn = null;
         double? evenness = null, edgeRoom = null;
-        int? read = null, expected = null;
+        int? read = null, expected = null, markersInFrame = null;
+        double? printedRoom = null, modulePixels = null, markerPixels = null;
         if (measurement.Registration is { } registration && measurement.Fiducials is { } markers)
         {
             (read, expected) = (markers.Matches.Count, markers.Expected);
@@ -84,10 +97,31 @@ public static class CaptureGuidance
             // past the edge, so the guidance can hold a band rather than flip at the edge.
             edgeRoom = corners.Min(c => Math.Min(Math.Min(c.X, frame.Width - 1 - c.X), Math.Min(c.Y, frame.Height - 1 - c.Y))) / Math.Max(frame.Width, frame.Height);
             evenness = PictureCheck.Evenness(PictureCheck.BullPaper(frame, pageToImage, definition));
+
+            // Entry 291 section 3.2: the printed sheet, its markers and codes, not the paper's white margin, is what must be in the frame; and
+            // how many pixels a code's module and a marker get, which is what reading them needs.
+            var (room, inFrameCount) = Printed(definition, pageToImage, frame.Width, frame.Height);
+            (printedRoom, markersInFrame) = (room, inFrameCount);
+            modulePixels = quality.LeastPixelsPerInch * (definition.Codes?.ModuleSize ?? 4) / 254.0;
+            markerPixels = quality.LeastPixelsPerInch * (definition.Fiducials?.MarkerSize ?? 40) / 254.0;
+        }
+
+        // Entry 291 section 3.5: the frame's blur, in its own pixels, the worse direction's, measured on the frame as it is. The sheet
+        // rectified at its least resolution hid a shake: a far sheet's rectified copy has fewer pixels than the frame, and a shake of 8 pixels
+        // in the picture measured 0.38 there. The strongest edges in the frame are the markers', the codes' and the printing's.
+        double? frameBlur = CaptureQualities.DirectionalBlur(frame) is var smear && !double.IsNaN(smear) ? smear : null;
+
+        // A frame whose markers were read but too few to fit the sheet by: how many, and how large, so the guidance can say closer.
+        if (measurement.Registration is null && measurement.Fiducials is { Matches.Count: > 0 } few)
+        {
+            read = few.Matches.Count;
+            markerPixels = few.Matches.Select(m => Enumerable.Range(0, m.ImageCorners.Count).Average(i =>
+                Math.Sqrt(Squared(m.ImageCorners[i], m.ImageCorners[(i + 1) % m.ImageCorners.Count])))).Order().ElementAt(few.Matches.Count / 2);
         }
 
         return Judge(outline, reason, quality, cornersIn) with
         {
+            FrameBlurPixels = frameBlur,
             MarkersRead = read,
             MarkersExpected = expected,
             CodesRead = codesRead,
@@ -97,7 +131,54 @@ public static class CaptureGuidance
             Mapping = measurement.Registration?.Mapping,
             PixelsPerMm = measurement.Scale is { } s ? s.PixelsPerDmmArea * 10 : null,
             EdgeRoom = edgeRoom,
+            PrintedRoom = printedRoom,
+            ModulePixels = modulePixels,
+            MarkerPixels = markerPixels,
+            MarkersInFrame = markersInFrame,
         };
+    }
+
+    private static double Squared(PointD a, PointD b) => ((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y));
+
+    /// <summary>
+    /// The side, in pixels of the picture, from which a marker is read: entry 291's pictures from the Fold 7 made smaller step by step read
+    /// all 34 markers with sides of 15.5 pixels and more, and 33 at 13.8 (docs/MOBILE-CAPTURE.md section 8).
+    /// </summary>
+    public const double ReadableMarkerPixels = 14;
+
+    /// <summary>
+    /// How much of the frame is clear beyond the sheet's printing, its markers' corners and its codes, as a share of the frame's longer side,
+    /// negative past the edge; and how many markers lie whole inside the frame.
+    /// </summary>
+    public static (double Room, int MarkersInFrame) Printed(TargetDefinition definition, Homography pageInchesToImage, int width, int height)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        ArgumentNullException.ThrowIfNull(pageInchesToImage);
+        double Room(PointD p) => Math.Min(Math.Min(p.X, width - 1 - p.X), Math.Min(p.Y, height - 1 - p.Y));
+        var (markers, codes) = LiveSheet.Printed(definition);
+        double half = (definition.Fiducials?.MarkerSize ?? 40) / 2.0;
+        double least = double.MaxValue;
+        int inside = 0;
+        foreach (var m in markers)
+        {
+            var corners = new[] { new PointD(m.X - half, m.Y - half), new PointD(m.X + half, m.Y - half), new PointD(m.X + half, m.Y + half), new PointD(m.X - half, m.Y + half) }
+                .Select(c => pageInchesToImage.Apply(new PointD(c.X / 254.0, c.Y / 254.0))).ToList();
+            double room = corners.Min(Room);
+            least = Math.Min(least, room);
+            inside += room >= 0 ? 1 : 0;
+        }
+
+        if (definition.Codes is { } c)
+        {
+            double side = ((c.Version is { } v ? (4 * v) + 17 : 57) * c.ModuleSize) / 2.0;
+            foreach (var at in codes)
+            {
+                least = Math.Min(least, new[] { new PointD(at.X - side, at.Y - side), new PointD(at.X + side, at.Y - side), new PointD(at.X + side, at.Y + side), new PointD(at.X - side, at.Y + side) }
+                    .Select(p => pageInchesToImage.Apply(new PointD(p.X / 254.0, p.Y / 254.0))).Min(Room));
+            }
+        }
+
+        return (least == double.MaxValue ? 0 : least / Math.Max(width, height), inside);
     }
 
     /// <summary>
@@ -109,9 +190,13 @@ public static class CaptureGuidance
     {
         ArgumentNullException.ThrowIfNull(search);
         bool markers = search.MarkersFound >= LiveSheet.LeastMarkers;
+        // Entry 291 section 3.2: markers seen, too few or too small to fit the sheet by, mean closer, never back. The outline's "out of the
+        // frame" is believed only where no marker is seen at all: in the second sitting it said "Move back" to a sheet whose markers were
+        // in view but too small to read, and went on saying it until nothing could be read.
         (Instruction Say, string Words) next =
-            markers && search.MedianSidePixels < LiveSheet.ReadableSidePixels ? (Instruction.MoveCloser, "Move closer, so GroupLab can read the sheet's codes.")
+            search.MarkersFound > 0 && search.MedianSidePixels < LiveSheet.ReadableSidePixels ? (Instruction.MoveCloser, "Move closer, so GroupLab can read the sheet's markers.")
             : markers ? (Instruction.FindTheSheet, "Hold still while GroupLab reads the sheet.")
+            : search.MarkersFound > 0 ? (Instruction.MoveCloser, "Move closer to the sheet.")
             : outlineReason == SheetOutline.OutOfFrame ? (Instruction.MoveBack, "Fit the whole sheet in view, with a little space around it.")
             : outline is not null ? (Instruction.MoveCloser, "Move closer to the sheet.")
             : (Instruction.FindTheSheet, "Point the camera at the sheet.");

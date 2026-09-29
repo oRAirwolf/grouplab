@@ -271,9 +271,20 @@ public sealed class Shell : UserControl
         _ => GroupLab.App.Theme.Icons.Settings,
     };
 
+    /// <summary>
+    /// A page that must answer Back itself, entry 291 section 2.2: Fix holes asks whether to keep the changes rather than lose them. True
+    /// where it did.
+    /// </summary>
+    internal static Func<bool>? BackOverride { get; set; }
+
     /// <summary>Back returns to Capture from anywhere else, and is left to Android on Capture itself.</summary>
     internal bool Back()
     {
+        if (BackOverride is { } page && page())
+        {
+            return true;
+        }
+
         // Entry 260: on the camera, Android's back closes it rather than leaving the application.
         if (Content == frame && Showing == Place.Capture && capture?.CloseCamera() == true)
         {
