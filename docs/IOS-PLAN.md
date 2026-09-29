@@ -76,8 +76,9 @@ analysis, several shared at once as a set, one per sheet; a share the extension 
 time GroupLab opens. A HEIC photograph is written as a JPEG for OpenCV, at full size and without its location. Whether the device is
 online comes from Network's path monitor, so a photograph that could not be fetched is said to be for that reason. The simulator's
 self-test opens and cancels both pickers, reads the sample scan into analysis through **Open in**, and through a share left in the app
-group as the extension leaves one and opened by the simulator at `grouplab://shared`; the workflow checks that the extension is inside the
-application and that iOS registered it. The signed build will need a second provisioning profile, for `org.grouplab.app.share`, and the
+group as the extension leaves one and opened at `grouplab://shared` through iOS by the call the extension makes; the workflow checks
+that the extension is inside the application and that iOS registered it. When the simulator itself opens that address, iOS asks "Open in
+GroupLab?" first, which is why the sitting checks what a share shows. The signed build will need a second provisioning profile, for `org.grouplab.app.share`, and the
 app group registered on both identifiers; `scripts/ios-signing.py` checks only the application's today.
 
 ## The first TestFlight sitting
@@ -112,7 +113,8 @@ no, and a no comes back as a note with what was seen.
     far it has got, and Cancel stops it and returns to Capture. The same with Wi-Fi off says the iPad is offline.
 14. **Files.** From another app opens Files; a picture from iCloud Drive and one from Google Drive or OneDrive, where installed, are read.
 15. **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight
-    into analysis. The same from Photos, and with three shared at once, which are read as a set.
+    into analysis, with no question from iOS in between, or with only its "Open in GroupLab?" (note which). The same from Photos, and
+    with three shared at once, which are read as a set.
 16. **Open in GroupLab.** From Files, Share, then GroupLab in the row of apps (or Open in), opens GroupLab and reads the picture.
 17. **A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it. If iOS will not let the share
     sheet open GroupLab, the sheet says the picture is waiting, and opening GroupLab reads it.

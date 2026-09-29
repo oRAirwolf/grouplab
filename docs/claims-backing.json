@@ -4385,10 +4385,6 @@
    "kind": "code",
    "where": "ios/GroupLab.iOS/Photos: PhotoPickers.Pick (PHPickerViewController with the current representation, UIDocumentPickerViewController for public.image), PhotoPickers.Load (the item provider's file and progress, canceled by Cancel), PhotoFiles.Readable, IncomingPhotos, Connection; ios/GroupLab.Share/ShareViewController.cs and ios/Shared/Handoff.cs; PhotosSelfTest on the simulator in .github/workflows/ios-app.yml; entry 292 section 2"
   },
-  "**Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis.": {
-   "kind": "code",
-   "where": "a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs"
-  },
   "**A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it.": {
    "kind": "code",
    "where": "a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/ShareViewController.cs OpenGroupLab and ios/GroupLab.iOS/Photos/IncomingPhotos.cs Listen and Waiting"
@@ -4400,6 +4396,10 @@
   "**The Photos picker (entry 292).** Choose a photograph opens Photos with no question about access; a photograph on the iPad is read at its full size, and a HEIC one reads the right way up.": {
    "kind": "code",
    "where": "a check to be made on the iPad mini, entry 292 section 2.1; ios/GroupLab.iOS/Photos/PhotoPickers.cs (PhotosPicker, the current representation) and PhotoFiles.Readable, which keeps the orientation"
+  },
+  "**Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis, with no question from iOS in between, or with only its \"Open in GroupLab?\" (note which).": {
+   "kind": "code",
+   "where": "a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs"
   }
  },
  "rules": [
