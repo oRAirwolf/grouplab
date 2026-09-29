@@ -81,4 +81,8 @@ the outlines do.
 | Microsoft.Data.Sqlite, with SQLitePCLRaw and SQLite | MIT; SQLitePCLRaw Apache-2.0; SQLite public domain | GroupLab.Core | The session and records database of DESIGN.md section 15 (NOTES-FROM-PLANNING.md entry 112 section 1) |
 | OpenCvSharp4 and OpenCvSharp4.runtime.win, with OpenCV | Apache-2.0; OpenCV Apache-2.0 | GroupLab.Cli, and the tests through it | Marker detection, homography fitting and resampling behind `IImagingBackend` |
 | PDFtoImage, with PDFium and SkiaSharp | MIT; PDFium BSD-3-Clause and Apache-2.0; SkiaSharp MIT | tests only | Rasterising rendered PDFs for conformance tests 39, 41, 42 and 43 |
+| Avalonia, Avalonia.Desktop, Avalonia.Android, Avalonia.Themes.Fluent, Avalonia.Headless.XUnit | MIT | GroupLab.App, GroupLab.Mobile and the Android head; the headless one in tests only | The user interface on the desktop and the phone, and driving it in tests |
+| Xamarin.AndroidX.Camera (CameraX), with the AndroidX libraries it brings | MIT (the .NET bindings); AndroidX Apache-2.0 | the Android head | The camera on Android (entry 219 item A4) |
+| Xamarin.AndroidX.Work.Runtime (WorkManager) | MIT (the .NET binding); AndroidX Apache-2.0 | GroupLab Dev's APK only, never the build for Google Play | The six-hourly update check (entry 288) |
+| OpenCV and opencv_contrib 4.13.0, and OpenCvSharp's native half, built from source for Android and iOS | Apache-2.0 | the Android head; the iOS build | The same imaging on the phones, built by `android/opencv/build-extern.sh` and `ios/opencv/build-extern.sh` |
 | xunit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk | Apache-2.0, MIT | tests only | Test framework |
