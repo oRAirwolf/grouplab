@@ -1,3 +1,5 @@
+FOR UNHOLY (entry 289): once nightly 126 is out, the 2 MOA sheets are in GroupLab under Targets, Centerfire load development: "GroupLab 3x3 2 MOA" for one page, or "..., Set of 3 Letter Sheets" for load development, each also with the C or E bull and on A4. Print at Actual size. Three details differ from what was asked (two corner codes, bulls numbered 1 to 9 on each page, the standard load block), because the sheet format cannot carry them yet; planning has them as questions 71 to 73.
+
 IOS, UNTIL WEDNESDAY 8 PM MOUNTAIN (entry 290; not a request, updated as items land):
 1. The shared mobile project, both phones' screens in one place: built; Android unchanged, checked again on the next nightly.
 2. OpenCV for iOS in CI: built and proven: a static library for the iPhone and the simulator, 22 MB, rebuilt only when its recipe changes.

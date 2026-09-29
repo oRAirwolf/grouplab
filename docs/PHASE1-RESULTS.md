@@ -40,6 +40,23 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 289: the 2 MOA sheets
+
+Twelve sheets for Unholy's request: `GL-CF9-LTR` and `GL-CF9-A4` (one page), `GL-CF9-T` and `GL-CF9-TA4` (a set of three pooled by tile
+index), each plain, C and E. Nine 2.00 in bulls, 3 by 3, on a 63.4 mm pitch (the even-pitch rule takes 0.1 mm off 2.5 in and keeps the
+1 MOA sheets' 12.6 mm gap), with the nine-field load block.
+
+- **The bull:** 508/492/254/238/50 dmm. The E is twice the 1 MOA E (0.72 in center); the C is a 2.00 in diamond, point to point.
+- **Codes:** the top pair on every page (question 71).
+- **Markers:** a new derived rule, `grid-boundary-edge-1` (scheme byte 4): the lattice intersections plus the outer cell edges' midpoints,
+  26 on Letter and 28 on A4. Registration over 60 synthetic photographs per page: with the 14 intersections alone, 3 of 30 bowed Letter
+  frames missed the 0.005 in gate (worst 0.0060 in); with the edge markers the worst is 0.0020 in bowed (the 5x5: 0.0023).
+- **A4:** the grid sits 9.9 mm from the side edges, the nearest ink 7.9 mm (the 5x5 on A4: 8.0 mm). Nothing shrank.
+- **Not carried by the format**, raised as questions 71 to 73: four codes with the load block between them, numbering 1 to 25 with S1 and
+  S2, and the six named load fields.
+- `TwoMoaSheetTests` renders and reads back every page of all twelve, both page sizes and all three bulls. Features has `two-moa` with its
+  own two pictures; the Targets tour, TARGET-LIBRARY.md section 4.6 and PHONE-PARITY follow.
+
 ## Entry 290: iOS, the shared mobile project first
 
 **The shared mobile project is built** (section 2 item 1). Every Avalonia screen of the phone, 26 files, moved from the Android head to
