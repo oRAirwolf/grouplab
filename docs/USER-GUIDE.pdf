@@ -769,7 +769,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 31 0 R >>
 endobj
 31 0 obj
-<< /Length 1644 >>
+<< /Length 1765 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -784,7 +784,8 @@ BT /F1 71 Tf 1 0 0 -1 381 1015 Tm (result of twenty shots or more, is the same p
 BT /F1 71 Tf 1 0 0 -1 381 1103 Tm (its offset across and up from the aim point and, with your rifle's click value, the clicks to bring it onto the aim; its) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1191 Tm (Counted switch leaves a shot out of every figure, struck through in the list and dashed on the picture, and still on) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1279 Tm (the record. Zero from this group says where the group sits, the clicks, whether that is worth dialing at this many) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1367 Tm (shots, and opens Shots Needed to Zero.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1367 Tm (shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then includes it at every) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1455 Tm (range.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 14 of 14) Tj ET
 Q
 endstream
@@ -6379,15 +6380,15 @@ xref
 0000060557 00000 n 
 0000064307 00000 n 
 0000064435 00000 n 
-0000066132 00000 n 
-0000345904 00000 n 
-0000544418 00000 n 
-0000814143 00000 n 
-0000918958 00000 n 
-0001051050 00000 n 
-0001244703 00000 n 
+0000066253 00000 n 
+0000346025 00000 n 
+0000544539 00000 n 
+0000814264 00000 n 
+0000919079 00000 n 
+0001051171 00000 n 
+0001244824 00000 n 
 trailer
 << /Size 39 /Root 1 0 R >>
 startxref
-1346697
+1346818
 %%EOF

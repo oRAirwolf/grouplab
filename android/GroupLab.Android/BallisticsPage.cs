@@ -44,9 +44,25 @@ internal sealed class BallisticsPage : UserControl
     private string target = "10 in plate";
     private int preset = 1;
 
+    /// <summary>
+    /// Entry 280 section 2, board ZeroFrom: a group's zero offset, as angles, carried into the dope. A zero that is off by an angle at the
+    /// distance shot is off by that angle at every range, so each range's hold gains it; null when no group's offset was handed in.
+    /// </summary>
+    private readonly (double UpMoa, double LeftMoa, string Words)? zeroOffset;
+
     /// <param name="carried">The result's group, carried in from a result's section list, for the hit chance; null from the tab.</param>
-    public BallisticsPage(MarkingState? carried = null)
+    /// <param name="useZeroOffset">Carry the group's offset from its aim point into the dope as the zero offset.</param>
+    public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false)
     {
+        if (useZeroOffset && carried is { ShotDistanceInches: { } shotAt } && Zeroing.For(carried) is { } zero)
+        {
+            double Angle(ZeroAxis axis) => Angular.Constant(AngularUnit.Moa) / 2 * Math.Atan(Math.Abs(axis.OffsetInches) / shotAt);
+            double up = zero.Elevation.Dial == "up" ? Angle(zero.Elevation) : -Angle(zero.Elevation);
+            double left = zero.Windage.Dial == "left" ? Angle(zero.Windage) : -Angle(zero.Windage);
+            zeroOffset = (up, left, string.Create(CultureInfo.CurrentCulture,
+                $"With the zero offset of the group you carried in, {Math.Abs(up):0.00} MOA {(up >= 0 ? "up" : "down")} and {Math.Abs(left):0.00} MOA {(left >= 0 ? "left" : "right")} at every range, from {zero.Shots} shots{(zero.Worth ? "" : "; at this many shots it is not yet worth dialing")}."));
+        }
+
         // Entry 273: a tap on any number switches units everywhere; this page shows them again.
         void Follow() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
@@ -169,6 +185,12 @@ internal sealed class BallisticsPage : UserControl
             var p = points[i];
             bool last = i == points.Count - 1;
             double up = -(mil ? p.DropMil : p.DropMoa), across = mil ? p.WindMil : p.WindMoa;
+            // Entry 280 section 2: the carried group's zero offset, the same angle at every range, in the table's unit.
+            if (zeroOffset is { } offset)
+            {
+                up += mil ? offset.UpMoa / 3.43774677 : offset.UpMoa;
+            }
+
             var cells = new List<string>
             {
                 units.DistanceText(p.RangeYards * 36),
@@ -189,7 +211,14 @@ internal sealed class BallisticsPage : UserControl
         }
 
         var fields = new WrapPanel { Children = { Labeled("To, yd", to), Labeled("Every, yd", every), Screens.Choice("Work it out", Build) } };
-        return new StackPanel { Spacing = 10, Children = { Screens.Card(fields), Screens.Card(grid) } };
+        var column = new StackPanel { Spacing = 10, Children = { Screens.Card(fields) } };
+        if (zeroOffset is { } carriedZero)
+        {
+            column.Children.Add(Screens.Card(Screens.Line(carriedZero.Words), Screens.Dim("The Up column includes it; hold or dial the across part at every range too.")));
+        }
+
+        column.Children.Add(Screens.Card(grid));
+        return column;
     }
 
     private Control Trajectory(BallisticInput input)

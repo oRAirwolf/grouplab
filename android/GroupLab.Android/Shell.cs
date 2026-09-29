@@ -149,10 +149,10 @@ public sealed class Shell : UserControl
     }
 
     /// <summary>Entry 259 screen 5: Ballistics with a result's group carried in, for its hit chance.</summary>
-    internal void ShowBallistics(GroupLab.Core.Marking.MarkingState state)
+    internal void ShowBallistics(GroupLab.Core.Marking.MarkingState state, bool zeroOffset = false)
     {
         Show(Place.Ballistics);
-        page.Content = new BallisticsPage(state);
+        page.Content = new BallisticsPage(state, zeroOffset);
     }
 
     /// <summary>Entry 273: the printer check, under Settings, and back to Settings when it is done or skipped.</summary>

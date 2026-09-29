@@ -43,6 +43,8 @@ internal sealed class ZeroFromPage : UserControl
         }
 
         column.Children.Add(Screens.Choice("Open in Shots Needed to Zero", shotsToZero));
+        // Entry 280 section 2: the offset handed to Ballistics, whose dope then includes it at every range.
+        column.Children.Add(Screens.Choice("Use as the zero offset in Ballistics", () => Shell.Current?.ShowBallistics(state, zeroOffset: true)));
         column.Children.Add(Screens.Choice("Back to the result", back));
         Content = Screens.Page(column);
     }
