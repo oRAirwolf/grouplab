@@ -21,6 +21,20 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-09-29, question 74: the card check's thickness correction reads the print about 0.3% too large
+
+**Status: open.** Nothing waits on it; request 56 has Alan use a scan meanwhile. Entry 291's scale test: three 600 dpi scans of the printed
+check pages read 100.01 to 100.07% (GroupLab's own scan path), so the printer printed true size. The six card photos, read by the phone's
+own code at 8 MP, with the thickness correction the app applied (0.48%): errors +0.35 to +0.80% on most photos; with no thickness
+correction, A and C agree with their scans to about 0.2% (mean error A 0.20%, C 0.13%; B 0.44%). From the page's size in the frame the
+phone was about 21 cm away, which calls for a lift of about 0.35%, not 0.48%. **Either** the phone reports a focal length that makes
+GroupLab think it was nearer, **or** the card's outline in the picture is not its raised face (the silver card's edges are noisier and it
+reads its height about 0.4% short on A and C). **The options.** A: take the distance from the page's own size in the frame rather than
+the focal length. B: drop the thickness correction and state a card's thickness as part of the uncertainty. C: keep it and measure more
+cards. I would try A, measured against these scans, and choose outline C over A only with more than two cards per page.
+
+---
+
 ## 2026-09-29, question 73: the 2 MOA set's load block names six fields; the format carries the standard nine
 
 **Status: open.** Nothing waits on it: the sheets carry the standard nine-field load block (entry 289 section 1: "date, distance, rifle,

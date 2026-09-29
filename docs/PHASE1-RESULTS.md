@@ -40,6 +40,20 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 291: the scale test, and a printer check tied to its prints
+
+- **The photos:** six printer-check photos from the Fold 7 (pages A, B, C; card 1 a new silver card, card 2 an older dark one), kept
+  locally with the three 600 dpi scans. The photo Guided mode took by itself was page A with card 1 on it.
+- **The scans:** the printer printed 100.01 to 100.02% across and 100.03 to 100.07% down on all three pages: true size within 0.1%.
+- **The cards:** the app's saved check (C, card 2) said 100.48 / 100.38%, so the saved correction is about 0.4% too large. Most of it is
+  the card-thickness correction (0.48% applied, about 0.35% fits the distance); with none, A and C agree with the scan to about 0.2%.
+  Question 74.
+- **The outlines**, mean error with no thickness correction: A 0.20%, B 0.44%, C 0.13%; spread between the two cards, across / down:
+  A 0.37 / 0.42, B 0.60 / 0.02, C 0.03 / 0.47. B's hairline reads the card about 0.5% large and is ruled out; A and C are not separable on
+  two cards each.
+- **5.2:** a printer check now carries its date on every result it corrects; Settings can mark a printer calibrated or serviced, and a
+  marked or six-month-old check says so and offers a new one (`PrinterProfile.Stale`, `PrinterChangedTests`).
+
 ## Entry 280 section 2: row 10 on both platforms
 
 - **Phone:** Share a picture (the results box dragged, pinched or corner-resized, lines chosen by a tap; chips for the mean radius circle,

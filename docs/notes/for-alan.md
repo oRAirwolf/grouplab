@@ -29,7 +29,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 10.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). Then **53**, the three test pages, ready now. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 10.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -112,6 +112,23 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
+## 56. Your printer's scale, measured properly: one sheet printed now, scanned at 600 dpi (entry 291), about ten minutes
+
+**Opened 2026-09-29.** **Why:** the scale test is done (request 53 has the results). Your three scans show your printer printed those pages
+at its true size, within a tenth of a percent. The card photos read it about 0.4% large, and that is the figure GroupLab saved, so photos
+since then read groups about 0.4% small. The card method is what needs work, not your printer. And you have calibrated the printer since.
+**Needed:**
+
+1. Until you do step 2: in GroupLab Dev, Settings, turn off "Correct photographs by the chosen printer's scale". That is closer to the truth
+   than the saved +0.4%.
+2. Once nightly 126 or later is on the phone and the computer: print any GroupLab sheet now, at 100 percent, scan it at 600 dpi, and in
+   GroupLab choose Printers, Add a printer, Scanner, and pick that scan. Scanner checks agreed with each other to within 0.07%.
+3. Also in Printers, press "Printer calibrated or serviced" on the old printer check, so every result it corrected says so.
+
+**A good answer:** "done", or the percentage the Scanner check showed.
+
+---
+
 ## 55. iOS: the Apple steps after you enrol, about forty minutes, once (entry 278 item 6)
 
 **Opened 2026-09-28 (entry 278 item 6, entry 279 item 1).** **Not before** your Apple Developer Program membership (individual) shows as
@@ -159,6 +176,11 @@ desktop's marking screen with the scale set by hand, as a new user would, and it
 done", and the distance and caliber if you know them.
 
 ## 53. Question 67 tested: three check pages, one scan each, card photos (entry 278 item 3), about thirty minutes
+
+**ANSWERED 2026-09-29 (entry 291).** The scale test is done: the printer printed at its true size (the scans read 100.01 to 100.07%); the
+card photos read about 0.4% large, most of it the card-thickness correction; outline B reads worst and A and C are about equal, C a little
+ahead. The picture GroupLab took by itself was page A with your first card on it, so every Guided check passed. Request 56 is what to do
+next.
 
 **Opened 2026-09-28 (entry 278 item 3). TEST PAGES READY** (made 2026-09-28 by `grouplab scale-test-pages`; the label sits clear of every marker).
 **Needed:**
