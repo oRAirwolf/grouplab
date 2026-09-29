@@ -9,7 +9,9 @@ when there is one, and fails when:
 
 - a check on the simulator failed (a skipped one, where this build had no OpenCV, is a notice and not a failure);
 - a number both measured differs by more than the tolerance below, or the shots found differ in number, bull or place;
-- a place along the bottom was not photographed, where --screens names the folder the screenshots went to.
+- a place along the bottom was not photographed, where --screens names the folder the screenshots went to;
+- the idle screen's screenshot is not black from edge to edge (entry 290 section 2 item 6): behind the status bar and the home indicator
+  too, allowing iOS's own clock, battery and indicator drawn over it.
 
 The tolerance is the gate record's printed precision: the phase 0 gate record (.github/workflows/gate-record.yml) prints lengths to three
 decimals of an inch, so two platforms agree when every length agrees to within 0.001 in. Pixel and count figures are held to the same 0.001,
@@ -20,12 +22,77 @@ from __future__ import annotations
 
 import json
 import os
+import struct
 import sys
+import zlib
 from pathlib import Path
 
 TOLERANCE = 0.001
 NOT_COMPARED = {"seconds"}
 PLACES = ["capture", "sessions", "ballistics", "targets", "settings"]
+
+
+def png_rows(path: Path) -> tuple[list[bytes], int]:
+    """An 8-bit, non-interlaced PNG's unfiltered rows and its bytes a pixel, with nothing but the standard library."""
+    data = path.read_bytes()
+    pos, idat, width, height, channels = 8, b"", 0, 0, 0
+    while pos < len(data):
+        length, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + length]
+        if kind == b"IHDR":
+            width, height, depth, colour, _, _, interlace = struct.unpack(">IIBBBBB", body)
+            if depth != 8 or interlace:
+                raise ValueError(f"{path.name}: a {depth}-bit{' interlaced' if interlace else ''} PNG is not read here")
+            channels = {0: 1, 2: 3, 4: 2, 6: 4}[colour]
+        elif kind == b"IDAT":
+            idat += body
+        pos += 12 + length
+    raw, stride, rows, previous = zlib.decompress(idat), width * channels, [], bytearray(width * channels)
+    for y in range(height):
+        kind, line = raw[y * (stride + 1)], bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
+        for i in range(stride):
+            left = line[i - channels] if i >= channels else 0
+            up = previous[i]
+            corner = previous[i - channels] if i >= channels else 0
+            if kind == 1:
+                line[i] = (line[i] + left) & 255
+            elif kind == 2:
+                line[i] = (line[i] + up) & 255
+            elif kind == 3:
+                line[i] = (line[i] + (left + up) // 2) & 255
+            elif kind == 4:
+                guess = left + up - corner
+                pa, pb, pc = abs(guess - left), abs(guess - up), abs(guess - corner)
+                line[i] = (line[i] + (left if pa <= pb and pa <= pc else up if pb <= pc else corner)) & 255
+        rows.append(bytes(line))
+        previous = line
+    return rows, channels
+
+
+def black_share(rows: list[bytes], channels: int) -> float:
+    """The share of pixels whose brightest colour is under 24 of 255."""
+    colours = min(channels, 3)
+    dark = total = 0
+    for row in rows:
+        for x in range(0, len(row), channels):
+            total += 1
+            dark += max(row[x:x + colours]) < 24
+    return dark / total if total else 0.0
+
+
+def idle_problems(shot: Path) -> list[str]:
+    """Entry 290 section 2 item 6: the idle screen black to every edge, the status bar's strip and the home indicator's included."""
+    rows, channels = png_rows(shot)
+    strip = max(1, len(rows) * 6 // 100)
+    parts = {"the whole screen": (rows, 0.97), "the strip behind the status bar": (rows[:strip], 0.85),
+             "the strip behind the home indicator": (rows[-strip:], 0.93)}
+    found = []
+    for name, (part, least) in parts.items():
+        share = black_share(part, channels)
+        print(f"idle screen: {name} is {share:.1%} black")
+        if share < least:
+            found.append(f"the idle screen is not black edge to edge: {name} is {share:.1%} black, under {least:.0%}")
+    return found
 
 
 def close(a: float, b: float) -> bool:
@@ -96,6 +163,11 @@ def main(argv: list[str]) -> int:
             if not any(n.endswith(f"-{place}.png") for n in taken):
                 failures.append(f"no screenshot of {place}")
         print("screenshots: " + ", ".join(taken))
+        idle = screens / "90-idle.png"
+        if idle.exists():
+            failures.extend(idle_problems(idle))
+        else:
+            failures.append("no screenshot of the idle screen")
 
     if not ios.get("opencv"):
         print("::notice::This build had no OpenCV for iOS, so the imaging and pipeline checks were skipped.")
