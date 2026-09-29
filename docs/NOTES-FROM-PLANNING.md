@@ -64,6 +64,43 @@ Still sideways, still an empty area below, and the Move, Add and Remove buttons 
 
 Built, tested, in the next nightly, and on the Fold 7 (by the new updater of entry 288 where it works). Say in `for-alan.md` what to look at.
 
+## 2026-09-29, entry 294: a mil shooter should never feel like an afterthought
+
+**Status: done 2026-09-29 but section 3, which is Alan's question through planning (no sheet changed).** 1: both platforms' first run asks
+"Is your scope in mil or MOA?" (Mil, MOA, "Both, I have rifles of each") with inches or millimeters beside it, and asks existing installs
+once; the angle is no longer guessed from the region; `UnitSettings.Aiming(rifle)` makes a session's rifle's scope unit win for every
+aiming figure (the zero block, Zero from this group, Shots Needed to Zero, the dope, the hit chance, the reports), MOA a tap away; Settings
+leads Units with "Scope unit"; clicks offered as 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or typed. Not done: the typed inputs of the desktop's
+hit chance view stay in Settings' unit so a typed value keeps its meaning. 2: a "Mil or MOA" guide section; neutral or paired wording on the
+tour, Features, home page, README and research; a Features entry "Works in your scope's unit" with its own picture; the screenshot walk's
+rifle is a 0.1 mil scope. 4: a Discord reply line in for-alan.md.
+
+On the reloading Discord, a shooter wrote to Alan (quoted as posted): "it looks like from the descriptions you are doing everything in moa and just supplying mil as an after thought both in the pics and the text. I didnt see anything in the user guide talking about setting a user preference to pick if you are using a moa or mil scope and then making the interface function in the selected mode. If i was using it to zero my scopes I need mil as the only scopes i have in moa are my hunting rifle, the competition ones are in mil as are most peoples i would bet."
+
+**What exists already, and why he missed it:** Settings has an angle unit (`docs/USER-GUIDE.md` section 12, "Units: length, angle and distance, each chosen on its own"); each figure can be tapped to switch and is remembered (entry 280); a rifle carries a click value. But the angle unit is defaulted from the system's region, so almost every American starts in MOA; the first run never asks; the guide mentions it in one line; the zero correction shows "MOA and mil side by side" rather than in the scope's own unit; and the site's pictures and wording lead with MOA. He is right about how it looks. On the Android and desktop line, alongside entry 290's iOS work:
+
+### 1. The scope's unit is a first-class choice
+
+1. **The first run asks**, on both platforms, as one of its first questions: "Is your scope in mil or MOA?" with a third answer, "Both, I have rifles of each", and the length unit (inches or millimeters) beside it. No region guess for the angle unit; the region may still preselect the length unit.
+2. **Each rifle has its scope's unit and click value** (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, and any other). Where a session names a rifle, **that rifle's unit wins** for everything aiming: the zero correction, the clicks, Shots Needed to Zero, the dope table, hit chance, the per-shot table, "Zero from this group", Ballistics. Where no rifle is named, the Settings choice decides. The "Both" answer means GroupLab asks which rifle, or uses the rifle's own unit.
+3. **In mil mode, the aiming figures show mil only**: the zero correction reads "0.3 mil left, 0.2 mil up, 3 and 2 clicks" with no MOA beside it. MOA stays one tap or press-and-hold away, as now. Group size figures follow the same angle unit.
+4. **Settings says it plainly** at the top of Units: "Scope unit: mil / MOA", with one line saying what it changes.
+5. Tests: a session in mil mode shows no MOA text in any aiming figure unless the person asked for it; a rifle's unit overrides Settings; the first run's answer is kept.
+
+### 2. The words and the pictures
+
+1. **User guide:** a short section near the start, "Mil or MOA", saying how to choose, that each rifle keeps its own, and that everything aiming follows it.
+2. **The site, the README, the Features page and the tour:** audit every figure and sentence for MOA-first wording, and make them neutral or paired ("mil or MOA, your choice"). Where a screenshot shows angles, show mil in at least half of them; the zero screenshots should show a mil scope. The Features page gets an entry "Works in your scope's unit", with its own picture (entry 256).
+3. The printed sheets already come in both (the zeroing grids in 0.2 mil and 0.5 MOA squares); say so where the sheets are listed.
+
+### 3. A question for Alan, through planning, not blocking the rest
+
+The load development bulls are sized in inches (1.00 in, the "1 MOA" family; 2.00 in, "2 MOA", entry 289). Whether mil shooters want bulls named or sized in mil (for example 0.3 mil at 100 m, or labels giving each bull's size in both) is Alan's choice; planning will ask him. Do not change the sheets for this entry.
+
+### 4. Reporting
+
+Say in `for-alan.md` when it is in a nightly, with a one-line reply Alan can give the shooter on the Discord.
+
 ## 2026-09-29, entry 293: request 38, the Microsoft Store: Part A is done
 
 **Status: done 2026-09-29.** 1: the draft `store-draft-0.2.0` (`grouplab-win-x64.msix`, 92,035,133 bytes, version 0.2.0.0, SHA-256

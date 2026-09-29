@@ -4352,6 +4352,22 @@
   "04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in your scope's unit, mil or MOA, each with its interval, and the reasoning one click away.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/AnalysisPanel.cs Zero, in the scope's unit from UnitSettings.Aiming; website/build.py home page (entry 294 section 1)"
+  },
+  "It declares it from nightly 128.": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 128: update.install.start silent=True then status=-1; the notice Install now, Android asked once; dumpsys package on 128: UPDATE_PACKAGES_WITHOUT_USER_ACTION granted=true, installerPackageName=org.grouplab.app.dev; entry 288"
+  },
+  "**Nightly 126 to 128** still needed a tap, because it is the installing build's own declaration that counts and 126 had none; asked from the background, Android showed nothing, and every later start tried the silent way again, so the tap was given through the notice's \"Install now\" (Android's one question, then Update).": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 128: update.install.start silent=True then status=-1; the notice Install now, Android asked once; dumpsys package on 128: UPDATE_PACKAGES_WITHOUT_USER_ACTION granted=true, installerPackageName=org.grouplab.app.dev; entry 288"
+  },
+  "Nightly 128 on the tablet holds the permission (granted at install) and is its own installer of record, so 128 to 129 is the no-tap test.": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 128: update.install.start silent=True then status=-1; the notice Install now, Android asked once; dumpsys package on 128: UPDATE_PACKAGES_WITHOUT_USER_ACTION granted=true, installerPackageName=org.grouplab.app.dev; entry 288"
+  },
+  "From 129 a tap Android wants in the background is remembered and asked for on screen at the next start.": {
+   "kind": "measured",
+   "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 128: update.install.start silent=True then status=-1; the notice Install now, Android asked once; dumpsys package on 128: UPDATE_PACKAGES_WITHOUT_USER_ACTION granted=true, installerPackageName=org.grouplab.app.dev; entry 288"
   }
  },
  "rules": [

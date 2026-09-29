@@ -73,6 +73,16 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 - **5.2:** a printer check now carries its date on every result it corrects; Settings can mark a printer calibrated or serviced, and a
   marked or six-month-old check says so and offers a new one (`PrinterProfile.Stale`, `PrinterChangedTests`).
 
+## Entry 294: mil as a first-class scope unit
+
+- The first run asks "Is your scope in mil or MOA?" (Mil, MOA, "Both, I have rifles of each"), inches or millimeters beside it, on both
+  platforms, and asks existing installs once; no region guess for the angle.
+- `UnitSettings.Aiming(rifle)`: a session's rifle's scope unit beats Settings for every aiming figure. The desktop zero block shows one
+  angle column in the scope's unit, the other a tap away. `Entry294Tests` (Core, App, Mobile) hold that a mil session shows no MOA in any
+  aiming figure, a rifle's unit overrides Settings, and the first run's answer is kept.
+- A "Mil or MOA" guide section, paired wording across the site, a Features entry "Works in your scope's unit", and the screenshots of the
+  analysis, zero, dope and hit views in mil.
+
 ## Entry 295: Compare loads, All figures and session names
 
 - **The chart** (desktop and phone): each name on its own line, the range and value beneath, as tall as its rows; `IntervalChartTests`
