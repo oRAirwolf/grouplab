@@ -53,6 +53,11 @@ _spec = _importlib_util.spec_from_file_location("screens_stamp", Path(__file__).
 _screens_stamp = _importlib_util.module_from_spec(_spec)
 _spec.loader.exec_module(_screens_stamp)
 
+# Entry 284: Behind the curtain, the map of how GroupLab works and its three deep dives, from website/how-it-works.json.
+_spec = _importlib_util.spec_from_file_location("how_it_works", Path(__file__).resolve().parent / "how_it_works.py")
+_how_it_works = _importlib_util.module_from_spec(_spec)
+_spec.loader.exec_module(_how_it_works)
+
 
 def count_words(name: str, capital: bool = False) -> str:
     said = _counts.words(COUNTS[name])
@@ -586,7 +591,7 @@ def page_home() -> str:
 <div class="stack">
 <p class="eyebrow">Your own targets</p>
 <h2>Any target you already shoot.</h2>
-<p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target. Marking by hand is on the computer; it is coming to the phone.</p>
+<p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target. Marking by hand is on the computer and, under a crosshair, on the phone.</p>
 <p>Finding the holes by itself on any target is the goal, not yet a feature. On a GroupLab sheet it already does, which makes the sheet the fast lane, not a requirement.</p>
 </div>
 <figure class="fig">{screen("marking-other", "A plain sample target with four ring bulls, its scale drawn across one ring and each bull's shots marked by hand in its own color")}<figcaption><strong>A sample, marked by hand</strong><span>A plain target GroupLab drew for this picture, with no markers or codes: the scale set from a ring's known width, then the bulls and the shots placed by hand.</span></figcaption></figure>
@@ -1806,12 +1811,16 @@ def page_tour_index() -> str:
     body = f"""
 <section class="wrap stack">
 <h1>A tour of GroupLab</h1>
+<p class="small"><a href="/tour/how-it-works/">Behind the curtain: how GroupLab works &#8594;</a></p>
 <p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
-<div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample; marking by hand is coming to the phone. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
+<div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample, or on the phone under a crosshair. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
 {platform_switch()}
 {shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
 {shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}
 <div class="research-grid">{"".join(cards)}</div>
+<div class="panel pad hiw-tour-card"><div><p class="eyebrow">Behind the curtain</p><h2 class="h3">How GroupLab works</h2>
+<p class="small">A map of the parts and what each is built from, how OpenCV is used, how the hole detector was built, and one target followed stage by stage.</p></div>
+<a class="btn btn-primary" href="/tour/how-it-works/">See how it works</a></div>
 </section>
 """
     return shell("/tour/", "Tour", "Every screen in GroupLab, what it is for, and what you would do on it.", body, "Tour")
@@ -2105,7 +2114,7 @@ def page_features() -> str:
 <section class="wrap page-head stack">
 <p class="eyebrow">Features</p>
 <h1>Everything GroupLab does</h1>
-<p class="lead">Every feature, grouped, with where it is explained. The <a href="/tour/">tour</a> walks the main path, print, shoot, scan or photograph, read the numbers; this is the whole list.</p>
+<p class="lead">Every feature, grouped, with where it is explained. The <a href="/tour/">tour</a> walks the main path, print, shoot, scan or photograph, read the numbers; this is the whole list. <a href="/tour/how-it-works/">Behind the curtain</a> shows how the parts behind them fit together.</p>
 {platform_switch()}
 <p class="small">{" · ".join(f'<a href="#{slug(g)}">{esc(g)}</a>' for g in data["groups"])}</p>
 </section>
@@ -2935,7 +2944,8 @@ def main() -> None:
     build_fonts()
     build_images()
     build_downloads()
-    write("assets/css/site.css", CSS.strip() + "\n")
+    write("assets/css/site.css", CSS.strip() + "\n" + _how_it_works.CSS.strip() + "\n")
+    write("assets/js/how-it-works.js", _how_it_works.JS.strip() + "\n")
     write("assets/js/theme.js", JS)
     write("assets/js/terms.js", TERMS_JS)
 
@@ -2976,6 +2986,8 @@ def main() -> None:
             if extra.is_file() and extra.suffix.lower() in {".png", ".svg", ".csv"}:
                 copy(extra, f"research/{meta['slug']}/{extra.relative_to(figures).as_posix()}")
     write("tour/index.html", page_tour_index())
+    for path, title, description, body in _how_it_works.pages():
+        write(path.strip("/") + "/index.html", shell(path, title, description, body, "Tour"))
     for key in tour()["order"]:
         write(f"tour/{key}/index.html", page_tour_screen(key))
     for old in TOUR_MOVED:
@@ -3020,6 +3032,7 @@ def main() -> None:
     problems += _readme_images.problems()
     problems += parity_problems()
     problems += download_problems()
+    problems += _how_it_works.problems(published_articles(), lambda rel: (REPO / rel).exists())
     if problems:
         print("\n".join(problems))
         sys.exit("build: checks failed")

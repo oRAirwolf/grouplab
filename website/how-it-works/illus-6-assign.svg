@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 240" aria-hidden="true" focusable="false" font-family="inherit">
+<g transform="translate(106,14) scale(1.4)">
+<rect x="10" width="90" height="150" rx="3" style="fill:var(--panel);stroke:var(--line2)" stroke-width="1.5"/>
+<circle cx="55" cy="45" r="20" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="55" cy="45" r="2" fill="currentColor"/>
+<circle cx="55" cy="105" r="20" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="55" cy="105" r="2" fill="currentColor"/>
+<line x1="55" y1="45" x2="47" y2="36" style="stroke:var(--amber)" stroke-width="1"/><line x1="55" y1="45" x2="64" y2="39" style="stroke:var(--amber)" stroke-width="1"/><line x1="55" y1="45" x2="59" y2="55" style="stroke:var(--amber)" stroke-width="1"/><line x1="55" y1="45" x2="44" y2="50" style="stroke:var(--amber)" stroke-width="1"/><line x1="55" y1="45" x2="66" y2="30" style="stroke:var(--amber)" stroke-width="1"/><circle cx="47" cy="36" r="2.6" style="fill:var(--amber)"/><circle cx="64" cy="39" r="2.6" style="fill:var(--amber)"/><circle cx="59" cy="55" r="2.6" style="fill:var(--amber)"/><circle cx="44" cy="50" r="2.6" style="fill:var(--amber)"/><circle cx="66" cy="30" r="2.6" style="fill:var(--amber)"/><line x1="55" y1="105" x2="48" y2="98" style="stroke:var(--teal)" stroke-width="1"/><line x1="55" y1="105" x2="62" y2="101" style="stroke:var(--teal)" stroke-width="1"/><line x1="55" y1="105" x2="58" y2="116" style="stroke:var(--teal)" stroke-width="1"/><line x1="55" y1="105" x2="45" y2="111" style="stroke:var(--teal)" stroke-width="1"/><line x1="55" y1="105" x2="65" y2="93" style="stroke:var(--teal)" stroke-width="1"/><circle cx="48" cy="98" r="2.6" style="fill:var(--teal)"/><circle cx="62" cy="101" r="2.6" style="fill:var(--teal)"/><circle cx="58" cy="116" r="2.6" style="fill:var(--teal)"/><circle cx="45" cy="111" r="2.6" style="fill:var(--teal)"/><circle cx="65" cy="93" r="2.6" style="fill:var(--teal)"/>
+</g>
+<text x="276" y="80" style="fill:var(--amber)" font-size="11">bull 1</text>
+<text x="276" y="164" style="fill:var(--teal)" font-size="11">bull 2</text>
+</svg>

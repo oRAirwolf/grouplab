@@ -40,6 +40,37 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 284: Behind the curtain
+
+The map and three deep dives are built (`website/how_it_works.py`, `website/how-it-works.json`, 20 drawings in `website/how-it-works/`). Of the 321 facts in the approved designs, 248 were confirmed, 63 corrected and 10 reworded because the repository cannot confirm them, each against the repository on 2026-09-29. The corrections that change what a reader learns:
+
+1. **Markers.** Today's GL-CF25-LTR carries 38 markers (152 corners); 34 was the Phase 0 printing, and GL-CF25-LTR-D still has 34.
+   So the curl test's 38 and the sheet's 38 now agree.
+2. **Bulls.** GL-CF25-LTR has 28 bulls, 25 scoring and 3 sighters: "25 shots to 25 bulls" stands, "30 bulls" was the specification's slip.
+3. **Sheets named from their codes.** 35 of the 37 Phase 0 images on Windows, Linux and macOS alike, none wrongly, since tonight's code
+   crops (the gate record of 78ee351); it was 33, 33 and 32. DETECTION-PIPELINE.md is amended to say so.
+4. **Only the Core is kept off OpenCV.** The apps call OpenCV themselves to decode and encode image files; the map says "the Core's only
+   door to OpenCV".
+5. **The QR path** is as planning read it, on the desktop and the phone alike (one source file): the WeChat detector is created with no
+   model paths, only finds the codes, and the plain decoder reads the bytes; no model file ships. dnn is compiled in only because the
+   WeChat finder needs it.
+6. **"0 learned models"** stands for deciding what is a hole: no trained model is loaded anywhere.
+7. **The phone's live analysis** is 1920 by 1440, 4:3, the newest frame kept, after entry 281.
+8. **Built and tested on Windows, Linux and macOS** stands; the phase 0 gate record runs on all three. "A few seconds for a 300 dpi
+   Letter scan" stands (3.1 s and 3.9 s measured); "a few hundred MB" is not claimed, having no measurement.
+9. **Holes on ink**, from SCAN-MEASUREMENTS.md section 3.6, worded once: the rim is shallower and less even (its darkest point V 48
+   against 34 on paper), its dark band about 29 percent thicker, and it measures about 7 percent smaller; milestone M2.2's "darker" was wrong.
+10. **The paper level** is taken in eighth-inch blocks since entry 233, not quarter-inch; the opening radius the code uses is 0.012 in
+    (DETECTION-PIPELINE.md's 0.032 in reasoning is kept, now with an amendment beside it).
+11. **The trace** on the pipeline page is a real run of the committed sample `gl-cf25-ltr-d-25-shots-600-dpi.png`, timings dropped.
+12. **Stage codes** are written "S1 to S4", "S5 to S8" and "after S10" throughout; the code records S5 to S8 as one stage.
+13. **"5 assumptions overturned"** reworded: four assumptions were overturned and one, scale, was confirmed and became the main test.
+14. **Research links** to six draft articles are left out (scanner-traps, photographing-targets, printer-true-size,
+    mean-radius-or-extreme-spread, cep-explained, how-many-shots); published ones stand in where a part would have none.
+15. **Timeline dates** 13, 14, 16, 21, 22, 24 and 28 September are confirmed from the commits and entries.
+16. **Synthetic results** are labelled an upper bound everywhere, and the held-out figures are given as first read at a split of 1.45
+    with today's 1.80 figures beside them.
+
 ## Entry 280: one number at a time
 
 A tap now switches the number tapped and nothing else, and GroupLab remembers the unit for that figure (`UnitTap`, `UnitSwitch.Convert`,

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 240" aria-hidden="true" focusable="false" font-family="inherit">
+<rect x="20" y="30" width="80" height="80" rx="6" style="fill:var(--sunk);stroke:var(--line2)"/>
+<line x1="60" y1="34" x2="60" y2="106" style="stroke:var(--line2)"/><line x1="24" y1="70" x2="96" y2="70" style="stroke:var(--line2)"/>
+<circle cx="52" cy="62" r="3" style="fill:var(--amber)"/><circle cx="68" cy="66" r="3" style="fill:var(--amber)"/><circle cx="63" cy="80" r="3" style="fill:var(--amber)"/><circle cx="49" cy="76" r="3" style="fill:var(--amber)"/><circle cx="70" cy="56" r="3" style="fill:var(--amber)"/>
+<rect x="20" y="130" width="80" height="80" rx="6" style="fill:var(--sunk);stroke:var(--line2)"/>
+<line x1="60" y1="134" x2="60" y2="206" style="stroke:var(--line2)"/><line x1="24" y1="170" x2="96" y2="170" style="stroke:var(--line2)"/>
+<circle cx="55" cy="160" r="3" style="fill:var(--teal)"/><circle cx="66" cy="172" r="3" style="fill:var(--teal)"/><circle cx="58" cy="182" r="3" style="fill:var(--teal)"/><circle cx="47" cy="168" r="3" style="fill:var(--teal)"/><circle cx="72" cy="163" r="3" style="fill:var(--teal)"/>
+<text x="60" y="24" style="fill:var(--dim)" font-size="10" text-anchor="middle">sheet 1</text>
+<text x="60" y="226" style="fill:var(--dim)" font-size="10" text-anchor="middle">sheet 2</text>
+<polyline points="108,70 150,120 108,170" fill="none" style="stroke:var(--faint)" stroke-width="1.5"/>
+<line x1="150" y1="120" x2="176" y2="120" style="stroke:var(--faint)" stroke-width="1.5"/>
+<rect x="186" y="50" width="140" height="140" rx="8" style="fill:var(--sunk);stroke:var(--line2)"/>
+<line x1="256" y1="56" x2="256" y2="184" style="stroke:var(--line2)"/><line x1="192" y1="120" x2="320" y2="120" style="stroke:var(--line2)"/>
+<circle cx="246" cy="108" r="3.5" style="fill:var(--amber)"/><circle cx="268" cy="114" r="3.5" style="fill:var(--amber)"/><circle cx="261" cy="134" r="3.5" style="fill:var(--amber)"/><circle cx="242" cy="128" r="3.5" style="fill:var(--amber)"/><circle cx="271" cy="100" r="3.5" style="fill:var(--amber)"/>
+<circle cx="250" cy="112" r="3.5" style="fill:var(--teal)"/><circle cx="266" cy="126" r="3.5" style="fill:var(--teal)"/><circle cx="255" cy="140" r="3.5" style="fill:var(--teal)"/><circle cx="238" cy="118" r="3.5" style="fill:var(--teal)"/><circle cx="276" cy="112" r="3.5" style="fill:var(--teal)"/>
+<text x="256" y="210" style="fill:var(--dim)" font-size="10" text-anchor="middle">one load, ten shots</text>
+</svg>

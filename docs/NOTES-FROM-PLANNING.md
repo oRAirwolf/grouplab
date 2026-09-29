@@ -24,6 +24,60 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-29, entry 284: the architecture pages ("Behind the curtain"): Alan approved the refined design; build it
+
+**Status: done 2026-09-29.** The four pages are built from `website/how-it-works.json` and the drawings in `website/how-it-works/` by `website/how_it_works.py`, at the paths suggested: `/tour/how-it-works/` and its `opencv/`, `hole-detection/` and `pipeline/`. The map works without JavaScript (every part and step a plain section); the drawings are SVG in the site's own colors, light and dark; the tour, the README's Architecture section and the Features page link to it. All 255 figures are in the data file, each with its source, and the build fails on a figure without one or on a source that is not in the repository. Every one of 321 claims was checked against the code; 63 were corrected, listed in PHASE1-RESULTS.md. The pages at phone width wait for a look on the phone: headless Chrome will not lay out narrower than about 500 pixels.
+
+Alan asked for a page linked from the tour that shows how GroupLab works behind the curtain: how the parts fit together, what each is built from, how OpenCV is used, and how the hole detector was developed, linking to the research articles and the Features page. He chose concept B (a clickable map) with concept C's drawings, asked for it to be much more thorough and technical, and approved the refined design: "Architecture refined: approved".
+
+### 1. The design, and where to read it
+
+- The approved boards are on the Design canvas "GroupLab architecture tour concepts", page "Refined: B with C's drawings". Their sources are copied, local only, to `C:\Dev\grouplab-local\design-concepts\architecture-2026-09-29\`:
+  - `RefMap.dc.html`: the map, the page reached from the tour (interactive).
+  - `DeepOpenCV.dc.html`: deep dive, how GroupLab uses OpenCV.
+  - `DeepHoles.dc.html`: deep dive, how the hole detector was built.
+  - `DeepFlow.dc.html`: deep dive, follow a target stage by stage (S0 to S10).
+  - `PhoneDeep.dc.html`: the OpenCV deep dive at phone width, as the pattern for all three.
+  - `Illus.dc.html`: the eight step drawings (print, shoot, capture, register, detect as photo minus artwork, assign, combine, report).
+  - `TourLink.dc.html`: how the tour links to it (a card at the end of the tour and a small link at the top).
+- The files are the design's HTML. Take the layout, the order of sections, the words and the drawings from them; build the pages in the site's own way. They are not to be copied into the repository as they are.
+
+### 2. What to build
+
+1. **Four pages on the site**, suggested paths `/tour/how-it-works/` (the map) and `/tour/how-it-works/opencv/`, `/tour/how-it-works/hole-detection/`, `/tour/how-it-works/pipeline/`. Code may choose better paths; say which in the results.
+2. **The map.** Layers as drawn: Apps (desktop, Android, iPhone and iPad being built, command line), GroupLab.Core (target format, renderer, registration, hole detection, statistics, ballistics), Imaging (OpenCV behind IImagingBackend), Checked at build time (R shotGroups, Python), Online (site, server workers, builds and updates). A click shows the part's summary, key numbers, built from, where it lives (linked to GitHub) and research links, and a button to its deep dive where one exists. "Follow a target" steps through the eight steps with the drawings and the stage codes each covers.
+   - **It must work without JavaScript**: with scripts off, every part's summary is readable as a plain list, and each step as a plain section. The interaction is an enhancement.
+   - **Phone:** the map stacks by layer and a tap opens the summary as a sheet or an expanding section; deep dives stack their tables into cards as `PhoneDeep` shows.
+3. **The three deep dives** as drawn, including the drawings (marker detection in six panels, the morphology in five panels, the widths ruler of printed lines, hand strokes and holes).
+4. **Light and dark**, like the rest of the site. The drawings are SVG and follow the theme.
+5. **Links in:** the card at the end of the tour and the small link at its top (`TourLink`), and a link from the README's Architecture section and from the Features page where it fits. Rule (c): README, site and assets stay consistent, in the same change.
+6. **The numbers come from one place.** Keep the figures the pages show (for example 343 holes, 45,476 values compared with R, 33 of 37 sheets named, 0.00319 in) in one data file the build reads, each with the document or command it comes from, so the consistency audit can check them and a changed figure changes everywhere.
+
+### 3. Check every fact before it is published
+
+Planning took every figure from the repository's documents and code (DETECTION-PIPELINE.md, DETECTION-LEARNING-STUDY.md, FIDUCIAL-DECISION.md, MOBILE-CAPTURE.md, PHASE1-RESULTS.md and results-milestones.md M1.5 and M2.2, SCAN-MEASUREMENTS.md, IImagingBackend.cs, PortableImaging.cs, OpenCvSharpBackend.cs, the Detection and Registration summaries, android/opencv/build-extern.sh). Check each one against the current code and results, correct what has moved, and list the corrections in the results. In particular:
+
+- **The timeline dates** on the hole-detection page (13, 14, 16, 21, 22, 24 and 28 September) were read from the commit history and entry numbers. Confirm each.
+- **The QR path:** the page says the WeChat detector is used without its neural network models, finds the codes, and the plain decoder reads the bytes. Confirm this is the same on desktop and Android, and that no WeChat model files ship.
+- **"No learned model decides what is a hole"**, shown as "0 learned models". Confirm, or reword.
+- **The phone's live analysis resolution:** the page says 1920 by 1440 (MOBILE-CAPTURE.md C3a). Entry 281 changed the camera; use whatever is true after it.
+- **"Every change is built and tested on Windows, Linux and macOS"** and **"a few seconds to analyze a 300 dpi Letter scan"**: confirm or reword.
+- **Marker counts:** 34 on GL-CF25-LTR, but the curl test sheet read 38; the page must not make those look contradictory.
+- **Holes on ink:** DETECTION-PIPELINE.md says their rim is paler; M2.2 says the synthetic ones are drawn darker. Planning left the direction out. Settle it from SCAN-MEASUREMENTS.md section 3.6 and word it once.
+- **The trace block** on the pipeline page is labeled illustrative, in the specification's format. If a real `--trace` run of a GroupLab sheet can supply the text, use a real one and say so.
+- **Synthetic results** are always labeled as an upper bound, as the page does.
+- **Where the site says "the developer"**, keep that wording; the credit rules stand (Unholy and Jylee may be credited, Justin by first name only, Fenix thanked).
+
+### 4. What must not appear
+
+- No photographs from `camera-0929`, `planning\camera-0928`, the friend's 2026-09-16 scan, or anything sent as "testing only". The pages use drawings only; any real image needs its own consent check first.
+- No server address, no key names, no internal paths beyond the repository's own.
+- No mention of a lawyer reviewing anything.
+
+### 5. When it is done
+
+Say in `for-alan.md` where the pages are on a local build and on the nightly site, with the list of facts corrected. Planning will look at them and send Alan the links.
+
 ## 2026-09-29, entry 283: with entries 281 and 282: the shutter is slow to respond; measure it and make it fast
 
 **Status: done 2026-09-29, in part.** Built: every step from the press to the first result in the log, the sound and flash at the press, the live analysis standing aside, the minimum latency capture mode (the quality mode kept for GroupLab Dev's comparison), and `scripts/shutter-timing.py`, the repeatable device test. Not done: sections 1 and 3's numbers, twenty presses on each device, which need the build that carries the timings; they go in `docs/ANDROID.md`.

@@ -3288,6 +3288,718 @@
   "In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)"
+  },
+  "Architecture **[Behind the curtain](https://grouplab.org/tour/how-it-works/)** on the website is the same picture as a map you can click: each part, what it is built from and where it lives, how OpenCV is used, how the hole detector was built, and one target followed stage by stage.": {
+   "kind": "code",
+   "where": "website/how_it_works.py and website/how-it-works.json (entry 284): the map at /tour/how-it-works/ and its three deep dives"
+  },
+  "It was measured into existence: 343 real hole measurements first, a written test it had to pass second, synthetic sheets to practice on third, and then every miss on real paper turned into a rule with its reason written beside it.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 1 · By 13 September · Measure first 343 holes, and five findings that changed the design Before a line of GroupLab&#x27;s detector was written, seventeen scanned files of fourteen commercial targets were measured by a Python and OpenCV harness: 343 hole measurements on 15 of them.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Measured, the center is on average darker than paper, and a quarter of holes have a center within 5 gray levels of the paper around them.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Core 53 levels darker than paper · 24% at paper level DROPPED A hole is round A bullet hole in paper is a lobed star.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Rim radius varies by 0.48 of its mean RAISED The naive baseline is weak Tuned for one picture, a Hough circle detector finds nearly every hole.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "26 of 27 at one setting · 0 of 27 at another SPLIT Color tells a hole apart Chroma works on color-printed targets and does nothing on black or gray ones; brightness is the reverse.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Best separation 0.14 on the grayscale target KEPT Scale holds everywhere Every printed feature on every target is at most 0.0567 in wide; every hole is 0.15 to 0.54 in across.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Holes are 3 to 9 times wider than any printed line What that left Not brightness, not roundness, not color.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0 0.1 0.2 0.3 0.4 0.5 0.6 in every printed line, rings, numerals and barcode bars: at most 0.0567 hand-drawn strokes: 0.037 to 0.102 bullet holes 0.15 to 0.54, mean 0.266 0.064 disk, across Widths on real targets, inches.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 2 · 13 September · The test comes first A gate that rewards stability, not luck The original plan said the detector must beat a naive baseline of about 25 percent.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The survey showed a tuned Hough circle detector finds 26 of 27 holes on the reference scan, but only at one setting: at an accumulator threshold of 25 it finds 26, at 40 it finds 10, at 55 it finds none.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Gate Requirement Why G1 At least 95% of holes across all 15 files, with one set of settings and no per-image tuning Beats the tuned baseline while forbidding what makes it useless: tuning per picture.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "G3 Still above 90% when every threshold moves by 30% either way The test the naive methods fail.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "G4 The same settings pass at 93, 300 and 600 dpi Proves no absolute gray-level threshold survived.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "G5 At least 95% on the grayscale target The hardest file: no color at all, ring and hole the same gray.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 3 · 14 September · Practice on synthetic sheets Holes drawn from the survey&#x27;s own numbers None of the seventeen scans was a GroupLab sheet, and render-and-difference needs one.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Development used seeds 1 to 3.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Seeds 1001 to 1003 were kept aside and run once, at the end, so the result is not the product of tuning to the test.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "What a synthetic hole is A dark rim at a set radius, lobed by four patterns of narrow outward spikes, with 3 to 6 lobes around the rim, so it is a ragged star, not a circle.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Over the page: hand ink, a paper gradient, a 0.6 pixel blur and noise.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/SyntheticSheet.cs Measured by the same baseline, on 229 real holes on bare paper.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Calibration was limited to four rounds and the gap was published, not hidden: synthetic holes are 19 percent wider, 20 gray levels darker in the core and 19 percent less ragged, all of which make them easier.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "How real they are Real Synthetic Hull diameter, in 0.272 0.324 Core brightness, V 195.6 175.6 Darkest rim, V 33.8 32.1 Raggedness, in 0.0456 0.0370 Development, one change at a time.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Found within 0.15 in, 600 dpi, development seeds; the last column with the registration off by 0.02 in.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Synthetic sheets, an upper bound, as first read on 14 September at a split of 1.45.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Change, and why One per bull Two per bull Registration off The survey&#x27;s opening, radius 0.032 in.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "about 85% Opening cut to radius 0.012 in.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "97.6% 73.8% 60.7% Each bull cell aligned by phase correlation.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "97.6% 73.8% 92.9% Merged neighbors split; oversized holes flagged.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Single holes stretch to 1.26 to 1.37 at the 99th percentile (1.61 at worst); merged pairs from 1.50.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "97.6% 95.2% 92.9% The held-out run, once.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Found within 0.15 in, as first read on 14 September at a split of 1.45.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "It kept every hole with the registration off by up to 0.08 in, and lost everything from 0.12 in, which says exactly how good registration must be.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Re-recorded at today&#x27;s split of 1.80: two per bull 87.5% at 600 dpi and 90.5% at 300 dpi; one per bull unchanged.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Sheets Render-diff Baseline Median error, in 600 dpi, one per bull 100.0% 85.7% 0.0063 / 0.0112 600 dpi, two per bull 94.0% 67.3% 0.0074 / 0.0147 300 dpi, one per bull 100.0% 83.3% 0.0067 / 0.0122 300 dpi, two per bull 96.4% 72.0% 0.0082 / 0.0125 The hard cases.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "As first read at a split of 1.45.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Arrowheads drawn in the cells made 53 strays at first, 50 with today&#x27;s settings, which is why position and exclusion zones matter as much as shape.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "At today&#x27;s split overlapping pairs read 47.3%.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Case Found Strays Baseline Overlapping pairs 48.2% 0 47.3% X marks over holes 94.6% 0 89.3% Arrowheads, letter bowls 98.2% 53 87.5% Holes on the ring&#x27;s edge 100.0% 0 83.9% Dark backing 98.2% 0 100.0% Shots in the next cell 98.2% 0 91.1% Step 4 · 16 to 24 September · Real paper overrules Every miss became a rule, with its reason Synthetic sheets set the starting point.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "16 September Do not cut real holes in two What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The split point between one hole and two merged holes was set at an elongation of 1.45 from synthetic holes.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The split is at 1.80, where no real hole in the collection is split.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs 21 September A torn hole is still a hole What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The fifteenth was seen, measured at 0.236 in, and refused for a solidity of 0.54 against a floor of 0.55.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Lowering the floor would have let in handwriting at 0.53 to 0.41.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/TornHole.cs 21 September Holes are smaller than bullets What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Five real .22 LR holes of 0.11 to 0.14 in were refused by a fixed 0.15 in floor.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Paper stretches ahead of the bullet and closes behind it; the smallest measured 0.49 of its caliber.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "A stated caliber sets the floor at 0.45 of the caliber, a little below the worst seen so the next slightly worse hole is not refused.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/HoleSizeGate.cs 21 September A shot that missed the bull still counts What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/OutsideTheGrid.cs 21 September Half a hole at the edge of the picture What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/PartialHole.cs 22 September One hole or two, on photographs What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Judged against the stated caliber, one 15-shot photograph had all fifteen holes flagged as possibly two shots.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "website/research/one-hole-or-two.md 24 September A center from the edge, not the shadow What happened.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Core/Detection/HoleEdgeFit.cs Step 5 · 28 September · Stress it Shadows, glare, blur, curl A rendered GL-CF25-LTR with one synthetic hole on each of its 25 scoring bulls, two seeds, each degraded one way and read by the whole pipeline as a photograph.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "A hole counts as found within 0.1 in.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "A test now requires at least 23 of 25 holes found on the curled sheet.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "GroupLab has about 400 distinct labeled holes, an estimate.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Where it stands What is met, and what is not MET Real commercial scan 25 of 27 hand-verified holes with no false marks on the reference scan, by the detector GroupLab&#x27;s own grew from.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "MET Registration on paper Ten of ten printed sheets inside the 0.005 in gate, worst bull 0.00319 in.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "NOT YET Synthetic gate 99 percent of holes with no false marks: one hole per bull is found completely with no strays, two per bull reaches 87.5 to 90.5 percent at today&#x27;s split.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "NOT YET Photographs Flat photographs nearly pass the 0.005 in gate; mounted ones do not yet, and wait on photographs of mounted GroupLab sheets.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "On eight photographs of a commercial grid target shot in tight five-shot groups, the detector built from the scans, for sheets GroupLab did not print, found 54 of 400 shots as marks of their own.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "&#8594; How GroupLab reads a target &#8594; A bullet hole is not the bullet &#8594; One hole or two?": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "&#8594; Curled, angled and wrinkled paper &#8594; The detector on GitHub &#8594; The full pipeline specification &#8594; How GroupLab uses OpenCV &#8594; Follow one target, stage by stage &#8594; Every feature Free and open source under GPL-3.0.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "How GroupLab works: the map | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Key numbers 1 to 4 s to analyze a 300 dpi Letter scan on a desktop, naming the sheet included Built from .NET 10 Avalonia OpenCvSharp 4.13 Where it lives src/GroupLab.App Apps you run Android app The same Core on the phone, with OpenCV built from source for arm64.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The camera screen analyzes a 1920 × 1440 stream live (CameraX&#x27;s default is 640 by 480, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires after 3 ready frames in a row.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Built from .NET 10 Avalonia OpenCV for iOS Where it lives docs/IOS-PLAN.md Apps you run Command line The engine with no windows.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Its measurements are made by named commands, such as grouplab holes synthetic for the detector&#x27;s scores or grouplab identify sweep for the QR reading, and the Phase 0 measurement record and the QR sweep are rerun by those commands in CI on Windows, Linux and macOS.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Key numbers 3 systems Windows, Linux and macOS, where CI reruns the Phase 0 measurement record Built from .NET 10 OpenCvSharp Where it lives src/GroupLab.Cli GroupLab.Core Target format Every sheet is one GLTD definition: bulls, rings, markers, codes and the zones that can never hold a shot.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "A binary frame, GLTD-B, is printed in the QR codes: the whole definition, a CRC-32 over it and a tile index, so a sheet names its own definition.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Paper level is estimated locally (the 95th percentile of paper pixels in eighth-inch blocks, smoothed), never as one global value.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Scans get a homography, never less than affine because scanners shear by 0.12 to 0.17 degrees.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Then morphology sized in inches, not pixels: open with a radius of 0.012 in, threshold at 0.15, close with a radius of 0.055 in, fill, convex hull.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Every feature GroupLab.Core Statistics Mean radius, CEP 50 and 90, extreme spread and the rest, each with an interval.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Key numbers 45,476 values compared with R shotGroups, none pending 490 of 490 Monte Carlo table cells within tolerance Built from .NET 10 checked against R shotGroups Where it lives src/GroupLab.Core/Statistics docs/STATISTICS.md Read more How many shots to zero?": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Built from .NET 10 Where it lives src/GroupLab.Core/Ballistics docs/BALLISTICS-VALIDATION.md Imaging OpenCV, behind one interface The Core never calls OpenCV.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The statistics are checked against R&#x27;s shotGroups, the geometry and the QR format against independent Python code, and the ballistics against two other solvers, every time GroupLab is built.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "true size markers QR code Step 1 of 8 &#183; before S0 Print The renderer draws the sheet from its GLTD definition, with AprilTag markers where the cell lines cross and the definition in its QR codes.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0.5 mm marker modules, 4.0 mm markers, 38 on GL-CF25-LTR Every stage in full &#8595; five shots at the top bull Step 2 of 8 &#183; no stage Shoot Nothing runs.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The paper stretches ahead of the bullet and closes behind it, so a hole is narrower than the bullet: about 0.92 of caliber for .264 and .308 in the survey.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "a fixed allowance narrower than the bullet, not a scale factor Every stage in full &#8595; or a scan Step 3 of 8 &#183; S0 Capture A scan or a photo is decoded into one image, and the sheet is named from its QR codes.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "codes read at full, double, half and quarter size, then cut out where the markers put them and enlarged; a frame must pass its CRC, and codes that disagree are refused Every stage in full &#8595; as photographed mapped back to flat Step 4 of 8 &#183; S1 to S4 Register The markers give scale, position and shape of the paper.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "AprilTag 36h11 with sub-pixel corners and two shape gates S3 Register.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "size for the caliber, position, splits, flags Every stage in full &#8595; bull 1 bull 2 Step 6 of 8 &#183; S9 Assign Shots are matched to bulls.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "globally optimal one-to-one matching; never forced when shots outnumber bulls; margins under 0.15 in flagged Every stage in full &#8595; sheet 1 sheet 2 one load, ten shots Step 7 of 8 &#183; S10 Combine Sheets of one load, or tiles of one big target, are pooled.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "each tile registers itself, so tile alignment adds nothing; a missing tile is reported, not dropped Every stage in full &#8595; mean radius how sure it is Step 8 of 8 &#183; after S10 Report Figures with intervals, checked against R shotGroups.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "mean radius, CEP, extreme spread, each with how sure it is Every stage in full &#8595; &#8594; How GroupLab uses OpenCV &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Back to the tour &#8594; Every feature &#8594; The code on GitHub Free and open source under GPL-3.0.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "4.13.0 the OpenCV release on every platform, built for each 7 operations the Core may ask for, and no others 10 OpenCV modules compiled into the Android build 4 floating-point steps moved into GroupLab&#x27;s own code 1 · Where OpenCV sits Four layers between the Core and the pixels GroupLab.Core has no reference to OpenCV at all.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "↓ calls IImagingBackend DetectMarkers · FindHomography · WarpPerspective · Morphology · FilledBlobs · PhaseCorrelate · ReadCodes src/GroupLab.Core/Imaging ↓ implemented with OpenCvSharp A thin C# layer over OpenCV&#x27;s C++ API, under the Apache-2.0 license.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "↓ calls native code Desktop and command line OpenCvSharp&#x27;s published native runtimes at 4.13.0, for Windows, Linux x64 and macOS, Intel and Apple silicon.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Cli/GroupLab.Cli.csproj ↓ calls native code Android Nobody publishes this, so GroupLab builds it: OpenCV and opencv_contrib 4.13.0 compiled with the Android NDK for arm64-v8a, API 24, static C++ runtime, linked into one libOpenCvSharpExtern.so.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The only community build carried four modules; GroupLab needs 10.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Filled blobs findContours (external), fill, 8-connected components, convexHull S7 Each outline filled, then each blob with its pixel count, box and convex hull, the hull being what is measured.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Phase correlation imgproc phaseCorrelate, Hann window S5 Aligns each bull cell of the expected image to the photo, up to 0.1 in, so a small registration error does not leave slivers.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Tried at full, double, half and quarter size, with the corners of the page tried when the whole finds nothing; then each code is cut out where the markers put it and read enlarged 2, 3 and 4 times.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "3 · Inside marker detection How one AprilTag becomes four precise corners Today&#x27;s GroupLab Letter sheet, GL-CF25-LTR, carries 38 markers: 34 where the cell lines of its 5 by 5 grid cross, and 4 below its row of three sighter bulls.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Each is an AprilTag from the 36h11 family: an 8 by 8 grid of 0.5 mm squares, a black border around 36 data bits.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Too small, or sides more than 2 to 1, and it is refused.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "101100 011010 110001 001101 100110 010101 1 of 587 codes 5.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Each marker&#x27;s 36 data bits are matched against the family&#x27;s 587 codes, any two of which differ in at least 11 bits.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The family could correct up to 5 misread bits; GroupLab corrects at most 3 and refuses the rest.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Why 36h11 587 identifiers, a minimum distance of 11 bits between any two, and the only strong family that both OpenCV and the BSD-licensed AprilTag reference code can read.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The first draft chose ArUco 6x6.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Checking the claims it rested on reversed it: the AprilTag library cannot read any ArUco dictionary, and OpenCV draws 36h11 in the same 8 by 8 footprint.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Why 0.5 mm squares Detection needs about 3 pixels a square.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The printer is the real limit: under about 5 printer dots a square, ink spread shifts the edges, and the corner is the measurement.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0.5 mm gives 11.8 pixels a square on a 600 dpi scan and 7.2 on a 12 MP photo.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The 38 on GL-CF25-LTR survive a torn corner, sample a lens&#x27;s distortion at many distances from the center, and give 152 corners for 8 unknowns, so the fit is far more precise than any one corner.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The load-block sheet GL-CF25-LTR-D carries 34.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "4 · Where the defaults were wrong Five things that would have failed silently OpenCV&#x27;s defaults are tuned for cameras, where a marker is a small part of the picture.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "CORNER_REFINE_NONE Corner refinement is off The accuracy target is a thousandth of an inch, 0.6 pixels at 600 dpi.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "adaptiveThreshWinSizeMax = 23 The threshold window is sized for webcams At 600 dpi a 4.0 mm marker is 94 pixels across, far larger than the default window expects.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "first corner = printed bottom-right OpenCV&#x27;s 36h11 codes are turned 180 degrees Identifiers still decode, so nothing looks wrong, but the corner order is reversed.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "GroupLab prints the official orientation and turns OpenCV&#x27;s corners back, tested against all 587 codes.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "sorted by identifier Results come back in any order The macOS runner returned markers in a different order, and RANSAC samples by position in the list, so one image could give two answers.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "side ratio &gt; 2.0 refused Shape can only be checked after decoding Every false marker seen on the real scans was a sliver.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "5 · Morphology Finding holes by their size, in inches After the printed artwork has been subtracted, what is left is a residual image.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Every radius is written in inches and converted with the scale the markers measured, so the same numbers run unchanged on a 300 dpi and a 600 dpi scan, and are meant to hold down to a 93 dpi picture from a messaging app.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0.012 in the opening&#x27;s radius 0.15 the threshold, a fraction of the local paper-to-ink range 0.055 in the closing&#x27;s radius Why not a gray level An absolute gray threshold was measured needing 28 at 600 dpi, 12 at 300 dpi and 18 at 93 dpi on the same physical targets, because a rim averaged over fewer, larger pixels looks paler.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "6 · The same answer everywhere Why four steps left OpenCV The accuracy record is rerun on Windows, Linux and macOS.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Linux matched to the precision reported; macOS gave different figures in two measurements.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Since then macOS prints the same figures as the other two.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The four steps, in GroupLab&#x27;s code Perspective warp · sub-pixel corner refinement · the homography&#x27;s final refinement · contour refinement src/GroupLab.Core/Imaging/PortableImaging.cs 7 · Reading the QR codes Two detectors, because neither is enough OpenCV&#x27;s plain QR detector missed the codes on a 600 dpi scan, a tile and a photograph.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The WeChat detector, used without its neural network models, found all three, but hands back text through UTF-8, so every byte above 0x7F in the binary frame became a replacement character and no frame passed its CRC.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "src/GroupLab.Cli/Imaging/OpenCvSharpBackend.cs 8 · What OpenCV does not do The parts that are GroupLab&#x27;s own Drawing the target The sheet you print, and the expected image it is compared with.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "&#8594; Choosing the markers &#8594; How GroupLab reads a target &#8594; The imaging interface on GitHub &#8594; The Android OpenCV build script &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Every feature Free and open source under GPL-3.0.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "8 steps a shooter would name 11 stages in the pipeline&#x27;s specification 25 of 25 shots found and assigned in the real run at the foot of this page 0.232 in that group&#x27;s mean radius Step 1 · before S0 Print The sheet is born from a GLTD definition, and everything GroupLab will later need to read it is printed on it.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "true size markers QR code Step 1: print.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "38 markers on GL-CF25-LTR, on the corners of its cell lattice 6.0 mm per marker with its quiet zone GLTD The definition Bulls, rings, markers and QR codes, all in page units.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "PDF The render AprilTag 36h11 markers of 0.5 mm squares, 4.0 mm across, where the cell lines cross and nothing else is in the way; 9 on a 300 yard tile.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "A GLTD-B frame in every QR code: the whole definition, a CRC-32 over it and a tile index; the sheet&#x27;s identifier is computed from the definition.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 2 · no stage Shoot Nothing runs, but the physics decides what GroupLab will see.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "five shots at the top bull Step 2: shoot.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0.919 hole over caliber, .264, 189 holes 0.920 hole over caliber, .308, 42 holes Survey What holes measure About 0.020 in narrower than the bullet, with a spread of 0.051 in: modeled as a fixed allowance, not a scale factor.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  ".338 holes measured 0.981 of caliber; a .22 LR hole as little as 0.49.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "On printed ink a hole&#x27;s rim is shallower and less even (its darkest point V 48 against 34 on paper), its dark band about 29 percent thicker, and it measures about 7 percent smaller; the inside of the hole is unchanged.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 3 · S0 Capture A scan or a photograph becomes one image with a record of where it came from, and the sheet names its own definition.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "or a scan Step 3: capture.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "1920 × 1440 live analysis stream on the phone 0 wrong sheet names on any platform S0 Decode The file is decoded as the camera or scanner stored it.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "S0 Identify QR codes tried at full, double, half and quarter size, stopping at the first size that gives a GLTD-B frame passing its CRC; a size that would exceed 8000 px is skipped.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "When no size gives a code, each code is cut out where the markers put it and read enlarged 2, 3 and 4 times.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "35 of 37 Phase 0 images named, on Windows, Linux and macOS alike, and none named wrongly.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Guided mode fires after 3 ready frames in a row; every picture is then checked and scored.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 4 · S1 to S4 Register The markers turn pixels into page coordinates.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "as photographed mapped back to flat Step 4: register.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0.00319 in worst bull, ten printed sheets, gate 0.005 in 0 → 26 of 28 holes found once detection was kept inside the sheet S1 Scale In order of authority: the markers, then the file&#x27;s DPI tag, then the content, then the person.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The tag was accurate to better than 0.1 percent on all fifteen files that carry one; a messaging-app picture with no tag was derived twice, at 93.0 and 93.05 dpi.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "On a crumpled, taped sheet it left 0.0027 in rms, where a similarity left 0.0040, and a more complex surface gained only 0.0002.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Never less than affine: scanners shear rows against columns by 0.12 to 0.17 degrees.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "From here on only pixels inside the registered sheet can become a candidate: on one photo the dark mat around the sheet merged into a blob a foot across, and 0 of 28 holes were found until it was masked.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 5 · S5 to S8 Detect Render the sheet as printed, lay it over the photo, subtract, and judge what is left.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "− = photo what was printed the holes Step 5: detect.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0.012 / 0.055 in opening and closing radii 0.15 threshold, a fraction of paper-to-ink range S5 Render The definition rasterized and resampled through the registration, on a grid and interpolated between.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Paper: the 95th percentile of paper pixels in eighth-inch blocks, smoothed.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Each bull cell aligned by phase correlation, up to 0.1 in; the rest of the page by the median of those shifts.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "S7 Candidates Open with a disk of radius 0.012 in, threshold at 0.15, close with a disk of radius 0.055 in, fill, take each blob&#x27;s convex hull.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "S8 Classify Size against the stated caliber, floor 0.45 of it; solidity and aspect, with the torn-hole rescue.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Elongation of 1.80 or more is split into two holes, both flagged; a mark with the area of 1.35 single holes or more is flagged as oversized, a single hole being the caliber&#x27;s or the sheet&#x27;s own typical mark.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 6 · S9 Assign Nearest bull is not the rule.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "bull 1 bull 2 Step 6: assign.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0 to 3 shots per surveyed target outside their own cell 1 shot nearest bull got wrong in the survey; matching gets it right S9 Three cases As many shots as bulls, or fewer: optimal one-to-one matching.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "A margin under 0.15 in between the best and second-best bull is flagged either way.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Real The case that proves it On one commercial scan, a hole 0.627 in from bull 4 and 1.043 in from bull 9.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Nearest bull gives it to 4, which already has a shot 0.289 in away; bull 9 has none.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 7 · S10 Combine Sheets of one load, or the tiles of one large target, become one group.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "sheet 1 sheet 2 one load, ten shots Step 7: combine.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "0 effect of tile alignment on the group per shot confidence survives pooling S10 Pool Each tile runs S0 to S9 on its own and every shot is an offset from its own bull, so tape gaps and sheets stapled out of square add nothing.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Step 8 · after S10 Report The figures, each with a range for how sure it is, from a statistics library compared with R&#x27;s shotGroups on every build.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "mean radius how sure it is Step 8: report.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "45,476 values compared with R shotGroups 490 of 490 Monte Carlo cells within tolerance Stats What is reported Mean radius, estimated as sigma times the square root of pi over two; CEP 50 and 90; extreme spread; each with its interval.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "The rejections are the interesting half: they turn &quot;no shot here&quot; into &quot;a mark 0.058 in across, under the 0.150 in floor&quot;.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Below is a real run of grouplab analyze on a sample in the repository, a 600 dpi scan of GL-CF25-LTR-D with 25 shots.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "&#8594; Designing a target GroupLab can read &#8594; A bullet hole is not the bullet &#8594; Scans against phone photos &#8594; Choosing the markers &#8594; Curled, angled and wrinkled paper &#8594; How GroupLab reads a target &#8594; One hole or two?": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "&#8594; Pooling groups &#8594; The sample on GitHub &#8594; The pipeline specification &#8594; How the hole detector was built &#8594; How GroupLab uses OpenCV &#8594; Every feature Free and open source under GPL-3.0.": {
+   "kind": "measured",
+   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
+   "kind": "decided",
+   "where": "entry 279 section 2: marking by hand is on the phone (android/GroupLab.Android/MarkingAPage.cs); entry 284 section 2.5 for the link"
   }
  },
  "rules": [

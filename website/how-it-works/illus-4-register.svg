@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 240" aria-hidden="true" focusable="false" font-family="inherit">
+<g transform="matrix(0.72,-0.09,0.12,0.8,20,62)"><rect x="0" width="110" height="150" rx="3" style="fill:var(--panel);stroke:var(--line2)" stroke-width="1.5"/>
+<rect x="5" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="91" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="5" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="91" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="2" y="2" width="20" height="20" fill="none" style="stroke:var(--amber)" stroke-width="2.5"/>
+<rect x="88" y="2" width="20" height="20" fill="none" style="stroke:var(--amber)" stroke-width="2.5"/>
+<rect x="2" y="128" width="20" height="20" fill="none" style="stroke:var(--amber)" stroke-width="2.5"/>
+<rect x="88" y="128" width="20" height="20" fill="none" style="stroke:var(--amber)" stroke-width="2.5"/>
+<circle cx="55" cy="45" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="55" cy="97" r="20" fill="none" stroke="currentColor" stroke-width="2"/></g>
+<line x1="138" y1="120" x2="186" y2="120" style="stroke:var(--amber)" stroke-width="2"/>
+<polyline points="178,113 187,120 178,127" fill="none" style="stroke:var(--amber)" stroke-width="2"/>
+<g transform="translate(200,48) scale(0.9)"><rect x="0" width="110" height="150" rx="3" style="fill:var(--panel);stroke:var(--line2)" stroke-width="1.5"/>
+<line x1="0" y1="37" x2="110" y2="37" style="stroke:var(--teal)" stroke-width="0.8"/>
+<line x1="0" y1="75" x2="110" y2="75" style="stroke:var(--teal)" stroke-width="0.8"/>
+<line x1="0" y1="112" x2="110" y2="112" style="stroke:var(--teal)" stroke-width="0.8"/>
+<line x1="27" y1="0" x2="27" y2="150" style="stroke:var(--teal)" stroke-width="0.8"/>
+<line x1="55" y1="0" x2="55" y2="150" style="stroke:var(--teal)" stroke-width="0.8"/>
+<line x1="82" y1="0" x2="82" y2="150" style="stroke:var(--teal)" stroke-width="0.8"/>
+<rect x="5" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="91" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="5" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="91" y="131" width="14" height="14" fill="currentColor"/>
+<circle cx="55" cy="45" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="55" cy="97" r="20" fill="none" stroke="currentColor" stroke-width="2"/></g>
+<text x="80" y="222" style="fill:var(--dim)" font-size="11" text-anchor="middle">as photographed</text>
+<text x="250" y="222" style="fill:var(--dim)" font-size="11" text-anchor="middle">mapped back to flat</text>
+</svg>

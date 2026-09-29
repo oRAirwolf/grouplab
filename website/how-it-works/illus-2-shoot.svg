@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 240" aria-hidden="true" focusable="false" font-family="inherit">
+<g transform="translate(115,45)"><rect x="0" width="110" height="150" rx="3" style="fill:var(--panel);stroke:var(--line2)" stroke-width="1.5"/>
+<rect x="5" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="9" y="9" width="6" height="6" style="fill:var(--panel)"/>
+<rect x="91" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="95" y="9" width="6" height="6" style="fill:var(--panel)"/>
+<rect x="5" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="9" y="135" width="6" height="6" style="fill:var(--panel)"/>
+<rect x="91" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="95" y="135" width="6" height="6" style="fill:var(--panel)"/>
+<circle cx="55" cy="45" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="55" cy="45" r="7" fill="currentColor"/>
+<circle cx="55" cy="97" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="55" cy="97" r="7" fill="currentColor"/>
+<rect x="47" y="124" width="16" height="16" fill="currentColor"/><rect x="50" y="127" width="4" height="4" style="fill:var(--panel)"/><rect x="56" y="133" width="4" height="4" style="fill:var(--panel)"/>
+<circle cx="47" cy="36" r="3" style="fill:var(--amber);stroke:var(--bg)" stroke-width="1"/>
+<circle cx="64" cy="39" r="3" style="fill:var(--amber);stroke:var(--bg)" stroke-width="1"/>
+<circle cx="59" cy="55" r="3" style="fill:var(--amber);stroke:var(--bg)" stroke-width="1"/>
+<circle cx="44" cy="50" r="3" style="fill:var(--amber);stroke:var(--bg)" stroke-width="1"/>
+<circle cx="66" cy="30" r="3" style="fill:var(--amber);stroke:var(--bg)" stroke-width="1"/></g>
+<text x="170" y="222" style="fill:var(--dim)" font-size="11" text-anchor="middle">five shots at the top bull</text>
+</svg>

@@ -279,7 +279,7 @@ That is the whole point of the project. Everything else is the machinery that ma
 
 ## How it works
 
-**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer for now; marking by hand is coming to the phone. The same statistics run. Finding the holes by itself on any target is the goal, not yet a feature.
+**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or, under a crosshair, on the phone. The same statistics run. Finding the holes by itself on any target is the goal, not yet a feature.
 
 **A GroupLab sheet is the fast lane, not a requirement.** On its own sheets everything is automatic: the scale, every hole, and which bull each shot belongs to, and one shot per bull gives large groups. You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyze it correctly.
 
@@ -553,6 +553,9 @@ data. Linux and macOS are held correct continuously so that neither turns into a
 
 <details>
 <summary><strong>Architecture</strong></summary>
+
+**[Behind the curtain](https://grouplab.org/tour/how-it-works/)** on the website is the same picture as a map you can click: each part,
+what it is built from and where it lives, how OpenCV is used, how the hole detector was built, and one target followed stage by stage.
 
 ```mermaid
 flowchart TB

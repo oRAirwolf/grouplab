@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" aria-hidden="true" focusable="false" font-family="inherit">
+<rect width="140" height="140" rx="10" style="fill:var(--sunk)"/>
+<path d="M 90.8 58 L 100 70 L 90.8 82 L 85 96 L 70 94 L 55 96 L 49.2 82 L 40 70 L 49.2 58 L 55 44 L 70 46 L 85 44 Z" fill="none" style="stroke:var(--dim)" stroke-width="7" stroke-linejoin="round"/>
+<path d="M 20 70 A 50 50 0 0 1 45 26.7" fill="none" style="stroke:var(--dim)" stroke-width="1.3"/>
+<path d="M 108 105 A 50 50 0 0 1 80 119" fill="none" style="stroke:var(--dim)" stroke-width="1.3"/>
+<circle cx="116" cy="28" r="2.2" style="fill:var(--dim)"/>
+</svg>

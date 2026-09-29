@@ -5,6 +5,8 @@ GOOD MORNING (the night of 28 September, in five lines):
 4. New tonight (entries 278 and 279), none before the camera test: 53, three test pages to print, scan and photograph with a card (ready in C:\Dev\grouplab-local\scale-test); 54, a store-bought target with five shots; 55, the Apple steps for iOS once your membership is active. The tablet has nightly 121 too and shows the black idle screen.
 5. Updated 2026-09-29 02:17 UTC. Also built tonight: CSV import with guesses (phone and computer), marking a target by hand on the phone, Fudd buster mode, the target saving itself with the time shown, and a tap on a number switching that number alone.
 
+**Behind the curtain is built** (entry 284; not a request, for planning to look at). Locally: build the site with `python website/build.py` and open `website/_site/tour/how-it-works/index.html`; on the site, once this change is published: https://grouplab.org/tour/how-it-works/, with /opencv/, /hole-detection/ and /pipeline/ under it. Every fact was checked; the corrections are listed in `docs/PHASE1-RESULTS.md` under entry 284 (the markers are 38 on today's sheet, 35 of 37 sheets are named from their codes, six draft articles are not linked, the trace is a real run).
+
 # Requests for Alan
 
 **Open: 10.** Most urgent: **50**, the camera test of 33 inside it, ready now (line 2 above). Then **53**, the three test pages, ready now. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).

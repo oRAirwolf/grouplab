@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 240" aria-hidden="true" focusable="false" font-family="inherit">
+<g transform="translate(130,40)"><rect x="0" width="110" height="150" rx="3" style="fill:var(--panel);stroke:var(--line2)" stroke-width="1.5"/>
+<rect x="5" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="9" y="9" width="6" height="6" style="fill:var(--panel)"/>
+<rect x="91" y="5" width="14" height="14" fill="currentColor"/>
+<rect x="95" y="9" width="6" height="6" style="fill:var(--panel)"/>
+<rect x="5" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="9" y="135" width="6" height="6" style="fill:var(--panel)"/>
+<rect x="91" y="131" width="14" height="14" fill="currentColor"/>
+<rect x="95" y="135" width="6" height="6" style="fill:var(--panel)"/>
+<circle cx="55" cy="45" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="55" cy="45" r="7" fill="currentColor"/>
+<circle cx="55" cy="97" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="55" cy="97" r="7" fill="currentColor"/>
+<rect x="47" y="124" width="16" height="16" fill="currentColor"/><rect x="50" y="127" width="4" height="4" style="fill:var(--panel)"/><rect x="56" y="133" width="4" height="4" style="fill:var(--panel)"/></g>
+<line x1="112" y1="40" x2="112" y2="190" style="stroke:var(--amber)" stroke-width="1.5"/>
+<line x1="106" y1="40" x2="118" y2="40" style="stroke:var(--amber)" stroke-width="1.5"/>
+<line x1="106" y1="190" x2="118" y2="190" style="stroke:var(--amber)" stroke-width="1.5"/>
+<text x="100" y="119" style="fill:var(--amber)" font-size="11" text-anchor="end">true size</text>
+<text x="252" y="58" style="fill:var(--dim)" font-size="11">markers</text>
+<text x="252" y="168" style="fill:var(--dim)" font-size="11">QR code</text>
+</svg>
