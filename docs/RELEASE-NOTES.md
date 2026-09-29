@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.124
+
+**2026-09-29**, commit `b856d1f`. Nightly.
+
+**What you will notice**
+
+- On the phone, a target with several aim points shows each in its own color with its own figures, and another can be added from the result.
+- On the phone, Zero from this group can hand the group's offset to Ballistics, whose dope then includes it at every range.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.124)
+
+---
+
 ## 0.2.0-nightly.123
 
 **2026-09-29**, commit `612dd50`. Nightly.
