@@ -34,8 +34,24 @@ internal static class NativeOpenCv
         NativeLibrary.SetDllImportResolver(typeof(OpenCvSharp.Cv2).Assembly, Resolver);
     }
 
-    private static IntPtr Resolver(string name, Assembly assembly, DllImportSearchPath? path) =>
-        name == Library ? MainProgram() : IntPtr.Zero;
+    /// <summary>How often the runtime asked for a library of OpenCvSharp's, and the last name it asked for, for the self-test.</summary>
+    internal static int Asked { get; private set; }
+
+    internal static string? LastAsked { get; private set; }
+
+    private static IntPtr Resolver(string name, Assembly assembly, DllImportSearchPath? path)
+    {
+        Asked++;
+        LastAsked = name;
+        return name == Library ? MainProgram() : IntPtr.Zero;
+    }
+
+    /// <summary>What the self-test reports: the executable's handle and whether an OpenCV entry point is found through it.</summary>
+    internal static (bool Handle, bool Export) Probe()
+    {
+        IntPtr handle = MainProgram();
+        return (handle != IntPtr.Zero, handle != IntPtr.Zero && NativeLibrary.TryGetExport(handle, "core_Mat_new1", out _));
+    }
 
     private static IntPtr main;
 

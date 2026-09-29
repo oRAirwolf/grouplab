@@ -29,6 +29,8 @@
     <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
     <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     <_AggressiveAttributeTrimming>false</_AggressiveAttributeTrimming>
+    <!-- An exception says what went wrong in words, in the log and an error report, rather than a resource key. -->
+    <UseSystemResourceKeys>false</UseSystemResourceKeys>
   </PropertyGroup>
 
   <ItemGroup>
