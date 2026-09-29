@@ -147,6 +147,24 @@ public sealed class ResultView : UserControl
             actions.Children.Add(Screens.Row("Bulls you fired at", AimedBulls.Says(session.State.Rule, session.State.Bulls), ShowBulls));
         }
 
+        // Entry 280 section 2, Shots A: every shot's offset and clicks, and which count.
+        actions.Children.Add(Screens.Row("Shots", "Each shot's offset and clicks, and which count", () =>
+        {
+            var result = Content;
+            Content = new ShotsPage(session, definition, units, Changed, () =>
+            {
+                Content = result;
+                Refresh();
+            });
+        }));
+
+        // Entry 280 section 2, board ZeroFrom: the zero from this group, and on to Shots Needed to Zero.
+        actions.Children.Add(Screens.Row("Zero from this group", "Where the group sits, the clicks, and how sure", () =>
+        {
+            var result = Content;
+            Content = new ZeroFromPage(session.State, units, ShowShotsToZero, () => Content = result);
+        }));
+
         // Entry 279 section 3 and entry 281 section 2: Unholy's "Fudd buster mode", from twenty shots.
         if (FuddBusterPage.Shots(session.State).Count >= GroupLab.Core.Statistics.FuddBuster.LeastShots)
         {
@@ -485,10 +503,12 @@ public sealed class ResultView : UserControl
             }
 
             var pen = new Pen(Brushes.OrangeRed, 2);
+            // Entry 280 section 2, Shots A: a shot left out is dashed on the picture, still there.
+            var leftOut = new Pen(Brushes.OrangeRed, 2, new DashStyle([2, 2], 0));
             foreach (var shot in shots())
             {
                 var at = shot.Id == dragging && finger is { } f ? f : ToScreen(shot.Image);
-                context.DrawEllipse(null, pen, at, 9, 9);
+                context.DrawEllipse(null, shot.Exclusion is null ? pen : leftOut, at, 9, 9);
             }
 
             if (finger is not { } held)

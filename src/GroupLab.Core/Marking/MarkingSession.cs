@@ -33,6 +33,12 @@ public enum ExclusionReason
 
     /// <summary>A shot the shooter knows they pulled.</summary>
     PulledShot,
+
+    /// <summary>
+    /// Entry 280 section 2, Shots A: left out with the "Counted" switch, which asks for no other reason; the record says the shooter left it
+    /// out, which is true and all that the switch knows.
+    /// </summary>
+    ByShooter,
 }
 
 /// <summary>
@@ -46,6 +52,7 @@ public static class ExclusionReasons
     {
         ExclusionReason.CalledFlyer => "Called flyer",
         ExclusionReason.BadRound => "Bad round",
+        ExclusionReason.ByShooter => "Left out by the shooter",
         _ => "Pulled shot",
     };
 
