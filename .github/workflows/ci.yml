@@ -96,7 +96,7 @@ jobs:
           status=0
           runner_temp="$RUNNER_TEMP/grouplab-dotnet-test"
           mkdir -p "$runner_temp"
-          for project in tests/GroupLab.Core.Tests tests/GroupLab.App.Tests; do
+          for project in tests/GroupLab.Core.Tests tests/GroupLab.App.Tests tests/GroupLab.Mobile.Tests; do
             TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build 2>&1 | tee -a test-output.txt || status=1
           done
           rm -rf "$runner_temp"

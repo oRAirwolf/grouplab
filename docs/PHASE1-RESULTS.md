@@ -60,6 +60,9 @@ Because the library is plain .NET, it builds on any machine, and `MobileProjectT
   so the head hands it JPEG or PNG.
 - **The signing check is built** (item 7): `scripts/ios-signing.py` signs only with all seven secrets set and well formed, builds unsigned
   with none, and fails naming a malformed one, never printing a value; its self-test runs in every build.
+- **The shared screens are tested on every machine** (toward item 4): `tests/GroupLab.Mobile.Tests` starts them headlessly on a stand-in
+  phone that is neither Android nor iOS; every tab opens, and the committed 25-shot 600 dpi sample goes through the phone's own pipeline
+  (the path a picked picture takes) to all 25 shots, a named sheet and a saved session. CI runs it on Windows, Linux and macOS.
 - **Question 70, answered B:** each cell of the desktop's full CEP table shows its own unit and switches alone.
 
 ## Entry 288: GroupLab Dev updates itself

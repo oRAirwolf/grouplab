@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NOTES-FROM-PLANNING.md entry 290 section 2: the phone's shared screens driven headlessly on any machine, with a stand-in for the phone
+    underneath, so every tab opening and the whole pipeline are proven on every build, on the three desktop systems, before the Android
+    and iOS heads add their own parts. Its own project because the shared library compiles the desktop's files too, and the App tests
+    already have those from the desktop application.
+  -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Headless.XUnit" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Skia" Version="12.1.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="OpenCvSharp4.official.runtime.linux-x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.arm64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\mobile\GroupLab.Mobile\GroupLab.Mobile.csproj" />
+  </ItemGroup>
+
+  <!-- Shared by every test project: one temporary folder for the run, and a cleanup that cannot delete must never fail a test. -->
+  <ItemGroup>
+    <Compile Include="..\Shared\Temp.cs" Link="Support\Temp.cs" />
+    <Compile Include="..\Shared\TestTempRoot.cs" Link="Support\TestTempRoot.cs" />
+  </ItemGroup>
+
+</Project>

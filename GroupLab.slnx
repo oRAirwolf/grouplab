@@ -7,5 +7,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/GroupLab.App.Tests/GroupLab.App.Tests.csproj" />
     <Project Path="tests/GroupLab.Core.Tests/GroupLab.Core.Tests.csproj" />
+    <Project Path="tests/GroupLab.Mobile.Tests/GroupLab.Mobile.Tests.csproj" />
   </Folder>
 </Solution>

@@ -25,6 +25,7 @@
     <InternalsVisibleTo Include="GroupLab.iOS" />
     <InternalsVisibleTo Include="GroupLab.App.Tests" />
     <InternalsVisibleTo Include="GroupLab.Core.Tests" />
+    <InternalsVisibleTo Include="GroupLab.Mobile.Tests" />
   </ItemGroup>
 
   <ItemGroup>
