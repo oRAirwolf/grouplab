@@ -90,6 +90,7 @@ jobs:
           dotnet restore ios/GroupLab.iOS -v:q > /dev/null
           assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
           python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          xcrun nm -gUm ios/native/OpenCvSharpExtern.xcframework/ios-arm64-simulator/libOpenCvSharpExtern.a 2>/dev/null | grep -E " _vector_Point2f_(delete|new1)$" || echo "vector_Point2f_delete is not defined in the simulator archive"
           cd "$RUNNER_TEMP/ios-opencv"
           # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
           frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
@@ -120,6 +121,7 @@ jobs:
           test -n "$(ls "$app/targets/frozen"/*.gltd.json 2>/dev/null)" || { echo "::error::The application carries no frozen sheets"; exit 1; }
           if [ "${{ steps.opencv.outputs.linked }}" = "true" ]; then
             nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the executable"; exit 1; }
+            nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -E " _vector_Point2f_delete$" || echo "vector_Point2f_delete is not in the executable"
           fi
 
       - name: Boot an iOS 26 simulator
