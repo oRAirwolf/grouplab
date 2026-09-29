@@ -237,7 +237,7 @@ public static class SyntheticSheet
         return Math.Sqrt(Math.Pow(p.X - (s.X0 + (t * vx)), 2) + Math.Pow(p.Y - (s.Y0 + (t * vy)), 2));
     }
 
-    private static float[] Blur(float[] source, int width, int height, double sigma)
+    internal static float[] Blur(float[] source, int width, int height, double sigma)
     {
         int radius = (int)Math.Ceiling(3 * sigma);
         var kernel = new double[(2 * radius) + 1];
