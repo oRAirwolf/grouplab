@@ -85,6 +85,12 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/ios/native"
           unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
           ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          cd "$RUNNER_TEMP/ios-opencv"
           # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
           frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
           flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
@@ -268,6 +274,12 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/ios/native"
           unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
           ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          cd "$RUNNER_TEMP/ios-opencv"
           # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
           frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
           flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
