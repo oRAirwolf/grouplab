@@ -30,3 +30,5 @@ website/research/*/figures/*.pdf
 docs/notes/panel.md
 # The Android native library, fetched from the android workflow's artifact for a build here (entry 202); never committed.
 android/native/
+# OpenCV for iOS, fetched from the ios workflow's artifact for a build (entry 290); never committed.
+ios/native/
