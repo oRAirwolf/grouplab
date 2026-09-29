@@ -106,6 +106,11 @@ internal static class SelfTest
             }
 
             await OnUi(() => Shell.Current!.Show(Shell.Place.Capture));
+
+            // Entry 290 section 2 item 5: the camera's place, which on the simulator is the files picker, pressed while the Capture screen
+            // shows its start; and the camera's picture written as a JPEG.
+            checks.Add(await CameraSelfTest.Fallback(80));
+            checks.Add(await CameraSelfTest.Jpeg());
             budget = Phone.Platform.MemoryBudgetMegabytes();
             checks.Add(new SelfTestCheck("opencv linked")
             {
@@ -139,10 +144,6 @@ internal static class SelfTest
                 checks.Add(await Task.Run(() => SelfTestChecks.Pipeline(sample)));
                 checks.Add(await Chosen(sample, n));
             }
-
-            // Entry 290 section 2 item 5: the camera's place, which on the simulator is the files picker, and the camera's JPEG.
-            checks.Add(await CameraSelfTest.Jpeg());
-            checks.Add(await CameraSelfTest.Fallback(n + 3));
 
             // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
             checks.Add(await OnScreen(() => Shell.Current!.ShowIdle(), () => Find<IdleScreen>() is not null, "90-idle", "idle screen", words: false));

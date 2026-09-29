@@ -29,8 +29,10 @@ internal static class CameraSelfTest
             await Task.Delay(TimeSpan.FromSeconds(2));
             bool pressed = await SelfTest.OnUi(() =>
             {
-                var take = Shell.Current!.GetVisualDescendants().OfType<Button>()
-                    .FirstOrDefault(b => b.Content is "Take a picture" or TextBlock { Text: "Take a picture" });
+                // Take a picture on the tab's start, or the Camera button above a result, which opens the same camera.
+                var buttons = Shell.Current!.GetVisualDescendants().OfType<Button>().ToList();
+                var take = buttons.FirstOrDefault(b => b.Content is TextBlock { Text: "Take a picture" })
+                    ?? buttons.FirstOrDefault(b => b.Content is TextBlock { Text: "Camera" });
                 take?.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                 return take is not null;
             });
@@ -94,17 +96,27 @@ internal static class CameraSelfTest
             var (width, height) = written ? IosPhone.HeaderSize(path) : (0, 0);
             bool jpeg = StillFile.IsJpeg(start);
             bool opencv = true;
+            string openCvWords = "";
             if (NativeOpenCv.Linked && written)
             {
-                using var read = OpenCvSharp.Cv2.ImRead(path, OpenCvSharp.ImreadModes.Grayscale);
-                opencv = !read.Empty() && read.Width == Width && read.Height == Height;
-                check.Numbers["opencvWidth"] = read.Width;
+                try
+                {
+                    using var read = OpenCvSharp.Cv2.ImRead(path, OpenCvSharp.ImreadModes.Grayscale);
+                    opencv = !read.Empty() && read.Width == Width && read.Height == Height;
+                    check.Numbers["opencvWidth"] = read.Width;
+                    openCvWords = opencv ? ", which OpenCV read at its size" : ", which OpenCV did not read at its size";
+                }
+                catch (TypeInitializationException)
+                {
+                    // OpenCV itself would not start, which the imaging checks report; the JPEG is judged by ImageIO alone here.
+                    openCvWords = ", not read by OpenCV, which would not start";
+                }
             }
             check.Numbers["width"] = width;
             check.Numbers["height"] = height;
             File.Delete(path);
             check.Passed = written && jpeg && width == Width && height == Height && opencv;
-            check.Detail = $"a {kind} picture was written {(jpeg ? "as a JPEG" : "not as a JPEG")} of {width} by {height}{(opencv ? "" : ", which OpenCV did not read at its size")}";
+            check.Detail = $"a {kind} picture was written {(jpeg ? "as a JPEG" : "not as a JPEG")} of {width} by {height}{openCvWords}";
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
