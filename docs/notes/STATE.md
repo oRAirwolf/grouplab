@@ -19,8 +19,9 @@ the home page) and 288 in part (GroupLab Dev updates itself; its device check wa
 ## In flight
 
 - **iOS until 2026-10-01 02:00 UTC** (entry 290): the phone's screens are in `mobile/GroupLab.Mobile` (plain .NET, both heads link it,
-  `IPhonePlatform` is the only way to the OS). OpenCV for iOS is being built on the branch `ios/opencv` by a worker; the iOS head and the
-  simulator job come next, then section 6's parity, screen by screen. The checklist is at the top of `for-alan.md`.
+  `IPhonePlatform` is the only way to the OS), tested headlessly on every machine by `tests/GroupLab.Mobile.Tests`. OpenCV for iOS is
+  built in CI (the `ios` workflow). Workers on branches: the iOS head and simulator job (`ios/head`), the camera (`ios/camera`), entry
+  289's sheets and entry 280's screens; `ci.yml` and the gate record skip `ios/**` branches. The checklist is at the top of `for-alan.md`.
 - **GroupLab Dev updates itself** (entry 288): `AndroidUpdates` in Core, the `Updates` folder in the Android project compiled only with
   `-p:GroupLabUpdater=true` (GroupLab Dev's APK only, never the AAB), and the Dev APK listed in the signed manifest as `android apk-dev`.
   Nightly 125 is the first with it: install it over adb once, then the next nightly should arrive by itself; record the first prompt,
