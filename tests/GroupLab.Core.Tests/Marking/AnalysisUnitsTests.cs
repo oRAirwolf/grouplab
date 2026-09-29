@@ -25,8 +25,9 @@ public class AnalysisUnitsTests
     [Fact]
     public void AChoiceOnThePageWinsOverTheSettings()
     {
-        Assert.Equal(UnitSettings.Metric, UnitSettings.ForAnalysis("metric", UnitSettings.Imperial));
-        Assert.Equal(UnitSettings.Imperial, UnitSettings.ForAnalysis("imperial", UnitSettings.Metric));
+        // Entry 294 section 1: the page's choice is the length and the distance; the angle stays the scope's, from Settings.
+        Assert.Equal(UnitSettings.Metric with { Angular = AngularUnit.Moa }, UnitSettings.ForAnalysis("metric", UnitSettings.Imperial));
+        Assert.Equal(UnitSettings.Imperial with { Angular = AngularUnit.Mrad }, UnitSettings.ForAnalysis("imperial", UnitSettings.Metric));
     }
 
     /// <summary>Switching twice comes back to where it started, which is what a toggle has to do to be a toggle.</summary>
@@ -58,14 +59,15 @@ public class AnalysisUnitsTests
     [Fact]
     public void EachPairIsTheOneAPersonActuallyUses()
     {
+        // Entry 294 section 1: the angle is the scope's, so it is whatever Settings says, never the toggle's.
         var imperial = UnitSettings.ForAnalysis("imperial", UnitSettings.Metric);
         Assert.Equal(LinearUnit.Inch, imperial.Linear);
-        Assert.Equal(AngularUnit.Moa, imperial.Angular);
+        Assert.Equal(AngularUnit.Mrad, imperial.Angular);
         Assert.Equal(DistanceUnit.Yard, imperial.Distance);
 
         var metric = UnitSettings.ForAnalysis("metric", UnitSettings.Imperial);
         Assert.Equal(LinearUnit.Centimetre, metric.Linear);
-        Assert.Equal(AngularUnit.Mrad, metric.Angular);
+        Assert.Equal(AngularUnit.Moa, metric.Angular);
         Assert.Equal(DistanceUnit.Metre, metric.Distance);
     }
 

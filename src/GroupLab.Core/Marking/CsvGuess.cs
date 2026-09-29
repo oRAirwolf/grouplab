@@ -123,7 +123,7 @@ public sealed record CsvGuess(
                 $"Unit: millimeters, because nothing names it and a number as large as {largest:0.#} would be far off the target in any other unit. Check it."));
         }
 
-        return new GuessLine<CoordinateUnit>(null, "Unit: nothing in the file says it, and the numbers could be inches, centimeters, MOA or mil. Choose it.");
+        return new GuessLine<CoordinateUnit>(null, "Unit: nothing in the file says it, and the numbers could be inches, centimeters, mil or MOA. Choose it.");
     }
 
     private static GuessLine<bool> Direction(CsvTable table, int? upDown)

@@ -43,13 +43,14 @@ public class UnitsTests
         Assert.DoesNotContain(AngularUnit.Mil, UnitSettings.AngularChoices);
     }
 
+    /// <summary>The region chooses the lengths and distances; entry 294 section 1: never the angle, which the first run asks.</summary>
     [Fact]
     public void TheFirstRunDefaultFollowsTheRegion()
     {
-        Assert.Equal(UnitSettings.Imperial, UnitSettings.ForRegion("US"));
-        Assert.Equal(UnitSettings.Imperial, UnitSettings.ForRegion("us"));
-        Assert.Equal(UnitSettings.Metric, UnitSettings.ForRegion("DE"));
-        Assert.Equal(UnitSettings.Metric, UnitSettings.ForRegion(null));
+        Assert.Equal(UnitSettings.Imperial with { Angular = UnitSettings.Unanswered }, UnitSettings.ForRegion("US"));
+        Assert.Equal(UnitSettings.Imperial with { Angular = UnitSettings.Unanswered }, UnitSettings.ForRegion("us"));
+        Assert.Equal(UnitSettings.Metric with { Angular = UnitSettings.Unanswered }, UnitSettings.ForRegion("DE"));
+        Assert.Equal(UnitSettings.Metric with { Angular = UnitSettings.Unanswered }, UnitSettings.ForRegion(null));
     }
 
     /// <summary>The classic failure entry 25 names: a saved file that reads differently depending on a setting on the machine that opens it.</summary>

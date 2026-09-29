@@ -69,8 +69,9 @@ public class FourUnitsTests
         Assert.Equal("moa", FourUnits.Headline(null));
         Assert.Equal("moa", FourUnits.Headline("  "));
 
-        Assert.Equal(["moa", "in", "cm"], FourUnits.Beneath("mil"));
-        Assert.Equal(["mil", "in", "cm"], FourUnits.Beneath("moa"));
+        // Entry 294 section 1: the other angle is no longer set beneath; it is a tap on the number away.
+        Assert.Equal(["in", "cm"], FourUnits.Beneath("mil"));
+        Assert.Equal(["in", "cm"], FourUnits.Beneath("moa"));
     }
 
     /// <summary>"Up 8 clicks at 0.1 mil" is what a person actually does, so it is spelled out rather than left as an angle to divide.</summary>

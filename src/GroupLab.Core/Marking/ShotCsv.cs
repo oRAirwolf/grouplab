@@ -110,7 +110,7 @@ public static class ShotCsv
         ArgumentNullException.ThrowIfNull(table);
         if (unit is CoordinateUnit.Moa or CoordinateUnit.Mil && distanceInches is not > 0)
         {
-            throw new ArgumentException("Coordinates in MOA or mil need the distance they were shot at.", nameof(distanceInches));
+            throw new ArgumentException("Coordinates in mil or MOA need the distance they were shot at.", nameof(distanceInches));
         }
 
         double Inches(double value) => unit switch

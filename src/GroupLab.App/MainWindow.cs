@@ -1389,6 +1389,15 @@ public sealed partial class MainWindow : Window
     /// <summary>The unit setting in use, for the headless tests.</summary>
     internal UnitSettings Units => units;
 
+    /// <summary>
+    /// The units the open marking aims in, entry 294 section 1: its rifle's scope unit where it names one, and Settings' otherwise. Every
+    /// angle on the analysis page, the zero, the report and Zero from this group is in it; lengths and distances are Settings' own.
+    /// </summary>
+    internal UnitSettings Aim => units.Aiming(session.State.Rifle);
+
+    /// <summary>Entry 294 section 1: somebody with rifles of each is asked which rifle a session with none was shot with.</summary>
+    private bool AskWhichRifle => session.State.Rifle is null && settingsStore.LoadScopeAnswer() == ScopeAnswer.Both;
+
     /// <summary>The scale inputs, for the headless tests.</summary>
     internal StackPanel ScaleInputs => scaleInputs;
 
@@ -1529,7 +1538,7 @@ public sealed partial class MainWindow : Window
         double? distance = session.State.ShotDistanceInches;
         string across = centre.X >= 0 ? "right" : "left", down = centre.Y >= 0 ? "low" : "high";
         string text = $"Center from aim: {units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}";
-        return units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{text} ({x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down})" : text;
+        return Aim.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{text} ({x} {across}, {Aim.AngleText(Math.Abs(centre.Y), distance)} {down})" : text;
     }
 
     /// <summary>The centre from aim as a figure row: its angle first when there is a distance, and the offsets on the paper beneath.</summary>
@@ -1547,12 +1556,12 @@ public sealed partial class MainWindow : Window
     /// A one-distance shooter can put the size on the paper first in Settings.
     /// </summary>
     private (string Value, string? Beneath) Sized(double inches, double? distance) =>
-        Sized(units.Length(inches), units.AngleText(inches, distance), distance);
+        Sized(units.Length(inches), Aim.AngleText(inches, distance), distance);
 
     /// <summary>Width by height the same way: both angles, or both sizes on the paper.</summary>
     private (string Value, string? Beneath) SizedPair(double width, double height, double? distance) =>
         Sized($"{units.Number(width)} \u00d7 {units.Length(height)}",
-            units.Angle(width, distance) is { } across ? $"{across.ToString("0.00", CultureInfo.InvariantCulture)} \u00d7 {units.AngleText(height, distance)}" : null, distance);
+            Aim.Angle(width, distance) is { } across ? $"{across.ToString("0.00", CultureInfo.InvariantCulture)} \u00d7 {Aim.AngleText(height, distance)}" : null, distance);
 
     private (string Value, string? Beneath) Sized(string onPaper, string? angle, double? distance)
     {
@@ -4806,7 +4815,7 @@ public sealed partial class MainWindow : Window
             : $"no interval: {e.IntervalUnavailable}";
 
         var lines = new List<string>();
-        string? angle = units.AngleText(all.Value, distance);
+        string? angle = Aim.AngleText(all.Value, distance);
         if (interval || angle is not null)
         {
             lines.Add(string.Join("  \u00b7  ", new[] { angle, interval ? Interval(all) : null }.Where(t => t is not null)));
@@ -4952,7 +4961,7 @@ public sealed partial class MainWindow : Window
                 ? string.Create(CultureInfo.InvariantCulture, $"Extreme spread is center to center, and its {100 * esCoverage:0.0} percent interval runs {units.Number(esLower)} to {units.Length(esUpper)}.")
                 : $"Extreme spread has no interval: {all.ExtremeSpread!.IntervalUnavailable}.",
             all.ExtremeSpreadEdgeToEdge is { } edgeToEdge
-                ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(units.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is center to center plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
+                ? $"Edge to edge, across the outsides of the holes: {units.Length(edgeToEdge)}{(Aim.AngleText(edgeToEdge, state.ShotDistanceInches) is { } angle ? ", " + angle : "")}, which is center to center plus one {units.Length(state.Calibre!.DiameterInches)} bullet."
                 : $"Edge to edge: {all.ExtremeSpreadEdgeToEdgeUnavailable}.",
         };
         if (state.ShotDistanceInches is null)
@@ -5173,11 +5182,17 @@ public sealed partial class MainWindow : Window
         column.Children.Add(new TextBlock { Text = "Settings", Classes = { AppStyles.Title } });
 
         // Entry 25 section 1: one application-wide unit setting on three axes, which every figure obeys and no stored value does.
+        // Entry 294 section 1: the scope's unit at the top, said plainly, with one line on what it changes.
         column.Children.Add(Ruled("Units"));
+        var scopeLabel = FieldLabel(UnitSettings.ScopeUnitLabel);
+        scopeLabel.VerticalAlignment = VerticalAlignment.Center;
+        column.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space12, Children = { scopeLabel, angularUnit } });
+        angularUnit.SelectionChanged += (_, _) => UnitsChosen();
+        column.Children.Add(Line(UnitSettings.ScopeUnitSays));
         column.Children.Add(Line("Every figure is shown in these units. Nothing stored changes."));
-        var unitGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("160,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto,Auto"), RowSpacing = Tokens.Space8 };
+        var unitGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("160,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto"), RowSpacing = Tokens.Space8 };
         int row = 0;
-        foreach (var (name, combo) in new[] { ("Lengths", linearUnit), ("Angles", angularUnit), ("Distances", distanceUnit) })
+        foreach (var (name, combo) in new[] { ("Lengths", linearUnit), ("Distances", distanceUnit) })
         {
             var label = FieldLabel(name);
             label.VerticalAlignment = VerticalAlignment.Center;
@@ -5705,14 +5720,14 @@ public sealed partial class MainWindow : Window
         new() { Text = text, FontSize = Tokens.SecondarySize, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Faint } };
 
     /// <summary>One cell of the zero readouts, in the tabular mono, right-aligned so the columns line up.</summary>
-    private static TextBlock ZeroCell(string text) => UnitTap.Attach(new TextBlock
+    private static TextBlock ZeroCell(string text, string? figure = null) => UnitTap.Attach(new TextBlock
     {
         Text = text,
         FontFamily = Mono,
         HorizontalAlignment = HorizontalAlignment.Right,
         Margin = new Thickness(Tokens.Space8, 0, 0, 0),
         VerticalAlignment = VerticalAlignment.Center,
-    });
+    }, figure);
 
     /// <summary>Entry 42 section 3: a second line under a readout, in mono at the secondary size and dim.</summary>
     private static TextBlock Detail(string text) =>
@@ -5735,19 +5750,22 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        // Entry 169 section 2: one compact block. The offset in the length unit, MOA and mil side by side, both always, whatever the angular
-        // setting, because a shooter works in whichever his scope is marked in; the distance it is for; and one line saying what to dial,
-        // in clicks of the rifle's scope with the click value stated. The give or take, the degrees of freedom and the rounding are behind
-        // the line's "why", and carrying it to another distance is in Advanced. "Where it landed" is gone: it drew what the plot draws.
+        // Entry 169 section 2: one compact block. The offset in the length unit and in the scope's own angle, the distance it is for, and one
+        // line saying what to dial, in clicks of the rifle's scope with the click value stated. Entry 294 section 1 replaced "MOA and mil
+        // side by side, both always": the angle is the scope's alone, the rifle's where the marking names one and Settings' where it does
+        // not, and the other unit is a tap on the number away. The give or take, the degrees of freedom and the rounding are behind the
+        // line's "why", and carrying it to another distance is in Advanced. "Where it landed" is gone: it drew what the plot draws.
         var zero = Zeroing.For(state)!;
         double? distance = state.ShotDistanceInches;
-        string Angle(double inches, AngularUnit unit) => UnitSettings.AngleIn(Math.Abs(inches), distance, unit) is { } a ? a.ToString("0.00", CultureInfo.InvariantCulture) : "\u2013";
-        var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto,Auto") };
-        void Cell(string text, int row, int column, bool heading)
+        var aim = units.Aiming(state.Rifle);
+        string Angle(double inches) => aim.AngleText(Math.Abs(inches), distance) ?? "\u2013";
+        var readouts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto,Auto") };
+        // Entry 294 section 1: each readout is a figure of its own, so a tap to the other unit is remembered for that row, as entry 280 has it.
+        void Cell(string text, int row, int column, bool heading, string? figure = null)
         {
             var cell = heading
                 ? new TextBlock { Text = text, HorizontalAlignment = column == 0 ? HorizontalAlignment.Left : HorizontalAlignment.Right, Classes = { AppStyles.Dim } }
-                : column == 0 ? new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } } : ZeroCell(text);
+                : column == 0 ? new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } } : ZeroCell(text, figure);
             cell.Margin = new Thickness(column == 0 ? 0 : Tokens.Space12, 0, 0, 0);
             Grid.SetRow(cell, row);
             Grid.SetColumn(cell, column);
@@ -5755,23 +5773,21 @@ public sealed partial class MainWindow : Window
         }
 
         Cell("Center from aim", 0, 0, heading: true);
-        Cell(UnitSettings.Symbol(units.Linear), 0, 1, heading: true);
-        Cell("MOA", 0, 2, heading: true);
-        Cell("mil", 0, 3, heading: true);
+        Cell("On the paper", 0, 1, heading: true);
+        Cell("Scope", 0, 2, heading: true);
         int line = 1;
         foreach (var (label, axis) in new[] { ("Windage", zero.Windage), ("Elevation", zero.Elevation) })
         {
             Cell($"{label}, {axis.Sits.Trim()}", line, 0, heading: false);
-            Cell(units.Number(Math.Abs(axis.OffsetInches)), line, 1, heading: false);
-            Cell(Angle(axis.OffsetInches, AngularUnit.Moa), line, 2, heading: false);
-            Cell(Angle(axis.OffsetInches, AngularUnit.Mrad), line, 3, heading: false);
+            Cell(units.Length(Math.Abs(axis.OffsetInches)), line, 1, heading: false, "Zero, " + label.ToLowerInvariant());
+            Cell(Angle(axis.OffsetInches), line, 2, heading: false, "Zero, " + label.ToLowerInvariant());
             line++;
         }
 
         zeroPanel.Children.Add(readouts);
         zeroPanel.Children.Add(new TextBlock
         {
-            Text = distance is { } at ? $"For a zero at {units.DistanceText(at)}." : "Set the shot distance to see MOA, mil and clicks.",
+            Text = distance is { } at ? $"For a zero at {units.DistanceText(at)}." : "Set the shot distance to see the angle and the clicks.",
             TextWrapping = TextWrapping.Wrap,
             Classes = { AppStyles.Secondary },
         });
@@ -5781,7 +5797,7 @@ public sealed partial class MainWindow : Window
             ? view.Verdict
             : dialAxes.All(a => a.Clicks is not null) && state.Rifle is { } rifle
                 ? $"Dial {string.Join(" and ", dialAxes.Select(a => a.Clicks!.Describe()))}, at {rifle.DescribeClick()}."
-                : $"Dial {string.Join(" and ", dialAxes.Select(a => a.Dial))} by the figures above." + (state.Rifle is null ? " Choose a rifle to have it in clicks." : "");
+                : $"Dial {string.Join(" and ", dialAxes.Select(a => a.Dial))} by the figures above." + (state.Rifle is null ? " " + (AskWhichRifle ? ResultWords.WhichRifle : "Choose a rifle to have it in clicks.") : "");
         var verdict = new TextBlock { Text = verdictText, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, Tokens.Space4) };
         if (view.Dial)
         {
@@ -5790,7 +5806,7 @@ public sealed partial class MainWindow : Window
 
         var why = new List<string> { "The group center is known to within " + view.Note! + "." };
         why.AddRange(dialAxes.Where(a => a.Clicks is not null).Select(a => string.Create(CultureInfo.InvariantCulture,
-            $"Rounding {a.Dial} to whole clicks leaves {Math.Abs(a.Clicks!.ResidualAngle):0.00} {(a.Clicks.Unit == AngularUnit.Mrad ? "mil" : "MOA")}.")));
+            $"Rounding {a.Dial} to whole clicks leaves {Math.Abs(a.Clicks!.ResidualAngle):0.00} {UnitSettings.Symbol(a.Clicks.Unit)}.")));
         why.AddRange(view.Why);
         zeroPanel.Children.Add(Explained(verdict, item, [.. why]));
         if (view.AtZero is { } atZero)
@@ -5871,14 +5887,14 @@ public sealed partial class MainWindow : Window
         }
 
         double? distance = state.ShotDistanceInches;
-        string Both(double inches) => units.AngleText(Math.Abs(inches), distance) is { } angle
+        string Both(double inches) => Aim.AngleText(Math.Abs(inches), distance) is { } angle
             ? $"{units.Length(Math.Abs(inches))}  {angle}"
             : units.Length(Math.Abs(inches));
 
         var rows = new List<(string, string, string, string)>();
         foreach (var (label, axis) in new[] { ("Group center, windage", zero.Windage), ("Group center, elevation", zero.Elevation) })
         {
-            rows.Add((label, units.Length(Math.Abs(axis.OffsetInches)), units.AngleText(Math.Abs(axis.OffsetInches), distance) ?? "", axis.Sits));
+            rows.Add((label, units.Length(Math.Abs(axis.OffsetInches)), Aim.AngleText(Math.Abs(axis.OffsetInches), distance) ?? "", axis.Sits));
         }
 
         string note = $"give or take {Both(zero.Windage.HalfWidthInches)} across and {Both(zero.Elevation.HalfWidthInches)} up and down, at {100 * Zeroing.Level:0} percent";
@@ -5888,7 +5904,7 @@ public sealed partial class MainWindow : Window
         // Entry 97 section 2: in clicks where the marking names a rifle and the distance is set, with what rounding leaves, and otherwise in
         // the linear and angular figures, which every turret is marked in one of.
         string Dial(ZeroAxis axis) => axis.Clicks is { } clicks
-            ? clicks.Describe() + string.Create(CultureInfo.InvariantCulture, $" ({Both(axis.OffsetInches)}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {(clicks.Unit == AngularUnit.Mrad ? "mil" : "MOA")})")
+            ? clicks.Describe() + string.Create(CultureInfo.InvariantCulture, $" ({Both(axis.OffsetInches)}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {UnitSettings.Symbol(clicks.Unit)})")
             : $"{Both(axis.OffsetInches)} {axis.Dial}";
         var dial = new List<string>();
         if (zero.Windage.Distinguishable)
@@ -5923,7 +5939,7 @@ public sealed partial class MainWindow : Window
         why.Add(distance is null
             ? "Angular figures and clicks need the shot distance. It corrects the zero at the distance shot; moving a zero between distances needs the solver."
             : state.Rifle is null
-                ? "Choose a rifle to have this in clicks. It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
+                ? (AskWhichRifle ? ResultWords.WhichRifle : "Choose a rifle to have this in clicks.") + " It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
                 : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver.");
         return new ZeroView(null, rows, note, verdict, dial.Count > 0, why)
         {

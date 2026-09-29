@@ -319,13 +319,13 @@ public class Entry105Tests
             Assert.EndsWith(" MOA", mean.Value, StringComparison.Ordinal);
             Assert.Contains(window.KeptBeneath, t => t.EndsWith(" in on the paper at 100 yd", StringComparison.Ordinal));
 
-            // Entry 169 section 2: the zero readouts are cells in columns headed by their units, the length unit, MOA and mil, and each
-            // axis's row says which way the group sits.
+            // Entry 169 section 2: the zero readouts are cells in columns, on the paper and in the scope's unit (entry 294 section 1: the
+            // one unit, here Settings' MOA), and each axis's row says which way the group sits.
             var zero = window.ZeroText.ToList();
             Assert.Contains(zero, t => t.EndsWith(" right", StringComparison.Ordinal) || t.EndsWith(" left", StringComparison.Ordinal));
             Assert.Contains(zero, t => t.EndsWith(" high", StringComparison.Ordinal) || t.EndsWith(" low", StringComparison.Ordinal));
-            Assert.Contains("MOA", zero);
-            Assert.Contains("mil", zero);
+            Assert.Contains("Scope", zero);
+            Assert.Contains(zero, t => t.EndsWith(" MOA", StringComparison.Ordinal));
             window.Close();
         }
         finally

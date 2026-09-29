@@ -37,6 +37,7 @@ Store listing uses 1920x1080.
 | `marking` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /, /features/, /guides/user-guide/, /tour/, /tour/marking/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `optic` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/optic/ | sheet made by the generator |
 | `optic-4x` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/optic/ | sheet made by the generator |
+| `scope-unit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | no sheet at all |
 | `sessions` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/sessions/, README.md, docs/USER-GUIDE.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `settings` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/settings/, docs/USER-GUIDE.md | Entry109Tests synthetic sheet; no sheet at all |
 | `shots-to-zero` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/analysis-open/ | Entry109Tests synthetic sheet |

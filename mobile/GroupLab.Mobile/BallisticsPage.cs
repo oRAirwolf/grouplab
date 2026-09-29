@@ -55,7 +55,7 @@ internal sealed class BallisticsPage : UserControl
     public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false)
     {
         // Entry 280 section 2: the offset and its sentence are the desktop's own (ResultWords.ZeroOffsetFor).
-        if (useZeroOffset && carried is not null && ResultWords.ZeroOffsetFor(carried) is { } offset)
+        if (useZeroOffset && carried is not null && ResultWords.ZeroOffsetFor(carried, units) is { } offset)
         {
             zeroOffset = (offset.UpMoa, offset.LeftMoa, offset.Words);
         }
@@ -87,6 +87,12 @@ internal sealed class BallisticsPage : UserControl
     }
 
     private Rifle? RifleChosen => book.FindRifle(rifleName);
+
+    /// <summary>Entry 294 section 1: the angle this page aims in, the chosen rifle's scope unit, or Settings' where there is none.</summary>
+    private bool Mil => units.Aiming(RifleChosen).Angular == AngularUnit.Mrad;
+
+    /// <summary>The hit chance's angular target, in the scope's unit: half a mil, or two minutes.</summary>
+    private string AngleTarget => Mil ? "0.5 mil" : "2 MOA";
 
     private Load? LoadChosen => book.FindLoad(loadName);
 
@@ -145,7 +151,7 @@ internal sealed class BallisticsPage : UserControl
         double max = Number(to) ?? 1000, step = Number(every) ?? 100;
         max = Math.Clamp(max, 100, 3000);
         step = Math.Clamp(step, 10, 500);
-        bool mil = RifleChosen?.ClickUnit == AngularUnit.Mrad;
+        bool mil = Mil;
         double click = RifleChosen?.ClickValue is > 0 and var c ? c : mil ? 0.1 : 0.25;
         var points = SolverUse.Dope(input with { CrosswindMph = 10 }, max, step).Points.Where(p => p.RangeYards > 0).ToList();
         bool wide = Bounds.Width > Bounds.Height && Bounds.Width > 600;
@@ -229,7 +235,12 @@ internal sealed class BallisticsPage : UserControl
     {
         var panel = new StackPanel { Spacing = 10 };
         var targets = new WrapPanel();
-        foreach (string name in new[] { "10 in plate", "2 MOA", "Other" })
+        if (target is "2 MOA" or "0.5 mil")
+        {
+            target = AngleTarget;
+        }
+
+        foreach (string name in new[] { "10 in plate", AngleTarget, "Other" })
         {
             targets.Children.Add(Chip(name, target == name, () =>
             {
@@ -262,7 +273,7 @@ internal sealed class BallisticsPage : UserControl
 
         var (group, refusal) = carried is { } state ? HitFromGroup.Of(state) : (null, "Open a result and choose Ballistics from it to carry its group in; the hit chance needs your own measured precision.");
         panel.Children.Add(Screens.Dim(group is { } g
-            ? string.Create(CultureInfo.CurrentCulture, $"Your group: sigma {g.Precision.SigmaMrad * 3.4377:0.00} MOA per axis, {g.Shots} shots.")
+            ? string.Create(CultureInfo.CurrentCulture, $"Your group: sigma {g.Precision.SigmaMrad * (Mil ? 1 : 3.4377):0.00} {(Mil ? "mil" : "MOA")} per axis, {g.Shots} shots.")
             : refusal ?? ""));
         var answer = new StackPanel { Spacing = 10 };
         panel.Children.Add(answer);
@@ -274,7 +285,14 @@ internal sealed class BallisticsPage : UserControl
     {
         answer.Children.Clear();
         double? yards = Number(range);
-        double? size = target switch { "10 in plate" => 10, "2 MOA" when yards is { } y => 2 * 1.047 * y / 100, "Other" => Number(otherSize), _ => null };
+        double? size = target switch
+        {
+            "10 in plate" => 10,
+            "2 MOA" when yards is { } y => 2 * 1.047 * y / 100,
+            "0.5 mil" when yards is { } y => 0.5 * 3.6 * y / 100,
+            "Other" => Number(otherSize),
+            _ => null,
+        };
         if (group is null || yards is null || yards <= 0 || size is null || size <= 0 || Number(wind) is not { } mph)
         {
             answer.Children.Add(Screens.Line(group is null ? "The hit chance needs a group carried in from a result." : "Enter the range, the crosswind and the target's size."));
@@ -343,18 +361,43 @@ internal sealed class BallisticsPage : UserControl
         var name = Field(r?.Name ?? "My rifle");
         var sight = Field(r?.SightHeightInches?.ToString("0.##", CultureInfo.InvariantCulture) ?? "1.75");
         var zero = Field(r?.ZeroDistanceYards?.ToString("0", CultureInfo.InvariantCulture) ?? "100");
-        var click = Field(r?.ClickValue.ToString("0.###", CultureInfo.InvariantCulture) ?? "0.25");
-        bool mil = r?.ClickUnit == AngularUnit.Mrad;
-        var unit = new CheckBox { Content = "Clicks in mil (off: MOA)", IsChecked = mil, MinHeight = Screens.Touch };
+        // Entry 294 section 1: the scope's unit and click as chips, 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other typed in mil or MOA;
+        // a new rifle starts in the scope unit Settings has.
+        var usual = r is null ? ScopeClicks.Usual(units.Angular) : (r.ClickValue, r.ClickUnit);
+        var click = Field(usual.Item1.ToString("0.###", CultureInfo.InvariantCulture));
+        bool mil = usual.Item2 == AngularUnit.Mrad;
+        var unitChips = new WrapPanel();
+        var typedUnit = new WrapPanel();
+        void ShowClicks()
+        {
+            unitChips.Children.Clear();
+            double? now = Number(click);
+            foreach (var (words, value, u) in ScopeClicks.Common)
+            {
+                unitChips.Children.Add(Chip(words, now is { } v && Math.Abs(v - value) < 1e-9 && mil == (u == AngularUnit.Mrad), () =>
+                {
+                    click.Text = value.ToString("0.###", CultureInfo.InvariantCulture);
+                    mil = u == AngularUnit.Mrad;
+                    ShowClicks();
+                }));
+            }
+
+            typedUnit.Children.Clear();
+            typedUnit.Children.Add(Chip("mil", mil, () => { mil = true; ShowClicks(); }));
+            typedUnit.Children.Add(Chip("MOA", !mil, () => { mil = false; ShowClicks(); }));
+        }
+
+        ShowClicks();
         return Screens.Card(Screens.Heading("The rifle"), Picker(book.Rifles.Select(x => x.Name), n => { rifleName = n; Build(); }),
-            Labeled("Name", name), Labeled("Sight height, in", sight), Labeled("Zero distance, yd", zero), Labeled("One click", click), unit,
+            Labeled("Name", name), Labeled("Sight height, in", sight), Labeled("Zero distance, yd", zero), Screens.Dim("Scope unit and one click"), unitChips,
+            Labeled("One click, or any other", click), typedUnit,
             Screens.Primary("Keep this rifle", () =>
             {
-                var rifle = (r ?? new Rifle(name.Text ?? "My rifle", 0.25, AngularUnit.Moa)) with
+                var rifle = (r ?? new Rifle(name.Text ?? "My rifle", usual.Item1, usual.Item2)) with
                 {
                     Name = name.Text is { Length: > 0 } n ? n : "My rifle",
-                    ClickValue = Number(click) ?? 0.25,
-                    ClickUnit = unit.IsChecked == true ? AngularUnit.Mrad : AngularUnit.Moa,
+                    ClickValue = Number(click) ?? ScopeClicks.Usual(mil ? AngularUnit.Mrad : AngularUnit.Moa).Value,
+                    ClickUnit = mil ? AngularUnit.Mrad : AngularUnit.Moa,
                     SightHeightInches = Number(sight),
                     ZeroDistanceYards = Number(zero),
                 };

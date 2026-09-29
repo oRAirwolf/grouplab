@@ -31,6 +31,9 @@ namespace GroupLab.App.Tests
             // a target unless the test says so; the tests of sending set ReceiverOpen themselves.
             GroupLab.App.MainWindow.ReceiverOpenByDefault = false;
 
+            // Entry 294: a test window does not ask the scope question unless the test says so.
+            GroupLab.App.MainWindow.AskScopeByDefault = false;
+
             // Entry 200: error reports are switched on too. A test window does not ask about them or send one unless the test says so.
             GroupLab.App.MainWindow.ErrorsOpenByDefault = false;
 

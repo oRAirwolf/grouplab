@@ -225,7 +225,7 @@ public sealed partial class MainWindow
     private List<string>? ChoicesFor(string key) => key switch
     {
         "firearm" => ["Rifle", "Pistol"],
-        "clickUnit" => ["Moa", "Mrad", "Smoa"],
+        "clickUnit" => ["mil", "MOA", "SMOA"],
         "twistDirection" => ["right", "left"],
         "dragModel" => ["G1", "G7"],
         "rifle" => [.. book.Rifles.Select(r => r.Name)],
@@ -305,8 +305,15 @@ public sealed partial class MainWindow
         switch (equipmentKind)
         {
             case EquipmentKind.Rifle:
-                double click = Number(Typed("clickValue")) ?? 0.25;
-                var unit = Typed("clickUnit") switch { "Mrad" => AngularUnit.Mrad, "Smoa" => AngularUnit.Smoa, _ => AngularUnit.Moa };
+                // Entry 294 section 1: the scope unit as a shooter says it, mil, MOA or SMOA, and a new rifle starts in Settings' own.
+                var unit = Typed("clickUnit") switch
+                {
+                    "mil" or "Mrad" => AngularUnit.Mrad,
+                    "SMOA" or "Smoa" => AngularUnit.Smoa,
+                    "MOA" or "Moa" => AngularUnit.Moa,
+                    _ => units.Angular,
+                };
+                double click = Number(Typed("clickValue")) ?? ScopeClicks.Usual(unit).Value;
                 book = book.With(new Rifle(name, click, unit)
                 {
                     Firearm = Typed("firearm") is "Pistol" ? FirearmType.Pistol : FirearmType.Rifle,

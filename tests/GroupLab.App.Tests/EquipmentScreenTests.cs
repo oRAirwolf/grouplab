@@ -53,7 +53,7 @@ public class EquipmentScreenTests
             window.TypeEquipment("manufacturer", "Tikka");
             window.TypeEquipment("cartridge", "6.5 Creedmoor");
             window.TypeEquipment("clickValue", "0.1");
-            window.TypeEquipment("clickUnit", "Mrad");
+            window.TypeEquipment("clickUnit", "mil");
             window.TypeEquipment("sightHeightInches", "1.85");
             window.TypeEquipment("zeroDistanceYards", "100");
             window.SaveEquipment();

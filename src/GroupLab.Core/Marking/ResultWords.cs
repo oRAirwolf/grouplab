@@ -8,7 +8,8 @@ public sealed record ZeroFromWords(IReadOnlyList<string> Axes, string Scope, str
 
 /// <summary>
 /// A group's offset from its aim point as the zero offset Ballistics carries at every range, NOTES-FROM-PLANNING.md entry 280 section 2 (board
-/// ZeroFrom): the angle to dial up (negative down) and left (negative right), in MOA, and the sentence that says it was carried in.
+/// ZeroFrom): the angle to dial up (negative down) and left (negative right), kept in MOA, and the sentence that says it was carried in, in
+/// the scope's own unit (entry 294 section 1).
 /// </summary>
 public sealed record ZeroOffset(double UpMoa, double LeftMoa, int Shots, bool Worth, string Words)
 {
@@ -71,7 +72,7 @@ public static class ResultWords
     /// Zero from this group, board ZeroFrom: the group's centre from the aim point, the clicks with the scope named, how well the centre is
     /// known at this many shots (entry 53 section 3's rule: dial an axis only where its interval excludes zero), and the verdict.
     /// </summary>
-    public static ZeroFromWords ZeroFrom(MarkingState state, UnitSettings units)
+    public static ZeroFromWords ZeroFrom(MarkingState state, UnitSettings units, bool askWhichRifle = false)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
@@ -80,10 +81,16 @@ public static class ResultWords
             return new ZeroFromWords([], "", "", "", "This group has no aim point to measure a zero from, or too few shots for one.");
         }
 
+        // Entry 294 section 1: the angle in the scope's own unit, the rifle's where one is named, and only that one; the size at the target
+        // follows it in brackets, and the other angle is a tap away.
+        units = units.Aiming(state.Rifle);
+        double? distance = state.ShotDistanceInches;
         string Axis(ZeroAxis axis, string name)
         {
-            string amount = units.Length(Math.Abs(axis.OffsetInches)) + " " + axis.Sits;
-            string dial = axis.Clicks is { } c ? c.Describe() : "dial " + axis.Dial;
+            string length = units.Length(Math.Abs(axis.OffsetInches));
+            string? angle = units.AngleText(Math.Abs(axis.OffsetInches), distance);
+            string amount = angle is null ? length + " " + axis.Sits : $"{angle} {axis.Sits} ({length})";
+            string dial = (angle is null ? "dial " + axis.Dial : $"dial {angle} {axis.Dial}") + (axis.Clicks is { } c ? ", " + c.Describe() : "");
             return axis.Distinguishable
                 ? $"{name}: the group sits {amount}; {dial}."
                 : $"{name}: the group sits {amount}, too little to dial at {zero.Shots} shots"
@@ -92,7 +99,8 @@ public static class ResultWords
 
         return new ZeroFromWords(
             [Axis(zero.Elevation, "Up and down"), Axis(zero.Windage, "Across")],
-            state.Rifle is { } rifle ? $"Clicks at {rifle.DescribeClick()}, the click value of {rifle.Name}." : "Choose a rifle with its click value to see clicks.",
+            state.Rifle is { } rifle ? $"Clicks at {rifle.DescribeClick()}, the click value of {rifle.Name}."
+                : askWhichRifle ? WhichRifle : "Choose a rifle with its click value to see clicks.",
             string.Create(CultureInfo.InvariantCulture,
                 $"How well the center is known: the smallest offset these {zero.Shots} shots can call is {units.Length(zero.DetectableInches)}; an axis is worth dialing only where the group sits further off than that."),
             zero.Worth ? "Worth dialing." : "Neither axis is far enough off to be worth dialing at this many shots.",
@@ -100,10 +108,17 @@ public static class ResultWords
     }
 
     /// <summary>
-    /// The group's offset as the zero offset Ballistics carries, "Use as the zero offset in Ballistics": the angle the centre sits from the
-    /// aim at the distance shot, to dial the other way at every range; null without a distance or a zero.
+    /// Entry 294 section 1: what the zero says to somebody who answered "Both, I have rifles of each", where the session names no rifle, since
+    /// which unit to show depends on which rifle it was.
     /// </summary>
-    public static ZeroOffset? ZeroOffsetFor(MarkingState state)
+    public const string WhichRifle = "Which rifle was this? Choose it and the correction is in its scope's unit and clicks.";
+
+    /// <summary>
+    /// The group's offset as the zero offset Ballistics carries, "Use as the zero offset in Ballistics": the angle the centre sits from the
+    /// aim at the distance shot, to dial the other way at every range; null without a distance or a zero. The sentence is in the scope's
+    /// unit (entry 294 section 1): the rifle's where the session names one, and the one in <paramref name="units"/> where it does not.
+    /// </summary>
+    public static ZeroOffset? ZeroOffsetFor(MarkingState state, UnitSettings? units = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         if (state.ShotDistanceInches is not { } shotAt || shotAt <= 0 || Zeroing.For(state) is not { } zero)
@@ -114,8 +129,11 @@ public static class ResultWords
         static double Moa(double inches, double at) => Angular.Constant(AngularUnit.Moa) / 2 * Math.Atan(Math.Abs(inches) / at);
         double up = zero.Elevation.Dial == "up" ? Moa(zero.Elevation.OffsetInches, shotAt) : -Moa(zero.Elevation.OffsetInches, shotAt);
         double left = zero.Windage.Dial == "left" ? Moa(zero.Windage.OffsetInches, shotAt) : -Moa(zero.Windage.OffsetInches, shotAt);
+        var unit = (units ?? UnitSettings.Imperial with { Angular = UnitSettings.Unanswered }).Aiming(state.Rifle).Angular;
+        double per = Angular.Constant(unit) / Angular.Constant(AngularUnit.Moa);
+        string symbol = UnitSettings.Symbol(unit);
         string words = string.Create(CultureInfo.InvariantCulture,
-            $"With the zero offset of the group you carried in, {Math.Abs(up):0.00} MOA {(up >= 0 ? "up" : "down")} and {Math.Abs(left):0.00} MOA {(left >= 0 ? "left" : "right")} at every range, from {zero.Shots} shots{(zero.Worth ? "" : "; at this many shots it is not yet worth dialing")}.");
+            $"With the zero offset of the group you carried in, {Math.Abs(up * per):0.00} {symbol} {(up >= 0 ? "up" : "down")} and {Math.Abs(left * per):0.00} {symbol} {(left >= 0 ? "left" : "right")} at every range, from {zero.Shots} shots{(zero.Worth ? "" : "; at this many shots it is not yet worth dialing")}.");
         return new ZeroOffset(up, left, zero.Shots, zero.Worth, words);
     }
 

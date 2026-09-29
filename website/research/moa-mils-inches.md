@@ -69,7 +69,7 @@ GroupLab does these conversions with the exact trigonometric form, not the small
 
 An angle needs a distance. Without one, a half-inch group could be 0.5 MOA at 100 yards or 0.1 MOA at 500. So GroupLab stores everything as a real distance on the paper and only shows MOA or mil once it knows how far away the target was. With no distance, the angular columns are not shown at all, rather than shown as zero or guessed.
 
-GroupLab can show inches, centimeters, MOA and mil side by side. It uses true MOA by default and offers IPHY for those who prefer it, and the metric and imperial switch changes every figure in the application at once.
+GroupLab shows sizes on the paper in inches or centimeters and angles in your scope's unit, mil or MOA, which it asks for the first time it starts; each rifle keeps its own. Its MOA is the true minute, and IPHY is offered for those who prefer it, as SMOA. Any angle can be tapped to see it in the other unit.
 
 ## What this means
 

@@ -552,9 +552,11 @@ public sealed partial class MainWindow
         // Entry 156 section 8 item 1: the probability with the dope, where the shooter reads the elevation and the wind.
         var point = BallisticSolver.Solve(setup.Solver, setup.DistanceYards, setup.DistanceYards).Points[^1];
         double range = setup.DistanceYards * 36;
-        string elevation = (units.AngleText(Math.Abs(point.DropInches), range) ?? units.Length(Math.Abs(point.DropInches))) + (point.DropInches < 0 ? " up" : " down");
+        // Entry 294 section 1: the hold in the chosen rifle's scope unit.
+        var aim = units.Aiming(ChosenRifle ?? session.State.Rifle);
+        string elevation = (aim.AngleText(Math.Abs(point.DropInches), range) ?? units.Length(Math.Abs(point.DropInches))) + (point.DropInches < 0 ? " up" : " down");
         string wind = Math.Abs(point.WindInches) < 5e-4 ? "no wind hold"
-            : (units.AngleText(Math.Abs(point.WindInches), range) ?? units.Length(Math.Abs(point.WindInches))) + (point.WindInches > 0 ? " left" : " right") + " for the crosswind";
+            : (aim.AngleText(Math.Abs(point.WindInches), range) ?? units.Length(Math.Abs(point.WindInches))) + (point.WindInches > 0 ? " left" : " right") + " for the crosswind";
         hitLines.Children.Add(Line($"At {at}: elevation {elevation}, wind {wind}."));
 
         string Chance(HitChance c)

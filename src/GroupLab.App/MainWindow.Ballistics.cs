@@ -463,7 +463,9 @@ public sealed partial class MainWindow
             return grid;
         }
 
-        string length = UnitSettings.Symbol(units.Linear), angle = UnitSettings.Symbol(units.Angular);
+        // Entry 294 section 1: the dope's angles are in the chosen rifle's scope unit, whatever Settings says.
+        var aim = units.Aiming(rifle);
+        string length = UnitSettings.Symbol(units.Linear), angle = UnitSettings.Symbol(aim.Angular);
         var head = Cells([$"range, {UnitSettings.Symbol(units.Distance)}", $"drop, {length}", $"elevation, {angle}", "clicks", $"10 mph wind, {length}", $"windage, {angle}", "clicks into wind",
             $"velocity, {BallisticMeasures.Symbol(BallisticMeasure.Speed, units)}", BallisticMeasures.IsMetric(units) ? "energy, J" : "energy, ft lb"], heading: true);
         head.Margin = new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, Tokens.Space4);
@@ -475,7 +477,7 @@ public sealed partial class MainWindow
         {
             double range = solved.RangeYards * 36;
             var point = carriedZero is null ? solved : solved with { DropInches = solved.DropInches - carriedZero.UpInchesAt(range) };
-            string Angle(double inches) => units.Angle(Math.Abs(inches), range) is { } a ? a.ToString("0.00", CultureInfo.InvariantCulture) : "";
+            string Angle(double inches) => aim.Angle(Math.Abs(inches), range) is { } a ? a.ToString("0.00", CultureInfo.InvariantCulture) : "";
             // Anything under the display's resolution is zero, with no direction to dial.
             string ClickText(double inches, string direction) => Math.Abs(inches) < 5e-4 ? "0" : Clicks.For(inches, range, rifle!, direction).Describe();
             var row = new Border
@@ -579,13 +581,14 @@ public sealed partial class MainWindow
         var air = Air();
         var carried = SolverUse.Carry(SolverUse.Input(rifle, load, air)!, zero, shot / 36, to, rifle);
         double toInches = to * 36;
-        string Both(double inches) => units.AngleText(Math.Abs(inches), toInches) is { } angle ? $"{units.Length(Math.Abs(inches))}  {angle}" : units.Length(Math.Abs(inches));
+        var aim = units.Aiming(rifle ?? state.Rifle);
+        string Both(double inches) => aim.AngleText(Math.Abs(inches), toInches) is { } angle ? $"{units.Length(Math.Abs(inches))}  {angle}" : units.Length(Math.Abs(inches));
         string at = units.DistanceText(toInches);
         foreach (var (name, axis) in new[] { ("Windage", carried.Windage), ("Elevation", carried.Elevation) })
         {
             zeroPanel.Children.Add(Line(axis.Distinguishable
                 ? $"{name} at {at}: {Both(axis.OffsetInches)} {axis.Dial}, give or take {Both(axis.HalfWidthInches)}" + (axis.Clicks is { } clicks
-                    ? string.Create(CultureInfo.InvariantCulture, $"; {clicks.Describe()}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {(clicks.Unit == AngularUnit.Mrad ? "mil" : "MOA")}.")
+                    ? string.Create(CultureInfo.InvariantCulture, $"; {clicks.Describe()}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {UnitSettings.Symbol(clicks.Unit)}.")
                     : ".")
                 : $"{name}: not distinguishable from zero at {zero.Shots} shots, so there is nothing to carry to {at}."));
         }

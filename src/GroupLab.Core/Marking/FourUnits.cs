@@ -31,7 +31,7 @@ public sealed record InFourUnits(double Moa, double Mil, double Inches, double C
 /// </para>
 /// <para>
 /// Where the rifle records what its scope adjusts in, that unit is the headline and the clicks are spelled out, because "Up 8 clicks" is
-/// what a person actually does. Where it does not, MOA leads, being the commoner marking on scopes this project has seen.
+/// what a person actually does. Where it does not, the scope unit in Settings leads (entry 294 section 1), and the other angle is a tap away.
 /// </para>
 /// </summary>
 public static class FourUnits
@@ -76,9 +76,12 @@ public static class FourUnits
             _ => "moa",
         };
 
-    /// <summary>The other three, in the order the table shows them beneath the headline.</summary>
-    public static IReadOnlyList<string> Beneath(string headline) =>
-        headline == "mil" ? ["moa", "in", "cm"] : ["mil", "in", "cm"];
+    /// <summary>
+    /// What the table shows beneath the headline: the size at the target in inches and centimeters. Entry 294 section 1 replaced entry 131
+    /// section 3.1's "other three": the other angle is no longer set beneath, because a mil shooter reading "0.35 MOA" under every mil figure
+    /// is being told the application thinks in MOA. It stays one tap away on the number itself.
+    /// </summary>
+    public static IReadOnlyList<string> Beneath(string headline) => ["in", "cm"];
 
     /// <summary>
     /// What to turn, in the scope's own clicks, or null where the rifle does not record a click value. Never guessed: a scope that adjusts

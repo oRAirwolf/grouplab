@@ -25,7 +25,7 @@ public class UnitSwitchTests
     public void PressAndHoldListsEveryUnitAndMarksTheCurrentOne()
     {
         var angles = UnitSwitch.Choices(UnitSettings.Imperial, UnitKind.Angle);
-        Assert.Equal(["MOA", "mil", "SMOA"], angles.Select(c => c.Symbol));
+        Assert.Equal(["mil", "MOA", "SMOA"], angles.Select(c => c.Symbol));
         Assert.Single(angles, c => c.Current);
         Assert.Equal(["in", "cm", "mm"], UnitSwitch.Choices(UnitSettings.Imperial, UnitKind.Length).Select(c => c.Symbol));
         Assert.Equal(["yd", "m"], UnitSwitch.Choices(UnitSettings.Metric, UnitKind.Distance).Select(c => c.Symbol));

@@ -53,6 +53,8 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
 
+        // Entry 294 section 1: a session that names a rifle aims in its scope's unit, whatever Settings says.
+        units = units.Aiming(state.Rifle);
         var report = GroupAnalysis.Analyse(state);
         var blocks = ImmutableList.CreateBuilder<PanelBlock>();
         blocks.Add(Group(report, units, sitePublished));
@@ -95,7 +97,7 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
     }
 
     /// <summary>
-    /// The zero: the correction as the headline, in the scope's units where the rifle records them, with the other three beneath
+    /// The zero: the correction as the headline, in the scope's units where the rifle records them, with the size at the target beneath
     /// (entry 131 sections 3.1 and 5.2). Null where the marking cannot say where the group sits against where it was aimed, because a
     /// heading with nothing but "needs a point of aim" under it is the busy page section 5 is trying to undo.
     /// </summary>
@@ -107,7 +109,8 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
         }
 
         double yards = distanceInches / 36;
-        string? scope = state.Rifle is { } rifle ? (rifle.ClickUnit == Statistics.AngularUnit.Mrad ? "mil" : "moa") : null;
+        // Entry 294 section 1: the rifle's scope unit where it names one, and the scope unit in Settings where it does not.
+        string scope = units.Aiming(state.Rifle).Angular == Statistics.AngularUnit.Mrad ? "mil" : "moa";
         string headline = FourUnits.Headline(scope);
         var rows = ImmutableList.CreateBuilder<PanelFigure>();
 
@@ -134,8 +137,8 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
                 Headline: label == "Elevation",
                 Withheld: !axis.Distinguishable));
 
-            // The other three units beneath, entry 131 section 3.1: they stay visible rather than hiding behind a toggle, because a shooter
-            // reading a correction in a unit their turret does not use needs the one it does without another click.
+            // The size at the target beneath, entry 131 section 3.1 as entry 294 section 1 left it: the other angle is a tap away on the
+            // number rather than set beneath every figure, so a mil scope's correction reads in mil alone.
             rows.Add(new PanelFigure(
                 "zero",
                 label + ", other units",

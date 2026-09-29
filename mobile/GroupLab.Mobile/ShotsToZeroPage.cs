@@ -20,8 +20,8 @@ namespace GroupLab.Mobile;
 /// </summary>
 internal sealed class ShotsToZeroPage : UserControl
 {
-    private static readonly (string Words, double Value, AngularUnit Unit)[] Clicks =
-        [("0.1 mil", 0.1, AngularUnit.Mrad), ("1/4 MOA", 0.25, AngularUnit.Moa), ("1/8 MOA", 0.125, AngularUnit.Moa), ("Other", 0, AngularUnit.Moa)];
+    /// <summary>Entry 294 section 1: the desktop's list (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA) and Other, typed in mil or MOA.</summary>
+    private static readonly (string Words, double Value, AngularUnit Unit)[] Clicks = [.. ScopeClicks.Common, ("Other", 0, AngularUnit.Moa)];
 
     private readonly MarkingState state;
     private UnitSettings units;
@@ -50,8 +50,8 @@ internal sealed class ShotsToZeroPage : UserControl
         this.units = units;
         if (state.Rifle is { ClickValue: > 0 } rifle)
         {
-            int match = Array.FindIndex(Clicks, c => c.Unit == rifle.ClickUnit && Math.Abs(c.Value - rifle.ClickValue) < 1e-9);
-            click = match >= 0 ? match : 3;
+            int match = ScopeClicks.IndexOf(rifle.ClickValue, rifle.ClickUnit);
+            click = match >= 0 ? match : Clicks.Length - 1;
             if (match < 0)
             {
                 typed.Text = rifle.ClickValue.ToString("0.###", CultureInfo.InvariantCulture);
@@ -60,7 +60,10 @@ internal sealed class ShotsToZeroPage : UserControl
         }
         else
         {
-            click = 1;
+            // Entry 294 section 1: with no rifle, the scope unit in Settings offers its usual click first.
+            var usual = ScopeClicks.Usual(units.Aiming(state.Rifle).Angular);
+            click = Math.Max(0, ScopeClicks.IndexOf(usual.Value, usual.Unit));
+            typedMil = usual.Unit == AngularUnit.Mrad;
         }
 
         column.Children.Add(Screens.Title("Shots Needed to Zero"));
@@ -90,7 +93,7 @@ internal sealed class ShotsToZeroPage : UserControl
         setup.Children.Add(chips);
         if (Clicks[click].Value == 0)
         {
-            var unit = new WrapPanel { Children = { typed, Chip("MOA", !typedMil, () => { typedMil = false; Build(); }), Chip("mil", typedMil, () => { typedMil = true; Build(); }) } };
+            var unit = new WrapPanel { Children = { typed, Chip("mil", typedMil, () => { typedMil = true; Build(); }), Chip("MOA", !typedMil, () => { typedMil = false; Build(); }) } };
             typed.LostFocus -= Typed;
             typed.LostFocus += Typed;
             setup.Children.Add(unit);

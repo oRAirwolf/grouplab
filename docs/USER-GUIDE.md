@@ -8,6 +8,21 @@ The rail down the left of the window is how you move around it:
 - then load comparison;
 - the gear at the foot is the settings.
 
+## Mil or MOA
+
+GroupLab works in your scope's unit, mil or MOA, and neither is the default. The first time it starts, on the computer and on the phone,
+it asks **Is your scope in mil or MOA?**, with a third answer, **Both, I have rifles of each**, and whether you measure sizes on the paper
+in inches or millimeters. Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
+
+**Each rifle keeps its own.** A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other
+value you type. When a session names a rifle, that rifle's unit wins over Settings; when it names none, Settings decides. If you answered
+Both, a session with no rifle asks which rifle it was.
+
+**Everything aiming follows it:** the zero correction, the clicks, Shots Needed to Zero, the dope table, the hit chance, the table of
+each shot's offset, Zero from this group, and group sizes shown as angles. With a mil scope the zero correction reads in mil alone,
+such as "dial 0.30 mil left, 3 clicks left", with no MOA next to it. The other unit is never far: tap a number to
+switch it, or press and hold it for every unit it can take, and GroupLab remembers that figure's choice.
+
 ## 1. Print a sheet
 
 Open **Targets** from the rail. It lists the built-in sheets by family, read only, and your own sheets after them. Choose a sheet and
@@ -148,10 +163,10 @@ The analysis has three columns:
 - **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, over the bull's rings drawn as wide gray bands. Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the figures, with its range, and where your shots are too few to reach that far out, fewer than one expected outside the circle, it says the circle is the model's guess rather than something the shots show. Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered. **Group** and **Whole target** beside them frame the group alone or the entire bull with the group inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.
 - **On the right:** the zero correction, the figures and the two judgment cards.
 
-**Tap a number to switch units.** Tap an angle to switch that number between MOA and mil, a size on the paper to switch it between
+**Tap a number to switch units.** Tap an angle to switch that number between mil and MOA, a size on the paper to switch it between
 inches and centimeters, and a distance to switch it between yards and meters. Only the number you tap changes, and GroupLab remembers
-the unit for that figure, so mean radius in mil stays in mil the next time while extreme spread can stay in MOA; figures you never tap
-follow Units in Settings. Right-click a number, or press and hold it on the phone, to choose any unit it can take, SMOA and millimeters
+the unit for that figure, so mean radius in MOA stays in MOA the next time while extreme spread can stay in mil; figures you never tap
+follow the scope unit ([Mil or MOA](#mil-or-moa)). Right-click a number, or press and hold it on the phone, to choose any unit it can take, SMOA and millimeters
 included. A figure's name still explains it when you tap it; only the number switches.
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
@@ -168,7 +183,7 @@ Every edit shows a small message at the bottom of the screen saying what changed
 
 **Every word you may not know is underlined with dots,** a figure's name or a word like sigma, MOA or bull, here and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means; click it or press Enter for the whole entry, with **More in the glossary**. For a figure the sentences say what it is good for and what the number of shots does to it. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
 
-**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **With the shot distance set, each is an angle first,** in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100. MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one distance. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
+**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one distance. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
 
 **Advanced** holds everything else, closed until you open it: sigma, the strips across and up and down, the order the shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it.
 
@@ -184,7 +199,7 @@ another; the figures above pool them all. **Zero from this group,** under the ze
 with the scope named and how well the center is known at this many shots, and opens Shots Needed to Zero or carries the offset into
 Ballistics, whose dope then includes it at every range until you stop it.
 
-**The zero correction** gives the group center's offset across and up and down in your length unit, MOA and mil side by side, whichever your scope is marked in, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
+**The zero correction** gives the group center's offset across and up and down on the paper and in your scope's unit alone, mil or MOA, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
 
 It says what to dial when the group's center is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialing an offset nobody can distinguish from zero only chases noise.
 
@@ -330,7 +345,7 @@ GroupLab can also send error reports by itself, once you say so: the first time 
 ## 12. Settings
 
 The gear opens the settings:
-- **Units:** length, angle and distance, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle.
+- **Units:** first the **Scope unit: mil / MOA**, with a line saying what it changes (see [Mil or MOA](#mil-or-moa)), then lengths and distances, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle. The phone's Settings starts with the same Units.
 - **Theme:** dark, light, high contrast, or follow the system.
 - **Sharing:** the three things GroupLab may send, in the order the first run screen asks them. **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them. **Error reports:** send them automatically, ask each time, or never, and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On the first run screen, Yes to the survey asks whether to run the benchmark now or later.
 - **Log:** how much the diagnostic log records, and where it is.

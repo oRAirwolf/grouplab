@@ -103,6 +103,37 @@ public sealed class AppSettingsStore(string path)
     }
 
     /// <summary>
+    /// Entry 294 section 1: the first run's "Is your scope in mil or MOA?", or <see cref="ScopeAnswer.Unset"/> until it is answered. It is
+    /// asked of an existing install too, once, because the angle it has was guessed from the region.
+    /// </summary>
+    public ScopeAnswer LoadScopeAnswer() =>
+        Read(file => Enum.TryParse((string?)file["scope"], out ScopeAnswer answer) && Enum.IsDefined(answer) ? answer : ScopeAnswer.Unset);
+
+    /// <summary>
+    /// Keeps the first run's answer: mil or MOA becomes the scope unit in Settings; "Both" keeps the unit Settings has and remembers that each
+    /// rifle decides for itself. The length chosen beside it, inches or millimeters, becomes the length unit, with yards or meters beside it.
+    /// </summary>
+    public bool SaveScopeAnswer(ScopeAnswer answer, LinearUnit? length = null)
+    {
+        var units = LoadUnits();
+        units = answer switch
+        {
+            ScopeAnswer.Mil => units with { Angular = AngularUnit.Mrad },
+            ScopeAnswer.Moa => units with { Angular = AngularUnit.Moa },
+            _ => units,
+        };
+        if (length is { } chosen)
+        {
+            units = units with { Linear = chosen, Distance = chosen == LinearUnit.Inch ? DistanceUnit.Yard : DistanceUnit.Metre };
+        }
+
+        return SaveUnits(units) && Save(file => file["scope"] = answer.ToString());
+    }
+
+    /// <summary>The length the first run offers first beside the scope question: inches where the region measures in inches, millimeters elsewhere.</summary>
+    public static LinearUnit LengthForRegion(string? region) => UnitSettings.ForRegion(region).Linear == LinearUnit.Inch ? LinearUnit.Inch : LinearUnit.Millimetre;
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 189 section 3: a group's size is shown first as an angle where the distance is known, and this puts the
     /// size on the paper first instead, for a shooter who only ever shoots one distance. Off unless chosen.
     /// </summary>
@@ -729,6 +760,20 @@ public sealed class AppSettingsStore(string path)
             return false;
         }
     }
+}
+
+/// <summary>The first run's answer to "Is your scope in mil or MOA?", entry 294 section 1.</summary>
+public enum ScopeAnswer
+{
+    /// <summary>Not answered yet: the first run asks.</summary>
+    Unset,
+
+    Mil,
+
+    Moa,
+
+    /// <summary>"Both, I have rifles of each": each rifle's own unit decides, and a session with no rifle asks which.</summary>
+    Both,
 }
 
 /// <summary>The theme the window uses, NOTES-FROM-PLANNING.md entry 42 section 2. High contrast is DESIGN.md section 19's fourth theme, and later work.</summary>

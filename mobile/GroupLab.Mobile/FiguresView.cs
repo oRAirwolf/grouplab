@@ -32,7 +32,7 @@ internal sealed class FiguresView : UserControl
     public FiguresView(MarkingState state, UnitSettings units, CompositePlot plot, Action? shotsToZero)
     {
         this.state = state;
-        this.units = units;
+        this.units = units.Aiming(state.Rifle); // entry 294 section 1: angles in the rifle's scope unit where one is named
         this.plot = plot;
         this.shotsToZero = shotsToZero;
         Content = column;
@@ -44,6 +44,7 @@ internal sealed class FiguresView : UserControl
     public void Show(MarkingState now, UnitSettings withUnits)
     {
         state = now;
+        withUnits = withUnits.Aiming(now.Rifle); // entry 294 section 1
         units = withUnits;
         // Entry 273: an angle chosen here follows the setting a tap on a number changes.
         if (angle is not null)
@@ -66,13 +67,16 @@ internal sealed class FiguresView : UserControl
 
         // The units switch, top right: inches, or an angle where the distance is known.
         var switcher = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, HorizontalAlignment = HorizontalAlignment.Right };
-        foreach (var (words, unit) in new (string, AngularUnit?)[] { ("in", null), ("MOA", AngularUnit.Moa), ("mil", AngularUnit.Mrad) })
+        // Entry 294 section 1: the scope's own unit comes first after inches, so a mil shooter reads mil before MOA.
+        var angles = units.Angular == AngularUnit.Moa ? new[] { AngularUnit.Moa, AngularUnit.Mrad } : new[] { AngularUnit.Mrad, AngularUnit.Moa };
+        foreach (var (words, unit) in new (string, AngularUnit?)[] { ("in", null), (UnitSettings.Symbol(angles[0]), angles[0]), (UnitSettings.Symbol(angles[1]), angles[1]) })
         {
             var chip = Chip(words, angle == unit, () =>
             {
                 angle = unit;
                 // Entry 273: MOA and mil here are the one angle setting that a tap on any number switches too.
-                if (unit is { } chosen && chosen != units.Angular)
+                // Entry 294: a session with a rifle keeps its scope unit, so a chip here only changes what this page shows.
+                if (unit is { } chosen && chosen != units.Angular && state.Rifle is null)
                 {
                     UnitTap.Apply?.Invoke(units with { Angular = chosen }, GroupLab.Core.Marking.UnitKind.Angle);
                     return;

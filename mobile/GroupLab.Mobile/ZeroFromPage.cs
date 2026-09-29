@@ -16,14 +16,15 @@ internal sealed class ZeroFromPage : UserControl
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title("Zero from this group"));
         // Entry 280 section 2: the words are the desktop window's own (ResultWords).
-        var words = ResultWords.ZeroFrom(state, units);
+        // Entry 294 section 1: somebody with rifles of each is asked which rifle a session with none was shot with.
+        var words = ResultWords.ZeroFrom(state, units, state.Rifle is null && Phone.Settings.LoadScopeAnswer() == ScopeAnswer.Both);
         if (words.Refusal is { } refusal)
         {
             column.Children.Add(Screens.Line(refusal));
         }
         else
         {
-            column.Children.Add(Screens.Card([.. words.Axes.Select(a => (Control)Screens.Line(a))]));
+            column.Children.Add(Screens.Card([.. words.Axes.Select(a => (Control)UnitTap.Attach(Screens.Line(a)))]));
             column.Children.Add(Screens.Dim(words.Scope));
             column.Children.Add(Screens.Dim(words.HowWell));
             column.Children.Add(Screens.Line(words.Verdict));

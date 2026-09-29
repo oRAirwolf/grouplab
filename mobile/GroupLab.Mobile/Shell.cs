@@ -55,6 +55,9 @@ public sealed class Shell : UserControl
     /// <summary>Entry 273: the units changed by a tap on a number; every page showing figures shows them again.</summary>
     internal static event Action? UnitsChanged;
 
+    /// <summary>Entry 294: Settings changed a unit, so every open screen shows its figures again.</summary>
+    internal static void Units() => UnitsChanged?.Invoke();
+
     /// <summary>The capture page is kept, so going to Settings and back does not lose a result on screen.</summary>
     private CapturePage? capture;
 

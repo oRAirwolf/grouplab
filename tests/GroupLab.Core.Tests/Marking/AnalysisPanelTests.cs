@@ -133,8 +133,9 @@ public class AnalysisPanelTests
         Assert.Contains("mil", elevation.Value, StringComparison.Ordinal);
         Assert.Contains("click", elevation.Interval!, StringComparison.Ordinal);
 
+        // Entry 294 section 1: beneath it the size at the target, and no MOA beside a mil scope's correction.
         var others = zero.Figures.Single(f => f.Label == "Elevation, other units");
-        Assert.Contains("MOA", others.Value, StringComparison.Ordinal);
+        Assert.DoesNotContain("MOA", others.Value, StringComparison.Ordinal);
         Assert.Contains("in", others.Value, StringComparison.Ordinal);
         Assert.Contains("cm", others.Value, StringComparison.Ordinal);
     }

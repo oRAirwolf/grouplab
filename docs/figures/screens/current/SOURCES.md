@@ -63,6 +63,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `equipment-light-1400x900.png` | no sheet at all |
 | `equipment-light-1920x1080.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
+| `scope-unit-dark-1280x720.png` | no sheet at all |
+| `scope-unit-dark-1400x900.png` | no sheet at all |
+| `scope-unit-dark-1920x1080.png` | no sheet at all |
+| `scope-unit-dark-2560x1440.png` | no sheet at all |
+| `scope-unit-light-1280x720.png` | no sheet at all |
+| `scope-unit-light-1400x900.png` | no sheet at all |
+| `scope-unit-light-1920x1080.png` | no sheet at all |
+| `scope-unit-light-2560x1440.png` | no sheet at all |
 | `targets-dark-1280x720.png` | built-in library sheet |
 | `targets-dark-1400x900.png` | built-in library sheet |
 | `targets-dark-1920x1080.png` | built-in library sheet |

@@ -27,6 +27,8 @@ public static class ResultFigures
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
+        // Entry 294 section 1: group sizes as angles follow the scope's unit too, the rifle's where the session names one.
+        units = units.Aiming(state.Rifle);
         var report = GroupAnalysis.Analyse(state);
         var all = report.Counted; // entry 278 section 5c: a shot left out is out of every figure
         double? distance = state.ShotDistanceInches;

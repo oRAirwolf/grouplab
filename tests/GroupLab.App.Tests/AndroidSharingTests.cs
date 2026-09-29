@@ -72,7 +72,8 @@ public sealed class AndroidSharingTests
     {
         string text = File.ReadAllText(Path.Combine(Mobile, "FirstRunView.cs"));
         var radios = Regex.Matches(text, @"Screens\.Radio\([^;]*\);");
-        Assert.Equal(2, radios.Count);
+        // The two consent levels, and entry 294's inches and millimeters beside the scope question.
+        Assert.Equal(4, radios.Count);
         Assert.All(radios, r => Assert.EndsWith(", false);", r.Value, StringComparison.Ordinal));
         Assert.DoesNotContain("IsChecked = true", text, StringComparison.Ordinal);
     }

@@ -387,7 +387,7 @@ beside the same word, because both are written from one list.</p>
 {"".join(entries)}
 </section>
 """
-    return shell(GLOSSARY_PATH, "Glossary", "What the words GroupLab uses mean, in plain words: sigma, mean radius, CEP, MOA, mil and the rest.", body, "Guides")
+    return shell(GLOSSARY_PATH, "Glossary", "What the words GroupLab uses mean, in plain words: sigma, mean radius, CEP, mil, MOA and the rest.", body, "Guides")
 
 
 def term_problems() -> list[str]:
@@ -662,7 +662,7 @@ def page_home() -> str:
 <li class="panel"><span class="mono num">01</span><h3>Print a GroupLab sheet</h3><p>{count_words('sheets', True)} built-in sheets, printed at actual size. Registration markers and QR codes carry the sheet's full definition.</p></li>
 <li class="panel"><span class="mono num">02</span><h3>Shoot it</h3><p>One shot per bull, in order. Write your load in the block at the bottom, or print it filled in.</p></li>
 <li class="panel"><span class="mono num">03</span><h3>Scan or photograph it</h3><p>A flat 600 dpi scan is best. A photograph works too, even with the sheet still stapled to the board.</p></li>
-<li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, extreme spread, CEP and the zero correction in MOA and mil, each with its interval, and the reasoning one click away.</p></li>
+<li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, extreme spread, CEP and the zero correction in your scope's unit, mil or MOA, each with its interval, and the reasoning one click away.</p></li>
 </ol>
 </section>
 

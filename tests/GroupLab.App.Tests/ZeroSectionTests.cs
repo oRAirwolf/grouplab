@@ -79,7 +79,7 @@ public class ZeroSectionTests
         var window = NewWindow();
         window.Show();
         Mark(window, offsetInches: 1.2, sigmaInches: 0.27);
-        Assert.Contains(window.ZeroText, t => t.StartsWith("Set the shot distance to see MOA, mil and clicks", StringComparison.Ordinal));
+        Assert.Contains(window.ZeroText, t => t.StartsWith("Set the shot distance to see the angle and the clicks", StringComparison.Ordinal));
 
         window.Session.SetShotDistance(3600);
         Dispatcher.UIThread.RunJobs();

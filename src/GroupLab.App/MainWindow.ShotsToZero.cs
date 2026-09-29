@@ -32,11 +32,10 @@ public sealed partial class MainWindow
     private MarkingState? shotsState;
     private bool shotsBuilt;
 
-    /// <summary>The click values a scope is usually made with, and a typed one in either unit.</summary>
+    /// <summary>The click values a scope is usually made with (entry 294: the phone's list too), and a typed one in either unit.</summary>
     private static readonly (string Words, double Value, AngularUnit Unit)[] ClickChoices =
     [
-        ("0.1 mil", 0.1, AngularUnit.Mrad), ("1/4 MOA", 0.25, AngularUnit.Moa), ("1/8 MOA", 0.125, AngularUnit.Moa),
-        ("Typed, in mil", 0, AngularUnit.Mrad), ("Typed, in MOA", 0, AngularUnit.Moa),
+        .. ScopeClicks.Common, ("Typed, in mil", 0, AngularUnit.Mrad), ("Typed, in MOA", 0, AngularUnit.Moa),
     ];
 
     /// <summary>The work running now, for the headless tests to wait on.</summary>
@@ -55,6 +54,9 @@ public sealed partial class MainWindow
         }
 
         shotsBuilt = true;
+        // Entry 294 section 1: the click offered first is the scope unit's usual one, a tenth of a mil or a quarter of a minute.
+        var usual = ScopeClicks.Usual(Aim.Angular);
+        shotsClick.SelectedIndex = Math.Max(0, ScopeClicks.IndexOf(usual.Value, usual.Unit));
         shotsClick.SelectionChanged += (_, _) =>
         {
             shotsClickTyped.IsVisible = ClickChoices[Math.Max(0, shotsClick.SelectedIndex)].Value == 0;
@@ -83,13 +85,13 @@ public sealed partial class MainWindow
     {
         if (shotsState?.Rifle is { ClickValue: > 0 } rifle)
         {
-            return (rifle.ClickValue, rifle.ClickUnit, $"{rifle.ClickValue.ToString("0.###", CultureInfo.InvariantCulture)} {(rifle.ClickUnit == AngularUnit.Mrad ? "mil" : "MOA")}, from {rifle.Name}", true);
+            return (rifle.ClickValue, rifle.ClickUnit, $"{rifle.ClickValue.ToString("0.###", CultureInfo.InvariantCulture)} {UnitSettings.Symbol(rifle.ClickUnit)}, from {rifle.Name}", true);
         }
 
         var choice = ClickChoices[Math.Max(0, shotsClick.SelectedIndex)];
         double value = choice.Value > 0 ? choice.Value
             : double.TryParse(shotsClickTyped.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double typed) && typed > 0 ? typed : 0;
-        return value > 0 ? (value, choice.Unit, $"{value.ToString("0.###", CultureInfo.InvariantCulture)} {(choice.Unit == AngularUnit.Mrad ? "mil" : "MOA")}", false) : null;
+        return value > 0 ? (value, choice.Unit, $"{value.ToString("0.###", CultureInfo.InvariantCulture)} {UnitSettings.Symbol(choice.Unit)}", false) : null;
     }
 
     private void RefreshShotsToZero()

@@ -80,7 +80,8 @@ public class Entry252Tests
             var text = Answer(window);
             Assert.Contains("Your scope's click", text);
             Assert.Contains(text, t => t.StartsWith("On the closest click, both axes: ", StringComparison.Ordinal));
-            Assert.Contains(text, t => t.Contains("clicks of 0.1 mil", StringComparison.Ordinal));
+            // Entry 294 section 1: the rifle's scope is in MOA, so the click offered is its usual quarter minute.
+            Assert.Contains(text, t => t.Contains("clicks of 0.25 MOA", StringComparison.Ordinal));
         }
         finally
         {

@@ -178,10 +178,30 @@
       }
     },
     {
+      "key": "scope-unit",
+      "group": "The numbers",
+      "name": "Works in your scope's unit",
+      "sentence": "The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.",
+      "shot": "scope-unit",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "GroupLab now asks whether your scope is in mil or MOA",
+      "tour": "firstrun",
+      "guide": "mil-or-moa",
+      "mobile": {
+        "noPicture": "the phone's scope question is photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "unit-tap",
       "group": "The numbers",
       "name": "Tap a number to switch units",
-      "sentence": "Tap an angle to switch that number between MOA and mil, a size on the paper between inches and centimeters, a distance between yards and meters; GroupLab remembers it for that figure, and press and hold gives every unit.",
+      "sentence": "Tap an angle to switch that number between mil and MOA, a size on the paper between inches and centimeters, a distance between yards and meters; GroupLab remembers it for that figure, and press and hold gives every unit.",
       "shot": "analysis",
       "platforms": [
         "Windows",
@@ -247,7 +267,7 @@
       "key": "six-figures",
       "group": "The numbers",
       "name": "The figures you read off a target",
-      "sentence": "The analysis leads with the figures a shooter reads off a target and the zero correction in inches, MOA and mil with the clicks to dial.",
+      "sentence": "The analysis leads with the figures a shooter reads off a target and the zero correction on the paper and in your scope's unit, mil or MOA, with the clicks to dial.",
       "shot": "analysis",
       "platforms": [
         "Windows",
@@ -474,9 +494,9 @@
       "key": "zero-grids",
       "group": "Sheets and printing",
       "name": "Zeroing grids read through a scope",
-      "sentence": "Design C3, chosen by Alan with Jylee and Unholy: squares of a scope's own subtension, a tick for each click, the numbers outside the grid and a legend you can read through the scope.",
+      "sentence": "Design C3, chosen by Alan with Jylee and Unholy: squares of a scope's own subtension, 0.2 mil or 0.5 MOA, a tick for each click (0.1 mil or 1/4 MOA), the numbers outside the grid and a legend you can read through the scope; each comes in mil and in MOA, at 100 yd and at 100 m.",
       "shot": "targets-zero",
-      "sheets": [["zero-moa-100y", "MOA at 100 yd"], ["zero-mil-100y", "Mil at 100 yd"], ["zero-moa-100m", "MOA at 100 m"], ["zero-mil-100m", "Mil at 100 m; design C3, chosen by Alan with Jylee and Unholy"]],
+      "sheets": [["zero-mil-100y", "Mil at 100 yd: 0.2 mil squares"], ["zero-moa-100y", "MOA at 100 yd: 0.5 MOA squares"], ["zero-mil-100m", "Mil at 100 m; design C3, chosen by Alan with Jylee and Unholy"], ["zero-moa-100m", "MOA at 100 m"]],
       "platforms": [
         "Windows",
         "macOS",

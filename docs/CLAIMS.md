@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1320 |
-| measured | 1793 |
+| code | 1324 |
+| measured | 1792 |
 | decided | 1280 |
 | unbacked | 0 |
-| **total** | **4393** |
+| **total** | **4396** |
 
-**998** of them were read one sentence at a time and their backing written against the sentence. The other **3395** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1001** of them were read one sentence at a time and their backing written against the sentence. The other **3395** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3146,6 +3146,9 @@ one that matters.
 - *decided* (what GroupLab is, DESIGN.md section 1): # GroupLab user guide GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.
 - *code* (src/GroupLab.App/MainWindow.cs manual marking (length, rectangle, per-bull scales) and AutomaticMarking.Run on GroupLab sheets (entry 270)): It works on any target you already shoot: photograph or scan it, set the scale once and mark the holes by hand (section 1, under a target GroupLab did not print, says how).
 - *code* (.github/workflows/screenshots.yml renders every picture from the newest build each week (entry 144)): It describes the Windows application as it is built today, and every picture in it is a render of the build.
+- *code* (src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)): Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
+- *code* (src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)): **Each rifle keeps its own.** A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.
+- *code* (src/GroupLab.Core/Marking/ResultWords.cs ZeroFrom, the angle in the scope's unit alone; Entry294Tests (entry 294 section 1)): With a mil scope the zero correction reads in mil alone, such as "dial 0.30 mil left, 3 clicks left", with no MOA next to it.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): - **Print** (on Windows) prints from inside GroupLab at actual size.
@@ -3185,8 +3188,8 @@ one that matters.
 - *code* (src/GroupLab.App/MainWindow.cs cep99Box, SetCepPercent and CepRange; src/GroupLab.App/CompositePlot.cs Circles; GroupAnalysis.CepTailNote (entry 227 section 3)): Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.
 - *code* (MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)): **Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.
-- *code* (src/GroupLab.App/MainWindow.cs Sized; tests/GroupLab.App.Tests/Entry189Tests.cs ASizeIsAnAngleFirstWhereTheDistanceIsKnown): **With the shot distance set, each is an angle first,** in the unit chosen in Settings, and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.
-- *measured* (src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA): MOA is the default; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 1.59 MOA or 1.66 SMOA.
+- *code* (src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)): **With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.
+- *code* (src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)): Mil and MOA are the two a scope is marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA or 1.66 SMOA.
 - *code* (ShowZero in src/GroupLab.App/MainWindow.cs and Clicks.Describe (entry 169)): Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click".
 - *code* (FullFigures in src/GroupLab.App/MainWindow.Figures.cs): The table gives the CEP at 50, 90, 95 and 99 percent three ways.
 - *code* (src/GroupLab.App/MainWindow.ShotsToZero.cs, the Shots Needed to Zero section in the full figures (entry 252 section 3); tests/GroupLab.App.Tests/Entry252Tests.cs): From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100.

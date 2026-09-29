@@ -55,6 +55,36 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
     public string DescribeClick() => string.Create(CultureInfo.InvariantCulture, $"{ClickValue:0.###} {(ClickUnit == AngularUnit.Mrad ? "mil" : ClickUnit == AngularUnit.Smoa ? "SMOA" : "MOA")} a click");
 }
 
+/// <summary>
+/// The click values scopes are usually made with, entry 294 section 1, in the order a rifle's form and Shots Needed to Zero offer them on
+/// both platforms; any other value is typed, in mil or MOA.
+/// </summary>
+public static class ScopeClicks
+{
+    public static IReadOnlyList<(string Words, double Value, AngularUnit Unit)> Common { get; } =
+    [
+        ("0.1 mil", 0.1, AngularUnit.Mrad), ("0.05 mil", 0.05, AngularUnit.Mrad), ("1/4 MOA", 0.25, AngularUnit.Moa), ("1/8 MOA", 0.125, AngularUnit.Moa),
+    ];
+
+    /// <summary>The click a new rifle starts with in a scope unit: a tenth of a mil, or a quarter of a minute.</summary>
+    public static (double Value, AngularUnit Unit) Usual(AngularUnit scope) =>
+        scope == AngularUnit.Mrad ? (0.1, AngularUnit.Mrad) : (0.25, scope == AngularUnit.Smoa ? AngularUnit.Smoa : AngularUnit.Moa);
+
+    /// <summary>Where a click value sits in <see cref="Common"/>, or -1 for any other.</summary>
+    public static int IndexOf(double value, AngularUnit unit)
+    {
+        for (int i = 0; i < Common.Count; i++)
+        {
+            if (Common[i].Unit == unit && Math.Abs(Common[i].Value - value) < 1e-9)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+
 /// <summary>A barrel: a name, the rifle it is on, and how many rounds it has fired, which is what a barrel's life is counted in.</summary>
 public sealed record Barrel(string Name, string? Rifle, int Rounds)
 {

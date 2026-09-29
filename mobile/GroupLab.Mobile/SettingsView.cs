@@ -19,6 +19,56 @@ public sealed class SettingsView : UserControl
         // Entry 246, look B: the page's title, each section's heading, its choices as cards and what it explains in the dim style.
         column.Children.Add(Screens.Title("Settings"));
 
+        // Entry 294 section 1: Units at the top, the scope's unit first and said plainly, with one line on what it changes.
+        column.Children.Add(Screens.Heading("Units"));
+        column.Children.Add(Screens.Line(GroupLab.Core.Marking.UnitSettings.ScopeUnitLabel));
+        var now = settings.LoadUnits();
+        foreach (var angle in GroupLab.Core.Marking.UnitSettings.AngularChoices)
+        {
+            var radio = Screens.Radio("scopeUnit", GroupLab.Core.Marking.UnitSettings.Symbol(angle), now.Angular == angle);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && settings.LoadUnits().Angular != angle)
+                {
+                    settings.SaveUnits(settings.LoadUnits() with { Angular = angle });
+                    DiagnosticLog.Info("units.scope", ("angular", angle.ToString()));
+                    Shell.Units();
+                }
+            };
+            column.Children.Add(radio);
+        }
+
+        column.Children.Add(Screens.Dim(GroupLab.Core.Marking.UnitSettings.ScopeUnitSays));
+        column.Children.Add(Screens.Line("Sizes on the paper"));
+        foreach (var linear in new[] { GroupLab.Core.Marking.LinearUnit.Inch, GroupLab.Core.Marking.LinearUnit.Millimetre, GroupLab.Core.Marking.LinearUnit.Centimetre })
+        {
+            var radio = Screens.Radio("lengthUnit", GroupLab.Core.Marking.UnitSettings.Symbol(linear), now.Linear == linear);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && settings.LoadUnits().Linear != linear)
+                {
+                    settings.SaveUnits(settings.LoadUnits() with { Linear = linear });
+                    Shell.Units();
+                }
+            };
+            column.Children.Add(radio);
+        }
+
+        column.Children.Add(Screens.Line("Distances"));
+        foreach (var distance in new[] { GroupLab.Core.Marking.DistanceUnit.Yard, GroupLab.Core.Marking.DistanceUnit.Metre })
+        {
+            var radio = Screens.Radio("distanceUnit", GroupLab.Core.Marking.UnitSettings.Symbol(distance), now.Distance == distance);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && settings.LoadUnits().Distance != distance)
+                {
+                    settings.SaveUnits(settings.LoadUnits() with { Distance = distance });
+                    Shell.Units();
+                }
+            };
+            column.Children.Add(radio);
+        }
+
         // Entry 273 section 4: the printers, which one photographs are corrected for, check again, delete, add, and correction off.
         column.Children.Add(Screens.Heading("Printers"));
         column.Children.Add(Screens.Dim(GroupLab.Core.Marking.DetectionAdvice.OncePerPrinter));

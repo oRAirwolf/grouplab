@@ -44,6 +44,12 @@ public sealed partial class MainWindow
     /// <summary>Whether the receiver is open: the build's limits.json, which the tests can override.</summary>
     internal bool ReceiverOpen { get; set; } = ReceiverOpenByDefault ?? ReceiverTerms.Current.AppOpen;
 
+    /// <summary>What a new window takes for asking the scope question: the test run sets it off, as it does the others.</summary>
+    internal static bool? AskScopeByDefault { get; set; }
+
+    /// <summary>Whether the first run asks "Is your scope in mil or MOA?" while it is unanswered, entry 294 section 1; always, outside the tests.</summary>
+    internal bool AskScope { get; set; } = AskScopeByDefault ?? true;
+
     private string PendingFolder => Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? ".",
         Path.GetFileNameWithoutExtension(settingsStore.Path) == "settings" ? "pending-targets" : Path.GetFileNameWithoutExtension(settingsStore.Path) + ".pending-targets");
 
@@ -281,7 +287,9 @@ public sealed partial class MainWindow
         // Entry 208: the survey is the third question on the same screen. Somebody who answered the other two before sees the screen once
         // more, with only the survey to answer and a line saying their earlier answers are kept.
         bool surveyDue = SurveyOpen && settingsStore.LoadSurveyChoice() == GroupLab.Core.Survey.SurveyChoice.Unset;
-        if (!targetsDue && !errorsDue && !surveyDue)
+        // Entry 294 section 1: the scope question comes first, and is asked of an existing install once, since its angle was a region's guess.
+        bool scopeDue = AskScope && settingsStore.LoadScopeAnswer() == ScopeAnswer.Unset;
+        if (!targetsDue && !errorsDue && !surveyDue && !scopeDue)
         {
             return;
         }
@@ -291,6 +299,8 @@ public sealed partial class MainWindow
         var card = new StackPanel { Spacing = Tokens.Space8, IsVisible = targetsDue };
         var errors = new StackPanel { Spacing = Tokens.Space8, IsVisible = errorsDue };
         var survey = new StackPanel { Spacing = Tokens.Space8, IsVisible = surveyDue };
+        var scope = new StackPanel { Spacing = Tokens.Space8, IsVisible = scopeDue };
+        outer.Children.Add(scope);
         outer.Children.Add(card);
         outer.Children.Add(errors);
         outer.Children.Add(survey);
@@ -302,12 +312,13 @@ public sealed partial class MainWindow
         }
         void Answered()
         {
-            if (!card.IsVisible && !errors.IsVisible && !survey.IsVisible)
+            if (!card.IsVisible && !errors.IsVisible && !survey.IsVisible && !scope.IsVisible)
             {
                 firstRun.IsVisible = false;
             }
         }
 
+        FillFirstRunScope(scope, Answered);
         FillFirstRunErrors(errors, Answered);
         FillFirstRunSurvey(survey, Answered, earlierKept: !targetsDue && !errorsDue);
         card.Children.Add(new TextBlock { Text = SharingWords.TargetsQuestion, Classes = { AppStyles.Title } });
@@ -353,6 +364,36 @@ public sealed partial class MainWindow
             Classes = { AppStyles.Side },
         };
         firstRun.IsVisible = true;
+    }
+
+    /// <summary>
+    /// Entry 294 section 1: "Is your scope in mil or MOA?", with "Both, I have rifles of each", and the length beside it, inches or
+    /// millimeters. Nothing about the angle is guessed: the person answers. Nothing is chosen for the person either (entry 203 section 3):
+    /// a length left unchosen is the region's, inches where it measures in inches and millimeters elsewhere.
+    /// </summary>
+    private void FillFirstRunScope(StackPanel part, Action answered)
+    {
+        part.Children.Add(new TextBlock { Text = UnitSettings.ScopeQuestion, Classes = { AppStyles.Title } });
+        part.Children.Add(Line(UnitSettings.ScopeQuestionSays));
+        var inInches = new RadioButton { GroupName = "firstRunLength", Content = Wrapped("Sizes in inches") };
+        var inMillimeters = new RadioButton { GroupName = "firstRunLength", Content = Wrapped("Sizes in millimeters") };
+        part.Children.Add(Row(inInches, inMillimeters));
+        void Choose(ScopeAnswer answer)
+        {
+            var length = inMillimeters.IsChecked == true ? LinearUnit.Millimetre
+                : inInches.IsChecked == true ? LinearUnit.Inch : AppSettingsStore.LengthForRegion(AppSettingsStore.Region());
+            settingsStore.SaveScopeAnswer(answer, length);
+            units = settingsStore.LoadUnits();
+            DiagnosticLog.Info("scope.first-run", ("answer", answer.ToString()), ("linear", units.Linear.ToString()));
+            ShowUnits();
+            RelabelBallistics();
+            Refresh();
+            part.IsVisible = false;
+            answered();
+        }
+
+        part.Children.Add(Row(Button("Mil", () => Choose(ScopeAnswer.Mil)), Button("MOA", () => Choose(ScopeAnswer.Moa)), Button(UnitSettings.ScopeBoth, () => Choose(ScopeAnswer.Both))));
+        part.Children.Add(Line("You can change either in Settings, under Units, and give each rifle its own scope unit and click."));
     }
 
     /// <summary>Entry 165 section 9: Settings' own Sending targets section, reading and writing the same setting as the first run screen.</summary>

@@ -28,6 +28,7 @@ public static class ShareCard
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
+        units = units.Aiming(state.Rifle); // entry 294 section 1: angles in the scope's unit, the rifle's where one is named
         var lines = new List<ShareLine> { new("title", string.IsNullOrWhiteSpace(date) ? title : $"{title}, {date}", true) };
         var report = GroupAnalysis.Analyse(state);
         double? distance = state.ShotDistanceInches;

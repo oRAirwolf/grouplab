@@ -202,7 +202,7 @@ public sealed partial class MainWindow
         var body = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         var window = ToolWindow("Zero from this group", body, height: 460);
         body.Children.Add(new TextBlock { Text = "Zero from this group", Classes = { AppStyles.Section } });
-        var words = ResultWords.ZeroFrom(state, units);
+        var words = ResultWords.ZeroFrom(state, units, AskWhichRifle);
         if (words.Refusal is { } refusal)
         {
             body.Children.Add(Line(refusal));
@@ -211,7 +211,7 @@ public sealed partial class MainWindow
         {
             foreach (string axis in words.Axes)
             {
-                body.Children.Add(new TextBlock { Text = axis, TextWrapping = TextWrapping.Wrap });
+                body.Children.Add(UnitTap.Attach(new TextBlock { Text = axis, TextWrapping = TextWrapping.Wrap }));
             }
 
             body.Children.Add(Note(words.Scope));
@@ -238,7 +238,7 @@ public sealed partial class MainWindow
     /// <summary>Ballistics with this group's offset in its dope at every range, the phone's "Use as the zero offset in Ballistics".</summary>
     internal void UseZeroOffset(MarkingState state)
     {
-        ballisticsZeroOffset = ResultWords.ZeroOffsetFor(state);
+        ballisticsZeroOffset = ResultWords.ZeroOffsetFor(state, units);
         status.Text = ballisticsZeroOffset is null
             ? "This group has no zero offset to carry: it needs the shot distance and enough shots about an aim point."
             : "Ballistics' dope now includes this group's zero offset.";

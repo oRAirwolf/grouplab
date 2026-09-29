@@ -15,7 +15,10 @@ namespace GroupLab.Mobile;
 public sealed class FirstRunView : UserControl
 {
     /// <summary>Whether any question is still open and unanswered.</summary>
-    public static bool Due(AppSettingsStore settings) => TargetsDue(settings) || ErrorsDue(settings) || SurveyDue(settings);
+    public static bool Due(AppSettingsStore settings) => ScopeDue(settings) || TargetsDue(settings) || ErrorsDue(settings) || SurveyDue(settings);
+
+    /// <summary>Entry 294 section 1: "Is your scope in mil or MOA?" until it is answered, asked of an existing install once too.</summary>
+    internal static bool ScopeDue(AppSettingsStore settings) => settings.LoadScopeAnswer() == ScopeAnswer.Unset;
 
     private static bool SurveyDue(AppSettingsStore settings) => Shell.SurveyOpen && settings.LoadSurveyChoice() == SurveyChoice.Unset;
 
@@ -32,9 +35,11 @@ public sealed class FirstRunView : UserControl
 
         // Entry 246, look B: the page's own title, then each question with what it sends on a card of its own.
         column.Children.Add(Screens.Title("Before you start"));
+        var scope = new StackPanel { Spacing = 8, IsVisible = ScopeDue(settings) };
         var targets = new StackPanel { Spacing = 8, IsVisible = TargetsDue(settings) };
         var errors = new StackPanel { Spacing = 8, IsVisible = ErrorsDue(settings) };
         var survey = new StackPanel { Spacing = 8, IsVisible = SurveyDue(settings) };
+        column.Children.Add(scope);
         column.Children.Add(targets);
         column.Children.Add(errors);
         column.Children.Add(survey);
@@ -51,11 +56,33 @@ public sealed class FirstRunView : UserControl
         }
         void Answered()
         {
-            if (!targets.IsVisible && !errors.IsVisible && !survey.IsVisible)
+            if (!scope.IsVisible && !targets.IsVisible && !errors.IsVisible && !survey.IsVisible)
             {
                 done();
             }
         }
+
+        // Entry 294 section 1: the scope's unit first, with the length beside it; nothing about the angle is guessed, and nothing is chosen
+        // for the person (entry 203 section 3): a length left unchosen is the region's.
+        scope.Children.Add(Screens.Heading(GroupLab.Core.Marking.UnitSettings.ScopeQuestion));
+        scope.Children.Add(Screens.Dim(GroupLab.Core.Marking.UnitSettings.ScopeQuestionSays));
+        var inInches = Screens.Radio("firstRunLength", "Sizes in inches", false);
+        var inMillimeters = Screens.Radio("firstRunLength", "Sizes in millimeters", false);
+        scope.Children.Add(inInches);
+        scope.Children.Add(inMillimeters);
+        foreach (var (answer, words) in new[] { (ScopeAnswer.Mil, "Mil"), (ScopeAnswer.Moa, "MOA"), (ScopeAnswer.Both, GroupLab.Core.Marking.UnitSettings.ScopeBoth) })
+        {
+            scope.Children.Add(Screens.Choice(words, () =>
+            {
+                settings.SaveScopeAnswer(answer, inMillimeters.IsChecked == true ? GroupLab.Core.Marking.LinearUnit.Millimetre
+                    : inInches.IsChecked == true ? GroupLab.Core.Marking.LinearUnit.Inch : AppSettingsStore.LengthForRegion(AppSettingsStore.Region()));
+                DiagnosticLog.Info("scope.first-run", ("answer", answer.ToString()));
+                scope.IsVisible = false;
+                Answered();
+            }));
+        }
+
+        scope.Children.Add(Screens.Dim("You can change either in Settings, under Units, and give each rifle its own scope unit and click."));
 
         var terms = ReceiverTerms.Current;
         targets.Children.Add(Screens.Heading(SharingWords.TargetsQuestion));

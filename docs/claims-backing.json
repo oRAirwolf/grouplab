@@ -4304,6 +4304,54 @@
   "**Correcting the holes** (item A4, second part; entry 291 section 2).": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/FixHolesPage.cs and ResultView.SheetPicture, held by tests/GroupLab.Mobile.Tests/ResultScreenTests.cs"
+  },
+  "Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "**Each rifle keeps its own.** A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "**With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "Mil and MOA are the two a scope is marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA or 1.66 SMOA.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "With a mil scope the zero correction reads in mil alone, such as \"dial 0.30 mil left, 3 clicks left\", with no MOA next to it.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ResultWords.cs ZeroFrom, the angle in the scope's unit alone; Entry294Tests (entry 294 section 1)"
+  },
+  "On the tour · In the user guide The numbers Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.": {
+   "kind": "code",
+   "where": "website/features.json scope-unit, from UnitSettings.Aiming and the first run question (entry 294 section 1)"
+  },
+  "User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page Mil or MOA 1.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with the user guide's page title"
+  },
+  "Your answer becomes the Scope unit at the top of Units in Settings, where you can change it at any time.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope, mobile/GroupLab.Mobile/FirstRunView.cs, UnitSettings.Aiming (entry 294 section 1)"
+  },
+  "A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope, mobile/GroupLab.Mobile/FirstRunView.cs, UnitSettings.Aiming (entry 294 section 1)"
+  },
+  "With the shot distance set, each is an angle first, in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope, mobile/GroupLab.Mobile/FirstRunView.cs, UnitSettings.Aiming (entry 294 section 1)"
+  },
+  "A zeroing grid, design C3: squares of 0.2 mil or 0.5 MOA with a tick for each click, every line&#x27;s distance from the aim written outside the grid, and a legend above it to read through the scope.": {
+   "kind": "code",
+   "where": "targets/GL-ZERO-MIL-100Y.gltd.json and GL-ZERO-MOA-100Y.gltd.json, src/GroupLab.Cli/Library/LibraryBuilder.cs, the C3 grid of 0.2 mil or 0.5 MOA squares (entry 251)"
+  },
+  "04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in your scope's unit, mil or MOA, each with its interval, and the reasoning one click away.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/AnalysisPanel.cs Zero, in the scope's unit from UnitSettings.Aiming; website/build.py home page (entry 294 section 1)"
   }
  },
  "rules": [

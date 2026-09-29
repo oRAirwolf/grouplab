@@ -32,7 +32,7 @@ public static partial class UnitSwitch
     /// The hint's longer form, shown once on a result. Entry 280 section 1 (Alan): a tap switches that one number, not every number of its
     /// kind, and the choice is remembered for that figure.
     /// </summary>
-    public const string HintMore = "Tap a number to switch this number between MOA and mil, or inches and centimeters; GroupLab remembers it for that figure. Tap a label to have it explained. Press and hold a number for every unit.";
+    public const string HintMore = "Tap a number to switch this number between mil and MOA, or inches and centimeters; GroupLab remembers it for that figure. Tap a label to have it explained. Press and hold a number for every unit.";
 
     /// <summary>The unit symbols a value of <paramref name="kind"/> can be shown in, in the order a tap steps through the first two.</summary>
     public static IReadOnlyList<string> Symbols(UnitKind kind) => kind switch

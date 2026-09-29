@@ -186,7 +186,7 @@ public sealed partial class MainWindow
         double? distance = session.State.ShotDistanceInches;
         string across = centre.X >= 0 ? "right" : "left", down = centre.Y >= 0 ? "low" : "high";
         string value = $"{units.Length(Math.Abs(centre.X))} {across}, {units.Length(Math.Abs(centre.Y))} {down}";
-        string? angle = units.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{x} {across}, {units.AngleText(Math.Abs(centre.Y), distance)} {down}" : null;
+        string? angle = Aim.AngleText(Math.Abs(centre.X), distance) is { } x ? $"{x} {across}, {Aim.AngleText(Math.Abs(centre.Y), distance)} {down}" : null;
         return Sized(value, angle, distance);
     }
 

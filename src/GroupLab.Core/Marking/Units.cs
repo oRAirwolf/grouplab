@@ -35,8 +35,44 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
 
     public static UnitSettings Metric { get; } = new(LinearUnit.Centimetre, AngularUnit.Mrad, DistanceUnit.Metre);
 
-    /// <summary>The angular units offered, in the order the screen lists them.</summary>
-    public static IReadOnlyList<AngularUnit> AngularChoices { get; } = [AngularUnit.Moa, AngularUnit.Mrad, AngularUnit.Smoa];
+    /// <summary>
+    /// The angular units offered, in the order the screen lists them: mil first, then MOA, entry 294 section 1 ("Scope unit: mil / MOA"),
+    /// and SMOA for the scopes marked in inches per hundred yards.
+    /// </summary>
+    public static IReadOnlyList<AngularUnit> AngularChoices { get; } = [AngularUnit.Mrad, AngularUnit.Moa, AngularUnit.Smoa];
+
+    /// <summary>
+    /// The angle unit before anybody has said which their scope is, entry 294 section 1: the first run asks, on both platforms, and nothing
+    /// is guessed from the region any more. The region guess started almost every American in MOA, which is what made a mil shooter feel
+    /// like an afterthought; mil is the unit most competition scopes are marked in, and it lasts only until the question is answered.
+    /// </summary>
+    public const AngularUnit Unanswered = AngularUnit.Mrad;
+
+    /// <summary>
+    /// The units a session aims in, entry 294 section 1: where the session names a rifle, its scope's unit decides every aiming figure (the
+    /// zero correction, the clicks, the dope, the hit chance, group sizes as angles), whatever Settings says; where it names none, Settings
+    /// decides. Only the angle changes; lengths and distances stay as chosen. A figure a person tapped to another unit keeps that unit.
+    /// </summary>
+    public UnitSettings Aiming(Rifle? rifle) =>
+        rifle is not null && ScopeUnit(rifle.ClickUnit) is { } scope && scope != Angular ? this with { Angular = scope } : this;
+
+    /// <summary>Entry 294 section 1: the first run's question, word for word, on both platforms.</summary>
+    public const string ScopeQuestion = "Is your scope in mil or MOA?";
+
+    /// <summary>The first run's third answer, for somebody with rifles of each.</summary>
+    public const string ScopeBoth = "Both, I have rifles of each";
+
+    /// <summary>What the answer changes, said under the question.</summary>
+    public const string ScopeQuestionSays = "GroupLab then works in it everywhere you aim: the zero correction, the clicks, the dope and the hit chance. Each rifle keeps its own scope unit, and the other unit is always a tap away.";
+
+    /// <summary>The top of Units in Settings, entry 294 section 1.</summary>
+    public const string ScopeUnitLabel = "Scope unit: mil / MOA";
+
+    /// <summary>The one line under it saying what it changes.</summary>
+    public const string ScopeUnitSays = "Everything you aim with follows it: the zero correction, clicks, Shots Needed to Zero, the dope, the hit chance and group sizes as angles. A session that names a rifle follows that rifle's scope instead.";
+
+    /// <summary>A scope's unit as one of <see cref="AngularChoices"/>, or null for one no scope is marked in.</summary>
+    public static AngularUnit? ScopeUnit(AngularUnit unit) => AngularChoices.Contains(unit) ? unit : null;
 
     /// <summary>
     /// The units the analysis page reads in, entry 131 section 3.2: the page's own choice where a person has made one, and the application's
@@ -50,8 +86,9 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
     public static UnitSettings ForAnalysis(string? chosen, UnitSettings settings) =>
         chosen?.Trim().ToLowerInvariant() switch
         {
-            "imperial" => Imperial,
-            "metric" => Metric,
+            // Entry 294: the page's toggle is inches or centimeters; the angle stays the scope's, which Settings or the rifle says.
+            "imperial" => Imperial with { Angular = settings.Angular },
+            "metric" => Metric with { Angular = settings.Angular },
             _ => settings,
         };
 
@@ -66,12 +103,13 @@ public sealed record UnitSettings(LinearUnit Linear, AngularUnit Angular, Distan
     public const string AngularNeedsDistance = "angular figures need the shot distance";
 
     /// <summary>
-    /// The first-run default from the system's region: inches, yards and MOA in the United States, Liberia and Myanmar, the three
-    /// countries that have not adopted the metric system officially, and centimetres, metres and mil everywhere else. It is only a
-    /// starting point; the choice is remembered once made.
+    /// The first-run default from the system's region: inches and yards in the United States, Liberia and Myanmar, the three countries that
+    /// have not adopted the metric system officially, and centimetres and metres everywhere else. It is only a starting point; the choice is
+    /// remembered once made. Entry 294 section 1: the angle is never guessed from the region; it is <see cref="Unanswered"/> until the first
+    /// run's "Is your scope in mil or MOA?" is answered.
     /// </summary>
     public static UnitSettings ForRegion(string? twoLetterRegion) =>
-        twoLetterRegion?.ToUpperInvariant() is "US" or "LR" or "MM" ? Imperial : Metric;
+        (twoLetterRegion?.ToUpperInvariant() is "US" or "LR" or "MM" ? Imperial : Metric) with { Angular = Unanswered };
 
     public static double FromInches(double inches, LinearUnit unit) => unit switch
     {

@@ -50,9 +50,12 @@ public class Entry169Tests
         }
     }
 
-    /// <summary>Section 2: MOA and mil side by side whatever the setting, the distance stated, and nothing below the block but its "why".</summary>
+    /// <summary>
+    /// Section 2 as entry 294 section 1 left it: the angle in the scope's one unit (it was MOA and mil side by side), the distance stated,
+    /// and nothing below the block but its "why".
+    /// </summary>
     [AvaloniaFact]
-    public void TheZeroBlockGivesMoaAndMilAndTheDistanceItIsFor()
+    public void TheZeroBlockGivesTheScopesUnitAndTheDistanceItIsFor()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         try
@@ -61,8 +64,9 @@ public class Entry169Tests
             window.Analyse();
             Settle();
             var zero = window.ZeroBlockText.ToList();
-            Assert.Contains("MOA", zero);
-            Assert.Contains("mil", zero);
+            string unit = UnitSettings.Symbol(window.Aim.Angular);
+            Assert.Contains(zero, t => t.EndsWith(" " + unit, StringComparison.Ordinal));
+            Assert.DoesNotContain(zero, t => t.EndsWith(unit == "mil" ? " MOA" : " mil", StringComparison.Ordinal));
             Assert.Contains("For a zero at 100 yd.", zero);
             Assert.Contains(zero, t => t.StartsWith("Windage, ", StringComparison.Ordinal));
             Assert.Contains(zero, t => t.StartsWith("Elevation, ", StringComparison.Ordinal));

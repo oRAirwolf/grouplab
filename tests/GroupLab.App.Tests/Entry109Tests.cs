@@ -316,7 +316,9 @@ public class Entry109Tests
                     window.Session.SetCalibre(Calibre.Of(0.308));
                     window.Session.SetShotDistance(3600);
                     // Entry 112 section 4: a rifle and load carrying what the solver needs, so the Ballistics screen shows its table.
-                    var rifle = new Rifle("Test rifle", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa) { SightHeightInches = 1.75, ZeroDistanceYards = 100 };
+                    // Entry 294 section 2: its scope is in mil, a tenth a click, so the zero, the dope and Shots Needed to Zero are pictured
+                    // in mil while Settings says MOA; Compare and Settings stay in MOA, so each unit is shown.
+                    var rifle = new Rifle("Test rifle", 0.1, GroupLab.Core.Statistics.AngularUnit.Mrad) { SightHeightInches = 1.75, ZeroDistanceYards = 100 };
                     window.Book = RecordBook.Empty.With(rifle).With(new Load("Test load", null)
                     {
                         MuzzleVelocityFps = 2710, MuzzleVelocitySdFps = 10, BallisticCoefficient = 0.326, DragModel = GroupLab.Core.Ballistics.DragModel.G7,
@@ -387,7 +389,7 @@ public class Entry109Tests
                         Save(window, $"analysis-open-{name}-{size}");
                         window.SetEveryWhy(null);
 
-                        // Entry 253 section 2: Shots Needed to Zero open, worked out from the test rifle's quarter-MOA clicks.
+                        // Entry 253 section 2: Shots Needed to Zero open, worked out from the test rifle's tenth-mil clicks.
                         window.AdvancedPanel.IsExpanded = true;
                         window.FullFiguresPanel.IsExpanded = true;
                         Dispatcher.UIThread.RunJobs();
@@ -409,7 +411,7 @@ public class Entry109Tests
                         Save(window, $"targets-{name}-{size}");
 
                         // Entry 253 section 2: a C3 zeroing grid in the preview, its words drawn.
-                        window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-ZERO-MOA-100Y.gltd.json").Definition.Name);
+                        window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-ZERO-MIL-100Y.gltd.json").Definition.Name);
                         Save(window, $"targets-zero-{name}-{size}");
 
                         // Entry 242 section 1: "Made for your optic" filled in, for its tour stop: 100 yd through 10x, and through 4x, the set.
@@ -491,7 +493,7 @@ public class Entry109Tests
                     string fresh = Path.Combine(Path.GetTempPath(), $"grouplab-entry253-{Guid.NewGuid():N}");
                     var first = new MainWindow(new AppSettingsStore(Path.Combine(fresh, "settings.json")))
                     {
-                        Width = width, Height = height, ReceiverOpen = true, ErrorsOpen = true, SurveyOpen = true,
+                        Width = width, Height = height, ReceiverOpen = true, ErrorsOpen = true, SurveyOpen = true, AskScope = true,
                     };
                     try
                     {
@@ -506,6 +508,23 @@ public class Entry109Tests
                         first.Close();
                         TestDefaults.Outside.Forget();
                         GroupLab.Tests.Support.Temp.Delete(fresh);
+                    }
+
+                    // Entry 294 section 2: the Features page's own picture of "Works in your scope's unit", the question alone.
+                    string scopeOnly = Path.Combine(Path.GetTempPath(), $"grouplab-entry294-{Guid.NewGuid():N}");
+                    var asked = new MainWindow(new AppSettingsStore(Path.Combine(scopeOnly, "settings.json"))) { Width = width, Height = height, AskScope = true };
+                    try
+                    {
+                        asked.Show();
+                        asked.SetTheme(theme);
+                        asked.ShowFirstRunIfDue();
+                        Assert.True(asked.FirstRunShown);
+                        Save(asked, $"scope-unit-{name}-{width}x{height}");
+                    }
+                    finally
+                    {
+                        asked.Close();
+                        GroupLab.Tests.Support.Temp.Delete(scopeOnly);
                     }
                 }
             }

@@ -371,7 +371,8 @@ public partial class MainWindow
         }
 
         double inches = yards * 36;
-        string Angle(double value) => units.Angle(Math.Abs(value), inches) is { } a ? $"{a.ToString("0.00", CultureInfo.InvariantCulture)} {UnitSettings.Symbol(units.Angular)}" : units.Length(Math.Abs(value));
+        var aim = units.Aiming(rifle); // entry 294 section 1: the rifle's scope unit
+        string Angle(double value) => aim.Angle(Math.Abs(value), inches) is { } a ? $"{a.ToString("0.00", CultureInfo.InvariantCulture)} {UnitSettings.Symbol(aim.Angular)}" : units.Length(Math.Abs(value));
         string ClickText(double value, string direction) => Math.Abs(value) < 5e-4 ? "no clicks" : Clicks.For(value, inches, rifle!, direction).Describe();
 
         // The one figure the screen is for, in amber at the lead size, as the analysis screen's mean radius is.

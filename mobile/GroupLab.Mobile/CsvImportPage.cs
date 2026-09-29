@@ -34,7 +34,7 @@ internal sealed class CsvImportPage : UserControl
         this.back = back;
         this.imported = imported;
         guess = CsvGuess.For(table, name);
-        distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}, for MOA or mil";
+        distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}, for mil or MOA";
         distance.TextChanged += (_, _) => Show();
         Show();
     }
@@ -57,7 +57,7 @@ internal sealed class CsvImportPage : UserControl
 
         if (unit is CoordinateUnit.Moa or CoordinateUnit.Mil && DistanceInches is null)
         {
-            return ([], 0, "Numbers in MOA or mil need the distance they were shot at.");
+            return ([], 0, "Numbers in mil or MOA need the distance they were shot at.");
         }
 
         var (offsets, skipped) = ShotCsv.Shots(table, x, y, unit, guess.UpIsPositive.Value ?? true, DistanceInches);

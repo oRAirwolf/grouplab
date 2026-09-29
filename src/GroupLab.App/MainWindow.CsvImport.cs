@@ -90,7 +90,7 @@ public sealed partial class MainWindow
         body.Children.Add(Row(new TextBlock { Text = "Unit", Width = 110, VerticalAlignment = VerticalAlignment.Center }, unit));
         body.Children.Add(upPositive);
         body.Children.Add(Row(new TextBlock { Text = "Measured from", Width = 110, VerticalAlignment = VerticalAlignment.Center }, origin));
-        body.Children.Add(Row(new TextBlock { Text = "Shot at", Width = 110, VerticalAlignment = VerticalAlignment.Center }, distance, new TextBlock { Text = "yards, needed for MOA or mil", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
+        body.Children.Add(Row(new TextBlock { Text = "Shot at", Width = 110, VerticalAlignment = VerticalAlignment.Center }, distance, new TextBlock { Text = "yards, needed for mil or MOA", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
         body.Children.Add(Note("Each row is one shot. Rows without two numbers, such as a total line, are left out and counted."));
         body.Children.Add(problem);
         body.Children.Add(Row(

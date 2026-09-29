@@ -39,10 +39,14 @@
  "screens": {
   "firstrun": {
    "name": "The first run",
-   "blurb": "The first time GroupLab opens it asks three questions: whether to send your targets, whether to send error reports, and whether to take part in the hardware survey.",
-   "purpose": "Nothing leaves your computer until you have said it may. Each question says exactly what would be sent before you answer it, and each has a way to say no. The answers are kept and can be changed at any time in Settings, under Sharing.",
+   "blurb": "The first time GroupLab opens it asks whether your scope is in mil or MOA, then three questions: whether to send your targets, whether to send error reports, and whether to take part in the hardware survey.",
+   "purpose": "GroupLab works in your scope's unit from the start, and nothing leaves your computer until you have said it may. Each sharing question says exactly what would be sent before you answer it, and each has a way to say no. The answers are kept and can be changed at any time in Settings, under Units and Sharing.",
    "withoutASheet": "No difference. It appears before any sheet is opened.",
    "parts": [
+    [
+     "Is your scope in mil or MOA?",
+     "Mil, MOA, or Both, I have rifles of each, and whether sizes on the paper are in inches or millimeters. The zero correction, the clicks and the dope then read in that unit, and each rifle can keep its own."
+    ],
     [
      "Send your targets",
      "What goes with each target, then the two consents, testing only or may be published, and three answers: send every target automatically, ask me each time, or never."
@@ -58,14 +62,22 @@
    ],
    "steps": [
     "Open GroupLab for the first time.",
-    "Read each question and answer it; No is always one of the answers.",
-    "Change any answer later in Settings, under Sharing."
+    "Say whether your scope is in mil or MOA, and whether you measure in inches or millimeters.",
+    "Read each sharing question and answer it; No is always one of the answers.",
+    "Change any answer later in Settings, under Units and Sharing."
    ],
    "fits": "Shown once, over the marking screen, before anything else.",
    "links": [
     [
      "What GroupLab sends from your computer",
      "/research/what-grouplab-sends/"
+    ]
+   ],
+   "moreShots": [
+    [
+     "scope-unit",
+     "The first run's scope question alone: Is your scope in mil or MOA?, with Mil, MOA and Both, I have rifles of each, and sizes in inches or millimeters",
+     "Is your scope in mil or MOA? The answer is the scope unit every aiming figure reads in, and each rifle can keep its own."
     ]
    ],
    "mobile": {
@@ -211,7 +223,7 @@
   "analysis": {
    "name": "The analysis",
    "blurb": "Every shot on one bull, with the six figures a shooter reads in view and everything else one click away.",
-   "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is. Tap any number to switch its units: angles between MOA and mil, sizes between inches and centimeters, everywhere at once, and remembered.",
+   "purpose": "Twenty-five bulls shot one round each become one picture of twenty-five shots, because each shot is measured from its own bull. Every number here comes with an interval, which is the range the true value could really be given how few shots you fired. That is the difference between knowing a load is better and hoping it is. Tap any number to switch its units: angles between mil and MOA, sizes between inches and centimeters, and GroupLab remembers it for that figure.",
    "withoutASheet": "No difference. Every figure here is worked out from the marks and the scale, and it does not matter whether a detector placed them or you did.",
    "parts": [
     [
@@ -228,11 +240,11 @@
     ],
     [
      "Zero correction",
-     "How far the group center is from where you aimed, across and up and down, in inches, MOA and mil side by side, and the distance the correction is for. Beneath it one line says what to dial, in clicks of your scope with the click value, or that the offset cannot yet be told from chance. Its why holds the give or take. Zero from this group opens the same in a window, with how well the center is known, and carries the offset into Ballistics."
+     "How far the group center is from where you aimed, across and up and down, on the paper and in your scope's unit, mil or MOA, the rifle's where the session names one, and the distance the correction is for. Beneath it one line says what to dial, in clicks of your scope with the click value, or that the offset cannot yet be told from chance. Its why holds the give or take. Zero from this group opens the same in a window, with how well the center is known, and carries the offset into Ballistics."
     ],
     [
      "Group",
-     "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. With the shot distance set each is an angle first, in MOA unless you chose another unit, with its size on the paper beneath; without it, the size on the paper and a button to set the distance. Hover over a figure for the range it could really be and the figure without any shot you left out."
+     "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. With the shot distance set each is an angle first, in your scope's unit, mil or MOA, with its size on the paper beneath; without it, the size on the paper and a button to set the distance. Hover over a figure for the range it could really be and the figure without any shot you left out."
     ],
     [
      "Advanced, closed until you open it",
@@ -625,7 +637,7 @@
    "parts": [
     [
      "Units",
-     "Lengths, angles and distances. Displayed only; nothing stored changes. A box beneath puts a group's size on the paper before its angle, for shooting at one distance."
+     "The scope unit first, mil or MOA, with a line saying everything aiming follows it; then lengths and distances. Displayed only; nothing stored changes. A box beneath puts a group's size on the paper before its angle, for shooting at one distance."
     ],
     [
      "Theme",
@@ -773,8 +785,8 @@
    "moreShots": [
     [
      "targets-zero",
-     "Targets with the MOA zeroing grid for 100 yards chosen: design C3, its legend and numbers drawn in the preview",
-     "A zeroing grid, design C3: squares the size of a scope's clicks, every line's distance from the aim written outside the grid, and a legend above it to read through the scope."
+     "Targets with the mil zeroing grid for 100 yards chosen: design C3, its legend and numbers drawn in the preview",
+     "A zeroing grid, design C3: squares of 0.2 mil or 0.5 MOA with a tick for each click, every line's distance from the aim written outside the grid, and a legend above it to read through the scope."
     ]
    ],
    "mobile": {
