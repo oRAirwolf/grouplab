@@ -341,10 +341,22 @@ internal static class SelfTestChecks
         catch (Exception e) when (e is not OutOfMemoryException)
         {
             check.Passed = false;
-            check.Detail = e.GetType().Name + ": " + e.Message;
+            check.Detail = Describe(e);
         }
 
         return check;
+    }
+
+    /// <summary>An exception and every one inside it, type and message, so a failure on a phone says what actually failed.</summary>
+    internal static string Describe(Exception e)
+    {
+        var parts = new List<string>();
+        for (Exception? at = e; at is not null && parts.Count < 5; at = at.InnerException)
+        {
+            parts.Add(at.GetType().Name + ": " + at.Message);
+        }
+
+        return string.Join(" <- ", parts);
     }
 
     private static double Distance(PointD a, PointD b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));

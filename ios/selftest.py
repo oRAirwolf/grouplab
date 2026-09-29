@@ -54,7 +54,7 @@ def main(argv: list[str]) -> int:
             failures.append(f"{name}: {check['detail']}")
         compared = ""
         other = theirs.get(name)
-        if other is not None:
+        if other is not None and state != "FAILED":
             worst = 0.0
             differing = []
             for key, value in check["numbers"].items():
