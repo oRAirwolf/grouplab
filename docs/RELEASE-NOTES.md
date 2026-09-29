@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.123
+
+**2026-09-29**, commit `612dd50`. Nightly.
+
+**What you will notice**
+
+- Fudd buster mode, Unholy's idea, shows with your own shots why a few shots mislead: the tightest and widest three-shot groups among them, what averaging small groups would have said, and the zero chased five shots at a time.
+- On the phone, a result now lists every shot with its offset and clicks and a Counted switch to leave one out, and Zero from this group says where the group sits and whether to dial.
+- On the phone, a target GroupLab did not print can now be marked by hand: set a known length and the aim point, then add each hole under a crosshair that stays in the middle.
+- The status bar now says when the target was saved and where, with Show in folder, and it saves by itself once you change or accept it; Settings can switch to a Save button instead.
+- A tap on a number now switches that number alone, and GroupLab remembers the unit for that figure; the others follow Settings as before.
+- GroupLab's license now allows it to be distributed through Apple's App Store and its test service, as work on an iPhone and iPad version begins.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.123)
+
+---
+
 ## 0.2.0-nightly.122
 
 **2026-09-29**, commit `78ee351`. Nightly.
