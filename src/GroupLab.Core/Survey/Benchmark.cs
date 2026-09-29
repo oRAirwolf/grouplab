@@ -84,7 +84,16 @@ public static class Benchmark
     /// </summary>
     public static long PeakMegabytes()
     {
-        using var self = Process.GetCurrentProcess();
-        return Math.Max(self.PeakWorkingSet64, self.WorkingSet64) / (1024 * 1024);
+        try
+        {
+            using var self = Process.GetCurrentProcess();
+            return Math.Max(self.PeakWorkingSet64, self.WorkingSet64) / (1024 * 1024);
+        }
+        catch (PlatformNotSupportedException)
+        {
+            // Entry 290: iOS gives an application nothing about its own process, and the whole analysis stopped on asking; the managed
+            // memory held now stands in, as the memory held does on macOS.
+            return GC.GetTotalMemory(false) / (1024 * 1024);
+        }
     }
 }
