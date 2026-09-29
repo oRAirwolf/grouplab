@@ -12,6 +12,26 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.125
+
+**2026-09-29**, commit `0011246`. Nightly.
+
+**What you will notice**
+
+- GroupLab Dev now updates itself on Android: it looks for a newer nightly, downloads it on Wi-Fi, checks its signature and signing key, and installs it when you leave the app, with Update now and a switch for automatic installs in Settings under About.
+- The list of other people's software GroupLab is built with now names what the phone version uses, including the camera and update libraries.
+- Tap any number to switch its units now works in the full CEP table too: each number there shows its own unit and switches alone. (Question 70).
+
+**Under the hood**
+
+- Work toward the iPhone and iPad version: a black resting screen for overnight testing on screens that can burn in.
+- Work toward the iPhone and iPad version: the phone's screens are now checked on every build on computers of all three kinds.
+- The phone's screens are now shared with the iPhone and iPad version being built, with nothing changed in what you see on Android.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.125)
+
+---
+
 ## 0.2.0-nightly.124
 
 **2026-09-29**, commit `b856d1f`. Nightly.
