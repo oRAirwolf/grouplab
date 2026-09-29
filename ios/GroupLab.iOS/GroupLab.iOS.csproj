@@ -21,6 +21,15 @@
     <AppIcon>AppIcon</AppIcon>
     <!-- Unsigned until the signing secrets exist (request 55); the simulator never needs signing. -->
     <EnableCodeSigning Condition="'$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
+    <!--
+      The trimmer. GroupLab's settings, records, error reports and markings are written with System.Text.Json's reflection, and its build
+      stamp is read from assembly metadata, as on the desktop and Android. So only the SDK is trimmed (partial), JSON's reflection stays on,
+      and the attribute the build stamp lives in is kept; the analysis of GroupLab's own code for full trimming is not asked for.
+    -->
+    <TrimMode>partial</TrimMode>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    <_AggressiveAttributeTrimming>false</_AggressiveAttributeTrimming>
   </PropertyGroup>
 
   <ItemGroup>
