@@ -45,6 +45,9 @@ public class BenchCoverageTests
     {
         ["GridStyle2"] = "The zeroing grid's fixed numbers and its three sentences of scale. Drawing the grid is measured, in rendering the sheet.",
         ["GridStyle3"] = "The C3 zeroing grid's fixed numbers, its numbers' wording and its legend. Drawing it is rendering a sheet, which is measured.",
+        ["BullColours"] = "Entry 297's three bull colors and their tints, fixed values; drawing a colored sheet is rendering a sheet, which is measured.",
+        ["SceneSvg"] = "Entry 300's writer of a sheet's close-up as SVG for the website, used only by the screenshot walk, never by the application.",
+        ["DataExport"] = "Entry 307's export and import, run by hand once in a while; its own test holds 300 sessions to about a second.",
         ["SessionNames"] = "What a saved session is called on screen, from its load, date and time: words, not a measurement. Entry 295 section 3.",
         ["ShotsToZero"] = "Shots Needed to Zero is arithmetic on one group, not the detection the bench times; its own test holds it to entry 252's half-second budget.",
         ["ScopeClicks"] = "Entry 294's list of the click values scopes are made with, four fixed numbers; there is nothing in it to time.",
