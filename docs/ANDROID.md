@@ -519,6 +519,11 @@ the tap was given through the notice's "Install now" (Android's one question, th
 permission (granted at install) and is its own installer of record, so 128 to 129 is the no-tap test. From 129 a tap Android wants in
 the background is remembered and asked for on screen at the next start.
 
+**The Fold 7 (Android 16), from its own log.** Nightly 125 over adb; at 11:00 UTC its first self-update to 126 asked once and was
+tapped. At 18:16 UTC the six-hourly background check (WorkManager, `worker=True`) found nightly 129 by itself and downloaded it in
+1 second; 126 did not yet declare the permission, so Android asked and the tap was given 24 seconds later. The Fold is now on 129,
+holding the permission and its own installer of record, so its next update is the no-tap one.
+
 **adb stays for tests and logs only.** Installing a nightly over adb is still how a sitting starts on a device that has no updater yet.
 
 ## 18. Pictures from any photo app (entry 292)

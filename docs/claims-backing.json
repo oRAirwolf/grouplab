@@ -4368,6 +4368,18 @@
   "From 129 a tap Android wants in the background is remembered and asked for on screen at the next start.": {
    "kind": "measured",
    "where": "the Tab S8 Ultra, 2026-09-29, nightly 126 to 128: update.install.start silent=True then status=-1; the notice Install now, Android asked once; dumpsys package on 128: UPDATE_PACKAGES_WITHOUT_USER_ACTION granted=true, installerPackageName=org.grouplab.app.dev; entry 288"
+  },
+  "**The Fold 7 (Android 16), from its own log.** Nightly 125 over adb; at 11:00 UTC its first self-update to 126 asked once and was tapped.": {
+   "kind": "measured",
+   "where": "the Fold 7 GroupLab Dev log, 2026-09-29: update.install.start 126 silent=False 11:00, INSTALL_SUCCEEDED 11:00:52; update.check worker=True offered 129 at 18:16:17, downloaded 1 s, status=-1 then INSTALL_SUCCEEDED 18:16:46; pm installer=org.grouplab.app.dev; entry 288"
+  },
+  "At 18:16 UTC the six-hourly background check (WorkManager, `worker=True`) found nightly 129 by itself and downloaded it in 1 second; 126 did not yet declare the permission, so Android asked and the tap was given 24 seconds later.": {
+   "kind": "measured",
+   "where": "the Fold 7 GroupLab Dev log, 2026-09-29: update.install.start 126 silent=False 11:00, INSTALL_SUCCEEDED 11:00:52; update.check worker=True offered 129 at 18:16:17, downloaded 1 s, status=-1 then INSTALL_SUCCEEDED 18:16:46; pm installer=org.grouplab.app.dev; entry 288"
+  },
+  "The Fold is now on 129, holding the permission and its own installer of record, so its next update is the no-tap one.": {
+   "kind": "measured",
+   "where": "the Fold 7 GroupLab Dev log, 2026-09-29: update.install.start 126 silent=False 11:00, INSTALL_SUCCEEDED 11:00:52; update.check worker=True offered 129 at 18:16:17, downloaded 1 s, status=-1 then INSTALL_SUCCEEDED 18:16:46; pm installer=org.grouplab.app.dev; entry 288"
   }
  },
  "rules": [
