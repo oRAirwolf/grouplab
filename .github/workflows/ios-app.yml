@@ -200,6 +200,17 @@ jobs:
           cp "$folder/results.json" ios-results.json 2>/dev/null || { echo "::error::The self-test wrote no results (status: $status)"; grep -v "^\s*$" app-console.log | tail -60; exit 1; }
           xcrun simctl terminate "$UDID" org.grouplab.app || true
 
+      # Entry 290 section 6: the dark theme, which every shot above is not in. Capture with the bar along the bottom, as a person starts it
+      # with the phone set to dark; the first run's questions were answered by the self-test.
+      - name: The dark theme
+        run: |
+          xcrun simctl ui "$UDID" appearance dark
+          xcrun simctl launch "$UDID" org.grouplab.app
+          sleep 20
+          xcrun simctl io "$UDID" screenshot shots/97-dark-capture.png > /dev/null
+          xcrun simctl terminate "$UDID" org.grouplab.app || true
+          xcrun simctl ui "$UDID" appearance light
+
       - name: The desktop's numbers
         if: steps.opencv.outputs.linked == 'true'
         run: |
