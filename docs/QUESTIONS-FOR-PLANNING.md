@@ -23,7 +23,7 @@ number is never reused and a question is never lost:
 
 ## 2026-09-30, question 76: should a full cartridge name typed without choosing it from the list count?
 
-**Status: open.** Nothing waits on it: entry 314 is built with B. Entry 163 holds back some cartridges from being taken as a caliber
+**Status: answered 2026-09-30.** Alan (entry 318): "Q76: B." As built: a held-back cartridge must be chosen from the list. Nothing waits on it: entry 314 is built with B. Entry 163 holds back some cartridges from being taken as a caliber
 unless chosen (.45 ACP, 7.62x39 and others whose name does not say the bullet's diameter plainly), so the box still asks for a diameter
 when one of those is typed in full and not chosen. Separately, the draft table named the same cartridge twice 56 times (on both the rifle
 and handgun lists, or under two names); merged, the list before typing holds 105 rows, not the 111 entry 314 counted.
@@ -33,7 +33,7 @@ list shows the row as soon as the name is typed.
 
 ## 2026-09-30, question 75: colored ring bulls use more ink than black on a color inkjet
 
-**Status: open.** Nothing waits on it: the colors are built as approved. Entry 297 section 7.3: "color never costs more ink than black".
+**Status: answered 2026-09-30.** Alan (entry 318): "Q75: A." Accepted; the user guide says blue uses a little less ink than red. Nothing waits on it: the colors are built as approved. Entry 297 section 7.3: "color never costs more ink than black".
 Measured (bulls only, square inches of full ink on Letter, a CMY plus K model): the filled bulls cost less in color (GL-CF25-LTR-C black
 20.3, blue 15.4, red 18.2; the E bulls 19.4, 14.7, 17.4), and on a black-and-white printer every color prints as gray at 36 to 64% of
 black's toner. But the ring bulls and the zeroing grids cost more on a color inkjet, because a full-color line needs two inks (red is
