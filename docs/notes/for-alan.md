@@ -182,6 +182,31 @@ iPad. The tool is pymobiledevice3, a Python program.
 
 **A good answer:** "the iPad is listed" and whether Developer Mode is on. Leave the cable in when you can.
 
+**Being done by Code (Alan, 2026-09-30: "do request 60 yourself from the Windows shell").** Notes, newest last, one change at a time:
+
+- *Starting point:* pymobiledevice3 in `C:\Dev\pmd3` (Python 3.13); Apple Mobile Device Support 19.4.0.10 from winget, its service
+  running on 127.0.0.1:27015; iTunes and the Store's Apple Devices app removed; `usbmux list --simple` empty; no pair record in
+  `C:\ProgramData\Apple\Lockdown` after Trust.
+- *Found (read only):* the iPad (USB `VID_05AC&PID_12AB`) is bound to Windows Update's Apple driver `oem23.inf` 538.0.0.0 (2023):
+  the composite device to `usbccgp` and its usbmux interface (MI_01) to Microsoft's WinUSB. That driver belongs with the Store app's
+  own service. The service Mobile Device Support installs talks to the iPad only through Apple's own USB driver `usbaapl64.sys`, and
+  that driver is not on this computer: the installed `Mobile Device Support` folder has no `Drivers` folder and the driver store holds
+  only the 538 driver. Apple's MSI (the winget URL, 40,308,736 bytes, SHA-256 B60533FB...D360E9, signature valid, Apple Inc.) does
+  carry `Drivers\usbaapl64.inf` (1.67, dated 2017), which claims `VID_05ac&PID_12ab` for the whole device. Windows ranks the newer
+  538 driver first, so `usbaapl64` only takes the iPad once 538 is out of the way.
+- *Plan, each step undoable:* (1) add `usbaapl64.inf` to the driver store (`pnputil /add-driver`); binds nothing by itself; undo:
+  `pnputil /delete-driver <its oemNN.inf>`. (2) Export `oem23.inf` to `C:\Dev\grouplab-trash\2026-09-30\driver-oem23-538\` with
+  `pnputil /export-driver`, then `pnputil /delete-driver oem23.inf /uninstall`, so the iPad falls back to `usbaapl64`; undo:
+  `pnputil /add-driver <that folder>\*.inf /install`. (3) Restart Apple Mobile Device Service and list again. Then Trust on the iPad.
+- *Done, 2026-09-30 about 12:45 UTC, each step elevated by a hidden PowerShell (the UAC setting let it through without a prompt):*
+  (1) `pnputil /add-driver usbaapl64.inf`: published as `oem104.inf`; nothing rebound, list still empty. (2) `oem23.inf` exported to
+  `C:\Dev\grouplab-trash\2026-09-30\driver-oem23-538\` (appleusb.inf, AppleUSB.cat, AppleLowerFilter.sys, AppleKmdfFilter.sys,
+  AppleUsbFilter.dll), then deleted with `/uninstall`: the device record moved to `oem104.inf`, but the running stack kept the old
+  filters until a restart. (3) Restarting the service: still empty. (4) `pnputil /restart-device`: refused, "pending system reboot".
+  (5) `pnputil /remove-device <the iPad> /subtree`, then `/scan-devices`: the iPad came back on `USBAAPL64` alone (running), and
+  `usbmux list` **lists the iPad**. No computer restart was needed. Windows Update may offer the 538 driver again later; if the list
+  goes empty after an update, the same step 2 and 5 undo it.
+
 ## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
 **Opened 2026-09-30.** **Why:** nightly 134 is the first iPhone and iPad build signed and sent to TestFlight (07:00 UTC). From now on the
