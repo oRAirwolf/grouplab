@@ -212,34 +212,25 @@ public sealed partial class MainWindow
         compareCharts.Clear();
         compareColumn.Children.Add(Line($"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (compareFooting is null ? "" : " " + compareFooting)));
 
-        // The groups side by side, each with its plot and its figures with intervals.
+        // Entry 309 section 2: the groups first, each about its own center at one scale in its load's color, and a tap stacks them.
+        compareGroupsCard = new LoadGroups([.. report.Groups.Select(g => new LoadGroup(g.Name, g.Offsets, g.Centre, g.MeanRadius.Value))],
+            inches => Sized(inches, compareDistance).Value, cell: 200);
+        compareColumn.Children.Add(new Border { Child = compareGroupsCard, Classes = { AppStyles.ResultCard } });
+
+        // Each load's figures with their intervals, side by side, its name in its color.
         var cards = new Grid { ColumnDefinitions = new ColumnDefinitions(string.Join(",", report.Groups.Select(_ => "*"))) };
         for (int i = 0; i < report.Groups.Count; i++)
         {
             var group = report.Groups[i];
             var card = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, 0, Tokens.Space12, 0) };
-            card.Children.Add(new TextBlock { Text = group.Name, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Section } });
+            var title = LoadGroups.Named(i, group.Name);
+            ((TextBlock)title.Children[1]).Classes.Add(AppStyles.Section);
+            card.Children.Add(title);
             card.Children.Add(Detail(compareGroups[i].Detail));
             if (compareGroups[i].Speed is { } speed)
             {
                 card.Children.Add(Detail(speed));
             }
-            var groupPlot = new CompositePlot
-            {
-                Height = 220,
-                Shots = [.. group.Offsets.Select((o, k) => new PlotShot(k, (k + 1).ToString(CultureInfo.InvariantCulture), null, o, false))],
-                Centre = group.Centre,
-                Cep50Inches = group.Rayleigh.Cep(0.5).Value,
-                Cep90Inches = group.Rayleigh.Cep(0.9).Value,
-                Cep95Inches = group.Rayleigh.Cep(0.95).Value,
-                Cep99Inches = group.Rayleigh.Cep(0.99).Value,
-                CustomCepInches = settingsStore.LoadPlotMarks().CustomPercent is { } percent ? group.Rayleigh.Cep(percent / 100).Value : null,
-                Shown = settingsStore.LoadPlotMarks(),
-                WholeTarget = settingsStore.LoadPlotWholeTarget(),
-                Length = inches => units.Length(inches),
-                ShowKey = false,
-            };
-            card.Children.Add(groupPlot);
             string Interval(Estimate e) => $"{units.Number(e.Lower)} to {units.Length(e.Upper)}";
             card.Children.Add(Rowed(Readout("Sigma", units.Length(group.Rayleigh.Sigma.Value), Tokens.ValueSize)));
             card.Children.Add(Detail("95% interval " + Interval(group.Rayleigh.Sigma)));
@@ -263,19 +254,6 @@ public sealed partial class MainWindow
         }
 
         compareColumn.Children.Add(cards);
-        compareColumn.Children.Add(Note(CompareKey(settingsStore.LoadPlotMarks())));
-
-        // Entry 210 section 2.4: the same framing choice as the analysis screen's plot, and the same remembered setting.
-        var whole = new CheckBox { Content = "Whole target", IsChecked = settingsStore.LoadPlotWholeTarget(), MinHeight = 44 };
-        whole.IsCheckedChanged += (_, _) =>
-        {
-            settingsStore.SavePlotWholeTarget(whole.IsChecked == true);
-            foreach (var small in compareColumn.GetLogicalDescendants().OfType<CompositePlot>())
-            {
-                small.WholeTarget = whole.IsChecked == true;
-            }
-        };
-        compareColumn.Children.Add(whole);
 
         // Entry 131 section 10: the figures with their intervals, drawn. This is the one picture that makes the project's whole argument
         // visible. Two loads reading 0.42 in and 0.51 in look like a winner and a loser in a table; drawn with their intervals, anybody can
@@ -288,7 +266,13 @@ public sealed partial class MainWindow
         {
             // Entry 189 section 3: the charts read in the same order as the cards, as angles where there is a distance.
             // Entry 295 section 1.4: the sentence beneath is the comparison's own, so it can never disagree with the verdict.
-            var chart = new IntervalChart { Rows = rows, Length = inches => Sized(inches, compareDistance).Value, Says = LoadComparison.ChartSays(report, title, hasRange: true) };
+            var chart = new IntervalChart
+            {
+                Rows = rows,
+                Length = inches => Sized(inches, compareDistance).Value,
+                Says = LoadComparison.ChartSays(report, title, hasRange: true),
+                RowsAreLoads = true,
+            };
             compareCharts[title] = chart;
             compareColumn.Children.Add(Ruled(title + ", with the range each could really be"));
             compareColumn.Children.Add(chart);
@@ -297,6 +281,7 @@ public sealed partial class MainWindow
 
         // The verdict, which never ranks by point estimate.
         var verdict = new StackPanel { Spacing = Tokens.Space4 };
+        verdict.Children.Add(LoadGroups.Key([.. report.Groups.Select(g => g.Name)]));
         verdict.Children.Add(new TextBlock { Text = report.Headline, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Warn } });
         foreach (string line in report.Explanation)
         {
@@ -353,16 +338,8 @@ public sealed partial class MainWindow
 
     internal IEnumerable<string> CompareText => compareColumn.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 
-    /// <summary>
-    /// What the comparison's small plots show, said once beneath them (entry 113 section 2), following the plot's own toggles (entry 204): the
-    /// group centre's and aim point's lines, and whichever CEP circles are on. The small plots draw no extreme spread line.
-    /// </summary>
-    internal static string CompareKey(PlotMarks shown)
-    {
-        var circles = new[] { (shown.Cep50, "the dotted circle CEP 50"), (shown.Cep90, "the solid circle CEP 90"), (shown.Cep95, "the dashed circle CEP 95"), (shown.Cep99, "the dash and dot circle CEP 99"),
-            (shown.CustomPercent is not null, $"the long dashed circle CEP {shown.CustomPercent?.ToString("0.#", CultureInfo.InvariantCulture)}") }
-            .Where(c => c.Item1).Select(c => c.Item2).ToList();
-        string cep = circles.Count == 0 ? "" : $"; in green, {string.Join(", ", circles)}";
-        return $"Each plot: the dots are the shots about their own bulls, excluded ones left out; the green lines cross at the group's center and the blue lines at the aim point{cep}.";
-    }
+    /// <summary>The Compare card's plots, for the headless tests.</summary>
+    internal LoadGroups? CompareGroups => compareGroupsCard;
+
+    private LoadGroups? compareGroupsCard;
 }

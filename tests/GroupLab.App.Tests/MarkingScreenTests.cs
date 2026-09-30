@@ -631,12 +631,13 @@ public class MarkingScreenTests
     }
 
     /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 76 section 4: a detected shot's ring is the diameter the detector measured, in sheet units at any zoom, with
-    /// the calibre's hole drawn beside it once a calibre is set; a shot placed by hand, which has no measurement, keeps the calibre ring, and
-    /// moving a detected shot drops the measurement.
+    /// NOTES-FROM-PLANNING.md entry 76 section 4: a detected shot's ring is the diameter the detector measured, in sheet units at any zoom,
+    /// until a calibre is set. Entry 309 section 3.4 turned it round: once a calibre is set, every ring is the caliber's diameter, with the
+    /// measured size drawn beside it; a shot placed by hand, which has no measurement, has the calibre ring alone, and moving a detected shot
+    /// drops the measurement.
     /// </summary>
     [AvaloniaFact]
-    public void ADetectedShotIsDrawnAtItsMeasuredDiameterWithTheCalibreBesideIt()
+    public void ADetectedShotIsDrawnAtItsMeasuredDiameterUntilACalibreThenAtTheCalibre()
     {
         (int X, int Y)[] holes = [(200, 200)];
         string path = SyntheticTarget(holes);
@@ -659,8 +660,8 @@ public class MarkingScreenTests
             }
 
             session.SetCalibre(new Calibre(".308", 0.308));
-            var (measured, calibre, _) = window.Canvas.RingDiametersInches(detected);
-            Assert.Equal((0.52, 0.308), (Math.Round(measured, 6), Math.Round(calibre!.Value, 6)));
+            var (calibre, measured, _) = window.Canvas.RingDiametersInches(detected);
+            Assert.Equal((0.308, 0.52), (Math.Round(calibre, 6), Math.Round(measured!.Value, 6)));
             var (byHand, noExpected, _) = window.Canvas.RingDiametersInches(hand);
             Assert.Equal(0.308, byHand, 6);
             Assert.Null(noExpected);

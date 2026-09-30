@@ -1,6 +1,7 @@
 using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 
@@ -11,9 +12,26 @@ namespace GroupLab.Mobile;
 /// target, then take a picture with the capture screen or choose one already on the phone; either is analyzed at the working size, the
 /// result shown, and saved in Sessions. The caliber comes first because it is the one answer that changes what GroupLab finds (entry 131
 /// section 6.3), as on the desktop.
+/// <para>
+/// Entry 309 section 1, Alan: "Lets use A as the capture page and make it the default landing page." So the tab's start is Home A: the
+/// GroupLab mark and word, one line saying what GroupLab does, one row with the caliber and distance remembered from the last target and
+/// Change, Take a picture, Choose a photo and Print a target, the "Getting started on your phone" card, and grouplab.org and the version at
+/// the foot. It does not ask every time: only where no caliber has been set yet does Take a picture or Choose a photo ask for it first, in a
+/// sheet over the page, then go straight on.
+/// </para>
 /// </summary>
 public sealed class CapturePage : UserControl
 {
+    /// <summary>Entry 309 section 1.3: the phone's part of the user guide, since grouplab.org has no page of its own for it.</summary>
+    internal const string GettingStartedAddress = "https://grouplab.org/guides/user-guide/#13-on-the-phone";
+
+    private readonly TextBlock setupSummary = Screens.Line("");
+    private readonly Border setupFields;
+    private readonly Button change = Screens.Choice("Change", () => { });
+    private readonly Border ask;
+    private readonly StackPanel askFields = new() { Spacing = 8 };
+    private readonly TextBlock askSaid = Screens.Line("");
+    private Action? afterAsk;
     private readonly TextBlock status = Screens.Line("");
     private readonly AutoCompleteBox calibre = new()
     {
@@ -49,34 +67,173 @@ public sealed class CapturePage : UserControl
         calibre.Text = typed ?? "";
         distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}";
         distance.Text = inches is { } d ? UnitSettings.DistanceFromInches(d, units.Distance).ToString("0.#", CultureInfo.CurrentCulture) : "";
+        // Entry 309 section 1: Home A. The caliber and distance as one row, remembered, with Change opening the two fields beneath it.
+        setupFields = Screens.Card(calibre, distance);
+        setupFields.IsVisible = false;
+        change.Click += (_, _) =>
+        {
+            if (setupFields.IsVisible && Setup() is null)
+            {
+                return;
+            }
+
+            setupFields.IsVisible = !setupFields.IsVisible;
+            Summarize();
+        };
+        var setupRow = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 8 };
+        var said = new StackPanel { Spacing = 2, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, Children = { Screens.Dim("Caliber and distance"), setupSummary } };
+        Grid.SetColumn(change, 1);
+        setupRow.Children.Add(said);
+        setupRow.Children.Add(change);
+        Summarize();
+
+        var choose = Screens.Choice("Choose a photo", () => AskFirst(() => _ = Choose()));
+        var print = Screens.Choice("Print a target", () => Shell.Current?.Show(Shell.Place.Targets));
+        var pair = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { choose, print } };
+        Grid.SetColumn(print, 1);
+
+        // Entry 292 sections 1.2 and 258: the other ways a picture comes in, kept one tap away under the two.
+        var others = new WrapPanel
+        {
+            Children =
+            {
+                Link("From another app", () => AskFirst(() => _ = Choose(PhotoSource.OtherApp))),
+                Link("Paste a picture", () => AskFirst(() => _ = Paste())),
+            },
+        };
+
+        // Entry 233 and entry 271 section 4: the two things a good picture still needs, which the camera's live checks do not look for.
+        var tips = MoreFold.Make(Phone.Settings, "capture.tips",
+        [
+            Screens.Dim("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one."),
+            Screens.Dim(DetectionAdvice.OncePerPrinter + (Phone.Settings.LoadChosenPrinter() is { } printer
+                ? string.Create(CultureInfo.CurrentCulture, $" Photographs are corrected for {printer.Name}'s {printer.Scale * 100:0.0} percent.")
+                : "")),
+        ], Screens.Touch);
+
+        var gettingStarted = Screens.Row("Getting started on your phone", "Print, shoot, photograph, read.", () => Phone.Platform.OpenAddress(GettingStartedAddress));
         start = Screens.Page(new StackPanel
         {
             Spacing = 12,
             Children =
             {
-                Screens.Title("Capture"),
-                Screens.Line("Photograph a GroupLab target and GroupLab finds the holes and measures the group. Hold the phone square over the sheet; the words at the top of the camera say what to change, and it takes the picture itself when everything is right."),
-
-                // Entry 246, look B: what GroupLab needs to know on one card, then the one thing the screen is for.
-                Screens.Card(Screens.Dim("The caliber and the distance"), calibre, distance),
-                Screens.Primary("Take a picture", Camera),
-                Screens.Choice("Choose a photograph", () => _ = Choose()),
-
-                // Entry 292 section 1.2: every app that offers pictures, by name, as a photo editor reaches them.
-                Screens.Choice("From another app", () => _ = Choose(PhotoSource.OtherApp)),
-                Screens.Choice("Paste a picture", () => _ = Paste()),
+                new GroupLab.App.BrandMark { Lockup = true, Height = 36, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left, Margin = new Avalonia.Thickness(0, 8, 0, 0) },
+                Screens.Line("Photograph a target and read your group. On a GroupLab sheet, the scale and every hole are found for you."),
+                Screens.Card(setupRow, setupFields),
+                Screens.Primary("Take a picture", () => AskFirst(Camera)),
+                pair,
+                others,
                 status,
-
-                // Entry 233: the one thing on a kitchen counter that still costs a hole, which the camera's live checks do not look for.
-                Screens.Card(Screens.Dim("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one.")),
-
-                // Entry 271 section 4: how a photograph gets real inches, and which printer's scale it will be corrected for.
-                Screens.Card(Screens.Dim(DetectionAdvice.OncePerPrinter + (Phone.Settings.LoadChosenPrinter() is { } printer
-                    ? string.Create(CultureInfo.CurrentCulture, $" Photographs are corrected for {printer.Name}'s {printer.Scale * 100:0.0} percent.")
-                    : ""))),
+                Screens.Card(gettingStarted, Screens.Dim("Tips for a good picture"), tips),
+                Link("grouplab.org", () => Phone.Platform.OpenAddress("https://grouplab.org/")),
+                Screens.Quiet($"Free and open source · GPL-3.0 · {AppInfo.Version}"),
             },
         });
-        Content = start;
+
+        // The question for a first caliber, in a sheet over the page (entry 309 section 1.2).
+        ask = Screens.Card(
+            Screens.Heading("Which caliber are you shooting?"),
+            Screens.Dim("GroupLab asks once and remembers it for the next target. The distance may stay empty if you do not know it; both can be changed on the result."),
+            askFields,
+            askSaid,
+            Screens.Primary("Continue", Continue),
+            Screens.Choice("Cancel", () => CloseAsk(false)));
+        ask.IsVisible = false;
+        ask.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
+        ask.Margin = new Avalonia.Thickness(8);
+        home = new Grid { Children = { start, ask } };
+        Content = home;
+    }
+
+    /// <summary>The start with the question sheet over it.</summary>
+    private readonly Grid home;
+
+    private static Button Link(string words, Action chosen)
+    {
+        var link = new Button { Content = words, MinHeight = Screens.Touch, Margin = new Avalonia.Thickness(0, 0, 16, 0), Classes = { GroupLab.App.Theme.AppStyles.Link } };
+        link.Click += (_, _) => chosen();
+        return link;
+    }
+
+    /// <summary>The caliber and distance row as it reads: "6 ARC, 100 yd", with "distance not known" and "no caliber yet" where empty.</summary>
+    private void Summarize()
+    {
+        string c = string.IsNullOrWhiteSpace(calibre.Text) ? "No caliber yet" : calibre.Text.Trim();
+        string d = string.IsNullOrWhiteSpace(distance.Text) ? "distance not known" : $"{distance.Text.Trim()} {UnitSettings.Symbol(Phone.Settings.LoadUnits().Distance)}";
+        setupSummary.Text = $"{c}, {d}";
+        change.Content = setupFields.IsVisible ? "Done" : "Change";
+    }
+
+    /// <summary>Whether a caliber has been set, on this page or remembered from the last target.</summary>
+    private bool HasCalibre()
+    {
+        if (string.IsNullOrWhiteSpace(calibre.Text) && Phone.Settings.LoadShotSetup().Calibre is { Length: > 0 } remembered)
+        {
+            calibre.Text = remembered;
+        }
+
+        return !string.IsNullOrWhiteSpace(calibre.Text);
+    }
+
+    /// <summary>Entry 309 section 1.2: straight on where a caliber is set; otherwise the question first, then straight on.</summary>
+    internal void AskFirst(Action then)
+    {
+        if (HasCalibre())
+        {
+            then();
+            return;
+        }
+
+        afterAsk = then;
+        Move(askFields);
+        ask.IsVisible = true;
+        DiagnosticLog.Info("capture.ask", ("calibre", false));
+    }
+
+    /// <summary>Whether the question for a first caliber is showing, for the tests.</summary>
+    internal bool Asking => ask.IsVisible;
+
+    private void Continue()
+    {
+        if (!HasCalibre())
+        {
+            askSaid.Text = "Type the caliber, for example 6.5 Creedmoor or .308.";
+            return;
+        }
+
+        if (Setup() is null)
+        {
+            // Why the caliber could not be read, said in the sheet, where it is being typed.
+            askSaid.Text = status.Text;
+            return;
+        }
+
+        askSaid.Text = "";
+
+        CloseAsk(true);
+    }
+
+    private void CloseAsk(bool goOn)
+    {
+        ask.IsVisible = false;
+        Move((Panel)setupFields.Child!);
+        Summarize();
+        var then = afterAsk;
+        afterAsk = null;
+        if (goOn)
+        {
+            then?.Invoke();
+        }
+    }
+
+    /// <summary>The two fields, into the question sheet or back onto the page.</summary>
+    private void Move(Panel to)
+    {
+        foreach (var field in new Control[] { calibre, distance })
+        {
+            (field.Parent as Panel)?.Children.Remove(field);
+            to.Children.Add(field);
+        }
     }
 
     /// <summary>The caliber and distance as typed, remembered for the next target; null where the caliber cannot be read, with why.</summary>
@@ -135,7 +292,7 @@ public sealed class CapturePage : UserControl
     }
 
     /// <summary>The start of the tab, with the two buttons above it once there is a result to go back to.</summary>
-    private void ShowStart() => Content = lastResult is null ? start : WithBar(start, false);
+    private void ShowStart() => Content = lastResult is null ? home : WithBar(home, false);
 
     /// <summary>A result shown, and kept as the one the Result button returns to.</summary>
     internal void ShowResult(Control result)

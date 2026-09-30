@@ -171,6 +171,16 @@ public static class Tokens
         ? new PlotInks(Hex(0xffffff), Hex(0x000000), Hex(0x4d4d4d), Hex(0xc8102e), Hex(0x007a4d), Hex(0x0055d4), Hex(0xbdbdbd))
         : new PlotInks(Hex(0x0a0a0a), Hex(0xffffff), Hex(0xb3b3b3), Hex(0xff5a5f), Hex(0x3ddc84), Hex(0x5aa9ff), Hex(0x282828));
 
+    /// <summary>
+    /// Each load's color on Compare, NOTES-FROM-PLANNING.md entry 309 section 2.1: amber, then a blue near #6ea8ec in the dark theme and its
+    /// match for the light, and for more loads further colors that differ in lightness as well as hue, so a reader who cannot tell the hues
+    /// apart still tells the loads apart. The plots, the range chart's names and the verdict's key use the same one for each load; high
+    /// contrast takes the dark set, which already clears its ratio on the black paper.
+    /// </summary>
+    public static IReadOnlyList<Color> Loads(ThemeVariant? variant) => variant == ThemeVariant.Light
+        ? [Hex(0x965d12), Hex(0x2f6fc4), Hex(0x2e7d32), Hex(0x9c3f8f), Hex(0x5f5a00)]
+        : [Hex(0xe0912f), Hex(0x6ea8ec), Hex(0xb5eaa9), Hex(0xb65aa3), Hex(0xf2e27d)];
+
     public static Palette For(ThemeVariant? variant) =>
         variant == HighContrastVariant ? HighContrast : variant == ThemeVariant.Light ? Light : Dark;
 

@@ -275,11 +275,63 @@ internal sealed class MarkingAPage : UserControl
         /// <summary>The bullet's diameter in inches, for the crosshair's ring, once the scale is known.</summary>
         public double? RingInches { get; set; }
 
-        /// <summary>The hole being moved, drawn under the crosshair rather than where it was; null while none is.</summary>
-        public int? Held { get; set; }
+        /// <summary>
+        /// The hole being moved; null while none is. Entry 309 section 3: picking it up leaves its circle where it was, a finger drags the
+        /// circle itself (<see cref="HeldAt"/>) with the crosshair on its center, and a dashed ghost stays where it started.
+        /// </summary>
+        public int? Held
+        {
+            get => held;
+            set
+            {
+                held = value;
+                HeldFrom = value is { } id && session.State.Shots.FirstOrDefault(s => s.Id == id) is { } shot ? shot.Image : null;
+                HeldAt = HeldFrom;
+                InvalidateVisual();
+            }
+        }
 
-        /// <summary>The image point under the crosshair.</summary>
-        public PointD Centre => ToImage(new Point(Bounds.Width / 2, Bounds.Height / 2));
+        private int? held;
+
+        /// <summary>Where the hole being moved started, and where its circle is now, in image pixels.</summary>
+        public PointD? HeldFrom { get; private set; }
+
+        public PointD? HeldAt { get; private set; }
+
+        /// <summary>How far the hole being moved has gone, in inches on the target, where the scale is known.</summary>
+        public double? HeldMovedInches => HeldFrom is { } from && HeldAt is { } at && session.State.Scale is { } scale
+            ? Math.Sqrt(Math.Pow(scale.ToTarget(at).X - scale.ToTarget(from).X, 2) + Math.Pow(scale.ToTarget(at).Y - scale.ToTarget(from).Y, 2))
+            : null;
+
+        /// <summary>The image point under the crosshair: the middle, or while a hole is being moved, its circle's center.</summary>
+        public PointD Centre => HeldAt ?? ToImage(new Point(Bounds.Width / 2, Bounds.Height / 2));
+
+        /// <summary>How near an edge, in screen units, the circle being moved can come before the picture scrolls under it.</summary>
+        internal const double EdgeRoom = 48;
+
+        /// <summary>
+        /// Moves the circle of the hole being moved by <paramref name="by"/> screen units, as a finger dragging it does, and scrolls the picture
+        /// when the circle comes near an edge so it never leaves the view.
+        /// </summary>
+        internal void DragHeld(Vector by)
+        {
+            if (HeldAt is not { } at)
+            {
+                return;
+            }
+
+            var screen = ToScreen(at) + by;
+            double x = Math.Clamp(screen.X, EdgeRoom, Math.Max(EdgeRoom, Bounds.Width - EdgeRoom));
+            double y = Math.Clamp(screen.Y, EdgeRoom, Math.Max(EdgeRoom, Bounds.Height - EdgeRoom));
+            HeldAt = ToImage(screen);
+            if (x != screen.X || y != screen.Y)
+            {
+                offset += new Vector(x - screen.X, y - screen.Y);
+            }
+
+            InvalidateVisual();
+            Moved?.Invoke();
+        }
 
         /// <summary>The zoom, screen units a stored pixel, for a test.</summary>
         internal double Zoom => zoom;
@@ -362,13 +414,43 @@ internal sealed class MarkingAPage : UserControl
             if (last is { } was && pinch == 1)
             {
                 var now = e.GetPosition(this);
-                offset += now - was;
                 last = now;
-                InvalidateVisual();
-                Moved?.Invoke();
+                if (HeldAt is not null)
+                {
+                    // Entry 309 section 3.3: while a hole is being moved, a finger moves its circle, not the picture.
+                    DragHeld(now - was);
+                }
+                else
+                {
+                    offset += now - was;
+                    InvalidateVisual();
+                    Moved?.Invoke();
+                }
+
                 e.Handled = true;
             }
         }
+
+        /// <summary>
+        /// Screen units an inch of the target takes at <paramref name="at"/>, from the scale, or null where it is not known. Entry 309 section
+        /// 3.1: each hole's circle is drawn at the bullet's diameter, so a correct circle sits on the edge of its hole.
+        /// </summary>
+        private double? ScreenPerInch(PointD at)
+        {
+            if (session.State.Scale is not { } scale)
+            {
+                return null;
+            }
+
+            var a = scale.ToTarget(at);
+            var dx = scale.ToTarget(new PointD(at.X + 1, at.Y));
+            var dy = scale.ToTarget(new PointD(at.X, at.Y + 1));
+            double inchesPerPixel = (Math.Sqrt(Math.Pow(dx.X - a.X, 2) + Math.Pow(dx.Y - a.Y, 2)) + Math.Sqrt(Math.Pow(dy.X - a.X, 2) + Math.Pow(dy.Y - a.Y, 2))) / 2;
+            return inchesPerPixel > 1e-12 ? zoom / inchesPerPixel : null;
+        }
+
+        /// <summary>A hole's circle's radius on screen: the bullet's where the caliber and scale are known, and the old fixed size otherwise.</summary>
+        internal double HoleRadius(PointD at) => RingInches is { } bullet && ScreenPerInch(at) is { } perInch ? Math.Max(3, bullet / 2 * perInch) : 9;
 
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
@@ -410,9 +492,20 @@ internal sealed class MarkingAPage : UserControl
             foreach (var shot in session.State.Shots.Where(s => s.IsShot))
             {
                 number++;
-                var at = shot.Id == Held ? new Point(Bounds.Width / 2, Bounds.Height / 2) : ToScreen(shot.Image);
+                bool moving = shot.Id == Held && HeldAt is not null;
+                var at = moving ? ToScreen(HeldAt!.Value) : ToScreen(shot.Image);
+                double radius = HoleRadius(moving ? HeldAt!.Value : shot.Image);
                 bool byHand = shot.Provenance == ShotProvenance.Manual;
-                context.DrawEllipse(null, byHand ? added : found, at, 9, 9);
+                if (moving && HeldFrom is { } from)
+                {
+                    // Where it started, dashed, with a dashed line to where it is now.
+                    var ghost = new Pen(Brushes.White, 1.5, new DashStyle([3, 3], 0));
+                    var start = ToScreen(from);
+                    context.DrawEllipse(null, ghost, start, HoleRadius(from), HoleRadius(from));
+                    context.DrawLine(ghost, start, at);
+                }
+
+                context.DrawEllipse(null, byHand ? added : found, at, radius, radius);
                 if (byHand)
                 {
                     context.DrawEllipse(Brushes.LimeGreen, null, at, 2.5, 2.5);
@@ -420,22 +513,22 @@ internal sealed class MarkingAPage : UserControl
                 else
                 {
                     var text = new FormattedText(number.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 12, Brushes.OrangeRed);
-                    context.DrawText(text, new Point(at.X + 10, at.Y - 18));
+                    context.DrawText(text, new Point(at.X + radius + 1, at.Y - radius - 9));
                 }
             }
 
-            // The crosshair, fixed at the middle; its ring the bullet's real size where the scale and caliber are known.
-            var middle = new Point(Bounds.Width / 2, Bounds.Height / 2);
+            // The crosshair, fixed at the middle, or on the center of the hole being moved; its ring the bullet's real size where the scale and
+            // caliber are known.
+            var middle = HeldAt is { } heldAt ? ToScreen(heldAt) : new Point(Bounds.Width / 2, Bounds.Height / 2);
             var cross = new Pen(Brushes.White, 1.5);
             context.DrawLine(cross, new Point(middle.X - 30, middle.Y), new Point(middle.X - 6, middle.Y));
             context.DrawLine(cross, new Point(middle.X + 6, middle.Y), new Point(middle.X + 30, middle.Y));
             context.DrawLine(cross, new Point(middle.X, middle.Y - 30), new Point(middle.X, middle.Y - 6));
             context.DrawLine(cross, new Point(middle.X, middle.Y + 6), new Point(middle.X, middle.Y + 30));
-            if (RingInches is { } bullet && session.State.Scale is { } scale)
+            if (RingInches is not null && ScreenPerInch(Centre) is not null && HeldAt is null)
             {
-                var a = scale.ToTarget(Centre);
-                double pixelsPerInch = 1 / Math.Max(1e-9, Math.Abs(scale.ToTarget(new PointD(Centre.X + 1, Centre.Y)).X - a.X));
-                context.DrawEllipse(null, cross, middle, bullet / 2 * pixelsPerInch * zoom, bullet / 2 * pixelsPerInch * zoom);
+                double ring = HoleRadius(Centre);
+                context.DrawEllipse(null, cross, middle, ring, ring);
             }
         }
     }

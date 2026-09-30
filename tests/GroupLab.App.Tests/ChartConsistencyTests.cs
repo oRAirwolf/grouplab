@@ -23,7 +23,7 @@ public class ChartConsistencyTests
 
     /// <summary>Every chart control, including the ones with no interval to draw.</summary>
     private static readonly string[] EveryChart =
-        ["IntervalChart.cs", "SessionsOverTime.cs", "SpreadStrips.cs", "ShotOrderChart.cs", "VelocityStrip.cs", "CompositePlot.cs"];
+        ["IntervalChart.cs", "SessionsOverTime.cs", "SpreadStrips.cs", "ShotOrderChart.cs", "VelocityStrip.cs", "CompositePlot.cs", "LoadGroups.cs"];
 
     private static string Read(string name) =>
         File.ReadAllText(Path.Combine(TypeScaleTests.AppSource, name));

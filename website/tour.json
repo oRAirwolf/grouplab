@@ -198,7 +198,7 @@
      ],
      [
       "Move this hole",
-      "With the crosshair on a ring, picks the hole up; bring the crosshair to where it belongs and press Put the hole here."
+      "With the crosshair on a ring, picks the hole up; drag its circle, drawn at the bullet's size, onto the hole, the crosshair traveling with it, and press Put the hole here."
      ],
      [
       "Remove this hole",
@@ -900,29 +900,29 @@
    "platform": "mobile",
    "desktopWords": "On the phone only. On a computer, open a scan or a photograph from the marking screen instead.",
    "blurb": "Photograph a GroupLab target with the phone, or choose a photograph, and GroupLab finds the holes and measures the group.",
-   "purpose": "The phone's first screen. Hold the phone square over the sheet and the words at the top of the camera say what to change; it takes the picture itself when everything is right. A photograph already on the phone works too.",
+   "purpose": "The phone's first screen, with the GroupLab mark at the top and grouplab.org and the version at the foot. Hold the phone square over the sheet and the words at the top of the camera say what to change; it takes the picture itself when everything is right. A photograph already on the phone works too.",
    "withoutASheet": "Placing bulls by hand on a target GroupLab did not print is on the desktop only, for now; the phone is for GroupLab's own sheets.",
    "fits": "Its result is the <a href=\"/tour/analysis/\">analysis</a>, kept in <a href=\"/tour/sessions/\">sessions</a>. The sheets come from <a href=\"/tour/targets/\">Targets</a>.",
    "parts": [
     [
      "The caliber and the distance",
-     "Optional, typed before the picture: the caliber sizes the holes, and the distance turns sizes into angles."
+     "One row, remembered from the last target, with Change to type new ones: the caliber sizes the holes, and the distance turns sizes into angles. The first time, Take a picture asks for the caliber in a sheet over the page, then goes on."
     ],
     [
      "Take a picture",
      "Opens the camera, which says what to change and takes the picture itself."
     ],
     [
-     "Choose a photograph",
-     "Opens one already on the phone."
+     "Choose a photo and Print a target",
+     "Side by side: one opens a photograph already on the phone, the other the targets to print. From another app and Paste a picture are beneath them."
     ],
     [
-     "The tip",
-     "Shade the whole sheet or none of it, and hold it down outside the printed area."
+     "Getting started on your phone",
+     "Opens the phone's part of the user guide, with the tips for a good picture folded beneath it."
     ]
    ],
    "steps": [
-    "Type the caliber and the distance if you know them.",
+    "Check the caliber and the distance, or tap Change.",
     "Tap Take a picture and hold the phone square over the sheet until it takes the picture.",
     "Read the result that opens."
    ],

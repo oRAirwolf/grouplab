@@ -85,7 +85,9 @@ internal sealed class BrandMark : Control
                 return cached;
             }
 
-            using var stream = AssetLoader.Open(new Uri($"avares://GroupLab.App/Assets/{file}"));
+            // The phone compiles this file into its own assembly with the files beside it (entry 309 section 1), so the address names
+            // whichever assembly this is.
+            using var stream = AssetLoader.Open(new Uri($"avares://{typeof(BrandMark).Assembly.GetName().Name}/Assets/{file}"));
             var art = Parse(XDocument.Load(stream));
             Cache[file] = art;
             return art;

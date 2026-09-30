@@ -131,7 +131,7 @@ public sealed class ResultView : UserControl
                         session.Load(fixedState);
                         Changed();
                     }
-                });
+                }, units);
             }));
             picture.Children.Add(Screens.Dim("Move, add or remove a hole under a crosshair, with zoom and undo."));
             picture.Children.Add(picturePane);

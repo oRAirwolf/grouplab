@@ -64,6 +64,9 @@ internal sealed class ComparePage : UserControl
                 column.Children.Add(Screens.Dim(footing));
             }
 
+            // Entry 309 section 2: each load's group about its own center at one scale, in its color; a tap stacks them on one center.
+            Groups = new LoadGroups([.. report.Groups.Select(g => new LoadGroup(g.Name, g.Offsets, g.Centre, g.MeanRadius.Value))], Size, cell: 150, touch: Screens.Touch);
+            column.Children.Add(Screens.Card(Groups));
             column.Children.Add(new ContentControl());
             column.Children.Add(new ContentControl());
             var list = new StackPanel { Spacing = 6 };
@@ -73,7 +76,7 @@ internal sealed class ComparePage : UserControl
             }
 
             column.Children.Add(Screens.Card(list));
-            var verdict = new StackPanel { Spacing = 6, Children = { Screens.Heading("What these shots can tell"), Screens.Line(report.Headline) } };
+            var verdict = new StackPanel { Spacing = 6, Children = { Screens.Heading("What these shots can tell"), LoadGroups.Key([.. report.Groups.Select(g => g.Name)]), Screens.Line(report.Headline) } };
             foreach (string line in report.Explanation)
             {
                 verdict.Children.Add(Screens.Dim(line));
@@ -124,6 +127,7 @@ internal sealed class ComparePage : UserControl
         }
 
         var chart = Chart(report, figure, Size);
+        chart.RowsAreLoads = true;
         int at = column.Children.IndexOf(column.Children.OfType<ContentControl>().First());
         column.Children[at] = new ContentControl { Content = chips };
         // Extreme spread has no range here, so its heading does not promise one (entry 295 section 1.4).
@@ -147,6 +151,9 @@ internal sealed class ComparePage : UserControl
         chart.Says = LoadComparison.ChartSays(report, figure, chart.HasRanges);
         return chart;
     }
+
+    /// <summary>The card of each load's group, for the tests.</summary>
+    internal LoadGroups? Groups { get; }
 
     /// <summary>The figures the chips offer, in their order.</summary>
     internal static readonly string[] Figures = ["Mean radius", "Extreme spread", "CEP 90"];

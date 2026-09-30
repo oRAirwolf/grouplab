@@ -567,12 +567,20 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 Marks.Line(context, now ? Marks.NeedsPerson : Marks.Faint, c, ToControl(bull.Image), now ? Tokens.MarkCoreWidth : 1, new DashStyle([4, 4], 0));
             }
 
-            Marks.Ring(context, colour, c, radius, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, shot.Exclusion is null ? null : Marks.Dashed);
-            if (ExpectedRadius(state, at, shot.MeasuredDiameterInches) is { } expected)
+            if (dragging == shot.Id)
             {
-                // Entry 76 section 4: the calibre's hole beside the measured one, faint and dashed, so the comparison behind a size warning is
-                // visible rather than only described.
-                Marks.Ring(context, Marks.Faint, c, expected, dash: Marks.Dashed);
+                // Entry 309 section 3.4: a hole being dragged leaves a dashed ghost where it was, with a dashed line to where it is going.
+                var from = ToControl(shot.Image);
+                Marks.Ring(context, Marks.Faint, from, ImpactRadius(state, shot.Image, shot.MeasuredDiameterInches), 1, Marks.Dashed);
+                Marks.Line(context, Marks.Faint, from, c, 1, Marks.Dashed);
+            }
+
+            Marks.Ring(context, colour, c, radius, selected ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth, shot.Exclusion is null ? null : Marks.Dashed);
+            if (MeasuredRadius(state, at, shot.MeasuredDiameterInches) is { } measured)
+            {
+                // Entry 76 section 4, turned round by entry 309 section 3.4: the size the detector measured beside the calibre's circle, faint
+                // and dashed, so the comparison behind a size warning is visible rather than only described.
+                Marks.Ring(context, Marks.Faint, c, measured, dash: Marks.Dashed);
             }
             if (DetectorFlags.TryGetValue(shot.Id, out bool tentative))
             {
@@ -605,22 +613,23 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     }
 
     /// <summary>
-    /// An impact's ring radius on screen, in sheet units so it scales with the image. A detected shot is drawn at the diameter the detector
-    /// measured, NOTES-FROM-PLANNING.md entry 76 section 4, the most diagnostic number detection produces. Otherwise it is the bullet's
-    /// diameter once the calibre and the scale are known (entry 42 section 5), and a fixed ring before then. Never so small it cannot be seen.
+    /// An impact's ring radius on screen, in sheet units so it scales with the image. NOTES-FROM-PLANNING.md entry 309 section 3.4, Alan: the
+    /// circle should match the caliber's diameter, so a correct circle sits on the edge of the hole. So it is the bullet's diameter once the
+    /// calibre and the scale are known (entry 42 section 5); before a calibre, a detected shot is drawn at the diameter the detector measured
+    /// (entry 76 section 4), and anything else at a fixed ring. Never so small it cannot be seen.
     /// </summary>
-    private double ImpactRadius(MarkingState state, PointD image, double? measuredInches) => state.Scale is { } scale && (measuredInches ?? state.Calibre?.DiameterInches) is { } diameter
+    private double ImpactRadius(MarkingState state, PointD image, double? measuredInches) => state.Scale is { } scale && (state.Calibre?.DiameterInches ?? measuredInches) is { } diameter
         ? Math.Max(MinimumImpactRadius, diameter / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
         : MarkRadius;
 
-    /// <summary>The calibre's hole on screen beside a measured one, when there are both; null otherwise, where the impact ring already is the calibre.</summary>
-    private double? ExpectedRadius(MarkingState state, PointD image, double? measuredInches) =>
-        measuredInches is not null && state.Calibre is { } calibre && state.Scale is { } scale
-            ? Math.Max(MinimumImpactRadius, calibre.DiameterInches / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
+    /// <summary>The size the detector measured on screen beside the calibre's circle, when there are both; null otherwise.</summary>
+    private double? MeasuredRadius(MarkingState state, PointD image, double? measuredInches) =>
+        measuredInches is { } measured && state.Calibre is not null && state.Scale is { } scale
+            ? Math.Max(MinimumImpactRadius, measured / 2 * HoleSize.PixelsPerInch(scale, image) * zoom)
             : null;
 
-    /// <summary>The drawn diameters in inches of a shot's impact ring, its expected calibre ring when there is one, and its alert ring when it is flagged; for the tests.</summary>
-    internal (double Impact, double? Expected, double? Oversize) RingDiametersInches(int shotId)
+    /// <summary>The drawn diameters in inches of a shot's impact ring, the measured ring beside it when there is one, and its alert ring when it is flagged; for the tests.</summary>
+    internal (double Impact, double? Measured, double? Oversize) RingDiametersInches(int shotId)
     {
         var state = Session?.State;
         if (state?.Shots.FirstOrDefault(s => s.Id == shotId) is not { } shot || state.Scale is not { } scale)
@@ -630,9 +639,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
         double inchesPerScreenPixel = 1 / (HoleSize.PixelsPerInch(scale, shot.Image) * zoom);
         double impact = ImpactRadius(state, shot.Image, shot.MeasuredDiameterInches);
-        double? expected = ExpectedRadius(state, shot.Image, shot.MeasuredDiameterInches);
+        double? measured = MeasuredRadius(state, shot.Image, shot.MeasuredDiameterInches);
         double? oversize = DetectorFlags.ContainsKey(shotId) ? impact + AlertRingGap : null;
-        return (2 * impact * inchesPerScreenPixel, expected * 2 * inchesPerScreenPixel, oversize * 2 * inchesPerScreenPixel);
+        return (2 * impact * inchesPerScreenPixel, measured * 2 * inchesPerScreenPixel, oversize * 2 * inchesPerScreenPixel);
     }
 
     /// <summary>A scale reference's segments and a filled circle at every end.</summary>

@@ -63,6 +63,15 @@ internal sealed class IntervalChart : Control
     /// </summary>
     public string? Says { get; set; }
 
+    /// <summary>
+    /// Entry 309 section 2.3: the rows are loads, each named after its marker in its load's color (<see cref="LoadGroups"/>), as on the
+    /// plots above; the interval stays teal and the dot the impact's, as on every chart.
+    /// </summary>
+    public bool RowsAreLoads { get; set; }
+
+    /// <summary>The room a load's marker takes before its name.</summary>
+    private double Indent => RowsAreLoads ? 16 : 0;
+
     public IntervalChart()
     {
         ClipToBounds = true;
@@ -130,8 +139,8 @@ internal sealed class IntervalChart : Control
         double y = 0;
         foreach (var row in Rows)
         {
-            var name = NameText(row.Label, width, null);
-            var nameBox = new Rect(0, y, Math.Min(width, name.WidthIncludingTrailingWhitespace), name.Height);
+            var name = NameText(row.Label, width - Indent, null);
+            var nameBox = new Rect(Indent, y, Math.Min(width - Indent, name.WidthIncludingTrailingWhitespace), name.Height);
             y += name.Height + NameGap;
             var value = ValueText(row.Value, null);
             double line = Math.Max(2 * Whisker + 2, beside ? value.Height : 0);
@@ -188,7 +197,12 @@ internal sealed class IntervalChart : Control
             double At(double value) => left + (((value - lo) / (hi - lo)) * (right - left));
             double y = place.Bar.Center.Y;
 
-            context.DrawText(NameText(row.Label, Bounds.Width, dim), place.Name.TopLeft);
+            context.DrawText(NameText(row.Label, Bounds.Width - Indent, dim), place.Name.TopLeft);
+            if (RowsAreLoads)
+            {
+                var load = LoadGroups.Brush(i, ActualThemeVariant);
+                GroupDots.Marker(context, i, load, new Pen(load, 1.5), new Point(Indent / 2, place.Name.Top + (TextSize * 0.7)), 4.5);
+            }
 
             // The interval first and heavier than the dot, because the interval is the thing that decides whether a comparison means
             // anything and the dot is only where the measurement happened to land.

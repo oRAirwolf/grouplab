@@ -30,16 +30,20 @@ internal sealed class FixHolesPage : UserControl
     private readonly Button undo = Screens.Choice("Undo", () => { });
     private readonly Button done = Screens.Primary("Done", () => { });
     private readonly Border ask;
+    private readonly TextBlock trueSize = Screens.Dim("");
+    private readonly UnitSettings units;
     private int? under;
 
     /// <param name="state">The result's marking; it is copied, so nothing reaches the result until Done or a yes to keeping the changes.</param>
     /// <param name="turns">The quarter turns the result shows the picture upright by.</param>
     /// <param name="finished">Called once with the corrected marking, or null where the changes were thrown away or none were made.</param>
-    public FixHolesPage(MarkingState state, int turns, Action<MarkingState?> finished)
+    /// <param name="units">The person's units, for how far a hole being moved has gone.</param>
+    public FixHolesPage(MarkingState state, int turns, Action<MarkingState?> finished, UnitSettings? units = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         WorkInProgress.HoldWhileShown(this);
         this.finished = finished;
+        this.units = units ?? UnitSettings.Imperial;
         session = new MarkingSession(state);
         viewer = new MarkingAPage.Viewer(new Bitmap(state.ImagePath!), session, [], turns)
         {
@@ -68,6 +72,7 @@ internal sealed class FixHolesPage : UserControl
         column.Children.Add(Screens.Title("Fix holes"));
         column.Children.Add(words);
         column.Children.Add(viewer);
+        column.Children.Add(trueSize);
         column.Children.Add(main);
         column.Children.Add(pair);
         column.Children.Add(closing);
@@ -105,11 +110,16 @@ internal sealed class FixHolesPage : UserControl
     private void Show()
     {
         under = viewer.Held is null ? viewer.MarkUnderCrosshair(Reach) : null;
+        // Entry 309 section 3.1: the circles are the bullet's size where the caliber is known; where it is not, a line says what would make them so.
+        trueSize.Text = viewer.RingInches is null ? "Set the caliber on the result and each circle is drawn at the bullet's true size." : "";
+        trueSize.IsVisible = trueSize.Text.Length > 0;
         if (viewer.Held is { } held)
         {
-            words.Text = $"Bring the crosshair to the center of the hole's mark, then put it there. Hole {Number(held)} follows the crosshair.";
+            // Entry 309 section 3.3: the circle is dragged itself, the crosshair on its center, with how far it has gone.
+            string gone = viewer.HeldMovedInches is { } inches ? $" Moved {units.Length(inches)}." : "";
+            words.Text = $"Drag hole {Number(held)}'s circle with your finger until it sits on the hole's edge, then put it there.{gone}";
             main.Content = Label("Put the hole here");
-            move.Content = Label("Cancel the move");
+            move.Content = Label("Cancel");
             move.IsEnabled = true;
             remove.IsEnabled = false;
         }
@@ -138,8 +148,9 @@ internal sealed class FixHolesPage : UserControl
     {
         if (viewer.Held is { } held)
         {
+            var to = viewer.Centre;
             viewer.Held = null;
-            session.MoveShot(held, viewer.Centre);
+            session.MoveShot(held, to);
         }
         else if (under is null)
         {

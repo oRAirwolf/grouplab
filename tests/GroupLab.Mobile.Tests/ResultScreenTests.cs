@@ -139,13 +139,23 @@ public class ResultScreenTests
         Dispatcher.UIThread.RunJobs();
         Assert.Equal(25, Shots());
 
-        // Move: pick up the hole under the crosshair, pan, put it down; Remove another; zoom in; Done measures again.
+        // Move: pick up the hole under the crosshair, drag its circle (entry 309 section 3.3), put it down; Remove another; zoom in; Done
+        // measures again.
         page = Open();
         var shots = page.State.Shots.Where(s => s.IsShot).ToList();
         page.Picture.ZoomBy(4);
         page.Picture.CentreOn(shots[0].Image);
+
+        // Entry 309 section 3.1: each circle is the bullet's size, so it grows with the zoom rather than staying a fixed mark.
+        double radius = page.Picture.HoleRadius(shots[0].Image);
+        Assert.NotEqual(9, radius);
+        page.Picture.ZoomBy(1.5);
+        page.Picture.CentreOn(shots[0].Image);
+        Assert.InRange(page.Picture.HoleRadius(shots[0].Image) / radius, 1.49, 1.51);
         page.Move();
-        page.Picture.Pan(new Avalonia.Vector(-12, 0));
+        page.Picture.DragHeld(new Avalonia.Vector(12, 0));
+        Assert.Equal(page.Picture.HeldAt, page.Picture.Centre);
+        Assert.True(page.Picture.HeldMovedInches > 0);
         page.Press();
         var moved = page.State.Shots.Single(s => s.Id == shots[0].Id).Image;
         Assert.True(moved.X - shots[0].Image.X > 1, $"moved from {shots[0].Image} to {moved}");

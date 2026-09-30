@@ -37,6 +37,7 @@
     "src/GroupLab.App/GroupLab.App.csproj",
     "src/GroupLab.App/HitGraphs.cs",
     "src/GroupLab.App/IntervalChart.cs",
+    "src/GroupLab.App/LoadGroups.cs",
     "src/GroupLab.App/MainWindow.Ballistics.cs",
     "src/GroupLab.App/MainWindow.BallisticsLayout.cs",
     "src/GroupLab.App/MainWindow.Chronograph.cs",

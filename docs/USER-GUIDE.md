@@ -361,7 +361,11 @@ GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB
 [download page](https://grouplab.org/download/), or the Google Play internal test if you are invited; remove one before installing the
 other, because they are signed with different keys. It uses the same engine as the computer, so the same picture gives the same numbers.
 
-**Capture.** Type the caliber and the distance, then **Take a picture**. The camera fills the screen with the instruction at the top, the
+**Capture** is the first screen: the GroupLab mark, one row with the caliber and distance remembered from the last target (**Change**
+types new ones), **Take a picture**, **Choose a photo** and **Print a target** side by side, with **From another app** and **Paste a
+picture** beneath, a **Getting started on your phone** card that opens this section, and grouplab.org and the version at the foot. It
+does not ask every time: only the first time, with no caliber set yet, **Take a picture** or **Choose a photo** asks for it in a sheet
+over the page and then goes straight on; the distance may stay empty if you do not know it. **Take a picture**: the camera fills the screen with the instruction at the top, the
 checks beneath it (focus, light, the tags and codes read) and a bar that forecasts the picture's quality. In **Guided** it takes the
 picture by itself once everything holds; in **Manual** you press the shutter when you choose. Fill the frame with the sheet: GroupLab
 says **Move back** only when some of the printing runs out of the picture, **Move closer** when the sheet's codes would be too small to
@@ -371,7 +375,7 @@ take you to either in one press, the one showing in the highlight color, and the
 is read, the line under it names the step it is on. When a picture's square codes cannot be read,
 GroupLab says which sheet it looks like, for you to confirm or choose another.
 
-**A photograph from any photo app.** **Choose a photograph** opens Android's photo picker, which shows the photographs in your photo apps,
+**A photograph from any photo app.** **Choose a photo** opens Android's photo picker, which shows the photographs in your photo apps,
 those kept only in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone without one
 offers the apps instead. **From another app** lists every app that offers pictures by name: Google Photos, Samsung Gallery, your phone
 maker's own gallery, Drive, OneDrive, Dropbox and Files. A picture shared into GroupLab from any app, or opened or edited with it, is read
@@ -379,7 +383,7 @@ the same way, and several shared at once are read one after another as a set, on
 downloaded first, with a line saying which app it is coming from and a **Cancel**; the phone has to be online for that. GroupLab always
 reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
 
-**On iPhone and iPad** (being built, and not yet installable): **Choose a photograph** opens Photos, iCloud Photos included, with no
+**On iPhone and iPad** (being built, and not yet installable): **Choose a photo** opens Photos, iCloud Photos included, with no
 question about access, and **From another app** opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox. iOS lets no
 app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
 works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis.
@@ -402,7 +406,12 @@ picture itself: mostly what GroupLab corrected, sometimes what would help next t
 **The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
 number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole, and is for looking
 only. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
-then **Add a hole here**, or **Move this hole** and **Put the hole here**, or **Remove this hole**, with **Undo** for each. **Done** takes
+then **Add a hole here**, or **Remove this hole**, with **Undo** for each. Each hole's circle is drawn at your bullet's diameter, so a
+correct circle sits on the edge of its hole; with no caliber set, a line says that setting it makes the circles true size. **Move this
+hole** leaves the circle where it was: drag the circle itself with your finger, the crosshair on its center, while a dashed ghost stays
+where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge; **Put the hole here** drops
+it and **Cancel** puts it back. On the computer, every hole's circle is the caliber's size too once one is set, with the size GroupLab
+measured dashed beside it, and a hole dragged with the select tool leaves the same dashed ghost. **Done** takes
 the changes back to the result, which measures again; leaving any other way asks whether to keep them. From the result: the bulls you fired at, Shots Needed to Zero, Ballistics with the group carried in, sharing
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result.
