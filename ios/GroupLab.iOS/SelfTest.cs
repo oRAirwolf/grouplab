@@ -75,6 +75,9 @@ internal static class SelfTest
         store.SaveErrorChoice(ErrorReportChoice.Never);
         store.SaveSurveyChoice(GroupLab.Core.Survey.SurveyChoice.No);
         store.SaveUnits(UnitSettings.Imperial);
+
+        // Entry 294 section 1: the first run's "Is your scope in mil or MOA?", answered MOA with inches, as Imperial already is.
+        store.SaveScopeAnswer(ScopeAnswer.Moa, GroupLab.Core.Marking.LinearUnit.Inch);
         store.SaveShotSetup(SelfTestChecks.SampleCalibre, SelfTestChecks.SampleDistanceInches);
     }
 
@@ -161,6 +164,7 @@ internal static class SelfTest
 
             // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
             checks.Add(await OnScreen(() => Shell.Current!.ShowIdle(), () => Find<IdleScreen>() is not null, "90-idle", "idle screen", words: false));
+            checks.Add(await IdleLayers());
         }
         catch (Exception e) when (e is not OutOfMemoryException)
         {
@@ -204,6 +208,36 @@ internal static class SelfTest
             return null;
         });
     }
+
+    /// <summary>
+    /// Entry 290 section 2 item 6: what lies behind the idle screen, from the Shell up to the window, with each one's background and
+    /// padding, so a strip left light behind the status bar or the home indicator can be traced; ios/selftest.py judges the screenshot.
+    /// </summary>
+    private static Task<SelfTestCheck> IdleLayers() => OnUi(() =>
+    {
+        var check = new SelfTestCheck("idle screen layers");
+        var parts = new List<string>();
+        for (Avalonia.Visual? v = Shell.Current; v is not null; v = v.GetVisualParent())
+        {
+            string background = v switch
+            {
+                Avalonia.Controls.Primitives.TemplatedControl t => t.Background?.ToString() ?? "none",
+                Panel panel => panel.Background?.ToString() ?? "none",
+                Border border => border.Background?.ToString() ?? "none",
+                _ => "-",
+            };
+            string padding = v is Decorator d ? d.Padding.ToString() : v is Avalonia.Controls.Primitives.TemplatedControl tc ? tc.Padding.ToString() : "-";
+            parts.Add($"{v.GetType().Name} {v.Bounds.Width:0}x{v.Bounds.Height:0} at {v.Bounds.X:0},{v.Bounds.Y:0}, background {background}, padding {padding}");
+        }
+
+        var window = UIKit.UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIKit.UIWindowScene>().SelectMany(w => w.Windows).FirstOrDefault();
+        var root = window?.RootViewController?.View;
+        parts.Add($"UIWindow {window?.Frame.Width:0}x{window?.Frame.Height:0}, background {window?.BackgroundColor?.ToString() ?? "none"}");
+        parts.Add($"{root?.GetType().Name} {root?.Frame.Width:0}x{root?.Frame.Height:0} at {root?.Frame.Y:0}, background {root?.BackgroundColor?.ToString() ?? "none"}, safe area {root?.SafeAreaInsets.Top:0} top {root?.SafeAreaInsets.Bottom:0} bottom");
+        check.Passed = true;
+        check.Detail = string.Join(" | ", parts);
+        return check;
+    });
 
     /// <summary>Shows something, checks it is there, and waits while the workflow photographs it.</summary>
     private static async Task<SelfTestCheck> OnScreen(Action show, Func<bool> shown, string picture, string name, bool words = true)
