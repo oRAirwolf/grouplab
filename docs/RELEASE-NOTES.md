@@ -568,7 +568,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - Nothing changes on the desktop: the code that draws the group plot and saves a session is now shared with the coming Android app, which can photograph a target and show its result.
 - A hardware survey and a built-in benchmark are ready but switched off; GroupLab will ask once, and send nothing unless you say yes, when the project's side is installed.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.108)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
