@@ -40,6 +40,35 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 310: TestFlight's two groups on the same build
+
+- **Built:** `scripts/testflight.py`, run by `.github/workflows/testflight.yml` after every nightly (waiting up to 30 minutes for Apple
+  to process the upload) and at a quarter past and a quarter to each hour, on a Linux runner. Each run is one step and can be repeated:
+  the newest processed build into Public Beta with that nightly's "What you will notice" lines as What to Test, a Beta App Review
+  submission where Apple asks for one, then GroupLab Team given the newest build Public Beta can install. Its self-test holds eleven
+  cases against a made-up App Store Connect; `TestFlightTests` runs it and holds the workflow to a Linux runner.
+- **Section 5:** the application already carried `ITSAppUsesNonExemptEncryption = false`; the share extension did not, and does now
+  (c5a359ad), with the nightly reading the key from both bundles in the signed package. Where Apple still asks, the step answers it.
+- **Not proven against Apple yet:** the groups do not exist until Alan makes them (request 59, rewritten to entry 310's names). Until
+  then each run says so in one line and does nothing. The site's "Join the iPhone and iPad beta" waits for his public link.
+- **What Apple does not allow:** a waiting beta review cannot be withdrawn through the API, so a newer build waits for the older
+  review and follows it; both groups stay together throughout. Nothing is ever taken out of a group.
+
+## Request 55: the first signed iPhone build, and the Mac build notarized
+
+- **iOS:** nightly 134 (2026-09-30 07:00 UTC) was the first to sign with the distribution certificate, carry the share extension with
+  its own profile, and upload to TestFlight; the step passed. Nightly 133's iOS job had failed only because it read the secrets at
+  05:23 UTC, while Alan was still setting them (one of eight set).
+- **Mac, first attempt (nightly 134):** both packages failed at signing: codesign counts every file in `Contents/MacOS` as code and
+  only the native files had been signed, so the main program failed on the first unsigned .NET library. Every file there is now
+  signed first and the program with the bundle (6dc18259).
+- **Mac, proven by hand before the next nightly** (package.yml can now be run by hand; it publishes nothing): arm64 was signed,
+  accepted by Apple's notary service, stapled, and Gatekeeper said "accepted, source=Notarized Developer ID". x64 was signed the same,
+  but notarytool's `--wait` stopped on one status request that timed out while Apple was still working. The build now asks again
+  every 30 seconds for up to 45 minutes (50fd9253); the second run used exactly that, 64 answers of "In Progress" over about 32
+  minutes, then Accepted, and Gatekeeper accepted it too. The Mac package job may take 90 minutes instead of 60.
+- **Also:** a refused notarization prints Apple's own reasons in the build log (8670092a).
+
 ## Entry 291 sections 2, 3 and 7.5: the result screen and the camera's words
 
 - **3.1:** naming an off-square picture from its codes took 5.1, 13.7, 4.2 and 30.0 s on the Fold 7: the whole picture was read at four

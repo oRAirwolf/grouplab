@@ -34,7 +34,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 12.** Most urgent: **59**, GroupLab on your iPad mini through TestFlight (ten minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 12.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -135,20 +135,24 @@ At the start of a run, the count of open requests in this file is printed and no
 
 ---
 
-## 59. GroupLab on your iPad mini through TestFlight, about ten minutes (entry 290, request 55)
+## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
-**Opened 2026-09-30.** **Why:** nightly 134 is the first iPhone and iPad build signed and sent to TestFlight (07:00 UTC), so GroupLab can now
-be installed on a real device. Apple takes from a few minutes to about half an hour to process a build, and emails you when it is ready.
+**Opened 2026-09-30.** **Why:** nightly 134 is the first iPhone and iPad build signed and sent to TestFlight (07:00 UTC). From now on the
+testflight workflow puts each new build into your two groups itself and keeps them on the same build, as you asked (entry 310): into Public
+Beta first, and into GroupLab Team once Public Beta's testers can install it. It needs the two groups to exist, by these exact names.
 
-1. In App Store Connect (https://appstoreconnect.apple.com), open Apps, GroupLab, then the TestFlight tab. Build 134 should be listed
-   under iOS builds. If it says "Missing Compliance", answer that GroupLab uses no encryption beyond what the system provides.
-2. Under Internal Testing, add a group (any name, for example "Alan"), add yourself to it, and add build 134 to the group. Tick
-   "Enable automatic distribution" so every later nightly reaches you with no further steps.
-3. On the iPad mini, install Apple's TestFlight app from the App Store, signed in with the same Apple account, then open the invitation
-   (the email, or the TestFlight app itself) and install GroupLab.
+1. In App Store Connect (https://appstoreconnect.apple.com), Apps, GroupLab, TestFlight. Under Internal Testing, add a group named exactly
+   **GroupLab Team**, add yourself, and leave "Enable automatic distribution" **off** (the workflow distributes, so both groups move together).
+2. Under External Testing, add a group named exactly **Public Beta**. Fill in Test Information first: a feedback email, marketing URL
+   https://grouplab.org, privacy policy https://grouplab.org/research/what-grouplab-sends/, a review contact, and "sign-in not required".
+   Then turn the public link on and send the link to planning, which adds "Join the iPhone and iPad beta" to the site and the README.
+3. Unholy and Fenix: in Users and Access, invite each with the Marketing role, limited to the GroupLab app, without access to reports.
+   Once they accept, add them to GroupLab Team. Their addresses stay with you; nothing here records them.
+4. On the iPad mini, install Apple's TestFlight app from the App Store, signed in with the same Apple account, and install GroupLab from the
+   invitation. The first build reaches both groups after Apple's first beta review, usually within a day; later ones often in minutes.
 
-**A good answer:** "GroupLab 134 is on the iPad" and whether it opened. What to try once it is there is the first TestFlight sitting's
-list in `docs/IOS-PLAN.md`, which comes as its own request when you have the time.
+**A good answer:** "the groups are made", the public link, and later "GroupLab is on the iPad" and whether it opened. The first TestFlight
+sitting's list in `docs/IOS-PLAN.md` comes as its own request when you have the time.
 
 ## 58. Store-bought targets for the detector, whenever suits you, about ten minutes a target (entry 308)
 

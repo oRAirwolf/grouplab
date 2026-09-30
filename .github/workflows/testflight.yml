@@ -1,0 +1,47 @@
+name: testflight
+
+# NOTES-FROM-PLANNING.md entry 310: TestFlight's GroupLab Team and Public Beta always on the same build. The nightly's iOS job uploads the
+# build; this moves it on, a step at a time, with scripts/testflight.py: into Public Beta and submitted for Beta App Review, then into
+# GroupLab Team once Public Beta's testers can install it. After every nightly it waits up to 30 minutes for Apple to finish processing the
+# upload, on a small Linux runner rather than a Mac; every half hour it looks again, so an approval reaches the team within half an hour.
+# It never fails for a missing group or key: it says so in the summary and does nothing.
+on:
+  workflow_run:
+    workflows: ["nightly"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "15,45 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One at a time, and a run is never cut short: a half-finished step is picked up by the next run anyway, but two at once could submit twice.
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+jobs:
+  step:
+    name: TestFlight groups on the same build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: The token maker
+        run: python -m pip install --quiet --disable-pip-version-check "pyjwt[crypto]==2.10.1"
+
+      - name: One step
+        env:
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: python scripts/testflight.py --run --wait-minutes ${{ github.event_name == 'workflow_run' && '30' || '0' }}

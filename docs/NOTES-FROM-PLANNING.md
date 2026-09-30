@@ -24,6 +24,52 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 310: TestFlight, the team and the public beta always on the same build
+
+**Status: built 2026-09-30; section 5 done (c5a359ad); proven against Apple once Alan's two groups exist (request 59); the beta link on the site waits for his public link.** The testflight workflow (after each nightly and every half hour, on Linux) runs scripts/testflight.py: the newest processed build goes to Public Beta with that nightly's notes as What to Test and is submitted for Beta App Review; GroupLab Team gets the newest build Public Beta can install, so neither is ahead; a rejection moves nothing and is said; a missing group or key does nothing and says so. Nothing is ever taken out of a group. Apple offers no way to withdraw a waiting submission, so a newer build waits for the older review and follows it.
+
+From planning, 2026-09-30, for Alan.
+
+## What Alan decided
+
+1. "I want to give unholy and fenix app store connect team rights." Alan is collecting their Apple ID emails and adds them himself in
+   Users and Access; planning suggested the Marketing role, limited to the GroupLab app, without access to reports. Once they accept, they
+   go in the internal group. Code never handles their emails; do not write them into any file.
+2. "I would also like to keep the external testing version up to date with the internal testing version. They should always be on the
+   same version."
+
+## The groups (Alan creates them in App Store Connect)
+
+- Internal: **GroupLab Team** (Alan, then Unholy and Fenix). Automatic distribution **off**, because the nightly distributes (below).
+- External: **Public Beta**, with the public link on, once Alan has filled in Test Information (feedback email, marketing URL
+  https://grouplab.org, privacy policy https://grouplab.org/research/what-grouplab-sends/, review contact, no sign-in).
+
+## What Code builds: one step at the end of the nightly's iOS job
+
+Using the App Store Connect API key already in the secrets:
+
+1. Wait for the uploaded build to finish processing (poll in minutes, with a time limit; the job may hand off to a small follow-up workflow
+   rather than hold a Mac runner).
+2. Add the same build to **Public Beta** and submit it for Beta App Review when Apple requires it.
+3. **Lockstep, as Alan asked:** the build is added to **GroupLab Team** only once it is available to Public Beta: at once when Apple
+   needs no review, or when the review is approved. Both groups therefore always carry the same build. A later build that arrives while
+   one is waiting supersedes it (submit the newest, withdraw the older submission where the API allows).
+4. If a review is rejected, nothing moves: both groups stay on the last approved build, the run summary says why, and a line goes in
+   for-alan.md. Never move one group ahead of the other.
+5. Add `ITSAppUsesNonExemptEncryption = false` to the iOS Info.plist so builds do not wait on the export compliance question.
+6. Look the groups up by name (GroupLab Team, Public Beta); if either does not exist yet, skip this step with a clear line in the summary,
+   so the nightly never fails for it.
+7. Record each nightly's TestFlight state (build number, review status, both groups' current build) in the run summary.
+
+## After Alan sends the public link
+
+Add "Join the iPhone and iPad beta" with that link to the download page, the README and the guide (rule c), next to GroupLab Dev for
+Android, with one honest line: builds reach testers after Apple's check, usually within minutes, sometimes a day.
+
+## Order
+
+After the current iOS work, before the deadline if it fits: it completes entry 290's TestFlight path.
+
 ## 2026-09-30, entry 303: mil bulls only as a designer option, and the self-update worked
 
 **Status: done 2026-09-30.** 1: no new built-in sheets; the desktop designer takes a bull's size in mil or MOA at the sheet's distance as well as inches (the phone has no grid designer). 2: GroupLab Dev updated itself on the Fold 7 without adb, after a quick Play Protect scan, recorded in ANDROID.md and the guide. 3: request 56 now says to print and add the Scanner check on the computer. 4: the drafted Discord reply is gone from for-alan.md.
