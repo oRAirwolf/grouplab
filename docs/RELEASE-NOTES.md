@@ -12,6 +12,27 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.131
+
+**2026-09-30**, commit `dfb6bc5`. Nightly.
+
+**Under the hood**
+
+- The iPhone and iPad build loads its project files again after the signing change.
+- When the Apple secrets are set, the iPhone and iPad test build will be signed with its share sheet entry included.
+- The black idle screen now reaches every edge of an iPhone or iPad, behind the clock and the home bar too.
+- The iPhone and iPad test run answers the scope question first and reports what shows behind the idle screen.
+- The iPhone and iPad test run now checks sharing, printing, pasting a picture and the black idle screen.
+- The iPhone and iPad test run now opens GroupLab's share address the way the share sheet does.
+- The iPhone and iPad test run now checks that a picture opened in GroupLab is read to the end.
+- The iPhone and iPad application now carries its share sheet entry inside it, ready for the first test build.
+- The guide explains that on iPhone and iPad a Google Photos picture is shared into GroupLab.
+- On iPhone and iPad a photograph can be chosen from Photos or Files, or shared into GroupLab from Google Photos and any other app.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.131)
+
+---
+
 ## 0.2.0-nightly.130
 
 **2026-09-30**, commit `1bafd04`. Nightly.
