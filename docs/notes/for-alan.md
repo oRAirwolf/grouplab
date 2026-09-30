@@ -36,7 +36,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 14.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 13.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -165,6 +165,8 @@ set are reused. At developer.apple.com, Certificates, Identifiers & Profiles:
 
 ## 60. The iPad on a cable to this computer, like adb for Android, about fifteen minutes, whenever suits (entries 311 and 315)
 
+**Answered 2026-09-30: done, by Code from the Windows shell with Alan tapping Trust and turning on Developer Mode.** The iPad is paired over USB on Apple's own driver and answers (iPad14,2, iPadOS 27.0.1), with Developer Mode on. After the iPad restarts, re-plug the cable. Notes below.
+
 **Opened 2026-09-30.** **Why:** with this I can read GroupLab's own log live and copy its folder from the iPad over USB, the way adb works
 for the Fold, instead of asking you for screenshots. Only GroupLab is read: never another app, a notification or anything else on the
 iPad. The tool is pymobiledevice3, a Python program.
@@ -216,6 +218,9 @@ iPad. The tool is pymobiledevice3, a Python program.
   iPad only when it arrives, not when the service starts. (7) The step 5 remove-and-rescan again: this time the iPad did not come
   back; the port shows two "Unknown USB Device (Device Descriptor Request Failed)". (8) One more rescan: no change. Needs a replug.
   Lesson: after the iPad restarts, re-plug the cable rather than restart the service or remove the device.
+- *Replugged, 12:40 UTC:* no Trust prompt (the pair record held); `lockdown info` answers and `amfi developer-mode-status` reads
+  true. Request 60 is done. For entry 315, iPadOS 17 and later reach developer services through a tunnel
+  (`pymobiledevice3 lockdown start-tunnel`, elevated), set up when that work starts.
 
 ## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
