@@ -508,7 +508,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - The consent record shipped with the sample now covers what Alan passes on from his testers, and names Unholy for the scan he gave.
 - A target sent to the project now carries every part of the photograph's quality score, so the scoring can be tuned from real photographs; sending itself is still switched off.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.100)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
