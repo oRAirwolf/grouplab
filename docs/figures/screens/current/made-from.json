@@ -1,9 +1,9 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 132,
+  "afterNightly": 134,
   "screens": {
-    "analysis": "1002dcfae1d27a1aa3b9d7fbfe3593624fe11062dffc278dd7ac658c856a9bdf",
-    "analysis-open": "4b661a5a4471ae35b45a8a9544906f3b67ce7e7ac382312b0d7713a8c18e83ba",
+    "analysis": "e00fd5d59d3e7cde246eef622bba74ec6fde56ea3887fbc6c7ad700c1e71eb22",
+    "analysis-open": "dfcb176c7e224166a19656390e12dbb7bab269a15fddf537ea7d5b2fa2fba5af",
     "ballistics": "0bad136b2b0a229c6557e1a8840dc98d2e510410e43737247ad9015b8a55c657",
     "ballistics-hit": "17609a93bd4975d4c362d83dd9d9feac4c3fcb758feef703708e2b153ad5bb4e",
     "compare": "2aa242eb08b26d4136a2feb500523ec77ef7e0526dd54365f05276555725fc63",
