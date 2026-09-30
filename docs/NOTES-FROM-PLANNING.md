@@ -24,6 +24,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 306: notarize the Mac build (Alan: "Mac notarization: yes")
+
+**Status: done 2026-09-30 but the xattr instructions, which stay until a notarized nightly is seen accepted; the Mac steps are in request 55.** The Mac packages are signed inside out with the hardened runtime, notarized (the build fails unless Apple accepts it), stapled and checked by Gatekeeper, once the Developer ID certificate and its password are set; until then they build unsigned as before. scripts/macos-signing.py decides, as ios-signing.py does, reusing the team ID and App Store Connect key.
+
+From planning, 2026-09-30, for Alan.
+
+1. **Why:** today a Mac user must run `xattr -dr com.apple.quarantine` in Terminal before GroupLab opens. A Developer ID signature plus
+   Apple's notarization lets macOS open it normally. Not the Mac App Store (that would need a sandbox and no self-updater).
+2. **Add Alan's steps to request 55**, after the iOS secrets, in the same style: create a "Developer ID Application" certificate from a
+   certificate signing request made in Git Bash with OpenSSL (as for the iOS distribution certificate), download it, make the .p12, and set
+   the new secrets with `gh secret set` (for example `MACOS_DEVID_CERT_P12` and `MACOS_DEVID_CERT_PASSWORD`). Reuse the App Store Connect
+   API key and team ID he is already setting for iOS for `notarytool`. Files stay in `C:\Dev\keys\apple`, which Code never opens.
+3. **CI:** sign the .app with the hardened runtime and the entitlements .NET and Avalonia need, submit with `notarytool --wait`, staple the
+   ticket, and package a signed, notarized DMG (or zip). Sign only when the secrets exist and are well formed, as the iOS check does;
+   otherwise build unsigned as today.
+4. **Once a notarized nightly passes a check on a Mac** (the Mac tester, request 16, or CI's Gatekeeper assessment `spctl`), remove the
+   `xattr` instructions from the README, site and guide (rule c). Not before.
+
 ## 2026-09-30, entry 307: export everything to one file, and import it on any GroupLab
 
 **Status: done 2026-09-30 but the iOS "Open in" for a .grouplab file, which goes to the iOS worker.** "Export all my data" writes one .grouplab file (sessions with their pictures and marks, rifles, barrels and loads, designed sheets, printers and units), and "Import data" on any GroupLab shows what it will add, skips what is already there, and lists what differs, keeping the local copy. Settings, "Your data", on the desktop and the phone; Android opens a shared .grouplab file straight into it. Round trip desktop to phone to desktop identical; 300 sessions in about a second; a newer or damaged file refused in plain words.

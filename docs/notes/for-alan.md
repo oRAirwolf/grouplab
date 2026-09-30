@@ -170,6 +170,31 @@ since then read groups about 0.4% small. The card method is what needs work, not
 
 ## 55. iOS: the Apple steps after you enrol, about forty minutes, once (entry 278 item 6)
 
+**Added 2026-09-30 (entry 306): the Mac, about twenty minutes, after the iOS secrets.** This signs and notarizes the Mac build, so it opens
+without the xattr step. It needs the Account Holder role. The team ID and App Store Connect key you set for iOS are reused.
+
+1. In Git Bash:
+
+   ```
+   cd /c/Dev/keys/apple
+   openssl req -new -newkey rsa:2048 -nodes -keyout devid.key -out devid.csr -subj "/CN=Alan Hayes/C=US"
+   ```
+
+2. developer.apple.com, Certificates, the + button, Developer ID Application (G2 Sub-CA): upload devid.csr and download the .cer.
+3. In Git Bash, in the same folder (choose a password when asked):
+
+   ```
+   openssl x509 -inform DER -in developerID_application.cer -out devid.pem
+   openssl pkcs12 -export -legacy -inkey devid.key -in devid.pem -out devid.p12 -name "Developer ID Application"
+   gh secret set MACOS_DEVID_CERT_P12 -R oRAirwolf/grouplab --body "$(base64 -w0 devid.p12)"
+   gh secret set MACOS_DEVID_CERT_PASSWORD -R oRAirwolf/grouplab
+   ```
+
+   The last command asks for the password; paste it.
+
+A good result: the next nightly's run summary says "macOS macos-arm64: signed, notarized and stapled" and that Gatekeeper accepted it
+as a Notarized Developer ID. Code never opens that folder.
+
 **Added 2026-09-29 (entry 290): an eighth secret, for the share extension.** The iPhone app now has a share extension (so Google Photos can
 share into GroupLab), and it needs its own identifiers. Do these with the steps below, in the Apple Developer site, Certificates,
 Identifiers and Profiles:
