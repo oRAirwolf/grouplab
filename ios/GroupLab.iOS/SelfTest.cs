@@ -251,6 +251,16 @@ internal static class SelfTest
     {
         var check = new SelfTestCheck("landscape");
         string? refused = null;
+        static bool Turned() => Shell.Current is { } shell && shell.Bounds.Width > shell.Bounds.Height;
+
+        // The workflow may have turned the simulator already, the one way an iPad showing apps in windows can be turned.
+        if (await OnUi(Turned))
+        {
+            check.Passed = true;
+            check.Detail = "the screen was already in landscape";
+            return check;
+        }
+
         await OnUi(() =>
         {
             var scene = UIKit.UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIKit.UIWindowScene>().FirstOrDefault();
@@ -258,7 +268,15 @@ internal static class SelfTest
             scene?.RequestGeometryUpdate(new UIKit.UIWindowSceneGeometryPreferencesIOS(UIKit.UIInterfaceOrientationMask.LandscapeRight),
                 error => refused = error.LocalizedDescription);
         });
-        check.Passed = await WaitFor(() => Shell.Current is { } shell && shell.Bounds.Width > shell.Bounds.Height, TimeSpan.FromSeconds(15));
+        check.Passed = await WaitFor(Turned, TimeSpan.FromSeconds(10));
+        if (!check.Passed)
+        {
+            // An iPad showing apps in windows refuses the request; the device's own orientation is set instead, as a turned device sets it.
+            await OnUi(() => UIKit.UIDevice.CurrentDevice.SetValueForKey(
+                Foundation.NSNumber.FromInt32((int)UIKit.UIInterfaceOrientation.LandscapeRight), new Foundation.NSString("orientation")));
+            check.Passed = await WaitFor(Turned, TimeSpan.FromSeconds(10));
+        }
+
         await Task.Delay(TimeSpan.FromSeconds(2));
         check.Detail = check.Passed ? "the screen turned to landscape" : "the screen did not turn" + (refused is null ? "" : ": " + refused);
         return check;
