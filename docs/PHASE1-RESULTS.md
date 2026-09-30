@@ -40,6 +40,45 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 315: GroupLab Dev driven without hands (sections 1 and 2, and the iOS Dev app)
+
+Built overnight on `overnight/tooling`; the bridge was a stopped half-commit, finished, reviewed and merged 2026-09-30.
+
+- **2, scenario files (b8484f72):** a development build runs a JSON list of steps from its scenario folder, a launch argument on iOS or
+  the extra on Android, and writes each step's result, time, memory, screenshots, control trees and the log back for a script to copy.
+- **Amendment 1 (a8ce0e90):** with `-p:GroupLabDev=true` the iOS head is GroupLab Dev, `org.grouplab.app.dev`, beside GroupLab; the ios
+  app workflow builds it for the simulator and runs a scenario over the sample scan, and checks the public build carries none of the
+  developer tools. The nightly builds it every night and signs and uploads it only once request 61's profiles exist.
+- **1, the automation bridge (c6a31b63):** compiled only into GroupLab Dev, on 127.0.0.1 only, on by default there, with a random key
+  shown on screen and written to Documents. Reviewed for safety: a line over 64 KiB is refused, at most four connections and one command
+  at a time, idle connections closed after ten minutes, the key compared in constant time over hashes, a malformed or unkeyed request
+  refused and the connection closed. Commands reuse the scenario runner's steps (go, press, type, choose, scroll, read a picture, a
+  setting, reset) and add ping, tree, log, timings and memory. 42 key controls carry stable automation ids, held by a test.
+  `scripts/app-bridge.py --platform android|ios` drives it over `adb forward` or pymobiledevice3. Not yet run on a device: the copies on
+  the phones and the iPad predate it. Tests: Mobile 64, the Core tests for the area 138.
+- **Not done yet:** section 3 (the replay camera and sitting clips), section 4 (structured timings everywhere and the debug overlay),
+  and amendment 2 items 3, 4 and 6 (the replay camera and overlay on Android, and Firebase Test Lab's cost and free quota).
+
+## Entry 311: the first iPad sitting, Guided sooner, the level, and the iPad's logs
+
+Built overnight on `overnight/reading` and `overnight/tooling`, reviewed, tested and merged 2026-09-30.
+
+- **1, Guided sooner (4930c1c2):** measured from the Fold 7's 79 `camera.say` lines: analysis frames at a median of 892 ms, and Guided
+  waited the half-second hold of the words plus three ready frames, about 2.7 s at the median. The count and the hold held it back, not a
+  threshold. One shared rule now: the picture is taken once every frame for 0.6 s, and at least two, has been judged ready, about 0.9 s at
+  the Fold 7's pace. What counts as ready is unchanged, and no detection code changed. Whether pictures taken this soon read as well
+  comes from the next sitting's `camera.auto` and `phone.detect` lines.
+- **2, the level (f8da0c6d):** the tilt did not depend on the axes; on the iPad only an 18 point dot turned green. The whole crosshair now
+  turns green at Android's 3 degrees, and `camera.level` logs the raw gravity, the screen's turn and the tilt.
+- **3.1 and 3.2 (5f8287af):** Settings, About, Send diagnostics on both phones (the newest five logs, crash records and kept pictures in
+  one zip through the share sheet). On iOS, GroupLab's Documents shows in Files under On My iPad, GroupLab, with the keep-pictures switch.
+- **3.3 (451c21b7):** `scripts/` reads GroupLab's own log and copies its Documents over USB with pymobiledevice3, nothing else on the
+  device. Request 60 (the pairing) was done with Alan on 2026-09-30; build 134 lacks file sharing, so Documents over USB starts with the
+  next build on the iPad.
+- **3.4 (acfb1823):** the testflight workflow summarizes new beta feedback and crashes after each step. Reviewed before merging: the
+  repository is public, so the summary says only whether a tester wrote a comment, never the words (a follow-up commit).
+- Item 2 of Alan's sitting (the gap at the top of the preview) is entry 313 section 2's layout.
+
 ## Entry 313: the iPad's reading hang, Cancel, and the camera panel
 
 Built overnight on `overnight/reading`, reviewed, tested (Mobile 50, Core 550 on the changed areas) and merged 2026-09-30 as 3638462d,

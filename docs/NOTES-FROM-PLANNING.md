@@ -37,6 +37,97 @@ Should it just say 'M-series SoCs' or something to that effect so it doesnt have
    and any other list of chip names, and word them the same way (rule c). The Intel card stays as it is.
 3. Small; do it with the next site change, no rush.
 
+## 2026-09-30, entry 315: letting Code drive and watch the app without Alan's hands (dev builds, iOS first, Android too)
+
+**Status: sections 1 and 2 and amendment 1 done 2026-09-30 (b8484f72, a8ce0e90, c6a31b63); not done: section 3 (the replay camera), section 4 (timings and the debug overlay), amendment 2 items 3, 4 and 6; the iOS Dev app's upload waits for request 61.**
+
+From planning, 2026-09-30, for Alan. Alan: "it seems like it [pymobiledevice3] has most of the features code will need to develop and
+troubleshoot except the tap swipe and type. Is there anything that can be added to the development version of the application that would
+give extra visibility or development support needed to automate code's ability to develop and test the application without me doing
+things manually?"
+
+Yes: make the app drivable from inside, so taps are not needed. One design for iOS and Android, so the same scripts test both.
+
+## 1. An automation bridge, off by default
+
+- A hidden developer switch (Settings, About, tap the version seven times, or on by default in GroupLab Dev on Android) turns on a small
+  command server inside the app, listening **only on the device's localhost**, with a random token shown on screen and written to the
+  app's Documents folder. Code reaches it over USB: `pymobiledevice3 usbmux forward` on iOS, `adb forward` on Android. Nothing listens
+  unless the switch is on; nothing is reachable from the network; public App Store builds may keep the switch but it starts off.
+- Commands (JSON): go to a screen; press a control by its automation name; type into a field; choose a list item; scroll; open a picture
+  already in Documents as if chosen or shared; run the full reading on it; set a setting; return the visible screen's element tree
+  (names, text, bounds, enabled); take an in-app screenshot; return the last N log lines, timings and memory; reset to a clean state.
+- Every control that matters gets a stable automation name (Avalonia's AutomationProperties), checked by a test so none goes missing.
+
+## 2. Scripted runs without the bridge
+
+- On launch, a dev build reads a scenario file (JSON) from Documents, or launch arguments passed by `pymobiledevice3 developer dvt
+  launch` / `adb shell am start`: steps like "open Capture, load sample.jpg, read, open Fix holes, move hole 3 by 0.02 in, save, open
+  Compare". It writes a results file, screenshots and the log back to Documents for Code to pull. Android already has the
+  `org.grouplab.test.picture` extra; extend that into the same scenario format.
+
+## 3. The camera without pointing a camera
+
+- A "replay camera" in dev builds: the capture screen takes its frames from a picture or a short recorded frame sequence in Documents
+  instead of the live camera, so Guided, the words, the level, the torch logic and auto-capture timing can be tested by script.
+- During Alan's sittings, record short frame sequences (a few seconds, low resolution, local only, never committed) so real framing can be
+  replayed against every later build: the camera's own regression test.
+
+## 4. More visibility
+
+- Structured JSON-lines log with per-stage timings (`read.stage`, `camera.say`, `camera.level`, `camera.torch`), state changes, errors
+  with stack traces, memory and thermal state; unhandled exceptions written to a file before the app dies.
+- A debug overlay (dev switch): frame rate, current guidance verdict and its failing check, tilt values, torch level, reading stage and
+  elapsed time, drawn over the camera and the reading screen, so a screenshot alone explains a hang.
+
+## 5. What still needs Alan
+
+Pointing the real camera at a real sheet, the first setup of pymobiledevice3 (the Apple Devices app, a cable, Trust This Computer, and
+Developer Mode on the iPad), and judging how things look. Write the setup as a request with exact steps.
+
+## Order
+
+After entries 313 (the hang) and 311 items 1 and 2 (logs out of the iPad). Build section 4 first (it helps every fix), then 2, 1 and 3.
+
+## Amendment, 2026-09-30: where the dev features live (Alan asked about Apple's review; "Can you have code build in all of the development features you just mentioned?")
+
+Alan wants all of sections 1 to 4 built. To keep them away from Apple's review:
+
+1. **The public app (`org.grouplab.app`, internal and Public Beta in lockstep, later the App Store) carries none of the automation
+   bridge, scenario files or replay camera.** They are compiled out (a build property, as `GroupLabUpdater` is on Android), not hidden
+   behind a switch: App Review guideline 2.3.1 forbids hidden or undocumented features, and Beta App Review applies it to external builds.
+   The public app keeps what is visible and documented: the structured log, crash files, "Send diagnostics", and the debug overlay as a
+   plainly labelled setting ("Show diagnostics on the camera"), described in the guide.
+2. **A separate iOS app, GroupLab Dev (`org.grouplab.app.dev`, "GroupLab Dev" on the home screen, its own icon as on Android),**
+   built by the nightly with everything in sections 1 to 4, sent to TestFlight and added **only to the internal group** (GroupLab Team),
+   never to an external group or the App Store. Internal TestFlight builds are not reviewed by Apple; they pass only the automated upload
+   checks, which look for private API use, and a localhost listener uses public APIs only. Bind it to 127.0.0.1 so iOS does not ask for
+   local network permission.
+3. **Android:** GroupLab Dev already exists and carries all of it; the Play build does not.
+4. **Alan's steps for the iOS Dev app** (write them as a request with exact paste lines, like request 55): App ID `org.grouplab.app.dev`
+   with App Groups (a group `group.org.grouplab.app.dev`), the share extension's ID `org.grouplab.app.dev.share` if the Dev app keeps
+   sharing, two App Store profiles from the existing distribution certificate, the secrets for them, and an App Store Connect app record
+   named "GroupLab Dev" (or "GroupLab Dev Build" if taken). Until those exist, build and test the Dev app on the simulator in CI only.
+5. A test that the public build contains none of the bridge's types, so it cannot slip in.
+
+## Amendment 2, 2026-09-30: Android GroupLab Dev gets the same, plus wider device coverage
+
+Alan asked whether Android GroupLab Dev already has all of this. It has part of it: launch extras (`org.grouplab.test.picture`,
+`.camera`, `.capturemode`, `.press`, `.idle`, `.shotstozero`), a sitting's pictures kept on the phone, self-update, and adb (logcat,
+screenshots, screenrecord, install, input taps). Missing, and wanted:
+
+1. **The same automation bridge** (section 1) over `adb forward`. adb can tap, but only by screen coordinates: Avalonia draws its own
+   controls, so Android's UI tools cannot find buttons by name, and a coordinate breaks whenever a layout moves. The bridge addresses
+   controls by automation name on both platforms.
+2. **The scenario format** (section 2) replacing the one-off extras, which stay as shortcuts that run one-step scenarios.
+3. **The replay camera** (section 3) and the sitting clips, shared with iOS so one clip tests both.
+4. **The debug overlay and structured timings** (section 4).
+5. **A clean-state command and test data:** reset GroupLab Dev to a first run, or load a fixed set of sample sessions, rifles and printers,
+   so every scripted run starts from the same place.
+6. **More phones without Alan buying them:** consider Firebase Test Lab (Google's real and virtual devices; a free daily quota) to run
+   the scenario suite on Samsung, Xiaomi, Oppo, Pixel and other models, which is where entry 292's photo-app differences would show.
+   Report its cost and what the free quota covers before relying on it; nothing paid without Alan.
+
 ## 2026-09-30, entry 313: the iPad hangs on "reading the sheet's codes", Cancel does nothing (PRIORITY), and the preview's layout
 
 **Status: done 2026-09-30 (overnight/reading, merged as 3638462d, 5a18a86a, 4d27fcbe); section 1.4's times on the iPad itself come from the next sitting's log.**
@@ -73,6 +164,58 @@ Also: a stray dash at the right end of the quality bar (a clipped label or a cha
 ## 3. Noted, nothing to change
 
 "The shutter lag time is acceptable."
+
+## 2026-09-30, entry 311: the first iPad sitting (TestFlight build 134), and getting the iPad's logs to Code
+
+**Status: done 2026-09-30 (4930c1c2, f8da0c6d, 5f8287af, 451c21b7, acfb1823); whether Guided's sooner pictures read as well waits for the next sitting's log.**
+
+From planning, 2026-09-30, for Alan. GroupLab 134 is on Alan's iPad mini through TestFlight. The first TestFlight sitting
+(`docs/IOS-PLAN.md`), Alan's words:
+
+1. Camera permission: "I was able to give it permission to use the camera." **Yes.**
+2. Preview: "The preview looks good but there is some space at the top. I took a screenshot." **Partly.** The screenshot follows in
+   `C:\Dev\grouplab-local\ipad-sitting\` (local only, metadata stripped before any use, never committed). Find what the gap is (safe area
+   counted twice, the status bar strip, or the 4:3 letterbox placed at the top instead of centered) and fix it.
+3. Guided: "Guided mode worked but like on android, the threshold for taking a photo automatically seems too high and it takes a long
+   time for it to do it." **Works, too slow.** Same complaint as Android.
+4. Level: "The level on the camera screen does not turn green when it is level. I am not sure if this is because it is just not working
+   or if it is way too sensitive." **No.**
+5. Manual: "Manual mode works." **Yes.**
+Items 6 onward were not tried yet.
+
+## 1. Guided fires sooner, on both platforms
+
+Measure first, from the logs (Android's sittings already have `camera.say` lines with frame times): how long from the first Ready-worthy
+frame to the shot, and which check holds it back (sharpness, steadiness, the ready-frame count, the code count). Then loosen what holds it
+back without letting in pictures the detector reads worse (check against the scoreboard: fired pictures must still read as well). Target:
+under about a second of steady framing on a good sheet. Same change on Android and iOS.
+
+## 2. The level turns green
+
+Log the raw gravity or attitude values and the tilt the level computes (`camera.level`) and check on the iPad whether the axes are
+right for the iPad's orientation and whether the green tolerance is sensible (Android's is the reference). Likely suspects: the iPad's
+orientation not applied to the axes, or a tolerance tighter than the sensor's noise. Green should hold steadily when the iPad lies flat on
+a table.
+
+## 3. Logs from the iPad, three ways (Alan: "How can code get detailed logs and information from the ios/ipados app?")
+
+1. **Share the log from the app:** Settings, About, "Send diagnostics" (or the Android equivalent's name): the share sheet with the
+   log file and the sitting's record, so Alan can AirDrop, save to Files or OneDrive, or email it. The same button as Android if it has one.
+2. **The app's folder in Files:** set `UIFileSharingEnabled` and `LSSupportsOpeningDocumentsInPlace` (check what Info.plist already
+   has), with the log and a sitting's pictures kept in Documents (the iOS twin of GroupLab Dev's kept pictures, with the same switch to
+   turn it off). They then appear in the Files app under On My iPad, GroupLab.
+3. **Over USB from Alan's Windows computer, like adb:** with Apple's devices driver (the Apple Devices app or iTunes) installed,
+   `pymobiledevice3` (Python) can stream the iPad's system log filtered to GroupLab and copy the app's Documents folder, which file
+   sharing (item 2) allows even for a TestFlight build. Write the setup as a request for Alan (install the Apple Devices app, plug in, trust
+   the computer), then a script in `scripts/` like the Android ones. Touch only GroupLab on the iPad; nothing else is read, never
+   notifications or other apps' data.
+4. **TestFlight's own feedback and crashes:** a screenshot shared as beta feedback in TestFlight, and every crash, land in App Store
+   Connect. Read them with the App Store Connect API key already in the secrets (beta feedback and crash submissions) in a small script
+   or a scheduled workflow step, and summarize new ones in for-alan.md. Never publish a tester's screenshot or email.
+
+## Order
+
+1 and 2 before the iOS deadline if they fit (they are what the next sitting needs), then 3.
 
 ## 2026-09-30, entry 310: TestFlight, the team and the public beta always on the same build
 
