@@ -276,6 +276,16 @@ jobs:
             mkdir -p "$data/Documents/selftest"
             cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
             tour "$IPAD" shots/ipad --screens || failed=1
+            # An iPad showing apps in windows refuses an application's own request to turn, so the simulator is turned from its Device
+            # menu first, with only the iPad running; the tour turns the screen itself only where it is still upright.
+            xcrun simctl shutdown "$UDID" || true
+            open -a Simulator --args -CurrentDeviceUDID "$IPAD"
+            sleep 15
+            osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
+              -e 'tell application "System Events" to tell process "Simulator" to click menu item "Rotate Left" of menu "Device" of menu bar 1' 2>&1 \
+              || osascript -e 'tell application "Simulator" to activate' -e 'delay 2' -e 'tell application "System Events" to key code 123 using command down' 2>&1 \
+              || echo "the simulator could not be turned from its menu"
+            sleep 5
             tour "$IPAD" shots/ipad-landscape --screens --landscape || failed=1
             xcrun simctl shutdown "$IPAD" || true
           fi
