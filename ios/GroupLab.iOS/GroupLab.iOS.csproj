@@ -42,7 +42,7 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <!--
       Entry 290 section 2 item 7: the nightly's signed publish names each project's App Store profile by its own property
-      (scripts/ios-signing.py --properties), because one CodesignProvision on the command line would reach the share extension too.
+      (the properties scripts/ios-signing.py builds), because one CodesignProvision on the command line would reach the share extension too.
     -->
     <CodesignProvision Condition="'$(GroupLabAppProvision)' != ''">$(GroupLabAppProvision)</CodesignProvision>
     <!--
