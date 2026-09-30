@@ -587,7 +587,8 @@ jobs:
           test "$(embedded "$payload/PlugIns/GroupLab.Share.appex")" = "$share_uuid" || { echo "::error::The share extension is not signed with its own profile."; exit 1; }
           # Alan, 2026-09-30: App Store Connect asks no export question for any build, so both bundles say they use only the system's encryption.
           for b in "$payload" "$payload/PlugIns/GroupLab.Share.appex"; do
-            test "$(plutil -extract ITSAppUsesNonExemptEncryption raw "$b/Info.plist" 2>/dev/null)" = "false" \n              || { echo "::error::$(basename "$b") does not say it uses only the system's encryption, so TestFlight would ask."; exit 1; }
+            # Read with Python's own plist reader: plutil's raw form of a true or false value did not read "false" (nightly 135).
+            test "$(python3 -c 'import plistlib, sys; print(plistlib.load(open(sys.argv[1], "rb")).get("ITSAppUsesNonExemptEncryption"))' "$b/Info.plist")" = "False" \n              || { echo "::error::$(basename "$b") does not say it uses only the system's encryption, so TestFlight would ask."; exit 1; }
           done
           rm -rf "$RUNNER_TEMP/ipa-check"
           mkdir -p "$HOME/private_keys"
