@@ -24,6 +24,19 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 316: the Mac download names no chip generations
+
+**Status: done 2026-09-30.**
+
+From planning, 2026-09-30, for Alan: "under the macos download, it says 'M1, M2, M3, M4. Not an Intel Mac'...isn't the M5 SoC out now?
+Should it just say 'M-series SoCs' or something to that effect so it doesnt have to list out the cpu's?"
+
+1. The Apple silicon card on grouplab.org/download/ reads "Any Mac with Apple silicon (M-series). Not an Intel Mac." (or as close as
+   the card's layout allows), and its description "For any Mac with Apple silicon." No list of generations anywhere.
+2. Search the site sources, README, user guide, PLATFORM-SUPPORT.md, release notes templates and the app's own update text for "M1, M2"
+   and any other list of chip names, and word them the same way (rule c). The Intel card stays as it is.
+3. Small; do it with the next site change, no rush.
+
 ## 2026-09-30, entry 313: the iPad hangs on "reading the sheet's codes", Cancel does nothing (PRIORITY), and the preview's layout
 
 **Status: done 2026-09-30 (overnight/reading, merged as 3638462d, 5a18a86a, 4d27fcbe); section 1.4's times on the iPad itself come from the next sitting's log.**
@@ -60,19 +73,6 @@ Also: a stray dash at the right end of the quality bar (a clipped label or a cha
 ## 3. Noted, nothing to change
 
 "The shutter lag time is acceptable."
-
-## 2026-09-30, entry 316: the Mac download names no chip generations
-
-**Status: done 2026-09-30.**
-
-From planning, 2026-09-30, for Alan: "under the macos download, it says 'M1, M2, M3, M4. Not an Intel Mac'...isn't the M5 SoC out now?
-Should it just say 'M-series SoCs' or something to that effect so it doesnt have to list out the cpu's?"
-
-1. The Apple silicon card on grouplab.org/download/ reads "Any Mac with Apple silicon (M-series). Not an Intel Mac." (or as close as
-   the card's layout allows), and its description "For any Mac with Apple silicon." No list of generations anywhere.
-2. Search the site sources, README, user guide, PLATFORM-SUPPORT.md, release notes templates and the app's own update text for "M1, M2"
-   and any other list of chip names, and word them the same way (rule c). The Intel card stays as it is.
-3. Small; do it with the next site change, no rush.
 
 ## 2026-09-30, entry 310: TestFlight, the team and the public beta always on the same build
 
