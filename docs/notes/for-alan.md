@@ -211,6 +211,11 @@ iPad. The tool is pymobiledevice3, a Python program.
   GroupLab works once GroupLab is open (nothing else is read). `amfi reveal-developer-mode` ran, so the switch is now in Settings,
   Privacy & Security; Developer Mode is still off. **Left for Alan, only for entry 315 later:** turn Developer Mode on there and let the
   iPad restart. Copying GroupLab's folder needs file sharing in the app, which comes with the next build that carries entry 311.
+- *After Developer Mode (Alan turned it on and confirmed it, 12:30 UTC):* the iPad stayed listed but every lockdown query hung for
+  40 s. (6) Restarting Apple Mobile Device Service: the list went empty ("Device is not connected"); this service seems to find an
+  iPad only when it arrives, not when the service starts. (7) The step 5 remove-and-rescan again: this time the iPad did not come
+  back; the port shows two "Unknown USB Device (Device Descriptor Request Failed)". (8) One more rescan: no change. Needs a replug.
+  Lesson: after the iPad restarts, re-plug the cable rather than restart the service or remove the device.
 
 ## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
