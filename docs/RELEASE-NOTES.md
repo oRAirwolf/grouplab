@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.142
+
+**2026-09-30**, commit `6d5884c`. Nightly.
+
+**What you will notice**
+
+- On a target GroupLab did not print, Find holes (Experimental) now proposes the holes once you set the scale, on the computer and in GroupLab Dev on the phone; check every one, and those it is unsure of wait in the review with the reason.
+
+**Under the hood**
+
+- The experimental hole finder for targets GroupLab did not print now also sees holes in black bulls and hits on fluorescent targets, and every build measures it on four kinds of drawn target.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.142)
+
+---
+
 ## 0.2.0-nightly.141
 
 **2026-09-30**, commit `70a098e`. Nightly.
