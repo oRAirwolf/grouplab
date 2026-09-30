@@ -12,6 +12,38 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.130
+
+**2026-09-30**, commit `1bafd04`. Nightly.
+
+**What you will notice**
+
+- GroupLab now asks whether your scope is in mil or MOA, and the zero correction, clicks, dope and hit chance then read in that unit alone, with each rifle keeping its own scope unit.
+- If GroupLab Dev cannot install an update without your tap, it now asks for it next time you open it instead of waiting silently.
+- While GroupLab reads a target, a picture taken at an angle is now named from its square codes in about a second rather than up to half a minute.
+- On the phone, holes are fixed on a page of their own with zoom, a crosshair and undo, the result's picture stands upright, and the camera now guides by what the picture will read.
+
+**Under the hood**
+
+- The black resting screen for overnight testing now covers the whole screen, edges included, on every phone.
+- The iPhone and iPad test run now checks the camera's fallback before anything else changes the screen.
+- The iPhone and iPad application gains its own camera screen, which still has to be checked on a real iPad before it is relied on.
+- The iPhone and iPad self-test reads its picture the way a picture chosen from Files is read.
+- On iPhone and iPad a picture is now analyzed instead of stopping with "Operation is not supported on this platform".
+- GroupLab for iPhone and iPad can now start its image analysis, which failed on its first call before.
+- The iPhone and iPad self-test now explains a failure of the image analysis in words, so it can be fixed.
+- The iPhone and iPad self-test now starts on the simulator, so every screen and the image analysis are checked there.
+- GroupLab for iPhone and iPad keeps the image analysis it needs when the application is linked, ahead of the first test build for Apple devices.
+- On iPhone and iPad a test sitting can show the black idle screen, and the screen is kept on only while it does.
+- On iPhone and iPad, a photograph saved as HEIC can be chosen or pasted and is read like any other picture.
+- GroupLab for iPhone and iPad keeps its settings and records working in the release build, ahead of the first test build for Apple devices.
+- GroupLab for iPhone and iPad now builds with the Xcode 26 tools, ahead of the first test build for Apple devices.
+- GroupLab for iPhone and iPad now builds and is tested on the simulator, ahead of the first test build for Apple devices.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.130)
+
+---
+
 ## 0.2.0-nightly.129
 
 **2026-09-29**, commit `6cf5d40`. Nightly.
