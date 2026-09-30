@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.143
+
+**2026-09-30**, commit `2c25c28`. Nightly.
+
+**What you will notice**
+
+- On the phone, the camera's level works upright at a target still on its backer as well as flat over a table, says which under the crosshair, and follows the sheet itself once its corner squares are read; Guided takes the picture either way.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.143)
+
+---
+
 ## 0.2.0-nightly.142
 
 **2026-09-30**, commit `6d5884c`. Nightly.
