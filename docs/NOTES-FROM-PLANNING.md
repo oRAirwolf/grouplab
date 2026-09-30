@@ -183,7 +183,7 @@ From planning, 2026-09-30, for Alan.
 
 ## 2026-09-30, entry 307: export everything to one file, and import it on any GroupLab
 
-**Status: done 2026-09-30 but the iOS "Open in" for a .grouplab file, which goes to the iOS worker.** "Export all my data" writes one .grouplab file (sessions with their pictures and marks, rifles, barrels and loads, designed sheets, printers and units), and "Import data" on any GroupLab shows what it will add, skips what is already there, and lists what differs, keeping the local copy. Settings, "Your data", on the desktop and the phone; Android opens a shared .grouplab file straight into it. Round trip desktop to phone to desktop identical; 300 sessions in about a second; a newer or damaged file refused in plain words.
+**Status: done 2026-09-30, the iOS "Open in" for a .grouplab file included (4362991b, 4123240c).** "Export all my data" writes one .grouplab file (sessions with their pictures and marks, rifles, barrels and loads, designed sheets, printers and units), and "Import data" on any GroupLab shows what it will add, skips what is already there, and lists what differs, keeping the local copy. Settings, "Your data", on the desktop and the phone; Android opens a shared .grouplab file straight into it. Round trip desktop to phone to desktop identical; 300 sessions in about a second; a newer or damaged file refused in plain words.
 
 From planning, 2026-09-30, for Alan: "make the ability to export all of your data from any of the apps into a file that any of the
 applications can read and import ... as a stop gap" until cloud backup.
@@ -388,7 +388,7 @@ From planning, 2026-09-29, for Alan: "It is very wordy and takes up too much spa
 
 ## 2026-09-30, entry 302: the torch should dim, or go off, when the page is too bright
 
-**Status: done 2026-09-30 but the iOS part (item 3), which goes to the iOS worker.** A shared `TorchGovernor` starts at the lowest level,
+**Status: done 2026-09-30, the iOS part (item 3) included (c58bb4cd); the torch itself waits for the iPad sitting.** A shared `TorchGovernor` starts at the lowest level,
 steps up only while the page is dim, and steps down or off on glare (over 2% clipped), a hot spot, or a paper median of 235 or more; four
 agreeing frames and 1.5 s between changes; the Android camera sets CameraX's torch strength where the phone offers levels, and on or off
 elsewhere. Whether the strength changes mid-session on the Fold 7 is for the next sitting's log.
