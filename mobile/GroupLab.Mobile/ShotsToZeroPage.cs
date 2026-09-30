@@ -93,7 +93,7 @@ internal sealed class ShotsToZeroPage : UserControl
         setup.Children.Add(chips);
         if (Clicks[click].Value == 0)
         {
-            var unit = new WrapPanel { Children = { typed, Chip("mil", typedMil, () => { typedMil = true; Build(); }), Chip("MOA", !typedMil, () => { typedMil = false; Build(); }) } };
+            var unit = new WrapPanel { Children = { Screens.Detach(typed), Chip("mil", typedMil, () => { typedMil = true; Build(); }), Chip("MOA", !typedMil, () => { typedMil = false; Build(); }) } };
             typed.LostFocus -= Typed;
             typed.LostFocus += Typed;
             setup.Children.Add(unit);
@@ -219,16 +219,11 @@ internal sealed class ShotsToZeroPage : UserControl
 
         curve.Points = result.Curve;
         curve.InvalidateVisual();
-        if (curve.Parent is Panel old)
-        {
-            old.Children.Remove(curve);
-        }
-
-        answer.Children.Add(Screens.Card(Screens.Dim("The chance against shots, both ways: amber within 1 click, teal the closest click."), curve));
+        answer.Children.Add(Screens.Card(Screens.Dim("The chance against shots, both ways: amber within 1 click, teal the closest click."), Screens.Detach(curve)));
         answer.Children.Add(Screens.Line("The closest click comes slowly: where the true zero lies near the line between two clicks, only a very large group tells which side it is on. Within one click comes far sooner, and is what most zeroing needs."));
         string moves = result.ShotsCanMove == 0 ? "another seed would not move these counts" : $"another seed could move a count by up to {result.ShotsCanMove}";
         answer.Children.Add(Screens.Dim(string.Create(CultureInfo.CurrentCulture, $"{result.Trials:N0} draws of the spread the group could really have, seed {result.Seed}; {moves}.")));
-        answer.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { Screens.Dim("Seed"), seed } });
+        answer.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { Screens.Dim("Seed"), Screens.Detach(seed) } });
         answer.Children.Add(Screens.Primary("Calculate again", Calculate));
     }
 
