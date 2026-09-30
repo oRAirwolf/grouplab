@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.140
+
+**2026-09-30**, commit `90ee7ff`. Nightly.
+
+**Under the hood**
+
+- The developer copy for Android can now be run by Google's phone testing service on real Samsung, Pixel and other phones, once the free account is set up.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.140)
+
+---
+
 ## 0.2.0-nightly.139
 
 **2026-09-30**, commit `10259c6`. Nightly.
