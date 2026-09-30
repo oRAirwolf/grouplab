@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.132
+
+**2026-09-30**, commit `d66fa51`. Nightly.
+
+**What you will notice**
+
+- Every split between panes can now be dragged by a visible grip and is remembered, and Settings has Reset layout to put them all back.
+- In Settings, the three sharing sections now show their choice and one short line, with the full explanation one tap away under More.
+- On the phone, the torch on Auto now starts low, brightens only while the paper is too dim, and dims or turns off on glare or in bright light.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.132)
+
+---
+
 ## 0.2.0-nightly.131
 
 **2026-09-30**, commit `dfb6bc5`. Nightly.
