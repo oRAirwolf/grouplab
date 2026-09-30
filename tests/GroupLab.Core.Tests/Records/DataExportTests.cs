@@ -209,7 +209,8 @@ public class DataExportTests
             Assert.Equal(300, target.List().Count);
             Assert.True(clock.Elapsed < TimeSpan.FromSeconds(60), $"300 sessions took {clock.Elapsed.TotalSeconds:0} s");
             Assert.True(new FileInfo(path).Length > 300 * 60_000, "every picture is in the file");
-            Assert.True(GC.GetTotalMemory(false) - before < 400_000_000, "the import held far more than the file in memory");
+            // Collected first: garbage the runner has not swept yet is not memory the import holds, and Windows sweeps later than Linux.
+            Assert.True(GC.GetTotalMemory(true) - before < 400_000_000, "the import held far more than the file in memory");
         }
         finally
         {
