@@ -24,6 +24,7 @@ public static class ScoreboardVerb
         "usage: grouplab scoreboard --synthetic [--seeds 291,292] [--only <condition>] [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard --corpus <folder> [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard truth --scan <scan> --sheet <file.gltd.json> [--calibre <inches>] --out <truth.json>\n" +
+        "  A corpus folder whose truth.json says \"target\": \"any\" is a store-bought target: picture, blank, count and dpi (entry 308).\n" +
         "  --margin holes=1,false=1,center=0.005,worst=0.03,registration=0.005 overrides the baseline's own margin.\n" +
         "  Exits 1 naming each condition that fell beyond the margin against the baseline, 2 on a usage error.";
 
@@ -130,6 +131,14 @@ public static class ScoreboardVerb
         {
             string dir = Path.GetDirectoryName(truthPath)!;
             var truth = JsonNode.Parse(File.ReadAllText(truthPath))!;
+
+            // Entry 308: a target GroupLab did not print, a store-bought one, read by the detector that needs no printed artwork.
+            if ((string?)truth["target"] == "any")
+            {
+                scores.AddRange(AnyTarget(dir, truth, Path.GetRelativePath(folder, dir).Replace('\\', '/'), backend, error));
+                continue;
+            }
+
             string picture = Path.Combine(dir, (string)truth["picture"]!);
             string sheetFile = (string)truth["sheet"]!;
             var definition = Sheet(File.Exists(sheetFile) ? sheetFile : Path.Combine("targets", sheetFile));
@@ -176,6 +185,45 @@ public static class ScoreboardVerb
                 CentreErrors = errors,
             });
             error.WriteLine($"{name}: {marks.Count} marks, {(found is { } ff ? ff.ToString(CultureInfo.InvariantCulture) : "?")} found, {clock.ElapsedMilliseconds} ms");
+        }
+
+        return scores;
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 308 section 4: a store-bought target, scanned blank before it was shot and again after, as an "any target"
+    /// case. The truth file says <c>"target": "any"</c>, the shot scan (<c>picture</c>), the blank scan (<c>blank</c>, optional), how many shots
+    /// were fired (<c>count</c>) and the scans' resolution (<c>dpi</c>, 600 where it is not given). The detector for a target GroupLab did not
+    /// print, the neutral darkness detector of docs/DETECTION-LEARNING-STUDY.md section 7, reads both: on the shot scan its marks are held to
+    /// the count, and on the blank one every mark is a false one, which is what makes a store-bought target's printing a hard test. The pictures
+    /// stay in C:\Dev\grouplab-local\commercial-targets and are never committed or shown.
+    /// </summary>
+    public static IReadOnlyList<PictureScore> AnyTarget(string dir, JsonNode truth, string name, GroupLab.Core.Imaging.IImagingBackend backend, TextWriter error)
+    {
+        ArgumentNullException.ThrowIfNull(dir);
+        ArgumentNullException.ThrowIfNull(truth);
+        ArgumentNullException.ThrowIfNull(backend);
+        ArgumentNullException.ThrowIfNull(error);
+        double dpi = (double?)truth["dpi"] ?? 600;
+        int? count = (int?)truth["count"];
+        var scores = new List<PictureScore>();
+        foreach (var (key, condition, expected) in new[] { ("picture", "any target, shot", count), ("blank", "any target, blank", (int?)0) })
+        {
+            if ((string?)truth[key] is not { } file)
+            {
+                continue;
+            }
+
+            var (value, _) = ImageLoader.LoadMaxChannel(Path.Combine(dir, file));
+            var clock = Stopwatch.StartNew();
+            var found = GroupLab.Core.Detection.NeutralDarknessHoleDetector.Detect(value, dpi, backend);
+            clock.Stop();
+            int marks = found.Holes.Count;
+            int? hits = expected is { } n ? Math.Min(n, marks) : null;
+            int? falseMarks = expected is { } m ? Math.Max(0, marks - m) : null;
+            scores.Add(new PictureScore(condition, name + "/" + file, expected is null ? "count-unknown" : "count", expected, marks, hits, falseMarks,
+                null, null, null, null, null, true, clock.ElapsedMilliseconds));
+            error.WriteLine($"{name}/{file}: {marks} marks{(expected is { } e ? $" against {e}" : "")}, {clock.ElapsedMilliseconds} ms");
         }
 
         return scores;

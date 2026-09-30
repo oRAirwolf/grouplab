@@ -243,6 +243,14 @@ same sheet where one exists (every hole, in the sheet's own inches), or the shot
 4. `grouplab scoreboard --corpus C:\Dev\grouplab-local\corpus --table <corpus>\scoreboard.md --out <corpus>\scoreboard.json`, and
    `--baseline` against the last run's file to see what a change did.
 
+**Store-bought targets, "any target" (entry 308).** Each target Alan buys is scanned at 600 dpi before it is shot, shot, scanned again
+and photographed two or three times, into `C:\Dev\grouplab-local\commercial-targets\<target>\`, local only and never shown. Its
+`truth.json` says `"target": "any"`, `picture` (the shot scan), `blank` (the blank scan), `count` (the shots fired) and `dpi`. The
+scoreboard reads both scans with the detector that needs no printed artwork (section 7) and gives two lines: "any target, shot", its marks
+held to the count, and "any target, blank", where every mark is a false one, since nothing on a blank sheet is a hole. The phone photographs
+wait for the wiring of section 7, which gives them a scale. Alan's photographs of 20 September of a store-bought target are test
+material of the same kind, and are never shown or named on the site.
+
 **The first real table** (2026-09-29, seven photographs of three sheets, each against its own 600 dpi scan). The four pictures of the
 second camera sitting are all of one 6 ARC load sheet, taken with the torch at 1, 2, 9 and 15 degrees off square; the three of 2026-09-26
 are the kitchen-counter photographs of entry 233.

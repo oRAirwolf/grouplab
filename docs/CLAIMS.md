@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1372 |
 | measured | 1802 |
-| decided | 1279 |
+| decided | 1283 |
 | unbacked | 0 |
-| **total** | **4453** |
+| **total** | **4457** |
 
-**1027** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1031** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -745,6 +745,10 @@ one that matters.
 - *measured* (grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)): It is the local paper level of entry 260 again: a hole just inside a shadow's edge is judged against the paper outside it.
 - *measured* (grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)): - **Glare** reproduces the study's 22 and 23 once the hot spot is clipped to white, as a camera clips it; the holes under it are lost.
 - *measured* (grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)): - **Soft shadow and uneven light** lose one hole fewer than the study did, **blur 1.5 px** makes one false mark on one seed, and the seeds differ; these are within the margin and are the conditions' exact definitions, not a change in the detector.
+- *decided* (entry 308 sections 1, 3 and 4; src/GroupLab.Cli/ScoreboardVerb.cs AnyTarget): **Store-bought targets, "any target" (entry 308).** Each target Alan buys is scanned at 600 dpi before it is shot, shot, scanned again and photographed two or three times, into `C:\Dev\grouplab-local\commercial-targets\ \`, local only and never shown.
+- *decided* (entry 308 sections 1, 3 and 4; src/GroupLab.Cli/ScoreboardVerb.cs AnyTarget): The scoreboard reads both scans with the detector that needs no printed artwork (section 7) and gives two lines: "any target, shot", its marks held to the count, and "any target, blank", where every mark is a false one, since nothing on a blank sheet is a hole.
+- *decided* (entry 308 sections 1, 3 and 4; src/GroupLab.Cli/ScoreboardVerb.cs AnyTarget): The phone photographs wait for the wiring of section 7, which gives them a scale.
+- *decided* (entry 308 sections 1, 3 and 4; src/GroupLab.Cli/ScoreboardVerb.cs AnyTarget): Alan's photographs of 20 September of a store-bought target are test material of the same kind, and are never shown or named on the site.
 - *measured* (grouplab scoreboard --corpus on the local corpus of the 2026-09-29 sitting and the 2026-09-26 photographs against their scans, measured 2026-09-29 (entry 291); local only): **The first real table** (2026-09-29, seven photographs of three sheets, each against its own 600 dpi scan).
 - *measured* (grouplab scoreboard --corpus on the local corpus of the 2026-09-29 sitting and the 2026-09-26 photographs against their scans, measured 2026-09-29 (entry 291); local only): The four pictures of the second camera sitting are all of one 6 ARC load sheet, taken with the torch at 1, 2, 9 and 15 degrees off square; the three of 2026-09-26 are the kitchen-counter photographs of entry 233.
 - *measured* (grouplab scoreboard --corpus on the local corpus of the 2026-09-29 sitting and the 2026-09-26 photographs against their scans, measured 2026-09-29 (entry 291); local only): **What it says:** square-on pictures are clean; the two taken well off square lose holes and make false marks, all in the right-hand column of bulls, where the stray marks are 0.3 to 0.5 in across, a hole and the paper beside it read as one, placed up to 0.18 in from the hole.
