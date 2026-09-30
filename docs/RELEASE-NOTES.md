@@ -518,7 +518,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - GroupLab can now send a report when it hits an error, so the problem can be fixed; the first time, it asks whether to send automatically, ask each time, or never, and Settings can change it.
 - The two consent choices on the first screen, and the other long choices in the sending question and Settings, now wrap onto several lines instead of running off the edge, so you can read everything you are agreeing to.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.103)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
