@@ -44,7 +44,12 @@ public static class SheetIdentification
     public const int MaximumWorkingSide = 8000;
 
     /// <param name="cancellation">Checked before each resolution is read and each code cut out is enlarged, so a screen can stop a long identification (NOTES-FROM-PLANNING.md entry 76 section 4, entry 313 section 1.1).</param>
-    public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace, CancellationToken cancellation = default)
+    /// <param name="longestSide">
+    /// The longest side a resolution may make the image, <see cref="MaximumWorkingSide"/> unless the caller asks for less. The phone asks for
+    /// less (NOTES-FROM-PLANNING.md entry 313 section 1.4): on its pictures doubling the whole picture never named a sheet, took 11 to 12.5
+    /// seconds on the desktop and tripled the memory the reading held, and the codes cut out and enlarged read what it could.
+    /// </param>
+    public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace, CancellationToken cancellation = default, int longestSide = MaximumWorkingSide)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
@@ -100,9 +105,9 @@ public static class SheetIdentification
         foreach (double scale in Scales)
         {
             cancellation.ThrowIfCancellationRequested();
-            if (Math.Max(image.Width, image.Height) * scale > MaximumWorkingSide)
+            if (Math.Max(image.Width, image.Height) * scale > longestSide)
             {
-                stage.Detail(string.Create(inv, $"at {scale:0.##} times full resolution: skipped, which would make the image longer than {MaximumWorkingSide} px"));
+                stage.Detail(string.Create(inv, $"at {scale:0.##} times full resolution: skipped, which would make the image longer than {longestSide} px"));
                 continue;
             }
 
