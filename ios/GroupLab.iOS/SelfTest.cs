@@ -160,6 +160,9 @@ internal static class SelfTest
                 // Entry 292 section 2.3: a picture opened in GroupLab from another app, and one shared into it, each read into analysis.
                 checks.Add(await PhotosSelfTest.OpenIn(sample, 60));
                 checks.Add(await PhotosSelfTest.Shared(sample, 61));
+
+                // Entry 290 section 6: every feature the parity table had not seen on iOS, opened from the result and the places along the bottom.
+                checks.AddRange(await ParityTour.Run(sample));
             }
 
             // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
