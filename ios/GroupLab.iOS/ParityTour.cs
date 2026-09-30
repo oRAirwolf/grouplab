@@ -84,7 +84,7 @@ internal static class ParityTour
     /// <summary>The button whose words, or first line on a row, are <paramref name="words"/>, within <paramref name="within"/>.</summary>
     private static Button? ButtonOf(Control within, string words) =>
         within.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b =>
-            b.IsEffectivelyVisible && b.GetLogicalDescendants().OfType<TextBlock>().FirstOrDefault()?.Text == words);
+            b.IsEffectivelyVisible && ((b.Content as string) ?? b.GetLogicalDescendants().OfType<TextBlock>().FirstOrDefault()?.Text) == words);
 
     private static void Press(Button button) => button.RaiseEvent(new RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
 

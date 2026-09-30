@@ -23,7 +23,7 @@ internal sealed class CaptureScreen : UIView
     public const string ShutterName = "Shutter";
     public const string InstructionName = "Instruction";
     public const string TorchName = "Torch";
-    public const string PickerName = "Choose a photograph";
+    public const string PickerName = "Choose a photo";
     public const string GuidedName = "Guided mode";
     public const string ManualName = "Manual mode";
     public const string LevelName = "Level";
