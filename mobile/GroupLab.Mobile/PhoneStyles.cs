@@ -85,6 +85,11 @@ internal static class PhoneStyles
             (TextBlock.ForegroundProperty, Brush(p.Text))),
         Rule(x => x.OfType<TextBlock>().Class(Dim), (TextBlock.FontSizeProperty, Tokens.HeadingSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
 
+        // Entry 290 section 6: a word's explanation, which opens over the page, in the application's own face and size. The theme gave it
+        // the system's face at a smaller size, the only words on the phone that were not in GroupLab's type.
+        Rule(x => x.OfType<FlyoutPresenter>(), (TemplatedControl.FontFamilyProperty, Tokens.Sans), (TemplatedControl.FontSizeProperty, Tokens.TitleSize),
+            (TemplatedControl.ForegroundProperty, Brush(p.Text))),
+
         // Related things on one panel.
         Rule(x => x.OfType<Border>().Class(Card), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)),
             (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(CardRadius)), (Border.PaddingProperty, new Thickness(Tokens.Space16, Tokens.Space12))),
