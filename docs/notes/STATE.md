@@ -9,87 +9,72 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 12:15 UTC, when Alan stopped the overnight run at a clean point: three workers stopped, their
-work pushed as branches (below), main unchanged by it.
+**Last rewritten:** 2026-09-30 13:40 UTC, after the three overnight branches merged and entries 311 to 317 were folded.
 
 ---
 
 ## In flight
 
-- **iOS until 2026-10-01 02:00 UTC** (entries 290 and 296): on main and proven on the simulator: every tab, the imaging, the 25-shot
-  sample identical to the desktop, Apple Photos, Files, sharing into GroupLab (a share extension), share, print and paste, the parity tour
-  of every feature, Home A, the torch on Auto a step at a time (entry 302 item 3), and a `.grouplab` data file opened from Files (entry
-  307). Nightly 134 was signed and sent to TestFlight; 135 and 136 were signed but not sent (next three, 1). Entry 310's testflight
-  workflow keeps GroupLab Team and Public Beta on one build once Alan makes the groups (request 59). iPad and landscape are
-  photographed and fixed (the short build code, the bar to both edges, a large iPhone's result side by side). The camera, torch and level wait for the iPad sitting.
-- **GroupLab Dev updates itself** (entry 288): the Dev APK only, never the AAB, `UPDATE_PACKAGES_WITHOUT_USER_ACTION` for a silent second
-  update. The Fold proved the first prompt; the silent second update on the tablet (nightly 128) and the Fold (129) waits for the devices
-  to be reachable over adb again; `docs/ANDROID.md` section 17 has the results so far.
-- **Export and import everything** (entry 307): one `.grouplab` file that any GroupLab reads, merged without overwriting, conflicts listed
-  first; on Android, the desktop and iOS.
-- **Colored bulls** (entry 297): red or blue bulls on every sheet, found from the photo; question 75 on the ink they use is with planning.
-- **The detection scoreboard** (entry 308): `grouplab scoreboard` against made-up targets in CI and the local corpus by hand.
-- **The Mac build is signed and notarized** (entry 306): shipped from nightly 135 on both architectures; the xattr Terminal command is
-  gone from the README and the download page, which say Windows and Linux are unsigned and the Mac build is approved by Apple.
-- **The phone does what the desktop does** (entries 258, 259, 290): `docs/PHONE-PARITY.md` has an Android and an iOS column; the site
-  build fails on a feature with no row.
+- **Nightly 137** builds e8fa5ce0: everything below merged today. It is the test of the TestFlight upload fix (63eadc57, the encryption
+  check reports instead of stopping); its log says what the signed package carries. Then: does the iPad mini receive it (build 134 on it now).
+- **Merged today** (on main, first in nightly 137): the iPad reading hang, Cancel and a one-minute limit (313); Guided about a second
+  after ready and the green level (311); Send diagnostics, the iPad's Files folder, its log over USB, TestFlight feedback summaries
+  (311 section 3); the iPad screenshot fixes (312); crash reports 11 and 12 fixed; the cartridge lookup and its setting (314); scenario
+  files, GroupLab Dev for iOS, the automation bridge, and Show diagnostics on the camera (315 sections 1, 2, 4); the Mac download says
+  M-series (316).
+- **iOS until 2026-10-01 02:00 UTC** (entry 290): the end-of-window summary goes at the top of `for-alan.md`.
+- **The Microsoft Store's first submission** (request 38 Part B) went to certification on 2026-09-30; `store-status.yml` reads its
+  status every six hours (read only) into the run summary.
+- **GroupLab Dev updates itself** (entry 288): the silent second update waits for the phones to be reachable over adb again.
+- **Colored bulls** (entry 297): question 75 with planning; request 57 for Alan.
 
 ## The next three
 
-1. **Review and merge the three overnight branches** (pushed, not on main, not proven in CI; each commit has its trailers):
-   `overnight/reading` (c1516855): entry 313 section 1 (Cancel always works, a time limit, the screen lock, `read.stage` timings, crash
-   report 11) and section 2 (the panel above the preview, no stray dash), 313 section 1.4 (no doubled picture for the codes), entry 311
-   sections 1 (Guided fires about a second after ready, both platforms) and 2 (the level). `overnight/screens` (15643ee6): crash report
-   12 (Shots Needed to Zero calculated twice), all of entry 312, then a **WIP** commit of entry 314 (table, lookup, setting, unfinished).
-   `overnight/tooling` (3f4e571c): entry 311 section 3 (Send diagnostics, the Files folder, `scripts/` for the iPad over USB, TestFlight
-   feedback), entry 315 section 2 (scenario files) and the iOS GroupLab Dev app on the simulator, then a **WIP** commit of the bridge.
-   Run each branch's tests and the `ios app` workflow, merge the finished commits, then fold entries 311 to 313 (and 314, 315 when done).
-2. **Prove the TestFlight upload** on the first nightly that changes the app (63eadc57 made the encryption check print and warn); its log
-   says what the signed package carries (the unsigned device build carries false in both bundles, read from nightly 136's log).
-3. Entry 290's end-of-window iOS summary in `docs/notes/for-alan.md` (the window ends 2026-10-01 02:00 UTC), then entry 314's rest and
-   entry 315's sections 1, 3 and 4.
+1. Nightly 137: confirm the TestFlight upload, the site current, and close crash reports 11 and 12 with the build; check the iPad with
+   `pymobiledevice3 apps query org.grouplab.app` (never list other apps).
+2. Entry 290's iOS summary at the end of the window; then drive the new build on the iPad over USB where Alan's sitting allows
+   (the bridge is GroupLab Dev only, and the iOS Dev app waits on request 61).
+3. Entry 315's rest: section 3 (the replay camera and sitting clips) and amendment 2 items 3 and 6 (Android's replay camera, Firebase
+   Test Lab's cost, reported before anything is used).
 
 ## Blocked, and on what
 
 - **TestFlight distribution and the public beta link**: request 59 (the two groups, then the public link).
-- **The phones**: not reachable over adb since 2026-09-30 morning; their wireless debugging adverts refuse connections.
-- **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
-- **Entry 166 section 3.2.** Request 16: the Mac tester's trackpad check.
+- **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
+- **The phones**: not reachable over adb since 2026-09-30 morning.
+- **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **12** (59 the TestFlight groups and the iPad; 56 the printer scale; 50 the device sitting;
-57 red bulls; 58 store-bought targets for the detector; 54 a plain target; 46 the backups on 4 October; 38 the Store; then 33, 9, 16 and 20).
-for-alan.md's own count says the same.
+Open requests in `docs/notes/for-alan.md`: **13** (59 TestFlight groups; 56 printer scale; 50 the device sitting; 54, 57, 58 at the
+range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`; 69 to 74 were answered by the run's own messages.
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
+- **76** a held-back cartridge typed in full without choosing it (B built: it must be chosen)
 - **75** colored ring bulls use more ink than black on a color inkjet (A proposed: accept it)
-- **67** the printer check page as grid style 4, and its card outline 3 mm outside the card (with Alan)
-- **51** which hole center GroupLab should report; agreed to wait on request 9
+- **67** the printer check page as grid style 4 (with Alan)
+- **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
-- **36** a light installer, measured, and why shrinking the one we have beat it
-- **34** pooling two sheets of one load needs a rule for what a pooled group's center means
+- **36** a light installer, measured
+- **34** pooling two sheets of one load needs a rule for a pooled group's center
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.136 (2026-09-30, about 11:05 UTC): the iPad and landscape fixes and the short build code; Windows,
-  Linux, Android and the notarized Mac all published; the iOS build signed but not sent (next three, 1). Nightly 135 was the first with
-  the Mac build notarized.
-- **The site follows each push by itself**, but not the nightly's own notes commits; it serves f2328b6b (the Mac download without the Terminal command).
-- **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
+- **Last nightly:** 0.2.0-nightly.136 (2026-09-30 about 11:05 UTC); 137 is building from e8fa5ce0.
+- **The site** publishes each push; a234baeb carries the M-series wording.
+- Crash reports open: 9 (an unobserved index error; the reading now records such errors with their stack, so the next report says
+  where), 11 and 12 (fixed, closed with nightly 137).
 
 ## The inbox
 
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
-they differ. The planning session's files are not committed, so while a run is working through them the
-line reads what the repository holds, and the test fails locally until the last is done.
+they differ.
 
 **Holds:** none
 
-Waiting on this computer: entries 311 to 315 (and entry 314's CSV), read and partly built on the overnight branches (next three,
-1); none folded yet. Crash reports 11 and 12 are fixed on those branches and still open; 9 reopened with a different fault.
+Entries 311 to 317 are folded; their files are in `C:\Dev\grouplab-trash\2026-09-30\`.
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -117,4 +102,8 @@ Waiting on this computer: entries 311 to 315 (and entry 314's CSV), read and par
 - **Alan's own photographs and scans may be published**, and so may what he passes on from Unholy (also TNA) and his other friends;
   the 2026-09-16 friend scan never is. Justin is credited as "Justin" only.
 - **A sample over about 10 MB is never committed**; it goes on the `test-data` release.
-- **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel.
+- **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary
+  (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
+- **A push headed `[notes] ` builds nothing**, so the last commit of a push that should make a nightly must not be one (it cancelled
+  a234baeb's build on 2026-09-30, and e8fa5ce0 rebuilt it).
+- **Entry 317's budget is in force:** one worker by default, the ccusage line once a day in for-alan.md.
