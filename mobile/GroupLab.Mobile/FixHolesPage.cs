@@ -24,11 +24,11 @@ internal sealed class FixHolesPage : UserControl
     private readonly MarkingAPage.Viewer viewer;
     private readonly Action<MarkingState?> finished;
     private readonly TextBlock words = Screens.Line("");
-    private readonly Button main = Screens.Primary("", () => { });
-    private readonly Button move = Screens.Choice("Move this hole", () => { });
-    private readonly Button remove = Screens.Choice("Remove this hole", () => { });
-    private readonly Button undo = Screens.Choice("Undo", () => { });
-    private readonly Button done = Screens.Primary("Done", () => { });
+    private readonly Button main = Screens.Primary("", () => { }).Id("fix-main");
+    private readonly Button move = Screens.Choice("Move this hole", () => { }).Id("fix-move");
+    private readonly Button remove = Screens.Choice("Remove this hole", () => { }).Id("fix-remove");
+    private readonly Button undo = Screens.Choice("Undo", () => { }).Id("fix-undo");
+    private readonly Button done = Screens.Primary("Done", () => { }).Id("fix-done");
     private readonly Border ask;
     private readonly TextBlock trueSize = Screens.Dim("");
     private readonly UnitSettings units;
@@ -59,9 +59,9 @@ internal sealed class FixHolesPage : UserControl
 
         ask = Screens.Card(
             Screens.Heading("Keep the changes you made?"),
-            Screens.Choice("Keep them", () => Finish(session.State)),
-            Screens.Choice("Throw them away", () => Finish(null)),
-            Screens.Choice("Go on fixing", GoOn));
+            Screens.Choice("Keep them", () => Finish(session.State)).Id("fix-keep"),
+            Screens.Choice("Throw them away", () => Finish(null)).Id("fix-throw-away"),
+            Screens.Choice("Go on fixing", GoOn).Id("fix-go-on"));
         ask.IsVisible = false;
 
         var pair = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { move, remove } };
@@ -77,7 +77,7 @@ internal sealed class FixHolesPage : UserControl
         column.Children.Add(pair);
         column.Children.Add(closing);
         column.Children.Add(ask);
-        column.Children.Add(Screens.Choice("Back to the result", Leave));
+        column.Children.Add(Screens.Choice("Back to the result", Leave).Id("fix-back"));
         Content = new ScrollViewer { Content = column };
 
         // The picture takes most of the screen, the buttons under it within a thumb's reach.

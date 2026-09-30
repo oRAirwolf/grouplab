@@ -33,10 +33,15 @@ namespace GroupLab.Mobile.Dev;
 ///   { "do": "tree", "name": "fix-holes" },
 ///   { "do": "open", "place": "sessions" } ] }
 /// </code>
-/// Steps: <c>open</c> a place along the bottom; <c>picture</c>, a file in the scenario folder read as a chosen photograph; <c>wait</c> until
-/// a screen (a control's type) or some text is showing; <c>press</c> a button by its automation name or its words; <c>type</c> into a field
-/// named by its automation name or its placeholder; <c>screenshot</c>; <c>tree</c>, the visible controls with their names, words, places and
-/// whether each is enabled; <c>sleep</c>; <c>log</c>, the newest lines of the log. A step it does not know fails and says so. Before the
+/// Steps: <c>open</c> a place along the bottom; <c>back</c>, as Android's back does; <c>picture</c>, a file in the scenario folder (or the
+/// files folder itself, Documents on iOS) read as a chosen photograph; <c>read</c>, the same and then a wait for the result;
+/// <c>wait</c> until a screen (a control's type) or some text is showing; <c>press</c> a button by its automation id, its automation name
+/// or its words; <c>type</c> into a field named by its automation id, its automation name or its placeholder; <c>choose</c> an
+/// <c>"item"</c> in a list, or turn a check box, switch or choice named <c>"name"</c> on (or off, with <c>"on": false</c>); <c>scroll</c> a
+/// named control into view, or the page <c>"by"</c> so many points or <c>"to"</c> its top or bottom; <c>setting</c>, one value in the
+/// settings file by its key; <c>reset</c>, the settings and the sessions taken away and every page made again, as a first run;
+/// <c>screenshot</c>; <c>tree</c>, the visible controls with their ids, names, words, places and whether each is enabled; <c>sleep</c>;
+/// <c>log</c>, the newest lines of the log. A step it does not know fails and says so. Before the
 /// application starts, the first run's questions are answered unless the scenario has <c>"firstRun": "ask"</c>, and <c>"caliber"</c> with
 /// <c>"distanceInches"</c> are saved as the Capture screen's setup. <c>"stopOnFailure": false</c> carries on past a step that failed.
 /// </summary>
@@ -282,12 +287,12 @@ internal static class Scenario
         return results;
     }
 
-    private static async Task<(bool, string)> Do(Step step)
+    internal static async Task<(bool, string)> Do(Step step)
     {
         switch (step.Do)
         {
             case "open":
-                if (!Enum.TryParse(step.Text("place"), ignoreCase: true, out Shell.Place place))
+                if (!Enum.TryParse(step.Text("place"), ignoreCase: true, out Shell.Place place) || !Enum.IsDefined(place))
                 {
                     return (false, "no place named " + (step.Text("place") ?? "nothing") + "; the places are " + string.Join(", ", Enum.GetNames<Shell.Place>()));
                 }
@@ -297,14 +302,33 @@ internal static class Scenario
                     Shell.Current?.Show(place);
                     return (Shell.Current is not null, place.ToString());
                 });
+            case "back":
+                return await OnUi(() => (Shell.Current?.Back() == true, Shell.Current?.Showing.ToString() ?? ""));
             case "picture":
                 return await Picture(step.Text("file"));
+            case "read":
+                // The picture read as a chosen one, and then the result, or the question a smaller copy asks, waited for.
+                var (given, which) = await Picture(step.Text("file"));
+                if (!given)
+                {
+                    return (false, which);
+                }
+
+                return await Wait("ResultView", "A smaller copy", TimeSpan.FromSeconds(step.Number("seconds", 180)));
             case "wait":
                 return await Wait(step.Text("screen"), step.Text("text"), TimeSpan.FromSeconds(step.Number("seconds", 60)));
             case "press":
                 return await OnUi(() => Press(step.Text("name")));
             case "type":
                 return await OnUi(() => Type(step.Text("name"), step.Text("text") ?? ""));
+            case "choose":
+                return await OnUi(() => Choose(step.Text("name"), step.Text("item"), step.Fields["on"]?.GetValueKind() != JsonValueKind.False));
+            case "scroll":
+                return await OnUi(() => Scroll(step.Text("name"), step.Text("to"), step.Number("by", 0)));
+            case "setting":
+                return await OnUi(() => Setting(step.Text("name"), step.Fields["value"]));
+            case "reset":
+                return await OnUi(() => Reset(step.Text("firstRun") != "ask"));
             case "screenshot":
                 return await OnUi(() => Screenshot(Name(step.Text("name"), "screen")));
             case "tree":
@@ -328,7 +352,7 @@ internal static class Scenario
         return name.Trim('.') is { Length: > 0 } safe ? safe : otherwise;
     }
 
-    private static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
+    internal static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
 
     /// <summary>What is on screen now, laid out first so a page just opened is there to be found.</summary>
     private static IEnumerable<Visual> Showing()
@@ -342,18 +366,23 @@ internal static class Scenario
         return shell.GetVisualDescendants().Where(v => v.IsEffectivelyVisible).ToList();
     }
 
-    /// <summary>A picture in the scenario folder, read as a photograph chosen on the Capture screen.</summary>
+    /// <summary>A picture in the scenario folder, or in the files folder itself, read as a photograph chosen on the Capture screen.</summary>
     private static async Task<(bool, string)> Picture(string? file)
     {
         if (file is not { Length: > 0 } || Name(file, "") != file)
         {
-            return (false, "a picture is a file name in the scenario folder");
+            return (false, "a picture is a file name in the scenario folder or the files folder");
         }
 
         string path = Path.Combine(Folder, file);
         if (!File.Exists(path))
         {
-            return (false, file + " is not in the scenario folder");
+            path = Path.Combine(Phone.Platform.FilesFolder, file);
+        }
+
+        if (!File.Exists(path))
+        {
+            return (false, file + " is not in the scenario folder or the files folder");
         }
 
         var handle = new PhotoHandle(null, null, null, new FileInfo(path).Length, Path.GetExtension(path).ToLowerInvariant(),
@@ -378,7 +407,8 @@ internal static class Scenario
             return (false, "wait for a \"screen\" or some \"text\"");
         }
 
-        // Several may be given, separated by |: the first that shows ends the wait, and is said.
+        // Several may be given, separated by |: the first that shows ends the wait, and is said. An hour at most.
+        most = TimeSpan.FromSeconds(Math.Clamp(most.TotalSeconds, 0, 3600));
         string[] screens = screen?.Split('|') ?? [];
         string[] texts = text?.Split('|') ?? [];
         var clock = Stopwatch.StartNew();
@@ -409,6 +439,17 @@ internal static class Scenario
         _ => null,
     };
 
+    /// <summary>Whether a control answers to a name given it for scripts: its automation id or its automation name.</summary>
+    private static bool Named(Control control, string? name) =>
+        name is not null && (AutomationProperties.GetAutomationId(control) == name || AutomationProperties.GetName(control) == name);
+
+    /// <summary>The first of <paramref name="controls"/> named <paramref name="name"/>, or else the first whose words are it.</summary>
+    private static T? Find<T>(IEnumerable<T> controls, string name) where T : Control
+    {
+        var all = controls.ToList();
+        return all.FirstOrDefault(c => Named(c, name)) ?? all.FirstOrDefault(c => Words(c) == name);
+    }
+
     private static (bool, string) Press(string? name)
     {
         if (name is null)
@@ -420,7 +461,7 @@ internal static class Scenario
         var buttons = Showing().OfType<Button>().ToList();
         foreach (string each in name.Split('|'))
         {
-            var button = buttons.FirstOrDefault(b => AutomationProperties.GetName(b) == each) ?? buttons.FirstOrDefault(b => Words(b) == each);
+            var button = Find(buttons, each);
             if (button is null)
             {
                 continue;
@@ -440,7 +481,15 @@ internal static class Scenario
 
     private static (bool, string) Type(string? name, string text)
     {
-        var box = Showing().OfType<TextBox>().FirstOrDefault(b => AutomationProperties.GetName(b) == name || b.PlaceholderText == name);
+        // A box that suggests as it is typed in (the caliber) takes the words itself; the field inside it is not what is named.
+        var showing = Showing().OfType<Control>().ToList();
+        if (showing.OfType<AutoCompleteBox>().FirstOrDefault(b => Named(b, name) || b.PlaceholderText == name) is { } suggesting)
+        {
+            suggesting.Text = text;
+            return (true, name ?? "");
+        }
+
+        var box = showing.OfType<TextBox>().FirstOrDefault(b => Named(b, name) || b.PlaceholderText == name);
         if (box is null)
         {
             return (false, "no field named " + name);
@@ -448,6 +497,180 @@ internal static class Scenario
 
         box.Text = text;
         return (true, name ?? "");
+    }
+
+    /// <summary>An item chosen in a list named <paramref name="name"/>, or a check box, switch or choice so named turned on or off.</summary>
+    private static (bool, string) Choose(string? name, string? item, bool on)
+    {
+        if (name is null)
+        {
+            return (false, "choose needs a \"name\"");
+        }
+
+        var showing = Showing().OfType<Control>().ToList();
+        if (showing.OfType<Avalonia.Controls.Primitives.SelectingItemsControl>().FirstOrDefault(l => Named(l, name)) is { } list)
+        {
+            if (item is null)
+            {
+                return (false, "choosing in a list needs an \"item\"");
+            }
+
+            int index = 0;
+            foreach (object? each in list.Items)
+            {
+                if ((each is Visual visual ? Words(visual) : each?.ToString()) == item)
+                {
+                    if (!list.IsEffectivelyEnabled)
+                    {
+                        return (false, name + " is not enabled");
+                    }
+
+                    list.SelectedIndex = index;
+                    return (true, item);
+                }
+
+                index++;
+            }
+
+            return (false, $"{name} has no item {item}");
+        }
+
+        if (Find(showing.OfType<Avalonia.Controls.Primitives.ToggleButton>(), name) is not { } toggle)
+        {
+            return (false, "no list, check box or choice named " + name);
+        }
+
+        if (!toggle.IsEffectivelyEnabled)
+        {
+            return (false, name + " is not enabled");
+        }
+
+        // A choice among several is chosen, never unchosen: another is chosen instead.
+        toggle.IsChecked = toggle is RadioButton || on;
+        return (true, $"{name} {(toggle.IsChecked == true ? "on" : "off")}");
+    }
+
+    /// <summary>A named control scrolled into view, or the innermost page that scrolls moved by some points or to its top or bottom.</summary>
+    private static (bool, string) Scroll(string? name, string? to, double by)
+    {
+        var showing = Showing().OfType<Control>().ToList();
+        if (name is not null)
+        {
+            if (Find(showing, name) is not { } control)
+            {
+                return (false, "no control named " + name);
+            }
+
+            control.BringIntoView();
+            return (true, name);
+        }
+
+        var viewer = showing.OfType<ScrollViewer>().LastOrDefault(v => v.Extent.Height > v.Viewport.Height);
+        if (viewer is null)
+        {
+            return (false, "nothing showing scrolls");
+        }
+
+        switch (to)
+        {
+            case "top":
+                viewer.ScrollToHome();
+                break;
+            case "bottom":
+                viewer.ScrollToEnd();
+                break;
+            case null:
+                double most = Math.Max(0, viewer.Extent.Height - viewer.Viewport.Height);
+                viewer.Offset = new Vector(viewer.Offset.X, Math.Clamp(viewer.Offset.Y + by, 0, most));
+                break;
+            default:
+                return (false, "scroll \"to\" is top or bottom");
+        }
+
+        viewer.UpdateLayout();
+        return (true, string.Create(CultureInfo.InvariantCulture, $"at {viewer.Offset.Y:0} of {Math.Max(0, viewer.Extent.Height - viewer.Viewport.Height):0}"));
+    }
+
+    /// <summary>
+    /// One value in the settings file set by its key, as the settings store would write it, or taken away by a null; the place showing is
+    /// made again, so a screen opened afterwards reads it.
+    /// </summary>
+    private static (bool, string) Setting(string? key, JsonNode? value)
+    {
+        if (key is not { Length: > 0 })
+        {
+            return (false, "setting needs a \"name\", the key in the settings file");
+        }
+
+        string path = Phone.Settings.Path;
+        JsonObject file;
+        try
+        {
+            file = File.Exists(path) && JsonNode.Parse(File.ReadAllText(path)) is JsonObject existing ? existing : [];
+        }
+        catch (JsonException e)
+        {
+            return (false, "the settings file is not JSON: " + e.Message);
+        }
+
+        if (value is null)
+        {
+            file.Remove(key);
+        }
+        else
+        {
+            file[key] = value.DeepClone();
+        }
+
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, file.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+        Shell.Units();
+        if (Shell.Current is { } shell && shell.Showing != Shell.Place.Capture)
+        {
+            shell.Show(shell.Showing);
+        }
+
+        DiagnosticLog.Info("scenario.setting", ("key", key));
+        return (true, key);
+    }
+
+    /// <summary>
+    /// What a person's use leaves behind, taken away for a run that starts as a first run: the settings and the sessions with their pictures
+    /// and own sheets. The built-in sheets, the scenario folder, the bridge's key and a sitting's kept pictures stay.
+    /// </summary>
+    internal static readonly string[] ResetTakes = ["settings.json", "sessions.db", "sessions.db-wal", "sessions.db-shm", "sessions.db-journal", "records.json", "sessions", "own-sheets"];
+
+    private static (bool, string) Reset(bool answerFirstRun)
+    {
+        var kept = new List<string>();
+        foreach (string name in ResetTakes)
+        {
+            string path = Path.Combine(Phone.Platform.FilesFolder, name);
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, recursive: true);
+                }
+                else if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                kept.Add(name);
+            }
+        }
+
+        if (answerFirstRun)
+        {
+            AnswerFirstRun(Phone.Settings);
+        }
+
+        Shell.Current?.Restart();
+        DiagnosticLog.Info("scenario.reset", ("kept", kept.Count));
+        return kept.Count == 0 ? (true, answerFirstRun ? "a first run, its questions answered" : "a first run") : (false, "could not take away " + string.Join(", ", kept));
     }
 
     private static (bool, string) Screenshot(string name)
@@ -483,7 +706,8 @@ internal static class Scenario
         {
             string? name = AutomationProperties.GetName(visual);
             string? words = visual is Panel or Border or Avalonia.Controls.Presenters.ContentPresenter ? null : Words(visual);
-            if (name is null && words is null && visual is not (Button or TextBox or CheckBox or RadioButton))
+            if (name is null && words is null && AutomationProperties.GetAutomationId(visual) is null
+                && visual is not (Button or TextBox or Avalonia.Controls.Primitives.ToggleButton or Avalonia.Controls.Primitives.SelectingItemsControl))
             {
                 continue;
             }
@@ -492,6 +716,7 @@ internal static class Scenario
             all.Add(new JsonObject
             {
                 ["type"] = visual.GetType().Name,
+                ["id"] = AutomationProperties.GetAutomationId(visual),
                 ["name"] = name,
                 ["text"] = words,
                 ["x"] = Math.Round(box.X),
@@ -516,16 +741,27 @@ internal static class Scenario
     /// <summary>The newest lines of this run's log, or all of it, copied beside the results.</summary>
     private static bool CopyLog(string to, int? lines)
     {
-        DiagnosticLog.Current.Flush();
-        if (DiagnosticLog.Current.FilePath is not { } log || !File.Exists(log))
+        if (LogLines(lines) is not { } text)
         {
             return false;
         }
 
+        File.WriteAllText(to, text);
+        return true;
+    }
+
+    /// <summary>The newest lines of this run's log, or all of it; null where there is no log.</summary>
+    internal static string? LogLines(int? lines)
+    {
+        DiagnosticLog.Current.Flush();
+        if (DiagnosticLog.Current.FilePath is not { } log || !File.Exists(log))
+        {
+            return null;
+        }
+
         using var read = new StreamReader(new FileStream(log, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete));
         var all = read.ReadToEnd().Split('\n');
-        File.WriteAllText(to, string.Join('\n', lines is { } n ? all.TakeLast(n) : all));
-        return true;
+        return string.Join('\n', lines is { } n ? all.TakeLast(n) : all);
     }
 }
 #endif

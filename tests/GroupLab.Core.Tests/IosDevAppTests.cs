@@ -20,6 +20,16 @@ public class IosDevAppTests
         }
     }
 
+    /// <summary>Entry 315 section 1: the script that drives GroupLab Dev over the cable, against a made-up GroupLab Dev.</summary>
+    [Fact]
+    public void TheBridgesScriptPassesItsOwnSelfTest()
+    {
+        if (IpadLogsTests.Python("scripts/app-bridge.py --self-test") is { } run)
+        {
+            Assert.True(run.Exit == 0, run.Said);
+        }
+    }
+
     [Fact]
     public void EachProjectBecomesGroupLabDevOnlyWithTheProperty()
     {

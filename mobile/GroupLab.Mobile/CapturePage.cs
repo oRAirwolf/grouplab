@@ -27,21 +27,21 @@ public sealed class CapturePage : UserControl
 
     private readonly TextBlock setupSummary = Screens.Line("");
     private readonly Border setupFields;
-    private readonly Button change = Screens.Choice("Change", () => { });
+    private readonly Button change = Screens.Choice("Change", () => { }).Id("capture-change");
     private readonly Border ask;
     private readonly StackPanel askFields = new() { Spacing = 8 };
     private readonly TextBlock askSaid = Screens.Line("");
     private Action? afterAsk;
     private readonly TextBlock status = Screens.Line("");
-    private readonly AutoCompleteBox calibre = new()
+    private readonly AutoCompleteBox calibre = new AutoCompleteBox
     {
         ItemsSource = CartridgeTable.Suggest(""),
         FilterMode = AutoCompleteFilterMode.Contains,
         PlaceholderText = "Caliber, e.g. 6.5 Creedmoor or .308",
         MinHeight = Screens.Touch,
-    };
+    }.Id("capture-caliber");
 
-    private readonly TextBox distance = new() { MinHeight = Screens.Touch, PlaceholderText = "Distance" };
+    private readonly TextBox distance = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "Distance" }.Id("capture-distance");
     private readonly Control start;
 
     public CapturePage()
@@ -87,8 +87,8 @@ public sealed class CapturePage : UserControl
         setupRow.Children.Add(change);
         Summarize();
 
-        var choose = Screens.Choice("Choose a photo", () => AskFirst(() => _ = Choose()));
-        var print = Screens.Choice("Print a target", () => Shell.Current?.Show(Shell.Place.Targets));
+        var choose = Screens.Choice("Choose a photo", () => AskFirst(() => _ = Choose())).Id("capture-choose-photo");
+        var print = Screens.Choice("Print a target", () => Shell.Current?.Show(Shell.Place.Targets)).Id("capture-print-target");
         var pair = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { choose, print } };
         Grid.SetColumn(print, 1);
 
@@ -129,7 +129,7 @@ public sealed class CapturePage : UserControl
                 Screens.Line("Photograph a target and read your group. On a GroupLab sheet, the scale and every hole are found for you."),
                 keptCard,
                 Screens.Card(setupRow, setupFields),
-                Screens.Primary("Take a picture", () => AskFirst(Camera)),
+                Screens.Primary("Take a picture", () => AskFirst(Camera)).Id("capture-take-picture"),
                 pair,
                 others,
                 status,
@@ -145,8 +145,8 @@ public sealed class CapturePage : UserControl
             Screens.Dim("GroupLab asks once and remembers it for the next target. The distance may stay empty if you do not know it; both can be changed on the result."),
             askFields,
             askSaid,
-            Screens.Primary("Continue", Continue),
-            Screens.Choice("Cancel", () => CloseAsk(false)));
+            Screens.Primary("Continue", Continue).Id("capture-ask-continue"),
+            Screens.Choice("Cancel", () => CloseAsk(false)).Id("capture-ask-cancel"));
         ask.IsVisible = false;
         ask.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
         ask.Margin = new Avalonia.Thickness(8);
@@ -277,14 +277,14 @@ public sealed class CapturePage : UserControl
             old.Children.Remove(page);
         }
 
-        var camera = Screens.Choice("Camera", Camera);
+        var camera = Screens.Choice("Camera", Camera).Id("capture-show-camera");
         var result = Screens.Choice("Result", () =>
         {
             if (lastResult is { } shown)
             {
                 Content = WithBar(shown, true);
             }
-        });
+        }).Id("capture-show-result");
         // Entry 291 section 2.3: the one showing looks selected, in the primary color, and never greyed out as if it could not be pressed.
         result.IsEnabled = lastResult is not null;
         (onResult ? result : camera).Classes.Add(PhoneStyles.Primary);

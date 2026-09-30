@@ -171,6 +171,9 @@ share extension `org.grouplab.app.dev.share` and address, so it installs beside 
 GroupLab's own by `scripts/ios-dev-app.py`, and a test fails while they are out of step. Only GroupLab Dev carries the developer tools,
 starting with scenario files (entry 315 section 2); they are compiled out of GroupLab, not hidden, and a test and the `ios app` workflow
 both check that GroupLab carries none of them. The `ios app` workflow builds GroupLab Dev for the simulator and runs a scenario in it.
+GroupLab Dev also carries the automation bridge (entry 315 section 1), as on Android: bound to 127.0.0.1 only, so iOS asks for no local
+network permission, reached with `scripts/app-bridge.py --platform ios`, which forwards the port with `pymobiledevice3 usbmux forward`
+and reads this run's key from `Documents/bridge/key`; docs/ANDROID.md describes its commands and what it cannot do yet.
 The nightly's `ios-dev` job builds it for a device every night and, once `IOS_DEV_PROFILE` and `IOS_DEV_SHARE_PROFILE` are set (request
 61), signs it with the same certificate and sends it to TestFlight for the internal group only; `scripts/ios-signing.py --check-dev`
 decides, and a missing or malformed profile is a warning, never a failed nightly.

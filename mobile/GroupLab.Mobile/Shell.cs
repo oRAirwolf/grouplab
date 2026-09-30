@@ -109,6 +109,7 @@ public sealed class Shell : UserControl
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Classes = { PhoneStyles.NavItem },
             };
+            tab.Id("tab-" + place.ToString().ToLowerInvariant());
             tab.Click += (_, _) => Show(place);
             tabs[place] = tab;
             bar.Children.Add(tab);
@@ -158,6 +159,12 @@ public sealed class Shell : UserControl
             }
         };
 
+        Begin();
+    }
+
+    /// <summary>The first run's questions where they are still open, and then Capture.</summary>
+    private void Begin()
+    {
         if (FirstRunView.Due(Phone.Settings))
         {
             Content = new FirstRunView(Phone.Settings, () =>
@@ -171,6 +178,18 @@ public sealed class Shell : UserControl
             Content = frame;
             Show(Place.Capture);
         }
+    }
+
+    /// <summary>
+    /// Entry 315 section 1: every page made again from the settings as they are now, as at a start, with the camera closed; GroupLab Dev's
+    /// reset to a clean state uses it after taking away the settings and the sessions.
+    /// </summary>
+    internal void Restart()
+    {
+        capture?.CloseCamera();
+        capture = null;
+        BackOverride = null;
+        Begin();
     }
 
     /// <summary>
@@ -400,6 +419,16 @@ internal static class Screens
     /// with Load Block, Letter" underlining a whole line of names as though it explained a word.
     /// </summary>
     public static TextBlock Quiet(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } };
+
+    /// <summary>
+    /// Entry 315 section 1: a control's automation id, a name that stays when its words change, so a developer's script and a test find it
+    /// by the same name on Android and iOS. <c>AutomationIdTests</c> holds the ones that matter to it.
+    /// </summary>
+    public static T Id<T>(this T control, string id) where T : Control
+    {
+        Avalonia.Automation.AutomationProperties.SetAutomationId(control, id);
+        return control;
+    }
 
     public static Button Choice(string words, Action chosen) => Pill(words, chosen, primary: false);
 

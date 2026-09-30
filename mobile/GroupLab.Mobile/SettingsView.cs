@@ -116,10 +116,10 @@ public sealed class SettingsView : UserControl
             }));
         }
 
-        var correcting = new CheckBox { Content = "Correct photographs by the chosen printer's scale", IsChecked = settings.LoadPrinterCorrection(), MinHeight = Screens.Touch };
+        var correcting = new CheckBox { Content = "Correct photographs by the chosen printer's scale", IsChecked = settings.LoadPrinterCorrection(), MinHeight = Screens.Touch }.Id("settings-printer-correction");
         correcting.IsCheckedChanged += (_, _) => settings.SavePrinterCorrection(correcting.IsChecked == true);
         column.Children.Add(correcting);
-        column.Children.Add(Screens.Choice("Add a printer", () => Shell.Current?.ShowPrinterCheck("")));
+        column.Children.Add(Screens.Choice("Add a printer", () => Shell.Current?.ShowPrinterCheck("")).Id("settings-add-printer"));
         column.Children.Add(Screens.Heading("Sharing"));
         // Entry 299: the page that says exactly what GroupLab sends, always in view; each section below shows its choice and one short line,
         // and the full explanation under "More".
@@ -310,17 +310,30 @@ public sealed class SettingsView : UserControl
             ((StackPanel)about.Child!).Children.Add(Screens.Dim(OperatingSystem.IsIOS()
                 ? "This is GroupLab Dev, the development build. It installs beside GroupLab, can be driven by a developer's scripts, and marks its error and survey reports as coming from a development build."
                 : "This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+#if GROUPLAB_DEV
+
+            // Entry 315 section 1: the automation bridge, with its key shown so a developer can reach it over the cable.
+            var bridge = new CheckBox { Content = "Let a developer's scripts drive GroupLab Dev over the cable", IsChecked = Dev.Bridge.Wanted, MinHeight = Screens.Touch }.Id("settings-dev-bridge");
+            var bridgeSaid = Screens.Dim(Dev.Bridge.Words());
+            bridge.IsCheckedChanged += (_, _) =>
+            {
+                Dev.Bridge.Wanted = bridge.IsChecked == true;
+                bridgeSaid.Text = Dev.Bridge.Words();
+            };
+            ((StackPanel)about.Child!).Children.Add(bridge);
+            ((StackPanel)about.Child!).Children.Add(bridgeSaid);
+#endif
         }
 
         // Entry 311 section 3 item 1: the logs, the crash records and the kept pictures in one file, through the share sheet.
         var sendSaid = Screens.Dim("The newest logs, any crash records and the kept pictures, in one file you send where you choose.");
-        ((StackPanel)about.Child!).Children.Add(Screens.Choice("Send diagnostics", () => sendSaid.Text = DiagnosticsPackage.Send(DateTime.Now)));
+        ((StackPanel)about.Child!).Children.Add(Screens.Choice("Send diagnostics", () => sendSaid.Text = DiagnosticsPackage.Send(DateTime.Now)).Id("settings-send-diagnostics"));
         ((StackPanel)about.Child!).Children.Add(sendSaid);
 
         if (Phone.Platform.KeepsSittings is (true, var keepByDefault))
         {
             // Entry 291 section 7.5: every picture of a sitting kept on the device, for the developer to pull; off, and it is deleted.
-            var keeping = new CheckBox { Content = "Keep every picture taken, on this device only", IsChecked = settings.LoadKeepSitting(keepByDefault), MinHeight = Screens.Touch };
+            var keeping = new CheckBox { Content = "Keep every picture taken, on this device only", IsChecked = settings.LoadKeepSitting(keepByDefault), MinHeight = Screens.Touch }.Id("settings-keep-pictures");
             var kept = Screens.Dim(KeptWords());
             keeping.IsCheckedChanged += (_, _) =>
             {

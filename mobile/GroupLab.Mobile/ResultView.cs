@@ -63,13 +63,13 @@ public sealed class ResultView : UserControl
                 {
                     // Entry 281: the sheet the picture looks most like, by its markers and its drawing, to confirm with one press.
                     column.Children.Add(Screens.Line($"It looks like {likely.Name}."));
-                    column.Children.Add(Screens.Primary("Yes, measure it as that sheet", () => _ = AsSheet(working, likely, setup, again)));
+                    column.Children.Add(Screens.Primary("Yes, measure it as that sheet", () => _ = AsSheet(working, likely, setup, again)).Id("result-as-likely-sheet"));
                 }
 
                 // Entry 279 section 2: a target GroupLab did not print is marked by hand, Marking A.
                 var failed = Screens.Page(column);
                 column.Children.Add(Screens.Choice("Not a GroupLab sheet: mark it by hand", () => Content = new MarkingAPage(working.Path, working.Metadata.Orientation, setup, units,
-                    marked => Content = new ResultView(marked, setup, units, again), () => Content = failed)));
+                    marked => Content = new ResultView(marked, setup, units, again), () => Content = failed)).Id("result-mark-by-hand"));
                 column.Children.Add(Screens.Line(result.LooksLike is null ? "Which sheet is it?" : "Or another sheet:"));
                 foreach (var sheet in PhoneAnalysis.Library().OrderBy(d => d.Name, StringComparer.CurrentCultureIgnoreCase))
                 {
@@ -132,7 +132,7 @@ public sealed class ResultView : UserControl
                         Changed();
                     }
                 }, units);
-            }));
+            }).Id("result-fix-holes"));
             picture.Children.Add(Screens.Dim("Move, add or remove a hole under a crosshair, with zoom and undo."));
             picture.Children.Add(picturePane);
         }
@@ -144,7 +144,7 @@ public sealed class ResultView : UserControl
         }
 
         // Entry 259 screen 5: the hit chance with this group carried in.
-        actions.Children.Add(Screens.Row("Ballistics", "The dope, and the chance of a hit with this group", () => Shell.Current?.ShowBallistics(session.State)));
+        actions.Children.Add(Screens.Row("Ballistics", "The dope, and the chance of a hit with this group", () => Shell.Current?.ShowBallistics(session.State)).Id("result-ballistics"));
 
         // Entry 259 screen 2: which bulls were fired at, so each shot is measured from its own.
         if (session.State.Bulls.Count(b => b.Scoring) > 1)
@@ -161,14 +161,14 @@ public sealed class ResultView : UserControl
                 Content = result;
                 Refresh();
             });
-        }));
+        }).Id("result-shots"));
 
         // Entry 280 section 2, board ZeroFrom: the zero from this group, and on to Shots Needed to Zero.
         actions.Children.Add(Screens.Row("Zero from this group", "Where the group sits, the clicks, and how sure", () =>
         {
             var result = Content;
             Content = new ZeroFromPage(session.State, units, ShowShotsToZero, () => Content = result);
-        }));
+        }).Id("result-zero"));
 
         // Entry 280 section 2, board ShareA: the picture with a results box on it, saved to the gallery or shared.
         if (result.State.ImagePath is { } shared && File.Exists(shared))
@@ -177,7 +177,7 @@ public sealed class ResultView : UserControl
             {
                 var result = Content;
                 Content = new SharePage(session.State, Title(), Date(), units, () => Content = result);
-            }));
+            }).Id("result-share-picture"));
         }
 
         // Entry 280 section 2, board Report: one dated page, shared or printed.
@@ -185,7 +185,7 @@ public sealed class ResultView : UserControl
         {
             var result = Content;
             Content = new OnePageReportPage(session.State, Title(), Date(), units, () => Content = result);
-        }));
+        }).Id("result-report"));
 
         // Entry 279 section 3 and entry 281 section 2: Unholy's "Fudd buster mode", from twenty shots.
         if (FuddBusterPage.Shots(session.State).Count >= GroupLab.Core.Statistics.FuddBuster.LeastShots)
@@ -201,10 +201,10 @@ public sealed class ResultView : UserControl
         saved.Text = SavedWords(sessionId);
         actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
-        actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? ""));
-        actions.Children.Add(Screens.Choice("Share the shots as CSV", () => shareSaid.Text = SessionFiles.ShareCsv(session.State, definition) ?? ""));
+        actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
+        actions.Children.Add(Screens.Choice("Share the shots as CSV", () => shareSaid.Text = SessionFiles.ShareCsv(session.State, definition) ?? "").Id("result-share-csv"));
         actions.Children.Add(shareSaid);
-        actions.Children.Add(Screens.Choice("Another target", again));
+        actions.Children.Add(Screens.Choice("Another target", again).Id("result-another-target"));
         Refresh();
 
         var host = new Grid { Margin = new Thickness(16) };

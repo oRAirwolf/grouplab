@@ -24,8 +24,8 @@ public sealed class SessionsPage : UserControl
         var column = new StackPanel { Spacing = 8 };
         column.Children.Add(Screens.Title("Sessions"));
         var said = Screens.Line("");
-        column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)));
-        column.Children.Add(Screens.Choice("Import shots from a CSV file", () => _ = ImportCsv(said)));
+        column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)).Id("sessions-open-file"));
+        column.Children.Add(Screens.Choice("Import shots from a CSV file", () => _ = ImportCsv(said)).Id("sessions-import-csv"));
         column.Children.Add(said);
         IReadOnlyList<SessionSummary> saved;
         try
@@ -60,7 +60,7 @@ public sealed class SessionsPage : UserControl
         // Entry 259 screen 4: two or more sessions compared, one figure at a time.
         if (saved.Count >= 2)
         {
-            column.Children.Add(Screens.Choice("Compare loads", () => Content = Choose(saved, [])));
+            column.Children.Add(Screens.Choice("Compare loads", () => Content = Choose(saved, [])).Id("sessions-compare-loads"));
         }
 
         return Screens.Page(column);
@@ -121,7 +121,7 @@ public sealed class SessionsPage : UserControl
 
         column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         column.Children.Add(compare);
-        column.Children.Add(Screens.Choice("Back to Sessions", () => Content = List()));
+        column.Children.Add(Screens.Choice("Back to Sessions", () => Content = List()).Id("sessions-back"));
         return Screens.Page(column);
     }
 

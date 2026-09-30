@@ -127,8 +127,8 @@ internal static class PhotoPages
             {
                 Screens.Title("A smaller copy"),
                 Screens.Line(words),
-                Screens.Primary("Read it anyway", () => Answer(true)),
-                Screens.Choice("Choose another way", () => Answer(false)),
+                Screens.Primary("Read it anyway", () => Answer(true)).Id("photo-read-anyway"),
+                Screens.Choice("Choose another way", () => Answer(false)).Id("photo-choose-another"),
             },
         });
         return answer.Task;

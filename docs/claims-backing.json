@@ -4560,6 +4560,22 @@
   "The nightly's `ios-dev` job builds it for a device every night and, once `IOS_DEV_PROFILE` and `IOS_DEV_SHARE_PROFILE` are set (request 61), signs it with the same certificate and sends it to TestFlight for the internal group only; `scripts/ios-signing.py --check-dev` decides, and a missing or malformed profile is a warning, never a failed nightly.": {
    "kind": "code",
    "where": "ios/GroupLab.iOS/GroupLab.iOS.csproj and ios/GroupLab.Share/GroupLab.Share.csproj, the GroupLabDev property groups; scripts/ios-dev-app.py; scripts/ios-signing.py decide_dev; nightly.yml ios-dev and ios-app.yml dev-simulator; tests IosDevAppTests and ScenarioTests; entry 315 amendment"
+  },
+  "**The automation bridge** (entry 315 section 1), in GroupLab Dev only: a small command server on the device's own 127.0.0.1, port 47315, reached over the cable with `adb forward` (or `pymobiledevice3 usbmux forward` on iOS).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
+  },
+  "A request without the key, or longer than 64 KiB, is refused and its connection closed.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
+  },
+  "Not yet: the camera cannot be driven (the replay camera is section 3), the system's own pickers, share sheet and permission questions are outside the application and out of its reach, and there is no debug overlay or per-stage timing beyond what the log already says (section 4).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
+  },
+  "GroupLab Dev also carries the automation bridge (entry 315 section 1), as on Android: bound to 127.0.0.1 only, so iOS asks for no local network permission, reached with `scripts/app-bridge.py --platform ios`, which forwards the port with `pymobiledevice3 usbmux forward` and reads this run's key from `Documents/bridge/key`; docs/ANDROID.md describes its commands and what it cannot do yet.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
   }
  },
  "rules": [
