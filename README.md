@@ -324,7 +324,7 @@ New on the phone in the latest builds, as entries 258 and 259 bring it level wit
 - On the phone, a set of sheets is a checklist: the sheets read so far pooled into one group, and those still to read.
 - On the phone, a scan says how it was printed, and every size is corrected to real inches.
 
-What does not exist yet: Garmin Xero import, velocity regression, synchronization, the iOS build (being built), and hand marking on the phone.
+What does not exist yet: Garmin Xero import, velocity regression, synchronization, and a released iOS build (it is in testing through TestFlight).
 
 #### Before the first beta or stable release
 
@@ -454,7 +454,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Built, not proven.** The result on the phone, its edits and undo, sessions kept and shared as files the desktop opens, and the first run's sharing questions.
 - **Built, not proven.** The Targets screen: the library and a sheet made for your optic, through Android's print dialog or shared as a PDF.
 - **Built, not proven.** A signed APK with every nightly, a development build that installs beside it, and Google Play's internal test.
-- **Not started.** Marking a target by hand on the phone.
+- **Built, not proven.** Marking a target by hand on the phone: the scale, the aim points and the holes placed under a fixed crosshair, on Android and iOS (entry 279, Marking A).
 
 **Phase 7. Synchronization.**
 - **Not started.** Cloud provider adapters over three-tier storage.

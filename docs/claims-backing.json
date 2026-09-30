@@ -4628,6 +4628,10 @@
   "`.github/workflows/testlab.yml` runs scenario 1 (`android/testlab/scenario-1.json`, the committed sample scan read and every tab photographed) once a day on three real phones and one virtual phone chosen from Test Lab's own list by `scripts/testlab-devices.py`, inside the free plan; until request 62's project and key exist it says so and tests nothing.": {
    "kind": "code",
    "where": ".github/workflows/testlab.yml and scripts/testlab-devices.py (its --self-test holds the choice of three real phones and one virtual one); android/testlab/scenario-1.json; request 62 in docs/notes/for-alan.md"
+  },
+  "- **Built, not proven.** Marking a target by hand on the phone: the scale, the aim points and the holes placed under a fixed crosshair, on Android and iOS (entry 279, Marking A).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/MarkingAPage.cs (the phone's hand marking, entry 279 section 2), shared by the Android and iOS heads; docs/PHONE-PARITY.md row other-targets"
   }
  },
  "rules": [

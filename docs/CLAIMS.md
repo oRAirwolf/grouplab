@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1449 |
+| code | 1450 |
 | measured | 1799 |
 | decided | 1270 |
 | unbacked | 0 |
-| **total** | **4518** |
+| **total** | **4519** |
 
-**1066** of them were read one sentence at a time and their backing written against the sentence. The other **3452** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1067** of them were read one sentence at a time and their backing written against the sentence. The other **3452** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -410,6 +410,7 @@ one that matters.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Built, not proven.** A volunteer print pack: the print screen's "Print a volunteer pack" gives the sheet and one page of instructions together, generated from `docs/VOLUNTEER-PACK.md` at the sheet's own paper size, with its own distance from bull 1 to bull 5 to measure.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): Chronograph, solver, and comparison.** - **Built, not proven.** Chronograph strings entered by hand, with the reconciliation `DESIGN.md` section 15 requires: the readings are never assumed to line up with the shots, the in-order pairing is a proposal, a reading that belongs to no shot or a shot the chronograph missed is marked, and what is accepted is kept on the session.
 - *code* (the Ballistics screen and the zero carry, src/GroupLab.App/MainWindow.Ballistics.cs): On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.
+- *code* (mobile/GroupLab.Mobile/MarkingAPage.cs (the phone's hand marking, entry 279 section 2), shared by the Android and iOS heads; docs/PHONE-PARITY.md row other-targets): - **Built, not proven.** Marking a target by hand on the phone: the scale, the aim points and the holes placed under a fixed crosshair, on Android and iOS (entry 279, Marking A).
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6, Alan's decision of 2026-09-28 that iOS is built; docs/IOS-PLAN.md): iOS.** - **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight.
 - *decided* (DESIGN.md section 21, Phase 9): It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop.
 - *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): Deferred, and why #### Deferred, and why **One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down.
