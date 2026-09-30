@@ -13,7 +13,7 @@ IOS, UNTIL WEDNESDAY 8 PM MOUNTAIN (entry 290; not a request, updated as items l
 4. It runs on the iOS Simulator in CI: done; every tab, the imaging, and your 25-shot sample identical to the desktop, and a picked picture through to a saved session.
 5. The camera screen: built (the camera, Guided and Manual, the torch, the level, the picture as JPEG); the simulator has no camera and falls back to the picker, which works; the rest is on the first TestFlight sitting's checklist.
 6. Files, sharing, printing, the idle screen: done on the simulator (the Photos picker with iCloud, Files, sharing from Google Photos and any app, Share, Print, Paste, the black idle screen); what only a device can show is on the first TestFlight sitting's list.
-7. The TestFlight path, ready for request 55's secrets: the check is built (it signs only when all seven are set and right, and names a malformed one); the job that uses it comes with item 3.
+7. The TestFlight path: the secrets are set (2026-09-30) and nightly 134 is the first to sign and send; before that, ready for request 55's secrets: the check is built (it signs only when all seven are set and right, and names a malformed one); the job that uses it comes with item 3.
 Parity with the phone (section 6): 37 of the phone's features seen working on the iOS Simulator, 8 more built but provable only on an iPad (the camera, the torch, printing, photos from other apps, the side-by-side screen), 4 left out (Android's own updater and the like).
 Also landed: GroupLab Dev updates itself from nightly 125 on (entry 288), and your answers to questions 69 (A) and 70 (B) are recorded.
 
@@ -34,7 +34,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 12.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 11.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -185,6 +185,8 @@ since then read groups about 0.4% small. The card method is what needs work, not
 ---
 
 ## 55. iOS: the Apple steps after you enrol, about forty minutes, once (entry 278 item 6)
+
+**Answered 2026-09-30: all ten secrets are set** (the eight for iOS, including IOS_SHARE_PROFILE, and the two for the Mac), and the app is named GroupLab in App Store Connect. Nothing more to do: nightly 134 is the first to sign and send to TestFlight and to notarize the Mac build, and what it reports goes in the next report.
 
 **Added 2026-09-30 (entry 306): the Mac, about twenty minutes, after the iOS secrets.** This signs and notarizes the Mac build, so it opens
 without the xattr step. It needs the Account Holder role. The team ID and App Store Connect key you set for iOS are reused.
