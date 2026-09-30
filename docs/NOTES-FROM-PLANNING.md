@@ -24,6 +24,20 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 298: every pane can be resized and is remembered
+
+**Status: done 2026-09-30.** Every multi-pane screen has a grip to drag (amber on hover), each split remembered: the editor, analysis, library, Targets, Equipment and Ballistics on the desktop, and the result's sheet and numbers side by side on a wide phone or tablet; Settings has Reset layout on both. Tested headlessly at 3840 by 2160 and at 150% scaling; a real 4K monitor is not checked. The pictures follow at the next walk.
+
+From planning, 2026-09-29, for Alan.
+
+1. **On the desktop, every split between panes inside GroupLab can be dragged** (Targets list, print panel and preview; the designer;
+   Analyze; Sessions; Compare; Ballistics; Settings; any other two- or three-pane screen), with a visible grip and a sensible least width.
+2. **Each size is remembered** between runs, per screen, and survives a window resize sensibly (proportions, not raw pixels, where that
+   reads better). The Targets list width is already remembered; follow that pattern.
+3. **Settings gets "Reset layout"**, which puts every pane back to its default size at once.
+4. On the phone, where a screen has two panes side by side (tablet, the Fold's inner screen), do the same if it is cheap; otherwise say so.
+5. Check at 3840 by 2160 with 100% and 150% Windows scaling: Alan's monitor is a 48 inch 3840 by 2160 OLED at 120 Hz.
+
 ## 2026-09-30, entry 299: Settings, the privacy and feedback text folded away
 
 **Status: done 2026-09-30.** Settings' Sending targets, Error reports and Hardware survey each show their choice and one short line; the rest folds under a remembered "More", on both platforms, with "What GroupLab sends" always in view. The Settings pictures and guide PDF follow at the next walk.
