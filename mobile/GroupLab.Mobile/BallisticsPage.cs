@@ -127,7 +127,7 @@ internal sealed class BallisticsPage : UserControl
         var missing = SolverUse.Missing(RifleChosen, LoadChosen);
         if (missing.Count > 0)
         {
-            body.Content = Screens.Card(Screens.Line("The solver needs " + string.Join(", ", missing) + ". Open Rifle or Load above to enter them."));
+            body.Content = Screens.Card(Screens.Line("The solver needs " + Joined(missing) + ". Open Rifle or Load above to enter them."));
             return;
         }
 
@@ -469,6 +469,13 @@ internal sealed class BallisticsPage : UserControl
 
         return row;
     }
+
+    /// <summary>"a rifle and a load", or "x, y and z": the desktop's way of listing what the solver still needs.</summary>
+    internal static string Joined(IReadOnlyList<string> items) => items.Count switch
+    {
+        1 => items[0],
+        _ => string.Join(", ", items.Take(items.Count - 1)) + " and " + items[^1],
+    };
 
     private static TextBox Field(string text) => new() { Text = text, MinHeight = Screens.Touch, MinWidth = 110 };
 
