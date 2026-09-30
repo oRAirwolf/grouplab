@@ -552,7 +552,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - Nothing in the desktop application changes; the Android test build now has a camera screen that says how to hold the phone and takes the picture itself.
 - Under the hood: the rules that will tell a phone user how to hold the camera, one instruction at a time, and when to take the picture, are built and tested; nothing on the desktop uses them yet.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.107)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
