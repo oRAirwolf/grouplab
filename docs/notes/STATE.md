@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 11:20 UTC, when Alan stopped the run at a clean point: nightly 136 published, nothing uncommitted,
-no worker running.
+**Last rewritten:** 2026-09-30 12:15 UTC, when Alan stopped the overnight run at a clean point: three workers stopped, their
+work pushed as branches (below), main unchanged by it.
 
 ---
 
@@ -36,14 +36,18 @@ no worker running.
 
 ## The next three
 
-1. **The iOS upload to TestFlight stops on the encryption check.** Nightlies 135 and 136 were signed, then the nightly's check found the
-   signed package's `GroupLab.iOS.app/Info.plist` not saying `ITSAppUsesNonExemptEncryption` false (read with plistlib in 136, so not a
-   plutil quirk), though the simulator build's copy does. So the signed device publish seems to drop or change the key, which would also
-   be why TestFlight asked about build 134. Next: print that key's value and the plist's keys in the check, find where the device publish
-   loses it, fix it; or make the check a warning, since `scripts/testflight.py` answers the export question by the API anyway.
-2. Entry 290's end-of-window summary in `docs/notes/for-alan.md` at 2026-10-01 02:00 UTC (its section 5), then Android and desktop work
-   at their normal share.
-3. Entry 288's no-tap second update on the tablet and the Fold as soon as adb reaches them; record it in `docs/ANDROID.md` section 17.
+1. **Review and merge the three overnight branches** (pushed, not on main, not proven in CI; each commit has its trailers):
+   `overnight/reading` (c1516855): entry 313 section 1 (Cancel always works, a time limit, the screen lock, `read.stage` timings, crash
+   report 11) and section 2 (the panel above the preview, no stray dash), 313 section 1.4 (no doubled picture for the codes), entry 311
+   sections 1 (Guided fires about a second after ready, both platforms) and 2 (the level). `overnight/screens` (15643ee6): crash report
+   12 (Shots Needed to Zero calculated twice), all of entry 312, then a **WIP** commit of entry 314 (table, lookup, setting, unfinished).
+   `overnight/tooling` (3f4e571c): entry 311 section 3 (Send diagnostics, the Files folder, `scripts/` for the iPad over USB, TestFlight
+   feedback), entry 315 section 2 (scenario files) and the iOS GroupLab Dev app on the simulator, then a **WIP** commit of the bridge.
+   Run each branch's tests and the `ios app` workflow, merge the finished commits, then fold entries 311 to 313 (and 314, 315 when done).
+2. **Prove the TestFlight upload** on the first nightly that changes the app (63eadc57 made the encryption check print and warn); its log
+   says what the signed package carries (the unsigned device build carries false in both bundles, read from nightly 136's log).
+3. Entry 290's end-of-window iOS summary in `docs/notes/for-alan.md` (the window ends 2026-10-01 02:00 UTC), then entry 314's rest and
+   entry 315's sections 1, 3 and 4.
 
 ## Blocked, and on what
 
@@ -84,8 +88,8 @@ line reads what the repository holds, and the test fails locally until the last 
 
 **Holds:** none
 
-Waiting on this computer, not yet read or started: entries 311 to 315 (and entry 314's cartridge draft CSV), delivered on
-2026-09-30 while the run was stopping. Start there after the next three's first item.
+Waiting on this computer: entries 311 to 315 (and entry 314's CSV), read and partly built on the overnight branches (next three,
+1); none folded yet. Crash reports 11 and 12 are fixed on those branches and still open; 9 reopened with a different fault.
 
 ## Things that would surprise somebody who was not here yesterday
 
