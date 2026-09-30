@@ -91,7 +91,7 @@ public sealed class SessionsPage : UserControl
         {
             var store = PhoneAnalysis.Store();
             var records = saved.OrderBy(s => s.CreatedUtc, StringComparer.Ordinal).Where(s => chosen.Contains(s.Id)).Select(s => store.Get(s.Id)).OfType<SessionRecord>().ToList();
-            Content = new ComparePage(records, units, () => Content = Choose(saved, chosen));
+            Content = new ComparePage(records, units, () => Content = Choose(saved, chosen), () => Content = List());
         });
         compare.IsEnabled = chosen.Count >= 2;
         var rows = new StackPanel { Spacing = 4 };
