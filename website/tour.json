@@ -732,6 +732,10 @@
      "Its name and full description: the bull spacing, the sighter row, the distance it was designed for, and the paper it wants. Choosing a sheet fills everything under it at once."
     ],
     [
+     "Bulls in black, blue or red",
+     "Any sheet's bulls, rings and numbers in black, blue or red, remembered for that sheet; the codes, markers, title and load block stay black, and large solid areas print as a lighter tint."
+    ],
+    [
      "Built in and read only",
      "The sheets that come with GroupLab cannot be edited. Duplicate makes a copy that is yours, to rename and change."
     ],

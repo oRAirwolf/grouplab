@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1361 |
-| measured | 1801 |
+| code | 1363 |
+| measured | 1803 |
 | decided | 1280 |
 | unbacked | 0 |
-| **total** | **4442** |
+| **total** | **4446** |
 
-**1020** of them were read one sentence at a time and their backing written against the sentence. The other **3422** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1022** of them were read one sentence at a time and their backing written against the sentence. The other **3424** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -735,6 +735,8 @@ one that matters.
 - *code* (src/GroupLab.Core/Evaluation/Scoreboard.cs Scoreboard and src/GroupLab.Cli/ScoreboardVerb.cs (entry 291)): The scoreboard, built (entry 291 section 7) Option (a) now exists.
 - *code* (src/GroupLab.Core/Evaluation/Scoreboard.cs Scoreboard and src/GroupLab.Cli/ScoreboardVerb.cs (entry 291)): The synthetic picture is the one of section 1: GL-CF25-LTR at 300 dpi with one synthetic hole on each of its 25 bulls, two seeds, each condition alone, read as a photograph by the whole pipeline.
 - *code* (src/GroupLab.Core/Evaluation/Scoreboard.cs Scoreboard and src/GroupLab.Cli/ScoreboardVerb.cs (entry 291)): A hole is found when a mark lies within 0.1 in of it, each mark counting for one hole at most; a mark that matches no hole is a false mark.
+- *measured* (docs/scoreboard/synthetic-baseline.json, grouplab scoreboard --synthetic, seeds 291 and 292, 2026-09-30 (entry 297)): | Condition | Black | Blue | Red | |---|---|---|---| | clean | 49 of 50 | 50 of 50 | 49 of 50 | | hard shadow | 49 | 50 | 49 | | glare | 45 | 48 | 48 | | dim | 49 | 49 | 48 | No false marks in any of them, and the median center error falls from 0.006 in to 0.004 in, because a hole shows dark against a colored ring where it hides in a black one.
+- *measured* (docs/scoreboard/synthetic-baseline.json, measured 2026-09-29 (entry 291 section 7)): **Against section 1's table.** The scratch script of 2026-09-28 was deleted, so the exact geometry of each condition was not kept; the scoreboard now fixes it in code.
 - *measured* (grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)): The differences, and why: - **Curl: 0 of 50 then, 49 of 50 now.** Entry 260 registered a bent sheet through every marker the day after the study.
 - *code* (Scoreboard.Conditions curl 15 px and tests/GroupLab.Core.Tests/Registration/MarkerMeshTests.cs Curled (entries 260 and 291)): The curl is the one entry 260's own test uses, which reproduced the study's failure.
 - *measured* (grouplab scoreboard --synthetic, docs/scoreboard/synthetic-baseline.json and ScoreboardTests, measured 2026-09-29 (entry 291)): What remains is geometry: the bulls between the markers are placed up to about 0.03 in off (median 0.014 in), where a flat sheet's are placed to 0.0003 in.
@@ -3182,7 +3184,7 @@ one that matters.
 - *code* (src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)): Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
 - *code* (src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)): **Each rifle keeps its own.** A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.
 - *code* (src/GroupLab.Core/Marking/ResultWords.cs ZeroFrom, the angle in the scope's unit alone; Entry294Tests (entry 294 section 1)): With a mil scope the zero correction reads in mil alone, such as "dial 0.30 mil left, 3 clicks left", with no MOA next to it.
-- *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown.
+- *code* (src/GroupLab.Core/Rendering/BullColour.cs BullColours.Apply; src/GroupLab.App/PrintPanel.cs ColourNote; RenderDifferenceHoleDetector Inks; entry 297): ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png) - **Bulls in** black, blue or red, for any sheet, built in or your own, on the computer and the phone.
 - *code* (the GLTD-I instance code, src/GroupLab.Core/Gltd/Binary/InstanceCodec.cs, only where the reserve holds it (TARGET-SCHEMA.md section 3.10)): On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): - **Print** (on Windows) prints from inside GroupLab at actual size.
 - *code* (src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)): **Three sheets come with the E bull as well**: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.
@@ -3607,7 +3609,9 @@ one that matters.
 
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): GroupLab is unreleased, so every one of these is a pre-release.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.130 2026-09-30 , commit 1bafd04 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.131 2026-09-30 , commit dfb6bc5 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): The iPhone and iPad test run now checks that a picture opened in GroupLab is read to the end.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.130 2026-09-30 , commit 1bafd04 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): While GroupLab reads a target, a picture taken at an angle is now named from its square codes in about a second rather than up to half a minute.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): On iPhone and iPad a picture is now analyzed instead of stopping with "Operation is not supported on this platform".
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): GroupLab for iPhone and iPad now builds with the Xcode 26 tools, ahead of the first test build for Apple devices.
@@ -3670,7 +3674,7 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): The zeroing grids now say in the library that they are for sighting in by eye at the bench, and that a zero from a group is shot on a 5x5 sheet.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.101 2026-09-24 , commit 98da32d .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): A problem report written by hand now keeps its description to 500 characters.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.100 2026-09-24 , commit 5f08633 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.100 2026-09-24 , commit 5f08633 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Under the hood A zeroing grid scanned at 600 dpi now registers and finds its shot once you say which sheet it is; its printed codes can still fail to read on a scan.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.99 2026-09-24 , commit e84c949 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 165) The upload page on grouplab.org now asks whether your photographs are for testing only or may also be published, and a testing only target is never published.

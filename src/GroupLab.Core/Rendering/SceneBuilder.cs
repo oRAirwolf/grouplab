@@ -30,7 +30,8 @@ public sealed record RenderOptions(
     bool AllowInvalid = false,
     double Scale = 1.0,
     string? PrintNote = null,
-    bool OneSheet = false);
+    bool OneSheet = false,
+    BullColour BullColour = BullColour.Black);
 
 public sealed record SceneResult(IReadOnlyList<Scene> Pages, string? DefinitionId, IReadOnlyList<Diagnostic> Diagnostics);
 
@@ -143,7 +144,7 @@ public static class SceneBuilder
             var pages = indices.Select(BuildPage).ToList();
             return _diagnostics.Any(x => x.Severity == Severity.Error && x.Code.StartsWith("render.", StringComparison.Ordinal))
                 ? new SceneResult([], _encoding.DefinitionId, _diagnostics)
-                : new SceneResult(pages, _encoding.DefinitionId, _diagnostics);
+                : new SceneResult([.. pages.Select(p => BullColours.Apply(p, options.BullColour))], _encoding.DefinitionId, _diagnostics);
         }
 
         private SceneResult Refused(string code, string path, string message)

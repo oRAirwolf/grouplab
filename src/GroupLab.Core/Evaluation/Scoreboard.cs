@@ -148,8 +148,19 @@ public static class Scoreboard
     /// <summary>The synthetic picture for a seed, undisturbed: GL-CF25-LTR at 300 dpi with one hole on each bull, and each hole's centre in pixels.</summary>
     public static (GrayImage Image, IReadOnlyList<PointD> Holes, IPageMapping Truth) SyntheticPicture(TargetDefinition definition, int seed)
     {
+        var (grey, _, holes, truth) = SyntheticPicture(definition, seed, BullColour.Black);
+        return (grey, holes, truth);
+    }
+
+    /// <summary>
+    /// Entry 297: the same picture with its bulls printed in <paramref name="colour"/>, as the two images a photograph gives, grey by luminance
+    /// for the markers and codes and value, max(R, G, B), for the holes. The holes and the noise are the same as the black picture's.
+    /// </summary>
+    public static (GrayImage Grey, GrayImage Value, IReadOnlyList<PointD> Holes, IPageMapping Truth) SyntheticPicture(TargetDefinition definition, int seed, BullColour colour)
+    {
         ArgumentNullException.ThrowIfNull(definition);
-        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], SyntheticDpi);
+        var black = SceneBuilder.Build(definition).Pages[0];
+        var render = SceneRasterizer.Rasterize(black, SyntheticDpi);
         var random = new Random(seed);
         bool OnInk(double x, double y) => render[(int)(x * SyntheticDpi / 254), (int)(y * SyntheticDpi / 254)] < 128;
         var holes = definition.Bulls.Where(b => b.Scoring)
@@ -158,9 +169,28 @@ public static class Scoreboard
             .ToList();
         double s = 254 / SyntheticDpi;
         var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
-        var image = GroupLab.Core.Detection.SyntheticSheet.Compose(render, SyntheticDpi, truth, render.Width, render.Height, holes, [], random);
-        return (image, [.. holes.Select(h => truth.ToImage(new PointD(h.X, h.Y)))], truth);
+        var centres = holes.Select(h => truth.ToImage(new PointD(h.X, h.Y))).ToList();
+        if (colour == BullColour.Black)
+        {
+            var image = GroupLab.Core.Detection.SyntheticSheet.Compose(render, SyntheticDpi, truth, render.Width, render.Height, holes, [], random);
+            return (image, image, centres, truth);
+        }
+
+        var coloured = BullColours.Apply(black, colour);
+        int noise = random.Next();
+        GrayImage Seen(Func<Gltd.Binary.Rgb, double> level) =>
+            GroupLab.Core.Detection.SyntheticSheet.Compose(SceneRasterizer.Rasterize(coloured, SyntheticDpi, level: level), SyntheticDpi, truth, render.Width, render.Height, holes, [], new Random(noise));
+        return (Seen(SceneRasterizer.Luminance), Seen(SceneRasterizer.Value), centres, truth);
     }
+
+    /// <summary>
+    /// Entry 297 section 4: the conditions each bull color is read under, shadow, glare and poor light, beside the clean picture. A color is
+    /// held to the black sheet's line for the same condition (<c>ScoreboardTests</c>), and a color that fails is not offered.
+    /// </summary>
+    public static IReadOnlyList<string> ColourConditions { get; } = ["clean", "hard shadow", "glare", "dim"];
+
+    /// <summary>A colored line's name: the color, then the condition, as "red glare".</summary>
+    public static string ColourLine(BullColour colour, string condition) => $"{BullColours.Name(colour)} {condition}";
 
     /// <summary>
     /// Every condition on every seed, read as a photograph (no stated resolution) by <see cref="AutomaticMarking.Run"/>. A condition whose
@@ -175,6 +205,29 @@ public static class Scoreboard
         var scores = new List<PictureScore>();
         foreach (int seed in seeds)
         {
+            // Entry 297: the colored sheets under their conditions, each read from its two images.
+            foreach (var colour in new[] { BullColour.Blue, BullColour.Red })
+            {
+                var lines = Conditions.Where(c => ColourConditions.Contains(c.Name) && (only is null || only.Contains(ColourLine(colour, c.Name), StringComparer.OrdinalIgnoreCase))).ToList();
+                if (lines.Count == 0)
+                {
+                    continue;
+                }
+
+                var (grey, value, colourHoles, colourTruth) = SyntheticPicture(definition, seed, colour);
+                foreach (var condition in lines)
+                {
+                    var seenGrey = condition.Degrade(grey, new Random(seed * 31), jpeg);
+                    var seenValue = condition.Degrade(value, new Random(seed * 31), jpeg);
+                    if (seenGrey is null || seenValue is null)
+                    {
+                        continue;
+                    }
+
+                    scores.Add(Score(ColourLine(colour, condition.Name), seed, condition, definition, backend, seenGrey, seenValue, colourHoles, colourTruth));
+                }
+            }
+
             var (flat, holes, truth) = SyntheticPicture(definition, seed);
             foreach (var condition in chosen)
             {
@@ -184,35 +237,42 @@ public static class Scoreboard
                     continue;
                 }
 
-                var metadata = new ImageMetadata("JPEG", image.Width, image.Height, null, null, null, null, null, null, null);
-                var clock = Stopwatch.StartNew();
-                var result = AutomaticMarking.Run(image, image, metadata, definition, backend);
-                clock.Stop();
-                var moved = holes.Select(h => condition.Move(h, image.Width)).ToList();
-                var marks = result.Detections.Select(d => d.Image).ToList();
-                var (found, falseMarks, errors) = Match(moved, marks, FoundWithinInches * SyntheticDpi);
-                bool registered = result.Failure is null && result.Scale is not null;
-                var registration = registered
-                    ? definition.Bulls.Select(b =>
-                    {
-                        var page = new PointD(b.X, b.Y);
-                        var expected = condition.Move(truth.ToImage(page), image.Width);
-                        var measured = result.Scale!.Mapping.ToImage(page);
-                        return Distance(expected, measured) / SyntheticDpi;
-                    }).ToList()
-                    : [];
-                var inches = errors.Select(e => e / SyntheticDpi).ToList();
-                scores.Add(new PictureScore(condition.Name, $"seed {seed}", "holes", holes.Count, marks.Count, found, falseMarks,
-                    Median(inches), Worst(inches), Median(registration), Worst(registration), Residual(result), registered, clock.ElapsedMilliseconds,
-                    result.Failure)
-                {
-                    CentreErrors = inches,
-                    RegistrationErrors = registration,
-                });
+                scores.Add(Score(condition.Name, seed, condition, definition, backend, image, image, holes, truth));
             }
         }
 
         return scores;
+    }
+
+    /// <summary>One synthetic picture read and scored: its grey and value images, the holes' centres before the condition and the truth mapping.</summary>
+    private static PictureScore Score(string line, int seed, SyntheticCondition condition, TargetDefinition definition, IImagingBackend backend, GrayImage grey, GrayImage value,
+        IReadOnlyList<PointD> holes, IPageMapping truth)
+    {
+        var metadata = new ImageMetadata("JPEG", grey.Width, grey.Height, null, null, null, null, null, null, null);
+        var clock = Stopwatch.StartNew();
+        var result = AutomaticMarking.Run(grey, value, metadata, definition, backend);
+        clock.Stop();
+        var moved = holes.Select(h => condition.Move(h, grey.Width)).ToList();
+        var marks = result.Detections.Select(d => d.Image).ToList();
+        var (found, falseMarks, errors) = Match(moved, marks, FoundWithinInches * SyntheticDpi);
+        bool registered = result.Failure is null && result.Scale is not null;
+        var registration = registered
+            ? definition.Bulls.Select(b =>
+            {
+                var page = new PointD(b.X, b.Y);
+                var expected = condition.Move(truth.ToImage(page), grey.Width);
+                var measured = result.Scale!.Mapping.ToImage(page);
+                return Distance(expected, measured) / SyntheticDpi;
+            }).ToList()
+            : [];
+        var inches = errors.Select(e => e / SyntheticDpi).ToList();
+        return new PictureScore(line, $"seed {seed}", "holes", holes.Count, marks.Count, found, falseMarks,
+            Median(inches), Worst(inches), Median(registration), Worst(registration), Residual(result), registered, clock.ElapsedMilliseconds,
+            result.Failure)
+        {
+            CentreErrors = inches,
+            RegistrationErrors = registration,
+        };
     }
 
     /// <summary>

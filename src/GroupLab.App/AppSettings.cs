@@ -330,6 +330,20 @@ public sealed class AppSettingsStore(string path)
         opened[item] = open;
     });
 
+    /// <summary>Entry 297: the color a sheet's bulls print in, remembered per sheet by its file; black where none was chosen.</summary>
+    public GroupLab.Core.Rendering.BullColour LoadBullColour(string sheet) =>
+        GroupLab.Core.Rendering.BullColours.Parse(Read(file => file["bullColours"]?[sheet]?.GetValueKind() == JsonValueKind.String ? (string?)file["bullColours"]![sheet] : null));
+
+    public bool SaveBullColour(string sheet, GroupLab.Core.Rendering.BullColour colour) => Save(file =>
+    {
+        if (file["bullColours"] is not JsonObject colours)
+        {
+            file["bullColours"] = colours = new JsonObject();
+        }
+
+        colours[sheet] = GroupLab.Core.Rendering.BullColours.Name(colour);
+    });
+
     /// <summary>A side column's width as a person dragged it, entry 105 section 1, or null where it was never dragged.</summary>
     public double? LoadColumnWidth(string column) => Read(file => file["columnWidths"]?[column]?.GetValueKind() == JsonValueKind.Number ? (double?)file["columnWidths"]![column]!.GetValue<double>() : null);
 

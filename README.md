@@ -73,6 +73,9 @@ These are the application as it is: the build renders every screen itself, in bo
 Every split between panes can now be dragged to the size you want, on the computer and on a wide phone or tablet, and GroupLab
 remembers it; Settings has Reset layout to put them all back.
 
+Any sheet can now print its bulls in black, blue or red, on the computer and the phone. Only the bulls, their rings and numbers take the
+color, large solid areas print as a lighter tint, and GroupLab finds the color from the photograph.
+
 ## Download
 
 **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing. **It may be broken**, because passing the tests is not the same as somebody having used it, and the Windows installer updates itself when a newer one appears.

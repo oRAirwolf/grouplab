@@ -30,6 +30,7 @@ everything it takes to print it is beside the list, with its artwork filling the
 
 ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png)
 
+- **Bulls in** black, blue or red, for any sheet, built in or your own, on the computer and the phone. Only the bulls, their rings and numbers take the color; the corner codes, markers, title and load block stay black. Lines print in the full color and large solid areas, such as the C bull's diamond, as a lighter tint, so a hole shows dark against it. The preview and the PDF follow the choice at once, and GroupLab remembers it for that sheet. GroupLab finds the color from the photograph, so nothing needs to be set when you read the sheet. On a black and white printer the colors print as gray.
 - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown. On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - **Print** (on Windows) prints from inside GroupLab at actual size. It refuses, with the reason, when the paper is not the sheet's or ink would fall in the printer's margin. When the job is sent, a confirmation names the printer and the pages.
 - **Open to print** opens the PDF in your viewer instead. Print it from there at Actual size or 100 percent, never Fit.

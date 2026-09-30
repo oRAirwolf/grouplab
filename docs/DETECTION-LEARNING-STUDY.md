@@ -199,6 +199,22 @@ improvement; when a change makes a line better, the baseline moves in the same c
 | noise, sd 12 levels | 25, 24 | 0 | 0.007 in | 0.067 in | 0.0002, 0.0004 in |
 | JPEG quality 40 | 25, 24 | 0 | 0.006 in | 0.068 in | 0.0002, 0.0003 in |
 
+**Bulls in blue and red (entry 297, 2026-09-30).** The same picture with its bulls, rings and numbers printed in blue (#1F5FBF) or red
+(#D22630) and its large solid areas at a 60 percent tint, read from the two images a photograph gives (gray by luminance for the markers
+and codes, value for the holes), under the four conditions entry 297 names. The detector is not told the color: where much of the solid
+ink reads light in the value image it measures the bulls' lines, their solid areas and the rest of the ink each on its own, and draws the
+expected sheet with the three levels. Each line is held to the black line of its condition (`BullColourTests`).
+
+| Condition | Black | Blue | Red |
+|---|---|---|---|
+| clean | 49 of 50 | 50 of 50 | 49 of 50 |
+| hard shadow | 49 | 50 | 49 |
+| glare | 45 | 48 | 48 |
+| dim | 49 | 49 | 48 |
+
+No false marks in any of them, and the median center error falls from 0.006 in to 0.004 in, because a hole shows dark against a colored
+ring where it hides in a black one.
+
 **Against section 1's table.** The scratch script of 2026-09-28 was deleted, so the exact geometry of each condition was not kept; the
 scoreboard now fixes it in code. Most lines agree within a hole. The differences, and why:
 

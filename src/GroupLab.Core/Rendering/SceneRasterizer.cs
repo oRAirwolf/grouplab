@@ -22,7 +22,37 @@ public static class SceneRasterizer
     /// <summary>Samples per axis on a pixel that a circle's edge crosses.</summary>
     private const int Subsamples = 16;
 
-    public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null, bool words = false)
+    /// <summary>An ink's level by its luminance, the default, as a grey photograph sees it.</summary>
+    public static double Luminance(Gltd.Binary.Rgb ink) => (0.299 * ink.R) + (0.587 * ink.G) + (0.114 * ink.B);
+
+    /// <summary>
+    /// An ink's level as HSV value, max(R, G, B), which is how the hole finder sees a photograph (entry 297): black and grey are the same
+    /// as by luminance, and a red or blue bull is light, so a hole shows dark against it.
+    /// </summary>
+    public static double Value(Gltd.Binary.Rgb ink) => Math.Max(ink.R, Math.Max(ink.G, ink.B));
+
+    /// <summary>
+    /// The page in color, as three channels interleaved blue, green, red for an image encoder, for a preview that shows a sheet's bulls in
+    /// their color (entry 297 section 2).
+    /// </summary>
+    public static (int Width, int Height, byte[] Bgr) RasterizeBgr(Scene page, double dpi, bool words = false)
+    {
+        var b = Rasterize(page, dpi, words: words, level: ink => ink.B);
+        var g = Rasterize(page, dpi, words: words, level: ink => ink.G);
+        var r = Rasterize(page, dpi, words: words, level: ink => ink.R);
+        var bgr = new byte[b.Pixels.Length * 3];
+        for (int i = 0; i < b.Pixels.Length; i++)
+        {
+            bgr[3 * i] = b.Pixels[i];
+            bgr[(3 * i) + 1] = g.Pixels[i];
+            bgr[(3 * i) + 2] = r.Pixels[i];
+        }
+
+        return (b.Width, b.Height, bgr);
+    }
+
+    /// <param name="level">An ink's level, 0 to 255; by its luminance where not given.</param>
+    public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null, bool words = false, Func<Gltd.Binary.Rgb, double>? level = null)
     {
         ArgumentNullException.ThrowIfNull(page);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dpi);
@@ -38,7 +68,7 @@ public static class SceneRasterizer
         var canvas = new Canvas(pixels, r.Width, r.Height);
         foreach (var item in page.Items)
         {
-            double luminance = (0.299 * item.Colour.R) + (0.587 * item.Colour.G) + (0.114 * item.Colour.B);
+            double luminance = (level ?? Luminance)(item.Colour);
             switch (item)
             {
                 case RectFill rect:

@@ -157,6 +157,32 @@ public sealed class PrintPanel : UserControl
         details.Children.Add(designer);
         details.Children.Add(title);
         details.Children.Add(summary);
+
+        // Entry 297: the bulls in black, blue or red, remembered for each sheet; the preview and the PDF follow at once.
+        bullColour.ItemsSource = BullColours.All.Select(c => ColourWords(c)).ToList();
+        bullColour.SelectedIndex = 0;
+        bullColour.SelectionChanged += (_, _) =>
+        {
+            if (showingColour || selected is null)
+            {
+                return;
+            }
+
+            var chosen = Colour;
+            Settings?.SaveBullColour(ColourKey(selected), chosen);
+            DiagnosticLog.Info("print.color", ("sheet", selected.File), ("color", BullColours.Name(chosen)));
+            ShowPreview();
+        };
+        var colourLabel = new TextBlock { Text = "Bulls in", VerticalAlignment = VerticalAlignment.Center };
+        details.Children.Add(new StackPanel
+        {
+            Spacing = Tokens.Space4,
+            Children =
+            {
+                Row(colourLabel, bullColour),
+                new TextBlock { Text = ColourNote, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } },
+            },
+        });
         details.Children.Add(loadBlock);
         details.Children.Add(note);
         details.Children.Add(oneSheet);
@@ -184,6 +210,40 @@ public sealed class PrintPanel : UserControl
         {
             SetStatus("The built-in library was not found beside the application.", StatusKind.Alert);
         }
+    }
+
+    /// <summary>The settings file the bull color is remembered in, per sheet (entry 297); none in a panel a test makes alone.</summary>
+    internal AppSettingsStore? Settings { get; init; }
+
+    private readonly ComboBox bullColour = new() { MinWidth = 140 };
+    private bool showingColour;
+
+    /// <summary>The bull color chosen for the sheet showing.</summary>
+    internal BullColour Colour => BullColours.All[Math.Max(0, bullColour.SelectedIndex)];
+
+    /// <summary>Chooses a bull color as the drop-down does, for the headless tests.</summary>
+    internal void ChooseColour(BullColour colour) => bullColour.SelectedIndex = BullColours.All.ToList().IndexOf(colour);
+
+    /// <summary>What the drop-down offers for each color.</summary>
+    internal static string ColourWords(BullColour colour) => colour switch
+    {
+        BullColour.Red => "Red",
+        BullColour.Blue => "Blue",
+        _ => "Black",
+    };
+
+    /// <summary>The line under the choice: what takes the color, and why the rest stays black.</summary>
+    internal const string ColourNote = "Only the bulls, their rings and numbers take the color; the corner codes, markers, title and load block stay black. Large solid areas print as a lighter tint, which saves ink and shows a hole better. On a black and white printer the colors print as gray.";
+
+    /// <summary>The key a sheet's color is remembered under: its file, or the designer's own for a design not yet saved.</summary>
+    private static string ColourKey(LibrarySheet sheet) => sheet.File == "custom.gltd.json" ? "designer" : Path.GetFileName(sheet.File);
+
+    /// <summary>The drop-down set to a sheet's remembered color without saving it again.</summary>
+    private void ShowColour(LibrarySheet sheet)
+    {
+        showingColour = true;
+        ChooseColour(Settings?.LoadBullColour(ColourKey(sheet)) ?? BullColour.Black);
+        showingColour = false;
     }
 
     /// <summary>Raised with each page of artwork this panel shows, so the screen's one preview can show it.</summary>
@@ -514,7 +574,8 @@ public sealed class PrintPanel : UserControl
             Mode: fill ? DataBlockMode.Filled : DataBlockMode.Blank,
             Instance: instance,
             PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null,
-            OneSheet: oneSheet.IsVisible && oneSheet.IsChecked == true));
+            OneSheet: oneSheet.IsVisible && oneSheet.IsChecked == true,
+            BullColour: Colour));
         if (result.Pdf is null)
         {
             SetStatus("This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)), StatusKind.Alert);
@@ -559,6 +620,7 @@ public sealed class PrintPanel : UserControl
         DiagnosticLog.Info("print.select", ("sheet", sheet.File));
         selected = sheet;
         page = 0;
+        ShowColour(sheet);
         title.Text = sheet.Definition.Name;
         summary.Text = sheet.Family + ". " + sheet.Summary + LargeSheetWords(sheet.Definition);
         oneSheet.IsVisible = CutSheet.Refusal(sheet.Definition) is null;
@@ -638,7 +700,7 @@ public sealed class PrintPanel : UserControl
         }
 
         (preview.Source as IDisposable)?.Dispose();
-        preview.Source = Preview(selected.Definition, page, note.IsChecked == true);
+        preview.Source = Preview(selected.Definition, page, note.IsChecked == true, Colour);
         PageShown?.Invoke(preview.Source as Bitmap);
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
     }
@@ -647,19 +709,39 @@ public sealed class PrintPanel : UserControl
     /// One sheet as it prints, words and all (entry 250 section 1), as a bitmap with its longer side near 900 pixels, or null when it has
     /// none. The actual-size instruction is on it when the PDF will carry it.
     /// </summary>
-    internal static Bitmap? Preview(TargetDefinition definition, int tile = 0, bool note = true)
+    internal static Bitmap? Preview(TargetDefinition definition, int tile = 0, bool note = true, BullColour colour = BullColour.Black)
     {
-        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: tile, PrintNote: note ? SceneBuilder.ActualSizeNote : null));
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: tile, PrintNote: note ? SceneBuilder.ActualSizeNote : null, BullColour: colour));
         if (scenes.Pages.Count == 0)
         {
             return null;
         }
 
-        var scene = scenes.Pages[0];
+        return Picture(scenes.Pages[0]);
+    }
+
+    /// <summary>
+    /// A page as a bitmap with its longer side near 900 pixels, words and all; in color where its bulls are (entry 297), grey otherwise, as
+    /// it always was.
+    /// </summary>
+    internal static Bitmap Picture(Scene scene)
+    {
         double longerInches = Math.Max(scene.Width, scene.Height) / (2.0 * 254);
-        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches), words: true);
-        using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
-        OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
+        double dpi = Math.Min(100, 900 / longerInches);
+        byte[] png;
+        if (scene.Items.Any(i => i.Colour.R != i.Colour.G || i.Colour.G != i.Colour.B))
+        {
+            var (width, height, bgr) = SceneRasterizer.RasterizeBgr(scene, dpi, words: true);
+            using var colour = OpenCvSharp.Mat.FromPixelData(height, width, OpenCvSharp.MatType.CV_8UC3, bgr);
+            OpenCvSharp.Cv2.ImEncode(".png", colour, out png);
+        }
+        else
+        {
+            var image = SceneRasterizer.Rasterize(scene, dpi, words: true);
+            using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
+            OpenCvSharp.Cv2.ImEncode(".png", mat, out png);
+        }
+
         using var stream = new MemoryStream(png);
         return new Bitmap(stream);
     }

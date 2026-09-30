@@ -143,10 +143,32 @@ public sealed class TargetsPage : UserControl
         {
             column.Children.Add(Screens.Dim(large));
         }
-        if (Preview(sheet.Definition) is { } picture)
+        // Entry 297: the bulls in black, blue or red, remembered for each sheet; the picture follows the choice at once.
+        string key = sheet.File == "custom.gltd.json" ? "designer" : Path.GetFileName(sheet.File);
+        var colour = Phone.Settings.LoadBullColour(key);
+        var image = new Image { Source = Preview(sheet.Definition, colour), MaxHeight = 480, HorizontalAlignment = HorizontalAlignment.Center };
+        column.Children.Add(image);
+        var colours = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*,*"), ColumnSpacing = 8 };
+        foreach (var (choice, at) in GroupLab.Core.Rendering.BullColours.All.Select((c, i) => (c, i)))
         {
-            column.Children.Add(new Image { Source = picture, MaxHeight = 480, HorizontalAlignment = HorizontalAlignment.Center });
+            var radio = Screens.Radio("bullColour", choice switch { GroupLab.Core.Rendering.BullColour.Red => "Red", GroupLab.Core.Rendering.BullColour.Blue => "Blue", _ => "Black" }, colour == choice);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && Phone.Settings.LoadBullColour(key) != choice)
+                {
+                    Phone.Settings.SaveBullColour(key, choice);
+                    DiagnosticLog.Info("print.color", ("sheet", sheet.File), ("color", GroupLab.Core.Rendering.BullColours.Name(choice)));
+                    (image.Source as IDisposable)?.Dispose();
+                    image.Source = Preview(sheet.Definition, choice);
+                }
+            };
+            Grid.SetColumn(radio, at);
+            colours.Children.Add(radio);
         }
+
+        column.Children.Add(Screens.Dim("Bulls in"));
+        column.Children.Add(colours);
+        column.Children.Add(Screens.Dim("Only the bulls, their rings and numbers take the color; the codes, markers, title and load block stay black. Large solid areas print as a lighter tint."));
 
         var result = Screens.Line("");
         var offer = new StackPanel { Spacing = 8, IsVisible = false };
@@ -178,7 +200,8 @@ public sealed class TargetsPage : UserControl
 
     private static void Out(LibrarySheet sheet, TextBlock result, bool print, bool oneSheet = false)
     {
-        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, OneSheet: oneSheet));
+        var colour = Phone.Settings.LoadBullColour(sheet.File == "custom.gltd.json" ? "designer" : Path.GetFileName(sheet.File));
+        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, OneSheet: oneSheet, BullColour: colour));
         if (rendered.Pdf is not { } pdf)
         {
             result.Text = "This sheet cannot be printed as it is: " + string.Join(" ", rendered.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message));
@@ -189,10 +212,10 @@ public sealed class TargetsPage : UserControl
     }
 
     /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>
-    private static Bitmap? Preview(TargetDefinition definition)
+    private static Bitmap? Preview(TargetDefinition definition, GroupLab.Core.Rendering.BullColour colour = GroupLab.Core.Rendering.BullColour.Black)
     {
-        // Entry 250 section 1: the sheet as its PDF prints it, words and the actual-size instruction included.
-        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote));
+        // Entry 250 section 1: the sheet as its PDF prints it, words and the actual-size instruction included; entry 297, its bulls in color.
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote, BullColour: colour));
         if (scenes.Pages.Count == 0)
         {
             return null;
@@ -200,8 +223,8 @@ public sealed class TargetsPage : UserControl
 
         var scene = scenes.Pages[0];
         double longerInches = Math.Max(scene.Width, scene.Height) / (2.0 * 254);
-        var image = SceneRasterizer.Rasterize(scene, Math.Min(100, 900 / longerInches), words: true);
-        using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
+        var (width, height, bgr) = SceneRasterizer.RasterizeBgr(scene, Math.Min(100, 900 / longerInches), words: true);
+        using var mat = OpenCvSharp.Mat.FromPixelData(height, width, OpenCvSharp.MatType.CV_8UC3, bgr);
         OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
         using var stream = new MemoryStream(png);
         return new Bitmap(stream);

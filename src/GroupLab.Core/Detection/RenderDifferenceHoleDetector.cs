@@ -248,6 +248,17 @@ public static class RenderDifferenceHoleDetector
         var paper = PaperField(observed, expected, block, SheetMask(definition.Page.Width, definition.Page.Height, registration, width, height, options.EdgeBandInches * 254));
         double inkFraction = InkFraction(observed, expected, paper, block);
 
+        // Entry 297: bulls printed in blue or red, found from the photograph rather than told. Where much of the solid ink reads light, as a
+        // color does in the value image, the bulls' lines, their large solid areas and everything else are each measured on their own and
+        // the expected artwork is drawn with the three ink levels the photograph shows; a black sheet measures one level for all three and
+        // is drawn exactly as before.
+        if (LightInkShare(observed, expected, paper, block) >= ColourGate
+            && Inks(observed, scene, dpi, registration, expected, paper, block, inkFraction) is { } inks)
+        {
+            expected = inks.Expected;
+            inkFraction = inks.Rest;
+        }
+
         // S5, alignment: each bull's cell by phase correlation, the rest by the median shift.
         var cells = DetectionCells(definition);
         var (aligned, shifts) = Align(observed, expected, paper, block, inkFraction, cells, registration, options.MaximumShiftInches * dpi, backend);
@@ -972,6 +983,96 @@ public static class RenderDifferenceHoleDetector
         int i1 = Math.Min(i0 + 1, bw - 1), j1 = Math.Min(j0 + 1, bh - 1);
         double tx = Math.Clamp(fx - i0, 0, 1), ty = Math.Clamp(fy - j0, 0, 1);
         return ((1 - ty) * (((1 - tx) * level[(j0 * bw) + i0]) + (tx * level[(j0 * bw) + i1]))) + (ty * (((1 - tx) * level[(j1 * bw) + i0]) + (tx * level[(j1 * bw) + i1])));
+    }
+
+    /// <summary>
+    /// The share of solid ink reading lighter than <see cref="LightInk"/> of its paper from which the bulls may be in a color (entry 297): a red
+    /// or blue bull reads near 0.8 in the value image and black ink near 0.2, and the bulls hold most of a sheet's ink.
+    /// </summary>
+    internal const double ColourGate = 0.15, LightInk = 0.55;
+
+    /// <summary>The share of the pixels the render calls solid ink that read lighter than <see cref="LightInk"/> of their paper.</summary>
+    private static double LightInkShare(GrayImage observed, GrayImage expected, double[] paper, int block)
+    {
+        int ink = 0, light = 0;
+        for (int y = 0; y < observed.Height; y += 3)
+        {
+            for (int x = 0; x < observed.Width; x += 3)
+            {
+                int k = (y * observed.Width) + x;
+                if (expected.Pixels[k] <= 20)
+                {
+                    ink++;
+                    light += observed.Pixels[k] / Math.Max(1, PaperAt(paper, block, observed.Width, observed.Height, x, y)) > LightInk ? 1 : 0;
+                }
+            }
+        }
+
+        return ink == 0 ? 0 : (double)light / ink;
+    }
+
+    /// <summary>The three ink levels of a sheet whose bulls may be in a color, and the expected artwork drawn with them.</summary>
+    private sealed record ColourInks(GrayImage Expected, double Rest, double Lines, double Solid);
+
+    /// <summary>
+    /// Entry 297: the bulls' lines and numbers, their large solid areas (<see cref="BullColours.Solid"/>) and every other ink measured on their
+    /// own in the photograph, each as the median ratio to local paper where the render calls it solid, and the expected artwork redrawn so
+    /// that each pixel is as dark as its inks' coverage at the levels measured, relative to the black ink the residual is scaled by. Null
+    /// where a part has too few pixels to measure.
+    /// </summary>
+    private static ColourInks? Inks(GrayImage observed, Scene scene, double dpi, IPageMapping registration, GrayImage all, double[] paper, int block, double inkAll)
+    {
+        int width = observed.Width, height = observed.Height;
+        GrayImage Part(Func<SceneItem, bool> keep) =>
+            ExpectedImage.Render(SceneRasterizer.Rasterize(scene with { Items = [.. scene.Items.Where(keep)] }, dpi), dpi, registration, width, height);
+        var lines = Part(i => BullColours.Coloured(i.Layer) && !BullColours.Solid(i));
+        var solid = Part(i => BullColours.Coloured(i.Layer) && BullColours.Solid(i));
+        double? Level(Func<int, bool> where)
+        {
+            var ratios = new List<double>();
+            for (int y = 0; y < height; y += 2)
+            {
+                for (int x = 0; x < width; x += 2)
+                {
+                    int k = (y * width) + x;
+                    if (where(k))
+                    {
+                        ratios.Add(observed.Pixels[k] / Math.Max(1, PaperAt(paper, block, width, height, x, y)));
+                    }
+                }
+            }
+
+            if (ratios.Count < 50)
+            {
+                return null;
+            }
+
+            ratios.Sort();
+            return Math.Min(1, ratios[ratios.Count / 2]);
+        }
+
+        double rest = Level(k => all.Pixels[k] <= 20 && lines.Pixels[k] >= 235 && solid.Pixels[k] >= 235) ?? inkAll;
+        if (Level(k => lines.Pixels[k] <= 20) is not { } lineLevel)
+        {
+            return null;
+        }
+
+        double solidLevel = Level(k => solid.Pixels[k] <= 20) ?? lineLevel;
+        double scale = Math.Max(0.05, 1 - rest);
+        var pixels = new byte[width * height];
+        Parallel.For(0, height, y =>
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int k = (y * width) + x;
+                double cLines = 1 - (lines.Pixels[k] / 255.0), cSolid = 1 - (solid.Pixels[k] / 255.0);
+                double cRest = Math.Max(0, 1 - (all.Pixels[k] / 255.0) - cLines - cSolid);
+                double dark = (cRest * (1 - rest)) + (cLines * (1 - lineLevel)) + (cSolid * (1 - solidLevel));
+                pixels[k] = (byte)Math.Clamp(Math.Round(255 * (1 - (dark / scale))), 0, 255);
+            }
+        });
+
+        return new ColourInks(new GrayImage(width, height, pixels), rest, lineLevel, solidLevel);
     }
 
     /// <summary>The median ratio of observed to local paper where the render calls solid ink.</summary>

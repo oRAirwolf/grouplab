@@ -3,7 +3,8 @@
     "NOTES-FROM-PLANNING.md entry 291 section 7: the detection scoreboard's synthetic baseline, docs/DETECTION-LEARNING-STUDY.md section 9.",
     "GL-CF25-LTR at 300 dpi, one synthetic hole on each of its 25 bulls, two seeds, each condition alone, read as a photograph by the whole pipeline.",
     "ScoreboardTests re-reads every condition in every build and fails on a drop beyond the margin. Written by grouplab scoreboard --synthetic --out;",
-    "when a change makes a line better, move the baseline in the same commit and say why. A line marked expectedToFail is a known failure kept in view."
+    "when a change makes a line better, move the baseline in the same commit and say why. A line marked expectedToFail is a known failure kept in view.",
+    "NOTES-FROM-PLANNING.md entry 297 section 4: the red and blue lines, each held to the black line of its condition by ScoreboardTests, measured 2026-09-30."
   ],
   "measured": "2026-09-29",
   "seeds": [
@@ -295,6 +296,174 @@
         24
       ],
       "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "blue clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 50,
+      "found": 50,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0038,
+      "worstCentreInches": 0.0711,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 2237,
+      "foundPerPicture": [
+        25,
+        25
+      ],
+      "recall": 1,
+      "expectedToFail": false
+    },
+    {
+      "condition": "blue hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 50,
+      "found": 50,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0038,
+      "worstCentreInches": 0.0711,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1316,
+      "foundPerPicture": [
+        25,
+        25
+      ],
+      "recall": 1,
+      "expectedToFail": false
+    },
+    {
+      "condition": "blue dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0038,
+      "worstCentreInches": 0.0652,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1083,
+      "foundPerPicture": [
+        25,
+        24
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "blue glare",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 48,
+      "found": 48,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0044,
+      "worstCentreInches": 0.0801,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 1004,
+      "foundPerPicture": [
+        23,
+        25
+      ],
+      "recall": 0.96,
+      "expectedToFail": false
+    },
+    {
+      "condition": "red clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0035,
+      "worstCentreInches": 0.0473,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 996,
+      "foundPerPicture": [
+        24,
+        25
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "red hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 49,
+      "found": 49,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0036,
+      "worstCentreInches": 0.0473,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 983,
+      "foundPerPicture": [
+        24,
+        25
+      ],
+      "recall": 0.98,
+      "expectedToFail": false
+    },
+    {
+      "condition": "red dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 48,
+      "found": 48,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0034,
+      "worstCentreInches": 0.0158,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 995,
+      "foundPerPicture": [
+        24,
+        24
+      ],
+      "recall": 0.96,
+      "expectedToFail": false
+    },
+    {
+      "condition": "red glare",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 50,
+      "marks": 48,
+      "found": 48,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0037,
+      "worstCentreInches": 0.0804,
+      "medianRegistrationInches": 0.0001,
+      "worstRegistrationInches": 0.0003,
+      "medianMilliseconds": 974,
+      "foundPerPicture": [
+        23,
+        25
+      ],
+      "recall": 0.96,
       "expectedToFail": false
     }
   ]
