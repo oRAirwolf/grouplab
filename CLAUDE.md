@@ -251,6 +251,15 @@ Alan: "I would like going forward is for cowork and code to be more efficient wi
 3. **Regenerate the figure that changed**, not every research figure.
 4. **Where a task is mechanical and repetitive, write a script and run it once**, rather than performing the same edit fifty times by hand.
 
+### The standing budget, entry 317 (replaces entry 296's spending rules)
+
+About 12% of the weekly limit a day and 15% an hour; `npx.cmd ccusage@latest daily` once a day, one line in `for-alan.md`, and one worker
+the next day after a hot one. **One worker by default**, two only for separate areas, three only when Alan asks. Application code, tests,
+detection, statistics, camera and UI stay on the main model; cheaper models only for chores that cannot change the app. A fresh session
+per block of work. `for-alan.md` holds the open requests and the latest summary; answered ones go to `docs/notes/for-alan-archive.md`.
+Screenshots, guide PDFs and the site audit once per nightly. No minute-by-minute watching. Priorities when tight: bugs Alan hit and iOS
+parity, then approved features, then polish.
+
 ### The commands ordinary work needs
 
 Entry 160 section 6: Alan has been approving every command including ordinary git ones, which turns a one hour run into several hours of his attention and costs a round trip each time. This is the set that covers ordinary work in this repository, and nothing in it writes outside the repository, reaches the network destructively, or touches the server:

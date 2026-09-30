@@ -40,6 +40,13 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 317: the token budget
+
+Done 2026-09-30. The rules are in `CLAUDE.md` under "The standing budget". `for-alan.md` went from 1709 lines to about 330: 47 answered
+requests and the old summaries moved whole to `docs/notes/for-alan-archive.md`. The first usage line is in it: 29 September 1.31 billion
+tokens with 43.5 million of cache creation (five times a normal day), 30 September 0.31 billion at 13:20 UTC. This run already ran one
+worker at a time after the entry arrived.
+
 ## Entry 314: the caliber box offers calibers, cartridges or both, with a lookup of every cartridge
 
 Built 2026-09-30 on `overnight/screens` from a stopped half-commit, finished, reviewed and merged as 96c848a6.

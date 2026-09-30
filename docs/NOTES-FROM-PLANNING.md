@@ -24,6 +24,44 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 317: the token budget, a standing rule (replaces entry 296's spending rules)
+
+**Status: done 2026-09-30; in force from this run on.**
+
+From planning, 2026-09-30, approved by Alan ("Go ahead"). In force from the next session start and every session after.
+
+## Why
+
+Alan's usage log: about 99% of tokens are cache reads, the conversation re-sent on every step. Cost is context size times steps times
+sessions running at once. These rules cut all three without touching the app's quality.
+
+## Budget
+
+- About 12% of the weekly limit per day, about 15% per hour within a 5-hour window; the rest is reserve.
+- Once a day, run `npx.cmd ccusage@latest daily` (Node is installed) and put one line in for-alan.md: yesterday's tokens and the trend.
+  If a day ran hot, the next day runs one worker.
+
+## Habits
+
+1. **A fresh session per block of work.** When a batch is done: commit, update STATE.md, and end the session (or /clear) rather than
+   carrying the day's history. Compact early when a session grows.
+2. **One worker by default**; two only for truly separate areas; three only when Alan asks.
+3. **Models, with quality first (Alan: "As long as the cheaper model mode does not affect the quality of the application").** All
+   application code, tests, detection, statistics, camera and UI work stay on the main model. Cheaper models only for chores that
+   cannot change the app: screenshot and PDF regeneration, searches, log and CI summaries, doc consistency passes, file moves. Do not
+   switch the main session to a cheaper model.
+4. **Smaller files to reread.** Keep STATE.md under 120 lines. Trim for-alan.md to open requests and the latest summary; move answered
+   requests and old "UNDER WAY" and "READY" paragraphs to `docs/notes/for-alan-archive.md`. Read NOTES-FROM-PLANNING.md by entry
+   number, never whole.
+5. **Ceremony once a day, not per change:** screenshots, guide PDFs, claims backing, the site consistency audit, STATE.md rewrites and
+   folding entries into the log happen once per nightly.
+6. **No watching.** Start a CI run or a long build, work on something else, check back once when it should be done (a monitor or a
+   long sleep, never minute-by-minute polling).
+7. **Targeted tests locally,** the full suite in CI.
+8. **Priorities when the budget is tight:** bugs Alan hit and iOS parity first, approved features second, polish last.
+9. **Overnight runs continue, at one worker** (Alan: "Yes").
+10. If a limit is hit: one line in for-alan.md saying where the run stopped, commit, stop.
+
 ## 2026-09-30, entry 316: the Mac download names no chip generations
 
 **Status: done 2026-09-30.**
