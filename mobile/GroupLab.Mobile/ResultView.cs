@@ -121,7 +121,7 @@ public sealed class ResultView : UserControl
             int turns = ViewRotation.Upright(result.State.Scale, bitmap.PixelSize.Width, bitmap.PixelSize.Height, result.State.ViewQuarterTurns);
             picturePane = new SheetPicture(bitmap, turns, () => session.State.Shots.Where(s => s.IsShot).ToList(),
                 definition is null && AimedByHand(result.State) ? shot => AimColour(session.State, shot.Bull) : null,
-                () => ReviewQueue.SizeFlags(session.State).Select(f => f.ShotId).ToHashSet());
+                () => ReviewQueue.MarksToCheck(session.State).Select(f => f.ShotId).ToHashSet());
             picture.Children.Add(checks);
 
             // Entry 291 section 2.2: the holes are fixed on their own page, and the result measures again when it comes back.
@@ -394,20 +394,20 @@ public sealed class ResultView : UserControl
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 318 section 1: a mark much bigger than the bullet goes to the person to check. Each one still standing is
     /// ringed in amber on the picture and said here in a sentence, with the review queue's own choices; it stays until one of them is taken
-    /// or the shot is moved in Fix holes.
+    /// or the shot is moved in Fix holes. Entry 318 section 2: so is a hole Find holes proposed and was not sure of.
     /// </summary>
     private void ShowChecks()
     {
         checks.Children.Clear();
         var state = session.State;
-        var flags = ReviewQueue.SizeFlags(state);
+        var flags = ReviewQueue.MarksToCheck(state);
         checks.IsVisible = flags.Count > 0;
         if (flags.Count == 0)
         {
             return;
         }
 
-        var open = ReviewQueue.For(state).Where(i => !i.Resolved && i.Kind is ReviewKind.Joined or ReviewKind.Oversized).ToList();
+        var open = ReviewQueue.For(state).Where(i => !i.Resolved && i.Kind is ReviewKind.Joined or ReviewKind.Oversized or ReviewKind.Proposed).ToList();
         var card = new List<Control> { Screens.Heading(flags.Count == 1 ? "1 mark to check" : $"{flags.Count} marks to check") };
         foreach (var flag in flags)
         {

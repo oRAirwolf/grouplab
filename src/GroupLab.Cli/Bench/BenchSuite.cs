@@ -216,6 +216,19 @@ public static class BenchSuite
             },
             ["ReviewQueue", "MarkingSession", "ExclusionReasons"]);
 
+        // Entry 318 section 2: the drawn target is made once, outside the timing of every run after the first.
+        var drawn = new Lazy<(GrayImage Value, IReadOnlyList<PointD> Holes)>(() => GroupLab.Core.Evaluation.Scoreboard.AnyTargetPicture("black bulls", 318));
+        yield return new BenchCase("measurement", "find holes on a target GroupLab did not print",
+            "Find holes, experimental, on a drawn black-bull target at 200 dpi with the scale set by hand: the three ways a hole is told from the print, and their merge.",
+            _ =>
+            {
+                var (value, holes) = drawn.Value;
+                var state = MarkingState.Empty with { ImagePath = "black bulls", Scale = new LengthReference(new PointD(0, 0), new PointD(200, 0), 1), Calibre = Calibre.Of(0.308) };
+                var finding = FindHoles.Run(value, state, new OpenCvSharpBackend());
+                return string.Create(CultureInfo.InvariantCulture, $"{finding.Holes.Count} proposed for {holes.Count} holes");
+            },
+            ["FindHoles"]);
+
         yield return new BenchCase("measurement", "what to say about the sheet", "The sentences the marking screen shows when a sheet is imperfect: the print scale, the doubt, and the refusal with what to do next.",
             _ =>
             {

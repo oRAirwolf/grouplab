@@ -136,6 +136,60 @@ a learned classifier would only be worth it for the kinds of target the tuned de
 The measurement script was a scratch test, run once and deleted; its conditions are listed in section 1 so it can be rebuilt as the
 scoreboard. Entry 291 rebuilt it as the scoreboard of section 9.
 
+**Built, and wired to the marking screens (entry 318 section 2, 2026-09-30).** `AnyTargetHoleFinder` (`src/GroupLab.Core/Detection`)
+reads a target GroupLab did not print three ways, each at the resolution it needs, and merges them, one proposal a hole:
+
+- **Dark on paper**, the neutral darkness detector at no more than 300 dpi, run twice: once against the paper's level taken locally (a
+  closing that ignores anything dark narrower than 1.2 in, so a tight group is still on paper, with darkness taken as a share of that
+  paper so dim light and shadow read like bright light), and once against the survey's single level, which keeps a hole beside a large
+  printed shape. A local mark whose surrounding ring lies on large dark print is the corner of a printed shape and is refused.
+- **Light in print**: inside a black bull what shows through a hole is lighter than the ink. The print's level is an opening then a closing
+  (the hole's own dark rim otherwise drags it down), printed light lines narrower than 0.05 in are erased, blobs are taken unfilled (a
+  paper band between printed rings would swallow every hole inside it), and a round light spot with print all round it is a hole; a light
+  shape with straight sides, such as a white aim diamond, is refused.
+- **A dark center inside a bright ring**, the rule for fluorescent targets, looked for only where most of the picture is dark print: each
+  small round dark piece the bright surrounds is a hit. A bright patch with no dark center, a printed aim dot, is refused, not proposed; where
+  hits were found, light spots are not looked for, because a piece of a ring is one.
+
+The person sets the scale (and the bulls, if they want them) and presses **Find holes (Experimental)**: on the desktop always, under the
+scale; on the phone in GroupLab Dev only, at Marking A's holes step. Each proposal is a normal detected mark (`MarkingSession.ProposeHoles`)
+on its nearest bull, one Undo step; pressing again replaces only proposals nobody touched. A proposal the finder is unsure of (a size out of
+keeping with the bullet, a ragged outline, touching print, at the picture's edge, or only a little lighter than the ink) carries its reason
+to the review queue as "Proposed hole to check" until the person says it is a hole, removes it or moves it; the phone rings it in amber and
+asks on the result, as it does a size flag. The proposal and its reason are kept in the marking file.
+
+**The scoreboard's any-target class** (`grouplab scoreboard --any-target`, `docs/scoreboard/any-target-baseline.json`, held in every build
+by `AnyTargetScoreboardTests`): four targets drawn in code and never kept as pictures, 6.5 by 8.5 in at 200 dpi with 16 holes of a .308
+around four aim points, black bulls with white rings on a white-lidded scan, a fluorescent target whose hits show a bright ring around a dark
+board, black diamonds with a white aim diamond, and a 1 in grid with black aim dots; each read clean, under the hard shadow, dim and curled 15
+px, on seeds 318 and 319. Found holes of 32 a line, with false marks:
+
+| Target | Clean | Hard shadow | Dim | Curl 15 px | Median center error |
+|---|---|---|---|---|---|
+| Black bulls | 20, 1 false | 20, 1 | 19, 3 | 20, 0 | 0.010 to 0.011 in |
+| Fluorescent | 26, 0 | 26, 0 | 26, 0 | 26, 0 | 0.007 to 0.008 in |
+| Diamonds | 22, 0 | 21, 0 | 23, 3 | 22, 0 | 0.011 to 0.012 in |
+| Grid | 25, 4 | 24, 3 | 25, 7 | 26, 2 | 0.015 to 0.017 in |
+
+Together 371 of 512 holes and 24 false marks, most of the false marks a spike of a synthetic hole's torn edge placed as a second small mark,
+flagged as small for the bullet. What the drawn holes cost is the synthesis as much as the finder: their torn edges are long spikes, and on a
+white lid a hole on paper shows a light core in a thin dark rim, which reads as a small printed circle and is missed. Holes are not placed
+across the edge of a black shape, where the finder is known to lose them.
+
+**On real targets, local only** (numbers, never the pictures). The fifteen commercial scans in `scans/` at 300 and 600 dpi: of the 345
+reference marks, the survey detector's 343 and the two holes a person added on `300_nm_hand_load.jpg`, 331 are proposed again, with 344
+proposals in all. On `300_nm_hand_load.jpg`, whose 27 holes a person checked, 25 are found and nothing else, as the survey found
+(`AnyTargetHoleFinderTests`); six of the marks not proposed again are the survey detector's own marks on the barcode of `338lmao.jpg`. The
+National Target Company ST-4 of 2026-09-20, eight frames registered by its grid (`grouplab st4 --any-target`): 67 of the 410 shots in
+view found as a mark of their own and 29 marks near no group, where the survey's detector gives 54 of 400 and 13; the count of shots in
+view moves with the marks, because the grid is matched to the groups by them. Five shot 6.5 Creedmoor groups at 100 yards run together,
+the finding of section 2, and the finder places one mark on such a group and says it is wider than one bullet. The store-bought blank and
+shot scans of entry 308 are not on this machine yet (request 58); the scoreboard's corpus mode reads them with this finder when they are.
+
+**What it cannot do yet:** a hole across the edge of a black bull; a hole in black print with a dark board behind it, where nothing lighter
+shows through; a light-cored hole with a thin rim on a scan; and a printed white center dot in a black bull, which is round and light, is
+proposed as a hole with no doubt unless it is wider than the bullet.
+
 ## 8. A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built)
 
 A photograph cannot measure how large a sheet was printed, because nothing in the frame has a known absolute size
@@ -247,8 +301,9 @@ same sheet where one exists (every hole, in the sheet's own inches), or the shot
 and photographed two or three times, into `C:\Dev\grouplab-local\commercial-targets\<target>\`, local only and never shown. Its
 `truth.json` says `"target": "any"`, `picture` (the shot scan), `blank` (the blank scan), `count` (the shots fired) and `dpi`. The
 scoreboard reads both scans with the detector that needs no printed artwork (section 7) and gives two lines: "any target, shot", its marks
-held to the count, and "any target, blank", where every mark is a false one, since nothing on a blank sheet is a hole. The phone photographs
-wait for the wiring of section 7, which gives them a scale. Alan's photographs of 20 September of a store-bought target are test
+held to the count, and "any target, blank", where every mark is a false one, since nothing on a blank sheet is a hole. Since entry 318 the
+scans are read by the finder of section 7 that Find holes uses, and the phone photographs, which have no scale of their own, are read there
+once the person sets one. Alan's photographs of 20 September of a store-bought target are test
 material of the same kind, and are never shown or named on the site.
 
 **The first real table** (2026-09-29, seven photographs of three sheets, each against its own 600 dpi scan). The four pictures of the

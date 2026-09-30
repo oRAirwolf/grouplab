@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
+using GroupLab.Cli.Imaging;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 
@@ -19,6 +20,8 @@ namespace GroupLab.Mobile;
 /// 2", "Add hole here (6)"), with Undo. Once the scale is known the crosshair's ring is the bullet's real size. Holes GroupLab found are
 /// rings with their number; holes added here are rings with a dot; a wrong mark is removed by putting the crosshair on it, when the button
 /// says so. "Done: measure N shots" makes the result; "Keep as a template" keeps the aim points for the next sheet of the same target.
+/// Entry 318 section 2, in GroupLab Dev only: at the holes, "Find holes (Experimental)" proposes them from the scale, each a found hole to
+/// keep or remove here and move in Fix holes; one the finder is unsure of is ringed in amber and asked about on the result.
 /// </summary>
 internal sealed class MarkingAPage : UserControl
 {
@@ -44,14 +47,18 @@ internal sealed class MarkingAPage : UserControl
     private readonly Button undo = Screens.Choice("Undo", () => { });
     private readonly Button next = Screens.Choice("", () => { });
     private readonly Button template = Screens.Choice("Keep as a template", () => { });
+    private readonly Button findHoles = Screens.Choice(FindHoles.Label, () => { }).Id("marking-find-holes");
+    private readonly string imagePath;
     private readonly List<PointD> ends = [];
     private Step step = Step.Scale;
     private readonly long? sessionId;
+    private string? found;
 
     /// <param name="existing">A marking to go on with, entry 280 section 2's "+ Aim point": its scale kept, starting at the aim points.</param>
     public MarkingAPage(string imagePath, int? exifOrientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel, MarkingState? existing = null, long? sessionId = null)
     {
         WorkInProgress.HoldWhileShown(this);
+        this.imagePath = imagePath;
         this.sessionId = sessionId;
         this.units = units;
         this.done = done;
@@ -75,8 +82,9 @@ internal sealed class MarkingAPage : UserControl
         undo.Click += (_, _) => Undo();
         next.Click += (_, _) => Next();
         template.Click += (_, _) => KeepTemplate();
+        findHoles.Click += (_, _) => _ = FindHolesAsync();
 
-        var buttons = new StackPanel { Spacing = 8, Children = { main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, template } };
+        var buttons = new StackPanel { Spacing = 8, Children = { main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, findHoles, template } };
         Grid.SetColumn(next, 1);
         var column = new StackPanel { Spacing = 10, Margin = new Thickness(16, 12, 16, 12) };
         column.Children.Add(title);
@@ -96,6 +104,9 @@ internal sealed class MarkingAPage : UserControl
         viewer.RingInches = step == Step.Holes ? session.State.Calibre?.DiameterInches : null;
         length.IsVisible = step == Step.Scale && ends.Count == 2;
         template.IsVisible = step == Step.Holes && session.State.Bulls.Count >= 2;
+
+        // Entry 318 section 2: experimental, so in GroupLab Dev only, at the holes, where the scale is known.
+        findHoles.IsVisible = FindHolesOffered;
         undo.IsEnabled = step == Step.Scale ? ends.Count > 0 : session.CanUndo;
         switch (step)
         {
@@ -117,7 +128,7 @@ internal sealed class MarkingAPage : UserControl
                 break;
             default:
                 title.Text = "3. The holes";
-                words.Text = "Put the crosshair on the center of each hole and add it. To take one away, put the crosshair on it.";
+                words.Text = found ?? "Put the crosshair on the center of each hole and add it. To take one away, put the crosshair on it.";
                 if (viewer.MarkUnderCrosshair(Reach) is { } near)
                 {
                     SetMain("Remove this hole", true);
@@ -194,7 +205,7 @@ internal sealed class MarkingAPage : UserControl
         Show();
     }
 
-    private void Next()
+    internal void Next()
     {
         switch (step)
         {
@@ -220,6 +231,54 @@ internal sealed class MarkingAPage : UserControl
                 return;
         }
 
+        Show();
+    }
+
+    /// <summary>Whether "Find holes (Experimental)" is on the page: GroupLab Dev, at the holes, with the scale set.</summary>
+    internal bool FindHolesOffered => Phone.Platform.IsDevBuild && step == Step.Holes && FindHoles.Offered(session.State);
+
+    /// <summary>The marking as it stands, for a test.</summary>
+    internal MarkingState State => session.State;
+
+    /// <summary>
+    /// Proposes the holes away from the screen's thread and places them as found holes, as one step Undo takes back. Nothing is kept until
+    /// the person has seen them and pressed Done; one the finder is unsure of is ringed in amber here and asked about on the result.
+    /// </summary>
+    internal async Task FindHolesAsync()
+    {
+        if (!FindHolesOffered)
+        {
+            return;
+        }
+
+        var state = session.State;
+        findHoles.IsEnabled = false;
+        words.Text = "Finding holes, experimental…";
+        try
+        {
+            ShowProposals(await Task.Run(() => FindHoles.Run(ImageLoader.LoadMaxChannel(imagePath).MaxChannel, state, new OpenCvSharpBackend())));
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or OpenCvSharp.OpenCVException)
+        {
+            found = "Find holes could not read this picture. Mark the holes by hand.";
+            DiagnosticLog.Exception(LogLevel.Warn, "marking.findholes", ex);
+            Show();
+        }
+        finally
+        {
+            findHoles.IsEnabled = true;
+        }
+    }
+
+    /// <summary>Finds and places the holes on the calling thread, for a test.</summary>
+    internal void FindHolesNow() => ShowProposals(FindHoles.Run(ImageLoader.LoadMaxChannel(imagePath).MaxChannel, session.State, new OpenCvSharpBackend()));
+
+    private void ShowProposals(GroupLab.Core.Detection.AnyTargetFinding finding)
+    {
+        int placed = session.ProposeHoles(finding.Holes);
+        int doubted = session.State.Shots.Count(s => ReviewQueue.StillDoubted(session.State, s));
+        found = FindHoles.Said(placed, doubted) + (doubted > 0 ? " Those ringed in amber are the ones to check." : "");
+        DiagnosticLog.Info("marking.findholes", ("proposed", finding.Holes.Count), ("placed", placed), ("doubted", doubted));
         Show();
     }
 
@@ -505,7 +564,9 @@ internal sealed class MarkingAPage : UserControl
                     context.DrawLine(ghost, start, at);
                 }
 
-                context.DrawEllipse(null, byHand ? added : found, at, radius, radius);
+                // Entry 318 section 2: a hole Find holes proposed and is unsure of is ringed in amber, as a mark to check is on the result.
+                bool doubted = ReviewQueue.StillDoubted(session.State, shot);
+                context.DrawEllipse(null, byHand ? added : doubted ? new Pen(amber, 2.5) : found, at, radius, radius);
                 if (byHand)
                 {
                     context.DrawEllipse(Brushes.LimeGreen, null, at, 2.5, 2.5);

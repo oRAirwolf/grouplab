@@ -23,6 +23,7 @@ public partial class AutomationIdTests
         ("FixHolesPage.cs", ["fix-main", "fix-move", "fix-remove", "fix-undo", "fix-done", "fix-keep", "fix-throw-away", "fix-go-on", "fix-back"]),
         ("SessionsPage.cs", ["sessions-open-file", "sessions-import-csv", "sessions-compare-loads", "sessions-back"]),
         ("PhotoPages.cs", ["photo-read-anyway", "photo-choose-another"]),
+        ("MarkingAPage.cs", ["marking-find-holes"]),
         ("SettingsView.cs", ["settings-send-diagnostics", "settings-add-printer", "settings-printer-correction", "settings-keep-pictures", "settings-dev-bridge"]),
     ];
 

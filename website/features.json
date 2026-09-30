@@ -104,14 +104,15 @@
     "Distance, click value, velocity and the other number boxes on the",
     "Compare's verdict on the phone now says in plain words how far apart",
     "On an iPad, an Android tablet or the open Fold, Compare now draws",
-    "In Guided mode the camera now takes the picture about a second after"
+    "In Guided mode the camera now takes the picture about a second after",
+    "Find holes (Experimental)"
   ],
   "features": [
     {
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Any target you already shoot",
-      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. Finding the holes by itself on any target is the goal, not yet a feature.",
+      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. On the computer, Find holes (Experimental) proposes the holes for you to check; finding them reliably on any target is still the goal.",
       "shot": "marking-other",
       "platforms": [
         "Windows",

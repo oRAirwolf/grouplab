@@ -125,6 +125,8 @@ public static class MarkingFile
                         acrossHoles = flag.AcrossHoles,
                     }
                     : null,
+                // Entry 318 section 2: a hole Find holes proposed, written only where there is one.
+                proposal = s.Proposal is { } proposed ? new { look = proposed.Look.ToString(), doubt = proposed.Doubt } : null,
             }),
             report,
         };
@@ -204,6 +206,9 @@ public static class MarkingFile
             Sighter = (bool?)s["sighter"] ?? false,
             ChosenDiameterInches = (double?)s["chosenDiameterInches"],
             Note = (string?)s["note"],
+            Proposal = s["proposal"] is JsonObject proposed && Enum.TryParse<GroupLab.Core.Detection.HoleLook>((string?)proposed["look"], out var look)
+                ? new HoleProposal(look, (string?)proposed["doubt"])
+                : null,
         }).ToImmutableList();
         var state = new MarkingState(
             (string?)file["image"],

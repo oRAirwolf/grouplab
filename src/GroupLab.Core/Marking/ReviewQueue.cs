@@ -18,6 +18,11 @@ public enum ReviewKind
     /// </summary>
     Joined,
 
+    /// <summary>
+    /// A hole Find holes proposed on a target GroupLab did not print and was not sure of (NOTES-FROM-PLANNING.md entry 318 section 2).
+    /// </summary>
+    Proposed,
+
     /// <summary>A scoring bull holding more than one shot.</summary>
     Doubled,
 
@@ -203,6 +208,14 @@ public static class ReviewQueue
             string key = JoinedKey(shot.Id);
             items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id], state.Calibre?.DiameterInches),
                 [new ReviewChoice("It is on the hole", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
+        }
+
+        // Entry 318 section 2: a hole Find holes proposed and was not sure of, until the person says it is a hole, moves it or takes it away.
+        foreach (var shot in shots.Where(s => s.Proposal is { Doubt: not null } && s.Provenance == ShotProvenance.Automatic && !OnlySighters(s.Bull)))
+        {
+            string key = ProposedKey(shot.Id);
+            items.Add(new ReviewItem(key, ReviewKind.Proposed, shot.Id, shot.Bull, shot.Image, Doubt(labels[shot.Id], shot.Proposal!),
+                [new ReviewChoice("It is a hole", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
         }
 
         // Entry 113 section 4: a bull the marking says holds more than one, or a sheet read by nearest bull, is not doubled by holding them.
@@ -410,6 +423,40 @@ public static class ReviewQueue
 
     /// <summary>The key of the review item a shot placed inside a larger mark raises, entry 291 section 7 item 4.</summary>
     public static string JoinedKey(int shotId) => string.Create(CultureInfo.InvariantCulture, $"joined:{shotId}");
+
+    /// <summary>The key of the review item a hole Find holes proposed and was not sure of raises, entry 318 section 2.</summary>
+    public static string ProposedKey(int shotId) => string.Create(CultureInfo.InvariantCulture, $"proposed:{shotId}");
+
+    /// <summary>The sentence for a proposed hole the finder was not sure of: that it was proposed, that the finder is experimental, and why.</summary>
+    public static string Doubt(string shot, HoleProposal proposal)
+    {
+        ArgumentNullException.ThrowIfNull(proposal);
+        return $"Find holes, which is experimental, proposed shot {shot} and is not sure of it: {proposal.Doubt}. Check that it is a hole.";
+    }
+
+    /// <summary>
+    /// Whether a proposed hole still wants checking, entry 318 section 2: it stays until the person says it is a hole, takes it away, or moves
+    /// it, which makes it theirs.
+    /// </summary>
+    public static bool StillDoubted(MarkingState state, MarkedShot shot)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(shot);
+        return shot.IsShot && shot.Provenance == ShotProvenance.Automatic && shot.Proposal is { Doubt: not null }
+            && state.Dismissed?.Contains(ProposedKey(shot.Id)) != true;
+    }
+
+    /// <summary>
+    /// Every mark the result asks the person to check, in the sheet's order: the size flags of <see cref="SizeFlags"/>, then the holes Find
+    /// holes proposed and was not sure of (entry 318 section 2), each with its sentence. The phone rings each in amber and lists the sentences.
+    /// </summary>
+    public static IReadOnlyList<SizeFlag> MarksToCheck(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text ?? "");
+        return [.. SizeFlags(state), .. state.Shots.Where(s => StillDoubted(state, s)).Select(s => new SizeFlag(s.Id, s.Image,
+            Doubt(labels.TryGetValue(s.Id, out var label) ? label : s.Id.ToString(CultureInfo.InvariantCulture), s.Proposal!), true, false))];
+    }
 
     /// <summary>
     /// Whether a shot's size flag still stands, NOTES-FROM-PLANNING.md entry 318 section 1: a mark much bigger than the bullet stays flagged on

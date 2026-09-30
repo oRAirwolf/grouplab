@@ -2596,6 +2596,12 @@ public sealed partial class MainWindow : Window
         {
             scaleInputs.Children.Clear();
             scaleInputs.Children.Add(ScaleReadout(state.Scale));
+
+            // Entry 318 section 2: on a target GroupLab did not print, once the scale is set, the holes can be proposed.
+            if (FindHolesOffered)
+            {
+                scaleInputs.Children.Add(FindHolesRow());
+            }
         }
 
         emptyCanvas.IsVisible = state.ImagePath is null;
@@ -4170,6 +4176,7 @@ public sealed partial class MainWindow : Window
         ReviewKind.Contested => "Contested assignment",
         ReviewKind.Oversized => "Possibly two holes",
         ReviewKind.Joined => "Hole read with what is beside it",
+        ReviewKind.Proposed => "Proposed hole to check",
         ReviewKind.Doubled => "Two shots on one bull",
         ReviewKind.Unassigned => "No bull",
         ReviewKind.Count => "Count differs from rounds fired",

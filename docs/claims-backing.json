@@ -4652,6 +4652,42 @@
   "Aligning quarters cancels the rings, and it also lays bare the registration's own error in the far column, where every hole reads 0.02 to 0.04 in too far out, the way the markers are off; on the 15 degree picture that moved three far holes past the median and pushed a marker's own residue out of its zone into a false mark.": {
    "kind": "measured",
    "where": "grouplab scoreboard --corpus on the seven local pictures and --synthetic against docs/scoreboard/synthetic-baseline.json, 2026-09-30, with scratch measurements (deleted after the run) of marker residuals against the registration, per-cell blur matching and quarter-cell phase correlation in RenderDifferenceHoleDetector's alignment, and SheetMeasurer's mesh choice (entry 318 section 1)"
+  },
+  "The print's level is an opening then a closing (the hole's own dark rim otherwise drags it down), printed light lines narrower than 0.05 in are erased, blobs are taken unfilled (a paper band between printed rings would swallow every hole inside it), and a round light spot with print all round it is a hole; a light shape with straight sides, such as a white aim diamond, is refused.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)"
+  },
+  "The fifteen commercial scans in `scans/` at 300 and 600 dpi: of the 345 reference marks, the survey detector's 343 and the two holes a person added on `300_nm_hand_load.jpg`, 331 are proposed again, with 344 proposals in all.": {
+   "kind": "measured",
+   "where": "the finder's run over scans/ against scans/phase1/measurements/holes-baseline.json and the two holes of docs/SCAN-MEASUREMENTS.md section 8, 2026-09-30 (entry 318 section 2); the 300_nm_hand_load case is AnyTargetHoleFinderTests.OnTheCommercialScanWithCheckedHolesItFindsWhatTheSurveyFoundAndNothingElse"
+  },
+  "On `300_nm_hand_load.jpg`, whose 27 holes a person checked, 25 are found and nothing else, as the survey found (`AnyTargetHoleFinderTests`); six of the marks not proposed again are the survey detector's own marks on the barcode of `338lmao.jpg`.": {
+   "kind": "measured",
+   "where": "the finder's run over scans/ against scans/phase1/measurements/holes-baseline.json and the two holes of docs/SCAN-MEASUREMENTS.md section 8, 2026-09-30 (entry 318 section 2); the 300_nm_hand_load case is AnyTargetHoleFinderTests.OnTheCommercialScanWithCheckedHolesItFindsWhatTheSurveyFoundAndNothingElse"
+  },
+  "The National Target Company ST-4 of 2026-09-20, eight frames registered by its grid (`grouplab st4 --any-target`): 67 of the 410 shots in view found as a mark of their own and 29 marks near no group, where the survey's detector gives 54 of 400 and 13; the count of shots in view moves with the marks, because the grid is matched to the groups by them.": {
+   "kind": "measured",
+   "where": "grouplab st4 tests/GroupLab.Core.Tests/Analysis/st4-2026-09-20.json, with and without --any-target, on the local frames, 2026-09-30 (entry 318 section 2)"
+  },
+  "Five shot 6.5 Creedmoor groups at 100 yards run together, the finding of section 2, and the finder places one mark on such a group and says it is wider than one bullet.": {
+   "kind": "measured",
+   "where": "grouplab st4 tests/GroupLab.Core.Tests/Analysis/st4-2026-09-20.json, with and without --any-target, on the local frames, 2026-09-30 (entry 318 section 2)"
+  },
+  "The store-bought blank and shot scans of entry 308 are not on this machine yet (request 58); the scoreboard's corpus mode reads them with this finder when they are.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 308 section 4 and entry 318 section 2; docs/notes/for-alan.md request 58"
+  },
+  "**What it cannot do yet:** a hole across the edge of a black bull; a hole in black print with a dark board behind it, where nothing lighter shows through; a light-cored hole with a thin rim on a scan; and a printed white center dot in a black bull, which is round and light, is proposed as a hole with no doubt unless it is wider than the bullet.": {
+   "kind": "measured",
+   "where": "the any-target scoreboard and the scans' run, 2026-09-30 (entry 318 section 2); docs/scoreboard/any-target-baseline.json"
+  },
+  "Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)"
+  },
+  "Since entry 318 the scans are read by the finder of section 7 that Find holes uses, and the phone photographs, which have no scale of their own, are read there once the person sets one.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)"
   }
  },
  "rules": [

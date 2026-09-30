@@ -49,6 +49,7 @@
     "src/GroupLab.App/MainWindow.Equipment.cs",
     "src/GroupLab.App/MainWindow.Errors.cs",
     "src/GroupLab.App/MainWindow.Figures.cs",
+    "src/GroupLab.App/MainWindow.FindHoles.cs",
     "src/GroupLab.App/MainWindow.FuddBuster.cs",
     "src/GroupLab.App/MainWindow.GroupTools.cs",
     "src/GroupLab.App/MainWindow.Hit.cs",

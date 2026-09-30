@@ -57,6 +57,8 @@ A3 sheet you printed before still reads. The roll sheets are for a plotter, and 
 
 **A target GroupLab did not print, with several bulls** (suggested by Unholy, also TNA). Choose **Place bulls** (B) and tap each bull's aim point; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest bull and are drawn in its color, so a shot on the wrong bull shows. **Lasso** (O): draw round several shots, then tap the bull they belong to. For the scale, tap four corners of something rectangular whose size you know, such as the paper's edge, which removes the photograph's angle; or draw a length near a bull, a ring's width or a grid square, and choose **Use it as bull N's own scale**, then a second at right angles to it. GroupLab says when the bulls' scales disagree, which means the photograph was taken at an angle, and how uncertain the sizes are because of it. Under Advanced, **Bull by bull** gives each bull as its own group beside the pooled one. With the bulls tool in hand, **Save these bulls** keeps them as a template; on the next sheet of the same target, tap its first two bulls and **Place the rest**.
 
+**Find holes (Experimental).** Once the scale is set, and the bulls if you placed them, the button under the scale proposes the holes: a hole darker than the paper, a hole in a black bull where what shows through is lighter than the ink, and on a fluorescent target a dark center inside its bright ring. Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason. It is experimental: it misses some holes, such as one on the edge of a black bull, and it can take printing for a hole, so look at every mark before you trust the figures. Undo takes all of them back at once, and pressing it again replaces only the marks you have not touched.
+
 **Large targets.** A sheet larger than Letter or A4 does not fit a flatbed scanner. For each one the Targets screen works out how many pixels an inch a phone photograph of the whole sheet gives and says whether that is enough. Tiled Letter or A4 pages are the better choice for a large target: each page scans by itself, and a plotter can print them all on one large page with cut lines between them.
 
 **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
@@ -457,7 +459,9 @@ the Fold 7 opened, the result shows the sheet beside the numbers.
 **A target GroupLab did not print** is marked by hand: when its codes cannot be read, choose **Not a GroupLab sheet: mark it by hand**. The
 picture moves under a crosshair that stays in the middle: set the two ends of a length you know and type it, set the aim point, then
 **Add hole here** on each hole, with **Undo**. A mark under the crosshair can be removed; once the scale is known the crosshair's ring is
-your bullet's size. **Fudd buster mode**, under a result of twenty shots or more, is the same page as on the computer.
+your bullet's size. In GroupLab Dev, the development build, **Find holes (Experimental)** at the holes proposes them, as on the computer:
+each is a found hole to keep or remove there and to move in **Fix holes**, and one it is not sure of is ringed in amber and asked about on
+the result. **Fudd buster mode**, under a result of twenty shots or more, is the same page as on the computer.
 **Shots**, under a result, lists every shot with its offset across and up from the aim point and, with your rifle's click value, the
 clicks to bring it onto the aim; its **Counted** switch leaves a shot out of every figure, struck through in the list and dashed on the
 picture, and still on the record. **Zero from this group** says where the group sits, the clicks, whether that is worth dialing at

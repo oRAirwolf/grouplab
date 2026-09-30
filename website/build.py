@@ -650,7 +650,7 @@ def page_home() -> str:
 <p class="eyebrow">Your own targets</p>
 <h2>Any target you already shoot.</h2>
 <p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target. Marking by hand is on the computer and, under a crosshair, on the phone.</p>
-<p>Finding the holes by itself on any target is the goal, not yet a feature. On a GroupLab sheet it already does, which makes the sheet the fast lane, not a requirement.</p>
+<p>Finding the holes by itself on any target is the goal: on the computer, Find holes (Experimental) already proposes them for you to check. On a GroupLab sheet every hole is found by itself, which makes the sheet the fast lane, not a requirement.</p>
 </div>
 <figure class="fig">{screen("marking-other", "A plain sample target with four ring bulls, its scale drawn across one ring and each bull's shots marked by hand in its own color")}<figcaption><strong>A sample, marked by hand</strong><span>A plain target GroupLab drew for this picture, with no markers or codes: the scale set from a ring's known width, then the bulls and the shots placed by hand.</span></figcaption></figure>
 </section>

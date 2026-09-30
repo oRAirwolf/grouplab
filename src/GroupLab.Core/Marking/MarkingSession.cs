@@ -104,6 +104,12 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
     /// <summary>A note the person typed against this shot, entry 131 section 2, or null. Nothing reads it: it is theirs.</summary>
     public string? Note { get; init; }
 
+    /// <summary>
+    /// Where Find holes, the experimental finder for a target GroupLab did not print, proposed this shot (NOTES-FROM-PLANNING.md entry 318
+    /// section 2): how the hole looked and, where the finder was unsure, why. Null for every other shot.
+    /// </summary>
+    public HoleProposal? Proposal { get; init; }
+
     /// <summary>What the hole is taken to measure: what a person set, else what the detector measured, else nothing.</summary>
     public double? DiameterInches => ChosenDiameterInches ?? MeasuredDiameterInches;
 }
@@ -326,6 +332,38 @@ public sealed class MarkingSession
         int id = State.NextId;
         Apply(Rematch(State with { Shots = State.Shots.Add(new MarkedShot(id, image, ShotProvenance.Manual, Bull: bull ?? NearestBull(State, image), BullChosen: bull is not null)), NextId = id + 1 }));
         return id;
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 318 section 2: the holes Find holes proposed on a target GroupLab did not print, placed as detected shots,
+    /// each on its nearest bull, as one step that can be undone, and returns how many were placed. Proposals from an earlier Find holes that
+    /// nobody has touched are replaced; every shot the person placed, moved or settled is kept, and a proposal within half a bullet of one is
+    /// dropped, so one hole never becomes two marks. Each is a normal mark the person can confirm, move or remove.
+    /// </summary>
+    public int ProposeHoles(IReadOnlyList<ProposedHole> proposals)
+    {
+        ArgumentNullException.ThrowIfNull(proposals);
+        var kept = State.Shots.Where(s => !(s.Proposal is not null && s.Provenance == ShotProvenance.Automatic && s.IsShot)).ToList();
+        PointD Plane(PointD p) => State.Scale is { } scale ? scale.ToTarget(p) : p;
+        double apart = 0.5 * (State.Calibre?.DiameterInches ?? 0.2);
+        int id = State.NextId;
+        var placed = new List<MarkedShot>();
+        foreach (var hole in proposals)
+        {
+            var at = Plane(hole.Image);
+            if (kept.Concat(placed).Any(s => s.IsShot && Math.Sqrt(Math.Pow(Plane(s.Image).X - at.X, 2) + Math.Pow(Plane(s.Image).Y - at.Y, 2)) < apart))
+            {
+                continue;
+            }
+
+            placed.Add(new MarkedShot(id++, hole.Image, ShotProvenance.Automatic, Bull: NearestBull(State, hole.Image), MeasuredDiameterInches: hole.DiameterInches)
+            {
+                Proposal = new HoleProposal(hole.Look, hole.Doubt),
+            });
+        }
+
+        Apply(Rematch(State with { Shots = [.. kept, .. placed], NextId = id }));
+        return placed.Count;
     }
 
     /// <summary>
