@@ -101,7 +101,7 @@ public class IosSigningTests
             Assert.Equal("false", keys[at + 1].Name.LocalName);
         }
 
-        Assert.Contains(".get(\"ITSAppUsesNonExemptEncryption\"))", File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml")),
+        Assert.Contains("p.get(\"ITSAppUsesNonExemptEncryption\", \"absent\")", File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml")),
             StringComparison.Ordinal);
     }
 }
