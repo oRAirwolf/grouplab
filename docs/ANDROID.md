@@ -414,6 +414,13 @@ owner's own pictures. Put the file there with `run-as org.grouplab.app.dev`, the
 org.grouplab.test.picture <name>`; the log's `phone.prepare` and `phone.detect` lines give the working size, the most memory held and each
 stage's time. The release build has no such way in.
 
+**Scenario files** (entry 315 section 2), in GroupLab Dev on Android and iOS alike: a JSON file of steps (open a place, read a picture
+from the scenario folder, wait for a screen or words, press a button by its name or words, type, take a screenshot, write the visible
+controls as a tree, sleep, copy the log) run with nobody's hands. It waits in `files/scenario/scenario.json`, or is named by the extra
+`org.grouplab.test.scenario` with a file name in that folder; it runs once, and `files/scenario/results/` gets `results.json` (each step,
+whether it worked, its time and the memory held), the screenshots, the trees and the log. The format and its steps are described in
+`mobile/GroupLab.Mobile/Dev/Scenario.cs`. The older extras stay as shortcuts. The Play build is built without any of it.
+
 **Every picture of a sitting is kept** (entry 291 section 7.5), in GroupLab Dev only: each picture the camera takes goes into its own
 folder under `files/sitting/`, numbered `picture-0001` on, as `picture.jpg` with every metadata segment taken out (no location, no time,
 no camera settings; the picture's own data is copied, not re-encoded), `live.txt` with what the last live frame read before it (the

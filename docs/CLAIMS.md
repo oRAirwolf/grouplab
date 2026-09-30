@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1410 |
+| code | 1411 |
 | measured | 1799 |
 | decided | 1269 |
 | unbacked | 0 |
-| **total** | **4478** |
+| **total** | **4479** |
 
-**1043** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1044** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -593,6 +593,7 @@ one that matters.
 - *decided* (docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job): Alan's request with the exact steps is written after the Store work of request 38 is done.
 - *code* (mobile/GroupLab.Mobile/PhoneStyles.cs and App.cs PhoneStyles.Apply; scripts/android-icons.py and android/GroupLab.Android/Resources/mipmap-*; held by Entry234Tests (entries 246 and 248)): **Look and icon** (entries 246 and 248): the phone uses the desktop's styles and tokens with look B's cards on top of them, as DESIGN.md section 19 describes, and its icons, GroupLab's dark and GroupLab Dev's light, adaptive with a monochrome layer and PNGs for older launchers, are written by `scripts/android-icons.py` from the desktop's mark.
 - *code* (android/GroupLab.Android/MainActivity.cs TestPictureExtra and CapturePage.TestPicture, under GROUPLAB_DEV only; PhoneAnalysis's phone.prepare and phone.detect log lines (entry 246)): **A picture without the picker** (entry 246): GroupLab Dev reads a picture named by the extra `org.grouplab.test.picture`, a file name in its own `files/test` folder, exactly as a chosen photograph, so a device is measured without opening the system's picker, which shows the owner's own pictures.
+- *code* (mobile/GroupLab.Mobile/Dev/Scenario.cs; android/GroupLab.Android/MainActivity.cs TestScenarioExtra; tests/GroupLab.Mobile.Tests/ScenarioTests.cs; entry 315 section 2): **Scenario files** (entry 315 section 2), in GroupLab Dev on Android and iOS alike: a JSON file of steps (open a place, read a picture from the scenario folder, wait for a screen or words, press a button by its name or words, type, take a screenshot, write the visible controls as a tree, sleep, copy the log) run with nobody's hands.
 - *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; mobile/GroupLab.Mobile/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): The memory budget, scaled to the device (entry 240) Entry 206's single number is replaced by a rule, `MemoryBudget.Phone`.
 - *measured* (docs/PHASE1-RESULTS.md, Entry 240: the published scan at 4 to 24 megapixels and the three kitchen photographs at 8 and 12, 2026-09-27): Measured on this machine at each working size: the published scan's shots moved about 0.0005 in between 8 and 24 megapixels, and on the three kitchen photographs of entry 233 the 8 and 12 megapixel readings agreed to 0.001 in, against a photo to scan difference of 0.015 to 0.027 in, with the odd extra mark going either way.
 - *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; mobile/GroupLab.Mobile/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): So **every phone works at 8 megapixels** (`MemoryBudget.PhoneWorkingMegapixels`: the floor holds 9.8), and more memory never makes two phones' results differ.

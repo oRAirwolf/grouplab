@@ -21,6 +21,11 @@ public sealed class App : Avalonia.Application
             SelfTest.Prepare();
         }
 
+#if GROUPLAB_DEV
+        // Entry 315 section 2, GroupLab Dev only: a scenario named by --scenario, or waiting in Documents/scenario, read before the start.
+        bool scenario = !selfTest && !tour && GroupLab.Mobile.Dev.Scenario.Prepare(IosPhone.Documents, SelfTest.Value("--scenario"));
+#endif
+
         // Entry 290 section 6: the bar along the bottom reaches the bottom edge, under the home indicator, as an iPhone's bars do.
         Shell.BarToBottomEdge = true;
 
@@ -49,5 +54,11 @@ public sealed class App : Avalonia.Application
         {
             SelfTest.StartIdle();
         }
+#if GROUPLAB_DEV
+        else if (scenario)
+        {
+            GroupLab.Mobile.Dev.Scenario.StartIfPrepared();
+        }
+#endif
     }
 }

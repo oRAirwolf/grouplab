@@ -48,6 +48,36 @@ internal static class SelfTest
         || Foundation.NSProcessInfo.ProcessInfo.Arguments.Contains(argument)
         || (Environment.GetEnvironmentVariable("GROUPLAB_ARGUMENTS") ?? "").Split(' ').Contains(argument);
 
+#if GROUPLAB_DEV
+    /// <summary>
+    /// GroupLab Dev only (entry 315 section 2): the word after <paramref name="argument"/>, or after its equals sign, wherever the arguments
+    /// arrived; an empty string where the argument is there alone, and null where it is not there.
+    /// </summary>
+    internal static string? Value(string argument)
+    {
+        foreach (var arguments in new IEnumerable<string>[]
+        {
+            Program.Arguments, Environment.GetCommandLineArgs(), Foundation.NSProcessInfo.ProcessInfo.Arguments,
+            (Environment.GetEnvironmentVariable("GROUPLAB_ARGUMENTS") ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries),
+        })
+        {
+            var list = arguments.ToList();
+            int at = list.IndexOf(argument);
+            if (at >= 0)
+            {
+                return at + 1 < list.Count && !list[at + 1].StartsWith("--", StringComparison.Ordinal) ? list[at + 1] : "";
+            }
+
+            if (list.FirstOrDefault(a => a.StartsWith(argument + "=", StringComparison.Ordinal)) is { } joined)
+            {
+                return joined[(argument.Length + 1)..];
+            }
+        }
+
+        return null;
+    }
+#endif
+
     /// <summary>
     /// A test sitting's idle screen: shown once the application is up, with the screen kept on only while it is showing, since the sitting
     /// watches it; once it is closed, iOS may dim and lock the screen again as it always does.
