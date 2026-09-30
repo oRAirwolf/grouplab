@@ -4620,6 +4620,14 @@
   "GroupLab Dev also has the replay camera (entry 315 section 3): the same clip format as Android, recorded into `Documents/clips/` and replayed through the same shared code; docs/ANDROID.md describes it.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
+  },
+  "**Firebase Test Lab** (entry 318 section 3), in GroupLab Dev only: Test Lab starts GroupLab Dev as a \"game loop\" test, with the action `com.google.intent.action.TEST_LOOP` and a loop number N.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/MainActivity.cs TestLoop and its TEST_LOOP intent filter (GroupLab Dev only); mobile/GroupLab.Mobile/Dev/Scenario.cs Finished; NOTES-FROM-PLANNING.md entry 318 section 3"
+  },
+  "`.github/workflows/testlab.yml` runs scenario 1 (`android/testlab/scenario-1.json`, the committed sample scan read and every tab photographed) once a day on three real phones and one virtual phone chosen from Test Lab's own list by `scripts/testlab-devices.py`, inside the free plan; until request 62's project and key exist it says so and tests nothing.": {
+   "kind": "code",
+   "where": ".github/workflows/testlab.yml and scripts/testlab-devices.py (its --self-test holds the choice of three real phones and one virtual one); android/testlab/scenario-1.json; request 62 in docs/notes/for-alan.md"
   }
  },
  "rules": [

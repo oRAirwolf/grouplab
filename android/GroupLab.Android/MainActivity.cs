@@ -38,6 +38,10 @@ namespace GroupLab.Android;
 // file itself is checked before anything is read from it.
 [IntentFilter([Intent.ActionView, Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "application/octet-stream")]
 [IntentFilter([Intent.ActionView, Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "application/json")]
+#if GROUPLAB_DEV
+// Entry 318 section 3: Firebase Test Lab starts a "game loop" test with this action; GroupLab Dev answers it with a scenario.
+[IntentFilter([MainActivity.TestLoopAction], Categories = [Intent.CategoryDefault], DataMimeType = "application/javascript")]
+#endif
 public class MainActivity : AvaloniaMainActivity
 {
     /// <summary>The name under the icon, entry 234: the development build says it is one there too.</summary>
@@ -84,7 +88,7 @@ public class MainActivity : AvaloniaMainActivity
 
 #if GROUPLAB_DEV
         // Entry 315 section 2: a scenario named by the extra, or waiting in files/scenario, read before the application starts.
-        bool scenario = GroupLab.Mobile.Dev.Scenario.Prepare(FilesDir!.AbsolutePath, Intent?.GetStringExtra(TestScenarioExtra));
+        bool scenario = GroupLab.Mobile.Dev.Scenario.Prepare(FilesDir!.AbsolutePath, TestLoop(Intent) ?? Intent?.GetStringExtra(TestScenarioExtra));
 #endif
         base.OnCreate(savedInstanceState);
         Shared(Intent);
@@ -265,6 +269,62 @@ public class MainActivity : AvaloniaMainActivity
         TestShotsToZero(intent);
         TestCamera(intent);
         TestIdle(intent);
+    }
+
+    /// <summary>The action Firebase Test Lab starts a game loop test with (entry 318 section 3).</summary>
+    internal const string TestLoopAction = "com.google.intent.action.TEST_LOOP";
+
+    /// <summary>
+    /// GroupLab Dev only, entry 318 section 3: a Test Lab game loop. Test Lab pushes the scenarios and the picture they read into this
+    /// application's own folder on shared storage (<c>Android/data/org.grouplab.app.dev/files/testlab</c>, which it reads with no permission),
+    /// and starts GroupLab Dev with this action and a loop number. Scenario N is <c>scenario-N.json</c> there. Everything in that folder is
+    /// copied into the scenario folder, the results are copied back to <c>testlab/results</c> when the run ends, for Test Lab to pull, and
+    /// GroupLab Dev then closes, which is how a game loop says it has finished. Returns the scenario's name, or null for any other start.
+    /// </summary>
+    private string? TestLoop(Intent? intent)
+    {
+        if (intent?.Action != TestLoopAction || GetExternalFilesDir(null)?.AbsolutePath is not { } shared)
+        {
+            return null;
+        }
+
+        int loop = intent.GetIntExtra("scenario", 1);
+        string from = Path.Combine(shared, "testlab"), into = Path.Combine(FilesDir!.AbsolutePath, "scenario");
+        try
+        {
+            Directory.CreateDirectory(into);
+            foreach (string file in Directory.Exists(from) ? Directory.GetFiles(from) : [])
+            {
+                File.Copy(file, Path.Combine(into, Path.GetFileName(file)), overwrite: true);
+            }
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            GroupLab.App.Diagnostics.DiagnosticLog.Exception(GroupLab.App.Diagnostics.LogLevel.Warn, "testlab.copy", e);
+        }
+
+        GroupLab.App.Diagnostics.DiagnosticLog.Info("testlab.loop", ("scenario", loop));
+        GroupLab.Mobile.Dev.Scenario.Finished += results =>
+        {
+            try
+            {
+                string back = Path.Combine(from, "results");
+                Directory.CreateDirectory(back);
+                foreach (string file in Directory.GetFiles(results, "*", SearchOption.AllDirectories))
+                {
+                    string to = Path.Combine(back, Path.GetRelativePath(results, file));
+                    Directory.CreateDirectory(Path.GetDirectoryName(to)!);
+                    File.Copy(file, to, overwrite: true);
+                }
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                GroupLab.App.Diagnostics.DiagnosticLog.Exception(GroupLab.App.Diagnostics.LogLevel.Warn, "testlab.results", e);
+            }
+
+            RunOnUiThread(FinishAndRemoveTask);
+        };
+        return string.Create(System.Globalization.CultureInfo.InvariantCulture, $"scenario-{loop}.json");
     }
 
     /// <summary>The extra that shows GroupLab Dev's black idle screen (entry 268), with any value.</summary>

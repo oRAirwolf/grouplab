@@ -421,6 +421,14 @@ controls as a tree, sleep, copy the log) run with nobody's hands. It waits in `f
 whether it worked, its time and the memory held), the screenshots, the trees and the log. The format and its steps are described in
 `mobile/GroupLab.Mobile/Dev/Scenario.cs`. The older extras stay as shortcuts. The Play build is built without any of it.
 
+**Firebase Test Lab** (entry 318 section 3), in GroupLab Dev only: Test Lab starts GroupLab Dev as a "game loop" test, with the action
+`com.google.intent.action.TEST_LOOP` and a loop number N. GroupLab Dev copies what Test Lab pushed into its own folder on shared storage,
+`Android/data/org.grouplab.app.dev/files/testlab/` (read with no permission), into the scenario folder, runs `scenario-N.json`, copies the
+results back to `testlab/results/` for Test Lab to pull, and closes. `.github/workflows/testlab.yml` runs scenario 1
+(`android/testlab/scenario-1.json`, the committed sample scan read and every tab photographed) once a day on three real phones and one
+virtual phone chosen from Test Lab's own list by `scripts/testlab-devices.py`, inside the free plan; until request 62's project and key
+exist it says so and tests nothing.
+
 **The automation bridge** (entry 315 section 1), in GroupLab Dev only: a small command server on the device's own 127.0.0.1, port 47315,
 reached over the cable with `adb forward` (or `pymobiledevice3 usbmux forward` on iOS). Every scenario step is a command, one line of
 JSON each way, with the same code behind it, and the steps now include going back, reading a picture through to its result, choosing

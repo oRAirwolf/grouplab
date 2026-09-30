@@ -1,0 +1,101 @@
+name: test lab
+
+# NOTES-FROM-PLANNING.md entry 318 section 3: GroupLab Dev's scenario on real and virtual phones in Firebase Test Lab, once a day, inside the
+# free plan (five real-phone and ten virtual runs a day; this uses three and one). Test Lab starts GroupLab Dev as a "game loop"; GroupLab Dev
+# runs scenario 1 (android/testlab/scenario-1.json) on the committed sample scan, whose consent is in samples/PROVENANCE.md, writes its
+# screenshots, control trees, results and log, and closes. Until Alan makes the Firebase project and sets its key (request 62), every run
+# says so in one line and tests nothing. Nothing here can spend money: the Spark plan has no billing.
+on:
+  schedule:
+    - cron: "40 17 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testlab
+  cancel-in-progress: false
+
+jobs:
+  phones:
+    name: GroupLab Dev on Test Lab's phones
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      KEY: ${{ secrets.FIREBASE_TESTLAB_KEY }}
+      PROJECT: ${{ vars.FIREBASE_PROJECT_ID }}
+      DEVICE_FOLDER: /sdcard/Android/data/org.grouplab.app.dev/files/testlab
+    steps:
+      - name: Is Test Lab set up
+        id: ready
+        run: |
+          if [ -n "$KEY" ] && [ -n "$PROJECT" ]; then
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+            echo "### Test Lab is not set up yet, so no phones were tested (request 62: the Firebase project and its key)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.ready.outputs.ready == 'yes'
+
+      - uses: google-github-actions/auth@v2
+        if: steps.ready.outputs.ready == 'yes'
+        with:
+          credentials_json: ${{ secrets.FIREBASE_TESTLAB_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+        if: steps.ready.outputs.ready == 'yes'
+
+      - name: GroupLab Dev from the newest nightly
+        if: steps.ready.outputs.ready == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download nightly -R "$GITHUB_REPOSITORY" -p grouplab-android-dev.apk -D apk
+
+      - name: The phones, chosen from Test Lab's own list
+        if: steps.ready.outputs.ready == 'yes'
+        run: |
+          python3 scripts/testlab-devices.py --self-test
+          gcloud firebase test android models list --project "$PROJECT" --format=json > models.json
+          python3 scripts/testlab-devices.py < models.json > devices.txt
+          { echo "### Test Lab's phones today"; echo; sed 's/^/- /' devices.txt; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run the scenario
+        if: steps.ready.outputs.ready == 'yes'
+        run: |
+          args=()
+          while read -r device; do args+=(--device "$device"); done < devices.txt
+          status=0
+          gcloud firebase test android run --project "$PROJECT" --type game-loop --app apk/grouplab-android-dev.apk --scenario-numbers 1 \
+            "${args[@]}" \
+            --other-files "$DEVICE_FOLDER/scenario-1.json=android/testlab/scenario-1.json,$DEVICE_FOLDER/sample.png=samples/gl-cf25-ltr-d-25-shots-600-dpi.png" \
+            --directories-to-pull "$DEVICE_FOLDER/results" \
+            --timeout 15m --results-dir "grouplab-$GITHUB_RUN_ID" --format=json > outcome.json 2> gcloud.log || status=$?
+          # Each phone's outcome; the full log is kept as an artifact. The key never reaches either.
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          try:
+              rows = json.load(open("outcome.json"))
+          except Exception:
+              rows = []
+          print("### Test Lab's outcome")
+          print()
+          for r in rows if isinstance(rows, list) else []:
+              print(f"- {r.get('axis_value', '?')}: {r.get('outcome', '?')}, {r.get('test_details', '')}")
+          if not rows:
+              print("- no outcome was returned; gcloud.log in the artifact says why")
+          PY
+          grep -o 'https://console.firebase.google.com[^ ]*' gcloud.log | head -1 | sed 's/^/Results in the Firebase console: /' >> "$GITHUB_STEP_SUMMARY" || true
+          exit $status
+
+      - uses: actions/upload-artifact@v6
+        if: always() && steps.ready.outputs.ready == 'yes'
+        with:
+          name: testlab
+          path: |
+            outcome.json
+            gcloud.log
+            devices.txt
+          if-no-files-found: ignore

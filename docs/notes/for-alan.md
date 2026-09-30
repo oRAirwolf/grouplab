@@ -1,4 +1,4 @@
-**Open: 13.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 14.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
 1. In nightly 137 (out at 15:30 UTC): the iPad's reading no longer hangs, Cancel always works and a reading stops after a minute (entry 313);
@@ -42,6 +42,34 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 62. Firebase Test Lab: GroupLab Dev on real phones every day, free, about ten minutes, whenever you choose (entry 318)
+
+**Opened 2026-09-30.** **Why:** once this is done, every day GroupLab Dev reads the sample scan and walks every tab on three real phones
+(a Samsung, a Pixel, and a Xiaomi or Oppo, whichever Test Lab has) and one virtual phone, and I read the screenshots and logs. That is
+where differences between phone makers show up, without you buying phones. It stays on the free plan, which has no billing at all, so
+nothing can be charged. The workflow is ready and waits for these steps; until then it says "not set up" and tests nothing.
+
+1. Open https://console.firebase.google.com signed in with your Google account. **Add project**, name it `grouplab-testlab`, and turn
+   Google Analytics **off**. Leave it on the free Spark plan; never choose Upgrade.
+2. In the project, open **Test Lab** (under Run or Release and monitor) once, so it is switched on.
+3. Open https://console.cloud.google.com/apis/library/testing.googleapis.com with the `grouplab-testlab` project chosen at the top and
+   press **Enable**; then the same for https://console.cloud.google.com/apis/library/toolresults.googleapis.com.
+4. Open https://console.cloud.google.com/iam-admin/serviceaccounts (same project), **Create service account**, name `grouplab-ci`.
+   Give it exactly two roles: **Firebase Test Lab Admin** and **Firebase Analytics Viewer**. Nothing else. (Those two are what Google
+   documents for running tests from CI; they can also see this project's storage, which holds only test results.)
+5. Open the new account, **Keys**, **Add key**, **Create new key**, **JSON**. A file downloads.
+6. In PowerShell, with the file's real name in the first line (the project ID is shown on the project's home page; it may have a
+   short suffix, such as `grouplab-testlab-a1b2c`):
+
+```
+Get-Content -Raw "$HOME\Downloads\grouplab-testlab-XXXXXXXX.json" | gh secret set FIREBASE_TESTLAB_KEY -R oRAirwolf/grouplab
+gh variable set FIREBASE_PROJECT_ID -R oRAirwolf/grouplab --body "grouplab-testlab"
+Remove-Item "$HOME\Downloads\grouplab-testlab-XXXXXXXX.json"
+```
+
+   A good result: the first two print nothing or a line saying the secret or variable was set; the key file is then gone from Downloads.
+7. Tell planning "request 62 done". I start the first run by hand and put what the phones showed here.
 
 ## 61. iOS: the Apple steps for GroupLab Dev, about twenty minutes, whenever suits (entry 315)
 

@@ -54,6 +54,9 @@ internal static class Scenario
     /// <summary>The application's files, known before the phone starts; the platform's once it has.</summary>
     private static string? files;
 
+    /// <summary>Told the results folder when a run started by <see cref="StartIfPrepared"/> has written its results (entry 318 section 3).</summary>
+    internal static event Action<string>? Finished;
+
     /// <summary>A scenario read before the application started, waiting for the screens.</summary>
     private static string? pending;
 
@@ -175,6 +178,7 @@ internal static class Scenario
             // The first screen is built a moment after the application starts.
             await Task.Delay(TimeSpan.FromSeconds(2));
             await Run(text);
+            Finished?.Invoke(Results);
         });
     }
 
