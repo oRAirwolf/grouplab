@@ -46,6 +46,9 @@ AVAILABLE = {"BETA_APPROVED", "IN_BETA_TESTING", "READY_FOR_BETA_TESTING"}
 # A Beta App Review still to be decided.
 PENDING = {"WAITING_FOR_REVIEW", "IN_REVIEW"}
 
+# The same, as a build's external state.
+WAITING_STATES = {"WAITING_FOR_BETA_REVIEW", "IN_BETA_REVIEW"}
+
 
 class Refused(Exception):
     """App Store Connect said no to a request, with its own words."""
@@ -120,9 +123,11 @@ def step(store: Store, notes: Callable[[int], str], wait_minutes: int = 0, sleep
     # for review keeps its place in Apple's queue: nothing newer is added or submitted, and GroupLab Team keeps its own automatic
     # distribution, which Alan left on for that time.
     if not any(b.id in in_beta and store.external_state(b.id) in AVAILABLE for b in usable):
-        waiting = next((b for b in usable if b.id in in_beta and store.review(b.id) in PENDING), None)
+        # The review's own state, or the build's where the review cannot be read: either says it is still with Apple.
+        waiting = next((b for b in usable if b.id in in_beta
+                        and (store.review(b.id) in PENDING or store.external_state(b.id) in WAITING_STATES)), None)
         if waiting is not None:
-            said = store.review(waiting.id).replace("_", " ").lower()
+            said = (store.review(waiting.id) or store.external_state(waiting.id)).replace("_", " ").lower()
             lines.append(f"{BETA}'s first build, {waiting.number}, is {said}; nothing newer is added or submitted until Apple approves it, "
                          "so it keeps its place in the queue (entry 319).")
             return lines, None
@@ -352,6 +357,11 @@ def self_test() -> int:
     lines, alan = step(s, no_notes)
     expect("first review held", "b140" not in s.members["beta"] and "b140" not in s.reviews and not s.members["team"] and alan is None)
     expect("first review said", any("first build, 134" in line and "entry 319" in line for line in lines))
+    # The same where only the build's state says it waits (its review record not readable).
+    s2 = Pretend(builds_=[Build("b134", 134, "VALID"), Build("b140", 140, "VALID")], states={"b134": "WAITING_FOR_BETA_REVIEW"})
+    s2.members["beta"].add("b134")
+    step(s2, no_notes)
+    expect("first review held by state", "b140" not in s2.members["beta"] and "b140" not in s2.reviews)
     # Once approved, the newer build goes on as before.
     s.states["b134"] = "BETA_APPROVED"
     s.reviews["b134"] = "APPROVED"
