@@ -83,8 +83,8 @@ online comes from Network's path monitor, so a photograph that could not be fetc
 self-test opens and cancels both pickers, reads the sample scan into analysis through **Open in**, and through a share left in the app
 group as the extension leaves one and opened at `grouplab://shared` through iOS by the call the extension makes; the workflow checks
 that the extension is inside the application and that iOS registered it. When the simulator itself opens that address, iOS asks "Open in
-GroupLab?" first, which is why the sitting checks what a share shows. The signed build will need a second provisioning profile, for `org.grouplab.app.share`, and the
-app group registered on both identifiers; `scripts/ios-signing.py` checks only the application's today.
+GroupLab?" first, which is why the sitting checks what a share shows. The signed build signs the extension with its own App Store profile, for `org.grouplab.app.share`, and
+both profiles carry the app group (section 3).
 
 ## The first TestFlight sitting
 
@@ -127,20 +127,36 @@ no, and a no comes back as a note with what was seen.
 ## 3. Building without a Mac
 
 The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26. It builds the head,
-signs it with the distribution certificate and the App Store provisioning profile, and uploads it to TestFlight with the App Store Connect
-API key. The signing material and the key are secrets Alan sets himself with `gh secret set`, request 55 in `docs/notes/for-alan.md`
-says how; neither session ever sees them. Until all seven are there, the job builds without signing and uploads nothing, so a nightly
-never fails for want of them. The secrets it reads: `APPLE_TEAM_ID`, `IOS_DIST_CERT_P12`, `IOS_DIST_CERT_PASSWORD`, `IOS_PROFILE`,
-`APPLE_API_ISSUER_ID`, `APPLE_API_KEY_ID` and `APPLE_API_KEY_P8`.
+signs it with the distribution certificate and two App Store provisioning profiles, one for the application and one for its share
+extension, and uploads it to TestFlight with the App Store Connect API key. The signing material and the key are secrets Alan sets himself
+with `gh secret set`, request 55 in `docs/notes/for-alan.md` says how; neither session ever sees them. Until all eight are there, the job
+builds without signing and uploads nothing, so a nightly never fails for want of them. The secrets it reads: `APPLE_TEAM_ID`,
+`IOS_DIST_CERT_P12`, `IOS_DIST_CERT_PASSWORD`, `IOS_PROFILE`, `IOS_SHARE_PROFILE`, `APPLE_API_ISSUER_ID`, `APPLE_API_KEY_ID` and
+`APPLE_API_KEY_P8`.
+
+**The share extension (entry 292 section 2.3) needs its own identifiers in the Apple Developer site**, beside the application's:
+
+1. An **App Group**, `group.org.grouplab.app` (Certificates, Identifiers and Profiles, Identifiers, App Groups).
+2. The application's App ID, `org.grouplab.app`, with the **App Groups** capability on and that group ticked.
+3. A second App ID, `org.grouplab.app.share`, for the extension, with **App Groups** on and the same group ticked.
+4. A second **App Store** distribution profile, for `org.grouplab.app.share`, made with the same distribution certificate; and the
+   application's profile made again (or edited and downloaded again) after step 2, so it carries the group.
+
+The application's profile goes in `IOS_PROFILE` and the extension's in `IOS_SHARE_PROFILE`, each as base64. The signed publish gives each
+project its own profile (`GroupLabAppProvision` and `GroupLabShareProvision`, which `scripts/ios-signing.py --properties` builds), because a
+single profile given on the command line would reach the extension too; `ios/signing-dry-run.sh` proves that with made-up values in every
+nightly and every push to an `ios/` branch, and after the publish the job checks that the package carries the extension and that each
+bundle holds its own profile.
 
 **In every nightly (entry 290):** the nightly's `ios` job builds GroupLab for iPhone and iPad with the nightly's version on `macos-26`,
 with OpenCV from the `ios` workflow's cache. It is not among the jobs publishing waits for, so the other builds are never held up by it.
 
-**The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and
-whether its shape is right, never a value. None set: the build is not signed and nothing is sent, exit 3. All seven set and right: it
+**The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the eight and prints one line for each, set or not and
+whether its shape is right, never a value. None set: the build is not signed and nothing is sent, exit 3. All eight set and right: it
 signs. Some set, or one malformed: it fails, naming the secret and what is wrong with it (a team ID that is not ten capitals and digits, a
-certificate that is not base64 or not a .p12, a profile for another team or another app than `org.grouplab.app`, an issuer that is not a
-UUID, a key that is not a .p8), so a mistake is found on the night it is made. Its self-test runs with made-up values in every build.
+certificate that is not base64 or not a .p12, a profile for another team or another app than `org.grouplab.app` or, for the extension,
+`org.grouplab.app.share`, a profile without the app group `group.org.grouplab.app`, an issuer that is not a UUID, a key that is not a
+.p8), so a mistake is found on the night it is made. Its self-test runs with made-up values in every build.
 
 Alan installs from TestFlight on the iPad mini. iPhone testers come later, by TestFlight invitation.
 

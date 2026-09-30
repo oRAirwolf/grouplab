@@ -334,6 +334,11 @@ jobs:
             nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the device executable"; exit 1; }
           fi
 
+      # Entry 290 section 2 item 7: the nightly's signed publish gives the application and the share extension each its own profile,
+      # proved with made-up values, since no Apple secret exists here.
+      - name: The signing properties, a dry run
+        run: sh ios/signing-dry-run.sh
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

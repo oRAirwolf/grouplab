@@ -493,6 +493,7 @@ jobs:
           IOS_DIST_CERT_P12: ${{ secrets.IOS_DIST_CERT_P12 }}
           IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
           IOS_PROFILE: ${{ secrets.IOS_PROFILE }}
+          IOS_SHARE_PROFILE: ${{ secrets.IOS_SHARE_PROFILE }}
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
@@ -519,8 +520,14 @@ jobs:
           fi
           echo "### iOS: built for a device, $(du -sh "$app" | cut -f1), version $VERSION." >> "$GITHUB_STEP_SUMMARY"
 
-      # With all seven secrets right: sign with the distribution certificate and the App Store profile in a keychain made for this run and
-      # deleted after it, and send the build to TestFlight with the App Store Connect key. No secret is ever printed.
+      # Entry 292 section 2.3: the application and its share extension are each signed with their own App Store profile. The properties the
+      # signed publish is given are built by scripts/ios-signing.py --properties, and this dry run proves with made-up values that MSBuild
+      # gives each project its own, so the signed path is checked every night whether or not the secrets exist.
+      - name: The signing properties, a dry run
+        run: sh ios/signing-dry-run.sh
+
+      # With all eight secrets right: sign with the distribution certificate and the two App Store profiles in a keychain made for this run
+      # and deleted after it, and send the build to TestFlight with the App Store Connect key. No secret is ever printed.
       - name: Sign and send to TestFlight
         if: steps.signing.outputs.sign == 'true'
         env:
@@ -528,6 +535,7 @@ jobs:
           IOS_DIST_CERT_P12: ${{ secrets.IOS_DIST_CERT_P12 }}
           IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
           IOS_PROFILE: ${{ secrets.IOS_PROFILE }}
+          IOS_SHARE_PROFILE: ${{ secrets.IOS_SHARE_PROFILE }}
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
@@ -544,18 +552,38 @@ jobs:
           security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
           rm -f "$RUNNER_TEMP/dist.p12"
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          echo "$IOS_PROFILE" | base64 --decode > "$RUNNER_TEMP/grouplab.mobileprovision"
-          uuid=$(security cms -D -i "$RUNNER_TEMP/grouplab.mobileprovision" | plutil -extract UUID raw -)
-          cp "$RUNNER_TEMP/grouplab.mobileprovision" "$HOME/Library/MobileDevice/Provisioning Profiles/$uuid.mobileprovision"
+          install_profile() {
+            printf '%s' "$1" | base64 --decode > "$RUNNER_TEMP/$2.mobileprovision"
+            installed=$(security cms -D -i "$RUNNER_TEMP/$2.mobileprovision" | plutil -extract UUID raw -)
+            cp "$RUNNER_TEMP/$2.mobileprovision" "$HOME/Library/MobileDevice/Provisioning Profiles/$installed.mobileprovision"
+            rm -f "$RUNNER_TEMP/$2.mobileprovision"
+            echo "$installed"
+          }
+          uuid=$(install_profile "$IOS_PROFILE" grouplab)
+          share_uuid=$(install_profile "$IOS_SHARE_PROFILE" grouplab-share)
           identity=$(security find-identity -v -p codesigning "$keychain" | grep -oE '"[^"]*Distribution[^"]*"' | head -1 | tr -d '"')
           test -n "$identity" || { echo "::error::The distribution certificate did not import as a signing identity."; exit 1; }
           code="${VERSION##*.}"
+          # One argument a line from the check: the identity and each project's own profile (GroupLabAppProvision, GroupLabShareProvision).
+          signing=$(python3 scripts/ios-signing.py --properties "$identity" "$uuid" "$share_uuid")
+          set --
+          while IFS= read -r line; do set -- "$@" "$line"; done <<EOF
+          $signing
+          EOF
           dotnet publish ios/GroupLab.iOS --configuration Release -r ios-arm64 \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
             -p:Version="$VERSION" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
-            -p:ArchiveOnBuild=true -p:CodesignKey="$identity" -p:CodesignProvision="$uuid" -o "$RUNNER_TEMP/ipa" \
+            -p:ArchiveOnBuild=true "$@" -o "$RUNNER_TEMP/ipa" \
             -v:minimal -clp:ErrorsOnly > publish-ios.log 2>&1 || { grep -E "error" publish-ios.log | head -40; exit 1; }
           ipa=$(ls "$RUNNER_TEMP"/ipa/*.ipa | head -1)
+          # The package carries the share extension, and each bundle its own profile.
+          unzip -q -o "$ipa" -d "$RUNNER_TEMP/ipa-check"
+          payload=$(ls -d "$RUNNER_TEMP"/ipa-check/Payload/*.app | head -1)
+          embedded() { security cms -D -i "$1/embedded.mobileprovision" | plutil -extract UUID raw -; }
+          test "$(embedded "$payload")" = "$uuid" || { echo "::error::The application is not signed with its own profile."; exit 1; }
+          test -d "$payload/PlugIns/GroupLab.Share.appex" || { echo "::error::The signed package carries no share extension."; exit 1; }
+          test "$(embedded "$payload/PlugIns/GroupLab.Share.appex")" = "$share_uuid" || { echo "::error::The share extension is not signed with its own profile."; exit 1; }
+          rm -rf "$RUNNER_TEMP/ipa-check"
           mkdir -p "$HOME/private_keys"
           if printf '%s' "$APPLE_API_KEY_P8" | grep -q "BEGIN PRIVATE KEY"; then
             printf '%s' "$APPLE_API_KEY_P8" > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"

@@ -4045,10 +4045,6 @@
    "kind": "code",
    "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
   },
-  "**The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the seven and prints one line for each, set or not and whether its shape is right, never a value.": {
-   "kind": "code",
-   "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
-  },
   "None set: the build is not signed and nothing is sent, exit 3.": {
    "kind": "code",
    "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
@@ -4400,6 +4396,22 @@
   "**Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis, with no question from iOS in between, or with only its \"Open in GroupLab?\" (note which).": {
    "kind": "code",
    "where": "a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs"
+  },
+  "The signed build signs the extension with its own App Store profile, for `org.grouplab.app.share`, and both profiles carry the app group (section 3).": {
+   "kind": "code",
+   "where": "scripts/ios-signing.py (SECRETS, PROFILE_BUNDLES, APP_GROUP, problem, properties and the self-test), ios/signing-dry-run.sh, .github/workflows/nightly.yml job ios, the GroupLabAppProvision and GroupLabShareProvision properties in ios/GroupLab.iOS and ios/GroupLab.Share; held by IosSigningTests; entry 290 section 2 item 7 and entry 292 section 2.3"
+  },
+  "**The share extension (entry 292 section 2.3) needs its own identifiers in the Apple Developer site**, beside the application's: 1.": {
+   "kind": "code",
+   "where": "scripts/ios-signing.py (SECRETS, PROFILE_BUNDLES, APP_GROUP, problem, properties and the self-test), ios/signing-dry-run.sh, .github/workflows/nightly.yml job ios, the GroupLabAppProvision and GroupLabShareProvision properties in ios/GroupLab.iOS and ios/GroupLab.Share; held by IosSigningTests; entry 290 section 2 item 7 and entry 292 section 2.3"
+  },
+  "A second **App Store** distribution profile, for `org.grouplab.app.share`, made with the same distribution certificate; and the application's profile made again (or edited and downloaded again) after step 2, so it carries the group.": {
+   "kind": "code",
+   "where": "scripts/ios-signing.py (SECRETS, PROFILE_BUNDLES, APP_GROUP, problem, properties and the self-test), ios/signing-dry-run.sh, .github/workflows/nightly.yml job ios, the GroupLabAppProvision and GroupLabShareProvision properties in ios/GroupLab.iOS and ios/GroupLab.Share; held by IosSigningTests; entry 290 section 2 item 7 and entry 292 section 2.3"
+  },
+  "**The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the eight and prints one line for each, set or not and whether its shape is right, never a value.": {
+   "kind": "code",
+   "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
   }
  },
  "rules": [
