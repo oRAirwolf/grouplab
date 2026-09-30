@@ -17,6 +17,20 @@
   ],
   "phrases": [
     {
+      "phrase": "M1, M2, M3",
+      "why": "entry 316: the Mac download says Apple silicon (M-series) and names no chip generations",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "M1 or later",
+      "why": "entry 316: the Mac download says Apple silicon (M-series) and names no chip generations",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
       "phrase": "lawyer",
       "why": "entry 267: no lawyer's review for now",
       "allowedIn": [

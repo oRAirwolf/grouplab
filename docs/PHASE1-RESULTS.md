@@ -40,6 +40,13 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 316: the Mac download names no chip generations
+
+Done 2026-09-30. The Apple silicon card on the download page says "For any Mac with Apple silicon" and "Any Mac with Apple silicon
+(M-series). Not an Intel Mac"; the README's row says the same. No other list of chip names was found in the site, the README, the guides,
+the platform notes or the application. "M1, M2, M3" and "M1 or later" are retired wording, so `scripts/consistency.py` reports them if
+they come back. The Intel card is unchanged. Three claims were moved to the new sentences with their backing (entry 306).
+
 ## Entry 310: TestFlight's two groups on the same build
 
 - **Built:** `scripts/testflight.py`, run by `.github/workflows/testflight.yml` after every nightly (waiting up to 30 minutes for Apple

@@ -24,6 +24,19 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 316: the Mac download names no chip generations
+
+**Status: done 2026-09-30.**
+
+From planning, 2026-09-30, for Alan: "under the macos download, it says 'M1, M2, M3, M4. Not an Intel Mac'...isn't the M5 SoC out now?
+Should it just say 'M-series SoCs' or something to that effect so it doesnt have to list out the cpu's?"
+
+1. The Apple silicon card on grouplab.org/download/ reads "Any Mac with Apple silicon (M-series). Not an Intel Mac." (or as close as
+   the card's layout allows), and its description "For any Mac with Apple silicon." No list of generations anywhere.
+2. Search the site sources, README, user guide, PLATFORM-SUPPORT.md, release notes templates and the app's own update text for "M1, M2"
+   and any other list of chip names, and word them the same way (rule c). The Intel card stays as it is.
+3. Small; do it with the next site change, no rush.
+
 ## 2026-09-30, entry 310: TestFlight, the team and the public beta always on the same build
 
 **Status: built 2026-09-30; section 5 done (c5a359ad); proven against Apple once Alan's two groups exist (request 59); the beta link on the site waits for his public link.** The testflight workflow (after each nightly and every half hour, on Linux) runs scripts/testflight.py: the newest processed build goes to Public Beta with that nightly's notes as What to Test and is submitted for Beta App Review; GroupLab Team gets the newest build Public Beta can install, so neither is ahead; a rejection moves nothing and is said; a missing group or key does nothing and says so. Nothing is ever taken out of a group. Apple offers no way to withdraw a waiting submission, so a newer build waits for the older review and follows it.

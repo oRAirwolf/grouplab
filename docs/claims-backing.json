@@ -33,7 +33,7 @@
    "kind": "code",
    "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs; package.yml builds the tarball on ubuntu-latest; ci.yml tests on it"
   },
-  "Nobody uses it day to day yet Reports from Linux are especially welcome Download linux tarball macOS, Apple silicon grouplab-macos-arm64.tar.gz For any Mac with an M1 or later.": {
+  "Nobody uses it day to day yet Reports from Linux are especially welcome Download linux tarball macOS, Apple silicon grouplab-macos-arm64.tar.gz For any Mac with Apple silicon.": {
    "kind": "decided",
    "where": "entry 147 section 3, the platform statement"
   },
@@ -705,7 +705,7 @@
    "kind": "code",
    "where": ".github/workflows/package.yml; the platform statement"
   },
-  "| | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later.": {
+  "| | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with Apple silicon (M-series).": {
    "kind": "decided",
    "where": "entries 147 and 166, the platform statement; package.yml builds both bundles"
   },
@@ -4445,7 +4445,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Capture/TorchGovernor.cs (AgreeingFrames, SettleMs 1500, the ceiling after glare or a hotspot, MostReversals) and ios/GroupLab.iOS/Camera/CameraSession.cs TorchSteps and SetTorch; a check to be made on the iPad mini, entry 302"
   },
-  "One tester, an M5 Max, nightly 93 Signed, notarized and stapled: opens like any other Mac application M1, M2, M3, M4.": {
+  "One tester, an M5 Max, nightly 93 Signed, notarized and stapled: opens like any other Mac application Any Mac with Apple silicon (M-series).": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
   },

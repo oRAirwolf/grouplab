@@ -776,7 +776,7 @@ def page_download() -> str:
 {card("Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.", ["Nobody uses it day to day yet", "Reports from Linux are especially welcome"])}
 </section>
 <section class="wrap grid-3">
-{card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with an M1 or later. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93", "Signed, notarized and stapled: opens like any other Mac application", "M1, M2, M3, M4. Not an Intel Mac"], label="Download for Apple silicon")}
+{card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with Apple silicon. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93", "Signed, notarized and stapled: opens like any other Mac application", "Any Mac with Apple silicon (M-series). Not an Intel Mac"], label="Download for Apple silicon")}
 {card("macOS, Intel", "grouplab-macos-x64.tar.gz", "For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it", "Signed, notarized and stapled: opens like any other Mac application", "Intel only. Not an Apple silicon Mac"], label="Download for an Intel Mac")}
 <div class="panel pad stack tight">
 <h2 class="h3">Which Mac have you got?</h2>
