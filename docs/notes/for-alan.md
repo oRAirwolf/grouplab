@@ -615,7 +615,7 @@ the policy gets checked.
 
 ## 38. The Microsoft Store: your account, the name, and the keys that let releases go there by themselves
 
-**Opened 2026-09-25. Being applied: Part A answered 2026-09-29 (entry 293); Part B, the first submission, is yours with planning.** Everything you set works.
+**Opened 2026-09-25. Being applied: Part A answered 2026-09-29 (entry 293); Part B, the first submission, was submitted for certification by Alan on 2026-09-30. Waiting on Microsoft's result, which I watch for; it closes when the Store lists GroupLab.** Everything you set works.
 The Store package is built with your identity as a draft release, "GroupLab 0.2.0 for the Microsoft Store, draft", on
 github.com/oRAirwolf/grouplab/releases (drafts are visible only to you): `grouplab-win-x64.msix`, 87.8 MB, version 0.2.0.0. Its identity
 matches the four variables. Microsoft's certification kit passed it with warnings only, none blocking. GroupLab's release process signed
