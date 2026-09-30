@@ -443,7 +443,8 @@ internal static class ParityTour
             }
 
             var (first, last) = (printed[0], printed[^1]);
-            double inches = Math.Sqrt(Math.Pow(first.Declared!.Value.X - last.Declared!.Value.X, 2) + Math.Pow(first.Declared.Value.Y - last.Declared.Value.Y, 2));
+            // A bull's stated place is in tenths of a millimeter, 254 to the inch.
+            double inches = Math.Sqrt(Math.Pow(first.Declared!.Value.X - last.Declared!.Value.X, 2) + Math.Pow(first.Declared.Value.Y - last.Declared.Value.Y, 2)) / 254;
             var bulls = printed.Select(b => b with { Declared = null }).ToImmutableList();
             var kept = bulls.Select(b => b.Index).ToHashSet();
             var byHand = state with
