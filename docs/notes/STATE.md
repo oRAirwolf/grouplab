@@ -9,69 +9,53 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-29, after entries 281 to 283 (the camera test's fixes, Alan's screenshots, the shutter) and 278 (CSV B, the
-spread audit, a shot left out left out everywhere, the iOS plan) and 279 (the App Store permission, Marking A, Fudd buster mode,
-saving A), 280 in part, 284 (Behind the curtain), 285 (the README's list) 286 (nightly 123 on both devices), 287 (the product picture on
-the home page) and 288 in part (GroupLab Dev updates itself; its device check waits for two nightlies). Entry 280's screens are next.
+**Last rewritten:** 2026-09-30, after entries 288 to 309 (the Android self-updater, the iOS app and its parity with Android, colored
+bulls, export and import of everything in one file, the detection scoreboard, the Mac signing path, Home A) and nightly 133.
 
 ---
 
 ## In flight
 
-- **iOS until 2026-10-01 02:00 UTC** (entries 290 and 296): on main, the iOS app (proven on the simulator: every tab, the imaging, the
-  25-shot sample identical to the desktop), the camera (device checks on the TestFlight list), and the nightly's iOS job (unsigned until
-  request 55's secrets). One worker, `ios/photos`: Apple Photos, Files, sharing into GroupLab, and item 6's share, print and paste checks.
-  Entry 296's rules: at most three workers, small commits, CI checked in five-minute steps.
-- **GroupLab Dev updates itself** (entry 288): `AndroidUpdates` in Core, the `Updates` folder in the Android project compiled only with
-  `-p:GroupLabUpdater=true` (GroupLab Dev's APK only, never the AAB), and the Dev APK listed in the signed manifest as `android apk-dev`.
-  Nightly 125 is the first with it: install it over adb once, then the next nightly should arrive by itself; record the first prompt,
-  whether the second is silent, data kept and minutes from publishing (`update.installed`) in `docs/ANDROID.md` section 17.
-- **The phone's camera screen is rebuilt** (entry 260): a native Capture B over the live preview, Guided and Manual, the quality bar,
-  the torch on Auto, and Feedback B checking every picture with a score from 0 to 100 (`PictureCheck`). Alan's camera test on nightly 121 went badly;
-  entry 281's fixes (level, torch, lifecycle, one field of view, steady words, Camera and Result buttons, the sheet offered when codes
-  fail) are built and wait for a device check on the next nightly.
-- **A curled sheet is registered through every marker** (`MarkerMesh`, a thin-plate spline) when the radial fit keeps fewer than half
-  the corners; a saved session keeps the mesh as its corners (entry 260).
-- **The printer check** (entries 271 to 273): the check page (`GL-SCALE-LTR-1`, `GL-SCALE-A4-1`, grid style 4, question 67), the
-  three-screen wizard on both platforms, card photos (`CardCheck`), caliper and ruler readings, scans, Printers in Settings, offers at
-  first run and first print, and the paper-edge check on every photo (`PaperEdgeCheck`). A profile holds across and down.
-- **Tap a number to switch units** (entry 273): `UnitTap` on the desktop's figures, Compare and Ballistics and the phone's tiles and rows;
-  numbers inside sentences and the full table's bare cells are not tappable yet.
-- **The phone does what the desktop does** (entries 258, 259): full figures, the bulls you fired at, Shots Needed to Zero, compare loads,
-  Ballistics as a fifth tab, the set as a checklist and the scan pill are on the phone; `docs/PHONE-PARITY.md` holds the rest (marking
-  by touch, CSV, large sheet advice, a picture shared in), and the site build fails on a feature with no row.
-- **Any target, and the sheet as the fast lane** (entry 270): the README, the home page, the tour index, Features and the user guide
-  lead with it, with a sample target marked by hand as the picture (entry 274).
-- **The README is Alan's chosen design** (entry 266), its pictures made by `scripts/readme-images.py`; `scripts/consistency.py` audits
-  the README, the site and the assets (entry 267), including retired wording in `docs/RETIRED-WORDING.json`.
-- **The donor pack** is one sheet of each style, built from the library (entry 264); /download/ lists Android (entry 265).
-- **GroupLab Dev has a black idle screen** for the OLED devices (entry 268); every device session ends on it.
+- **iOS until 2026-10-01 02:00 UTC** (entries 290 and 296): on main and proven on the simulator: every tab, the imaging, the 25-shot
+  sample identical to the desktop, Apple Photos, Files, sharing into GroupLab (a share extension), share, print and paste, the parity tour
+  of every feature, Home A, the torch on Auto a step at a time (entry 302 item 3), and a `.grouplab` data file opened from Files (entry
+  307). The nightly's iOS job builds unsigned until request 55's secrets; the camera, torch and level wait for the iPad sitting.
+- **GroupLab Dev updates itself** (entry 288): the Dev APK only, never the AAB, `UPDATE_PACKAGES_WITHOUT_USER_ACTION` for a silent second
+  update. The Fold proved the first prompt; the silent second update on the tablet (nightly 128) and the Fold (129) waits for the devices
+  to be reachable over adb again; `docs/ANDROID.md` section 17 has the results so far.
+- **Export and import everything** (entry 307): one `.grouplab` file that any GroupLab reads, merged without overwriting, conflicts listed
+  first; on Android, the desktop and iOS.
+- **Colored bulls** (entry 297): red or blue bulls on every sheet, found from the photo; question 75 on the ink they use is with planning.
+- **The detection scoreboard** (entry 308): `grouplab scoreboard` against made-up targets in CI and the local corpus by hand.
+- **The Mac build can be signed and notarized** (entry 306) once request 55's Mac steps give it a certificate.
+- **The phone does what the desktop does** (entries 258, 259, 290): `docs/PHONE-PARITY.md` has an Android and an iOS column; the site
+  build fails on a feature with no row.
 
 ## The next three
 
-0. Entry 290 (iOS) has most of the effort until Wednesday 8 pm Mountain; entry 289's 2 MOA sheets run in their own worker; entry 288's
-   device check as soon as nightly 125 and the one after it are out.
-1. The device sitting on the nightly that carries entries 281 to 283: the camera fixes checked, `scripts/shutter-timing.py` on both
-   devices, the phone and tablet pictures (253 section 3), the inner Fold screen (257), torch strength (262), the card photo (273).
-2. Entry 280 section 2's remaining screens, Share A and the dated report, and the desktop's equivalents of all five, after the sitting
-   confirms the phone screens built tonight (Shots A, zero from this group with the Ballistics offset, several aim points); then the
-   desktop's tabs (entry 281 section 2). Question 70 is answered B: each CEP table cell shows and switches its own unit.
-3. The 2 MOA sheets once planning draws their layout; question 67 from request 53's photographs.
+1. Entry 290's end-of-window summary in `docs/notes/for-alan.md` at 2026-10-01 02:00 UTC (its section 5), then Android and desktop work
+   at their normal share.
+2. Entry 288's no-tap second update on the tablet and the Fold as soon as adb reaches them; record it in `docs/ANDROID.md` section 17.
+3. The device sitting (request 50): the camera fixes, the torch on Auto, red bulls (request 57), the card photo.
 
 ## Blocked, and on what
 
-- **Nothing waits on a device**: both are paired again and their wireless authorizations no longer expire (entry 280 section 4).
+- **Signing for iOS and the Mac**: request 55 (Apple enrollment, eight secrets, and the Developer ID certificate).
+- **The phones**: not reachable over adb since 2026-09-30 morning; their wireless debugging adverts refuse connections.
 - **Entry 170 section 4.4.** Request 9: the same scan marked by hand twice.
-- **Entry 166 section 3.2.** Request 16: the Mac tester's trackpad check (his thanks, to Fenix, is in the README since entry 189).
+- **Entry 166 section 3.2.** Request 16: the Mac tester's trackpad check.
 
-Open requests in `docs/notes/for-alan.md`: **10** (50 the device sitting; 53 the card outline test pages; 54 a store-bought target; 55 the Apple steps; 46 the backups on 4 October; 38 the Store; then 9, 16 and 20). for-alan.md's own count says the same.
+Open requests in `docs/notes/for-alan.md`: **12** (56 the printer scale; 50 the device sitting; 57 red bulls; 58 store-bought targets for
+the detector; 54 a plain target; 55 the Apple and Mac steps; 46 the backups on 4 October; 38 the Store; then 33, 9, 16 and 20).
+for-alan.md's own count says the same.
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 274, 68 by entry 276.
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`; 69 to 74 were answered by the run's own messages.
 
+- **75** colored ring bulls use more ink than black on a color inkjet (A proposed: accept it)
 - **67** the printer check page as grid style 4, and its card outline 3 mm outside the card (with Alan)
-- **51** which hole centre GroupLab should report; agreed to wait on request 9
+- **51** which hole center GroupLab should report; agreed to wait on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have
 - **36** a light installer, measured, and why shrinking the one we have beat it
@@ -79,8 +63,9 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md`; 65 and 66 were answered by entry 2
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.129. The next carries the iOS app, the camera and the nightly's iOS job, entries 291, 293, 294 and 295.
-- **The site follows each push by itself**; it serves b856d1f and later.
+- **Last nightly:** 0.2.0-nightly.133 (2026-09-30), with the export and import, colored bulls and Home A. The next carries the iOS torch,
+  the iOS data file, and the test fix that kept 133 waiting.
+- **The site follows each push by itself**, but not the nightly's own notes commits; it serves 40c85b6 (nightly 133's refresh).
 - **The site sync** checks for as long as nginx can serve a replaced file, read from nginx at run time.
 
 ## The inbox
