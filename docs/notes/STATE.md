@@ -17,8 +17,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Nightly 137** (15:30 UTC) carries everything below, and was signed and accepted by TestFlight (both bundles carry the encryption
   setting as false). It reaches nobody until request 59's groups exist; the iPad mini still has 134.
-- **Held for the next nightly:** the replay camera for GroupLab Dev and one shared frame judge for both camera screens (ff402d72); the
-  TestFlight feedback step's import fix.
+- **Nightly 138** carries the replay camera for GroupLab Dev, one shared frame judge for both camera screens, and the TestFlight
+  feedback step's import fix.
 - **Merged today** (on main, first in nightly 137): the iPad reading hang, Cancel and a one-minute limit (313); Guided about a second
   after ready and the green level (311); Send diagnostics, the iPad's Files folder, its log over USB, TestFlight feedback summaries
   (311 section 3); the iPad screenshot fixes (312); crash reports 11 and 12 fixed; the cartridge lookup and its setting (314); scenario
@@ -32,7 +32,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## The next three
 
-1. The next nightly (the replay camera); when Alan makes request 59's groups, check the iPad gets the newest build with
+1. When Alan makes request 59's groups, check the iPad gets the newest build with
    `pymobiledevice3 apps query org.grouplab.app` (never list other apps), then read its log and Documents over USB.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Question 76 and 75 when planning answers; each nightly's notes need placing in `website/features.json` or the site stops building.
@@ -62,7 +62,8 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.137 (2026-09-30 15:30 UTC), all platforms, iOS signed and sent to TestFlight.
+- **Last nightly:** 0.2.0-nightly.138 (2026-09-30 16:17 UTC): the replay camera; all platforms, iOS signed and sent to TestFlight, as
+  was 137 (15:30 UTC).
 - **The site** publishes each push; a234baeb carries the M-series wording.
 - Crash reports open: 9 only (an unobserved index error; from nightly 137 the reading records such errors with their stack). 11 and 12
   closed with nightly 137.
