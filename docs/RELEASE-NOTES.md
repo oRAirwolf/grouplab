@@ -541,7 +541,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - The bull's rings on the composite plot are wider and darker, and a Group or Whole target switch beside it shows either the group alone or the entire bull; the mouse wheel or a pinch zooms, dragging moves the view, and a double click fits it again.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.105)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
