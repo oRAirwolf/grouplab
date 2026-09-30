@@ -5,8 +5,9 @@ NOTES-FROM-PLANNING.md entry 311 section 3 item 4. A tester who takes a screensh
 crash a tester sends, lands in App Store Connect. This reads the ones from the last day through App Store Connect's API, with the key the
 nightly already uploads with (the token is made by scripts/testflight.py), and writes one short line each to $GITHUB_STEP_SUMMARY:
 
-- a screenshot: when, which build, the device and iOS version, and the tester's comment, shortened, with anything that looks like an email
-  address, a telephone number or a web address taken out;
+- a screenshot: when, which build, the device and iOS version, and whether the tester wrote a comment. The comment itself is never
+  written here: the repository is public, so a run's summary is too, and a Public Beta tester's words are theirs. It is read in App Store
+  Connect, TestFlight, Feedback;
 - a crash: the same, and the crash log's exception lines and GroupLab's own frames, never the whole log.
 
 Never published: a screenshot (its address is not even asked for), a tester's email or name. The API is asked only for the fields listed in
@@ -110,7 +111,7 @@ def read(store: Store, since: _dt.datetime) -> tuple[list[str], int]:
                 number = store.builds([]).get(item.build, "?")
                 line = (f"{'Screenshot' if kind == 'screenshot' else 'Crash'} {item.when:%Y-%m-%d %H:%M} UTC, "
                         f"{'GroupLab Dev' if bundle.endswith('.dev') else 'GroupLab'} build {number}, {item.device} iOS {item.os}".rstrip())
-                line += f": \"{item.comment}\"" if item.comment else ", no comment"
+                line += ", with a comment" if item.comment else ", no comment"
                 lines.append(line)
                 if kind == "crash":
                     try:
@@ -202,9 +203,8 @@ def self_test() -> int:
     text = "\n".join(lines)
     expect("three in the last day", found == 3)
     expect("the old one left out", "An old one" not in text)
-    expect("no email", "tester@example.com" not in text and "[email]" in text)
-    expect("no telephone number", "555" not in text and "[number]" in text)
-    expect("no web address", "x.example" not in text and "[address]" in text)
+    expect("no comment's words", "level never turns green" not in text and "crashed again" not in text and "with a comment" in text)
+    expect("no email, telephone number or web address", "tester@example.com" not in text and "555" not in text and "x.example" not in text)
     expect("no screenshot address", "shot.png" not in text)
     expect("the build number", "build 140" in text)
     expect("the crash's exception", "Exception Type: EXC_CRASH (SIGABRT)" in text and "GroupLab_Mobile_CapturePage_Read" in text)
@@ -212,7 +212,7 @@ def self_test() -> int:
     expect("a crash log not made yet", "could not be read (KeyError)" in text)
     expect("no comment said", "no comment" in text)
     crashes = [line for line in lines if line.startswith("Crash ")]
-    expect("newest first", len(crashes) == 2 and "no comment" in crashes[0] and "crashed again" in crashes[1])
+    expect("newest first", len(crashes) == 2 and "no comment" in crashes[0] and "with a comment" in crashes[1])
     expect("a long comment shortened", len(scrubbed("word " * 200)) <= COMMENT)
 
     quiet, found = read(Pretend(), since)
