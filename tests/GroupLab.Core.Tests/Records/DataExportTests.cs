@@ -4,13 +4,16 @@ using System.Text.Json.Nodes;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
 using GroupLab.Core.Statistics;
+using GroupLab.Core.Tests.Support;
 
 namespace GroupLab.Core.Tests.Records;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 307: everything in one file that any GroupLab reads, merged on import without overwriting or duplicating, with
-/// the conflicts listed first. Round trip, an older file, a damaged one, and a large library.
+/// the conflicts listed first. Round trip, an older file, a damaged one, and a large library. Run with nothing beside it: the large library
+/// measures the memory the import holds, and another test allocating at the same time is counted too (Windows, c1918e19, 2026-09-30).
 /// </summary>
+[Collection(MeasuredAloneCollection.Name)]
 public class DataExportTests
 {
     private static string Folder() => Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"grouplab-data-{Guid.NewGuid():N}")).FullName;

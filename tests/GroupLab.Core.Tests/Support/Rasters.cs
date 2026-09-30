@@ -17,6 +17,13 @@ public sealed class PdfiumCollection
     public const string Name = "PDFium";
 }
 
+/// <summary>Tests that measure the process's memory, run with no other test beside them, since the heap is the whole process's.</summary>
+[CollectionDefinition(Name, DisableParallelization = true)]
+public sealed class MeasuredAloneCollection
+{
+    public const string Name = "Measured alone";
+}
+
 internal static class BuiltIns
 {
     public static IEnumerable<string> Files =>
