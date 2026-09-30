@@ -556,7 +556,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - A sheet can now be given a label of your own, such as the letter written in its serial box, and GroupLab says when you open another copy of a sheet design you have analyzed before; each stays its own session.
 - When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, GroupLab now gives each shot to the bull it was fired at instead of the nearest one, says how far off they all were, and lets you undo it.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.112)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
