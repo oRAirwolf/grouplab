@@ -14,7 +14,8 @@ public sealed class App : Avalonia.Application
     public override void OnFrameworkInitializationCompleted()
     {
         bool selfTest = SelfTest.Asked();
-        if (selfTest)
+        bool tour = !selfTest && SelfTest.TourAsked();
+        if (selfTest || tour)
         {
             // The simulator's self-test answers the first run's questions with no, so the screens behind them can be opened.
             SelfTest.Prepare();
@@ -36,6 +37,10 @@ public sealed class App : Avalonia.Application
         if (selfTest)
         {
             SelfTest.Start();
+        }
+        else if (tour)
+        {
+            SelfTest.StartTour();
         }
         else if (SelfTest.IdleAsked())
         {

@@ -25,7 +25,17 @@ internal static class SelfTest
     /// <summary>The launch argument that shows the black idle screen (entry 268, entry 290 section 2 item 6), for a sitting on the iPad.</summary>
     internal const string IdleArgument = "--idle";
 
+    /// <summary>
+    /// Entry 290 section 6: the short tour for the iPad and for landscape, which nobody had photographed. Every place along the bottom and
+    /// the sample's result, each photographed; with <see cref="LandscapeArgument"/> the screen is turned on its side first.
+    /// </summary>
+    internal const string TourArgument = "--screens";
+
+    internal const string LandscapeArgument = "--landscape";
+
     internal static bool Asked() => Has(Argument) || Environment.GetEnvironmentVariable("GROUPLAB_SELFTEST") == "1";
+
+    internal static bool TourAsked() => Has(TourArgument);
 
     internal static bool IdleAsked() => Has(IdleArgument);
 
@@ -189,6 +199,85 @@ internal static class SelfTest
         running = false;
         Say("done");
     }
+
+    internal static void StartTour() => _ = Task.Run(TourAsync);
+
+    /// <summary>The tour <see cref="TourArgument"/> asks for: the places along the bottom and a result, on whatever screen this is.</summary>
+    private static async Task TourAsync()
+    {
+        var checks = new List<SelfTestCheck>();
+        bool running = true;
+        await OnUi(() => KeepAwakeWhile(() => running));
+        try
+        {
+            Say("running");
+            await WaitFor(() => Shell.Current is not null, TimeSpan.FromSeconds(60));
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            if (Has(LandscapeArgument))
+            {
+                checks.Add(await Landscape());
+            }
+
+            checks.Add(await Screen());
+            int n = 1;
+            foreach (var place in Enum.GetValues<Shell.Place>())
+            {
+                checks.Add(await OnScreen(() => Shell.Current!.Show(place), () => Shell.Current!.Showing == place,
+                    $"{n++:00}-{place.ToString().ToLowerInvariant()}", "screen " + place));
+            }
+
+            if (NativeOpenCv.Linked)
+            {
+                checks.Add(await Chosen(Path.Combine(Folder, "sample.png"), n));
+            }
+        }
+        catch (Exception e) when (e is not OutOfMemoryException)
+        {
+            checks.Add(new SelfTestCheck("tour") { Detail = SelfTestChecks.Describe(e) });
+        }
+
+        File.WriteAllText(Path.Combine(Folder, "results.json"), SelfTestChecks.Json("ios", NativeOpenCv.Linked, 0, checks));
+        foreach (var check in checks)
+        {
+            Console.WriteLine("GroupLab SELFTEST " + SelfTestChecks.Line(check));
+        }
+
+        running = false;
+        Say("done");
+    }
+
+    /// <summary>Turns the screen on its side, as a person turning the phone would, and waits until the Shell is wider than it is tall.</summary>
+    private static async Task<SelfTestCheck> Landscape()
+    {
+        var check = new SelfTestCheck("landscape");
+        string? refused = null;
+        await OnUi(() =>
+        {
+            var scene = UIKit.UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIKit.UIWindowScene>().FirstOrDefault();
+            scene?.Windows.FirstOrDefault()?.RootViewController?.SetNeedsUpdateOfSupportedInterfaceOrientations();
+            scene?.RequestGeometryUpdate(new UIKit.UIWindowSceneGeometryPreferencesIOS(UIKit.UIInterfaceOrientationMask.LandscapeRight),
+                error => refused = error.LocalizedDescription);
+        });
+        check.Passed = await WaitFor(() => Shell.Current is { } shell && shell.Bounds.Width > shell.Bounds.Height, TimeSpan.FromSeconds(15));
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        check.Detail = check.Passed ? "the screen turned to landscape" : "the screen did not turn" + (refused is null ? "" : ": " + refused);
+        return check;
+    }
+
+    /// <summary>The screen's size and safe area, so a screenshot can be read against them.</summary>
+    private static Task<SelfTestCheck> Screen() => OnUi(() =>
+    {
+        var check = new SelfTestCheck("screen size") { Passed = true };
+        var root = UIKit.UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIKit.UIWindowScene>()
+            .SelectMany(w => w.Windows).FirstOrDefault()?.RootViewController?.View;
+        var safe = root?.SafeAreaInsets ?? default;
+        var shell = Shell.Current!;
+        check.Numbers["width"] = Math.Round(shell.Bounds.Width);
+        check.Numbers["height"] = Math.Round(shell.Bounds.Height);
+        check.Detail = $"{UIKit.UIDevice.CurrentDevice.Model}, the Shell {shell.Bounds.Width:0}x{shell.Bounds.Height:0} with padding {shell.Padding}; "
+            + $"safe area {safe.Top:0} top, {safe.Left:0} left, {safe.Bottom:0} bottom, {safe.Right:0} right";
+        return check;
+    });
 
     /// <summary>
     /// The sample read as a chosen picture: through the Capture screen's own path, the one the files picker feeds, to the picture check,
