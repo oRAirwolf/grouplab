@@ -395,7 +395,9 @@ internal static class ParityTour
         bool found = await SelfTest.OnUi(() =>
         {
             var line = Shell.Current!.GetLogicalDescendants().OfType<TextBlock>().FirstOrDefault(t => t.Text == heading);
-            line?.BringIntoView();
+
+            // The heading with the screen's height beneath it, so the section is shown from its heading down.
+            line?.BringIntoView(new Rect(0, 0, 1, 560));
             return line is not null;
         });
         await Seen(check, () => found && (holds?.Invoke() ?? true), $"Settings, {heading},");
@@ -438,8 +440,17 @@ internal static class ParityTour
                 Shots = state.Shots.Where(s => s.Bull is { } b && kept.Contains(b)).ToImmutableList(),
                 SetSheet = null,
             };
+            // The tour ends in Settings; the hand-marked result is shown where every result is, on Capture.
+            await SelfTest.OnUi(() => Shell.Current!.Show(Shell.Place.Capture));
+            await Task.Delay(TimeSpan.FromSeconds(1));
             var capture = await SelfTest.OnUi(() => SelfTest.Find<CapturePage>());
-            await SelfTest.OnUi(() => capture!.ShowResult(new ResultView(new PhoneResult(byHand, null, null, null),
+            if (capture is null)
+            {
+                check.Detail = "the Capture screen was not found";
+                return check;
+            }
+
+            await SelfTest.OnUi(() => capture.ShowResult(new ResultView(new PhoneResult(byHand, null, null, null),
                 new ShotSetup(state.Calibre, state.ShotDistanceInches), UnitSettings.Imperial, () => { })));
             return await Seen(check, () => Shell.Current!.GetLogicalDescendants().OfType<Button>().Any(b => Words(b) is { } w && w.StartsWith("Aim ", StringComparison.Ordinal))
                 && ButtonOf(Shell.Current!, "+ Aim point") is not null, "three aim points marked by hand, each a chip,");
