@@ -12,6 +12,35 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.133
+
+**2026-09-30**, commit `33bcca2`. Nightly.
+
+**What you will notice**
+
+- The target designer now takes a bull size in mil, MOA or inches, read at the sheet's distance, with no new built-in sheets.
+- Every app can now export all of your data to one file that any GroupLab imports, without overwriting or duplicating anything.
+- Any sheet can now print its bulls in black, blue or red, with large solid areas as a lighter tint, and GroupLab finds the color from the photograph.
+- On the phone, a figure withheld for too few shots now wraps its words instead of being cut off, and the choices in Settings show their circle beside their words. (Shared phone screens).
+- The Targets preview is now drawn live from the same shapes as the printed PDF, so it is exactly what prints and stays sharp at any zoom, with Open as PDF beside it.
+- On the phone, Capture is now the first screen with your caliber row and Choose a photo beside Print a target, Compare can stack each load's group on one center with a tap, and every hole's circle matches your bullet.
+
+**Under the hood**
+
+- Importing a data file now copes with two sessions read from the same picture in the same second.
+- The detection scoreboard can now score store-bought targets, from a scan before and after shooting.
+- The Mac build is ready to be signed and notarized as soon as the Apple certificate is in place, so it will open without a Terminal command.
+- The iPhone and iPad test run's hand-marked aim points now measure in true inches.
+- The iPhone and iPad test run marks ten aim points by hand and shows each Settings section from its heading.
+- The iPhone and iPad test run's tour of the shared screens builds again.
+- The iPhone and iPad test run shows hand-marked aim points and each Settings section from its heading.
+- The iPhone and iPad test run's tour of the shared screens builds without warnings.
+- The iPhone and iPad test run now opens and photographs every screen the phone shares with Android.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.133)
+
+---
+
 ## 0.2.0-nightly.132
 
 **2026-09-30**, commit `d66fa51`. Nightly.
