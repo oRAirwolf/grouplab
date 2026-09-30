@@ -753,8 +753,8 @@ def platform_support() -> str:
 
 
 def page_download() -> str:
-    def card(title: str, file: str, desc: str, points: list[str], rec: bool = False, label: str | None = None) -> str:
-        badge = '<span class="badge mono">Recommended</span>' if rec else ""
+    def card(title: str, file: str, desc: str, points: list[str], rec: bool = False, label: str | None = None, badge_words: str = "Recommended") -> str:
+        badge = f'<span class="badge mono">{badge_words}</span>' if rec else ""
         lis = "".join(f"<li>{p}</li>" for p in points)
         return f"""<div class="panel card{' card-rec' if rec else ''}">
 <div class="card-head"><h2 class="h3">{title}</h2>{badge}</div>
@@ -785,12 +785,18 @@ def page_download() -> str:
 </div>
 </section>
 <section class="wrap grid-3">
-{card("Android", "grouplab-android.apk", "For an arm64 phone or tablet with Android 10 or later and 4 GB of memory. An early test build with the same engine as the desktop: it photographs or opens a sheet and gives every figure with its explanation, the bulls you fired at, Shots Needed to Zero, compare loads, Ballistics, printing and sessions. Marking a target by hand is not on the phone yet.", ["Open the file on the phone; allow your browser to install apps when Android asks", "Remove the Google Play copy first, if you have it: the two are signed with different keys", "Since nightly 119 the capture screen shows its words, shutter and Back over the picture"], label="Download for Android")}
-{card("GroupLab Dev", "grouplab-android-dev.apk", "For testers: installs beside GroupLab, with the hooks a test sitting uses.", ["The same app under its own name, so both can be on one phone", "Nobody needs it to use GroupLab"], label="Download GroupLab Dev")}
+{card("GroupLab Dev", "grouplab-android-dev.apk", "For testing GroupLab on Android until it is published on the Play Store. An arm64 phone or tablet with Android 10 or later and 4 GB of memory. After the first install it keeps itself on the newest nightly, and fixes reach you the same day they are made.", ["Updates itself from every nightly: no computer and no adb after the first install", "Installs beside the Google Play test copy without replacing it", "Its logs are easy to send with a problem report", "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev"], True, label="Download GroupLab Dev", badge_words="Recommended download")}
+{card("Android", "grouplab-android.apk", "The same app under GroupLab's own name, signed like the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.", ["Open the file on the phone; allow your browser to install apps when Android asks", "Remove the Google Play copy first, if you have it: the two are signed with different keys", "Marking a target by hand is on the phone, as on the computer"], label="Download for Android")}
 <div class="panel pad stack tight">
 <h2 class="h3">Google Play, by invitation</h2>
 <p class="small">GroupLab's internal test on Google Play updates itself like any Play app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test's page</a>.</p>
-<p class="small faint">Take either the Play copy or the APK, not both: remove one before installing the other.</p>
+<p class="small faint">Take either the Play copy or the APK, not both: remove one before installing the other. GroupLab Dev is different: it installs beside either.</p>
+</div>
+</section>
+<section class="wrap section-sm">
+<div class="panel pad stack tight">
+<h2 class="h3">When Android says Google Play Protect is scanning the app</h2>
+<p class="small">Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>
 </div>
 </section>
 <section class="wrap section-sm grid-2">

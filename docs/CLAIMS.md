@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1365 |
-| measured | 1803 |
-| decided | 1280 |
+| code | 1369 |
+| measured | 1802 |
+| decided | 1279 |
 | unbacked | 0 |
-| **total** | **4448** |
+| **total** | **4450** |
 
-**1022** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1024** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -365,6 +365,7 @@ one that matters.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
 - *code* (samples/ and samples/PROVENANCE.md, packaged by scripts/package-windows.ps1): - **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
 - *decided* (entries 147 and 166: the command, confirmed on a Mac by the first tester): That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software.
+- *decided* (entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums): **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.
 - *code* (docs/ANDROID.md section 12, the uninstall-first rule and GroupLab Dev (entries 231 and 234)): [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - *code* (README.md's generated platform section and the download page): - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
@@ -3249,6 +3250,7 @@ one that matters.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 - *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): ![The settings](figures/screens/current/settings-light-1400x900.png) ## 13.
 - *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On the phone GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory.
+- *decided* (entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums): **GroupLab Dev is the recommended download for testing until GroupLab is on the Play Store**: from the [download page](https://grouplab.org/download/), it updates itself from every nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.
 - *code* (mobile/GroupLab.Mobile/PhotoIntake.cs Reduced and Fetch, PhotoPages.UseReduced; tests/GroupLab.Mobile.Tests/PhotoIntakeTests.cs AReducedCopyIsSaidToBeOne (entry 292 section 1.4)): GroupLab always reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
 - *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): **The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.
 - *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On a large screen, such as the Tab S8 Ultra or the Fold 7 opened, the result shows the sheet beside the numbers.
@@ -3387,7 +3389,7 @@ one that matters.
 
 ### site:404.html
 
-- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Page not found | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Page not found | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.
 - *code* (website/build.py shell(): the footer; LICENSE): &#169; 2026 the GroupLab contributors.
 
 ### site:discord/index.html
@@ -3452,7 +3454,7 @@ one that matters.
 
 ### site:features/index.html
 
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.128 Pictures from any photo app Choose a photograph from Android&#x27;s photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker&#x27;s own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.126 The 2 MOA sheets Nine 2.00 in bulls on a Letter or A4 page, 1.91 MOA at 100 yd and 1.75 MOA at 100 m, with a load block: one page for a quick group or a zero check, or a set of three pages that GroupLab pools for load development, with the plain, C or E bull.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
@@ -3493,7 +3495,7 @@ one that matters.
 
 ### site:guides/index.html
 
-- *decided* (NOTES-FROM-PLANNING.md entry 275 section 15): Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.
 
 ### site:guides/testing-guide/index.html
 
@@ -3517,7 +3519,7 @@ one that matters.
 
 ### site:guides/user-guide/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with the user guide's page title): User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page Mil or MOA 1.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page Mil or MOA 1.
 - *code* (website/build.py: the guide's contents, generated from its headings): Mark it and settle the review queue 5.
 - *code* (website/build.py: the guide's contents, generated from its headings): Sessions and the report 7.
 - *code* (website/build.py: the guide's contents, generated from its headings): The zero correction at another distance, and the dope table 9.
@@ -3592,7 +3594,7 @@ one that matters.
 
 ### site:index.html
 
-- *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android Measure how accurately your rifle shoots, and how little a small group can tell you.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android Measure how accurately your rifle shoots, and how little a small group can tell you.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in GroupLab New in nightly.130 Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
@@ -3816,7 +3818,7 @@ one that matters.
 
 ### site:research/aim-points-by-optic-class/index.html
 
-- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Aim points for 1x to high power optics | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Aim points for 1x to high power optics GroupLab project.
+- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Aim points for 1x to high power optics | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Aim points for 1x to high power optics GroupLab project.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Written 2026-09-22; the data is from Planned; results pending.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): 1x optics: centering a dot A red dot has a fixed angular size.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): A 2 MOA dot covers about 0.5 inch at 25 yards, 1 inch at 50 and 2 inches at 100.
@@ -3847,7 +3849,7 @@ one that matters.
 
 ### site:research/can-you-see-the-bull/index.html
 
-- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Can you see the bull?
+- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Can you see the bull?
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards GroupLab project.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Written 2026-09-22; the data is from 2026-09-20 observations; the test shot 2026-09-26.
 - *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): They agree with the 3 to 4 arcminute rule at every magnification tested.
@@ -3893,7 +3895,7 @@ one that matters.
 
 ### site:research/cep-explained/index.html
 
-- *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): CEP 50 and 90 explained | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.
+- *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): CEP 50 and 90 explained | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.
 - *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): Written 2026-09-22; the data is from Simulation, seed 2026.
 - *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): What we found for a round group, CEP 50, mean radius and CEP 90 are fixed multiples of the same underlying spread: 1.18, 1.25 and 2.15 sigma.
 - *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): When a group stretches to twice as wide as it is tall, the round-group CEP 50 circle holds about 54 percent of shots instead of 50, and the CEP 90 circle about 89 percent instead of 90.
@@ -3924,7 +3926,7 @@ one that matters.
 
 ### site:research/choosing-the-markers/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Choosing the markers | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Choosing the markers GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Choosing the markers | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Choosing the markers GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Written 2026-09-22; the data is from 2026-09-22.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What we found Dictionaries with a minimum Hamming distance of 4 or less produced false marker detections on ordinary target artwork.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every dictionary at Hamming 11 or above produced none.
@@ -3970,7 +3972,7 @@ one that matters.
 
 ### site:research/designing-a-readable-target/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Any detector good enough to find a .22 hole in a printed ring will find all of those too.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): They need a quiet zone around them, 1.0 mm on a 4.0 mm marker.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centerfire at 300, and the built-in library is thirty-eight sheets rather than one because those are genuinely different problems.
@@ -3995,7 +3997,7 @@ one that matters.
 
 ### site:research/how-grouplab-reads-a-target/index.html
 
-- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): How GroupLab reads a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Reading targets How GroupLab reads a target GroupLab project.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): How GroupLab reads a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Reading targets How GroupLab reads a target GroupLab project.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): GroupLab prints the ruler on the target , and everything below follows from that.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): Work out where the page is Knowing the number and the position of each marker, and knowing where those markers were printed, GroupLab can work out the exact mapping between the photograph and the page.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): On the 2026-09-20 scans it was 0.0023 to 0.0026 in.
@@ -4094,7 +4096,7 @@ one that matters.
 
 ### site:research/nightly-builds/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Nightly builds, from commit to installer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Nightly builds, from commit to installer GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Nightly builds, from commit to installer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Nightly builds, from commit to installer GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Tests run on Windows, macOS and Linux.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If they all pass, a nightly build starts: it packages a Windows installer, signs a manifest saying what is in it, tags the commit, and publishes a release.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That produced entries like: Entry 130 item 3.3: doubt travels with the number That is written for the project's own log.
@@ -4270,7 +4272,7 @@ one that matters.
 
 ### site:research/safe-updates/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): How GroupLab updates itself safely | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built How GroupLab updates itself safely GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): How GroupLab updates itself safely | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built How GroupLab updates itself safely GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Each build publishes a small file saying what the newest version is, and for every file its name, size and SHA-256.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That file carries a signature, and GroupLab refuses a manifest whose signature does not verify.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): A file whose SHA-256 does not match the manifest is refused, whatever the manifest said.
@@ -4335,7 +4337,7 @@ one that matters.
 
 ### site:research/smaller-installer/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Cutting the installer from 97 MB to 81 MB | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Cutting the installer from 97 MB to 81 MB GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Cutting the installer from 97 MB to 81 MB | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Cutting the installer from 97 MB to 81 MB GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What we found 100.7 MB of a 332.6 MB install was debug symbols, 100 MB of it in two files.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Removing them took the install to 204.3 MB, a 39 percent cut, and made the self-contained build smaller than the framework-dependent one had been.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): And in the middle of the table was something nobody had asked about: 100.7 MB of the 332.6 MB install was debug symbols.
@@ -4381,7 +4383,7 @@ one that matters.
 
 ### site:research/uploads-rebuilt-from-pixels/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every upload is rebuilt from pixels | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Every upload is rebuilt from pixels GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every upload is rebuilt from pixels | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Every upload is rebuilt from pixels GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab does with it Before a photograph is published, the metadata is thrown away and rebuilt .
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The keep list, in full Kept, because they describe the camera and the exposure and are what makes a photograph useful as evidence about photographs: Make, Model, Orientation Exposure time, f-number, ISO Focal length and its 35 mm equivalent Pixel dimensions Digital zoom ratio Lens model Removed, which is everything else: Every GPS field.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Separately from all of the above, no part of GroupLab reads GPS or location values from any photograph at any point, including the diagnostic log, which has its own whitelist following the same rule.
@@ -4389,7 +4391,7 @@ one that matters.
 
 ### site:research/velocity-sd-small-samples/index.html
 
-- *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.
+- *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): What we found if you chronograph five shots and measure an SD of 10 ft/s, the true SD of that ammunition is, with 95 percent confidence, somewhere between 6.0 and 28.7 ft/s.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): With 20 shots the same reading narrows to 7.6 to 14.6.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): The interval, string by string Suppose your chronograph says SD 10 ft/s.
@@ -4408,7 +4410,7 @@ one that matters.
 
 ### site:research/what-grouplab-sends/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab sends from your computer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What GroupLab sends from your computer GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab sends from your computer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What GroupLab sends from your computer GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): There is no analytics, no usage reporting, no license check and no phoning home.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): It does not send your machine name, your account, your screen, your Windows version or a unique identifier of any kind.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The same error several times goes as one report with a count, and a day's reports are capped at 20.
@@ -4472,7 +4474,7 @@ one that matters.
 
 ### site:shoot-a-target/index.html
 
-- *code* (website/build.py NAV, the top bar with Features beside the tour (entry 242)): Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.
 - *measured* (scans/phase1/measurements/detection-counts.json rows by definition, 2026-09-28: only GL-CF25-LTR, GL-CF25-LTR-D and one other design, none of the E bull, the C bull or the C3 grids (entry 264)): grouplab-donor-pack.zip &#183; 9 PDFs Download all Most useful right now: The E bull, the C bull and the C3 zeroing grids: GroupLab has no real photographs of any of them yet.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): One sheet of each The E bull, 5x5 The everyday sheet for load development through a scope: a black disc with a white center and a small dot, 25 bulls and three sighters.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF A4 PDF The C bull, 5x5 The same sheet with a diamond standing on its point, whose points sit on a crosshair&#x27;s lines.
@@ -4633,7 +4635,7 @@ one that matters.
 
 ### site:tour/how-it-works/index.html
 
-- *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): How GroupLab works: the map | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): How GroupLab works: the map | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Key numbers 1 to 4 s to analyze a 300 dpi Letter scan on a desktop, naming the sheet included Built from .NET 10 Avalonia OpenCvSharp 4.13 Where it lives src/GroupLab.App Apps you run Android app The same Core on the phone, with OpenCV built from source for arm64.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): The camera screen analyzes a 1920 × 1440 stream live (CameraX&#x27;s default is 640 by 480, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires after 3 ready frames in a row.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Built from .NET 10 Avalonia OpenCV for iOS Where it lives docs/IOS-PLAN.md Apps you run Command line The engine with no windows.
@@ -4753,7 +4755,7 @@ one that matters.
 
 ### site:tour/index.html
 
-- *decided* (entry 279 section 2: marking by hand is on the phone (mobile/GroupLab.Mobile/MarkingAPage.cs); entry 284 section 2.5 for the link): Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.
+- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.
 - *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Twelve pages, one per screen, so you can see what using GroupLab is like before you download it.
 - *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting.
 - *decided* (docs/figures/screens/phone/SOURCES.md and samples/PROVENANCE.md, the 2026-09-26 range day, Alan's standing consent of entry 171): The result in them is Alan's own scan of a 25 shot group, published with his consent.

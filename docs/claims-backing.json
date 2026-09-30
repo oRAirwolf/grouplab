@@ -4468,6 +4468,22 @@
   "Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
    "kind": "code",
    "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "An arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
+   "kind": "decided",
+   "where": "entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums"
+  },
+  "GroupLab Dev is the recommended download for testing until GroupLab is on the Play Store : from the download page , it updates itself from every nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.": {
+   "kind": "decided",
+   "where": "entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums"
+  },
+  "**GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.": {
+   "kind": "decided",
+   "where": "entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums"
+  },
+  "**GroupLab Dev is the recommended download for testing until GroupLab is on the Play Store**: from the [download page](https://grouplab.org/download/), it updates itself from every nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.": {
+   "kind": "decided",
+   "where": "entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums"
   }
  },
  "rules": [

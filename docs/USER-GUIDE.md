@@ -321,8 +321,8 @@ If an update ever fails, the build you had is still installed and still works. N
 **GroupLab Dev on Android updates itself.** The Android build installed from its APK looks for a newer nightly when it starts and about
 every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and that it is signed with the same key as the copy
 you have before installing it. The first time, it asks for Android's "Install unknown apps" permission and opens that page for you, and
-Android asks you to confirm the first update; Google Play Protect may scan the new copy first, as it does any app from outside the Play
-Store, which takes a moment. After that it installs by itself when you leave GroupLab, never while the camera is open, a
+Android asks you to confirm the first update; Google Play Protect asks to scan the new copy first, on the first install and on updates, as
+it does any app from outside the Play Store: it is Google's own check, takes a few seconds, and is expected. After that it installs by itself when you leave GroupLab, never while the camera is open, a
 sheet is being read or a change is unsaved, and your sessions and settings stay. Settings, About shows the version you have, the newest
 one, **Update now**, and **Install updates automatically**, which you can turn off. The copy from Google Play has none of this: Google Play
 updates it.
@@ -360,9 +360,13 @@ The gear opens the settings:
 
 ## 13. On the phone
 
-GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory. Install the APK from the
-[download page](https://grouplab.org/download/), or the Google Play internal test if you are invited; remove one before installing the
-other, because they are signed with different keys. It uses the same engine as the computer, so the same picture gives the same numbers.
+GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory. **GroupLab Dev is the recommended download for
+testing until GroupLab is on the Play Store**: from the [download page](https://grouplab.org/download/), it updates itself from every
+nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy
+to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev. The
+plain APK and the Google Play internal test (if you are invited) are signed with different keys, so remove one before installing the other.
+Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates: it is Google's
+own check, takes a few seconds, and is expected. It uses the same engine as the computer, so the same picture gives the same numbers.
 
 **Capture** is the first screen: the GroupLab mark, one row with the caliber and distance remembered from the last target (**Change**
 types new ones), **Take a picture**, **Choose a photo** and **Print a target** side by side, with **From another app** and **Paste a
