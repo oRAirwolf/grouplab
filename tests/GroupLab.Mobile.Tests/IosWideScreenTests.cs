@@ -4,6 +4,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GroupLab.App;
+using GroupLab.Core.Marking;
 
 namespace GroupLab.Mobile.Tests;
 
@@ -55,6 +56,41 @@ public class IosWideScreenTests
         finally
         {
             Shell.BarToBottomEdge = before;
+        }
+    }
+
+    [AvaloniaFact]
+    public void OnIosTheResultGoesSideBySideByTheScreensWidth()
+    {
+        bool before = Shell.WideByScreen;
+        try
+        {
+            Padded();
+            string sample = Repo.PathTo("samples", "gl-cf25-ltr-d-25-shots-600-dpi.png");
+            string copy = Path.Combine(ThePhone.CacheFolder, "wide.png");
+            File.Copy(sample, copy, overwrite: true);
+            var result = PhoneAnalysis.Run(copy, new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, null, CancellationToken.None);
+            Assert.Null(result.Failure);
+
+            // The width left inside the safe area of a Pro Max on its side, and the height above the bar.
+            bool SideBySide(bool byScreen)
+            {
+                Shell.WideByScreen = byScreen;
+                var view = new ResultView(result, new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { });
+                var window = new Window { Width = 832, Height = 330, Content = view };
+                window.Show();
+                Dispatcher.UIThread.RunJobs();
+                bool wide = view.GetVisualDescendants().OfType<GridSplitter>().Any();
+                window.Close();
+                return wide;
+            }
+
+            Assert.True(SideBySide(byScreen: true));
+            Assert.False(SideBySide(byScreen: false));
+        }
+        finally
+        {
+            Shell.WideByScreen = before;
         }
     }
 }

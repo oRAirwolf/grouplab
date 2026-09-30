@@ -214,7 +214,7 @@ public sealed class ResultView : UserControl
         bool? wide = null;
         void Arrange(Size size)
         {
-            bool now = size.Width >= ExpandedWidth && size.Width > size.Height && picture.Children.Count > 0;
+            bool now = Shell.Across(size.Width) >= ExpandedWidth && size.Width > size.Height && picture.Children.Count > 0;
             if (wide == now)
             {
                 return;

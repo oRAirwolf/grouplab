@@ -75,6 +75,17 @@ public sealed class Shell : UserControl
     /// </summary>
     internal static bool BarToBottomEdge { get; set; }
 
+    /// <summary>
+    /// Entry 290 section 6: on iOS a page that changes its layout on a wide screen reads the whole screen's width, as iOS's own size classes
+    /// do, not the width left inside the safe area. An iPhone on its side pads 62 points each side for the camera's island, which left a Pro
+    /// Max 832 wide inside, just under <see cref="ResultView.ExpandedWidth"/>, where an Android phone of its size shows the result's sheet and
+    /// numbers side by side. The iOS head sets this; Android keeps the width inside its insets, as it was.
+    /// </summary>
+    internal static bool WideByScreen { get; set; }
+
+    /// <summary>The width a page's wide layout is judged by: its own, and on iOS the safe area beside it as well.</summary>
+    internal static double Across(double width) =>
+        width + (WideByScreen && Current is { } shell ? shell.Padding.Left + shell.Padding.Right : 0);
 
     public Shell()
     {

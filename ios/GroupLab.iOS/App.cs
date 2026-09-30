@@ -23,6 +23,9 @@ public sealed class App : Avalonia.Application
 
         // Entry 290 section 6: the bar along the bottom reaches the bottom edge, under the home indicator, as an iPhone's bars do.
         Shell.BarToBottomEdge = true;
+
+        // Entry 290 section 6: the result goes side by side on a wide screen by the screen's width, as iOS's size classes are read.
+        Shell.WideByScreen = true;
         Phone.Start(new IosPhone(), this, IosPhone.Region, (level, line) =>
         {
             // The system log, which `xcrun simctl spawn booted log stream` and Console.app read; DEBUG lines never reach here.
