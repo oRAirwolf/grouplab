@@ -39,6 +39,12 @@ public interface IPhonePlatform
     /// <summary>Whether the camera may be used; where not, it asks, and the person presses again once it is allowed.</summary>
     bool CameraAllowed();
 
+    /// <summary>
+    /// Whether the camera has been allowed, asking nothing: entry 312 section 6, so the line asking for it goes once it is. False where a
+    /// platform cannot say, which leaves the line as it was.
+    /// </summary>
+    bool CameraGranted() => false;
+
     /// <summary>The camera screen: <paramref name="taken"/> hears the picture's path and whether the torch was on.</summary>
     Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null);
 

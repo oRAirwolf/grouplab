@@ -161,6 +161,68 @@ public class Entry312Tests
         window.Close();
     }
 
+    /// <summary>
+    /// Section 6: the line asking for the camera stays until the camera is allowed, then goes, whether Capture is showing at the time or is
+    /// visited later.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheCameraLineGoesOnceTheCameraIsAllowed()
+    {
+        if (Phone.Platform is null)
+        {
+            Phone.Start(ThePhone, Avalonia.Application.Current!, () => "US", null);
+        }
+
+        var phone = (TestPhone)Phone.Platform!;
+        var (was, wasInches) = Phone.Settings.LoadShotSetup();
+        Phone.Settings.SaveShotSetup(".308", 3600);
+        var window = new Window { Width = 412, Height = 915 };
+        try
+        {
+            window.Show();
+            var page = new CapturePage();
+            window.Content = page;
+            Dispatcher.UIThread.RunJobs();
+            bool Asking() => page.GetLogicalDescendants().OfType<TextBlock>().Any(t => t.Text == CapturePage.CameraWords);
+            void Take()
+            {
+                page.GetLogicalDescendants().OfType<Button>().First(b => b.Content is TextBlock { Text: "Take a picture" })
+                    .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            // Not allowed: the line stays.
+            phone.Granted = false;
+            Take();
+            Assert.True(Asking());
+            page.WaitForCamera();
+            Assert.True(Asking());
+
+            // Allowed while Capture shows: the next look, which a timer makes every second on the phone, takes the line away.
+            phone.Granted = true;
+            page.WaitForCamera();
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(Asking());
+
+            // Allowed while away: the line goes on the next visit.
+            phone.Granted = false;
+            Take();
+            Assert.True(Asking());
+            window.Content = new TextBlock();
+            Dispatcher.UIThread.RunJobs();
+            phone.Granted = true;
+            window.Content = page;
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(Asking());
+        }
+        finally
+        {
+            phone.Granted = false;
+            Phone.Settings.SaveShotSetup(was ?? "", wasInches);
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void CompareHasAWayBackToSessionsAtTheTop()
     {

@@ -108,6 +108,9 @@ internal sealed class AndroidPhone : IPhonePlatform
 
     public bool CameraAllowed() => MainActivity.CameraAllowed();
 
+    public bool CameraGranted() => MainActivity.Current is { } activity
+        && AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.Camera) == global::Android.Content.PM.Permission.Granted;
+
     public Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => new CameraView(taken, back, choose, result);
 
     public bool IsCamera(object? content) => content is CameraView;
