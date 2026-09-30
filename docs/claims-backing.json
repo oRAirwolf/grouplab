@@ -4484,6 +4484,14 @@
   "**GroupLab Dev is the recommended download for testing until GroupLab is on the Play Store**: from the [download page](https://grouplab.org/download/), it updates itself from every nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.": {
    "kind": "decided",
    "where": "entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums"
+  },
+  "**The sheet beside the numbers (entry 290 section 6).** On the iPad mini in landscape, a result shows the sheet on one side and the numbers on the other, and turning the iPad back to portrait puts them one above the other again.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6"
+  },
+  "The iPhone simulator cannot show it: in landscape it is 832 points wide inside its safe area, and the side by side layout starts at 840.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6"
   }
  },
  "rules": [

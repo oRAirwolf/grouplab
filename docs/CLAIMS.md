@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1369 |
+| code | 1371 |
 | measured | 1802 |
 | decided | 1279 |
 | unbacked | 0 |
-| **total** | **4450** |
+| **total** | **4452** |
 
-**1024** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1026** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1167,6 +1167,8 @@ one that matters.
 - *code* (a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs): **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis, with no question from iOS in between, or with only its "Open in GroupLab?" (note which).
 - *code* (a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/ShareViewController.cs OpenGroupLab and ios/GroupLab.iOS/Photos/IncomingPhotos.cs Listen and Waiting): **A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it.
 - *code* (ios/GroupLab.Share/ShareViewController.cs Receive (the sentence when GroupLab cannot be opened) and ios/GroupLab.iOS/Photos/IncomingPhotos.cs Listen and Activated, which read a waiting share at the next start or return to the front; entry 292 section 2.3): If iOS will not let the share sheet open GroupLab, the sheet says the picture is waiting, and opening GroupLab reads it.
+- *code* (mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6): **The sheet beside the numbers (entry 290 section 6).** On the iPad mini in landscape, a result shows the sheet on one side and the numbers on the other, and turning the iPad back to portrait puts them one above the other again.
+- *code* (mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6): The iPhone simulator cannot show it: in landscape it is 832 points wide inside its safe area, and the side by side layout starts at 840.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): Building without a Mac The nightly workflow gains an iOS job on GitHub's `macos-26` runner, free for a public repository, with Xcode 26.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1; the licences in THIRD-PARTY-NOTICES.md and android/opencv/build-extern.sh; entry 206 section 4 for the floor; request 55 in docs/notes/for-alan.md): The signing material and the key are secrets Alan sets himself with `gh secret set`, request 55 in `docs/notes/for-alan.md` says how; neither session ever sees them.
 - *code* (scripts/ios-signing.py (SECRETS, PROFILE_BUNDLES, APP_GROUP, problem, properties and the self-test), ios/signing-dry-run.sh, .github/workflows/nightly.yml job ios, the GroupLabAppProvision and GroupLabShareProvision properties in ios/GroupLab.iOS and ios/GroupLab.Share; held by IosSigningTests; entry 290 section 2 item 7 and entry 292 section 2.3): **The share extension (entry 292 section 2.3) needs its own identifiers in the Apple Developer site**, beside the application's: 1.
