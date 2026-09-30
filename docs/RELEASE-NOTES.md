@@ -514,7 +514,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - Settings has a new Error reports section; sending reports of errors to the project is built but not switched on yet, so for now the section says so and nothing is sent.
 - A problem report written by hand now keeps its description to 500 characters.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.101)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
