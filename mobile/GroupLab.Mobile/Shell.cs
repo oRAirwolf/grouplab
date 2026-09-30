@@ -415,7 +415,8 @@ internal static class Screens
                     Children =
                     {
                         new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
-                        UnitTap.Attach(new TextBlock { Text = value, Classes = { PhoneStyles.TileValue } }, label), // one line on purpose: a figure's number
+                        // One line for a figure's number; a figure withheld in words ("not quoted below 5 shots") wraps rather than being cut off.
+                        UnitTap.Attach(new TextBlock { Text = value, TextWrapping = value.Any(char.IsDigit) && value.Count(char.IsLetter) <= 4 ? TextWrapping.NoWrap : TextWrapping.Wrap, Classes = { PhoneStyles.TileValue } }, label),
                         UnitTap.Attach(new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } }, label),
                     },
                 },

@@ -109,6 +109,11 @@ internal static class PhoneStyles
         Rule(x => x.OfType<RadioButton>().Class(Choice).Class(":checked"), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint)),
             (TemplatedControl.BorderBrushProperty, Brush(p.Amber))),
 
+        // The circle beside its words, inside the card: the theme's template puts it at the card's top-left corner, since the card's
+        // padding reaches only the words. The root inset by the padding's width at the left, and the circle's row centered on the words.
+        Rule(x => x.OfType<RadioButton>().Class(Choice).Template().OfType<Border>().Name("RootBorder"), (Decorator.PaddingProperty, new Thickness(Tokens.Space12, 0, 0, 0))),
+        Rule(x => x.OfType<RadioButton>().Class(Choice).Template().OfType<Grid>().Child().OfType<Grid>(), (Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center)),
+
         // Fields: the desktop's field colors, rounded as the cards are, a thumb high.
         Rule(x => x.OfType<TextBox>(), (TemplatedControl.CornerRadiusProperty, new CornerRadius(CardRadius)), (Layoutable.MinHeightProperty, Screens.Touch),
             (TemplatedControl.FontSizeProperty, Tokens.TitleSize), (TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center)),
