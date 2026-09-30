@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 """Whether the nightly can sign the iOS build and send it to TestFlight, and why not, without ever printing a secret.
 
-NOTES-FROM-PLANNING.md entry 290 section 2 item 7 and docs/IOS-PLAN.md section 3. The nightly's iOS job reads seven repository secrets that
-Alan sets himself (request 55). Until all seven are there, the job builds without signing and uploads nothing, so a nightly never fails for
+NOTES-FROM-PLANNING.md entry 290 section 2 item 7 and docs/IOS-PLAN.md section 3. The nightly's iOS job reads eight repository secrets that
+Alan sets himself (request 55). Until all eight are there, the job builds without signing and uploads nothing, so a nightly never fails for
 want of them. Once any of them is there, each is checked for its shape before anything uses it, and a malformed one fails loudly, saying
 which secret and what is wrong with it, never its value.
 
+Entry 292 section 2.3 added the share extension, org.grouplab.app.share, which is signed with its own App Store profile (IOS_SHARE_PROFILE),
+and both profiles must carry the app group group.org.grouplab.app, through which the extension hands shared pictures to the application.
+
     python3 scripts/ios-signing.py --check        prints one line per secret and the decision; exit 0 sign, 3 unsigned, 1 malformed
     python3 scripts/ios-signing.py --self-test    checks the checker against made-up values, none of them real
+    python3 scripts/ios-signing.py --properties <identity> <application profile UUID> <extension profile UUID>
+                                                  the MSBuild properties the signed publish is given, one per line, so the nightly and
+                                                  its dry run build them the same way
 
 The decision is also written to $GITHUB_OUTPUT as `sign=true` or `sign=false` when that variable is set.
 """
@@ -24,13 +30,18 @@ SECRETS = [
     "IOS_DIST_CERT_P12",
     "IOS_DIST_CERT_PASSWORD",
     "IOS_PROFILE",
+    "IOS_SHARE_PROFILE",
     "APPLE_API_ISSUER_ID",
     "APPLE_API_KEY_ID",
     "APPLE_API_KEY_P8",
 ]
 
-# The bundle the profile must be for: docs/IOS-PLAN.md section 2.
+# The bundle each profile must be for: docs/IOS-PLAN.md section 2, and the share extension of entry 292 section 2.3.
 BUNDLE_ID = "org.grouplab.app"
+PROFILE_BUNDLES = {"IOS_PROFILE": BUNDLE_ID, "IOS_SHARE_PROFILE": BUNDLE_ID + ".share"}
+
+# The app group both profiles must allow: ios/Shared/Handoff.cs and each project's Entitlements.plist.
+APP_GROUP = "group.org.grouplab.app"
 
 TEN = re.compile(r"^[A-Z0-9]{10}$")
 UUID = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
@@ -59,7 +70,8 @@ def problem(name: str, value: str, env: dict[str, str]) -> str | None:
             return "is not base64; encode the .p12 file with base64 before setting it"
         # A PKCS#12 file is a DER SEQUENCE: its first byte is 0x30.
         return None if len(data) > 100 and data[0] == 0x30 else "decodes, but not to a .p12 certificate file"
-    if name == "IOS_PROFILE":
+    if name in PROFILE_BUNDLES:
+        bundle = PROFILE_BUNDLES[name]
         data = decoded(value)
         if data is None:
             return "is not base64; encode the .mobileprovision file with base64 before setting it"
@@ -68,8 +80,12 @@ def problem(name: str, value: str, env: dict[str, str]) -> str | None:
         team = env.get("APPLE_TEAM_ID", "").strip()
         if team and f"<string>{team}</string>".encode() not in data:
             return "is for another team than APPLE_TEAM_ID"
-        if f".{BUNDLE_ID}</string>".encode() not in data:
-            return f"is not for the bundle {BUNDLE_ID}"
+        # The application identifier, the team then the bundle; the app group's own name ends in the application's bundle, so a plain
+        # search for the bundle would take the extension's profile for the application's.
+        if not re.search(rb"<key>application-identifier</key>\s*<string>[A-Z0-9]{10}\." + re.escape(bundle.encode()) + rb"</string>", data):
+            return f"is not for the bundle {bundle}"
+        if b"<key>com.apple.security.application-groups</key>" not in data or f"<string>{APP_GROUP}</string>".encode() not in data:
+            return f"does not allow the app group {APP_GROUP}; turn App Groups on for {bundle}, tick the group, and download the profile again"
         return None
     if name == "APPLE_API_KEY_P8":
         text = value if "-----BEGIN PRIVATE KEY-----" in value else (decoded(value) or b"").decode("latin-1")
@@ -90,13 +106,27 @@ def decide(env: dict[str, str]) -> tuple[str, list[str]]:
         lines.append(f"{name}: set, " + ("its shape is right" if why is None else "MALFORMED: " + why))
         faults += why is not None
     if not present:
-        return "unsigned", lines + ["None of the seven is set, so the build is not signed and nothing is sent to TestFlight (request 55)."]
+        return "unsigned", lines + ["None of the eight is set, so the build is not signed and nothing is sent to TestFlight (request 55)."]
     if faults:
         return "malformed", lines + [f"{faults} of the secrets that are set are malformed; nothing is signed. Set them again as request 55 says."]
     if len(present) < len(SECRETS):
         missing = ", ".join(n for n in SECRETS if n not in present)
-        return "malformed", lines + [f"Only {len(present)} of the seven are set; still missing: {missing}. Nothing is signed until all seven are."]
-    return "sign", lines + ["All seven are set and look right; the build is signed and sent to TestFlight."]
+        return "malformed", lines + [f"Only {len(present)} of the eight are set; still missing: {missing}. Nothing is signed until all eight are."]
+    return "sign", lines + ["All eight are set and look right; the build is signed and sent to TestFlight."]
+
+
+def properties(identity: str, app_profile: str, share_profile: str) -> list[str]:
+    """
+    The signing properties for the publish. The profile is given to each project by its own name, because a property set on the command
+    line reaches every project the build touches, and one CodesignProvision would sign the share extension with the application's profile;
+    ios/GroupLab.iOS and ios/GroupLab.Share each turn their own into CodesignProvision. The identity is the same distribution certificate.
+    """
+    for what, uuid in (("application", app_profile), ("extension", share_profile)):
+        if not UUID.match(uuid):
+            raise ValueError(f"the {what} profile's UUID is not a UUID")
+    if app_profile.lower() == share_profile.lower():
+        raise ValueError("the application and the extension were given the same profile")
+    return [f"-p:CodesignKey={identity}", f"-p:GroupLabAppProvision={app_profile}", f"-p:GroupLabShareProvision={share_profile}"]
 
 
 def self_test() -> int:
@@ -111,13 +141,20 @@ def self_test() -> int:
             failed += 1
             print(f"FAIL {what}: {got}{' (a value was printed)' if leaked else ''}")
 
-    profile = base64.b64encode(b"\x30\x80" + b"<?xml version=\"1.0\"?><plist><dict><key>TeamIdentifier</key><array><string>ABCDE12345</string></array>"
-                               b"<key>application-identifier</key><string>ABCDE12345.org.grouplab.app</string></dict></plist>").decode()
+    def made_up(bundle: str, group: bool = True) -> str:
+        groups = (b"<key>com.apple.security.application-groups</key><array><string>group.org.grouplab.app</string></array>" if group else b"")
+        return base64.b64encode(b"\x30\x80" + b"<?xml version=\"1.0\"?><plist><dict><key>TeamIdentifier</key><array><string>ABCDE12345</string></array>"
+                                b"<key>Entitlements</key><dict><key>application-identifier</key><string>ABCDE12345." + bundle.encode()
+                                + b"</string>" + groups + b"</dict></dict></plist>").decode()
+
+    profile = made_up("org.grouplab.app")
+    share = made_up("org.grouplab.app.share")
     good = {
         "APPLE_TEAM_ID": "ABCDE12345",
         "IOS_DIST_CERT_P12": base64.b64encode(b"\x30" + b"\x82" * 200).decode(),
         "IOS_DIST_CERT_PASSWORD": "not a real password",
         "IOS_PROFILE": profile,
+        "IOS_SHARE_PROFILE": share,
         "APPLE_API_ISSUER_ID": "12345678-90ab-cdef-1234-567890abcdef",
         "APPLE_API_KEY_ID": "KEY1234567",
         "APPLE_API_KEY_P8": "-----BEGIN PRIVATE KEY-----\nnot a real key\n-----END PRIVATE KEY-----",
@@ -131,6 +168,27 @@ def self_test() -> int:
     expect("a profile for another team", {**good, "APPLE_TEAM_ID": "ZZZZZ99999"}, "malformed")
     other_app = base64.b64encode(base64.b64decode(profile).replace(b"org.grouplab.app", b"org.example.app")).decode()
     expect("a profile for another app", {**good, "IOS_PROFILE": other_app}, "malformed")
+    expect("the extension missing", {k: v for k, v in good.items() if k != "IOS_SHARE_PROFILE"}, "malformed")
+    expect("the application's profile given for the extension", {**good, "IOS_SHARE_PROFILE": profile}, "malformed")
+    expect("the extension's profile given for the application", {**good, "IOS_PROFILE": share}, "malformed")
+    expect("an application profile without the app group", {**good, "IOS_PROFILE": made_up("org.grouplab.app", group=False)}, "malformed")
+    expect("an extension profile without the app group", {**good, "IOS_SHARE_PROFILE": made_up("org.grouplab.app.share", group=False)}, "malformed")
+
+    app_uuid, share_uuid = "11111111-2222-3333-4444-555555555555", "66666666-7777-8888-9999-aaaaaaaaaaaa"
+    built = properties("Apple Distribution: Made Up (ABCDE12345)", app_uuid, share_uuid)
+    if built != ["-p:CodesignKey=Apple Distribution: Made Up (ABCDE12345)", f"-p:GroupLabAppProvision={app_uuid}", f"-p:GroupLabShareProvision={share_uuid}"]:
+        failed += 1
+        print("FAIL the publish properties: " + " ".join(built))
+    if any("CodesignProvision=" in p and "GroupLab" not in p for p in built):
+        failed += 1
+        print("FAIL one CodesignProvision would reach the extension too")
+    for bad in ((app_uuid, app_uuid), ("not-a-uuid", share_uuid)):
+        try:
+            properties("x", *bad)
+            failed += 1
+            print(f"FAIL the publish properties took {bad}")
+        except ValueError:
+            pass
     expect("an issuer that is not a UUID", {**good, "APPLE_API_ISSUER_ID": "issuer"}, "malformed")
     expect("a key that is not a key", {**good, "APPLE_API_KEY_P8": "just some words here"}, "malformed")
     print("ios-signing self-test: " + ("passed" if not failed else f"{failed} failed"))
@@ -140,6 +198,13 @@ def self_test() -> int:
 def main(argv: list[str]) -> int:
     if argv[1:2] == ["--self-test"]:
         return self_test()
+    if argv[1:2] == ["--properties"] and len(argv) == 5:
+        try:
+            print("\n".join(properties(argv[2], argv[3], argv[4])))
+        except ValueError as e:
+            print(f"ios-signing: {e}", file=sys.stderr)
+            return 1
+        return 0
     if argv[1:2] != ["--check"]:
         print(__doc__)
         return 2
