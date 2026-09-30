@@ -65,6 +65,8 @@ jobs:
       ref: ${{ github.sha }}
       version: ${{ needs.work-out-the-version.outputs.version }}
       train: release
+    # Entry 306: the Developer ID and the App Store Connect key, for signing and notarizing the Mac build when they are set.
+    secrets: inherit
 
   # NOTES-FROM-PLANNING.md entry 224 section 3: the Microsoft Store's MSIX, with the identity Partner Center gave when the name GroupLab was
   # reserved, from the repository's variables. A run by hand makes a draft carrying it, which is how the first submission is made by hand;

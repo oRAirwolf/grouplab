@@ -26,6 +26,20 @@ on:
         required: false
         default: 'development'
         type: string
+    # Entry 306: the Mac build is signed with a Developer ID and notarized when these are set (request 55), and left unsigned otherwise.
+    secrets:
+      MACOS_DEVID_CERT_P12:
+        required: false
+      MACOS_DEVID_CERT_PASSWORD:
+        required: false
+      APPLE_TEAM_ID:
+        required: false
+      APPLE_API_ISSUER_ID:
+        required: false
+      APPLE_API_KEY_ID:
+        required: false
+      APPLE_API_KEY_P8:
+        required: false
     outputs:
       version:
         description: 'The version the assets are named by.'
@@ -155,6 +169,83 @@ jobs:
           set -o pipefail
           python3 scripts/macos-bundle.py publish/grouplab out/bundle \
             --version "${{ steps.name.outputs.version }}" --arch "${{ matrix.target.label }}"
+
+      # NOTES-FROM-PLANNING.md entry 306: sign with the Developer ID and the hardened runtime, notarize, and staple, so macOS opens GroupLab
+      # with no Terminal command first. scripts/macos-signing.py decides from the six secrets: none of the Mac's own set leaves the build
+      # unsigned as before, all six right signs it, and a missing or malformed one fails naming the secret, never its value.
+      - name: The Mac signing secrets
+        id: macsign
+        if: matrix.target.bundle
+        shell: bash
+        env:
+          MACOS_DEVID_CERT_P12: ${{ secrets.MACOS_DEVID_CERT_P12 }}
+          MACOS_DEVID_CERT_PASSWORD: ${{ secrets.MACOS_DEVID_CERT_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          set +e
+          python3 scripts/macos-signing.py --check
+          code=$?
+          set -e
+          [ $code -eq 1 ] && { echo "::error::A Mac signing secret is missing or malformed; the lines above name it. Nothing was signed."; exit 1; }
+          if [ $code -eq 3 ]; then echo "### macOS: no Developer ID yet, so this build is not signed or notarized (request 55)." >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Sign, notarize and staple
+        if: matrix.target.bundle && steps.macsign.outputs.sign == 'true'
+        shell: bash
+        env:
+          MACOS_DEVID_CERT_P12: ${{ secrets.MACOS_DEVID_CERT_P12 }}
+          MACOS_DEVID_CERT_PASSWORD: ${{ secrets.MACOS_DEVID_CERT_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          set -euo pipefail
+          app=out/bundle/GroupLab.app
+          keychain="$RUNNER_TEMP/devid.keychain-db"
+          password=$(uuidgen)
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          printf '%s' "$MACOS_DEVID_CERT_P12" | base64 --decode > "$RUNNER_TEMP/devid.p12"
+          security import "$RUNNER_TEMP/devid.p12" -k "$keychain" -P "$MACOS_DEVID_CERT_PASSWORD" -T /usr/bin/codesign
+          rm -f "$RUNNER_TEMP/devid.p12"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" > /dev/null
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          identity=$(security find-identity -v -p codesigning "$keychain" | grep "Developer ID Application" | head -1 | awk '{print $2}')
+          test -n "$identity" || { echo "::error::The certificate is not a Developer ID Application certificate"; exit 1; }
+
+          # Inside out: every library and executable in the bundle, then the bundle itself with the entitlements .NET needs.
+          find "$app/Contents" -type f | while read -r f; do
+            if file "$f" | grep -q "Mach-O"; then
+              codesign --force --timestamp --options runtime --entitlements scripts/macos/GroupLab.entitlements --sign "$identity" "$f"
+            fi
+          done
+          codesign --force --timestamp --options runtime --entitlements scripts/macos/GroupLab.entitlements --sign "$identity" "$app"
+          codesign --verify --deep --strict --verbose=2 "$app"
+
+          mkdir -p "$HOME/private_keys"
+          key="$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          if printf '%s' "$APPLE_API_KEY_P8" | grep -q "BEGIN PRIVATE KEY"; then
+            printf '%s' "$APPLE_API_KEY_P8" > "$key"
+          else
+            printf '%s' "$APPLE_API_KEY_P8" | base64 --decode > "$key"
+          fi
+          ditto -c -k --keepParent "$app" "$RUNNER_TEMP/GroupLab-notarize.zip"
+          xcrun notarytool submit "$RUNNER_TEMP/GroupLab-notarize.zip" --key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID" \
+            --team-id "$APPLE_TEAM_ID" --wait --timeout 45m | tee notarize.log
+          grep -q "status: Accepted" notarize.log || { echo "::error::Apple did not accept the notarization; notarize.log has its answer"; exit 1; }
+          rm -f "$key" "$RUNNER_TEMP/GroupLab-notarize.zip"
+          xcrun stapler staple "$app"
+          xcrun stapler validate "$app"
+
+          # Gatekeeper's own assessment, the check entry 306 section 4 waits for before the Terminal command leaves the instructions.
+          spctl --assess --type execute --verbose=4 "$app" 2>&1 | tee gatekeeper.log
+          echo "### macOS ${{ matrix.target.label }}: signed, notarized and stapled. Gatekeeper: $(head -1 gatekeeper.log)" >> "$GITHUB_STEP_SUMMARY"
+          security delete-keychain "$keychain"
 
       - name: Pack
         shell: bash

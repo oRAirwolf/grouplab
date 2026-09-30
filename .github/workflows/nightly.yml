@@ -287,6 +287,8 @@ jobs:
       ref: ${{ needs.name-it.outputs.sha }}
       version: ${{ needs.name-it.outputs.version }}
       train: nightly
+    # Entry 306: the Developer ID and the App Store Connect key, for signing and notarizing the Mac build when they are set.
+    secrets: inherit
 
   # NOTES-FROM-PLANNING.md entry 219 item A6: the Android application, signed with Alan's upload key, as an APK to install by hand and
   # an AAB for Google Play's internal testing track. Until the key is in the repository's secrets it builds nothing and says so, and it

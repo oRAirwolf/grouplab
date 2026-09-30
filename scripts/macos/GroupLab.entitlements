@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  NOTES-FROM-PLANNING.md entry 306: what the hardened runtime must allow for GroupLab to run once it is signed and notarized. .NET compiles
+  code as it runs (allow-jit) and its runtime writes code it then executes (allow-unsigned-executable-memory); the native libraries beside
+  the executable, OpenCV and Skia among them, are loaded from the bundle and are signed by the same Developer ID, and disable-library-
+  validation lets a library signed by its own maker load too. Nothing else is asked for: no network server, no camera, no files beyond
+  what the person chooses. Not the Mac App Store: that would need the sandbox and forbid the self-updater.
+-->
+<plist version="1.0">
+<dict>
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+</dict>
+</plist>
