@@ -1,0 +1,326 @@
+{
+  "why": [
+    "NOTES-FROM-PLANNING.md entry 318 section 2: the scoreboard\u0027s any-target class, docs/DETECTION-LEARNING-STUDY.md section 7.",
+    "Four targets GroupLab did not print, drawn in code (black bulls, fluorescent, diamonds, grid), 16 holes of a .308 each, at 200 dpi,",
+    "read by the finder for such targets under four conditions on two seeds. AnyTargetScoreboardTests holds every build to these lines.",
+    "Written by grouplab scoreboard --any-target --out; when a change makes a line better, move it in the same commit and say why."
+  ],
+  "measured": "2026-09-30",
+  "seeds": [
+    318,
+    319
+  ],
+  "margin": {
+    "holes": 1,
+    "falseMarks": 1,
+    "centreInches": 0.005,
+    "worstCentreInches": 0.03,
+    "registrationInches": 0.005
+  },
+  "rows": [
+    {
+      "condition": "any target, black bulls, clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 21,
+      "found": 20,
+      "falseMarks": 1,
+      "medianCentreInches": 0.0114,
+      "worstCentreInches": 0.0328,
+      "medianMilliseconds": 409,
+      "foundPerPicture": [
+        12,
+        8
+      ],
+      "recall": 0.625,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, black bulls, hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 21,
+      "found": 20,
+      "falseMarks": 1,
+      "medianCentreInches": 0.01,
+      "worstCentreInches": 0.0328,
+      "medianMilliseconds": 300,
+      "foundPerPicture": [
+        12,
+        8
+      ],
+      "recall": 0.625,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, black bulls, dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 22,
+      "found": 19,
+      "falseMarks": 3,
+      "medianCentreInches": 0.011,
+      "worstCentreInches": 0.0314,
+      "medianMilliseconds": 270,
+      "foundPerPicture": [
+        12,
+        7
+      ],
+      "recall": 0.5938,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, black bulls, curl 15 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 20,
+      "found": 20,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0106,
+      "worstCentreInches": 0.0332,
+      "medianMilliseconds": 273,
+      "foundPerPicture": [
+        12,
+        8
+      ],
+      "recall": 0.625,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, fluorescent, clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 26,
+      "found": 26,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0073,
+      "worstCentreInches": 0.0229,
+      "medianMilliseconds": 263,
+      "foundPerPicture": [
+        13,
+        13
+      ],
+      "recall": 0.8125,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, fluorescent, hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 26,
+      "found": 26,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0073,
+      "worstCentreInches": 0.0229,
+      "medianMilliseconds": 257,
+      "foundPerPicture": [
+        13,
+        13
+      ],
+      "recall": 0.8125,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, fluorescent, dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 26,
+      "found": 26,
+      "falseMarks": 0,
+      "medianCentreInches": 0.008,
+      "worstCentreInches": 0.0227,
+      "medianMilliseconds": 258,
+      "foundPerPicture": [
+        13,
+        13
+      ],
+      "recall": 0.8125,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, fluorescent, curl 15 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 26,
+      "found": 26,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0072,
+      "worstCentreInches": 0.0274,
+      "medianMilliseconds": 259,
+      "foundPerPicture": [
+        13,
+        13
+      ],
+      "recall": 0.8125,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, diamonds, clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 22,
+      "found": 22,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0115,
+      "worstCentreInches": 0.0339,
+      "medianMilliseconds": 266,
+      "foundPerPicture": [
+        8,
+        14
+      ],
+      "recall": 0.6875,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, diamonds, hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 21,
+      "found": 21,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0106,
+      "worstCentreInches": 0.0339,
+      "medianMilliseconds": 266,
+      "foundPerPicture": [
+        7,
+        14
+      ],
+      "recall": 0.6562,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, diamonds, dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 26,
+      "found": 23,
+      "falseMarks": 3,
+      "medianCentreInches": 0.0106,
+      "worstCentreInches": 0.0341,
+      "medianMilliseconds": 268,
+      "foundPerPicture": [
+        9,
+        14
+      ],
+      "recall": 0.7188,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, diamonds, curl 15 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 22,
+      "found": 22,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0111,
+      "worstCentreInches": 0.0332,
+      "medianMilliseconds": 267,
+      "foundPerPicture": [
+        8,
+        14
+      ],
+      "recall": 0.6875,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, grid, clean",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 29,
+      "found": 25,
+      "falseMarks": 4,
+      "medianCentreInches": 0.0149,
+      "worstCentreInches": 0.0534,
+      "medianMilliseconds": 271,
+      "foundPerPicture": [
+        12,
+        13
+      ],
+      "recall": 0.7812,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, grid, hard shadow",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 27,
+      "found": 24,
+      "falseMarks": 3,
+      "medianCentreInches": 0.0145,
+      "worstCentreInches": 0.0421,
+      "medianMilliseconds": 273,
+      "foundPerPicture": [
+        11,
+        13
+      ],
+      "recall": 0.75,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, grid, dim",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 32,
+      "found": 25,
+      "falseMarks": 7,
+      "medianCentreInches": 0.0151,
+      "worstCentreInches": 0.0438,
+      "medianMilliseconds": 272,
+      "foundPerPicture": [
+        12,
+        13
+      ],
+      "recall": 0.7812,
+      "expectedToFail": false
+    },
+    {
+      "condition": "any target, grid, curl 15 px",
+      "truth": "holes",
+      "pictures": 2,
+      "registered": 2,
+      "holes": 32,
+      "marks": 28,
+      "found": 26,
+      "falseMarks": 2,
+      "medianCentreInches": 0.0166,
+      "worstCentreInches": 0.0973,
+      "medianMilliseconds": 274,
+      "foundPerPicture": [
+        13,
+        13
+      ],
+      "recall": 0.8125,
+      "expectedToFail": false
+    }
+  ]
+}

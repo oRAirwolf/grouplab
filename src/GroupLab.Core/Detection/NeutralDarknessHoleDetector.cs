@@ -58,20 +58,31 @@ public sealed record HoleDetection(double Dpi, double PaperLevel, IReadOnlyList<
 /// </summary>
 public static class NeutralDarknessHoleDetector
 {
+    /// <summary>The paper's level on the survey's scans, docs/SCAN-MEASUREMENTS.md section 3.2, to which a local paper's darkness is scaled.</summary>
+    public const double SurveyPaper = 245.65;
+
     /// <param name="maxChannel">max(R, G, B) per pixel, which is also HSV Value.</param>
     /// <param name="dpi">The image's resolution; every inch figure in <paramref name="options"/> is scaled by it.</param>
-    public static HoleDetection Detect(GrayImage maxChannel, double dpi, IImagingBackend backend, HoleDetectionOptions? options = null)
+    /// <param name="localPaper">
+    /// NOTES-FROM-PLANNING.md entry 318 section 2: the paper's level at every pixel, the same size as the image, where one level for the whole
+    /// picture would be wrong: a shadow across a photograph, or a target printed with large dark areas. The darkness is then taken as a share
+    /// of that paper and put on the survey's scale, a paper of <see cref="SurveyPaper"/>, so the threshold means the same in dim light as in
+    /// bright. Null keeps the survey's single level, the 90th percentile of the picture.
+    /// </param>
+    public static HoleDetection Detect(GrayImage maxChannel, double dpi, IImagingBackend backend, HoleDetectionOptions? options = null, GrayImage? localPaper = null)
     {
         ArgumentNullException.ThrowIfNull(maxChannel);
         ArgumentNullException.ThrowIfNull(backend);
         options ??= new HoleDetectionOptions();
-        double paper = Percentile(maxChannel.Pixels, 0.90);
+        double paper = localPaper is null ? Percentile(maxChannel.Pixels, 0.90) : Percentile(localPaper.Pixels, 0.50);
 
         // Neutral darkness, clipped at 0 and truncated to a byte as numpy's astype does.
         var dn = new byte[maxChannel.Pixels.Length];
         for (int i = 0; i < dn.Length; i++)
         {
-            dn[i] = (byte)Math.Clamp(paper - maxChannel.Pixels[i], 0, 255);
+            dn[i] = localPaper is null
+                ? (byte)Math.Clamp(paper - maxChannel.Pixels[i], 0, 255)
+                : (byte)Math.Clamp((localPaper.Pixels[i] - maxChannel.Pixels[i]) * SurveyPaper / Math.Max(16.0, localPaper.Pixels[i]), 0, 255);
         }
 
         int openRadius = Math.Max(2, (int)Math.Round(options.OpenRadiusInches * dpi, MidpointRounding.ToEven));

@@ -16,7 +16,7 @@ namespace GroupLab.Cli.Spike;
 /// </summary>
 public static class St4Verb
 {
-    public const string Usage = "grouplab st4 <st4-2026-09-20.json> [--frames <folder>]";
+    public const string Usage = "grouplab st4 <st4-2026-09-20.json> [--frames <folder>] [--any-target]";
 
     private sealed record Group(int Id, double X, double Y, int Shots, IReadOnlyList<string> Frames);
 
@@ -33,6 +33,9 @@ public static class St4Verb
 
         var truth = JsonNode.Parse(File.ReadAllText(args[0]))!;
         string folder = args.Count >= 3 && args[1] == "--frames" ? args[2] : (string)truth["folder"]!;
+
+        // Entry 318 section 2: --any-target reads the holes with the finder the marking screens offer for a target GroupLab did not print.
+        bool anyTarget = args.Contains("--any-target");
         var groups = truth["groups"]!.AsArray().Select(g => new Group((int)g!["group"]!, (double)g["xInches"]!, (double)g["yInches"]!, (int)g["shots"]!,
             [(string)g["closeUp"]!, .. g["alsoIn"]!.AsArray().Select(f => (string)f!)])).ToList();
         double calibre = (double)truth["bulletInches"]!;
@@ -92,7 +95,9 @@ public static class St4Verb
             };
 
             var (max, _) = ImageLoader.LoadMaxChannel(path);
-            var holes = NeutralDarknessHoleDetector.Detect(max, spacing, backend, new HoleDetectionOptions(CalibreInches: calibre)).Holes;
+            var holes = anyTarget
+                ? [.. AnyTargetHoleFinder.Find(max, spacing, backend, calibre).Holes.Select(p => new DetectedHole(p.Image.X, p.Image.Y, p.DiameterInches * spacing, p.DiameterInches, 1, 0, 0, 0))]
+                : NeutralDarknessHoleDetector.Detect(max, spacing, backend, new HoleDetectionOptions(CalibreInches: calibre)).Holes;
             var upright = holes.Select(hole => (Hole: hole, At: Upright(toLattice(new PointD(hole.X, hole.Y))))).ToList();
 
             // The lattice is counted from wherever the walk began, so its offset to the sheet's own grid is the whole-inch shift that puts the

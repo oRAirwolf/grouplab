@@ -22,6 +22,7 @@ public static class ScoreboardVerb
 {
     private const string Usage =
         "usage: grouplab scoreboard --synthetic [--seeds 291,292] [--only <condition>] [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
+        "       grouplab scoreboard --any-target [--seeds 318,319] [--only <line>] [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard --corpus <folder> [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard truth --scan <scan> --sheet <file.gltd.json> [--calibre <inches>] --out <truth.json>\n" +
         "  A corpus folder whose truth.json says \"target\": \"any\" is a store-bought target: picture, blank, count and dpi (entry 308).\n" +
@@ -38,10 +39,12 @@ public static class ScoreboardVerb
             return Truth(args[1..], output, error);
         }
 
+
         string? Option(string name) => Array.IndexOf(args, name) is int i and >= 0 && i + 1 < args.Length ? args[i + 1] : null;
         bool synthetic = args.Contains("--synthetic");
+        bool anyTarget = args.Contains("--any-target");
         string? corpus = Option("--corpus");
-        if (synthetic == (corpus is not null))
+        if ((synthetic ? 1 : 0) + (anyTarget ? 1 : 0) + (corpus is not null ? 1 : 0) != 1)
         {
             error.WriteLine(Usage);
             return 2;
@@ -60,6 +63,13 @@ public static class ScoreboardVerb
             only = Option("--only");
             pictures = Scoreboard.RunSynthetic(definition, new OpenCvSharpBackend(), seeds, Jpeg, only is null ? null : [only]);
         }
+        else if (anyTarget)
+        {
+            // Entry 318 section 2: targets GroupLab did not print, drawn in code, read by the finder the marking screens offer for them.
+            seeds = Option("--seeds") is { } s ? [.. s.Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture))] : baseline?.Seeds ?? Scoreboard.AnyTargetSeeds;
+            only = Option("--only");
+            pictures = Scoreboard.RunAnyTarget(new OpenCvSharpBackend(), seeds, only is null ? null : [only]);
+        }
         else
         {
             pictures = RunCorpus(corpus!, error);
@@ -71,7 +81,7 @@ public static class ScoreboardVerb
             rows = [.. rows.Select(r => baseline.Rows.FirstOrDefault(b => b.Condition == r.Condition) is { } b ? r with { ExpectedToFail = b.ExpectedToFail, Note = b.Note } : r)];
         }
 
-        string table = Scoreboard.Table(rows) + (synthetic ? "" : "\n" + Scoreboard.PictureTable(pictures));
+        string table = Scoreboard.Table(rows) + (synthetic || anyTarget ? "" : "\n" + Scoreboard.PictureTable(pictures));
         output.Write(table);
         if (Option("--table") is { } tablePath)
         {
@@ -81,7 +91,14 @@ public static class ScoreboardVerb
         if (Option("--out") is { } outPath)
         {
             var file = new ScoreboardBaseline(
-                ["NOTES-FROM-PLANNING.md entry 291 section 7: the detection scoreboard, written by grouplab scoreboard."],
+                anyTarget
+                    ? [
+                        "NOTES-FROM-PLANNING.md entry 318 section 2: the scoreboard's any-target class, docs/DETECTION-LEARNING-STUDY.md section 7.",
+                        "Four targets GroupLab did not print, drawn in code (black bulls, fluorescent, diamonds, grid), 16 holes of a .308 each, at 200 dpi,",
+                        "read by the finder for such targets under four conditions on two seeds. AnyTargetScoreboardTests holds every build to these lines.",
+                        "Written by grouplab scoreboard --any-target --out; when a change makes a line better, move it in the same commit and say why.",
+                    ]
+                    : ["NOTES-FROM-PLANNING.md entry 291 section 7: the detection scoreboard, written by grouplab scoreboard."],
                 DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), seeds, margin, rows);
             File.WriteAllText(outPath, Scoreboard.ToJson(file));
         }
@@ -196,7 +213,9 @@ public static class ScoreboardVerb
     /// were fired (<c>count</c>) and the scans' resolution (<c>dpi</c>, 600 where it is not given). The detector for a target GroupLab did not
     /// print, the neutral darkness detector of docs/DETECTION-LEARNING-STUDY.md section 7, reads both: on the shot scan its marks are held to
     /// the count, and on the blank one every mark is a false one, which is what makes a store-bought target's printing a hard test. The pictures
-    /// stay in C:\Dev\grouplab-local\commercial-targets and are never committed or shown.
+    /// stay in C:\Dev\grouplab-local\commercial-targets and are never committed or shown. Entry 318 section 2: they are read by the finder the
+    /// marking screens offer for such a target, that detector with the paper's level taken locally and two more looks, a light hole in dark
+    /// print and a dark centre in a bright ring; <c>calibre</c> in the truth file names the bullet, where it is known.
     /// </summary>
     public static IReadOnlyList<PictureScore> AnyTarget(string dir, JsonNode truth, string name, GroupLab.Core.Imaging.IImagingBackend backend, TextWriter error)
     {
@@ -216,7 +235,7 @@ public static class ScoreboardVerb
 
             var (value, _) = ImageLoader.LoadMaxChannel(Path.Combine(dir, file));
             var clock = Stopwatch.StartNew();
-            var found = GroupLab.Core.Detection.NeutralDarknessHoleDetector.Detect(value, dpi, backend);
+            var found = GroupLab.Core.Detection.AnyTargetHoleFinder.Find(value, dpi, backend, (double?)truth["calibre"]);
             clock.Stop();
             int marks = found.Holes.Count;
             int? hits = expected is { } n ? Math.Min(n, marks) : null;

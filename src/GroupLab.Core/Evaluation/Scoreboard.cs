@@ -100,7 +100,7 @@ public sealed record SyntheticCondition(string Name, string Description, Func<Gr
 /// and how long each picture took. A drop beyond a set margin against a committed baseline fails, naming the condition and the numbers.
 /// docs/DETECTION-LEARNING-STUDY.md section 1 describes the conditions and section 9 how to run it.
 /// </summary>
-public static class Scoreboard
+public static partial class Scoreboard
 {
     /// <summary>A picture encoded as JPEG at a quality and decoded again; Core has no encoder, so the command line supplies one.</summary>
     public delegate GrayImage JpegRoundTrip(GrayImage image, int quality);

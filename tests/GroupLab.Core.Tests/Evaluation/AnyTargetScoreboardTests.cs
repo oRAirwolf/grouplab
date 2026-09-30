@@ -1,15 +1,45 @@
 using GroupLab.Cli;
+using GroupLab.Cli.Imaging;
 using GroupLab.Core.Evaluation;
+using GroupLab.Core.Tests.Support;
 using OpenCvSharp;
 
 namespace GroupLab.Core.Tests.Evaluation;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 308 section 4: a store-bought target's blank and shot scans go on the scoreboard as an "any target" case, read
-/// by the detector that needs no printed artwork. Here a made-up orange target stands in for Alan's, which stay on his computer.
+/// by the detector that needs no printed artwork. Here a made-up orange target stands in for Alan's, which stay on his computer. Entry 318
+/// section 2: the class's synthetic targets, drawn in code, are held to docs/scoreboard/any-target-baseline.json in every build.
 /// </summary>
 public class AnyTargetScoreboardTests
 {
+    private static ScoreboardBaseline Baseline() =>
+        Scoreboard.FromJson(File.ReadAllText(Repo.PathTo("docs", "scoreboard", "any-target-baseline.json")));
+
+    [Fact]
+    public void TheSyntheticTargetsGroupLabDidNotPrintHoldTheirBaseline()
+    {
+        var baseline = Baseline();
+        var rows = Scoreboard.Rows(Scoreboard.RunAnyTarget(new OpenCvSharpBackend(), baseline.Seeds));
+        var drops = Scoreboard.Drops(baseline.Rows, rows, baseline.Margin);
+        Assert.True(drops.Count == 0,
+            "The any-target scoreboard fell beyond its margin against docs/scoreboard/any-target-baseline.json:\n" + string.Join("\n", drops) + "\n\nThis run:\n" + Scoreboard.Table(rows));
+    }
+
+    /// <summary>A kind or a condition added without a baseline line would never be held to anything; each line is its own class, "any target".</summary>
+    [Fact]
+    public void EveryKindUnderEveryConditionHasABaselineLine()
+    {
+        var names = Baseline().Rows.Select(r => r.Condition).ToHashSet();
+        foreach (string kind in Scoreboard.AnyTargetKinds)
+        {
+            Assert.All(Scoreboard.AnyTargetConditions, c => Assert.Contains(Scoreboard.AnyTargetLine(kind, c), names));
+        }
+
+        Assert.All(names, n => Assert.StartsWith("any target, ", n, StringComparison.Ordinal));
+        Assert.All(Scoreboard.AnyTargetConditions, c => Assert.Contains(Scoreboard.Conditions, s => s.Name == c));
+    }
+
     [Fact]
     public void AStoreBoughtTargetIsScoredOnItsShotScanAndItsBlankOne()
     {
