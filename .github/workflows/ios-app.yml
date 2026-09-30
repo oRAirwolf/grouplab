@@ -146,7 +146,8 @@ jobs:
           xcrun simctl status_bar "$udid" override --time 9:41 --batteryState charged --batteryLevel 100 || true
           echo "UDID=$udid" >> "$GITHUB_ENV"
           # Entry 290 section 6: an iPad beside it for the wide screens, an iPad mini where the runner has one since that is the device
-          # the sittings use. Booted after the self-test, whose own time a second simulator starting beside it doubled on a slow runner.
+          # the sittings use. Booted only once the iPhone is done with: a second simulator starting beside it made every screenshot take
+          # a minute and a half (runs 36688921677 and 36693793801).
           ipad=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
@@ -262,10 +263,10 @@ jobs:
             test -f "$out/results.json" && ls "$out" | grep -q -- '-chosen-picture\.png$'
           }
           failed=0
-          # The iPad starts while the iPhone's tour runs.
-          [ -z "$IPAD" ] || xcrun simctl boot "$IPAD"
           tour "$UDID" shots/landscape --screens --landscape || failed=1
           if [ -n "$IPAD" ]; then
+            xcrun simctl shutdown "$UDID" || true
+            xcrun simctl boot "$IPAD"
             xcrun simctl bootstatus "$IPAD" -b > /dev/null
             xcrun simctl status_bar "$IPAD" override --time 9:41 --batteryState charged --batteryLevel 100 || true
             xcrun simctl install "$IPAD" "$APP"
@@ -280,7 +281,6 @@ jobs:
             tour "$IPAD" shots/ipad --screens || failed=1
             # An iPad showing apps in windows refuses an application's own request to turn, so the simulator is turned from its Device
             # menu first, with only the iPad running; the tour turns the screen itself only where it is still upright.
-            xcrun simctl shutdown "$UDID" || true
             open -a Simulator --args -CurrentDeviceUDID "$IPAD"
             sleep 15
             osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
