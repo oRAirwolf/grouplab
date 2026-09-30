@@ -62,11 +62,11 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.138 (2026-09-30 16:17 UTC): the replay camera; all platforms, iOS signed and sent to TestFlight, as
-  was 137 (15:30 UTC).
+- **Last nightly:** 0.2.0-nightly.139 (2026-09-30 17:07 UTC): crash report 9's fix; 138 had the replay camera; iOS signed and sent to
+  TestFlight each time since 137.
 - **The site** publishes each push; a234baeb carries the M-series wording.
-- Crash reports open: 9, fixed by 10259c6e from the stack in the iPad's own log (a sheet that cannot be drawn among look-alikes); close
-  it with the nightly that carries it. 11 and 12 closed with nightly 137.
+- Crash reports open: none. 9 was fixed by 10259c6e from the stack in the iPad's own log and closed with nightly 139; 11 and 12 closed
+  with nightly 137.
 
 ## The inbox
 

@@ -88,6 +88,7 @@
     "now shows a short build code instead of a long one",
     "a result now shows the target beside the numbers, as on a tablet",
     "the bar of places along the bottom now runs to both edges",
+    "A picture of a sheet that shares its layout with others no longer fails to read",
     "Settings, About has a new switch, Show diagnostics on the camera, off",
     "The caliber box can now find any of more than six hundred cartridges",
     "Settings, About now has Send diagnostics, which puts GroupLab's logs",

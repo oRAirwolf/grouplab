@@ -11,7 +11,7 @@ GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
 3. TestFlight works again: nightlies 137 and 138 were signed and accepted, and your iPad mini updated itself to 137 by 16:20 UTC
    (read over the cable). Request 59's groups are still needed for the public beta and to keep every build flowing. Crash reports 11
    and 12 are fixed in 137 and closed. The iPad's own log, copied over the cable, gave crash report 9 its missing stack: a reading
-   failed when one of the sheets that look alike could not be drawn. Fixed and tested (10259c6e), in the next nightly.
+   failed when one of the sheets that look alike could not be drawn. Fixed and tested (10259c6e), in nightly 139 (17:07 UTC), and closed.
 4. Your usage (entry 317): 29 September was 1.31 billion tokens with 43.5 million of cache creation, five times a normal day; 30
    September so far 0.31 billion. Trending down.
 5. Also built, in the next nightly: GroupLab Dev can record the camera's last seconds and replay them to test Guided without anyone
