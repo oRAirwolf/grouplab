@@ -144,6 +144,38 @@ public class CalibreSplitTests
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 318 section 1: on the photograph taken 9 degrees off square both false marks were slivers of printed ring
+    /// about five times longer than wide, holding a little more than one hole's area, which the sliver rule at one hole let through. A mark
+    /// too small to be two holes and more than 4.5 times longer than wide is refused as residue now, and a mark as long as the torn hole
+    /// measured, 3.4 times, still stands.
+    /// </summary>
+    [Fact]
+    public void ALongSliverOfAboutOneHoleIsRefusedAndATornLengthMarkIsKept()
+    {
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        const double dpi = 150;
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], dpi);
+        double s = 254 / dpi;
+        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
+        var holes = definition.Bulls.Take(14).Select((b, k) => Hole(b.X + 90, b.Y + 90, 0.06, k)).ToList();
+
+        // Diagonal, so the bounding box is square and only the length can tell: 0.44 by 0.095 in, and 0.32 by 0.12 in.
+        static InkStroke Stroke(Bull b, double lengthInches, double widthInches)
+        {
+            double along = lengthInches * 254 / Math.Sqrt(2);
+            return new InkStroke(b.X - 170, b.Y + 40, b.X - 170 + along, b.Y + 40 + along, widthInches * 254, 60);
+        }
+
+        var slivers = definition.Bulls.Skip(16).Take(4).Select(b => Stroke(b, 0.44, 0.095)).ToList();
+        var torn = definition.Bulls.Skip(20).Take(4).Select(b => Stroke(b, 0.32, 0.12)).ToList();
+        var observed = SyntheticSheet.Compose(render, dpi, truth, render.Width, render.Height, holes, [.. slivers, .. torn], new Random(813));
+        var result = RenderDifferenceHoleDetector.Detect(observed, definition, 0, truth, dpi, new OpenCvSharpBackend(), new RenderDifferenceOptions(), render);
+        string said = string.Join(" | ", result.Holes.Select(h => $"{h.Elongation:0.00} {h.SizeHoles:0.00}").Concat(result.Rejected.Select(r => r.Reason)));
+        Assert.True(slivers.Count == result.Rejected.Count(r => r.Reason.StartsWith("residue", StringComparison.Ordinal)), said);
+        Assert.True(holes.Count + torn.Count == result.Holes.Count, said);
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 81 section 2: at the shipped settings a pair overlapped too far for its shape to ask for a split stays one
     /// mark, and that mark is flagged oversized, with a calibre and without one, while the single holes around it are not.
     /// </summary>

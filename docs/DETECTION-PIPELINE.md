@@ -279,8 +279,12 @@ sheet has too few marks; with neither, nothing is opened. Measured with `groupla
 | Synthetic, a hand's shadow, two seeds | 44 of 50 | 0 | 45 of 50 | 0 |
 | Synthetic, the other twelve conditions | unchanged | unchanged | unchanged | unchanged |
 
-The two false marks left on the 9 degree picture are slivers of the same rings about 0.3 in long with no hole in them; they are a different
-failure and are not touched here.
+The two false marks left on the 9 degree picture were slivers of the same rings about 0.3 in long with no hole in them, 5.05 and 5.14 times
+longer than wide with the area of 1.15 holes: too large for the residue rule at one hole and too short for the rule at six times. A mark
+too small to be two holes and 4.5 times longer than wide or more is now residue (NOTES-FROM-PLANNING.md entry 318 section 1); the longest
+real hole measured, a torn one, is 3.38. Measured with `grouplab scoreboard` on 2026-09-30, the 9 degree picture went from 2 false marks
+to none and nothing else on the seven real pictures or the synthetic board moved. The rings failed to cancel there because the
+registration leaves the markers of the sheet's far column out: docs/DETECTION-LEARNING-STUDY.md has what was measured and what was tried.
 
 **Caliber estimation** follows DESIGN.md section 12, with the measured calibration now available. Median hull diameter over all detections, then divide by the measured ratio to recover caliber:
 

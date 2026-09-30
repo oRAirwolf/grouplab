@@ -55,6 +55,14 @@ public sealed record RenderDifferenceOptions(
     /// wide, a clean hole reaches 1.72 and the one torn hole measured reached 3.38, so the gap between them is wide enough to sit in.
     /// </summary>
     double AlwaysResidueElongation = 6.0,
+    /// <summary>
+    /// The length at which a mark too small to be two holes is residue, NOTES-FROM-PLANNING.md entry 318 section 1. On the photograph taken 9
+    /// degrees off square both false marks were slivers of printed ring 5.05 and 5.14 times longer than wide, with the area of 1.15 holes: too
+    /// large for the sliver rule at one hole and too short for <see cref="AlwaysResidueElongation"/>. The longest real hole measured is the
+    /// torn one at 3.38, so the line sits between them, and it asks that the mark be too small to be two holes, so a line of merged holes is
+    /// still judged as it was.
+    /// </summary>
+    double LongResidueElongation = 4.5,
     double SmallestHoleInches = 0.16,
     double LargestHoleInches = 0.60,
     int MarksForSheetSize = 12,
@@ -415,6 +423,7 @@ public static class RenderDifferenceHoleDetector
             // hole is long and bigger than a hole, and it is neither of those. The first test does not ask whether the split was vetoed,
             // because a mark sixteen times longer than it is wide is not two holes either.
             bool residue = moments.Elongation >= options.AlwaysResidueElongation
+                || (vetoed && moments.Elongation >= options.LongResidueElongation)
                 || (vetoed && moments.Elongation >= options.ResidueElongation && sizeHoles < options.ResidueAtMostHoles);
             if (residue)
             {

@@ -293,5 +293,37 @@ compact is now placed on its hole. The baseline moved with it. What is left on t
 0.3 in long with no hole in them, and the worst center errors of 0.08 in are one hole 1.3 holes across, below the rule's reach; both are
 the rings failing to cancel on the side of the sheet farthest from square, and that is the next thing to look at.
 
+**Why the rings fail to cancel on the far side, and the second fix** (entry 318 section 1). All 34 markers are read on the 9 and 15 degree
+pictures, and the lens fit leaves six of them out as not fitting: the five of the column nearest the sheet's far edge, 10 to 19 pixels
+(about 0.05 to 0.09 in) from where the registration puts them, and one far corner. The sheet is registered without them, the expected
+drawing is warped through that registration, and S5 moves each bull's cell by a single shift, so in the far column the half of each cell
+nearest the edge is left 3 to 6 pixels off while the other half is aligned. That half is where the slivers and the worst centers are. A
+blur of the expected drawing does not help: on the 9 degree picture it matched worse in every cell at every width tried, 0.5 to 4 pixels.
+Three changes were measured against the seven pictures:
+
+| Change | 9 degrees | 15 degrees | The other five |
+|---|---|---|---|
+| Each quarter of a cell aligned on its own | false marks 2 to 0, worst center 0.081 to 0.043 in | false marks 0 to 1, median 0.014 to 0.017 in, worst 0.083 to 0.041 in | medians within 0.0003 in |
+| The mesh through every marker, where it predicts them better than the lens fit | false marks 2 to 1, worst 0.081 to 0.032 in | not taken | 1 degree: worst 0.045 to 0.024 in; the marker residual reported rises from 0.004 to 0.011 and 0.026 in |
+| A mark too small to be two holes and 4.5 times longer than wide refused as residue | false marks 2 to 0 | unchanged | unchanged |
+
+Only the third made no picture worse, and it is the one made (docs/DETECTION-PIPELINE.md, S8). Aligning quarters cancels the rings, and
+it also lays bare the registration's own error in the far column, where every hole reads 0.02 to 0.04 in too far out, the way the markers
+are off; on the 15 degree picture that moved three far holes past the median and pushed a marker's own residue out of its zone into a false
+mark. The mesh helps two pictures, is not taken on the third, and changes the registration figure a person is shown. Both point at the
+same place, and it is the next thing to look at: why the lens fit cannot follow the far column when every marker on it was read.
+
+| Picture | Found | False marks | Median center error | Worst center error |
+|---|---|---|---|---|
+| 2026-09-29, 2 degrees off square | 25 of 25 | 0 | 0.012 in | 0.025 in |
+| 2026-09-29, 1 degree | 25 of 25 | 0 | 0.014 in | 0.045 in |
+| 2026-09-29, 9 degrees | 25 of 25 | 0 | 0.013 in | 0.081 in |
+| 2026-09-29, 15 degrees | 25 of 25 | 0 | 0.014 in | 0.083 in |
+| 2026-09-26, 6 ARC, Dominus K | 25 of 25 | 0 | 0.015 in | 0.034 in |
+| 2026-09-26, 6 ARC, Magnus S | 25 of 25 | 1 | 0.021 in | 0.037 in |
+| 2026-09-26, 6.5 Creedmoor | 22 of 23 | 1 | 0.026 in | 0.055 in |
+
+Together: 172 of 173 holes found and 2 false marks, where it was 4.
+
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.

@@ -4632,6 +4632,26 @@
   "- **Built, not proven.** Marking a target by hand on the phone: the scale, the aim points and the holes placed under a fixed crosshair, on Android and iOS (entry 279, Marking A).": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/MarkingAPage.cs (the phone's hand marking, entry 279 section 2), shared by the Android and iOS heads; docs/PHONE-PARITY.md row other-targets"
+  },
+  "**Why the rings fail to cancel on the far side, and the second fix** (entry 318 section 1).": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the seven local pictures and --synthetic against docs/scoreboard/synthetic-baseline.json, 2026-09-30, with scratch measurements (deleted after the run) of marker residuals against the registration, per-cell blur matching and quarter-cell phase correlation in RenderDifferenceHoleDetector's alignment, and SheetMeasurer's mesh choice (entry 318 section 1)"
+  },
+  "All 34 markers are read on the 9 and 15 degree pictures, and the lens fit leaves six of them out as not fitting: the five of the column nearest the sheet's far edge, 10 to 19 pixels (about 0.05 to 0.09 in) from where the registration puts them, and one far corner.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the seven local pictures and --synthetic against docs/scoreboard/synthetic-baseline.json, 2026-09-30, with scratch measurements (deleted after the run) of marker residuals against the registration, per-cell blur matching and quarter-cell phase correlation in RenderDifferenceHoleDetector's alignment, and SheetMeasurer's mesh choice (entry 318 section 1)"
+  },
+  "The sheet is registered without them, the expected drawing is warped through that registration, and S5 moves each bull's cell by a single shift, so in the far column the half of each cell nearest the edge is left 3 to 6 pixels off while the other half is aligned.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the seven local pictures and --synthetic against docs/scoreboard/synthetic-baseline.json, 2026-09-30, with scratch measurements (deleted after the run) of marker residuals against the registration, per-cell blur matching and quarter-cell phase correlation in RenderDifferenceHoleDetector's alignment, and SheetMeasurer's mesh choice (entry 318 section 1)"
+  },
+  "A blur of the expected drawing does not help: on the 9 degree picture it matched worse in every cell at every width tried, 0.5 to 4 pixels.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the seven local pictures and --synthetic against docs/scoreboard/synthetic-baseline.json, 2026-09-30, with scratch measurements (deleted after the run) of marker residuals against the registration, per-cell blur matching and quarter-cell phase correlation in RenderDifferenceHoleDetector's alignment, and SheetMeasurer's mesh choice (entry 318 section 1)"
+  },
+  "Aligning quarters cancels the rings, and it also lays bare the registration's own error in the far column, where every hole reads 0.02 to 0.04 in too far out, the way the markers are off; on the 15 degree picture that moved three far holes past the median and pushed a marker's own residue out of its zone into a false mark.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --corpus on the seven local pictures and --synthetic against docs/scoreboard/synthetic-baseline.json, 2026-09-30, with scratch measurements (deleted after the run) of marker residuals against the registration, per-cell blur matching and quarter-cell phase correlation in RenderDifferenceHoleDetector's alignment, and SheetMeasurer's mesh choice (entry 318 section 1)"
   }
  },
  "rules": [
