@@ -82,9 +82,18 @@ public class MainActivity : AvaloniaMainActivity
             Shell.LetGo(shell);
         }
 
+#if GROUPLAB_DEV
+        // Entry 315 section 2: a scenario named by the extra, or waiting in files/scenario, read before the application starts.
+        bool scenario = GroupLab.Mobile.Dev.Scenario.Prepare(FilesDir!.AbsolutePath, Intent?.GetStringExtra(TestScenarioExtra));
+#endif
         base.OnCreate(savedInstanceState);
         Shared(Intent);
 #if GROUPLAB_DEV
+        if (scenario)
+        {
+            GroupLab.Mobile.Dev.Scenario.StartIfPrepared();
+        }
+
         TestPicture(Intent);
         TestShotsToZero(Intent);
         TestCamera(Intent);
@@ -237,10 +246,21 @@ public class MainActivity : AvaloniaMainActivity
     /// <summary>The extra a test names a picture with, a file name in the application's own <c>test</c> folder (entry 246).</summary>
     internal const string TestPictureExtra = "org.grouplab.test.picture";
 
+    /// <summary>
+    /// The extra that runs a scenario (entry 315 section 2): a file name in files/scenario, such as <c>read-sample.json</c>. With no extra,
+    /// a waiting files/scenario/scenario.json runs at the start. The older extras stay as shortcuts to one step each.
+    /// </summary>
+    internal const string TestScenarioExtra = "org.grouplab.test.scenario";
+
     protected override void OnNewIntent(Intent? intent)
     {
         base.OnNewIntent(intent);
         Shared(intent);
+        if (intent?.GetStringExtra(TestScenarioExtra) is { } named && GroupLab.Mobile.Dev.Scenario.Prepare(FilesDir!.AbsolutePath, named))
+        {
+            GroupLab.Mobile.Dev.Scenario.StartIfPrepared();
+        }
+
         TestPicture(intent);
         TestShotsToZero(intent);
         TestCamera(intent);

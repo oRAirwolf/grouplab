@@ -31,6 +31,17 @@
     <ProjectReference Include="..\..\mobile\GroupLab.Mobile\GroupLab.Mobile.csproj" />
   </ItemGroup>
 
+  <!--
+    Entry 315: GroupLab Dev's developer tools are compiled out of the shared library as the tests and the public application build it, so
+    the tests compile them here instead, as GroupLab Dev does, and hold both: that they work, and that the library has none of them.
+  -->
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);GROUPLAB_DEV</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\mobile\GroupLab.Mobile\Dev\*.cs" Link="Dev\%(Filename)%(Extension)" />
+  </ItemGroup>
+
   <!-- Shared by every test project: one temporary folder for the run, and a cleanup that cannot delete must never fail a test. -->
   <ItemGroup>
     <Compile Include="..\Shared\Temp.cs" Link="Support\Temp.cs" />

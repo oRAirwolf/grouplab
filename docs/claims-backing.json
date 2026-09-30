@@ -4532,6 +4532,22 @@
   "**Diagnostics on the phone** (entry 311 section 3).": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/DiagnosticsPackage.cs Send; SettingsView About; ios/GroupLab.iOS/Info.plist UIFileSharingEnabled; tests/GroupLab.Mobile.Tests/DiagnosticsTests.cs; entry 311 section 3"
+  },
+  "**Scenario files** (entry 315 section 2), in GroupLab Dev on Android and iOS alike: a JSON file of steps (open a place, read a picture from the scenario folder, wait for a screen or words, press a button by its name or words, type, take a screenshot, write the visible controls as a tree, sleep, copy the log) run with nobody's hands.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/Dev/Scenario.cs; android/GroupLab.Android/MainActivity.cs TestScenarioExtra; tests/GroupLab.Mobile.Tests/ScenarioTests.cs; entry 315 section 2"
+  },
+  "**GroupLab Dev for iPhone and iPad (entry 315's amendment):** the same sources built with `-p:GroupLabDev=true` make a second application, `org.grouplab.app.dev`, named GroupLab Dev under its own light icon, with its own app group `group.org.grouplab.app.dev`, share extension `org.grouplab.app.dev.share` and address, so it installs beside GroupLab.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/GroupLab.iOS.csproj and ios/GroupLab.Share/GroupLab.Share.csproj, the GroupLabDev property groups; scripts/ios-dev-app.py; scripts/ios-signing.py decide_dev; nightly.yml ios-dev and ios-app.yml dev-simulator; tests IosDevAppTests and ScenarioTests; entry 315 amendment"
+  },
+  "Only GroupLab Dev carries the developer tools, starting with scenario files (entry 315 section 2); they are compiled out of GroupLab, not hidden, and a test and the `ios app` workflow both check that GroupLab carries none of them.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/GroupLab.iOS.csproj and ios/GroupLab.Share/GroupLab.Share.csproj, the GroupLabDev property groups; scripts/ios-dev-app.py; scripts/ios-signing.py decide_dev; nightly.yml ios-dev and ios-app.yml dev-simulator; tests IosDevAppTests and ScenarioTests; entry 315 amendment"
+  },
+  "The nightly's `ios-dev` job builds it for a device every night and, once `IOS_DEV_PROFILE` and `IOS_DEV_SHARE_PROFILE` are set (request 61), signs it with the same certificate and sends it to TestFlight for the internal group only; `scripts/ios-signing.py --check-dev` decides, and a missing or malformed profile is a warning, never a failed nightly.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/GroupLab.iOS.csproj and ios/GroupLab.Share/GroupLab.Share.csproj, the GroupLabDev property groups; scripts/ios-dev-app.py; scripts/ios-signing.py decide_dev; nightly.yml ios-dev and ios-app.yml dev-simulator; tests IosDevAppTests and ScenarioTests; entry 315 amendment"
   }
  },
  "rules": [
