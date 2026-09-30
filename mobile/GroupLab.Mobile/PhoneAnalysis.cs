@@ -35,6 +35,16 @@ internal static class PhoneAnalysis
 {
     private static IReadOnlyList<TargetDefinition>? library;
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 313 section 1.4: the longest side the phone reads a whole picture's codes at. The iPad mini's reading
+    /// hung on "Reading the sheet's codes". Of 21 real phone pictures measured on the desktop on 2026-09-30 (the Fold 7's sittings), 19 were
+    /// named square on in 0.7 to 1.4 seconds; the other two read nothing square on, nothing in the whole picture at its size, doubled, halved
+    /// or quartered, and were named by their codes cut out and enlarged. Doubling the whole 3266 pixel picture took 11 to 12.5 seconds of
+    /// the 25 to 31 and raised the memory held from 474 to 1495 MB, and named nothing, so the phone does not double it; a picture is read
+    /// at its own size, halved and quartered, then cut out and enlarged, as before.
+    /// </summary>
+    internal const int LongestReadSide = 4096;
+
     internal static string Files => Phone.Platform.FilesFolder;
 
     /// <summary>Where each session's working image lives, one folder a session.</summary>
@@ -206,7 +216,7 @@ internal static class PhoneAnalysis
         session.SetCalibre(setup.Calibre);
         session.SetShotDistance(setup.DistanceInches);
 
-        var identity = chosen is null ? SheetIdentification.Identify(grey, Library(), backend, trace, token) : null;
+        var identity = chosen is null ? SheetIdentification.Identify(grey, Library(), backend, trace, token, LongestReadSide) : null;
         var definition = chosen ?? identity!.Definition;
         int codesRead = identity?.CodesRead ?? 0;
         if (definition is null)
