@@ -142,7 +142,8 @@ jobs:
   portable:
     name: ${{ matrix.target.label }} package
     runs-on: ${{ matrix.target.os }}
-    timeout-minutes: 60
+    # 90, not 60: Apple's notarization of the Mac build can take most of an hour on a slow day.
+    timeout-minutes: 90
     continue-on-error: ${{ matrix.target.optional }}
     strategy:
       fail-fast: false
@@ -267,9 +268,22 @@ jobs:
           xcrun notarytool submit "$RUNNER_TEMP/GroupLab-notarize.zip" --key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID" \
             --team-id "$APPLE_TEAM_ID" --wait --timeout 45m 2>&1 | tee notarize.log
           set -e
-          if ! grep -q "status: Accepted" notarize.log; then
-            id=$(grep -m1 -oE "id: [0-9a-f-]{36}" notarize.log | cut -d' ' -f2 || true)
-            if [ -n "$id" ]; then
+          id=$(grep -m1 -oE "id: [0-9a-f-]{36}" notarize.log | cut -d' ' -f2 || true)
+          status=$(grep -oE "status: (Accepted|Invalid|Rejected)" notarize.log | tail -1 | cut -d' ' -f2 || true)
+          # --wait gives up on the first status request that fails while Apple is still working: the first run by hand stopped on "The
+          # request timed out" with the submission in progress. So where it ended with no answer, ask again every 30 seconds, a failed
+          # request simply retried, until Apple answers or 45 minutes pass.
+          if [ -z "$status" ] && [ -n "$id" ]; then
+            for _ in $(seq 90); do
+              status=$(xcrun notarytool info "$id" --key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID" --team-id "$APPLE_TEAM_ID" \
+                --output-format json 2>/dev/null | python3 -c 'import json, sys; print(json.load(sys.stdin).get("status", ""))' 2>/dev/null || true)
+              echo "Notarization: ${status:-no answer to this request}"
+              case "$status" in Accepted|Invalid|Rejected) break ;; esac
+              sleep 30
+            done
+          fi
+          if [ "$status" != "Accepted" ]; then
+            if [ -n "$id" ] && [ -n "$status" ]; then
               xcrun notarytool log "$id" --key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID" --team-id "$APPLE_TEAM_ID" \
                 notarize-issues.json > /dev/null 2>&1 || true
               python3 -c 'import json; [print("::error::" + str(i.get("path")) + ": " + str(i.get("message"))) for i in (json.load(open("notarize-issues.json")).get("issues") or [])[:40]]' || true
