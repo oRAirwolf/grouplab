@@ -50,6 +50,7 @@ internal static class ParityTour
 
         // From the places along the bottom.
         checks.Add(await Compare());
+        checks.Add(await CompareGroups());
         checks.Add(await Optic());
         checks.Add(await LibrarySheet("zero-grids", "GroupLab Zeroing Grid, MOA at 100 yd", null));
         checks.Add(await LibrarySheet("e-bull", "GroupLab 5x5 Load Development, E Bull, Letter", null));
@@ -322,6 +323,94 @@ internal static class ParityTour
         }
 
         return await Seen(check, () => Has<ComparePage>(), "two sessions compared");
+    });
+
+    /// <summary>
+    /// Entry 301: two saved sessions of different loads compared, and Compare draws each load's group, holes and all. The newest session with
+    /// enough shots is saved again under two loads, the two are ticked by their names in Compare loads, and the card of groups is read.
+    /// </summary>
+    private static Task<SelfTestCheck> CompareGroups() => Guard("compare groups", async check =>
+    {
+        string[] loads = ["Self-test load A", "Self-test load B"];
+        int least = GroupLab.Core.Statistics.LoadComparison.MinimumShots;
+        bool saved = await Task.Run(() =>
+        {
+            var store = PhoneAnalysis.Store();
+            if (store.List().FirstOrDefault(s => s.ShotCount >= least) is not { } newest || store.Get(newest.Id) is not { } record)
+            {
+                return false;
+            }
+
+            string now = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", System.Globalization.CultureInfo.InvariantCulture);
+            foreach (string load in loads)
+            {
+                store.Save(record with { Id = 0, Load = load, CreatedUtc = now });
+            }
+
+            return true;
+        });
+        if (!saved)
+        {
+            check.Detail = "no saved session had the shots to save again under two loads";
+            return check;
+        }
+
+        await SelfTest.OnUi(() => Shell.Current!.Show(Shell.Place.Sessions));
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        string? missing = await SelfTest.OnUi(() =>
+        {
+            if (ButtonOf(Shell.Current!, "Compare loads") is not { } compare)
+            {
+                return "Compare loads";
+            }
+
+            Press(compare);
+            int ticked = 0;
+            foreach (var box in Shell.Current!.GetLogicalDescendants().OfType<CheckBox>().ToList())
+            {
+                string? name = box.GetLogicalDescendants().OfType<TextBlock>().FirstOrDefault()?.Text;
+                box.IsChecked = name is not null && loads.Any(l => name.StartsWith(l, StringComparison.Ordinal));
+                ticked += box.IsChecked == true ? 1 : 0;
+            }
+
+            if (ticked != loads.Length)
+            {
+                return "a session of each load";
+            }
+
+            if (ButtonOf(Shell.Current!, "Compare") is not { IsEnabled: true } go)
+            {
+                return "an enabled Compare";
+            }
+
+            Press(go);
+            return null;
+        });
+        if (missing is not null)
+        {
+            check.Detail = $"\"{missing}\" was not found";
+            return check;
+        }
+
+        bool drawn = await SelfTest.WaitFor(() => SelfTest.Find<ComparePage>()?.Groups is { IsEffectivelyVisible: true, Plots: { Count: > 0 } plots }
+            && plots.All(p => p.Bounds.Width > 0), TimeSpan.FromSeconds(15));
+        var groups = await SelfTest.OnUi<List<(string Name, int Holes)>>(() =>
+        {
+            var card = SelfTest.Find<ComparePage>()?.Groups;
+            card?.BringIntoView();
+            return card is null || card.Stacked ? [] : [.. card.Plots.SelectMany(p => p.Show).Select(s => (s.Group.Name, s.Group.Offsets.Count))];
+        });
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        bool taken = await SelfTest.Photographed("97-compare-groups");
+        check.Numbers["loads"] = groups.Count;
+        check.Numbers["holes"] = groups.Sum(g => g.Holes);
+        check.Passed = drawn && groups.Count == loads.Length && groups.Select(g => g.Name).Order(StringComparer.Ordinal).SequenceEqual(loads)
+            && groups.All(g => g.Holes >= least);
+        check.Detail = drawn
+            ? $"Compare drew {groups.Count} loads' groups side by side ({string.Join("; ", groups.Select(g => $"{g.Name}, {g.Holes} holes"))}), "
+                + (taken ? "photographed" : "not photographed")
+            : "Compare did not draw each load's group";
+        return check;
     });
 
     /// <summary>Targets, Made for your optic: 100 yards at 10 power makes a sheet to print or share.</summary>

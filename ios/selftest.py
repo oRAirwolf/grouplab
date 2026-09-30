@@ -10,6 +10,7 @@ when there is one, and fails when:
 - a check on the simulator failed (a skipped one, where this build had no OpenCV, is a notice and not a failure);
 - a number both measured differs by more than the tolerance below, or the shots found differ in number, bull or place;
 - a place along the bottom was not photographed, where --screens names the folder the screenshots went to;
+- where the tour ran, Compare did not draw a group for each of two loads with its holes, or was not photographed (entry 301);
 - the idle screen's screenshot is not black from edge to edge (entry 290 section 2 item 6): behind the status bar and the home indicator
   too, allowing iOS's own clock, battery and indicator drawn over it.
 
@@ -156,6 +157,18 @@ def main(argv: list[str]) -> int:
         b = names["sample pipeline"]["numbers"].get("meanRadius")
         if a is not None and b is not None and not close(a, b):
             failures.append(f"the chosen picture's saved mean radius {a} is not the pipeline's {b}")
+
+    # Entry 301: where the tour ran, Compare drew each of two loads' groups with its holes, and was photographed.
+    if ios.get("opencv"):
+        groups = names.get("compare groups")
+        if groups is None:
+            failures.append("Compare's drawn groups were not checked")
+        elif groups["numbers"].get("loads", 0) < 2 or groups["numbers"].get("holes", 0) < 6:
+            failures.append(f"Compare drew {groups['numbers'].get('loads', 0)} loads' groups with {groups['numbers'].get('holes', 0)} holes, not two with three or more each")
+        else:
+            print(f"compare groups: {groups['detail']}")
+        if screens is not None and not (screens / "97-compare-groups.png").exists():
+            failures.append("no screenshot of Compare's drawn groups")
 
     if screens is not None:
         taken = sorted(p.name for p in screens.glob("*.png"))
