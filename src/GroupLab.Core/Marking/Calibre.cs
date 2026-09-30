@@ -97,6 +97,13 @@ public sealed partial record Calibre(string Name, double DiameterInches)
             return Of(family.Diameter);
         }
 
+        // Entry 314 section 2: a cartridge's name typed in full, as the lookup lists it, where the confirmed table does not have it. A number
+        // with its unit is never a name here, so "7.62 mm" is still refused as a designation rather than read as a cartridge.
+        if (!Inches().IsMatch(typed) && !Millimetres().IsMatch(typed) && CartridgeLookup.Exact(typed) is { } row)
+        {
+            return Of(row.DiameterInches);
+        }
+
         double inches;
         if (Inches().Match(typed) is { Success: true } i)
         {

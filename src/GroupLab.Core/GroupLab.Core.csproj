@@ -5,6 +5,8 @@
     <EmbeddedResource Include="Statistics\RangeStatistics.csv" LogicalName="GroupLab.Core.Statistics.RangeStatistics.csv" />
     <EmbeddedResource Include="..\..\docs\VOLUNTEER-PACK.md" LogicalName="GroupLab.Core.Reporting.VolunteerPack.md" />
     <EmbeddedResource Include="Marking\cartridges.json" LogicalName="GroupLab.Core.Marking.cartridges.json" />
+    <!-- NOTES-FROM-PLANNING.md entry 314 section 2: every cartridge, its aliases, diameter, tier and precision flag, for the caliber box. -->
+    <EmbeddedResource Include="Data\cartridges.csv" LogicalName="GroupLab.Core.Data.cartridges.csv" />
     <EmbeddedResource Include="Rendering\Glyphs\SheetSans.glyphs" LogicalName="GroupLab.Core.Rendering.SheetSans.glyphs" />
     <EmbeddedResource Include="Rendering\Glyphs\SheetSansBold.glyphs" LogicalName="GroupLab.Core.Rendering.SheetSansBold.glyphs" />
     <EmbeddedResource Include="Marking\glossary.json" LogicalName="GroupLab.Core.Marking.glossary.json" />

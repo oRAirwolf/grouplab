@@ -214,6 +214,20 @@ public sealed class AppSettingsStore(string path)
 
     public bool SaveShowWork(bool shown) => Save(file => file["showWork"] = shown);
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 314 section 1: what the caliber box offers, Calibers, Cartridges or Both; Both until one is chosen. One
+    /// setting on the desktop, Android and iOS.
+    /// </summary>
+    public GroupLab.Core.Marking.CaliberList LoadCaliberList() =>
+        Read(file => Enum.TryParse((string?)file["caliberList"], out GroupLab.Core.Marking.CaliberList list) && Enum.IsDefined(list) ? list : GroupLab.Core.Marking.CaliberList.Both);
+
+    public bool SaveCaliberList(GroupLab.Core.Marking.CaliberList list) => Save(file => file["caliberList"] = list.ToString());
+
+    /// <summary>What the setting is called on every platform, and the one line under it.</summary>
+    public const string CaliberListLabel = "Caliber box shows";
+
+    public const string CaliberListSays = "Calibers are bullet diameters, such as .308 (7.62 mm, .30). Cartridges are names, such as 6.5 Creedmoor, each with its diameter. Both shows calibers first, then cartridges as you type.";
+
     /// <summary>NOTES-FROM-PLANNING.md entry 260: the phone's capture mode as last chosen, Manual or Guided; Guided until one is chosen.</summary>
     public bool LoadCaptureManual() => Read(file => file["captureManual"]?.GetValueKind() == JsonValueKind.True);
 

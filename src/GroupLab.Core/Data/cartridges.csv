@@ -1,0 +1,606 @@
+name,aliases,diameter_in,diameter_mm,type,tier,precision,source,note
+.22 Long Rifle,.22 LR;.22 Stinger,.223,5.66,rifle;handgun,1,yes,wikipedia,"rimfire; one cartridge with .22 LR (handgun list, tier 1)"
+.357 Magnum,.357 Mag;9x33mmR;.353 Casull,.357,9.07,handgun,1,yes,wikipedia,silhouette
+.38 Special,.38 Spl;.38 S&W Special;.38 Special Wadcutter;9x29mmR,.357,9.07,handgun,1,yes,wikipedia,
+.380 ACP,.380 Auto;9x17mm;9mm Kurz;9mm Browning Short;9mm Short,.355,9.02,handgun,1,no,wikipedia,
+.40 S&W,.40 Auto;.40 Short;10x22mm;.40 Smith & Wesson,.400,10.16,handgun,1,yes,wikipedia,
+.45 ACP,.45 Auto;.45 Automatic Colt Pistol;11.43x23mm;.45,.452,11.48,handgun,1,yes,wikipedia,the draft gave .451/.452 (11.46/11.48); .452 is SAAMI's maximum
+10mm Auto,10x25mm;10mm Norma;10mm FBI;10mm,.400,10.16,handgun,1,no,wikipedia,
+9mm Luger,9x19mm Parabellum;9mm Parabellum;9x19mm;9mm NATO;9mm,.355,9.02,handgun,1,yes,wikipedia,
+.223 Remington,.223 Rem;5.56x45mm,.224,5.69,rifle;handgun,1,yes,wikipedia,"one cartridge with .223 Remington (handgun list, tier 3)"
+.243 Winchester,.243 Win,.243,6.17,rifle,1,yes,wikipedia,
+.270 Winchester,.270 Win,.277,7.04,rifle,1,no,wikipedia,
+.30-06 Springfield,.30-06;7.62x63mm,.308,7.82,rifle,1,no,wikipedia,
+.30-30 Winchester,.30-30;.30 WCF,.308,7.82,rifle;handgun,1,no,wikipedia,"one cartridge with .30-30 Winchester (handgun list, tier 3)"
+.300 Winchester Magnum,.300 Win Mag;.300 WM,.308,7.82,rifle,1,yes,wikipedia,
+.308 Winchester,.308 Win,.308,7.82,rifle,1,yes,wikipedia,
+5.56x45mm NATO,5.56 NATO;5.56x45;5.56,.224,5.69,rifle,1,yes,added,not on Wikipedia list; tier-1 example
+6.5mm Creedmoor,6.5 Creedmoor;6.5 CM,.264,6.71,rifle,1,yes,wikipedia,
+7.62x39mm,7.62x39;7.62 Soviet,.311,7.90,rifle;handgun,1,no,wikipedia,"one cartridge with 7.62x39mm (handgun list, tier 3)"
+7.62x51mm NATO,7.62 NATO;7.62x51,.308,7.82,rifle,1,yes,wikipedia,
+.17 Hornady Magnum Rimfire,.17 HMR,.172,4.37,rifle;handgun,2,no,wikipedia,"rimfire; one cartridge with .17 HMR (handgun list, tier 2)"
+.22 Winchester Magnum Rimfire,.22 WMR;.22 Magnum;.22 Mag,.224,5.69,rifle;handgun,2,no,wikipedia,"rimfire; one cartridge with .22 WMR (handgun list, tier 2)"
+.25 ACP,.25 Auto;.25 Auto Colt Pistol;6.35mm Browning,.251,6.38,handgun,2,no,wikipedia,
+.30 Super Carry,.30 SC;.30SC,.312,7.92,handgun,2,no,wikipedia,Wikipedia lists .313
+.32 ACP,.32 Auto;.32 Auto Colt Pistol;7.65mm Browning;7.65x17mmSR,.309,7.85,handgun,2,no,wikipedia,
+.327 Federal Magnum,.327 Fed Mag;.327 Magnum,.312,7.92,handgun,2,no,wikipedia,
+.357 SIG,.357 Sig Sauer,.355,9.02,handgun,2,no,wikipedia,
+.38 Super,.38 Super Auto;.38 Super ACP,.356,9.04,handgun,2,yes,wikipedia,
+.41 Magnum,.41 Remington Magnum;.41 Rem Mag,.410,10.41,handgun,2,no,wikipedia,
+.44 Magnum,.44 Remington Magnum;.44 Rem Mag;.44 Mag,.429,10.90,handgun,2,yes,wikipedia,silhouette
+.44 Special,.44 Smith & Wesson Special;.44 S&W Special;.44 Spl,.429,10.90,handgun,2,no,wikipedia,
+.45 Colt,.45 Long Colt;.45 LC,.452,11.48,handgun,2,no,wikipedia,historic .454 per Wikipedia
+.454 Casull,.45 Magnum,.452,11.48,handgun,2,no,wikipedia,
+.460 S&W Magnum,.460 S&W;.460 Smith & Wesson Magnum,.452,11.48,handgun;rifle,2,no,wikipedia,"one cartridge with .460 S&W Magnum (rifle list, tier 3)"
+.500 S&W Magnum,.500 S&W;.500 Smith & Wesson Magnum,.500,12.70,handgun,2,no,wikipedia,
+5.7x28mm,FN 5.7x28mm;5.7mm,.224,5.69,handgun,2,no,wikipedia,
+9mm Makarov,9x18mm Makarov;9x18mm PM;9x18mm,.363,9.22,handgun,2,no,wikipedia,
+.204 Ruger,,.204,5.18,rifle,2,no,wikipedia,
+.22 Hornet,,.224,5.69,rifle;handgun,2,no,wikipedia,"one cartridge with .22 Hornet (handgun list, tier 3)"
+.22-250 Remington,.22-250,.224,5.69,rifle,2,no,wikipedia,
+.25-06 Remington,.25-06,.257,6.53,rifle,2,no,wikipedia,
+.270 Winchester Short Magnum,.270 WSM,.277,7.04,rifle,2,no,wikipedia,
+.280 Remington,7mm Express Remington;.280 Rem,.284,7.21,rifle,2,no,wikipedia,
+.30 Carbine,.30 M1 Carbine;7.62x33mm,.308,7.82,rifle;handgun,2,no,wikipedia,"one cartridge with .30 Carbine (handgun list, tier 3)"
+.300 AAC Blackout,.300 Blackout;.300 BLK;7.62x35mm,.308,7.82,rifle,2,no,wikipedia,"one cartridge with 7.62x35mm (rifle list, tier 2)"
+.300 PRC,.300 Precision Rifle Cartridge,.308,7.82,rifle,2,yes,wikipedia,
+.300 Weatherby Magnum,.300 Wby Mag,.308,7.82,rifle,2,no,wikipedia,
+.300 Winchester Short Magnum,.300 WSM,.308,7.82,rifle,2,yes,wikipedia,
+.338 Lapua Magnum,.338 Lapua;.338 LM;8.6x70mm,.338,8.59,rifle,2,yes,wikipedia,
+.338 Winchester Magnum,.338 Win Mag,.338,8.59,rifle,2,no,wikipedia,
+.350 Legend,,.357,9.07,rifle,2,no,wikipedia,
+.375 H&H Magnum,.375 H&H,.375,9.52,rifle,2,no,wikipedia,
+.45-70,.45-70 Government,.458,11.63,rifle;handgun,2,no,wikipedia,"one cartridge with .45-70 Government (handgun list, tier 3)"
+.450 Bushmaster,,.452,11.48,rifle,2,no,wikipedia,
+6.5 PRC,6.5 Precision Rifle Cartridge,.264,6.71,rifle,2,yes,wikipedia,
+6.5mm Grendel,6.5 Grendel,.264,6.71,rifle,2,no,wikipedia,
+6.5x55mm Swedish,6.5x55;6.5x55 SE;6.5 Swede,.264,6.71,rifle,2,yes,wikipedia,raised to 2 by planning
+6mm ARC,6mm Advanced Rifle Cartridge,.243,6.17,rifle,2,yes,wikipedia,raised to 2 by planning
+6mm Creedmoor,6 Creedmoor;6 CM,.243,6.17,rifle,2,yes,wikipedia,
+7.62x54mmR,7.62x54R,.311,7.90,rifle;handgun,2,no,wikipedia,"one cartridge with 7.62x54mmR (handgun list, tier 3)"
+7mm PRC,7mm Precision Rifle Cartridge,.284,7.21,rifle,2,yes,wikipedia,
+7mm Remington Magnum,7mm Rem Mag,.284,7.21,rifle,2,no,wikipedia,
+7mm-08 Remington,7mm-08,.284,7.21,rifle,2,no,wikipedia,
+.17 Hornady Mach 2,.17 HM2;.17 Mach 2,.172,4.37,rifle;handgun,3,no,wikipedia,"rimfire; one cartridge with .17 HM2 (handgun list, tier 3)"
+.218 Bee,,.224,5.69,handgun;rifle,3,no,wikipedia,"rifle/shotgun cartridge; from 'Other cartridges used in handguns' table; tier reflects handgun use; one cartridge with .218 Bee (rifle list, tier 4)"
+.22 CB Cap,.22 CB,.222,5.64,rifle;handgun,3,no,wikipedia,"rimfire; unsure; one cartridge with .22 CB Cap (handgun list, tier 3)"
+.22 Long,,.223,5.66,handgun;rifle,3,no,wikipedia,"one cartridge with .22 Long (rifle list, tier 4)"
+.22 Short,,.223,5.66,rifle;handgun,3,yes,wikipedia,"rimfire; one cartridge with .22 Short (handgun list, tier 3)"
+.22 TCM,.22 Tuason Craig Micromagnum;.22 TCM 9R,.223,5.66,handgun,3,no,wikipedia,
+.30 Luger,7.65mm Parabellum;7.65x21mm Parabellum;7.65mm Luger,.308,7.82,handgun;rifle,3,no,wikipedia,"one cartridge with 7.65x21mm Parabellum (rifle list, tier 4)"
+.32 H&R Magnum,.32 H&R Mag,.312,7.92,handgun,3,no,wikipedia,unsure
+.32 S&W,.32 S&W Short,.312,7.92,handgun,3,no,wikipedia,
+.32 S&W Long,.32 Colt New Police;.32 Long,.312,7.92,handgun,3,yes,wikipedia,
+.32-20 Winchester,.32 WCF;.32-20;.32-20 Marlin;.32 Colt Lightning,.312,7.92,rifle;handgun,3,no,wikipedia,"one cartridge with .32-20 Winchester (handgun list, tier 3)"
+.38 Long Colt,.38 LC,.357,9.07,handgun,3,no,wikipedia,unsure
+.38 S&W,.38 Colt New Police;.380 Rim;.38 S&W Corto;.380-200 British Service;.38/200,.361,9.17,handgun,3,no,wikipedia,
+.38 Short Colt,.38 SC,.357,9.07,handgun,3,no,wikipedia,
+.38 Super Comp,,.356,9.04,handgun,3,yes,wikipedia,unsure
+.38-40 Winchester,.38-40 WCF;.38-40;.38 WCF,.400,10.16,rifle;handgun,3,no,wikipedia,"unsure; one cartridge with .38-40 Winchester (handgun list, tier 3); the lists gave .400 and .401, and this row keeps .400"
+.410 Bore,.410 Gauge;.410,.410,10.41,handgun,3,no,wikipedia,rifle/shotgun cartridge; from 'Other cartridges used in handguns' table; tier reflects handgun use
+.44 Russian,.44 Smith & Wesson Russian;.44 S&W Russian,.429,10.90,handgun,3,no,wikipedia,
+.44-40 Winchester,.44 WCF;.44-40,.427,10.85,rifle;handgun,3,no,wikipedia,"one cartridge with .44-40 Winchester (handgun list, tier 3); the lists gave .427 and .429, and this row keeps .427"
+.444 Marlin,,.429,10.90,rifle;handgun,3,no,wikipedia,"one cartridge with .444 Marlin (handgun list, tier 3)"
+.45 Auto Rim,.45 Automatic Rimmed;.45 AR,.452,11.48,handgun,3,no,wikipedia,
+.45 GAP,.45 Glock Automatic Pistol;.45 Glock,.452,11.48,handgun,3,no,wikipedia,
+.45 Schofield,.45 Smith & Wesson;.45 S&W Schofield,.454,11.53,handgun,3,no,wikipedia,
+.45 Super,,.451,11.46,handgun,3,no,wikipedia,
+.450 Marlin,,.458,11.63,handgun;rifle,3,no,wikipedia,"rifle/shotgun cartridge; from 'Other cartridges used in handguns' table; tier reflects handgun use; one cartridge with .450 Marlin (rifle list, tier 4)"
+.455 Webley,.455 Revolver;.455 Colt,.455,11.56,handgun;rifle,3,no,wikipedia,"one cartridge with .455 Webley (rifle list, tier 4)"
+.455 Webley Mk II,.455 Webley Revolver Mark 2,.454,11.53,handgun,3,no,wikipedia,
+.458 Winchester Magnum,.458 Win Mag,.458,11.63,rifle;handgun,3,no,wikipedia,"one cartridge with .458 Winchester Magnum (handgun list, tier 3)"
+.460 Rowland,,.451,11.46,handgun;rifle,3,no,wikipedia,"one cartridge with .460 Rowland (rifle list, tier 4); the lists gave .451 and .452, and this row keeps .451"
+.475 Linebaugh,,.475,12.06,handgun,3,no,wikipedia,Wikipedia lists .476
+.480 Ruger,,.475,12.06,handgun,3,no,wikipedia,Wikipedia lists .476
+.50 Action Express,.50 AE,.500,12.70,handgun,3,no,wikipedia,
+.500 Linebaugh,,.510,12.95,handgun,3,no,wikipedia,unsure
+28 Gauge,28 ga,.550,13.97,handgun,3,no,wikipedia,rifle/shotgun cartridge; from 'Other cartridges used in handguns' table; tier reflects handgun use
+4.6x30mm,HK 4.6x30mm;4.6mm HK,.183,4.65,handgun,3,no,wikipedia,
+5.45x39mm,5.45 Soviet,.221,5.61,rifle;handgun,3,no,added,"not on Wikipedia list; unsure; one cartridge with 5.45x39mm (handgun list, tier 3)"
+5mm RMR,5mm Remington Rimfire Magnum,.205,5.21,handgun,3,no,wikipedia,
+7.5 FK,7.5x27mm;7.5 FK Brno,.307,7.80,handgun;rifle,3,no,wikipedia,"one cartridge with 7.5x27mm (rifle list, tier 4); the lists gave .307 and .308, and this row keeps .307"
+7.62mm Nagant,7.62x38mmR;7.62 Nagant,.295,7.49,handgun;rifle,3,no,wikipedia,"one cartridge with 7.62x38mmR (rifle list, tier 4)"
+7.62x25mm Tokarev,7.62mm Tokarev;7.62x25mm;7.62 Tok;7.62 Tokarev,.308,7.82,rifle;handgun,3,no,wikipedia,"pistol/SMG round; one cartridge with 7.62x25mm Tokarev (handgun list, tier 3); the lists gave .307 and .308, and this row keeps .308"
+7.63mm Mauser,7.63x25mm Mauser;.30 Mauser,.308,7.82,handgun;rifle,3,no,wikipedia,"unsure; one cartridge with 7.63x25mm Mauser (rifle list, tier 4)"
+9x21mm IMI,9x21mm;9mm IMI,.355,9.02,handgun,3,yes,wikipedia,IPSC/Europe
+.17 Hornet,,.172,4.37,rifle,3,no,wikipedia,
+.17 Remington,,.172,4.37,rifle,3,no,wikipedia,
+.17 Remington Fireball,,.172,4.37,rifle,3,no,wikipedia,
+.17 Winchester Super Magnum,.17 WSM,.172,4.37,rifle,3,no,wikipedia,rimfire
+.22 ARC,,.224,5.69,rifle,3,yes,wikipedia,
+.22 Creedmoor,,.224,5.69,rifle,3,yes,wikipedia,
+.22 Nosler,,.224,5.69,rifle,3,no,wikipedia,
+.22 PPC,,.224,5.69,rifle,3,yes,wikipedia,unsure
+.22 Winchester Rimfire,.22 WRF,.224,5.69,rifle,3,no,wikipedia,rimfire; unsure
+.220 Russian,5.6x39mm,.224,5.69,rifle,3,no,wikipedia,unsure
+.220 Swift,,.224,5.69,rifle,3,no,wikipedia,
+.221 Remington Fireball,.221 Fireball,.224,5.69,rifle;handgun,3,yes,wikipedia,"one cartridge with .221 Remington Fireball (handgun list, tier 4)"
+.222 Remington,.222 Rem,.224,5.69,rifle,3,yes,wikipedia,
+.224 Valkyrie,,.224,5.69,rifle,3,no,wikipedia,
+.240 Weatherby Magnum,,.243,6.17,rifle,3,no,wikipedia,
+.25-20 Winchester,.25-20 WCF,.257,6.53,rifle,3,no,wikipedia,
+.250 Savage,.250-3000 Savage,.257,6.53,rifle,3,no,wikipedia,"unsure; one cartridge with .250-3000 Savage (rifle list, tier 3)"
+.257 Roberts,.257 Bob,.257,6.53,rifle,3,no,wikipedia,
+.257 Weatherby Magnum,.257 Wby Mag,.257,6.53,rifle,3,no,wikipedia,
+.26 Nosler,,.264,6.71,rifle,3,no,wikipedia,
+.260 Remington,.260 Rem,.264,6.71,rifle,3,yes,wikipedia,
+.264 Winchester Magnum,,.264,6.71,rifle,3,no,wikipedia,
+.270 Weatherby Magnum,.270 Wby Mag,.277,7.04,rifle,3,no,wikipedia,
+.275 Rigby,7x57mm Mauser;7mm Mauser,.284,7.21,rifle,3,no,wikipedia,"one cartridge with 7x57mm Mauser (rifle list, tier 3)"
+.277 FURY,.277 SIG Fury;6.8x51mm,.277,7.04,rifle,3,no,wikipedia,"one cartridge with 6.8x51mm (rifle list, tier 3)"
+.28 Nosler,,.284,7.21,rifle,3,no,wikipedia,
+.280 Ackley Improved,.280 AI,.284,7.21,rifle,3,no,wikipedia,
+.284 Winchester,.284 Win,.284,7.21,rifle,3,yes,wikipedia,
+.30 BR,,.308,7.82,rifle,3,yes,added,benchrest score; unsure
+.30 Nosler,,.308,7.82,rifle,3,no,wikipedia,
+.30-378 Weatherby Magnum,.30-378 Wby,.308,7.82,rifle,3,yes,wikipedia,
+.30-40 Krag,.30 Army,.308,7.82,rifle,3,no,wikipedia,unsure
+.300 H&H Magnum,.300 H&H,.308,7.82,rifle,3,no,wikipedia,
+.300 Norma Magnum,.300 Norma;.300 NM,.308,7.82,rifle,3,yes,wikipedia,
+.300 Remington Short Action Ultra Magnum,.300 RSAUM;.300 SAUM,.308,7.82,rifle,3,yes,wikipedia,unsure
+.300 Remington Ultra Magnum,.300 RUM,.308,7.82,rifle,3,yes,wikipedia,
+.300 Savage,,.308,7.82,rifle,3,no,wikipedia,
+.300 Whisper,,.308,7.82,rifle,3,no,wikipedia,
+.303 British,.303 Brit;7.7x56mmR,.312,7.92,rifle,3,no,wikipedia,
+.32 Winchester Special,.32 Win Special,.321,8.15,rifle,3,no,wikipedia,
+.33 Nosler,,.338,8.59,rifle,3,no,wikipedia,
+.338 Federal,,.338,8.59,rifle,3,no,wikipedia,
+.338 Norma Magnum,.338 Norma;.338 NM,.338,8.59,rifle,3,yes,wikipedia,
+.338 Remington Ultra Magnum,.338 RUM,.338,8.59,rifle,3,no,wikipedia,unsure
+.338-378 Weatherby Magnum,.338-378 Wby,.338,8.59,rifle,3,yes,wikipedia,
+.340 Weatherby Magnum,.340 Wby Mag,.338,8.59,rifle,3,no,wikipedia,
+.35 Remington,.35 Rem,.358,9.09,rifle,3,no,wikipedia,
+.35 Whelen,,.358,9.09,rifle,3,no,wikipedia,
+.360 Buckhammer,,.355,9.02,rifle,3,no,wikipedia,
+.375 CheyTac,,.375,9.52,rifle,3,yes,wikipedia,
+.375 Ruger,,.375,9.52,rifle,3,no,wikipedia,
+.378 Weatherby Magnum,.378 Wby Mag,.375,9.52,rifle,3,no,wikipedia,
+.38-55 Winchester,.38-55,.377,9.58,rifle,3,no,wikipedia,
+.400 Legend,,.400,10.16,rifle,3,no,wikipedia,
+.405 Winchester,,.412,10.46,rifle,3,no,wikipedia,
+.408 CheyTac,,.408,10.36,rifle,3,yes,wikipedia,
+.416 Barrett,,.416,10.57,rifle,3,yes,wikipedia,
+.416 Remington Magnum,,.416,10.57,rifle,3,no,wikipedia,
+.416 Rigby,,.416,10.57,rifle,3,no,wikipedia,
+.458 Lott,,.458,11.63,rifle,3,no,wikipedia,
+.460 Weatherby Magnum,.460 Wby Mag,.458,11.63,rifle,3,no,wikipedia,
+.50 BMG,.50 Browning Machine Gun;12.7x99mm NATO,.510,12.95,rifle,3,yes,wikipedia,"unsure; one cartridge with 12.7x99mm NATO (rifle list, tier 3)"
+6.5-284 Norma,6.5-284,.264,6.71,rifle,3,yes,wikipedia,
+6.5-300 Weatherby Magnum,6.5-300 Wby,.264,6.71,rifle,3,no,wikipedia,
+6.5x47mm Lapua,6.5x47 Lapua;6.5x47,.264,6.71,rifle,3,yes,wikipedia,
+6.8 Western,,.277,7.04,rifle,3,no,wikipedia,
+6.8mm Remington SPC,6.8 SPC,.277,7.04,rifle,3,no,wikipedia,
+6mm BR Remington,6mm BR;6mm BR Norma;6 BR,.243,6.17,rifle,3,yes,wikipedia,6mm BR Norma is the modern CIP variant
+6mm Dasher,6 Dasher,.243,6.17,rifle,3,yes,added,wildcat; PRS/benchrest
+6mm GT,6 GT,.243,6.17,rifle,3,yes,added,unsure
+6mm PPC,6 PPC;6mm PPC-USA,.243,6.17,rifle,3,yes,wikipedia,
+6mm Remington,.244 Remington,.243,6.17,rifle,3,no,wikipedia,"one cartridge with .244 Remington (rifle list, tier 4)"
+6mm XC,6XC,.243,6.17,rifle,3,yes,wikipedia,
+7.5x55mm Swiss,GP11;7.5 Swiss,.308,7.82,rifle,3,no,wikipedia,
+7.62x53mmR,7.62x53R,.310,7.87,rifle,3,no,wikipedia,unsure
+7.92x57mm Mauser,8mm Mauser;8x57mm IS;8x57,.323,8.20,rifle,3,no,wikipedia,
+7mm Backcountry,,.284,7.21,rifle,3,no,wikipedia,unsure
+7mm Remington Short Action Ultra Magnum,7mm RSAUM;7mm SAUM;7 SAUM,.284,7.21,rifle,3,yes,wikipedia,unsure
+7mm Remington Ultra Magnum,7mm RUM,.284,7.21,rifle,3,yes,wikipedia,
+7mm Shooting Times Westerner,7mm STW,.284,7.21,rifle,3,no,wikipedia,unsure
+7mm Weatherby Magnum,7mm Wby Mag,.284,7.21,rifle,3,no,wikipedia,
+7mm Winchester Short Magnum,7mm WSM,.284,7.21,rifle,3,no,wikipedia,
+7x64mm Brenneke,7x64,.284,7.21,rifle,3,no,wikipedia,
+9.3x62mm,,.366,9.30,rifle,3,no,wikipedia,
+.17-357 RG,.17 Real Guns,.172,4.37,handgun,4,no,wikipedia,
+.22 BB Cap,.22 BB,.222,5.64,rifle;handgun,4,no,wikipedia,"rimfire; one cartridge with .22 BB Cap (handgun list, tier 4)"
+.22 Reed Express,,.223,5.66,handgun,4,no,wikipedia,
+.22 Remington Jet,.22 Jet,.222,5.64,rifle;handgun,4,no,wikipedia,"one cartridge with .22 Remington Jet (handgun list, tier 4); the lists gave .222 and .223, and this row keeps .222"
+.224 Boz,,.224,5.69,rifle;handgun,4,no,wikipedia,"one cartridge with .224 BOZ (handgun list, tier 4)"
+.224 Kay-Chuk,.224 Harvey Kay-Chuk,.224,5.69,handgun,4,no,wikipedia,
+.224 Montgomery,,.224,5.69,handgun,4,no,wikipedia,
+.224-32 FA,,.224,5.69,handgun,4,no,wikipedia,
+.25 NAA,,.251,6.38,handgun,4,no,wikipedia,
+.256 Winchester Magnum,,.257,6.53,rifle;handgun,4,no,wikipedia,"one cartridge with .256 Winchester Magnum (handgun list, tier 4)"
+.30 Wildey Magnum,.30 Wildey,.309,7.85,handgun,4,no,wikipedia,
+.32 Colt,,.299,7.59,handgun,4,no,wikipedia,
+.32 Long Colt,.32 LC,.312,7.92,handgun,4,no,wikipedia,unsure
+.32 NAA,,.312,7.92,handgun,4,no,wikipedia,unsure
+.32 Protector,,.300,7.62,handgun,4,no,wikipedia,
+.32 Short Colt,.32 SC,.312,7.92,handgun,4,no,wikipedia,
+.320 Revolver,.320 European;.320 Bulldog;.320 Webley,.317,8.05,handgun,4,no,wikipedia,
+.35 S&W Auto,.35 Auto,.309,7.85,handgun,4,no,wikipedia,
+.356 TSW,9x21.5mm,.355,9.02,handgun,4,no,wikipedia,
+.357 AutoMag,.357 AMP,.357,9.07,handgun,4,no,wikipedia,
+.357 Maximum,.357 Remington Maximum;.357 Max,.357,9.07,handgun,4,yes,wikipedia,unsure; silhouette
+.357 SuperMag,,.357,9.07,handgun,4,no,wikipedia,
+.357 Wildey Magnum,.357 Peterbuilt,.357,9.07,handgun,4,no,wikipedia,
+.357-45 GWM,.357/45 Grizzly Winchester Magnum,.357,9.07,handgun,4,no,wikipedia,
+.357/44 Bain & Davis,,.357,9.07,handgun,4,no,wikipedia,
+.360 Dan Wesson,.360 DW;9x36R,.357,9.07,handgun,4,no,wikipedia,
+.375 SuperMag,,.375,9.52,handgun,4,no,wikipedia,
+.375 Winchester,,.375,9.52,rifle;handgun,4,no,wikipedia,"one cartridge with .375 Winchester (handgun list, tier 4)"
+.38 ACP,.38 Auto;9x23mmSR,.358,9.09,handgun,4,no,wikipedia,
+.38 AMU,.38 Army Marksmanship Unit,.357,9.07,handgun,4,yes,wikipedia,
+.38 Casull,,.356,9.04,handgun,4,no,wikipedia,
+.38 rimfire,.38 RF;.38 Hopkins & Allen,.375,9.52,rifle;handgun,4,no,wikipedia,"rimfire; diameter approximate; one cartridge with .38 Rimfire (handgun list, tier 4); the lists gave .356 and .375, and this row keeps .375"
+.38-45 Auto,.45-38 Auto Pistol;.38-45 Clerke;.38-45 Hard Head,.355,9.02,handgun,4,no,wikipedia,
+.380 Long,.380 Revolver Long,.375,9.52,rifle;handgun,4,no,wikipedia,"diameter approximate; one cartridge with .380 Revolver Long (handgun list, tier 4)"
+.380 Revolver Short,.380 Short,.375,9.52,handgun,4,no,wikipedia,
+.40 G&A,,.400,10.16,handgun,4,no,wikipedia,
+.40 Super,,.400,10.16,handgun,4,no,wikipedia,
+.400 Corbon,,.400,10.16,rifle;handgun,4,no,wikipedia,"one cartridge with .400 Cor-Bon (handgun list, tier 4); the lists gave .400 and .401, and this row keeps .400"
+.401 Powermag,.401 Herter's Powermag,.401,10.19,handgun,4,no,wikipedia,
+.41 Action Express,.41 AE,.410,10.41,handgun,4,no,wikipedia,
+.41 Avenger,,.410,10.41,handgun,4,no,wikipedia,
+.41 Long Colt,,.401,10.19,handgun,4,no,wikipedia,unsure; smokeless inside-lubricated variant .386
+.41 Short Colt,,.402,10.21,handgun,4,no,wikipedia,
+.41 Short Rimfire,.41 Short,.405,10.29,rifle;handgun,4,no,wikipedia,"rimfire; diameter approximate; one cartridge with .41 Short Rimfire (handgun list, tier 4)"
+.41 Special,,.410,10.41,handgun,4,no,wikipedia,unsure
+.41 Wildey Magnum,10mm Wildey Magnum,.410,10.41,handgun,4,no,wikipedia,
+.414 SuperMag,,.410,10.41,handgun,4,no,wikipedia,
+.429 DE,.429 Desert Eagle,.429,10.90,handgun,4,no,wikipedia,
+.44 AutoMag,.44 AMP,.429,10.90,handgun,4,no,wikipedia,
+.44 Bull Dog,,.440,11.18,handgun,4,no,wikipedia,
+.44 Colt,,.443,11.25,handgun,4,no,wikipedia,
+.44 S&W American,.44 Smith & Wesson American,.434,11.02,handgun,4,no,wikipedia,
+.44 Wildey Magnum,11mm Wildey Magnum,.429,10.90,handgun,4,no,wikipedia,
+.440 Cor-Bon,,.429,10.90,handgun,4,no,wikipedia,
+.442 Webley,.442 Revolver Centre Fire;.442 Kurz;.44 Webley;.442 RIC;10.5x17mmR,.436,11.07,handgun,4,no,wikipedia,
+.445 SuperMag,,.432,10.97,handgun,4,no,wikipedia,
+.45 Colt Government,.45 Colt Short,.454,11.53,handgun,4,no,wikipedia,
+.45 HP,.45 Hirtenberger Patrone;.45 Automatic Short;.45 Italian,.452,11.48,handgun,4,no,wikipedia,
+.45 Mars Long,,.449,11.40,handgun,4,no,wikipedia,
+.45 Mars Short,,.447,11.35,handgun,4,no,wikipedia,
+.45 Wildey Magnum,,.452,11.48,handgun,4,no,wikipedia,
+.45 Winchester Magnum,.45 Win Mag;.45 NAACO,.451,11.46,handgun,4,no,wikipedia,
+.450 Adams,.450 Boxer;.450 Revolver;.450 Short;.450 Corto,.455,11.56,handgun,4,no,wikipedia,
+.450 Magnum Express,,.451,11.46,handgun,4,no,wikipedia,
+.450 SMC,.450 Short Magnum Cartridge;.450 Triton,.451,11.46,handgun,4,no,wikipedia,
+.451 Detonics Magnum,.451 Detonics,.452,11.48,handgun,4,no,wikipedia,
+.455 SuperMag,,.451,11.46,handgun,4,no,wikipedia,
+.455 Webley Auto,.455 Webley Self-Loading,.455,11.56,handgun,4,no,wikipedia,
+.455 Webley Mk I,.455 Webley Revolver Mark 1,.454,11.53,handgun,4,no,wikipedia,
+.458 Devastator,,.458,11.63,handgun,4,no,wikipedia,
+.458 Maximum,,.458,11.63,handgun,4,no,wikipedia,
+.475 Linebaugh Long,.475 Maximum,.475,12.06,handgun,4,no,wikipedia,
+.475 Wildey Magnum,,.475,12.06,handgun,4,no,wikipedia,
+.476 Enfield,.476 Eley;.476 Revolver;.455/476,.476,12.09,rifle;handgun,4,no,wikipedia,"one cartridge with .476 Enfield (handgun list, tier 4); the lists gave .472 and .476, and this row keeps .476"
+.50 GI,,.500,12.70,handgun,4,no,wikipedia,unsure
+.50 Remington Navy,,.508,12.90,rifle;handgun,4,no,wikipedia,"diameter approximate; one cartridge with .50 Remington Navy (handgun list, tier 4)"
+.50 Special,.50 Bowen Special,.511,12.98,handgun,4,no,wikipedia,
+.50-70 Government,.50-70,.515,13.08,rifle;handgun,4,no,wikipedia,"one cartridge with .50-70 Government (handgun list, tier 4)"
+.500 Bushwhacker,,.500,12.70,rifle;handgun,4,no,wikipedia,"one cartridge with .500 Bushwhacker (handgun list, tier 4)"
+.500 JRH,,.500,12.70,handgun,4,no,wikipedia,unsure
+.500 Linebaugh Long,.500 Maximum,.510,12.95,handgun,4,no,wikipedia,
+.500 S&W Special,,.500,12.70,handgun,4,no,wikipedia,unsure
+.500 Tranter,,.513,13.03,handgun,4,no,wikipedia,
+.500 Wyoming Express,.500 WE,.500,12.70,rifle;handgun,4,no,wikipedia,"one cartridge with .500 Wyoming Express (handgun list, tier 4)"
+.505 SuperMag,.510 SuperMag,.510,12.95,handgun,4,no,wikipedia,
+.577 Boxer,.577 Eley;.577 Webley,.594,15.09,handgun,4,no,wikipedia,
+.600 Nitro Express,.600 NE,.620,15.75,rifle;handgun,4,no,wikipedia,"one cartridge with .600 Nitro Express (handgun list, tier 4)"
+10.35mm Italian,10.4mm Italian;10.4mm Italian Ordnance;10.35mm,.422,10.72,handgun,4,no,wikipedia,
+10.4mm Swiss,10.4mm Swiss Centerfire;1878 Swiss Ordnance,.424,10.77,handgun,4,no,wikipedia,
+10mm Magnum,,.400,10.16,handgun,4,no,wikipedia,
+11.35mm Schouboe,11.35x18mm SR;.45 Schouboe,.446,11.33,handgun,4,no,wikipedia,
+11.3x36mmR,11mm Gasser;11mm Montenegrin;11.25x36mm Montenegrin,.445,11.30,rifle;handgun,4,no,wikipedia,"diameter approximate; one cartridge with 11.3x36mmR (handgun list, tier 4)"
+11mm French Ordnance,11mm MAS;11mm 1873 French,.451,11.46,handgun,4,no,wikipedia,
+11mm German Service,10.6mm German Service;10.8mm German Service,.451,11.46,handgun,4,no,wikipedia,
+12.3x22mmR,12.3x22 SP,.501,12.73,handgun,4,no,wikipedia,
+12.3x40mmR,12.3x40 SP;STs-110,.501,12.73,handgun,4,no,wikipedia,
+12.3x50mmR,12.3x50 SP,.501,12.73,handgun,4,no,wikipedia,
+12.7x55mm STs-130,12.7x55 PS-12,.511,12.98,handgun,4,no,wikipedia,rifle/shotgun cartridge; from 'Other cartridges used in handguns' table; tier reflects handgun use
+13mm Gyrojet,,.510,12.95,handgun,4,no,wikipedia,
+2.34mm Rimfire,2.34mm Swiss Mini Gun,.092,2.34,handgun,4,no,wikipedia,
+2.7mm Kolibri,2mm Kolibri;2.7x9mm,.107,2.72,handgun,4,no,wikipedia,
+3mm Kolibri,,.120,3.05,handgun,4,no,wikipedia,
+4.25mm Liliput,4.25mm Erika,.167,4.24,handgun,4,no,wikipedia,
+5.45x18mm,5.45x18mm Soviet;5.45mm PSM;5.45x18mm MPTs,.210,5.33,handgun,4,no,wikipedia,unsure
+5.5mm Velo-Dog,5.75mm Velo Dog,.225,5.71,handgun,4,no,wikipedia,
+5.8x21mm DAP92,5.8x21mm,.230,5.84,handgun,4,no,wikipedia,
+5mm Bergmann,5mm Bergmann Rimless,.203,5.16,handgun,4,no,wikipedia,
+5mm Clement,5mm Clement Auto,.202,5.13,handgun,4,no,wikipedia,
+6.5mm Bergmann,,.264,6.71,handgun,4,no,wikipedia,
+7.25mm Adler,7.25 Adler,.279,7.09,handgun,4,no,wikipedia,
+7.5mm Nagant,7.5mm Swedish Nagant,.325,8.25,handgun,4,no,wikipedia,
+7.5mm Swiss Army Revolver,7.5mm 1882 Ordnance,.317,8.05,handgun,4,no,wikipedia,
+7.62x17mm Type 64,7.62mm Chinese,.309,7.85,handgun,4,no,wikipedia,
+7.62x42mm SP-4,SP-4,.307,7.80,handgun,4,no,wikipedia,
+7.65x25mm Borchardt,7.65mm Borchardt;.30 Borchardt,.308,7.82,rifle;handgun,4,no,wikipedia,"one cartridge with 7.65mm Borchardt (handgun list, tier 4); the lists gave .307 and .308, and this row keeps .308"
+7.65mm Frommer,,.301,7.65,handgun,4,no,wikipedia,
+7.65mm Longue,7.65mm MAS;7.65x20mm,.309,7.85,handgun,4,no,wikipedia,
+7.65mm Mannlicher,7.63mm Mannlicher;7.65x21mm Mannlicher,.308,7.82,handgun,4,no,wikipedia,
+7.65mm Roth-Sauer,,.301,7.65,handgun,4,no,wikipedia,
+7.7mm Bittner,,.308,7.82,handgun,4,no,wikipedia,
+7.92x24mm VBR,,.312,7.92,handgun,4,no,wikipedia,
+7mm Nambu,7x20mm,.280,7.11,handgun,4,no,wikipedia,
+7mm Penna,,.277,7.04,handgun,4,no,wikipedia,
+8.5mm Mars,,.331,8.41,handgun,4,no,wikipedia,
+8mm Lebel Revolver,8mm French Ordnance;8mm 1892 Ordnance,.329,8.36,handgun,4,no,wikipedia,
+8mm Nambu,8x22mm Nambu,.320,8.13,handgun,4,no,wikipedia,
+8mm Pieper,8x37mmR Pieper,.286,7.26,handgun,4,no,wikipedia,
+8mm Rast & Gasser,8mm Gasser,.320,8.13,handgun,4,no,wikipedia,
+8mm Roth-Steyr,8x19mm Roth-Steyr,.329,8.36,handgun,4,no,wikipedia,
+9.1x17R,9mm Portuguese;9.1 Abadie Revolver,.365,9.27,handgun,4,no,wikipedia,
+9.4mm Dutch El Revolver,9.4x27mm Dutch,.380,9.65,handgun,4,no,wikipedia,
+9.4mm Dutch Revolver,9.4x21mm Dutch,.380,9.65,handgun,4,no,wikipedia,
+9.8mm Auto Colt,9.65mm Browning Automatic,.378,9.60,handgun,4,no,wikipedia,
+9mm Action Express,9mm AE,.355,9.02,handgun,4,no,wikipedia,
+9mm Browning Long,9x20mmSR,.355,9.02,handgun,4,no,wikipedia,
+9mm Federal,9x19mmR,.355,9.02,handgun,4,no,wikipedia,
+9mm Glisenti,9x19mm Glisenti,.355,9.02,handgun,4,no,wikipedia,
+9mm Japanese Revolver,9x22mmR Type 26,.351,8.92,handgun,4,no,wikipedia,
+9x23mm Largo,9mm Largo;9mm Bergmann-Bayard;9mm Bayard Long,.355,9.02,rifle;handgun,4,no,wikipedia,"one cartridge with 9mm Largo (handgun list, tier 4)"
+9mm Mars,,.360,9.14,handgun,4,no,wikipedia,
+9mm Steyr,9x23mm Steyr,.355,9.02,handgun,4,no,wikipedia,
+9mm Ultra,9mm Police;9x18mm Ultra,.355,9.02,handgun,4,no,wikipedia,
+9mm Winchester Magnum,9mm Win Mag,.355,9.02,handgun,4,no,wikipedia,
+9x21mm Gyurza,9x21mm Russian;SP-10,.355,9.02,rifle;handgun,4,no,wikipedia,"one cartridge with 9x21mm Gyurza (handgun list, tier 4)"
+9x23mm Winchester,9x23 Win,.356,9.04,handgun,4,no,wikipedia,unsure
+9x25mm Dillon,,.355,9.02,handgun,4,no,wikipedia,unsure
+9x25mm Mauser,9x25mm Mauser Export,.355,9.02,handgun,4,no,wikipedia,
+.14-222,,.144,3.66,rifle,4,no,wikipedia,
+.17 Ackley Bee,,.172,4.37,rifle,4,no,wikipedia,
+.17 Mach IV,,.172,4.37,rifle,4,no,wikipedia,
+.17 Munisalva,,.172,4.37,rifle,4,no,wikipedia,rimfire
+.17 PMC/Aguila,.17 Aguila,.172,4.37,rifle,4,no,wikipedia,rimfire
+.17-223,,.172,4.37,rifle,4,no,wikipedia,
+.19 Badger,,.198,5.03,rifle,4,no,wikipedia,
+.19 Calhoon Hornet,,.198,5.03,rifle,4,no,wikipedia,
+.19-223,,.198,5.03,rifle,4,no,wikipedia,
+.20 BR,,.204,5.18,rifle,4,no,wikipedia,
+.20 Tactical,,.204,5.18,rifle,4,no,wikipedia,
+.20 VarTarg,,.204,5.18,rifle,4,no,wikipedia,
+.219 Donaldson Wasp,,.224,5.69,rifle,4,no,wikipedia,
+.219 Zipper,,.224,5.69,rifle,4,no,wikipedia,
+.22 Accelerator,Remington Accelerator,.224,5.69,rifle,4,no,wikipedia,sabot load
+.22 BR Remington,.22 BR,.224,5.69,rifle,4,yes,wikipedia,
+.22 CHeetah,,.224,5.69,rifle,4,no,wikipedia,
+.22 Eargesplitten Loudenboomer,,.224,5.69,rifle,4,no,wikipedia,
+.22 Extra Long,,.223,5.66,rifle,4,no,wikipedia,rimfire
+.22 GT,,.224,5.69,rifle,4,yes,added,wildcat; unsure
+.22 ILARCO,,.224,5.69,rifle,4,no,wikipedia,rimfire
+.22 Remington Automatic,,.223,5.66,rifle,4,no,wikipedia,rimfire
+.22 Savage Hi-Power,5.6x52mmR,.227,5.77,rifle,4,no,wikipedia,
+.22 Spitfire,5.7mm MMJ,.224,5.69,rifle,4,no,wikipedia,
+.22 WCF,.22 Winchester Centerfire,.228,5.79,rifle,4,no,wikipedia,
+.22 Winchester Automatic,,.223,5.66,rifle,4,no,wikipedia,rimfire
+.220 Rook,,.222,5.64,rifle,4,no,wikipedia,
+.222 Remington Magnum,,.224,5.69,rifle,4,no,wikipedia,
+.222 Rimmed,,.224,5.69,rifle,4,no,wikipedia,
+.223 Winchester Super Short Magnum,.223 WSSM,.224,5.69,rifle,4,no,wikipedia,
+.224 Weatherby Magnum,,.224,5.69,rifle,4,no,wikipedia,
+.225 Winchester,,.224,5.69,rifle,4,no,wikipedia,
+.240 Apex,.240 Belted Rimless Nitro Express;.240 Holland & Holland,.245,6.22,rifle,4,no,wikipedia,
+.242 Rimless Nitro Express,,.249,6.32,rifle,4,no,wikipedia,diameter approximate
+.243 Winchester Super Short Magnum,.243 WSSM,.243,6.17,rifle,4,no,wikipedia,
+.244 H&H Magnum,,.244,6.20,rifle,4,no,wikipedia,
+.246 Purdey,,.253,6.43,rifle,4,no,wikipedia,diameter approximate
+.25 Creedmoor,,.257,6.53,rifle,4,yes,added,wildcat; unsure
+.25 Remington,,.257,6.53,rifle,4,no,wikipedia,
+.25 Short,,.251,6.38,rifle,4,no,wikipedia,rimfire; diameter approximate
+.25 Stevens,,.251,6.38,rifle,4,no,wikipedia,rimfire; diameter approximate
+.25 Stevens Short,,.251,6.38,rifle,4,no,wikipedia,rimfire; diameter approximate
+.25 Winchester Super Short Magnum,.25 WSSM,.257,6.53,rifle,4,no,wikipedia,
+.25-21 Stevens,,.257,6.53,rifle,4,no,wikipedia,
+.25-25 Stevens,,.257,6.53,rifle,4,no,wikipedia,
+.25-35 Winchester,.25-35 WCF,.257,6.53,rifle,4,no,wikipedia,
+.25-45 Sharps,,.257,6.53,rifle,4,no,wikipedia,
+.255 Jeffery Rook,,.255,6.48,rifle,4,no,wikipedia,diameter approximate
+.256 Gibbs Magnum,,.264,6.71,rifle,4,no,wikipedia,
+.256 Newton,,.264,6.71,rifle,4,no,wikipedia,
+.264 LBC-AR,,.264,6.71,rifle,4,no,wikipedia,
+.275 H&H Magnum,,.284,7.21,rifle,4,no,wikipedia,
+.275 No 2 Magnum,,.284,7.21,rifle,4,no,wikipedia,
+.276 Enfield,,.282,7.16,rifle,4,no,wikipedia,
+.276 Pedersen,,.284,7.21,rifle,4,no,wikipedia,
+.277 Wolverine,,.277,7.04,rifle,4,no,wikipedia,
+.280 British,,.284,7.21,rifle,4,no,wikipedia,
+.280 Flanged,,.287,7.29,rifle,4,no,wikipedia,diameter approximate
+.280 Jeffery,,.288,7.32,rifle,4,no,wikipedia,
+.280 Ross,,.287,7.29,rifle,4,no,wikipedia,
+.284 Shehane,,.284,7.21,rifle,4,yes,added,F-Class wildcat; unsure
+.297/230 Morris,,.230,5.84,rifle,4,no,wikipedia,diameter approximate
+.297/250 Rook,,.250,6.35,rifle,4,no,wikipedia,diameter approximate
+.30 Newton,,.308,7.82,rifle,4,no,wikipedia,
+.30 R Blaser,,.308,7.82,rifle,4,no,wikipedia,
+.30 Remington,,.307,7.80,rifle,4,no,wikipedia,
+.30 Remington AR,.30 RAR,.308,7.82,rifle,4,no,wikipedia,
+.30 TC,.30 Thompson/Center,.308,7.82,rifle,4,no,wikipedia,
+.30-01,,.308,7.82,rifle,4,no,wikipedia,
+.30-03 Springfield,,.308,7.82,rifle,4,no,wikipedia,
+.30-06 JDJ,,.308,7.82,rifle,4,no,wikipedia,
+.300 ICL Grizzly,,.308,7.82,rifle,4,no,wikipedia,
+.300 Lapua Magnum,,.308,7.82,rifle,4,no,wikipedia,
+.300 Rook,,.300,7.62,rifle,4,no,wikipedia,diameter approximate
+.300 Ruger Compact Magnum,.300 RCM,.308,7.82,rifle,4,no,wikipedia,
+.300 Sherwood,,.308,7.82,rifle,4,no,wikipedia,
+.300-221,,.308,7.82,rifle,4,no,wikipedia,
+.303 Magnum,,.312,7.92,rifle,4,no,wikipedia,
+.303 Savage,,.308,7.82,rifle,4,no,wikipedia,
+.303/22,,.224,5.69,rifle,4,no,wikipedia,
+.303/25,,.257,6.53,rifle,4,no,wikipedia,
+.307 Winchester,,.308,7.82,rifle,4,no,wikipedia,
+.308 Marlin Express,,.308,7.82,rifle,4,no,wikipedia,
+.308 Norma Magnum,,.308,7.82,rifle,4,no,wikipedia,
+".308x1.5"" Barnes",.308x1.5 Barnes,.308,7.82,rifle,4,no,wikipedia,
+.310 Cadet,,.323,8.20,rifle,4,no,wikipedia,diameter approximate
+.318 Westley Richards,,.330,8.38,rifle,4,no,wikipedia,
+.32 rimfire,,.316,8.03,rifle,4,no,wikipedia,rimfire; diameter approximate
+.32 Winchester Self-Loading,.32 WSL,.320,8.13,rifle,4,no,wikipedia,
+.32-40 Ballard,,.320,8.13,rifle,4,no,wikipedia,
+.32-40 Winchester,,.320,8.13,rifle,4,no,wikipedia,
+.33 Winchester,,.338,8.59,rifle,4,no,wikipedia,
+.333 Jeffery,,.333,8.46,rifle,4,no,wikipedia,
+.338 Edge,,.338,8.59,rifle,4,yes,wikipedia,
+.338 Marlin Express,,.338,8.59,rifle,4,no,wikipedia,
+.338 Ruger Compact Magnum,.338 RCM,.338,8.59,rifle,4,no,wikipedia,
+.338 Whisper,,.338,8.59,rifle,4,no,wikipedia,
+.338-06,,.338,8.59,rifle,4,no,wikipedia,
+.348 Winchester,,.348,8.84,rifle,4,no,wikipedia,unsure
+.35 Winchester,,.358,9.09,rifle,4,no,wikipedia,
+.35 Winchester Self-Loading,.35 WSL,.351,8.92,rifle,4,no,wikipedia,
+.350 Remington Magnum,,.358,9.09,rifle,4,no,wikipedia,
+.350 Rigby,,.358,9.09,rifle,4,no,wikipedia,
+.351 Winchester Self-Loading,.351 WSL,.351,8.92,rifle,4,no,wikipedia,
+.356 Winchester,,.358,9.09,rifle,4,no,wikipedia,
+.358 Norma Magnum,,.358,9.09,rifle,4,no,wikipedia,
+.358 Winchester,,.358,9.09,rifle,4,no,wikipedia,
+.360 No 2 Nitro Express,,.367,9.32,rifle,4,no,wikipedia,
+.360 No 5 Rook,,.365,9.27,rifle,4,no,wikipedia,diameter approximate
+.369 Nitro Express,,.375,9.52,rifle,4,no,wikipedia,
+.375 Dakota,,.375,9.52,rifle,4,no,wikipedia,
+.375 Flanged Nitro Express,,.375,9.52,rifle,4,no,wikipedia,
+.375 Remington Ultra Magnum,.375 RUM,.375,9.52,rifle,4,no,wikipedia,
+.375 SOCOM,,.375,9.52,rifle,4,no,wikipedia,
+.375 SWISS P,,.375,9.52,rifle,4,yes,wikipedia,unsure
+.375 Viersco Magnum,,.375,9.52,rifle,4,no,wikipedia,
+.375 Weatherby Magnum,,.375,9.52,rifle,4,no,wikipedia,
+.375/303 Westley Richards Accelerated Express,,.375,9.52,rifle,4,no,wikipedia,
+.376 Steyr,,.375,9.52,rifle,4,no,wikipedia,
+.38 TPC,,.357,9.07,rifle,4,no,wikipedia,diameter unsure
+.38-56 WCF,,.379,9.63,rifle,4,no,wikipedia,
+.38-72 Winchester,,.378,9.60,rifle,4,no,wikipedia,
+.40-60 Winchester,,.404,10.26,rifle,4,no,wikipedia,
+.40-65 Winchester,,.406,10.31,rifle,4,no,wikipedia,
+.40-72 Winchester,,.406,10.31,rifle,4,no,wikipedia,
+.400 H&H Magnum,,.411,10.44,rifle,4,no,wikipedia,
+.400 Jeffery Nitro Express,.450/400 3 inch,.410,10.41,rifle,4,no,wikipedia,
+.400 Purdey,,.405,10.29,rifle,4,no,wikipedia,diameter approximate
+.400 Whelen,,.405,10.29,rifle,4,no,wikipedia,
+.400/350 Nitro Express,,.358,9.09,rifle,4,no,wikipedia,
+.400/360 Nitro Express,,.358,9.09,rifle,4,no,wikipedia,
+.401 Winchester Self-Loading,.401 WSL,.406,10.31,rifle,4,no,wikipedia,
+.404 Jeffery,10.75x73mm,.423,10.74,rifle,4,no,wikipedia,
+.41 rimfire,,.405,10.29,rifle,4,no,wikipedia,rimfire; diameter approximate
+.41 Swiss,10.4x38mmR Vetterli,.430,10.92,rifle,4,no,wikipedia,rimfire; diameter approximate
+.416 Ruger,,.416,10.57,rifle,4,no,wikipedia,
+.416 Taylor,,.416,10.57,rifle,4,no,wikipedia,
+.416 Weatherby Magnum,,.416,10.57,rifle,4,no,wikipedia,
+.425 Westley Richards,,.435,11.05,rifle,4,no,wikipedia,
+.44 Henry,,.446,11.33,rifle,4,no,wikipedia,rimfire
+.45 Black Powder Magnum,,.458,11.63,rifle,4,no,wikipedia,diameter approximate
+.45 Raptor,,.452,11.48,rifle,4,no,wikipedia,diameter unsure
+.45-60 Winchester,,.458,11.63,rifle,4,no,wikipedia,
+.45-75 Winchester,,.458,11.63,rifle,4,no,wikipedia,
+.45-90 Sharps,,.458,11.63,rifle,4,no,wikipedia,
+.450 Black Powder Express,,.458,11.63,rifle,4,no,wikipedia,
+.450 Dakota,,.458,11.63,rifle,4,no,wikipedia,
+.450 Nitro Express,,.458,11.63,rifle,4,no,wikipedia,
+.450 No 2 Nitro Express,,.458,11.63,rifle,4,no,wikipedia,
+.450 Rigby,,.458,11.63,rifle,4,no,wikipedia,
+.450 Watts Magnum,,.458,11.63,rifle,4,no,wikipedia,
+.450/400 Black Powder Express,,.405,10.29,rifle,4,no,wikipedia,
+.450/400 Nitro Express,,.411,10.44,rifle,4,no,wikipedia,
+.458 Express,,.458,11.63,rifle,4,no,wikipedia,
+.458 HAM'R,,.458,11.63,rifle,4,no,wikipedia,
+.458 SOCOM,,.458,11.63,rifle,4,no,wikipedia,
+.458x2-inch American,,.458,11.63,rifle,4,no,wikipedia,
+.46 rimfire,,.456,11.58,rifle,4,no,wikipedia,rimfire; diameter approximate
+.460 Steyr,,.458,11.63,rifle,4,no,wikipedia,diameter unsure
+.461 Gibbs,,.458,11.63,rifle,4,no,wikipedia,
+.465 H&H Magnum,,.468,11.89,rifle,4,no,wikipedia,
+.470 Nitro Express,.470 NE,.475,12.06,rifle,4,no,wikipedia,
+.475 Nitro Express,,.483,12.27,rifle,4,no,wikipedia,
+.475 No 2 Nitro Express,,.483,12.27,rifle,4,no,wikipedia,
+.476 Nitro Express,,.476,12.09,rifle,4,no,wikipedia,
+.50 Alaskan,,.510,12.95,rifle,4,no,wikipedia,
+.50 Beowulf,,.500,12.70,rifle,4,no,wikipedia,
+.50-110 Winchester,,.512,13.00,rifle,4,no,wikipedia,
+.50-140 Sharps,,.512,13.00,rifle,4,no,wikipedia,
+.50-90 Sharps,,.512,13.00,rifle,4,no,wikipedia,
+.500 A-Square,,.510,12.95,rifle,4,no,wikipedia,
+.500 Jeffery,,.510,12.95,rifle,4,no,wikipedia,
+.500 Nitro Express,,.510,12.95,rifle,4,no,wikipedia,
+.500/450 Magnum Black Powder Express,,.458,11.63,rifle,4,no,wikipedia,
+.500/450 Nitro Express,,.458,11.63,rifle,4,no,wikipedia,
+.500/450 No 1 Black Powder Express,,.458,11.63,rifle,4,no,wikipedia,
+.500/465 Nitro Express,,.468,11.89,rifle,4,no,wikipedia,
+.505 Gibbs,,.505,12.83,rifle,4,no,wikipedia,
+.510 DTC Europ,,.510,12.95,rifle,4,no,wikipedia,
+.510 Whisper,,.510,12.95,rifle,4,no,wikipedia,
+.56-56 Spencer,,.545,13.84,rifle,4,no,wikipedia,rimfire; diameter approximate
+.577 Black Powder Express,,.585,14.86,rifle,4,no,wikipedia,
+.577 Nitro Express,,.585,14.86,rifle,4,no,wikipedia,
+.577 Snider,,.570,14.48,rifle,4,no,wikipedia,
+.577 Tyrannosaur,,.585,14.86,rifle,4,no,wikipedia,
+.577/450 Martini-Henry,,.455,11.56,rifle,4,no,wikipedia,
+.577/500 Nitro Express,,.510,12.95,rifle,4,no,wikipedia,
+.577/500 No 2 Black Powder Express,,.510,12.95,rifle,4,no,wikipedia,
+.585 Nyati,,.585,14.86,rifle,4,no,wikipedia,
+.600 Overkill,,.620,15.75,rifle,4,no,wikipedia,
+.600/577 Rewa,,.585,14.86,rifle,4,no,wikipedia,
+.700 Nitro Express,,.700,17.78,rifle,4,no,wikipedia,
+.950 JDJ,,.950,24.13,rifle,4,no,wikipedia,
+10.15x61mmR,10.15x61R Jarmann,.406,10.31,rifle,4,no,wikipedia,diameter approximate
+10.6x25mmR,,.417,10.59,rifle,4,no,wikipedia,diameter approximate
+10.75x68mm,,.424,10.77,rifle,4,no,wikipedia,
+11.35x51mmR,,.447,11.35,rifle,4,no,wikipedia,diameter approximate
+11x58mmR,11mm Werndl,.445,11.30,rifle,4,no,wikipedia,diameter approximate
+11x59mmR Gras,11mm Gras,.445,11.30,rifle,4,no,wikipedia,
+11x60mm Mauser,11mm Mauser,.446,11.33,rifle,4,no,wikipedia,
+12.17x42mm RF,,.479,12.17,rifle,4,no,wikipedia,rimfire; diameter approximate
+12.7x108mm,,.511,12.98,rifle,4,no,wikipedia,
+12.7x55mm,,.511,12.98,rifle,4,no,wikipedia,
+12.7x81mmSR,.50 Vickers,.510,12.95,rifle,4,no,wikipedia,
+13.2x92mmSR,,.520,13.2,rifle,4,no,wikipedia,diameter nominal
+13.2x99mm Hotchkiss Long,,.520,13.2,rifle,4,no,wikipedia,diameter nominal
+14.5mm JDJ,,.585,14.86,rifle,4,no,wikipedia,
+14.5x114mm,,.586,14.88,rifle,4,no,wikipedia,
+15.2mm Steyr,,.598,15.2,rifle,4,no,wikipedia,diameter nominal
+20x110mm,,.787,20,rifle,4,no,wikipedia,cannon round; diameter nominal
+20x138mmB,,.787,20,rifle,4,no,wikipedia,cannon round; diameter nominal
+20x82mm,,.787,20,rifle,4,no,wikipedia,cannon round; diameter nominal
+23x115mm,,.906,23,rifle,4,no,wikipedia,cannon round; diameter nominal
+23x152mm,,.906,23,rifle,4,no,wikipedia,cannon round; diameter nominal
+24x139mm Swiss,,.945,24,rifle,4,no,wikipedia,cannon round; diameter nominal
+25x137mm,,.984,25,rifle,4,no,wikipedia,cannon round; diameter nominal
+30x165mm,,1.181,30,rifle,4,no,wikipedia,cannon round; diameter nominal
+30x173mm,,1.181,30,rifle,4,no,wikipedia,cannon round; diameter nominal
+37x145mmR,,1.457,37,rifle,4,no,wikipedia,cannon round; diameter nominal
+6.5 SAUM,6.5 Short Action Ultra Magnum,.264,6.71,rifle,4,yes,added,wildcat; unsure
+6.5-06,,.264,6.71,rifle,4,no,wikipedia,
+6.5-06 A-Square,,.264,6.71,rifle,4,no,wikipedia,
+6.5mm Remington Magnum,,.264,6.71,rifle,4,no,wikipedia,
+6.5mm TCU,,.264,6.71,rifle,4,no,wikipedia,
+6.5x25mm CBJ,,.264,6.71,rifle,4,no,wikipedia,subcaliber projectile; diameter nominal
+6.5x50mm Arisaka,6.5mm Arisaka,.264,6.71,rifle,4,no,wikipedia,
+6.5x52mm Carcano,,.268,6.81,rifle,4,no,wikipedia,
+6.5x53mmR,6.5x53R Mannlicher,.264,6.71,rifle,4,no,wikipedia,
+6.5x54mm Mannlicher-Schonauer,6.5x54 M-S,.264,6.71,rifle,4,no,wikipedia,
+6.5x57mm Mauser,,.264,6.71,rifle,4,no,wikipedia,
+6.5x58mm Vergueiro,,.264,6.71,rifle,4,no,wikipedia,
+6.5x68mm,,.264,6.71,rifle,4,no,wikipedia,
+6mm AR,,.243,6.17,rifle,4,no,wikipedia,unsure
+6mm BRA,6 BRA;6mm BR Ackley,.243,6.17,rifle,4,yes,added,wildcat; unsure
+6mm BRX,6 BRX,.243,6.17,rifle,4,yes,added,wildcat; unsure
+6mm Lee Navy,.236 Navy,.244,6.20,rifle,4,no,wikipedia,
+6mm Musgrave,,.243,6.17,rifle,4,no,wikipedia,
+6mm TCU,,.243,6.17,rifle,4,no,wikipedia,
+6x45mm,6mm-223,.243,6.17,rifle,4,no,wikipedia,
+6x47mm Lapua,6x47 Lapua;6x47,.243,6.17,rifle,4,yes,added,wildcat; unsure
+7-30 Waters,,.284,7.21,rifle,4,no,wikipedia,
+7.35x51mm Carcano,,.298,7.57,rifle,4,no,wikipedia,
+7.5x23mmR,,.317,8.05,rifle,4,no,wikipedia,diameter approximate
+7.5x54mm French,7.5 French,.308,7.82,rifle,4,no,wikipedia,
+7.5x57mm MAS,,.308,7.82,rifle,4,no,wikipedia,
+7.62 Thumper,,.308,7.82,rifle,4,no,wikipedia,
+7.62x37mm Musang,,.308,7.82,rifle,4,no,wikipedia,
+7.62x40 Wilson Tactical,7.62x40 WT,.308,7.82,rifle,4,no,wikipedia,
+7.62x45mm vz. 52,,.311,7.90,rifle,4,no,wikipedia,
+7.65x20mm Long,.30 Pedersen,.309,7.85,rifle,4,no,wikipedia,
+7.65x53mm Mauser,7.65 Argentine,.311,7.90,rifle,4,no,wikipedia,unsure
+7.7x58mm Arisaka,,.311,7.90,rifle,4,no,wikipedia,
+7.92x107mm DS,,.323,8.20,rifle,4,no,wikipedia,
+7.92x33mm Kurz,7.92 Kurz,.323,8.20,rifle,4,no,wikipedia,
+7.92x36mm EPK,,.323,8.20,rifle,4,no,wikipedia,
+7.92x94mm Patronen,,.323,8.20,rifle,4,no,wikipedia,
+7mm BR Remington,7mm BR,.284,7.21,rifle,4,no,wikipedia,
+7x33mm Sako,,.284,7.21,rifle,4,no,wikipedia,
+7x54mm Finnish,,.284,7.21,rifle,4,no,wikipedia,
+7x54mm Fournier,,.284,7.21,rifle,4,no,wikipedia,
+7x61mm Sharpe & Hart,,.284,7.21,rifle,4,no,wikipedia,
+9.3x57mm,,.366,9.30,rifle,4,no,wikipedia,
+9.3x64mm Brenneke,,.366,9.30,rifle,4,no,wikipedia,
+9.3x74mmR,,.366,9.30,rifle,4,no,wikipedia,unsure
+9.5x57mm Mannlicher-Schoenauer,.375 Rimless Nitro Express,.375,9.52,rifle,4,no,wikipedia,
+9x25mm Super Auto G,,.355,9.02,rifle,4,no,wikipedia,
+9x30mm Grom,,.355,9.02,rifle,4,no,wikipedia,diameter unsure
+9x39mm,,.363,9.22,rifle,4,no,wikipedia,
+9x53mmR,,.363,9.22,rifle,4,no,wikipedia,diameter approximate
+9x57mm Mauser,,.356,9.04,rifle,4,no,wikipedia,
