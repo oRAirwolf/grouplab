@@ -127,6 +127,40 @@ public class Entry312Tests
         Assert.Null(Screens.Read("half"));
     }
 
+    /// <summary>
+    /// Section 5: a choice leaves a short name in the caliber box with the whole line under it, the name reads back as the same diameter,
+    /// a tap selects all of it, and the clear button empties it.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheCaliberBoxKeepsAShortNameSelectsAllAndClears()
+    {
+        var window = new Window { Width = 412, Height = 915 };
+        var caliber = new CaliberBox();
+        window.Content = caliber;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        var box = caliber.Box;
+        string line = box.ItemsSource!.Cast<string>().First(i => i.StartsWith("6.5 Creedmoor", StringComparison.Ordinal));
+        box.SelectedItem = line;
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal("6.5 Creedmoor, 0.264 in", caliber.Text);
+        Assert.Equal(line, caliber.Under);
+        Assert.Equal(0.264, GroupLab.Core.Marking.Calibre.Parse(caliber.Text, out string? why)!.DiameterInches, 4);
+        Assert.Null(why);
+
+        box.Focus();
+        Dispatcher.UIThread.RunJobs();
+        var field = box.GetVisualDescendants().OfType<TextBox>().First();
+        Assert.Equal(caliber.Text!.Length, Math.Abs(field.SelectionEnd - field.SelectionStart));
+
+        var clear = Assert.IsType<Button>(box.InnerRightContent);
+        clear.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal("", caliber.Text);
+        Assert.Null(caliber.Under);
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void CompareHasAWayBackToSessionsAtTheTop()
     {

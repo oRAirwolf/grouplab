@@ -33,19 +33,15 @@ public sealed class CapturePage : UserControl
     private readonly TextBlock askSaid = Screens.Line("");
     private Action? afterAsk;
     private readonly TextBlock status = Screens.Line("");
-    private readonly AutoCompleteBox calibre = new AutoCompleteBox
-    {
-        ItemsSource = CartridgeTable.Suggest(""),
-        FilterMode = AutoCompleteFilterMode.Contains,
-        PlaceholderText = "Caliber, e.g. 6.5 Creedmoor or .308",
-        MinHeight = Screens.Touch,
-    }.Id("capture-caliber");
+    private readonly CaliberBox calibre = new();
 
     private readonly TextBox distance = Screens.Numeric(new() { MinHeight = Screens.Touch, PlaceholderText = "Distance" }).Id("capture-distance");
     private readonly Control start;
 
     public CapturePage()
     {
+        // The id is on the box itself, where a script types, not on the panel round it with its clear button.
+        calibre.Box.Id("capture-caliber");
         // Entry 258: a picture shared into GroupLab from another application is read as a chosen one; entry 292 section 1.3, several at
         // once are a set, one per sheet.
         SharedPicture = photos =>

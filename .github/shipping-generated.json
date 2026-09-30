@@ -31,6 +31,7 @@
     "src/GroupLab.App/BallisticMeasures.cs",
     "src/GroupLab.App/BenchmarkPanel.cs",
     "src/GroupLab.App/BrandMark.cs",
+    "src/GroupLab.App/CaliberBoxes.cs",
     "src/GroupLab.App/CommandKey.cs",
     "src/GroupLab.App/CompositePlot.cs",
     "src/GroupLab.App/Diagnostics/",

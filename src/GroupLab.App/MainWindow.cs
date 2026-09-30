@@ -782,6 +782,9 @@ public sealed partial class MainWindow : Window
         // Entry 189 section 6, Unholy: typing "6.5" and clicking "6.5 Creedmoor" left "6.5" in the box, and Set had to be pressed twice.
         // Highlighting or choosing a suggestion writes its text into the box, and the suggestions were made afresh on every change of
         // text, which threw the choice away before the box took it. They are made again only for text a person typed.
+        // Entry 312 section 5: the box selects all of its text when it takes the focus, and a clear button inside it empties it.
+        CaliberBoxes.SelectAllOnFocus(calibreBox);
+        CaliberBoxes.Clear(calibreBox, 24);
         calibreBox.TextChanged += (_, _) =>
         {
             // A suggestion highlighted or chosen writes its own text into the box; that is not new typing, so the list stays as it is.
