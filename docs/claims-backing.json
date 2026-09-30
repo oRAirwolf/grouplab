@@ -4576,6 +4576,18 @@
   "GroupLab Dev also carries the automation bridge (entry 315 section 1), as on Android: bound to 127.0.0.1 only, so iOS asks for no local network permission, reached with `scripts/app-bridge.py --platform ios`, which forwards the port with `pymobiledevice3 usbmux forward` and reads this run's key from `Documents/bridge/key`; docs/ANDROID.md describes its commands and what it cannot do yet.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
+  },
+  "Typing a caliber offers the calibers and cartridges that match, with spacing and points forgiven, so \"65 creed\" finds 6.5 Creedmoor, and choosing one from the list, with a click or with Enter, sets it at once.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/CartridgeLookup.cs Search and CaliberChoices.Suggest; tests/GroupLab.Core.Tests/Marking/CartridgeLookupTests.cs TheSearchForgivesPunctuationAndSpacing; entry 314 section 2"
+  },
+  "**Caliber box shows** in Settings, the same on the phone, chooses what the list offers: **Calibers**, the bullet diameters with their usual names, such as .308 (7.62 mm, .30); **Cartridges**, the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or **Both**, calibers first and then cartridges, which is where it starts.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs LoadCaliberList (Both until chosen), MainWindow.cs BuildSettings and mobile SettingsView.cs; CaliberChoices.Calibers and Line; tests Entry314Tests (App and Mobile); entry 314 section 1"
+  },
+  "Caliber box shows in Settings, the same on the phone, chooses what the list offers: Calibers , the bullet diameters with their usual names, such as .308 (7.62 mm, .30); Cartridges , the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or Both , calibers first and then cartridges, which is where it starts.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs LoadCaliberList (Both until chosen), MainWindow.cs BuildSettings and mobile SettingsView.cs; CaliberChoices.Calibers and Line; tests Entry314Tests (App and Mobile); entry 314 section 1"
   }
  },
  "rules": [

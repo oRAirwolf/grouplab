@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1418 |
+| code | 1420 |
 | measured | 1799 |
 | decided | 1269 |
 | unbacked | 0 |
-| **total** | **4486** |
+| **total** | **4488** |
 
-**1051** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1053** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3242,6 +3242,8 @@ one that matters.
 - *code* (AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs): On a GroupLab sheet the rest happens on its own: 1.
 - *code* (AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment): GroupLab reads the sheet's printed codes to name its definition.
 - *code* (MarkingSession in src/GroupLab.Core/Marking/MarkingSession.cs): Every result is an ordinary mark that you can move, delete or reassign.
+- *code* (src/GroupLab.Core/Marking/CartridgeLookup.cs Search and CaliberChoices.Suggest; tests/GroupLab.Core.Tests/Marking/CartridgeLookupTests.cs TheSearchForgivesPunctuationAndSpacing; entry 314 section 2): Typing a caliber offers the calibers and cartridges that match, with spacing and points forgiven, so "65 creed" finds 6.5 Creedmoor, and choosing one from the list, with a click or with Enter, sets it at once.
+- *code* (src/GroupLab.App/AppSettings.cs LoadCaliberList (Both until chosen), MainWindow.cs BuildSettings and mobile SettingsView.cs; CaliberChoices.Calibers and Line; tests Entry314Tests (App and Mobile); entry 314 section 1): **Caliber box shows** in Settings, the same on the phone, chooses what the list offers: **Calibers**, the bullet diameters with their usual names, such as .308 (7.62 mm, .30); **Cartridges**, the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or **Both**, calibers first and then cartridges, which is where it starts.
 - *code* (the marking screen's Find the paper's edges and the automatic path's refusal, src/GroupLab.Core/Capture, entry 157): On a white board it cannot tell the paper from the board, and you tap the corners.
 - *code* (src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit.Degrees and Refusal; CaptureTests.TheRefusalNamesTheAngleAndTheLimit (entry 238)): A photograph taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png) The pill in the header counts the marks that need you.

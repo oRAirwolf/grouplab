@@ -70,6 +70,25 @@ public sealed class SettingsView : UserControl
             column.Children.Add(radio);
         }
 
+        // Entry 314 section 1: what the caliber box offers, the same setting as on the desktop.
+        column.Children.Add(Screens.Heading(AppSettingsStore.CaliberListLabel));
+        var offered = settings.LoadCaliberList();
+        foreach (var list in Enum.GetValues<GroupLab.Core.Marking.CaliberList>())
+        {
+            var radio = Screens.Radio("caliberList", list.ToString(), offered == list);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && settings.LoadCaliberList() != list)
+                {
+                    settings.SaveCaliberList(list);
+                    DiagnosticLog.Info("settings.caliberList", ("list", list.ToString()));
+                }
+            };
+            column.Children.Add(radio);
+        }
+
+        column.Children.Add(Screens.Dim(AppSettingsStore.CaliberListSays));
+
         // Entry 273 section 4: the printers, which one photographs are corrected for, check again, delete, add, and correction off.
         column.Children.Add(Screens.Heading("Printers"));
         column.Children.Add(Screens.Dim(GroupLab.Core.Marking.DetectionAdvice.OncePerPrinter));

@@ -466,7 +466,7 @@ public sealed partial class MainWindow : Window
     // NOTES-FROM-PLANNING.md entry 163 section 3: the list offers cartridge names with their diameter, the common first, and names the
     // family a person could pick by mistake. It used to offer bare diameters filtered by "contains", which is how typing 6.5 offered .257:
     // "6.53 mm" contains "6.5". The list is rebuilt from the cartridge table as somebody types, so the order is the table's, not the box's.
-    private readonly AutoCompleteBox calibreBox = new() { ItemsSource = CartridgeTable.Suggest(""), FilterMode = AutoCompleteFilterMode.None, MinWidth = 180, PlaceholderText = "e.g. 6.5 Creedmoor, 308 or .264", Name = "CalibreBox" };
+    private readonly AutoCompleteBox calibreBox = new() { FilterMode = AutoCompleteFilterMode.None, MinWidth = 180, PlaceholderText = "e.g. 6.5 Creedmoor, 308 or .264", Name = "CalibreBox" };
     private readonly TextBlock calibreNote = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>
@@ -590,6 +590,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>Entry 189 section 3: the size on the paper before its angle, for one-distance shooters. Off unless chosen in Settings.</summary>
     private bool sizeOnPaperFirst;
+
+    /// <summary>Entry 314 section 1: what the caliber box offers, calibers, cartridges or both. Both unless chosen in Settings.</summary>
+    private CaliberList caliberList = CaliberList.Both;
     private bool showingUnits;
 
     public MainWindow()
@@ -626,6 +629,8 @@ public sealed partial class MainWindow : Window
         updates = settings.LoadUpdatePreferences(OwnTrain);
         units = settings.LoadUnits();
         sizeOnPaperFirst = settings.LoadSizeOnPaperFirst();
+        caliberList = settings.LoadCaliberList();
+        calibreBox.ItemsSource = CaliberChoices.Suggest("", caliberList);
         moreFiguresPanel.Content = moreFigures;
         moreFiguresPanel.IsExpanded = settings.LoadMoreFigures();
         moreFiguresPanel.PropertyChanged += (_, e) =>
@@ -791,7 +796,7 @@ public sealed partial class MainWindow : Window
             if (!choosingCalibre && calibreBox.Text != calibreSuggestedFor && !(calibreBox.ItemsSource is IEnumerable<string> shown && shown.Contains(calibreBox.Text)))
             {
                 calibreSuggestedFor = calibreBox.Text;
-                calibreBox.ItemsSource = CartridgeTable.Suggest(calibreBox.Text);
+                calibreBox.ItemsSource = CaliberChoices.Suggest(calibreBox.Text, caliberList);
             }
         };
 
@@ -1846,6 +1851,21 @@ public sealed partial class MainWindow : Window
         {
             status.Text = CalibreAfterCorrectionsText;
         }
+    }
+
+    /// <summary>Entry 314 section 1: the caliber box offers calibers, cartridges or both from now on, and remembers it.</summary>
+    internal void SetCaliberList(CaliberList list)
+    {
+        if (list == caliberList)
+        {
+            return;
+        }
+
+        caliberList = list;
+        settingsStore.SaveCaliberList(list);
+        calibreSuggestedFor = calibreBox.Text;
+        calibreBox.ItemsSource = CaliberChoices.Suggest(calibreBox.Text, list);
+        DiagnosticLog.Info("settings.caliberList", ("list", list.ToString()));
     }
 
     /// <summary>The suggestion list inside the caliber box, found when its template is applied.</summary>
@@ -5235,6 +5255,23 @@ public sealed partial class MainWindow : Window
             Refresh();
         };
         column.Children.Add(paperFirst);
+
+        // Entry 314 section 1: what the caliber box offers, the same setting as on the phone.
+        column.Children.Add(Ruled(AppSettingsStore.CaliberListLabel));
+        foreach (var list in Enum.GetValues<CaliberList>())
+        {
+            var choice = new RadioButton { GroupName = "caliberList", Content = Wrapped(list.ToString()), IsChecked = caliberList == list };
+            choice.IsCheckedChanged += (_, _) =>
+            {
+                if (choice.IsChecked == true)
+                {
+                    SetCaliberList(list);
+                }
+            };
+            column.Children.Add(choice);
+        }
+
+        column.Children.Add(Line(AppSettingsStore.CaliberListSays));
 
         // Entry 271: which printer's measured scale photographs are corrected for.
         BuildPrinterSettings(column);

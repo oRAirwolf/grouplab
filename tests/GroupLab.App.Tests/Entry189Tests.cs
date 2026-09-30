@@ -75,7 +75,8 @@ public class Entry189Tests
             window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
             window.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
             Settle();
-            Assert.StartsWith("6.5 Creedmoor", window.CalibreHighlighted, StringComparison.Ordinal);
+            // Entry 314: the box offers calibers first, then cartridges, so the first line is the 6.5 mm caliber.
+            Assert.StartsWith(".264 (6.5 mm)", window.CalibreHighlighted, StringComparison.Ordinal);
             window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
             window.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
             Settle();

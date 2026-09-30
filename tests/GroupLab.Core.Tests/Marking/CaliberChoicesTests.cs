@@ -15,7 +15,8 @@ public class CaliberChoicesTests
         Assert.StartsWith("6.5 Creedmoor, 6.5x55 Swedish", line, StringComparison.Ordinal);
         string shortName = CaliberChoices.Short(line);
         Assert.Equal("6.5 Creedmoor, 0.264 in", shortName);
-        Assert.Equal(line, CaliberChoices.Explain(shortName));
+        // Entry 314: the name is the lookup's 6.5 Creedmoor, so what is said beneath is that cartridge, its diameter and its other names.
+        Assert.StartsWith("6.5 Creedmoor: 0.264 in (6.71 mm), a rifle cartridge", CaliberChoices.Explain(shortName), StringComparison.Ordinal);
         Assert.Equal(0.264, Calibre.Parse(shortName, out string? why)!.DiameterInches, 4);
         Assert.Null(why);
 

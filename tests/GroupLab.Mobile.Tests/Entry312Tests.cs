@@ -144,7 +144,8 @@ public class Entry312Tests
         box.SelectedItem = line;
         Dispatcher.UIThread.RunJobs();
         Assert.Equal("6.5 Creedmoor, 0.264 in", caliber.Text);
-        Assert.Equal(line, caliber.Under);
+        // Entry 314: the name is the lookup's 6.5 Creedmoor, so what is said beneath is that cartridge, its diameter and its other names.
+        Assert.StartsWith("6.5 Creedmoor: 0.264 in (6.71 mm)", caliber.Under, StringComparison.Ordinal);
         Assert.Equal(0.264, GroupLab.Core.Marking.Calibre.Parse(caliber.Text, out string? why)!.DiameterInches, 4);
         Assert.Null(why);
 

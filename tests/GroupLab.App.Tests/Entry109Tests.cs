@@ -206,7 +206,8 @@ public class Entry109Tests
             // Entry 165 section 9 adds "Sending targets", its own section rather than a toggle among the others.
             // Entry 208 section 4 gathers sending targets, error reports and the survey under one section, "Sharing".
             // Entry 298 adds "Layout", with Reset layout.
-            Assert.Equal(["Units", "Printers", "Saving", "Theme", "Layout", "This build", "Updates", "Sharing", "Your data", "Diagnostics", "Crash records"], settings);
+            // Entry 314 adds "Caliber box shows", what the caliber box offers.
+            Assert.Equal(["Units", "Caliber box shows", "Printers", "Saving", "Theme", "Layout", "This build", "Updates", "Sharing", "Your data", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }
