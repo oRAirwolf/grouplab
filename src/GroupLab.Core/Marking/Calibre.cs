@@ -84,6 +84,12 @@ public sealed partial record Calibre(string Name, double DiameterInches)
             return null;
         }
 
+        // Entry 312 section 5: the short name the box keeps after a choice, "6.5 Creedmoor, 0.264 in", carries its own diameter.
+        if (CaliberChoices.Diameter(typed) is { } chosen && chosen >= 0.1 && chosen <= 1)
+        {
+            return Of(chosen);
+        }
+
         // NOTES-FROM-PLANNING.md entry 163 section 3.1, reversing entry 108: names are matched before numbers. "6.5" is the 6.5 mm family,
         // 0.264 in, and not 6.5 mm; ".38" is 0.357 in, and not 0.380. Only what matches no name is read as a diameter.
         if (CartridgeTable.Named(typed) is { } family)

@@ -33,13 +33,7 @@ public sealed class CapturePage : UserControl
     private readonly TextBlock askSaid = Screens.Line("");
     private Action? afterAsk;
     private readonly TextBlock status = Screens.Line("");
-    private readonly AutoCompleteBox calibre = new()
-    {
-        ItemsSource = CartridgeTable.Suggest(""),
-        FilterMode = AutoCompleteFilterMode.Contains,
-        PlaceholderText = "Caliber, e.g. 6.5 Creedmoor or .308",
-        MinHeight = Screens.Touch,
-    };
+    private readonly CaliberBox calibre = new();
 
     private readonly TextBox distance = Screens.Numeric(new() { MinHeight = Screens.Touch, PlaceholderText = "Distance" });
     private readonly Control start;
