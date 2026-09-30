@@ -136,6 +136,32 @@ public class DataExportTests
     }
 
     [Fact]
+    public void TwoSessionsWithOneIdentityAreNeitherAConflictNorAnError()
+    {
+        // The same picture read twice in one second, with a different load the second time: both here, both in the file.
+        string a = Folder(), b = Folder();
+        try
+        {
+            var store = SessionStore.Open(Path.Combine(a, "grouplab.db"));
+            store.Save(Session(1));
+            store.Save(Session(1) with { Load = "Varget" });
+            byte[] bytes = Export(store);
+            var again = DataExport.Plan(Read(bytes), store, [], []);
+            Assert.Equal(0, again.Adds);
+            Assert.Empty(again.Conflicts);
+
+            var elsewhere = SessionStore.Open(Path.Combine(b, "grouplab.db"));
+            var plan = DataExport.Plan(Read(bytes), elsewhere, [], []);
+            Assert.Equal(2, plan.NewSessions.Count);
+        }
+        finally
+        {
+            Delete(a);
+            Delete(b);
+        }
+    }
+
+    [Fact]
     public void AnOlderFileIsReadAndANewerOrDamagedOneIsRefusedPlainly()
     {
         // Version 1 as the first builds write it may carry nothing but sessions.

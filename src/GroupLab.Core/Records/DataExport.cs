@@ -199,17 +199,35 @@ public static class DataExport
         ArgumentNullException.ThrowIfNull(localSettings);
         var conflicts = new List<string>();
 
-        var here = store.List().Select(s => store.Get(s.Id)!).ToDictionary(Identity);
+        // Two sessions can share an identity (the same picture read twice in one second), here or in the file; an incoming session is the
+        // same as any one of those here with its identity, and new only where none is.
+        var here = new Dictionary<string, List<SessionRecord>>(StringComparer.Ordinal);
+        foreach (var local in store.List().OrderBy(s => s.Id).Select(s => store.Get(s.Id)).OfType<SessionRecord>())
+        {
+            (here.TryGetValue(Identity(local), out var list) ? list : here[Identity(local)] = []).Add(local);
+        }
+
         var newSessions = new List<ExportedSession>();
+        var arriving = new Dictionary<string, List<SessionRecord>>(StringComparer.Ordinal);
         int sameSessions = 0;
         foreach (var s in file.Sessions)
         {
-            if (!here.TryGetValue(Identity(s.Session), out var existing))
+            string identity = Identity(s.Session);
+            if (!here.TryGetValue(identity, out var existing))
             {
-                newSessions.Add(s);
-                here[Identity(s.Session)] = s.Session;
+                // New here; a second one with the same identity in the file is new too unless it repeats one already taken.
+                var taken = arriving.TryGetValue(identity, out var list) ? list : arriving[identity] = [];
+                if (taken.Any(t => SameContent(t, s.Session)))
+                {
+                    sameSessions++;
+                }
+                else
+                {
+                    newSessions.Add(s);
+                    taken.Add(s.Session);
+                }
             }
-            else if (SameContent(existing, s.Session with { ImagePath = existing.ImagePath }))
+            else if (existing.Any(e => SameContent(e, s.Session with { ImagePath = e.ImagePath })))
             {
                 sameSessions++;
             }
