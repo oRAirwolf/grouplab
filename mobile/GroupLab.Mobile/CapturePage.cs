@@ -504,7 +504,7 @@ public sealed class CapturePage : UserControl
             line.Text = "Canceling…";
         };
         var before = Content;
-        Content = page;
+        Content = DiagnosticsOverlay.Over(page, () => reading.Elapsed);
         var units = Phone.Settings.LoadUnits();
         ReadOutcome<PhoneResult> outcome;
         using (Phone.Platform.KeepRunning("Reading the sheet"))
@@ -634,7 +634,7 @@ public sealed class CapturePage : UserControl
         var reading = new Reading("phone.unread");
         var (page, _, stop) = Screens.Progress("Getting the picture ready");
         stop.Click += (_, _) => reading.Stop();
-        Content = page;
+        Content = DiagnosticsOverlay.Over(page, () => reading.Elapsed);
         var units = Phone.Settings.LoadUnits();
         var outcome = await reading.Run(_ => PhoneAnalysis.Unread(photo, said), Reading.Limit, Late);
         if (outcome.End is ReadEnd.Canceled or ReadEnd.TimedOut)
@@ -667,7 +667,8 @@ public sealed class CapturePage : UserControl
             line.Text = "Canceling…";
         };
         Shell.Current?.Immersive(false);
-        Content = page;
+        // Entry 315 section 4: with Show diagnostics on the camera on, the stage, the time, the memory and the heat over the page.
+        Content = DiagnosticsOverlay.Over(page, () => reading.Elapsed);
         var units = Phone.Settings.LoadUnits();
         string? onCodes = GroupLab.Core.Trace.StageWords.During("S0.identify");
         bool readingCodes = false;

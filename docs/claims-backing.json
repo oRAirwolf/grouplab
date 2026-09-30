@@ -4588,6 +4588,14 @@
   "Caliber box shows in Settings, the same on the phone, chooses what the list offers: Calibers , the bullet diameters with their usual names, such as .308 (7.62 mm, .30); Cartridges , the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or Both , calibers first and then cartridges, which is where it starts.": {
    "kind": "code",
    "where": "src/GroupLab.App/AppSettings.cs LoadCaliberList (Both until chosen), MainWindow.cs BuildSettings and mobile SettingsView.cs; CaliberChoices.Calibers and Line; tests Entry314Tests (App and Mobile); entry 314 section 1"
+  },
+  "Entry 315 section 4 adds **Show diagnostics on the camera** beside it, off until turned on on both phones: the camera's frame rate, instruction and failing check, tilt and torch, and the reading's step and time, with memory and heat, drawn over the camera and the reading screen.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/DiagnosticsOverlay.cs DiagnosticsOverlay.Lines, Camera and Reading; the camera heads' CameraSession and CaptureScreen.ShowDiagnostics; SettingsView's switch; entry 315 section 4"
+  },
+  "While a picture is read the same corner names the step being read, how long that step and the whole reading have taken, and on both screens the memory GroupLab is using and how warm the phone says it is.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/DiagnosticsOverlay.cs DiagnosticsOverlay.Lines, Camera and Reading; the camera heads' CameraSession and CaptureScreen.ShowDiagnostics; SettingsView's switch; entry 315 section 4"
   }
  },
  "rules": [

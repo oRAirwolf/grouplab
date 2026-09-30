@@ -349,6 +349,12 @@ public sealed class SettingsView : UserControl
         ((StackPanel)about.Child!).Children.Add(Screens.Choice("Send diagnostics", () => sendSaid.Text = DiagnosticsPackage.Send(DateTime.Now)).Id("settings-send-diagnostics"));
         ((StackPanel)about.Child!).Children.Add(sendSaid);
 
+        // Entry 315 section 4: the diagnostics overlay, a plain setting on every build, off until turned on.
+        var overlay = new CheckBox { Content = "Show diagnostics on the camera", IsChecked = settings.LoadShowDiagnostics(), MinHeight = Screens.Touch }.Id("settings-show-diagnostics");
+        overlay.IsCheckedChanged += (_, _) => settings.SaveShowDiagnostics(overlay.IsChecked == true);
+        ((StackPanel)about.Child!).Children.Add(overlay);
+        ((StackPanel)about.Child!).Children.Add(Screens.Dim(OverlayWords));
+
         if (Phone.Platform.KeepsSittings is (true, var keepByDefault))
         {
             // Entry 291 section 7.5: every picture of a sitting kept on the device, for the developer to pull; off, and it is deleted.
@@ -369,6 +375,9 @@ public sealed class SettingsView : UserControl
         }
         Content = Screens.Page(column);
     }
+
+    /// <summary>What the diagnostics overlay shows, in a line under its switch.</summary>
+    internal const string OverlayWords = "A small block of numbers over the camera and while a picture is read: frames a second, what the guidance is waiting for, the tilt, the torch, the step being read and its time, the memory in use and how warm the phone is. A screenshot of it shows somebody helping you where GroupLab was.";
 
     /// <summary>What GroupLab Dev keeps of a sitting, in a line under its switch.</summary>
     private static string KeptWords()

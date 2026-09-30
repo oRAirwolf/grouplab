@@ -81,7 +81,9 @@ actually checks. The site build holds this column to those four words.
 crash records and the kept pictures in one zip through the share sheet. On iPhone and iPad, GroupLab's Documents folder shows in the
 Files app, with the log and, when **Keep every picture taken** is on (off until turned on there, on until turned off in GroupLab Dev), a
 sitting's pictures; `scripts/ipad-logs.py` streams GroupLab's own log from an iPad on a USB cable and copies that folder, touching
-nothing else on it. The desktop has its own report package under **Report a problem**, so this is not a separate feature.
+nothing else on it. Entry 315 section 4 adds **Show diagnostics on the camera** beside it, off until turned on on both phones: the
+camera's frame rate, instruction and failing check, tilt and torch, and the reading's step and time, with memory and heat, drawn over the
+camera and the reading screen. The desktop has its own report package under **Report a problem**, so neither is a separate feature.
 
 ## Phones sold outside America (entry 292 section 4)
 

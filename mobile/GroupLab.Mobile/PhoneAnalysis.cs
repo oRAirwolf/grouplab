@@ -125,13 +125,14 @@ internal static class PhoneAnalysis
         // Entry 288: an update never installs while a sheet is being read.
         using var running = WorkInProgress.Analysis();
         progress?.Invoke(GroupLab.Core.Trace.StageWords.Starting);
+        ReadStage.Began("prepare");
         var clock = Stopwatch.StartNew();
         if (Prepare(photo) is not { } working)
         {
             return new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
         }
 
-        DiagnosticLog.Info("read.stage", ("stage", "prepare"), ("ms", clock.ElapsedMilliseconds));
+        DiagnosticLog.Info("read.stage", [("stage", "prepare"), ("ms", clock.ElapsedMilliseconds), .. DeviceHealth.Fields()]);
         try
         {
             token.ThrowIfCancellationRequested();
@@ -162,12 +163,17 @@ internal static class PhoneAnalysis
 
     /// <summary>
     /// Entry 313 section 1.4: each stage of a reading in the log as it begins and ends, with its time, and each resolution the codes were
-    /// read at as it is tried, so a sitting's log shows where the time went even when the reading never finished.
+    /// read at as it is tried, so a sitting's log shows where the time went even when the reading never finished. Entry 315 section 4: a
+    /// stage's end carries the memory in use and the phone's heat, and the stage begun is what the diagnostics overlay names.
     /// </summary>
     private static void Log(TraceRecorder trace)
     {
-        trace.Begun += stage => DiagnosticLog.Info("read.stage", ("stage", stage), ("began", true));
-        trace.Filed += record => DiagnosticLog.Info("read.stage", ("stage", record.Stage), ("ms", record.DurationMs), ("status", record.Status));
+        trace.Begun += stage =>
+        {
+            ReadStage.Began(stage);
+            DiagnosticLog.Info("read.stage", ("stage", stage), ("began", true));
+        };
+        trace.Filed += record => DiagnosticLog.Info("read.stage", [("stage", record.Stage), ("ms", record.DurationMs), ("status", record.Status), .. DeviceHealth.Fields()]);
         trace.Noted += (stage, line) => DiagnosticLog.Info("read.stage", ("stage", stage), ("detail", line));
     }
 
@@ -195,9 +201,10 @@ internal static class PhoneAnalysis
     public static PhoneResult Detect(WorkingImage working, TargetDefinition? chosen, ShotSetup setup, UnitSettings units, SurveyQueue? survey, CancellationToken token, Action<string>? progress = null, bool torch = false, string? picture = null)
     {
         var clock = Stopwatch.StartNew();
+        ReadStage.Began("load");
         var (grey, _) = ImageLoader.Load(working.Path);
         var (value, _) = ImageLoader.LoadMaxChannel(working.Path);
-        DiagnosticLog.Info("read.stage", ("stage", "load"), ("ms", clock.ElapsedMilliseconds), ("size", $"{grey.Width}x{grey.Height}"));
+        DiagnosticLog.Info("read.stage", [("stage", "load"), ("ms", clock.ElapsedMilliseconds), ("size", $"{grey.Width}x{grey.Height}"), .. DeviceHealth.Fields()]);
         token.ThrowIfCancellationRequested();
         var backend = new OpenCvSharpBackend();
         var trace = new TraceRecorder();

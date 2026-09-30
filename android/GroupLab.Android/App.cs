@@ -17,6 +17,9 @@ public sealed class App : Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // Entry 315 section 4: the phone's thermal status for the log and the diagnostics overlay (Android 10 and later, as GroupLab is).
+        var power = global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService) as global::Android.OS.PowerManager;
+        DeviceHealth.Heat = () => power?.CurrentThermalStatus.ToString().ToLowerInvariant();
         Phone.Start(new AndroidPhone(), this,
             () => Java.Util.Locale.Default.Country is { Length: 2 } country ? country : null,
             (level, line) =>

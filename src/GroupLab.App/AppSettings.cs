@@ -251,6 +251,14 @@ public sealed class AppSettingsStore(string path)
     public bool SaveKeepSitting(bool keep) => Save(file => file["keepSitting"] = keep);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 315 section 4: whether the phone draws its diagnostics over the camera and the reading screen; off until
+    /// turned on, in every build.
+    /// </summary>
+    public bool LoadShowDiagnostics() => Read(file => file["showDiagnostics"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveShowDiagnostics(bool shown) => Save(file => file["showDiagnostics"] = shown);
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 271: every printer profile saved, by name. A profile measured again under the same name replaces the old.
     /// </summary>
     public IReadOnlyList<PrinterProfile> LoadPrinters() => Read(file => file["printers"] is JsonArray all

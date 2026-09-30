@@ -393,6 +393,14 @@ says what it was trying to read, and offers the sheets to choose from; time with
 on when you come back to it. When a picture's square codes cannot be read,
 GroupLab says which sheet it looks like, for you to confirm or choose another.
 
+**Show diagnostics on the camera.** Settings, About, **Show diagnostics on the camera** is off until you turn it on, on Android, iPhone
+and iPad alike. With it on, a small block of numbers sits in the bottom corner of the camera: how many frames a second the camera is
+judging and how long each takes, the instruction and the check holding it back (the angle, the focus or the light, with its value), the
+tilt, and the torch's level. While a picture is read the same corner names the step being read, how long that step and the whole reading
+have taken, and on both screens the memory GroupLab is using and how warm the phone says it is. It changes nothing about how a picture is
+taken or read; it is there so that a screenshot shows somebody helping you exactly where GroupLab was. The log records the same memory
+and warmth with each step of a reading and each change of instruction.
+
 **A photograph from any photo app.** **Choose a photo** opens Android's photo picker, which shows the photographs in your photo apps,
 those kept only in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone without one
 offers the apps instead. **From another app** lists every app that offers pictures by name: Google Photos, Samsung Gallery, your phone

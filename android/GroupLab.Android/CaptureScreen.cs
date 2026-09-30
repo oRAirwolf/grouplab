@@ -32,6 +32,7 @@ internal sealed class CaptureScreen : LinearLayout
     public const string ManualName = "Manual mode";
     public const string LevelName = "Level";
     public const string ResultName = "Result";
+    public const string DiagnosticsName = "Diagnostics";
 
     private static readonly Color Panel = Color.Argb(214, 16, 20, 24);
     private static readonly Color Ground = Color.Rgb(16, 20, 24);
@@ -49,6 +50,7 @@ internal sealed class CaptureScreen : LinearLayout
     private readonly TextView guided;
     private readonly TextView manual;
     private readonly TextView result;
+    private readonly TextView diagnostics;
 
     public CaptureScreen(Context context, PreviewView preview) : base(context)
     {
@@ -97,6 +99,16 @@ internal sealed class CaptureScreen : LinearLayout
         // Entry 281 section 1.1: the level is a crosshair in the middle of the camera with a dot that moves like a bubble.
         level = new BubbleView(context) { ContentDescription = LevelName };
         camera.AddView(level, new FrameLayout.LayoutParams(Dp(132), Dp(132), GravityFlags.Center));
+
+        // Entry 315 section 4: Show diagnostics on the camera, in the camera's bottom corner, hidden until the first values come.
+        diagnostics = new TextView(context) { TextSize = 11, ContentDescription = DiagnosticsName, Visibility = ViewStates.Gone, Background = Rounded(Color.Argb(170, 0, 0, 0), 6) };
+        diagnostics.SetTextColor(Color.White);
+        diagnostics.SetTypeface(Typeface.Monospace, TypefaceStyle.Normal);
+        diagnostics.SetPadding(Dp(8), Dp(6), Dp(8), Dp(6));
+        camera.AddView(diagnostics, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Bottom | GravityFlags.Left)
+        {
+            LeftMargin = Dp(10), BottomMargin = Dp(10),
+        });
         AddView(camera, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, 0, 1f));
 
         // Under the camera: picker, shutter, lens; the modes beneath.
@@ -214,6 +226,13 @@ internal sealed class CaptureScreen : LinearLayout
     }
 
     public void Say(string words) => say.Text = words;
+
+    /// <summary>Entry 315 section 4: the diagnostics overlay's lines, shown from the first.</summary>
+    public void ShowDiagnostics(string text)
+    {
+        diagnostics.Text = text;
+        diagnostics.Visibility = ViewStates.Visible;
+    }
 
     private string? laidOut;
 

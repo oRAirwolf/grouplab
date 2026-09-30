@@ -33,6 +33,7 @@ internal sealed class CaptureScreen : UIView
     public const string ManualName = "Manual mode";
     public const string LevelName = "Level";
     public const string ResultName = "Result";
+    public const string DiagnosticsName = "Diagnostics";
 
     internal static readonly UIColor Amber = UIColor.FromRGB(232, 150, 46);
     private static readonly UIColor Ground = UIColor.FromRGB(16, 20, 24);
@@ -52,6 +53,10 @@ internal sealed class CaptureScreen : UIView
     private readonly UIButton manual;
     private readonly UIButton result;
     private readonly BubbleView level = new();
+
+    /// <summary>Entry 315 section 4: Show diagnostics on the camera, in the camera's bottom corner, hidden until the first values come.</summary>
+    private readonly UIView diagnosticsBox = new() { BackgroundColor = UIColor.FromRGBA(0, 0, 0, 170), Hidden = true, UserInteractionEnabled = false };
+    private readonly UILabel diagnostics = new() { TextColor = UIColor.White, Font = UIFont.MonospacedDigitSystemFontOfSize(11, UIFontWeight.Regular), Lines = 0 };
     private string? laidOut;
 
     public CaptureScreen(AVCaptureVideoPreviewLayer preview)
@@ -84,6 +89,10 @@ internal sealed class CaptureScreen : UIView
         // Entry 281 section 1.1: the level is a crosshair in the middle of the camera with a dot that moves like a bubble.
         level.AccessibilityIdentifier = LevelName;
         camera.AddSubview(level);
+        diagnosticsBox.Layer.CornerRadius = 6;
+        diagnosticsBox.AccessibilityIdentifier = DiagnosticsName;
+        diagnosticsBox.AddSubview(diagnostics);
+        camera.AddSubview(diagnosticsBox);
 
         picker = Pill("Photos", PickerName);
         Shutter = new ShutterButton { AccessibilityIdentifier = ShutterName, AccessibilityLabel = ShutterName };
@@ -203,6 +212,22 @@ internal sealed class CaptureScreen : UIView
     /// <summary>Whether the level shows flat now, for the self-test.</summary>
     internal bool LevelReady => level.Ready;
 
+    /// <summary>Entry 315 section 4: the diagnostics overlay's lines, shown from the first; only the overlay is laid out again.</summary>
+    public void ShowDiagnostics(string text)
+    {
+        diagnostics.Text = text;
+        diagnosticsBox.Hidden = false;
+        PlaceDiagnostics();
+    }
+
+    /// <summary>The overlay sized to its lines, in the camera's bottom left corner.</summary>
+    private void PlaceDiagnostics()
+    {
+        var size = diagnostics.SizeThatFits(new CGSize(Math.Max(0, camera.Bounds.Width - 36), 400));
+        diagnostics.Frame = new CGRect(8, 6, size.Width, size.Height);
+        diagnosticsBox.Frame = new CGRect(10, Math.Max(0, camera.Bounds.Height - size.Height - 12 - 10), size.Width + 16, size.Height + 12);
+    }
+
     public void Say(string words)
     {
         say.Text = words;
@@ -261,6 +286,7 @@ internal sealed class CaptureScreen : UIView
 
         double levelSize = 132;
         level.Frame = new CGRect((width - levelSize) / 2, (cameraHeight - levelSize) / 2, levelSize, levelSize);
+        PlaceDiagnostics();
 
         // Under the camera: the picker, the shutter; the modes beneath.
         double middle = width / 2, top = camera.Frame.Bottom + 14;

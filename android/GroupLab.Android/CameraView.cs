@@ -116,6 +116,18 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     private long readySince;
     private readonly GuidanceSteadier steadier = new();
 
+    /// <summary>Entry 315 section 4: the overlay, where Show diagnostics on the camera is on; the frame rate, the tilt and the torch it shows.</summary>
+    private readonly bool showDiagnostics;
+    private readonly FrameRate frameRate = new();
+    private long overlayAt = -DiagnosticsOverlay.EveryMs;
+    private double? tilt;
+    private int torchLevel;
+    private bool? levelWasReady;
+    private long levelLogged = -LevelLogMs;
+
+    /// <summary>How often the level is written to the log while it holds, in milliseconds; a change between flat and not is written at once.</summary>
+    private const long LevelLogMs = 2000;
+
     /// <summary>Entry 291 section 3.3: the last frame judged, its size, its crop and the picture's scale to it, for the record kept at the press.</summary>
     private volatile string lastLive = "no live frame was judged";
     private ProcessCameraProvider provider;
@@ -146,6 +158,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         this.screen = screen;
         manual = Phone.Settings.LoadCaptureManual();
         torchChoice = Phone.Settings.LoadCaptureTorch();
+        showDiagnostics = DiagnosticsOverlay.On;
         screen.ShowMode(manual);
         screen.ShowTorch(torchChoice);
         screen.ShowLens(Lenses[0]);
@@ -175,7 +188,12 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             screen.ShowLens(Lenses[lens]);
         };
         sensors = (SensorManager)context.GetSystemService(Context.SensorService);
-        level = new Level((x, y, z) => screen.Post(() => screen.ShowLevel(x, y, z)));
+        level = new Level((x, y, z) =>
+        {
+            tilt = BubbleLevel.Tilt(x, y, z);
+            LogLevel(x, y, z);
+            screen.Post(() => screen.ShowLevel(x, y, z));
+        });
     }
 
     /// <summary>A still saved: its path in the application's cache, and whether the torch was on.</summary>
@@ -334,6 +352,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             camera.CameraControl.SetTorchStrengthLevel(Math.Clamp(level, 1, torchMax));
         }
 
+        torchLevel = Math.Clamp(level, 0, Math.Max(1, torchMax));
         SetTorch(level > 0);
     }
 
@@ -387,8 +406,8 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             if (torchChoice == 0 && torchAuto.Next(verdict.Quality, verdict.Evenness, clock.ElapsedMilliseconds) is { } change)
             {
                 ContextCompat.GetMainExecutor(context).Execute(new Java.Lang.Runnable(() => SetTorchLevel(change.Level)));
-                DiagnosticLog.Info("camera.torch", ("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", torchMax), ("reason", change.Reason),
-                    ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness));
+                DiagnosticLog.Info("camera.torch", [("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", torchMax), ("reason", change.Reason),
+                    ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness), .. DeviceHealth.Fields()]);
             }
 
             long now = clock.ElapsedMilliseconds;
@@ -400,8 +419,9 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             {
                 lastSay = verdict.Say;
                 readySince = now;
-                DiagnosticLog.Info("camera.say", ("say", verdict.Say.ToString()), ("ms", now), ("frameMs", frameClock.ElapsedMilliseconds),
-                    ("markers", verdict.MarkersRead), ("codes", verdict.CodesRead), ("score", verdict.Quality?.Score), ("mode", manual ? "manual" : "guided"));
+                DiagnosticLog.Info("camera.say", [("say", verdict.Say.ToString()), ("ms", now), ("frameMs", frameClock.ElapsedMilliseconds),
+                    ("markers", verdict.MarkersRead), ("codes", verdict.CodesRead), ("score", verdict.Quality?.Score), ("mode", manual ? "manual" : "guided"),
+                    ("failing", DiagnosticsOverlay.Failing(verdict)), .. DeviceHealth.Fields()]);
             }
 
             // Entry 273: on the printer check page the card is looked for too, and the shutter waits for it.
@@ -419,10 +439,22 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             bool fire = auto.Next(steadier.Decided, card != false, now);
             int? forecast = verdict.Quality is { } quality ? PictureCheck.Forecast(quality) : null;
             float progress = manual ? 0 : fire ? 1 : (float)auto.Progress;
+            double? fps = frameRate.Next(now);
+            string overlay = null;
+            if (showDiagnostics && now - overlayAt >= DiagnosticsOverlay.EveryMs)
+            {
+                overlayAt = now;
+                overlay = DiagnosticsOverlay.Camera(fps, frameClock.ElapsedMilliseconds, verdict, tilt, torchOn ? torchLevel : 0, torchMax);
+            }
+
             screen.Post(() =>
             {
                 screen.Show(verdict, forecast, torchOn, card);
                 screen.Shutter.Progress = progress;
+                if (overlay is not null)
+                {
+                    screen.ShowDiagnostics(overlay);
+                }
             });
             if (!manual && fire && !taking)
             {
@@ -438,6 +470,25 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         {
             image.Close();
         }
+    }
+
+    /// <summary>
+    /// Entry 315 section 4, as entry 311 section 2 does on iOS: the gravity reading and the tilt the level computes (camera.level), when it
+    /// turns green or stops being green and every two seconds besides, with the memory in use and the phone's heat.
+    /// </summary>
+    private void LogLevel(double x, double y, double z)
+    {
+        bool ready = BubbleLevel.Ready(x, y, z);
+        long now = clock.ElapsedMilliseconds;
+        if (ready == levelWasReady && now - levelLogged < LevelLogMs)
+        {
+            return;
+        }
+
+        levelWasReady = ready;
+        levelLogged = now;
+        DiagnosticLog.Info("camera.level", [("gravity", string.Create(CultureInfo.InvariantCulture, $"{x:0.000},{y:0.000},{z:0.000}")),
+            ("tilt", Math.Round(BubbleLevel.Tilt(x, y, z), 1)), ("green", ready), ("ms", now), .. DeviceHealth.Fields()]);
     }
 
     /// <summary>

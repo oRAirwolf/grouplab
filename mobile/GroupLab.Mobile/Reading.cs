@@ -49,6 +49,7 @@ internal sealed class Reading
     private readonly TaskCompletionSource stopped = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly string name;
     private readonly Func<TimeSpan> clock;
+    private readonly TimeSpan created;
     private int pressed;
 
     /// <param name="name">What the log calls this reading, such as phone.detect.</param>
@@ -58,7 +59,11 @@ internal sealed class Reading
         this.name = name;
         var watch = Stopwatch.StartNew();
         this.clock = clock ?? (() => watch.Elapsed);
+        created = this.clock();
     }
+
+    /// <summary>The time since the reading was made, screen lock included, for the diagnostics overlay (entry 315 section 4).</summary>
+    public TimeSpan Elapsed => clock() - created;
 
     /// <summary>The cancellation the reading checks between its stages and inside its long loops.</summary>
     public CancellationToken Token => cancel.Token;

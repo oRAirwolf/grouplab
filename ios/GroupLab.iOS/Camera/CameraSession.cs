@@ -72,6 +72,12 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private long pressedAt;
     private ScreenTurn turn;
 
+    /// <summary>Entry 315 section 4: the overlay, where Show diagnostics on the camera is on; the frame rate and the tilt it shows.</summary>
+    private readonly bool showDiagnostics;
+    private readonly FrameRate frameRate = new();
+    private long overlayAt = -DiagnosticsOverlay.EveryMs;
+    private double? tilt;
+
     public CameraSession(AVCaptureDevice device, AVCaptureSession session, CaptureScreen screen)
     {
         this.device = device;
@@ -79,6 +85,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         this.screen = screen;
         manual = Phone.Settings.LoadCaptureManual();
         torchChoice = Phone.Settings.LoadCaptureTorch();
+        showDiagnostics = DiagnosticsOverlay.On;
         screen.ShowMode(manual);
         screen.ShowTorch(torchChoice);
         screen.ShutterPressed += () => Take(manual ? "manual" : "guided, pressed");
@@ -346,6 +353,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
 
             var g = data.Gravity;
             var (x, y, z) = PhoneCamera.LevelFromGravity(g.X, g.Y, g.Z, turn);
+            tilt = BubbleLevel.Tilt(x, y, z);
             screen.ShowLevel(x, y, z);
             LogLevel(g.X, g.Y, g.Z, x, y, z);
         });
@@ -374,8 +382,9 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         levelWasReady = ready;
         levelLogged = now;
         var inv = System.Globalization.CultureInfo.InvariantCulture;
-        DiagnosticLog.Info("camera.level", ("gravity", string.Create(inv, $"{gx:0.000},{gy:0.000},{gz:0.000}")), ("turn", turn),
-            ("screen", string.Create(inv, $"{x:0.000},{y:0.000},{z:0.000}")), ("tilt", Math.Round(BubbleLevel.Tilt(x, y, z), 1)), ("green", ready), ("ms", now));
+        DiagnosticLog.Info("camera.level", [("gravity", string.Create(inv, $"{gx:0.000},{gy:0.000},{gz:0.000}")), ("turn", turn),
+            ("screen", string.Create(inv, $"{x:0.000},{y:0.000},{z:0.000}")), ("tilt", Math.Round(BubbleLevel.Tilt(x, y, z), 1)), ("green", ready), ("ms", now),
+            .. DeviceHealth.Fields()]);
     }
 
     /// <summary>The preview stood the way the screen is; on the interface thread, after each layout.</summary>
@@ -538,8 +547,8 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         if (torchChoice == 0 && torchAuto.Next(verdict.Quality, verdict.Evenness, clock.ElapsedMilliseconds) is { } change)
         {
             sessionQueue.DispatchAsync(() => SetTorch(change.Level));
-            DiagnosticLog.Info("camera.torch", ("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", TorchSteps), ("reason", change.Reason),
-                ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness));
+            DiagnosticLog.Info("camera.torch", [("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", TorchSteps), ("reason", change.Reason),
+                ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness), .. DeviceHealth.Fields()]);
         }
 
         long now = clock.ElapsedMilliseconds;
@@ -549,8 +558,9 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         {
             lastSay = verdict.Say;
             readySince = now;
-            DiagnosticLog.Info("camera.say", ("say", verdict.Say.ToString()), ("ms", now), ("frameMs", frameClock.ElapsedMilliseconds),
-                ("markers", verdict.MarkersRead), ("codes", verdict.CodesRead), ("score", verdict.Quality?.Score), ("mode", manual ? "manual" : "guided"));
+            DiagnosticLog.Info("camera.say", [("say", verdict.Say.ToString()), ("ms", now), ("frameMs", frameClock.ElapsedMilliseconds),
+                ("markers", verdict.MarkersRead), ("codes", verdict.CodesRead), ("score", verdict.Quality?.Score), ("mode", manual ? "manual" : "guided"),
+                ("failing", DiagnosticsOverlay.Failing(verdict)), .. DeviceHealth.Fields()]);
         }
 
         // Entry 273: on the printer check page the card is looked for too, and the shutter waits for it.
@@ -570,12 +580,24 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         bool torchNow = torchOn;
         double progress = manual ? 0 : fire ? 1 : auto.Progress;
         var shown = verdict;
+        double? fps = frameRate.Next(now);
+        string overlay = null;
+        if (showDiagnostics && now - overlayAt >= DiagnosticsOverlay.EveryMs)
+        {
+            overlayAt = now;
+            overlay = DiagnosticsOverlay.Camera(fps, frameClock.ElapsedMilliseconds, verdict, tilt, torchNow ? torchLevel : 0, device.HasTorch ? TorchSteps : 0);
+        }
+
         screen.BeginInvokeOnMainThread(() =>
         {
             if (!stopped && !capturing)
             {
                 screen.Show(shown, forecast, torchNow, card);
                 screen.Shutter.Progress = progress;
+                if (overlay is not null)
+                {
+                    screen.ShowDiagnostics(overlay);
+                }
             }
         });
         if (!manual && fire && !taking)
