@@ -471,6 +471,11 @@ Fold 7 (SM-F966U1): Android 16, SDK 36; back camera 0: flash available, strength
 Whether the level can be set during a camera session, and how long exposure takes to settle after each change, are measured with GroupLab
 Dev in a later build.
 
+Entry 302 uses the levels: the torch on Auto starts at level 1 and steps up and down during the session (docs/MOBILE-CAPTURE.md section 9),
+through CameraX's own torch strength setting where the phone reports it supported, and on and off elsewhere. `camera.start` logs the
+levels offered and the default; each `camera.torch` line the level chosen and why, which answers at the next sitting whether the level
+takes effect while the camera runs.
+
 ## The shutter, from the press to the result (entry 283)
 
 Alan found a long wait between pressing the shutter and the phone answering. Every step is now in GroupLab Dev's log as `camera.shutter`

@@ -407,3 +407,18 @@ result and sets it. The four pictures as taken measure 0.00: none of them was sh
 by itself and by the box around it, which also stood a screen high. The holes are fixed on a page of their own (ANDROID.md section 11).
 Camera and Result show which is on screen in the highlight color, never greyed. The level's whole crosshair turns green when flat. GroupLab
 Dev keeps every picture of a sitting with its live record and trace (ANDROID.md section 13).
+
+## 9. The torch on Auto dims and turns off (entry 302)
+
+Alan, 2026-09-29: "It seems like once it gets bright, it doesn't get dimmer." Until then the torch on Auto came on when the paper was dim
+or the light uneven and stayed on for the rest of the session. Now (`TorchGovernor`) it starts at the lowest level the phone offers and
+steps up only while the paper is still too dim; it steps down, or goes off, on glare (more than 2 percent of the paper blown out), on a
+hotspot (the bulls' light clearly less even with the torch than without it), or when the paper's median level reaches 235 of 255 so the
+torch is not needed. A change needs four frames in a row that want it and 1.5 s since the last change; a step down for glare or a hotspot
+is never undone in that session; and after two changes of direction the torch stays where it is, so it never flickers. On a phone that
+offers strength levels (Android 15 and later where the maker supports it; the Fold 7 offers 1 to 5) the level is set while the camera
+runs; elsewhere the torch is on or off. Each change is in GroupLab Dev's log as `camera.torch` with the level, the reason and the paper's
+readings, and `camera.start` records the levels offered. The iPhone uses the same rules with its own torch levels.
+
+**At the next sitting:** torch on Auto, point the phone at a sheet in dim light, then close over glossy paper so the torch glares, then in
+daylight; the log should show it coming on low, stepping down on the glare, and going off in daylight, never twice within 1.5 s.

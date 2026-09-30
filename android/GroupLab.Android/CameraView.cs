@@ -108,6 +108,10 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     private bool manual;
     private int torchChoice;
     private bool torchOn;
+    /// <summary>Entry 302: the torch's highest level, 1 where the phone offers only on and off, 0 with no torch; and the level it had at the start.</summary>
+    private int torchMax;
+    private int torchStartLevel;
+    private volatile TorchGovernor torchAuto = new(0);
     private int lens;
     private long frames;
     private int? codesRead;
@@ -163,7 +167,8 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             torchChoice = (torchChoice + 1) % 3;
             Phone.Settings.SaveCaptureTorch(torchChoice);
             screen.ShowTorch(torchChoice);
-            SetTorch(torchChoice == 1);
+            torchAuto = new TorchGovernor(torchMax);
+            SetTorchLevel(torchChoice == 1 ? torchStartLevel : 0);
             DiagnosticLog.Info("camera.torch", ("choice", torchChoice switch { 1 => "on", 2 => "off", _ => "auto" }));
         };
         screen.LensPressed += () =>
@@ -228,7 +233,11 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
 
             camera = provider.BindToLifecycle(owner, CameraSelector.DefaultBackCamera, group.Build());
             torchOn = false;
-            SetTorch(torchChoice == 1);
+            bool strength = camera.CameraInfo.HasFlashUnit && camera.CameraInfo.IsTorchStrengthSupported;
+            torchMax = !camera.CameraInfo.HasFlashUnit ? 0 : strength ? camera.CameraInfo.MaxTorchStrengthLevel : 1;
+            torchStartLevel = strength && camera.CameraInfo.TorchStrengthLevel.Value is Java.Lang.Integer start ? start.IntValue() : torchMax;
+            torchAuto = new TorchGovernor(torchMax);
+            SetTorchLevel(torchChoice == 1 ? torchStartLevel : 0);
             if (TestPressAfterSeconds > 0)
             {
                 double after = TestPressAfterSeconds;
@@ -236,7 +245,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
                 screen.PostDelayed(() => Take("test press"), (long)(after * 1000));
             }
 
-            DiagnosticLog.Info("camera.start", ("mode", manual ? "manual" : "guided"), ("torch", torchChoice),
+            DiagnosticLog.Info("camera.start", ("mode", manual ? "manual" : "guided"), ("torch", torchChoice), ("torchLevels", torchMax), ("torchDefault", torchStartLevel),
                 ("analysis", analysis.ResolutionInfo?.Resolution?.ToString()), ("still", still.ResolutionInfo?.Resolution?.ToString()));
         }), ContextCompat.GetMainExecutor(context));
     }
@@ -313,6 +322,25 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     }
 
     /// <summary>
+    /// Entry 302: the torch at <paramref name="level"/>, 0 for off. Where the phone offers strength levels (Android 15 and later, where the
+    /// maker supports it; the Fold 7 offers 1 to 5) the level is set while the camera runs; elsewhere any level above 0 is simply on.
+    /// </summary>
+    private void SetTorchLevel(int level)
+    {
+        if (camera?.CameraInfo.HasFlashUnit != true)
+        {
+            return;
+        }
+
+        if (level > 0 && torchMax > 1)
+        {
+            camera.CameraControl.SetTorchStrengthLevel(Math.Clamp(level, 1, torchMax));
+        }
+
+        SetTorch(level > 0);
+    }
+
+    /// <summary>
     /// Each frame of the stream, judged the way the desktop judges a photograph, on its luminance. Until the sheet is known, it is looked for
     /// by its codes and its markers (<see cref="LiveSheet"/>); once known from its markers only, its codes are still tried now and then.
     /// </summary>
@@ -357,11 +385,13 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
                 verdict = CaptureGuidance.JudgeFrame(grey, metadata, definition, backend, codesRead);
             }
 
-            // Torch on Auto: on when the paper is dim or the light uneven, and left on for the rest of the session so it does not flicker.
-            if (torchChoice == 0 && !torchOn && (verdict.Quality is { ExposurePart: < CaptureGuidance.Holds, ClippedShare: <= CaptureQualities.FineClipped } || verdict.Evenness is < PictureCheck.EvenLight))
+            // Entry 302, torch on Auto: it starts at the lowest level, steps up only while the paper is dim, and steps down or goes off on
+            // glare, a hotspot or paper already bright, with a settling time between changes so it never flickers (TorchGovernor).
+            if (torchChoice == 0 && torchAuto.Next(verdict.Quality, verdict.Evenness, clock.ElapsedMilliseconds) is { } change)
             {
-                ContextCompat.GetMainExecutor(context).Execute(new Java.Lang.Runnable(() => SetTorch(true)));
-                DiagnosticLog.Info("camera.torch", ("auto", "on"), ("evenness", verdict.Evenness));
+                ContextCompat.GetMainExecutor(context).Execute(new Java.Lang.Runnable(() => SetTorchLevel(change.Level)));
+                DiagnosticLog.Info("camera.torch", ("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", torchMax), ("reason", change.Reason),
+                    ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness));
             }
 
             long now = clock.ElapsedMilliseconds;

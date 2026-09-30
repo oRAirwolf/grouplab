@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1358 |
-| measured | 1796 |
+| code | 1359 |
+| measured | 1801 |
 | decided | 1280 |
 | unbacked | 0 |
-| **total** | **4434** |
+| **total** | **4440** |
 
-**1019** of them were read one sentence at a time and their backing written against the sentence. The other **3415** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1020** of them were read one sentence at a time and their backing written against the sentence. The other **3420** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -598,6 +598,7 @@ one that matters.
 - *code* (src/GroupLab.Core/Imaging/MemoryBudget.cs; MemoryBudgetTests; mobile/GroupLab.Mobile/PhoneAnalysis.cs Budget; src/GroupLab.Cli/Imaging/ImageLoader.cs NotTooLarge (entry 240)): How much time the phone's 50 s spends where waits on the devices (entry 239).
 - *code* (android/GroupLab.Android/IdleActivity.cs, opened by MainActivity TestIdle (entry 268)): It is never screen pinning, kiosk or lock task: Home, Back and Recents leave it like any application, and a tap shows one dim line, "GroupLab Dev idle screen, used for overnight testing", and a Close button of 48 dp for four seconds.
 - *measured* (adb shell dumpsys media.camera on the Fold 7, 2026-09-28 11:22 UTC (entry 262)): The torch's strength (entry 262) Fold 7 (SM-F966U1): Android 16, SDK 36; back camera 0: flash available, strengthMaximumLevel 5, strengthDefaultLevel 1.
+- *code* (src/GroupLab.Core/Capture/TorchGovernor.cs TorchGovernor; android/GroupLab.Android/CameraView.cs SetTorchLevel; entry 302): Entry 302 uses the levels: the torch on Auto starts at level 1 and steps up and down during the session (docs/MOBILE-CAPTURE.md section 9), through CameraX's own torch strength setting where the phone reports it supported, and on and off elsewhere.
 - *decided* (entry 283 sections 1 to 3; android/GroupLab.Android/CameraView.cs Take and Saved (the camera.shutter steps), scripts/shutter-timing.py; not measured until the next sitting, as the section says): ## The shutter, from the press to the result (entry 283) Alan found a long wait between pressing the shutter and the phone answering.
 - *decided* (entry 283 sections 1 to 3; android/GroupLab.Android/CameraView.cs Take and Saved (the camera.shutter steps), scripts/shutter-timing.py; not measured until the next sitting, as the section says): The target is a sound and a flash within about 0.3 s, and the result as soon as the detector allows.
 - *decided* (entry 283 sections 1 to 3; android/GroupLab.Android/CameraView.cs Take and Saved (the camera.shutter steps), scripts/shutter-timing.py; not measured until the next sitting, as the section says): python scripts/shutter-timing.py --serial --presses 20 --mode manual --capture latency python scripts/shutter-timing.py --serial --presses 20 --mode manual --capture quality The script presses the shutter through GroupLab Dev's own path, waits for each result, and prints the median and slowest milliseconds of each step as a table for this section.
@@ -1277,6 +1278,11 @@ one that matters.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The four pictures as taken measure 0.00: none of them was shaken.
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The holes are fixed on a page of their own (ANDROID.md section 11).
 - *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): GroupLab Dev keeps every picture of a sitting with its live record and trace (ANDROID.md section 13).
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): The torch on Auto dims and turns off (entry 302) Alan, 2026-09-29: "It seems like once it gets bright, it doesn't get dimmer." Until then the torch on Auto came on when the paper was dim or the light uneven and stayed on for the rest of the session.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): Now (`TorchGovernor`) it starts at the lowest level the phone offers and steps up only while the paper is still too dim; it steps down, or goes off, on glare (more than 2 percent of the paper blown out), on a hotspot (the bulls' light clearly less even with the torch than without it), or when the paper's median level reaches 235 of 255 so the torch is not needed.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): A change needs four frames in a row that want it and 1.5 s since the last change; a step down for glare or a hotspot is never undone in that session; and after two changes of direction the torch stays where it is, so it never flickers.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): On a phone that offers strength levels (Android 15 and later where the maker supports it; the Fold 7 offers 1 to 5) the level is set while the camera runs; elsewhere the torch is on or off.
+- *measured* (entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs): **At the next sitting:** torch on Auto, point the phone at a sheet in dim light, then close over glossy paper so the torch glares, then in daylight; the log should show it coming on low, stepping down on the glare, and going off in daylight, never twice within 1.5 s.
 
 ### docs/OVERNIGHT-2026-09-21.md
 

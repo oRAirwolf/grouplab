@@ -4416,6 +4416,10 @@
   "Alan confirmed it updated itself without adb (entry 303).": {
    "kind": "decided",
    "where": "entry 303 item 2: Alan reported the Play Protect scan before GroupLab Dev self-updated on the Fold 7"
+  },
+  "Entry 302 uses the levels: the torch on Auto starts at level 1 and steps up and down during the session (docs/MOBILE-CAPTURE.md section 9), through CameraX's own torch strength setting where the phone reports it supported, and on and off elsewhere.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/TorchGovernor.cs TorchGovernor; android/GroupLab.Android/CameraView.cs SetTorchLevel; entry 302"
   }
  },
  "rules": [
