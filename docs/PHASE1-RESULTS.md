@@ -105,7 +105,12 @@ Built overnight on `overnight/tooling`; the bridge was a stopped half-commit, fi
   light, in `clips/<time>/`, never uploaded) and replays a clip or a picture through the capture screen, as a scenario or bridge step.
   Frames are kept at the stream's full 1920 px by default: at 1280 px the committed sample read 16 of 34 markers against 29. Tests: a steady
   clip fires at the third ready frame (600 ms), an unsteady one never does. Not yet run on a device.
-- **Not done yet:** amendment 2 item 6 (Firebase Test Lab's cost and free quota, reported before anything is used).
+- **Amendment 2 item 6, Firebase Test Lab, reported and not used:** on the free Spark plan, up to 15 test runs a day (10 on virtual
+  devices, 5 on physical ones), no charge. On the paid Blaze plan the first 30 minutes a day on physical devices and 60 on virtual ones are
+  free, then $5 an hour per physical device and $1 per virtual one (firebase.google.com/docs/test-lab/usage-quotas-pricing, read
+  2026-09-30). GroupLab Dev's scenario files fit Test Lab's "game loop" test, where the app is started with a test intent and its
+  results files are collected, so a scenario could run on a few Samsung, Xiaomi, Oppo and Pixel models a day at no cost. It needs a
+  Firebase project under Alan's Google account, so nothing is set up until planning and Alan want it; nothing paid without Alan.
 
 ## Entry 311: the first iPad sitting, Guided sooner, the level, and the iPad's logs
 
