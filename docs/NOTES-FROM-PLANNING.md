@@ -128,6 +128,64 @@ screenshots, screenrecord, install, input taps). Missing, and wanted:
    the scenario suite on Samsung, Xiaomi, Oppo, Pixel and other models, which is where entry 292's photo-app differences would show.
    Report its cost and what the free quota covers before relying on it; nothing paid without Alan.
 
+## 2026-09-30, entry 314: calibers, cartridges and a lookup of every cartridge
+
+**Status: done 2026-09-30 (96c848a6); question 76 asks whether a held-back cartridge typed in full should count, built as B meanwhile.**
+
+From planning, 2026-09-30, for Alan.
+
+## What Alan asked
+
+"I think we should probably add some options to the caliber dropdown in settings. I like the caliber list in ballistic x and the hornady
+app ... We should include the common calibers. We should also have an option for common cartridges for people who do not know the
+caliber. There should be a setting that lets you choose if you want one or both. For somebody like me, I only want caliber to show up.
+For somebody that is new, they may want to type in the cartridge name." And a lookup of every cartridge that autocompletes as one types.
+(Ballistic-X picks the caliber on a wheel, .243 to .280 and more; Hornady offers eight bullet diameters. See the planning study
+`claude/competitor-study.md`.)
+
+## 1. A setting: what the caliber box offers
+
+Settings, "Caliber box shows": **Calibers** (bullet diameters), **Cartridges** (names), or **Both** (the default for a new install;
+Alan will choose Calibers). Desktop, Android and iOS alike, one setting.
+
+- **Calibers:** the bullet diameters in common use, each written as its diameter with its usual names, for example ".224 (5.56 mm)",
+  ".243 (6 mm)", ".264 (6.5 mm)", ".277 (6.8 mm, .270)", ".284 (7 mm)", ".308 (7.62 mm, .30)", ".311", ".338", ".355 (9 mm)", ".357",
+  ".400 (10 mm, .40)", ".429 (.44)", ".452 (.45)". Derive the list from the cartridge table's tier 1 to 2 diameters, and let any other
+  diameter be typed in inches or millimetres.
+- **Cartridges:** the names, each carrying its diameter ("6.5 Creedmoor, 0.264 in").
+- **Both:** one list, calibers first, then cartridges as you type.
+- The box itself behaves as entry 312 section 5 says (short name after a choice, select all on tap, a clear button).
+
+## 2. The cartridge lookup
+
+`entry-314-cartridges-draft.csv` beside this entry: 661 cartridges from Wikipedia's rifle and handgun lists plus 12 precision cartridges
+Wikipedia omits (6mm Dasher, 6mm GT, 6 BRA, 6 BRX, 6x47 Lapua, .30 BR, 6.5 SAUM, .284 Shehane, .22 GT, .25 Creedmoor, and 5.56x45 NATO
+and 5.45x39), each with aliases, bullet diameter in inches and mm, rifle or handgun, a tier (1 everyday, 2 common, 3 niche but current,
+4 rare or obsolete) and a precision flag. Planning's draft, compiled by research agents from the two pages; some obsolete diameters are
+marked approximate or unsure in the note column. Alan decides the cutoff (below); until he does, build with it as it stands:
+
+1. Move it into the repository as data (for example `src/GroupLab.Core/Data/cartridges.csv`), one table used by every platform, with a
+   test that every row has a diameter and a tier, names are unique after aliases, and every tier 1 to 2 row's diameter is right against
+   SAAMI or CIP where one exists.
+2. Autocomplete searches name and aliases, forgiving punctuation and spacing ("65 creed", "6.5cm", "308", "9mm"). Ranking: exact alias
+   first, then tier, then precision flag.
+3. What is shown without typing (the dropdown's common list) is tier 1 and 2 plus every precision row; everything else appears only as
+   typed. So the full table can hold all tiers without cluttering the list.
+4. The existing `CartridgeTable` groups several cartridges under one diameter ("6.5 Creedmoor, 6.5x55 Swedish, .260 Remington and
+   others"); keep that grouping for the Calibers list and use the new table for Cartridges.
+5. Site, guide and README lines to match (rule c).
+
+## Open for Alan
+
+The cutoff for what the lookup holds at all: all 661, or tiers 1 to 3 plus precision (227), or tiers 1 to 2 plus precision (111).
+Planning recommends all 661 in the lookup with only tiers 1 to 2 plus precision in the unprompted list, since typed search keeps the
+rare ones out of the way.
+
+## Answered (added 2026-09-30)
+
+Alan: "It seems like the cartridges are fine as recommended." So: all 661 rows in the lookup; tiers 1 and 2 plus every precision row
+(111) in the list shown before typing. Build it as section 2 says.
+
 ## 2026-09-30, entry 313: the iPad hangs on "reading the sheet's codes", Cancel does nothing (PRIORITY), and the preview's layout
 
 **Status: done 2026-09-30 (overnight/reading, merged as 3638462d, 5a18a86a, 4d27fcbe); section 1.4's times on the iPad itself come from the next sitting's log.**
@@ -164,6 +222,59 @@ Also: a stray dash at the right end of the quality bar (a clipped label or a cha
 ## 3. Noted, nothing to change
 
 "The shutter lag time is acceptable."
+
+## 2026-09-30, entry 312: Alan's iPad screenshots of build 134: Compare, the caliber and distance fields
+
+**Status: done 2026-09-30 (overnight/screens, merged as 54ed59a5 to 2d150031).**
+
+From planning, 2026-09-30, for Alan. Four screenshots from the iPad mini (planning has seen them; not in the repository). Alan's words:
+"The compare loads doesnt take up the entire screen. The distance box brings up the keyboard when it should bring up the num pad. The
+caliber fills in the text with what you select and if you want to change it, you have to delete everything and then start typing again."
+
+## 1. Compare on a tablet uses the whole width (iPad, and Android tablets and the open Fold)
+
+- "Each load's group" draws two plots of about 265 points each in the left half of a 1,300 point wide card, with the right half empty.
+  On a wide screen the plots grow to share the width (two loads side by side filling the card, three or four in a row or a 2 by 2 grid),
+  still square and at one shared scale.
+- The page's column may stay at a comfortable reading width for text, but the plots card and the charts should use the full width.
+- There is no way back to Sessions visible at the top of Compare on the iPad; check the back control is there on iOS as on Android.
+
+## 2. A bug in Extreme spread, as measured
+
+Both loads read 0.56 mil, yet the first load's dot sits far right and the second's far left of the same row width. Two equal values must
+sit at the same position on one shared axis. Check the axis (it may be drawing each row on its own scale, or placing the dot by an index).
+Add a test: equal values, equal x.
+
+## 3. The verdict card still reads as statistics
+
+"2026-09-30, 02:35's sigma is 1.01 times 2026-09-30, 03:55's, 95 percent interval 0.76 to 1.34" and "To resolve a difference of 10
+percent, with 80 percent power at the 5 percent level, takes 434 ..." are what entry 295 section 3 asked to put in plain words. Plain first
+(for example "Their spreads are within about a third of each other either way; to tell a 10 percent difference apart would take about 434
+shots each"), with the exact figures behind the term help or a "Details" expander.
+
+## 4. The distance field opens the number pad
+
+On iOS and Android, every numeric field (distance, seed, click value, velocity and the rest) opens the number pad with a decimal point
+(iOS decimal pad; Android number with decimal), not the full keyboard. Check each numeric entry in the app, desktop excepted.
+
+## 5. The caliber field can be changed without deleting everything
+
+Choosing a caliber now fills the box with its whole entry ("6.5 Creedmoor, 6.5x55 Swedish, .260 Remington and others: 0.264 in (6.71
+mm)"), and changing it means deleting all of that. Instead:
+- after a choice, the box shows a short name ("6.5 Creedmoor, 0.264 in") with the full entry as the line under it;
+- tapping the box selects all of its text, so typing replaces it at once;
+- a clear (x) button inside the box empties it.
+Same on Android and iOS, and the desktop's box gets the select-all on focus and the clear button too.
+
+## 6. A stale message on Capture
+
+The 03:01 screenshot shows "GroupLab needs the camera to take the picture. Allow it, then press Take a picture again." under the
+buttons, after Alan had already allowed the camera (entry 311, item 1). The line should disappear once permission is granted, and on a
+later visit to Capture.
+
+## Still owed by Alan
+
+The screenshot of the gap at the top of the camera preview (entry 311 item 2) was not among these four.
 
 ## 2026-09-30, entry 311: the first iPad sitting (TestFlight build 134), and getting the iPad's logs to Code
 

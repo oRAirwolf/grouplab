@@ -40,6 +40,36 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 314: the caliber box offers calibers, cartridges or both, with a lookup of every cartridge
+
+Built 2026-09-30 on `overnight/screens` from a stopped half-commit, finished, reviewed and merged as 96c848a6.
+
+- **The table:** `src/GroupLab.Core/Data/cartridges.csv`, one table for every platform. The draft's 661 rows name the same cartridge twice
+  56 times (both the rifle and handgun lists, or two names); merged, 605 rows hold every name and alias of the 661 (checked by a script),
+  and the list shown before typing (tiers 1 and 2 and every precision row) is 105, not 111. Tests: every row has a diameter and a tier,
+  names are unique after aliases, and 26 standard diameters agree with SAAMI or CIP.
+- **The lookup:** name and aliases, forgiving punctuation and spacing ("65 creed", "6.5cm", "308", "9mm" all tested); ranked by exact alias,
+  then tier, then the precision flag.
+- **The setting:** "Caliber box shows" Calibers, Cartridges or Both (Both for a new install), one setting on the desktop, Android and iOS;
+  the Calibers list keeps the existing grouping by diameter; any other diameter can still be typed in inches or mm.
+- **Question 76:** a held-back cartridge (entry 163) typed in full without choosing it still asks for a diameter; built as B.
+- Tests: Core 165 on the area, App 12 on the caliber box and 35 over Settings and Compare, Mobile 72. The user guide has the line.
+
+## Entry 312: Alan's iPad screenshots of build 134
+
+Built overnight on `overnight/screens`, reviewed, tested and merged 2026-09-30.
+
+- **1 (88d4a2b1):** Compare's plots and chart use the card's whole width on a tablet, two loads side by side and more in a row or a grid,
+  square and at one scale; a way back to Sessions at the top on iOS as on Android.
+- **2 (54ed59a5):** equal figures sit at the same place on the chart; the dot had been placed on each row's own scale. A test holds equal
+  values at equal x.
+- **3 (c7e2617d):** the verdict card in plain words first, the exact figures behind Details.
+- **4 (67cea745):** every numeric field on both phones opens the number pad with a decimal point.
+- **5 (756ce71b):** the caliber box shows a short name after a choice, selects all on a tap, and has a clear button, on the phones and the
+  desktop.
+- **6 (2d150031):** the line asking for the camera goes once the camera is allowed.
+- Crash report 12 (Shots Needed to Zero calculated twice) is fixed with it (38862de3).
+
 ## Entry 315: GroupLab Dev driven without hands (sections 1 and 2, and the iOS Dev app)
 
 Built overnight on `overnight/tooling`; the bridge was a stopped half-commit, finished, reviewed and merged 2026-09-30.

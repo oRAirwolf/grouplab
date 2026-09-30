@@ -21,6 +21,16 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-09-30, question 76: should a full cartridge name typed without choosing it from the list count?
+
+**Status: open.** Nothing waits on it: entry 314 is built with B. Entry 163 holds back some cartridges from being taken as a caliber
+unless chosen (.45 ACP, 7.62x39 and others whose name does not say the bullet's diameter plainly), so the box still asks for a diameter
+when one of those is typed in full and not chosen. Separately, the draft table named the same cartridge twice 56 times (on both the rifle
+and handgun lists, or under two names); merged, the list before typing holds 105 rows, not the 111 entry 314 counted.
+**The options.** A: a full name typed exactly as a row or alias counts as chosen, for every cartridge. B: as now, the held-back ones must be
+chosen from the list (a tap). I would choose B for now: entry 163's reason (a name that misleads about the diameter) still holds, and the
+list shows the row as soon as the name is typed.
+
 ## 2026-09-30, question 75: colored ring bulls use more ink than black on a color inkjet
 
 **Status: open.** Nothing waits on it: the colors are built as approved. Entry 297 section 7.3: "color never costs more ink than black".
