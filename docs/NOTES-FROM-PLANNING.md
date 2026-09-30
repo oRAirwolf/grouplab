@@ -24,6 +24,17 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 299: Settings, the privacy and feedback text folded away
+
+**Status: done 2026-09-30.** Settings' Sending targets, Error reports and Hardware survey each show their choice and one short line; the rest folds under a remembered "More", on both platforms, with "What GroupLab sends" always in view. The Settings pictures and guide PDF follow at the next walk.
+
+From planning, 2026-09-29, for Alan: "It is very wordy and takes up too much space."
+
+1. Under the privacy options and the feedback options in Settings, show the switch and one short line each. The full explanation goes
+   behind a "More" (or chevron) expander, closed by default, remembered once opened.
+2. Nothing is removed: every word that is there today is still one tap away. Links to "What GroupLab sends" stay visible.
+3. Desktop and phone alike. Screenshots and the guide follow at the next nightly's refresh (entry 296 section 2.4).
+
 ## 2026-09-30, entry 302: the torch should dim, or go off, when the page is too bright
 
 **Status: done 2026-09-30 but the iOS part (item 3), which goes to the iOS worker.** A shared `TorchGovernor` starts at the lowest level,
