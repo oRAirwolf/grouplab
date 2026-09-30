@@ -40,7 +40,14 @@ internal static class IncomingPhotos
         switch (e)
         {
             case FileActivatedEventArgs files:
-                Hand(Opened(files.Files), "open in");
+                // Entry 307: a GroupLab data file goes to Settings to be imported; everything else is a picture.
+                var data = files.Files.Where(IsDataFile).ToList();
+                if (data.Count > 0)
+                {
+                    DataFile(data[0]);
+                }
+
+                Hand(Opened(files.Files.Except(data)), "open in");
                 break;
             case ProtocolActivatedEventArgs address when IsHandoff(address.Uri):
                 Hand(Waiting(), "share");
@@ -49,6 +56,55 @@ internal static class IncomingPhotos
                 Hand(Waiting(), "waiting");
                 break;
         }
+    }
+
+    /// <summary>Whether a file opened in GroupLab is a GroupLab data file, by its ending (entry 307).</summary>
+    internal static bool IsDataFile(IStorageItem item) =>
+        (item.TryGetLocalPath() ?? item.Name).EndsWith(GroupLab.Core.Records.DataExport.Extension, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Entry 307, as Android's MainActivity does: a data file opened in GroupLab is moved out of the Inbox into the cache and kept only when
+    /// it begins as a GroupLab data file does; then Settings opens with what importing it would do, and nothing is written until Import is
+    /// pressed.
+    /// </summary>
+    internal static void DataFile(IStorageItem item)
+    {
+        if (item.TryGetLocalPath() is not { } path || !File.Exists(path))
+        {
+            return;
+        }
+
+        string copy = Path.Combine(IosPhone.Caches, "incoming" + GroupLab.Core.Records.DataExport.Extension);
+        try
+        {
+            File.Copy(path, copy, overwrite: true);
+            File.Delete(path);
+            string start;
+            using (var head = new StreamReader(copy))
+            {
+                var chars = new char[64];
+                start = new string(chars, 0, head.Read(chars, 0, chars.Length));
+            }
+
+            if (!start.Replace(" ", "", StringComparison.Ordinal).Contains("\"format\":\"grouplab-data\"", StringComparison.Ordinal))
+            {
+                File.Delete(copy);
+                DiagnosticLog.Info("data.incoming", ("grouplab", false));
+                return;
+            }
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "data.incoming", e);
+            return;
+        }
+
+        DiagnosticLog.Info("data.incoming", ("grouplab", true));
+        Dispatcher.UIThread.Post(() => DispatcherTimer.RunOnce(() =>
+        {
+            DataSection.Waiting = copy;
+            Shell.Current?.Show(Shell.Place.Settings);
+        }, TimeSpan.FromSeconds(1)));
     }
 
     /// <summary>Whether an address is the share extension's: <c>grouplab://shared</c>.</summary>
