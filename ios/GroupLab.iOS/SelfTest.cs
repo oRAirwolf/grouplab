@@ -124,6 +124,7 @@ internal static class SelfTest
             // shows its start; and the camera's picture written as a JPEG.
             checks.Add(await CameraSelfTest.Fallback(80));
             checks.Add(await CameraSelfTest.Jpeg());
+            checks.Add(await CameraSelfTest.Layout(79));
 
             // Entry 292 sections 2.1 and 2.2: Choose a photo opens the Photos picker and From another app opens Files; each Cancel comes back.
             checks.Add(await PhotosSelfTest.Picker(PhotoSource.Photos, "81-photos-picker"));

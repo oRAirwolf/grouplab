@@ -60,7 +60,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | GroupLab Dev for testers | `dev-build` | on the phone | | left out |
 | The sheet beside the numbers on a big screen | `big-screen` | on the phone | | on a device |
 | Print a sheet from the phone | `phone-targets` | on the phone | | on a device |
-| Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame | on a device |
+| Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame; on iPhone and iPad the panel sits above the preview, not over it (entry 313 section 2) | on a device |
 | Every picture checked | `picture-check` | on the phone | | on iOS |
 | The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | on iOS |
 | Every shot, and which count | `shots-table` | on the phone | entry 280 section 2, Shots A: the Shots page from a result; on the computer, Shots and clicks under the shot table | on iOS |
