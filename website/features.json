@@ -84,7 +84,10 @@
     "the Key button above the group plot is now easy to tap",
     "When you tap an underlined word for its meaning",
     "the bar of places along the bottom now reaches the bottom edge",
-    "The Mac download is signed and approved by Apple"
+    "The Mac download is signed and approved by Apple",
+    "now shows a short build code instead of a long one",
+    "a result now shows the target beside the numbers, as on a tablet",
+    "the bar of places along the bottom now runs to both edges"
   ],
   "features": [
     {
