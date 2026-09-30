@@ -9,33 +9,33 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 13:40 UTC, after the three overnight branches merged and entries 311 to 317 were folded.
+**Last rewritten:** 2026-09-30 15:50 UTC, after nightly 137 (the first TestFlight upload since 134) and entry 315 finished.
 
 ---
 
 ## In flight
 
-- **Nightly 137** builds e8fa5ce0: everything below merged today. It is the test of the TestFlight upload fix (63eadc57, the encryption
-  check reports instead of stopping); its log says what the signed package carries. Then: does the iPad mini receive it (build 134 on it now).
+- **Nightly 137** (15:30 UTC) carries everything below, and was signed and accepted by TestFlight (both bundles carry the encryption
+  setting as false). It reaches nobody until request 59's groups exist; the iPad mini still has 134.
+- **Held for the next nightly:** the replay camera for GroupLab Dev and one shared frame judge for both camera screens (ff402d72); the
+  TestFlight feedback step's import fix.
 - **Merged today** (on main, first in nightly 137): the iPad reading hang, Cancel and a one-minute limit (313); Guided about a second
   after ready and the green level (311); Send diagnostics, the iPad's Files folder, its log over USB, TestFlight feedback summaries
   (311 section 3); the iPad screenshot fixes (312); crash reports 11 and 12 fixed; the cartridge lookup and its setting (314); scenario
   files, GroupLab Dev for iOS, the automation bridge, and Show diagnostics on the camera (315 sections 1, 2, 4); the Mac download says
-  M-series (316).
-- **iOS until 2026-10-01 02:00 UTC** (entry 290): the end-of-window summary goes at the top of `for-alan.md`.
+  M-series (316). Entry 315 is done; Firebase Test Lab is reported (free: 15 runs a day) and not set up.
+- **iOS until 2026-10-01 02:00 UTC** (entry 290): the summary is written at the top of `for-alan.md` (15:40 UTC).
 - **The Microsoft Store's first submission** (request 38 Part B) went to certification on 2026-09-30; `store-status.yml` reads its
-  status every six hours (read only) into the run summary.
+  status every six hours (read only) into the run summary: "Certification" at 15:45 UTC.
 - **GroupLab Dev updates itself** (entry 288): the silent second update waits for the phones to be reachable over adb again.
 - **Colored bulls** (entry 297): question 75 with planning; request 57 for Alan.
 
 ## The next three
 
-1. Nightly 137: confirm the TestFlight upload, the site current, and close crash reports 11 and 12 with the build; check the iPad with
-   `pymobiledevice3 apps query org.grouplab.app` (never list other apps).
-2. Entry 290's iOS summary at the end of the window; then drive the new build on the iPad over USB where Alan's sitting allows
-   (the bridge is GroupLab Dev only, and the iOS Dev app waits on request 61).
-3. Entry 315's rest: section 3 (the replay camera and sitting clips) and amendment 2 items 3 and 6 (Android's replay camera, Firebase
-   Test Lab's cost, reported before anything is used).
+1. The next nightly (the replay camera); when Alan makes request 59's groups, check the iPad gets the newest build with
+   `pymobiledevice3 apps query org.grouplab.app` (never list other apps), then read its log and Documents over USB.
+2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
+3. Question 76 and 75 when planning answers; each nightly's notes need placing in `website/features.json` or the site stops building.
 
 ## Blocked, and on what
 
@@ -62,10 +62,10 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.136 (2026-09-30 about 11:05 UTC); 137 is building from e8fa5ce0.
+- **Last nightly:** 0.2.0-nightly.137 (2026-09-30 15:30 UTC), all platforms, iOS signed and sent to TestFlight.
 - **The site** publishes each push; a234baeb carries the M-series wording.
-- Crash reports open: 9 (an unobserved index error; the reading now records such errors with their stack, so the next report says
-  where), 11 and 12 (fixed, closed with nightly 137).
+- Crash reports open: 9 only (an unobserved index error; from nightly 137 the reading records such errors with their stack). 11 and 12
+  closed with nightly 137.
 
 ## The inbox
 
