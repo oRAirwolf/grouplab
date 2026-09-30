@@ -9,10 +9,10 @@ FOR UNHOLY (entry 289): once nightly 126 is out, the 2 MOA sheets are in GroupLa
 IOS, UNTIL WEDNESDAY 8 PM MOUNTAIN (entry 290; not a request, updated as items land):
 1. The shared mobile project, both phones' screens in one place: built; Android unchanged, checked again on the next nightly.
 2. OpenCV for iOS in CI: built and proven: a static library for the iPhone and the simulator, 22 MB, rebuilt only when its recipe changes.
-3. The iOS build: it builds in CI for the iPhone and iPad (unsigned) and for the simulator; joining the nightly next.
-4. It runs on the iOS Simulator in CI: the app starts and draws its screens, and the committed 25-shot sample reads 25 shots, the same as the desktop; the rest of the self-test is being finished.
+3. The iOS build in the nightly: done; nightly 130 was the first to build GroupLab for iPhone and iPad (unsigned until request 55's secrets).
+4. It runs on the iOS Simulator in CI: done; every tab, the imaging, and your 25-shot sample identical to the desktop, and a picked picture through to a saved session.
 5. The camera screen: built (the camera, Guided and Manual, the torch, the level, the picture as JPEG); the simulator has no camera and falls back to the picker, which works; the rest is on the first TestFlight sitting's checklist.
-6. Files, sharing, printing, the idle screen: not yet.
+6. Files, sharing, printing, the idle screen: done on the simulator (the Photos picker with iCloud, Files, sharing from Google Photos and any app, Share, Print, Paste, the black idle screen); what only a device can show is on the first TestFlight sitting's list.
 7. The TestFlight path, ready for request 55's secrets: the check is built (it signs only when all seven are set and right, and names a malformed one); the job that uses it comes with item 3.
 Also landed: GroupLab Dev updates itself from nightly 125 on (entry 288), and your answers to questions 69 (A) and 70 (B) are recorded.
 
