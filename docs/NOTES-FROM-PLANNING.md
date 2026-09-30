@@ -24,6 +24,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 308: commercial targets for the detector, and request 54 clarified
+
+**Status: done 2026-09-30; request 54 clarified, request 58 opened.** The scoreboard reads another maker's target as an "any target" case: a truth file with the shot scan, an optional blank scan and the shot count, found holes against the count and every mark on the blank a false one (a made-up orange target: 5 of 5, none false). No commercial scans exist yet; request 58 asks for them. Request 54 now asks for a plain target with no maker's logo for the home page, since GroupLab never shows another maker's target.
+
+From planning, 2026-09-30, for Alan.
+
+1. **Alan's photos of 20 September** (the orange commercial target that says "100-yard precision rifle target", with close-ups of the
+   groups) stay what they are: test material for the detector. Under the standing rule they are never shown or named on the site, so they
+   cannot be request 54's home page picture.
+2. **Request 54 is still wanted**, for the home page: a plain target with no brand design or logo on it (or one whose logo can be cropped
+   off). Rewrite request 54 to say so plainly.
+3. **Alan offers to buy several commercial targets that fit on the scanner glass.** Planning says yes, for testing automatic holes on any
+   target (a stated goal). Add a request for Alan: for each target, scan it at 600 dpi **before** shooting, shoot it, then scan it again
+   and take two or three phone photos (square on, and one at an angle). A blank scan of the same target makes each one a hard test case.
+   Suggest a spread: black bulls, fluorescent or splatter targets, colored diamonds, small grid targets. Files go in
+   `C:\Dev\grouplab-local\commercial-targets\`, local only, never committed or shown.
+4. **Use them:** add the pairs to the scoreboard as "any target" cases, and report how the automatic finder does on each. The wiring of the
+   automatic finder to targets GroupLab did not print (DETECTION-LEARNING-STUDY.md) is the work this feeds; plan it after the iOS deadline.
+
+## Order after entry 303's list
+
+305 (small), 307 (export), 306 (Mac, with request 55), 308.
+
 ## 2026-09-30, entry 306: notarize the Mac build (Alan: "Mac notarization: yes")
 
 **Status: done 2026-09-30 but the xattr instructions, which stay until a notarized nightly is seen accepted; the Mac steps are in request 55.** The Mac packages are signed inside out with the hardened runtime, notarized (the build fails unless Apple accepts it), stapled and checked by Gatekeeper, once the Developer ID certificate and its password are set; until then they build unsigned as before. scripts/macos-signing.py decides, as ios-signing.py does, reusing the team ID and App Store Connect key.

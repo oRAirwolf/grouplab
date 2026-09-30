@@ -34,7 +34,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 11.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 12.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -132,6 +132,22 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 58. Store-bought targets for the detector, whenever suits you, about ten minutes a target (entry 308)
+
+**Opened 2026-09-30.** **Why:** each blank and shot scan of another maker's target becomes a hard test of finding holes on any target,
+kept on your computer only, never committed or shown. **Needed:** yes to buying several that fit on the scanner glass; a spread helps
+most: plain black bulls, a fluorescent or splatter target, colored diamonds, and a small grid target. For each one:
+
+1. Scan it at 600 dpi before shooting it.
+2. Shoot it, and note how many shots.
+3. Scan it again at 600 dpi.
+4. Take two or three phone photos, one square on and one at an angle.
+
+Put each target's files in its own folder under `C:\Dev\grouplab-local\commercial-targets\` (for example `splatter-1\blank.png`,
+`shot.png`, `photo-1.jpg`) with a line saying how many shots. **A good answer:** "done, N targets".
 
 ---
 
@@ -252,14 +268,14 @@ Keep every file below in `C:\Dev\keys\apple\`, which I never open. **Needed, in 
 **A good answer:** "Apple steps done", and the app name if it is not GroupLab. The seven secret names above are what the nightly's iOS job
 reads; until they are all there it builds without signing and uploads nothing. Nothing here submits anything to the App Store.
 
-## 54. A store-bought target, five shots, for the home page (entry 278 item 4), about fifteen minutes at the range
+## 54. A plain target for the home page's picture, five shots, about fifteen minutes at the range (entries 278 and 308)
 
-**Opened 2026-09-28 (entry 278 item 4, question 66).** **Needed:** a plain store-bought target that carries nobody's design (a simple
-bullseye or square), five shots at any distance, then photographed flat in good light, straight down, the whole sheet in the picture;
-if it is convenient, also scanned at 600 dpi on the Brother flatbed. Put the files in `C:\Dev\grouplab-local\store-target\`, any names.
-**Why:** the home page's "Your own targets" and the tour show a sample GroupLab drew itself until a real one exists. I mark yours on the
-desktop's marking screen with the scale set by hand, as a new user would, and it replaces the sample. **A good answer:** "store target
-done", and the distance and caliber if you know them.
+**Opened 2026-09-28; clarified 2026-09-30 (entry 308).** **Wanted:** a store-bought target with no brand name or logo printed on it, or
+one whose logo sits where it can be cropped off (a plain bull or diamond on white is ideal). Shoot five shots at it, then scan it at 600
+dpi or take one square-on phone photo in daylight, and put the files in `C:\Dev\grouplab-local\store-target\`. **Why:** the home page's
+"Your own targets" shows a sample GroupLab drew itself until a real one exists; GroupLab never shows or names another maker's target on the
+site, so your 20 September photos of the orange target stay test material for the detector only. **A good answer:** "done", and the
+distance and caliber if you know them.
 
 ## 53. Question 67 tested: three check pages, one scan each, card photos (entry 278 item 3), about thirty minutes
 
