@@ -77,7 +77,7 @@ Should it just say 'M-series SoCs' or something to that effect so it doesnt have
 
 ## 2026-09-30, entry 315: letting Code drive and watch the app without Alan's hands (dev builds, iOS first, Android too)
 
-**Status: sections 1, 2 and 4 and amendment 1 done 2026-09-30 (b8484f72, a8ce0e90, c6a31b63, d3cf5717); not done: section 3 (the replay camera), amendment 2 items 3 and 6 (the replay camera on Android, Firebase Test Lab); the iOS Dev app's upload waits for request 61.**
+**Status: sections 1 to 4 and amendment 1 done 2026-09-30 (b8484f72, a8ce0e90, c6a31b63, d3cf5717, b2377a8f); not done: amendment 2 item 6 (Firebase Test Lab's cost and free quota); the iOS Dev app's upload waits for request 61.**
 
 From planning, 2026-09-30, for Alan. Alan: "it seems like it [pymobiledevice3] has most of the features code will need to develop and
 troubleshoot except the tap swipe and type. Is there anything that can be added to the development version of the application that would

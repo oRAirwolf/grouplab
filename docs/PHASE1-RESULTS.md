@@ -99,8 +99,13 @@ Built overnight on `overnight/tooling`; the bridge was a stopped half-commit, fi
   Settings, About, off by default on every build as the amendment asks: frame rate, the instruction and its failing check, tilt and
   torch over the camera, and the stage and times over the reading, at most four redraws a second. Mobile 78 tests. iOS is first
   compiled by CI.
-- **Not done yet:** section 3 (the replay camera and sitting clips) and amendment 2 items 3 and 6 (the replay camera on Android, and
-  Firebase Test Lab's cost and free quota).
+- **3, the replay camera (b2377a8f):** both heads' per-frame work (the sheet search, the guidance, the torch on Auto, the steadied words,
+  the card check and the auto shutter) was the same code twice; it is now one shared frame judge, which the live camera, the replay and
+  the tests all run. GroupLab Dev records the camera's last seconds (greyscale JPEG frames with each frame's time, gravity, torch level and
+  light, in `clips/<time>/`, never uploaded) and replays a clip or a picture through the capture screen, as a scenario or bridge step.
+  Frames are kept at the stream's full 1920 px by default: at 1280 px the committed sample read 16 of 34 markers against 29. Tests: a steady
+  clip fires at the third ready frame (600 ms), an unsteady one never does. Not yet run on a device.
+- **Not done yet:** amendment 2 item 6 (Firebase Test Lab's cost and free quota, reported before anything is used).
 
 ## Entry 311: the first iPad sitting, Guided sooner, the level, and the iPad's logs
 
