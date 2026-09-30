@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.139
+
+**2026-09-30**, commit `10259c6`. Nightly.
+
+**What you will notice**
+
+- A picture of a sheet that shares its layout with others no longer fails to read on the phone when one of your own saved sheets cannot be drawn. (Error report 9).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.139)
+
+---
+
 ## 0.2.0-nightly.138
 
 **2026-09-30**, commit `366ff9b`. Nightly.
