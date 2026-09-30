@@ -27,8 +27,8 @@ internal sealed class ShotsToZeroPage : UserControl
     private UnitSettings units;
     private readonly StackPanel column = new() { Spacing = 12 };
     private readonly StackPanel answer = new() { Spacing = 10 };
-    private readonly TextBox typed = new() { PlaceholderText = "click, e.g. 0.2", MinHeight = Screens.Touch, Width = 120 };
-    private readonly TextBox seed = new() { Text = "41", MinHeight = Screens.Touch, Width = 90 };
+    private readonly TextBox typed = Screens.Numeric(new() { PlaceholderText = "click, e.g. 0.2", MinHeight = Screens.Touch, Width = 120 });
+    private readonly TextBox seed = Screens.Numeric(new() { Text = "41", MinHeight = Screens.Touch, Width = 90 });
     private readonly ShotsCurve curve = new() { Height = 200 };
     private int click;
     private bool typedMil;
@@ -121,7 +121,7 @@ internal sealed class ShotsToZeroPage : UserControl
 
     private (double Value, AngularUnit Unit)? Click() => Clicks[click].Value > 0
         ? (Clicks[click].Value, Clicks[click].Unit)
-        : double.TryParse(typed.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double v) && v > 0 ? (v, typedMil ? AngularUnit.Mrad : AngularUnit.Moa) : null;
+        : Screens.Read(typed.Text) is { } v && v > 0 ? (v, typedMil ? AngularUnit.Mrad : AngularUnit.Moa) : null;
 
     private void Calculate()
     {

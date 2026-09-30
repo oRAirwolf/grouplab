@@ -1,6 +1,5 @@
 using System.Globalization;
 using Avalonia.Controls;
-using Avalonia.Input.TextInput;
 using Avalonia.Layout;
 using Avalonia.Media.Imaging;
 using GroupLab.App;
@@ -40,8 +39,7 @@ public sealed class TargetsPage : UserControl
     private static TextBox Number(string text)
     {
         var box = new TextBox { Text = text, MinHeight = Screens.Touch, MinWidth = 96, HorizontalAlignment = HorizontalAlignment.Left };
-        TextInputOptions.SetContentType(box, TextInputContentType.Number);
-        return box;
+        return Screens.Numeric(box);
     }
 
     private static Control Field(string words, TextBox box) => new StackPanel { Spacing = 4, Children = { Screens.Dim(words), box } };

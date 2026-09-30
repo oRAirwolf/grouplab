@@ -220,7 +220,7 @@ internal sealed class FiguresView : UserControl
     /// <summary>A CEP for any percent from 1 to 99.9, drawn on the plot and given here.</summary>
     private Control OwnPercent()
     {
-        var box = new TextBox { PlaceholderText = "e.g. 97.5", MinHeight = Screens.Touch, Width = 110, Text = plot.Shown.CustomPercent?.ToString("0.#", CultureInfo.CurrentCulture) ?? "" };
+        var box = Screens.Numeric(new TextBox { PlaceholderText = "e.g. 97.5", MinHeight = Screens.Touch, Width = 110, Text = plot.Shown.CustomPercent?.ToString("0.#", CultureInfo.CurrentCulture) ?? "" });
         var said = Screens.Dim(plot.Shown.CustomPercent is null ? "A circle for any percent you type, on the plot." : "It is on the plot.");
         box.LostFocus += (_, _) => Apply();
         box.KeyUp += (_, e) =>

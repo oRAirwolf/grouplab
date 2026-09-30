@@ -23,7 +23,7 @@ internal sealed class CsvImportPage : UserControl
     private readonly Action back;
     private readonly Action<PhoneResult> imported;
     private readonly UnitSettings units = Phone.Settings.LoadUnits();
-    private readonly TextBox distance = new() { MinHeight = Screens.Touch };
+    private readonly TextBox distance = Screens.Numeric(new() { MinHeight = Screens.Touch });
     private CsvGuess guess;
 
     public CsvImportPage(CsvTable table, string name, Action back, Action<PhoneResult> imported)
