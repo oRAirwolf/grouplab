@@ -165,6 +165,16 @@ certificate that is not base64 or not a .p12, a profile for another team or anot
 `org.grouplab.app.share`, a profile without the app group `group.org.grouplab.app`, an issuer that is not a UUID, a key that is not a
 .p8), so a mistake is found on the night it is made. Its self-test runs with made-up values in every build.
 
+**GroupLab Dev for iPhone and iPad (entry 315's amendment):** the same sources built with `-p:GroupLabDev=true` make a second
+application, `org.grouplab.app.dev`, named GroupLab Dev under its own light icon, with its own app group `group.org.grouplab.app.dev`,
+share extension `org.grouplab.app.dev.share` and address, so it installs beside GroupLab. Its Info.plist and entitlements are made from
+GroupLab's own by `scripts/ios-dev-app.py`, and a test fails while they are out of step. Only GroupLab Dev carries the developer tools,
+starting with scenario files (entry 315 section 2); they are compiled out of GroupLab, not hidden, and a test and the `ios app` workflow
+both check that GroupLab carries none of them. The `ios app` workflow builds GroupLab Dev for the simulator and runs a scenario in it.
+The nightly's `ios-dev` job builds it for a device every night and, once `IOS_DEV_PROFILE` and `IOS_DEV_SHARE_PROFILE` are set (request
+61), signs it with the same certificate and sends it to TestFlight for the internal group only; `scripts/ios-signing.py --check-dev`
+decides, and a missing or malformed profile is a warning, never a failed nightly.
+
 Alan installs from TestFlight on the iPad mini. iPhone testers come later, by TestFlight invitation.
 
 ## 4. The App Store, and the licence

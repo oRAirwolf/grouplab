@@ -29,6 +29,18 @@
     <UseSystemResourceKeys>false</UseSystemResourceKeys>
   </PropertyGroup>
 
+  <!--
+    Entry 315's amendment: GroupLab Dev's share extension, org.grouplab.app.dev.share, with GroupLab Dev's app group and name, from the .dev
+    files scripts/ios-dev-app.py makes from this project's own.
+  -->
+  <PropertyGroup Condition="'$(GroupLabDev)' == 'true'">
+    <ApplicationId>org.grouplab.app.dev.share</ApplicationId>
+    <ApplicationTitle>GroupLab Dev</ApplicationTitle>
+    <CodesignEntitlements>Entitlements.dev.plist</CodesignEntitlements>
+    <AppBundleManifest>Info.dev.plist</AppBundleManifest>
+    <DefineConstants>$(DefineConstants);GROUPLAB_DEV</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Using Remove="UIKit" />
     <Using Remove="Foundation" />

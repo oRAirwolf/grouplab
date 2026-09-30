@@ -10,6 +10,8 @@ Entry 292 section 2.3 added the share extension, org.grouplab.app.share, which i
 and both profiles must carry the app group group.org.grouplab.app, through which the extension hands shared pictures to the application.
 
     python3 scripts/ios-signing.py --check        prints one line per secret and the decision; exit 0 sign, 3 unsigned, 1 malformed
+    python3 scripts/ios-signing.py --check-dev    GroupLab Dev's two profiles (entry 315, request 61), as sign-dev; exit 0, 3 or 1 as above,
+                                                  and the nightly never fails for this one
     python3 scripts/ios-signing.py --self-test    checks the checker against made-up values, none of them real
     python3 scripts/ios-signing.py --properties <identity> <application profile UUID> <extension profile UUID>
                                                   the MSBuild properties the signed publish is given, one per line, so the nightly and
@@ -42,6 +44,15 @@ PROFILE_BUNDLES = {"IOS_PROFILE": BUNDLE_ID, "IOS_SHARE_PROFILE": BUNDLE_ID + ".
 
 # The app group both profiles must allow: ios/Shared/Handoff.cs and each project's Entitlements.plist.
 APP_GROUP = "group.org.grouplab.app"
+
+# Entry 315's amendment: GroupLab Dev, org.grouplab.app.dev, signed with the same certificate and key and two App Store profiles of its own
+# (request 61), for TestFlight's internal group only. Until both are set it is built unsigned and sent nowhere; the public application's
+# signing never depends on them.
+DEV_SECRETS = ["IOS_DEV_PROFILE", "IOS_DEV_SHARE_PROFILE"]
+DEV_BUNDLE_ID = "org.grouplab.app.dev"
+PROFILE_BUNDLES.update({"IOS_DEV_PROFILE": DEV_BUNDLE_ID, "IOS_DEV_SHARE_PROFILE": DEV_BUNDLE_ID + ".share"})
+DEV_APP_GROUP = "group.org.grouplab.app.dev"
+GROUPS = {"IOS_PROFILE": APP_GROUP, "IOS_SHARE_PROFILE": APP_GROUP, "IOS_DEV_PROFILE": DEV_APP_GROUP, "IOS_DEV_SHARE_PROFILE": DEV_APP_GROUP}
 
 TEN = re.compile(r"^[A-Z0-9]{10}$")
 UUID = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
@@ -84,8 +95,9 @@ def problem(name: str, value: str, env: dict[str, str]) -> str | None:
         # search for the bundle would take the extension's profile for the application's.
         if not re.search(rb"<key>application-identifier</key>\s*<string>[A-Z0-9]{10}\." + re.escape(bundle.encode()) + rb"</string>", data):
             return f"is not for the bundle {bundle}"
-        if b"<key>com.apple.security.application-groups</key>" not in data or f"<string>{APP_GROUP}</string>".encode() not in data:
-            return f"does not allow the app group {APP_GROUP}; turn App Groups on for {bundle}, tick the group, and download the profile again"
+        group = GROUPS[name]
+        if b"<key>com.apple.security.application-groups</key>" not in data or f"<string>{group}</string>".encode() not in data:
+            return f"does not allow the app group {group}; turn App Groups on for {bundle}, tick the group, and download the profile again"
         return None
     if name == "APPLE_API_KEY_P8":
         text = value if "-----BEGIN PRIVATE KEY-----" in value else (decoded(value) or b"").decode("latin-1")
@@ -113,6 +125,31 @@ def decide(env: dict[str, str]) -> tuple[str, list[str]]:
         missing = ", ".join(n for n in SECRETS if n not in present)
         return "malformed", lines + [f"Only {len(present)} of the eight are set; still missing: {missing}. Nothing is signed until all eight are."]
     return "sign", lines + ["All eight are set and look right; the build is signed and sent to TestFlight."]
+
+
+def decide_dev(env: dict[str, str]) -> tuple[str, list[str]]:
+    """
+    GroupLab Dev's decision: signed only where the public application's eight are right and both of its own profiles are set and right;
+    unsigned where neither is set; malformed where one is missing or wrong, which the nightly reports without failing anything else.
+    """
+    public, _ = decide(env)
+    present = [n for n in DEV_SECRETS if env.get(n, "").strip()]
+    lines = []
+    faults = 0
+    for name in DEV_SECRETS:
+        if name not in present:
+            lines.append(f"{name}: not set")
+            continue
+        why = problem(name, env[name], env)
+        lines.append(f"{name}: set, " + ("its shape is right" if why is None else "MALFORMED: " + why))
+        faults += why is not None
+    if not present:
+        return "unsigned", lines + ["Neither of GroupLab Dev's profiles is set, so GroupLab Dev is built unsigned and sent nowhere (request 61)."]
+    if faults or len(present) < len(DEV_SECRETS):
+        return "malformed", lines + ["GroupLab Dev's profiles are not both set and right, so GroupLab Dev is not signed. Set them again as request 61 says."]
+    if public != "sign":
+        return "unsigned", lines + ["GroupLab Dev's profiles are right, but the public application's eight secrets are not, so nothing is signed."]
+    return "sign", lines + ["GroupLab Dev's profiles are right; GroupLab Dev is signed and sent to TestFlight's internal group."]
 
 
 def properties(identity: str, app_profile: str, share_profile: str) -> list[str]:
@@ -191,6 +228,30 @@ def self_test() -> int:
             pass
     expect("an issuer that is not a UUID", {**good, "APPLE_API_ISSUER_ID": "issuer"}, "malformed")
     expect("a key that is not a key", {**good, "APPLE_API_KEY_P8": "just some words here"}, "malformed")
+
+    # Entry 315's amendment: GroupLab Dev's two profiles, which never change the public application's decision.
+    def made_up_dev(bundle: str) -> str:
+        return base64.b64encode(base64.b64decode(made_up(bundle)).replace(b"group.org.grouplab.app<", b"group.org.grouplab.app.dev<")).decode()
+
+    dev = {"IOS_DEV_PROFILE": made_up_dev("org.grouplab.app.dev"), "IOS_DEV_SHARE_PROFILE": made_up_dev("org.grouplab.app.dev.share")}
+
+    def expect_dev(what: str, env: dict[str, str], want: str) -> None:
+        nonlocal failed
+        got, lines = decide_dev(env)
+        leaked = any(v in line for v in env.values() if len(v) > 3 for line in lines)
+        if got != want or leaked:
+            failed += 1
+            print(f"FAIL GroupLab Dev, {what}: {got}{' (a value was printed)' if leaked else ''}")
+
+    expect_dev("none set", good, "unsigned")
+    expect_dev("both right", {**good, **dev}, "sign")
+    expect_dev("one missing", {**good, "IOS_DEV_PROFILE": dev["IOS_DEV_PROFILE"]}, "malformed")
+    expect_dev("the public profile given for Dev", {**good, **dev, "IOS_DEV_PROFILE": profile}, "malformed")
+    expect_dev("Dev's profile without Dev's app group", {**good, **dev, "IOS_DEV_PROFILE": made_up("org.grouplab.app.dev")}, "malformed")
+    expect_dev("the extension's profile given for the application", {**good, **dev, "IOS_DEV_PROFILE": dev["IOS_DEV_SHARE_PROFILE"]}, "malformed")
+    expect_dev("right, but the public secrets missing", dev, "unsigned")
+    expect("Dev's profiles leave the public decision alone", {**good, **dev}, "sign")
+    expect("a Dev profile given for the public application", {**good, "IOS_PROFILE": dev["IOS_DEV_PROFILE"]}, "malformed")
     print("ios-signing self-test: " + ("passed" if not failed else f"{failed} failed"))
     return 1 if failed else 0
 
@@ -205,6 +266,14 @@ def main(argv: list[str]) -> int:
             print(f"ios-signing: {e}", file=sys.stderr)
             return 1
         return 0
+    if argv[1:2] == ["--check-dev"]:
+        decision, lines = decide_dev(dict(os.environ))
+        for line in lines:
+            print(line)
+        if out := os.environ.get("GITHUB_OUTPUT"):
+            with open(out, "a", encoding="utf-8", newline="\n") as f:
+                f.write(f"sign-dev={'true' if decision == 'sign' else 'false'}\n")
+        return {"sign": 0, "unsigned": 3, "malformed": 1}[decision]
     if argv[1:2] != ["--check"]:
         print(__doc__)
         return 2

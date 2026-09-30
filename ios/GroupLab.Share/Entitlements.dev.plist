@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- GroupLab Dev's, written by scripts/ios-dev-app.py from ios/GroupLab.Share/Entitlements.plist; change that file and run the script, never this one. -->
+<plist version="1.0">
+<dict>
+	<!-- Entry 292 section 2.3: the app group shared pictures are left in for GroupLab (ios/Shared/Handoff.cs). -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.org.grouplab.app.dev</string>
+	</array>
+</dict>
+</plist>

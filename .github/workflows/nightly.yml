@@ -619,6 +619,205 @@ jobs:
             build-device.binlog
           retention-days: 7
 
+  # NOTES-FROM-PLANNING.md entry 315's amendment, section 2: GroupLab Dev for iPhone and iPad, org.grouplab.app.dev, the same sources with
+  # the developer tools compiled in (-p:GroupLabDev=true). Built for a device every nightly; signed and sent to TestFlight, for the
+  # internal group only, once its two profiles exist (request 61). Its own job, never a need of publish, and never failing the nightly.
+  ios-dev:
+    name: iOS GroupLab Dev, unsigned until its profiles exist
+    needs: name-it
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
+    runs-on: macos-26
+    timeout-minutes: 120
+    continue-on-error: true
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+      VERSION: ${{ needs.name-it.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.name-it.outputs.sha }}
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+
+      # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
+      - name: The .NET iOS workload
+        run: |
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload list | grep -i ios
+
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: OpenCV for iOS
+        id: opencv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
+            echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/ios-opencv"
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          mkdir -p "$GITHUB_WORKSPACE/ios/native"
+          unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
+          ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          cd "$RUNNER_TEMP/ios-opencv"
+          # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
+          frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
+          flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
+          echo "OpenCV for iOS from run $run: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)"
+          echo "frameworks: $frameworks"
+          echo "linker flags: $flags"
+          echo "linked=true" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+
+      # Request 61: GroupLab Dev's two App Store profiles. Until both are set it is built unsigned and sent nowhere; a malformed one is a
+      # warning, never a failure, since nothing else depends on GroupLab Dev.
+      - name: GroupLab Dev's profiles
+        id: signing
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          IOS_DIST_CERT_P12: ${{ secrets.IOS_DIST_CERT_P12 }}
+          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+          IOS_PROFILE: ${{ secrets.IOS_PROFILE }}
+          IOS_SHARE_PROFILE: ${{ secrets.IOS_SHARE_PROFILE }}
+          IOS_DEV_PROFILE: ${{ secrets.IOS_DEV_PROFILE }}
+          IOS_DEV_SHARE_PROFILE: ${{ secrets.IOS_DEV_SHARE_PROFILE }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          set +e
+          python3 scripts/ios-signing.py --check-dev
+          code=$?
+          set -e
+          [ $code -eq 1 ] && echo "::warning::GroupLab Dev's profiles are not both right; the lines above say which. GroupLab Dev is built unsigned."
+          if [ $code -ne 0 ]; then echo "### iOS GroupLab Dev: not signed or sent to TestFlight (request 61)." >> "$GITHUB_STEP_SUMMARY"; fi
+          exit 0
+
+      - name: Build GroupLab Dev for a device
+        run: |
+          code="${VERSION##*.}"
+          dotnet build ios/GroupLab.iOS --configuration Release -r ios-arm64 -p:GroupLabDev=true \
+            -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
+            -p:Version="$VERSION-dev" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
+            -p:EnableCodeSigning=false -bl:build-dev-device.binlog \
+            -v:minimal -clp:ErrorsOnly > build-dev-device.log 2>&1 || { grep -E "error" build-dev-device.log | head -60; exit 1; }
+          app=$(find ios/GroupLab.iOS/bin/Release -path '*ios-arm64*' -not -path '*simulator*' -name 'GroupLab.iOS.app' -type d | head -1)
+          test -n "$app"
+          test "$(plutil -extract CFBundleIdentifier raw "$app/Info.plist")" = "org.grouplab.app.dev" || { echo "::error::GroupLab Dev is not org.grouplab.app.dev"; exit 1; }
+          test "$(plutil -extract CFBundleIdentifier raw "$app/PlugIns/GroupLab.Share.appex/Info.plist")" = "org.grouplab.app.dev.share" || { echo "::error::GroupLab Dev's share extension has the wrong id"; exit 1; }
+          echo "### iOS GroupLab Dev: built for a device, $(du -sh "$app" | cut -f1), version $VERSION-dev." >> "$GITHUB_STEP_SUMMARY"
+
+      # With GroupLab Dev's profiles right: signed with the same certificate, sent to TestFlight with the same key. Its App Store Connect
+      # record is its own, and it is given only to the internal group there (entry 315's amendment, section 2); nothing here adds it to an
+      # external group. No secret is ever printed.
+      - name: Sign GroupLab Dev and send it to TestFlight
+        if: steps.signing.outputs.sign-dev == 'true'
+        env:
+          IOS_DIST_CERT_P12: ${{ secrets.IOS_DIST_CERT_P12 }}
+          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+          IOS_DEV_PROFILE: ${{ secrets.IOS_DEV_PROFILE }}
+          IOS_DEV_SHARE_PROFILE: ${{ secrets.IOS_DEV_SHARE_PROFILE }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          keychain="$RUNNER_TEMP/grouplab-dev-signing.keychain-db"
+          kpass=$(uuidgen)
+          echo "::add-mask::$kpass"
+          echo "$IOS_DIST_CERT_P12" | base64 --decode > "$RUNNER_TEMP/dist.p12"
+          security create-keychain -p "$kpass" "$keychain"
+          security set-keychain-settings -lut 3600 "$keychain"
+          security unlock-keychain -p "$kpass" "$keychain"
+          security import "$RUNNER_TEMP/dist.p12" -k "$keychain" -P "$IOS_DIST_CERT_PASSWORD" -T /usr/bin/codesign > /dev/null
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$kpass" "$keychain" > /dev/null
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          rm -f "$RUNNER_TEMP/dist.p12"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          install_profile() {
+            printf '%s' "$1" | base64 --decode > "$RUNNER_TEMP/$2.mobileprovision"
+            installed=$(security cms -D -i "$RUNNER_TEMP/$2.mobileprovision" | plutil -extract UUID raw -)
+            cp "$RUNNER_TEMP/$2.mobileprovision" "$HOME/Library/MobileDevice/Provisioning Profiles/$installed.mobileprovision"
+            rm -f "$RUNNER_TEMP/$2.mobileprovision"
+            echo "$installed"
+          }
+          uuid=$(install_profile "$IOS_DEV_PROFILE" grouplab-dev)
+          share_uuid=$(install_profile "$IOS_DEV_SHARE_PROFILE" grouplab-dev-share)
+          identity=$(security find-identity -v -p codesigning "$keychain" | grep -oE '"[^"]*Distribution[^"]*"' | head -1 | tr -d '"')
+          test -n "$identity" || { echo "::error::The distribution certificate did not import as a signing identity."; exit 1; }
+          code="${VERSION##*.}"
+          signing=$(python3 scripts/ios-signing.py --properties "$identity" "$uuid" "$share_uuid")
+          set --
+          while IFS= read -r line; do set -- "$@" "$line"; done <<EOF
+          $signing
+          EOF
+          dotnet publish ios/GroupLab.iOS --configuration Release -r ios-arm64 -p:GroupLabDev=true \
+            -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
+            -p:Version="$VERSION-dev" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
+            -p:ArchiveOnBuild=true "$@" -o "$RUNNER_TEMP/ipa-dev" \
+            -v:minimal -clp:ErrorsOnly > publish-ios-dev.log 2>&1 || { grep -E "error" publish-ios-dev.log | head -40; exit 1; }
+          ipa=$(ls "$RUNNER_TEMP"/ipa-dev/*.ipa | head -1)
+          mkdir -p "$HOME/private_keys"
+          if printf '%s' "$APPLE_API_KEY_P8" | grep -q "BEGIN PRIVATE KEY"; then
+            printf '%s' "$APPLE_API_KEY_P8" > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          else
+            printf '%s' "$APPLE_API_KEY_P8" | base64 --decode > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          fi
+          xcrun altool --upload-app --type ios --file "$ipa" --apiKey "$APPLE_API_KEY_ID" --apiIssuer "$APPLE_API_ISSUER_ID" > upload.log 2>&1 \
+            || { grep -vi "key" upload.log | tail -20; echo "::error::TestFlight did not take GroupLab Dev; the lines above say why."; exit 1; }
+          echo "### iOS GroupLab Dev: signed and sent to TestFlight, version $VERSION-dev." >> "$GITHUB_STEP_SUMMARY"
+          rm -f "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          security delete-keychain "$keychain"
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-dev-nightly-build
+          path: |
+            build-dev-device.log
+            build-dev-device.binlog
+          retention-days: 7
+
   publish:
     name: publish the nightly
     needs: [name-it, package, android]

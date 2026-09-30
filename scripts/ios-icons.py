@@ -23,6 +23,9 @@ SPEC.loader.exec_module(android)
 
 CATALOG = HERE / "ios" / "GroupLab.iOS" / "Assets.xcassets"
 ICON = CATALOG / "AppIcon.appiconset"
+# Entry 315's amendment: GroupLab Dev's icon, the light background with the light mark as Android's ic_launcher_dev, so the two are never
+# confused on a home screen.
+ICON_DEV = CATALOG / "AppIconDev.appiconset"
 SIZE = 1024
 
 
@@ -31,17 +34,22 @@ def write_json(path: Path, value: dict) -> None:
     path.write_bytes((json.dumps(value, indent=2) + "\n").encode())
 
 
-def main() -> int:
-    marks = android.circles(android.MARK)
+def icon(folder: Path, background: str, mark: Path) -> None:
+    """One 1024 square icon and its catalog entry."""
     # The mark reaches 36 percent of the side from the middle, as the Play listing's icon does.
-    image = android.render(SIZE, android.DARK_BG, "square", marks, SIZE * 0.36).convert("RGB")
-    android.save(image, ICON / "icon-1024.png")
-    write_json(CATALOG / "Contents.json", {"info": {"author": "xcode", "version": 1}})
-    write_json(ICON / "Contents.json", {
+    image = android.render(SIZE, background, "square", android.circles(mark), SIZE * 0.36).convert("RGB")
+    android.save(image, folder / "icon-1024.png")
+    write_json(folder / "Contents.json", {
         "images": [{"filename": "icon-1024.png", "idiom": "universal", "platform": "ios", "size": f"{SIZE}x{SIZE}"}],
         "info": {"author": "xcode", "version": 1},
     })
-    print(f"ios icon from {android.MARK.name}: {ICON.relative_to(HERE).as_posix()}/icon-1024.png")
+
+
+def main() -> int:
+    write_json(CATALOG / "Contents.json", {"info": {"author": "xcode", "version": 1}})
+    icon(ICON, android.DARK_BG, android.MARK)
+    icon(ICON_DEV, android.LIGHT_BG, android.MARK_LIGHT)
+    print(f"ios icons from {android.MARK.name}: {ICON.relative_to(HERE).as_posix()} and {ICON_DEV.name}")
     return 0
 
 

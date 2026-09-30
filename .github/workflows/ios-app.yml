@@ -131,6 +131,12 @@ jobs:
             nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -E " _vector_Point2f_delete$" || echo "vector_Point2f_delete is not in the executable"
           fi
 
+          # Entry 315's amendment, section 5: the public application carries none of GroupLab Dev's developer tools, which are compiled
+          # out of it; GroupLab Dev's own job checks that its library has them.
+          dll=$(find "$app" -name 'GroupLab.Mobile.dll' | head -1)
+          if [ -n "$dll" ] && grep -q "GroupLab.Mobile.Dev" "$dll"; then echo "::error::GroupLab carries GroupLab Dev's developer tools"; exit 1; fi
+          test -n "$dll" && echo "GroupLab.Mobile.dll carries no developer tools" || echo "::notice::No GroupLab.Mobile.dll in the bundle to look into"
+
       - name: Boot an iOS 26 simulator
         run: |
           udid=$(xcrun simctl list devices available -j | python3 -c '
@@ -440,3 +446,209 @@ jobs:
             build-device.log
             build-device.binlog
           retention-days: 7
+
+  # NOTES-FROM-PLANNING.md entry 315's amendment, sections 2 and 5, and section 2: GroupLab Dev (org.grouplab.app.dev), built from the same
+  # sources with -p:GroupLabDev=true, checked to be its own application beside GroupLab, and made to run a scenario with nobody's hands.
+  dev-simulator:
+    name: GroupLab Dev on the iOS Simulator
+    runs-on: macos-26
+    timeout-minutes: 120
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+
+      # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
+      - name: The .NET iOS workload
+        run: |
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload list | grep -i ios
+
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: OpenCV for iOS
+        id: opencv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
+            echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/ios-opencv"
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          mkdir -p "$GITHUB_WORKSPACE/ios/native"
+          unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
+          ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          cd "$RUNNER_TEMP/ios-opencv"
+          # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
+          frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
+          flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
+          echo "OpenCV for iOS from run $run: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)"
+          echo "frameworks: $frameworks"
+          echo "linker flags: $flags"
+          echo "linked=true" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+
+      - name: Build GroupLab Dev for the simulator
+        run: |
+          dotnet build ios/GroupLab.iOS --configuration Release -r iossimulator-arm64 -p:GroupLabDev=true \
+            -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
+            -bl:build-dev-simulator.binlog -v:minimal -clp:ErrorsOnly > build-dev-simulator.log 2>&1 || { grep -E "error" build-dev-simulator.log | head -60; exit 1; }
+          app=$(find ios/GroupLab.iOS/bin/Release -path '*iossimulator-arm64*' -name 'GroupLab.iOS.app' -type d | head -1)
+          test -n "$app"
+          echo "APP=$app" >> "$GITHUB_ENV"
+          # Everything two applications side by side cannot share is GroupLab Dev's own (scripts/ios-dev-app.py).
+          said() { plutil -extract "$2" raw "$1/Info.plist" 2>/dev/null || echo "(absent)"; }
+          appex="$app/PlugIns/GroupLab.Share.appex"
+          echo "id $(said "$app" CFBundleIdentifier), name $(said "$app" CFBundleDisplayName), address $(said "$app" CFBundleURLTypes.0.CFBundleURLSchemes.0), extension $(said "$appex" CFBundleIdentifier)"
+          test "$(said "$app" CFBundleIdentifier)" = "org.grouplab.app.dev" || { echo "::error::GroupLab Dev is not org.grouplab.app.dev"; exit 1; }
+          test "$(said "$app" CFBundleDisplayName)" = "GroupLab Dev" || { echo "::error::GroupLab Dev is not named GroupLab Dev under its icon"; exit 1; }
+          test "$(said "$app" CFBundleURLTypes.0.CFBundleURLSchemes.0)" = "grouplab-dev" || { echo "::error::GroupLab Dev answers GroupLab's own address"; exit 1; }
+          test "$(said "$appex" CFBundleIdentifier)" = "org.grouplab.app.dev.share" || { echo "::error::GroupLab Dev's share extension has the wrong id"; exit 1; }
+          codesign -d --entitlements - --xml "$app" 2>/dev/null | grep -q "group.org.grouplab.app.dev" || echo "::warning::GroupLab Dev's signature does not show its app group"
+          # The developer tools are in GroupLab Dev's shared library, and (the job iOS Simulator checks) not in GroupLab's.
+          dll=$(find "$app" -name 'GroupLab.Mobile.dll' | head -1)
+          if [ -n "$dll" ]; then
+            grep -c "GroupLab.Mobile.Dev" "$dll" || { echo "::error::GroupLab Dev's library carries no developer tools"; exit 1; }
+          else
+            echo "::notice::No GroupLab.Mobile.dll in the bundle to look into"
+          fi
+
+      - name: Boot an iOS 26 simulator
+        run: |
+          udid=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds if d["name"].startswith("iPhone")]
+          found.sort(key=lambda p: (p[0], "Pro" in p[1]["name"], p[1]["name"]))
+          print(found[-1][1]["udid"] if found else "")')
+          test -n "$udid" || { xcrun simctl list runtimes; echo "::error::No iOS 26 iPhone simulator"; exit 1; }
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b > /dev/null
+          echo "UDID=$udid" >> "$GITHUB_ENV"
+
+      # Entry 315 section 2: a scenario run with nobody's hands. The sample scan (its consent is in samples/PROVENANCE.md) and a scenario
+      # go into Documents/scenario; GroupLab Dev reads it at the start, runs it once, and writes results, screenshots, trees and its log
+      # into Documents/scenario/results, which this copies off as a developer's script would from a device.
+      - name: A scenario
+        timeout-minutes: 20
+        run: |
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch "$UDID" org.grouplab.app.dev
+          sleep 15
+          xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
+          data=$(xcrun simctl get_app_container "$UDID" org.grouplab.app.dev data)
+          folder="$data/Documents/scenario"
+          mkdir -p "$folder"
+          cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$folder/sample.png"
+          cat > "$folder/scenario.json" <<'JSON'
+          { "name": "read the sample and look around", "stopOnFailure": false, "caliber": "6.5 Creedmoor", "distanceInches": 3600,
+            "steps": [
+              { "do": "open", "place": "capture" },
+              { "do": "screenshot", "name": "01-capture" },
+              { "do": "tree", "name": "01-capture" },
+              { "do": "picture", "file": "sample.png" },
+              { "do": "wait", "screen": "FeedbackView|ResultView", "seconds": 300 },
+              { "do": "screenshot", "name": "02-check" },
+              { "do": "press", "name": "Use this picture|Use it anyway" },
+              { "do": "wait", "screen": "ResultView", "seconds": 120 },
+              { "do": "sleep", "seconds": 2 },
+              { "do": "screenshot", "name": "03-result" },
+              { "do": "tree", "name": "03-result" },
+              { "do": "open", "place": "settings" },
+              { "do": "wait", "text": "Send diagnostics", "seconds": 10 },
+              { "do": "screenshot", "name": "04-settings" },
+              { "do": "open", "place": "sessions" },
+              { "do": "screenshot", "name": "05-sessions" },
+              { "do": "log", "lines": 400 } ] }
+          JSON
+          xcrun simctl launch --console-pty "$UDID" org.grouplab.app.dev > dev-console.log 2>&1 &
+          start=$(date +%s)
+          status=""
+          while [ $(( $(date +%s) - start )) -lt 900 ]; do
+            status=$(cat "$folder/results/status" 2>/dev/null || true)
+            [ "$status" = "done" ] && break
+            sleep 5
+          done
+          echo "status after $(( $(date +%s) - start )) s: $status"
+          xcrun simctl io "$UDID" screenshot dev-last-screen.png > /dev/null || true
+          xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
+          mkdir -p scenario-results
+          cp -R "$folder/results/." scenario-results/ 2>/dev/null || true
+          test -f "$folder/scenario.json.ran" || { echo "::error::GroupLab Dev did not take the waiting scenario"; exit 1; }
+          test -f scenario-results/results.json || { echo "::error::The scenario wrote no results (status: $status)"; tail -40 dev-console.log; exit 1; }
+          python3 - <<'PY'
+          import json, os
+          results = json.load(open("scenario-results/results.json"))
+          for step in results["steps"]:
+              print(f"{step['step']:>2} {step['do']:<10} {'ok' if step['ok'] else 'FAILED':<6} {step['ms']:>7} ms  {step['detail']}")
+          must = {("open", True), ("screenshot", True), ("tree", True), ("picture", True)}
+          done = {(s["do"], s["ok"]) for s in results["steps"]}
+          missing = [m for m in must if m not in done]
+          shots = [f for f in os.listdir("scenario-results") if f.endswith(".png")]
+          print(f"{len(shots)} screenshots: {', '.join(sorted(shots))}")
+          if missing or not shots:
+              raise SystemExit(f"::error::The scenario's basic steps did not all work: {missing}")
+          if not results.get("ok"):
+              print("::warning::A step of the scenario failed; the lines above say which")
+          PY
+          if grep -q '"do": "wait",' scenario-results/results.json && python3 -c 'import json,sys; r=json.load(open("scenario-results/results.json")); sys.exit(0 if any(s["do"]=="wait" and s["ok"] and "ResultView" in s["detail"] for s in r["steps"]) else 1)'; then
+            echo "### GroupLab Dev read the sample in a scenario on the simulator, and reached its result." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### GroupLab Dev ran a scenario on the simulator; the sample's result was not reached (see the step lines)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-dev-simulator
+          path: |
+            scenario-results
+            dev-console.log
+            dev-last-screen.png
+            build-dev-simulator.log
+            build-dev-simulator.binlog
+          retention-days: 14
+          if-no-files-found: warn

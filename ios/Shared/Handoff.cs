@@ -12,11 +12,18 @@ namespace GroupLab.iOS;
 /// </summary>
 internal static class Handoff
 {
+#if GROUPLAB_DEV
+    // Entry 315's amendment: GroupLab Dev installs beside GroupLab, so its app group and address are its own (scripts/ios-dev-app.py).
+    internal const string Group = "group.org.grouplab.app.dev";
+
+    internal const string Scheme = "grouplab-dev";
+#else
     /// <summary>The app group the application and the extension share; it has to be registered with Apple for a signed build.</summary>
     internal const string Group = "group.org.grouplab.app";
 
     /// <summary>The address scheme GroupLab answers, declared in the application's Info.plist.</summary>
     internal const string Scheme = "grouplab";
+#endif
 
     /// <summary>The address's host that says pictures are waiting in the app group.</summary>
     internal const string Shared = "shared";

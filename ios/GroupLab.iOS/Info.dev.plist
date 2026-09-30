@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- GroupLab Dev's, written by scripts/ios-dev-app.py from ios/GroupLab.iOS/Info.plist; change that file and run the script, never this one. -->
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>GroupLab Dev</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string></string>
+	</dict>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<!--
+	  Entry 311 section 3 item 2: GroupLab's Documents folder in the Files app, under On My iPad (or iPhone), GroupLab: the log in logs, a
+	  sitting's kept pictures in sitting, and the sessions. Both keys are needed for Files to show it; the second lets Files hand over a file
+	  where it lies, which GroupLab reads and leaves in place (IncomingPhotos.Claim). It also lets a USB tool copy the folder (scripts/ipad-logs.py).
+	-->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<!-- Entry 292 section 2.3: "Open in GroupLab" for any picture, which iOS copies into GroupLab's own files. -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Picture</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+		</dict>
+		<!-- Entry 307: a GroupLab data file, all of someone's sessions, rifles, sheets and settings, opened in GroupLab to import. -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>GroupLab data</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.grouplab.data</string>
+			</array>
+		</dict>
+	</array>
+	<!-- Entry 307: what a .grouplab file is, so iOS knows GroupLab owns it: JSON, as the desktop and Android write it. -->
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.grouplab.data</string>
+			<key>UTTypeDescription</key>
+			<string>GroupLab data</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>grouplab</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<!-- Entry 292 section 2.3: the address the share extension opens GroupLab with once the shared pictures are in the app group. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>org.grouplab.app.dev.shared</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>grouplab-dev</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>GroupLab photographs a target to find the holes and measure the group. The picture stays on this device unless you share it.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>GroupLab saves a result's picture to your photos when you ask it to.</string>
+</dict>
+</plist>
