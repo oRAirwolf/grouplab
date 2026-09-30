@@ -196,11 +196,16 @@ public sealed partial class MainWindow
         }
 
         surveySettings.Children.Add(choices);
-        surveySettings.Children.Add(FieldLabel("What a report holds"));
+        surveySettings.Children.Add(Line(SharingWords.SurveyShort));
+
+        // Entry 299: what a report holds, under "More".
+        var more = new List<Control> { Line(SharingWords.SurveyIntro), FieldLabel("What a report holds") };
         foreach (string line in SurveyReport.WhatIsSent)
         {
-            surveySettings.Children.Add(Line("• " + line));
+            more.Add(Line("• " + line));
         }
+
+        surveySettings.Children.Add(MoreFold.Make(settingsStore, "survey", more));
 
         // Entry 227 section 2: whether the survey is on is the choice above; the benchmark says when it last ran and what it found, and
         // runs from here, with its progress and a Cancel.

@@ -139,16 +139,20 @@ public sealed partial class MainWindow
         }
 
         errorSettings.Children.Add(choices);
-        errorSettings.Children.Add(FieldLabel("What a report holds"));
+        errorSettings.Children.Add(Line(SharingWords.ErrorsShort));
+
+        // Entry 299: what a report holds and how many have gone, under "More".
+        var more = new List<Control> { Line(SharingWords.ErrorsIntro) };
         foreach (string line in ErrorReports.WhatIsSent)
         {
-            errorSettings.Children.Add(Line("• " + line));
+            more.Add(Line("• " + line));
         }
 
         int inAll = settingsStore.LoadErrorsSent(DateTime.UtcNow).InAll;
-        errorSettings.Children.Add(Line(inAll == 0
+        more.Add(Line(inAll == 0
             ? "No error reports have been sent from this computer."
             : string.Create(CultureInfo.InvariantCulture, $"{inAll} error report{(inAll == 1 ? " has" : "s have")} been sent from this computer.")));
+        errorSettings.Children.Add(MoreFold.Make(settingsStore, "errors", more));
     }
 
     /// <summary>The Error reports section's words, for the headless tests.</summary>

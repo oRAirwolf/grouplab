@@ -5337,6 +5337,8 @@ public sealed partial class MainWindow : Window
 
         // Entry 208 section 4: what may be shared, the first run screen's three questions, together in one section in the same order.
         column.Children.Add(Ruled("Sharing"));
+        // Entry 299: the page that says exactly what GroupLab sends, always in view above the three folded sections.
+        column.Children.Add(Row(Link(SharingWords.WhatIsSentLabel, () => OpenInTheBrowser(SharingWords.WhatIsSentAddress))));
         BuildSendingSettings(column);
         BuildErrorSettings(column);
         BuildSurveySettings(column);

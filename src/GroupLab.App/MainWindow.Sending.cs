@@ -431,11 +431,15 @@ public sealed partial class MainWindow
         }
 
         sendingSettings.Children.Add(choices);
+        sendingSettings.Children.Add(Line(SharingWords.TargetsShort));
         sendingSettings.Children.Add(FieldLabel(SharingWords.LevelHeading));
         var levels = new StackPanel { Spacing = Tokens.Space4 };
+        // Entry 299: the level's name on the choice, and the receiver's description of each under "More".
+        var more = new List<Control> { Line(SharingWords.TargetsIntro) };
         foreach (var (value, words) in SharingWords.Levels(terms))
         {
-            var radio = new RadioButton { GroupName = "sendingLevel", Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap, MaxWidth = 640 }, IsChecked = level == value };
+            more.Add(Line(words));
+            var radio = new RadioButton { GroupName = "sendingLevel", Content = Wrapped(SharingWords.LevelName(value)), IsChecked = level == value };
             radio.IsCheckedChanged += (_, _) =>
             {
                 if (radio.IsChecked == true && settingsStore.LoadSending().Level != value)
@@ -448,14 +452,14 @@ public sealed partial class MainWindow
         }
 
         sendingSettings.Children.Add(levels);
-        sendingSettings.Children.Add(FieldLabel("What is sent"));
+        more.Add(FieldLabel("What is sent"));
         foreach (string line in TargetPackages.WhatIsSent)
         {
-            sendingSettings.Children.Add(Line("• " + line));
+            more.Add(Line("• " + line));
         }
 
         var sent = settingsStore.LoadSent();
-        sendingSettings.Children.Add(Line(sent.Count == 0
+        more.Add(Line(sent.Count == 0
             ? "No targets have been sent from this computer."
             : string.Create(CultureInfo.InvariantCulture, $"{sent.Count} target{(sent.Count == 1 ? " has" : "s have")} been sent from this computer: {string.Join(", ", sent)}. To have one removed, write to {SupportLink.Email} with its reference.")));
 
@@ -474,6 +478,8 @@ public sealed partial class MainWindow
                 FillSendingSettings();
             })));
         }
+
+        sendingSettings.Children.Add(MoreFold.Make(settingsStore, "sending", more));
     }
 
     /// <summary>What the question panel and the line under it say, for the headless tests.</summary>

@@ -84,4 +84,17 @@ public interface IPhonePlatform
 
     /// <summary>Whether this is the development build, which says so in Settings.</summary>
     bool IsDevBuild { get; }
+
+    /// <summary>
+    /// Opens a web address in the phone's browser (entries 299 and 309): what GroupLab sends, the phone's getting-started guide. By default
+    /// through Avalonia's launcher, which both heads provide; a test phone records it instead.
+    /// </summary>
+    void OpenAddress(string address)
+    {
+        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime { MainView: { } view }
+            && TopLevel.GetTopLevel(view) is { } top)
+        {
+            _ = top.Launcher.LaunchUriAsync(new Uri(address));
+        }
+    }
 }

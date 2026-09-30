@@ -64,6 +64,7 @@
     "src/GroupLab.App/MainWindow.Updates.cs",
     "src/GroupLab.App/MainWindow.cs",
     "src/GroupLab.App/MarkingCanvas.cs",
+    "src/GroupLab.App/MoreFold.cs",
     "src/GroupLab.App/PrintPanel.cs",
     "src/GroupLab.App/Program.cs",
     "src/GroupLab.App/SessionsOverTime.cs",

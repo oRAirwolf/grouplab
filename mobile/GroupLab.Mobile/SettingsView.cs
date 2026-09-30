@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
+using GroupLab.App.Theme;
 using GroupLab.Core.Publication;
 using GroupLab.Core.Survey;
 
@@ -120,6 +121,11 @@ public sealed class SettingsView : UserControl
         column.Children.Add(correcting);
         column.Children.Add(Screens.Choice("Add a printer", () => Shell.Current?.ShowPrinterCheck("")));
         column.Children.Add(Screens.Heading("Sharing"));
+        // Entry 299: the page that says exactly what GroupLab sends, always in view; each section below shows its choice and one short line,
+        // and the full explanation under "More".
+        var whatIsSent = new Button { Content = SharingWords.WhatIsSentLabel, MinHeight = Screens.Touch, Classes = { AppStyles.Link } };
+        whatIsSent.Click += (_, _) => Phone.Platform.OpenAddress(SharingWords.WhatIsSentAddress);
+        column.Children.Add(whatIsSent);
 
         column.Children.Add(Screens.Heading("Sending targets"));
         if (!Shell.TargetsOpen)
@@ -143,10 +149,13 @@ public sealed class SettingsView : UserControl
                 column.Children.Add(radio);
             }
 
+            column.Children.Add(Screens.Dim(SharingWords.TargetsShort));
             column.Children.Add(Screens.Dim(SharingWords.LevelHeading));
+            var more = new List<Control> { Screens.Dim(SharingWords.TargetsIntro) };
             foreach (var (value, words) in SharingWords.Levels(ReceiverTerms.Current))
             {
-                var radio = Screens.Radio("sendingLevel", words, level == value);
+                more.Add(Screens.Dim(words));
+                var radio = Screens.Radio("sendingLevel", SharingWords.LevelName(value), level == value);
                 radio.IsCheckedChanged += (_, _) =>
                 {
                     // A change applies to targets sent from now on and never re-labels one already sent.
@@ -157,6 +166,10 @@ public sealed class SettingsView : UserControl
                 };
                 column.Children.Add(radio);
             }
+
+            more.Add(Screens.Dim("What is sent:"));
+            more.AddRange(TargetPackages.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line)));
+            column.Children.Add(MoreFold.Make(settings, "sending", more, Screens.Touch));
         }
 
         column.Children.Add(Screens.Heading("Error reports"));
@@ -182,11 +195,9 @@ public sealed class SettingsView : UserControl
                 column.Children.Add(radio);
             }
 
-            column.Children.Add(Screens.Dim(SharingWords.ErrorsIntro));
-            foreach (string line in ErrorReports.WhatIsSent)
-            {
-                column.Children.Add(Screens.Dim("• " + line));
-            }
+            column.Children.Add(Screens.Dim(SharingWords.ErrorsShort));
+            column.Children.Add(MoreFold.Make(settings, "errors",
+                [Screens.Dim(SharingWords.ErrorsIntro), .. ErrorReports.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))], Screens.Touch));
         }
 
         column.Children.Add(Screens.Heading("Hardware survey"));
@@ -216,10 +227,9 @@ public sealed class SettingsView : UserControl
                 column.Children.Add(radio);
             }
 
-            foreach (string line in SurveyReport.WhatIsSent)
-            {
-                column.Children.Add(Screens.Dim("• " + line));
-            }
+            column.Children.Add(Screens.Dim(SharingWords.SurveyShort));
+            column.Children.Add(MoreFold.Make(settings, "survey",
+                [Screens.Dim(SharingWords.SurveyIntro), .. SurveyReport.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))], Screens.Touch));
 
             // Entry 227 section 2: when the benchmark last ran and what it found, and a button to run it now, with its progress.
             column.Children.Add(Screens.Heading("The benchmark"));

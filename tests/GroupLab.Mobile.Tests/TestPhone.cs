@@ -70,6 +70,9 @@ internal sealed class TestPhone : IPhonePlatform
 
     public bool CameraAllowed() => false;
 
+    /// <summary>A web address a screen asked to open, recorded and never opened.</summary>
+    public void OpenAddress(string address) => Asked.Add(("open", address));
+
     public Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => new TextBlock { Text = "camera" };
 
     public bool IsCamera(object? content) => content is TextBlock { Text: "camera" };

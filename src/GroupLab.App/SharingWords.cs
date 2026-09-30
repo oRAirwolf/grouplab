@@ -14,6 +14,23 @@ internal static class SharingWords
 {
     public const string TargetsQuestion = "Send your targets to help improve GroupLab?";
 
+    /// <summary>
+    /// Entry 299: the one short line each of Settings' sharing sections shows under its choice; the full explanation is behind "More".
+    /// </summary>
+    public const string TargetsShort = "Targets you analyze can go to the project to test and improve detection.";
+
+    public const string ErrorsShort = "A report of an error can go to the project, where it is fixed.";
+
+    public const string SurveyShort = "Once a week, what GroupLab runs on and how fast.";
+
+    /// <summary>Entry 299: the page that says exactly what GroupLab sends, linked from Settings where it can always be seen.</summary>
+    public const string WhatIsSentLabel = "What GroupLab sends";
+
+    public const string WhatIsSentAddress = "https://grouplab.org/research/what-grouplab-sends/";
+
+    /// <summary>Entry 299: the consent level's name alone, for the choice in Settings; the receiver's full description is under "More".</summary>
+    public static string LevelName(ConsentLevel level) => level == ConsentLevel.Publishable ? MayBePublished.Trim() : TestingOnly.Trim();
+
     public const string TargetsIntro = "Each target you analyze can go to the project, to test and improve detection. This is what goes:";
 
     public const string TestingOnly = "Testing only. ";
