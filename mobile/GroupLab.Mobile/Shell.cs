@@ -222,17 +222,32 @@ public sealed class Shell : UserControl
     {
         var before = Content;
 
-        // The window behind the safe area too (the status bar's and the home indicator's strips on iOS), black while it shows.
+        // The window behind the safe area too (the status bar's and the home indicator's strips on iOS), black while it shows. The Shell
+        // itself carries the safe area as its padding and paints it with its own background, which the iOS self-test found left light
+        // there (entry 290 section 2 item 6), so the Shell's background is made black as well as the window's.
         var top = TopLevel.GetTopLevel(this);
         var behind = top?.Background;
+        var own = Background;
+        bool ownSet = IsSet(BackgroundProperty);
         if (top is not null)
         {
             top.Background = Avalonia.Media.Brushes.Black;
         }
 
+        Background = Avalonia.Media.Brushes.Black;
+
         Content = new IdleScreen(() =>
         {
             Content = before;
+            if (ownSet)
+            {
+                Background = own;
+            }
+            else
+            {
+                ClearValue(BackgroundProperty);
+            }
+
             if (top is not null)
             {
                 top.Background = behind;
