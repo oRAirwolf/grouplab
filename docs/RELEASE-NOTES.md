@@ -522,7 +522,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - A scanned GroupLab sheet whose printed codes could not be found in the whole page now reads them from its corners, so a zeroing grid scanned at 600 dpi names itself instead of asking which sheet it is.
 - The zeroing grids now say in the library that they are for sighting in by eye at the bench, and that a zero from a group is shot on a 5x5 sheet.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.102)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
