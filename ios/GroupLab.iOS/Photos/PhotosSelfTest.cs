@@ -9,7 +9,7 @@ using UIKit;
 namespace GroupLab.iOS;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 292 section 2: what the simulator can prove of pictures from anywhere. Choose a photograph opens the Photos
+/// NOTES-FROM-PLANNING.md entry 292 section 2: what the simulator can prove of pictures from anywhere. Choose a photo opens the Photos
 /// picker and From another app opens Files, each without a crash, and each Cancel comes back with nothing; a picture opened in GroupLab from
 /// another app ("Open in GroupLab") is read straight into analysis through the address iOS hands the application; and a picture shared from
 /// another app, left in the app group exactly as the share extension leaves one, is read into analysis when iOS opens

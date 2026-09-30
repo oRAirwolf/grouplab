@@ -308,7 +308,7 @@ internal sealed class IosPhone : IPhonePlatform
     }
 
     /// <summary>
-    /// Entry 292 section 2: Choose a photograph opens the Photos picker, iCloud Photos included and with no permission asked; From another
+    /// Entry 292 section 2: Choose a photo opens the Photos picker, iCloud Photos included and with no permission asked; From another
     /// app opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox (Photos/PhotoPickers.cs).
     /// </summary>
     public Task<IReadOnlyList<PhotoHandle>> PickPhotos(PhotoSource source, Avalonia.Controls.TopLevel? top) => PhotoPickers.Pick(source);

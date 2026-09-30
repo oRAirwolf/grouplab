@@ -67,7 +67,7 @@ sample sheet to Share and to Print and checks that iOS's share sheet and print s
 the sample scan on the pasteboard and presses Paste a picture on Capture through to a saved session, and `ios/selftest.py` reads the idle
 screen's screenshot and fails unless it is black to every edge, the strips behind the status bar and the home indicator included.
 
-**Pictures from anywhere (entry 292 section 2):** built in `ios/GroupLab.iOS/Photos` and `ios/GroupLab.Share`. **Choose a photograph**
+**Pictures from anywhere (entry 292 section 2):** built in `ios/GroupLab.iOS/Photos` and `ios/GroupLab.Share`. **Choose a photo**
 opens the Photos picker (`PHPickerViewController`, images only), which shows the whole library, photographs kept only in iCloud Photos
 included, and asks for no permission, since GroupLab sees only what is chosen. It asks for the photograph as it was taken (the current
 representation, the file itself, never a copy made for the screen); one kept only in iCloud downloads through the item provider, whose
@@ -112,7 +112,7 @@ no, and a no comes back as a note with what was seen.
     result follows as soon as the reading allows. Measured from a screen recording started in Control Center, frame by frame from the
     press to the flash and to the result; the log's `camera.shutter` lines hold the same steps, but the iPad cannot hand its log over yet.
 11. **Tap to focus.** A tap on the preview sharpens that part of the sheet and holds it until the next tap.
-12. **The Photos picker (entry 292).** Choose a photograph opens Photos with no question about access; a photograph on the iPad is read
+12. **The Photos picker (entry 292).** Choose a photo opens Photos with no question about access; a photograph on the iPad is read
     at its full size, and a HEIC one reads the right way up.
 13. **A photograph kept only in iCloud.** With Optimize iPad Storage on, a photograph not on the iPad downloads with the line saying how
     far it has got, and Cancel stops it and returns to Capture. The same with Wi-Fi off says the iPad is offline.

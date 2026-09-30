@@ -8,8 +8,8 @@ using UniformTypeIdentifiers;
 namespace GroupLab.iOS;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 292 sections 2.1 and 2.2: the two pickers behind Choose a photograph and From another app on iPhone and
-/// iPad. Choose a photograph opens the Photos picker, which shows every photograph in the person's library, those kept only in iCloud
+/// NOTES-FROM-PLANNING.md entry 292 sections 2.1 and 2.2: the two pickers behind Choose a photo and From another app on iPhone and
+/// iPad. Choose a photo opens the Photos picker, which shows every photograph in the person's library, those kept only in iCloud
 /// Photos too, and asks for no permission, because GroupLab sees only what is chosen. From another app opens Files, which reaches iCloud
 /// Drive, Google Drive, OneDrive, Dropbox and every other place a Files provider is installed for. Each hands back the chosen photograph
 /// unread; the shared <see cref="PhotoIntake.Fetch"/> reads it with the progress line and Cancel.
