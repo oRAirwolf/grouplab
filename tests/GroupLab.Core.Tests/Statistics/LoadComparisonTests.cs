@@ -136,4 +136,31 @@ public class LoadComparisonTests
         Assert.Contains("mean radius", spread, StringComparison.Ordinal);
         Assert.DoesNotContain("difference these shots can see", spread, StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// Entry 312 section 3: the verdict reads in plain words first, and the statistician's sentences (the ratio with its 95 percent interval
+    /// and the power) are behind Details, with nothing lost between them.
+    /// </summary>
+    [Fact]
+    public void TheVerdictSaysItInPlainWordsFirstWithTheExactFiguresBehindDetails()
+    {
+        Assert.Equal("Their spreads are within about a third of each other either way; these shots cannot say which is smaller.", LoadComparison.Apart("a", "b", 0.76, 1.34));
+        Assert.Equal("Their spreads could be the same, or either could be up to 2.5 times the other's; these shots cannot say which.", LoadComparison.Apart("a", "b", 0.4, 1.2));
+        Assert.Equal("wide spreads more than tight: by somewhere between 40 and 180 percent.", LoadComparison.Apart("wide", "tight", 1.4, 2.8));
+        Assert.Equal("tight spreads less than wide: by somewhere between 20 and 50 percent.", LoadComparison.Apart("tight", "wide", 0.5, 0.8));
+        Assert.Equal("a quarter", LoadComparison.Fraction(0.26));
+        Assert.Equal("5 percent", LoadComparison.Fraction(0.05));
+
+        var report = LoadComparison.Compare([("41.5 gr", Group(1, 10, 0.12)), ("42.1 gr", Group(2, 10, 0.10))], Inches);
+        Assert.Equal(report.Explanation[0], report.Plain[0]);
+        Assert.Contains(report.Plain, p => p.StartsWith("Their spreads ", StringComparison.Ordinal));
+        Assert.Equal("To tell a 10 percent difference in spread apart would take about 434 shots each; these groups have 10 and 10.", report.Plain[^1]);
+        Assert.All(report.Plain, p => Assert.DoesNotContain("95 percent", p, StringComparison.Ordinal));
+        Assert.All(report.Plain, p => Assert.DoesNotContain("power", p, StringComparison.Ordinal));
+        Assert.Equal(report.Explanation.Skip(1), report.Details);
+
+        var three = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 8, 0.1)), ("c", Group(7, 8, 0.1))], Inches);
+        Assert.Contains(three.Details, e => e.Contains("Holm's method", StringComparison.Ordinal));
+        Assert.Contains(three.Plain, p => p.Contains("under Details", StringComparison.Ordinal));
+    }
 }

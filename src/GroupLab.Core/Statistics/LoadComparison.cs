@@ -30,7 +30,17 @@ public sealed record LoadComparisonReport(
     bool IntervalsOverlap,
     string Headline,
     IReadOnlyList<string> Explanation,
-    IReadOnlyList<ResolveRow> Resolve);
+    IReadOnlyList<ResolveRow> Resolve)
+{
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 312 section 3: what the explanation says, in plain words a shooter reads first, such as "Their spreads
+    /// are within about a third of each other either way". The statistician's sentences behind them are <see cref="Details"/>.
+    /// </summary>
+    public IReadOnlyList<string> Plain { get; init; } = [];
+
+    /// <summary>The exact figures behind <see cref="Plain"/>: the ratio of the sigmas with its 95 percent interval, and the power sentence.</summary>
+    public IReadOnlyList<string> Details { get; init; } = [];
+}
 
 public static class LoadComparison
 {
@@ -153,9 +163,12 @@ public static class LoadComparison
             explanation.Add("Each load's range overlaps the other's (the sigma intervals), which a real but modest difference often does; the range of the ratio between them is the comparison, and it leaves out 1, so the spreads do differ.");
         }
 
+        int said = explanation.Count;
+        var plain = new List<string>(explanation);
         if (compared.Count == 2)
         {
             var only = paired[0];
+            plain.Add(Apart(compared[0].Name, compared[1].Name, only.Ratio.Lower, only.Ratio.Upper));
             explanation.Add($"{compared[0].Name}'s sigma is {only.Ratio.Value.ToString("0.00", CultureInfo.InvariantCulture)} times {compared[1].Name}'s, 95 percent interval {only.Ratio.Lower.ToString("0.00", CultureInfo.InvariantCulture)} to {only.Ratio.Upper.ToString("0.00", CultureInfo.InvariantCulture)}.");
         }
         else
@@ -163,9 +176,50 @@ public static class LoadComparison
             explanation.Add("Every pair's sigma ratio is below with its interval, and its p-value adjusted by Holm's method for the number of pairs compared, which is said because six loads make fifteen pairs and one of them will look different by chance.");
         }
 
+        if (compared.Count > 2)
+        {
+            plain.Add("Every pair of loads is compared under Details, and with this many pairs one of them can look different by chance alone.");
+        }
+
+        string have = compared.Count == 2 ? $"{compared[0].Shots} and {compared[1].Shots}" : string.Join(", ", compared.Select(g => g.Shots));
+        plain.Add($"To tell a 10 percent difference in spread apart would take about {SampleSize.ShotsPerLoad(1.10)} shots each; these groups have {have}.");
         explanation.Add($"To resolve a difference of 10 percent, with 80 percent power at the 5 percent level, takes {SampleSize.ShotsPerLoad(1.10)} shots per load. These groups have {string.Join(", ", compared.Select(g => g.Shots))}.");
         var resolve = new[] { 1.10, 1.25, 1.50 }.Select(k => new ResolveRow(k, SampleSize.ShotsPerLoad(k))).ToList();
-        return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve);
+        var details = explanation.Skip(said).ToList();
+        return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve) { Plain = plain, Details = details };
+    }
+
+    /// <summary>
+    /// Entry 312 section 3: the ratio of two sigmas and its 95 percent interval, said as a shooter would say it. Where the interval holds 1
+    /// the spreads may be the same, and the sentence gives how far apart they could still be either way, as a fraction where one is near
+    /// ("about a third") and in percent otherwise; where it leaves 1 out, which load spreads more and by how much.
+    /// </summary>
+    internal static string Apart(string first, string second, double lower, double upper)
+    {
+        if (lower <= 1 && upper >= 1)
+        {
+            double most = Math.Max(upper, 1 / lower);
+            return most >= 2
+                ? $"Their spreads could be the same, or either could be up to {Times(most)} the other's; these shots cannot say which."
+                : $"Their spreads are within about {Fraction(most - 1)} of each other either way; these shots cannot say which is smaller.";
+        }
+
+        return lower > 1
+            ? $"{first} spreads more than {second}: by {Range(lower - 1, upper - 1)}."
+            : $"{first} spreads less than {second}: by {Range(1 - upper, 1 - lower)}.";
+    }
+
+    private static string Range(double low, double high) =>
+        $"somewhere between {Percent(1 + low)} and {Percent(1 + high)} percent";
+
+    private static string Times(double ratio) => ratio.ToString("0.#", CultureInfo.InvariantCulture) + " times";
+
+    /// <summary>A fraction in words where a common one is within a few points of it, and in percent otherwise.</summary>
+    internal static string Fraction(double part)
+    {
+        (double Value, string Words)[] common = [(0.1, "a tenth"), (0.2, "a fifth"), (0.25, "a quarter"), (1.0 / 3, "a third"), (0.5, "half"), (2.0 / 3, "two thirds"), (0.75, "three quarters")];
+        var near = common.MinBy(c => Math.Abs(c.Value - part));
+        return Math.Abs(near.Value - part) <= 0.03 ? near.Words : Percent(1 + part) + " percent";
     }
 
     /// <summary>
