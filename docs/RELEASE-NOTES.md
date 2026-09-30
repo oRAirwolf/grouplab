@@ -561,7 +561,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - On the phone, units now follow the phone's region, so a US phone asks for yards and gives inches rather than meters and centimeters, and Settings shows the full nightly version.
 - When you say yes to the hardware survey, GroupLab now asks whether to run the benchmark now or later, shows how far it has got with a Cancel button, and says when it finished and what it found; Settings shows when it last ran, on the computer and the phone.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.111)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
