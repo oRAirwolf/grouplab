@@ -12,6 +12,27 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.135
+
+**2026-09-30**, commit `417694c`. Nightly.
+
+**What you will notice**
+
+- The Ballistics screen on phones now reads "The solver needs a rifle and a load" instead of a broken list when nothing is chosen yet.
+- On phones and tablets the Key button above the group plot is now easy to tap with a thumb; the whole strip around it opens the key.
+- When you tap an underlined word for its meaning, the explanation now appears in the same lettering and size as the rest of GroupLab on iPhone, iPad and Android.
+- On iPhone and iPad the bar of places along the bottom now reaches the bottom edge of the screen, behind the home indicator, instead of leaving a pale strip beneath it.
+- The Mac download is signed and approved by Apple from the next nightly, so it opens without the Terminal command. (Request 55).
+
+**Under the hood**
+
+- A slow answer from Apple no longer stops the Mac download from being signed and approved. (Request 55).
+- The iPhone and iPad test run now checks that Compare draws each load's group with its holes.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.135)
+
+---
+
 ## 0.2.0-nightly.134
 
 **2026-09-30**, commit `b26bcb9`. Nightly.
