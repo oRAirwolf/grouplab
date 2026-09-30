@@ -1,4 +1,9 @@
-**Open: 14.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+
+PUBLIC BETA (entries 319 and 320, 22:10 UTC, not a request): thank you for the two groups and the link. Build 134 is waiting for
+Apple's first beta review, and nothing touches it until Apple decides, so it keeps its place in the queue. When it is approved I put the
+"Join the iPhone and iPad beta" link on the download page, the README and the guide, prove both groups get the same next build, and only
+then tell you to turn GroupLab Team's automatic distribution off; leave it on until I say.
 
 GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
 1. In nightly 137 (out at 15:30 UTC): the iPad's reading no longer hangs, Cancel always works and a reading stops after a minute (entry 313);
@@ -99,7 +104,7 @@ set are reused. At developer.apple.com, Certificates, Identifiers & Profiles:
 
 ## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
-**Opened 2026-09-30.** **Why:** nightly 134 is the first iPhone and iPad build signed and sent to TestFlight (07:00 UTC). From now on the
+**Opened 2026-09-30. Being applied: both groups exist and the public link is made (entries 319 and 320); what is left is Apple's first beta review of build 134, which nothing disturbs, then I publish the link and say when to turn GroupLab Team's automatic distribution off.** **Why:** nightly 134 is the first iPhone and iPad build signed and sent to TestFlight (07:00 UTC). From now on the
 testflight workflow puts each new build into your two groups itself and keeps them on the same build, as you asked (entry 310): into Public
 Beta first, and into GroupLab Team once Public Beta's testers can install it. It needs the two groups to exist, by these exact names.
 

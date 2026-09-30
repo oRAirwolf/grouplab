@@ -53,7 +53,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **TestFlight distribution and the public beta link**: request 59 (the two groups, then the public link).
+- **The public beta link**: Apple's first review of build 134 (entries 319, 320); the link is in
+  `C:\Dev\grouplab-local\testflight-public-link.txt`, published only after approval. Nothing touches 134's review.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.

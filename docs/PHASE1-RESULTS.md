@@ -40,6 +40,17 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 319 and 320: the TestFlight groups, and Public Beta's first review left alone
+
+Done 2026-09-30 as far as Apple allows. Every testflight run since the groups were made (about 20:49 UTC) had stopped at App Store
+Connect's refusal of the What to Test field, so nothing had been added to Public Beta or submitted, and build 134's review was not
+disturbed. The step now holds while Public Beta's first build waits for review: nothing newer is added or submitted, GroupLab Team keeps
+Alan's automatic distribution, and each run's summary names the review's state (4cd83444, with a self-test case). The field is Apple's
+`whatsNew`. Request 59 is marked being applied. The public link is kept on this computer only, not in the repository, until Apple
+approves (entry 320 section 1); then the download page, the README and the guide get it, the lockstep is proven on the next nightly,
+and only then does Alan turn automatic distribution off. The feedback summary already writes no tester's words, screenshots, name or
+email (entry 311's review); that covers public testers too. Unholy's address is written nowhere.
+
 ## Entry 318: the next batch without Alan
 
 Done 2026-09-30, with one worker at a time (entry 317).

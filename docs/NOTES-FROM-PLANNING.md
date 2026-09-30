@@ -24,6 +24,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 320: the Public Beta's public link exists; publish it only after Apple approves
+
+**Status: waiting 2026-09-30: sections 1 to 3 wait for Apple to approve build 134 for Public Beta; section 4 is in force (entry 319's results).**
+
+From planning, 2026-09-30, for Alan. **Correction: Public Beta is NOT approved yet.** Build 134 is still "Waiting for Review". Alan created the
+public link already (no tester limit, no filters); until Apple approves, anyone opening it cannot install. The link:
+
+(the link, kept on this computer in `C:\Dev\grouplab-local\testflight-public-link.txt` and out of this public repository until Apple approves; entry 320 section 1)
+
+1. **Publish it only after Apple approves build 134 for Public Beta** (watch it as entry 319 section 3 says), then (rule c): a "Join the iPhone and iPad beta" button on the download page next to GroupLab Dev for Android, a line in
+   the README's download section and in the user guide's phone section, and the site's iOS platform status. One honest line: builds
+   reach testers after Apple's check, usually within minutes, sometimes a day; install Apple's free TestFlight app first.
+2. **After approval, entry 310's lockstep goes live** (until then entry 319 sections 1 and 2 stand: do not touch the pending review). On the first nightly after approval that changes the app, prove the step:
+   the same build lands in both GroupLab Team and Public Beta (or both wait for review). Only after that works, put a line at the top of
+   for-alan.md telling Alan to switch GroupLab Team's automatic distribution off. Until then it stays on.
+3. Request 59: close it once Public Beta is approved and the link is published.
+4. The TestFlight feedback and crash summary (entry 311) now covers public testers too: never publish a tester's words, screenshots,
+   name or email; summarize only.
+
+## 2026-09-30, entry 319: both TestFlight groups exist; do not disturb the first Public Beta review
+
+**Status: done 2026-09-30 (4cd83444) but section 3, Apple's approval of build 134, which each testflight run reports and which is watched.**
+
+From planning, 2026-09-30 afternoon, for Alan. Request 59: "GroupLab Team" (internal) and "Public Beta" (external) both exist in App
+Store Connect. Public Beta holds build 134, "Waiting for Review" since the night of 29 to 30 September; Test Information is filled in.
+The public link comes after Apple approves.
+
+1. **Do not withdraw or replace build 134's pending review** to submit a newer build (entry 310 section 3's "supersede" rule is
+   suspended for this first review): withdrawing sends the app to the back of the queue. Once 134 is approved, later builds of 0.2.0
+   usually need no full review, and entry 310's lockstep applies from then on.
+2. Until Public Beta's first approval, GroupLab Team keeps **automatic distribution on** (Alan set it), so Alan and Unholy keep receiving
+   every nightly. After approval, the lockstep step takes over; tell Alan in for-alan.md when to switch automatic distribution off.
+3. Watch the review status read-only (as the Store check does), and when it is approved, say so at the top of for-alan.md and ask Alan
+   for the public link (Public Beta, Enable Public Link).
+4. Unholy has been invited as an internal tester by Alan (Marketing role, GroupLab only). His address is not to be written anywhere.
+5. Mark request 59 as done except the public link.
+
 ## 2026-09-30, entry 318: the next batch Code can do without Alan (2026-09-30 afternoon)
 
 **Status: done 2026-09-30 (sections 1 to 5); request 62 is Alan's, whenever he chooses.**
