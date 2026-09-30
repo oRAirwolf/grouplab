@@ -33,7 +33,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page | on iOS |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures | on iOS |
 | Every figure explained | `why` | on the phone | entry 259 screen 1, the explanation sheet | on iOS |
-| Compare loads honestly | `compare` | on the phone | entry 259 screen 4, one figure at a time; entry 295: each name on its own line, sessions named by load, date and time, and extreme spread pointing to mean radius; not yet in each load's color, and the groups themselves not drawn (DESIGN NEEDED) | on iOS |
+| Compare loads honestly | `compare` | on the phone | entry 259 screen 4, one figure at a time; entry 295: each name on its own line, sessions named by load, date and time, and extreme spread pointing to mean radius; entry 309 section 2: each load's group drawn in its own color, which the iOS self-test checks with two loads | on iOS |
 | Sessions over time | `sessions` | on the phone | | on iOS |
 | Ballistics and hit chances | `ballistics` | on the phone | entry 259 screen 5, its own tab; printing the dope card is still to come | on iOS |
 | Fudd buster mode | `fudd-buster` | on the phone | entry 279 section 3 and entry 281 section 2, page A: the same three sections as the desktop's window | on iOS |
