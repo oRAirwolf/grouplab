@@ -396,8 +396,11 @@ internal static class ParityTour
         {
             var line = Shell.Current!.GetLogicalDescendants().OfType<TextBlock>().FirstOrDefault(t => t.Text == heading);
 
-            // The heading with the screen's height beneath it, so the section is shown from its heading down.
-            line?.BringIntoView(new Avalonia.Rect(0, 0, 1, 560));
+            // The section shown from its heading down: the scroller moved so the heading is at its top.
+            if (line?.FindAncestorOfType<ScrollViewer>() is { Content: Visual inside } scroller && line.TranslatePoint(default, inside) is { } at)
+            {
+                scroller.Offset = new Vector(0, Math.Max(0, at.Y - 8));
+            }
             return line is not null;
         });
         await Seen(check, () => found && (holds?.Invoke() ?? true), $"Settings, {heading},");
@@ -430,12 +433,23 @@ internal static class ParityTour
                 return check;
             }
 
-            var bulls = state.Bulls.Where(b => b.Scoring).Take(3).Select(b => b with { Declared = null }).ToImmutableList();
+            // Ten aim points, two rows of the sheet, so each has enough shots for its figures. The scale is a length drawn between the first
+            // and the tenth, whose distance apart the sheet states; the picture is the one the marking's points are in.
+            var printed = state.Bulls.Where(b => b.Scoring && b.Declared is not null).Take(10).ToList();
+            if (printed.Count < 2 || state.ImagePath is not { } image || !File.Exists(image))
+            {
+                check.Detail = "the result's picture or bulls could not be read";
+                return check;
+            }
+
+            var (first, last) = (printed[0], printed[^1]);
+            double inches = Math.Sqrt(Math.Pow(first.Declared!.Value.X - last.Declared!.Value.X, 2) + Math.Pow(first.Declared.Value.Y - last.Declared.Value.Y, 2));
+            var bulls = printed.Select(b => b with { Declared = null }).ToImmutableList();
             var kept = bulls.Select(b => b.Index).ToHashSet();
             var byHand = state with
             {
-                ImagePath = sample,
-                Scale = new LengthReference(new GroupLab.Core.Imaging.PointD(0, 0), new GroupLab.Core.Imaging.PointD(600, 0), 1.0),
+                ImagePath = image,
+                Scale = new LengthReference(first.Image, last.Image, inches),
                 Bulls = bulls,
                 Shots = state.Shots.Where(s => s.Bull is { } b && kept.Contains(b)).ToImmutableList(),
                 SetSheet = null,
@@ -452,8 +466,9 @@ internal static class ParityTour
 
             await SelfTest.OnUi(() => capture.ShowResult(new ResultView(new PhoneResult(byHand, null, null, null),
                 new ShotSetup(state.Calibre, state.ShotDistanceInches), UnitSettings.Imperial, () => { })));
-            return await Seen(check, () => Shell.Current!.GetLogicalDescendants().OfType<Button>().Any(b => Words(b) is { } w && w.StartsWith("Aim ", StringComparison.Ordinal))
-                && ButtonOf(Shell.Current!, "+ Aim point") is not null, "three aim points marked by hand, each a chip,");
+            return await Seen(check, () => Shell.Current!.GetLogicalDescendants().OfType<Button>()
+                    .Count(b => b.GetLogicalDescendants().OfType<TextBlock>().Any(t => t.Text?.StartsWith("Aim ", StringComparison.Ordinal) == true)) >= 2
+                && ButtonOf(Shell.Current!, "+ Aim point") is not null, "ten aim points marked by hand, each a chip,");
         });
         var marking = await Guard("other-targets", async check =>
         {
