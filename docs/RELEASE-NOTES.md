@@ -559,7 +559,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - Internal: a one page plan for the hole size test at the range, printed from the same tool as the guides.
 - On Android, what GroupLab records while it works now also goes to the phone's system log, without file names or locations, so a problem on a tester's phone can be diagnosed.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.113)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
