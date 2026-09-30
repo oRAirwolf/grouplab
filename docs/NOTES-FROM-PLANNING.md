@@ -24,6 +24,26 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 300: the sheet preview drawn live and sharp, not a compressed picture
+
+**Status: done 2026-09-30.** The sheet preview is drawn live from the same vectors the PDF is written from (the Scene), sharp at any zoom, on the desktop's Targets and the phone's sheet page, with "Open as PDF" beside the zoom; drawn against the PDF's own rasterizer it differs by under 4 gray levels on rings, C bulls and a zero grid. The site's desktop screenshots and sheet pictures are lossless WebP, and the sheet close-ups SVG.
+
+From planning, 2026-09-29, for Alan. Alan asked whether the Targets screen and the designer can show the sheet as a live PDF in the right
+pane: "it may also be easier to just display a realtime PDF instead of maintaining screenshots that are also heavily compressed and don't
+look good." His monitor is a 48 inch LG C1 OLED at 3840 by 2160, where a soft or compressed image looks especially bad.
+
+1. **Goal:** the preview is exactly what will print, redrawn the moment any setting changes (sheet, paper, bull color from entry 297,
+   every designer field), and sharp at any zoom on a 4K screen.
+2. **Recommended way, to be confirmed by measurement:** draw the preview from the same scene the PDF is written from, as vectors (or
+   rasterized at the screen's true pixel density and re-rasterized on zoom), rather than showing a fixed-resolution bitmap. That keeps it
+   identical to the PDF without embedding a PDF viewer on four platforms. If an embedded PDF renderer (for example PDFium) turns out simpler,
+   say what it costs in download size and platforms, and ask planning before adding it.
+3. **"Open as PDF"** beside the preview opens the real PDF in the system viewer, for anyone who wants it.
+4. **The designer benefits most:** every change shows at once. Keep it responsive; debounce typing if needed.
+5. **The site and README images:** where a target or sheet is shown, serve it sharp at 2x or as SVG generated from the same scene, not a
+   heavily compressed PNG. App screenshots for the site: lossless PNG at 2x where size allows. Say what this does to page weight.
+6. Phone: the same live drawing on the Targets screen.
+
 ## 2026-09-30, entry 297: bulls in black, blue or red
 
 **Status: done 2026-09-30, with entry 309 section 4; question 75 open, request 57 for Alan.** Bulls print in black, blue (#1F5FBF) or red (#D22630), wide bands at a 60% tint; codes, markers and the load block stay black. The color is found from the photo, not carried in the codes (a coded color would make every colored sheet a new definition): where solid ink reads light, the expected sheet is redrawn with the bulls' own levels, and black sheets read exactly as before. The scoreboard gains red and blue under four conditions, each held to black's line: found of 50, black, blue, red: clean 49, 50, 49; hard shadow 49, 50, 49; glare 45, 48, 48; dim 49, 49, 48; no false marks. "Bulls in" on the desktop's Targets and designer and the phone's sheet page. Ring bulls in color cost more ink on a color inkjet than black (question 75).
