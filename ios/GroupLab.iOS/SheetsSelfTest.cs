@@ -111,7 +111,8 @@ internal static class SheetsSelfTest
         {
             using var data = NSData.FromFile(sample);
             UIPasteboard.General.SetData(data, "public.png");
-            var paste = Shell.Current!.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => b.Content is TextBlock { Text: "Paste a picture" });
+            // Entry 309, Home A: a link now, whose words are its content itself.
+            var paste = Shell.Current!.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => b.Content is TextBlock { Text: "Paste a picture" } or "Paste a picture");
             if (paste is null)
             {
                 return "the Paste a picture button was not found on the Capture screen";

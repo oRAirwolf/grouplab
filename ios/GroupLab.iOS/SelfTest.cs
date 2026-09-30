@@ -161,6 +161,9 @@ internal static class SelfTest
                 checks.Add(await PhotosSelfTest.OpenIn(sample, 60));
                 checks.Add(await PhotosSelfTest.Shared(sample, 61));
 
+                // Entry 307: Your data exported to the share sheet, and the file opened in GroupLab again brings its import plan.
+                checks.Add(await DataSelfTest.RoundTrip());
+
                 // Entry 290 section 6: every feature the parity table had not seen on iOS, opened from the result and the places along the bottom.
                 checks.AddRange(await ParityTour.Run(sample));
             }

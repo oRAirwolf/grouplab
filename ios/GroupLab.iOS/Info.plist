@@ -57,6 +57,41 @@
 				<string>public.image</string>
 			</array>
 		</dict>
+		<!-- Entry 307: a GroupLab data file, all of someone's sessions, rifles, sheets and settings, opened in GroupLab to import. -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>GroupLab data</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.grouplab.data</string>
+			</array>
+		</dict>
+	</array>
+	<!-- Entry 307: what a .grouplab file is, so iOS knows GroupLab owns it: JSON, as the desktop and Android write it. -->
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.grouplab.data</string>
+			<key>UTTypeDescription</key>
+			<string>GroupLab data</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>grouplab</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
