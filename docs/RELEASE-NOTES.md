@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.138
+
+**2026-09-30**, commit `366ff9b`. Nightly.
+
+**Under the hood**
+
+- The developer copy can now play a recorded camera clip or a saved picture through the capture screen in place of the camera, and record the camera's last few seconds on the device, so the guidance and the automatic shutter can be tested again on every build; the published app is unchanged.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.138)
+
+---
+
 ## 0.2.0-nightly.137
 
 **2026-09-30**, commit `b8e500c`. Nightly.
