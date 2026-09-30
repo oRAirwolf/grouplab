@@ -206,6 +206,11 @@ iPad. The tool is pymobiledevice3, a Python program.
   (5) `pnputil /remove-device <the iPad> /subtree`, then `/scan-devices`: the iPad came back on `USBAAPL64` alone (running), and
   `usbmux list` **lists the iPad**. No computer restart was needed. Windows Update may offer the 538 driver again later; if the list
   goes empty after an update, the same step 2 and 5 undo it.
+- *Paired, 2026-09-30 12:26 UTC:* Alan unlocked the iPad and tapped Trust; `pymobiledevice3 lockdown pair` saved the pair record in
+  `C:\ProgramData\Apple\Lockdown` (9,386 bytes) and `lockdown info` answers (iPad14,2, iPadOS 27.0.1). The live log filtered to
+  GroupLab works once GroupLab is open (nothing else is read). `amfi reveal-developer-mode` ran, so the switch is now in Settings,
+  Privacy & Security; Developer Mode is still off. **Left for Alan, only for entry 315 later:** turn Developer Mode on there and let the
+  iPad restart. Copying GroupLab's folder needs file sharing in the app, which comes with the next build that carries entry 311.
 
 ## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
