@@ -14,6 +14,7 @@ IOS, UNTIL WEDNESDAY 8 PM MOUNTAIN (entry 290; not a request, updated as items l
 5. The camera screen: built (the camera, Guided and Manual, the torch, the level, the picture as JPEG); the simulator has no camera and falls back to the picker, which works; the rest is on the first TestFlight sitting's checklist.
 6. Files, sharing, printing, the idle screen: done on the simulator (the Photos picker with iCloud, Files, sharing from Google Photos and any app, Share, Print, Paste, the black idle screen); what only a device can show is on the first TestFlight sitting's list.
 7. The TestFlight path, ready for request 55's secrets: the check is built (it signs only when all seven are set and right, and names a malformed one); the job that uses it comes with item 3.
+Parity with the phone (section 6): 37 of the phone's features seen working on the iOS Simulator, 8 more built but provable only on an iPad (the camera, the torch, printing, photos from other apps, the side-by-side screen), 4 left out (Android's own updater and the like).
 Also landed: GroupLab Dev updates itself from nightly 125 on (entry 288), and your answers to questions 69 (A) and 70 (B) are recorded.
 
 READY (entry 286, 04:38 UTC): GroupLab Dev nightly 123 is on the Fold 7 (and the tablet), your data kept. The card photo screen opens: Settings, Printers, Add a printer, choose "A card and one photo", Next, then Take the picture. The phone is left on that screen for you.
