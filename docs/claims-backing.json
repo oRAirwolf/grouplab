@@ -4468,6 +4468,10 @@
   "Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
    "kind": "code",
    "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "**On Auto (entry 302)**, in a dim room it comes on at the lowest of its five levels and steps up a level at a time, about every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/TorchGovernor.cs (AgreeingFrames, SettleMs 1500, the ceiling after glare or a hotspot, MostReversals) and ios/GroupLab.iOS/Camera/CameraSession.cs TorchSteps and SetTorch; a check to be made on the iPad mini, entry 302"
   }
  },
  "rules": [

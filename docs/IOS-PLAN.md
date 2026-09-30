@@ -56,7 +56,7 @@ phone's own pipeline and compared with the desktop running the same checks in th
 back wide camera in the 4:3 mode whose stream is nearest 1920 by 1440 (`PhoneCamera.ChooseMode` in Core, the rule CameraX follows on
 Android), its preview shown whole, a photo output taking that mode's largest 4:3 picture as a JPEG (a HEIC is turned into a JPEG, since
 OpenCV on iOS reads none), and the stream's luminance judged frame by frame by the same Core rules as on Android. Guided and Manual, the
-torch (off, on or automatic, and always off once the picture is taken), tap to focus, the level from Core Motion's gravity turned with the
+torch (off, on, or automatic in five steps of strength by the same TorchGovernor as on Android, and always off once the picture is taken), tap to focus, the level from Core Motion's gravity turned with the
 screen, and the camera let go in the background and taken again in the foreground. The overlay is UIKit's own views in one native view,
 for the reason Android's is Android's. The iPad mini has one camera at the back, so there is no lens button. Core Motion's gravity needs
 no permission, so the only question iOS asks is the camera's. On the simulator, which has no camera, Take a picture opens the files
@@ -100,8 +100,11 @@ no, and a no comes back as a note with what was seen.
 4. **Guided fires.** Over a printed GroupLab sheet the words settle (no flicker between Move closer and Move back), the ring fills, and
    the picture is taken by itself after three ready frames.
 5. **Manual shutter.** In Manual the picture is taken only when the shutter is pressed; the mode is remembered after closing GroupLab.
-6. **The torch.** Torch: On lights it while framing, and it goes off the moment the picture is taken; Torch: Auto lights it in a dim
-   room; Torch: Off never does. After Back, and after a picture, it is off.
+6. **The torch.** Torch: On lights it at full strength while framing, and it goes off the moment the picture is taken; Torch: Off never
+   lights it. After Back, and after a picture, it is off. **On Auto (entry 302)**, in a dim room it comes on at the lowest of its five levels and steps up a level at a time, about
+   every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it
+   steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off. It never flickers.
+   The log's `camera.torch` lines give each change, its level of five and its reason, which the sitting's notes can quote.
 7. **The level.** Flat over a sheet on a table the dot sits in the ring and turns green; raising an edge sends it toward that edge, in
    portrait and in landscape.
 8. **Background and foreground.** With the camera open, go to the Home Screen and come back: the preview runs again, the torch is as

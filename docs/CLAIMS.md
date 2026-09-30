@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1365 |
+| code | 1366 |
 | measured | 1803 |
 | decided | 1280 |
 | unbacked | 0 |
-| **total** | **4448** |
+| **total** | **4449** |
 
-**1022** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1023** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1161,6 +1161,7 @@ one that matters.
 - *code* (ios/GroupLab.iOS/Photos: PhotoPickers.Pick (PHPickerViewController with the current representation, UIDocumentPickerViewController for public.image), PhotoPickers.Load (the item provider's file and progress, canceled by Cancel), PhotoFiles.Readable, IncomingPhotos, Connection; ios/GroupLab.Share/ShareViewController.cs and ios/Shared/Handoff.cs; PhotosSelfTest on the simulator in .github/workflows/ios-app.yml; entry 292 section 2): **Pictures from anywhere (entry 292 section 2):** built in `ios/GroupLab.iOS/Photos` and `ios/GroupLab.Share`.
 - *code* (scripts/ios-signing.py (SECRETS, PROFILE_BUNDLES, APP_GROUP, problem, properties and the self-test), ios/signing-dry-run.sh, .github/workflows/nightly.yml job ios, the GroupLabAppProvision and GroupLabShareProvision properties in ios/GroupLab.iOS and ios/GroupLab.Share; held by IosSigningTests; entry 290 section 2 item 7 and entry 292 section 2.3): The signed build signs the extension with its own App Store profile, for `org.grouplab.app.share`, and both profiles carry the app group (section 3).
 - *code* (a check to be made on the iPad mini, entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CaptureScreen.cs (ResizeAspect) and CameraSession.Orient with PhoneCamera.RotationDegrees): **The preview fills 4:3.** The whole picture is shown, nothing cut from its edges, with black bars rather than a stretch, upright and in portrait, in both landscapes and upside down.
+- *code* (src/GroupLab.Core/Capture/TorchGovernor.cs (AgreeingFrames, SettleMs 1500, the ceiling after glare or a hotspot, MostReversals) and ios/GroupLab.iOS/Camera/CameraSession.cs TorchSteps and SetTorch; a check to be made on the iPad mini, entry 302): **On Auto (entry 302)**, in a dim room it comes on at the lowest of its five levels and steps up a level at a time, about every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off.
 - *decided* (entry 283, the shutter's target of about 0.3 s (docs/ANDROID.md, The shutter), and entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CameraSession.cs Take logs camera.shutter): **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the result follows as soon as the reading allows.
 - *code* (a check to be made on the iPad mini, entry 292 section 2.1; ios/GroupLab.iOS/Photos/PhotoPickers.cs (PhotosPicker, the current representation) and PhotoFiles.Readable, which keeps the orientation): **The Photos picker (entry 292).** Choose a photograph opens Photos with no question about access; a photograph on the iPad is read at its full size, and a HEIC one reads the right way up.
 - *code* (a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs): **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis, with no question from iOS in between, or with only its "Open in GroupLab?" (note which).
