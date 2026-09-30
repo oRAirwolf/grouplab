@@ -10,6 +10,24 @@
 name: package
 
 on:
+  # Request 55: run by hand to prove the Mac signing and notarization on one commit without waiting for a nightly. It publishes nothing;
+  # the packages stay the run's own artifacts.
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The commit to build.'
+        required: true
+        type: string
+      version:
+        description: 'The version to name the assets by. Empty takes the one in Directory.Build.props.'
+        required: false
+        default: ''
+        type: string
+      train:
+        description: 'The update train: nightly, beta or release. Empty leaves it a development build.'
+        required: false
+        default: 'development'
+        type: string
   workflow_call:
     inputs:
       ref:
@@ -218,9 +236,18 @@ jobs:
           identity=$(security find-identity -v -p codesigning "$keychain" | grep "Developer ID Application" | head -1 | awk '{print $2}')
           test -n "$identity" || { echo "::error::The certificate is not a Developer ID Application certificate"; exit 1; }
 
-          # Inside out: every library and executable in the bundle, then the bundle itself with the entitlements .NET needs.
+          # Inside out, then the bundle itself with the entitlements .NET needs. codesign counts every file in Contents/MacOS as code, the
+          # .NET libraries included (their signature goes in extended attributes, which ditto and the Mac's own tar carry), and signing the
+          # main executable before all of them are signed fails. Nightly 134 did: "code object is not signed at all, in subcomponent
+          # System.Diagnostics.Contracts.dll". So every file there is signed but the main executable, which is signed with the bundle.
+          main="$app/Contents/MacOS/$(plutil -extract CFBundleExecutable raw "$app/Contents/Info.plist")"
           find "$app/Contents" -type f | while read -r f; do
-            if file "$f" | grep -q "Mach-O"; then
+            if [ "$f" = "$main" ]; then continue; fi
+            case "$f" in
+              "$app/Contents/MacOS/"*) sign=yes ;;
+              *) if file "$f" | grep -q "Mach-O"; then sign=yes; else sign=no; fi ;;
+            esac
+            if [ "$sign" = yes ]; then
               codesign --force --timestamp --options runtime --entitlements scripts/macos/GroupLab.entitlements --sign "$identity" "$f"
             fi
           done
