@@ -4412,6 +4412,10 @@
   "**The check that decides (entry 290):** `scripts/ios-signing.py --check` reads the eight and prints one line for each, set or not and whether its shape is right, never a value.": {
    "kind": "code",
    "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
+  },
+  "Alan confirmed it updated itself without adb (entry 303).": {
+   "kind": "decided",
+   "where": "entry 303 item 2: Alan reported the Play Protect scan before GroupLab Dev self-updated on the Fold 7"
   }
  },
  "rules": [

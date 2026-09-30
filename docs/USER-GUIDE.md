@@ -318,7 +318,8 @@ If an update ever fails, the build you had is still installed and still works. N
 **GroupLab Dev on Android updates itself.** The Android build installed from its APK looks for a newer nightly when it starts and about
 every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and that it is signed with the same key as the copy
 you have before installing it. The first time, it asks for Android's "Install unknown apps" permission and opens that page for you, and
-Android asks you to confirm the first update. After that it installs by itself when you leave GroupLab, never while the camera is open, a
+Android asks you to confirm the first update; Google Play Protect may scan the new copy first, as it does any app from outside the Play
+Store, which takes a moment. After that it installs by itself when you leave GroupLab, never while the camera is open, a
 sheet is being read or a change is unsaved, and your sessions and settings stay. Settings, About shows the version you have, the newest
 one, **Update now**, and **Install updates automatically**, which you can turn off. The copy from Google Play has none of this: Google Play
 updates it.

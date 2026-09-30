@@ -54,7 +54,7 @@ The approved Compare design (entry 259 screen 4, "one figure at a time") has onl
 and "each load in its own color" is not built either. Planning, please draw the two groups for the phone (side by side, or overlaid in
 two colors); everything else in entry 295 section 1 is built.
 
-**MIL OR MOA, YOUR CHOICE (entry 294, not a request; in the next nightly):** GroupLab now asks on first start whether your scope is mil or MOA, each rifle keeps its own scope unit and click, and every aiming figure reads in that unit only, the other a tap away. **A reply for the shooter on the Discord, once it is in a nightly:** "Fair point, and fixed: GroupLab now asks on first start whether your scope is mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 or 1/8 MOA), and the zero correction, clicks, dope and hit chance read in mil only, with MOA a tap away; the user guide has a Mil or MOA section." Planning will ask you separately whether mil shooters want the load development bulls sized or labeled in mil.
+**MIL OR MOA, YOUR CHOICE (entry 294, not a request; in the next nightly):** GroupLab now asks on first start whether your scope is mil or MOA, each rifle keeps its own scope unit and click, and every aiming figure reads in that unit only, the other a tap away. You have already replied on the Discord. Mil bulls: your answer (entry 303) is an option in the target designer, not new sheets; it is being built.
 
 **THE RESULT SCREEN AND THE CAMERA, FIXED (entry 291, not a request; in the next nightly):** the picture now stands upright and fills the width with no empty space; holes are fixed on their own page ("Fix holes": pinch to zoom, move, add, remove, undo, and it asks before throwing changes away), and the picture on the result can no longer be nudged by accident; the Camera or Result button you are on looks selected. An angled picture is read in about a second instead of up to thirty. The camera says "Move back" only when the printing runs out of the frame, "Move closer" when the codes are too small to read, and "Hold steadier" only when the frame is really blurred; the whole crosshair turns green when level. GroupLab Dev now keeps every picture of a sitting on the phone (a switch under About turns it off and deletes them). **At the next sitting:** about ten target pictures (filling the frame, far, off square, and two or three deliberately shaken), then Fix holes, the picture with the phone held four ways, and the green crosshair.
 
@@ -143,8 +143,8 @@ since then read groups about 0.4% small. The card method is what needs work, not
 
 1. Until you do step 2: in GroupLab Dev, Settings, turn off "Correct photographs by the chosen printer's scale". That is closer to the truth
    than the saved +0.4%.
-2. Once nightly 126 or later is on the phone and the computer: print any GroupLab sheet now, at 100 percent, scan it at 600 dpi, and in
-   GroupLab choose Printers, Add a printer, Scanner, and pick that scan. Scanner checks agreed with each other to within 0.07%.
+2. On the computer: print any GroupLab sheet now at Actual size, scan it at 600 dpi, and in GroupLab on the computer choose Printers,
+   Add a printer, Scanner, and pick that scan (entry 303). Scanner checks agreed with each other to within 0.07%.
 3. Also in Printers, press "Printer calibrated or serviced" on the old printer check, so every result it corrected says so.
 
 **A good answer:** "done", or the percentage the Scanner check showed.

@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1354 |
+| code | 1358 |
 | measured | 1796 |
-| decided | 1279 |
+| decided | 1280 |
 | unbacked | 0 |
-| **total** | **4429** |
+| **total** | **4434** |
 
-**1018** of them were read one sentence at a time and their backing written against the sentence. The other **3411** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1019** of them were read one sentence at a time and their backing written against the sentence. The other **3415** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -617,6 +617,7 @@ one that matters.
 - *measured* (the Fold 7 GroupLab Dev log, 2026-09-29: update.install.start 126 silent=False 11:00, INSTALL_SUCCEEDED 11:00:52; update.check worker=True offered 129 at 18:16:17, downloaded 1 s, status=-1 then INSTALL_SUCCEEDED 18:16:46; pm installer=org.grouplab.app.dev; entry 288): **The Fold 7 (Android 16), from its own log.** Nightly 125 over adb; at 11:00 UTC its first self-update to 126 asked once and was tapped.
 - *measured* (the Fold 7 GroupLab Dev log, 2026-09-29: update.install.start 126 silent=False 11:00, INSTALL_SUCCEEDED 11:00:52; update.check worker=True offered 129 at 18:16:17, downloaded 1 s, status=-1 then INSTALL_SUCCEEDED 18:16:46; pm installer=org.grouplab.app.dev; entry 288): At 18:16 UTC the six-hourly background check (WorkManager, `worker=True`) found nightly 129 by itself and downloaded it in 1 second; 126 did not yet declare the permission, so Android asked and the tap was given 24 seconds later.
 - *measured* (the Fold 7 GroupLab Dev log, 2026-09-29: update.install.start 126 silent=False 11:00, INSTALL_SUCCEEDED 11:00:52; update.check worker=True offered 129 at 18:16:17, downloaded 1 s, status=-1 then INSTALL_SUCCEEDED 18:16:46; pm installer=org.grouplab.app.dev; entry 288): The Fold is now on 129, holding the permission and its own installer of record, so its next update is the no-tap one.
+- *decided* (entry 303 item 2: Alan reported the Play Protect scan before GroupLab Dev self-updated on the Fold 7): Alan confirmed it updated itself without adb (entry 303).
 - *decided* (NOTES-FROM-PLANNING.md entry 292, Alan's words and section 1): Pictures from any photo app (entry 292) Alan: "It is important that it can access cloud stored photos and not just ones local to the phone." Before entry 292, **Choose a photograph** opened the documents picker, which reached Drive and Images and nothing else.
 - *code* (android/GroupLab.Android/PhotoPickers.cs and Properties/AndroidManifest.xml: no storage permission in the merged manifest, checked 2026-09-29 (entry 292)): Now there are three ways in, and none of them asks for a storage permission, because the picker or the app grants GroupLab the one picture chosen and nothing more: 1.
 - *code* (AndroidX Activity PickVisualMedia.isPhotoPickerAvailable, used by android/GroupLab.Android/PhotoPickers.cs; the ModuleDependencies service in android/GroupLab.Android/Properties/AndroidManifest.xml (entry 292 section 1.1)): It is built into Android 13 and later and added to Android 11 and 12 by Google Play system updates; the manifest asks Google Play services to add it to Android 10.
@@ -3581,7 +3582,7 @@ one that matters.
 ### site:index.html
 
 - *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28): GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android Measure how accurately your rifle shoots, and how little a small group can tell you.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in GroupLab Coming in the next build Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in GroupLab New in nightly.130 Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
@@ -3598,7 +3599,11 @@ one that matters.
 
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): GroupLab is unreleased, so every one of these is a pre-release.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.129 2026-09-29 , commit 6cf5d40 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.130 2026-09-30 , commit 1bafd04 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): While GroupLab reads a target, a picture taken at an angle is now named from its square codes in about a second rather than up to half a minute.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): On iPhone and iPad a picture is now analyzed instead of stopping with "Operation is not supported on this platform".
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): GroupLab for iPhone and iPad now builds with the Xcode 26 tools, ahead of the first test build for Apple devices.
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.129 2026-09-29 , commit 6cf5d40 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): This build has no change to the application; it behaves exactly as nightly 128 does.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.128 2026-09-29 , commit 6cf5d40 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): What you will notice On Android you can now choose a target photo from any photo app, including Google Photos, Samsung Gallery, your phone maker's own gallery and cloud-only photos, or share one or several into GroupLab, with the download shown and a smaller copy called out.
@@ -3659,7 +3664,7 @@ one that matters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): A problem report written by hand now keeps its description to 500 characters.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.100 2026-09-24 , commit 5f08633 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Under the hood A zeroing grid scanned at 600 dpi now registers and finds its shot once you say which sheet it is; its printed codes can still fail to read on a scan.
-- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): Downloads for this build 0.2.0-nightly.99 2026-09-24 , commit e84c949 .
+- *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.99 2026-09-24 , commit e84c949 .
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 165) The upload page on grouplab.org now asks whether your photographs are for testing only or may also be published, and a testing only target is never published.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): (Entry 165) This build's release no longer exists on GitHub , so there is nothing to download from it.
 - *code* (each line is one commit's Release-note trailer, generated by scripts/release-notes.py (entry 144); the commit is the backing): 0.2.0-nightly.98 2026-09-24 , commit 099c270 .

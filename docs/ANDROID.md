@@ -522,7 +522,9 @@ the background is remembered and asked for on screen at the next start.
 **The Fold 7 (Android 16), from its own log.** Nightly 125 over adb; at 11:00 UTC its first self-update to 126 asked once and was
 tapped. At 18:16 UTC the six-hourly background check (WorkManager, `worker=True`) found nightly 129 by itself and downloaded it in
 1 second; 126 did not yet declare the permission, so Android asked and the tap was given 24 seconds later. The Fold is now on 129,
-holding the permission and its own installer of record, so its next update is the no-tap one.
+holding the permission and its own installer of record, so its next update is the no-tap one. Alan confirmed it updated itself
+without adb (entry 303). Before the first self-update Android made him wait for Google Play Protect's scan of the new copy, as it does
+for any app from outside the Play Store; it is quick, and the user guide now says so.
 
 **adb stays for tests and logs only.** Installing a nightly over adb is still how a sitting starts on a device that has no updater yet.
 
