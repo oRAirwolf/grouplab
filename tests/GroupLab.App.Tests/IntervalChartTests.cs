@@ -130,4 +130,27 @@ public class IntervalChartTests
             }
         }
     }
+
+    /// <summary>
+    /// Entry 312 section 2: two loads whose extreme spreads both read 0.56 mil sat at opposite ends of their rows, because the scale ran
+    /// from the smaller value to the larger. Equal values sit at the same place, values that read the same sit within a hair of each
+    /// other, and a size is drawn on a scale from zero.
+    /// </summary>
+    [AvaloniaFact]
+    public void EqualValuesSitAtTheSamePlace()
+    {
+        foreach (var (a, b) in ((double, double)[])[(0.56, 0.56), (0.555, 0.564)])
+        {
+            var chart = new IntervalChart
+            {
+                Rows = [new IntervalRow("first load", a, null, null), new IntervalRow("second load", b, null, null)],
+                Length = v => v.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + " mil",
+            };
+            var (rows, _) = chart.Places(1300);
+            double first = chart.X(a, rows[0].Bar), second = chart.X(b, rows[1].Bar);
+            Assert.InRange(Math.Abs(first - second), 0, a == b ? 1e-9 : 0.02 * rows[0].Bar.Width);
+            Assert.Equal(0, chart.Axis().Lo);
+            Assert.InRange(first, rows[0].Bar.Left + (0.6 * rows[0].Bar.Width), rows[0].Bar.Right);
+        }
+    }
 }
