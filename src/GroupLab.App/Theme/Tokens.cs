@@ -181,6 +181,16 @@ public static class Tokens
         ? [Hex(0x965d12), Hex(0x2f6fc4), Hex(0x2e7d32), Hex(0x9c3f8f), Hex(0x5f5a00)]
         : [Hex(0xe0912f), Hex(0x6ea8ec), Hex(0xb5eaa9), Hex(0xb65aa3), Hex(0xf2e27d)];
 
+    /// <summary>
+    /// A printed sheet's colors in the live preview, entry 300: the paper, white in every theme because it is the paper; its edge, a faint
+    /// line so a white page reads as a page on a light panel; and each ink as the sheet itself names it, which is data, not a theme's choice.
+    /// </summary>
+    public static Color SheetPaper => Hex(0xffffff);
+
+    public static Color SheetEdge => Color.FromArgb(60, 0, 0, 0);
+
+    public static Color SheetInk(byte r, byte g, byte b) => Color.FromRgb(r, g, b);
+
     public static Palette For(ThemeVariant? variant) =>
         variant == HighContrastVariant ? HighContrast : variant == ThemeVariant.Light ? Light : Dark;
 

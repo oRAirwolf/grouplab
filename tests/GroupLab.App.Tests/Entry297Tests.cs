@@ -1,5 +1,4 @@
 using Avalonia.Headless.XUnit;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using GroupLab.App;
 using GroupLab.Core.Gltd.Binary;
@@ -28,7 +27,7 @@ public class Entry297Tests
             var pages = panel.Render()!.Pages;
             Assert.Contains(pages[0].Items, i => i.Layer == SceneLayer.Bulls && i.Colour == BullColours.Of(BullColour.Red));
             Assert.All(pages[0].Items.Where(i => i.Layer is SceneLayer.Markers or SceneLayer.Codes), i => Assert.Equal(new Rgb(0, 0, 0), i.Colour));
-            Assert.IsType<Bitmap>(panel.PreviewSource);
+            Assert.Contains(panel.PreviewSource!.Items, i => i.Layer == SceneLayer.Bulls && i.Colour == BullColours.Of(BullColour.Red));
 
             // Another sheet starts black, and the first comes back red.
             panel.Select("GL-CF25-LTR-C.gltd.json");

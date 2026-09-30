@@ -192,21 +192,26 @@ def build_images() -> None:
         dst.parent.mkdir(parents=True, exist_ok=True)
         img.save(dst, "WEBP", quality=90, method=6)
 
-    # Every screen in both themes at 1400 by 900, as WebP.
+    # Every screen in both themes at 1400 by 900, as WebP. Entry 300 section 5: lossless, so nothing is softened, which on these flat
+    # screens is also smaller than quality 90 was: about 73 KB a screen against 132 KB, measured 2026-09-30 on twelve of them.
     for png in sorted(SCREENS.glob("*-1400x900.png")):
         img = Image.open(png).convert("RGB")
         dst = OUT / "assets" / "screens" / (png.stem + ".webp")
         dst.parent.mkdir(parents=True, exist_ok=True)
-        img.save(dst, "WEBP", quality=90, method=6)
+        img.save(dst, "WEBP", lossless=True, method=6)
 
-    # Entry 256: the bulls, grids and sheets as they print, one picture for both themes, on their own white paper.
+    # Entry 256: the bulls, grids and sheets as they print, one picture for both themes, on their own white paper. Entry 300 section 5: a
+    # bull or a grid also comes as vectors from the same scene as its PDF, served instead of the picture wherever it is shown.
     for png in sorted(SCREENS.glob("sheet-*.png")):
         img = Image.open(png).convert("RGB")
         dst = OUT / "assets" / "screens" / (png.stem + ".webp")
         dst.parent.mkdir(parents=True, exist_ok=True)
-        img.save(dst, "WEBP", quality=90, method=6)
+        img.save(dst, "WEBP", lossless=True, method=6)
+    for svg in sorted(SCREENS.glob("sheet-*.svg")):
+        shutil.copyfile(svg, OUT / "assets" / "screens" / svg.name)
 
-    # The phone's screens at half their size, which is still sharper than any page shows them.
+    # The phone's screens at half their size, which is still sharper than any page shows them. They stay at quality 90: with the camera and
+    # photographs in them, lossless would be 3.6 MB for the 28 of them against 1.5 MB (entry 300, measured 2026-09-30).
     for png in sorted(PHONE_SCREENS.glob("*.png")):
         img = Image.open(png).convert("RGB")
         img = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
@@ -2123,7 +2128,9 @@ def sheet_pictures(f: dict) -> str:
     figures = []
     for name, caption in f["sheets"]:
         size = Image.open(need(SCREENS / f"sheet-{name}.png")).size
-        figures.append(f'<figure class="sheet-pic"><a class="plain" href="/assets/screens/sheet-{name}.webp"><img src="/assets/screens/sheet-{name}.webp" '
+        # Entry 300 section 5: the vectors where the walk wrote them, sharp at any size; the picture otherwise.
+        src = f"/assets/screens/sheet-{name}.svg" if (SCREENS / f"sheet-{name}.svg").is_file() else f"/assets/screens/sheet-{name}.webp"
+        figures.append(f'<figure class="sheet-pic"><a class="plain" href="{src}"><img src="{src}" '
                        f'alt="{esc(caption)}" width="{size[0]}" height="{size[1]}" loading="lazy" decoding="async"></a>'
                        f'<figcaption class="small faint">{esc(caption)}</figcaption></figure>')
     return f'<div class="sheet-pics">{"".join(figures)}</div>'

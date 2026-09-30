@@ -71,7 +71,8 @@ public sealed class PrintPanel : UserControl
     private readonly CheckBox oneSheet = new() { Content = "Print every sheet on one large page, with cut lines between them, for a plotter", IsVisible = false };
     private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock pageCaption = new() { VerticalAlignment = VerticalAlignment.Center };
-    private readonly Image preview = new() { Stretch = Stretch.Uniform, Height = 520, HorizontalAlignment = HorizontalAlignment.Left };
+    /// <summary>Entry 300: the page showing, drawn live from its scene by the screen's one preview.</summary>
+    private Scene? shown;
     private LibrarySheet? selected;
     private int page;
 
@@ -246,8 +247,11 @@ public sealed class PrintPanel : UserControl
         showingColour = false;
     }
 
-    /// <summary>Raised with each page of artwork this panel shows, so the screen's one preview can show it.</summary>
-    internal event Action<Bitmap?>? PageShown;
+    /// <summary>
+    /// Raised with each page this panel shows, as the scene its PDF is written from, so the screen's one preview draws it live and sharp
+    /// (entry 300); null where there is none.
+    /// </summary>
+    internal event Action<Scene?>? PageShown;
 
     /// <summary>Raised when the panel chooses a sheet itself, a design it has just saved, so the library can select it too.</summary>
     internal event Action<LibrarySheet>? SheetChosen;
@@ -413,7 +417,7 @@ public sealed class PrintPanel : UserControl
         {
             Check(CheckLevel.Refusal, "Enter the spacing between bulls in inches, such as 1.50.");
             selected = null;
-            preview.Source = null;
+            ShowNothing();
             return;
         }
 
@@ -448,7 +452,7 @@ public sealed class PrintPanel : UserControl
         else
         {
             selected = null;
-            preview.Source = null;
+            ShowNothing();
             title.Text = "";
             summary.Text = "";
         }
@@ -495,7 +499,7 @@ public sealed class PrintPanel : UserControl
         else
         {
             selected = null;
-            preview.Source = null;
+            ShowNothing();
         }
 
         return made;
@@ -509,8 +513,15 @@ public sealed class PrintPanel : UserControl
     });
 
 
-    /// <summary>The preview image, for the headless tests.</summary>
-    internal IImage? PreviewSource => preview.Source;
+    /// <summary>The page the preview draws, for the headless tests.</summary>
+    internal Scene? PreviewSource => shown;
+
+    /// <summary>No page to show: the preview clears.</summary>
+    private void ShowNothing()
+    {
+        shown = null;
+        PageShown?.Invoke(null);
+    }
 
     /// <summary>What the screen says about the selected sheet, and whether it offers one large page with cut lines, for the headless tests.</summary>
     internal string SummaryText => summary.Text ?? "";
@@ -699,9 +710,10 @@ public sealed class PrintPanel : UserControl
             return;
         }
 
-        (preview.Source as IDisposable)?.Dispose();
-        preview.Source = Preview(selected.Definition, page, note.IsChecked == true, Colour);
-        PageShown?.Invoke(preview.Source as Bitmap);
+        // Entry 300: the scene itself, not a picture of it; the preview draws it as vectors at the screen's own resolution.
+        var scenes = SceneBuilder.Build(selected.Definition, new RenderOptions(TileIndex: page, PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null, BullColour: Colour));
+        shown = scenes.Pages.Count > 0 ? scenes.Pages[0] : null;
+        PageShown?.Invoke(shown);
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
     }
 
@@ -808,6 +820,35 @@ public sealed class PrintPanel : UserControl
         DiagnosticLog.Info("print.open", [.. DiagnosticLog.File(path), ("verb", "none"), ("returned", true)]);
         SetStatus(opened, kind);
         Confirm(opened, checkPrinter: selected is { } printed ? PrinterOffer?.Invoke(printed.Definition) : null);
+    }
+
+    /// <summary>
+    /// Entry 300 section 3: the sheet as the real PDF, opened in the system's viewer for anyone who wants it, with nothing else asked. It is
+    /// written where the print path writes it and opened the one way out of the process.
+    /// </summary>
+    internal void OpenAsPdf()
+    {
+        if (selected is null)
+        {
+            return;
+        }
+
+        string path = Path.Combine(Path.GetTempPath(), "GroupLab", selected.File.Replace(".gltd.json", ".pdf", StringComparison.Ordinal));
+        if (!SavePdf(path))
+        {
+            return;
+        }
+
+        try
+        {
+            TheOutsideWorld.Current.OpenFile(path);
+            DiagnosticLog.Info("print.pdf", [.. DiagnosticLog.File(path), ("opened", true)]);
+        }
+        catch (Win32Exception ex)
+        {
+            SetStatus("No application could open the PDF (" + ex.Message + "). It is saved at " + path + ".", StatusKind.Alert);
+            DiagnosticLog.Exception(LogLevel.Warn, "print.pdf", ex);
+        }
     }
 
     /// <summary>

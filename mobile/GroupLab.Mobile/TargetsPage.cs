@@ -146,7 +146,8 @@ public sealed class TargetsPage : UserControl
         // Entry 297: the bulls in black, blue or red, remembered for each sheet; the picture follows the choice at once.
         string key = sheet.File == "custom.gltd.json" ? "designer" : Path.GetFileName(sheet.File);
         var colour = Phone.Settings.LoadBullColour(key);
-        var image = new Image { Source = Preview(sheet.Definition, colour), MaxHeight = 480, HorizontalAlignment = HorizontalAlignment.Center };
+        // Entry 300 section 6: the sheet drawn live from the scene its PDF is written from, sharp at the phone's own resolution.
+        var image = new SheetView { Scene = Page(sheet.Definition, colour), Height = 480, HorizontalAlignment = HorizontalAlignment.Stretch };
         column.Children.Add(image);
         var colours = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*,*"), ColumnSpacing = 8 };
         foreach (var (choice, at) in GroupLab.Core.Rendering.BullColours.All.Select((c, i) => (c, i)))
@@ -158,8 +159,7 @@ public sealed class TargetsPage : UserControl
                 {
                     Phone.Settings.SaveBullColour(key, choice);
                     DiagnosticLog.Info("print.color", ("sheet", sheet.File), ("color", GroupLab.Core.Rendering.BullColours.Name(choice)));
-                    (image.Source as IDisposable)?.Dispose();
-                    image.Source = Preview(sheet.Definition, choice);
+                    image.Scene = Page(sheet.Definition, choice);
                 }
             };
             Grid.SetColumn(radio, at);
@@ -212,21 +212,10 @@ public sealed class TargetsPage : UserControl
     }
 
     /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>
-    private static Bitmap? Preview(TargetDefinition definition, GroupLab.Core.Rendering.BullColour colour = GroupLab.Core.Rendering.BullColour.Black)
+    private static Scene? Page(TargetDefinition definition, GroupLab.Core.Rendering.BullColour colour = GroupLab.Core.Rendering.BullColour.Black)
     {
         // Entry 250 section 1: the sheet as its PDF prints it, words and the actual-size instruction included; entry 297, its bulls in color.
         var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote, BullColour: colour));
-        if (scenes.Pages.Count == 0)
-        {
-            return null;
-        }
-
-        var scene = scenes.Pages[0];
-        double longerInches = Math.Max(scene.Width, scene.Height) / (2.0 * 254);
-        var (width, height, bgr) = SceneRasterizer.RasterizeBgr(scene, Math.Min(100, 900 / longerInches), words: true);
-        using var mat = OpenCvSharp.Mat.FromPixelData(height, width, OpenCvSharp.MatType.CV_8UC3, bgr);
-        OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
-        using var stream = new MemoryStream(png);
-        return new Bitmap(stream);
+        return scenes.Pages.Count == 0 ? null : scenes.Pages[0];
     }
 }

@@ -74,6 +74,7 @@
     "src/GroupLab.App/SharingWords.cs",
     "src/GroupLab.App/SheetGestures.cs",
     "src/GroupLab.App/SheetThumbnail.cs",
+    "src/GroupLab.App/SheetView.cs",
     "src/GroupLab.App/ShotOrderChart.cs",
     "src/GroupLab.App/ShotsCurve.cs",
     "src/GroupLab.App/SpreadStrips.cs",

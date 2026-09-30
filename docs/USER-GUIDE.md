@@ -26,7 +26,9 @@ switch it, or press and hold it for every unit it can take, and GroupLab remembe
 ## 1. Print a sheet
 
 Open **Targets** from the rail. It lists the built-in sheets by family, read only, and your own sheets after them. Choose a sheet and
-everything it takes to print it is beside the list, with its artwork filling the rest of the screen.
+everything it takes to print it is beside the list, with the page filling the rest of the screen. The page is drawn live from the same
+shapes and letters as its PDF, so it is exactly what prints, changes the moment any setting or designer field does, and stays sharp at any
+zoom on any screen; **Open as PDF** under it opens the real PDF in your viewer. The phone's Targets screen draws its page the same way.
 
 ![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png)
 

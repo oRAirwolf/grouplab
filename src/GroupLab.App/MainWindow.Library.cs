@@ -29,11 +29,10 @@ public sealed partial class MainWindow
     private readonly StackPanel libraryDetail = new() { Spacing = Tokens.Space8 };
 
     // Entry 120 section 10.2: the preview fills everything under the detail, keeping its aspect, and grows with the window. Stretch rather
-    // than a fixed box, and no MaxHeight, because a fixed box left two thirds of the window empty.
-    private readonly Image libraryPreview = new()
+    // than a fixed box, and no MaxHeight, because a fixed box left two thirds of the window empty. Entry 300: it is the sheet's own scene
+    // drawn as vectors, so it is exactly what prints and sharp at any zoom on a 4K screen.
+    private readonly SheetView libraryPreview = new()
     {
-        Stretch = Stretch.Uniform,
-        StretchDirection = StretchDirection.Both,
         HorizontalAlignment = HorizontalAlignment.Stretch,
         VerticalAlignment = VerticalAlignment.Stretch,
     };
@@ -82,7 +81,7 @@ public sealed partial class MainWindow
         targetsPanel = new PrintPanel(LibrarySheets, ownSheets) { PrinterOffer = PrinterOfferAfterPrinting, Settings = settingsStore };
         targetsPanel.PageShown += page =>
         {
-            libraryPreview.Source = page;
+            libraryPreview.Scene = page;
             SetLibraryZoom(libraryZoom);
         };
         targetsPanel.SheetsChanged += () => FillLibrary();
@@ -129,7 +128,9 @@ public sealed partial class MainWindow
         var zoom = Row(
             Button("Zoom in", () => SetLibraryZoom(libraryZoom <= 0 ? 1.25 : libraryZoom * 1.25)),
             Button("Zoom out", () => SetLibraryZoom(libraryZoom <= 0 ? 0.8 : libraryZoom * 0.8)),
-            Button("Fit", () => SetLibraryZoom(0)));
+            Button("Fit", () => SetLibraryZoom(0)),
+            // Entry 300 section 3: the real PDF in the system's viewer, for anyone who wants it.
+            Button("Open as PDF", () => targetsPanel.OpenAsPdf()));
         zoom.Margin = new Thickness(0, Tokens.Space8, 0, 0);
         Grid.SetRow(zoom, 1);
         preview.Children.Add(zoom);
@@ -167,12 +168,11 @@ public sealed partial class MainWindow
             libraryPreviewHost.IsVisible = false;
             libraryPreview.Width = double.NaN;
             libraryPreview.Height = double.NaN;
-            libraryPreview.Stretch = Stretch.Uniform;
             return;
         }
 
-        // Zoomed: the image goes into the scroll viewer at its chosen size, so it can be panned as well as magnified.
-        if (libraryPreview.Source is { } source)
+        // Zoomed: the sheet goes into the scroll viewer at its chosen size, so it can be panned as well as magnified.
+        if (libraryPreview.Scene is not null && libraryPreview.Natural is var source)
         {
             Reparent(libraryPreview, libraryPreviewFrame);
             libraryPreviewHost.Content = libraryPreviewFrame;
@@ -182,9 +182,8 @@ public sealed partial class MainWindow
                 libraryPreviewArea.Children.Add(libraryPreviewHost);
             }
 
-            libraryPreview.Stretch = Stretch.Uniform;
-            libraryPreview.Width = source.Size.Width * libraryZoom;
-            libraryPreview.Height = source.Size.Height * libraryZoom;
+            libraryPreview.Width = source.Width * libraryZoom;
+            libraryPreview.Height = source.Height * libraryZoom;
             libraryPreviewFrame.Width = libraryPreview.Width;
             libraryPreviewFrame.Height = libraryPreview.Height;
         }

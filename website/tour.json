@@ -760,8 +760,8 @@
      "For a tiled sheet that spans several pages. The counter says which page of how many. A tiled sheet can also be printed on one large page with cut lines between the sheets, for a plotter; each piece scans on its own."
     ],
     [
-     "The preview, with Zoom in, Zoom out and Fit",
-     "The artwork of the page about to print, filling the rest of the screen. It is artwork, not a photograph, so it stays sharp however far you go in; its text is drawn in the PDF, so the preview shows slightly less than the paper will."
+     "The preview, with Zoom in, Zoom out, Fit and Open as PDF",
+     "The page about to print, drawn live from the same shapes and letters its PDF is written from, filling the rest of the screen: it changes the moment any setting does, words included, and stays sharp however far you go in on any screen. Open as PDF opens the real PDF in your viewer."
     ],
     [
      "Design your own sheet",

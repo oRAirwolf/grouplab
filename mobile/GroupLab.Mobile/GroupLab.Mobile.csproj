@@ -50,6 +50,7 @@
     <Compile Include="..\..\src\GroupLab.App\MoreFold.cs" Link="Shared\MoreFold.cs" />
     <Compile Include="..\..\src\GroupLab.App\LoadGroups.cs" Link="Shared\LoadGroups.cs" />
     <Compile Include="..\..\src\GroupLab.App\BrandMark.cs" Link="Shared\BrandMark.cs" />
+    <Compile Include="..\..\src\GroupLab.App\SheetView.cs" Link="Shared\SheetView.cs" />
     <AvaloniaResource Include="..\..\src\GroupLab.App\Assets\grouplab-*.svg" Link="Assets\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />
     <Compile Include="..\..\src\GroupLab.App\BenchmarkPanel.cs" Link="Shared\BenchmarkPanel.cs" />

@@ -592,7 +592,7 @@ public class Entry109Tests
     /// to it with a little margin, on its own white paper so one picture reads in both themes. The grids keep their legend and the numbers
     /// outside them, so the scale can be read.
     /// </summary>
-    private static void SheetPictures(IReadOnlyList<string> outputs)
+    internal static void SheetPictures(IReadOnlyList<string> outputs)
     {
         const double dpi = 200;
         const double perDmm = dpi / 254;
@@ -600,6 +600,9 @@ public class Entry109Tests
         static GroupLab.Core.Gltd.Model.TargetDefinition Load(string file) =>
             GltdJsonReader.ReadFile(Path.Combine(Repository(), "targets", file)).Definition!;
 
+        // Entry 300 section 5: beside each picture of part of a page, a bull or a grid, the same as vectors from the same scene, which the
+        // site serves instead of the picture so it is sharp on any screen. A whole page stays a picture: as vectors it is ten times the size.
+        string? drawing = null;
         GrayImage Draw(GroupLab.Core.Gltd.Model.TargetDefinition d, int page, double left, double top, double right, double bottom)
         {
             var scene = SceneBuilder.Build(d).Pages[page];
@@ -607,6 +610,7 @@ public class Entry109Tests
             top = Math.Max(0, top);
             right = Math.Min(scene.Width / 2.0, right);
             bottom = Math.Min(scene.Height / 2.0, bottom);
+            drawing = SceneSvg.Write(scene, left, top, right, bottom);
             var region = new PixelRegion((int)Math.Round(left * perDmm), (int)Math.Round(top * perDmm), (int)Math.Round((right - left) * perDmm), (int)Math.Round((bottom - top) * perDmm));
             return SceneRasterizer.Rasterize(scene, dpi, 1.0, region, words: true);
         }
@@ -617,7 +621,13 @@ public class Entry109Tests
             foreach (string output in outputs)
             {
                 Cv2.ImWrite(Path.Combine(output, $"sheet-{name}.png"), mat);
+                if (drawing is not null)
+                {
+                    File.WriteAllText(Path.Combine(output, $"sheet-{name}.svg"), drawing);
+                }
             }
+
+            drawing = null;
         }
 
         // One bull, a little more than its outer disc on every side.
@@ -644,7 +654,8 @@ public class Entry109Tests
         foreach (string file in donor.Select(s => (string)s!["letter"]!))
         {
             var d = Load(file + ".gltd.json");
-            Save("page-" + file.Replace("GL-", "", StringComparison.Ordinal).ToLowerInvariant(), SceneRasterizer.Rasterize(SceneBuilder.Build(d).Pages[0], 40, words: true));
+            string name = "page-" + file.Replace("GL-", "", StringComparison.Ordinal).ToLowerInvariant();
+            Save(name, SceneRasterizer.Rasterize(SceneBuilder.Build(d).Pages[0], 40, words: true));
         }
 
         // Entry 273: the printer check page, whole, as it prints on Letter.
