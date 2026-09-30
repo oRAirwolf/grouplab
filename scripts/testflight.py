@@ -43,6 +43,9 @@ NOTES = Path(__file__).resolve().parent.parent / "docs" / "RELEASE-NOTES.md"
 # The states of a build for external testers in which Public Beta's testers can install it.
 AVAILABLE = {"BETA_APPROVED", "IN_BETA_TESTING", "READY_FOR_BETA_TESTING"}
 
+# A Beta App Review still to be decided.
+PENDING = {"WAITING_FOR_REVIEW", "IN_REVIEW"}
+
 
 class Refused(Exception):
     """App Store Connect said no to a request, with its own words."""
@@ -112,6 +115,17 @@ def step(store: Store, notes: Callable[[int], str], wait_minutes: int = 0, sleep
 
     newest = usable[0]
     in_beta, in_team = store.in_group(beta), store.in_group(team)
+
+    # Entry 319 section 1: Public Beta's first review is never disturbed. Until a build of it has been approved, a build already waiting
+    # for review keeps its place in Apple's queue: nothing newer is added or submitted, and GroupLab Team keeps its own automatic
+    # distribution, which Alan left on for that time.
+    if not any(b.id in in_beta and store.external_state(b.id) in AVAILABLE for b in usable):
+        waiting = next((b for b in usable if b.id in in_beta and store.review(b.id) in PENDING), None)
+        if waiting is not None:
+            said = store.review(waiting.id).replace("_", " ").lower()
+            lines.append(f"{BETA}'s first build, {waiting.number}, is {said}; nothing newer is added or submitted until Apple approves it, "
+                         "so it keeps its place in the queue (entry 319).")
+            return lines, None
     if store.external_state(newest.id) == "MISSING_EXPORT_COMPLIANCE":
         store.no_encryption(newest.id)
         lines.append(f"Build {newest.number}: answered the export question (GroupLab uses only the system's encryption).")
@@ -185,7 +199,7 @@ class Apple(Store):
 
     def builds(self, app):
         found = []
-        for b in self.call("GET", f"/v1/builds?filter[app]={app}&sort=-uploadedDate&limit=20").get("data", []):
+        for b in self.call("GET", f"/v1/builds?filter[app]={app}&sort=-uploadedDate&limit=50").get("data", []):
             a = b["attributes"]
             found.append(Build(b["id"], int(re.sub(r"\D", "", a.get("version", "0")) or 0), a.get("processingState", ""), a.get("expired", False)))
         return sorted(found, key=lambda b: b.number, reverse=True)
@@ -216,10 +230,10 @@ class Apple(Store):
         english = next((l for l in existing if l["attributes"].get("locale", "").startswith("en")), None)
         if english:
             self.call("PATCH", f"/v1/betaBuildLocalizations/{english['id']}",
-                      {"data": {"type": "betaBuildLocalizations", "id": english["id"], "attributes": {"whatToTest": text}}})
+                      {"data": {"type": "betaBuildLocalizations", "id": english["id"], "attributes": {"whatsNew": text}}})
         else:
             self.call("POST", "/v1/betaBuildLocalizations",
-                      {"data": {"type": "betaBuildLocalizations", "attributes": {"locale": "en-US", "whatToTest": text},
+                      {"data": {"type": "betaBuildLocalizations", "attributes": {"locale": "en-US", "whatsNew": text},
                                 "relationships": {"build": {"data": {"type": "builds", "id": build}}}}})
 
 
@@ -330,6 +344,19 @@ def self_test() -> int:
     s = Pretend(builds_=[Build("b141", 141, "VALID")], states={"b141": "MISSING_EXPORT_COMPLIANCE"})
     lines, _ = step(s, no_notes)
     expect("export answered", any("export question" in line for line in lines) and s.reviews.get("b141"))
+
+    # Entry 319: Public Beta's first build waiting for review is never superseded; nothing newer is added or submitted.
+    s = Pretend(builds_=[Build("b134", 134, "VALID"), Build("b140", 140, "VALID")],
+                states={"b134": "WAITING_FOR_BETA_REVIEW"}, reviews={"b134": "WAITING_FOR_REVIEW"})
+    s.members["beta"].add("b134")
+    lines, alan = step(s, no_notes)
+    expect("first review held", "b140" not in s.members["beta"] and "b140" not in s.reviews and not s.members["team"] and alan is None)
+    expect("first review said", any("first build, 134" in line and "entry 319" in line for line in lines))
+    # Once approved, the newer build goes on as before.
+    s.states["b134"] = "BETA_APPROVED"
+    s.reviews["b134"] = "APPROVED"
+    step(s, no_notes)
+    expect("after approval, on", "b140" in s.members["beta"] and "b134" in s.members["team"])
 
     # What to Test from the release notes.
     notes = ("## 0.2.0-nightly.142\n\n**2026-10-01**\n\n**What you will notice**\n\n- First thing.\n- Second thing.\n\n"
