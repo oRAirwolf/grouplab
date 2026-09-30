@@ -156,6 +156,7 @@ internal static class DiagnosticsOverlay
             FontSize = 12,
             Foreground = Brushes.White,
             Text = Reading(elapsed()),
+            TextWrapping = TextWrapping.Wrap,
         };
         var box = new Border
         {

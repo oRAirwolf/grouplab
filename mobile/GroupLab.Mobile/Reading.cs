@@ -33,9 +33,11 @@ internal sealed class Reading
     /// <summary>
     /// The longest a reading may run before it is stopped and the person told, counted while the application runs. The slowest reading in
     /// the Fold 7's sittings took 45.5 seconds (2026-09-28, a picture that named no sheet, before entry 291 made reading the codes square
-    /// on); a good picture takes 3 to 20. Sixty seconds stops only what would otherwise spin.
+    /// on); a good picture takes 3 to 20. Sixty seconds stops only what would otherwise spin. The iOS self-test raises it, and nothing else
+    /// does: the CI simulator reads the committed scan in 33 to 59 seconds (run 36726281165, 2026-09-30), so a minute cut one of its readings
+    /// short. A person's phone keeps the minute.
     /// </summary>
-    public static readonly TimeSpan Limit = TimeSpan.FromSeconds(60);
+    public static TimeSpan Limit { get; internal set; } = TimeSpan.FromSeconds(60);
 
     /// <summary>How often the reading is looked at while it runs.</summary>
     public static readonly TimeSpan Tick = TimeSpan.FromMilliseconds(250);

@@ -128,6 +128,9 @@ internal static class SelfTest
         var checks = new List<SelfTestCheck>();
         double budget = 0;
 
+        // The simulator on a CI runner reads a picture several times slower than a phone; its readings must not meet a phone's limit.
+        Reading.Limit = TimeSpan.FromMinutes(5);
+
         // The self-test is a sitting: the screen stays on while it runs, and only then.
         bool running = true;
         await OnUi(() => KeepAwakeWhile(() => running));

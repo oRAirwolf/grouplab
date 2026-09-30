@@ -67,7 +67,7 @@ internal static class CaliberBoxes
             MinWidth = side,
             MinHeight = side,
             Padding = new Thickness(0),
-            Background = Avalonia.Media.Brushes.Transparent,
+            Background = Tokens.Clear,
             BorderThickness = new Thickness(0),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
