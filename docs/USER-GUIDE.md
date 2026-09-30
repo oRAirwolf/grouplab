@@ -400,7 +400,8 @@ reads the whole photograph, and when an app hands over a smaller copy it says so
 **On iPhone and iPad** (being built, and not yet installable): **Choose a photo** opens Photos, iCloud Photos included, with no
 question about access, and **From another app** opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox. iOS lets no
 app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
-works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis.
+works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis. On the camera the
+panel with the instruction sits above the preview rather than over it, so the preview shows the whole of what the picture will hold.
 
 **Updates on phones that stop apps in the background.** GroupLab Dev looks for an update every time it opens, as well as about every six
 hours, so an update is late at worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it (the

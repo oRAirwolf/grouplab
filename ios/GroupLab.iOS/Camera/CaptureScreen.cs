@@ -12,9 +12,14 @@ namespace GroupLab.iOS;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 290 section 2 item 5: Capture B on iPhone and iPad, drawn as UIKit's own views, for the reason Android draws
 /// it with Android's (android/GroupLab.Android/CaptureScreen.cs): a native view hosted in an Avalonia screen covers whatever Avalonia draws
-/// in its place, so nothing Avalonia draws could be seen over the camera. The same layout: the floating panel at the top (Back, the one
-/// instruction, the torch, the live checks and the forecast bar), the level in the middle of the camera, and under the camera the shutter
-/// with the photo picker to its left, and the two modes beneath. The iPad mini has one camera at the back, so there is no lens button.
+/// in its place, so nothing Avalonia draws could be seen over the camera. The panel at the top (Back, the one instruction, the torch, the
+/// live checks and the forecast bar), the level in the middle of the camera, and under the camera the shutter with the photo picker to its
+/// left, and the two modes beneath. The iPad mini has one camera at the back, so there is no lens button.
+/// <para>
+/// NOTES-FROM-PLANNING.md entry 313 section 2: on the iPad mini the preview filled from the top of the screen with the panel floating over
+/// it, so its top edge showed between the status bar and the panel and the panel hid the top of the picture. The panel now sits above the
+/// preview, which starts under it and is centred in what is left, so everything the preview shows is what the picture will hold.
+/// </para>
 /// Each control carries its name as its accessibility identifier, as Android's carry theirs as their descriptions.
 /// </summary>
 internal sealed class CaptureScreen : UIView
@@ -71,9 +76,10 @@ internal sealed class CaptureScreen : UIView
         torch = Pill("Torch: Auto", TorchName);
         checks = new UILabel { Text = "", TextColor = Dim, Font = UIFont.SystemFontOfSize(13, UIFontWeight.Regular), Lines = 2 };
         Bar = new QualityBar();
-        score = new UILabel { Text = "–", TextColor = UIColor.White, Font = UIFont.SystemFontOfSize(13, UIFontWeight.Regular) };
+        // Entry 313 section 2: nothing beside the bar until there is a score; the dash it showed read as a stray character.
+        score = new UILabel { Text = "", TextColor = UIColor.White, Font = UIFont.SystemFontOfSize(13, UIFontWeight.Regular) };
         panel.AddSubviews(back, say, torch, checks, Bar, score);
-        camera.AddSubview(panel);
+        AddSubview(panel);
 
         // Entry 281 section 1.1: the level is a crosshair in the middle of the camera with a dot that moves like a bubble.
         level.AccessibilityIdentifier = LevelName;
@@ -99,12 +105,9 @@ internal sealed class CaptureScreen : UIView
         {
             if (tap.State == UIGestureRecognizerState.Ended)
             {
+                // The preview layer fills the camera view, so a point in the one is the same point in the other; the panel is above it.
                 CGPoint at = tap.LocationInView(camera);
-                if (!panel.Frame.Contains(at))
-                {
-                    // The preview layer fills the camera view, so a point in the one is the same point in the other.
-                    Tapped?.Invoke(Preview.CaptureDevicePointOfInterestForPoint(at));
-                }
+                Tapped?.Invoke(Preview.CaptureDevicePointOfInterestForPoint(at));
             }
         }));
     }
@@ -142,6 +145,12 @@ internal sealed class CaptureScreen : UIView
         _ => ScreenTurn.Upright,
     };
 
+    /// <summary>
+    /// Entry 313 section 2, for the self-test: where the panel, the camera and the shutter are, the safe area's top, and what shows beside
+    /// the quality bar.
+    /// </summary>
+    internal (CGRect Panel, CGRect Camera, CGRect Shutter, double SafeTop, string Score) Geometry() => (panel.Frame, camera.Frame, Shutter.Frame, SafeAreaInsets.Top, score.Text ?? "");
+
     /// <summary>Shows the Result button where there is a result to go back to.</summary>
     public void ShowResultButton(bool shown) => result.Hidden = !shown;
 
@@ -175,7 +184,7 @@ internal sealed class CaptureScreen : UIView
         parts.Add(torchOn ? "Torch on" : "Torch off");
         checks.Text = string.Join(" · ", parts);
         Bar.Score = forecast;
-        score.Text = forecast is { } s ? string.Create(CultureInfo.InvariantCulture, $"{s} {PictureCheck.BandWord(PictureCheck.Band(s))}") : "–";
+        score.Text = forecast is { } s ? string.Create(CultureInfo.InvariantCulture, $"{s} {PictureCheck.BandWord(PictureCheck.Band(s))}") : "";
         SetNeedsLayout();
     }
 
@@ -206,8 +215,9 @@ internal sealed class CaptureScreen : UIView
     }
 
     /// <summary>
-    /// The camera takes the height the controls leave, with the panel over its top and the level in its middle; the controls sit under
-    /// it, inside the safe area, so neither the home indicator nor the status bar covers them.
+    /// Entry 313 section 2: the panel at the top, under the status bar; the camera takes the height between it and the controls, the
+    /// preview centred in it and the level in its middle; the controls sit under it, inside the safe area, so neither the home indicator nor
+    /// the status bar covers them.
     /// </summary>
     public override void LayoutSubviews()
     {
@@ -216,12 +226,6 @@ internal sealed class CaptureScreen : UIView
         double width = Bounds.Width, height = Bounds.Height;
         const double shutterSize = 76, modeHeight = 44, gap = 10;
         double controls = 14 + shutterSize + 6 + modeHeight + 8;
-        double cameraHeight = Math.Max(0, height - controls - safe.Bottom);
-        camera.Frame = new CGRect(0, 0, width, cameraHeight);
-        CATransaction.Begin();
-        CATransaction.DisableActions = true;
-        Preview.Frame = camera.Bounds;
-        CATransaction.Commit();
 
         // The panel: Back, the instruction and the torch in a row; the checks; the bar and its score.
         double panelWidth = Math.Max(0, width - safe.Left - safe.Right - (2 * gap));
@@ -243,11 +247,20 @@ internal sealed class CaptureScreen : UIView
         score.Frame = new CGRect(12 + inner - scoreSize.Width, barTop, scoreSize.Width, barRow);
         panel.Frame = new CGRect(safe.Left + gap, safe.Top + gap, panelWidth, barTop + barRow + 12);
 
+        // The camera under the panel, down to the controls; the preview keeps the picture's shape, centred both ways in it.
+        double cameraTop = panel.Frame.Bottom + gap;
+        double cameraHeight = Math.Max(0, height - controls - safe.Bottom - cameraTop);
+        camera.Frame = new CGRect(0, cameraTop, width, cameraHeight);
+        CATransaction.Begin();
+        CATransaction.DisableActions = true;
+        Preview.Frame = camera.Bounds;
+        CATransaction.Commit();
+
         double levelSize = 132;
         level.Frame = new CGRect((width - levelSize) / 2, (cameraHeight - levelSize) / 2, levelSize, levelSize);
 
         // Under the camera: the picker, the shutter; the modes beneath.
-        double middle = width / 2, top = cameraHeight + 14;
+        double middle = width / 2, top = camera.Frame.Bottom + 14;
         Shutter.Frame = new CGRect(middle - (shutterSize / 2), top, shutterSize, shutterSize);
         picker.Frame = new CGRect(middle - (shutterSize / 2) - 28 - 88, top + ((shutterSize - 44) / 2), 88, 44);
         double modesTop = top + shutterSize + 6;

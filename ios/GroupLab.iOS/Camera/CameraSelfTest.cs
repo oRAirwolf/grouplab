@@ -78,6 +78,57 @@ internal static class CameraSelfTest
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 313 section 2: the camera screen laid out over the whole window, with a preview that has no camera
+    /// behind it, since the simulator has none. The panel must sit under the status bar and above the camera, the camera between the panel
+    /// and the shutter, and nothing beside the quality bar before there is a score. Photographed, then taken away.
+    /// </summary>
+    internal static async Task<SelfTestCheck> Layout(int n)
+    {
+        var check = new SelfTestCheck("camera layout");
+        CaptureScreen? screen = null;
+        try
+        {
+            var geometry = await SelfTest.OnUi(() =>
+            {
+                var host = IosPhone.Top()?.View ?? throw new InvalidOperationException("no view to lay the camera screen over");
+                screen = new CaptureScreen(new AVFoundation.AVCaptureVideoPreviewLayer(new AVFoundation.AVCaptureSession())) { Frame = host.Bounds };
+                host.AddSubview(screen);
+                screen.SetNeedsLayout();
+                screen.LayoutIfNeeded();
+                return screen.Geometry();
+            });
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            bool taken = await SelfTest.Photographed($"{n:00}-camera-layout");
+            var (panel, camera, shutter, safeTop, score) = geometry;
+            check.Numbers["panelTop"] = Math.Round((double)panel.Top, 1);
+            check.Numbers["panelBottom"] = Math.Round((double)panel.Bottom, 1);
+            check.Numbers["cameraTop"] = Math.Round((double)camera.Top, 1);
+            check.Numbers["cameraBottom"] = Math.Round((double)camera.Bottom, 1);
+            check.Numbers["shutterTop"] = Math.Round((double)shutter.Top, 1);
+            check.Numbers["safeTop"] = Math.Round(safeTop, 1);
+            bool underStatus = panel.Top >= safeTop;
+            bool panelAbove = panel.Bottom <= camera.Top;
+            bool shutterBelow = camera.Bottom <= shutter.Top && camera.Height > 0;
+            bool noDash = score.Length == 0;
+            check.Passed = underStatus && panelAbove && shutterBelow && noDash;
+            check.Detail = $"panel {(int)panel.Top} to {(int)panel.Bottom} under a safe area of {(int)safeTop}, camera {(int)camera.Top} to {(int)camera.Bottom}, shutter from {(int)shutter.Top}; "
+                + (panelAbove ? "the panel is above the camera" : "the panel overlaps the camera")
+                + (noDash ? ", nothing beside the bar" : $", \"{score}\" beside the bar")
+                + (taken ? "; photographed" : "; not photographed");
+        }
+        catch (Exception e) when (e is not OutOfMemoryException)
+        {
+            check.Detail = e.GetType().Name + ": " + e.Message;
+        }
+        finally
+        {
+            await SelfTest.OnUi(() => screen?.RemoveFromSuperview());
+        }
+
+        return check;
+    }
+
+    /// <summary>
     /// A picture that is not a JPEG, HEIC where the simulator can write HEIC and PNG where not, written through the camera's own path: it
     /// must come out a JPEG at its own size, which OpenCV reads where it is linked.
     /// </summary>
