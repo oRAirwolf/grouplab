@@ -68,6 +68,13 @@ public sealed class Shell : UserControl
 
     private readonly Border nav;
 
+    /// <summary>
+    /// Entry 290 section 6: on iOS the bar along the bottom reaches the screen's bottom edge, under the home indicator, as every iPhone
+    /// application's does; the page's own color was left in a strip beneath it. The iOS head sets this before the Shell is made. Android
+    /// keeps its bar above the gesture strip, as it was.
+    /// </summary>
+    internal static bool BarToBottomEdge { get; set; }
+
     public Shell()
     {
         Current = this;
@@ -254,6 +261,21 @@ public sealed class Shell : UserControl
             }
         });
         DiagnosticLog.Info("app.idle", ("shown", true));
+    }
+
+    /// <summary>
+    /// The system gives the Shell the safe area as its padding. Where <see cref="BarToBottomEdge"/> is set, the bar reaches down through the
+    /// bottom of that padding, its buttons kept where they were and its own surface filling the strip behind the home indicator.
+    /// </summary>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (BarToBottomEdge && change.Property == PaddingProperty && nav is not null)
+        {
+            double below = Padding.Bottom;
+            nav.Margin = new Thickness(0, 0, 0, -below);
+            nav.Padding = new Thickness(0, GroupLab.App.Theme.Tokens.Space4, 0, GroupLab.App.Theme.Tokens.Space8 + below);
+        }
     }
 
     /// <summary>Hides the bar along the bottom, or shows it again.</summary>
