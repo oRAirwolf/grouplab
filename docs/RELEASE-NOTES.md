@@ -561,7 +561,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - GroupLab now asks once whether you would like to take part in the hardware survey, a weekly report of what your computer is and how fast GroupLab runs on it; nothing is sent unless you say yes, and you can change your answer in Settings, under Sharing.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.109)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
