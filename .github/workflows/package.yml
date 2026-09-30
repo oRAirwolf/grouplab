@@ -235,9 +235,22 @@ jobs:
             printf '%s' "$APPLE_API_KEY_P8" | base64 --decode > "$key"
           fi
           ditto -c -k --keepParent "$app" "$RUNNER_TEMP/GroupLab-notarize.zip"
+          # A rejection prints Apple's own reasons, one per file, so a failed night says what to fix without a second run to ask.
+          set +e
           xcrun notarytool submit "$RUNNER_TEMP/GroupLab-notarize.zip" --key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID" \
-            --team-id "$APPLE_TEAM_ID" --wait --timeout 45m | tee notarize.log
-          grep -q "status: Accepted" notarize.log || { echo "::error::Apple did not accept the notarization; notarize.log has its answer"; exit 1; }
+            --team-id "$APPLE_TEAM_ID" --wait --timeout 45m 2>&1 | tee notarize.log
+          set -e
+          if ! grep -q "status: Accepted" notarize.log; then
+            id=$(grep -m1 -oE "id: [0-9a-f-]{36}" notarize.log | cut -d' ' -f2 || true)
+            if [ -n "$id" ]; then
+              xcrun notarytool log "$id" --key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID" --team-id "$APPLE_TEAM_ID" \
+                notarize-issues.json > /dev/null 2>&1 || true
+              python3 -c 'import json; [print("::error::" + str(i.get("path")) + ": " + str(i.get("message"))) for i in (json.load(open("notarize-issues.json")).get("issues") or [])[:40]]' || true
+            fi
+            rm -f "$key"
+            echo "::error::Apple did not accept the notarization; the lines above give its reasons"
+            exit 1
+          fi
           rm -f "$key" "$RUNNER_TEMP/GroupLab-notarize.zip"
           xcrun stapler staple "$app"
           xcrun stapler validate "$app"
