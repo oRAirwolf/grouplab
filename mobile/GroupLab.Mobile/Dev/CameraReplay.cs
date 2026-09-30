@@ -138,6 +138,12 @@ internal static class CameraReplay
                 ["torch"] = step.Torch?.Level,
                 ["fires"] = step.Fire,
                 ["judgedMs"] = step.FrameMs,
+
+                // Entry 321: the level after the frame, its mode, what decided it and whether it was green.
+                ["level"] = step.Level?.ModeName,
+                ["levelBy"] = step.Level?.SourceName,
+                ["tilt"] = step.Level is { } level ? Math.Round(level.Tilt, 1) : null,
+                ["green"] = step.Level?.Ready,
             });
         }
     }

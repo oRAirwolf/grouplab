@@ -105,6 +105,19 @@ public static class PhoneCamera
     }
 
     /// <summary>
+    /// Entry 321: Android's gravity sensor, which reads in the phone's natural axes, turned into the screen's, as the level takes it. The
+    /// screen follows the phone into landscape, and <paramref name="displayDegrees"/> is how far it is turned (the display's rotation, 0, 90,
+    /// 180 or 270): at 90 the phone is turned counterclockwise, so the screen's right is the phone's bottom and its top the phone's right.
+    /// </summary>
+    public static (double X, double Y, double Z) LevelFromAndroid(double x, double y, double z, int displayDegrees) => (((displayDegrees % 360) + 360) % 360) switch
+    {
+        90 => (-y, x, z),
+        180 => (-x, -y, z),
+        270 => (y, -x, z),
+        _ => (x, y, z),
+    };
+
+    /// <summary>
     /// The level's reading from iOS's gravity (Core Motion's device motion), in the axes <see cref="BubbleLevel"/> takes: Android's, the
     /// direction away from the ground, x to the right of the screen and y to its top. Core Motion gives the pull toward the ground in the
     /// device's own axes, x to the right and y to the top of the device held upright, so the reading is turned round, and then turned with

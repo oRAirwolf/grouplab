@@ -4688,6 +4688,22 @@
   "Since entry 318 the scans are read by the finder of section 7 that Find holes uses, and the phone photographs, which have no scale of their own, are read there once the person sets one.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)"
+  },
+  "Sun lost 12 holes, 9 of them to the paper clipped to white alone: a synthetic hole shows a scanner lid's light core, which clips with the paper, where at the range a hole shows the backer.": {
+   "kind": "measured",
+   "where": "measured 2026-09-30 with grouplab scoreboard --synthetic, the lines in docs/scoreboard/synthetic-baseline.json held by ScoreboardTests, and the 1.75 and 1.5 ft runs, entry 321 sections 3 and 4"
+  },
+  "At 2 ft the working picture gives the sheet 98 pixels an inch and not one marker is read; at 1.75 ft, 112 pixels an inch, 49 of 50 holes are found, and at 1.5 ft, on one seed, all 25.": {
+   "kind": "measured",
+   "where": "measured 2026-09-30 with grouplab scoreboard --synthetic, the lines in docs/scoreboard/synthetic-baseline.json held by ScoreboardTests, and the 1.75 and 1.5 ft runs, entry 321 sections 3 and 4"
+  },
+  "That is closer than the 2.5 ft the photograph instructions give, a question the range photographs can answer for a real phone's lens; the camera says \"Move closer\" when it cannot read the markers.": {
+   "kind": "measured",
+   "where": "measured 2026-09-30 with grouplab scoreboard --synthetic, the lines in docs/scoreboard/synthetic-baseline.json held by ScoreboardTests, and the 1.75 and 1.5 ft runs, entry 321 sections 3 and 4"
+  },
+  "Guided takes the picture by itself in either position under the same rules: square to the sheet within 37 degrees, steady, and the sheet read.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/CaptureGuidance.cs Judge and GuidanceSteadier: the same checks at OffAxisLimit.Degrees whatever the phone's position, held by CameraReplayTests (entry 321)"
   }
  },
  "rules": [

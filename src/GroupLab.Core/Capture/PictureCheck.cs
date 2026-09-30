@@ -190,7 +190,7 @@ public static class PictureCheck
         {
             if (quality.OffAxisDegrees > CaptureQualities.FineDegrees)
             {
-                notes.Add((string.Create(CultureInfo.InvariantCulture, $"Hold the phone flatter next time: the sheet was {quality.OffAxisDegrees:0} degrees off square, and GroupLab corrected for it."), sheet));
+                notes.Add((string.Create(CultureInfo.InvariantCulture, $"Hold the phone square to the sheet next time: the picture was {quality.OffAxisDegrees:0} degrees off square, and GroupLab corrected for it."), sheet));
             }
 
             if (quality.ResolutionPart < 1)

@@ -21,7 +21,7 @@ namespace GroupLab.Cli;
 public static class ScoreboardVerb
 {
     private const string Usage =
-        "usage: grouplab scoreboard --synthetic [--seeds 291,292] [--only <condition>] [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
+        "usage: grouplab scoreboard --synthetic [--seeds 291,292] [--only <condition,...>] [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard --any-target [--seeds 318,319] [--only <line>] [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard --corpus <folder> [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard truth --scan <scan> --sheet <file.gltd.json> [--calibre <inches>] --out <truth.json>\n" +
@@ -61,7 +61,7 @@ public static class ScoreboardVerb
             seeds = Option("--seeds") is { } s ? [.. s.Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture))] : baseline?.Seeds ?? Scoreboard.DefaultSeeds;
             var definition = Sheet(Path.Combine("targets", Scoreboard.SyntheticSheetFile));
             only = Option("--only");
-            pictures = Scoreboard.RunSynthetic(definition, new OpenCvSharpBackend(), seeds, Jpeg, only is null ? null : [only]);
+            pictures = Scoreboard.RunSynthetic(definition, new OpenCvSharpBackend(), seeds, Jpeg, only?.Split(','));
         }
         else if (anyTarget)
         {
@@ -108,8 +108,8 @@ public static class ScoreboardVerb
             return 0;
         }
 
-        // A run of one condition is held only to that condition's line.
-        var held = only is null ? baseline.Rows : [.. baseline.Rows.Where(r => string.Equals(r.Condition, only, StringComparison.OrdinalIgnoreCase))];
+        // A run of some conditions, named with commas, is held only to their lines.
+        var held = only is null ? baseline.Rows : [.. baseline.Rows.Where(r => only.Split(',').Contains(r.Condition, StringComparer.OrdinalIgnoreCase))];
         foreach (string better in Scoreboard.Improvements(held, rows, margin))
         {
             output.WriteLine($"better than the baseline: {better}");

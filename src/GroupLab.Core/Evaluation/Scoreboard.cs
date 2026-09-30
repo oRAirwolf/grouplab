@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using GroupLab.Core.Capture;
 using GroupLab.Core.Detection;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
@@ -86,12 +87,20 @@ public sealed record ScoreboardMargin(int Holes = 1, int FalseMarks = 1, double 
 /// <summary>What a baseline file holds: the rows, the seeds they came from and the margin they are held to.</summary>
 public sealed record ScoreboardBaseline(IReadOnlyList<string> Why, string Measured, IReadOnlyList<int> Seeds, ScoreboardMargin Margin, IReadOnlyList<ScoreboardRow> Rows);
 
-/// <summary>A synthetic condition: what it does to a picture, and where it moves a point of the undisturbed picture, for a warp.</summary>
-public sealed record SyntheticCondition(string Name, string Description, Func<GrayImage, Random, Scoreboard.JpegRoundTrip?, GrayImage?> Degrade, Func<double, int, double>? ShiftDown = null)
+/// <summary>
+/// A synthetic condition: what it does to a picture, and where it moves a point of the undisturbed picture, for a warp. <see cref="View"/>,
+/// where given, is the camera's view of the whole sheet (entry 321): the undisturbed picture's pixels to the degraded picture's, which may be
+/// another size, so what is found is scored back on the undisturbed picture, in its inches.
+/// </summary>
+public sealed record SyntheticCondition(string Name, string Description, Func<GrayImage, Random, Scoreboard.JpegRoundTrip?, GrayImage?> Degrade, Func<double, int, double>? ShiftDown = null,
+    Func<int, int, SyntheticView>? View = null)
 {
     /// <summary>Where a point of the undisturbed picture is in the degraded one.</summary>
     public PointD Move(PointD p, int width) => ShiftDown is null ? p : new PointD(p.X, p.Y + ShiftDown(p.X, width));
 }
+
+/// <summary>A camera's view of the synthetic picture: its pixels to the view's, and the view's size.</summary>
+public sealed record SyntheticView(Homography Transform, int Width, int Height);
 
 /// <summary>
 /// The detection scoreboard, NOTES-FROM-PLANNING.md entry 261 option (a), built by entry 291 section 7: every build re-reads the same
@@ -143,7 +152,114 @@ public static partial class Scoreboard
         new("blur 3 px", "a Gaussian blur, sigma 3 px", (image, _, _) => Blur(image, 3)),
         new("noise 12", "gray noise, sd 12 levels", (image, random, _) => Noise(image, random, 12)),
         new("jpeg 40", "JPEG at quality 40", (image, _, jpeg) => jpeg?.Invoke(image, 40)),
+
+        // Entry 321 sections 3 and 4: the sheet on a backer at the range, photographed upright, as well as flat on a table.
+        Angle(15),
+        Angle(30),
+        new("sun and shadow", "strong sun, the paper clipped to white, and the shooter's head and shoulders in a hard-edged shadow at 30 percent", (image, _, _) => Shade(image, SunAndShadow)),
+        new("motion 6 px", "a sideways smear of 6 px, 0.02 in, as a slight shake or a sheet moving in the wind", (image, _, _) => Smear(image, 6)),
+        Far(2),
+        Far(3),
     ];
+
+    /// <summary>
+    /// Entry 321 section 3: the angles the tolerance for square on was measured over, <c>grouplab scoreboard --synthetic --only "angle 5,angle
+    /// 10,..."</c>. Only <see cref="Conditions"/> are held to a baseline in every build.
+    /// </summary>
+    public static IReadOnlyList<SyntheticCondition> AngleSweep { get; } = [.. Enumerable.Range(1, 9).Select(k => Angle(5 * k))];
+
+    /// <summary>
+    /// The sheet seen <paramref name="degrees"/> off square, turned about its upright axis so the right-hand column is the far one, as the
+    /// study's real pictures were, through the 26 mm equivalent lens the pipeline assumes, from far enough back that the near edge fits.
+    /// </summary>
+    public static SyntheticCondition Angle(double degrees)
+    {
+        Func<int, int, SyntheticView> view = (w, h) => AngledView(w, h, degrees);
+        return new(string.Create(CultureInfo.InvariantCulture, $"angle {degrees:0}"),
+            string.Create(CultureInfo.InvariantCulture, $"{degrees:0} degrees off square about the upright axis, the right-hand column farthest, on a cardboard backer"),
+            (image, _, _) => See(image, view(image.Width, image.Height)), View: view);
+    }
+
+    /// <summary>
+    /// The sheet <paramref name="feet"/> feet away, as the phone's working picture of <see cref="WorkingSize.PhoneMegapixels"/> megapixels in
+    /// portrait holds it through a 26 mm equivalent lens, square on, on a cardboard backer.
+    /// </summary>
+    public static SyntheticCondition Far(double feet)
+    {
+        Func<int, int, SyntheticView> view = (w, h) => FarView(w, h, feet);
+        return new(string.Create(CultureInfo.InvariantCulture, $"far {feet:0.##} ft"),
+            string.Create(CultureInfo.InvariantCulture, $"the sheet {feet:0.#} ft away in an 8 megapixel phone picture, {FarPixelsPerInch(feet):0} pixels an inch, on a cardboard backer"),
+            (image, _, _) => See(image, view(image.Width, image.Height)), View: view);
+    }
+
+    /// <summary>Pixels an inch on a sheet <paramref name="feet"/> away, square on, in the phone's working picture through a 26 mm equivalent lens.</summary>
+    public static double FarPixelsPerInch(double feet)
+    {
+        var (_, height) = PortraitWorkingPicture();
+        // A 35 mm equivalent lens's frame is 36 mm on its long side.
+        return height / (feet * 12 * 36 / CameraGeometry.AssumedEquivalentMm);
+    }
+
+    private static (int Width, int Height) PortraitWorkingPicture()
+    {
+        double pixels = WorkingSize.PhoneMegapixels * 1e6;
+        return ((int)Math.Round(Math.Sqrt(pixels * 3 / 4)), (int)Math.Round(Math.Sqrt(pixels * 4 / 3)));
+    }
+
+    private static SyntheticView AngledView(int width, int height, double degrees)
+    {
+        // A pinhole with the focal length the pipeline assumes, so the angle it measures is the angle made; the sheet turned about its upright
+        // axis at its center, which stands at distance d, far enough back that the near edge is 95 percent of the way to the frame's.
+        double f = CameraGeometry.AssumedFocal(width, height), cx = width / 2.0, cy = height / 2.0;
+        double sin = Math.Sin(degrees * Math.PI / 180), cos = Math.Cos(degrees * Math.PI / 180);
+        double d = (f / 0.95) + (cx * sin), near = d - (sin * cx);
+        return new SyntheticView(new Homography([
+            (f * cos) + (cx * sin), 0, (-f * cos * cx) + (cx * near),
+            cy * sin, f, (-f * cy) + (cy * near),
+            sin, 0, near]), width, height);
+    }
+
+    private static SyntheticView FarView(int width, int height, double feet)
+    {
+        var (w, h) = PortraitWorkingPicture();
+        double s = FarPixelsPerInch(feet) / SyntheticDpi;
+        return new SyntheticView(new Homography([s, 0, (w / 2.0) - (s * width / 2.0), 0, s, (h / 2.0) - (s * height / 2.0), 0, 0, 1]), w, h);
+    }
+
+    /// <summary>The picture through a view, on a cardboard backer where the sheet is not, smoothed first where the view makes it smaller, as a lens does.</summary>
+    private static GrayImage See(GrayImage image, SyntheticView view)
+    {
+        var h = view.Transform;
+        // The view's scale at the sheet's center.
+        var centre = new PointD(image.Width / 2.0, image.Height / 2.0);
+        var a = h.Apply(centre);
+        var b = h.Apply(new PointD(centre.X, centre.Y + 100));
+        double shrink = Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y))) / 100;
+        var source = shrink < 0.8 ? Blur(image, 0.4 / shrink) : image;
+        var inverse = h.Inverse();
+        const byte Backer = 110;
+        int sw = source.Width, sh = source.Height;
+        var pixels = new byte[view.Width * view.Height];
+        Parallel.For(0, view.Height, y =>
+        {
+            for (int x = 0; x < view.Width; x++)
+            {
+                var p = inverse.Apply(new PointD(x, y));
+                int x0 = (int)Math.Floor(p.X), y0 = (int)Math.Floor(p.Y);
+                if (x0 < 0 || y0 < 0 || x0 + 1 >= sw || y0 + 1 >= sh)
+                {
+                    pixels[(y * view.Width) + x] = Backer;
+                    continue;
+                }
+
+                double fx = p.X - x0, fy = p.Y - y0;
+                double top = source.Pixels[(y0 * sw) + x0] + ((source.Pixels[(y0 * sw) + x0 + 1] - source.Pixels[(y0 * sw) + x0]) * fx);
+                double bottom = source.Pixels[((y0 + 1) * sw) + x0] + ((source.Pixels[((y0 + 1) * sw) + x0 + 1] - source.Pixels[((y0 + 1) * sw) + x0]) * fx);
+                pixels[(y * view.Width) + x] = (byte)Math.Clamp(Math.Round(top + ((bottom - top) * fy)), 0, 255);
+            }
+        });
+        return new GrayImage(view.Width, view.Height, pixels);
+    }
 
     /// <summary>The synthetic picture for a seed, undisturbed: GL-CF25-LTR at 300 dpi with one hole on each bull, and each hole's centre in pixels.</summary>
     public static (GrayImage Image, IReadOnlyList<PointD> Holes, IPageMapping Truth) SyntheticPicture(TargetDefinition definition, int seed)
@@ -201,7 +317,7 @@ public static partial class Scoreboard
         ArgumentNullException.ThrowIfNull(definition);
         ArgumentNullException.ThrowIfNull(backend);
         ArgumentNullException.ThrowIfNull(seeds);
-        var chosen = only is null ? Conditions : [.. Conditions.Where(c => only.Contains(c.Name, StringComparer.OrdinalIgnoreCase))];
+        var chosen = only is null ? Conditions : [.. Conditions.Concat(AngleSweep).DistinctBy(c => c.Name).Where(c => only.Contains(c.Name, StringComparer.OrdinalIgnoreCase))];
         var scores = new List<PictureScore>();
         foreach (int seed in seeds)
         {
@@ -224,7 +340,7 @@ public static partial class Scoreboard
                         continue;
                     }
 
-                    scores.Add(Score(ColourLine(colour, condition.Name), seed, condition, definition, backend, seenGrey, seenValue, colourHoles, colourTruth));
+                    scores.Add(Score(ColourLine(colour, condition.Name), seed, condition, definition, backend, seenGrey, seenValue, colourHoles, colourTruth, grey.Width, grey.Height));
                 }
             }
 
@@ -237,31 +353,36 @@ public static partial class Scoreboard
                     continue;
                 }
 
-                scores.Add(Score(condition.Name, seed, condition, definition, backend, image, image, holes, truth));
+                scores.Add(Score(condition.Name, seed, condition, definition, backend, image, image, holes, truth, flat.Width, flat.Height));
             }
         }
 
         return scores;
     }
 
-    /// <summary>One synthetic picture read and scored: its grey and value images, the holes' centres before the condition and the truth mapping.</summary>
+    /// <summary>
+    /// One synthetic picture read and scored: its grey and value images, the holes' centres before the condition, the truth mapping and the
+    /// undisturbed picture's size. Under a view, the marks and the registration are taken back to the undisturbed picture and scored there.
+    /// </summary>
     private static PictureScore Score(string line, int seed, SyntheticCondition condition, TargetDefinition definition, IImagingBackend backend, GrayImage grey, GrayImage value,
-        IReadOnlyList<PointD> holes, IPageMapping truth)
+        IReadOnlyList<PointD> holes, IPageMapping truth, int width, int height)
     {
         var metadata = new ImageMetadata("JPEG", grey.Width, grey.Height, null, null, null, null, null, null, null);
         var clock = Stopwatch.StartNew();
         var result = AutomaticMarking.Run(grey, value, metadata, definition, backend);
         clock.Stop();
-        var moved = holes.Select(h => condition.Move(h, grey.Width)).ToList();
-        var marks = result.Detections.Select(d => d.Image).ToList();
+        var back = condition.View?.Invoke(width, height).Transform.Inverse();
+        PointD Back(PointD p) => back is null ? p : back.Apply(p);
+        var moved = back is null ? holes.Select(h => condition.Move(h, grey.Width)).ToList() : holes;
+        var marks = result.Detections.Select(d => Back(d.Image)).ToList();
         var (found, falseMarks, errors) = Match(moved, marks, FoundWithinInches * SyntheticDpi);
         bool registered = result.Failure is null && result.Scale is not null;
         var registration = registered
             ? definition.Bulls.Select(b =>
             {
                 var page = new PointD(b.X, b.Y);
-                var expected = condition.Move(truth.ToImage(page), grey.Width);
-                var measured = result.Scale!.Mapping.ToImage(page);
+                var expected = back is null ? condition.Move(truth.ToImage(page), grey.Width) : truth.ToImage(page);
+                var measured = Back(result.Scale!.Mapping.ToImage(page));
                 return Distance(expected, measured) / SyntheticDpi;
             }).ToList()
             : [];
@@ -470,6 +591,37 @@ public static partial class Scoreboard
     private static double Curl(double x, int width) => 15 * Math.Sin(2 * Math.PI * x / width);
 
     private static double Wave(double x, int width) => 8 * Math.Sin(4 * Math.PI * x / width);
+
+    private static double SunAndShadow(double x, double y, double w, double h)
+    {
+        // Sun behind the shooter: the paper lifted 30 percent, so its white clips as a camera exposing for the whole scene clips it, and the
+        // shooter's head and shoulders across the lower right, their edge sharp within about 4 px as a shadow in sunlight is.
+        double head = Math.Sqrt(((x - (0.64 * w)) * (x - (0.64 * w))) + ((y - (0.66 * h)) * (y - (0.66 * h)))) - (0.11 * w);
+        double shoulders = Math.Max((0.84 * h) - y, Math.Max((0.34 * w) - x, x - (0.98 * w)));
+        double inside = 1 / (1 + Math.Exp(Math.Min(head, shoulders) / 2));
+        return 1.3 * (1 - (0.7 * inside));
+    }
+
+    /// <summary>Each row smeared sideways over <paramref name="length"/> pixels, a straight streak as a moving sheet or a shaken phone leaves.</summary>
+    private static GrayImage Smear(GrayImage image, int length)
+    {
+        int w = image.Width, h = image.Height;
+        var pixels = new byte[image.Pixels.Length];
+        Parallel.For(0, h, y =>
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int sum = 0;
+                for (int k = 0; k < length; k++)
+                {
+                    sum += image.Pixels[(y * w) + Math.Clamp(x + k - (length / 2), 0, w - 1)];
+                }
+
+                pixels[(y * w) + x] = (byte)((sum + (length / 2)) / length);
+            }
+        });
+        return new GrayImage(w, h, pixels);
+    }
 
     private static double HandShadow(double x, double y, double w, double h)
     {

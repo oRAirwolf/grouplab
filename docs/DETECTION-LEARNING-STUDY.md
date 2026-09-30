@@ -382,5 +382,28 @@ Together: 172 of 173 holes found and 2 false marks, where it was 4. The shot pla
 on the result itself, on the desktop and the phone, ringed in amber and said as how many times the bullet across the mark is, until the
 person says the shot is on the hole or moves it.
 
+**The sheet on a backer at the range (entry 321, 2026-09-30).** Six lines were added for a sheet photographed upright, each on both
+seeds: turned 15 and 30 degrees about its upright axis through the 26 mm lens the pipeline assumes, on a cardboard backer; strong sun
+with the shooter's head and shoulders in a hard shadow; a sideways smear of 6 px (0.02 in); and the sheet 2 and 3 ft away in the phone's
+8 megapixel working picture.
+
+| Condition | Found | False marks | Median center error | Worst center error | Registration error at the bulls, median and worst |
+|---|---|---|---|---|---|
+| angle 15 | 50 of 50 | 0 | 0.006 in | 0.069 in | 0.0001, 0.0003 in |
+| angle 30 | 50 of 50 | 0 | 0.007 in | 0.070 in | 0.0001, 0.0003 in |
+| sun and shadow | 38 of 50 | 0 | 0.006 in | 0.057 in | 0.0002, 0.0006 in |
+| motion 6 px | 50 of 50 | 0 | 0.007 in | 0.021 in | 0.0017, 0.0018 in |
+| far 2 ft | not registered | | | | |
+| far 3 ft | not registered | | | | |
+
+Swept from 5 to 45 degrees in steps of 5, the turned sheet found every hole with no false mark at every angle, so the rendered sheet
+cannot place the edge of what is square enough, as the rendered sheet of entry 238 could not; the real photographs placed it at 37
+degrees, and the phone's Guided mode uses that limit whether the phone is flat or upright. Sun lost 12 holes, 9 of them to the paper
+clipped to white alone: a synthetic hole shows a scanner lid's light core, which clips with the paper, where at the range a hole shows the
+backer. The phone's camera says "Less light" to paper the sun has clipped, and never "Hold steadier". At 2 ft the working picture gives
+the sheet 98 pixels an inch and not one marker is read; at 1.75 ft, 112 pixels an inch, 49 of 50 holes are found, and at 1.5 ft, on one
+seed, all 25. That is closer than the 2.5 ft the photograph instructions give, a question the range photographs can answer for a real
+phone's lens; the camera says "Move closer" when it cannot read the markers.
+
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.

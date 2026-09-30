@@ -23,7 +23,8 @@ internal sealed record OverlayState(
     TimeSpan? Elapsed = null,
     long? MemoryMb = null,
     long? HeapMb = null,
-    string? Heat = null);
+    string? Heat = null,
+    string? LevelBy = null);
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 315 section 4: "Show diagnostics on the camera", a setting on every build, off until turned on. A small block
@@ -58,7 +59,7 @@ internal static class DiagnosticsOverlay
 
         if (state.TiltDegrees is { } tilt)
         {
-            lines.Add(string.Create(inv, $"tilt {tilt:0.0} deg") + (tilt <= BubbleLevel.ReadyDegrees ? ", level" : ""));
+            lines.Add(string.Create(inv, $"tilt {tilt:0.0} deg") + (tilt <= BubbleLevel.ReadyDegrees ? ", level" : "") + (state.LevelBy is { } by ? $", {by}" : ""));
         }
 
         if (state.TorchOf is { } of)
@@ -125,9 +126,11 @@ internal static class DiagnosticsOverlay
     }
 
     /// <summary>The camera's state for the overlay, with the memory and the heat added here.</summary>
-    public static string Camera(double? framesPerSecond, long frameMs, FrameVerdict verdict, double? tilt, int torchLevel, int torchOf) =>
-        Text(new OverlayState(framesPerSecond, frameMs, verdict.Say, Failing(verdict), tilt, torchLevel, torchOf,
-            MemoryMb: DeviceHealth.MemoryMb(), HeapMb: DeviceHealth.HeapMb(), Heat: DeviceHealth.HeatNow()));
+    /// <remarks>Entry 321: the tilt line names the level's mode and what decided it, as "upright by sheet".</remarks>
+    public static string Camera(double? framesPerSecond, long frameMs, FrameVerdict verdict, LevelReading? level, int torchLevel, int torchOf) =>
+        Text(new OverlayState(framesPerSecond, frameMs, verdict.Say, Failing(verdict), level?.Tilt, torchLevel, torchOf,
+            MemoryMb: DeviceHealth.MemoryMb(), HeapMb: DeviceHealth.HeapMb(), Heat: DeviceHealth.HeatNow(),
+            LevelBy: level is null ? null : $"{level.ModeName} by {level.SourceName}"));
 
     /// <summary>The reading screen's state for the overlay: the stage now, the reading's time, the memory and the heat.</summary>
     public static string Reading(TimeSpan elapsed)

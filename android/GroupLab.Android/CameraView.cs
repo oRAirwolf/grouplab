@@ -117,12 +117,15 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     private readonly bool showDiagnostics;
     private readonly FrameRate frameRate = new();
     private long overlayAt = -DiagnosticsOverlay.EveryMs;
-    private double? tilt;
+    private LevelReading levelNow;
     private int torchLevel;
-    private bool? levelWasReady;
+    private (bool Ready, LevelMode? Mode, LevelSource Source)? levelWas;
     private long levelLogged = -LevelLogMs;
 
-    /// <summary>How often the level is written to the log while it holds, in milliseconds; a change between flat and not is written at once.</summary>
+    /// <summary>
+    /// How often the level is written to the log while it holds, in milliseconds; a change between level and not, of mode or of what decided
+    /// it is written at once.
+    /// </summary>
     private const long LevelLogMs = 2000;
 
     /// <summary>Entry 291 section 3.3: the last frame judged, its size, its crop and the picture's scale to it, for the record kept at the press.</summary>
@@ -196,18 +199,38 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
             screen.ShowLens(Lenses[lens]);
         };
         sensors = (SensorManager)context.GetSystemService(Context.SensorService);
-        level = new Level(Levelled);
+        // Entry 321: the sensor reads in the phone's natural axes, and the level wants the screen's, which turn with it into landscape.
+        level = new Level((x, y, z) =>
+        {
+            var (sx, sy, sz) = PhoneCamera.LevelFromAndroid(x, y, z, DisplayDegrees);
+            Levelled(sx, sy, sz, clock.ElapsedMilliseconds);
+        });
     }
 
-    /// <summary>The level's reading, from the gravity sensor or from a replayed clip.</summary>
-    private void Levelled(double x, double y, double z)
+    /// <summary>How far the screen is turned from the phone's natural upright, in degrees.</summary>
+    private int DisplayDegrees => (int)(preview.Display?.Rotation ?? global::Android.Views.SurfaceOrientation.Rotation0) * 90;
+
+    /// <summary>
+    /// Entry 321: how far an analysis frame is turned clockwise to stand as the screen does now, from the sensor's mounting and the screen's
+    /// turn; asked of the camera each frame, since the screen turns without the camera being bound again.
+    /// </summary>
+    private int FrameTurn => camera?.CameraInfo is { } info ? info.GetSensorRotationDegrees((int)(preview.Display?.Rotation ?? global::Android.Views.SurfaceOrientation.Rotation0)) : 90;
+
+    /// <summary>The level's reading in the screen's axes, from the gravity sensor or from a replayed clip, at <paramref name="nowMs"/>.</summary>
+    private void Levelled(double x, double y, double z, long nowMs)
     {
-        tilt = BubbleLevel.Tilt(x, y, z);
 #if GROUPLAB_DEV
         gravity = (x, y, z);
 #endif
-        LogLevel(x, y, z);
-        screen.Post(() => screen.ShowLevel(x, y, z));
+        ShowLevel(judge.Level.Felt(x, y, z, nowMs), nowMs);
+    }
+
+    /// <summary>The level shown and logged, from gravity between frames or from a judged frame.</summary>
+    private void ShowLevel(LevelReading reading, long nowMs)
+    {
+        levelNow = reading;
+        LogLevel(reading, nowMs);
+        screen.Post(() => screen.ShowLevel(reading));
     }
 
     /// <summary>A still saved: its path in the application's cache, and whether the torch was on.</summary>
@@ -426,8 +449,13 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     /// </summary>
     private CameraStep Judge(GrayImage grey, Func<long> now, double scale, IImageProxy image)
     {
-        var step = judge.Next(grey, now, scale, torchChoice == 0, manual);
+        var step = judge.Next(grey, now, scale, torchChoice == 0, manual, FrameTurn);
         var verdict = step.Verdict;
+        if (step.Level is { } reading)
+        {
+            ShowLevel(reading, step.NowMs);
+        }
+
         if (step.Torch is { } change)
         {
             ContextCompat.GetMainExecutor(context).Execute(new Java.Lang.Runnable(() => SetTorchLevel(change.Level)));
@@ -440,7 +468,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         if (showDiagnostics && step.NowMs - overlayAt >= DiagnosticsOverlay.EveryMs)
         {
             overlayAt = step.NowMs;
-            overlay = DiagnosticsOverlay.Camera(fps, step.FrameMs, verdict, tilt, torchOn ? torchLevel : 0, torchMax);
+            overlay = DiagnosticsOverlay.Camera(fps, step.FrameMs, verdict, levelNow, torchOn ? torchLevel : 0, torchMax);
         }
 
         screen.Post(() =>
@@ -474,7 +502,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         {
             if (frame.Gravity is var (x, y, z))
             {
-                Levelled(x, y, z);
+                Levelled(x, y, z, ms);
             }
 
             CameraReplay.Saw(index, Judge(grey, () => ms, replay.Clip.MeasuredScale(grey), null));
@@ -509,22 +537,24 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
 #endif
 
     /// <summary>
-    /// Entry 315 section 4, as entry 311 section 2 does on iOS: the gravity reading and the tilt the level computes (camera.level), when it
-    /// turns green or stops being green and every two seconds besides, with the memory in use and the phone's heat.
+    /// Entry 315 section 4, as entry 311 section 2 does on iOS: the gravity reading in the screen's axes and the tilt the level shows
+    /// (camera.level), when it turns green or stops being green and every two seconds besides, with the memory in use and the phone's heat.
+    /// Entry 321: with the mode, looking down or upright, and whether gravity or the sheet's own angle decided it, written at once when
+    /// either changes.
     /// </summary>
-    private void LogLevel(double x, double y, double z)
+    private void LogLevel(LevelReading reading, long now)
     {
-        bool ready = BubbleLevel.Ready(x, y, z);
-        long now = clock.ElapsedMilliseconds;
-        if (ready == levelWasReady && now - levelLogged < LevelLogMs)
+        var state = (reading.Ready, reading.Mode, reading.Source);
+        if (state == levelWas && now - levelLogged < LevelLogMs)
         {
             return;
         }
 
-        levelWasReady = ready;
+        levelWas = state;
         levelLogged = now;
-        DiagnosticLog.Info("camera.level", [("gravity", string.Create(CultureInfo.InvariantCulture, $"{x:0.000},{y:0.000},{z:0.000}")),
-            ("tilt", Math.Round(BubbleLevel.Tilt(x, y, z), 1)), ("green", ready), ("ms", now), .. DeviceHealth.Fields()]);
+        var g = judge.Level.Gravity;
+        DiagnosticLog.Info("camera.level", [("gravity", g is var (x, y, z) ? string.Create(CultureInfo.InvariantCulture, $"{x:0.000},{y:0.000},{z:0.000}") : "none"),
+            ("tilt", Math.Round(reading.Tilt, 1)), ("green", reading.Ready), ("mode", reading.ModeName), ("source", reading.SourceName), ("ms", now), .. DeviceHealth.Fields()]);
     }
 
     /// <summary>

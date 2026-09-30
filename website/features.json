@@ -107,7 +107,8 @@
     "Compare's verdict on the phone now says in plain words how far apart",
     "On an iPad, an Android tablet or the open Fold, Compare now draws",
     "In Guided mode the camera now takes the picture about a second after",
-    "Find holes (Experimental)"
+    "Find holes (Experimental)",
+    "the camera's level works upright"
   ],
   "features": [
     {
@@ -934,7 +935,7 @@
       "key": "capture-modes",
       "group": "Photos and the phone",
       "name": "Guided or Manual on the camera",
-      "sentence": "The camera's instruction, shutter and Back show over the live picture, with the torch, a level and a quality bar; Guided takes the picture itself when everything is right, and Manual when you press.",
+      "sentence": "The camera's instruction, shutter and Back show over the live picture, with the torch, a level that works flat over a table or upright at a backer, and a quality bar; Guided takes the picture itself when everything is right, in either position, and Manual when you press.",
       "shot": null,
       "platforms": [
         "Android"

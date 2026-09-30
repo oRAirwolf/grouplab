@@ -32,6 +32,7 @@ internal sealed class CaptureScreen : UIView
     public const string GuidedName = "Guided mode";
     public const string ManualName = "Manual mode";
     public const string LevelName = "Level";
+    public const string LevelModeName = "Level mode";
     public const string ResultName = "Result";
     public const string DiagnosticsName = "Diagnostics";
 
@@ -53,6 +54,13 @@ internal sealed class CaptureScreen : UIView
     private readonly UIButton manual;
     private readonly UIButton result;
     private readonly BubbleView level = new();
+
+    /// <summary>Entry 321 section 1: the level's mode in a word under it, looking down at a table or upright at a backer, empty until gravity says.</summary>
+    private readonly UILabel levelMode = new()
+    {
+        TextColor = UIColor.White, Font = UIFont.SystemFontOfSize(13, UIFontWeight.Regular), TextAlignment = UITextAlignment.Center,
+        ShadowColor = UIColor.Black, ShadowOffset = new CGSize(0, 1), AccessibilityIdentifier = LevelModeName,
+    };
 
     /// <summary>Entry 315 section 4: Show diagnostics on the camera, in the camera's bottom corner, hidden until the first values come.</summary>
     private readonly UIView diagnosticsBox = new() { BackgroundColor = UIColor.FromRGBA(0, 0, 0, 170), Hidden = true, UserInteractionEnabled = false };
@@ -89,6 +97,7 @@ internal sealed class CaptureScreen : UIView
         // Entry 281 section 1.1: the level is a crosshair in the middle of the camera with a dot that moves like a bubble.
         level.AccessibilityIdentifier = LevelName;
         camera.AddSubview(level);
+        camera.AddSubview(levelMode);
         diagnosticsBox.Layer.CornerRadius = 6;
         diagnosticsBox.AccessibilityIdentifier = DiagnosticsName;
         diagnosticsBox.AddSubview(diagnostics);
@@ -206,8 +215,15 @@ internal sealed class CaptureScreen : UIView
         Shutter.Manual = isManual;
     }
 
-    /// <summary>The level from gravity, already in the screen's axes as Android's sensor gives it.</summary>
-    public void ShowLevel(double x, double y, double z) => level.Show(x, y, z);
+    /// <summary>The level, from gravity or the sheet's own angle (entry 321), and its mode in a word.</summary>
+    public void ShowLevel(LevelReading reading)
+    {
+        level.Show(reading);
+        if (levelMode.Text != reading.Word)
+        {
+            levelMode.Text = reading.Word;
+        }
+    }
 
     /// <summary>Whether the level shows flat now, for the self-test.</summary>
     internal bool LevelReady => level.Ready;
@@ -286,6 +302,7 @@ internal sealed class CaptureScreen : UIView
 
         double levelSize = 132;
         level.Frame = new CGRect((width - levelSize) / 2, (cameraHeight - levelSize) / 2, levelSize, levelSize);
+        levelMode.Frame = new CGRect(0, level.Frame.Bottom + 4, width, 20);
         PlaceDiagnostics();
 
         // Under the camera: the picker, the shutter; the modes beneath.
@@ -364,7 +381,8 @@ internal sealed class CaptureScreen : UIView
 
 /// <summary>
 /// Entry 281 section 1.1, Alan's level, as on Android: four arms and a dot that drifts toward the raised side the way a bubble does, green
-/// within <see cref="BubbleLevel.ReadyDegrees"/> of flat and white beyond. The arms are thin and half white, so the preview shows through.
+/// within <see cref="BubbleLevel.ReadyDegrees"/> of level and white beyond. The arms are thin and half white, so the preview shows through.
+/// Level is flat over a table or upright at a backer, and square to the sheet once its markers are read (entry 321).
 /// <para>
 /// NOTES-FROM-PLANNING.md entry 311 section 2, Alan on the iPad: "The level on the camera screen does not turn green when it is level." Only
 /// the dot turned green here, a spot 18 points across over the picture, where Android had turned the whole crosshair and its ring green and
@@ -386,10 +404,10 @@ internal sealed class BubbleView : UIView
     /// <summary>Whether the level shows flat, green, now.</summary>
     public bool Ready => ready;
 
-    public void Show(double x, double y, double z)
+    public void Show(LevelReading reading)
     {
-        dot = BubbleLevel.Dot(x, y, z);
-        ready = BubbleLevel.Ready(x, y, z);
+        dot = reading.Dot;
+        ready = reading.Ready;
         SetNeedsDisplay();
     }
 

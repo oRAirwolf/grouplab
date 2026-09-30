@@ -99,7 +99,7 @@ internal static class CameraSelfTest
                 // Entry 311 section 2: the level as the iPad lying flat on a table gives it, Core Motion's gravity straight down, which
                 // must show green, crosshair and all, in the photograph.
                 var (x, y, z) = GroupLab.Core.Capture.PhoneCamera.LevelFromGravity(0, 0, -1, GroupLab.Core.Capture.ScreenTurn.Upright);
-                screen.ShowLevel(x, y, z);
+                screen.ShowLevel(new GroupLab.Core.Capture.CameraLevel().Felt(x, y, z, 0));
                 return screen.Geometry();
             });
             bool levelGreen = await SelfTest.OnUi(() => screen?.LevelReady == true);

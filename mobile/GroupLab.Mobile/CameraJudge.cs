@@ -34,6 +34,12 @@ internal sealed class CameraJudge(Func<IReadOnlyList<TargetDefinition>>? library
     /// <summary>The sheet the frames have named, null until one has.</summary>
     public TargetDefinition? Definition => definition;
 
+    /// <summary>
+    /// Entry 321: the level, which the head's gravity sensor feeds (<see cref="CameraLevel.Felt"/>) and each frame that reads the sheet's
+    /// markers sets right with the sheet's own angle.
+    /// </summary>
+    public CameraLevel Level { get; } = new();
+
     /// <summary>Everything forgotten but the sheet, as when the camera starts again.</summary>
     public void Reset()
     {
@@ -60,11 +66,13 @@ internal sealed class CameraJudge(Func<IReadOnlyList<TargetDefinition>>? library
     /// <param name="measuredScale">The picture's pixels, as it is measured, per pixel of this frame (<see cref="PhoneCamera.MeasuredScale"/>).</param>
     /// <param name="torchOnAuto">Whether the torch is on Auto, so its governor decides.</param>
     /// <param name="manual">Whether the screen is in Manual, where the shutter never fires by itself.</param>
-    public CameraStep Next(GrayImage grey, Func<long> clock, double measuredScale, bool torchOnAuto, bool manual)
+    /// <param name="turnDegrees">How far the frame is turned clockwise to stand as the screen does, so the sheet's lean is in the screen's axes.</param>
+    public CameraStep Next(GrayImage grey, Func<long> clock, double measuredScale, bool torchOnAuto, bool manual, int turnDegrees = 0)
     {
         ArgumentNullException.ThrowIfNull(grey);
         ArgumentNullException.ThrowIfNull(clock);
         var frameClock = Stopwatch.StartNew();
+        var gravityAtFrame = Level.Gravity;
         var metadata = new ImageMetadata("YUV", grey.Width, grey.Height, null, null, "camera", "analysis", 1, null, null);
         var backend = new OpenCvSharpBackend();
         frames++;
@@ -94,6 +102,17 @@ internal sealed class CameraJudge(Func<IReadOnlyList<TargetDefinition>>? library
         }
 
         long now = clock();
+
+        // Entry 321 section 2: where the frame read the sheet's markers, the sheet's own angle decides the level, measured as the guidance
+        // measures it for square on, and turned into the screen's axes.
+        (double Right, double Down)? lean = null;
+        if (verdict.Mapping is { } seen && definition is not null)
+        {
+            var angle = CameraGeometry.Measure(CaptureRecord.PageToImage(seen, definition.Page.Width, definition.Page.Height), grey.Width, grey.Height, trueLengths: true);
+            lean = BubbleLevel.Turned((angle.Right, angle.Down), turnDegrees);
+        }
+
+        var level = Level.Seen(lean, gravityAtFrame, now);
 
         // Entry 302, torch on Auto: it starts at the lowest level, steps up only while the paper is dim, and steps down or goes off on glare, a
         // hotspot or paper already bright, with a settling time between changes so it never flickers.
@@ -132,7 +151,7 @@ internal sealed class CameraJudge(Func<IReadOnlyList<TargetDefinition>>? library
         bool fire = auto.Next(decided, card != false, now);
         int? forecast = verdict.Quality is { } quality ? PictureCheck.Forecast(quality) : null;
         double progress = manual ? 0 : fire ? 1 : auto.Progress;
-        return new CameraStep(verdict, decided, card, forecast, torch, !manual && fire, progress, now, frameClock.ElapsedMilliseconds, now - readySince, auto.ReadyMs);
+        return new CameraStep(verdict, decided, card, forecast, torch, !manual && fire, progress, now, frameClock.ElapsedMilliseconds, now - readySince, auto.ReadyMs, level);
     }
 }
 
@@ -148,5 +167,6 @@ internal sealed class CameraJudge(Func<IReadOnlyList<TargetDefinition>>? library
 /// <param name="FrameMs">How long judging it took.</param>
 /// <param name="SaidForMs">How long the words shown have been shown.</param>
 /// <param name="SteadyMs">How long the frames have been judged ready.</param>
+/// <param name="Level">The level once the frame was judged, with the sheet's angle where it was read; null with neither gravity nor sheet.</param>
 internal sealed record CameraStep(FrameVerdict Verdict, Instruction? Decided, bool? Card, int? Forecast, TorchChange? Torch, bool Fire, double Progress,
-    long NowMs, long FrameMs, long SaidForMs, long SteadyMs);
+    long NowMs, long FrameMs, long SaidForMs, long SteadyMs, LevelReading? Level = null);

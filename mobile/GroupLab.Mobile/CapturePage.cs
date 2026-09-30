@@ -108,6 +108,8 @@ public sealed class CapturePage : UserControl
         // Entry 233 and entry 271 section 4: the two things a good picture still needs, which the camera's live checks do not look for.
         var tips = MoreFold.Make(Phone.Settings, "capture.tips",
         [
+            // Entry 321 section 5: both ways of holding the phone, since the level turns green in either.
+            Screens.Dim("Lay the sheet flat on a table and hold the phone over it, or leave it on the backer and hold the phone upright, straight on to it. The word under the camera's level says which, and the level turns green in either when you are square to the sheet."),
             Screens.Dim("Shade the whole sheet or none of it: a shadow across part of it can hide a hole. Hold it down outside the printed area, because torn tape can look like one."),
             Screens.Dim(DetectionAdvice.OncePerPrinter + (Phone.Settings.LoadChosenPrinter() is { } printer
                 ? string.Create(CultureInfo.CurrentCulture, $" Photographs are corrected for {printer.Name}'s {printer.Scale * 100:0.0} percent.")

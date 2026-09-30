@@ -73,7 +73,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private readonly bool showDiagnostics;
     private readonly FrameRate frameRate = new();
     private long overlayAt = -DiagnosticsOverlay.EveryMs;
-    private double? tilt;
+    private LevelReading levelNow;
 #if GROUPLAB_DEV
 
     /// <summary>Entry 315 section 3, GroupLab Dev only: the clip played in place of the camera, and the recorder keeping the last seconds.</summary>
@@ -379,40 +379,51 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
 
             var g = data.Gravity;
             var (x, y, z) = PhoneCamera.LevelFromGravity(g.X, g.Y, g.Z, turn);
-            tilt = BubbleLevel.Tilt(x, y, z);
 #if GROUPLAB_DEV
             gravity = (x, y, z);
 #endif
-            screen.ShowLevel(x, y, z);
-            LogLevel(g.X, g.Y, g.Z, x, y, z);
+            long now = clock.ElapsedMilliseconds;
+            ShowLevel(judge.Level.Felt(x, y, z, now), (g.X, g.Y, g.Z), now);
         });
     }
 
-    private bool? levelWasReady;
+    /// <summary>The level shown and logged, from gravity between frames or from a judged frame; on any thread.</summary>
+    private void ShowLevel(LevelReading reading, (double X, double Y, double Z)? motionGravity, long now)
+    {
+        levelNow = reading;
+        screen.BeginInvokeOnMainThread(() => screen.ShowLevel(reading));
+        LogLevel(reading, motionGravity, now);
+    }
+
+    private (bool Ready, LevelMode? Mode, LevelSource Source)? levelWas;
     private long levelLogged = -LevelLogMs;
 
-    /// <summary>How often the level is written to the log while it holds, in milliseconds; a change between flat and not is written at once.</summary>
+    /// <summary>
+    /// How often the level is written to the log while it holds, in milliseconds; a change between level and not, of mode or of what decided
+    /// it is written at once.
+    /// </summary>
     private const long LevelLogMs = 2000;
 
     /// <summary>
     /// Entry 311 section 2: Core Motion's gravity as it came, the screen's turn, the reading in the screen's axes and the tilt the level
-    /// computes (camera.level), when it turns green or stops being green and every two seconds besides, so a sitting's log shows whether the
-    /// axes follow the iPad's orientation and how far from the tolerance a steady hand is.
+    /// shows (camera.level), when it turns green or stops being green and every two seconds besides, so a sitting's log shows whether the
+    /// axes follow the iPad's orientation and how far from the tolerance a steady hand is. Entry 321: with the mode, looking down or upright,
+    /// and whether gravity or the sheet's own angle decided it, written at once when either changes.
     /// </summary>
-    private void LogLevel(double gx, double gy, double gz, double x, double y, double z)
+    private void LogLevel(LevelReading reading, (double X, double Y, double Z)? motionGravity, long now)
     {
-        bool ready = BubbleLevel.Ready(x, y, z);
-        long now = clock.ElapsedMilliseconds;
-        if (ready == levelWasReady && now - levelLogged < LevelLogMs)
+        var state = (reading.Ready, reading.Mode, reading.Source);
+        if (state == levelWas && now - levelLogged < LevelLogMs)
         {
             return;
         }
 
-        levelWasReady = ready;
+        levelWas = state;
         levelLogged = now;
         var inv = System.Globalization.CultureInfo.InvariantCulture;
-        DiagnosticLog.Info("camera.level", [("gravity", string.Create(inv, $"{gx:0.000},{gy:0.000},{gz:0.000}")), ("turn", turn),
-            ("screen", string.Create(inv, $"{x:0.000},{y:0.000},{z:0.000}")), ("tilt", Math.Round(BubbleLevel.Tilt(x, y, z), 1)), ("green", ready), ("ms", now),
+        string Three((double X, double Y, double Z)? v) => v is var (x, y, z) ? string.Create(inv, $"{x:0.000},{y:0.000},{z:0.000}") : "none";
+        DiagnosticLog.Info("camera.level", [("gravity", Three(motionGravity)), ("turn", turn), ("screen", Three(judge.Level.Gravity)),
+            ("tilt", Math.Round(reading.Tilt, 1)), ("green", reading.Ready), ("mode", reading.ModeName), ("source", reading.SourceName), ("ms", now),
             .. DeviceHealth.Fields()]);
     }
 
@@ -550,7 +561,12 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     /// </summary>
     private CameraStep Judge(GrayImage grey, Func<long> now, double scale)
     {
-        var step = judge.Next(grey, now, scale, torchChoice == 0, manual);
+        var step = judge.Next(grey, now, scale, torchChoice == 0, manual, (int)PhoneCamera.RotationDegrees(turn));
+        if (step.Level is { } reading)
+        {
+            ShowLevel(reading, null, step.NowMs);
+        }
+
         if (step.Torch is { } change)
         {
             sessionQueue.DispatchAsync(() => SetTorch(change.Level));
@@ -564,7 +580,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         if (showDiagnostics && step.NowMs - overlayAt >= DiagnosticsOverlay.EveryMs)
         {
             overlayAt = step.NowMs;
-            overlay = DiagnosticsOverlay.Camera(fps, step.FrameMs, shown, tilt, torchNow ? torchLevel : 0, device.HasTorch ? TorchSteps : 0);
+            overlay = DiagnosticsOverlay.Camera(fps, step.FrameMs, shown, levelNow, torchNow ? torchLevel : 0, device.HasTorch ? TorchSteps : 0);
         }
 
         screen.BeginInvokeOnMainThread(() =>
@@ -601,10 +617,8 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         {
             if (frame.Gravity is var (x, y, z))
             {
-                tilt = BubbleLevel.Tilt(x, y, z);
                 gravity = (x, y, z);
-                screen.BeginInvokeOnMainThread(() => screen.ShowLevel(x, y, z));
-                LogLevel(x, y, z, x, y, z);
+                ShowLevel(judge.Level.Felt(x, y, z, ms), null, ms);
             }
 
             CameraReplay.Saw(index, Judge(grey, () => ms, replay.Clip.MeasuredScale(grey)));

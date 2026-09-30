@@ -19,9 +19,11 @@ public enum FocalSource
 /// <summary>
 /// How far off square to the sheet a photograph was taken: the angle between the camera's axis and the sheet's normal, in degrees, the focal
 /// length in pixels it was worked out with and where that came from, and, where the page was a unit square, the paper's width over its
-/// height as the photograph shows it.
+/// height as the photograph shows it. <see cref="Right"/> and <see cref="Down"/> (entry 321 section 2) are which way the sheet leans, in
+/// degrees along the image's right and down, their length the angle: the sheet's normal, taken pointing back at the camera, leans that way
+/// from the camera's axis, as gravity's pull leans for a level on a table, so the capture screen's bubble can follow the sheet itself.
 /// </summary>
-public sealed record OffAxis(double Degrees, double FocalPixels, FocalSource Focal, double Aspect);
+public sealed record OffAxis(double Degrees, double FocalPixels, FocalSource Focal, double Aspect, double Right = 0, double Down = 0);
 
 /// <summary>
 /// The camera geometry a photograph of a flat sheet holds, NOTES-FROM-PLANNING.md entry 157 sections 3 and 4.
@@ -139,7 +141,12 @@ public static class CameraGeometry
         double n1 = Norm(r1.X, r1.Y, r1.Z), n2 = Norm(r2.X, r2.Y, r2.Z);
         double nx = ((r1.Y * r2.Z) - (r1.Z * r2.Y)) / (n1 * n2), ny = ((r1.Z * r2.X) - (r1.X * r2.Z)) / (n1 * n2), nz = ((r1.X * r2.Y) - (r1.Y * r2.X)) / (n1 * n2);
         double degrees = Math.Acos(Math.Clamp(Math.Abs(nz) / Norm(nx, ny, nz), 0, 1)) * 180 / Math.PI;
-        return new OffAxis(degrees, focalPixels, source, n1 / n2);
+
+        // The normal turned to face the camera, which looks along +z: its sideways part is the way the sheet leans in the image.
+        double toward = nz > 0 ? -1 : 1, across = Norm(nx, ny);
+        return across > 0
+            ? new OffAxis(degrees, focalPixels, source, n1 / n2, degrees * toward * nx / across, degrees * toward * ny / across)
+            : new OffAxis(degrees, focalPixels, source, n1 / n2);
     }
 
     /// <summary>The homography's first two columns with the principal point moved to the origin.</summary>

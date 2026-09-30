@@ -96,6 +96,13 @@ For photographs:
 - keep the whole sheet and all its corner squares in the frame;
 - do not crop the pictures, and do not send them through a messaging app, which shrinks them.
 
+**Flat on a table, or straight on at the backer.** The phone's camera works either way. Lay the sheet flat and hold the phone over it,
+or leave the sheet on its backer at the range and hold the phone upright, straight on to it, in portrait or landscape. The word under the
+camera's level says which, **Looking down** or **Upright**, and the level turns green in either when the camera is square to the sheet.
+Once the sheet's corner squares are read, the sheet's own angle decides, so a backer leaning back, or a table that is not level, is still
+square when the phone is square to the sheet. Guided takes the picture by itself in either position under the same rules: square to the
+sheet within 37 degrees, steady, and the sheet read.
+
 **Real inches from a photograph.** A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your
 printer printed at 97 percent makes every group read about 3 percent large. For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it.
 The easiest way is the printer check, offered the first time GroupLab opens and the first time you print, and always in Settings under
@@ -387,7 +394,8 @@ checks beneath it (focus, light, the tags and codes read) and a bar that forecas
 picture by itself once everything holds; in **Manual** you press the shutter when you choose. Fill the frame with the sheet: GroupLab
 says **Move back** only when some of the printing runs out of the picture, **Move closer** when the sheet's codes would be too small to
 read, and **Hold steadier** only when a shake has smeared the picture. The level in the middle is a crosshair with a dot that drifts
-toward the raised side like a bubble; when the phone is flat the whole crosshair turns green. **Camera** and **Result**, above the page,
+toward the raised side like a bubble; when the phone is flat over a table, or upright and straight on to a sheet on its backer, the whole
+crosshair turns green, and the word under it says which, **Looking down** or **Upright**. **Camera** and **Result**, above the page,
 take you to either in one press, the one showing in the highlight color, and the camera has its own **Result** button. While a picture
 is read, the line under it names the step it is on, and **Cancel** stops it at once, at any step: Capture shows again with the picture
 kept, to **Read it again**, **Choose which sheet it is** or **Forget it**. A reading that has not finished after a minute stops by itself,

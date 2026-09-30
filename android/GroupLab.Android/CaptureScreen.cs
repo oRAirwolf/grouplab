@@ -31,6 +31,7 @@ internal sealed class CaptureScreen : LinearLayout
     public const string GuidedName = "Guided mode";
     public const string ManualName = "Manual mode";
     public const string LevelName = "Level";
+    public const string LevelModeName = "Level mode";
     public const string ResultName = "Result";
     public const string DiagnosticsName = "Diagnostics";
 
@@ -46,6 +47,7 @@ internal sealed class CaptureScreen : LinearLayout
     private readonly TextView torch;
     private readonly TextView lens;
     private readonly BubbleView level;
+    private readonly TextView levelMode;
     private readonly FrameLayout cameraFrame;
     private readonly TextView guided;
     private readonly TextView manual;
@@ -99,6 +101,15 @@ internal sealed class CaptureScreen : LinearLayout
         // Entry 281 section 1.1: the level is a crosshair in the middle of the camera with a dot that moves like a bubble.
         level = new BubbleView(context) { ContentDescription = LevelName };
         camera.AddView(level, new FrameLayout.LayoutParams(Dp(132), Dp(132), GravityFlags.Center));
+
+        // Entry 321 section 1: the level's mode in a word under it, looking down at a table or upright at a backer, empty until gravity says.
+        levelMode = new TextView(context) { TextSize = 13, ContentDescription = LevelModeName, Gravity = GravityFlags.Center };
+        levelMode.SetTextColor(Color.White);
+        levelMode.SetShadowLayer(4, 0, 1, Color.Black);
+        camera.AddView(levelMode, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Center)
+        {
+            TopMargin = Dp(160),
+        });
 
         // Entry 315 section 4: Show diagnostics on the camera, in the camera's bottom corner, hidden until the first values come.
         diagnostics = new TextView(context) { TextSize = 11, ContentDescription = DiagnosticsName, Visibility = ViewStates.Gone, Background = Rounded(Color.Argb(170, 0, 0, 0), 6) };
@@ -215,8 +226,15 @@ internal sealed class CaptureScreen : LinearLayout
         white.Animate()!.Alpha(0).SetDuration(180).WithEndAction(new Java.Lang.Runnable(() => cameraFrame.RemoveView(white)))!.Start();
     }
 
-    /// <summary>The level from the gravity sensor's reading, in the phone's own axes.</summary>
-    public void ShowLevel(double x, double y, double z) => level.Show(x, y, z);
+    /// <summary>The level, from gravity or the sheet's own angle (entry 321), and its mode in a word.</summary>
+    public void ShowLevel(GroupLab.Core.Capture.LevelReading reading)
+    {
+        level.Show(reading);
+        if (levelMode.Text != reading.Word)
+        {
+            levelMode.Text = reading.Word;
+        }
+    }
 
     public void ShowMode(bool isManual)
     {
@@ -299,8 +317,9 @@ internal sealed class CaptureScreen : LinearLayout
 
 /// <summary>
 /// Entry 281 section 1.1, Alan's level: four arms and a dot that drifts toward the raised side the way a bubble does, green within
-/// <see cref="GroupLab.Core.Capture.BubbleLevel.ReadyDegrees"/> of flat and white beyond. The arms are thin and half white, so the preview
-/// shows through; within the ready tolerance the arms and the ring turn green with the dot (entry 291 section 3.4).
+/// <see cref="GroupLab.Core.Capture.BubbleLevel.ReadyDegrees"/> of level and white beyond. The arms are thin and half white, so the preview
+/// shows through; within the ready tolerance the arms and the ring turn green with the dot (entry 291 section 3.4). Level is flat over a
+/// table or upright at a backer, and square to the sheet once its markers are read (entry 321).
 /// </summary>
 internal sealed class BubbleView(Context context) : View(context)
 {
@@ -308,10 +327,10 @@ internal sealed class BubbleView(Context context) : View(context)
     private (double Right, double Down) dot;
     private bool ready;
 
-    public void Show(double x, double y, double z)
+    public void Show(GroupLab.Core.Capture.LevelReading reading)
     {
-        dot = GroupLab.Core.Capture.BubbleLevel.Dot(x, y, z);
-        ready = GroupLab.Core.Capture.BubbleLevel.Ready(x, y, z);
+        dot = reading.Dot;
+        ready = reading.Ready;
         Invalidate();
     }
 

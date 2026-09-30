@@ -274,6 +274,13 @@ public static class CaptureQualities
 /// began to be missed, and from 36 degrees the sheet's codes were missed on six of the ten. The limit sits between the last photograph that agreed with
 /// the scan and the first that did not.
 /// </para>
+/// <para>
+/// NOTES-FROM-PLANNING.md entry 321 section 3 measured it again for a sheet on a backer photographed upright, where Guided's square on test
+/// is this limit in either position: the scoreboard's sheet turned about its upright axis through the 26 mm lens the pipeline assumes, on
+/// two seeds, found all 50 holes with no false mark at every angle from 5 to 45 degrees in steps of 5. A rendered sheet has no lens to
+/// fit and cannot find the edge, as the rendered sheet above could not; the real pictures can, and the ones since, at 9 and 15 degrees, read
+/// every hole (docs/DETECTION-LEARNING-STUDY.md section 9). Nothing measured moves it, and it stands at 37.
+/// </para>
 /// </summary>
 public static class OffAxisLimit
 {
