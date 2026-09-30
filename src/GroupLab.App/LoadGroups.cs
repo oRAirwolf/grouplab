@@ -25,22 +25,62 @@ internal sealed class LoadGroups : UserControl
 {
     private readonly IReadOnlyList<LoadGroup> groups;
     private readonly Func<double, string> size;
-    private readonly double cell;
+    private readonly double least;
     private readonly double touch;
+    private readonly bool fill;
+    private double cell;
     private readonly HashSet<int> hidden = [];
 
     /// <param name="groups">The loads, in the order chosen.</param>
     /// <param name="size">A length in inches as the person reads it: an angle where there is a distance, or a length.</param>
     /// <param name="cell">The side of one small plot; the stacked plot is twice it.</param>
     /// <param name="touch">The least height of a button, a finger's on the phone.</param>
-    public LoadGroups(IReadOnlyList<LoadGroup> groups, Func<double, string> size, double cell = 150, double touch = 32)
+    /// <param name="fill">Entry 312 section 1: on a wide screen the plots grow to share the card's width; the cell is then the least.</param>
+    public LoadGroups(IReadOnlyList<LoadGroup> groups, Func<double, string> size, double cell = 150, double touch = 32, bool fill = false)
     {
         this.groups = groups;
         this.size = size;
         this.cell = cell;
+        least = cell;
         this.touch = touch;
+        this.fill = fill;
         ActualThemeVariantChanged += (_, _) => Build();
+        SizeChanged += (_, e) =>
+        {
+            if (this.fill && Math.Abs(Fit(this.groups.Count, e.NewSize.Width, least) - this.cell) >= 1)
+            {
+                Build();
+            }
+        };
         Build();
+    }
+
+    /// <summary>The narrowest card the plots grow in; narrower, a phone held upright, they stay at their least side.</summary>
+    internal const double Wide = 600;
+
+    /// <summary>The side a plot grows to at most, so two loads on a wide tablet stay on the screen at once.</summary>
+    internal const double Largest = 480;
+
+    /// <summary>
+    /// Entry 312 section 1: on an iPad, an Android tablet or the open Fold, two plots of 150 points sat in the left half of the card. On a
+    /// card at least <see cref="Wide"/> across they share its width: two or three loads in a row, four in a row where each can be 240
+    /// across or else two by two, and more as many as fit; still square and at one scale.
+    /// </summary>
+    internal static double Fit(int loads, double width, double least)
+    {
+        if (!double.IsFinite(width) || width < Wide || loads < 1)
+        {
+            return least;
+        }
+
+        double gap = Tokens.Space12;
+        int columns = loads switch
+        {
+            <= 3 => loads,
+            4 => (width / 4) - gap >= 240 ? 4 : 2,
+            _ => Math.Max(1, Math.Min(loads, (int)(width / (least + gap)))),
+        };
+        return Math.Clamp(Math.Floor((width / columns) - gap - 1), least, Largest);
     }
 
     /// <summary>Whether the groups are stacked on one center now.</summary>
@@ -116,6 +156,11 @@ internal sealed class LoadGroups : UserControl
 
     private void Build()
     {
+        if (fill)
+        {
+            cell = Fit(groups.Count, Bounds.Width, least);
+        }
+
         var column = new StackPanel { Spacing = Tokens.Space8 };
         column.Children.Add(new TextBlock { Text = "Each load's group", FontSize = Tokens.HeadingSize, FontWeight = FontWeight.SemiBold });
         double extent = Extent;
@@ -148,7 +193,7 @@ internal sealed class LoadGroups : UserControl
         }
         else
         {
-            double side = cell * 2;
+            double side = fill && Bounds.Width >= Wide ? Math.Max(least * 2, Math.Min(cell * 2, Math.Min(Bounds.Width, Largest * 1.5))) : cell * 2;
             var plot = new GroupDots(extent) { Width = side, Height = side, HorizontalAlignment = HorizontalAlignment.Left };
             for (int i = 0; i < groups.Count; i++)
             {
