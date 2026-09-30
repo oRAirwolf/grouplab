@@ -16,7 +16,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## In flight
 
 - **Nightly 137** (15:30 UTC) carries everything below, and was signed and accepted by TestFlight (both bundles carry the encryption
-  setting as false). It reaches nobody until request 59's groups exist; the iPad mini still has 134.
+  setting as false). The iPad mini updated itself to 137 by 16:20 UTC (read over USB); request 59's groups are for the public beta.
 - **Nightly 138** carries the replay camera for GroupLab Dev, one shared frame judge for both camera screens, and the TestFlight
   feedback step's import fix.
 - **Merged today** (on main, first in nightly 137): the iPad reading hang, Cancel and a one-minute limit (313); Guided about a second
@@ -32,8 +32,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## The next three
 
-1. When Alan makes request 59's groups, check the iPad gets the newest build with
-   `pymobiledevice3 apps query org.grouplab.app` (never list other apps), then read its log and Documents over USB.
+1. The iPad has 137 with GroupLab's Files folder: read its log and Documents over USB after Alan's next use
+   (`pymobiledevice3 apps query org.grouplab.app` for the build; never list other apps).
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Question 76 and 75 when planning answers; each nightly's notes need placing in `website/features.json` or the site stops building.
 

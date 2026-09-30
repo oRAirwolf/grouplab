@@ -8,8 +8,9 @@ GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
    Mac download says "Apple silicon (M-series)" (316); and GroupLab Dev can be driven by a script over the cable (315).
 2. The Microsoft Store: your submission is recorded (request 38). A check reads its status every six hours; at 15:45 UTC it read
    "Certification", not yet published. I say here when Microsoft answers.
-3. TestFlight works again: nightly 137 was signed and accepted. It reaches your iPad mini once the two groups exist (request 59,
-   twenty minutes); until then the iPad keeps 134. Crash reports 11 and 12 are fixed in 137 and closed.
+3. TestFlight works again: nightlies 137 and 138 were signed and accepted, and your iPad mini updated itself to 137 by 16:20 UTC
+   (read over the cable). Request 59's groups are still needed for the public beta and to keep every build flowing. Crash reports 11
+   and 12 are fixed in 137 and closed.
 4. Your usage (entry 317): 29 September was 1.31 billion tokens with 43.5 million of cache creation, five times a normal day; 30
    September so far 0.31 billion. Trending down.
 5. Also built, in the next nightly: GroupLab Dev can record the camera's last seconds and replay them to test Guided without anyone
@@ -30,7 +31,8 @@ IOS, THE WINDOW'S SUMMARY (entry 290; written 2026-09-30 15:40 UTC, the window c
    passing on the build nightly 137 came from.
 5. The camera: built (Guided and Manual, the torch on Auto, the level, the diagnostics overlay); the camera itself only a device shows.
 6. Files, sharing, printing, the idle screen: done on the simulator; GroupLab's folder now shows in the iPad's Files app.
-7. TestFlight: uploaded, but given to nobody yet, because the two groups do not exist (request 59). Your iPad mini still has 134.
+7. TestFlight: 137 and 138 uploaded; your iPad mini updated itself to 137 by 16:20 UTC. The two groups (request 59) are still needed
+   for the public beta link.
 Parity: 37 of the phone's features seen working on the simulator, 8 that only a device can show, 4 left out (Android's own updater
 and the like). Left, with sizes: the 8 device checks (small, one sitting); GroupLab Dev on the iPad (medium, after request 61); the
 public beta link (small, after request 59). The first TestFlight sitting on the iPad mini checks: Guided taking the picture about a
