@@ -174,6 +174,7 @@ both check that GroupLab carries none of them. The `ios app` workflow builds Gro
 GroupLab Dev also carries the automation bridge (entry 315 section 1), as on Android: bound to 127.0.0.1 only, so iOS asks for no local
 network permission, reached with `scripts/app-bridge.py --platform ios`, which forwards the port with `pymobiledevice3 usbmux forward`
 and reads this run's key from `Documents/bridge/key`; docs/ANDROID.md describes its commands and what it cannot do yet.
+GroupLab Dev also has the replay camera (entry 315 section 3): the same clip format as Android, recorded into `Documents/clips/` and replayed through the same shared code; docs/ANDROID.md describes it.
 The nightly's `ios-dev` job builds it for a device every night and, once `IOS_DEV_PROFILE` and `IOS_DEV_SHARE_PROFILE` are set (request
 61), signs it with the same certificate and sends it to TestFlight for the internal group only; `scripts/ios-signing.py --check-dev`
 decides, and a missing or malformed profile is a warning, never a failed nightly.

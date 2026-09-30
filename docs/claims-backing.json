@@ -4569,9 +4569,9 @@
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
   },
-  "Not yet: the camera cannot be driven (the replay camera is section 3), the system's own pickers, share sheet and permission questions are outside the application and out of its reach, and there is no debug overlay or per-stage timing beyond what the log already says (section 4).": {
+  "Not yet: the live camera cannot be driven (a clip or a picture can be replayed through it instead, below), the system's own pickers, share sheet and permission questions are outside the application and out of its reach, and there is no debug overlay or per-stage timing beyond what the log already says (section 4).": {
    "kind": "code",
-   "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1"
+   "where": "mobile/GroupLab.Mobile/Dev/Bridge.cs; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; scripts/app-bridge.py; tests/GroupLab.Mobile.Tests/BridgeTests.cs and AutomationIdTests.cs; entry 315 section 1; mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
   },
   "GroupLab Dev also carries the automation bridge (entry 315 section 1), as on Android: bound to 127.0.0.1 only, so iOS asks for no local network permission, reached with `scripts/app-bridge.py --platform ios`, which forwards the port with `pymobiledevice3 usbmux forward` and reads this run's key from `Documents/bridge/key`; docs/ANDROID.md describes its commands and what it cannot do yet.": {
    "kind": "code",
@@ -4596,6 +4596,30 @@
   "While a picture is read the same corner names the step being read, how long that step and the whole reading have taken, and on both screens the memory GroupLab is using and how warm the phone says it is.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/DiagnosticsOverlay.cs DiagnosticsOverlay.Lines, Camera and Reading; the camera heads' CameraSession and CaptureScreen.ShowDiagnostics; SettingsView's switch; entry 315 section 4"
+  },
+  "**The replay camera** (entry 315 section 3), in GroupLab Dev only, on Android and iOS alike: the capture screen takes its frames from a recorded clip or a picture instead of the camera, and its level's readings from the clip instead of the gravity sensor, so Guided, the words, the level, the torch on Auto and the shutter's timing can be tested by script against every build.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
+  },
+  "`clip.json` has `\"format\": \"grouplab-camera-clip\"`, `\"version\": 1`, the device, the time recorded, the still's size (`picture`) and the analysis frame's (`stream`), and `frames`, each with its `file`, its `ms` from the first frame, the level's `gravity` in the screen's axes, the torch's level (`torch` of `torchOf`) and its mean `light`.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
+  },
+  "A picture on its own is played as a clip: the same picture again and again at the Fold 7's pace, the phone flat.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
+  },
+  "- *Recording*: the switch under About in GroupLab Dev's Settings, or the scenario step `{ \"do\": \"record\", \"seconds\": 6 }` (`\"every\"` keeps every Nth frame, `\"width\"` makes them smaller, `\"on\": false` turns it off).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
+  },
+  "- *Replaying*: copy a clip's folder (or a picture) into `files/clips/` or the scenario folder, then run the scenario step `{ \"do\": \"replay\", \"clip\": \"20260930-101500\", \"seconds\": 60 }` (`\"manual\": true` for Manual, `\"loop\": true` to play it round again).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
+  },
+  "GroupLab Dev also has the replay camera (entry 315 section 3): the same clip format as Android, recorded into `Documents/clips/` and replayed through the same shared code; docs/ANDROID.md describes it.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/CameraJudge.cs; mobile/GroupLab.Mobile/Dev/CameraClip.cs and CameraReplay.cs; android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, Replayed and TakeReplayed; mobile/GroupLab.Mobile/Dev/Scenario.cs Do; tests/GroupLab.Mobile.Tests/CameraReplayTests.cs; entry 315 section 3"
   }
  },
  "rules": [

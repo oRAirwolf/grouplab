@@ -41,7 +41,8 @@ namespace GroupLab.Mobile.Dev;
 /// named control into view, or the page <c>"by"</c> so many points or <c>"to"</c> its top or bottom; <c>setting</c>, one value in the
 /// settings file by its key; <c>reset</c>, the settings and the sessions taken away and every page made again, as a first run;
 /// <c>screenshot</c>; <c>tree</c>, the visible controls with their ids, names, words, places and whether each is enabled; <c>sleep</c>;
-/// <c>log</c>, the newest lines of the log. A step it does not know fails and says so. Before the
+/// <c>log</c>, the newest lines of the log; <c>replay</c>, a camera clip or a picture played through the capture screen in place of the
+/// camera, and <c>record</c>, the camera's last seconds kept as clips (<see cref="CameraReplay"/>). A step it does not know fails and says so. Before the
 /// application starts, the first run's questions are answered unless the scenario has <c>"firstRun": "ask"</c>, and <c>"caliber"</c> with
 /// <c>"distanceInches"</c> are saved as the Capture screen's setup. <c>"stopOnFailure": false</c> carries on past a step that failed.
 /// </summary>
@@ -336,6 +337,10 @@ internal static class Scenario
             case "sleep":
                 await Task.Delay(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 1), 0, 600)));
                 return (true, "");
+            case "replay":
+                return await CameraReplay.Step(step);
+            case "record":
+                return await OnUi(() => CameraReplay.RecordStep(step));
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -450,7 +455,7 @@ internal static class Scenario
         return all.FirstOrDefault(c => Named(c, name)) ?? all.FirstOrDefault(c => Words(c) == name);
     }
 
-    private static (bool, string) Press(string? name)
+    internal static (bool, string) Press(string? name)
     {
         if (name is null)
         {

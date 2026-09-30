@@ -341,6 +341,17 @@ public sealed class SettingsView : UserControl
             };
             ((StackPanel)about.Child!).Children.Add(bridge);
             ((StackPanel)about.Child!).Children.Add(bridgeSaid);
+
+            // Entry 315 section 3: the camera's last seconds kept as a clip each time it closes, for a developer to replay on later builds.
+            var record = new CheckBox { Content = "Record the camera's last few seconds, on this device only", IsChecked = Dev.CameraReplay.Recording, MinHeight = Screens.Touch }.Id("settings-dev-record-camera");
+            var recordSaid = Screens.Dim(Dev.CameraReplay.Words());
+            record.IsCheckedChanged += (_, _) =>
+            {
+                Dev.CameraReplay.Recording = record.IsChecked == true;
+                recordSaid.Text = Dev.CameraReplay.Words();
+            };
+            ((StackPanel)about.Child!).Children.Add(record);
+            ((StackPanel)about.Child!).Children.Add(recordSaid);
 #endif
         }
 

@@ -431,9 +431,36 @@ it starts, shown in Settings, About and written to `files/bridge/key`; a switch 
 than 64 KiB, is refused and its connection closed. The controls a script needs carry automation ids that do not change with their words
 (`tab-capture`, `capture-take-picture`, `result-fix-holes`, `fix-done`, `settings-send-diagnostics` and the rest, which a test holds).
 `scripts/app-bridge.py --platform android` forwards the port, reads the key, can copy a picture into the scenario folder first with
-`--push`, and sends one command. Not yet: the camera cannot be driven (the replay camera is section 3), the system's own pickers,
+`--push`, and sends one command. Not yet: the live camera cannot be driven (a clip or a picture can be replayed through it instead, below), the system's own pickers,
 share sheet and permission questions are outside the application and out of its reach, and there is no debug overlay or per-stage
 timing beyond what the log already says (section 4). The Play build is built without any of it.
+
+**The replay camera** (entry 315 section 3), in GroupLab Dev only, on Android and iOS alike: the capture screen takes its frames from a
+recorded clip or a picture instead of the camera, and its level's readings from the clip instead of the gravity sensor, so Guided, the
+words, the level, the torch on Auto and the shutter's timing can be tested by script against every build. Nothing else changes: both
+phones' cameras hand each frame to the same shared code (`mobile/GroupLab.Mobile/CameraJudge.cs`), which is what a replay runs too. The
+preview and the torch are still the camera's; the shutter takes the frame showing and hands it on to be read as a picture.
+
+- *The clip format*, one for both phones, so a clip recorded on either tests both: a folder holding `clip.json` and one greyscale JPEG
+  a frame, the luminance the guidance judges. `clip.json` has `"format": "grouplab-camera-clip"`, `"version": 1`, the device, the
+  time recorded, the still's size (`picture`) and the analysis frame's (`stream`), and `frames`, each with its `file`, its `ms` from
+  the first frame, the level's `gravity` in the screen's axes, the torch's level (`torch` of `torchOf`) and its mean `light`. A
+  replay hands each frame on with its recorded time, never sooner and never skipping one, so the waits are the recording's on any
+  device. A picture on its own is played as a clip: the same picture again and again at the Fold 7's pace, the phone flat.
+- *Recording*: the switch under About in GroupLab Dev's Settings, or the scenario step `{ "do": "record", "seconds": 6 }`
+  (`"every"` keeps every Nth frame, `"width"` makes them smaller, `"on": false` turns it off). While it is on, each time the camera
+  closes, taken or not, its last few seconds go into a new folder under `files/clips/` (`Documents/clips/` on iOS), named for the time.
+  The frames are kept at the stream's own size unless asked smaller, because a smaller frame reads fewer of the sheet's markers and
+  would replay a camera that saw less. Clips stay on the device: they are not uploaded, not in the diagnostics file, and never
+  committed. Copy one off with `adb exec-out run-as org.grouplab.app.dev tar c files/clips > clips.tar` into `C:\Dev\grouplab-local\`.
+- *Replaying*: copy a clip's folder (or a picture) into `files/clips/` or the scenario folder, then run the scenario step
+  `{ "do": "replay", "clip": "20260930-101500", "seconds": 60 }` (`"manual": true` for Manual, `"loop": true` to play it round again).
+  It opens the camera, waits until the shutter fires or the clip has played through, and writes `replay-<name>.json` to the results:
+  every frame's words, its own instruction, the ring round the shutter and any torch change, and whether and where it was taken.
+  `{ "do": "replay" }` with no clip puts the live camera back. The bridge takes the same two steps.
+- *In the tests*: `tests/GroupLab.Mobile.Tests/CameraReplayTests.cs` records clips made from the committed sample, reads them back and
+  replays them through the same code, and holds that a steady clip is taken once its frames have been ready long enough and an unsteady
+  one never is.
 
 **Every picture of a sitting is kept** (entry 291 section 7.5), in GroupLab Dev only: each picture the camera takes goes into its own
 folder under `files/sitting/`, numbered `picture-0001` on, as `picture.jpg` with every metadata segment taken out (no location, no time,

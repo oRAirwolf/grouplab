@@ -17,6 +17,9 @@ using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Mobile;
+#if GROUPLAB_DEV
+using GroupLab.Mobile.Dev;
+#endif
 using UIKit;
 
 namespace GroupLab.iOS;
@@ -39,7 +42,9 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private readonly DispatchQueue analysisQueue = new("org.grouplab.camera.analysis");
     private readonly CMMotionManager motion = new();
     private readonly Stopwatch clock = Stopwatch.StartNew();
-    private readonly GuidanceSteadier steadier = new();
+
+    /// <summary>Entry 315 section 3: the sheet found, the words, the torch on Auto and the shutter's timing, the code Android runs too.</summary>
+    private readonly CameraJudge judge = new();
     private AVCapturePhotoOutput still;
     private AVCaptureVideoDataOutput analysis;
     private StillSaved saving;
@@ -47,9 +52,6 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private (int Width, int Height) picture;
     private NSObject toBackground;
     private NSObject toForeground;
-    private TargetDefinition definition;
-    private bool definitionFromCodes;
-    private readonly AutoShutter auto = new();
     private bool taking;
     private bool manual;
     private int torchChoice;
@@ -62,11 +64,6 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     internal const int TorchSteps = 5;
 
     private int torchLevel;
-    private volatile TorchGovernor torchAuto = new(0);
-    private long frames;
-    private int? codesRead;
-    private Instruction? lastSay;
-    private long readySince;
     private volatile bool stopped = true;
     private volatile bool capturing;
     private long pressedAt;
@@ -77,6 +74,17 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private readonly FrameRate frameRate = new();
     private long overlayAt = -DiagnosticsOverlay.EveryMs;
     private double? tilt;
+#if GROUPLAB_DEV
+
+    /// <summary>Entry 315 section 3, GroupLab Dev only: the clip played in place of the camera, and the recorder keeping the last seconds.</summary>
+    private ClipPlayer replay;
+    private ClipRecorder recorder;
+    private (double X, double Y, double Z)? gravity;
+
+    private bool Replaying => replay is not null;
+#else
+    private static bool Replaying => false;
+#endif
 
     public CameraSession(AVCaptureDevice device, AVCaptureSession session, CaptureScreen screen)
     {
@@ -92,7 +100,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         screen.ModeChosen += chosen =>
         {
             manual = chosen;
-            auto.Reset();
+            judge.ResetShutter();
             screen.Shutter.Progress = 0;
             screen.ShowMode(manual);
             Phone.Settings.SaveCaptureManual(manual);
@@ -106,7 +114,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             int level = torchChoice == 1 ? TorchSteps : 0;
             sessionQueue.DispatchAsync(() =>
             {
-                torchAuto = new TorchGovernor(TorchMax());
+                judge.ResetTorch(TorchMax());
                 SetTorch(level);
             });
             DiagnosticLog.Info("camera.torch", ("choice", torchChoice switch { 1 => "on", 2 => "off", _ => "auto" }));
@@ -132,7 +140,18 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         Active = this;
         stopped = false;
         Watch();
-        StartLevel();
+#if GROUPLAB_DEV
+        // Entry 315 section 3: a clip asked for is played in place of the video stream and Core Motion; the preview and the torch are still
+        // the camera's.
+        replay = CameraReplay.NewPlayer(Replayed);
+        recorder = CameraReplay.NewRecorder("ios");
+        replay?.Start();
+#endif
+        if (!Replaying)
+        {
+            StartLevel();
+        }
+
         Orient();
         sessionQueue.DispatchAsync(() =>
         {
@@ -155,7 +174,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             session.StartRunning();
             torchOn = false;
             torchLevel = 0;
-            torchAuto = new TorchGovernor(TorchMax());
+            judge.ResetTorch(TorchMax());
             SetTorch(torchChoice == 1 ? TorchSteps : 0);
             DiagnosticLog.Info("camera.start", ("mode", manual ? "manual" : "guided"), ("torch", torchChoice), ("device", device.LocalizedName),
                 ("picture", $"{picture.Width}x{picture.Height}"), ("running", session.Running));
@@ -171,6 +190,14 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     {
         stopped = true;
         motion.StopDeviceMotionUpdates();
+#if GROUPLAB_DEV
+        replay?.Stop();
+        if (recorder is { } keeping)
+        {
+            recorder = null;
+            _ = Task.Run(() => keeping.Write(DateTime.Now));
+        }
+#endif
         sessionQueue.DispatchAsync(() =>
         {
             SetTorch(0);
@@ -211,8 +238,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             return;
         }
 
-        steadier.Reset();
-        auto.Reset();
+        judge.Reset();
         Start();
         DiagnosticLog.Info("camera.resume");
     }
@@ -354,6 +380,9 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             var g = data.Gravity;
             var (x, y, z) = PhoneCamera.LevelFromGravity(g.X, g.Y, g.Z, turn);
             tilt = BubbleLevel.Tilt(x, y, z);
+#if GROUPLAB_DEV
+            gravity = (x, y, z);
+#endif
             screen.ShowLevel(x, y, z);
             LogLevel(g.X, g.Y, g.Z, x, y, z);
         });
@@ -487,7 +516,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         try
         {
             // Entry 283: from the press to the saved picture the live analysis stands aside, so it does not compete for the processor.
-            if (stopped || capturing)
+            if (stopped || capturing || Replaying)
             {
                 return;
             }
@@ -498,7 +527,11 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
                 return;
             }
 
-            Judge(Luminance(pixels));
+            var grey = Luminance(pixels);
+            var step = Judge(grey, () => clock.ElapsedMilliseconds, PhoneCamera.MeasuredScale(picture.Width, picture.Height, grey.Width, grey.Height));
+#if GROUPLAB_DEV
+            recorder?.Offer(grey, step.NowMs, gravity, torchOn ? torchLevel : 0, TorchMax(), picture);
+#endif
         }
         catch (Exception e)
         {
@@ -511,88 +544,34 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         }
     }
 
-    private void Judge(GrayImage grey)
+    /// <summary>
+    /// One frame, from the camera or from a replayed clip, judged by the code both phones share (<see cref="CameraJudge"/>), then shown, the
+    /// torch set where Auto changed it, and the picture taken where Guided mode says so.
+    /// </summary>
+    private CameraStep Judge(GrayImage grey, Func<long> now, double scale)
     {
-        var frameClock = Stopwatch.StartNew();
-        var metadata = new ImageMetadata("YUV", grey.Width, grey.Height, null, null, "camera", "analysis", 1, null, null);
-        var backend = new OpenCvSharpBackend();
-        frames++;
-        FrameVerdict verdict;
-        if (definition is null || (!definitionFromCodes && frames % 5 == 0))
-        {
-            var search = LiveSheet.Find(grey, PhoneAnalysis.Library(), backend);
-            codesRead = search.CodesRead;
-            if (search.Definition is not null && (definition is null || search.FromCodes))
-            {
-                (definition, definitionFromCodes) = (search.Definition, search.FromCodes);
-                DiagnosticLog.Info("camera.sheet", ("from", search.FromCodes ? "codes" : "markers"), ("markers", search.MarkersFound));
-            }
-
-            verdict = definition is null
-                ? CaptureGuidance.Search(search, SheetOutline.Find(grey, out string reason), reason)
-                : CaptureGuidance.JudgeFrame(grey, metadata, definition, backend, codesRead);
-        }
-        else
-        {
-            if (frames % 3 == 0)
-            {
-                codesRead = backend.ReadCodes(grey, 1.0).Count;
-            }
-
-            verdict = CaptureGuidance.JudgeFrame(grey, metadata, definition, backend, codesRead);
-        }
-
-        // Entry 302, torch on Auto, as on Android: it starts at the lowest level, steps up only while the paper is dim, and steps down or goes
-        // off on glare, a hotspot or paper already bright, with a settling time between changes so it never flickers (TorchGovernor).
-        if (torchChoice == 0 && torchAuto.Next(verdict.Quality, verdict.Evenness, clock.ElapsedMilliseconds) is { } change)
+        var step = judge.Next(grey, now, scale, torchChoice == 0, manual);
+        if (step.Torch is { } change)
         {
             sessionQueue.DispatchAsync(() => SetTorch(change.Level));
-            DiagnosticLog.Info("camera.torch", [("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", TorchSteps), ("reason", change.Reason),
-                ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness), .. DeviceHealth.Fields()]);
         }
 
-        long now = clock.ElapsedMilliseconds;
-        // Entry 281 section 1.4: the words held steady, with resolution judged at the size the picture is measured at.
-        verdict = steadier.Next(verdict, now, PhoneCamera.MeasuredScale(picture.Width, picture.Height, grey.Width, grey.Height));
-        if (verdict.Say != lastSay)
-        {
-            lastSay = verdict.Say;
-            readySince = now;
-            DiagnosticLog.Info("camera.say", [("say", verdict.Say.ToString()), ("ms", now), ("frameMs", frameClock.ElapsedMilliseconds),
-                ("markers", verdict.MarkersRead), ("codes", verdict.CodesRead), ("score", verdict.Quality?.Score), ("mode", manual ? "manual" : "guided"),
-                ("failing", DiagnosticsOverlay.Failing(verdict)), .. DeviceHealth.Fields()]);
-        }
-
-        // Entry 273: on the printer check page the card is looked for too, and the shutter waits for it.
-        bool? card = null;
-        if (PrinterCheck.IsCheckPage(definition))
-        {
-            card = verdict.Mapping is { } mapping && verdict.PixelsPerMm is { } perMm && CardCheck.Measure(grey, mapping, definition!, perMm, 0) is not null;
-            if (verdict.Say == Instruction.Ready)
-            {
-                verdict = verdict with { Words = card == true ? "Card found. Hold still." : "Lay the card inside the outline, flat." };
-            }
-        }
-
-        // Entry 311 section 1: taken once every frame for AutoShutter.SteadyMs has been judged ready on its own, the same as on Android.
-        bool fire = auto.Next(steadier.Decided, card != false, now);
-        int? forecast = verdict.Quality is { } quality ? PictureCheck.Forecast(quality) : null;
+        var shown = step.Verdict;
         bool torchNow = torchOn;
-        double progress = manual ? 0 : fire ? 1 : auto.Progress;
-        var shown = verdict;
-        double? fps = frameRate.Next(now);
+        double progress = step.Progress;
+        double? fps = frameRate.Next(step.NowMs);
         string overlay = null;
-        if (showDiagnostics && now - overlayAt >= DiagnosticsOverlay.EveryMs)
+        if (showDiagnostics && step.NowMs - overlayAt >= DiagnosticsOverlay.EveryMs)
         {
-            overlayAt = now;
-            overlay = DiagnosticsOverlay.Camera(fps, frameClock.ElapsedMilliseconds, verdict, tilt, torchNow ? torchLevel : 0, device.HasTorch ? TorchSteps : 0);
+            overlayAt = step.NowMs;
+            overlay = DiagnosticsOverlay.Camera(fps, step.FrameMs, shown, tilt, torchNow ? torchLevel : 0, device.HasTorch ? TorchSteps : 0);
         }
 
         screen.BeginInvokeOnMainThread(() =>
         {
             if (!stopped && !capturing)
             {
-                screen.Show(shown, forecast, torchNow, card);
+                screen.Show(shown, step.Forecast, torchNow, step.Card);
                 screen.Shutter.Progress = progress;
                 if (overlay is not null)
                 {
@@ -600,12 +579,63 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
                 }
             }
         });
-        if (!manual && fire && !taking)
+        if (step.Fire && !taking)
         {
-            DiagnosticLog.Info("camera.auto", ("afterReadyMs", now - readySince), ("steadyMs", auto.ReadyMs), ("ms", now));
+            DiagnosticLog.Info("camera.auto", ("afterReadyMs", step.SaidForMs), ("steadyMs", step.SteadyMs), ("ms", step.NowMs));
             screen.BeginInvokeOnMainThread(() => Take("guided, by itself"));
         }
+
+        return step;
     }
+#if GROUPLAB_DEV
+
+    /// <summary>Entry 315 section 3: a replayed frame, with the level's reading recorded beside it, through the same steps as a live one.</summary>
+    private void Replayed(int index, GrayImage grey, ClipFrame frame, long ms)
+    {
+        if (stopped || capturing)
+        {
+            return;
+        }
+
+        try
+        {
+            if (frame.Gravity is var (x, y, z))
+            {
+                tilt = BubbleLevel.Tilt(x, y, z);
+                gravity = (x, y, z);
+                screen.BeginInvokeOnMainThread(() => screen.ShowLevel(x, y, z));
+                LogLevel(x, y, z, x, y, z);
+            }
+
+            CameraReplay.Saw(index, Judge(grey, () => ms, replay.Clip.MeasuredScale(grey)));
+        }
+        catch (Exception e)
+        {
+            DiagnosticLog.Info("camera.frame", ("error", e.GetType().Name), ("replay", index));
+        }
+    }
+
+    /// <summary>The shutter while a clip plays: the frame showing is the picture, handed on as a taken one is.</summary>
+    private void TakeReplayed(string why)
+    {
+        if (taking || stopped || replay.CurrentFile is not { } frame)
+        {
+            return;
+        }
+
+        taking = true;
+        capturing = true;
+        pressedAt = clock.ElapsedMilliseconds;
+        screen.Flash();
+        screen.Say("Taking the picture…");
+        screen.Shutter.Progress = 0;
+        string path = Path.Combine(IosPhone.Caches, $"still-{DateTime.Now:HHmmss}{Path.GetExtension(frame)}");
+        File.Copy(frame, path, overwrite: true);
+        DiagnosticLog.Info("camera.shutter", ("step", "replayed"), ("frame", replay.Current), ("guided", !manual));
+        CameraReplay.Took(why);
+        Saved(path, why);
+    }
+#endif
 
     /// <summary>The frame's luminance, the first plane of the full range stream, row by row, since a row may be padded beyond its width.</summary>
     private static GrayImage Luminance(CVPixelBuffer pixels)
@@ -632,6 +662,13 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     /// <summary>The shutter: on the interface thread, from the button or from Guided mode.</summary>
     public void Take(string why)
     {
+#if GROUPLAB_DEV
+        if (Replaying)
+        {
+            TakeReplayed(why);
+            return;
+        }
+#endif
         if (still is null || taking || stopped)
         {
             return;
