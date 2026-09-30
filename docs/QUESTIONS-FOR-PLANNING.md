@@ -21,6 +21,18 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-09-30, question 75: colored ring bulls use more ink than black on a color inkjet
+
+**Status: open.** Nothing waits on it: the colors are built as approved. Entry 297 section 7.3: "color never costs more ink than black".
+Measured (bulls only, square inches of full ink on Letter, a CMY plus K model): the filled bulls cost less in color (GL-CF25-LTR-C black
+20.3, blue 15.4, red 18.2; the E bulls 19.4, 14.7, 17.4), and on a black-and-white printer every color prints as gray at 36 to 64% of
+black's toner. But the ring bulls and the zeroing grids cost more on a color inkjet, because a full-color line needs two inks (red is
+magenta and yellow, blue is cyan and magenta): GL-CF25-LTR black 3.89, blue 4.88, red 5.78; GL-ZERO-MOA-100Y 8.5, 10.4, 12.3.
+**The options.** A: accept it (a few square inches of ink). B: print color lines at an 80% tint (less contrast in the photo). C: make
+blue the recommended color. I would choose A, with the guide saying blue costs a little less than red.
+
+---
+
 ## 2026-09-29, question 74: the card check's thickness correction reads the print about 0.3% too large
 
 **Status: answered 2026-09-29.** Alan: "Q74: A." As built. Nothing waits on it; request 56 has Alan use a scan meanwhile. Entry 291's scale test: three 600 dpi scans of the printed

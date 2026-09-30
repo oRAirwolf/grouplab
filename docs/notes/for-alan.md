@@ -33,7 +33,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 10.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 11.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target and **55** the Apple steps whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -131,6 +131,22 @@ one sitting. His answers come back as an inbox entry, like everything else. A re
 work: whatever does not depend on the answer is built anyway, and the report says which part is waiting.
 
 At the start of a run, the count of open requests in this file is printed and nothing more.
+
+---
+
+## 57. Red bulls on paper, about fifteen minutes (entry 297)
+
+**Opened 2026-09-30.** **Why:** the sheets can now be printed with red or blue bulls, and GroupLab finds the color from the photo; the
+made-up tests read red and blue as well as black, and a real sheet under real light is the proof. **Needed,** once the next nightly is out:
+
+1. In Targets choose GL-CF25-LTR, set "Bulls in" to Red, print it at Actual size.
+2. Shoot five shots, or poke five holes with a pen.
+3. Take three phone pictures with GroupLab: one with the torch on Auto in a dim room, one under warm indoor lamp light with the torch
+   off, and one in daylight.
+4. If you have a black-and-white printer, print the same sheet on it too and say whether the bulls read clearly as gray.
+
+**A good answer:** "done"; GroupLab Dev keeps the pictures, and Code reads them from the phone at the next sitting. Every hole found in all
+three, with no marks where there is no hole, is the result hoped for.
 
 ---
 

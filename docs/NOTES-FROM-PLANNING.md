@@ -24,6 +24,37 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 297: bulls in black, blue or red
+
+**Status: done 2026-09-30, with entry 309 section 4; question 75 open, request 57 for Alan.** Bulls print in black, blue (#1F5FBF) or red (#D22630), wide bands at a 60% tint; codes, markers and the load block stay black. The color is found from the photo, not carried in the codes (a coded color would make every colored sheet a new definition): where solid ink reads light, the expected sheet is redrawn with the bulls' own levels, and black sheets read exactly as before. The scoreboard gains red and blue under four conditions, each held to black's line: found of 50, black, blue, red: clean 49, 50, 49; hard shadow 49, 50, 49; glare 45, 48, 48; dim 49, 49, 48; no false marks. "Bulls in" on the desktop's Targets and designer and the phone's sheet page. Ring bulls in color cost more ink on a color inkjet than black (question 75).
+
+From planning, 2026-09-29, for Alan. Feedback from users: targets should not be only black and white.
+
+1. **Every sheet (built-in and designed) offers the bull color: black (default), blue or red.** A dropdown or radio buttons beside the
+   print settings on the Targets screen and in the designer, on the desktop and the phone. The choice is remembered per sheet.
+2. **The preview changes the moment the color changes** (see entry 300 for the preview itself). So does the printed PDF.
+3. **Only the bulls and their rings and numbers take the color.** The corner codes, markers, the title and the load block stay black, so
+   registration and code reading are unchanged.
+4. **Detection must not get worse.** The detector renders the expected sheet and differences it against the photo, so it must render the
+   chosen color. Decide whether the color is carried in the sheet's codes or found from the photo, and say which in the fold. Add red and blue
+   synthetic sheets to the scoreboard (shadow, glare, poor light) and to the gates; a color that fails the gates is not offered. Check a
+   red sheet photographed under the phone's torch and under warm indoor light.
+5. **The hues are provisional until Alan approves them.** Choose a blue and a red that stay distinct from a bullet hole in grayscale and
+   print well on an ordinary inkjet and on a black-and-white printer (where they print as gray). Planning will show them to Alan as swatches.
+6. Guide, site and README updated to match (rule c). No new built-in sheet names: the color is an option, not a new target.
+
+## 7. The hues and ink, decided by planning (added 2026-09-30)
+
+Alan: colors should be "high contrast and easy for the human eye to see", and should "not waste ink in a printer if at all possible",
+leaving the call to planning. Decided:
+
+1. **Lines, rings and numbers in the full color.** Start from a strong red near #D22630 and a strong blue near #1F5FBF; tune for the gates.
+2. **Large solid areas (the C bull's diamond, filled centers) print as a lighter tint of the color, about 60%, not solid.** That saves ink
+   on the areas that use most of it, and a bullet hole shows dark against a tint where it hides in solid black, so the shooter sees hits
+   through a spotting scope and the detector has more contrast. Check the tint still reads clearly as an aiming point at 100 yards.
+3. **No thicker lines or bigger fills than the black version.** Color never costs more ink than black does in the same style.
+4. Report in the fold the ink coverage of each style in each color against black, and the hole contrast each gives.
+
 ## 2026-09-30, entry 309: Alan's answers on the four designs (home, Compare, moving a hole, bull colors)
 
 **Status: done 2026-09-30 but section 4 (bull colors), which goes with entry 297.** 1: Home A on the Capture page: the brand lockup, one line, the caliber and distance with Change, Take a picture, Choose a photo and Print a target, Getting started (the guide's phone section), grouplab.org and the version; the first caliber asked once over the page. 2: Compare draws each load's group side by side at one scale in its own color and marker, with the mean radius dashed, a tap stacking them with per-load toggles, on both platforms. 3: Fix holes circles each hole at the caliber, Move drags the circle under the crosshair with a ghost, a line and the distance; the desktop's rings are the caliber once set.
