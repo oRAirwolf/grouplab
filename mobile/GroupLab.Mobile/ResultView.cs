@@ -232,14 +232,36 @@ public sealed class ResultView : UserControl
 
             if (now)
             {
+                // Entry 298 section 4: on a big screen in landscape the split between the sheet and the numbers can be dragged, and the
+                // share it is left at is remembered; a grip drawn in the middle of a finger-wide strip.
+                double share = Math.Clamp(Phone.Settings.LoadPaneShare(ResultSplit) ?? 0.6, 0.3, 0.75);
                 host.MaxWidth = double.PositiveInfinity;
-                host.ColumnDefinitions = new ColumnDefinitions("3*,24,2*");
+                host.ColumnDefinitions = new ColumnDefinitions
+                {
+                    new ColumnDefinition(share, GridUnitType.Star) { MinWidth = 320 },
+                    new ColumnDefinition(24, GridUnitType.Pixel),
+                    new ColumnDefinition(1 - share, GridUnitType.Star) { MinWidth = 280 },
+                };
                 left.Children.Add(column);
                 left.Children.Add(picture);
                 right.Children.Add(numbers);
                 right.Children.Add(actions);
                 host.Children.Add(left);
                 host.Children.Add(right);
+                var line = new Border { Width = 4, Height = 56, CornerRadius = new CornerRadius(2), VerticalAlignment = VerticalAlignment.Center, Classes = { GroupLab.App.Theme.AppStyles.Divider } };
+                var grip = new GridSplitter { Width = 24, Background = Brushes.Transparent, ResizeDirection = GridResizeDirection.Columns };
+                grip.DragCompleted += (_, _) =>
+                {
+                    double a = host.ColumnDefinitions[0].ActualWidth, b = host.ColumnDefinitions[2].ActualWidth;
+                    if (a + b > 0)
+                    {
+                        Phone.Settings.SavePaneShare(ResultSplit, a / (a + b));
+                    }
+                };
+                Grid.SetColumn(line, 1);
+                Grid.SetColumn(grip, 1);
+                host.Children.Add(line);
+                host.Children.Add(grip);
             }
             else
             {
@@ -295,6 +317,9 @@ public sealed class ResultView : UserControl
 
     /// <summary>The width from which the sheet and the numbers sit side by side in landscape, Material's expanded window class, entry 243 section 3.3.</summary>
     internal const double ExpandedWidth = 840;
+
+    /// <summary>Entry 298 section 4: the settings key of the wide result's split between the sheet and the numbers.</summary>
+    internal const string ResultSplit = "phone.result";
 
     /// <summary>Whether the aim points were placed by hand on a target GroupLab did not print, where each has a color.</summary>
     internal static bool AimedByHand(MarkingState state) => ResultWords.AimedByHand(state);

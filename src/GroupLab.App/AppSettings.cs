@@ -344,6 +344,29 @@ public sealed class AppSettingsStore(string path)
     });
 
     /// <summary>
+    /// Entry 298: a pane's share of its split, 0 to 1, as a person dragged it, or null where it was never dragged. Kept as a share rather than
+    /// pixels where the two panes are peers, so a window made wider or narrower keeps the same proportion.
+    /// </summary>
+    public double? LoadPaneShare(string split) => Read(file => file["paneShares"]?[split]?.GetValueKind() == JsonValueKind.Number ? (double?)file["paneShares"]![split]!.GetValue<double>() : null);
+
+    public bool SavePaneShare(string split, double share) => Save(file =>
+    {
+        if (file["paneShares"] is not JsonObject shares)
+        {
+            file["paneShares"] = shares = new JsonObject();
+        }
+
+        shares[split] = Math.Round(Math.Clamp(share, 0, 1), 4);
+    });
+
+    /// <summary>Entry 298 section 3, Settings' Reset layout: every dragged column width and pane share forgotten at once.</summary>
+    public bool ResetLayout() => Save(file =>
+    {
+        file.Remove("columnWidths");
+        file.Remove("paneShares");
+    });
+
+    /// <summary>
     /// Where a crash report is sent, entry 41 section 7. Empty unless configured, so a fork of GroupLab never posts to anybody's server and
     /// the Send button stays hidden; saving a report to disk works either way.
     /// </summary>

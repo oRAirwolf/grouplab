@@ -148,10 +148,32 @@ public sealed partial class MainWindow
         ballisticLeftPane = new Border { Child = new ScrollViewer { Content = left }, Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
         ballisticMiddlePane = new ScrollViewer { Content = new StackPanel { Margin = new Thickness(Tokens.Space20, Tokens.Space12), Spacing = Tokens.Space12, Children = { middle } } };
         ballisticRightPane = new Border { Child = AtOneRange(), Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
-        Grid.SetColumn(ballisticMiddlePane, 1);
-        ballisticBody = new Grid { Children = { ballisticLeftPane, ballisticMiddlePane } };
+        // Entry 298: a grip beside each side column, the width it is left at remembered, and Reset layout forgetting both.
+        ballisticLeftGrip = Grip();
+        ballisticRightGrip = Grip();
+        ballisticLeftDragged = settingsStore.LoadColumnWidth("ballistics.left");
+        ballisticRightDragged = settingsStore.LoadColumnWidth("ballistics.right");
+        ballisticLeftGrip.DragCompleted += (_, _) =>
+        {
+            ballisticLeftDragged = ballisticBody.ColumnDefinitions[0].ActualWidth;
+            settingsStore.SaveColumnWidth("ballistics.left", ballisticLeftDragged.Value);
+        };
+        ballisticRightGrip.DragCompleted += (_, _) =>
+        {
+            ballisticRightDragged = ballisticBody.ColumnDefinitions[4].ActualWidth;
+            settingsStore.SaveColumnWidth("ballistics.right", ballisticRightDragged.Value);
+        };
+        Grid.SetColumn(ballisticLeftGrip, 1);
+        Grid.SetColumn(ballisticMiddlePane, 2);
+        Grid.SetColumn(ballisticRightGrip, 3);
+        ballisticBody = new Grid { Children = { ballisticLeftPane, ballisticLeftGrip, ballisticMiddlePane, ballisticRightGrip } };
         ballisticBody.SizeChanged += (_, e) => ArrangeBallistics(e.NewSize.Width);
         ArrangeBallistics(1400);
+        layoutResets.Add(() =>
+        {
+            (ballisticLeftDragged, ballisticRightDragged) = (null, null);
+            ArrangeBallistics(ballisticWidth);
+        });
 
         unitBoxes.AddRange(new (TextBox, BallisticMeasure)[]
         {

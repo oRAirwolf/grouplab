@@ -67,6 +67,9 @@ public sealed partial class MainWindow
     /// </summary>
     internal const double LibraryListWidth = 360;
 
+    /// <summary>Entry 298: the sheet's column beside the preview, the print settings and the designer, by default and at the least.</summary>
+    internal const double LibrarySheetWidth = 380, LibrarySheetLeast = 320;
+
     /// <summary>What the status line says on the library screen. It used to say the marking screen's words about zooming with buttons that were not there.</summary>
     internal const string LibraryStatus = "The built-in sheets and your own. Choose one on the left: how to print it is beside it, and the buttons under the preview zoom it.";
 
@@ -100,13 +103,20 @@ public sealed partial class MainWindow
         librarySplit.ColumnDefinitions[2].MinWidth = 320;
 
         var listScroll = new ScrollViewer { Content = libraryList, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
-        var splitter = new GridSplitter { Width = Tokens.Space8, ResizeDirection = GridResizeDirection.Columns, Cursor = new Cursor(StandardCursorType.SizeWestEast) };
+        var splitter = Grip();
         Grid.SetColumn(splitter, 1);
         splitter.DragCompleted += (_, _) => settingsStore.SaveColumnWidth("library", librarySplit.ColumnDefinitions[0].ActualWidth);
+        layoutResets.Add(() => librarySplit.ColumnDefinitions[0].Width = new GridLength(LibraryListWidth));
 
         // The sheet: what it is, what can be done with it and how it prints, in a column of its own, and the preview filling everything
-        // beside it.
-        var detail = new Grid { ColumnDefinitions = new ColumnDefinitions("380,*"), Margin = new Thickness(Tokens.Space16, 0, 0, 0) };
+        // beside it. Entry 298: the split between them is dragged like the list's, and remembered; the designer sits in the same column.
+        var (sheetWidth, sheetGrip) = SideWidth("targets.sheet", LibrarySheetWidth, LibrarySheetLeast, 900);
+        var detail = new Grid { Margin = new Thickness(Tokens.Space16, 0, 0, 0) };
+        detail.ColumnDefinitions.Add(sheetWidth);
+        detail.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        detail.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star) { MinWidth = 320 });
+        Grid.SetColumn(sheetGrip, 1);
+        detail.Children.Add(sheetGrip);
         var sheetColumn = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, 0, Tokens.Space16, 0) };
         sheetColumn.Children.Add(libraryDetail);
         sheetColumn.Children.Add(targetsPanel);
@@ -123,7 +133,8 @@ public sealed partial class MainWindow
         zoom.Margin = new Thickness(0, Tokens.Space8, 0, 0);
         Grid.SetRow(zoom, 1);
         preview.Children.Add(zoom);
-        Grid.SetColumn(preview, 1);
+        preview.Margin = new Thickness(Tokens.Space16, 0, 0, 0);
+        Grid.SetColumn(preview, 2);
         detail.Children.Add(preview);
 
         Grid.SetColumn(detail, 2);

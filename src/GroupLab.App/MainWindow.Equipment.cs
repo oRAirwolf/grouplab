@@ -63,13 +63,11 @@ public sealed partial class MainWindow
         column.Children.Add(tabs);
         column.Children.Add(equipmentProblem);
 
-        var two = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), MinHeight = 360 };
+        // Entry 298: the list and the form are peers, so the split between them keeps its share of the window.
         var left = new Border { Child = new ScrollViewer { Content = equipmentLists }, Padding = new Thickness(0, Tokens.Space8, Tokens.Space16, 0) };
         var right = new Border { Child = new ScrollViewer { Content = equipmentForm }, Padding = new Thickness(Tokens.Space16, Tokens.Space8, 0, 0), Classes = { AppStyles.Side } };
-        Grid.SetColumn(left, 0);
-        Grid.SetColumn(right, 1);
-        two.Children.Add(left);
-        two.Children.Add(right);
+        var two = PeerPanes("equipment", left, right, 0.5, 260, 320);
+        two.MinHeight = 360;
         column.Children.Add(two);
         return new ScrollViewer { Content = column };
     }

@@ -277,6 +277,18 @@ public sealed class SettingsView : UserControl
             column.Children.Add(said);
         }
 
+        // Entry 298 section 4: on a tablet or an unfolded phone in landscape, the result's split between the sheet and the numbers is dragged
+        // and remembered; this puts it back.
+        column.Children.Add(Screens.Heading("Layout"));
+        column.Children.Add(Screens.Dim("On a tablet or an unfolded phone held sideways, the line between the sheet and the numbers on a result can be dragged, and GroupLab remembers where you left it."));
+        var layoutSaid = Screens.Dim("");
+        column.Children.Add(Screens.Choice("Reset layout", () =>
+        {
+            settings.ResetLayout();
+            layoutSaid.Text = "Every pane is back to its default size.";
+        }));
+        column.Children.Add(layoutSaid);
+
         column.Children.Add(Screens.Heading("About"));
         var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.Version}"));
         column.Children.Add(about);

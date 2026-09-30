@@ -644,6 +644,10 @@
      "Light, dark, or follow the system."
     ],
     [
+     "Layout",
+     "Every split between panes on every screen can be dragged by its grip and is remembered; Reset layout puts them all back at once."
+    ],
+    [
      "This build",
      "The version and the commit it was made from. Copy that line into a bug report and it says exactly which build you were on."
     ],

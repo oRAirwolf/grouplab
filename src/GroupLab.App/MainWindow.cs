@@ -3499,13 +3499,7 @@ public sealed partial class MainWindow : Window
 
         void Splitter(int column, string which, ColumnDefinition side)
         {
-            var splitter = new GridSplitter
-            {
-                Width = 5,
-                ResizeDirection = GridResizeDirection.Columns,
-                Cursor = new Cursor(StandardCursorType.SizeWestEast),
-            };
-            ToolTip.SetTip(splitter, "Drag to widen or narrow this column");
+            var splitter = Grip();
             splitter.DragCompleted += (_, _) => settingsStore.SaveColumnWidth($"{name}.{which}", side.ActualWidth);
             Grid.SetColumn(splitter, column);
             grid.Children.Add(splitter);
@@ -3542,7 +3536,7 @@ public sealed partial class MainWindow : Window
         bool stacked = false;
         void Fit(double width)
         {
-            double splitters = left is not null ? 10 : 5;
+            double splitters = (left is not null ? 2 : 1) * GripWidth;
             double least = (left is not null ? SideMinimum : 0) + SideMinimum + CentreMinimum + splitters;
             if (width < least)
             {
@@ -3604,6 +3598,22 @@ public sealed partial class MainWindow : Window
             };
         }
 
+        // Entry 298 section 3: Reset layout puts both side columns back to the design's widths.
+        layoutResets.Add(() =>
+        {
+            wantLeft = leftSide is null ? 0 : 300;
+            wantRight = Tokens.RightColumnWidth;
+            if (leftSide is not null)
+            {
+                leftSide.Width = new GridLength(wantLeft);
+            }
+
+            rightColumn.Width = new GridLength(wantRight);
+            if (grid.Bounds.Width > 0)
+            {
+                Fit(grid.Bounds.Width);
+            }
+        });
         return grid;
     }
 
@@ -5252,6 +5262,15 @@ public sealed partial class MainWindow : Window
 
         column.Children.Add(Ruled("Theme"));
         column.Children.Add(themeChoice);
+
+        // Entry 298 section 3: every column dragged on any screen goes back to its default width at once.
+        column.Children.Add(Ruled("Layout"));
+        column.Children.Add(Line("Every split between panes can be dragged, and GroupLab remembers where you left it."));
+        column.Children.Add(Row(Button("Reset layout", () =>
+        {
+            ResetLayout();
+            toaster.Say("Every pane is back to its default size.");
+        })));
         themeChoice.SelectionChanged += (_, _) =>
         {
             if (!showingTheme && themeChoice.SelectedIndex >= 0)

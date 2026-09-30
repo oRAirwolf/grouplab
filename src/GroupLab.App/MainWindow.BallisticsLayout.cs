@@ -44,6 +44,13 @@ public partial class MainWindow
     private Control ballisticMiddlePane = null!;
     private bool? ballisticNarrow;
 
+    /// <summary>Entry 298: the grips beside the side columns, the widths a person dragged them to (null for the design's), and the last width.</summary>
+    private GridSplitter ballisticLeftGrip = null!;
+    private GridSplitter ballisticRightGrip = null!;
+    private double? ballisticLeftDragged;
+    private double? ballisticRightDragged;
+    private double ballisticWidth = 1400;
+
     /// <summary>The columns' widths and their minimums, and the width below which the right column moves under the middle, as question 58's rule.</summary>
     internal const double BallisticLeft = 300, BallisticLeftMost = 240, BallisticRight = 330, BallisticRightMost = 260, BallisticMiddleLeast = 420;
 
@@ -461,25 +468,43 @@ public partial class MainWindow
     /// </summary>
     private void ArrangeBallistics(double width)
     {
-        bool narrow = width < BallisticLeftMost + BallisticMiddleLeast + BallisticRightMost;
+        ballisticWidth = width;
+        bool narrow = width < BallisticLeftMost + BallisticMiddleLeast + BallisticRightMost + (2 * GripWidth);
+
+        // Entry 298: the side columns at the design's share of the width, capped at its widths, or where a person dragged them; narrower than
+        // they and the middle's least need, both give up width toward their minimums in proportion to what each has to give.
+        const double weights = BallisticLeft + (2 * BallisticMiddleLeast) + BallisticRight;
+        double left = ballisticLeftDragged ?? Math.Clamp(width * BallisticLeft / (narrow ? weights - BallisticRight : weights), BallisticLeftMost, BallisticLeft);
+        double right = narrow ? 0 : ballisticRightDragged ?? Math.Clamp(width * BallisticRight / weights, BallisticRightMost, BallisticRight);
+        double over = left + right + (narrow ? 0 : BallisticMiddleLeast) + (2 * GripWidth) - width;
+        double give = (left - BallisticLeftMost) + (narrow ? 0 : right - BallisticRightMost);
+        if (over > 0 && give > 0)
+        {
+            double share = Math.Min(1, over / give);
+            left -= (left - BallisticLeftMost) * share;
+            right -= narrow ? 0 : (right - BallisticRightMost) * share;
+        }
+
+        if (ballisticBody.ColumnDefinitions.Count != 5)
+        {
+            ballisticBody.ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*,Auto,Auto");
+        }
+
+        var columns = ballisticBody.ColumnDefinitions;
+        columns[0].Width = new GridLength(left);
+        columns[0].MinWidth = BallisticLeftMost;
+        columns[0].MaxWidth = SideMaximum;
+        columns[2].MinWidth = narrow ? 0 : BallisticMiddleLeast;
+        columns[4].Width = new GridLength(right);
+        columns[4].MinWidth = narrow ? 0 : BallisticRightMost;
+        columns[4].MaxWidth = narrow ? 0 : SideMaximum;
+        ballisticRightGrip.IsVisible = !narrow;
         if (ballisticNarrow == narrow)
         {
             return;
         }
 
         ballisticNarrow = narrow;
-        ballisticBody.ColumnDefinitions = narrow
-            ? new ColumnDefinitions($"{BallisticLeft}*,{BallisticMiddleLeast * 2}*")
-            : new ColumnDefinitions($"{BallisticLeft}*,{BallisticMiddleLeast * 2}*,{BallisticRight}*");
-        ballisticBody.ColumnDefinitions[0].MinWidth = BallisticLeftMost;
-        ballisticBody.ColumnDefinitions[0].MaxWidth = BallisticLeft;
-        ballisticBody.ColumnDefinitions[1].MinWidth = narrow ? 0 : BallisticMiddleLeast;
-        if (!narrow)
-        {
-            ballisticBody.ColumnDefinitions[2].MinWidth = BallisticRightMost;
-            ballisticBody.ColumnDefinitions[2].MaxWidth = BallisticRight;
-        }
-
         if (ballisticRightPane.Parent is Panel from)
         {
             from.Children.Remove(ballisticRightPane);
@@ -491,7 +516,7 @@ public partial class MainWindow
         }
         else
         {
-            Grid.SetColumn(ballisticRightPane, 2);
+            Grid.SetColumn(ballisticRightPane, 4);
             ballisticBody.Children.Add(ballisticRightPane);
         }
     }

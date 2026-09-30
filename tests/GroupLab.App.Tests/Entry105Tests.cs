@@ -101,13 +101,14 @@ public class Entry105Tests
     {
         string settings = Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json");
         var (window, store) = NewWindow(settings);
-        // Three on the editor and the analysis, and a fourth on the target library since entry 120 section 10.
+        // Three on the editor and the analysis, a fourth on the target library since entry 120 section 10, and since entry 298 the sheet
+        // beside its preview, Equipment, and Ballistics' two.
         var splitters = window.GetLogicalDescendants().OfType<GridSplitter>().ToList();
-        Assert.Equal(4, splitters.Count);
+        Assert.Equal(8, splitters.Count);
         Assert.All(splitters, s => Assert.NotNull(s.Cursor));
         foreach (var grid in splitters.Select(s => (Grid)s.Parent!).Distinct())
         {
-            Assert.All(grid.ColumnDefinitions.Where(c => c.Width.IsAbsolute), c => Assert.True(c.MinWidth >= 260));
+            Assert.All(grid.ColumnDefinitions.Where(c => c.Width.IsAbsolute), c => Assert.True(c.MinWidth >= MainWindow.BallisticLeftMost));
         }
 
         store.SaveColumnWidth("editor.right", 480);
