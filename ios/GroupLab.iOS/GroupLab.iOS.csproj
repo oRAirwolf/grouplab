@@ -52,6 +52,22 @@
     <CodesignRequireProvisioningProfile Condition="'$(CodesignRequireProvisioningProfile)' == '' and $(RuntimeIdentifier.StartsWith('iossimulator'))">false</CodesignRequireProvisioningProfile>
   </PropertyGroup>
 
+  <!--
+    NOTES-FROM-PLANNING.md entry 315's amendment, sections 2 and 5: GroupLab Dev, with -p:GroupLabDev=true, as on Android. Its own id, name,
+    icon, app group and address, so it installs beside GroupLab (the .dev files scripts/ios-dev-app.py makes from this project's own), and
+    the developer tools compiled in (GROUPLAB_DEV, which reaches the shared screens through the same property). The public application is
+    built without them, and a test holds that it carries none of their types. Sent only to TestFlight's internal group once its profiles
+    exist (request 61); built for the simulator by the workflow ios app until then.
+  -->
+  <PropertyGroup Condition="'$(GroupLabDev)' == 'true'">
+    <ApplicationId>org.grouplab.app.dev</ApplicationId>
+    <ApplicationTitle>GroupLab Dev</ApplicationTitle>
+    <AppIcon>AppIconDev</AppIcon>
+    <CodesignEntitlements>Entitlements.dev.plist</CodesignEntitlements>
+    <AppBundleManifest>Info.dev.plist</AppBundleManifest>
+    <DefineConstants>$(DefineConstants);GROUPLAB_DEV</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia.iOS" Version="12.1.2" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
