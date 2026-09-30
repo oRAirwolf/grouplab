@@ -24,6 +24,25 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 302: the torch should dim, or go off, when the page is too bright
+
+**Status: done 2026-09-30 but the iOS part (item 3), which goes to the iOS worker.** A shared `TorchGovernor` starts at the lowest level,
+steps up only while the page is dim, and steps down or off on glare (over 2% clipped), a hot spot, or a paper median of 235 or more; four
+agreeing frames and 1.5 s between changes; the Android camera sets CameraX's torch strength where the phone offers levels, and on or off
+elsewhere. Whether the strength changes mid-session on the Fold 7 is for the next sitting's log.
+
+From planning, 2026-09-29, for Alan: "It seems like once it gets bright, it doesn't get dimmer. Will it dim if it determines it is too bright?"
+
+Today (`CameraView.cs`, torch on Auto): the torch turns on when the paper is dim or the light uneven, at full strength, and then stays on
+for the rest of the session so it does not flicker. It never dims and never turns off.
+
+1. **Turn it down or off when it hurts:** a hotspot or clipped highlights on the paper (glare from a point light next to the lens), or the
+   page already bright without it. Use hysteresis and a minimum time between changes so it never flickers.
+2. **Use strength levels where the phone supports them** (the Fold 7 should): start low, step up only if the frame is still too dim, step
+   down on glare. Where levels are not supported, on and off only. Entry 262's torch-strength work is the starting point.
+3. **iOS:** the same logic with the iPhone's torch levels.
+4. Log each change (`camera.torch` with the reason) so the next sitting shows what it did, and add a line to the sitting's checklist.
+
 ## 2026-09-29, entry 296: the iOS push goes on, with a leaner way of spending
 
 **Status: in force until 2026-10-01 02:00 UTC; section 1 done 2026-09-29.** The uncommitted work was committed (the updater's
