@@ -561,7 +561,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - A Microsoft Store version of GroupLab can now be built; in it, updates come from the Store and GroupLab's own updater is switched off. Nothing changes in the version you download.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.110)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
