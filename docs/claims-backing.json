@@ -4420,6 +4420,10 @@
   "Entry 302 uses the levels: the torch on Auto starts at level 1 and steps up and down during the session (docs/MOBILE-CAPTURE.md section 9), through CameraX's own torch strength setting where the phone reports it supported, and on and off elsewhere.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Capture/TorchGovernor.cs TorchGovernor; android/GroupLab.Android/CameraView.cs SetTorchLevel; entry 302"
+  },
+  "## Download **The latest build.** Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within a few minutes of it landing.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml: runs after build and test succeeds on main (workflow_run); entries 141 and 144"
   }
  },
  "rules": [
