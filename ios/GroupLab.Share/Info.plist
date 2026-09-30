@@ -6,6 +6,9 @@
 	<string>GroupLab</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
+	<!-- Alan, 2026-09-30: GroupLab uses only the encryption iOS itself provides, so App Store Connect asks no export question for any build. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>

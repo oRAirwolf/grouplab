@@ -585,6 +585,10 @@ jobs:
           test "$(embedded "$payload")" = "$uuid" || { echo "::error::The application is not signed with its own profile."; exit 1; }
           test -d "$payload/PlugIns/GroupLab.Share.appex" || { echo "::error::The signed package carries no share extension."; exit 1; }
           test "$(embedded "$payload/PlugIns/GroupLab.Share.appex")" = "$share_uuid" || { echo "::error::The share extension is not signed with its own profile."; exit 1; }
+          # Alan, 2026-09-30: App Store Connect asks no export question for any build, so both bundles say they use only the system's encryption.
+          for b in "$payload" "$payload/PlugIns/GroupLab.Share.appex"; do
+            test "$(plutil -extract ITSAppUsesNonExemptEncryption raw "$b/Info.plist" 2>/dev/null)" = "false" \n              || { echo "::error::$(basename "$b") does not say it uses only the system's encryption, so TestFlight would ask."; exit 1; }
+          done
           rm -rf "$RUNNER_TEMP/ipa-check"
           mkdir -p "$HOME/private_keys"
           if printf '%s' "$APPLE_API_KEY_P8" | grep -q "BEGIN PRIVATE KEY"; then

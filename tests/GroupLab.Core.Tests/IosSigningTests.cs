@@ -84,4 +84,24 @@ public class IosSigningTests
         Assert.Contains("<CodesignProvision Condition=\"'$(GroupLabShareProvision)' != ''\">$(GroupLabShareProvision)</CodesignProvision>",
             File.ReadAllText(Repo.PathTo("ios", "GroupLab.Share", "GroupLab.Share.csproj")), StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// Alan, 2026-09-30: TestFlight must not ask the export question for each build. The application and its share extension each say they
+    /// use only the encryption iOS provides, and the nightly checks both again inside the signed package.
+    /// </summary>
+    [Fact]
+    public void NeitherBundleMakesTestFlightAskAboutEncryption()
+    {
+        foreach (string project in new[] { "GroupLab.iOS", "GroupLab.Share" })
+        {
+            var plist = System.Xml.Linq.XDocument.Load(Repo.PathTo("ios", project, "Info.plist"));
+            var keys = plist.Root!.Element("dict")!.Elements().ToList();
+            int at = keys.FindIndex(e => e.Name == "key" && e.Value == "ITSAppUsesNonExemptEncryption");
+            Assert.True(at >= 0, project + "'s Info.plist does not say whether it uses encryption");
+            Assert.Equal("false", keys[at + 1].Name.LocalName);
+        }
+
+        Assert.Contains("plutil -extract ITSAppUsesNonExemptEncryption raw", File.ReadAllText(Repo.PathTo(".github", "workflows", "nightly.yml")),
+            StringComparison.Ordinal);
+    }
 }
