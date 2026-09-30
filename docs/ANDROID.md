@@ -421,6 +421,12 @@ controls as a tree, sleep, copy the log) run with nobody's hands. It waits in `f
 whether it worked, its time and the memory held), the screenshots, the trees and the log. The format and its steps are described in
 `mobile/GroupLab.Mobile/Dev/Scenario.cs`. The older extras stay as shortcuts. The Play build is built without any of it.
 
+**The automation bridge** (entry 315 section 1), in GroupLab Dev only: a small command server on the device's own 127.0.0.1, port 47315,
+reached over the cable with `adb forward` (or `pymobiledevice3 usbmux forward` on iOS). Every scenario step is a command, one line of
+JSON each way, and it also answers the controls showing, the newest log lines, a screenshot and the memory held. A request needs this
+run's key, made at random when it starts, shown in Settings, About and written to `files/bridge/key`; a switch there turns it off.
+`scripts/app-bridge.py` forwards the port, reads the key and sends one command.
+
 **Every picture of a sitting is kept** (entry 291 section 7.5), in GroupLab Dev only: each picture the camera takes goes into its own
 folder under `files/sitting/`, numbered `picture-0001` on, as `picture.jpg` with every metadata segment taken out (no location, no time,
 no camera settings; the picture's own data is copied, not re-encoded), `live.txt` with what the last live frame read before it (the

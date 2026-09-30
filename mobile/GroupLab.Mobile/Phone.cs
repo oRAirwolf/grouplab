@@ -71,6 +71,11 @@ public static class Phone
         {
             single.MainView = new Shell();
         }
+#if GROUPLAB_DEV
+
+        // Entry 315 section 1, GroupLab Dev only: the automation bridge on the device's own loopback address, unless turned off.
+        Dev.Bridge.StartUnlessTurnedOff();
+#endif
     }
 
     /// <summary>What is waiting goes when the person chose Always; never a dialog, and a failure waits for the next start.</summary>

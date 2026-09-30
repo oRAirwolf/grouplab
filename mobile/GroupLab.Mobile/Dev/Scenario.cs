@@ -282,7 +282,7 @@ internal static class Scenario
         return results;
     }
 
-    private static async Task<(bool, string)> Do(Step step)
+    internal static async Task<(bool, string)> Do(Step step)
     {
         switch (step.Do)
         {
@@ -328,7 +328,7 @@ internal static class Scenario
         return name.Trim('.') is { Length: > 0 } safe ? safe : otherwise;
     }
 
-    private static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
+    internal static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
 
     /// <summary>What is on screen now, laid out first so a page just opened is there to be found.</summary>
     private static IEnumerable<Visual> Showing()
@@ -516,16 +516,27 @@ internal static class Scenario
     /// <summary>The newest lines of this run's log, or all of it, copied beside the results.</summary>
     private static bool CopyLog(string to, int? lines)
     {
-        DiagnosticLog.Current.Flush();
-        if (DiagnosticLog.Current.FilePath is not { } log || !File.Exists(log))
+        if (LogLines(lines) is not { } text)
         {
             return false;
         }
 
+        File.WriteAllText(to, text);
+        return true;
+    }
+
+    /// <summary>The newest lines of this run's log, or all of it; null where there is no log.</summary>
+    internal static string? LogLines(int? lines)
+    {
+        DiagnosticLog.Current.Flush();
+        if (DiagnosticLog.Current.FilePath is not { } log || !File.Exists(log))
+        {
+            return null;
+        }
+
         using var read = new StreamReader(new FileStream(log, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete));
         var all = read.ReadToEnd().Split('\n');
-        File.WriteAllText(to, string.Join('\n', lines is { } n ? all.TakeLast(n) : all));
-        return true;
+        return string.Join('\n', lines is { } n ? all.TakeLast(n) : all);
     }
 }
 #endif

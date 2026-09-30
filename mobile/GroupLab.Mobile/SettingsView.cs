@@ -310,6 +310,19 @@ public sealed class SettingsView : UserControl
             ((StackPanel)about.Child!).Children.Add(Screens.Dim(OperatingSystem.IsIOS()
                 ? "This is GroupLab Dev, the development build. It installs beside GroupLab, can be driven by a developer's scripts, and marks its error and survey reports as coming from a development build."
                 : "This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+#if GROUPLAB_DEV
+
+            // Entry 315 section 1: the automation bridge, with its key shown so a developer can reach it over the cable.
+            var bridge = new CheckBox { Content = "Let a developer's scripts drive GroupLab Dev over the cable", IsChecked = Dev.Bridge.Wanted, MinHeight = Screens.Touch };
+            var bridgeSaid = Screens.Dim(Dev.Bridge.Words());
+            bridge.IsCheckedChanged += (_, _) =>
+            {
+                Dev.Bridge.Wanted = bridge.IsChecked == true;
+                bridgeSaid.Text = Dev.Bridge.Words();
+            };
+            ((StackPanel)about.Child!).Children.Add(bridge);
+            ((StackPanel)about.Child!).Children.Add(bridgeSaid);
+#endif
         }
 
         // Entry 311 section 3 item 1: the logs, the crash records and the kept pictures in one file, through the share sheet.
