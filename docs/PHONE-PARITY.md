@@ -77,6 +77,11 @@ iPad can prove it (the camera, the torch, the level, printing to a real printer,
 iOS Simulator. `docs/IOS-PLAN.md` has the plan, and `ios/GroupLab.iOS/SelfTest.cs` and `ios/selftest.py` say what the simulator's self-test
 actually checks. The site build holds this column to those four words.
 
+**Diagnostics on the phone** (entry 311 section 3). Settings, About, **Send diagnostics**, on Android and iOS alike: the newest logs, the
+crash records and the kept pictures in one zip through the share sheet. On iPhone and iPad, GroupLab's Documents folder shows in the
+Files app, with the log and, when **Keep every picture taken** is on (off until turned on there, on until turned off in GroupLab Dev), a
+sitting's pictures. The desktop has its own report package under **Report a problem**, so this is not a separate feature.
+
 ## Phones sold outside America (entry 292 section 4)
 
 Alan: "This may be especially important for europeans that have access to a lot of phones that are not available in america." Europe and

@@ -4528,6 +4528,10 @@
   "## Why Windows and Linux stay unsigned Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says \"Windows protected your PC\" about any program nobody has paid to sign.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "**Diagnostics on the phone** (entry 311 section 3).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/DiagnosticsPackage.cs Send; SettingsView About; ios/GroupLab.iOS/Info.plist UIFileSharingEnabled; tests/GroupLab.Mobile.Tests/DiagnosticsTests.cs; entry 311 section 3"
   }
  },
  "rules": [

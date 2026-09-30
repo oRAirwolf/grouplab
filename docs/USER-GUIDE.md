@@ -346,6 +346,10 @@ Meanwhile **Compare loads** puts the sessions of two or more loads side by side,
 
 GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never. A report holds the version, the system, the error and the names of the last things done, never anything you typed, and never a photograph, file name or location. That part is built but not switched on yet. Crash records are written to your own machine whether or not you ever send them. They name the version, the build train and the line it happened on, and they never contain a photograph, a location or anything read out of one.
 
+**Send diagnostics, on the phone.** Settings, About, **Send diagnostics** puts GroupLab's newest logs, any crash records and the pictures
+kept of a sitting into one file and opens the share sheet, so you choose where it goes: AirDrop, Files, OneDrive, email or a message.
+GroupLab sends nothing itself. The logs hold no location and no file names, and a kept picture has had its metadata taken out.
+
 **Sending in targets.** The page at `grouplab.org/targets/` takes scans and photographs of targets that help GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and never published, or may be published in GroupLab's public test data and research. GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 
 ## 12. Settings
@@ -397,7 +401,11 @@ reads the whole photograph, and when an app hands over a smaller copy it says so
 **On iPhone and iPad** (being built, and not yet installable): **Choose a photo** opens Photos, iCloud Photos included, with no
 question about access, and **From another app** opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox. iOS lets no
 app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
-works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis.
+works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis. A picture opened
+from Files is read where it lies and left there. **GroupLab's own folder is in the Files app**, under On My iPad (or On My iPhone),
+GroupLab: its log is in `logs`, and with **Keep every picture taken, on this device only** turned on in Settings, About, each picture of a
+sitting is in `sitting` with what the camera read before it and how it was analyzed. That switch is off until you turn it on, and turning
+it off deletes what was kept.
 
 **Updates on phones that stop apps in the background.** GroupLab Dev looks for an update every time it opens, as well as about every six
 hours, so an update is late at worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it (the

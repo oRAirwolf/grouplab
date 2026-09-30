@@ -307,10 +307,20 @@ public sealed class SettingsView : UserControl
         if (Phone.Platform.IsDevBuild)
         {
             // Entry 234 section 1: said plainly, so a screenshot or a report from it is never mistaken for the published application.
-            ((StackPanel)about.Child!).Children.Add(Screens.Dim("This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+            ((StackPanel)about.Child!).Children.Add(Screens.Dim(OperatingSystem.IsIOS()
+                ? "This is GroupLab Dev, the development build. It installs beside GroupLab, can be driven by a developer's scripts, and marks its error and survey reports as coming from a development build."
+                : "This is GroupLab Dev, the development build. It installs beside GroupLab from Google Play, can be debugged over adb, and marks its error and survey reports as coming from a development build."));
+        }
 
-            // Entry 291 section 7.5: every picture of a sitting kept on the phone, for the developer to pull; off, and it is deleted.
-            var keeping = new CheckBox { Content = "Keep every picture taken, on this phone only", IsChecked = settings.LoadKeepSitting(), MinHeight = Screens.Touch };
+        // Entry 311 section 3 item 1: the logs, the crash records and the kept pictures in one file, through the share sheet.
+        var sendSaid = Screens.Dim("The newest logs, any crash records and the kept pictures, in one file you send where you choose.");
+        ((StackPanel)about.Child!).Children.Add(Screens.Choice("Send diagnostics", () => sendSaid.Text = DiagnosticsPackage.Send(DateTime.Now)));
+        ((StackPanel)about.Child!).Children.Add(sendSaid);
+
+        if (Phone.Platform.KeepsSittings is (true, var keepByDefault))
+        {
+            // Entry 291 section 7.5: every picture of a sitting kept on the device, for the developer to pull; off, and it is deleted.
+            var keeping = new CheckBox { Content = "Keep every picture taken, on this device only", IsChecked = settings.LoadKeepSitting(keepByDefault), MinHeight = Screens.Touch };
             var kept = Screens.Dim(KeptWords());
             keeping.IsCheckedChanged += (_, _) =>
             {
@@ -333,8 +343,9 @@ public sealed class SettingsView : UserControl
     {
         int count = SittingRecord.Count();
         string now = count == 1 ? "1 picture is" : $"{count} pictures are";
+        string where = OperatingSystem.IsIOS() ? "in GroupLab's folder in the Files app" : "in the application's own folder";
         return SittingRecord.On
-            ? $"Each picture is kept with what the camera read before it and how it was analyzed, in the application's own folder, and sent nowhere. {now} kept now. Turning this off deletes them."
+            ? $"Each picture is kept with what the camera read before it and how it was analyzed, {where}, and sent nowhere. {now} kept now. Turning this off deletes them."
             : "Pictures are not kept.";
     }
 }

@@ -17,8 +17,11 @@ internal static class SittingRecord
     /// <summary>The folder a sitting is kept in, under the application's own files: <c>files/sitting</c>.</summary>
     public static string Folder => Path.Combine(Phone.Platform.FilesFolder, "sitting");
 
-    /// <summary>Whether pictures are being kept: GroupLab Dev only, and not after the switch in Settings has turned it off.</summary>
-    public static bool On => Phone.Platform.IsDevBuild && Phone.Settings.LoadKeepSitting();
+    /// <summary>
+    /// Whether pictures are being kept: only where the build offers it (GroupLab Dev, and the iPhone and iPad application of entry 311), and
+    /// only while the switch in Settings is on.
+    /// </summary>
+    public static bool On => Phone.Platform.KeepsSittings is (true, var byDefault) && Phone.Settings.LoadKeepSitting(byDefault);
 
     private static readonly ConcurrentDictionary<string, string> ByPicture = new(StringComparer.Ordinal);
 

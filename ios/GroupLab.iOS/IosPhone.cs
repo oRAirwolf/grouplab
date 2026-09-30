@@ -319,7 +319,18 @@ internal sealed class IosPhone : IPhonePlatform
     /// <summary>iOS updates GroupLab through TestFlight and the App Store, so there is no updater card.</summary>
     public Avalonia.Controls.Control? UpdateCard() => null;
 
-    public bool IsDevBuild => false;
+    public bool IsDevBuild =>
+#if GROUPLAB_DEV
+        true;
+#else
+        false;
+#endif
+
+    /// <summary>
+    /// Entry 311 section 3 item 2: the switch to keep a sitting's pictures is offered here too, since Documents shows in the Files app; off
+    /// until turned on in GroupLab, on until turned off in GroupLab Dev.
+    /// </summary>
+    public (bool Offered, bool OnByDefault) KeepsSittings => (true, IsDevBuild);
 
     /// <summary>The view controller in front, which a sheet is presented from.</summary>
     internal static UIViewController? Top()
