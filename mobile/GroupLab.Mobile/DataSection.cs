@@ -109,7 +109,7 @@ internal sealed class DataSection
             var plan = DataExport.Plan(file, PhoneAnalysis.Store(), Sheets.Exported(), settings.LoadAll());
             pending = plan;
             var card = new StackPanel { Spacing = 6 };
-            card.Children.Add(Screens.Line(file.FromApp is { } from ? $"From GroupLab {from}:" : "This file holds:"));
+            card.Children.Add(Screens.Line(file.FromApp is { } from ? $"From GroupLab {AppInfo.Shortened(from)}:" : "This file holds:"));
             foreach (string line in plan.Summary().Concat(plan.Conflicts.Select(c => "• " + c)))
             {
                 card.Children.Add(Screens.Dim(line));

@@ -53,7 +53,7 @@ internal sealed class OnePageReportPage : UserControl
         try
         {
             var picture = state.ImagePath is { } path ? ReportPicture.From(path, state.ViewQuarterTurns) : null;
-            var report = OnePageReports.For(state, title, date, units, Paper, picture, "GroupLab " + AppInfo.Version);
+            var report = OnePageReports.For(state, title, date, units, Paper, picture, "GroupLab " + AppInfo.ShortVersion);
             made = (OnePageReports.Write(report), report);
             DiagnosticLog.Info("report.one-page", ("bytes", made.Value.Pdf.Length), ("picture", picture is not null));
             return made;

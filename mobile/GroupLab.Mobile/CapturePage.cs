@@ -126,7 +126,7 @@ public sealed class CapturePage : UserControl
                 status,
                 Screens.Card(gettingStarted, Screens.Dim("Tips for a good picture"), tips),
                 Link("grouplab.org", () => Phone.Platform.OpenAddress("https://grouplab.org/")),
-                Screens.Quiet($"Free and open source · GPL-3.0 · {AppInfo.Version}"),
+                Screens.Quiet($"Free and open source · GPL-3.0 · {AppInfo.ShortVersion}"),
             },
         });
 
