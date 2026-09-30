@@ -12,6 +12,25 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.136
+
+**2026-09-30**, commit `4cd9a2a`. Nightly.
+
+**What you will notice**
+
+- With a large iPhone turned on its side, a result now shows the target beside the numbers, as on a tablet, instead of one long column.
+- With an iPhone turned on its side, the bar of places along the bottom now runs to both edges of the screen instead of stopping short.
+- The version at the foot of the Capture page and in Settings now shows a short build code instead of a long one that wrapped across the screen.
+
+**Under the hood**
+
+- The automatic iPad check now photographs every screen with the iPad turned on its side as well as upright.
+- The automatic iPhone and iPad check now also photographs every screen on an iPad and on an iPhone turned on its side.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.136)
+
+---
+
 ## 0.2.0-nightly.135
 
 **2026-09-30**, commit `417694c`. Nightly.
