@@ -49,7 +49,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private NSObject toForeground;
     private TargetDefinition definition;
     private bool definitionFromCodes;
-    private int readyInARow;
+    private readonly AutoShutter auto = new();
     private bool taking;
     private bool manual;
     private int torchChoice;
@@ -85,7 +85,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         screen.ModeChosen += chosen =>
         {
             manual = chosen;
-            readyInARow = 0;
+            auto.Reset();
             screen.Shutter.Progress = 0;
             screen.ShowMode(manual);
             Phone.Settings.SaveCaptureManual(manual);
@@ -205,7 +205,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         }
 
         steadier.Reset();
-        readyInARow = 0;
+        auto.Reset();
         Start();
         DiagnosticLog.Info("camera.resume");
     }
@@ -536,10 +536,11 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             }
         }
 
-        readyInARow = verdict.Say == Instruction.Ready && card != false ? readyInARow + 1 : 0;
+        // Entry 311 section 1: taken once every frame for AutoShutter.SteadyMs has been judged ready on its own, the same as on Android.
+        bool fire = auto.Next(steadier.Decided, card != false, now);
         int? forecast = verdict.Quality is { } quality ? PictureCheck.Forecast(quality) : null;
         bool torchNow = torchOn;
-        double progress = manual ? 0 : (double)readyInARow / PhoneCamera.ReadyFrames;
+        double progress = manual ? 0 : fire ? 1 : auto.Progress;
         var shown = verdict;
         screen.BeginInvokeOnMainThread(() =>
         {
@@ -549,10 +550,9 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
                 screen.Shutter.Progress = progress;
             }
         });
-        if (!manual && readyInARow >= PhoneCamera.ReadyFrames && !taking)
+        if (!manual && fire && !taking)
         {
-            readyInARow = 0;
-            DiagnosticLog.Info("camera.auto", ("afterReadyMs", now - readySince), ("ms", now));
+            DiagnosticLog.Info("camera.auto", ("afterReadyMs", now - readySince), ("steadyMs", auto.ReadyMs), ("ms", now));
             screen.BeginInvokeOnMainThread(() => Take("guided, by itself"));
         }
     }

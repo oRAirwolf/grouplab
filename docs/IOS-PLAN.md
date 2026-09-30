@@ -95,10 +95,10 @@ no, and a no comes back as a note with what was seen.
    opens the camera. After Don't Allow, GroupLab says so and does not crash.
 2. **The preview fills 4:3.** The whole picture is shown, nothing cut from its edges, with black bars rather than a stretch, upright and
    in portrait, in both landscapes and upside down.
-3. **The panel.** Back, the instruction, the torch, the checks line and the quality bar are all visible over the preview and none is
-   under the status bar or the home indicator; the shutter and the two modes are under the camera and answer a tap.
+3. **The panel.** Back, the instruction, the torch, the checks line and the quality bar are all visible above the preview, the preview
+   starting under the panel (entry 313 section 2), and none is under the status bar or the home indicator; the shutter and the two modes are under the camera and answer a tap.
 4. **Guided fires.** Over a printed GroupLab sheet the words settle (no flicker between Move closer and Move back), the ring fills, and
-   the picture is taken by itself after three ready frames.
+   the picture is taken by itself about a second after the words say Hold it there (entry 311 section 1).
 5. **Manual shutter.** In Manual the picture is taken only when the shutter is pressed; the mode is remembered after closing GroupLab.
 6. **The torch.** Torch: On lights it at full strength while framing, and it goes off the moment the picture is taken; Torch: Off never
    lights it. After Back, and after a picture, it is off. **On Auto (entry 302)**, in a dim room it comes on at the lowest of its five levels and steps up a level at a time, about

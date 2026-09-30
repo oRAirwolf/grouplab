@@ -9,8 +9,8 @@ namespace GroupLab.iOS;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 290 section 2 item 5: the capture screen on iPhone and iPad, Capture B as on Android. Everything on it is
 /// <see cref="CaptureScreen"/>, UIKit's own views around AVFoundation's preview, hosted in the Avalonia screen as one native view, the way
-/// the Android head hosts its CaptureScreen. In Guided mode the shutter fires by itself after <see cref="GroupLab.Core.Capture.PhoneCamera.ReadyFrames"/>
-/// ready frames in a row and can be pressed sooner; in Manual it fires only when pressed. The mode and the torch are remembered in the
+/// the Android head hosts its CaptureScreen. In Guided mode the shutter fires by itself once the frames have been judged ready for
+/// <see cref="GroupLab.Core.Capture.AutoShutter.SteadyMs"/> and can be pressed sooner; in Manual it fires only when pressed. The mode and the torch are remembered in the
 /// same settings as on Android. The still goes to the application's cache and is handed on to be analyzed and checked.
 /// </summary>
 internal sealed class CameraView : UserControl

@@ -99,9 +99,16 @@ public sealed class GuidanceSteadier
     private long pendingSince;
     private long? lastRegistered;
 
+    /// <summary>
+    /// The last frame's own instruction, before the words were held: what <see cref="AutoShutter"/> reads (entry 311 section 1). Null where
+    /// the frame could not be judged, a stumble just after a registered frame, for which the words are held as they were.
+    /// </summary>
+    public Instruction? Decided { get; private set; }
+
     /// <summary>Forgets everything, as when the camera starts again.</summary>
     public void Reset()
     {
+        Decided = null;
         (inFrame, closeEnough, square, shaky, pending, lastRegistered) = (false, false, false, false, null, null);
         (shown, shownWords) = (Instruction.FindTheSheet, "Point the camera at the sheet.");
     }
@@ -113,6 +120,7 @@ public sealed class GuidanceSteadier
         ArgumentNullException.ThrowIfNull(raw);
         if (raw.Quality is null && lastRegistered is { } seen && nowMs - seen < StumbleMs)
         {
+            Decided = null;
             return raw with { Say = shown, Words = shownWords };
         }
 
@@ -122,6 +130,7 @@ public sealed class GuidanceSteadier
         }
 
         var (say, words) = Decide(raw, measuredScale);
+        Decided = say;
         if (say == shown)
         {
             pending = null;

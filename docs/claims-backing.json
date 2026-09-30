@@ -3501,10 +3501,6 @@
    "kind": "measured",
    "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
   },
-  "The camera screen analyzes a 1920 × 1440 stream live (CameraX&#x27;s default is 640 by 480, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires after 3 ready frames in a row.": {
-   "kind": "measured",
-   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
-  },
   "Built from .NET 10 Avalonia OpenCV for iOS Where it lives docs/IOS-PLAN.md Apps you run Command line The engine with no windows.": {
    "kind": "measured",
    "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
@@ -3806,10 +3802,6 @@
    "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
   },
   "35 of 37 Phase 0 images named, on Windows, Linux and macOS alike, and none named wrongly.": {
-   "kind": "measured",
-   "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
-  },
-  "Guided mode fires after 3 ready frames in a row; every picture is then checked and scored.": {
    "kind": "measured",
    "where": "website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
   },
@@ -4528,6 +4520,22 @@
   "## Why Windows and Linux stay unsigned Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says \"Windows protected your PC\" about any program nobody has paid to sign.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "The camera screen analyzes a 1920 × 1440 stream live (CameraX&#x27;s default is 640 by 480, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires once every frame for 0.6 seconds has been judged ready.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs, LeastFrames), used by android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, held by AutoShutterTests (entry 311 section 1); website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "Guided mode fires once every frame for 0.6 seconds has been judged ready; every picture is then checked and scored.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs, LeastFrames), used by android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, held by AutoShutterTests (entry 311 section 1); website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)"
+  },
+  "**The panel.** Back, the instruction, the torch, the checks line and the quality bar are all visible above the preview, the preview starting under the panel (entry 313 section 2), and none is under the status bar or the home indicator; the shutter and the two modes are under the camera and answer a tap.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/Camera/CaptureScreen.cs LayoutSubviews, checked by the iOS self-test's camera layout check (CameraSelfTest.Layout, entry 313 section 2); a device check for the next iPad sitting"
+  },
+  "**Guided fires.** Over a printed GroupLab sheet the words settle (no flicker between Move closer and Move back), the ring fills, and the picture is taken by itself about a second after the words say Hold it there (entry 311 section 1).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs, LeastFrames), used by android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, held by AutoShutterTests (entry 311 section 1)"
   }
  },
  "rules": [
