@@ -36,7 +36,7 @@ GOOD MORNING (the night of 28 September, in five lines):
 
 # Requests for Alan
 
-**Open: 12.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 14.** Most urgent: **59**, the two TestFlight groups and GroupLab on your iPad mini (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. Then **38**, the Microsoft Store: your account, the name and the keys, about thirty minutes. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **Is a self-improving detection engine worth it? The study** (entry 261; not a request; `docs/DETECTION-LEARNING-STUDY.md`). Yes, it is
 possible and it needs no Claude to run. Build now a scoreboard that re-reads synthetic and real targets with every build; later, automatic
@@ -136,6 +136,51 @@ work: whatever does not depend on the answer is built anyway, and the report say
 At the start of a run, the count of open requests in this file is printed and nothing more.
 
 ---
+
+## 61. iOS: the Apple steps for GroupLab Dev, about twenty minutes, whenever suits (entry 315)
+
+**Opened 2026-09-30.** **Why:** entry 315 builds everything that lets me drive and watch the app without your hands (the automation
+bridge, scenario files, the replay camera) into a separate iOS app, GroupLab Dev, so the GroupLab that Apple reviews carries none of it.
+Until these exist it is built and tested on the simulator only. The distribution certificate and the App Store Connect key you already
+set are reused. At developer.apple.com, Certificates, Identifiers & Profiles:
+
+1. Identifiers, the + button, App Groups: create `group.org.grouplab.app.dev` (description: GroupLab Dev).
+2. Identifiers, the + button, App IDs, App: Description `GroupLab Dev`, Bundle ID **Explicit** `org.grouplab.app.dev`, turn on App
+   Groups, Configure, tick `group.org.grouplab.app.dev`, Continue, Register.
+3. The same again for the share extension: Description `GroupLab Dev Share`, Bundle ID `org.grouplab.app.dev.share`, App Groups with
+   `group.org.grouplab.app.dev`, Register.
+4. Profiles, the + button, Distribution, **App Store Connect**: App ID `org.grouplab.app.dev`, the same distribution certificate, name
+   it `GroupLab Dev App Store`, Generate, Download. Then the same for `org.grouplab.app.dev.share`, named `GroupLab Dev Share App Store`.
+5. In Git Bash, in the folder with the two downloads:
+   ```
+   base64 -w0 "GroupLab_Dev_App_Store.mobileprovision" | gh secret set IOS_DEV_PROFILE -R oRAirwolf/grouplab
+   base64 -w0 "GroupLab_Dev_Share_App_Store.mobileprovision" | gh secret set IOS_DEV_SHARE_PROFILE -R oRAirwolf/grouplab
+   ```
+   (use the downloaded files' own names if they differ).
+6. In App Store Connect, Apps, the + button, New App: iOS, name **GroupLab Dev** (or **GroupLab Dev Build** if that is taken), Bundle ID
+   `org.grouplab.app.dev`, SKU `grouplab-dev`, full access. Then in its TestFlight tab add an internal group named **GroupLab Team**. It
+   is never added to an external group, so Apple never reviews it.
+
+**A good answer:** "done", and `gh secret list -R oRAirwolf/grouplab` shows IOS_DEV_PROFILE and IOS_DEV_SHARE_PROFILE.
+
+## 60. The iPad on a cable to this computer, like adb for Android, about fifteen minutes, whenever suits (entries 311 and 315)
+
+**Opened 2026-09-30.** **Why:** with this I can read GroupLab's own log live and copy its folder from the iPad over USB, the way adb works
+for the Fold, instead of asking you for screenshots. Only GroupLab is read: never another app, a notification or anything else on the
+iPad. The tool is pymobiledevice3, a Python program.
+
+1. Install **Apple Devices** from the Microsoft Store (it brings the driver Windows needs to talk to an iPad).
+2. Plug the iPad mini into this computer with a USB-C cable, unlock it, tap **Trust**, and enter the iPad's passcode.
+3. In PowerShell:
+   ```
+   python -m pip install --user pymobiledevice3
+   python -m pymobiledevice3 usbmux list
+   ```
+   A good result is a short block that names an iPad. Do not paste it anywhere; it carries the iPad's serial number.
+4. For the automation of entry 315 later, Developer Mode as well: in PowerShell `python -m pymobiledevice3 amfi reveal-developer-mode`,
+   then on the iPad Settings, Privacy & Security, Developer Mode, on, and let it restart; after the restart confirm **Turn On**.
+
+**A good answer:** "the iPad is listed" and whether Developer Mode is on. Leave the cable in when you can.
 
 ## 59. TestFlight: the two groups, then GroupLab on your iPad mini, about twenty minutes (entries 290 and 310)
 
