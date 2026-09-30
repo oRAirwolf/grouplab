@@ -200,6 +200,9 @@ internal sealed class CaptureScreen : UIView
     /// <summary>The level from gravity, already in the screen's axes as Android's sensor gives it.</summary>
     public void ShowLevel(double x, double y, double z) => level.Show(x, y, z);
 
+    /// <summary>Whether the level shows flat now, for the self-test.</summary>
+    internal bool LevelReady => level.Ready;
+
     public void Say(string words)
     {
         say.Text = words;
@@ -336,6 +339,11 @@ internal sealed class CaptureScreen : UIView
 /// <summary>
 /// Entry 281 section 1.1, Alan's level, as on Android: four arms and a dot that drifts toward the raised side the way a bubble does, green
 /// within <see cref="BubbleLevel.ReadyDegrees"/> of flat and white beyond. The arms are thin and half white, so the preview shows through.
+/// <para>
+/// NOTES-FROM-PLANNING.md entry 311 section 2, Alan on the iPad: "The level on the camera screen does not turn green when it is level." Only
+/// the dot turned green here, a spot 18 points across over the picture, where Android had turned the whole crosshair and its ring green and
+/// thicker since entry 291 section 3.4. The iPad now draws it as Android does.
+/// </para>
 /// </summary>
 internal sealed class BubbleView : UIView
 {
@@ -349,6 +357,9 @@ internal sealed class BubbleView : UIView
         UserInteractionEnabled = false;
     }
 
+    /// <summary>Whether the level shows flat, green, now.</summary>
+    public bool Ready => ready;
+
     public void Show(double x, double y, double z)
     {
         dot = BubbleLevel.Dot(x, y, z);
@@ -359,8 +370,12 @@ internal sealed class BubbleView : UIView
     public override void Draw(CGRect rect)
     {
         double cx = Bounds.Width / 2, cy = Bounds.Height / 2, arm = Math.Min(Bounds.Width, Bounds.Height) / 2 * 0.86, dotRadius = arm * 0.16;
-        UIColor.FromRGBA(255, 255, 255, 150).SetStroke();
-        var cross = new UIBezierPath { LineWidth = (NFloat)Math.Max(2, arm * 0.03) };
+        // Entry 311 section 2, as Android since entry 291 section 3.4: level, the whole crosshair and its ring turn green with the dot, and
+        // thicker, so it is plain at a glance.
+        var green = UIColor.FromRGB(46, 160, 90);
+        (ready ? green : UIColor.FromRGBA(255, 255, 255, 150)).SetStroke();
+        double line = ready ? Math.Max(4, arm * 0.06) : Math.Max(2, arm * 0.03);
+        var cross = new UIBezierPath { LineWidth = (NFloat)line };
         cross.MoveTo(new CGPoint(cx - arm, cy));
         cross.AddLineTo(new CGPoint(cx + arm, cy));
         cross.MoveTo(new CGPoint(cx, cy - arm));
@@ -370,10 +385,10 @@ internal sealed class BubbleView : UIView
         // The ready ring: the dot inside it is within the ready tolerance.
         double ring = (arm * BubbleLevel.ReadyDegrees / BubbleLevel.FullScaleDegrees) + dotRadius;
         var circle = UIBezierPath.FromOval(new CGRect(cx - ring, cy - ring, 2 * ring, 2 * ring));
-        circle.LineWidth = (NFloat)Math.Max(2, arm * 0.03);
+        circle.LineWidth = (NFloat)line;
         circle.Stroke();
 
-        (ready ? UIColor.FromRGB(46, 160, 90) : UIColor.White).SetFill();
+        (ready ? green : UIColor.White).SetFill();
         double dx = cx + (dot.Right * arm), dy = cy + (dot.Down * arm);
         UIBezierPath.FromOval(new CGRect(dx - dotRadius, dy - dotRadius, 2 * dotRadius, 2 * dotRadius)).Fill();
     }

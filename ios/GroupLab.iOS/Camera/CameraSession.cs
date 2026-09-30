@@ -347,7 +347,35 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             var g = data.Gravity;
             var (x, y, z) = PhoneCamera.LevelFromGravity(g.X, g.Y, g.Z, turn);
             screen.ShowLevel(x, y, z);
+            LogLevel(g.X, g.Y, g.Z, x, y, z);
         });
+    }
+
+    private bool? levelWasReady;
+    private long levelLogged = -LevelLogMs;
+
+    /// <summary>How often the level is written to the log while it holds, in milliseconds; a change between flat and not is written at once.</summary>
+    private const long LevelLogMs = 2000;
+
+    /// <summary>
+    /// Entry 311 section 2: Core Motion's gravity as it came, the screen's turn, the reading in the screen's axes and the tilt the level
+    /// computes (camera.level), when it turns green or stops being green and every two seconds besides, so a sitting's log shows whether the
+    /// axes follow the iPad's orientation and how far from the tolerance a steady hand is.
+    /// </summary>
+    private void LogLevel(double gx, double gy, double gz, double x, double y, double z)
+    {
+        bool ready = BubbleLevel.Ready(x, y, z);
+        long now = clock.ElapsedMilliseconds;
+        if (ready == levelWasReady && now - levelLogged < LevelLogMs)
+        {
+            return;
+        }
+
+        levelWasReady = ready;
+        levelLogged = now;
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        DiagnosticLog.Info("camera.level", ("gravity", string.Create(inv, $"{gx:0.000},{gy:0.000},{gz:0.000}")), ("turn", turn),
+            ("screen", string.Create(inv, $"{x:0.000},{y:0.000},{z:0.000}")), ("tilt", Math.Round(BubbleLevel.Tilt(x, y, z), 1)), ("green", ready), ("ms", now));
     }
 
     /// <summary>The preview stood the way the screen is; on the interface thread, after each layout.</summary>
