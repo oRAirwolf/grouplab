@@ -24,6 +24,26 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 303: mil bulls only as a designer option, and the self-update worked
+
+**Status: done 2026-09-30.** 1: no new built-in sheets; the desktop designer takes a bull's size in mil or MOA at the sheet's distance as well as inches (the phone has no grid designer). 2: GroupLab Dev updated itself on the Fold 7 without adb, after a quick Play Protect scan, recorded in ANDROID.md and the guide. 3: request 56 now says to print and add the Scanner check on the computer. 4: the drafted Discord reply is gone from for-alan.md.
+
+From planning, 2026-09-29, for Alan.
+
+1. **Mil bulls (entry 294 section 3), answered:** "I dont really see much value in adding mil bulls and I don't want to have too many targets
+   initially. I would say make it an option in the target designer." So: no new built-in sheets. In the designer, the bull size can be given
+   in mil (at the sheet's distance) as well as inches and MOA. Guide line to match.
+2. **Entry 288 device check, from Alan:** GroupLab Dev updated itself on the Fold 7 without adb. The phone made him scan the app first
+   (Google Play Protect's scan of apps from outside the Play Store); he does not mind, it is quick. Record it in `docs/ANDROID.md` section 17
+   and mention the scan in the guide's update section so it does not surprise anyone.
+3. **Request 56:** planning is telling Alan to print from the desktop at Actual size and add the Scanner check on the desktop.
+4. **Glawk:** Alan already replied on Discord; drop the drafted Discord reply from for-alan.md.
+
+## Order, with entry 296's rules
+
+iOS stays first until the deadline. These go to one desktop and Android worker, in this order: 302 (torch), 299 (Settings), 298 (panes),
+297 (colors), 300 (live preview), 303 item 1. Entry 301 waits for Alan's choice.
+
 ## 2026-09-30, entry 308: commercial targets for the detector, and request 54 clarified
 
 **Status: done 2026-09-30; request 54 clarified, request 58 opened.** The scoreboard reads another maker's target as an "any target" case: a truth file with the shot scan, an optional blank scan and the shot count, found holes against the count and every mark on the blank a false one (a made-up orange target: 5 of 5, none false). No commercial scans exist yet; request 58 asks for them. Request 54 now asks for a plain target with no maker's logo for the home page, since GroupLab never shows another maker's target.
