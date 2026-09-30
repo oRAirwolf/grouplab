@@ -330,6 +330,49 @@ public sealed class AppSettingsStore(string path)
         opened[item] = open;
     });
 
+    /// <summary>Entry 307: the whole settings file, for an export to pick the settings that travel between devices from.</summary>
+    public JsonObject LoadAll() => Read(file => (JsonObject)file.DeepClone()) ?? [];
+
+    /// <summary>
+    /// Entry 307: what an import adds to the settings: printers appended, each sheet's bull color set, and any other setting set, each only
+    /// where the import's plan found it missing here, so nothing already here changes.
+    /// </summary>
+    public bool MergeImported(JsonObject adding) => Save(file =>
+    {
+        foreach (var (key, value) in adding)
+        {
+            if (value is null)
+            {
+                continue;
+            }
+
+            if (key == "printers" && value is JsonArray printers)
+            {
+                var all = file["printers"] as JsonArray ?? [];
+                foreach (var printer in printers)
+                {
+                    all.Add(printer?.DeepClone());
+                }
+
+                file["printers"] = all;
+            }
+            else if (key == "bullColours" && value is JsonObject colours)
+            {
+                var all = file["bullColours"] as JsonObject ?? [];
+                foreach (var (sheet, colour) in colours)
+                {
+                    all[sheet] = colour?.DeepClone();
+                }
+
+                file["bullColours"] = all;
+            }
+            else if (file[key] is null)
+            {
+                file[key] = value.DeepClone();
+            }
+        }
+    });
+
     /// <summary>Entry 297: the color a sheet's bulls print in, remembered per sheet by its file; black where none was chosen.</summary>
     public GroupLab.Core.Rendering.BullColour LoadBullColour(string sheet) =>
         GroupLab.Core.Rendering.BullColours.Parse(Read(file => file["bullColours"]?[sheet]?.GetValueKind() == JsonValueKind.String ? (string?)file["bullColours"]![sheet] : null));

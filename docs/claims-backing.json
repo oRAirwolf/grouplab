@@ -4492,6 +4492,10 @@
   "The iPhone simulator cannot show it: in landscape it is 832 points wide inside its safe area, and the side by side layout starts at 840.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6"
+  },
+  "Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists anything here that differs from the file, which is kept as it is here, and you can cancel.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/DataExport.cs Plan and Apply; DataExportTests.ImportingTwiceAddsNothingAndADifferenceIsListedNotOverwritten (entry 307)"
   }
  },
  "rules": [

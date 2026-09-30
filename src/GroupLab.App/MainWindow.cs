@@ -5362,6 +5362,9 @@ public sealed partial class MainWindow : Window
         BuildErrorSettings(column);
         BuildSurveySettings(column);
 
+        // Entry 307: everything exported to one file, and imported from one, before the log.
+        BuildDataSettings(column);
+
         // Entry 41 section 3: the log's DEBUG switch, remembered, and where the log is, or why there is none.
         column.Children.Add(Ruled("Diagnostics"));
         var detailedLogging = new CheckBox { Content = Wrapped("Detailed logging"), IsChecked = DiagnosticLog.Current.Verbose || settings.LoadVerbose() };

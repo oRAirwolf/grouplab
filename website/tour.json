@@ -660,6 +660,10 @@
      "The three things GroupLab may send, in the first run screen's order and words: every target you analyze, with which consent, or ask each time, or never; error reports, sent by themselves, asked about each time, or never; and the hardware survey, a weekly report of what your machine is and how fast GroupLab ran, with the benchmark, which runs only when you start it, shows its progress and says when it last ran. Each shows its choice and one short line; More opens exactly what it sends, and a link above them opens What GroupLab sends. Nothing goes unless you chose it."
     ],
     [
+     "Your data",
+     "Export all my data writes every session with its picture and marks, your rifles, barrels and loads, designed sheets and printers to one file; Import data reads one on any GroupLab, lists what it would add and anything that differs here, and overwrites nothing."
+    ],
+    [
      "Detailed logging",
      "Off by default. Turn it on before reproducing a problem, then send the report."
     ],

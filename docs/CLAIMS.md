@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1371 |
+| code | 1372 |
 | measured | 1802 |
 | decided | 1279 |
 | unbacked | 0 |
-| **total** | **4452** |
+| **total** | **4453** |
 
-**1026** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1027** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3250,6 +3250,7 @@ one that matters.
 - *code* (ReportUploader and the report window, src/GroupLab.App (entry 164)): Nothing is sent until you press send, and you can see what is in the package before you do.
 - *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
+- *code* (src/GroupLab.Core/Records/DataExport.cs Plan and Apply; DataExportTests.ImportingTwiceAddsNothingAndADifferenceIsListedNotOverwritten (entry 307)): Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists anything here that differs from the file, which is kept as it is here, and you can cancel.
 - *code* (android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)): ![The settings](figures/screens/current/settings-light-1400x900.png) ## 13.
 - *code* (android/GroupLab.Android (the phone section of the user guide, entry 275 section 15); docs/PHONE-PARITY.md): On the phone GroupLab for Android runs on a phone or tablet with Android 10 or later and 4 GB of memory.
 - *decided* (entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums): **GroupLab Dev is the recommended download for testing until GroupLab is on the Play Store**: from the [download page](https://grouplab.org/download/), it updates itself from every nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.

@@ -279,6 +279,12 @@ public sealed class SettingsView : UserControl
 
         // Entry 298 section 4: on a tablet or an unfolded phone in landscape, the result's split between the sheet and the numbers is dragged
         // and remembered; this puts it back.
+        // Entry 307: everything exported to one file, and imported from one.
+        foreach (var control in new DataSection(settings).Controls())
+        {
+            column.Children.Add(control);
+        }
+
         column.Children.Add(Screens.Heading("Layout"));
         column.Children.Add(Screens.Dim("On a tablet or an unfolded phone held sideways, the line between the sheet and the numbers on a result can be dragged, and GroupLab remembers where you left it."));
         var layoutSaid = Screens.Dim("");

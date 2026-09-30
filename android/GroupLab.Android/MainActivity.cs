@@ -34,6 +34,10 @@ namespace GroupLab.Android;
 [IntentFilter([Intent.ActionSendMultiple], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
 [IntentFilter([Intent.ActionView], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
 [IntentFilter([Intent.ActionEdit], Categories = [Intent.CategoryDefault], DataMimeType = "image/*")]
+// Entry 307: a GroupLab data file opened or shared from Files, a mail or a chat, offered for import. Its type is usually unknown, so the
+// file itself is checked before anything is read from it.
+[IntentFilter([Intent.ActionView, Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "application/octet-stream")]
+[IntentFilter([Intent.ActionView, Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "application/json")]
 public class MainActivity : AvaloniaMainActivity
 {
     /// <summary>The name under the icon, entry 234: the development build says it is one there too.</summary>
@@ -101,6 +105,11 @@ public class MainActivity : AvaloniaMainActivity
     /// </summary>
     private void Shared(Intent? intent)
     {
+        if (intent is not null && DataFile(intent))
+        {
+            return;
+        }
+
         if (intent is null || !PhotoIntake.IsIncoming(intent.Action, intent.Type))
         {
             return;
@@ -129,6 +138,58 @@ public class MainActivity : AvaloniaMainActivity
                 }
             },
             TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// Entry 307: a file that is not a picture, opened or shared with GroupLab. It is copied into the cache and kept only when it begins as a
+    /// GroupLab data file does; then Settings opens with what importing it would do, and nothing is written until Import is pressed.
+    /// </summary>
+    private bool DataFile(Intent intent)
+    {
+        if (intent.Action is not (Intent.ActionView or Intent.ActionSend) || intent.Type is null || intent.Type.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var uri = PhotoPickers.Shared(intent).FirstOrDefault();
+        if (uri is null)
+        {
+            return true;
+        }
+
+        string copy = System.IO.Path.Combine(CacheDir!.AbsolutePath, "incoming" + GroupLab.Core.Records.DataExport.Extension);
+        try
+        {
+            using (var from = ContentResolver!.OpenInputStream(uri))
+            using (var to = System.IO.File.Create(copy))
+            {
+                from?.CopyTo(to);
+            }
+
+            using var head = new System.IO.StreamReader(copy);
+            var start = new char[64];
+            int read = head.Read(start, 0, start.Length);
+            if (!new string(start, 0, read).Replace(" ", "", StringComparison.Ordinal).Contains("\"format\":\"grouplab-data\"", StringComparison.Ordinal))
+            {
+                head.Dispose();
+                System.IO.File.Delete(copy);
+                GroupLab.App.Diagnostics.DiagnosticLog.Info("data.incoming", ("grouplab", false));
+                return true;
+            }
+        }
+        catch (Exception e) when (e is System.IO.IOException or Java.Lang.Exception or UnauthorizedAccessException)
+        {
+            GroupLab.App.Diagnostics.DiagnosticLog.Exception(GroupLab.App.Diagnostics.LogLevel.Warn, "data.incoming", e);
+            return true;
+        }
+
+        GroupLab.App.Diagnostics.DiagnosticLog.Info("data.incoming", ("grouplab", true));
+        Avalonia.Threading.Dispatcher.UIThread.Post(() => Avalonia.Threading.DispatcherTimer.RunOnce(() =>
+        {
+            DataSection.Waiting = copy;
+            Shell.Current?.Show(Shell.Place.Settings);
+        }, TimeSpan.FromSeconds(1)));
+        return true;
     }
 
     /// <summary>The pickers waiting for their answer, by request (entry 292).</summary>

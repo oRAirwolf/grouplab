@@ -32,6 +32,35 @@ public sealed class OwnSheets(string folder)
             .ThenBy(s => s.File, StringComparer.Ordinal)];
     }
 
+    /// <summary>Entry 307: every sheet file here as it is written, for an export of everything.</summary>
+    public IReadOnlyList<Records.ExportedSheet> Exported() => !Directory.Exists(Folder)
+        ? []
+        : [.. Directory.EnumerateFiles(Folder, "*.gltd.json").OrderBy(p => p, StringComparer.Ordinal).Select(p => new Records.ExportedSheet(Path.GetFileName(p), File.ReadAllText(p)))];
+
+    /// <summary>
+    /// Entry 307: a sheet from an export, written under its own file name where no sheet has it. A name with a folder in it, or that is not a
+    /// sheet's, is refused, so a file from elsewhere can never write outside this folder. False where nothing was written.
+    /// </summary>
+    public bool Import(Records.ExportedSheet sheet)
+    {
+        ArgumentNullException.ThrowIfNull(sheet);
+        string name = Path.GetFileName(sheet.File);
+        if (name != sheet.File || !name.EndsWith(".gltd.json", StringComparison.OrdinalIgnoreCase) || name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        {
+            return false;
+        }
+
+        Directory.CreateDirectory(Folder);
+        string path = Path.Combine(Folder, name);
+        if (File.Exists(path))
+        {
+            return false;
+        }
+
+        File.WriteAllText(path, sheet.Definition);
+        return true;
+    }
+
     /// <summary>Saves a definition as a new sheet under its own name, made unique among the sheets already here.</summary>
     public LibrarySheet Save(TargetDefinition definition)
     {
