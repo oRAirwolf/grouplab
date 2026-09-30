@@ -75,6 +75,7 @@ public sealed class Shell : UserControl
     /// </summary>
     internal static bool BarToBottomEdge { get; set; }
 
+
     public Shell()
     {
         Current = this;
@@ -288,16 +289,18 @@ public sealed class Shell : UserControl
 
     /// <summary>
     /// The system gives the Shell the safe area as its padding. Where <see cref="BarToBottomEdge"/> is set, the bar reaches down through the
-    /// bottom of that padding, its buttons kept where they were and its own surface filling the strip behind the home indicator.
+    /// bottom of that padding, its buttons kept where they were and its own surface filling the strip behind the home indicator; and, entry
+    /// 290 section 6, through the sides too, which an iPhone on its side pads for the camera's island and the home indicator: the bar
+    /// stopped short of both edges there, with the page's color beside it.
     /// </summary>
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (BarToBottomEdge && change.Property == PaddingProperty && nav is not null)
         {
-            double below = Padding.Bottom;
-            nav.Margin = new Thickness(0, 0, 0, -below);
-            nav.Padding = new Thickness(0, GroupLab.App.Theme.Tokens.Space4, 0, GroupLab.App.Theme.Tokens.Space8 + below);
+            var safe = Padding;
+            nav.Margin = new Thickness(-safe.Left, 0, -safe.Right, -safe.Bottom);
+            nav.Padding = new Thickness(safe.Left, GroupLab.App.Theme.Tokens.Space4, safe.Right, GroupLab.App.Theme.Tokens.Space8 + safe.Bottom);
         }
     }
 
