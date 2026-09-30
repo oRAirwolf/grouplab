@@ -34,6 +34,42 @@
           "kind": "changed"
         }
       ]
+    },
+    "02fb365c31dbfb93f6e70c09b00fab424385da30": {
+      "why": "Nightly 130 refused the note: the checker reads the name of Apple's test service as a code name (as it did for nightly 123).",
+      "notes": [
+        {
+          "note": "GroupLab for iPhone and iPad keeps the image analysis it needs when the application is linked, ahead of the first test build for Apple devices. (Entry 290)",
+          "kind": "internal"
+        }
+      ]
+    },
+    "5042cbb1e0cecca5310adf1439926aeb32aaf99d": {
+      "why": "Nightly 130 refused the note: the checker reads the name of Apple's test service as a code name (as it did for nightly 123).",
+      "notes": [
+        {
+          "note": "GroupLab for iPhone and iPad keeps its settings and records working in the release build, ahead of the first test build for Apple devices. (Entry 290)",
+          "kind": "internal"
+        }
+      ]
+    },
+    "67e8f1686b110f64c48abf4aedf3559e081dee68": {
+      "why": "Nightly 130 refused the note: the checker reads the name of Apple's test service as a code name (as it did for nightly 123).",
+      "notes": [
+        {
+          "note": "GroupLab for iPhone and iPad now builds with the Xcode 26 tools, ahead of the first test build for Apple devices. (Entry 290)",
+          "kind": "internal"
+        }
+      ]
+    },
+    "ddbd3e51616fd96ed84e6277226b6984207b8541": {
+      "why": "Nightly 130 refused the note: the checker reads the name of Apple's test service as a code name (as it did for nightly 123).",
+      "notes": [
+        {
+          "note": "GroupLab for iPhone and iPad now builds and is tested on the simulator, ahead of the first test build for Apple devices. (Entry 290)",
+          "kind": "internal"
+        }
+      ]
     }
   }
 }
