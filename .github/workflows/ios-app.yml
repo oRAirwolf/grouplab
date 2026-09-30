@@ -146,7 +146,7 @@ jobs:
           xcrun simctl status_bar "$udid" override --time 9:41 --batteryState charged --batteryLevel 100 || true
           echo "UDID=$udid" >> "$GITHUB_ENV"
           # Entry 290 section 6: an iPad beside it for the wide screens, an iPad mini where the runner has one since that is the device
-          # the sittings use. Booted now and waited for later, so its start overlaps the self-test.
+          # the sittings use. Booted after the self-test, whose own time a second simulator starting beside it doubled on a slow runner.
           ipad=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
@@ -155,7 +155,6 @@ jobs:
           print(found[-1][1]["udid"] if found else "")')
           if [ -n "$ipad" ]; then
             xcrun simctl list devices | grep "$ipad"
-            xcrun simctl boot "$ipad"
             echo "IPAD=$ipad" >> "$GITHUB_ENV"
           else
             echo "::warning::No iOS 26 iPad simulator on this runner"
@@ -181,7 +180,7 @@ jobs:
           cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
 
       - name: Self-test
-        timeout-minutes: 30
+        timeout-minutes: 35
         run: |
           folder="$DATA/Documents/selftest"
           rm -f "$folder/status" "$folder/showing" "$folder/taken" "$folder/results.json"
@@ -189,10 +188,11 @@ jobs:
           launcher=$!
           # Each screen the self-test names in showing is photographed, and the name written back in taken, before it moves on. The
           # launcher ends when the application does, so an application that stopped is seen at once rather than at the time limit.
+          # The limit is 1900 s since a slow runner was still at Compare after 1500 (entry 290 section 6, run 36688921677).
           last=""
           status=""
           start=$(date +%s)
-          while [ $(( $(date +%s) - start )) -lt 1500 ]; do
+          while [ $(( $(date +%s) - start )) -lt 1900 ]; do
             status=$(cat "$folder/status" 2>/dev/null || true)
             showing=$(cat "$folder/showing" 2>/dev/null || true)
             if [ -n "$showing" ] && [ "$showing" != "$last" ]; then
@@ -262,6 +262,8 @@ jobs:
             test -f "$out/results.json" && ls "$out" | grep -q -- '-chosen-picture\.png$'
           }
           failed=0
+          # The iPad starts while the iPhone's tour runs.
+          [ -z "$IPAD" ] || xcrun simctl boot "$IPAD"
           tour "$UDID" shots/landscape --screens --landscape || failed=1
           if [ -n "$IPAD" ]; then
             xcrun simctl bootstatus "$IPAD" -b > /dev/null
