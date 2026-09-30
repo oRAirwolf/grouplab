@@ -40,6 +40,9 @@ def _testflight():
     """scripts/testflight.py, for its App Store Connect client, token and key reading."""
     spec = importlib.util.spec_from_file_location("testflight", HERE / "testflight.py")
     module = importlib.util.module_from_spec(spec)
+    # Registered before it runs: its dataclasses look their module up by name, and one missing from sys.modules stops the import
+    # (the testflight run of nightly 137, 2026-09-30).
+    sys.modules.setdefault("testflight", module)
     spec.loader.exec_module(module)
     return module
 
