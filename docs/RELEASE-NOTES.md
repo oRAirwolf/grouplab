@@ -12,6 +12,26 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.134
+
+**2026-09-30**, commit `b26bcb9`. Nightly.
+
+**What you will notice**
+
+- An error report that could appear after comparing sessions and running the benchmark, when GroupLab was opened again over another screen, no longer happens. (Crash reports 9 and 10).
+
+**Under the hood**
+
+- When Apple refuses to approve a Mac build, the build log now lists Apple's reasons so the problem can be fixed the same day. (Request 55).
+- On iPhone and iPad, ahead of the first test build for Apple devices, Export all my data no longer stops partway when rifles, barrels or loads are saved.
+- On iPhone and iPad a GroupLab data file opened from Files now shows in Settings what importing it would add.
+- On iPhone and iPad the torch on Auto now comes on gently, steps up only while the paper is dim, and dims or goes off on glare.
+- The iPhone and iPad test run follows the new Capture start with Choose a photo and its links.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.134)
+
+---
+
 ## 0.2.0-nightly.133
 
 **2026-09-30**, commit `33bcca2`. Nightly.
@@ -534,7 +554,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - Toggles beside the plot turn the CEP 50, CEP 90 and CEP 95 circles and the extreme spread line on and off, GroupLab remembers them, and the saved report draws the same marks.
 - The composite group plot is easier to read: the bull's rings are pale, the shot outlines lighter, the CEP circles green and bolder with CEP 95 added, and the group center and your point of aim are green and blue lines across the whole plot.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.104)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
