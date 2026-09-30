@@ -17,7 +17,7 @@
     <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
     <RootNamespace>GroupLab.Share</RootNamespace>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <!-- The extension's own App Store profile in the nightly's signed publish (scripts/ios-signing.py --properties). -->
+    <!-- The extension's own App Store profile in the nightly's signed publish (the properties scripts/ios-signing.py builds). -->
     <CodesignProvision Condition="'$(GroupLabShareProvision)' != ''">$(GroupLabShareProvision)</CodesignProvision>
     <!--
       Entitlements would make the build ask for a provisioning profile even for the simulator, which needs none: there it is signed ad hoc
