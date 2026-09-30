@@ -299,11 +299,19 @@ public static class LiveSheet
                 continue;
             }
 
+            // Crash report 9: a sheet the renderer refuses (one of a person's own that no longer validates) has no page to compare with,
+            // and indexing its first page threw inside a reading on the iPad mini. It is passed over, as a sheet the markers do not fit is.
+            var pages = Rendering.SceneBuilder.Build(candidate).Pages;
+            if (pages.Count == 0)
+            {
+                continue;
+            }
+
             double dmmPerPixel = 254 / CompareDpi;
             int w = (int)(candidate.Page.Width / dmmPerPixel), h = (int)(candidate.Page.Height / dmmPerPixel);
             var toRectified = Homography.Compose(pageToImage.Inverse(), new Homography([1 / dmmPerPixel, 0, 0, 0, 1 / dmmPerPixel, 0, 0, 0, 1]));
             var rectified = PortableImaging.WarpPerspective(image, toRectified, w, h);
-            var drawing = Rendering.SceneRasterizer.Rasterize(Rendering.SceneBuilder.Build(candidate).Pages[0], CompareDpi);
+            var drawing = Rendering.SceneRasterizer.Rasterize(pages[0], CompareDpi);
             scored.Add((candidate, Correlation(rectified, drawing)));
         }
 

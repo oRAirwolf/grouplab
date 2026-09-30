@@ -43,6 +43,24 @@ public class SheetsByMarkersTests
     }
 
     /// <summary>
+    /// Crash report 9, read from the iPad mini's own log over USB: an index out of range in the comparison, from a candidate the renderer
+    /// refuses and so has no page. Such a sheet is passed over and the one drawn is still chosen.
+    /// </summary>
+    [Fact]
+    public void ASheetThatCannotBeDrawnIsPassedOverNotThrown()
+    {
+        var library = BuiltIns.Files.Select(BuiltIns.Load).ToList();
+        var backend = new OpenCvSharpBackend();
+        var definition = library.First(d => d.Name.StartsWith("GroupLab 5x5 Load Development", StringComparison.Ordinal));
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], 100);
+        var broken = definition with { Name = definition.Name + ", broken", Bulls = [.. definition.Bulls.Select(b => b with { RingSet = "missing" })] };
+        Assert.Empty(SceneBuilder.Build(broken).Pages);
+
+        var sameLayout = LiveSheet.SheetsByMarkers(render, library, backend).Append(broken).ToList();
+        Assert.Equal(definition.Name, LiveSheet.MostAlike(render, sameLayout, backend)?.Name);
+    }
+
+    /// <summary>
     /// Entry 282 section 5: each code cut out where the markers put it, and read enlarged. At 100 dpi a module is about 1.6 pixels, too few to
     /// read as it stands, and a cut-out read at up to four times holds it.
     /// </summary>
