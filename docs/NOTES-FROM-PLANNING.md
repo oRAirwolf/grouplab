@@ -24,6 +24,26 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 307: export everything to one file, and import it on any GroupLab
+
+**Status: done 2026-09-30 but the iOS "Open in" for a .grouplab file, which goes to the iOS worker.** "Export all my data" writes one .grouplab file (sessions with their pictures and marks, rifles, barrels and loads, designed sheets, printers and units), and "Import data" on any GroupLab shows what it will add, skips what is already there, and lists what differs, keeping the local copy. Settings, "Your data", on the desktop and the phone; Android opens a shared .grouplab file straight into it. Round trip desktop to phone to desktop identical; 300 sessions in about a second; a newer or damaged file refused in plain words.
+
+From planning, 2026-09-30, for Alan: "make the ability to export all of your data from any of the apps into a file that any of the
+applications can read and import ... as a stop gap" until cloud backup.
+
+1. **Settings, "Export all my data"**, on the desktop, Android and iOS: one file with every session (with its pictures and marks),
+   rifles, barrels, loads and equipment, printers and their checks, designed sheets, and settings. One format for every platform, with a
+   version number, readable by every build from this one on.
+2. **"Import data"** reads that file on any platform. It merges: nothing already there is overwritten or duplicated (match by each
+   item's id); conflicts are listed before anything is written; the import can be cancelled.
+3. **Saving and opening** use each platform's own way: a save dialog on the desktop, Android's file picker and share sheet, iOS Files and
+   the share sheet. On the phone, opening such a file from another app offers to import it.
+4. **Privacy:** the export follows the app's existing rules for photo metadata and says so on the export screen. The file stays with
+   the person; nothing is sent anywhere.
+5. **Tests:** round trip desktop to phone to desktop with identical results, an old-version file, a damaged file refused with a clear
+   message, and a large library (hundreds of sessions with pictures) within reasonable time and memory.
+6. Guide section, site feature line, README line (rule c). Mention in entry 305's download text that Dev's data can be moved this way.
+
 ## 2026-09-30, entry 305: the download page recommends GroupLab Dev for Android testing, and mentions Play Protect
 
 **Status: done 2026-09-30.** The download page puts GroupLab Dev first in the Android row as the recommended download: it updates itself from every nightly with no computer after the first install, installs beside the Play test copy, and sends its logs easily; a nightly can break something, said plainly. The plain APK says it does not update itself. A panel explains Google Play Protect's scan. The README and the user guide say the same.
