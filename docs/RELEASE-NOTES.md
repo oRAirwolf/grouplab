@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.141
+
+**2026-09-30**, commit `70a098e`. Nightly.
+
+**What you will notice**
+
+- A mark much bigger than your bullet is now ringed in amber on the result, on the phone as well as the desktop, with a sentence saying how many times your bullet across it is, until you confirm the shot is on the hole or move it.
+- On a target photographed well off square, a sliver of printed ring beside a bull on the far side is no longer counted as an extra shot.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.141)
+
+---
+
 ## 0.2.0-nightly.140
 
 **2026-09-30**, commit `90ee7ff`. Nightly.
