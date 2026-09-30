@@ -9,8 +9,10 @@ Each of its parts is reported as what it measured, not as an assertion that it w
 
 ## 1. What the capture screen does
 
-**C1. Guided and Manual (entry 260).** In **Guided**, the default, the user frames the sheet and the shutter fires by itself after three
-ready frames in a row, when every condition of C2 holds; the shutter can be pressed sooner. In **Manual** it never fires by itself: the
+**C1. Guided and Manual (entry 260).** In **Guided**, the default, the user frames the sheet and the shutter fires by itself once every
+frame for 0.6 seconds, and at least two, has been judged ready on its own, every condition of C2 holding (entry 311 section 1, the same on
+Android and iOS; it was three frames in a row after the words' half second hold, about 2.7 seconds at the Fold 7's median frame of 892
+ms); the shutter can be pressed sooner. In **Manual** it never fires by itself: the
 user frames it and presses, and the guidance still shows, as a hint that never blocks. The mode is chosen under the shutter and
 remembered. Both check every picture afterwards (section 6). `CaptureScreenTests.TheShutterFiresOnlyWhenEveryConditionHolds`.
 

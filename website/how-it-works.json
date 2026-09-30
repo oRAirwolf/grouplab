@@ -124,9 +124,9 @@
    "value": "1920 × 1440",
    "source": "android/GroupLab.Android/CameraView.cs (AnalysisSize)"
   },
-  "ready-frames": {
-   "value": "3",
-   "source": "android/GroupLab.Android/CameraView.cs (ReadyFrames)"
+  "ready-steady": {
+   "value": "0.6 seconds",
+   "source": "src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs)"
   },
   "ci-systems": {
    "value": "3",
@@ -1093,7 +1093,7 @@
       "sub": "phone and tablet",
       "path": "android/GroupLab.Android",
       "summary": [
-       "The same Core on the phone, with OpenCV built from source for arm64. The camera screen analyzes a {fig:android-stream} stream live (CameraX's default is {fig:camerax-default}, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires after {fig:ready-frames} ready frames in a row. Every picture is then checked and scored. Its screens are one shared project, mobile/GroupLab.Mobile, a plain .NET library the iPhone and iPad build links too, and only the camera, printing, sharing and updating are Android's own."
+       "The same Core on the phone, with OpenCV built from source for arm64. The camera screen analyzes a {fig:android-stream} stream live (CameraX's default is {fig:camerax-default}, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires once every frame for {fig:ready-steady} has been judged ready. Every picture is then checked and scored. Its screens are one shared project, mobile/GroupLab.Mobile, a plain .NET library the iPhone and iPad build links too, and only the camera, printing, sharing and updating are Android's own."
       ],
       "numbers": [
        {
@@ -1101,8 +1101,8 @@
         "label": "live analysis stream"
        },
        {
-        "value": "{fig:ready-frames} frames",
-        "label": "in a row before Guided fires"
+        "value": "{fig:ready-steady}",
+        "label": "judged ready before Guided fires"
        },
        {
         "value": "< {fig:score-retake}",
@@ -3090,7 +3090,7 @@
          "title": "The camera",
          "text": [
           "One instruction at a time, in order: move back, move closer, less angle, hold steadier, more or less light.",
-          "Guided mode fires after {fig:ready-frames} ready frames in a row; every picture is then checked and scored."
+          "Guided mode fires once every frame for {fig:ready-steady} has been judged ready; every picture is then checked and scored."
          ],
          "badge": "Phone"
         }

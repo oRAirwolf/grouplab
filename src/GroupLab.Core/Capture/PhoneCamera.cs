@@ -18,9 +18,6 @@ public static class PhoneCamera
 
     public const int AnalysisHeight = 1440;
 
-    /// <summary>Ready frames in a row before Guided mode fires the shutter by itself (docs/MOBILE-CAPTURE.md item C1), as on Android.</summary>
-    public const int ReadyFrames = 3;
-
     /// <summary>Whether a size has the sensor's own 4:3 shape, either way round.</summary>
     public static bool IsFourByThree(int width, int height) =>
         width > 0 && height > 0 && ((long)width * 3 == (long)height * 4 || (long)height * 3 == (long)width * 4);

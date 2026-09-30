@@ -26,8 +26,8 @@ namespace GroupLab.Android;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 items A2 and A4, and entry 260: the capture screen. Everything on it is <see cref="CaptureScreen"/>, Android's
 /// own views around CameraX's preview, because a native view hosted in an Avalonia screen covers whatever Avalonia draws in its place: on
-/// 2026-09-28 the instruction, the Take button and Back were all there and none could be seen. In Guided mode the shutter fires by itself after
-/// <see cref="CameraSession.ReadyFrames"/> ready frames in a row (docs/MOBILE-CAPTURE.md item C1) and can be pressed sooner; in Manual it fires
+/// 2026-09-28 the instruction, the Take button and Back were all there and none could be seen. In Guided mode the shutter fires by itself once
+/// the frames have been judged ready for <see cref="AutoShutter.SteadyMs"/> (docs/MOBILE-CAPTURE.md item C1) and can be pressed sooner; in Manual it fires
 /// only when pressed, with the guidance still shown as a hint. The mode and the torch are remembered. The still goes to the application's
 /// cache and is handed on to be analyzed and checked; the cache copy is deleted once it has been.
 /// </summary>
@@ -80,9 +80,6 @@ public sealed class CameraView : UserControl
 /// <summary>The camera itself: preview, a still at the largest size in maximum quality, and the analysis stream the guidance runs on.</summary>
 internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
 {
-    /// <summary>Ready frames in a row before Guided mode fires the shutter.</summary>
-    public const int ReadyFrames = 3;
-
     /// <summary>
     /// The analysis stream's size. CameraX's default, 640 by 480, left a sheet's square codes at about a pixel a module, so the Fold 7 never
     /// knew the sheet; at 1920 by 1440 a Letter sheet across half the frame gives its markers about 20 pixels a side.
@@ -103,7 +100,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
     private ImageCapture still;
     private TargetDefinition definition;
     private bool definitionFromCodes;
-    private int readyInARow;
+    private readonly AutoShutter auto = new();
     private bool taking;
     private bool manual;
     private int torchChoice;
@@ -156,7 +153,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         screen.ModeChosen += chosen =>
         {
             manual = chosen;
-            readyInARow = 0;
+            auto.Reset();
             screen.Shutter.Progress = 0;
             screen.ShowMode(manual);
             Phone.Settings.SaveCaptureManual(manual);
@@ -286,7 +283,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         }
 
         steadier.Reset();
-        readyInARow = 0;
+        auto.Reset();
         Start();
         DiagnosticLog.Info("camera.resume");
     }
@@ -418,17 +415,18 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
                 }
             }
 
-            readyInARow = verdict.Say == Instruction.Ready && card != false ? readyInARow + 1 : 0;
+            // Entry 311 section 1: taken once every frame for AutoShutter.SteadyMs has been judged ready on its own, the same on iOS.
+            bool fire = auto.Next(steadier.Decided, card != false, now);
             int? forecast = verdict.Quality is { } quality ? PictureCheck.Forecast(quality) : null;
+            float progress = manual ? 0 : fire ? 1 : (float)auto.Progress;
             screen.Post(() =>
             {
                 screen.Show(verdict, forecast, torchOn, card);
-                screen.Shutter.Progress = manual ? 0 : (float)readyInARow / ReadyFrames;
+                screen.Shutter.Progress = progress;
             });
-            if (!manual && readyInARow >= ReadyFrames && !taking)
+            if (!manual && fire && !taking)
             {
-                readyInARow = 0;
-                DiagnosticLog.Info("camera.auto", ("afterReadyMs", now - readySince), ("ms", now));
+                DiagnosticLog.Info("camera.auto", ("afterReadyMs", now - readySince), ("steadyMs", auto.ReadyMs), ("ms", now));
                 Take("guided, by itself");
             }
         }
