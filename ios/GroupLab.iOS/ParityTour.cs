@@ -73,8 +73,8 @@ internal static class ParityTour
 
     private static string? Words(Control control) => control switch
     {
+        // A radio button is a button too.
         Button { Content: TextBlock t } => t.Text,
-        RadioButton { Content: TextBlock t } => t.Text,
         TextBlock t => t.Text,
         _ => null,
     };
@@ -375,8 +375,7 @@ internal static class ParityTour
             return check;
         }
 
-        await Seen(check, () => targets!.GetLogicalDescendants().OfType<TextBlock>().Any(t => t.Text == name && t.Classes.Contains(PhoneStyles.Title))
-            || targets.GetLogicalDescendants().OfType<TextBlock>().Count(t => t.Text == name) > 0 && ButtonOf(targets, "Print") is not null, name);
+        await Seen(check, () => targets!.GetLogicalDescendants().OfType<TextBlock>().Any(t => t.Text == name && t.Classes.Contains(PhoneStyles.Title)), name);
         if (also is not null)
         {
             bool has = await SelfTest.OnUi(() => ButtonOf(targets!, also) is not null);
