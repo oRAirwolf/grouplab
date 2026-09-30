@@ -439,13 +439,23 @@ def term_problems() -> list[str]:
 
 
 
+# Entry 304 section 3: the items the top bar moves into its More menu on a window too narrow to hold every item on one line.
+NAV_MORE = {"Community", "Release notes", "Support"}
+
+
 def shell(path: str, title: str, description: str, body: str, active: str = "") -> str:
     full_title = "GroupLab" if not title else f"{title} | GroupLab"
     links = []
+    menu_links = []
     for label, href in nav():
         cur = ' aria-current="page"' if label == active else ""
-        links.append(f'<a href="{href}"{cur}>{esc(label)}</a>')
+        more = label in NAV_MORE
+        bar_class = ' class="nav-more"' if more else ""
+        menu_class = "" if more else ' class="menu-main"'
+        links.append(f'<a href="{href}"{cur}{bar_class}>{esc(label)}</a>')
+        menu_links.append(f'<a href="{href}"{cur}{menu_class}>{esc(label)}</a>')
     nav_links = "\n".join(links)
+    menu = "\n".join(menu_links)
     year = datetime.date.today().year
     return f"""<!doctype html>
 <html lang="en">
@@ -482,14 +492,14 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <a class="brand" href="/" aria-label="GroupLab home">{logo()}</a>
 <nav class="nav" aria-label="Main">
 {nav_links}
-<a href="{GITHUB}" class="gh">{ICON_GITHUB}<span>GitHub</span></a>
+<a href="{GITHUB}" class="gh nav-more">{ICON_GITHUB}<span>GitHub</span></a>
 </nav>
 <div class="header-tools">
 <button type="button" class="theme-toggle" aria-label="Switch between dark and light">{ICON_THEME}</button>
 <details class="menu">
-<summary aria-label="Menu">{ICON_MENU}</summary>
+<summary aria-label="Menu">{ICON_MENU}<span class="menu-word">More</span></summary>
 <nav class="menu-panel" aria-label="Main">
-{nav_links}
+{menu}
 <a href="{GITHUB}">GitHub</a>
 </nav>
 </details>
@@ -555,6 +565,15 @@ def screen(name: str, alt: str, eager: bool = False, cls: str = "shot") -> str:
         f'<img class="{cls} only-dark" src="/assets/screens/{base}-dark-1400x900.webp" alt="{esc(alt)}" width="1400" height="900" {load} decoding="async">'
         f'<img class="{cls} only-light" src="/assets/screens/{base}-light-1400x900.webp" alt="{esc(alt)}" width="1400" height="900" loading="lazy" decoding="async">'
     )
+
+
+def screen_link(name: str, alt: str) -> str:
+    """Entry 304 section 2: a screenshot as large as its box allows, in both themes, each opening full size on a click."""
+    base = name.replace("-dark", "").replace("-light", "")
+    return "".join(
+        f'<a class="plain only-{theme} shot-link" href="/assets/screens/{base}-{theme}-1400x900.webp" aria-label="{esc(alt)}, full size">'
+        f'<img class="shot" src="/assets/screens/{base}-{theme}-1400x900.webp" alt="{esc(alt)}" width="1400" height="900" loading="lazy" decoding="async"></a>'
+        for theme in ("dark", "light"))
 
 
 def phone_themes(name: str) -> list[str]:
@@ -1848,11 +1867,11 @@ def page_tour_index() -> str:
         )
 
     body = f"""
-<section class="wrap stack">
+<section class="wrap stack page-top">
 <h1>A tour of GroupLab</h1>
 <p class="small"><a href="/tour/how-it-works/">Behind the curtain: how GroupLab works &#8594;</a></p>
 <p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
-<div class="note note-teal"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample, or on the phone under a crosshair. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
+<div class="note note-teal note-figure"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample, or on the phone under a crosshair. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen_link("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
 {platform_switch()}
 {shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
 {shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}
@@ -2431,7 +2450,14 @@ p.text,.text p,.text{color:var(--text)}
 .logo{height:30px;width:auto;display:block}
 .logo.small{height:22px}
 .nav{display:flex;align-items:center;gap:32px;margin-left:auto}
-.nav a{color:var(--dim);font-size:15px;padding:10px 0;border-bottom:2px solid transparent}
+.nav a{color:var(--dim);font-size:15px;padding:10px 0;border-bottom:2px solid transparent;white-space:nowrap}
+.site-header .wrap{max-width:1440px}
+.menu-word{display:none;margin-left:6px;font-size:15px}
+.page-top{padding-top:72px}
+.note.note-figure{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;row-gap:16px}
+.note-figure>*{min-width:0}
+.note-figure .shot-link{grid-column:1 / -1}
+.note-figure .shot-link img{max-width:100%}
 .nav a:hover{color:var(--text);text-decoration:none}
 .nav a[aria-current="page"]{color:var(--text);border-bottom-color:var(--amber)}
 .nav .gh{display:flex;align-items:center;gap:8px}
@@ -2664,6 +2690,15 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .small-callout h2{font-family:"IBM Plex Sans",sans-serif;font-size:19px;letter-spacing:0}
 .two-col.bottom{align-items:center}
 
+/* Entry 304 section 3: below the width that holds every item on one line, the last few move into More rather than wrap. */
+@media (max-width:1499px) and (min-width:861px){
+.nav .nav-more{display:none}
+.menu{display:block}
+.menu summary{width:auto;padding:0 12px}
+.menu-word{display:inline}
+.menu-panel .menu-main{display:none}
+}
+
 /* narrower screens */
 @media (max-width:1100px){
 .wrap{padding-left:40px;padding-right:40px}
@@ -2682,6 +2717,8 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .section{padding-top:72px}
 .last{padding-bottom:72px}
 .page-head{padding-top:40px}
+.page-top{padding-top:40px}
+.note.note-figure{grid-template-columns:minmax(0,1fr)}
 .two-col,.grid-2,.callout{grid-template-columns:repeat(1,minmax(0,1fr))}
 .callout{padding:28px 24px}
 .steps{grid-template-columns:repeat(1,minmax(0,1fr))}

@@ -4436,6 +4436,38 @@
   "**Against section 1's table.** The scratch script of 2026-09-28 was deleted, so the exact geometry of each condition was not kept; the scoreboard now fixes it in code.": {
    "kind": "measured",
    "where": "docs/scoreboard/synthetic-baseline.json, measured 2026-09-29 (entry 291 section 7)"
+  },
+  "Page not found | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "Guides | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Guides Guides Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page Mil or MOA 1.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android Measure how accurately your rifle shoots, and how little a small group can tell you.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "How GroupLab works: the map | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
   }
  },
  "rules": [
