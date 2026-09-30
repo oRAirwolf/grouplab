@@ -33,6 +33,20 @@ public static class AppInfo
         }
     }
 
+    /// <summary>
+    /// <see cref="Version"/> as a person reads it on a phone, entry 290 section 6: the commit after the plus sign cut to its first seven
+    /// characters, as git shortens it, since the whole forty wrapped onto a line of their own. Logs, error reports, exported files and the
+    /// update check keep <see cref="Version"/> whole.
+    /// </summary>
+    public static string ShortVersion => Shortened(Version);
+
+    /// <summary>Any version string with its commit cut to seven characters, such as the version an exported file says it came from.</summary>
+    public static string Shortened(string version)
+    {
+        int plus = version.IndexOf('+', StringComparison.Ordinal);
+        return plus < 0 || version.Length - plus - 1 <= 7 ? version : version[..(plus + 8)];
+    }
+
     /// <summary>The train the build was stamped with, or null for a build nobody published.</summary>
     public static string? Train { get; } =
         typeof(AppInfo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GroupLabTrain")?.Value;

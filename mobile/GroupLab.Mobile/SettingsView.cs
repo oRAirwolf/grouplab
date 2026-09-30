@@ -296,7 +296,7 @@ public sealed class SettingsView : UserControl
         column.Children.Add(layoutSaid);
 
         column.Children.Add(Screens.Heading("About"));
-        var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.Version}"));
+        var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.ShortVersion}"));
         column.Children.Add(about);
         // Entry 288: the updater's version, its train's newest, Update now and the automatic switch, in a build that has one.
         if (Phone.Platform.UpdateCard() is { } updates)
