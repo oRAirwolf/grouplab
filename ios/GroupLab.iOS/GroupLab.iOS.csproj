@@ -59,6 +59,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
+      Entry 307: JSON reads and writes the immutable lists of a data file (the rifles, barrels and loads) through the collection's own
+      factory methods, found by reflection, which the SDK's trimming removed; Export all my data stopped with "ImmutableList is not
+      supported" on the simulator. The assembly is kept whole.
+    -->
+    <TrimmerRootAssembly Include="System.Collections.Immutable" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Each file names the Apple namespaces it uses, so an Avalonia or OpenCV name is never read as a UIKit one. -->
     <Using Remove="UIKit" />
     <Using Remove="Foundation" />
