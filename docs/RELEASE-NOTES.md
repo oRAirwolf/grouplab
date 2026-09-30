@@ -12,6 +12,40 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.137
+
+**2026-09-30**, commit `b8e500c`. Nightly.
+
+**What you will notice**
+
+- Settings, About has a new switch, Show diagnostics on the camera, off until you turn it on: it shows a few numbers over the camera and while a picture is read, such as the frame rate, what the guidance is waiting for, the tilt, the step being read, memory and how warm the phone is, so a screenshot shows where GroupLab was.
+- The caliber box can now find any of more than six hundred cartridges by name as you type, even written loosely such as 65 creed or 308, and a new setting chooses whether it lists calibers, cartridges or both.
+- Settings, About now has Send diagnostics, which puts GroupLab's logs and any kept pictures in one file and opens the share sheet, so you choose where it goes.
+- On iPhone and iPad, GroupLab's own folder now appears in the Files app, and Settings, About can keep every picture of a sitting there until you turn it off.
+- The line on Capture asking you to allow the camera now goes away once you have allowed it, instead of staying under the buttons.
+- On Compare, two loads with the same extreme spread now sit at the same place on the chart, instead of at opposite ends of it.
+- Pressing Calculate again on Shots Needed to Zero no longer closes GroupLab on the iPhone and iPad, and pressing Work it out twice on Ballistics is safe too. (Build 134 error report).
+- A picture whose codes are hard to read is now read in about half the time on the phone, using much less memory.
+- On iPhone and iPad the level on the camera screen now turns its whole crosshair green when the device is flat, as it does on Android, so level is plain at a glance.
+- On iPhone and iPad the camera's instruction panel now sits above the preview instead of over it, so the preview shows the whole picture, and the stray dash beside the quality bar is gone.
+- Cancel now works at once while a picture is being read, keeps the picture so you can read it again or choose its sheet, and a reading that takes over a minute stops and says why instead of spinning.
+- Choosing a caliber now leaves a short name such as 6.5 Creedmoor, 0.264 in, a tap on the box selects it all so you can type a new one straight away, and a clear button empties it, on the phone and the desktop.
+- Distance, click value, velocity and the other number boxes on the iPhone, iPad and Android now open the number pad with a decimal point instead of the full keyboard.
+- Compare's verdict on the phone now says in plain words how far apart the loads' spreads could be and how many shots would tell them apart, with the exact figures under Details.
+- On an iPad, an Android tablet or the open Fold, Compare now draws each load's group large across the whole screen, and a Back to Sessions button sits at the top.
+- In Guided mode the camera now takes the picture about a second after the sheet is framed well, instead of making you hold still for several seconds; what counts as well framed is unchanged.
+
+**Under the hood**
+
+- Fixes to today's changes before they reach a build: the camera diagnostics text wraps on a narrow screen, and the caliber box's clear button follows the theme.
+- The developer copy of GroupLab can now be driven by a script over the USB cable, pressing buttons by name, reading a picture, taking screenshots and starting over, and only the developer copy has it.
+- A separate development build for iPhone and iPad, GroupLab Dev, is now made every night beside GroupLab, for testing only; GroupLab itself carries none of its tools.
+- GroupLab Dev can now run a written list of steps by itself and save what happened, with pictures of each screen, for testing without anyone's hands.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.137)
+
+---
+
 ## 0.2.0-nightly.136
 
 **2026-09-30**, commit `4cd9a2a`. Nightly.
