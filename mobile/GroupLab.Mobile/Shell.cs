@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input.TextInput;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Button = Avalonia.Controls.Button;
@@ -531,6 +532,37 @@ internal static class Screens
         var bar = new Avalonia.Controls.ProgressBar { IsIndeterminate = true, MinHeight = 6 };
         var cancel = new Button { Content = new TextBlock { Text = "Cancel" }, HorizontalAlignment = HorizontalAlignment.Left };
         return (Page(new StackPanel { Spacing = 12, Children = { Title(heading), Card(bar, line), cancel } }), line, cancel);
+    }
+
+    /// <summary>
+    /// Whether the number pad a numeric field opens has a minus sign. Android's does; the iOS decimal pad does not, so the iOS head sets
+    /// this false and a field that may be below zero, such as the air's temperature, keeps the full keyboard there.
+    /// </summary>
+    internal static bool NumberPadHasMinus { get; set; } = true;
+
+    /// <summary>
+    /// Entry 312 section 4: a field that takes a number opens the number pad with a decimal point, the iOS decimal pad and Android's number
+    /// keyboard with a decimal, not the full keyboard. <paramref name="signed"/> marks a field that may be below zero.
+    /// </summary>
+    public static TextBox Numeric(TextBox box, bool signed = false)
+    {
+        if (!signed || NumberPadHasMinus)
+        {
+            TextInputOptions.SetContentType(box, TextInputContentType.Number);
+        }
+
+        return box;
+    }
+
+    /// <summary>
+    /// A number typed in a numeric field: in the phone's own form first, since the decimal pad gives a comma where the language uses one,
+    /// then with a point, as the fields are filled.
+    /// </summary>
+    public static double? Read(string? text)
+    {
+        string t = (text ?? "").Trim();
+        return double.TryParse(t, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.CurrentCulture, out double v)
+            || double.TryParse(t, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v) ? v : null;
     }
 
     /// <summary>

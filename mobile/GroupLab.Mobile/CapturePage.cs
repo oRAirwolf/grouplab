@@ -41,7 +41,7 @@ public sealed class CapturePage : UserControl
         MinHeight = Screens.Touch,
     }.Id("capture-caliber");
 
-    private readonly TextBox distance = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "Distance" }.Id("capture-distance");
+    private readonly TextBox distance = Screens.Numeric(new() { MinHeight = Screens.Touch, PlaceholderText = "Distance" }).Id("capture-distance");
     private readonly Control start;
 
     public CapturePage()

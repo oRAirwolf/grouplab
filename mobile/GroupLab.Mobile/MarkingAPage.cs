@@ -39,7 +39,7 @@ internal sealed class MarkingAPage : UserControl
     private readonly Action cancel;
     private readonly TextBlock title = Screens.Title("");
     private readonly TextBlock words = Screens.Line("");
-    private readonly TextBox length = new() { MinHeight = Screens.Touch };
+    private readonly TextBox length = Screens.Numeric(new() { MinHeight = Screens.Touch });
     private readonly Button main = Screens.Primary("", () => { });
     private readonly Button undo = Screens.Choice("Undo", () => { });
     private readonly Button next = Screens.Choice("", () => { });

@@ -36,11 +36,11 @@ internal sealed class BallisticsPage : UserControl
     private AirInput air = new();
     private string open = "";
     private string tab = "Dope";
-    private readonly TextBox to = Field("1000");
-    private readonly TextBox every = Field("100");
-    private readonly TextBox range = Field("600");
-    private readonly TextBox wind = Field("10");
-    private readonly TextBox otherSize = Field("");
+    private readonly TextBox to = Screens.Numeric(Field("1000"));
+    private readonly TextBox every = Screens.Numeric(Field("100"));
+    private readonly TextBox range = Screens.Numeric(Field("600"));
+    private readonly TextBox wind = Screens.Numeric(Field("10"));
+    private readonly TextBox otherSize = Screens.Numeric(Field(""));
     private string target = "10 in plate";
     private int preset = 1;
 
@@ -359,12 +359,12 @@ internal sealed class BallisticsPage : UserControl
     {
         var r = RifleChosen;
         var name = Field(r?.Name ?? "My rifle");
-        var sight = Field(r?.SightHeightInches?.ToString("0.##", CultureInfo.InvariantCulture) ?? "1.75");
-        var zero = Field(r?.ZeroDistanceYards?.ToString("0", CultureInfo.InvariantCulture) ?? "100");
+        var sight = Screens.Numeric(Field(r?.SightHeightInches?.ToString("0.##", CultureInfo.InvariantCulture) ?? "1.75"));
+        var zero = Screens.Numeric(Field(r?.ZeroDistanceYards?.ToString("0", CultureInfo.InvariantCulture) ?? "100"));
         // Entry 294 section 1: the scope's unit and click as chips, 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other typed in mil or MOA;
         // a new rifle starts in the scope unit Settings has.
         var usual = r is null ? ScopeClicks.Usual(units.Angular) : (r.ClickValue, r.ClickUnit);
-        var click = Field(usual.Item1.ToString("0.###", CultureInfo.InvariantCulture));
+        var click = Screens.Numeric(Field(usual.Item1.ToString("0.###", CultureInfo.InvariantCulture)));
         bool mil = usual.Item2 == AngularUnit.Mrad;
         var unitChips = new WrapPanel();
         var typedUnit = new WrapPanel();
@@ -412,10 +412,10 @@ internal sealed class BallisticsPage : UserControl
     {
         var l = LoadChosen;
         var name = Field(l?.Name ?? "My load");
-        var speed = Field(l?.MuzzleVelocityFps?.ToString("0", CultureInfo.InvariantCulture) ?? "");
-        var sd = Field(l?.MuzzleVelocitySdFps?.ToString("0.#", CultureInfo.InvariantCulture) ?? "");
-        var bc = Field(l?.BallisticCoefficient?.ToString("0.###", CultureInfo.InvariantCulture) ?? "");
-        var weight = Field(l?.BulletWeightGrains?.ToString("0.#", CultureInfo.InvariantCulture) ?? "");
+        var speed = Screens.Numeric(Field(l?.MuzzleVelocityFps?.ToString("0", CultureInfo.InvariantCulture) ?? ""));
+        var sd = Screens.Numeric(Field(l?.MuzzleVelocitySdFps?.ToString("0.#", CultureInfo.InvariantCulture) ?? ""));
+        var bc = Screens.Numeric(Field(l?.BallisticCoefficient?.ToString("0.###", CultureInfo.InvariantCulture) ?? ""));
+        var weight = Screens.Numeric(Field(l?.BulletWeightGrains?.ToString("0.#", CultureInfo.InvariantCulture) ?? ""));
         var g7 = new CheckBox { Content = "G7 (off: G1)", IsChecked = l?.DragModel == DragModel.G7, MinHeight = Screens.Touch };
         return Screens.Card(Screens.Heading("The load"), Picker(book.Loads.Select(x => x.Name), n => { loadName = n; Build(); }),
             Labeled("Name", name), Labeled("Muzzle velocity, ft/s", speed), Labeled("Velocity SD, ft/s", sd), Labeled("Ballistic coefficient", bc), g7,
@@ -440,9 +440,9 @@ internal sealed class BallisticsPage : UserControl
 
     private Control AirForm()
     {
-        var temperature = Field(air.TemperatureF.ToString("0", CultureInfo.InvariantCulture));
-        var altitude = Field(air.AltitudeFt.ToString("0", CultureInfo.InvariantCulture));
-        var humidity = Field(air.HumidityPct.ToString("0", CultureInfo.InvariantCulture));
+        var temperature = Screens.Numeric(Field(air.TemperatureF.ToString("0", CultureInfo.InvariantCulture)), signed: true);
+        var altitude = Screens.Numeric(Field(air.AltitudeFt.ToString("0", CultureInfo.InvariantCulture)), signed: true);
+        var humidity = Screens.Numeric(Field(air.HumidityPct.ToString("0", CultureInfo.InvariantCulture)));
         return Screens.Card(Screens.Heading("The air"), Labeled("Temperature, °F", temperature), Labeled("Altitude, ft", altitude), Labeled("Humidity, percent", humidity),
             Screens.Primary("Use this air", () =>
             {
@@ -482,7 +482,7 @@ internal sealed class BallisticsPage : UserControl
     /// <summary>A label over its field. To, Every, Range and the rest are kept between builds, so each leaves the last build's row first.</summary>
     private static Control Labeled(string label, Control field) => new StackPanel { Spacing = 2, Margin = new Thickness(0, 0, 10, 6), Children = { Screens.Dim(label), Screens.Detach(field) } };
 
-    private static double? Number(TextBox box) => double.TryParse(box.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double v) ? v : null;
+    private static double? Number(TextBox box) => Screens.Read(box.Text);
 
     private static Button Chip(string words, bool on, Action chosen)
     {

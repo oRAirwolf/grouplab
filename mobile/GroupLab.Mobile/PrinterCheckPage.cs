@@ -153,8 +153,8 @@ internal sealed class PrinterCheckPage : UserControl
                 ? "Measure between the centers of the crosshairs: across the top, then down the right side. Each is drawn 150.00 mm apart."
                 : "Measure the two long lines end to end, tick to tick: across the bottom, drawn 190.0 mm, and down the left side, drawn 250.0 mm."));
             var unit = new ComboBox { ItemsSource = new[] { "mm", "in" }, SelectedIndex = 0, MinHeight = Screens.Touch };
-            var across = new TextBox { MinHeight = Screens.Touch, PlaceholderText = caliper ? "Across, 150.00" : "Across, 190.0" };
-            var down = new TextBox { MinHeight = Screens.Touch, PlaceholderText = caliper ? "Down, 150.00" : "Down, 250.0" };
+            var across = Screens.Numeric(new TextBox { MinHeight = Screens.Touch, PlaceholderText = caliper ? "Across, 150.00" : "Across, 190.0" });
+            var down = Screens.Numeric(new TextBox { MinHeight = Screens.Touch, PlaceholderText = caliper ? "Down, 150.00" : "Down, 250.0" });
             column.Children.Add(Screens.Card(across, down, unit));
             column.Children.Add(Screens.Primary("Work it out", () =>
             {

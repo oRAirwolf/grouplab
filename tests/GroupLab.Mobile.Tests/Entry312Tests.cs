@@ -83,6 +83,50 @@ public class Entry312Tests
         window.Close();
     }
 
+    /// <summary>
+    /// Section 4: the distance, the click value, the seed and the rest open the number pad with a decimal point. A field that may be below
+    /// zero asks for it only where the pad has a minus sign, which the iOS decimal pad does not.
+    /// </summary>
+    [AvaloniaFact]
+    public void NumericFieldsOpenTheNumberPad()
+    {
+        if (Phone.Platform is null)
+        {
+            Phone.Start(ThePhone, Avalonia.Application.Current!, () => "US", null);
+        }
+
+        static bool Pad(TextBox box) => Avalonia.Input.TextInput.TextInputOptions.GetContentType(box) == Avalonia.Input.TextInput.TextInputContentType.Number;
+        var window = new Window { Width = 412, Height = 915 };
+        window.Show();
+        var capture = new CapturePage();
+        window.Content = capture;
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains(capture.GetLogicalDescendants().OfType<TextBox>(), t => t.PlaceholderText?.StartsWith("Distance", StringComparison.Ordinal) == true && Pad(t));
+
+        var zero = new ShotsToZeroPage(ShotCsv.Marking([new(0.3, 0.1), new(0.1, -0.2), new(0.5, 0.2), new(0.2, 0.3)], 3600), UnitSettings.Imperial, () => { });
+        window.Content = zero;
+        Dispatcher.UIThread.RunJobs();
+        Assert.All(zero.GetLogicalDescendants().OfType<TextBox>(), t => Assert.True(Pad(t)));
+        window.Close();
+
+        Assert.True(Pad(Screens.Numeric(new TextBox())));
+        bool was = Screens.NumberPadHasMinus;
+        try
+        {
+            Screens.NumberPadHasMinus = false;
+            Assert.False(Pad(Screens.Numeric(new TextBox(), signed: true)));
+            Screens.NumberPadHasMinus = true;
+            Assert.True(Pad(Screens.Numeric(new TextBox(), signed: true)));
+        }
+        finally
+        {
+            Screens.NumberPadHasMinus = was;
+        }
+
+        Assert.Equal(0.5, Screens.Read("0.5"));
+        Assert.Null(Screens.Read("half"));
+    }
+
     [AvaloniaFact]
     public void CompareHasAWayBackToSessionsAtTheTop()
     {
