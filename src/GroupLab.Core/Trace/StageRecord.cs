@@ -133,6 +133,15 @@ public sealed class TraceRecorder
     /// </summary>
     public event Action<StageRecord>? Filed;
 
+    /// <summary>
+    /// Raised as a stage notes a detail, with the stage's name and the line, NOTES-FROM-PLANNING.md entry 313 section 1.4: reading the codes
+    /// notes each resolution it tried and how long it took, and a phone's log shows each as it happens, so a reading that never ends still
+    /// says where its time went.
+    /// </summary>
+    public event Action<string, string>? Noted;
+
+    internal void Note(string stage, string line) => Noted?.Invoke(stage, line);
+
     internal void Add(StageRecord record)
     {
         _records.Add(record);
@@ -169,7 +178,11 @@ public sealed class StageScope : IDisposable
     public void Reject(string what, string why, PointInches? at = null) =>
         Record.AddRejection(new Rejection(what, at?.X, at?.Y, why));
 
-    public void Detail(string line) => Record.AddDetail(line);
+    public void Detail(string line)
+    {
+        Record.AddDetail(line);
+        _recorder.Note(Record.Stage, line);
+    }
 
     /// <summary>
     /// Attaches the stage's picture, built only when the trace keeps pictures, so a batch run never pays for it. Called before the stage

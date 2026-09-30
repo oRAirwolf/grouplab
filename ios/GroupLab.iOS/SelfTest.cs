@@ -167,6 +167,9 @@ internal static class SelfTest
                 checks.Add(await SheetsSelfTest.Paste(sample, 59));
                 checks.Add(await Chosen(sample, n));
 
+                // Entry 313 section 1.5: Cancel pressed while the codes of a large picture are read brings the start back within a second.
+                checks.Add(await SelfTestCancel.Run(sample, 62));
+
                 // Entry 292 section 2.3: a picture opened in GroupLab from another app, and one shared into it, each read into analysis.
                 checks.Add(await PhotosSelfTest.OpenIn(sample, 60));
                 checks.Add(await PhotosSelfTest.Shared(sample, 61));

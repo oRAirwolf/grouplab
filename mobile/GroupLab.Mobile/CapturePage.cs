@@ -111,6 +111,14 @@ public sealed class CapturePage : UserControl
                 : "")),
         ], Screens.Touch);
 
+        // Entry 313 section 1.1: a canceled picture, kept to read again or to choose its sheet.
+        keptCard = Screens.Card(
+            Screens.Line("Reading the last picture was stopped. It is kept until you take another."),
+            Screens.Primary("Read it again", ReadKeptAgain),
+            Screens.Choice("Choose which sheet it is", () => _ = ChooseKeptSheet()),
+            Screens.Choice("Forget it", Forget));
+        keptCard.IsVisible = false;
+
         var gettingStarted = Screens.Row("Getting started on your phone", "Print, shoot, photograph, read.", () => Phone.Platform.OpenAddress(GettingStartedAddress));
         start = Screens.Page(new StackPanel
         {
@@ -119,6 +127,7 @@ public sealed class CapturePage : UserControl
             {
                 new GroupLab.App.BrandMark { Lockup = true, Height = 36, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left, Margin = new Avalonia.Thickness(0, 8, 0, 0) },
                 Screens.Line("Photograph a target and read your group. On a GroupLab sheet, the scale and every hole are found for you."),
+                keptCard,
                 Screens.Card(setupRow, setupFields),
                 Screens.Primary("Take a picture", () => AskFirst(Camera)),
                 pair,
@@ -452,73 +461,219 @@ public sealed class CapturePage : UserControl
     /// <summary>One sheet of several read and saved without showing its result, with its own progress and Cancel; false where canceled.</summary>
     private async Task<bool> ReadAhead(string photo, ShotSetup setup, int index, int count)
     {
-        using var cancel = new CancellationTokenSource();
+        // Entry 313 section 1: a Cancel that always works and a time limit, as for one picture.
+        var reading = new Reading("phone.set.read");
         var (page, line, stop) = Screens.Progress(string.Create(CultureInfo.CurrentCulture, $"Reading sheet {index + 1} of {count}"));
         stop.Click += (_, _) =>
         {
-            cancel.Cancel();
+            reading.Stop();
             line.Text = "Canceling…";
         };
         var before = Content;
         Content = page;
         var units = Phone.Settings.LoadUnits();
+        ReadOutcome<PhoneResult> outcome;
+        using (Phone.Platform.KeepRunning("Reading the sheet"))
+        {
+            outcome = await reading.Run(token => PhoneAnalysis.Run(photo, setup, units, Phone.Survey, token, words => Said(reading, line, words)), Reading.Limit, Late);
+        }
+
+        Delete(photo);
+        switch (outcome.End)
+        {
+            case ReadEnd.Canceled:
+                Content = before;
+                return false;
+            case ReadEnd.Done:
+                DiagnosticLog.Info("phone.set.read", ("sheet", index + 1), ("of", count), ("found", outcome.Value!.Definition is not null));
+                return true;
+            default:
+                // Timed out or failed, which the log has: the set goes on with its next sheet, as it did after an error.
+                DiagnosticLog.Info("phone.set.read", ("sheet", index + 1), ("of", count), ("ended", outcome.End));
+                return true;
+        }
+    }
+
+    /// <summary>A reading's progress line, left saying "Canceling…" once Cancel is pressed.</summary>
+    private static void Said(Reading reading, TextBlock line, string words) => Dispatcher.UIThread.Post(() =>
+    {
+        if (!reading.Stopping)
+        {
+            line.Text = words;
+        }
+    });
+
+    /// <summary>A result that arrived after its reading was stopped: nobody will see it, so its session and working copy go.</summary>
+    private static void Late(PhoneResult? late)
+    {
+        if (late is null)
+        {
+            return;
+        }
+
+        if (late.SessionId is { } id)
+        {
+            PhoneAnalysis.Store().Delete(id);
+        }
+
+        PhoneAnalysis.Discard(late.Image);
+    }
+
+    /// <summary>A picture deleted, where nothing else still has it open.</summary>
+    private static void Delete(string photo)
+    {
         try
-        {
-            var result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, Phone.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
-            DiagnosticLog.Info("phone.set.read", ("sheet", index + 1), ("of", count), ("found", result.Definition is not null));
-            return true;
-        }
-        catch (OperationCanceledException)
-        {
-            Content = before;
-            return false;
-        }
-        catch (Exception e) when (e is IOException or InvalidOperationException or OpenCvSharp.OpenCVException)
-        {
-            DiagnosticLog.Exception(LogLevel.Warn, "phone.set.read", e);
-            return true;
-        }
-        finally
         {
             File.Delete(photo);
         }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Info("phone.photo.delete", ("error", e.GetType().Name));
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 313 section 1.1: the picture whose reading was canceled, kept on the start with a line saying so, to
+    /// read again or to choose its sheet, until another picture is taken or it is forgotten.
+    /// </summary>
+    private sealed record KeptPicture(string Path, bool Torch);
+
+    private KeptPicture? kept;
+
+    /// <summary>The kept picture's card on the start; hidden while there is none.</summary>
+    private readonly Border keptCard;
+
+    /// <summary>Whether a canceled picture is being kept, for the tests and the self-test.</summary>
+    internal bool KeepingPicture => kept is not null;
+
+    /// <summary>Whether the start of the tab is what shows, with or without the two buttons above it.</summary>
+    internal bool AtStart => ReferenceEquals(Content, home) || (Content is DockPanel dock && dock.Children.Contains(home));
+
+    private void Keep(string photo, bool torch)
+    {
+        Forget();
+        kept = new KeptPicture(photo, torch);
+        keptCard.IsVisible = true;
+    }
+
+    /// <summary>The kept picture let go of, and deleted.</summary>
+    private void Forget()
+    {
+        if (kept is { } old)
+        {
+            Delete(old.Path);
+        }
+
+        kept = null;
+        keptCard.IsVisible = false;
+    }
+
+    /// <summary>The kept picture read again from the start, with the caliber and distance as they are now.</summary>
+    private void ReadKeptAgain()
+    {
+        if (kept is not { } picture || Setup() is not { } setup)
+        {
+            return;
+        }
+
+        kept = null;
+        keptCard.IsVisible = false;
+        _ = Analyze(picture.Path, setup, picture.Torch);
+    }
+
+    /// <summary>The kept picture offered with the sheets to choose from, its codes not read again (entry 313 section 1.2).</summary>
+    private async Task ChooseKeptSheet()
+    {
+        if (kept is not { } picture || Setup() is not { } setup)
+        {
+            return;
+        }
+
+        kept = null;
+        keptCard.IsVisible = false;
+        await Unread(picture.Path, picture.Torch, setup, "Choose which sheet it is.");
+    }
+
+    /// <summary>A picture prepared without reading its codes and shown with the sheets to choose from and <paramref name="said"/>.</summary>
+    private async Task Unread(string photo, bool torch, ShotSetup setup, string said)
+    {
+        var reading = new Reading("phone.unread");
+        var (page, _, stop) = Screens.Progress("Getting the picture ready");
+        stop.Click += (_, _) => reading.Stop();
+        Content = page;
+        var units = Phone.Settings.LoadUnits();
+        var outcome = await reading.Run(_ => PhoneAnalysis.Unread(photo, said), Reading.Limit, Late);
+        if (outcome.End is ReadEnd.Canceled or ReadEnd.TimedOut)
+        {
+            Keep(photo, torch);
+            ShowStart();
+            return;
+        }
+
+        Delete(photo);
+        var result = outcome.Value ?? new PhoneResult(MarkingState.Empty, null, "The picture could not be read: " + outcome.Error?.Message, null);
+        ShowResult(new ResultView(result, setup, units, ShowStart));
     }
 
     private async Task Analyze(string photo, ShotSetup setup, bool torch = false)
     {
-        using var cancel = new CancellationTokenSource();
+        // A new picture replaces a kept one; reading the kept one again is this picture.
+        if (kept is { } old && old.Path != photo)
+        {
+            Forget();
+        }
+
+        // Entry 313 section 1: Cancel always works, at once, from any stage, and a reading has a time limit. The reading runs on a pool
+        // thread; Cancel returns to the start with the picture kept and leaves the reading to stop at its next check.
+        var reading = new Reading("phone.detect");
         var (page, line, stop) = Screens.Progress("Reading the sheet");
         stop.Click += (_, _) =>
         {
-            cancel.Cancel();
+            reading.Stop();
             line.Text = "Canceling…";
         };
         Shell.Current?.Immersive(false);
         Content = page;
         var units = Phone.Settings.LoadUnits();
+        string? onCodes = GroupLab.Core.Trace.StageWords.During("S0.identify");
+        bool readingCodes = false;
+        ReadOutcome<PhoneResult> outcome;
+        using (Phone.Platform.KeepRunning("Reading the sheet"))
+        {
+            outcome = await reading.Run(token => PhoneAnalysis.Run(photo, setup, units, Phone.Survey, token, words =>
+            {
+                readingCodes = words == onCodes;
+                Said(reading, line, words);
+            }, torch), Reading.Limit, Late);
+        }
+
         PhoneResult result;
-        try
+        switch (outcome.End)
         {
-            result = await Task.Run(() => PhoneAnalysis.Run(photo, setup, units, Phone.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words), torch));
+            case ReadEnd.Canceled:
+                // Entry 243 section 3.2 kept nothing from a canceled reading; entry 313 section 1.1 keeps the picture, to read again or to
+                // choose its sheet. The working copy goes with the reading when it stops.
+                DiagnosticLog.Info("phone.detect.cancel", ("ms", (long)outcome.Took.TotalMilliseconds));
+                Keep(photo, torch);
+                ShowStart();
+                return;
+            case ReadEnd.TimedOut:
+                // Entry 313 section 1.2: stopped, and said what was tried, with the sheets to choose from.
+                await Unread(photo, torch, setup, readingCodes
+                    ? "The codes could not be read in time. Try again closer, or choose the sheet."
+                    : "The picture could not be read in time. Try again closer and in even light, or choose the sheet.");
+                return;
+            case ReadEnd.Failed:
+                // Every error ends the reading with a message; the log and the error report have where it happened.
+                result = new PhoneResult(MarkingState.Empty, null, "The picture could not be analyzed: " + outcome.Error!.Message, null);
+                break;
+            default:
+                result = outcome.Value!;
+                break;
         }
-        catch (OperationCanceledException)
-        {
-            // Entry 243 section 3.2: nothing from a canceled analysis is kept; the photograph goes below, the working copy went with the cancel.
-            DiagnosticLog.Info("phone.detect.cancel");
-            File.Delete(photo);
-            Dispatcher.UIThread.Post(ShowStart);
-            return;
-        }
-        catch (Exception e) when (e is IOException or InvalidOperationException or OpenCvSharp.OpenCVException)
-        {
-            DiagnosticLog.Exception(LogLevel.Warn, "phone.detect", e);
-            result = new PhoneResult(MarkingState.Empty, null, "The picture could not be analyzed: " + e.Message, null);
-        }
-        finally
-        {
-            // The photograph itself is never kept: the session keeps its working copy.
-            File.Delete(photo);
-        }
+
+        // The photograph itself is never kept: the session keeps its working copy.
+        Delete(photo);
 
         // Entry 260, Feedback B: every picture is checked before its result, taken or chosen; taking it again forgets this one.
         void Show() => ShowResult(new ResultView(result, setup, units, ShowStart));

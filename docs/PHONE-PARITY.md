@@ -19,7 +19,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 
 | Feature | Key | On the phone | Stage or reason | On iPhone and iPad |
 |---|---|---|---|---|
-| A GroupLab sheet reads itself | `reads-itself` | on the phone | | on iOS |
+| A GroupLab sheet reads itself | `reads-itself` | on the phone | entry 313 section 1: Cancel works at once from any step and keeps the picture to read again or to choose its sheet; a reading stops itself after a minute, the time the screen was locked not counted | on iOS |
 | Every hole found, and every one yours to change | `every-hole` | on the phone | entry 291 section 2: changed on a page of their own, Fix holes, under a fixed crosshair with zoom and undo; the result's picture takes no touch | on iOS |
 | The bulls you aimed at | `aimed-bulls` | on the phone | entry 259 screen 2, "tap the bulls on the sheet" | on iOS |
 | A sheet shot off by the same amount | `whole-sheet` | on the phone | | on iOS |

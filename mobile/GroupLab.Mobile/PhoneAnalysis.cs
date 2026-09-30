@@ -115,11 +115,13 @@ internal static class PhoneAnalysis
         // Entry 288: an update never installs while a sheet is being read.
         using var running = WorkInProgress.Analysis();
         progress?.Invoke(GroupLab.Core.Trace.StageWords.Starting);
+        var clock = Stopwatch.StartNew();
         if (Prepare(photo) is not { } working)
         {
             return new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
         }
 
+        DiagnosticLog.Info("read.stage", ("stage", "prepare"), ("ms", clock.ElapsedMilliseconds));
         try
         {
             token.ThrowIfCancellationRequested();
@@ -130,6 +132,33 @@ internal static class PhoneAnalysis
             Forget(working);
             throw;
         }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 313 section 1.2: a picture whose reading was stopped, prepared again and offered with the sheets to
+    /// choose from and <paramref name="said"/> saying why, without reading its codes again.
+    /// </summary>
+    public static PhoneResult Unread(string photo, string said)
+    {
+        if (Prepare(photo) is not { } working)
+        {
+            return new PhoneResult(MarkingState.Empty, null, "The picture could not be read as an image.", null);
+        }
+
+        var session = new MarkingSession();
+        session.Open(working.Path, working.Metadata.Orientation);
+        return new PhoneResult(session.State, null, said, null, working, AskWhichSheet: true);
+    }
+
+    /// <summary>
+    /// Entry 313 section 1.4: each stage of a reading in the log as it begins and ends, with its time, and each resolution the codes were
+    /// read at as it is tried, so a sitting's log shows where the time went even when the reading never finished.
+    /// </summary>
+    private static void Log(TraceRecorder trace)
+    {
+        trace.Begun += stage => DiagnosticLog.Info("read.stage", ("stage", stage), ("began", true));
+        trace.Filed += record => DiagnosticLog.Info("read.stage", ("stage", record.Stage), ("ms", record.DurationMs), ("status", record.Status));
+        trace.Noted += (stage, line) => DiagnosticLog.Info("read.stage", ("stage", stage), ("detail", line));
     }
 
     /// <summary>A working copy nothing will use, deleted with the folder made for it.</summary>
@@ -158,8 +187,11 @@ internal static class PhoneAnalysis
         var clock = Stopwatch.StartNew();
         var (grey, _) = ImageLoader.Load(working.Path);
         var (value, _) = ImageLoader.LoadMaxChannel(working.Path);
+        DiagnosticLog.Info("read.stage", ("stage", "load"), ("ms", clock.ElapsedMilliseconds), ("size", $"{grey.Width}x{grey.Height}"));
+        token.ThrowIfCancellationRequested();
         var backend = new OpenCvSharpBackend();
         var trace = new TraceRecorder();
+        Log(trace);
 
         // Entry 291 section 3.1: the line names the step being done as it starts, where it named the next step only as the last finished.
         trace.Begun += stage =>
@@ -179,12 +211,15 @@ internal static class PhoneAnalysis
         int codesRead = identity?.CodesRead ?? 0;
         if (definition is null)
         {
+            token.ThrowIfCancellationRequested();
             // Entry 260: every picture is checked, a picture that names no sheet included.
             var unread = GroupLab.Core.Capture.PictureCheck.Of(grey, null, null, codesRead, torch);
             // Entry 281: the codes' 0.4 mm modules get about 3 pixels each at the distance the whole sheet fits, so three of six pictures in
             // the camera test were refused here while the markers had named the layout on every frame. The markers never name a sheet by
             // themselves (SheetIdentification), so the sheet the picture looks most like is offered first, for the person to confirm.
+            long alikeBegan = clock.ElapsedMilliseconds;
             var looksLike = GroupLab.Core.Capture.LiveSheet.MostAlike(grey, GroupLab.Core.Capture.LiveSheet.SheetsByMarkers(grey, Library(), backend), backend);
+            DiagnosticLog.Info("read.stage", ("stage", "looks-like"), ("ms", clock.ElapsedMilliseconds - alikeBegan));
             DiagnosticLog.Info("phone.detect", ("named", false), ("ms", clock.ElapsedMilliseconds), ("looksLike", looksLike?.Name), ("check", unread.Describe()));
             if (picture is not null)
             {
@@ -233,6 +268,8 @@ internal static class PhoneAnalysis
             session.Load(session.State with { ViewQuarterTurns = upright });
         }
 
+        // Entry 313 section 1.1: a reading stopped while it ran saves nothing, since nobody will see its result.
+        token.ThrowIfCancellationRequested();
         long? id = Save(session.State, definition, units, null);
         return new PhoneResult(session.State, definition, null, id, working, Check: check, Measured: result.Measurement.Scale, Paper: result.Paper);
     }

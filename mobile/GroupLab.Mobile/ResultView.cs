@@ -387,25 +387,54 @@ public sealed class ResultView : UserControl
 
     private async Task AsSheet(WorkingImage working, TargetDefinition sheet, ShotSetup setup, Action again)
     {
-        using var cancel = new CancellationTokenSource();
+        // Entry 313 section 1: a Cancel that always works, at once, and a time limit, as for a picture whose codes are read.
+        var reading = new Reading("phone.detect");
         var (page, line, stop) = Screens.Progress($"Reading the sheet as {sheet.Name}");
         stop.Click += (_, _) =>
         {
-            cancel.Cancel();
+            reading.Stop();
             line.Text = "Canceling…";
         };
         Content = page;
-        try
+        ReadOutcome<PhoneResult> outcome;
+        using (Phone.Platform.KeepRunning("Reading the sheet"))
         {
-            var result = await Task.Run(() => PhoneAnalysis.Detect(working, sheet, setup, units, Phone.Survey, cancel.Token, words => Dispatcher.UIThread.Post(() => line.Text = words)));
-            Dispatcher.UIThread.Post(() => Content = new ResultView(result, setup, units, again));
+            outcome = await reading.Run(token => PhoneAnalysis.Detect(working, sheet, setup, units, Phone.Survey, token, words => Dispatcher.UIThread.Post(() =>
+            {
+                if (!reading.Stopping)
+                {
+                    line.Text = words;
+                }
+            })), Reading.Limit, late =>
+            {
+                // A reading stopped part way: nobody will see what it made, so its session and working copy go when it ends.
+                if (late?.SessionId is { } id)
+                {
+                    PhoneAnalysis.Store().Delete(id);
+                }
+
+                PhoneAnalysis.Forget(working);
+            });
         }
-        catch (OperationCanceledException)
+
+        switch (outcome.End)
         {
-            // Entry 243 section 3.2: canceled, so the working copy is forgotten and the person is back where they started.
-            GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.detect.cancel");
-            PhoneAnalysis.Forget(working);
-            Dispatcher.UIThread.Post(again);
+            case ReadEnd.Done:
+                Content = new ResultView(outcome.Value!, setup, units, again);
+                break;
+            case ReadEnd.Failed:
+                PhoneAnalysis.Forget(working);
+                Content = new ResultView(new PhoneResult(MarkingState.Empty, sheet, "The picture could not be analyzed: " + outcome.Error!.Message, null), setup, units, again);
+                break;
+            case ReadEnd.TimedOut:
+                Content = new ResultView(new PhoneResult(MarkingState.Empty, sheet,
+                    $"Reading the picture as {sheet.Name} took longer than a minute and was stopped. Take it again closer, square on and in even light.", null), setup, units, again);
+                break;
+            default:
+                // Entry 243 section 3.2: canceled, so the working copy goes when the reading stops, and the person is back where they started.
+                GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.detect.cancel", ("ms", (long)outcome.Took.TotalMilliseconds));
+                again();
+                break;
         }
     }
 

@@ -46,7 +46,15 @@ internal static class PhotoPages
         object? before = host.Content;
         using var cancel = new CancellationTokenSource();
         var (page, line, stop) = Screens.Progress(handles.Count > 1 ? "Getting the photos" : "Getting the photo");
-        stop.Click += (_, _) => cancel.Cancel();
+        // Entry 313 section 1: Cancel never throws, even pressed as the page goes away.
+        bool over = false;
+        stop.Click += (_, _) =>
+        {
+            if (!over)
+            {
+                cancel.Cancel();
+            }
+        };
         bool shown = false;
         var read = new List<PickedPhoto>();
         var failed = new List<string>();
@@ -81,6 +89,7 @@ internal static class PhotoPages
         }
         finally
         {
+            over = true;
             if (shown)
             {
                 host.Content = before;

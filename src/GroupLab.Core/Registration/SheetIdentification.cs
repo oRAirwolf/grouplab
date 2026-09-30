@@ -43,7 +43,7 @@ public static class SheetIdentification
     /// </summary>
     public const int MaximumWorkingSide = 8000;
 
-    /// <param name="cancellation">Checked before each resolution is read, so a screen can stop a long identification (NOTES-FROM-PLANNING.md entry 76 section 4).</param>
+    /// <param name="cancellation">Checked before each resolution is read and each code cut out is enlarged, so a screen can stop a long identification (NOTES-FROM-PLANNING.md entry 76 section 4, entry 313 section 1.1).</param>
     public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(image);
@@ -141,7 +141,11 @@ public static class SheetIdentification
             if (match.Codes is { Count: > 1 } all && frames.Count < all.Count)
             {
                 var more = Capture.LiveSheet.CodeCrops(image, [match], backend)
-                    .Select(crop => CropScales.Select(s => backend.ReadCodes(crop, s)).FirstOrDefault(r => r.Count > 0) ?? [])
+                    .Select(crop => CropScales.Select(s =>
+                    {
+                        cancellation.ThrowIfCancellationRequested();
+                        return backend.ReadCodes(crop, s);
+                    }).FirstOrDefault(r => r.Count > 0) ?? [])
                     .SelectMany(r => r.Take(1)).Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId == ids[0]).ToList();
                 if (more.Count > frames.Count)
                 {
@@ -166,6 +170,8 @@ public static class SheetIdentification
         {
             foreach (double scale in CropScales)
             {
+                // Entry 313 section 1.1: checked before each enlargement too, the slowest reading there is.
+                cancellation.ThrowIfCancellationRequested();
                 var found = backend.ReadCodes(crop, scale);
                 if (found.Count > 0)
                 {

@@ -321,6 +321,41 @@ internal sealed class IosPhone : IPhonePlatform
 
     public bool IsDevBuild => false;
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 313 section 1.3: a reading asks iOS for the time to finish while the screen locks. iOS gives some tens of
+    /// seconds and then says the time is up, when the reading is left to be suspended with the application and carries on when it comes
+    /// back, its time limit not counting the time away.
+    /// </summary>
+    public IDisposable KeepRunning(string why) => new BackgroundTime(why);
+
+    private sealed class BackgroundTime : IDisposable
+    {
+        private nint task;
+
+        public BackgroundTime(string why)
+        {
+            task = UIApplication.SharedApplication.BeginBackgroundTask(why, () => End(expired: true));
+        }
+
+        public void Dispose() => End(expired: false);
+
+        private void End(bool expired)
+        {
+            nint held = Interlocked.Exchange(ref task, UIApplication.BackgroundTaskInvalid);
+            if (held == UIApplication.BackgroundTaskInvalid)
+            {
+                return;
+            }
+
+            if (expired)
+            {
+                DiagnosticLog.Info("read.background", ("expired", true), ("remaining_s", Math.Round(UIApplication.SharedApplication.BackgroundTimeRemaining, 1)));
+            }
+
+            UIApplication.SharedApplication.EndBackgroundTask(held);
+        }
+    }
+
     /// <summary>The view controller in front, which a sheet is presented from.</summary>
     internal static UIViewController? Top()
     {
