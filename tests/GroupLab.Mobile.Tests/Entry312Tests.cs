@@ -67,6 +67,23 @@ public class Entry312Tests
     }
 
     [AvaloniaFact]
+    public void TheVerdictReadsInPlainWordsWithTheFiguresBehindDetails()
+    {
+        var window = new Window { Width = 412, Height = 915 };
+        window.Show();
+        var page = Compare(window);
+        var details = page.GetLogicalDescendants().OfType<Expander>().Single(e => e.Header is TextBlock { Text: "Details" });
+        Assert.False(details.IsExpanded);
+        var inside = details.GetLogicalDescendants().OfType<TextBlock>().ToHashSet();
+        var shown = page.GetLogicalDescendants().OfType<TextBlock>().Where(t => !inside.Contains(t)).Select(t => t.Text ?? "").ToList();
+        Assert.Contains(shown, t => t.StartsWith("Their spreads ", StringComparison.Ordinal) || t.Contains(" spreads ", StringComparison.Ordinal));
+        Assert.Contains(shown, t => t.StartsWith("To tell a 10 percent difference", StringComparison.Ordinal));
+        Assert.DoesNotContain(shown, t => t.Contains("95 percent interval", StringComparison.Ordinal) || t.Contains("80 percent power", StringComparison.Ordinal));
+        Assert.Contains(inside, t => t.Text?.Contains("95 percent interval", StringComparison.Ordinal) == true);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void CompareHasAWayBackToSessionsAtTheTop()
     {
         var window = new Window { Width = 744, Height = 1133 };

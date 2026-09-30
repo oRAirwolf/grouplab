@@ -86,10 +86,26 @@ internal sealed class ComparePage : UserControl
 
             column.Children.Add(Screens.Card(list));
             var verdict = new StackPanel { Spacing = 6, Children = { Screens.Heading("What these shots can tell"), LoadGroups.Key([.. report.Groups.Select(g => g.Name)]), Screens.Line(report.Headline) } };
-            foreach (string line in report.Explanation)
+            // Entry 312 section 3: plain words first; the ratio with its interval and the power sentence behind Details.
+            foreach (string line in report.Plain)
             {
                 verdict.Children.Add(Screens.Dim(line));
             }
+
+            var exact = new StackPanel { Spacing = 6 };
+            foreach (string line in report.Details)
+            {
+                exact.Children.Add(Screens.Dim(line));
+            }
+
+            verdict.Children.Add(new Expander
+            {
+                Header = new TextBlock { Text = "Details", Classes = { PhoneStyles.Dim } },
+                Content = exact,
+                IsExpanded = false,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+                MinHeight = Screens.Touch,
+            });
 
             column.Children.Add(new Border
             {
