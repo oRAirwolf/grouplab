@@ -142,6 +142,16 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "xattr -dr com.apple.quarantine",
+      "why": "entry 306 section 4: nightly 135's macOS build is signed with a Developer ID, notarized and stapled, so a Mac user no longer runs this command; it stays only for builds from before nightly 135",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/PLATFORM-SUPPORT.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

@@ -13,6 +13,8 @@ about 60 percent of phones in the United States and half in the United Kingdom (
 iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
 a Mac; and distribution needs the paid Apple developer program, which Alan is joining. `docs/IOS-PLAN.md` is the plan.
 
+**Old builds still exist** (entry 306 section 4). A macOS build before nightly 135 was not signed, and still needs `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal, after moving `GroupLab.app` into Applications. This sentence stays here only: the README and the download page describe the current, signed build.
+
 ---
 
 **Windows is the supported platform.** It is where GroupLab is developed and tested by hand, and the installer and automatic updates are built for it.
@@ -54,13 +56,7 @@ Other platforms get proper attention once the pace of change slows and the Windo
 
 ## Running the macOS build
 
-macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer. After the application has been moved to the Applications folder, this removes the quarantine flag:
-
-```
-xattr -dr com.apple.quarantine /Applications/GroupLab.app
-```
-
-Anyone not comfortable running that command should not run this build.
+From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
 
 ## Why it is not signed
 

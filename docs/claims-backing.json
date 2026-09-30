@@ -41,10 +41,6 @@
    "kind": "code",
    "where": ".github/workflows/package.yml builds on macos; ci.yml runs the suite on macos-latest"
   },
-  "One tester, an M5 Max, nightly 93 Unsigned: see the Terminal command below M1, M2, M3, M4.": {
-   "kind": "decided",
-   "where": "entry 166 section 4, the tester's answers"
-  },
   "Not an Intel Mac Download for Apple silicon macOS, Intel grouplab-macos-x64.tar.gz For a Mac with an Intel processor.": {
    "kind": "code",
    "where": "website/build.py page_download(): the two macOS cards and their assets"
@@ -56,18 +52,6 @@
   "Windows says this about any program nobody has paid to sign.": {
    "kind": "decided",
    "where": "entry 116 section 5 and entry 147: the builds are unsigned"
-  },
-  "When macOS refuses to open it macOS puts a quarantine flag on anything downloaded from the internet, and Gatekeeper refuses to open an unsigned application that carries it.": {
-   "kind": "decided",
-   "where": "entries 147 and 166: the command, confirmed on a Mac by the first tester"
-  },
-  "Move GroupLab.app into your Applications folder, then run this in Terminal: xattr -dr com.apple.quarantine /Applications/GroupLab.app That removes the quarantine flag macOS puts on downloaded files, and nothing else.": {
-   "kind": "decided",
-   "where": "entries 147 and 166: the command, confirmed on a Mac by the first tester"
-  },
-  "Why there is no signed build is below, under What is supported, and what is not .": {
-   "kind": "code",
-   "where": "website/build.py page_download(): the anchor to the statement"
   },
   "Your data Kept in %APPDATA%\\GroupLab on Windows, and under your home folder elsewhere.": {
    "kind": "code",
@@ -134,10 +118,6 @@
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
   "macOS depends on the hardware question below.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
@@ -761,10 +741,6 @@
    "kind": "decided",
    "where": "entry 116 section 5 and entry 147: the builds are unsigned"
   },
-  "That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software.": {
-   "kind": "decided",
-   "where": "entries 147 and 166: the command, confirmed on a Mac by the first tester"
-  },
   "- **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.": {
    "kind": "code",
    "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
@@ -846,10 +822,6 @@
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
   "### What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "### Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
@@ -1090,10 +1062,6 @@
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
   "## What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "## Running the macOS build macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
@@ -4520,6 +4488,42 @@
   "**On Auto (entry 302)**, in a dim room it comes on at the lowest of its five levels and steps up a level at a time, about every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Capture/TorchGovernor.cs (AgreeingFrames, SettleMs 1500, the ceiling after glare or a hotspot, MostReversals) and ios/GroupLab.iOS/Camera/CameraSession.cs TorchSteps and SetTorch; a check to be made on the iPad mini, entry 302"
+  },
+  "One tester, an M5 Max, nightly 93 Signed, notarized and stapled: opens like any other Mac application M1, M2, M3, M4.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Opening it on a Mac From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Move GroupLab.app into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Running the macOS build From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "The first time, macOS checks it with Apple and opens it.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "**Old builds still exist** (entry 306 section 4).": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "A macOS build before nightly 135 was not signed, and still needs `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal, after moving `GroupLab.app` into Applications.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "## Running the macOS build From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
   }
  },
  "rules": [

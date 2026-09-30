@@ -105,25 +105,37 @@ public partial class MacBuildsTests
     }
 
     /// <summary>
-    /// Section 2: the command, exactly, on the download page and in the README. It is the one thing a reader has to type, and a wrong path or
-    /// a missing flag turns into "it does not work" with nothing to go on.
+    /// Entry 306 section 4: from nightly 135 the macOS build is signed, notarized and stapled, so the download page and the README say the
+    /// plain thing (move it into Applications and open it) rather than the Terminal command that unsigned builds needed. The command
+    /// survives only in docs/PLATFORM-SUPPORT.md, for the old builds that still exist.
     /// </summary>
     [Fact]
-    public void TheGatekeeperCommandIsOnThePageAndInTheReadme()
+    public void TheReadmeAndThePageDescribeTheSignedBuildWithNoTerminalCommand()
     {
         const string command = "xattr -dr com.apple.quarantine /Applications/GroupLab.app";
+        const string plain = "macOS checks it with Apple";
 
-        Assert.Contains(command, Builder(), StringComparison.Ordinal);
-        Assert.Contains(command, File.ReadAllText(Repo.PathTo("README.md")), StringComparison.Ordinal);
+        string readme = File.ReadAllText(Repo.PathTo("README.md"));
+        Assert.DoesNotContain(command, readme, StringComparison.Ordinal);
+        Assert.Contains(plain, readme, StringComparison.Ordinal);
+
+        string builder = Builder();
+        Assert.DoesNotContain(command, builder, StringComparison.Ordinal);
+        Assert.Contains(plain, builder, StringComparison.Ordinal);
 
         string built = Built();
         if (built.Length > 0)
         {
-            Assert.Contains(command, built, StringComparison.Ordinal);
-
-            // Saying what it does, not just what to type. A command somebody runs without knowing what it does is a habit worth not teaching.
-            Assert.Contains("quarantine flag", built, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(command, built, StringComparison.Ordinal);
+            Assert.Contains(plain, built, StringComparison.Ordinal);
         }
+
+        // Still true, and only here, for the old builds that still exist. It sits above the "---" rule, in the
+        // file's own notes, so it is not part of the statement Source() returns and never reaches the README or
+        // the download page.
+        string platformSupport = File.ReadAllText(Repo.PathTo("docs", "PLATFORM-SUPPORT.md"));
+        Assert.Contains(command, platformSupport, StringComparison.Ordinal);
+        Assert.DoesNotContain(command, Source(), StringComparison.Ordinal);
     }
 
     /// <summary>

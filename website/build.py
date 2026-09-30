@@ -776,8 +776,8 @@ def page_download() -> str:
 {card("Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.", ["Nobody uses it day to day yet", "Reports from Linux are especially welcome"])}
 </section>
 <section class="wrap grid-3">
-{card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with an M1 or later. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93", "Unsigned: see the Terminal command below", "M1, M2, M3, M4. Not an Intel Mac"], label="Download for Apple silicon")}
-{card("macOS, Intel", "grouplab-macos-x64.tar.gz", "For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it", "Unsigned: see the Terminal command below", "Intel only. Not an Apple silicon Mac"], label="Download for an Intel Mac")}
+{card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with an M1 or later. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93", "Signed, notarized and stapled: opens like any other Mac application", "M1, M2, M3, M4. Not an Intel Mac"], label="Download for Apple silicon")}
+{card("macOS, Intel", "grouplab-macos-x64.tar.gz", "For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it", "Signed, notarized and stapled: opens like any other Mac application", "Intel only. Not an Apple silicon Mac"], label="Download for an Intel Mac")}
 <div class="panel pad stack tight">
 <h2 class="h3">Which Mac have you got?</h2>
 <p class="small">Apple menu, then About This Mac. A line saying <strong>Chip</strong> and a name beginning with M is Apple silicon. A line saying <strong>Processor</strong> and Intel is the Intel one.</p>
@@ -810,10 +810,8 @@ def page_download() -> str:
 </ol>
 </div>
 <div class="panel pad">
-<h2 class="h3">When macOS refuses to open it</h2>
-<p>macOS puts a quarantine flag on anything downloaded from the internet, and Gatekeeper refuses to open an unsigned application that carries it. Move <code>GroupLab.app</code> into your Applications folder, then run this in Terminal:</p>
-<p><code class="block">xattr -dr com.apple.quarantine /Applications/GroupLab.app</code></p>
-<p class="small">That removes the quarantine flag macOS puts on downloaded files, and nothing else. It is the standard way to run unsigned software. <strong>Anyone not comfortable running that command should not run this build.</strong> Why there is no signed build is below, under <a href="#supported">What is supported, and what is not</a>.</p>
+<h2 class="h3">Opening it on a Mac</h2>
+<p>From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move <code>GroupLab.app</code> into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.</p>
 </div>
 </section>
 <section class="wrap section-sm grid-2">

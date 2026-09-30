@@ -115,17 +115,11 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 - **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
 - **Which build you have:** the Settings screen names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
-- **On a Mac**, move `GroupLab.app` into Applications and then run `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal. That removes the quarantine flag macOS puts on anything downloaded from the internet, which is what stops Gatekeeper opening unsigned software. It is the standard way to run unsigned software. **Anyone not comfortable running that command should not run this build.**
+- **On a Mac**, move `GroupLab.app` into Applications and open it. The first time, macOS checks it with Apple and opens it.
 - **Questions, or somewhere to say it did not work:** the [GroupLab Discord](https://grouplab.org/discord). For anything private, or anything with a photograph attached, the support address is better.
 - **On Android**, the APK is signed. **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Export all my data. Google Play's internal test is open by invitation and updates itself, with a closed test to come; remove the Play copy before installing the plain APK, because the two are signed with different keys. Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates; it is Google's own check, takes a few seconds and is expected. [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
 - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
-
-The quarantine command for a Mac, the one thing a reader has to type:
-
-```
-xattr -dr com.apple.quarantine /Applications/GroupLab.app
-```
 
 </details>
 
@@ -226,13 +220,7 @@ Other platforms get proper attention once the pace of change slows and the Windo
 
 ### Running the macOS build
 
-macOS quarantines anything downloaded from the internet and refuses to open software that is not signed by a registered Apple developer. After the application has been moved to the Applications folder, this removes the quarantine flag:
-
-```
-xattr -dr com.apple.quarantine /Applications/GroupLab.app
-```
-
-Anyone not comfortable running that command should not run this build.
+From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
 
 ### Why it is not signed
 
