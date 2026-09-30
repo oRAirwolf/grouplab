@@ -90,6 +90,9 @@ public class JoinedHoleTests
                     var joined = Assert.Single(near);
                     Assert.True(Off(joined, truth, centres[k]) < 0.03, $"bull {k}: placed {Off(joined, truth, centres[k]):0.000} in off the hole");
                     Assert.True(joined.JoinedHoles >= 2, $"bull {k}: the whole mark holds {joined.JoinedHoles:0.00} holes");
+                    // Entry 318 section 1: the whole mark's size across travels with the shot, to be said to the person.
+                    Assert.InRange(joined.JoinedAcrossHoles!.Value, 2, 3);
+                    Assert.Equal(joined.JoinedAcrossHoles.Value * single, joined.JoinedAcrossInches!.Value, 6);
                     Assert.False(joined.Oversized);
                     Assert.False(joined.PossibleMerge);
                     Assert.InRange(joined.DiameterInches, 0.7 * single, 1.4 * single);
@@ -156,6 +159,68 @@ public class JoinedHoleTests
         // Moving the shot is the other way to settle it: the flag described the point the detector chose.
         session.MoveShot(session.State.Shots[1].Id, new PointD(255, 100));
         Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Joined);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 318 section 1: "a mark much bigger than your bullet goes to Alan to check". A shot placed inside a mark 2.2
+    /// times the bullet across is on the result as a flag, said in bullets across, through a save, and stays until the person says it is on
+    /// the hole or moves it; a mark flagged as possibly two holes goes when the person says it is one shot.
+    /// </summary>
+    [Fact]
+    public void AMarkMuchBiggerThanTheBulletStaysFlaggedOnTheResultUntilSettled()
+    {
+        var scale = new LengthReference(new PointD(0, 0), new PointD(100, 0), 1);
+        BullAim[] bulls = [new(0, "1", new PointD(100, 100)), new(1, "2", new PointD(250, 100)), new(2, "3", new PointD(400, 100))];
+        var assigned = new[] { new AssignedShot(0, 0, 5, 0, 5, 3000, false), new AssignedShot(1, 1, 5, 1, 5, 3000, false), new AssignedShot(2, 2, 5, 2, 5, 3000, false) };
+        MarkingSession Loaded()
+        {
+            var session = new MarkingSession();
+            session.Open("sheet.png");
+            session.SetCalibre(Calibre.Of(0.243));
+            session.LoadDetections(scale, bulls,
+            [
+                new DetectedShot(new PointD(100, 100), assigned[0], 0.22, new DetectedOversize(2.6, false, Joined: true, AcrossInches: 0.535, AcrossHoles: 2.3)),
+                new DetectedShot(new PointD(250, 100), assigned[1], 0.24, null),
+                new DetectedShot(new PointD(400, 100), assigned[2], 0.40, new DetectedOversize(1.9, false)),
+            ], new ShotAssignmentResult(AssignmentMethod.OneToOne, "test", assigned), [], "test");
+            return session;
+        }
+
+        var session = Loaded();
+        int joined = session.State.Shots[0].Id, plain = session.State.Shots[1].Id, pair = session.State.Shots[2].Id;
+        var flags = ReviewQueue.SizeFlags(session.State);
+        Assert.Equal([joined, pair], flags.Select(f => f.ShotId));
+        var mark = flags[0];
+        Assert.True(mark.Joined);
+        Assert.Contains("2.2 times your bullet across", mark.Sentence, StringComparison.Ordinal);
+        Assert.Contains("check that the hole is where GroupLab put it", mark.Sentence, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(flags, f => f.ShotId == plain);
+
+        // Without a caliber the same mark is said in single holes across.
+        session.SetCalibre(null);
+        Assert.Contains("2.3 times a single hole across", ReviewQueue.SizeFlags(session.State)[0].Sentence, StringComparison.Ordinal);
+        session.SetCalibre(Calibre.Of(0.243));
+
+        // It survives a save, and the review queue says the same sentence the result does.
+        var (read, _) = MarkingFile.Read(MarkingFile.Write(session.State));
+        Assert.Equal(flags, ReviewQueue.SizeFlags(read));
+        var item = ReviewQueue.For(session.State).Single(i => i.Kind == ReviewKind.Joined);
+        Assert.Equal(mark.Sentence, item.Sentence);
+
+        // Settled by saying it is on the hole, and by saying the other mark is one shot.
+        ReviewQueue.Apply(session, item, item.Choices.Single(c => c.Label == "It is on the hole"));
+        Assert.Equal([pair], ReviewQueue.SizeFlags(session.State).Select(f => f.ShotId));
+        var two = ReviewQueue.For(session.State).Single(i => i.Kind == ReviewKind.Oversized);
+        ReviewQueue.Apply(session, two, two.Choices.Single(c => c.Action == ReviewAction.Keep));
+        Assert.Empty(ReviewQueue.SizeFlags(session.State));
+
+        // Or by moving it, or by saying it is not a shot.
+        var moved = Loaded();
+        moved.MoveShot(joined, new PointD(104, 100));
+        Assert.DoesNotContain(ReviewQueue.SizeFlags(moved.State), f => f.ShotId == joined);
+        var refused = Loaded();
+        refused.SetNotAShot(joined, true);
+        Assert.DoesNotContain(ReviewQueue.SizeFlags(refused.State), f => f.ShotId == joined);
     }
 
     private static List<RenderDifferenceHole> Near(RenderDifferenceResult result, IPageMapping truth, PointD centre) =>

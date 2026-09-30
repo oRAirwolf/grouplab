@@ -2585,7 +2585,9 @@ public sealed partial class MainWindow : Window
             shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture) : "";
         }
 
-        canvas.DetectorFlags = state.Shots.Where(s => s.IsShot && s.Oversize is not null).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
+        // Entry 318 section 1: a size flag stays on the picture until the person settles it or moves the shot.
+        canvas.DetectorFlags = state.Shots.Where(s => ReviewQueue.StillFlagged(state, s)).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
+        canvas.JoinedFlags = state.Shots.Where(s => ReviewQueue.StillFlagged(state, s) && s.Oversize is { Joined: true }).Select(s => s.Id).ToHashSet();
         var open = ReviewQueue.For(state, analyseSighters).Where(i => !i.Resolved).ToList();
         canvas.NeedsPerson = open.Where(i => i.ShotId is not null).Select(i => i.ShotId!.Value).ToHashSet();
         canvas.ReviewShot = open.FirstOrDefault(i => i.Key == currentReview)?.ShotId ?? open.FirstOrDefault()?.ShotId;
@@ -2765,11 +2767,11 @@ public sealed partial class MainWindow : Window
             // Entry 104 section 4: the flags sit behind one disclosure that counts them, so however many there are the cards stay in view.
             // Each is a review item as well, which the amber line above counts.
             var flagged = new StackPanel { Spacing = 4 };
-            foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null))
+            foreach (var shot in state.Shots.Where(s => ReviewQueue.StillFlagged(state, s)))
             {
                 flagged.Children.Add(new TextBlock
                 {
-                    Text = shot.Oversize!.Describe(ShotLabel(shot.Id)),
+                    Text = shot.Oversize!.Describe(ShotLabel(shot.Id), state.Calibre?.DiameterInches),
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = Tokens.SecondarySize,
                     Classes = { shot.Oversize.Tentative ? AppStyles.Secondary : AppStyles.Alert },
@@ -2781,7 +2783,7 @@ public sealed partial class MainWindow : Window
                 flags.Children.Add(new Expander
                 {
                     // Entry 291 section 7 item 4: a shot placed on the hole inside a larger mark is flagged too, and is not possibly two holes.
-                    Header = state.Shots.Any(s => s.IsShot && s.Oversize is { Joined: true })
+                    Header = state.Shots.Any(s => ReviewQueue.StillFlagged(state, s) && s.Oversize is { Joined: true })
                         ? (flagged.Children.Count == 1 ? "1 mark flagged for its size" : $"{flagged.Children.Count} marks flagged for their size")
                         : flagged.Children.Count == 1 ? "1 mark flagged as possibly two holes" : $"{flagged.Children.Count} marks flagged as possibly two holes",
                     Content = flagged,

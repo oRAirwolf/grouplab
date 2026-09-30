@@ -154,12 +154,15 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// <para>
 /// <see cref="JoinedHoles"/> is set on a hole found inside a mark twice a hole across or more, NOTES-FROM-PLANNING.md entry 291 section 7
 /// item 4: the whole mark's own area in single holes. The hole's geometry is the hole-sized part's, and the mark is shown for review.
+/// <see cref="JoinedAcrossInches"/> is the whole mark's hull across, inches, and <see cref="JoinedAcrossHoles"/> the same in single holes
+/// across, so the person can be told how much bigger than the bullet the mark was (NOTES-FROM-PLANNING.md entry 318 section 1).
 /// </para>
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
     double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN,
-    double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null, double? JoinedHoles = null);
+    double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null, double? JoinedHoles = null, double? JoinedAcrossInches = null,
+    double? JoinedAcrossHoles = null);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -466,7 +469,7 @@ public static class RenderDifferenceHoleDetector
                 int at = holes.FindIndex(h => h.HullX == hx && h.HullY == hy);
                 holes.RemoveAll(h => h.HullX == hx && h.HullY == hy);
                 rejected.RemoveAll(r => r.X == hx && r.Y == hy);
-                holes.Insert(at >= 0 ? at : holes.Count, joined);
+                holes.Insert(at >= 0 ? at : holes.Count, joined with { JoinedAcrossInches = across, JoinedAcrossHoles = across / single });
             }
         }
 

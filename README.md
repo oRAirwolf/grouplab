@@ -393,6 +393,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 
 **Phase 1. Detection spike.**
 - **Built, not proven.** Render-and-difference hole detection, with one size check that the review queue counts.
+- **Built, not proven.** A mark much bigger than your bullet goes to you to check: the shot is put on the hole inside it, ringed in amber on the result on the desktop and the phone, and said as how many times your bullet across it is, until you say it is on the hole or move it.
 - **Done.** Hole-to-bull assignment by one-to-one matching, with sighter and scoring bulls as separate pools.
 - **Done.** An end-to-end `analyze` command, from photograph to group.
 - **Done.** A standing check that compares the corpus's detection counts whenever printed artwork changes.

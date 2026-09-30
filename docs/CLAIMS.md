@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1450 |
-| measured | 1806 |
+| measured | 1807 |
 | decided | 1270 |
 | unbacked | 0 |
-| **total** | **4526** |
+| **total** | **4527** |
 
-**1072** of them were read one sentence at a time and their backing written against the sentence. The other **3454** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1072** of them were read one sentence at a time and their backing written against the sentence. The other **3455** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -884,6 +884,7 @@ one that matters.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Where exactly one part is left, holding half a hole to 1.6 holes and no more than three quarters of the mark, the shot is placed on that part's weighted center and raised in the review queue as a hole read with what is beside it, with the whole mark's size.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): A mark too small to be two holes and 4.5 times longer than wide or more is now residue (NOTES-FROM-PLANNING.md entry 318 section 1); the longest real hole measured, a torn one, is 3.38.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Measured with `grouplab scoreboard` on 2026-09-30, the 9 degree picture went from 2 false marks to none and nothing else on the seven real pictures or the synthetic board moved.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): A shot placed on a joined mark carries the whole mark's size across, and the result on the desktop and the phone rings it in amber and says how many times the bullet across the mark is, until the person says it is on the hole or moves it (entry 318 section 1).
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **Caliber estimation** follows DESIGN.md section 12, with the measured calibration now available.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): On the corrected attribution the .264 and .308 pools agree to three decimal places, 0.919 against 0.920, which they did not before.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Across all 260 holes of known caliber the deficit is **−0.0202 in with a standard deviation of 0.0509**, and it is roughly constant in absolute terms rather than proportional.

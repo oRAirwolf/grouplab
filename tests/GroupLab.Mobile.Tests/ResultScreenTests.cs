@@ -184,6 +184,41 @@ public class ResultScreenTests
         window.Close();
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 318 section 1: a shot placed inside a mark much bigger than the bullet is on the phone's result, ringed on
+    /// the picture and said in a sentence with the queue's own choices, and it goes when the person says the shot is on the hole.
+    /// </summary>
+    [AvaloniaFact]
+    public void AMarkMuchBiggerThanTheBulletIsRingedAndSaidUntilThePersonSettlesIt()
+    {
+        var window = Started();
+        var session = new MarkingSession();
+        session.Open(Turned(0));
+        session.SetCalibre(Calibre.Of(0.243));
+        var scale = new LengthReference(new PointD(0, 0), new PointD(300, 0), 1);
+        var assigned = new[] { new GroupLab.Core.Detection.AssignedShot(0, 0, 5, 0, 5, 3000, false), new GroupLab.Core.Detection.AssignedShot(1, 1, 5, 1, 5, 3000, false) };
+        session.LoadDetections(scale, [new BullAim(0, "1", new PointD(300, 300)), new BullAim(1, "2", new PointD(700, 300))],
+        [
+            new DetectedShot(new PointD(300, 300), assigned[0], 0.22, new DetectedOversize(2.6, false, Joined: true, AcrossInches: 0.535, AcrossHoles: 2.3)),
+            new DetectedShot(new PointD(700, 300), assigned[1], 0.24, null),
+        ], new GroupLab.Core.Detection.ShotAssignmentResult(GroupLab.Core.Detection.AssignmentMethod.OneToOne, "test", assigned), [], "test");
+        int flagged = session.State.Shots[0].Id;
+        var view = new ResultView(new PhoneResult(session.State, null, null, null), new ShotSetup(Calibre.Of(0.243), 3600), UnitSettings.Imperial, () => { });
+        window.Content = view;
+        Dispatcher.UIThread.RunJobs();
+
+        string[] Said() => [.. view.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text ?? "")];
+        var picture = view.GetVisualDescendants().OfType<ResultView.SheetPicture>().Single();
+        Assert.Equal([flagged], picture.Flagged);
+        Assert.Contains(Said(), t => t.Contains("2.2 times your bullet across", StringComparison.Ordinal));
+        Assert.Contains("1 mark to check", Said());
+
+        Press(view, "It is on the hole");
+        Assert.Empty(view.GetVisualDescendants().OfType<ResultView.SheetPicture>().Single().Flagged);
+        Assert.DoesNotContain(Said(), t => t.Contains("times your bullet across", StringComparison.Ordinal));
+        window.Close();
+    }
+
     private static long SessionId(ResultView view) =>
         (long)typeof(ResultView).GetField("sessionId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(view)!;
 

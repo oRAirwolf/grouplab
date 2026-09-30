@@ -30,19 +30,34 @@ public sealed record MarkSize(double Holes, PointD? SplitA = null, PointD? Split
 /// <see cref="Joined"/> marks a shot placed on the one hole-sized part of a mark twice a hole across or more, NOTES-FROM-PLANNING.md entry
 /// 291 section 7 item 4: a hole read together with the printed rings or paper beside it. <see cref="Holes"/> is then the whole mark's area in
 /// holes, and the shot itself is a single hole where it was placed, so it is shown for review rather than offered as two shots.
+/// <see cref="AcrossInches"/> is that whole mark's size across, inches at the sheet's own scale, and <see cref="AcrossHoles"/> the same in
+/// single holes across, so the sentence can say how much bigger than the bullet the mark was (NOTES-FROM-PLANNING.md entry 318 section 1).
 /// </para>
 /// </summary>
-public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null, double? CalibreHoles = null, bool Joined = false)
+public sealed record DetectedOversize(double Holes, bool Tentative, PointD? SplitA = null, PointD? SplitB = null, double? CalibreHoles = null, bool Joined = false,
+    double? AcrossInches = null, double? AcrossHoles = null)
 {
-    /// <summary>The sentence for a shot, in plain words and without naming one cause.</summary>
-    public string Describe(string shot) => Joined
-        ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} was read as one mark about {Holes:0.0} holes' area, a hole joined to the print or paper beside it, and was placed on the part the size of one hole. Check it sits on the hole, and move it if it does not.")
+    /// <summary>
+    /// The sentence for a shot, in plain words and without naming one cause. <paramref name="bulletInches"/> is the caliber named, where
+    /// there is one: a mark joined to what lies beside it is then said in bullets across, the size a shooter knows, and otherwise in holes.
+    /// </summary>
+    public string Describe(string shot, double? bulletInches = null) => Joined
+        ? (AcrossInches, bulletInches, AcrossHoles) switch
+        {
+            ({ } across, { } bullet, _) when bullet > 0 => Checked(shot, across / bullet, "your bullet"),
+            (_, _, { } holes) => Checked(shot, holes, "a single hole"),
+            _ => string.Create(System.Globalization.CultureInfo.InvariantCulture,
+                $"Shot {shot} was read as one mark about {Holes:0.0} holes' area, a hole joined to the print or paper beside it, and was placed on the part the size of one hole. Check it sits on the hole, and move it if it does not."),
+        }
         : Tentative
         ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Look at it, and name the caliber if it is not named.{More}")
         : string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.{More}");
+
+    /// <summary>Entry 318 section 1: a mark much bigger than the bullet, said as how many times across, and what to check.</summary>
+    private static string Checked(string shot, double times, string against) => string.Create(System.Globalization.CultureInfo.InvariantCulture,
+        $"The mark under shot {shot} is {times:0.0} times {against} across, a hole read together with the print or paper beside it, and the shot was put on the part the size of one hole. Check that the hole is where GroupLab put it, and move it if it is not.");
 
     /// <summary>
     /// Entries 196 section 2.3 and 197: where the area holds about three holes of the named caliber, it may be three shots. Three places

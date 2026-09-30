@@ -32,6 +32,9 @@ public sealed class ResultView : UserControl
     private readonly FiguresView full;
     private readonly TextBlock saved = Screens.Line("");
     private SheetPicture? picturePane;
+
+    /// <summary>Entry 318 section 1: the marks to check, a card that follows every change.</summary>
+    private readonly StackPanel checks = new() { Spacing = 8 };
     private long? sessionId;
     private readonly Action again;
 
@@ -117,7 +120,9 @@ public sealed class ResultView : UserControl
             var bitmap = new Bitmap(path);
             int turns = ViewRotation.Upright(result.State.Scale, bitmap.PixelSize.Width, bitmap.PixelSize.Height, result.State.ViewQuarterTurns);
             picturePane = new SheetPicture(bitmap, turns, () => session.State.Shots.Where(s => s.IsShot).ToList(),
-                definition is null && AimedByHand(result.State) ? shot => AimColour(session.State, shot.Bull) : null);
+                definition is null && AimedByHand(result.State) ? shot => AimColour(session.State, shot.Bull) : null,
+                () => ReviewQueue.SizeFlags(session.State).Select(f => f.ShotId).ToHashSet());
+            picture.Children.Add(checks);
 
             // Entry 291 section 2.2: the holes are fixed on their own page, and the result measures again when it comes back.
             picture.Children.Add(Screens.Primary("Fix holes", () =>
@@ -382,7 +387,46 @@ public sealed class ResultView : UserControl
         plot.Show(state, definition, units, Label, Bull);
         full.Show(state, units);
         saved.Text = SavedWords(sessionId);
+        ShowChecks();
         picturePane?.InvalidateVisual();
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 318 section 1: a mark much bigger than the bullet goes to the person to check. Each one still standing is
+    /// ringed in amber on the picture and said here in a sentence, with the review queue's own choices; it stays until one of them is taken
+    /// or the shot is moved in Fix holes.
+    /// </summary>
+    private void ShowChecks()
+    {
+        checks.Children.Clear();
+        var state = session.State;
+        var flags = ReviewQueue.SizeFlags(state);
+        checks.IsVisible = flags.Count > 0;
+        if (flags.Count == 0)
+        {
+            return;
+        }
+
+        var open = ReviewQueue.For(state).Where(i => !i.Resolved && i.Kind is ReviewKind.Joined or ReviewKind.Oversized).ToList();
+        var card = new List<Control> { Screens.Heading(flags.Count == 1 ? "1 mark to check" : $"{flags.Count} marks to check") };
+        foreach (var flag in flags)
+        {
+            card.Add(Screens.Line(flag.Sentence));
+            if (open.FirstOrDefault(i => i.ShotId == flag.ShotId) is { } item)
+            {
+                foreach (var choice in item.Choices)
+                {
+                    card.Add(Screens.Choice(choice.Label, () =>
+                    {
+                        ReviewQueue.Apply(session, item, choice);
+                        Changed();
+                    }));
+                }
+            }
+        }
+
+        card.Add(Screens.Dim("Each is ringed in amber on the picture. Moving the shot in Fix holes settles it too."));
+        checks.Children.Add(Screens.Card([.. card]));
     }
 
     private async Task AsSheet(WorkingImage working, TargetDefinition sheet, ShotSetup setup, Action again)
@@ -496,10 +540,15 @@ public sealed class ResultView : UserControl
     /// Entry 291 section 2: it takes no touches. Entry 281 section 1.7 already scaled it alike across and down and turned it with the
     /// marking's view; entry 291 found it turned twice, by itself and again by the box it sat in, which also stood a screen high and empty.
     /// </summary>
-    internal sealed class SheetPicture(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Func<MarkedShot, IBrush?>? colour = null) : Control
+    /// <para>Entry 318 section 1: a shot whose mark is flagged for its size and not yet settled has a second ring around it, in amber.</para>
+    internal sealed class SheetPicture(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Func<MarkedShot, IBrush?>? colour = null,
+        Func<IReadOnlySet<int>>? flagged = null) : Control
     {
         /// <summary>The quarter turns the picture is shown by.</summary>
         internal int Turns => ViewRotation.Normalise(turns);
+
+        /// <summary>The shots ringed in amber as marks to check, entry 318 section 1.</summary>
+        internal IReadOnlySet<int> Flagged => flagged?.Invoke() ?? new HashSet<int>();
 
         private double PixelWidth => image.PixelSize.Width;
 
@@ -535,10 +584,16 @@ public sealed class ResultView : UserControl
             var pen = new Pen(Brushes.OrangeRed, 2);
             // Entry 280 section 2, Shots A: a shot left out is dashed on the picture, still there.
             var leftOut = new Pen(Brushes.OrangeRed, 2, new DashStyle([2, 2], 0));
+            var check = new Pen(new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected), 3);
+            var marked = Flagged;
             foreach (var shot in shots())
             {
                 var ring = colour?.Invoke(shot) is { } brush ? new Pen(brush, 2, shot.Exclusion is null ? null : new DashStyle([2, 2], 0)) : shot.Exclusion is null ? pen : leftOut;
                 context.DrawEllipse(null, ring, ToScreen(shot.Image), 9, 9);
+                if (marked.Contains(shot.Id))
+                {
+                    context.DrawEllipse(null, check, ToScreen(shot.Image), 15, 15);
+                }
             }
         }
     }

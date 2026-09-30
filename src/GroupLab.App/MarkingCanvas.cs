@@ -218,6 +218,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     public IReadOnlyDictionary<int, bool> DetectorFlags { get; set; } = new Dictionary<int, bool>();
 
     /// <summary>
+    /// The flagged shots placed on the hole inside a larger mark, NOTES-FROM-PLANNING.md entry 318 section 1: their ring is amber, the colour
+    /// of something for the person to check, where a mark that may be two holes stays in the alert colour.
+    /// </summary>
+    public IReadOnlySet<int> JoinedFlags { get; set; } = new HashSet<int>();
+
+    /// <summary>
     /// The shots the review queue still wants a decision on, drawn amber, and the one the editor is on now, whose line to its bull is drawn
     /// amber and dashed as the concept draws it (NOTES-FROM-PLANNING.md entry 97 section 1).
     /// </summary>
@@ -584,7 +590,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
             if (DetectorFlags.TryGetValue(shot.Id, out bool tentative))
             {
-                Marks.Ring(context, tentative ? Marks.Faint : Marks.Alert, c, radius + AlertRingGap, tentative ? 1 : Tokens.MarkCoreWidth, Marks.Dashed);
+                Marks.Ring(context, JoinedFlags.Contains(shot.Id) ? Marks.NeedsPerson : tentative ? Marks.Faint : Marks.Alert, c, radius + AlertRingGap, tentative ? 1 : Tokens.MarkCoreWidth, Marks.Dashed);
             }
 
             Marks.Dot(context, colour, c, 1);

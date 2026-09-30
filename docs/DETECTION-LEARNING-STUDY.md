@@ -323,7 +323,9 @@ same place, and it is the next thing to look at: why the lens fit cannot follow 
 | 2026-09-26, 6 ARC, Magnus S | 25 of 25 | 1 | 0.021 in | 0.037 in |
 | 2026-09-26, 6.5 Creedmoor | 22 of 23 | 1 | 0.026 in | 0.055 in |
 
-Together: 172 of 173 holes found and 2 false marks, where it was 4.
+Together: 172 of 173 holes found and 2 false marks, where it was 4. The shot placed inside a mark twice a hole across or more is now shown
+on the result itself, on the desktop and the phone, ringed in amber and said as how many times the bullet across the mark is, until the
+person says the shot is on the hole or moves it.
 
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.

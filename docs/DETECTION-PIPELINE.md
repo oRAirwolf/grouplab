@@ -284,7 +284,9 @@ longer than wide with the area of 1.15 holes: too large for the residue rule at 
 too small to be two holes and 4.5 times longer than wide or more is now residue (NOTES-FROM-PLANNING.md entry 318 section 1); the longest
 real hole measured, a torn one, is 3.38. Measured with `grouplab scoreboard` on 2026-09-30, the 9 degree picture went from 2 false marks
 to none and nothing else on the seven real pictures or the synthetic board moved. The rings failed to cancel there because the
-registration leaves the markers of the sheet's far column out: docs/DETECTION-LEARNING-STUDY.md has what was measured and what was tried.
+registration leaves the markers of the sheet's far column out: docs/DETECTION-LEARNING-STUDY.md has what was measured and what was tried. A
+shot placed on a joined mark carries the whole mark's size across, and the result on the desktop and the phone rings it in amber and says
+how many times the bullet across the mark is, until the person says it is on the hole or moves it (entry 318 section 1).
 
 **Caliber estimation** follows DESIGN.md section 12, with the measured calibration now available. Median hull diameter over all detections, then divide by the measured ratio to recover caliber:
 

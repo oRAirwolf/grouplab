@@ -38,6 +38,12 @@ public enum ReviewKind
 /// </summary>
 public sealed record ReviewItem(string Key, ReviewKind Kind, int? ShotId, int? Bull, PointD Image, string Sentence, IReadOnlyList<ReviewChoice> Choices, bool Resolved);
 
+/// <summary>
+/// A shot whose mark was flagged for its size and not yet settled, as the result shows it (NOTES-FROM-PLANNING.md entry 318 section 1): where it
+/// is, the sentence, whether it was judged from too few marks, and whether it is a hole placed inside a larger mark.
+/// </summary>
+public sealed record SizeFlag(int ShotId, PointD Image, string Sentence, bool Tentative, bool Joined);
+
 /// <summary>One way to settle a review item.</summary>
 public sealed record ReviewChoice(string Label, ReviewAction Action, int? Bull = null);
 
@@ -194,8 +200,8 @@ public static class ReviewQueue
         // person can check it sits on the hole.
         foreach (var shot in shots.Where(s => s.Oversize is { Joined: true } && !OnlySighters(s.Bull)))
         {
-            string key = $"joined:{shot.Id}";
-            items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]),
+            string key = JoinedKey(shot.Id);
+            items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id], state.Calibre?.DiameterInches),
                 [new ReviewChoice("It is on the hole", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
         }
 
@@ -400,6 +406,37 @@ public static class ReviewQueue
                 session.Dismiss(item.Key);
                 return item.ShotId;
         }
+    }
+
+    /// <summary>The key of the review item a shot placed inside a larger mark raises, entry 291 section 7 item 4.</summary>
+    public static string JoinedKey(int shotId) => string.Create(CultureInfo.InvariantCulture, $"joined:{shotId}");
+
+    /// <summary>
+    /// Whether a shot's size flag still stands, NOTES-FROM-PLANNING.md entry 318 section 1: a mark much bigger than the bullet stays flagged on
+    /// the result until the person settles it, by saying the shot is on the hole (or one shot), or by moving it, which clears the flag with
+    /// the measurement it described. A shot marked as not a shot carries no flag.
+    /// </summary>
+    public static bool StillFlagged(MarkingState state, MarkedShot shot)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(shot);
+        bool Settled(string key) => state.Dismissed?.Contains(key) == true;
+        return shot.IsShot && shot.Oversize is { } flag
+            && !(flag.Joined ? Settled(JoinedKey(shot.Id)) : Settled($"oversized:{shot.Id}") || Settled("oversized:all"));
+    }
+
+    /// <summary>
+    /// What the result shows of the size flags, entry 318 section 1: every shot whose flag still stands, with the sentence the review queue
+    /// says about it, in the sheet's order. The phone marks each on the picture and lists the sentences; the desktop draws the same shots'
+    /// rings and panel from it.
+    /// </summary>
+    public static IReadOnlyList<SizeFlag> SizeFlags(MarkingState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text ?? "");
+        return [.. state.Shots.Where(s => StillFlagged(state, s)).Select(s => new SizeFlag(s.Id, s.Image,
+            s.Oversize!.Describe(labels.TryGetValue(s.Id, out var label) ? label : s.Id.ToString(CultureInfo.InvariantCulture), state.Calibre?.DiameterInches),
+            s.Oversize.Tentative, s.Oversize.Joined))];
     }
 
     private static int? Nearest(MarkingState state, PointD image)

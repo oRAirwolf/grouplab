@@ -285,7 +285,8 @@ public static class AutomaticMarking
 
         var detections = holes.Holes.Select((h, i) => new DetectedShot(new PointD(h.X, h.Y), assignment.Shots[i], h.DiameterInches * printScale,
             h.Oversized ? new DetectedOversize(h.SizeHoles ?? 0, h.OversizeTentative, h.SplitA, h.SplitB, h.CalibreHoles)
-                : h.JoinedHoles is { } whole ? new DetectedOversize(whole, false, CalibreHoles: h.CalibreHoles, Joined: true)
+                : h.JoinedHoles is { } whole ? new DetectedOversize(whole, false, CalibreHoles: h.CalibreHoles, Joined: true,
+                    AcrossInches: h.JoinedAcrossInches * printScale, AcrossHoles: h.JoinedAcrossHoles)
                 : null,
             h.SizeHoles is { } size && !h.PossibleMerge ? new MarkSize(size, h.SplitA, h.SplitB) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();

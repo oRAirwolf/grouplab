@@ -100,9 +100,9 @@ public sealed partial class MainWindow
                 why.Add(new ReportSection("More figures", MoreFigureLines(state, all)));
             }
 
-            foreach (var shot in state.Shots.Where(s => s.IsShot && s.Oversize is not null))
+            foreach (var shot in state.Shots.Where(s => ReviewQueue.StillFlagged(state, s)))
             {
-                summary.Add(shot.Oversize!.Describe(ShotLabel(shot.Id)));
+                summary.Add(shot.Oversize!.Describe(ShotLabel(shot.Id), state.Calibre?.DiameterInches));
             }
         }
         else
