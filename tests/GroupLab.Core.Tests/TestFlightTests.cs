@@ -44,6 +44,26 @@ public class TestFlightTests
         Assert.True(Environment.GetEnvironmentVariable("CI") is null, "no python on this CI runner, so the TestFlight steps' self-test did not run, and it must");
     }
 
+    /// <summary>
+    /// Entry 311 section 3 item 4: TestFlight's feedback and crashes summarized, never a screenshot or a tester's email, and never failing
+    /// the run that reads them.
+    /// </summary>
+    [Fact]
+    public void TheFeedbackSummaryPassesItsOwnSelfTestAndRunsAfterTheSteps()
+    {
+        if (IpadLogsTests.Python("scripts/testflight-feedback.py --self-test") is { } run)
+        {
+            Assert.True(run.Exit == 0, "scripts/testflight-feedback.py --self-test failed:\n" + run.Said);
+        }
+
+        string workflow = File.ReadAllText(Repo.PathTo(".github", "workflows", "testflight.yml")).ReplaceLineEndings("\n");
+        int feedback = workflow.IndexOf("python scripts/testflight-feedback.py --run", StringComparison.Ordinal);
+        Assert.True(feedback > workflow.IndexOf("python scripts/testflight.py --run", StringComparison.Ordinal));
+        Assert.Contains("continue-on-error: true", workflow[..feedback], StringComparison.Ordinal);
+        string script = File.ReadAllText(Repo.PathTo("scripts", "testflight-feedback.py"));
+        Assert.DoesNotContain("email", script.Split("FIELDS = ")[1].Split('\n')[0], StringComparison.Ordinal);
+    }
+
     [Fact]
     public void TheWorkflowFollowsEveryNightlyAndNeverHoldsAMacRunner()
     {
