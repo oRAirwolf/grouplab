@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 15:50 UTC, after nightly 137 (the first TestFlight upload since 134) and entry 315 finished.
+**Last rewritten:** 2026-09-30 20:50 UTC, during entry 318 (sections 3 and 4 done, 1 with a worker, the list of what is left added).
 
 ---
 
@@ -32,10 +32,23 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## The next three
 
-1. The iPad has 137 with GroupLab's Files folder: read its log and Documents over USB after Alan's next use
-   (`pymobiledevice3 apps query org.grouplab.app` for the build; never list other apps).
+**What is left of the plan** (entry 318 section 5, for planning's next batch; one line each, with what blocks it):
+- **Detection, angled photos** (318.1): being built; the scoreboard judges it. **Holes on any target** (318.2): next, nothing blocks.
+- **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
+- **Garmin Xero import** (Phase 5): needs one sample export file from anybody with a Xero.
+- **Velocity regression, predicted against measured vertical** (Phase 5): not started; nothing blocks but priority.
+- **Synchronization, cloud adapters over three-tier storage** (Phase 7): not started; needs planning's design.
+- **iOS** (Phase 8): on TestFlight and on the iPad; the device checks need a sitting (50), the public beta request 59, GroupLab Dev
+  on the iPad request 61, an App Store release Alan's word.
+- **Performance** (Phase 9): the baseline gate and any optimization; waits for planning to say the application has settled.
+- **Proof of the 27 "built, not proven" features**: the gates need real material: requests 9, 16, 20, 33, 56, 57, 58.
+- **Stores**: Microsoft in certification (38); Google Play past internal test is Alan's call; Test Lab waits on request 62.
+- **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
+- **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
+
+1. Entry 318 sections 1 and 2 (the worker is on 1), then this list's first free item.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
-3. Question 76 and 75 when planning answers; each nightly's notes need placing in `website/features.json` or the site stops building.
+3. Each nightly's notes need placing in `website/features.json`, or the site stops building.
 
 ## Blocked, and on what
 
@@ -44,15 +57,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **13** (59 TestFlight groups; 56 printer scale; 50 the device sitting; 54, 57, 58 at the
+Open requests in `docs/notes/for-alan.md`: **14** (59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting; 54, 57, 58 at the
 range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (75 and 76 answered in entry 318, as built):
 
-- **76** a held-back cartridge typed in full without choosing it (B built: it must be chosen)
-- **75** colored ring bulls use more ink than black on a color inkjet (A proposed: accept it)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
@@ -81,8 +92,6 @@ Entries 311 to 317 are folded; their files are in `C:\Dev\grouplab-trash\2026-09
 
 - **The logs were split again** on 2026-09-28 (entry 160's rule): the live files keep the newest fifteen entries and twelve results
   sections; the rest is whole in `docs/notes/archive/`. A question is taken as open only when its line reads `**Status: open`.
-- **A push to main while a nightly runs cancels it** once that push's build passes (the nightly's concurrency group), iOS job included.
-  A notes-only commit headed `[notes] ` skips CI and cancels nothing.
 - **The Mac packaging can be run by hand**: `gh workflow run package.yml --ref <branch> -f ref=<sha>` proves the signing and
   notarization on a commit without a nightly, and publishes nothing.
 - **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
@@ -97,14 +106,8 @@ Entries 311 to 317 are folded; their files are in `C:\Dev\grouplab-trash\2026-09
   black is as large as on white; a synthetic one is not.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words.
-- **Every published sentence has its backing**: `scripts/claims.py --check` fails CI otherwise (entry 159).
-- **Nothing under `website/server/` may hold a carriage return**: it is copied to Linux as it is.
-- **Nothing is written into a HestiaCP `conf/web/<domain>/` folder** but the include itself.
-- **Alan's own photographs and scans may be published**, and so may what he passes on from Unholy (also TNA) and his other friends;
-  the 2026-09-16 friend scan never is. Justin is credited as "Justin" only.
-- **A sample over about 10 MB is never committed**; it goes on the `test-data` release.
 - **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary
   (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
-- **A push headed `[notes] ` builds nothing**, so the last commit of a push that should make a nightly must not be one (it cancelled
+- **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a push that should make a nightly must not be one (it cancelled
   a234baeb's build on 2026-09-30, and e8fa5ce0 rebuilt it).
 - **Entry 317's budget is in force:** one worker by default, the ccusage line once a day in for-alan.md.
