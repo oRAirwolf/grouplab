@@ -165,6 +165,45 @@ internal sealed class IntervalChart : Control
         return (places, y - RowGap);
     }
 
+    /// <summary>
+    /// The one scale every row shares, entry 312 section 2. A spread, a radius and a CEP are sizes, so the scale starts at zero whenever
+    /// nothing is below it: two loads reading 0.56 mil once sat at opposite ends of their rows, because the scale ran only from the smaller
+    /// value to the larger and a difference in the third decimal filled the whole width.
+    /// </summary>
+    internal (double Lo, double Hi) Axis()
+    {
+        double lo = Rows.Min(r => Math.Min(r.Value, r.Lower ?? r.Value));
+        double hi = Rows.Max(r => Math.Max(r.Value, r.Upper ?? r.Value));
+        double pad;
+        if (lo >= 0)
+        {
+            lo = 0;
+            pad = hi * 0.08;
+        }
+        else
+        {
+            // A little air at each end so a whisker never ends exactly on the edge, where it would read as cut off.
+            pad = (hi - lo) * 0.12;
+            lo -= pad;
+        }
+
+        hi += pad;
+        if (hi - lo < 1e-9)
+        {
+            hi = lo + 1;
+        }
+
+        return (lo, hi);
+    }
+
+    /// <summary>Where a value sits across a row's line, on the shared scale.</summary>
+    internal double X(double value, Rect bar)
+    {
+        var (lo, hi) = Axis();
+        double left = bar.Left + Whisker, right = bar.Right - Whisker;
+        return left + (((value - lo) / (hi - lo)) * (right - left));
+    }
+
     public override void Render(DrawingContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -177,24 +216,11 @@ internal sealed class IntervalChart : Control
         var dim = new SolidColorBrush(palette.Dim);
         var (places, _) = Places(Bounds.Width);
 
-        double lo = Rows.Min(r => Math.Min(r.Value, r.Lower ?? r.Value));
-        double hi = Rows.Max(r => Math.Max(r.Value, r.Upper ?? r.Value));
-        if (hi - lo < 1e-9)
-        {
-            hi = lo + 1;
-        }
-
-        // A little air at each end so a whisker never ends exactly on the edge, where it would read as cut off.
-        double pad = (hi - lo) * 0.12;
-        lo -= pad;
-        hi += pad;
-
         for (int i = 0; i < Rows.Count; i++)
         {
             var row = Rows[i];
             var place = places[i];
-            double left = place.Bar.Left + Whisker, right = place.Bar.Right - Whisker;
-            double At(double value) => left + (((value - lo) / (hi - lo)) * (right - left));
+            double At(double value) => X(value, place.Bar);
             double y = place.Bar.Center.Y;
 
             context.DrawText(NameText(row.Label, Bounds.Width - Indent, dim), place.Name.TopLeft);
