@@ -24,6 +24,26 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 304: the tour page's top, as Alan sees it on his desktop
+
+**Status: done 2026-09-30.** The tour page's "Your own targets" box lays its picture full width under the words, each theme's picture linking to its full size; the top bar stays on one line from about 1500 px, and between 861 and 1499 px Community, Release notes, Support and GitHub move into a "More" menu; the tour index title has the same top space as other pages. Checked in headless Chrome at 1280, 1920 and 3840 px in both themes; phone width not checkable there, and unchanged.
+
+From planning, 2026-09-29, for Alan. Alan sent a screenshot of grouplab.org/tour/ in dark mode, about 1800 px wide (his monitor is a 48 inch
+3840 by 2160 OLED). Planning sees these problems; Alan may add more.
+
+1. **The "Your own targets" box is mostly empty.** The label and paragraph sit at the bottom left, with a large blank area above them, and
+   the box is far taller than its content. Align the text to the top (or center it against the picture), and size the box to its content.
+2. **The picture in that box is tiny and unreadable** (about 450 px wide showing a whole desktop window). Make it large enough to read,
+   sharp at 2x, and let it open full size on click. Tie in entry 300 section 5 (sharp images on the site).
+3. **The top bar wraps**: "Send a target" and "Release notes" each break onto two lines at this width, so the bar is uneven. Keep every
+   item on one line (no wrapping in nav labels; tighten spacing, or move items into a "More" menu before they would wrap), checked from
+   1280 to 3840 px wide and on a phone.
+4. **The page title sits hard under the top bar** with almost no space above it. Give it the same top spacing as the other pages.
+5. Check the other tour pages and the home page for the same four problems, and fix them the same way. Screenshot each at 1280, 1920 and
+   3840 wide, dark and light, before and after, and list them in the fold.
+
+Order: after entry 302, alongside the site work in entry 300.
+
 ## 2026-09-30, entry 300: the sheet preview drawn live and sharp, not a compressed picture
 
 **Status: done 2026-09-30.** The sheet preview is drawn live from the same vectors the PDF is written from (the Scene), sharp at any zoom, on the desktop's Targets and the phone's sheet page, with "Open as PDF" beside the zoom; drawn against the PDF's own rasterizer it differs by under 4 gray levels on rings, C bulls and a zero grid. The site's desktop screenshots and sheet pictures are lossless WebP, and the sheet close-ups SVG.
