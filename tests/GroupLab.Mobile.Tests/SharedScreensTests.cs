@@ -123,6 +123,44 @@ public class SharedScreensTests
         Assert.NotSame(Avalonia.Media.Brushes.Black, TopLevel.GetTopLevel(shell)!.Background);
     }
 
+    /// <summary>
+    /// Crash reports 9 and 10: the one Shell moved to a second window (a second Android activity, started over the idle screen) while the
+    /// first still had layout queued for its pieces. Taken out the old way, the first window's next pass stops with "InvalidateArrange on
+    /// wrong LayoutManager"; let go through <see cref="Shell.LetGo"/>, the first window finishes its work first and the second lays it out.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheShellMovesToASecondWindowWithLayoutStillQueued()
+    {
+        (Window First, Window Second, Shell Shell) Queued()
+        {
+            var shell = Started();
+            shell.Show(Shell.Place.Settings);
+            Dispatcher.UIThread.RunJobs();
+
+            // What a changed benchmark bar or a newly placed page does: a piece waits in the first window's queue to be arranged again.
+            shell.GetVisualDescendants().OfType<Button>().First(b => b.IsEffectivelyVisible).InvalidateArrange();
+            var second = new Window { Width = 412, Height = 915 };
+            second.Show();
+            return (TopLevel.GetTopLevel(shell) as Window ?? throw new InvalidOperationException("no window"), second, shell);
+        }
+
+        var (first, second, shell) = Queued();
+        first.Content = null;
+        second.Content = shell;
+        Assert.Contains("wrong LayoutManager", Assert.Throws<ArgumentException>(first.UpdateLayout).Message);
+        second.Close();
+
+        (first, second, shell) = Queued();
+        Shell.LetGo(shell);
+        second.Content = shell;
+        first.UpdateLayout();
+        second.UpdateLayout();
+        Assert.Same(second, TopLevel.GetTopLevel(shell));
+        Assert.True(shell.Bounds.Width > 0);
+        first.Close();
+        second.Close();
+    }
+
     private static string Words(Button button) =>
         string.Join(" ", button.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).Where(t => !string.IsNullOrWhiteSpace(t)));
 }

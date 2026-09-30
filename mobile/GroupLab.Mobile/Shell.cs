@@ -154,6 +154,29 @@ public sealed class Shell : UserControl
         }
     }
 
+    /// <summary>
+    /// Entry 236: a new window (an Android activity) takes the one application view from the window that held it, so what the person was
+    /// doing moves with it. Crash reports 9 and 10: the old window still held layout queued for the view's pieces, some queued by the
+    /// letting go itself as their styles came off, and when it ran after the move it found them in the new window and stopped with
+    /// "InvalidateArrange on wrong LayoutManager". The old window runs that queue once the view is out of it, which drops every piece no
+    /// longer its own, before any other window can take the view.
+    /// </summary>
+    internal static void LetGo(Control view)
+    {
+        var before = TopLevel.GetTopLevel(view);
+        switch (view.Parent)
+        {
+            case Avalonia.Controls.Presenters.ContentPresenter presenter:
+                presenter.Content = null;
+                break;
+            case ContentControl holder:
+                holder.Content = null;
+                break;
+        }
+
+        before?.UpdateLayout();
+    }
+
     /// <summary>Entry 259 screen 5: Ballistics with a result's group carried in, for its hit chance.</summary>
     internal void ShowBallistics(GroupLab.Core.Marking.MarkingState state, bool zeroOffset = false)
     {

@@ -74,18 +74,12 @@ public class MainActivity : AvaloniaMainActivity
 
         // Entry 236: a new activity that starts before the old one has gone, as a task cleared and restarted, or a change of window mode on
         // a tablet does, found the one Shell still inside the old activity's view, and the application stopped with "already has a visual
-        // parent". The Shell is let go of first, so it moves to the new activity with everything the person was doing.
+        // parent". The Shell is let go of first, so it moves to the new activity with everything the person was doing. Crash reports 9 and
+        // 10: the old activity then runs the layout it still had queued for the Shell's pieces, so none of it is left to run after the move,
+        // as a second activity started over the idle screen found.
         if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime { MainView: { } shell })
         {
-            switch (shell.Parent)
-            {
-                case Avalonia.Controls.Presenters.ContentPresenter presenter:
-                    presenter.Content = null;
-                    break;
-                case Avalonia.Controls.ContentControl holder:
-                    holder.Content = null;
-                    break;
-            }
+            Shell.LetGo(shell);
         }
 
         base.OnCreate(savedInstanceState);
