@@ -54,6 +54,15 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
     private bool manual;
     private int torchChoice;
     private bool torchOn;
+
+    /// <summary>
+    /// Entry 302 on iOS: the torch's levels. An iPhone or iPad sets its torch anywhere from a little above 0 to 1, so the torch on Auto
+    /// moves in fifths of full strength, as a phone with five strength levels does on Android; On is full strength.
+    /// </summary>
+    internal const int TorchSteps = 5;
+
+    private int torchLevel;
+    private volatile TorchGovernor torchAuto = new(0);
     private long frames;
     private int? codesRead;
     private Instruction? lastSay;
@@ -87,8 +96,12 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             torchChoice = (torchChoice + 1) % 3;
             Phone.Settings.SaveCaptureTorch(torchChoice);
             screen.ShowTorch(torchChoice);
-            bool on = torchChoice == 1;
-            sessionQueue.DispatchAsync(() => SetTorch(on));
+            int level = torchChoice == 1 ? TorchSteps : 0;
+            sessionQueue.DispatchAsync(() =>
+            {
+                torchAuto = new TorchGovernor(TorchMax());
+                SetTorch(level);
+            });
             DiagnosticLog.Info("camera.torch", ("choice", torchChoice switch { 1 => "on", 2 => "off", _ => "auto" }));
         };
         screen.Tapped += FocusAt;
@@ -134,7 +147,9 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
 
             session.StartRunning();
             torchOn = false;
-            SetTorch(torchChoice == 1);
+            torchLevel = 0;
+            torchAuto = new TorchGovernor(TorchMax());
+            SetTorch(torchChoice == 1 ? TorchSteps : 0);
             DiagnosticLog.Info("camera.start", ("mode", manual ? "manual" : "guided"), ("torch", torchChoice), ("device", device.LocalizedName),
                 ("picture", $"{picture.Width}x{picture.Height}"), ("running", session.Running));
         });
@@ -151,7 +166,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         motion.StopDeviceMotionUpdates();
         sessionQueue.DispatchAsync(() =>
         {
-            SetTorch(false);
+            SetTorch(0);
             if (session.Running)
             {
                 session.StopRunning();
@@ -377,11 +392,19 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         });
     }
 
-    /// <summary>The torch on or off; on the session's queue, since the device is locked to change it.</summary>
-    private void SetTorch(bool on)
+    /// <summary>The highest torch level this camera offers: <see cref="TorchSteps"/>, or 0 where it has no torch.</summary>
+    private int TorchMax() => device is { HasTorch: true } && device.IsTorchModeSupported(AVCaptureTorchMode.On) ? TorchSteps : 0;
+
+    /// <summary>
+    /// The torch at <paramref name="level"/> fifths of full strength, 0 for off, and never above what iOS allows while the device is warm;
+    /// on the session's queue, since the device is locked to change it.
+    /// </summary>
+    private void SetTorch(int level)
     {
+        level = Math.Clamp(level, 0, TorchSteps);
+        bool on = level > 0;
         var mode = on ? AVCaptureTorchMode.On : AVCaptureTorchMode.Off;
-        if (!device.HasTorch || on == torchOn || !device.IsTorchModeSupported(mode))
+        if (!device.HasTorch || level == torchLevel || !device.IsTorchModeSupported(mode))
         {
             return;
         }
@@ -394,8 +417,22 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
 
         try
         {
-            device.TorchMode = mode;
+            if (on)
+            {
+                float strength = Math.Min(level / (float)TorchSteps, AVCaptureDevice.MaxAvailableTorchLevel);
+                if (!device.SetTorchModeLevel(strength, out NSError levelError))
+                {
+                    DiagnosticLog.Info("camera.torch", ("error", levelError?.LocalizedDescription), ("level", level));
+                    return;
+                }
+            }
+            else
+            {
+                device.TorchMode = mode;
+            }
+
             torchOn = on;
+            torchLevel = level;
         }
         finally
         {
@@ -468,11 +505,13 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
             verdict = CaptureGuidance.JudgeFrame(grey, metadata, definition, backend, codesRead);
         }
 
-        // Torch on Auto: on when the paper is dim or the light uneven, and left on for the rest of the session so it does not flicker.
-        if (torchChoice == 0 && !torchOn && (verdict.Quality is { ExposurePart: < CaptureGuidance.Holds, ClippedShare: <= CaptureQualities.FineClipped } || verdict.Evenness is < PictureCheck.EvenLight))
+        // Entry 302, torch on Auto, as on Android: it starts at the lowest level, steps up only while the paper is dim, and steps down or goes
+        // off on glare, a hotspot or paper already bright, with a settling time between changes so it never flickers (TorchGovernor).
+        if (torchChoice == 0 && torchAuto.Next(verdict.Quality, verdict.Evenness, clock.ElapsedMilliseconds) is { } change)
         {
-            sessionQueue.DispatchAsync(() => SetTorch(true));
-            DiagnosticLog.Info("camera.torch", ("auto", "on"), ("evenness", verdict.Evenness));
+            sessionQueue.DispatchAsync(() => SetTorch(change.Level));
+            DiagnosticLog.Info("camera.torch", ("auto", change.Level == 0 ? "off" : "on"), ("level", change.Level), ("of", TorchSteps), ("reason", change.Reason),
+                ("paper", verdict.Quality?.PaperLevel), ("clipped", verdict.Quality?.ClippedShare), ("evenness", verdict.Evenness));
         }
 
         long now = clock.ElapsedMilliseconds;
