@@ -272,7 +272,7 @@ internal sealed class CompositePlot : Control
         MinHeight = 200;
         PointerPressed += (_, e) =>
         {
-            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && KeyLayout() is { Collapsed: true } layout && layout.Key.Contains(e.GetPosition(this)))
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && KeyLayout() is { Collapsed: true } layout && KeyHit(layout.Key).Contains(e.GetPosition(this)))
             {
                 keyOpen = !keyOpen;
                 InvalidateVisual();
@@ -602,7 +602,16 @@ internal sealed class CompositePlot : Control
         context.DrawLine(pen, at + new Vector(0, -7), at + new Vector(0, 7));
     }
 
-    private const double KeyLine = 20, KeySwatch = 22, KeyPad = 10, KeyGap = 8, SmallestData = 240, ChipHeight = 28;
+    private const double KeyLine = 20, KeySwatch = 22, KeyPad = 10, KeyGap = 8, SmallestData = 240, KeyButtonHeight = 24;
+
+    /// <summary>
+    /// The height of the strip the collapsed Key button sits in, all of it the button's to tap. The desktop's 28 fits a pointer; the phone
+    /// sets a thumb's height (entry 290 section 6), and the button is drawn the same size in the middle of it.
+    /// </summary>
+    internal static double KeyStrip { get; set; } = 28;
+
+    /// <summary>What a tap on the collapsed Key button may land on: the button and the strip around it, not the plot beneath.</summary>
+    private static Rect KeyHit(Rect button) => new(0, 0, button.Right + (KeyGap / 2), KeyStrip);
 
     /// <summary>Whether a collapsed key has been opened from its button.</summary>
     private bool keyOpen;
@@ -637,7 +646,8 @@ internal sealed class CompositePlot : Control
             return (best.Data, best.Key, false);
         }
 
-        return (new Rect(0, ChipHeight, all.Width, Math.Max(0, all.Height - ChipHeight)), new Rect(KeyGap / 2, 2, 56, ChipHeight - 4), true);
+        double button = Math.Min(KeyButtonHeight, KeyStrip - 4);
+        return (new Rect(0, KeyStrip, all.Width, Math.Max(0, all.Height - KeyStrip)), new Rect(KeyGap / 2, (KeyStrip - button) / 2, 56, button), true);
     }
 
     /// <summary>The rectangle the plot itself is drawn in, clear of the key.</summary>
@@ -662,7 +672,7 @@ internal sealed class CompositePlot : Control
         }
 
         double width = Math.Min(Math.Max(0, Bounds.Width - (2 * pad)), swatch + texts.Max(t => t.Width) + (2 * pad));
-        var box = collapsed ? new Rect(pad, ChipHeight + 2, width, (entries.Count * line) + pad) : place;
+        var box = collapsed ? new Rect(pad, KeyStrip + 2, width, (entries.Count * line) + pad) : place;
         context.DrawRectangle(new SolidColorBrush(inks.Paper), new Pen(new SolidColorBrush(inks.Ring), 1), box, 3, 3);
         for (int i = 0; i < entries.Count; i++)
         {

@@ -34,6 +34,9 @@ public static class Phone
         ArgumentNullException.ThrowIfNull(application);
         application.Styles.Add(new FluentTheme());
         PhoneStyles.Apply(application);
+
+        // Entry 290 section 6: the plot's Key button, tapped with a thumb, gets a thumb's height to land on.
+        GroupLab.App.CompositePlot.KeyStrip = Screens.Touch;
     }
 
     /// <summary>
