@@ -4536,6 +4536,10 @@
   "**Guided fires.** Over a printed GroupLab sheet the words settle (no flicker between Move closer and Move back), the ring fills, and the picture is taken by itself about a second after the words say Hold it there (entry 311 section 1).": {
    "kind": "code",
    "where": "src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs, LeastFrames), used by android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, held by AutoShutterTests (entry 311 section 1)"
+  },
+  "**The level.** Flat over a sheet on a table the dot sits in the ring and the whole crosshair turns green, as on Android (entry 311 section 2); raising an edge sends it toward that edge, in portrait and in landscape.": {
+   "kind": "code",
+   "where": "ios/GroupLab.iOS/Camera/CaptureScreen.cs BubbleView.Draw, as android/GroupLab.Android/CaptureScreen.cs BubbleView.OnDraw; ios/GroupLab.iOS/Camera/CameraSession.cs LogLevel (camera.level); the self-test's camera layout check shows it green lying flat (entry 311 section 2); a device check for the next iPad sitting"
   }
  },
  "rules": [

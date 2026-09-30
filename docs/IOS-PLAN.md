@@ -105,8 +105,9 @@ no, and a no comes back as a note with what was seen.
    every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it
    steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off. It never flickers.
    The log's `camera.torch` lines give each change, its level of five and its reason, which the sitting's notes can quote.
-7. **The level.** Flat over a sheet on a table the dot sits in the ring and turns green; raising an edge sends it toward that edge, in
-   portrait and in landscape.
+7. **The level.** Flat over a sheet on a table the dot sits in the ring and the whole crosshair turns green, as on Android (entry 311
+   section 2); raising an edge sends it toward that edge, in portrait and in landscape. The log's `camera.level` lines give the gravity,
+   the screen's turn and the tilt, when it turns green or stops and every two seconds.
 8. **Background and foreground.** With the camera open, go to the Home Screen and come back: the preview runs again, the torch is as
    chosen, and the analysis carries on. The same with the iPad locked and unlocked, and with Split View or Slide Over opened over it.
 9. **End to end.** The picture taken is read: the picture check shows, then the result with the holes, and the session is saved with

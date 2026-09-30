@@ -95,8 +95,15 @@ internal static class CameraSelfTest
                 host.AddSubview(screen);
                 screen.SetNeedsLayout();
                 screen.LayoutIfNeeded();
+
+                // Entry 311 section 2: the level as the iPad lying flat on a table gives it, Core Motion's gravity straight down, which
+                // must show green, crosshair and all, in the photograph.
+                var (x, y, z) = GroupLab.Core.Capture.PhoneCamera.LevelFromGravity(0, 0, -1, GroupLab.Core.Capture.ScreenTurn.Upright);
+                screen.ShowLevel(x, y, z);
                 return screen.Geometry();
             });
+            bool levelGreen = await SelfTest.OnUi(() => screen?.LevelReady == true);
+            check.Numbers["levelGreenFlat"] = levelGreen ? 1 : 0;
             await Task.Delay(TimeSpan.FromSeconds(1));
             bool taken = await SelfTest.Photographed($"{n:00}-camera-layout");
             var (panel, camera, shutter, safeTop, score) = geometry;
@@ -110,10 +117,11 @@ internal static class CameraSelfTest
             bool panelAbove = panel.Bottom <= camera.Top;
             bool shutterBelow = camera.Bottom <= shutter.Top && camera.Height > 0;
             bool noDash = score.Length == 0;
-            check.Passed = underStatus && panelAbove && shutterBelow && noDash;
+            check.Passed = underStatus && panelAbove && shutterBelow && noDash && levelGreen;
             check.Detail = $"panel {(int)panel.Top} to {(int)panel.Bottom} under a safe area of {(int)safeTop}, camera {(int)camera.Top} to {(int)camera.Bottom}, shutter from {(int)shutter.Top}; "
                 + (panelAbove ? "the panel is above the camera" : "the panel overlaps the camera")
                 + (noDash ? ", nothing beside the bar" : $", \"{score}\" beside the bar")
+                + (levelGreen ? ", the level green lying flat" : ", the level not green lying flat")
                 + (taken ? "; photographed" : "; not photographed");
         }
         catch (Exception e) when (e is not OutOfMemoryException)

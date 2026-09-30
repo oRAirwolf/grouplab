@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1408 |
+| code | 1409 |
 | measured | 1799 |
 | decided | 1269 |
 | unbacked | 0 |
-| **total** | **4476** |
+| **total** | **4477** |
 
-**1041** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1042** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1170,6 +1170,7 @@ one that matters.
 - *code* (ios/GroupLab.iOS/Camera/CaptureScreen.cs LayoutSubviews, checked by the iOS self-test's camera layout check (CameraSelfTest.Layout, entry 313 section 2); a device check for the next iPad sitting): **The panel.** Back, the instruction, the torch, the checks line and the quality bar are all visible above the preview, the preview starting under the panel (entry 313 section 2), and none is under the status bar or the home indicator; the shutter and the two modes are under the camera and answer a tap.
 - *code* (src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs, LeastFrames), used by android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, held by AutoShutterTests (entry 311 section 1)): **Guided fires.** Over a printed GroupLab sheet the words settle (no flicker between Move closer and Move back), the ring fills, and the picture is taken by itself about a second after the words say Hold it there (entry 311 section 1).
 - *code* (src/GroupLab.Core/Capture/TorchGovernor.cs (AgreeingFrames, SettleMs 1500, the ceiling after glare or a hotspot, MostReversals) and ios/GroupLab.iOS/Camera/CameraSession.cs TorchSteps and SetTorch; a check to be made on the iPad mini, entry 302): **On Auto (entry 302)**, in a dim room it comes on at the lowest of its five levels and steps up a level at a time, about every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off.
+- *code* (ios/GroupLab.iOS/Camera/CaptureScreen.cs BubbleView.Draw, as android/GroupLab.Android/CaptureScreen.cs BubbleView.OnDraw; ios/GroupLab.iOS/Camera/CameraSession.cs LogLevel (camera.level); the self-test's camera layout check shows it green lying flat (entry 311 section 2); a device check for the next iPad sitting): **The level.** Flat over a sheet on a table the dot sits in the ring and the whole crosshair turns green, as on Android (entry 311 section 2); raising an edge sends it toward that edge, in portrait and in landscape.
 - *decided* (entry 283, the shutter's target of about 0.3 s (docs/ANDROID.md, The shutter), and entry 290 section 2 item 5; ios/GroupLab.iOS/Camera/CameraSession.cs Take logs camera.shutter): **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the result follows as soon as the reading allows.
 - *code* (a check to be made on the iPad mini, entry 292 section 2.1; ios/GroupLab.iOS/Photos/PhotoPickers.cs (PhotosPicker, the current representation) and PhotoFiles.Readable, which keeps the orientation): **The Photos picker (entry 292).** Choose a photo opens Photos with no question about access; a photograph on the iPad is read at its full size, and a HEIC one reads the right way up.
 - *code* (a check to be made on the iPad mini, entry 292 section 2.3; ios/GroupLab.Share/Info.plist (com.apple.share-services, images up to twenty) and ShareViewController, ios/GroupLab.iOS/Photos/IncomingPhotos.cs): **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight into analysis, with no question from iOS in between, or with only its "Open in GroupLab?" (note which).
