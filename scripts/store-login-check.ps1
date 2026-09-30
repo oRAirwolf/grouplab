@@ -5,7 +5,8 @@
 .DESCRIPTION
     Reads the Store's credentials from the environment, as release.yml passes them from the repository's secrets and variables: TENANT
     (AZURE_AD_TENANT_ID), CLIENT (AZURE_AD_APPLICATION_CLIENT_ID), SECRET (AZURE_AD_APPLICATION_SECRET) and PRODUCT (STORE_PRODUCT_ID).
-    It asks Microsoft Entra for a token for the Store submission API, then reads the product back, which is a read and changes nothing.
+    It asks Microsoft Entra for a token for the Store submission API, then reads the product back, and the status of any submission waiting on
+    Microsoft (request 38 Part B), which are reads and change nothing.
 
     It prints the two HTTP statuses and the product's name, and nothing else: no identifier, no token and never the secret. When Entra
     refuses, the error says in plain words that the Store secret may have expired or be wrong, with Entra's own error code, which names
@@ -22,6 +23,32 @@ $renew = 'Make a new client secret for grouplab-store-publisher in Microsoft Ent
 function Write-Summary([string] $line) {
     Write-Host $line
     if ($env:GITHUB_STEP_SUMMARY) { $line | Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY }
+}
+
+# Request 38 Part B: where the Store's submissions stand, read and never changed. The first submission was made by hand in Partner Center on
+# 2026-09-30, so this is how its certification result reaches the run's summary. A failure here is reported and never fails the login check.
+function Write-SubmissionState($product, [string] $access) {
+    Write-Summary "Published in the Store: $(if ($product.lastPublishedApplicationSubmission) { 'yes' } else { 'not yet' })."
+    $pending = $product.pendingApplicationSubmission
+    if (-not $pending) {
+        Write-Summary 'No submission is waiting on Microsoft.'
+        return
+    }
+    try {
+        $state = Invoke-WebRequest -Method Get -SkipHttpErrorCheck -Headers @{ Authorization = "Bearer $access" } `
+            -Uri "https://manage.devcenter.microsoft.com/v1.0/my/$($pending.resourceLocation)/status"
+        if ($state.StatusCode -ne 200) {
+            Write-Summary "A submission is waiting on Microsoft; its status could not be read (HTTP $($state.StatusCode))."
+            return
+        }
+        $status = $state.Content | ConvertFrom-Json
+        Write-Summary "### The waiting submission's status: $($status.status)."
+        foreach ($e in @($status.statusDetails.errors)) { if ($e) { Write-Summary "- Error $($e.code): $($e.details)" } }
+        foreach ($r in @($status.statusDetails.certificationReports)) { if ($r) { Write-Summary "- Certification report of $($r.date)" } }
+    }
+    catch {
+        Write-Summary 'A submission is waiting on Microsoft; the Store API could not be reached for its status. Run it again.'
+    }
 }
 
 $missing = @{ TENANT = 'AZURE_AD_TENANT_ID'; CLIENT = 'AZURE_AD_APPLICATION_CLIENT_ID'; SECRET = 'AZURE_AD_APPLICATION_SECRET'; PRODUCT = 'STORE_PRODUCT_ID' }.GetEnumerator() |
@@ -62,8 +89,9 @@ catch {
 }
 switch ($read.StatusCode) {
     200 {
-        $name = ($read.Content | ConvertFrom-Json).primaryName
-        Write-Summary "### The Store login works: the Store API answered $($read.StatusCode) and the product is named $name. Nothing was submitted."
+        $product = $read.Content | ConvertFrom-Json
+        Write-Summary "### The Store login works: the Store API answered $($read.StatusCode) and the product is named $($product.primaryName). Nothing was submitted."
+        Write-SubmissionState $product $access
     }
     { $_ -in 401, 403 } {
         Write-Summary "### The Store API refused the product: HTTP $($read.StatusCode)."

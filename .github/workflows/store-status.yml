@@ -1,0 +1,27 @@
+name: store status
+
+# Request 38 Part B: the first Store submission went to Microsoft's certification on 2026-09-30. This reads, and never changes, where the
+# Store's submissions stand, so the result shows in the run's summary without anybody opening Partner Center. It uses the same read-only
+# login check release.yml runs first.
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TENANT: ${{ secrets.AZURE_AD_TENANT_ID }}
+      CLIENT: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+      SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+      PRODUCT: ${{ vars.STORE_PRODUCT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Read the Store's submissions
+        shell: pwsh
+        run: ./scripts/store-login-check.ps1
