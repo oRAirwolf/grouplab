@@ -153,6 +153,28 @@ since then read groups about 0.4% small. The card method is what needs work, not
 
 ## 55. iOS: the Apple steps after you enrol, about forty minutes, once (entry 278 item 6)
 
+**Added 2026-09-29 (entry 290): an eighth secret, for the share extension.** The iPhone app now has a share extension (so Google Photos can
+share into GroupLab), and it needs its own identifiers. Do these with the steps below, in the Apple Developer site, Certificates,
+Identifiers and Profiles:
+
+1. Identifiers, the + button, App Groups: create group.org.grouplab.app (description: GroupLab).
+2. Identifiers, org.grouplab.app: turn on App Groups, Configure, tick group.org.grouplab.app, Save.
+3. Identifiers, the + button, App IDs, App: create org.grouplab.app.share (description: GroupLab Share), turn on App Groups, tick
+   group.org.grouplab.app, Continue, Register.
+4. Profiles: edit the App Store profile for org.grouplab.app (or make it again) so it includes the app group, and download it. This
+   replaces the file for IOS_PROFILE.
+5. Profiles, the + button, App Store Connect: App ID org.grouplab.app.share, the same distribution certificate, name it GroupLab Share App
+   Store, download it.
+6. In Git Bash in the repository folder, with the two downloaded files (use their real names):
+
+   ```
+   base64 -w0 "GroupLab_App_Store.mobileprovision" | gh secret set IOS_PROFILE -R oRAirwolf/grouplab
+   base64 -w0 "GroupLab_Share_App_Store.mobileprovision" | gh secret set IOS_SHARE_PROFILE -R oRAirwolf/grouplab
+   ```
+
+   A good result is two lines saying each secret was set. The next nightly's "The Apple secrets" step then lists all eight as "set, its
+   shape is right".
+
 **Opened 2026-09-28 (entry 278 item 6, entry 279 item 1).** **Not before** your Apple Developer Program membership (individual) shows as
 active in the Apple Developer app. **Why:** the nightly's iOS job builds on GitHub's Mac machines and sends each build to TestFlight, and
 for that it needs four things only you can make: an app identifier, a distribution certificate, a provisioning profile and an App Store
