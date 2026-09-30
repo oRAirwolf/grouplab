@@ -40,6 +40,23 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 313: the iPad's reading hang, Cancel, and the camera panel
+
+Built overnight on `overnight/reading`, reviewed, tested (Mobile 50, Core 550 on the changed areas) and merged 2026-09-30 as 3638462d,
+5a18a86a and 4d27fcbe.
+
+- **1.1 to 1.3:** a reading runs off the interface thread under one helper (`Reading` in the phone's shared project). Cancel never throws,
+  does not wait, and returns to Capture with the picture kept; a reading's late answer is cleaned up. One minute of running time is the
+  limit, with the time the application was suspended (the screen locked) not counted; iOS is asked for background time. Every error ends
+  the reading with a message, and one nobody expected is recorded as an error report, which is what crash reports 9 and 11 lacked.
+- **1.4:** measured on the desktop over the 21 real phone pictures (12 megapixel, as the iPad mini's): 19 are named in 0.7 to 1.4 s; two
+  fell through every resolution and took 30 and 36 s, 11 to 12.5 s of it reading the whole picture doubled, which named none of the 21.
+  The phone no longer doubles a whole picture: the two hard ones take 19.4 and 17.7 s, and peak memory fell from 1782 to 713 MB. The
+  iPad's own times come from the next sitting's `read.stage` lines.
+- **1.5:** the iOS self-test reads the 32 megapixel scan, presses Cancel during the codes, and requires Capture back within a second.
+- **2:** the panel sits under the status bar and the preview below it, centred; the dash beside the quality bar before a score is gone.
+  The self-test checks the three parts do not overlap and photographs the screen.
+
 ## Entry 316: the Mac download names no chip generations
 
 Done 2026-09-30. The Apple silicon card on the download page says "For any Mac with Apple silicon" and "Any Mac with Apple silicon

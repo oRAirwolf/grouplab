@@ -24,6 +24,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 313: the iPad hangs on "reading the sheet's codes", Cancel does nothing (PRIORITY), and the preview's layout
+
+**Status: done 2026-09-30 (overnight/reading, merged as 3638462d, 5a18a86a, 4d27fcbe); section 1.4's times on the iPad itself come from the next sitting's log.**
+
+From planning, 2026-09-30, for Alan, from the second look at TestFlight build 134 on the iPad mini.
+
+## 1. PRIORITY, before the deadline: reading hangs and cannot be cancelled
+
+Alan: "After taking a picture of the target, it hangs for a long time on reading the sheet's codes for me. One time it seemed to time
+out entirely. The screen locked itself and when I opened it again, it was still saying that. I pressed cancel and nothing happened. I
+ended up having to force close the application."
+
+1. **Cancel must always work**, within about a second, from any stage of reading, and return to Capture with the picture kept.
+   A Cancel that does nothing suggests the reading holds the UI thread, or the cancellation token is not passed to the slow step.
+   Reading runs off the UI thread with the token checked between stages and inside long loops (the code enlarging, each marker pass).
+2. **A time limit**: if reading takes longer than a sensible bound (measure the normal time on the iPad first), stop and say what was
+   tried ("The codes could not be read in time; try again closer, or choose the sheet") rather than spin forever.
+3. **Survive the lock**: iOS suspends the app when the screen locks. On coming back, reading either carries on or stops cleanly with a
+   message; it never shows a frozen "reading" line. Hold a background task or restart the step on resume.
+4. **Why is it slow on the iPad at all?** Measure each stage on the iPad's own pictures (the iPad mini camera is 12 MP; is the full frame
+   going through the code search, several times, at full size?). Compare with the same picture on the simulator and the desktop.
+   Log each stage's time (`read.stage` lines) so the next sitting's log shows where it goes.
+5. A test in the iOS self-test: a large picture, Cancel pressed during code reading, back on Capture within a second.
+
+## 2. The preview (Alan's screenshot, 04:39, the camera open on Guided)
+
+What it shows: black bars on both sides of the preview (about 40 points each) and the preview's top edge peeking out between the
+status bar and the panel, with the panel laid over the top part of the picture. So "space at the top" is the preview sitting under a
+floating panel rather than below it. Choose one clean layout: either the panel sits above the preview (the preview starting under it,
+centered in what is left), or the preview fills from the status bar down and the panel is fully opaque, with the framing guides and the
+"whole sheet in view" check knowing which part of the picture is hidden. The first is simpler and honest about what will be captured.
+Also: a stray dash at the right end of the quality bar (a clipped label or a character); remove it.
+
+## 3. Noted, nothing to change
+
+"The shutter lag time is acceptable."
+
 ## 2026-09-30, entry 316: the Mac download names no chip generations
 
 **Status: done 2026-09-30.**
