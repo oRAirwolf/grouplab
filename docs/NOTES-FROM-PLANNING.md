@@ -24,6 +24,21 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 305: the download page recommends GroupLab Dev for Android testing, and mentions Play Protect
+
+**Status: done 2026-09-30.** The download page puts GroupLab Dev first in the Android row as the recommended download: it updates itself from every nightly with no computer after the first install, installs beside the Play test copy, and sends its logs easily; a nightly can break something, said plainly. The plain APK says it does not update itself. A panel explains Google Play Protect's scan. The README and the user guide say the same.
+
+From planning, 2026-09-30, for Alan.
+
+1. **On the download page (and the Android part of the README and guide), GroupLab Dev gets a "Recommended download" badge** with a short
+   explanation, until GroupLab is published on the Play Store: it updates itself from every nightly (after the first install, no computer
+   or adb needed); it installs beside the Play test copy without replacing it; its logs are easy to send with a problem report; and fixes
+   reach testers the same day. One honest line too: a nightly can occasionally break something, and Dev's data stays in Dev unless exported
+   (entry 307).
+2. **Google Play Protect:** say that Android asks to scan an app installed from outside the Play Store, on the first install and on updates,
+   that this is Google's own check and takes a few seconds, and that the scan is expected. Same line in the guide's update section (entry 303).
+3. Rule c: the site, README and guide say the same thing.
+
 ## 2026-09-30, entry 304: the tour page's top, as Alan sees it on his desktop
 
 **Status: done 2026-09-30.** The tour page's "Your own targets" box lays its picture full width under the words, each theme's picture linking to its full size; the top bar stays on one line from about 1500 px, and between 861 and 1499 px Community, Release notes, Support and GitHub move into a "More" menu; the tour index title has the same top space as other pages. Checked in headless Chrome at 1280, 1920 and 3840 px in both themes; phone width not checkable there, and unchanged.
