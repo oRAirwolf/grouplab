@@ -315,7 +315,8 @@ What exists and is tested:
 - a sheet that names its own definition from its printed codes, so no target has to be named by hand
 - an end-to-end `analyze` command, from photograph to report
 - diagnostic logging, crash records and a report package, with no location data in any of them; on the phone, Send diagnostics in
-  Settings, About shares it, and on iPhone and iPad GroupLab's own folder appears in the Files app
+  Settings, About shares it, on iPhone and iPad GroupLab's own folder appears in the Files app, and Show diagnostics on the camera
+  puts the frame rate, what the guidance waits for and the reading's stage on screen
 - a caliber box that finds any of more than six hundred cartridges by name as you type, even written loosely, with a setting for
   whether it lists calibers, cartridges or both
 
