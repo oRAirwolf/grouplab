@@ -383,7 +383,10 @@ says **Move back** only when some of the printing runs out of the picture, **Mov
 read, and **Hold steadier** only when a shake has smeared the picture. The level in the middle is a crosshair with a dot that drifts
 toward the raised side like a bubble; when the phone is flat the whole crosshair turns green. **Camera** and **Result**, above the page,
 take you to either in one press, the one showing in the highlight color, and the camera has its own **Result** button. While a picture
-is read, the line under it names the step it is on. When a picture's square codes cannot be read,
+is read, the line under it names the step it is on, and **Cancel** stops it at once, at any step: Capture shows again with the picture
+kept, to **Read it again**, **Choose which sheet it is** or **Forget it**. A reading that has not finished after a minute stops by itself,
+says what it was trying to read, and offers the sheets to choose from; time with the screen locked does not count, and a reading carries
+on when you come back to it. When a picture's square codes cannot be read,
 GroupLab says which sheet it looks like, for you to confirm or choose another.
 
 **A photograph from any photo app.** **Choose a photo** opens Android's photo picker, which shows the photographs in your photo apps,

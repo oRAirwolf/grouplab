@@ -36,6 +36,13 @@ public interface IPhonePlatform
     /// <summary>The memory, in megabytes, an analysis may use now (entry 240), logged with what the device said.</summary>
     double MemoryBudgetMegabytes();
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 313 section 1.3: asks the system to let a reading go on while the screen locks, until the result is
+    /// disposed. iOS suspends an application soon after its screen locks and gives it some more time only where asked. Android keeps a
+    /// reading running while the screen is off, so the default asks nothing and Android is as it was.
+    /// </summary>
+    IDisposable KeepRunning(string why) => NothingHeld.Instance;
+
     /// <summary>Whether the camera may be used; where not, it asks, and the person presses again once it is allowed.</summary>
     bool CameraAllowed();
 
