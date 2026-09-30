@@ -397,7 +397,7 @@ internal static class ParityTour
             var line = Shell.Current!.GetLogicalDescendants().OfType<TextBlock>().FirstOrDefault(t => t.Text == heading);
 
             // The heading with the screen's height beneath it, so the section is shown from its heading down.
-            line?.BringIntoView(new Rect(0, 0, 1, 560));
+            line?.BringIntoView(new Avalonia.Rect(0, 0, 1, 560));
             return line is not null;
         });
         await Seen(check, () => found && (holds?.Invoke() ?? true), $"Settings, {heading},");
