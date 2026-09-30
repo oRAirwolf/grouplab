@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 20:50 UTC, during entry 318 (sections 3 and 4 done, 1 with a worker, the list of what is left added).
+**Last rewritten:** 2026-09-30 22:20 UTC, entry 318 done (all five sections).
 
 ---
 
@@ -33,7 +33,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## The next three
 
 **What is left of the plan** (entry 318 section 5, for planning's next batch; one line each, with what blocks it):
-- **Detection, angled photos** (318.1): being built; the scoreboard judges it. **Holes on any target** (318.2): next, nothing blocks.
+- **Detection, angled photos**: the far column's registration (the lens fit drops its markers); next in the study. **Holes on any
+  target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
 - **Garmin Xero import** (Phase 5): needs one sample export file from anybody with a Xero.
 - **Velocity regression, predicted against measured vertical** (Phase 5): not started; nothing blocks but priority.
@@ -46,7 +47,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 318 sections 1 and 2 (the worker is on 1), then this list's first free item.
+1. Planning's next batch from this list; meanwhile the far column's registration on angled photos.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building.
 

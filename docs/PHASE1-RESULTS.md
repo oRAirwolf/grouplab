@@ -40,6 +40,29 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 318: the next batch without Alan
+
+Done 2026-09-30, with one worker at a time (entry 317).
+
+- **1, angled photos (e75d137a, 70a098ed):** on the seven real pictures, 172 of 173 holes found before and after, false marks 4 to 2
+  (the 9 degree picture 2 to 0); every synthetic line unchanged. A mark too small to be two holes and 4.5 or more times longer than wide
+  is refused as printed-ring residue (the slivers measured 5.05 and 5.14; the longest real hole 3.38). The cause underneath: the lens fit
+  leaves the far column's markers out as outliers, so each far cell stays 3 to 6 px misaligned; aligning quarter-cells fixed the 9 degree
+  picture but worsened the 15, so it was not kept, and both are in the study. A mark much bigger than the bullet now carries its size to
+  the result: an amber ring and a plain sentence on the phone and the desktop, through the review queue, until the person confirms or
+  moves it.
+- **2, holes on any target (e82e7925, 884026e2):** a finder built on the neutral darkness detector (darker than the paper, lighter than
+  a black bull's ink, a dark centre in a bright fluorescent ring), measured as the scoreboard's "any target" class with its own baseline:
+  371 of 512 synthetic holes over black bulls, fluorescent, diamonds and grids under four conditions, 24 false marks; 25 of 27 with none
+  on the hand-checked commercial scan; 331 of 345 reference marks on the 15 committed commercial scans. "Find holes (Experimental)" on
+  the desktop's marking once the scale is set, and at the phone's Marking A holes step in GroupLab Dev only; proposals are ordinary marks,
+  unsure ones review items. Known misses are in DETECTION-LEARNING-STUDY.md section 7. Request 58 adds harder cases.
+- **3, Firebase Test Lab (90ee7ff0):** GroupLab Dev answers Test Lab's game loop; `testlab.yml` runs daily on three real phones and one
+  virtual, inside the free plan, and says "not set up" until request 62 (written, with Alan's exact steps).
+- **4:** questions 75 and 76 answered as built; the guide says blue uses a little less ink than red (b7f21712).
+- **5:** STATE.md opens its next items with what is left of the plan; writing it found the README calling hand marking on the phone
+  "not started", corrected (1b5b4925).
+
 ## Entry 317: the token budget
 
 Done 2026-09-30. The rules are in `CLAUDE.md` under "The standing budget". `for-alan.md` went from 1709 lines to about 330: 47 answered

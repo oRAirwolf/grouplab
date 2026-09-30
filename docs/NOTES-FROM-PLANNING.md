@@ -24,6 +24,36 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 318: the next batch Code can do without Alan (2026-09-30 afternoon)
+
+**Status: done 2026-09-30 (sections 1 to 5); request 62 is Alan's, whenever he chooses.**
+
+From planning, for Alan: "I do want Firebase but I dont want to set it up right now. I would like code to continue working on anything it
+can." Entry 317's budget rules apply (one worker, fresh session per block). In this order:
+
+1. **Angled photos.** Entry 291's scoreboard: the two photos at 9 and 15 degrees missed or misplaced holes in the right-hand column,
+   reading a hole and the paper beside it as one big mark. Fix it against the sitting pictures and the synthetic angled cases, with
+   the scoreboard as the judge (no case may get worse). Also build "a mark much bigger than your bullet goes to Alan to check" (a
+   flagged hole on the result, not a silent measurement).
+2. **Automatic holes on any target** (entry 308 section 4; a stated project goal). Start now with what exists: the 20 September
+   commercial-target photos and close-ups (local corpus only, never committed or shown) and synthetic non-GroupLab targets (black bulls,
+   fluorescent, diamonds, grids). Wire the existing automatic finder (DETECTION-LEARNING-STUDY.md) into the marking screen for targets
+   GroupLab did not print: holes proposed automatically, the person confirms, moves or removes them, the scale set as today. Offer it
+   first in GroupLab Dev and the desktop behind an "Experimental" label; measure it on the scoreboard as its own class of case. Request 58
+   (Alan's store-bought blank and shot scans) will add harder cases later; do not wait for it.
+3. **Firebase Test Lab, ready for Alan's ten minutes.** Write the CI workflow that runs the Android scenario suite on a small set of real
+   and virtual phones (Samsung, Pixel, Xiaomi or Oppo where offered) within the free daily quota, skipped with a clear line until its
+   secret exists. Write request 62 with Alan's exact steps (create the Firebase project under his Google account, enable Test Lab, make
+   a service account with the least role that runs tests, and `gh secret set` the key; he does it when he chooses). Nothing paid.
+4. **Questions 75 and 76:** planning has put them to Alan; build nothing new for them until he answers.
+5. **A short "what is left" list** for the next planning session, at the top of STATE.md's next items: every remaining piece of the plan
+   (phases, platforms, features Alan asked for and not built), one line each, with what blocks it. Planning uses it to set the next batch.
+
+## Answered 2026-09-30
+
+Alan: "Q75: A. Q76: B." Question 75: accept that colored ring bulls use a little more ink than black on a color inkjet; the guide says
+blue uses a little less than red. Question 76: as built, the held-back cartridges must be chosen from the list.
+
 ## 2026-09-30, entry 317: the token budget, a standing rule (replaces entry 296's spending rules)
 
 **Status: done 2026-09-30; in force from this run on.**
