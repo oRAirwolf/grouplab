@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1388 |
+| code | 1400 |
 | measured | 1802 |
-| decided | 1278 |
+| decided | 1269 |
 | unbacked | 0 |
-| **total** | **4468** |
+| **total** | **4471** |
 
-**1036** of them were read one sentence at a time and their backing written against the sentence. The other **3432** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1039** of them were read one sentence at a time and their backing written against the sentence. The other **3432** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -361,14 +361,15 @@ one that matters.
 - *decided* (entries 147 and 166, the platform statement; package.yml builds both bundles): | | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with an M1 or later.
 - *decided* (entries 147 and 166, the platform statement; package.yml builds both bundles): | | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac.
 - *code* (.github/workflows/nightly.yml signs and publishes grouplab-android.apk and grouplab-android-dev.apk; docs/ANDROID.md sections 11 to 14; the Play internal test of entries 231 and 232; the phones of entries 235 and 236): **Untested on a real Mac.** | | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory.
-- *code* (.github/workflows/nightly.yml signs only the Android packages; docs/RELEASE-PLAN.md, signing Windows builds on hold (entry 224)): | **Every desktop build here is unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): | **The Windows and Linux builds here are unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): **The macOS build is signed with a Developer ID and notarized by Apple.** - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
 - *code* (samples/ and samples/PROVENANCE.md, packaged by scripts/package-windows.ps1): - **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): The first time, macOS checks it with Apple and opens it.
 - *decided* (entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums): **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day.
 - *code* (docs/ANDROID.md section 12, the uninstall-first rule and GroupLab Dev (entries 231 and 234)): [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
-- *code* (README.md's generated platform section and the download page): - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the Windows and Linux builds are unsigned, what happens once the application settles, and how to ask for another Linux target.
 - *code* (moved verbatim by entry 266 from the previous README into its folds; ReadmeTests holds the phases, states and contents list, and scripts/platform-support.py the platform statement): ## What is supported, and what is not Every platform, its minimums and what happens on it --- ## Why it exists **An open-source tool that measures how accurately a rifle shoots, and is honest about how little a small group actually tells you.** Free, GPL-3.0, no account, no ads, no paid tier.
 - *code* (website/, published by website.yml (entry 144)): ** ** is the website: what GroupLab is, how to use it, and where to download it.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the rifle's true spread is somewhere between **0.68 and 1.92 times** what was measured, a factor of 2.8.
@@ -1938,9 +1939,10 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): macOS depends on the hardware question below.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): ## Running the macOS build From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): ## Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): ## Why Windows and Linux stay unsigned Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says "Windows protected your PC" about any program nobody has paid to sign.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Linux does not ask for a signature at all.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): The macOS build is different: it is signed and notarized by Apple, using the Apple developer program the project joined to put GroupLab on iOS (Apple mobile, below).
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Running the macOS build, above, says what that means for opening it.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): ## Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6 (Alan, 2026-09-28) replacing entry 147's Apple mobile paragraph; entry 206 section 4 for the facts): ## Apple mobile An iOS version of GroupLab is being built.
@@ -3100,7 +3102,7 @@ one that matters.
 
 - *decided* (what GroupLab is, DESIGN.md section 1): # Trying GroupLab ## What it is, in three sentences GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows may say **"Windows protected your PC"**.
-- *decided* (entry 116 section 5 and entry 147: the builds are unsigned): GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): The Windows build is unsigned, because signing costs money the project has not spent; the source of the build is public.
 - *measured* (measured 2026-09-21, entries 119 to 123): On 2026-09-21 two machines installed `grouplab-setup-win-x64.exe` from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.
 - *decided* (NOTES-FROM-PLANNING.md entry 275 section 8): The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them.
 - *measured* (measured 2026-09-21: the first self-update run end to end, entry 123): ### One reinstall by hand, once **`v0.2.0-nightly.25` is the first build that can update itself.** If you are on anything earlier, the update will not work and it is not your machine's fault: the signature those builds check was written differently on the machine that made them, so they reject a perfectly good update.
@@ -3423,7 +3425,7 @@ one that matters.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): One tester, an M5 Max, nightly 93 Signed, notarized and stapled: opens like any other Mac application M1, M2, M3, M4.
 - *code* (website/build.py page_download(): the two macOS cards and their assets): Not an Intel Mac Download for Apple silicon macOS, Intel grouplab-macos-x64.tar.gz For a Mac with an Intel processor.
 - *decided* (entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums): An arm64 phone or tablet with Android 10 or later and 4 GB of memory.
-- *decided* (entry 116 section 5 and entry 147: the builds are unsigned): When Windows says "Windows protected your PC" Every build is unsigned, because signing costs money the project has not spent.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): When Windows says "Windows protected your PC" The Windows and Linux builds are unsigned, because signing costs money the project has not spent.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows says this about any program nobody has paid to sign.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Opening it on a Mac From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Move GroupLab.app into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
@@ -3454,9 +3456,10 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Hands-on Linux testing follows, on virtual machines.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): macOS depends on the hardware question below.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Running the macOS build From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
-- *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Why Windows and Linux stay unsigned Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says "Windows protected your PC" about any program nobody has paid to sign.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Linux does not ask for a signature at all.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): The macOS build is different: it is signed and notarized by Apple, using the Apple developer program the project joined to put GroupLab on iOS (Apple mobile, below).
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Running the macOS build, above, says what that means for opening it.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.
 - *decided* (docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it): A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6; docs/PLATFORM-SUPPORT.md Apple mobile, which the page renders): Apple mobile An iOS version of GroupLab is being built.
@@ -3513,7 +3516,7 @@ one that matters.
 ### site:guides/testing-guide/index.html
 
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows may say "Windows protected your PC" .
-- *decided* (entry 116 section 5 and entry 147: the builds are unsigned): GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.
+- *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): The Windows build is unsigned, because signing costs money the project has not spent; the source of the build is public.
 - *measured* (measured 2026-09-21, entries 119 to 123): On 2026-09-21 two machines installed grouplab-setup-win-x64.exe from the nightly release and neither was warned, so it does not always happen; it is not promised either way, because SmartScreen decides per file and per machine and nothing here controls it.
 - *decided* (NOTES-FROM-PLANNING.md entry 275 section 8): The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them.
 - *measured* (measured 2026-09-21: the first self-update run end to end, entry 123): One reinstall by hand, once v0.2.0-nightly.25 is the first build that can update itself.

@@ -108,7 +108,7 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
 | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. |
 
-**Every desktop build here is unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names.
+**The Windows and Linux builds here are unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names. **The macOS build is signed with a Developer ID and notarized by Apple.**
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
 - **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
@@ -119,7 +119,7 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 - **Questions, or somewhere to say it did not work:** the [GroupLab Discord](https://grouplab.org/discord). For anything private, or anything with a photograph attached, the support address is better.
 - **On Android**, the APK is signed. **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Export all my data. Google Play's internal test is open by invitation and updates itself, with a closed test to come; remove the Play copy before installing the plain APK, because the two are signed with different keys. Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates; it is Google's own check, takes a few seconds and is expected. [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
 - **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
-- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.
+- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the Windows and Linux builds are unsigned, what happens once the application settles, and how to ask for another Linux target.
 
 </details>
 
@@ -222,11 +222,11 @@ Other platforms get proper attention once the pace of change slows and the Windo
 
 From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
 
-### Why it is not signed
+### Why Windows and Linux stay unsigned
 
-Signing a macOS application requires the Apple developer program, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
+Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says "Windows protected your PC" about any program nobody has paid to sign. Linux does not ask for a signature at all.
 
-That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+The macOS build is different: it is signed and notarized by Apple, using the Apple developer program the project joined to put GroupLab on iOS (Apple mobile, below). Running the macOS build, above, says what that means for opening it.
 
 ### Signing elsewhere
 

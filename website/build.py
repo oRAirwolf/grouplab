@@ -802,7 +802,7 @@ def page_download() -> str:
 <section class="wrap section-sm grid-2">
 <div class="panel pad">
 <h2 class="h3">When Windows says "Windows protected your PC"</h2>
-<p>Every build is unsigned, because signing costs money the project has not spent. Windows says this about any program nobody has paid to sign. The source of every build is public, at the commit the download names.</p>
+<p>The Windows and Linux builds are unsigned, because signing costs money the project has not spent. Windows says this about any program nobody has paid to sign. The source of every build is public, at the commit the download names.</p>
 <ol class="text">
 <li>Click <strong>More info</strong>.</li>
 <li>Click <strong>Run anyway</strong>.</li>

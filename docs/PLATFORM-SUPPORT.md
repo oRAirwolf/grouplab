@@ -58,11 +58,11 @@ Other platforms get proper attention once the pace of change slows and the Windo
 
 From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
 
-## Why it is not signed
+## Why Windows and Linux stay unsigned
 
-Signing a macOS application requires the Apple developer program, which costs 99 dollars a year. The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.
+Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says "Windows protected your PC" about any program nobody has paid to sign. Linux does not ask for a signature at all.
 
-That is the whole reason. It is not a technical obstacle and it is not indifference to Mac users. If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.
+The macOS build is different: it is signed and notarized by Apple, using the Apple developer program the project joined to put GroupLab on iOS (Apple mobile, below). Running the macOS build, above, says what that means for opening it.
 
 ## Signing elsewhere
 

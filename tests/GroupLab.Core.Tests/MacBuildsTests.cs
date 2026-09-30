@@ -212,10 +212,11 @@ public partial class MacBuildsTests
         "The Intel build has never been run on a Mac.",
         "The updater does not install them, and the developer still does not own a Mac.",
         "These builds are an experiment rather than a release.",
-        "does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own",
-        "donate a Mac for testing and cover the developer fees",
         // Entry 278 section 6: Alan's decision that iOS is being built replaced entry 147's "the machine to build it does not".
         "built and signed on GitHub's Mac machines",
+        // Entry 306 section 4: nightly 135 is signed and notarized, which replaced entry 147's reasons the macOS build was not.
+        "Signing the Windows build needs a code signing certificate, which has not been bought",
+        "The macOS build is different: it is signed and notarized by Apple",
     ];
 
     /// <summary>

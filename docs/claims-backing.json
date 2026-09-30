@@ -45,10 +45,6 @@
    "kind": "code",
    "where": "website/build.py page_download(): the two macOS cards and their assets"
   },
-  "When Windows says \"Windows protected your PC\" Every build is unsigned, because signing costs money the project has not spent.": {
-   "kind": "decided",
-   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
-  },
   "Windows says this about any program nobody has paid to sign.": {
    "kind": "decided",
    "where": "entry 116 section 5 and entry 147: the builds are unsigned"
@@ -121,18 +117,6 @@
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
-  "Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "The developer of GroupLab does not own a Mac, does not intend to buy one, and is not going to pay a yearly fee for a platform they do not own.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "If a developer or contributor wants signed macOS releases enough to donate a Mac for testing and cover the developer fees, the project will set it up.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
   "Signing elsewhere The one-off 25 dollar Google Play developer fee has been paid.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
@@ -166,10 +150,6 @@
    "where": "website/build.py shell(): the page frame and navigation"
   },
   "Windows may say \"Windows protected your PC\" .": {
-   "kind": "decided",
-   "where": "entry 116 section 5 and entry 147: the builds are unsigned"
-  },
-  "GroupLab is unsigned, because signing costs money the project has not spent; the source of the build is public.": {
    "kind": "decided",
    "where": "entry 116 section 5 and entry 147: the builds are unsigned"
   },
@@ -745,10 +725,6 @@
    "kind": "code",
    "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
   },
-  "- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the macOS build is unsigned, what happens once the application settles, and how to ask for another Linux target.": {
-   "kind": "code",
-   "where": "README.md's generated platform section and the download page"
-  },
   "Two loads that differ by 20 percent on five-shot groups are statistically indistinguishable.": {
    "kind": "measured",
    "where": "docs/STATISTICS.md section 9.1, the true size range for small groups"
@@ -822,10 +798,6 @@
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
   "### What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "### Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
@@ -1062,10 +1034,6 @@
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
   "## What happens once the application settles Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.": {
-   "kind": "decided",
-   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
-  },
-  "## Why it is not signed Signing a macOS application requires the Apple developer program, which costs 99 dollars a year.": {
    "kind": "decided",
    "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
   },
@@ -2420,10 +2388,6 @@
   "**Untested on a real Mac.** | | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
    "kind": "code",
    "where": ".github/workflows/nightly.yml signs and publishes grouplab-android.apk and grouplab-android-dev.apk; docs/ANDROID.md sections 11 to 14; the Play internal test of entries 231 and 232; the phones of entries 235 and 236"
-  },
-  "| **Every desktop build here is unsigned**, so Windows will say \"Windows protected your PC\": click **More info**, then **Run anyway**.": {
-   "kind": "code",
-   "where": ".github/workflows/nightly.yml signs only the Android packages; docs/RELEASE-PLAN.md, signing Windows builds on hold (entry 224)"
   },
   "[docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.": {
    "kind": "code",
@@ -4522,6 +4486,46 @@
    "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
   },
   "Move `GroupLab.app` into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "When Windows says \"Windows protected your PC\" The Windows and Linux builds are unsigned, because signing costs money the project has not spent.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Why Windows and Linux stay unsigned Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says \"Windows protected your PC\" about any program nobody has paid to sign.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Linux does not ask for a signature at all.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "The macOS build is different: it is signed and notarized by Apple, using the Apple developer program the project joined to put GroupLab on iOS (Apple mobile, below).": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "Running the macOS build, above, says what that means for opening it.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "The Windows build is unsigned, because signing costs money the project has not spent; the source of the build is public.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "| **The Windows and Linux builds here are unsigned**, so Windows will say \"Windows protected your PC\": click **More info**, then **Run anyway**.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "**The macOS build is signed with a Developer ID and notarized by Apple.** - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "- **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the Windows and Linux builds are unsigned, what happens once the application settles, and how to ask for another Linux target.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
+  },
+  "## Why Windows and Linux stay unsigned Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says \"Windows protected your PC\" about any program nobody has paid to sign.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step"
   }
