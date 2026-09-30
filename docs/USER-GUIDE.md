@@ -63,6 +63,8 @@ A3 sheet you printed before still reads. The roll sheets are for a plotter, and 
 
 **Your own sheet.** Design your own sheet, at the top of Targets, lays out a grid of bulls:
 - you choose the page, the rows and columns, the spacing, the ring, the sighters and a load block;
+- the bull's size can also be given in inches, MOA or mil, the angles read at the distance you give, so a 0.25 mil bull is 0.90 in across at 100 yd; the E and C bulls take the size exactly, and the rings take the nearest ring set;
+- the bull's size can be given in inches, MOA or mil, the angles at the distance you give, so a 0.25 mil bull is 0.90 in across at 100 yd; the E and C bulls take the size exactly and the rings take the nearest ring set;
 - a layout that cannot register or fit is refused;
 - if you give your five-shot group, a spacing tight for it is warned about.
 

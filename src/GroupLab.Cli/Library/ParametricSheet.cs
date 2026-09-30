@@ -73,6 +73,30 @@ public static class ParametricSheet
 
     public static IReadOnlyList<string> Pages { get; } = ["letter", "a4", "tabloid", "a3"];
 
+    /// <summary>The units a bull's size can be given in, in the designer (entry 303 item 1): inches, MOA and mil at the sheet's distance.</summary>
+    public static IReadOnlyList<string> BullUnits { get; } = ["in", "MOA", "mil"];
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 303 item 1, Alan: mil bulls as "an option in the target designer", not new built-in sheets. A bull's size
+    /// in inches from a size in <paramref name="unit"/>: inches as they are, and MOA or mil at <paramref name="distanceYards"/>, a true MOA
+    /// being 1.047 in at 100 yd and a mil 3.6 in. Null where MOA or mil has no distance to be read at, or the size is not a size.
+    /// </summary>
+    public static double? BullInches(double size, string unit, double? distanceYards)
+    {
+        if (size <= 0 || double.IsNaN(size) || double.IsInfinity(size))
+        {
+            return null;
+        }
+
+        return unit switch
+        {
+            "in" => size,
+            "MOA" when distanceYards is > 0 => size * 1.04720 * distanceYards.Value / 100,
+            "mil" when distanceYards is > 0 => size * 3.6 * distanceYards.Value / 100,
+            _ => null,
+        };
+    }
+
     /// <summary>The outer ring sizes with a documented disc stack, in dmm.</summary>
     public static IReadOnlyList<int> RingSizes { get; } = [.. LibraryBuilder.Stacks.Keys.Order()];
 

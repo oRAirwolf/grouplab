@@ -103,6 +103,11 @@ public sealed class PrintPanel : UserControl
 
     private readonly ComboBox designBull = new() { ItemsSource = BullChoices, SelectedIndex = 0, MinWidth = 120 };
 
+    /// <summary>Entry 303 item 1: the bull's size in inches, MOA or mil at the sheet's distance, in place of the ring's size.</summary>
+    private readonly TextBox designSize = new() { Width = 120, PlaceholderText = "optional" };
+
+    private readonly ComboBox designSizeUnit = new() { ItemsSource = ParametricSheet.BullUnits, SelectedIndex = 2, MinWidth = 90 };
+
     /// <summary>Made for your optic's shape, entry 243 section 4 item 4: the disc, or C's diamond, sized by the same rule.</summary>
     private readonly ComboBox genShape = new() { ItemsSource = new[] { "Disc", "Diamond" }, SelectedIndex = 0, MinWidth = 120 };
 
@@ -327,6 +332,15 @@ public sealed class PrintPanel : UserControl
         Redesign();
     }
 
+    /// <summary>Gives the bull's size and its unit, and the bull's style (0 rings, 1 E, 2 C), as a person would, for the headless tests.</summary>
+    internal void SetBullSize(string size, string unit, int style)
+    {
+        designBull.SelectedIndex = style;
+        designSizeUnit.SelectedIndex = ParametricSheet.BullUnits.ToList().IndexOf(unit);
+        designSize.Text = size;
+        Redesign();
+    }
+
     private void BuildDesigner()
     {
         designRing.SelectedIndex = ParametricSheet.RingSizes.ToList().IndexOf(254);
@@ -359,6 +373,8 @@ public sealed class PrintPanel : UserControl
         designer.Children.Add(Row(Label("Spacing between bulls, in"), designSpacing));
         designer.Children.Add(Row(Label("Ring"), designRing));
         designer.Children.Add(Row(Label("Bull"), designBull));
+        designer.Children.Add(Row(Label("Or the bull's size"), designSize, designSizeUnit));
+        designer.Children.Add(new TextBlock { Text = "Optional: a size in MOA or mil is read at the distance below, so a 1 mil bull is 3.60 in across at 100 yd.", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
         designer.Children.Add(Row(Label("Sighters"), designSighters));
         designer.Children.Add(designLoadBlock);
         designer.Children.Add(Row(Label("Your five-shot group, MOA"), designGroup, new TextBlock { Text = "at", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0) }, designDistance, new TextBlock { Text = "yd", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0) }));
@@ -367,12 +383,12 @@ public sealed class PrintPanel : UserControl
         saveOwn.Click += (_, _) => SaveDesign();
         designer.Children.Add(saveOwn);
 
-        foreach (var box in new[] { designName, designSpacing, designGroup, designDistance })
+        foreach (var box in new[] { designName, designSpacing, designGroup, designDistance, designSize })
         {
             box.TextChanged += (_, _) => Redesign();
         }
 
-        foreach (var combo in new[] { designPage, designRing, designBull })
+        foreach (var combo in new[] { designPage, designRing, designBull, designSizeUnit })
         {
             combo.SelectionChanged += (_, _) => Redesign();
         }
@@ -422,6 +438,32 @@ public sealed class PrintPanel : UserControl
         }
 
         int ringDmm = ParametricSheet.RingSizes[Math.Max(0, designRing.SelectedIndex)];
+
+        // Entry 303 item 1: a size given in inches, MOA or mil sets the bull's size; the E and C bulls take it exactly, and the rings, whose
+        // stacks come in set sizes, take the nearest, and say so.
+        if (!string.IsNullOrWhiteSpace(designSize.Text))
+        {
+            string unit = ParametricSheet.BullUnits[Math.Max(0, designSizeUnit.SelectedIndex)];
+            double? yards = double.TryParse(designDistance.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && d > 0 ? d : null;
+            if (!double.TryParse(designSize.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double size)
+                || ParametricSheet.BullInches(size, unit, yards) is not { } inches)
+            {
+                Check(CheckLevel.Refusal, unit == "in"
+                    ? "Enter the bull's size in inches, such as 2.00."
+                    : $"Enter the bull's size in {unit} and the distance in yards below; a size in {unit} is read at that distance.");
+                selected = null;
+                ShowNothing();
+                return;
+            }
+
+            int wanted = (int)Math.Round(inches * 254);
+            ringDmm = designBull.SelectedIndex is 1 or 2 ? wanted : ParametricSheet.RingSizes.MinBy(r => Math.Abs(r - wanted));
+            string across = string.Create(CultureInfo.InvariantCulture, $"{inches:0.00} in");
+            Check(CheckLevel.Fine, unit == "in"
+                ? $"The bull is {across} across{(ringDmm == wanted ? "" : string.Create(CultureInfo.InvariantCulture, $"; the nearest ring set is {ringDmm / 254.0:0.00} in"))}."
+                : string.Create(CultureInfo.InvariantCulture, $"{size:0.##} {unit} at {yards:0} yd is {across} across{(ringDmm == wanted ? "" : $"; the nearest ring set is {ringDmm / 254.0:0.00} in, so choose the E or C bull for the exact size")}."));
+        }
+
         var spec = new SheetSpec(designName.Text ?? "", ParametricSheet.Pages[Math.Max(0, designPage.SelectedIndex)], (int)(designColumns.Value ?? 5), (int)(designRows.Value ?? 5),
             spacing, ringDmm, (int)(designSighters.Value ?? 0), designLoadBlock.IsChecked == true,
             designBull.SelectedIndex switch { 1 => LibraryBuilder.EDiscs(ringDmm), 2 => LibraryBuilder.CDiscs(ringDmm), _ => null });

@@ -73,6 +73,8 @@ These are the application as it is: the build renders every screen itself, in bo
 Every split between panes can now be dragged to the size you want, on the computer and on a wide phone or tablet, and GroupLab
 remembers it; Settings has Reset layout to put them all back.
 
+The target designer now takes a bull size in mil, MOA or inches, the angles at the sheet's distance.
+
 Every app can now export all of your data to one file that any GroupLab imports, on the computer and the phone, without overwriting or
 duplicating anything.
 
