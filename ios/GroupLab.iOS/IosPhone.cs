@@ -222,6 +222,8 @@ internal sealed class IosPhone : IPhonePlatform
     // The camera, entry 290 section 2 item 5: AVFoundation where there is a camera, the files picker where there is none (Camera/IosCamera.cs).
     public bool CameraAllowed() => IosCamera.Allowed();
 
+    public bool CameraGranted() => AVCaptureDevice.GetAuthorizationStatus(AVAuthorizationMediaType.Video) == AVAuthorizationStatus.Authorized;
+
     public Avalonia.Controls.Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => IosCamera.Screen(taken, back, choose, result);
 
     public bool IsCamera(object? content) => IosCamera.IsScreen(content);

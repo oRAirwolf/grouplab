@@ -58,6 +58,13 @@ public sealed class CapturePage : UserControl
             Camera();
         };
 #endif
+        // Entry 312 section 6: a later visit to Capture looks again whether the camera has been allowed since the line was shown.
+        AttachedToVisualTree += (_, _) => WaitForCamera();
+        DetachedFromVisualTree += (_, _) =>
+        {
+            cameraWait?.Stop();
+            cameraWait = null;
+        };
         var units = Phone.Settings.LoadUnits();
         var (typed, inches) = Phone.Settings.LoadShotSetup();
         calibre.Text = typed ?? "";
@@ -316,7 +323,8 @@ public sealed class CapturePage : UserControl
 
         if (!Phone.Platform.CameraAllowed())
         {
-            status.Text = "GroupLab needs the camera to take the picture. Allow it, then press Take a picture again.";
+            status.Text = CameraWords;
+            WaitForCamera();
             return;
         }
 
@@ -335,6 +343,36 @@ public sealed class CapturePage : UserControl
                 Content = WithBar(shown, true);
             }
         });
+    }
+
+    /// <summary>The line asking for the camera, entry 311 item 1.</summary>
+    internal const string CameraWords = "GroupLab needs the camera to take the picture. Allow it, then press Take a picture again.";
+
+    private DispatcherTimer? cameraWait;
+
+    /// <summary>
+    /// Entry 312 section 6: the line asking for the camera stayed under the buttons after Alan had allowed it. It goes once the camera is
+    /// allowed, looked at every second while Capture shows and again whenever Capture is shown, and only then.
+    /// </summary>
+    internal void WaitForCamera()
+    {
+        if (status.Text != CameraWords || Phone.Platform.CameraGranted())
+        {
+            if (status.Text == CameraWords)
+            {
+                status.Text = "";
+            }
+
+            cameraWait?.Stop();
+            cameraWait = null;
+            return;
+        }
+
+        if (cameraWait is null && VisualRoot is not null)
+        {
+            cameraWait = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Background, (_, _) => WaitForCamera());
+            cameraWait.Start();
+        }
     }
 
     /// <summary>Whether the camera is showing; closes it and returns to the start where it was.</summary>

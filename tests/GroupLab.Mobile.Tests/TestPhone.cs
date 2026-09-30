@@ -70,6 +70,11 @@ internal sealed class TestPhone : IPhonePlatform
 
     public bool CameraAllowed() => false;
 
+    /// <summary>Whether the test has allowed the camera since Capture asked for it (entry 312 section 6).</summary>
+    public bool Granted { get; set; }
+
+    public bool CameraGranted() => Granted;
+
     /// <summary>A web address a screen asked to open, recorded and never opened.</summary>
     public void OpenAddress(string address) => Asked.Add(("open", address));
 
