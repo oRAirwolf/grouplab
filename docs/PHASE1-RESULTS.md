@@ -51,6 +51,21 @@ approves (entry 320 section 1); then the download page, the README and the guide
 and only then does Alan turn automatic distribution off. The feedback summary already writes no tester's words, screenshots, name or
 email (entry 311's review); that covers public testers too. Unholy's address is written nowhere.
 
+## Entry 321: the camera's level upright at a backer as well as flat over a table
+
+Done 2026-09-30 (e1c95abb), one worker. Gravity chooses the mode by itself with hysteresis: "Looking down" once the camera points more
+than 55 degrees below the horizon, "Upright" again below 35, so a hand near 45 never flickers; upright is level when the camera's axis is
+horizontal and the phone is not rolled, in portrait, landscape or upside down. The word sits under the crosshair; green is within 3
+degrees in both. Once a frame reads the markers, the sheet's own angle decides (gravity again 2.5 s after the last such frame), and
+`camera.level` logs the mode and the source. Found on the way: Android's gravity was read in the phone's natural axes, so the dot would
+have moved sideways in landscape; it now uses the screen's axes as iOS did (not yet checked on a phone). Synthetic angled cases with the
+pipeline's 26 mm lens read all 50 holes from 5 to 45 degrees, so they cannot find the limit; Guided's square-on limit stays 37 degrees
+in both positions until real pictures say otherwise. Range cases added to the scoreboard: 15 and 30 degrees 50 of 50, sun and the
+shooter's shadow 38 of 50 (9 lost to clipping alone), 6 px of motion 50 of 50, and 2 and 3 ft no marker read (question 77). Replayed
+upright clips in sun, in wind, curled and taped are taken without "Hold steadier"; a shaken clip is not. The guide, a capture tip, the
+README and the Features page mention both positions. Tests: Core 125 on the area, Mobile 88. Not done: a real phone check, and the tour's
+camera picture for the new word.
+
 ## Entry 318: the next batch without Alan
 
 Done 2026-09-30, with one worker at a time (entry 317).

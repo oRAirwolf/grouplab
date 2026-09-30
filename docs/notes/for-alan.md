@@ -5,6 +5,12 @@ Apple's first beta review, and nothing touches it until Apple decides, so it kee
 "Join the iPhone and iPad beta" link on the download page, the README and the guide, prove both groups get the same next build, and only
 then tell you to turn GroupLab Team's automatic distribution off; leave it on until I say.
 
+THE LEVEL AT THE RANGE (entry 321, 22:55 UTC, not a request; in the next nightly): the camera's level now works with the phone upright
+at a target on its backer as well as flat over a table, choosing by itself; the word "Upright" or "Looking down" sits under the crosshair,
+and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
+sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
+print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
 GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
 1. In nightly 137 (out at 15:30 UTC): the iPad's reading no longer hangs, Cancel always works and a reading stops after a minute (entry 313);
    Guided takes the picture about a second after the sheet is ready, and the level turns green (311); Send diagnostics in Settings, About,

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 22:20 UTC, entry 318 done (all five sections).
+**Last rewritten:** 2026-09-30 22:55 UTC, entries 318 to 321 done; the inbox is empty.
 
 ---
 
@@ -47,7 +47,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Planning's next batch from this list; meanwhile the far column's registration on angled photos.
+1. Planning's next batch from this list; meanwhile the far column's registration on angled photos. The next sitting: the level
+   upright at a backer (entry 321, Android landscape especially) and the distance of question 77.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building.
 
@@ -64,8 +65,9 @@ range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple s
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (75 and 76 answered in entry 318, as built):
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md` (75 and 76 answered in entry 318, as built):
 
+- **77** the guide says stand about 2.5 ft away; the synthetic camera reads no marker at 2 ft (A proposed: measure at the next sitting)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page

@@ -24,6 +24,35 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 321: the camera's level works on a target still on the backer, not only on a table
+
+**Status: done 2026-09-30 (e1c95abb); a device check at the next sitting, and question 77 on the distance.**
+
+From planning, 2026-09-30, for Alan: "the taking a picture function in the application assumes that the photo is being taken on a flat
+surface like a countertop but people may be taking pictures of the target that are still on the target backer at the range. Is there a
+way to make it so that the level can detect the orientation of the phone and the crosshair will turn green and a photo will be taken if
+it is in an upright position as well as a looking down position."
+
+Android and iOS alike.
+
+1. **Two gravity modes, chosen by themselves.** From the gravity vector: camera pointing down (phone near flat, screen up) is "looking
+   down", judged as today; camera pointing near horizontal (phone upright, portrait or landscape) is "upright", where level means the
+   camera's axis is horizontal (no tilt up or down) and the phone is not rolled. Switch between them with hysteresis (for example past
+   45 degrees of pitch with a margin) so the mode never flickers. Show which mode is in use in a word beside the level ("Table" or
+   "Backer", or better words), and the crosshair turns green in either when level.
+2. **Better than gravity: the sheet's own angle.** A backer may lean, and a table may not be level. Once the sheet's markers are read,
+   the registration already knows the camera's angle to the paper itself. When markers are visible, the level and Guided's "square on"
+   test use that angle (the camera square to the sheet within the tolerance the scoreboard supports), whatever the phone's orientation;
+   gravity is the fallback before markers are found and for targets GroupLab did not print. Say in the log which one decided
+   (`camera.level` with the source).
+3. **Guided fires in both positions** under the same rules (square on, steady, codes read), with the tolerance measured on the scoreboard's
+   angled cases rather than guessed.
+4. **At the range:** an upright photo from arm's length in sunlight, a sheet moving a little in the wind, a curled or taped sheet on
+   cardboard. Add these to the replay-camera and synthetic cases (strong sun and shadow of the shooter, slight motion blur, a sheet 2 to 3
+   feet away) and keep "hold steadier" honest for them.
+5. The guide's "taking the picture" section and the camera's tip text mention both: flat on a table, or straight on at the backer.
+6. If the level's look must change beyond the mode word, post DESIGN NEEDED rather than choosing.
+
 ## 2026-09-30, entry 320: the Public Beta's public link exists; publish it only after Apple approves
 
 **Status: waiting 2026-09-30: sections 1 to 3 wait for Apple to approve build 134 for Public Beta; section 4 is in force (entry 319's results).**
