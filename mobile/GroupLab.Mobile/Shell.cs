@@ -504,6 +504,29 @@ internal static class Screens
         return (Page(new StackPanel { Spacing = 12, Children = { Title(heading), Card(bar, line), cancel } }), line, cancel);
     }
 
+    /// <summary>
+    /// A control a page keeps between rebuilds, taken from wherever it was: a control has one parent, and adding it to a new panel while
+    /// the old one still holds it throws (the build 134 report from Shots Needed to Zero, calculated twice).
+    /// </summary>
+    public static T Detach<T>(T control)
+        where T : Control
+    {
+        switch (control.Parent)
+        {
+            case Panel panel:
+                panel.Children.Remove(control);
+                break;
+            case ContentControl holder:
+                holder.Content = null;
+                break;
+            case Decorator decorator:
+                decorator.Child = null;
+                break;
+        }
+
+        return control;
+    }
+
     /// <summary>A page of words: a title and a paragraph, scrolled when it does not fit.</summary>
     public static Control Words(string heading, string words) => Page(new StackPanel { Spacing = 12, Children = { Title(heading), Line(words) } });
 

@@ -479,7 +479,8 @@ internal sealed class BallisticsPage : UserControl
 
     private static TextBox Field(string text) => new() { Text = text, MinHeight = Screens.Touch, MinWidth = 110 };
 
-    private static Control Labeled(string label, Control field) => new StackPanel { Spacing = 2, Margin = new Thickness(0, 0, 10, 6), Children = { Screens.Dim(label), field } };
+    /// <summary>A label over its field. To, Every, Range and the rest are kept between builds, so each leaves the last build's row first.</summary>
+    private static Control Labeled(string label, Control field) => new StackPanel { Spacing = 2, Margin = new Thickness(0, 0, 10, 6), Children = { Screens.Dim(label), Screens.Detach(field) } };
 
     private static double? Number(TextBox box) => double.TryParse(box.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double v) ? v : null;
 

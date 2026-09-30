@@ -119,7 +119,7 @@ internal sealed class FiguresView : UserControl
             plot.InvalidateVisual();
             Build();
         }));
-        column.Children.Add(Screens.Card(Detach(plot), chips));
+        column.Children.Add(Screens.Card(Screens.Detach(plot), chips));
 
         foreach (var section in sections)
         {
@@ -215,25 +215,6 @@ internal sealed class FiguresView : UserControl
         }
 
         return holder;
-    }
-
-    /// <summary>The plot moved into the new card: a control has one parent, and the page is rebuilt on every change.</summary>
-    private static Control Detach(Control control)
-    {
-        switch (control.Parent)
-        {
-            case Panel panel:
-                panel.Children.Remove(control);
-                break;
-            case ContentControl holder:
-                holder.Content = null;
-                break;
-            case Decorator decorator:
-                decorator.Child = null;
-                break;
-        }
-
-        return control;
     }
 
     /// <summary>A CEP for any percent from 1 to 99.9, drawn on the plot and given here.</summary>
