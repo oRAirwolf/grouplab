@@ -24,6 +24,80 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-09-30, entry 309: Alan's answers on the four designs (home, Compare, moving a hole, bull colors)
+
+**Status: done 2026-09-30 but section 4 (bull colors), which goes with entry 297.** 1: Home A on the Capture page: the brand lockup, one line, the caliber and distance with Change, Take a picture, Choose a photo and Print a target, Getting started (the guide's phone section), grouplab.org and the version; the first caliber asked once over the page. 2: Compare draws each load's group side by side at one scale in its own color and marker, with the mean radius dashed, a tap stacking them with per-load toggles, on both platforms. 3: Fix holes circles each hole at the caliber, Move drags the circle under the crosshair with a ghost, a line and the distance; the desktop's rings are the caliber once set.
+
+From planning, 2026-09-30, for Alan. The canvas is "GroupLab waiting designs" (https://claude.ai/artifact/SAoLbcEdBhN3wS6zifZDZ3);
+a local copy of every board is in `C:\Dev\grouplab-local\design-concepts\waiting-2026-09-30\` (never committed). The numbers on the
+boards are sample data.
+
+## 1. The phone's first screen is the Capture page, redrawn as Home A (replaces entry 301's "design first")
+
+Alan: "Lets use A as the capture page and make it the default landing page." Board `Main.dc.html`.
+
+1. The app opens on Capture, and Capture is Home A: the GroupLab mark and word, one line saying what GroupLab does, then **one row
+   showing the caliber and distance** (remembered from the last target, "Change" opens them), then **Take a picture** (primary, full
+   width), **Choose a photo** and **Print a target** side by side, then a **"Getting started on your phone"** card, then grouplab.org and
+   the version at the foot. The tab bar stays, with Capture selected. No sixth tab.
+2. **Caliber and distance** (Alan asked whether it asks after the buttons): it does not ask every time. They show on the page as they are
+   today, remembered from the last target. Only when no caliber is set yet (first use) does Take a picture or Choose a photo ask for it
+   first, in a sheet over the page, then go straight on to the camera or picker. Distance may stay "Not known". Both remain changeable on the
+   result, as now.
+3. "Getting started on your phone" opens the phone section of the user guide (today grouplab.org/guides/user-guide/#13-on-the-phone) unless a
+   dedicated mobile getting-started page exists; report which in the fold.
+4. iOS the same. OLED black idle still applies.
+
+## 2. Compare: side by side, and a tap stacks them
+
+Alan: "A but can you make it where if you tap on one of the groups, it stacks them?" Boards `CompareA.dc.html` and `CompareB.dc.html`.
+
+1. The card "Each load's group": one small plot per load at the same scale, each load in its own color (amber, then a new blue near
+   #6ea8ec in the dark theme, matched for the light theme; more loads take further colors that differ in lightness as well as hue), shots as
+   dots, the mean radius as a dashed ring, each group centered on its own middle, a shared scale bar, and shots and mean radius beneath.
+2. **Tapping any group stacks them**: the card switches to one larger plot with every group on the same center (first load filled dots,
+   the second rings, and so on), with a button per load to hide or show it. Tapping the stacked plot puts them side by side again. The
+   choice holds while the page is open.
+3. The range chart and the verdict card below use the same load colors. The desktop's Compare gets the same card and the same tap.
+
+## 3. Moving a hole: circles the size of the bullet, and the crosshair moves with the circle
+
+Alan: "Move: A. Moving the impact should move the circle and the circle should match the caliber diameter. It is fine to move the
+crosshair with it." Boards `MoveA1.dc.html` and `MoveA2.dc.html`.
+
+1. **Every hole's circle in Fix holes is drawn at the caliber's diameter** at the current zoom (a 6 ARC hole's circle is 0.243 in across),
+   so a correct circle sits on the edge of the hole. Where the caliber is not known, the present size, and a line saying the caliber makes
+   the circles true size.
+2. Step 1 is as built: pan the picture under the fixed crosshair; a hole under it is chosen; Add, Move this hole, Remove, Undo, Done.
+3. **Step 2, moving:** the chosen circle is dragged directly with a finger (not by panning the picture), and the crosshair travels with the
+   circle's center. A dashed ghost stays where the circle was, with a dashed line to it; a readout gives how far it has moved in the person's
+   units; the picture scrolls by itself when the circle nears an edge. "Put the hole here" drops it; "Cancel" puts it back. Undo covers it.
+4. The desktop's marking screen: circles at the caliber's diameter too, and dragging a hole moves its circle the same way.
+
+## 4. Bull colors approved (entry 297 section 7 stands)
+
+Alan: "Colors: Approved." Red near #D22630 and blue near #1F5FBF for rings and lines, large solid areas at a 60% tint, codes black.
+Tune only if the detection gates require it, and say so.
+
+## Order
+
+Within entry 303's list for the desktop and Android worker: section 3 (moving a hole) and section 2 (Compare) after 302 and 299; section 1
+(the Capture page) alongside, on Android and iOS; section 4 with entry 297.
+
+## 2026-09-30, entry 301: a home screen on the phone, design first
+
+**Status: superseded 2026-09-30 by entry 309 section 1, done.** Home A is the Capture page and first screen (built with entry 309). There is no separate mobile getting-started page; the link is https://grouplab.org/guides/user-guide/#13-on-the-phone.
+
+**Superseded 2026-09-30 by entry 309 section 1:** Alan chose Home A as the Capture page and the first screen. Build it from entry 309.
+
+From planning, 2026-09-29, for Alan. When the phone app opens, show a home screen instead of going straight to Targets: a graphic with
+the GroupLab logo, basic information such as grouplab.org, and a link to the mobile getting-started guide.
+
+1. **Planning is drawing options for Alan now. Do not build the screen itself until he approves one.**
+2. Meanwhile, if it is cheap: prepare the navigation so a Home screen can be the first screen on Android and iOS, reachable again from the
+   tab bar or the logo, without changing what users see yet.
+3. Check where the mobile getting-started guide lives on grouplab.org and report its URL in the fold.
+
 ## 2026-09-30, entry 298: every pane can be resized and is remembered
 
 **Status: done 2026-09-30.** Every multi-pane screen has a grip to drag (amber on hover), each split remembered: the editor, analysis, library, Targets, Equipment and Ballistics on the desktop, and the result's sheet and numbers side by side on a wide phone or tablet; Settings has Reset layout on both. Tested headlessly at 3840 by 2160 and at 150% scaling; a real 4K monitor is not checked. The pictures follow at the next walk.
