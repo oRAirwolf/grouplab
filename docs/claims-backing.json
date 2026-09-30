@@ -4468,6 +4468,14 @@
   "Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
    "kind": "code",
    "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "**The sheet beside the numbers (entry 290 section 6).** On the iPad mini in landscape, a result shows the sheet on one side and the numbers on the other, and turning the iPad back to portrait puts them one above the other again.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6"
+  },
+  "The iPhone simulator cannot show it: in landscape it is 832 points wide inside its safe area, and the side by side layout starts at 840.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/ResultView.cs ExpandedWidth (840); the iOS self-test's layers, Shell 440 by 956 with a safe area of 62 at the top and 34 at the bottom, so 956 less 62 on each side in landscape; a check to be made on the iPad mini, entry 290 section 6"
   }
  },
  "rules": [

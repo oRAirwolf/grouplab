@@ -123,6 +123,9 @@ no, and a no comes back as a note with what was seen.
 16. **Open in GroupLab.** From Files, Share, then GroupLab in the row of apps (or Open in), opens GroupLab and reads the picture.
 17. **A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it. If iOS will not let the share
     sheet open GroupLab, the sheet says the picture is waiting, and opening GroupLab reads it.
+18. **The sheet beside the numbers (entry 290 section 6).** On the iPad mini in landscape, a result shows the sheet on one side and
+    the numbers on the other, and turning the iPad back to portrait puts them one above the other again. The iPhone simulator cannot
+    show it: in landscape it is 832 points wide inside its safe area, and the side by side layout starts at 840.
 
 ## 3. Building without a Mac
 
