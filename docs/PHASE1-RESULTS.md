@@ -86,8 +86,14 @@ Built overnight on `overnight/tooling`; the bridge was a stopped half-commit, fi
   setting, reset) and add ping, tree, log, timings and memory. 42 key controls carry stable automation ids, held by a test.
   `scripts/app-bridge.py --platform android|ios` drives it over `adb forward` or pymobiledevice3. Not yet run on a device: the copies on
   the phones and the iPad predate it. Tests: Mobile 64, the Core tests for the area 138.
-- **Not done yet:** section 3 (the replay camera and sitting clips), section 4 (structured timings everywhere and the debug overlay),
-  and amendment 2 items 3, 4 and 6 (the replay camera and overlay on Android, and Firebase Test Lab's cost and free quota).
+- **4, more visibility (d3cf5717):** the log stays one event per line as key=value (already structured, so not rewritten as JSON);
+  `read.stage`, `camera.say`, `camera.level` and `camera.torch` now carry memory, the managed heap and the device's heat (Android's
+  thermal status, iOS's thermal state), and `camera.say` names the check holding a frame back. "Show diagnostics on the camera" in
+  Settings, About, off by default on every build as the amendment asks: frame rate, the instruction and its failing check, tilt and
+  torch over the camera, and the stage and times over the reading, at most four redraws a second. Mobile 78 tests. iOS is first
+  compiled by CI.
+- **Not done yet:** section 3 (the replay camera and sitting clips) and amendment 2 items 3 and 6 (the replay camera on Android, and
+  Firebase Test Lab's cost and free quota).
 
 ## Entry 311: the first iPad sitting, Guided sooner, the level, and the iPad's logs
 
