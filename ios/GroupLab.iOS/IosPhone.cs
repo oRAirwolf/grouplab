@@ -319,7 +319,18 @@ internal sealed class IosPhone : IPhonePlatform
     /// <summary>iOS updates GroupLab through TestFlight and the App Store, so there is no updater card.</summary>
     public Avalonia.Controls.Control? UpdateCard() => null;
 
-    public bool IsDevBuild => false;
+    public bool IsDevBuild =>
+#if GROUPLAB_DEV
+        true;
+#else
+        false;
+#endif
+
+    /// <summary>
+    /// Entry 311 section 3 item 2: the switch to keep a sitting's pictures is offered here too, since Documents shows in the Files app; off
+    /// until turned on in GroupLab, on until turned off in GroupLab Dev.
+    /// </summary>
+    public (bool Offered, bool OnByDefault) KeepsSittings => (true, IsDevBuild);
 
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 313 section 1.3: a reading asks iOS for the time to finish while the screen locks. iOS gives some tens of

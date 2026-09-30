@@ -69,7 +69,7 @@ internal static class IncomingPhotos
     /// </summary>
     internal static void DataFile(IStorageItem item)
     {
-        if (item.TryGetLocalPath() is not { } path || !File.Exists(path))
+        if (item.TryGetLocalPath() is not { } path)
         {
             return;
         }
@@ -77,8 +77,11 @@ internal static class IncomingPhotos
         string copy = Path.Combine(IosPhone.Caches, "incoming" + GroupLab.Core.Records.DataExport.Extension);
         try
         {
-            File.Copy(path, copy, overwrite: true);
-            File.Delete(path);
+            if (!Claim(item, path, copy))
+            {
+                return;
+            }
+
             string start;
             using (var head = new StreamReader(copy))
             {
@@ -118,7 +121,7 @@ internal static class IncomingPhotos
         var handles = new List<PhotoHandle>();
         foreach (var item in items)
         {
-            if (item.TryGetLocalPath() is not { } path || !File.Exists(path))
+            if (item.TryGetLocalPath() is not { } path)
             {
                 continue;
             }
@@ -126,18 +129,52 @@ internal static class IncomingPhotos
             string claimed = Path.Combine(Claimed, Guid.NewGuid().ToString("N") + Path.GetExtension(path));
             try
             {
-                File.Move(path, claimed);
+                if (Claim(item, path, claimed))
+                {
+                    handles.Add(PhotoPickers.FromFile(claimed));
+                }
             }
             catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {
-                // A file iOS let GroupLab read in place: copied instead, and the original left where it is.
-                File.Copy(path, claimed, overwrite: true);
+                DiagnosticLog.Exception(LogLevel.Warn, "ios.incoming.open", e);
             }
-
-            handles.Add(PhotoPickers.FromFile(claimed));
         }
 
         return handles;
+    }
+
+    /// <summary>
+    /// A file opened in GroupLab, made GroupLab's own at <paramref name="to"/>. Only a copy iOS put in Documents/Inbox is moved. Entry 311
+    /// section 3 item 2: with GroupLab's folder in the Files app, iOS may hand over the person's own file where it lies, in place, and that
+    /// file is read through the access iOS granted and left exactly where it is, never moved or deleted. False where there was nothing to read.
+    /// </summary>
+    private static bool Claim(IStorageItem item, string path, string to)
+    {
+        if (InInbox(path) && File.Exists(path))
+        {
+            File.Move(path, to, overwrite: true);
+            return true;
+        }
+
+        if (item is not IStorageFile file)
+        {
+            return false;
+        }
+
+        // Avalonia's iOS file opens its stream inside the file's security scope, so a file outside GroupLab's own folders can be read.
+        using var from = file.OpenReadAsync().GetAwaiter().GetResult();
+        using var into = File.Create(to);
+        from.CopyTo(into);
+        DiagnosticLog.Info("ios.incoming.inplace", ("kind", Path.GetExtension(path)));
+        return true;
+    }
+
+    /// <summary>Whether a path is in Documents/Inbox, where iOS puts the copy of a file opened in GroupLab; /private/var and /var are one place.</summary>
+    internal static bool InInbox(string path)
+    {
+        static string Plain(string p) => p.StartsWith("/private/", StringComparison.Ordinal) ? p["/private".Length..] : p;
+        string inbox = Plain(Path.Combine(IosPhone.Documents, "Inbox")) + "/";
+        return Plain(Path.GetFullPath(path)).StartsWith(inbox, StringComparison.Ordinal);
     }
 
     /// <summary>

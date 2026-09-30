@@ -4540,6 +4540,10 @@
   "**The level.** Flat over a sheet on a table the dot sits in the ring and the whole crosshair turns green, as on Android (entry 311 section 2); raising an edge sends it toward that edge, in portrait and in landscape.": {
    "kind": "code",
    "where": "ios/GroupLab.iOS/Camera/CaptureScreen.cs BubbleView.Draw, as android/GroupLab.Android/CaptureScreen.cs BubbleView.OnDraw; ios/GroupLab.iOS/Camera/CameraSession.cs LogLevel (camera.level); the self-test's camera layout check shows it green lying flat (entry 311 section 2); a device check for the next iPad sitting"
+  },
+  "**Diagnostics on the phone** (entry 311 section 3).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/DiagnosticsPackage.cs Send; SettingsView About; ios/GroupLab.iOS/Info.plist UIFileSharingEnabled; tests/GroupLab.Mobile.Tests/DiagnosticsTests.cs; entry 311 section 3"
   }
  },
  "rules": [

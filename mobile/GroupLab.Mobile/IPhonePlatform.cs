@@ -93,6 +93,13 @@ public interface IPhonePlatform
     bool IsDevBuild { get; }
 
     /// <summary>
+    /// Whether Settings, About offers to keep every picture of a sitting (entry 291 section 7.5), and whether it is on until turned off. GroupLab
+    /// Dev on Android keeps them unless turned off; the Play build never offers it. Entry 311 section 3 item 2: the iPhone and iPad application
+    /// offers it too, off until turned on, and its kept pictures are in the Files app under On My iPad, GroupLab.
+    /// </summary>
+    (bool Offered, bool OnByDefault) KeepsSittings => (IsDevBuild, IsDevBuild);
+
+    /// <summary>
     /// Opens a web address in the phone's browser (entries 299 and 309): what GroupLab sends, the phone's getting-started guide. By default
     /// through Avalonia's launcher, which both heads provide; a test phone records it instead.
     /// </summary>

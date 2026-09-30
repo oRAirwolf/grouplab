@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1409 |
+| code | 1410 |
 | measured | 1799 |
 | decided | 1269 |
 | unbacked | 0 |
-| **total** | **4477** |
+| **total** | **4478** |
 
-**1042** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1043** of them were read one sentence at a time and their backing written against the sentence. The other **3435** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1906,6 +1906,7 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): **How it is built** (entry 258): what the desktop computes lives in shared code, so the phone and the desktop cannot give different numbers.
 - *code* (src/GroupLab.Core/Records/CompareSessions.cs and src/GroupLab.Core/Ballistics/HitFromGroup.cs, used by src/GroupLab.App/MainWindow.Compare.cs, MainWindow.Hit.cs and the phone's ComparePage.cs and BallisticsPage.cs (entry 258)): Making saved sessions into groups to compare moved from the desktop into `CompareSessions`, and the hit chance's precision from a marked group into `HitFromGroup` (entry 258).
 - *decided* (NOTES-FROM-PLANNING.md entries 258 and 259; the shared engines are src/GroupLab.Core/Marking/AnalysisPanel.cs, FigureExplanations.cs, AimedBulls.cs, SetPool.cs, ScaleReference.cs, Statistics/ShotsToZero.cs, LoadComparison.cs, Ballistics/HitProbability.cs): What is left for the phone is its screens, in entry 259's order, each shipped in its own nightly and tried at the next device sitting.
+- *code* (mobile/GroupLab.Mobile/DiagnosticsPackage.cs Send; SettingsView About; ios/GroupLab.iOS/Info.plist UIFileSharingEnabled; tests/GroupLab.Mobile.Tests/DiagnosticsTests.cs; entry 311 section 3): **Diagnostics on the phone** (entry 311 section 3).
 - *decided* (NOTES-FROM-PLANNING.md entry 292 section 4, Alan's words): ## Phones sold outside America (entry 292 section 4) Alan: "This may be especially important for europeans that have access to a lot of phones that are not available in america." Europe and South America buy far more of these than the US does.
 - *decided* (NOTES-FROM-PLANNING.md entry 292 section 4 item 1; android/GroupLab.Android/PhotoPickers.cs uses only the standard requests): GroupLab writes nothing for any one brand: their galleries answer the standard Android requests that Choose a photograph, From another app and sharing use (`docs/ANDROID.md` section 18), and their clouds hand a photograph over through the gallery's own stream, with the same progress, offline and whole-photograph rules.
 

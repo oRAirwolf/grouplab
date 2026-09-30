@@ -102,6 +102,11 @@ internal sealed class TestPhone : IPhonePlatform
     public Control? UpdateCard() => null;
 
     public bool IsDevBuild { get; set; }
+
+    /// <summary>What the build offers of the keep-pictures switch; null follows the development build, as Android does.</summary>
+    public (bool Offered, bool OnByDefault)? Keeps { get; set; }
+
+    public (bool Offered, bool OnByDefault) KeepsSittings => Keeps ?? (IsDevBuild, IsDevBuild);
 }
 
 /// <summary>The repository's root, found from the test's own folder.</summary>

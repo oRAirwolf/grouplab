@@ -226,9 +226,11 @@ public sealed class AppSettingsStore(string path)
 
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 291 section 7.5: whether GroupLab Dev keeps every picture of a sitting on the phone; on until turned off.
-    /// The release and Play builds never keep them, whatever this says.
+    /// The Play build never keeps them, whatever this says. Entry 311 section 3 item 2: the iPhone and iPad application has the same switch,
+    /// off until turned on (<paramref name="unset"/> false), so nobody's pictures pile up unasked.
     /// </summary>
-    public bool LoadKeepSitting() => Read<bool?>(file => file["keepSitting"]?.GetValueKind() != JsonValueKind.False) ?? true;
+    public bool LoadKeepSitting(bool unset = true) =>
+        Read<bool?>(file => file["keepSitting"] is { } kept ? kept.GetValueKind() != JsonValueKind.False : unset) ?? unset;
 
     public bool SaveKeepSitting(bool keep) => Save(file => file["keepSitting"] = keep);
 

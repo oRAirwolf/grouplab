@@ -38,8 +38,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!--
+	  Entry 311 section 3 item 2: GroupLab's Documents folder in the Files app, under On My iPad (or iPhone), GroupLab: the log in logs, a
+	  sitting's kept pictures in sitting, and the sessions. Both keys are needed for Files to show it; the second lets Files hand over a file
+	  where it lies, which GroupLab reads and leaves in place (IncomingPhotos.Claim). It also lets a USB tool copy the folder (scripts/ipad-logs.py).
+	-->
 	<key>UIFileSharingEnabled</key>
-	<false/>
+	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<!-- Entry 292 section 2.3: "Open in GroupLab" for any picture, which iOS copies into GroupLab's own files. -->
@@ -94,7 +99,7 @@
 		</dict>
 	</array>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<false/>
+	<true/>
 	<!-- Entry 292 section 2.3: the address the share extension opens GroupLab with once the shared pictures are in the app group. -->
 	<key>CFBundleURLTypes</key>
 	<array>
