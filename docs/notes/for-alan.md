@@ -1,4 +1,4 @@
-**Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
@@ -18,10 +18,11 @@ the vertical is velocity, with the amber band on the group picture and its Veloc
 phone it is the card above All figures, with Add readings and a Velocity band chip under the plot. It is in the next nightly; the phone
 check rides along with request 50's sitting.
 
-PUBLIC BETA (entries 319 and 320, 22:10 UTC, not a request): thank you for the two groups and the link. Build 134 is waiting for
-Apple's first beta review, and nothing touches it until Apple decides, so it keeps its place in the queue. When it is approved I put the
-"Join the iPhone and iPad beta" link on the download page, the README and the guide, prove both groups get the same next build, and only
-then tell you to turn GroupLab Team's automatic distribution off; leave it on until I say.
+PUBLIC BETA AND THE STORE (entries 335 to 337, not a request): Apple approved the Public Beta, and both TestFlight groups now get each
+build by themselves: build 148, which carries Unholy's two fixes, is in GroupLab Team and was added to the Public Beta and submitted
+automatically. Unholy can install 148 from TestFlight now to retest the keyboard and the curl note. GroupLab is in the Microsoft Store
+(request 38 closed). Putting the TestFlight invitation and the "Get it from Microsoft" badge on the website waits for your word in this
+session: the safety check stopped me publishing them from here.
 
 THE LEVEL AT THE RANGE (entry 321, 22:55 UTC, not a request; in the next nightly): the camera's level now works with the phone upright
 at a target on its backer as well as flat over a table, choosing by itself; the word "Upright" or "Looking down" sits under the crosshair,
@@ -250,64 +251,6 @@ Storage**, **Boot Volume Backups**: is there a backup of type **Full** created o
 **17 October**? That is the first Full of the schedule you changed on 27 September, and it is all that is needed to know the change worked.
 
 A good answer: "Full, 4 October, expires 17 October", or what the list shows instead.
-
-## 38. The Microsoft Store: your account, the name, and the keys that let releases go there by themselves
-
-**Opened 2026-09-25. Being applied: Part A answered 2026-09-29 (entry 293); Part B, the first submission, was submitted for certification by Alan on 2026-09-30. Waiting on Microsoft's result, which I watch for; it closes when the Store lists GroupLab.** Everything you set works.
-The Store package is built with your identity as a draft release, "GroupLab 0.2.0 for the Microsoft Store, draft", on
-github.com/oRAirwolf/grouplab/releases (drafts are visible only to you): `grouplab-win-x64.msix`, 87.8 MB, version 0.2.0.0. Its identity
-matches the four variables. Microsoft's certification kit passed it with warnings only, none blocking. GroupLab's release process signed
-in to the Store and read the product back as "GroupLab" without submitting anything. The Store secret expires about 2028-09-28; a
-reminder goes in well before, and a release that cannot sign in says the secret may have expired. One thing to know for Part B: the first
-submission is version 0.2.0.0, and the Store only takes higher versions after it, so the first stable release sent to it by itself will be
-0.2.1 or later.
-
-**Opened 2026-09-25. Entry 224 section 3.** The Store package is built (CI makes it on every push) and `release.yml` sends each tagged
-stable release to the Store by itself once these are in place. Part A is one sitting, about thirty minutes, mostly Microsoft's identity
-check. Part B comes after I reply that the first package is ready, and is the Store's one hand-made first submission.
-
-**Part A**
-
-1. **The developer account.** At https://storedeveloper.microsoft.com, sign up as an **individual** developer (free). It asks for an
-   identity check; that is the part that takes time.
-2. **Reserve the name.** In Partner Center, **Apps and games**, **New product**, **MSIX or PWA app**, name `GroupLab`.
-3. **The identity, into the repository's variables.** In the new product, **Product management**, **Product identity**, copy four values,
-   then in PowerShell (each asks for its value):
-
-```powershell
-gh variable set STORE_IDENTITY_NAME -R oRAirwolf/grouplab            # Package/Identity/Name
-gh variable set STORE_PUBLISHER -R oRAirwolf/grouplab                # Package/Identity/Publisher, the CN=... line
-gh variable set STORE_PUBLISHER_DISPLAY_NAME -R oRAirwolf/grouplab   # Package/Properties/PublisherDisplayName
-gh variable set STORE_PRODUCT_ID -R oRAirwolf/grouplab               # the Store ID, 9 followed by eleven letters and numbers
-```
-
-4. **The Entra application.** In Partner Center, **Account settings**, **Tenants**, associate your Entra tenant if it is not already. In
-   Entra, register an application (`grouplab-store-publisher`, single tenant, no redirect) and make it a client secret. Back in Partner
-   Center, **Account settings**, **User management**, **Microsoft Entra applications**, add it with the **Manager** role. The Seller ID is
-   under **Account settings**, **Legal info** (or **Identifiers**).
-5. **The four secrets**, in PowerShell (each asks for its value and does not show it):
-
-```powershell
-gh secret set AZURE_AD_TENANT_ID -R oRAirwolf/grouplab
-gh secret set AZURE_AD_APPLICATION_CLIENT_ID -R oRAirwolf/grouplab
-gh secret set AZURE_AD_APPLICATION_SECRET -R oRAirwolf/grouplab
-gh secret set SELLER_ID -R oRAirwolf/grouplab
-```
-
-**A good answer for part A:** "done", once the eight lines above each say they were set. I then build the first package with your identity
-as a draft release and tell you it is ready.
-
-**Part B, after I say the draft is ready.** In Partner Center, **Start your submission** for GroupLab:
-- **Pricing and availability:** free, all markets.
-- **Properties:** category Sports; privacy policy `https://grouplab.org/research/what-grouplab-sends/`.
-- **Age ratings:** answer as `docs/store/LISTING.md` says; expected 3+.
-- **Packages:** upload `grouplab-win-x64.msix` from the draft release on github.com/oRAirwolf/grouplab/releases. Where it asks why the
-  package needs **runFullTrust**, paste: "GroupLab is a desktop application built with .NET. It needs full trust to open the scans and
-  photographs the person chooses, to print targets, and to save reports and sessions where the person chooses."
-- **Store listing:** paste each block from `docs/store/LISTING.md` and upload its five screenshots.
-- **Submit.** Certification takes a few days. After it, every tagged release is sent to the Store by itself.
-
----
 
 ## 33. The Fold 7's camera: ten minutes with a printed sheet
 

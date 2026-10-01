@@ -129,6 +129,66 @@ At the start of a run, the count of open requests in this file is printed and no
 
 # Answered requests
 
+## 38. The Microsoft Store: your account, the name, and the keys that let releases go there by themselves
+
+**Answered 2026-10-01** (entry 336): GroupLab is in the Microsoft Store, product 9NWJCXBKZNPZ, and you installed it and it works.
+
+**Opened 2026-09-25. Being applied: Part A answered 2026-09-29 (entry 293); Part B, the first submission, was submitted for certification by Alan on 2026-09-30. Waiting on Microsoft's result, which I watch for; it closes when the Store lists GroupLab.** Everything you set works.
+The Store package is built with your identity as a draft release, "GroupLab 0.2.0 for the Microsoft Store, draft", on
+github.com/oRAirwolf/grouplab/releases (drafts are visible only to you): `grouplab-win-x64.msix`, 87.8 MB, version 0.2.0.0. Its identity
+matches the four variables. Microsoft's certification kit passed it with warnings only, none blocking. GroupLab's release process signed
+in to the Store and read the product back as "GroupLab" without submitting anything. The Store secret expires about 2028-09-28; a
+reminder goes in well before, and a release that cannot sign in says the secret may have expired. One thing to know for Part B: the first
+submission is version 0.2.0.0, and the Store only takes higher versions after it, so the first stable release sent to it by itself will be
+0.2.1 or later.
+
+**Opened 2026-09-25. Entry 224 section 3.** The Store package is built (CI makes it on every push) and `release.yml` sends each tagged
+stable release to the Store by itself once these are in place. Part A is one sitting, about thirty minutes, mostly Microsoft's identity
+check. Part B comes after I reply that the first package is ready, and is the Store's one hand-made first submission.
+
+**Part A**
+
+1. **The developer account.** At https://storedeveloper.microsoft.com, sign up as an **individual** developer (free). It asks for an
+   identity check; that is the part that takes time.
+2. **Reserve the name.** In Partner Center, **Apps and games**, **New product**, **MSIX or PWA app**, name `GroupLab`.
+3. **The identity, into the repository's variables.** In the new product, **Product management**, **Product identity**, copy four values,
+   then in PowerShell (each asks for its value):
+
+```powershell
+gh variable set STORE_IDENTITY_NAME -R oRAirwolf/grouplab            # Package/Identity/Name
+gh variable set STORE_PUBLISHER -R oRAirwolf/grouplab                # Package/Identity/Publisher, the CN=... line
+gh variable set STORE_PUBLISHER_DISPLAY_NAME -R oRAirwolf/grouplab   # Package/Properties/PublisherDisplayName
+gh variable set STORE_PRODUCT_ID -R oRAirwolf/grouplab               # the Store ID, 9 followed by eleven letters and numbers
+```
+
+4. **The Entra application.** In Partner Center, **Account settings**, **Tenants**, associate your Entra tenant if it is not already. In
+   Entra, register an application (`grouplab-store-publisher`, single tenant, no redirect) and make it a client secret. Back in Partner
+   Center, **Account settings**, **User management**, **Microsoft Entra applications**, add it with the **Manager** role. The Seller ID is
+   under **Account settings**, **Legal info** (or **Identifiers**).
+5. **The four secrets**, in PowerShell (each asks for its value and does not show it):
+
+```powershell
+gh secret set AZURE_AD_TENANT_ID -R oRAirwolf/grouplab
+gh secret set AZURE_AD_APPLICATION_CLIENT_ID -R oRAirwolf/grouplab
+gh secret set AZURE_AD_APPLICATION_SECRET -R oRAirwolf/grouplab
+gh secret set SELLER_ID -R oRAirwolf/grouplab
+```
+
+**A good answer for part A:** "done", once the eight lines above each say they were set. I then build the first package with your identity
+as a draft release and tell you it is ready.
+
+**Part B, after I say the draft is ready.** In Partner Center, **Start your submission** for GroupLab:
+- **Pricing and availability:** free, all markets.
+- **Properties:** category Sports; privacy policy `https://grouplab.org/research/what-grouplab-sends/`.
+- **Age ratings:** answer as `docs/store/LISTING.md` says; expected 3+.
+- **Packages:** upload `grouplab-win-x64.msix` from the draft release on github.com/oRAirwolf/grouplab/releases. Where it asks why the
+  package needs **runFullTrust**, paste: "GroupLab is a desktop application built with .NET. It needs full trust to open the scans and
+  photographs the person chooses, to print targets, and to save reports and sessions where the person chooses."
+- **Store listing:** paste each block from `docs/store/LISTING.md` and upload its five screenshots.
+- **Submit.** Certification takes a few days. After it, every tagged release is sent to the Store by itself.
+
+---
+
 ## 65. Garmin Xero exports for the chronograph reader (entries 333 and 334)
 
 **Opened and answered 2026-10-01** (entry 334): "All of the xlsx files in here are garmin chronograph files G:\My Drive\chronograph.files\2026
