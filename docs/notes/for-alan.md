@@ -135,6 +135,13 @@ sitting's list in `docs/IOS-PLAN.md` comes as its own request when you have the 
 
 ## 58. Store-bought targets for the detector, whenever suits you, about ten minutes a target (entry 308)
 
+**Updated 2026-10-01 (entries 325 and 327): in part. Thank you for the five Birchwood Casey blanks** (the 6 in and 8 in Shoot-N-C
+bullseyes, the sight-in grid, the crosshair, and the Eze-Scorer), each scanned at 600 dpi with its package photographed. They are on this
+computer only and are already being used: GroupLab looks for holes on each clean sheet, where every mark it finds is a false one. **Still
+needed, whenever suits you:** shoot each one, then scan it again with the sheet in **the same corner of the glass as its blank** (your
+scanner stops at legal size, so the scan holds the same part of the sheet), note how many shots you fired, and take one phone photo of
+each whole shot sheet. A good answer: a `shot.png`, the shot count in `notes.txt`, and the photo, in each target's folder.
+
 **Opened 2026-09-30.** **Why:** each blank and shot scan of another maker's target becomes a hard test of finding holes on any target,
 kept on your computer only, never committed or shown. **Needed:** yes to buying several that fit on the scanner glass; a spread helps
 most: plain black bulls, a fluorescent or splatter target, colored diamonds, and a small grid target. For each one:
