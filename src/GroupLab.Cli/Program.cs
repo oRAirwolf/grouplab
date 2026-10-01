@@ -84,6 +84,7 @@ return args switch
     ["donor-pack"] => GroupLab.Cli.DonorPackVerb.Run(".", Console.Out),
     ["donor-pack", var repository] => GroupLab.Cli.DonorPackVerb.Run(repository, Console.Out),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
+    ["velocity", .. var rest] => GroupLab.Cli.VelocityVerb.Run(rest, Console.Out, Console.Error),
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
         CorpusCounts.Run("scans/phase0", SampleSet.FrozenDirectory, "targets", rest.SkipWhile(a => a != "--local").Skip(1).FirstOrDefault(), rest.Contains("--write"), Console.Out),
@@ -527,6 +528,7 @@ static int Usage()
         grouplab trajectory --bc <bc> --model G1|G7 --mv <fps> --weight <grains> [--sight <in>] [--zero <yd>] [--max <yd>] [--step <yd>]
                             [--temp <F>] [--pressure <inHg> | --altitude <ft>] [--humidity <%>] [--wind <mph>] [--angle <degrees>]
                             [--reference icao|asm] [--twist <in> --diameter <in> --length <in> [--left-twist]] [--latitude <degrees>]
+        grouplab velocity <session.json> [--distance <yd>] [--bc <bc>] [--model G1|G7] [--weight <grains>] [--sight <in>] [--zero <yd>] [--confidence <c>]
         grouplab icons <mark.svg> <directory>
         grouplab analyze <image> [--target <file.gltd.json>] [--library <directory>]... [--calibre <calibre>] [--sighters] [-v 1|2|3] [--json <marking.json>]
         grouplab analyze-folder <directory> [--library <directory>]... [--calibre <diameter>] [--markings <directory>]
