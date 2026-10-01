@@ -267,7 +267,7 @@ That is the whole point of the project. Everything else is the machinery that ma
 
 ## How it works
 
-**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or, under a crosshair, on the phone. The same statistics run. Finding the holes by itself on any target is the goal: on the computer, Find holes (Experimental) now proposes them once the scale is set, for you to check one by one, and GroupLab Dev offers it on the phone.
+**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or, under a crosshair, on the phone. The same statistics run. Finding the holes by itself on any target is the goal: on the computer, Find holes (Experimental) now proposes them once the scale is set, for you to check one by one, and GroupLab Dev offers it on the phone. Five Birchwood Casey targets are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent on the fingerprinted sheets, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike.
 
 **A GroupLab sheet is the fast lane, not a requirement.** On its own sheets everything is automatic: the scale, every hole, and which bull each shot belongs to, and one shot per bull gives large groups. You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyze it correctly.
 
