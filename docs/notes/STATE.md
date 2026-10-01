@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 10:00 UTC, entries 331 and 332 folded and both workers stopped; 335 to
-338 are next (the Public Beta, the Microsoft Store, the download page).
+**Last rewritten:** 2026-10-01 11:20 UTC, entries 335 to 338 folded; 339 to 342 are next (BulletSeeker's name, recognition ships,
+scale assumed with a warning, the overnight list).
 
 ---
 
@@ -61,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **15** (66 the Store's cadence; 64 a second sheet of each store-bought target; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **16** (67 TestFlight team distribution off; 66 the Store's cadence; 64 a second sheet of each store-bought target; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -91,7 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 335, 336, 337, 338.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 339 to 344.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

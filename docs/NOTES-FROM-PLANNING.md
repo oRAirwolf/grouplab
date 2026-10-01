@@ -44,6 +44,109 @@ worker:
 4. Update the testers' guide line about feedback if it says who reads it, and docs/RESTORE.md if the private repository's contents need
    a backup line.
 
+## 2026-10-01, entry 335: the Public Beta is approved; do entries 319 and 320's next steps now
+
+**Status: done 2026-10-01.** 1: the invitation is on the download page, the README and the guide, with Alan's approval in the session (auto mode had first stopped it as a publication from a private note). 2: the lockstep is automatic: build 148 went into both groups by itself, so 147 was not needed; request 67 asks Alan to turn GroupLab Team's automatic distribution off. 3: the check reported only into its run summary; it now writes docs/notes/external-status.md when a state changes. 4: for-alan.md says Unholy can retest on 148.
+
+Alan, 2026-10-01 08:54 UTC, from a screenshot of App Store Connect, TestFlight, iOS Builds, version 0.2.0:
+
+- **Approved, in both GroupLab Team and Public Beta:** 134 (expires in 89 days), 143, 144, 145 and 146.
+- **147: "Ready to Submit", GroupLab Team only**, not yet in Public Beta. 147 carries Unholy's two fixes (entry 328).
+- 137 to 142: "Ready to Submit", GroupLab Team only. Feedback: one item on 143 (Unholy's, already handled).
+
+for-alan.md still says build 134 is waiting for review, so the scheduled TestFlight check did not notice the approval. Do this before
+the rest of the queue (it is small), by whichever worker is free:
+
+1. Entry 319 and 320's plan, now that Apple has approved: put the "Join the iPhone and iPad beta" link
+   (`C:\Dev\grouplab-local\testflight-public-link.txt`) on the download page, the README and the guide, in one change with its claims
+   backing, and say so in for-alan.md.
+2. Add 147 to Public Beta (submit it for beta review) so both groups are on the same build, and prove the lockstep on the next nightly:
+   both groups receive it without anyone touching App Store Connect. Only then tell Alan, in for-alan.md, to turn GroupLab Team's
+   automatic distribution off, with the exact clicks.
+3. Fix the TestFlight check so an approval, a rejection or a build left in "Ready to Submit" for an external group shows in for-alan.md
+   the same day; say why it missed this one.
+4. Tell Alan in for-alan.md that Unholy can install 147 from TestFlight now (he is in GroupLab Team) to retest the keyboard and the note.
+
+## 2026-10-01, entry 336: GroupLab is in the Microsoft Store (request 38 answered)
+
+**Status: done 2026-10-01, except the Store's version, which the next Store check writes.** 1: request 38 closed; Alan installed it himself (entry 337). 2: the badge, with entry 337. 3: same cause and fix as entry 335 section 3, and the check now names the package version the Store carries. 4: entry 337 section 4.
+
+Alan, 2026-10-01 08:54 UTC, from a screenshot of Partner Center: GroupLab, "MSIX or PWA app", badge "In Microsoft Store", Store presence
+"Submission 1: Last modified on 10/01/2026", and "Your product is currently available in the Microsoft Store based on the
+discoverability configured in the Availability module." Product ID 9NWJCXBKZNPZ (from the Partner Center address). Small; do it with
+entry 335, before the rest of the queue.
+
+1. Close request 38. Check the public listing at https://apps.microsoft.com/detail/9NWJCXBKZNPZ from outside Partner Center: it opens,
+   installs on this PC, and the installed app starts and reads a sample sheet. Say in for-alan.md which version the Store carries.
+2. Put "Get it from Microsoft" on the download page, the README and the guide, following Microsoft's own badge rules, in one change with
+   its claims backing; say how the Store build differs from the nightly and the direct download (updates, signing, which version).
+3. Why did the six-hourly check not report it? Fix it so it reports the day it changes.
+4. Plan how later versions reach the Store (by hand in Partner Center each time, or the Store submission API with credentials only Alan
+   creates). Write it as a request for Alan only if it needs him, with the exact steps; nothing is submitted to the Store without his word.
+
+## 2026-10-01, entry 337: Alan's answers on the Microsoft Store (entry 336), and a download page redesign coming
+
+**Status: done 2026-10-01.** 2: the badge on the current page, then entry 338's. 3: the check, as entry 336. 4: no new credentials were needed: request 38's app registration already holds the Manager role, so store-submit.yml uses it; request 66 proposes the cadence, and nothing is submitted until Alan answers.
+
+Alan, 2026-10-01 09:01 UTC, answering entry 336's four points:
+
+1. "I installed it from the store and it is working fine. It is definitely an older build." So the install check of 336 section 1 is
+   done by Alan on his own PC; still record which version the Store carries, and compare it with the newest nightly in for-alan.md.
+2. "Please add the badge." Yes to the "Get it from Microsoft" badge. But: "Now that there are a lot of different versions and
+   installers, the download page is starting to get pretty crowded." Planning is making concepts for a cleaner download page for Alan to
+   choose from. Until he chooses, add the badge and the TestFlight link (entry 335) to the current page in the plainest way, and do not
+   rework the page's layout; the chosen design comes as its own entry.
+3. "Yes please": fix the six-hourly Store check (336 section 3).
+4. "I want to have an automated route." Build the Store submission route through the Microsoft Store submission API: a workflow that
+   submits a chosen build as a new Store submission and reports its certification status back to for-alan.md. Write the request for the
+   credentials Alan alone can create, as one sitting with exact clicks: an app registration in his Entra ID tenant, associated with
+   Partner Center under Users, Microsoft Entra applications, with the Manager role, and the tenant ID, client ID, client secret and
+   seller ID stored as GitHub secrets by `gh secret set` (written out in full). Alan is an Entra ID administrator; the steps can be
+   brief but exact. Which builds go to the Store, and how often, is Alan's decision: propose a cadence (for example, a build that has
+   been on the nightly train without a new crash for a set time), and submit nothing until he agrees.
+
+## 2026-10-01, entry 338: the download page redesign, concept A ("pick your device")
+
+**Status: done 2026-10-01 (worker A), except two small parts.** The Steady card cannot show the Store's version until docs/notes/external-status.md records it and the site reads it; the guides' Android links still go to the plain page, which the device guess covers on a phone. No Features or tour picture showed the old page, so none is stale.
+
+Alan, 2026-10-01 09:09 UTC, on the canvas claude.ai/artifact/79m6nHkTJXekeMvhX9ZXF8: "Lets go with A for desktop but put the nightly
+on the left. A on mobile." The boards "A: pick your device (desktop, Windows chosen)" (now redrawn with the nightly on the left) and
+"A on a phone (Android chosen)" are the reference. Do it after entries 335 to 337 (it uses 335's TestFlight link and 336's badge).
+Sample numbers on the canvas are samples; every real figure comes from the build and the release data.
+
+1. **Layout, top to bottom.** "Download GroupLab" and one line under it; a row of five device buttons (Windows, Mac, iPhone and iPad,
+   Android, Linux) with the visitor's own device chosen and marked "This computer" (on a phone, "This phone"), as large buttons on the
+   desktop and a row of pill buttons on a phone; then only the chosen device's choices; a "Not sure?" line; that device's other
+   downloads and its help, folded; then "Everything else", folded: what each device needs (the minimums table), what is supported and
+   tested (today's long paragraphs, kept whole), updating, and every file of the current nightly on GitHub. Nothing on today's page is
+   deleted; it moves behind a fold.
+2. **Each device's two cards.** On the desktop the **nightly card is on the left** ("Newest", amber, one big download button, the file
+   name, nightly number and date, three short points, and the honest line that it passed the tests but nobody has used it yet), the
+   store card on the right ("Steady", the store's own badge or link, what updating through the store means, the store's version).
+   On a phone the two stack, as drawn. Per device:
+   - Windows: newest the installer; steady the Microsoft Store badge; folded: the zip, and "Windows protected your PC".
+   - Mac: newest Apple silicon; no store yet, so one card and a plain line saying so; folded: the Intel build (marked untested) and
+     "Which Mac have I got?".
+   - iPhone and iPad: the TestFlight Public Beta only (the internal group's nightlies are not public), so one card; folded: "Install
+     TestFlight first".
+   - Android: newest GroupLab Dev; steady Google Play by invitation, with the Discord step; folded: the plain APK, and the Play Protect
+     note; the "take one copy only" line stays visible.
+   - Linux: newest the tarball, one card.
+3. **Behaviour.** The device is guessed from the browser and can always be changed; a link can name one (`/download/?device=mac`), so
+   guides and posts can point at a device. With JavaScript off, every device's section shows in order, so nothing is hidden for good.
+   Device buttons are real buttons with `aria-pressed`; folds are real disclosure buttons; everything reaches 4.5:1 in both themes and
+   works at 320 wide.
+4. **The usual.** The site's look and tokens as they are; official badges under each store's rules; claims backing for every figure;
+   the tour and README links still land on the right device; the site's tests, a Features or tour picture of the new page if one shows
+   the old; for-alan.md says where to look.
+
+### 5. Amendment (Alan, 09:11 UTC): the file list moves up on the desktop
+
+"For A desktop, also move the 'every file in nightly 147' section right below 'Not sure?'" On the desktop, the folded "Every file in
+nightly N" (on GitHub, with the commit it was built from) sits directly under the "Not sure?" line, above the device's other downloads
+and help, and leaves "Everything else". The phone keeps it in "Everything else" unless Alan says otherwise. The canvas board is redrawn
+to match.
+
 ## 2026-10-01, entry 331: a batch that needs nobody, so the loop has real work
 
 **Status: done 2026-10-01, every section.** Section 1: Find holes on the five blanks went from 0, 0, 0, 3 and 8 marks to 0, 0, 0, 0 and 6, every any-target scoreboard line unchanged; the remaining six (printed dark numbers and letters, two white digits) cannot be told from a hole without refusing real ones. Section 2: a generic CSV, LabRadar and Garmin Xero, then entry 334's real files. Section 3: docs/PROOF-CHECKLIST.md (worker A). Section 4: docs/PERFORMANCE.md's second baseline. Section 5: the summary is at the top of for-alan.md.

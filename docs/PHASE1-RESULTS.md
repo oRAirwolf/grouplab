@@ -40,6 +40,23 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 335 to 338: the Public Beta, the Microsoft Store, and the download page
+
+Done 2026-10-01.
+
+- **Published, with Alan's approval in the session:** the TestFlight invitation and Microsoft's "Get it from Microsoft" badge (served from
+  the site, unaltered) on the download page, the README's generated table and the start of the guide.
+- **The lockstep:** build 148 went into GroupLab Team and the Public Beta and was submitted with nobody touching App Store Connect;
+  request 67 asks Alan to turn the team group's automatic distribution off.
+- **Why nobody heard:** the TestFlight step and the Store check wrote only into their run summaries. `scripts/status-note.py` now keeps
+  `docs/notes/external-status.md`, committed as "[notes] " only when a state changes; the Store check also names the package version.
+- **The Store route:** `store-submit.yml`, by hand, with request 38's existing keys, a dry run unless the version is typed twice; request
+  66 proposes the cadence.
+- **The download page** (entry 338, worker A): device buttons, the newest build on the left and the store copy on the right, everything
+  else folded, `?device=` links, all five sections shown with scripts off; every figure from docs/RELEASE-NOTES.md.
+- **An incident on the way:** nightly 148 left the moving "Latest nightly" release a draft, so every download link answered 404 from about
+  09:06 to 09:20 UTC; published by hand, and the nightly now publishes it if it is a draft and fails unless a download answers.
+
 ## Entry 331: a batch that needs nobody, and entry 332's fingerprint trial
 
 Done 2026-10-01; sections 1, 2 and 4 by worker B (this session), section 3 and entry 332 by worker A.

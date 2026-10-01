@@ -1,4 +1,4 @@
-**Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 16.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
@@ -74,6 +74,14 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 67. Turn off GroupLab Team's automatic distribution in TestFlight, about one minute, whenever suits (entries 319, 320 and 335)
+
+**Opened 2026-10-01.** **Why:** both TestFlight groups now get each build by themselves: build 148 reached GroupLab Team and the Public
+Beta with nobody touching App Store Connect, so the group's own automatic distribution, which you left on while Apple reviewed the first
+build, is no longer needed, and with it off the two groups can never drift apart. **Steps:** in App Store Connect open Apps, GroupLab,
+TestFlight; under Internal Testing choose GroupLab Team; in the group's settings turn off automatic distribution of new builds. **A good
+answer:** "done". If the setting is named differently, a screenshot of the group's page is enough.
 
 ## 66. How often GroupLab goes to the Microsoft Store: your choice, two minutes, whenever suits (entry 337)
 
