@@ -12,6 +12,8 @@
     <EmbeddedResource Include="Marking\glossary.json" LogicalName="GroupLab.Core.Marking.glossary.json" />
     <!-- NOTES-FROM-PLANNING.md entry 165: the consent texts and the receiver's limits, from the one file the site and both receivers read. -->
     <EmbeddedResource Include="..\..\website\api\limits.json" LogicalName="GroupLab.limits.json" />
+    <!-- NOTES-FROM-PLANNING.md entry 340: the store-bought targets' fingerprints, never a scan or picture of the maker's printing. -->
+    <EmbeddedResource Include="StoreTargets\Fingerprints\*.glfp" LogicalName="GroupLab.Core.StoreTargets.Fingerprints.%(Filename).glfp" />
   </ItemGroup>
 
   <ItemGroup>

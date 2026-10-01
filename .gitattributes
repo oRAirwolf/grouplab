@@ -24,3 +24,6 @@ tests/GroupLab.Core.Tests/Fixtures/ballistics-js.json -text
 website/server/** text eol=lf
 *.sh text eol=lf
 
+
+# Store-bought target fingerprints (entry 340) are gzip, never text.
+*.glfp binary

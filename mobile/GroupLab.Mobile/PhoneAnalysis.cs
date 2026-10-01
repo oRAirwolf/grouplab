@@ -20,7 +20,13 @@ internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int Ori
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
 internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
     GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null, PaperEdge? Paper = null,
-    TargetDefinition? LooksLike = null);
+    TargetDefinition? LooksLike = null, StoreTargetSeen? Recognized = null);
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 340: a store-bought target recognized in a picture that named no GroupLab sheet, and the working image's size
+/// its bulls are placed in.
+/// </summary>
+internal sealed record StoreTargetSeen(GroupLab.Core.StoreTargets.StoreTargetRecognition Recognition, int Width, int Height);
 
 /// <summary>What the person said about the shooting: the caliber, which changes what GroupLab finds, and the distance.</summary>
 internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
@@ -231,6 +237,10 @@ internal static class PhoneAnalysis
             token.ThrowIfCancellationRequested();
             // Entry 260: every picture is checked, a picture that names no sheet included.
             var unread = GroupLab.Core.Capture.PictureCheck.Of(grey, null, null, codesRead, torch);
+
+            // Entry 340 section 1: a target GroupLab did not print may be a store-bought one it knows, which is then marked with its bulls
+            // placed and its printed size as the scale, or asked about first where it comes in sizes the picture cannot tell apart.
+            var seen = Recognize(working.Path, grey.Width, grey.Height, token);
             // Entry 281: the codes' 0.4 mm modules get about 3 pixels each at the distance the whole sheet fits, so three of six pictures in
             // the camera test were refused here while the markers had named the layout on every frame. The markers never name a sheet by
             // themselves (SheetIdentification), so the sheet the picture looks most like is offered first, for the person to confirm.
@@ -245,7 +255,7 @@ internal static class PhoneAnalysis
 
             return new PhoneResult(session.State, null,
                 "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
-                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike);
+                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike, Recognized: seen);
         }
 
         // Entry 271: a photograph is corrected for the printer chosen, where one has been measured.
@@ -289,6 +299,28 @@ internal static class PhoneAnalysis
         token.ThrowIfCancellationRequested();
         long? id = Save(session.State, definition, units, null);
         return new PhoneResult(session.State, definition, null, id, working, Check: check, Measured: result.Measurement.Scale, Paper: result.Paper);
+    }
+
+    /// <summary>
+    /// Entry 340: the working image against the store-bought targets GroupLab has fingerprints of; null where none was recognized or the
+    /// picture could not be read for it, which leaves the picture to be named or marked by hand as before.
+    /// </summary>
+    internal static StoreTargetSeen? Recognize(string path, int width, int height, CancellationToken token)
+    {
+        ReadStage.Began("store-target");
+        var clock = Stopwatch.StartNew();
+        try
+        {
+            token.ThrowIfCancellationRequested();
+            var seen = GroupLab.Core.StoreTargets.StoreTargetRecognizer.Recognize(path, new OpenCvFingerprintBackend());
+            DiagnosticLog.Info("read.stage", ("stage", "store-target"), ("ms", clock.ElapsedMilliseconds), ("decided", seen?.Describe()));
+            return seen is { Found: true } ? new StoreTargetSeen(seen, width, height) : null;
+        }
+        catch (Exception e) when (e is IOException or InvalidDataException or OpenCVException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "storetarget.recognize", e);
+            return null;
+        }
     }
 
     /// <summary>Saves the session, or updates it where it was saved before; null where the database would not take it.</summary>

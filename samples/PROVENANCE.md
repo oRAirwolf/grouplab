@@ -61,6 +61,24 @@ something a reader needs, and the rest stays where it is.
 **Exceptions.** When Alan names a photograph or scan that cannot be published, it is listed here with the date he said so, and nothing
 published from it before that date is kept on the site.
 
+# Store-bought target fingerprints: what is committed, and what never is
+
+| | |
+|---|---|
+| **What** | `src/GroupLab.Core/StoreTargets/Fingerprints/*.glfp`, one for each of five Birchwood Casey products: the Shoot-N-C 8 in sight-in grid (34105), 6 in bullseye (34550), 8 in bullseye (34805) and 8 in crosshair (34806), and the Eze-Scorer paper bullseye (37826) |
+| **Made from** | Alan's own 600 dpi scans of a blank of each, taken on 2026-09-30 for request 58 (entry 327), by `grouplab store-fingerprints build` |
+| **Decided by** | `docs/NOTES-FROM-PLANNING.md` entries 332 and 340: "Fingerprints only, never a scan or image of another maker's target" |
+| **Licence** | The repository's, GPL-3.0, for the fingerprints; the printing they describe is Birchwood Casey's and is not in the repository |
+
+**What a fingerprint holds.** Local features (ORB, a 32 byte descriptor each, and its position in inches on the target), the aim points in
+the same inches, and the smoothed colour of each half inch cell of the printing, three bytes a cell. Together they are 25 to 60 KB a
+product. No picture of the target can be made from them: the colour layout is two points an inch, and a descriptor records which way
+brightness changes around a point, not what the point looks like.
+
+**What is never committed or published.** The scans themselves, the packet photographs taken with them, and any picture made from either,
+including the trial's test pictures (entry 332) and the crops the tests make where the scans are on the computer. Those tests return at
+once anywhere else, so CI never needs them. The scans are Alan's to keep, and they stay on his computer.
+
 # The 2026-09-26 range day: three load sheets, the aim point card and two score sheets
 
 Alan's, from his range day of 2026-09-26 at 100 yd, passed on as `drive-download-20260927T044320Z-1-001.zip` (entries 226 and 229). Kept

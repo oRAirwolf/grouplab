@@ -310,6 +310,19 @@ public sealed class MarkingSession
 
     public void SetScale(ScaleReference? scale) => Apply(State with { Scale = scale });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 340 section 1: a store-bought target GroupLab recognized, its printed size set as the scale and its bulls
+    /// placed where its fingerprint has them, as one step that Undo takes back. Bulls already placed are replaced; every shot goes to its
+    /// nearest bull unless the person chose one. Entry 341: the scale carries where it came from, so the warning follows it.
+    /// </summary>
+    public void PlaceStoreTarget(StoreTargets.StoreTargetMatch match, int width, int height)
+    {
+        ArgumentNullException.ThrowIfNull(match);
+        var bulls = match.Bulls(width, height).Select((p, i) => new BullAim(i, (i + 1).ToString(System.Globalization.CultureInfo.InvariantCulture), p));
+        var shots = State.Shots.Select(s => s.BullChosen ? s : s with { Bull = null }).ToImmutableList();
+        Apply(Reassigned(State with { Scale = match.Scale(), Bulls = [.. bulls], Shots = shots }));
+    }
+
     /// <summary>Sets the group's calibre, or clears it with null (NOTES-FROM-PLANNING.md entry 24 section 5).</summary>
     public void SetCalibre(Calibre? calibre) => Apply(State with { Calibre = calibre });
 

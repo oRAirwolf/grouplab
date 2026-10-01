@@ -88,6 +88,22 @@ public sealed class ResultView : UserControl
                 again();
             }));
             Content = Screens.Page(column);
+
+            // Entry 340 section 1: a store-bought target GroupLab knows goes straight to marking it, its bulls placed and its printed size as
+            // the scale, after "Which target is this?" where the picture cannot tell its sizes apart. Cancel comes back to the choices above.
+            if (result.Recognized is { } seen && result.Image is { } image)
+            {
+                var choices = Content;
+                if (seen.Recognition.AsksWhichSize)
+                {
+                    Content = new WhichTargetPage(seen.Recognition, match => MarkStoreTarget(result, seen, match, image, setup, units, again, choices));
+                }
+                else
+                {
+                    MarkStoreTarget(result, seen, seen.Recognition.Named, image, setup, units, again, choices);
+                }
+            }
+
             return;
         }
 
@@ -111,6 +127,18 @@ public sealed class ResultView : UserControl
         {
             numbers.Children.Add(Screens.Card(Screens.Line(GroupLab.Core.Marking.UnitSwitch.Hint + "."), Screens.Dim(GroupLab.Core.Marking.UnitSwitch.HintMore)));
         }
+        // Entry 341 section 2: a store-bought target's printed size is the scale, so the figures carry the warning and the way to check it.
+        if (GroupLab.Core.StoreTargets.StoreTargetMatch.InPlay(result.State) && result.State.ImagePath is { } marked && File.Exists(marked))
+        {
+            numbers.Children.Add(Screens.Card(Screens.Line(GroupLab.Core.StoreTargets.StoreTargetMatch.Warning),
+                Screens.Choice(GroupLab.Core.StoreTargets.StoreTargetMatch.CheckScale, () =>
+                {
+                    var here = Content;
+                    Content = new MarkingAPage(marked, session.State.ExifOrientation, setup, units,
+                        done => Content = new ResultView(done, setup, units, again), () => Content = here, session.State, sessionId, checkTheScale: true);
+                }).Id("result-check-scale")));
+        }
+
         // Entry 271: what the figures are measured in, and on a photograph the ruler that makes them real inches.
         if (PrinterCard.For(result, session, Changed) is { } printer)
         {
@@ -366,6 +394,33 @@ public sealed class ResultView : UserControl
         });
         return Screens.Card(Screens.Heading("Aim points"), chips, said, add,
             Screens.Dim(ResultWords.AimPointsPooled));
+    }
+
+    /// <summary>
+    /// Entry 340: Marking A on a recognized store-bought target, its bulls placed and, where a size is known, its printed size as the scale;
+    /// "Not sure" places the bull and starts at the scale.
+    /// </summary>
+    private void MarkStoreTarget(PhoneResult result, StoreTargetSeen seen, GroupLab.Core.StoreTargets.StoreTargetMatch? match, WorkingImage image, ShotSetup setup, UnitSettings units, Action again, object? back)
+    {
+        var marking = new MarkingSession(result.State);
+        string said;
+        if (match is null)
+        {
+            foreach (var bull in seen.Recognition.Family.FirstOrDefault()?.Bulls(seen.Width, seen.Height) ?? [])
+            {
+                marking.AddBull(bull);
+            }
+
+            said = GroupLab.Core.StoreTargets.FamilyQuestion.NotSureSaid;
+        }
+        else
+        {
+            marking.PlaceStoreTarget(match, seen.Width, seen.Height);
+            said = match.Said(marking.State.Bulls.Count);
+        }
+
+        Content = new MarkingAPage(image.Path, image.Metadata.Orientation, setup, units, marked => Content = new ResultView(marked, setup, units, again), () => Content = back,
+            marking.State, said: said);
     }
 
     /// <summary>Where the result is kept and that it is safe to close, entry 279 section 3 (Unholy) and entry 281 section 2 (A).</summary>

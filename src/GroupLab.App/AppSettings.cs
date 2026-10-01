@@ -304,6 +304,19 @@ public sealed class AppSettingsStore(string path)
         file["figureUnits"] = all;
     });
 
+    /// <summary>
+    /// Entry 340 section 2: the person's last answer to "Which target is this?" for a family of store-bought targets, a product's identifier,
+    /// offered first the next time; null where the family was never asked about.
+    /// </summary>
+    public string? LoadFamilyAnswer(string family) => Read(file => file["familyAnswers"] is JsonObject all ? (string?)all[family] : null);
+
+    public bool SaveFamilyAnswer(string family, string product) => Save(file =>
+    {
+        var all = file["familyAnswers"] as JsonObject ?? [];
+        all[family] = product;
+        file["familyAnswers"] = all;
+    });
+
     /// <summary>Entry 273: whether a number has ever been tapped to switch units; the one-time hint shows until one has.</summary>
     public bool LoadUnitTapped() => Read(file => file["unitTapped"]?.GetValueKind() == JsonValueKind.True);
 

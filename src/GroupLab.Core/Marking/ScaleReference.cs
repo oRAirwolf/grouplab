@@ -84,15 +84,27 @@ public sealed record RectangleReference : ScaleReference
 
     public double HeightInches { get; }
 
+    /// <summary>
+    /// The store-bought target whose printed size this rectangle is, NOTES-FROM-PLANNING.md entries 340 and 341: GroupLab recognized it and
+    /// set its corners from its fingerprint, a <see cref="StoreTargets.StoreTarget.Id"/>; null for a rectangle the person drew. Its scale is
+    /// used with <see cref="StoreTargets.StoreTargetMatch.Warning"/> beside it, because printed targets vary a little from sheet to sheet.
+    /// </summary>
+    public string? PrintedTarget { get; init; }
+
+    /// <summary>The store-bought target this scale came from, where it did.</summary>
+    public StoreTargets.StoreTarget? Printed => PrintedTarget is { } id ? StoreTargets.StoreTargetLibrary.Find(id) : null;
+
     public override PointD ToTarget(PointD image) => mapping.ToPage(image);
 
-    public override string Description => string.Create(System.Globalization.CultureInfo.InvariantCulture,
-        $"a {WidthInches:0.###} by {HeightInches:0.###} in reference rectangle, which removes perspective but assumes the sheet flat");
+    public override string Description => Printed is { } printed
+        ? $"the printed size of the {printed.Title}, which GroupLab recognized; it removes perspective but assumes the sheet flat, and printed targets vary a little from sheet to sheet"
+        : string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            $"a {WidthInches:0.###} by {HeightInches:0.###} in reference rectangle, which removes perspective but assumes the sheet flat");
 
     public override string Describe(UnitSettings units)
     {
         ArgumentNullException.ThrowIfNull(units);
-        return $"a {units.Number(WidthInches)} by {units.Length(HeightInches)} reference rectangle, which removes perspective but assumes the sheet flat";
+        return Printed is not null ? Description : $"a {units.Number(WidthInches)} by {units.Length(HeightInches)} reference rectangle, which removes perspective but assumes the sheet flat";
     }
 
     public override bool AssumesSquareOn => false;

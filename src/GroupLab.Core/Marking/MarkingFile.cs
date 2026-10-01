@@ -278,6 +278,7 @@ public static class MarkingFile
     private static object? ScaleDocument(ScaleReference? scale) => scale switch
     {
         LengthReference length => new { kind = "length", a = length.A, b = length.B, inches = length.Inches },
+        RectangleReference { PrintedTarget: { } printed } rectangle => new { kind = "rectangle", corners = rectangle.Corners, widthInches = rectangle.WidthInches, heightInches = rectangle.HeightInches, printedTarget = printed },
         RectangleReference rectangle => new { kind = "rectangle", corners = rectangle.Corners, widthInches = rectangle.WidthInches, heightInches = rectangle.HeightInches },
         PerBullReference perBull => new
         {
@@ -395,7 +396,7 @@ public static class MarkingFile
             case "length":
                 return new LengthReference(Point(node!["a"])!.Value, Point(node["b"])!.Value, (double)node["inches"]!);
             case "rectangle":
-                return new RectangleReference([.. node!["corners"]!.AsArray().Select(c => Point(c)!.Value)], (double)node["widthInches"]!, (double)node["heightInches"]!);
+                return new RectangleReference([.. node!["corners"]!.AsArray().Select(c => Point(c)!.Value)], (double)node["widthInches"]!, (double)node["heightInches"]!) { PrintedTarget = (string?)node["printedTarget"] };
             case "perBull":
                 static DrawnLength Length(JsonNode l) => new(Point(l["a"])!.Value, Point(l["b"])!.Value, (double)l["inches"]!);
                 return new PerBullReference(

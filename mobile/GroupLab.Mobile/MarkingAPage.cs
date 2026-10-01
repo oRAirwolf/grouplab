@@ -48,14 +48,25 @@ internal sealed class MarkingAPage : UserControl
     private readonly Button next = Screens.Choice("", () => { });
     private readonly Button template = Screens.Choice("Keep as a template", () => { });
     private readonly Button findHoles = Screens.Choice(FindHoles.Label, () => { }).Id("marking-find-holes");
+
+    /// <summary>Entry 341 section 2: under a store-bought target's printed size as the scale, the warning and the scale check.</summary>
+    private readonly TextBlock storeWarning = Screens.Dim(GroupLab.Core.StoreTargets.StoreTargetMatch.Warning);
+    private readonly Button checkScale = Screens.Choice(GroupLab.Core.StoreTargets.StoreTargetMatch.CheckScale, () => { }).Id("marking-check-scale");
+    private readonly TextBlock intro = Screens.Line("");
     private readonly string imagePath;
     private readonly List<PointD> ends = [];
     private Step step = Step.Scale;
     private readonly long? sessionId;
     private string? found;
 
-    /// <param name="existing">A marking to go on with, entry 280 section 2's "+ Aim point": its scale kept, starting at the aim points.</param>
-    public MarkingAPage(string imagePath, int? exifOrientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel, MarkingState? existing = null, long? sessionId = null)
+    /// <param name="existing">
+    /// A marking to go on with, entry 280 section 2's "+ Aim point": its scale kept, starting at the aim points; or entry 340's store-bought
+    /// target, its bulls placed and its printed size as the scale, starting at the aim points, or at the scale where no size was chosen.
+    /// </param>
+    /// <param name="said">What GroupLab recognized, said above the steps.</param>
+    /// <param name="checkTheScale">Start at the scale, to check a store-bought target's printed size against a known length.</param>
+    public MarkingAPage(string imagePath, int? exifOrientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel, MarkingState? existing = null, long? sessionId = null,
+        string? said = null, bool checkTheScale = false)
     {
         WorkInProgress.HoldWhileShown(this);
         this.imagePath = imagePath;
@@ -63,10 +74,10 @@ internal sealed class MarkingAPage : UserControl
         this.units = units;
         this.done = done;
         this.cancel = cancel;
-        if (existing is { Scale: not null })
+        if (existing is not null && (existing.Scale is not null || existing.Bulls.Count > 0))
         {
             session.Load(existing);
-            step = Step.Aim;
+            step = existing.Scale is null || checkTheScale ? Step.Scale : Step.Aim;
         }
         else
         {
@@ -83,11 +94,15 @@ internal sealed class MarkingAPage : UserControl
         next.Click += (_, _) => Next();
         template.Click += (_, _) => KeepTemplate();
         findHoles.Click += (_, _) => _ = FindHolesAsync();
+        checkScale.Click += (_, _) => CheckTheScale();
+        intro.Text = said ?? "";
+        intro.IsVisible = said is not null;
 
-        var buttons = new StackPanel { Spacing = 8, Children = { main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, findHoles, template } };
+        var buttons = new StackPanel { Spacing = 8, Children = { main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, findHoles, template, storeWarning, checkScale } };
         Grid.SetColumn(next, 1);
         var column = new StackPanel { Spacing = 10, Margin = new Thickness(16, 12, 16, 12) };
         column.Children.Add(title);
+        column.Children.Add(intro);
         column.Children.Add(words);
         column.Children.Add(viewer);
         column.Children.Add(length);
@@ -107,6 +122,9 @@ internal sealed class MarkingAPage : UserControl
 
         // Entry 318 section 2: experimental, so in GroupLab Dev only, at the holes, where the scale is known.
         findHoles.IsVisible = FindHolesOffered;
+
+        // Entry 341 section 2: wherever a store-bought target's printed size is the scale, the warning, and the scale check one tap away.
+        storeWarning.IsVisible = checkScale.IsVisible = StoreScaleInPlay;
         undo.IsEnabled = step == Step.Scale ? ends.Count > 0 : session.CanUndo;
         switch (step)
         {
@@ -231,6 +249,17 @@ internal sealed class MarkingAPage : UserControl
                 return;
         }
 
+        Show();
+    }
+
+    /// <summary>Whether a store-bought target's printed size is the scale, past the scale step, where the warning is shown.</summary>
+    internal bool StoreScaleInPlay => step != Step.Scale && GroupLab.Core.StoreTargets.StoreTargetMatch.InPlay(session.State);
+
+    /// <summary>The scale check: back to the scale step, where a known length measured on the picture replaces the printed size.</summary>
+    internal void CheckTheScale()
+    {
+        ends.Clear();
+        step = Step.Scale;
         Show();
     }
 

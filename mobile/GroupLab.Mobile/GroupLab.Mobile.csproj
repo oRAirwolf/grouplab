@@ -51,6 +51,8 @@
     <Compile Include="..\..\src\GroupLab.App\LoadGroups.cs" Link="Shared\LoadGroups.cs" />
     <Compile Include="..\..\src\GroupLab.App\CaliberBoxes.cs" Link="Shared\CaliberBoxes.cs" />
     <Compile Include="..\..\src\GroupLab.App\BrandMark.cs" Link="Shared\BrandMark.cs" />
+    <!-- Entry 340 section 2: the outline beside each answer to "Which target is this?", the same drawing as the desktop's. -->
+    <Compile Include="..\..\src\GroupLab.App\TargetOutline.cs" Link="Shared\TargetOutline.cs" />
     <Compile Include="..\..\src\GroupLab.App\SheetView.cs" Link="Shared\SheetView.cs" />
     <AvaloniaResource Include="..\..\src\GroupLab.App\Assets\grouplab-*.svg" Link="Assets\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />

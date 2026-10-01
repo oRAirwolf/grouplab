@@ -1064,7 +1064,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 corners[grabbed.Index] = handleAt;
                 try
                 {
-                    session.SetScale(new RectangleReference(corners, rectangle.WidthInches, rectangle.HeightInches));
+                    // Entry 341: a store-bought target's corners moved onto its print keep its printed size, and the warning with it.
+                    session.SetScale(new RectangleReference(corners, rectangle.WidthInches, rectangle.HeightInches) { PrintedTarget = rectangle.PrintedTarget });
                 }
                 catch (ArgumentException ex)
                 {

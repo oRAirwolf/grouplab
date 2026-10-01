@@ -23,6 +23,7 @@ using GroupLab.Core.Publication;
 using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Statistics;
+using GroupLab.Core.StoreTargets;
 using GroupLab.Core.Reporting;
 
 namespace GroupLab.App;
@@ -2129,6 +2130,12 @@ public sealed partial class MainWindow : Window
         // print or the picture cut them off, the screen asks which sheet it is by name, rather than stopping with the identity as the reason.
         if (identity.Definition is not { } named)
         {
+            // Entry 340 section 1: a target GroupLab did not print may be a store-bought one it knows, named, its bulls placed and scaled.
+            if (await RecognizeStoreTarget(g, token))
+            {
+                return;
+            }
+
             OfferTheSheet(g, v, m, identity.Failure);
             return;
         }
@@ -2619,6 +2626,7 @@ public sealed partial class MainWindow : Window
                 (string.Create(CultureInfo.InvariantCulture, $"Scale from the printed markers, {found} of {expected}"), found == expected),
             SheetReference => ("Scale from the sheet's printed markers", true),
             LengthReference => ("Scale from a reference length, set by hand", false),
+            RectangleReference { Printed: { } printed } => ($"Scale from the printed size of the {printed.ShortName}", false),
             _ => ("Scale from a reference rectangle, set by hand", false),
         };
         var line = new DockPanel();
@@ -2627,6 +2635,13 @@ public sealed partial class MainWindow : Window
         line.Children.Add(mark);
         line.Children.Add(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap });
         column.Children.Add(Explained(line, "scale", "From " + scale.Describe(units) + "."));
+
+        // Entry 341 section 2: a store-bought target's scale is used, with the warning beside it and the scale check one click away.
+        if (scale is RectangleReference { PrintedTarget: not null })
+        {
+            column.Children.Add(StoreTargetWarning());
+        }
+
         return column;
     }
 
@@ -2699,6 +2714,12 @@ public sealed partial class MainWindow : Window
         ShowAimedAt(state);
         ShowSameSetup(state);
         ShowZero(state);
+        // Entry 341 section 2: a store-bought target's printed size is the scale here, and that is said before the figures.
+        if (StoreTargetMatch.InPlay(state))
+        {
+            statistics.Children.Add(Note(StoreTargetMatch.Warning));
+        }
+
         // Entry 228 section 2: what the scale behind the figures can and cannot be trusted for, said before the figures.
         if (state.Scale is PerBullReference perBull)
         {
@@ -3039,6 +3060,7 @@ public sealed partial class MainWindow : Window
         {
             null => "\u26a0 No scale",
             SheetReference => "\u2713 Scale checked",
+            RectangleReference { PrintedTarget: not null } => "\u26a0 Scale from the printed size",
             _ => "\u26a0 Scale set by hand",
         };
         ToolTip.SetTip(registrationPill, null);
