@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, the keyboard no longer covers what you are typing",
+    "After a picture, the note about a curled sheet no longer shows the same number twice",
     "Velocity and the vertical now works out velocity's share in the air temperature",
     "Photographs taken at an angle where the far edge of the sheet has lifted off the table",
     "Accepting a chronograph string no longer fails when its first reading belongs to a shot",
