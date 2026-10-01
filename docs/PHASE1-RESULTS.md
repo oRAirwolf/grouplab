@@ -40,6 +40,25 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 344: a store-bought target's fingerprint from a camera photo, the engine
+
+Done 2026-10-01 by worker A; no screens (request 69).
+
+- **The command:** `grouplab target-reference make` straightens a photo by one of three scale sources, each recorded with an uncertainty
+  of about two standard deviations: (a) the printed size typed in, fitted to the four corners; (b) a GroupLab sheet in the same photo,
+  read by its markers, which also corrects the lens; (c) two tapped points and a distance, the corners taking out the angle. Then entry
+  332's fingerprint from the straightened picture with the bulls the person confirms, and the family check against the whole library
+  (the same size is a duplicate, another size joins the family). `check` does Code's checks on a submitted file, `add` puts it in the
+  built-in library (`src/GroupLab.Core/StoreTargets/Fingerprints/library.json`), `library` writes the signed library file, read only
+  when its signature checks. Never a photograph or a maker's artwork.
+- **Synthetic posters**, 12 photos each, tilted 1 to 29 degrees (`grouplab poster-trial`), scale error median / largest: 12 x 18 in, (a)
+  0.01 / 0.32 percent, (b) 0.28 / 0.55 (the sheet read in 8 of 12), (c) 0.16 / 0.46; 23 x 35 in, (a) 0.28 / 0.63 (corners found by
+  themselves in 1 of 12, the rest tapped), (b) never read, a Letter sheet too small at that distance, (c) 0.40 / 0.80. A fingerprint from
+  one photo named its poster in 11 of 11 others at both sizes. **So (b) is not the most accurate at poster size**, as entry 344 expected;
+  carried to a poster's far corner it does no better than (a), and without a printer check it carries another 3 percent.
+- **Not done:** the screens (request 69); the fetch of a newer library on the update check (question 80); a real phone photo of a real
+  poster (the trial's photos are synthetic, with no lens distortion and an assumed focal length).
+
 ## Entries 340 and 341: store-bought targets recognized, with a warning on their scale
 
 Done 2026-10-01 by worker A.

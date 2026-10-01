@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 12:35 UTC, entries 340 and 341 folded (recognition ships), entry 342's worker B list done;
-worker A takes entry 344's engine, then the Features picture and 342's application list.
+**Last rewritten:** 2026-10-01 13:30 UTC, entries 340, 341 and 344 folded; 342 remains, worker A on its items 1 and 3,
+this session on item 4.
 
 ---
 
@@ -67,15 +67,15 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
+- **80** where a newer fingerprint library is published and signed (entry 344)
 - **79** five built-not-proven lines whose written gates are met (entry 331 section 3)
 - **78** the plot's toggles cover the last lines of its key at 1400x900 (found in entry 323; a change to the look)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
-- **43** entry 137 names an image safety the desktop does not have
-- **36** a light installer, measured
+- **43** entry 137 names an image safety the desktop does not have; **36** a light installer, measured
 - **34** pooling two sheets of one load needs a rule for a pooled group's center
 
 ## Builds and the site
@@ -91,7 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 342, 344.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 342.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

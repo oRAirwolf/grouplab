@@ -46,6 +46,34 @@ Also from Alan: the download page's phone layout stays as drawn (store card firs
 are the desktop ones already in entry 338. He has given Code his word in the panel to publish the TestFlight link, the Microsoft badge
 and the new download page.
 
+## 2026-10-01, entry 344: fingerprints of any store-bought target, made from a camera photo (engine now, screens after concepts)
+
+**Status: sections 1, 2, 3 and 5 done 2026-10-01 as an engine and a command (worker A, 42c48394); section 4's screens wait for planning's concepts (request 69); the library's fetch on the update check is built and signed but not wired, question 80.** Measured on synthetic posters only: a GroupLab sheet in the photo, (b), was not the most accurate source at poster size.
+
+Alan, 2026-10-01 10:48 UTC: "I would like the ability to take camera photos of other commercial targets and manually measure the scale
+and you make fingerprints of those as well. Many of the ones I saw at Cabelas and other places are poster sized and wont fit on a
+flatbed scanner." And at 10:50: "These should be fingerprints for everybody to use but initially, only submitted by me. Concepts
+tomorrow." Builds on entries 332, 340 and 341. Worker A, after entry 342's first item; main model.
+
+1. **From a photograph to a reference.** One photo of a blank target (flat on a table or on a wall), lens-corrected as GroupLab's own
+   captures are, then straightened to the sheet using one of three scale sources: (a) the sheet's printed outer size typed in (find the
+   four corners, fit the rectangle); (b) a GroupLab sheet or card in the same photo, read by its markers (the most accurate); (c) two
+   tapped points and a typed distance. Record which source was used and an honest uncertainty for it; report on synthetic posters
+   (12 x 18, 23 x 35 in) photographed at the angles and distances a person would use what each source achieves.
+2. **Then the same fingerprint as entry 332**, the bull positions the person confirms, and the family check of entry 340 against the
+   whole library (a new artwork at another size joins that family).
+3. **Who adds to the library: Alan only, for now.** The made reference is exported as one small file (fingerprint, name, printed size,
+   bulls, scale source; never the photograph). Alan's files go into a folder Code reads (`C:\Dev\grouplab-local\commercial-targets\
+   submitted\`); Code checks each one (it recognizes its own photograph, it is not a duplicate, its family is right) and adds it to the
+   built-in library in the repository, signed with the rest. **Everybody gets the library**: it ships in every build, and the app also
+   fetches a newer signed library on its regular update check, so a new target reaches people without a new app. No public submission
+   path now; say in the guide that the library grows as targets are added.
+4. **The screens wait for concepts.** Planning draws the capture flow for Alan on 2026-10-01 (the steps, choosing the scale source,
+   confirming the bulls, exporting). Until then build the engine and a `grouplab target-reference` command that does steps 1 to 3 from a
+   photo file, so Alan can try it on the desktop; DESIGN NEEDED in for-alan.md for the screens.
+5. As entry 341: a store-bought scale always carries its plain note and the one-tap check; only fingerprints and GroupLab-drawn outlines
+   ever ship, never a maker's artwork.
+
 ## 2026-10-01, entry 340: store-bought target recognition ships, and a look-alike asks which size
 
 **Status: done 2026-10-01 (worker A, e0695661), except the Features page's own picture**, which waits for the screenshot walk (docs/figures/SCREENSHOTS.md). The five products are recognized on the computer and the phone with the trial's thresholds; the Shoot-N-C family asks 6 in or 8 in only when the picture cannot tell, and names a size without asking only when clearly ahead (agreement 0.95 or 150 features), which the trial's rule alone got wrong on 4 crops. Recognition time on a phone is not measured.

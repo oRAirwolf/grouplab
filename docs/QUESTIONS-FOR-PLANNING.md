@@ -21,6 +21,14 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-01, question 80: how a newer fingerprint library reaches people without a new build
+
+**Status: open.** Nothing waits on it but entry 344 section 3's last step. The signed library file and its reader exist and are tested;
+three things are not mine to decide. Where it is published (a file on grouplab.org beside the update manifests, or an asset on the
+moving release); whether CI signs it with the update key on every change to the built-in list, or only Code by hand when Alan's
+submission is added; and how often the application looks (with the update check, about every six hours on the phone and at start on
+the computer, is what I would do). I would choose grouplab.org, signed in CI, on the update check.
+
 ## 2026-10-01, question 79: five "built, not proven" lines whose written gates are met
 
 **Status: open.** Nothing waits on it. Entry 331 section 3 (docs/PROOF-CHECKLIST.md) measured what existing material allows. These meet
