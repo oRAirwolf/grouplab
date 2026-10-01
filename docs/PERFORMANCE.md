@@ -74,6 +74,15 @@ detection, as in the first record; start-up, 1.9 s; one sheet from file to figur
 pass for a sheet far away, the printed-shape test), and this machine's load during the run was not controlled; a run on an idle machine
 would tell the two apart, and is the first thing the Performance phase should do.
 
+**Entry 342: most of it was the machine, not the code.** The 2026-09-20 code (commit a506d666) and today's (663a29c6), both Release,
+were benched by turns on the same desktop, three rounds of three runs, so whatever else the machine was doing fell on both alike. Loading
+a 600 dpi scan took 669, 664 and 695 ms on the old code against 662, 653 and 673 on the new; a 600 dpi scan measured stage by stage 4109,
+4153 and 3735 ms against 4081, 3973 and 4828. The whole path from a file to the figures is the one place the new code looks slower: one
+sheet 987 and 1002 ms against 1053 and 1349, ten sheets 9198 and 9016 against 9987 and 12348, about 7 percent in the quieter round. The
+rounds themselves differed by up to 25 percent, because a second worker was building and testing on the machine, so a difference of 7
+percent cannot be bisected across nightlies here; the end to end case on an idle machine is still the measurement that would settle it,
+and the work added since (the lens refit, the second marker pass, the printed-shape test) is the expected cost if it holds.
+
 ## GroupLab Dev on an idle phone, entry 343
 
 **Not measured on a device.** What is held instead: GroupLab Dev's only background work is the update check, about every six hours,
