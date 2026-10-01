@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.153
+
+**2026-10-01**, commit `828858f`. Nightly.
+
+**What you will notice**
+
+- Every box and choice on the computer now has a name a screen reader reads out, and a button reached with Tab works with Space or Enter on every screen.
+- The Targets screen now fits a window 1060 wide, where its zoom buttons ran past the edge.
+- The phone reads a GroupLab sheet's codes in about half the time it took, so a photograph is measured sooner.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.153)
+
+---
+
 ## 0.2.0-nightly.152
 
 **2026-10-01**, commit `9590358`. Nightly.
