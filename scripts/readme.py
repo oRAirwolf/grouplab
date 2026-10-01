@@ -95,6 +95,9 @@ PLATFORMS = [
     ("Android", [("APK", "grouplab-android.apk")]),
 ]
 PLAY_TEST = "https://play.google.com/apps/internaltest/4701684356677501640"
+# Entries 335 and 337, published with Alan's approval on 2026-10-01: the Microsoft Store listing and the TestFlight Public Beta.
+STORE = "https://apps.microsoft.com/detail/9NWJCXBKZNPZ"
+TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
 
 
 def newest() -> str:
@@ -102,9 +105,13 @@ def newest() -> str:
     rows = ["| Platform | Download |", "|---|---|"]
     for name, files in PLATFORMS:
         links = " · ".join(f"[{label}]({RELEASES}/download/nightly/{asset})" for label, asset in files)
+        if name == "Windows":
+            links += f" · [Microsoft Store]({STORE}), an older, steadier build that updates itself"
         if name == "Android":
             links += f" · [Google Play internal test]({PLAY_TEST}), by invitation"
         rows.append(f"| **{name}** | {links} |")
+        if name == "macOS":
+            rows.append(f"| **iPhone and iPad** | [Public beta on TestFlight]({TESTFLIGHT}): install TestFlight from the App Store, then open the invitation |")
     return (f"**The newest build is {b['version']}**, from {b['date']}, commit `{b['commit']}`: "
             f"[its release page]({RELEASES}/tag/v{b['version']}), and [what is new in it](#what-is-new).\n\n" + "\n".join(rows))
 

@@ -90,8 +90,9 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 
 | Platform | Download |
 |---|---|
-| **Windows** | [Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe) · [Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip) |
+| **Windows** | [Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe) · [Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip) · [Microsoft Store](https://apps.microsoft.com/detail/9NWJCXBKZNPZ), an older, steadier build that updates itself |
 | **macOS** | [Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz) · [Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz) |
+| **iPhone and iPad** | [Public beta on TestFlight](https://testflight.apple.com/join/A3xyT6C6): install TestFlight from the App Store, then open the invitation |
 | **Linux** | [Tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz) |
 | **Android** | [APK](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk) · [Google Play internal test](https://play.google.com/apps/internaltest/4701684356677501640), by invitation |
 <!-- /readme:newest -->

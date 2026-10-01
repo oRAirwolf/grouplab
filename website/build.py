@@ -68,6 +68,9 @@ def count_words(name: str, capital: bool = False) -> str:
 SITE_URL = "https://grouplab.org"
 GITHUB = "https://github.com/oRAirwolf/grouplab"
 NIGHTLY = GITHUB + "/releases/download/nightly/"
+# Entries 335 to 337: the Microsoft Store's listing and the TestFlight Public Beta's invitation, published with Alan's approval on 2026-10-01.
+STORE = "https://apps.microsoft.com/detail/9NWJCXBKZNPZ"
+TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
 # Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
 # the receiver is installed on the server and tested, because a button that leads nowhere is worse
 # than one that leads somewhere old. Entry 129 section 6.2 flips it and redirects the old page.
@@ -181,6 +184,10 @@ def build_images() -> None:
     for name in ["grouplab-mark", "grouplab-mark-light", "grouplab-lockup", "grouplab-lockup-light"]:
         write(f"assets/img/{name}.svg", clean_svg(ASSETS / f"{name}.svg"))
     write("favicon.svg", clean_svg(ASSETS / "grouplab-mark.svg"))
+    # Entries 336 and 337: Microsoft's own "Get it from Microsoft" badge, unaltered, served from this site so no visitor is sent to Microsoft
+    # just by opening the page.
+    for theme in ("dark", "light"):
+        write(f"assets/img/get-it-from-microsoft-{theme}.svg", need(HERE / "badges" / f"get-it-from-microsoft-{theme}.svg").read_text(encoding="utf-8"))
     copy(need(ASSETS / "icons" / "grouplab.ico"), "favicon.ico")
     icon = Image.open(need(ASSETS / "icons" / "linux" / "grouplab-256.png")).convert("RGBA")
     icon.resize((180, 180), Image.LANCZOS).save(OUT / "apple-touch-icon.png", optimize=True)
@@ -774,6 +781,18 @@ def page_download() -> str:
 {card("Installer", "grouplab-setup-win-x64.exe", "Windows 10 and 11. Installs into your own user account, with an entry in Add or remove programs.", ["No administrator rights needed", "Keeps itself up to date: asks first, then updates in the background"], True)}
 {card("Zip", "grouplab-win-x64.zip", "Windows 10 and 11. Unzip it anywhere and run GroupLab.App.exe.", ["Nothing to install", "Tells you when a newer build exists; you download it yourself"])}
 {card("Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.", ["Nobody uses it day to day yet", "Reports from Linux are especially welcome"])}
+</section>
+<section class="wrap section-sm grid-2">
+<div class="panel pad stack tight">
+<h2 class="h3">Windows, from the Microsoft Store</h2>
+<p class="small">The Store keeps GroupLab up to date itself and installs it without the "Windows protected your PC" warning. It carries an older, steadier build than the test build above, and is updated by hand when a build has proven itself.</p>
+<p><a href="{STORE}"><img class="only-dark" src="/assets/img/get-it-from-microsoft-dark.svg" alt="Get it from Microsoft" width="161" height="44"><img class="only-light" src="/assets/img/get-it-from-microsoft-light.svg" alt="Get it from Microsoft" width="161" height="44"></a></p>
+</div>
+<div class="panel pad stack tight">
+<h2 class="h3">iPhone and iPad, the public beta</h2>
+<p class="small">GroupLab for iPhone and iPad is in a public beta through Apple's TestFlight. Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad. Each new beta build arrives through TestFlight.</p>
+<div class="card-foot">{btn("Join the iPhone and iPad beta", TESTFLIGHT)}</div>
+</div>
 </section>
 <section class="wrap grid-3">
 {card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with Apple silicon. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93", "Signed, notarized and stapled: opens like any other Mac application", "Any Mac with Apple silicon (M-series). Not an Intel Mac"], label="Download for Apple silicon")}

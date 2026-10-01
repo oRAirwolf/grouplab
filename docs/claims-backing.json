@@ -5,6 +5,30 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "On Windows, the Microsoft Store carries an older, steadier build that updates itself ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "Nobody uses it day to day yet Reports from Linux are especially welcome Download linux tarball Windows, from the Microsoft Store The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "Join the iPhone and iPad beta macOS, Apple silicon grouplab-macos-arm64.tar.gz For any Mac with Apple silicon.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "On Windows, the Microsoft Store carries an older, steadier build that updates itself ( Get it from Microsoft ); the installer and the zip there are the newest test build.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation on the device.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
   "- **Built, not proven.** Garmin Xero import: every one of Alan's own exports reads, deleted shots and the ones the chronograph left out of its own figures kept as such, and each string checked against its own footer; reconciling one against marked shots waits for a sheet shot with its string.": {
    "kind": "measured",
    "where": "grouplab chronograph-files C:\\Dev\\grouplab-local\\chronograph-samples\\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)"

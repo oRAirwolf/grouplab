@@ -21,8 +21,8 @@ check rides along with request 50's sitting.
 PUBLIC BETA AND THE STORE (entries 335 to 337, not a request): Apple approved the Public Beta, and both TestFlight groups now get each
 build by themselves: build 148, which carries Unholy's two fixes, is in GroupLab Team and was added to the Public Beta and submitted
 automatically. Unholy can install 148 from TestFlight now to retest the keyboard and the curl note. GroupLab is in the Microsoft Store
-(request 38 closed). Putting the TestFlight invitation and the "Get it from Microsoft" badge on the website waits for your word in this
-session: the safety check stopped me publishing them from here.
+(request 38 closed). With your approval, the TestFlight invitation and the "Get it from Microsoft" badge are on the download page, in the
+README's download table and at the start of the guide.
 
 THE LEVEL AT THE RANGE (entry 321, 22:55 UTC, not a request; in the next nightly): the camera's level now works with the phone upright
 at a target on its backer as well as flat over a table, choosing by itself; the word "Upright" or "Looking down" sits under the crosshair,
