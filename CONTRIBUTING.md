@@ -120,8 +120,8 @@ Where the specification is silent and a choice has to be made to go on, record t
   - **The check:** `ThemeTests` fails on a colour literal anywhere else in the application (entry 42).
 - **No pseudoscience.** Barrel harmonics, optimal barrel time, velocity nodes and accuracy nodes are not real. They must never appear in code, comments, documentation or interface text.
 - **No OnTarget compatibility of any kind.** That covers their target designs, file formats and dimensions.
-- **Contributions are accepted under GPL-3.0**, and may later be offered under an added GPL section 7 permission for app stores. Opening a
-  pull request says you agree to that.
+- **Contributions are accepted under GPL-3.0 with the section 7 permission** for Apple's App Store and TestFlight that LICENSE begins
+  with. Opening a pull request says you agree to that.
 - **Free, with nothing to sell.** No paid tier, no license key, no upsell.
 - **Paper targets, read from a picture.** Acoustic scoring and target hardware are other projects.
 - **Third-party code and packages.** List them in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) in the same change that adds them.

@@ -89,8 +89,7 @@ The repository's README is the authority on what works; this is the short versio
 
 - **Printing from inside GroupLab** lost every marker and code on one printer, which made those sheets unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed version has been checked on paper yet, so use **Open to print**.
 - **Hole detection on plain paper**, with no sheet definition, is not built.
-- **Garmin Xero import** is not built. Chronograph readings are typed in, and reconciled with the shots rather than assumed to line up with them.
-- **The phone does not yet mark a target by hand**, nor import shots from a CSV file; both are coming (the Features page and `docs/PHONE-PARITY.md` say what the phone does).
+- **Chronograph readings from a file** (a spreadsheet CSV, a Garmin Xero export, and, still experimental, a LabRadar report or a BulletSeeker export) are reconciled with the shots by a proposed pairing you accept; that pairing has not yet been checked against a sheet shot with its string recorded in order.
 - **Two of the project's own gates have no material yet**: no 25-shot editor timing and no blank-paper photograph. The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them. So GroupLab is careful software that has not yet been proved against a large body of real targets.
 - **Linux and macOS** are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon Mac build has been run on one Mac; the platform statement on the download page says exactly what has been checked.
 

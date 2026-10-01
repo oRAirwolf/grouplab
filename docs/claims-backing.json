@@ -5004,6 +5004,38 @@
   "Where a Shoot-N-C bullseye could be the 6 in or the 8 in, a small window asks which.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/Fingerprints/library.json, recognition in StoreTargetRecognizer, on the desktop src/GroupLab.App/MainWindow.StoreTargets.cs and on the phone mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion (6 in and 8 in, the Shoot-N-C bullseye family); the picture is Entry109Tests' stand-in bullseye (docs/figures/screens/current/SOURCES.md)"
+  },
+  "macOS blocked the first launch of that unsigned build, and a Terminal command cleared it; builds from nightly 135 on are signed and notarized by Apple.": {
+   "kind": "measured",
+   "where": "PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6"
+  },
+  "More macOS testing depends on somebody with a Mac running the signed builds.": {
+   "kind": "measured",
+   "where": "PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6"
+  },
+  "A signed Windows version is in the Microsoft Store, and a code signing certificate for the direct downloads may be bought if the price turns out to be reasonable.": {
+   "kind": "measured",
+   "where": "docs/notes/external-status.md: published in the Store, package version 0.2.0.0 (store-status.yml, entries 336 and 337); request 38 closed; entry 345 finding 5"
+  },
+  "Updating Of the computer downloads, only the Windows installer updates itself.": {
+   "kind": "decided",
+   "where": "website/build.py, the download page's Updating section: of the direct downloads only the Windows installer replaces itself (entry 288), and the Store, GroupLab Dev, Google Play and TestFlight update their own copies; entry 345 finding 7"
+  },
+  "Windows · macOS · Linux · Android · iPhone and iPad.": {
+   "kind": "measured",
+   "where": "PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6"
+  },
+  "Not built yet Hole detection on plain paper &#183; synchronization between devices The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.": {
+   "kind": "decided",
+   "where": "README.md's phase list: hole detection on blank paper is Phase 4 and synchronization Phase 7, neither built; Garmin Xero import, hand marking on the phone and the iPhone and iPad beta have shipped (entry 345 finding 1)"
+  },
+  "support@grouplab.org On a phone On Android, iPhone and iPad, open Settings, then About, and choose Send diagnostics : it puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email.": {
+   "kind": "decided",
+   "where": "docs/PHONE-PARITY.md, Diagnostics on the phone (entry 311 section 3), and docs/TESTING-GUIDE.md on TestFlight feedback (entries 326 and 345)"
+  },
+  "If a new build will not start On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in %APPDATA%\\GroupLab , which no installer or uninstaller touches.": {
+   "kind": "decided",
+   "where": "docs/TESTING-GUIDE.md: everything lives in %APPDATA%\\GroupLab, which no installer or uninstaller touches (entry 134); the Windows wording is entry 345's"
   }
  },
  "rules": [

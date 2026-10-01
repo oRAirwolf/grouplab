@@ -646,7 +646,7 @@ def page_home() -> str:
     body = f"""
 <section class="wrap hero">
 <div class="hero-text">
-<p class="eyebrow">Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android</p>
+<p class="eyebrow">Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android, and an iPhone and iPad public beta</p>
 <h1 class="display">Measure how accurately your rifle shoots, and how little a small group can tell you.</h1>
 <p class="lead">Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth. Print a GroupLab sheet, and it does all of it by itself. Every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion.</p>
 <div class="actions">
@@ -722,9 +722,9 @@ def page_home() -> str:
 </div>
 <div class="panel status">
 <h3>What it is today</h3>
-<p>Test builds for Windows, macOS, Linux and Android. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
+<p>Test builds for Windows, macOS, Linux and Android, an iPhone and iPad public beta through TestFlight, and a steadier Windows copy in the Microsoft Store. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
 <p class="mono dim small">Not built yet</p>
-<p class="text">Hole detection on plain paper &#183; Garmin Xero import &#183; hand marking on the phone &#183; iPhone and iPad, being built</p>
+<p class="text">Hole detection on plain paper &#183; synchronization between devices</p>
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
 </div>
 </div>
@@ -989,7 +989,7 @@ def page_download() -> str:
         "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. Take Google Play if you would rather Play looked after updates.",
         [fold("The plain APK", other(
             "Android", "grouplab-android.apk",
-            "The same app under GroupLab's own name, signed like the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.",
+            "The same app under GroupLab's own name, signed, with a different key from the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.",
             ["Open the file on the phone; allow your browser to install apps when Android asks",
              "Remove the Google Play copy first, if you have it: the two are signed with different keys",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
@@ -1016,9 +1016,9 @@ def page_download() -> str:
 
     updating = f"""<p>The newest build is rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes. It may be broken: passing the tests is not the same as somebody having used it. There is no full release yet.</p>
 <h3 class="h3">Updating</h3>
-<p><strong>Only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
+<p><strong>Of the computer downloads, only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
 <p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
-<p>The Microsoft Store copy is updated by the Store, GroupLab Dev updates itself from every nightly, and the Google Play copy is updated by Google Play.</p>
+<p>The Microsoft Store copy is updated by the Store, GroupLab Dev updates itself from every nightly, the Google Play copy is updated by Google Play, and TestFlight installs each new iPhone and iPad beta build.</p>
 <h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
@@ -1341,7 +1341,8 @@ def page_support() -> str:
 </section>
 <section class="wrap section-sm grid-2">
 <div class="panel pad stack tight"><h2 class="h3">No GitHub account?</h2><p>Email the report package instead, with the build line and a line about what you were doing.</p><p><a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p></div>
-<div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>Nothing of yours is at risk: settings, sessions, your own sheets and the log live in <code>%APPDATA%\\GroupLab</code>, which no installer or uninstaller touches. To go back, download the build you were on from the releases list and install it over the broken one.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
+<div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then About, and choose <strong>Send diagnostics</strong>: it puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. On the iPhone and iPad beta, <strong>Send Beta Feedback</strong> in TestFlight, or a screenshot shared to it, reaches the project too.</p></div>
+<div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in <code>%APPDATA%\\GroupLab</code>, which no installer or uninstaller touches. To go back, download the build you were on from the releases list and install it over the broken one.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
 </section>
 <section class="wrap section-sm last">
 <div class="callout">
@@ -2195,7 +2196,8 @@ def page_tour_moved(old: str) -> str:
 
 
 FEATURES_PATH = "/features/"
-PLATFORMS = ["Windows", "macOS", "Linux", "Android"]
+PLATFORMS = ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"]
+PHONES = {"Android", "iPhone and iPad"}
 
 
 def features() -> dict:
@@ -2276,7 +2278,7 @@ def feature_problems() -> list[str]:
                 found.append(f"{where}: there is no picture sheet-{name}.png in docs/figures/screens/current (entry 256)")
         # Entry 249 item 4: a feature the phone has needs the phone's own picture, as one the desktop has needs the desktop's (entry 242).
         mobile = f.get("mobile") or {}
-        desktop = set(f.get("platforms", [])) - {"Android"}
+        desktop = set(f.get("platforms", [])) - PHONES
         if desktop and f.get("shot") is None and not f.get("noPicture"):
             found.append(f"{where} has no desktop picture and does not say why")
         if "Android" in f.get("platforms", []) and not mobile.get("shot") and not mobile.get("noPicture"):
@@ -2328,7 +2330,7 @@ def parity_problems() -> list:
     for m in re.finditer(r"^\| [^|]+ \| `([a-z0-9-]+)` \| (on the phone|coming|left out) \| ([^|]*)\| ([^|]*)\|$", table, re.M):
         if m.group(1) in rows:
             found.append(f"docs/PHONE-PARITY.md: {m.group(1)} has two rows")
-        rows[m.group(1)] = (m.group(2), m.group(3).strip())
+        rows[m.group(1)] = (m.group(2), m.group(3).strip(), m.group(4).strip())
         if m.group(4).strip() not in ("on iOS", "not yet", "on a device", "left out"):
             found.append(f"docs/PHONE-PARITY.md: {m.group(1)} says {m.group(4).strip()!r} for iPhone and iPad, not one of on iOS, not yet, on a device, left out")
     for f in features()["features"]:
@@ -2339,6 +2341,9 @@ def parity_problems() -> list:
         on = "Android" in f["platforms"]
         if on != (row[0] == "on the phone"):
             found.append(f"docs/PHONE-PARITY.md: {f['key']} says {row[0]!r} and features.json {'lists' if on else 'does not list'} Android")
+        # Entry 345: the Features page names iPhone and iPad exactly where the fifth column says on iOS.
+        if ("iPhone and iPad" in f["platforms"]) != (row[2] == "on iOS"):
+            found.append(f"docs/PHONE-PARITY.md: {f['key']} says {row[2]!r} for iPhone and iPad and features.json {'lists' if 'iPhone and iPad' in f['platforms'] else 'does not list'} them")
         if row[0] != "on the phone" and not row[1]:
             found.append(f"docs/PHONE-PARITY.md: {f['key']} is {row[0]} and says no {'stage' if row[0] == 'coming' else 'reason'}")
     for key in rows:
@@ -2358,7 +2363,7 @@ def feature_card(f: dict, compact: bool = False) -> str:
     if not compact:
         # Entry 249: each side of the switch shows its own picture, or says plainly that the feature is not on it.
         mobile = f.get("mobile") or {}
-        on_desktop = bool(set(f["platforms"]) - {"Android"})
+        on_desktop = bool(set(f["platforms"]) - PHONES)
         desktop = (f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
                    if f.get("shot") else "" if on_desktop else only_note("On the phone only."))
         phone = (f'<a class="plain" href="/assets/screens/phone/{phone_themes(mobile["shot"])[0]}.webp">{phone_screen(mobile["shot"], f["name"] + " in GroupLab on a phone")}</a>'

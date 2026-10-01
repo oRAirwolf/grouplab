@@ -21,7 +21,7 @@ a Mac; and distribution needs the paid Apple developer program, which Alan is jo
 
 **Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
 
-**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch, and the Terminal command below cleared it. Opening, detecting and analyzing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
+**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch of that unsigned build, and a Terminal command cleared it; builds from nightly 135 on are signed and notarized by Apple. Opening, detecting and analyzing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
 
 ## Minimums
 
@@ -30,7 +30,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 
 | | Operating system | Built and published | Memory | Disk | Screen |
 |---|---|---|---|---|---|
-| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy, once it is published | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
+| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's internal test by invitation | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
@@ -52,7 +52,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, gives the dope and the chance of a hit, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. macOS depends on the hardware question below.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, gives the dope and the chance of a hit, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
 
 ## Running the macOS build
 
@@ -60,13 +60,13 @@ From nightly 135, the macOS build is signed with a Developer ID, notarized by Ap
 
 ## Why Windows and Linux stay unsigned
 
-Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says "Windows protected your PC" about any program nobody has paid to sign. Linux does not ask for a signature at all.
+Signing the Windows build needs a code signing certificate, which has not been bought, and Windows says "Windows protected your PC" about any program nobody has paid to sign. The Microsoft Store copy is signed through the Store and does not show that warning. Linux does not ask for a signature at all.
 
 The macOS build is different: it is signed and notarized by Apple, using the Apple developer program the project joined to put GroupLab on iOS (Apple mobile, below). Running the macOS build, above, says what that means for opening it.
 
 ## Signing elsewhere
 
-The one-off 25 dollar Google Play developer fee has been paid. A signed Windows version through the Microsoft Store is intended in due course, and a code signing certificate may be bought if the price turns out to be reasonable.
+The one-off 25 dollar Google Play developer fee has been paid. A signed Windows version is in the Microsoft Store, and a code signing certificate for the direct downloads may be bought if the price turns out to be reasonable.
 
 ## Apple mobile
 

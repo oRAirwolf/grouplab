@@ -140,7 +140,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "mobile": {
         "noPicture": "marking by hand on the phone is photographed at the next sitting with the phone"
@@ -161,7 +162,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "mobile": {
         "noPicture": "recognition and the question on the phone are photographed at the next sitting with the phone"
@@ -183,7 +185,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.12",
       "note": "A real scanned sheet is included in the download",
@@ -204,7 +207,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.28",
       "note": "You can now click a hole to edit it",
@@ -225,7 +229,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.66",
       "note": "You can now tell GroupLab which bulls you aimed at",
@@ -246,7 +251,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.112",
       "note": "When every shot on a sheet of one shot per bull landed off by the same amount",
@@ -267,7 +273,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "GroupLab now asks whether your scope is in mil or MOA",
@@ -287,7 +294,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "Tap any number to switch its units",
@@ -333,7 +341,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.71",
       "mobile": {
@@ -353,7 +362,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.95",
       "note": "The analysis screen shows the six figures you read off a target",
@@ -374,7 +384,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "now say how many shots a zeroing group needs",
@@ -389,13 +400,14 @@
       "key": "velocity",
       "group": "The numbers",
       "name": "Velocity and the vertical",
-      "sentence": "From a group's chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off. Where each reading is paired with its shot, a chart of height against velocity says whether the shots follow the solver.",
+      "sentence": "From a group's chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off. Where each reading is paired with its shot, a chart of height against velocity says whether the shots follow the solver. The readings can be typed in or come from a file, a spreadsheet CSV or a Garmin Xero export (or, Experimental, a LabRadar report or a BulletSeeker export), paired with the shots by a proposal you accept.",
       "shot": "velocity",
       "platforms": [
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "shows how much of a group's up-and-down spread comes from velocity alone",
@@ -415,7 +427,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.111",
       "note": "The analysis screen can now draw and list CEP 99",
@@ -436,7 +449,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.28",
       "note": "Every figure on the analysis page can now tell you what it means",
@@ -457,7 +471,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.42",
       "note": "Compare loads now draws each load's mean radius and sigma",
@@ -478,7 +493,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.71",
       "note": "The Session records screen now draws one load's sessions over time",
@@ -498,7 +514,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.96",
       "note": "The Ballistics screen now works out your chance of a hit",
@@ -518,7 +535,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "Fudd buster mode",
@@ -538,7 +556,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.95",
       "mobile": {
@@ -558,7 +577,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.96",
       "note": "The target library and printing are now one screen, Targets",
@@ -579,7 +599,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.111",
       "note": "Design your own sheet can now make a sheet for your optic",
@@ -601,7 +622,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.111",
       "note": "The four zeroing grids are redrawn to be read through a scope",
@@ -621,7 +643,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.111",
       "mobile": {
@@ -641,7 +664,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.95",
       "note": "A scanned target now reports real inches",
@@ -662,7 +686,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.97",
       "note": "A photograph taken more than 40 degrees off square to the sheet is now refused",
@@ -683,7 +708,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.108",
       "note": "You can share a session with the new Share a session file",
@@ -700,7 +726,8 @@
       "sentence": "On the phone, units follow the phone's region, yards and inches in the United States.",
       "shot": null,
       "platforms": [
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.111",
       "guide": "13-on-the-phone",
@@ -719,7 +746,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.102",
       "note": "After you analyze a target, GroupLab now offers to send it to the project",
@@ -740,7 +768,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.103",
       "note": "GroupLab can now send a report when it hits an error",
@@ -761,7 +790,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.109",
       "note": "GroupLab now asks once whether you would like to take part in the hardware survey",
@@ -782,7 +812,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.96",
       "mobile": {
@@ -829,7 +860,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "pool",
@@ -850,7 +882,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "three sheets with a new bull",
@@ -872,7 +905,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "the C bull",
@@ -918,7 +952,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "2 MOA sheets",
@@ -1015,7 +1050,8 @@
       "sentence": "Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, with numbered notes on the picture saying what GroupLab corrected and what would help next time; it asks for another only when it cannot measure.",
       "shot": null,
       "platforms": [
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "guide": "13-on-the-phone",
@@ -1050,7 +1086,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "Shots and clicks",
@@ -1070,7 +1107,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "Zero from this group window",
@@ -1090,7 +1128,8 @@
         "Windows",
         "macOS",
         "Linux",
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "next",
       "note": "aim point colors",

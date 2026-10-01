@@ -40,6 +40,23 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 345: the consistency audit of 2026-10-01
+
+Done 2026-10-01, in one change.
+
+- **The site:** the home page's "Not built yet" is now blank-paper detection and synchronization, and its platforms name the iPhone and
+  iPad beta and the Store copy; the download page says only the Windows installer of the computer downloads updates itself, that
+  TestFlight installs each beta build, and that the plain APK has a different key from Google Play's; the support page has a phone
+  paragraph (Send diagnostics, TestFlight's Send Beta Feedback) and says the recovery note is about Windows.
+- **The Features page:** iPhone and iPad on the 39 features PHONE-PARITY.md marks on iOS, and `parity_problems` now fails when the two
+  disagree; Velocity and the vertical says the readings can come from a file.
+- **The guides:** the testing guide's "What is not done yet" no longer says Xero import or the phone's hand marking and CSV are missing;
+  the user guide's iPhone and iPad line says public beta.
+- **The platform statement:** the Store copy is published and signed; the two references to things no longer below it are fixed.
+- **README, CONTRIBUTING, STATE, for-alan:** the status list names the iPhone and iPad beta, store-bought recognition and chronograph
+  files; the deferred line no longer contradicts recognition; CONTRIBUTING matches LICENSE's section 7 permission; STATE's nightly, site,
+  Store and next three are current; request 59 is cut to what may be left; two superseded summaries are archived.
+
 ## Entry 342, worker A: the phone's pipeline, the desktop sweep, the checklist
 
 2026-10-01; items 1 and 3 by worker A, item 4 and item 1's first half by this session. Item 2 is not started (budget).

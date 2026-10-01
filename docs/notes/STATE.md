@@ -9,7 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 14:30 UTC, entry 342 folded; the inbox is empty and the day's budget is reached.
+**Last rewritten:** 2026-10-01 16:20 UTC, entry 345 (the consistency audit) folded; the inbox is empty and the day's budget
+is reached.
 
 ---
 
@@ -29,33 +30,31 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Detection, angled photos**: the far column's 0.08 in errors come from a lifted margin; the bent-sheet registration is entry 324
   section 1, with the other session. **Holes on any target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
-- **Garmin Xero import** (Phase 5): reads every one of Alan's exports (entry 334); reconciling against marked shots needs a sheet shot
-  with its string.
+- **Chronograph files** (Phase 5): every one of Alan's Xero exports reads, and a timed string proposes its pairing (entry 342);
+  checking a proposal needs a sheet shot with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
   session's own conditions would need a form (DESIGN NEEDED if wanted); the phone's picture waits for request 50's sitting.
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
-- **iOS** (Phase 8): on TestFlight and on the iPad; the device checks need a sitting (50), the public beta request 59, GroupLab Dev
-  on the iPad request 61, an App Store release Alan's word.
+- **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
+  61, an App Store release Alan's word.
 - **Performance** (Phase 9): the baseline gate and any optimization; waits for planning to say the application has settled.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
-- **Stores**: Microsoft in certification (38); Google Play past internal test is Alan's call; Test Lab waits on request 62.
-- **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
+- **Stores**: Microsoft published, carrying 0.2.0, new submissions on request 66; Google Play past internal test is Alan's call; Test Lab waits on request 62.
+- **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; five are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Nightly 147 for Unholy; then close issues 13 and 14 with it and tell him which build to retest on.
-2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
+1. Entry 342's last item: the phone sweep on the emulator and the simulator in CI, on one worker.
+2. Planning's concepts for requests 68 and 69, then the screens they draw.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
 ## Blocked, and on what
 
-- **The public beta link**: Apple's first review of build 134 (entries 319, 320); the link is in
-  `C:\Dev\grouplab-local\testflight-public-link.txt`, published only after approval. Nothing touches 134's review.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
 Open requests in `docs/notes/for-alan.md`: **17** (69 DESIGN NEEDED, entry 344's fingerprint screens; 68 DESIGN NEEDED, the phone's pairing screen; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
-now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
+now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
@@ -73,8 +72,8 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.146 (2026-10-01 06:21 UTC): entry 329; 145 carried 323 and 324 section 1.
-- **The site** is live at 4ec87124 (published by hand: a bot's `[screens]` push starts no other workflow).
+- **Last nightly:** 0.2.0-nightly.153 (2026-10-01 15:00 UTC): the faster code reading and the desktop sweep; 152 carried recognition.
+- **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
 - Crash reports open: none.
 
 ## The inbox
@@ -85,9 +84,6 @@ they differ.
 **Holds:** none
 
 Inbox files are never committed, so CI sees an empty inbox and this line says none. Nothing waits locally.
-
-Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
-GitHub's secrets.
 
 ## Things that would surprise somebody who was not here yesterday
 

@@ -46,6 +46,161 @@ Also from Alan: the download page's phone layout stays as drawn (store card firs
 are the desktop ones already in entry 338. He has given Code his word in the panel to publish the TestFlight link, the Microsoft badge
 and the new download page.
 
+## 2026-10-01, entry 345: consistency audit, 2026-10-01
+
+**Status: done 2026-10-01, all fourteen.** 5: the platform statement's Store lines changed as facts only, as entries 166 and 306 did, so no line for Alan. 9: iPhone and iPad are on 39 features, held by the site build to PHONE-PARITY.md's fifth column; chronograph files are a sentence in Velocity and the vertical rather than an entry of their own, which would need its own picture. 3: the mounted photograph line stands (31 of 59 registered is still the latest).
+
+The scheduled consistency audit (entry 267 section 2b). Read: README.md, the live site (home, /download/, /features/, /tour/,
+/shoot-a-target/, /guides/, /releases/, /support/) as served at 15:50 UTC on 2026-10-01, website/features.json, website/build.py where a
+page's words come from it, docs/RELEASE-NOTES.md (nightlies 150 to 153), STATE.md, for-alan.md, external-status.md, PLATFORM-SUPPORT.md,
+PHONE-PARITY.md, ANDROID.md, TESTING-GUIDE.md, USER-GUIDE.md, CONTRIBUTING.md and LICENSE, and the commits of the last five days. No open
+issue is labelled `consistency`, so nothing below repeats one. The releases page matches RELEASE-NOTES.md through nightly 153, the README's
+download table and the download page name nightly 153 and commit 828858f, the credits name only Unholy and Jylee, nothing says a lawyer is
+reviewing anything, and "What GroupLab is not" is gone. Fourteen findings follow, the public ones first. Fix them in one change, the
+README, the site, the guides and CLAIMS.md together, as entry 267 asks.
+
+### 1. Home page, "Not built yet" names two things that have shipped
+
+- **Where:** https://grouplab.org/ under "What it is today"; source `website/build.py` lines 726 and 727.
+- **Says:** "Not built yet: Hole detection on plain paper · Garmin Xero import · hand marking on the phone · iPhone and iPad, being built".
+- **Should say:** something like "Not built yet: Hole detection on plain paper · synchronization", with iPhone and iPad moved out of the
+  list (they are in a public beta).
+- **Evidence:** Garmin Xero import is in nightlies 145 to 150 (RELEASE-NOTES.md lines 64, 65, 78 and 79; README line 453 "Built, not
+  proven"; USER-GUIDE.md line 300). Hand marking is on the phone: PHONE-PARITY.md row `other-targets` says "on the phone", and the same home
+  page says "Marking by hand is on the computer and, under a crosshair, on the phone" a few paragraphs earlier, so the page contradicts
+  itself. The iPhone and iPad public beta is on /download/ and in the README's download table (line 95).
+
+### 2. Home page, the platforms leave out iPhone and iPad and the Microsoft Store
+
+- **Where:** the eyebrow line, `website/build.py` line 649, "Free · open source · GPL-3.0 · test builds for Windows, macOS, Linux and
+  Android"; and "What it is today", line 725, "Test builds for Windows, macOS, Linux and Android."
+- **Should say:** both name iPhone and iPad (public beta through TestFlight). "What it is today" could add that Windows also has a steadier
+  copy in the Microsoft Store.
+- **Evidence:** /download/ opens with "Free, for Windows, Mac, iPhone and iPad, Android and Linux"; external-status.md says the Store
+  carries 0.2.0.
+
+### 3. The testing guide's "What is not done yet" is out of date, and the support page sends people to it
+
+- **Where:** docs/TESTING-GUIDE.md lines 92 and 93, rendered at /guides/testing-guide/#what-is-not-done-yet, which /support/ links as step
+  01, "Check what is not done yet".
+- **Says:** "Garmin Xero import is not built. Chronograph readings are typed in" and "The phone does not yet mark a target by hand, nor
+  import shots from a CSV file; both are coming".
+- **Should say:** neither line. Chronograph readings can come from a file (CSV, Garmin Xero, Labradar and BulletSeeker, the last two
+  Experimental), with a proposed pairing; checking a proposal against a sheet shot with its string is what is left. The phone marks by hand
+  and imports CSV.
+- **Evidence:** RELEASE-NOTES.md lines 64, 65, 78 and 79; PHONE-PARITY.md row `other-targets` (line 29 area) and row `csv` (line 42, "in
+  under Sessions since entry 278"); USER-GUIDE.md lines 300 to 310.
+- The same section's "mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half
+  of them" may also be stale after entries 321 and 322; check it against PHASE1-RESULTS.md while there.
+
+### 4. The user guide calls the iPhone and iPad build not installable
+
+- **Where:** docs/USER-GUIDE.md line 457, "**On iPhone and iPad** (being built, and not yet installable)".
+- **Should say:** "(in a public beta through TestFlight)" or similar.
+- **Evidence:** the same guide, lines 28 and 29, gives the TestFlight invitation; /download/ "The public beta".
+
+### 5. The platform statement still treats the Microsoft Store as future
+
+- **Where:** docs/PLATFORM-SUPPORT.md, rendered into README.md (line 194 and line 230) and into /download/ under "Minimums" and "Signing
+  elsewhere".
+- **Says:** Minimums, Windows: "version 1809 or later for the Microsoft Store copy, once it is published". Signing elsewhere: "A signed
+  Windows version through the Microsoft Store is intended in due course". "Why Windows and Linux stay unsigned" says nothing of the Store.
+- **Should say:** the Store copy is published (version 1809 or later); a signed Windows version is in the Microsoft Store, and a code
+  signing certificate for the direct downloads may still be bought; "Why Windows and Linux stay unsigned" adds that the Store copy is signed
+  through the Store and does not show the warning (the download page's own Windows section already says exactly that).
+- **Evidence:** external-status.md "Published in the Store: yes", "package version 0.2.0.0"; request 38 closed (commit c6a5f2c3).
+- **Note:** the file's header calls the statement Alan's settled wording. Entries 166 and 306 changed it for facts only; this is the same
+  kind of change. If you read it as needing Alan's word, add one line to for-alan.md rather than leave it stale.
+
+### 6. The platform statement points at two things that are no longer below it
+
+- **Where:** PLATFORM-SUPPORT.md line 24 (README line 185, /download/) and line 55 (README line 216, /download/).
+- **Says:** "macOS blocked the first launch, and the Terminal command below cleared it." There is no Terminal command below: it moved to
+  the "Old builds still exist" note, which is not rendered. And "macOS depends on the hardware question below." There is no hardware
+  question below.
+- **Should say:** for example "macOS blocked the first launch of that unsigned build, and a Terminal command cleared it; builds from
+  nightly 135 are signed and open normally", and the hardware clause removed or replaced with what actually decides more macOS testing now.
+
+### 7. Download page, "Only the Windows installer updates itself"
+
+- **Where:** /download/, "Updating"; `website/build.py` line 1019; claim in docs/CLAIMS.md line 3695.
+- **Says:** "Only the Windows installer updates itself." The next paragraph then names the Store, GroupLab Dev and Google Play as
+  updating, and TestFlight is not named at all.
+- **Should say:** "Of the computer downloads, only the Windows installer updates itself", and the second paragraph adds "TestFlight
+  installs each new iPhone and iPad beta build". Update the CLAIMS.md line with it.
+
+### 8. Download page, the plain APK card contradicts the page about its key
+
+- **Where:** /download/, Android, "The plain APK"; `website/build.py` line 992.
+- **Says:** "The same app under GroupLab's own name, signed like the Google Play copy."
+- **Should say:** "signed, with a different key from the Google Play copy". As written it reads as the same signature, against line 988
+  ("Signed with a different key from the plain APK"), line 994 and README line 121.
+
+### 9. Features page: no iPhone and iPad anywhere, and no entry for chronograph files
+
+- **Where:** https://grouplab.org/features/ and `website/features.json`.
+- **Says:** 41 features list "Windows · macOS · Linux · Android" and 8 list "Android"; none lists iPhone or iPad, though the page's
+  Mobile side covers phones. The Garmin Xero and chronograph file notes (features.json lines 17, 18, 21 and 22) are filed under
+  `notFeatures`, so the page never mentions that readings can come from a file.
+- **Should say:** iPhone and iPad (or iOS) on each feature that PHONE-PARITY.md's last column marks "on iOS", with the site build checking
+  that column the way it checks the Android one; and a feature for chronograph files (CSV, Garmin Xero, Labradar, BulletSeeker, the
+  proposed pairing), or that sentence added to "Velocity and the vertical" or "Ballistics and hit chances", with its own line in
+  PHONE-PARITY.md.
+- **Evidence:** PHONE-PARITY.md, for example the `store-targets`, `velocity`, `compare` and `csv` rows, all "on iOS"; RELEASE-NOTES.md
+  line 79, "on the computer and the phone".
+
+### 10. Support page: nothing for a phone
+
+- **Where:** https://grouplab.org/support/.
+- **Says:** only the desktop route: "the gear at the bottom left ... Report a problem", and recovery from `%APPDATA%\GroupLab`.
+- **Should say:** a short phone paragraph: Settings, About, Send diagnostics on Android and on iPhone and iPad; Send Beta Feedback in
+  TestFlight (as TESTING-GUIDE.md line 26 already says); GroupLab Dev for Android logs. The recovery paragraph could say it is about
+  Windows.
+- **Evidence:** PHONE-PARITY.md lines 82 to 88; TESTING-GUIDE.md line 26.
+
+### 11. CONTRIBUTING.md contradicts itself and LICENSE on the section 7 permission
+
+- **Where:** CONTRIBUTING.md line 123.
+- **Says:** contributions "may later be offered under an added GPL section 7 permission for app stores".
+- **Should say:** what line 7 and LICENSE say: contributions are accepted under GPL-3.0 with the section 7 permission for Apple's App Store
+  and TestFlight that LICENSE begins with.
+- **Evidence:** LICENSE lines 1 to 14; entry 279 section 1 (NOTES-FROM-PLANNING.md line 2097); README line 652.
+
+### 12. README "Where GroupLab stands" stops short of the phone and two recent features
+
+- **Where:** README.md, Status, "What exists and is tested" (about lines 302 to 318).
+- **Says:** "an Android app, in testing" and no iPhone and iPad app; nothing about store-bought recognition or chronograph files.
+- **Should say:** an iPhone and iPad app in public beta through TestFlight beside the Android line, and one line each for the five
+  recognized store-bought targets (nightly 152) and chronograph readings from a file, marked as the README's phase list marks them.
+
+### 13. README "Deferred" reads as if store-bought targets can only come through the designer
+
+- **Where:** README.md line 486, "Deferred: the full visual designer, and with it the full detector on a bought target", and STATE.md "The
+  next three", "Deferred on purpose".
+- **Says:** "The same canvas is how a person would trace a store-bought target into a definition ... when either is asked for, both arrive
+  together."
+- **Should say:** that five store-bought targets are already recognized by fingerprint (nightly 152), with their bulls and scale, that
+  fingerprints from a camera photo are being built (request 69), and that only automatic hole detection on a bought target, and the
+  designer, stay deferred. As it stands a reader of line 486 and line 270 gets two different stories.
+
+### 14. STATE.md and for-alan.md disagree with what has happened (internal, but Alan reads for-alan through planning)
+
+- **STATE.md line 76:** "Last nightly: 0.2.0-nightly.146"; the newest is 153.
+- **STATE.md line 41:** "Stores: Microsoft in certification (38)"; it is published and 38 is closed. "The next three" items 1 and 2
+  (nightly 147 for Unholy; close request 38 when listed) are done (for-alan.md "PUBLIC BETA AND THE STORE").
+- **STATE.md line 51:** "The public beta link: Apple's first review of build 134 ... published only after approval"; Apple approved it and
+  the link is published.
+- **STATE.md, "Open requests":** lists 38 among the open requests (18 numbers for a count of 17); for-alan.md has no request 38.
+- **STATE.md line 77:** "The site is live at 4ec87124"; check it against the commit the site now stamps (commit 6308cf5c).
+- **for-alan.md request 59:** its status line still says it waits for Apple's first review of build 134 and "then I publish the link";
+  both are done (entries 335 to 337), and request 67 now covers the automatic distribution. Close 59, or cut it down to what is left (the
+  iPad install, item 4, and the two testers' invitations, item 3, if those are still open).
+- **for-alan.md "GOOD MORNING" item 2** ("at 15:45 UTC it read Certification ... I say here when Microsoft answers") and **"IOS, THE
+  WINDOW'S SUMMARY" item 7 and its closing lines** ("The two groups (request 59) are still needed for the public beta link") are
+  superseded; move them to for-alan-archive.md.
+
+Nothing here needs Alan himself.
+
 ## 2026-10-01, entry 342: the overnight list, so the loop always has work
 
 **Status: done 2026-10-01 except worker A's item 2, the phone sweep on the emulator and simulator in CI, not started: the day reached entry 317's share (about 0.6 billion tokens against last week's 5.4) and it is the largest item; it is first tomorrow.** Worker A 1: the slowdown was mostly the machine; the phone reads a sheet's codes in about half the time, every table identical. A3: the desktop sweep, about 50 fields named, Targets fits 1060 wide, Space and Enter work on a button reached by Tab. A4: one checklist. Worker B 1 to 4: the audit, the pairing proposal, the Store dry run, nothing open to triage.

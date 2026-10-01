@@ -3,6 +3,51 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## Summaries moved 2026-10-01 (entry 345), superseded by the public beta and the Store
+
+GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
+1. In nightly 137 (out at 15:30 UTC): the iPad's reading no longer hangs, Cancel always works and a reading stops after a minute (entry 313);
+   Guided takes the picture about a second after the sheet is ready, and the level turns green (311); Send diagnostics in Settings, About,
+   and GroupLab's own folder in the iPad's Files app (311); all four of your iPad screenshots' fixes (312); the caliber box finds any of
+   600 cartridges as you type, with a setting for Calibers, Cartridges or Both (314: choose Calibers in Settings for your own use); the
+   Mac download says "Apple silicon (M-series)" (316); and GroupLab Dev can be driven by a script over the cable (315).
+2. The Microsoft Store: your submission is recorded (request 38). A check reads its status every six hours; at 15:45 UTC it read
+   "Certification", not yet published. I say here when Microsoft answers.
+3. TestFlight works again: nightlies 137 and 138 were signed and accepted, and your iPad mini updated itself to 137 by 16:20 UTC
+   (read over the cable). Request 59's groups are still needed for the public beta and to keep every build flowing. Crash reports 11
+   and 12 are fixed in 137 and closed. The iPad's own log, copied over the cable, gave crash report 9 its missing stack: a reading
+   failed when one of the sheets that look alike could not be drawn. Fixed and tested (10259c6e), in nightly 139 (17:07 UTC), and closed.
+4. Your usage (entry 317): 1 October 0.60 billion tokens by 14:20 UTC, two workers, and the run stopped there; this week so far 4.0
+   billion, last week 5.4. Tomorrow one worker.
+5. Also built, in the next nightly: GroupLab Dev can record the camera's last seconds and replay them to test Guided without anyone
+   holding the phone; Firebase Test Lab would test on more phone models free (15 runs a day) but needs a Google project of yours, so
+   nothing is set up. This file now holds only the open requests; answered ones and old notes are whole in for-alan-archive.md.
+
+<!-- automation-week: written by scripts/automation-report.py each week; not a request -->
+**This week, by itself** (not a request): backed up on 27 September (543 MB, backup-2026-09-27); the restore test passed on 27 September; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: nothing; the server's own backup is from 2026-09-26; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
+<!-- /automation-week -->
+
+IOS, THE WINDOW'S SUMMARY (entry 290; written 2026-09-30 15:40 UTC, the window closes 02:00 UTC tonight):
+1. The shared mobile project, both phones' screens in one place: done; Android is built and checked from it every night.
+2. OpenCV for iOS: done and proven in CI (a static library for the iPhone and the simulator).
+3. iOS in the nightly: done. Nightly 137 (15:30 UTC) was signed and accepted by TestFlight, both parts saying they use no
+   non-exempt encryption; that was the fix for 135 and 136, which were signed but held back.
+4. The simulator in CI: every tab, the imaging, your 25-shot sample identical to the desktop, a picked picture through to a saved
+   session, Cancel back on Capture within a second, the camera panel above the preview, and the level green when flat: 61 checks, all
+   passing on the build nightly 137 came from.
+5. The camera: built (Guided and Manual, the torch on Auto, the level, the diagnostics overlay); the camera itself only a device shows.
+6. Files, sharing, printing, the idle screen: done on the simulator; GroupLab's folder now shows in the iPad's Files app.
+7. TestFlight: 137 and 138 uploaded; your iPad mini updated itself to 137 by 16:20 UTC. The two groups (request 59) are still needed
+   for the public beta link.
+Parity: 37 of the phone's features seen working on the simulator, 8 that only a device can show, 4 left out (Android's own updater
+and the like). Left, with sizes: the 8 device checks (small, one sitting); GroupLab Dev on the iPad (medium, after request 61); the
+public beta link (small, after request 59). The first TestFlight sitting on the iPad mini checks: Guided taking the picture about a
+second after the sheet is ready; the level green when flat; a reading finishing, or Cancel working at once; the torch on Auto;
+printing to your printer; a Google Photos picture shared in; Send diagnostics. With the cable in, I read GroupLab's log and folder
+myself, so you only point the camera.
+
+# Requests for Alan
+
 ## Summaries and notes, as they stood on 2026-09-30
 
 STOPPED 2026-09-30 12:15 UTC at your request (not a request): the overnight run was stopped about 45 minutes in. Done and on main: the iPhone and iPad TestFlight upload is unblocked (the check now reports instead of stopping; proven on the next nightly), and requests 60 (the iPad on a cable) and 61 (the Apple steps for GroupLab Dev) are written. Built but not yet on main, pushed as three branches to review and merge next: the iPad reading hang and Cancel (entry 313), Guided firing sooner and the level (entry 311), Send diagnostics and the iPad's logs (entry 311), all of your iPad screenshots' fixes (entry 312), and GroupLab Dev for iPhone and iPad on the simulator (entry 315); the cartridge lookup (entry 314) is half done. Nothing is lost and nothing needs you for it; docs/notes/STATE.md has the detail.
