@@ -69,6 +69,7 @@ public class BenchCoverageTests
         ["CartridgeTable"] = "Forty names and fourteen diameters read once from an embedded file, and a list of strings for a box somebody is typing in. Entry 163.",
         ["TargetMaterial"] = "Two short lists of words and a check that a value is one of them. Entry 162.",
         ["ChronographFiles"] = "Reads one small text file a person chose, once; no image and nothing in a loop. Entry 331 section 2.",
+        ["ChronographReconciliation"] = "Proposes marks for one string of at most a few hundred readings, once, when a person imports it. Entry 342.",
         ["VelocityBlocks"] = "Words around VelocityVertical's one comparison, built once a screen refresh; nothing it adds costs time. Entry 323.",
         ["VelocityVertical"] = "Three solver runs to one distance and sums over a group's shots, once when a person asks for the comparison; no detection. Entry 322 section 3.",
         ["CanonicalJsonWriter"] = "Writing a definition back out happens in the editor's save, which is measured as a control.",

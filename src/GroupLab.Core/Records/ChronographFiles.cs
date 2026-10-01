@@ -26,7 +26,9 @@ public enum ChronographFormat
 
 /// <summary>One shot as the chronograph numbered it, with what the person noted about it where the file carries that.</summary>
 /// <param name="LeftOutByChronograph">The Xero shows "--" for its difference from the average: it left the shot out of its own figures.</param>
-public sealed record ChronographShot(int Number, double Fps, bool CleanBore = false, bool ColdBore = false, string? Note = null, bool LeftOutByChronograph = false);
+/// <param name="Time">The time of day the chronograph recorded the shot, where it times them (the Xero does); entry 342's proposal reads pauses from it.</param>
+public sealed record ChronographShot(int Number, double Fps, bool CleanBore = false, bool ColdBore = false, string? Note = null, bool LeftOutByChronograph = false,
+    TimeSpan? Time = null);
 
 /// <summary>
 /// The air and the projectile a file states, offered to the person and used only when accepted (entry 329's conditions); never a location,
@@ -200,7 +202,7 @@ public static class ChronographFiles
         // "Speed (M/S)", or "Speed (MPS)" as the Xero's metric export writes it (entry 339).
         bool inMetres = names[speed].Contains("M/S", StringComparison.OrdinalIgnoreCase) || names[speed].Contains("MPS", StringComparison.OrdinalIgnoreCase);
         int Column(string name) => Array.FindIndex(names, h => h.Trim().Equals(name, StringComparison.OrdinalIgnoreCase));
-        int clean = Column("Clean Bore"), cold = Column("Cold Bore"), note = Column("Shot Notes");
+        int clean = Column("Clean Bore"), cold = Column("Cold Bore"), note = Column("Shot Notes"), time = Column("Time");
         int delta = Array.FindIndex(names, h => h.Trim().StartsWith("Δ", StringComparison.Ordinal));
         string At(string[] row, int i) => i >= 0 && i < row.Length ? row[i].Trim() : "";
         static bool Ticked(string v) => v.Length > 0 && !v.Equals("false", StringComparison.OrdinalIgnoreCase) && v != "0" && !v.Equals("no", StringComparison.OrdinalIgnoreCase);
@@ -218,7 +220,7 @@ public static class ChronographFiles
             if (Number(At(row, speed)) is { } v)
             {
                 shots.Add(new ChronographShot(number, inMetres ? v * FeetPerMetre : v, Ticked(At(row, clean)), Ticked(At(row, cold)), At(row, note) is { Length: > 0 } n ? n : null,
-                    At(row, delta) == "--"));
+                    At(row, delta) == "--", Clock(At(row, time))));
             }
         }
 
@@ -369,6 +371,31 @@ public static class ChronographFiles
         return new ChronographImport(ChronographFormat.Generic, velocities,
             $"{velocities.Count} velocities from \"{header}\", {how}, in {(inMetres ? "m/s" : "ft/s")}, {units}{(skipped > 0 ? $"; {skipped} rows without a number were left out" : "")}.",
             false, names, at);
+    }
+
+    /// <summary>
+    /// A shot's time of day as the Xero writes it: "14:20:04" in a CSV, and in a workbook a date and time, or a fraction of a day where the
+    /// cell is a number; null for anything else.
+    /// </summary>
+    internal static TimeSpan? Clock(string text)
+    {
+        var inv = CultureInfo.InvariantCulture;
+        if (text.Length == 0)
+        {
+            return null;
+        }
+
+        if (TimeSpan.TryParse(text, inv, out var t) && t >= TimeSpan.Zero && t < TimeSpan.FromDays(1))
+        {
+            return t;
+        }
+
+        if (DateTime.TryParse(text, inv, DateTimeStyles.None, out var at))
+        {
+            return at.TimeOfDay;
+        }
+
+        return double.TryParse(text, NumberStyles.Float, inv, out double day) && day is >= 0 and < 1 ? TimeSpan.FromDays(day) : null;
     }
 
     /// <summary>A workbook cell as text: a number in the invariant culture, anything else as it is.</summary>

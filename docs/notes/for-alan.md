@@ -1,4 +1,4 @@
-**Open: 16.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
@@ -74,6 +74,16 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 68. DESIGN NEEDED: changing a chronograph pairing on the phone, for the planning session's concepts, no time from you now (entry 342)
+
+**Opened 2026-10-01.** **Why:** an imported Garmin Xero string now proposes its own pairing with the shots on both the computer and the
+phone: where the chronograph's pauses split a string into groups and only one stretch is as many shots as the sheet, the rest are marked
+as not this group's, then a shot the Xero left out, then one marked clean bore, and a skipped number gives the shot fired there no
+reading. About a quarter of your strings (132 of 534) hold more than one group. On the computer every mark is a button on its row; the
+phone shows the proposal and its reasons and can keep it, or keep the readings unpaired, but has no way yet to change a single mark.
+**Needed:** a concept for that screen on the phone (a row per shot and reading with a tap to mark it, perhaps, and where the reasons sit).
+**A good answer:** planning's drawing, or "keep it as it is" if the proposal and the computer are enough.
 
 ## 67. Turn off GroupLab Team's automatic distribution in TestFlight, about one minute, whenever suits (entries 319, 320 and 335)
 

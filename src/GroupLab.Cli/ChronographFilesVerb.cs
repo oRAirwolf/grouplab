@@ -25,7 +25,8 @@ public static class ChronographFilesVerb
         var unread = new List<string>();
         var differ = new List<string>();
         var empty = new List<string>();
-        int files = 0;
+        int files = 0, timed = 0, timedShots = 0;
+        var runs = new SortedDictionary<int, int>();
         foreach (string file in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories).Order(StringComparer.Ordinal))
         {
             if (!ChronographFiles.Extensions.Contains(Path.GetExtension(file).ToLowerInvariant()))
@@ -51,6 +52,15 @@ public static class ChronographFilesVerb
                     var those = strings.Where(s => s.Format == format).ToList();
                     var c = counts.GetValueOrDefault((year, format));
                     counts[(year, format)] = (c.Files + 1, c.Strings + those.Count, c.Shots + those.Sum(s => s.VelocitiesFps.Count));
+                }
+
+                // Entry 342: how the strings that time their shots split into runs, which is what the pairing proposal reads.
+                foreach (var each in strings.Where(s => s.Shots.Count > 1 && s.Shots.All(x => x.Time is not null)))
+                {
+                    timed++;
+                    timedShots += each.Shots.Count;
+                    int n = ChronographReconciliation.Runs(each.Shots).Count;
+                    runs[n] = runs.GetValueOrDefault(n) + 1;
                 }
 
                 differ.AddRange(strings.Where(s => s.Disagrees is not null).Select(s => $"{relative}: {s.Disagrees}"));
@@ -85,6 +95,8 @@ public static class ChronographFilesVerb
             output.WriteLine("  " + line);
         }
 
+        output.WriteLine($"Timed strings: {timed}, {timedShots} shots; runs separated by pauses: "
+            + (runs.Count == 0 ? "none" : string.Join(", ", runs.Select(r => $"{r.Value} with {r.Key}"))));
         output.WriteLine($"Own figures differing from the shots: {differ.Count}");
         foreach (string line in differ)
         {

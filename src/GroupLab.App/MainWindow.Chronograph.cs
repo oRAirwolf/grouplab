@@ -39,6 +39,9 @@ public sealed partial class MainWindow
     private readonly HashSet<int> chronoShotsWithNoReading = [];
     private readonly HashSet<int> chronoReadingsOfNoShot = [];
 
+    /// <summary>Why the marks an imported string proposed are there, entry 342; cleared when the list is read again by hand.</summary>
+    private IReadOnlyList<string> chronoReasons = [];
+
     private void BuildChronograph(StackPanel column)
     {
         column.Children.Add(Heading("Chronograph"));
@@ -50,6 +53,7 @@ public sealed partial class MainWindow
             chronoValues = [];
             chronoShotsWithNoReading.Clear();
             chronoReadingsOfNoShot.Clear();
+            chronoReasons = [];
             FillChronograph();
         })));
         column.Children.Add(chronoImport);
@@ -126,6 +130,7 @@ public sealed partial class MainWindow
             if (chosen.VelocitiesFps.Count > 0)
             {
                 ReadChronograph(chosen.Name ?? source, null, string.Join(", ", chosen.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture))));
+                Propose(chosen);
             }
         }
 
@@ -187,7 +192,28 @@ public sealed partial class MainWindow
         if (read.VelocitiesFps.Count > 0)
         {
             ReadChronograph(source, null, string.Join(", ", read.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture))));
+            Propose(read);
         }
+    }
+
+    /// <summary>
+    /// Entry 342, worker B item 2: an imported string that numbers its shots proposes its own marks, from its pauses, the shots the chronograph
+    /// left out or marked clean bore, and the numbers it skips; each is a row's mark like any other, with the reason above the rows, and the
+    /// person changes them or accepts.
+    /// </summary>
+    private void Propose(ChronographImport read)
+    {
+        if (read.Shots.Count != chronoValues.Count || read.Shots.Count == 0)
+        {
+            return;
+        }
+
+        var proposal = ChronographReconciliation.Propose([.. ChronographShots().Select(s => s.Id)], read.Shots);
+        chronoShotsWithNoReading.UnionWith(proposal.ShotsWithNoReading);
+        chronoReadingsOfNoShot.UnionWith(proposal.ReadingsOfNoShot);
+        chronoReasons = proposal.Reasons;
+        DiagnosticLog.Info("chronograph.propose", ("readings", read.Shots.Count), ("noShot", proposal.ReadingsOfNoShot.Count), ("noReading", proposal.ShotsWithNoReading.Count));
+        FillChronograph();
     }
 
     /// <summary>What the import said, for the headless tests.</summary>
@@ -206,6 +232,7 @@ public sealed partial class MainWindow
         var (velocities, refusal) = Chronograph.Read(chronoReadings.Text ?? "");
         chronoShotsWithNoReading.Clear();
         chronoReadingsOfNoShot.Clear();
+        chronoReasons = [];
         chronoValues = [.. velocities];
         if (refusal is not null)
         {
@@ -286,6 +313,7 @@ public sealed partial class MainWindow
         chronoValues = [];
         chronoShotsWithNoReading.Clear();
         chronoReadingsOfNoShot.Clear();
+        chronoReasons = [];
         FillBallistics();
         Refresh();
     }
@@ -325,6 +353,10 @@ public sealed partial class MainWindow
             FontWeight = FontWeight.SemiBold,
             Classes = { pairs.Any(p => p.ShotId is null || p.Reading is null) ? AppStyles.Warn : AppStyles.Good },
         });
+        foreach (string reason in chronoReasons)
+        {
+            chronoLines.Children.Add(Line(reason));
+        }
 
         var head = ChronographRow("shot", "reading, ft/s", null, heading: true);
         chronoRows.Children.Add(head);

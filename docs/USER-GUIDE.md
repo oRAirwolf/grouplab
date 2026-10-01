@@ -301,7 +301,11 @@ LabRadar report, or a BulletSeeker export. The Xero reader reads every one of Al
 BulletSeeker readers are Experimental. A shot deleted on the chronograph stays missing from the numbering, a shot the Xero left out of
 its own figures is kept and said, and where a file's own average, SD or spread differs from its shots GroupLab says so. A place name or
 coordinates in an older file are never read. GroupLab then proposes pairing the readings with the shots in order; mark any reading that
-belongs to no shot, or any shot the chronograph missed, and press **Accept the mapping**. The readings' own spread becomes the load's
+belongs to no shot, or any shot the chronograph missed, and press **Accept the mapping**. A file that numbers and times its shots, as
+the Xero's does, proposes the marks itself and says why: where the chronograph's pauses split the string into runs and only one stretch
+of them has as many shots as the group, the rest are marked as no shot of it; then a shot the Xero left out of its own figures, then one
+marked clean bore; and where the numbering skips a deleted shot, the shot fired in that place goes without a reading. Change any mark
+before accepting. The readings' own spread becomes the load's
 velocity SD, and Velocity and the vertical uses them. On the phone the same is under Velocity and the vertical's **Add readings**.
 
 ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)

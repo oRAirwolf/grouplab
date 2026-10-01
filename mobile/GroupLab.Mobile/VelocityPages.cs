@@ -54,6 +54,15 @@ internal static class VelocityPages
             done();
         }
 
+        // Entry 342: the string an import put in the box, so reading it proposes the marks its own evidence gives; typing changes the box and drops it.
+        ChronographImport? imported = null;
+        string? importedText = null;
+        void Remember(ChronographImport read)
+        {
+            box.Text = string.Join(", ", read.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture)));
+            (imported, importedText) = (read, box.Text);
+        }
+
         column.Children.Add(box);
         column.Children.Add(Screens.Primary("Read the list", () =>
         {
@@ -65,9 +74,10 @@ internal static class VelocityPages
                 return;
             }
 
-            var pairs = GroupLab.Core.Records.Chronograph.Pair(shots, readings);
-            said.Text = GroupLab.Core.Records.Chronograph.Describe(pairs, readings.Count);
-            choices.Children.Add(Screens.Primary("Keep, paired in this order", () => Keep(readings, pairs)).Id("chrono-keep-paired"));
+            var (pairs, reasons) = Proposed(shots, readings, box.Text == importedText ? imported : null);
+
+            said.Text = GroupLab.Core.Records.Chronograph.Describe(pairs, readings.Count) + reasons;
+            choices.Children.Add(Screens.Primary(reasons.Length > 0 ? "Keep, paired as proposed" : "Keep, paired in this order", () => Keep(readings, pairs)).Id("chrono-keep-paired"));
             choices.Children.Add(Screens.Choice("Keep without pairing", () => Keep(readings, null)).Id("chrono-keep-unpaired"));
         }).Id("chrono-read"));
         // Entry 331 section 2: a chronograph file instead of typing, read into the same box and then read as the list is.
@@ -87,7 +97,7 @@ internal static class VelocityPages
             }
 
             DiagnosticLog.Info("chronograph.import", ("format", read.Format.ToString()), ("readings", read.VelocitiesFps.Count));
-            box.Text = string.Join(", ", read.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture)));
+            Remember(read);
             said.Text = read.Said;
             if (read.Format == ChronographFormat.Generic)
             {
@@ -138,7 +148,7 @@ internal static class VelocityPages
             columns.Children.Clear();
             void Choose(ChronographImport chosen)
             {
-                box.Text = string.Join(", ", chosen.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture)));
+                Remember(chosen);
                 said.Text = chosen.Said + (chosen.Disagrees is { } d ? " " + d : "");
             }
 
@@ -163,6 +173,21 @@ internal static class VelocityPages
         column.Children.Add(choices);
         column.Children.Add(Screens.Choice("Back", done));
         return Screens.Page(column);
+    }
+
+    /// <summary>
+    /// Entry 342: the pairing of a list just read, with the marks an imported string's own evidence proposes and their reasons, each after a
+    /// space; in order with no reasons where the list was typed, or no longer matches the import.
+    /// </summary>
+    internal static (IReadOnlyList<ChronographPair> Pairs, string Reasons) Proposed(IReadOnlyList<int> shots, IReadOnlyList<double> readings, ChronographImport? imported)
+    {
+        if (imported is not { } from || from.Shots.Count != readings.Count || from.Shots.Count == 0)
+        {
+            return (GroupLab.Core.Records.Chronograph.Pair(shots, readings), "");
+        }
+
+        var proposal = ChronographReconciliation.Propose(shots, from.Shots);
+        return (proposal.Pairs(shots, readings), string.Concat(proposal.Reasons.Select(r => " " + r)));
     }
 
     /// <summary>The distance shot, in the person's distance unit, kept on the session; the figures then show their angles too.</summary>
