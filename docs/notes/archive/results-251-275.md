@@ -135,3 +135,59 @@ The Fold 7 runs Android 16 and offers torch strength 1 to 5, default 1 (`docs/AN
 
 Followed: nothing stopped for Alan, and what needs him is at the top of `docs/notes/for-alan.md`.
 
+## Entry 261, continued: the server's capacity read
+
+Section 6's one read-only command ran at 17:45 UTC with Alan's approval (request 52): two processors, 11.9 GB of memory with 10.2 GB available and no swap, 36 GB free of 45 GB, load 0.64. The re-reading loop fits at tens of submissions a day as one more worker capped at one processor and about 1.5 GB; with no swap the memory cap is required. `docs/DETECTION-LEARNING-STUDY.md` section 6 has it. Nothing on the server changed.
+
+## Entry 260, continued: the score checked, the off-white counter, and shadows
+
+**The score against how pictures measured.** On the sixteen Phase 0 phone photographs of unshot sheets the first score disagreed with how each measured; with the angle free to 25 degrees and the registration's error a part, the tightest registrations score 91 to 100 and the four worst 40 (MOBILE-CAPTURE.md section 6). **The off-white counter.** `CaptureScreenTests.ASheetOnAnOffWhiteCounterIsFoundAndReady` holds the guidance to a 1920 by 1440 frame of a sheet on a counter barely darker than its paper; at that size the codes are not read and the sheet is found by its markers' layout, which the E and C bull variants share. **Shadows.** The normalisation entry 260 asks for is already render-and-difference's stages S5 and S6: a local paper field from the pixels the render calls paper, and both images divided by it before differencing; the detection study measured hard, soft and hand shadows against it. **Still to do:** the inner Fold screen and landscape, the camera test with Alan, and the torch pair, which need the devices.
+
+## Entry 274: a target GroupLab did not print, shown as a sample
+
+The screenshot walk draws a plain Letter target at 150 dpi (four ring bulls with a solid center, five holes each, "Sample target" along the bottom, no markers or codes), opens it on the marking screen, sets the scale from bull 1's outer ring, 2.0 in across, places the four bulls and twenty shots by hand, and saves `marking-other` in both themes at every size. The home page's "Your own targets", the tour index and the marking stop show it, each saying that marking by hand is on the computer and coming to the phone. Entry 261's wording in the notes log no longer names `tools/study/`.
+
+## Entries 272 and 273: the printer check, and tap a number to switch units
+
+**The printer check.** `GL-SCALE-LTR-1` and `GL-SCALE-A4-1` are grid style 4 (`GridStyle4`, TARGET-SCHEMA.md section 3.13): three
+crosshairs in an L 150.00 mm apart, rulers of 250.0 and 190.0 mm, a card outline standing 3 mm outside an ID-1 card (question 67), the
+title and four instructions, all derived from the page size; the crosshairs' circles are unscored bulls. `PrinterProfile` now holds across
+and down. `CardCheck` finds the card's four sides where the photograph stops matching the printed page, fits each straight, and corrects for
+the card's 0.76 mm thickness from the camera's distance; on synthetic photographs at 99.2 percent a dark, a very dark and a light grey card,
+shifted up to 0.6 mm and turned up to 1.2 degrees, read 0.992 within 0.0015 across and 0.002 down. `PaperEdgeCheck` measures the paper
+through the markers and tells Letter from A4 by its shape; a sheet printed at 96.2 percent on Letter reads 0.955 to 0.969 and is said to
+look like Fit to page. The wizard is on both platforms; Printers in Settings lists each printer with its figures and date.
+
+**Tap a number to switch units.** `UnitSwitch` decides what a tap chooses, `UnitTap` makes any value that shows a unit tappable, reading its
+kind from the unit after its number; the desktop goes through `UseUnits`, so what is typed on Ballistics is rewritten rather than changing
+meaning (the Settings combos now do the same), and the phone's result, Ballistics, Compare and Shots Needed to Zero show a change at once.
+`UnitTapTests` taps the mean radius and checks every angle becomes mil, lengths stay, the note says so and it is remembered.
+
+**The curled-sheet mesh, rechecked.** Recording the new pages' artwork showed four Phase 0 phone photographs registering through entry 260's
+mesh, where the radial fit had held a third of their corners; the spurious marks on them went from 19 to 12 (ultrawide2 from 1 to 6). The
+mesh is now taken only where its error between markers beats the plain homography's over every corner, which these four still pass.
+
+## Entry 271: real inches on photographs
+
+`PrinterProfile` keeps a printer's measured scale, from a scan (its x and y spread, at least 0.1 percent) or one typed ruler distance (a thirty-second of an inch over the span); `RulerSpan` names the two bulls to measure (bull 1 to bull 5 on the 5 by 5 sheets). A photograph is multiplied by the chosen printer's scale and says so in one line; a scan that measured its own ignores it. On a sheet printed at 96.2 percent and photographed, bull 1 to bull 5 reads within 0.002 in of its true size with the profile; a ruler read to a sixteenth agrees with the scan's profile within their stated uncertainty. The session file carries the factor and its line. DESIGN.md no longer says a photograph measures the print scale.
+
+## Entry 270: any target, and the sheet as the fast lane
+
+The README's pitch, first caption and mosaic tile, the home page's lead and a "Your own targets" section, the tour's index, the Features page's first feature ("Any target you already shoot"), and the user guide's opening all lead with any target, with automatic holes on any target said as the goal. The mission line is in "Why it exists" and on the home page. `docs/RETIRED-WORDING.json` now names wording that makes a GroupLab sheet sound required. The picture waits on question 66.
+
+## Entry 269: Shots Needed to Zero's colors
+
+Within one click amber, the closest click teal, on the desktop and the phone.
+
+## Entry 268: dark OLED screens
+
+GroupLab Dev's idle screen is pure black with a dim line of text; Close, Back and Home all leave it; every device check ends on it.
+
+## Entry 267: no lawyer, and a standing consistency audit
+
+`scripts/consistency.py` checks the README, the site and the assets agree, and that retired wording (`docs/RETIRED-WORDING.json`) is gone; CI warns, and a weekly run opens an issue.
+
+## Entry 266: the README as Alan chose it
+
+Product shot, captions as a table, the six-screen mosaic, generated by `scripts/readme-images.py` from the screenshot job's pictures; "What GroupLab is not" is gone.
+

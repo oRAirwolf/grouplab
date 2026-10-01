@@ -14,10 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 11 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 20 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
 
@@ -49,123 +49,6 @@ where you aimed) are hidden behind them. Entry 323's Velocity band switch joins 
 covered when the band is on. **The options.** A: move the toggles under the plot, in a strip of their own, so the key never shares the
 space (a change to the look, so Alan's). B: open the key upward from its button, so its foot clears the toggles' rows. C: leave it; the
 key's entries are also in the tour and the guide. I would choose A: the key is the one place a reader learns what the lines are.
-
-## 2026-09-30, question 77: the guide says stand about 2.5 ft away, and the synthetic camera reads no marker at 2 ft
-
-**Status: answered 2026-10-01.** Alan (entry 322): "Q77 A and B." The guide says about 2 ft (60 cm) now, and the next sitting measures the distance on a real phone. Nothing waits on it; the guide is unchanged. Entry 321 added range cases to the scoreboard: a Letter sheet photographed
-at 1.75 ft finds 49 of 50 holes, but at 2 ft (98 pixels an inch in the phone's 8 megapixel working picture) and 3 ft (66) no corner
-marker is read, so nothing registers. The user guide (docs/USER-GUIDE.md, "stand about 2.5 ft (75 cm) from the sheet") and the camera's
-distance words were set from the Fold 7's sittings, where real pictures at about that distance did read; the synthetic markers may be
-harsher than real ones (rendered blur and noise), or the real sittings may have been closer than 2.5 ft. **The options.** A: keep the
-guide as it is until a real range sitting measures the distance at which markers stop reading (request 50's sitting can do it in two
-minutes: the same sheet at 1.5, 2, 2.5 and 3 ft). B: change the guide now to "about 2 ft". C: raise the working picture's size when the
-sheet is far (more memory and time on the phone). I would choose A, with the measurement added to the next sitting's list.
-
-## 2026-09-30, question 76: should a full cartridge name typed without choosing it from the list count?
-
-**Status: answered 2026-09-30.** Alan (entry 318): "Q76: B." As built: a held-back cartridge must be chosen from the list. Nothing waits on it: entry 314 is built with B. Entry 163 holds back some cartridges from being taken as a caliber
-unless chosen (.45 ACP, 7.62x39 and others whose name does not say the bullet's diameter plainly), so the box still asks for a diameter
-when one of those is typed in full and not chosen. Separately, the draft table named the same cartridge twice 56 times (on both the rifle
-and handgun lists, or under two names); merged, the list before typing holds 105 rows, not the 111 entry 314 counted.
-**The options.** A: a full name typed exactly as a row or alias counts as chosen, for every cartridge. B: as now, the held-back ones must be
-chosen from the list (a tap). I would choose B for now: entry 163's reason (a name that misleads about the diameter) still holds, and the
-list shows the row as soon as the name is typed.
-
-## 2026-09-30, question 75: colored ring bulls use more ink than black on a color inkjet
-
-**Status: answered 2026-09-30.** Alan (entry 318): "Q75: A." Accepted; the user guide says blue uses a little less ink than red. Nothing waits on it: the colors are built as approved. Entry 297 section 7.3: "color never costs more ink than black".
-Measured (bulls only, square inches of full ink on Letter, a CMY plus K model): the filled bulls cost less in color (GL-CF25-LTR-C black
-20.3, blue 15.4, red 18.2; the E bulls 19.4, 14.7, 17.4), and on a black-and-white printer every color prints as gray at 36 to 64% of
-black's toner. But the ring bulls and the zeroing grids cost more on a color inkjet, because a full-color line needs two inks (red is
-magenta and yellow, blue is cyan and magenta): GL-CF25-LTR black 3.89, blue 4.88, red 5.78; GL-ZERO-MOA-100Y 8.5, 10.4, 12.3.
-**The options.** A: accept it (a few square inches of ink). B: print color lines at an 80% tint (less contrast in the photo). C: make
-blue the recommended color. I would choose A, with the guide saying blue costs a little less than red.
-
----
-
-## 2026-09-29, question 74: the card check's thickness correction reads the print about 0.3% too large
-
-**Status: answered 2026-09-29.** Alan: "Q74: A." As built. Nothing waits on it; request 56 has Alan use a scan meanwhile. Entry 291's scale test: three 600 dpi scans of the printed
-check pages read 100.01 to 100.07% (GroupLab's own scan path), so the printer printed true size. The six card photos, read by the phone's
-own code at 8 MP, with the thickness correction the app applied (0.48%): errors +0.35 to +0.80% on most photos; with no thickness
-correction, A and C agree with their scans to about 0.2% (mean error A 0.20%, C 0.13%; B 0.44%). From the page's size in the frame the
-phone was about 21 cm away, which calls for a lift of about 0.35%, not 0.48%. **Either** the phone reports a focal length that makes
-GroupLab think it was nearer, **or** the card's outline in the picture is not its raised face (the silver card's edges are noisier and it
-reads its height about 0.4% short on A and C). **The options.** A: take the distance from the page's own size in the frame rather than
-the focal length. B: drop the thickness correction and state a card's thickness as part of the uncertainty. C: keep it and measure more
-cards. I would try A, measured against these scans, and choose outline C over A only with more than two cards per page.
-
----
-
-## 2026-09-29, question 73: the 2 MOA set's load block names six fields; the format carries the standard nine
-
-**Status: answered 2026-09-29.** Alan: "Q73: A." As built. Nothing waits on it: the sheets carry the standard nine-field load block (entry 289 section 1: "date, distance, rifle,
-caliber, load, notes"). A custom field set has no encoding in GLTD-B, so a sheet that declared six named fields could not be read back from
-its codes. **The options.** A: keep the nine standard fields (as built). B: add a field-set encoding to the format, which old builds would
-refuse. I would keep A.
-
----
-
-## 2026-09-29, question 72: the 2 MOA set numbers its bulls 1 to 9 on every page, not 1 to 25 with S1 and S2
-
-**Status: answered 2026-09-29.** Alan: "Q72: A." As built. Nothing waits on it. Entry 289 section 2.2 asks for "bulls numbered 1 to 25 across the set, and bulls 8 and 9 of the third
-page as sighters S1 and S2". A tiled set shares one definition, and labels other than the default need the label block, which has no byte
-layout yet (question 10 of the schema, `docs/SPEC-ERRATA.md`). **Built:** every page is numbered 1 to 9, the set pools all 27 bulls by tile
-index, and a missing page is reported. **The options.** A: as built. B: give the label block a byte layout so a tile can carry its own
-numbers and sighters, a format addition old builds refuse. C: three separate definitions instead of one tiled set, losing the pooling by
-tile index. I would choose A now and B when the label block is designed.
-
----
-
-## 2026-09-29, question 71: the 2 MOA sheets carry two corner codes, not four
-
-**Status: answered 2026-09-29.** Alan: "Q71: A." As built. Nothing waits on it. Entry 289 section 1: "the four corner codes as on every sheet ... load block between the bottom
-codes". `corners-1` lifts the bottom codes above any load block, and explicit code placement cannot be encoded (schema question 13), so a
-bottom pair beside the load block has no encoding; on Letter the bottom pair does not fit at all, and on A4 it would take two markers,
-after which 12 markers failed the registration gate once a quarter of them were lost. **Built:** every page carries the top pair only, as
-GL-CF25-LTR-D does, and reads itself from them (TwoMoaSheetTests). **The options.** A: as built. B: settle schema question 13 so a code
-can sit beside the load block. I would keep A. **Also for planning to know:** 14 markers were not enough for a bowed sheet (3 of 30 bowed
-Letter frames missed the 0.005 in gate, worst 0.0060 in), so the edge midpoints were added as entry 289 allowed, through a new derived
-rule, `grid-boundary-edge-1` (scheme byte 4): 26 markers on Letter, 28 on A4, worst 0.0020 in bowed. Builds before nightly 126 refuse these
-sheets by name rather than misread them.
-
----
-
-## 2026-09-29, question 70: a tap on a bare number in the full CEP table
-
-**Status: answered 2026-09-29.** Alan: "Question 70: B." Each cell of the full CEP table shows its own unit and switches alone,
-remembered for its figure, and the heading loses its unit.
-
-Entry 280 section 1: "when you tap a value, it should only change that individual value and not all of the values displayed on the
-screen", and "the desktop's table cells included where entry 273 left them untappable". The full CEP table's cells are bare numbers under
-a heading that names the unit ("CEP, in"). **Built:** every value that shows its own unit switches alone and is remembered for its figure.
-**Not built, and why:** a bare cell switched alone would sit under a heading naming the old unit, so the table would say the wrong unit for
-that cell. **The options.** A: a tap on a cell switches its whole column and the heading with it, remembered for that column (one tap,
-several numbers, against the letter of entry 280). B: each cell shows its own unit ("0.415 in") and switches alone, the heading losing its
-unit (a wider table). C: leave the table as it is; it is a reference, and the figures above it switch. I would choose B.
-
----
-
-## 2026-09-29, question 69: may a picture whose codes cannot be read be named by its markers without asking?
-
-**Status: answered 2026-09-29.** Alan: "Question 69: A." As built: the sheet the markers and the drawing point to is offered first,
-and the person confirms it with one press. Nothing is taken without asking.
-
-Before the answer: open, and smaller since entry 282. Nothing waited on it: GroupLab asks, as built. Entry 282 section 5 found why the codes failed (a module of about 3.1 pixels, which reads enlarged three times), and codes cut out where the markers put them and read enlarged now name the refused picture from its codes, so the offer is for what is left. Entry 282 section 4, Alan: a picture whose markers are read "must still be measured: identify the sheet from its markers' layout or ask which sheet it is"; asking is what is built.
-
-`SheetIdentification` says: "The markers cannot do this: the built-in definitions share marker ids, and registering against the wrong
-definition can look plausible ... Nothing is guessed." In the camera test (entry 281) three of six pictures were refused because a code's
-0.4 mm module got about 3 pixels at the distance the whole sheet fits. **What I built:** where the codes fail, the phone says "It looks like" and the sheet's
-name, and offers it first, with the others below. The sheet is found by the markers (seven library sheets share the 5x5 layout), then
-by laying the picture onto each of those through the markers and correlating it with the sheet's own drawing at 40 dpi
-(`LiveSheet.MostAlike`), offered only where it beats the next by 0.03. It named the right sheet on all three saved pictures, and on every
-5x5 sheet rendered (`SheetsByMarkersTests`).
-
-**The options.** A, as built: offer it, the person confirms, one press. B: take it without asking where it beats the next by a wide
-margin, and say so on the result. C: also move the camera closer when the codes matter, which costs the room around the sheet that
-entry 281 asked for. I would keep A until B has a measured error rate on real pictures of every variant, and never do C.
-
----
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
