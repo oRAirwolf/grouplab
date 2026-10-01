@@ -539,7 +539,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - A sheet whose printed code happened to hold certain bytes could fail to identify itself when scanned; GroupLab now reads those codes correctly.
 - The three large format sheets now print as sets of four Letter or A4 sheets, with the same bulls and spacing, so a home printer can print them; a tabloid or A3 sheet you printed before still reads.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.114)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
