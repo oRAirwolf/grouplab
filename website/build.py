@@ -111,17 +111,18 @@ NIGHTLY_ASSETS = ["grouplab-setup-win-x64.exe", "grouplab-win-x64.zip", "groupla
 
 
 def site_commit() -> str:
-    """The commit this site was built from, which every page carries so the server can prove what it is serving."""
-    head = os.environ.get("GITHUB_SHA")
-    if head:
-        return head[:40]
+    """The commit this site was built from, which every page carries so the server can prove what it is serving.
+
+    The checkout's own HEAD first, because that is what was built and what website.yml checks every page against. The workflow checks out
+    main, and a status commit landing between a dispatch and its checkout once left every page carrying the dispatched commit while HEAD
+    had moved on, so nothing published (2026-10-01). GITHUB_SHA is the fallback where there is no repository to ask."""
     try:
         out = subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=str(REPO), capture_output=True, text=True, check=True, timeout=30
         )
         return out.stdout.strip()[:40]
     except (OSError, subprocess.SubprocessError):
-        return "unknown"
+        return (os.environ.get("GITHUB_SHA") or "unknown")[:40]
 
 
 COMMIT = site_commit()
