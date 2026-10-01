@@ -56,3 +56,4 @@
 0.2.0-nightly.149
 0.2.0-nightly.150
 0.2.0-nightly.151
+0.2.0-nightly.152
