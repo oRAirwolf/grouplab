@@ -1,4 +1,4 @@
-**Open: 16.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
@@ -74,6 +74,14 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 69. DESIGN NEEDED: making a store-bought target's fingerprint from a camera photo, the screens, from planning's concepts (entry 344)
+
+**Opened 2026-10-01.** **Why:** you asked to photograph poster-sized targets that will not fit a scanner and have GroupLab make their
+fingerprints for everybody. The engine and a desktop command, `grouplab target-reference`, are being built now; the screens wait for the
+concepts planning is drawing today: the steps, choosing how the scale is found (the printed size typed in, a GroupLab sheet or card in
+the same photo, or two tapped points and a distance), confirming the bulls, and exporting the small file you send to Code. **A good
+answer:** planning's drawings; nothing is needed from you before then.
 
 ## 68. DESIGN NEEDED: changing a chronograph pairing on the phone, for the planning session's concepts, no time from you now (entry 342)
 

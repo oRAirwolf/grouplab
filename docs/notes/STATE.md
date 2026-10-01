@@ -61,7 +61,7 @@ worker A takes entry 344's engine, then the Features picture and 342's applicati
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **16** (68 DESIGN NEEDED, the phone's pairing screen; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **17** (69 DESIGN NEEDED, entry 344's fingerprint screens; 68 DESIGN NEEDED, the phone's pairing screen; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
