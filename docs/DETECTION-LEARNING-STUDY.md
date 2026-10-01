@@ -183,12 +183,41 @@ proposals in all. On `300_nm_hand_load.jpg`, whose 27 holes a person checked, 25
 National Target Company ST-4 of 2026-09-20, eight frames registered by its grid (`grouplab st4 --any-target`): 67 of the 410 shots in
 view found as a mark of their own and 29 marks near no group, where the survey's detector gives 54 of 400 and 13; the count of shots in
 view moves with the marks, because the grid is matched to the groups by them. Five shot 6.5 Creedmoor groups at 100 yards run together,
-the finding of section 2, and the finder places one mark on such a group and says it is wider than one bullet. The store-bought blank and
-shot scans of entry 308 are not on this machine yet (request 58); the scoreboard's corpus mode reads them with this finder when they are.
+the finding of section 2, and the finder places one mark on such a group and says it is wider than one bullet.
+
+**Store-bought blanks (entries 325 and 327, 2026-09-30, local only).** Five Birchwood Casey targets scanned blank at 600 dpi, none shot yet.
+Each scan is 4958 by 6458 pixels, 8.26 by 10.76 in, so the 8 in sheets and the Eze-Scorer run off one or more edges and the scanner's lid
+shows below the sheet: every scan is a crop of the target, and the shot scans will be too. Nothing in the scoreboard's case or in Find holes
+looks for the sheet's outline or its corners. A folder holding only `blank.png` (and, once shot, `shot.png`) is read by
+`grouplab scoreboard --corpus` as an "any target" case at 600 dpi with no bullet named, and on a blank every mark is a false one:
+
+| Folder | False marks before | After | What the finder took for a hole |
+|---|---|---|---|
+| bc-34105-shoot-n-c-sight-in | 0 | 0 | nothing |
+| bc-34550-shoot-n-c-6in-bull | 0 | 0 | nothing |
+| bc-34805-shoot-n-c-8in-bull | 0 | 0 | nothing |
+| bc-34806-shoot-n-c-8in-crosshair | 3 | 0 | the solid black diamonds, about 0.57 in across, in three of the four colored aim discs: two as dark on paper, the center one as a dark center in a bright ring |
+| bc-37826-eze-scorer-bull | 8 | 8 | six printed scoring numbers, four white in the black ring and two dark on the paper, and two letters of the maker's logo |
+
+On these five, nothing came from the printed rings, the crosshair arms, the sight-in grid, the reactive coating or the cut-off edges. Two
+changes came of it. A solid dark shape whose outline simplifies to four corners or fewer is a printed diamond or square and is refused, in
+the dark pass and the bright ring pass; a hole whose torn outline has few corners is made of spikes and far less solid, and no hole found
+before on the synthetic targets or the committed scans is lost to it. And beyond the picture's edge no longer
+counts as print or as a bright ring around a mark, so a piece of a light printed ring that a crop cuts off is not a light hole in print:
+on a crop of each synthetic target that runs off two edges (`AnyTargetHoleFinderTests`), the black bulls and the diamonds each had one
+such mark at the cut before and none after.
+
+Neither change moved a line of the any-target class (`any-target-baseline.json` is unchanged). On the fifteen committed commercial scans,
+measured before and after in the same way (a hole found within 0.1 in): with the .308 named, 331 of the 345 reference marks proposed again
+both times, with 351 proposals before and 350 after; with no bullet named, 330 both times, with 342 and 341. The one proposal fewer is a
+light mark at the top edge of `retumbo_0001.jpg`. The hand-checked scan still gives 25 of 27 and nothing else. The numbers and letters are
+not fixed: on the measures the finder has they are as round, solid and hole-sized as a hole, and telling them apart cheaply would need the
+blank scan of the same target beside the shot one, which Find holes does not have.
 
 **What it cannot do yet:** a hole across the edge of a black bull; a hole in black print with a dark board behind it, where nothing lighter
 shows through; a light-cored hole with a thin rim on a scan; and a printed white center dot in a black bull, which is round and light, is
-proposed as a hole with no doubt unless it is wider than the bullet.
+proposed as a hole with no doubt unless it is wider than the bullet; nor are printed numbers and letters about a bullet's size, on paper or
+white in black print.
 
 ## 8. A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built)
 

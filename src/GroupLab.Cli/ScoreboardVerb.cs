@@ -15,7 +15,7 @@ namespace GroupLab.Cli;
 /// <summary>
 /// <c>grouplab scoreboard</c>, NOTES-FROM-PLANNING.md entry 291 section 7: the detection scoreboard of docs/DETECTION-LEARNING-STUDY.md
 /// section 9. <c>--synthetic</c> reads the synthetic degradations; <c>--corpus</c> a folder of real photographs, each in its own folder with
-/// a <c>truth.json</c>; <c>truth</c> makes a truth file from a scan of the same sheet. Real photographs are read where they are and never
+/// a <c>truth.json</c>, or a store-bought target's folder with only its scans (entry 325); <c>truth</c> makes a truth file from a scan of the same sheet. Real photographs are read where they are and never
 /// copied anywhere by this verb: the corpus stays on the machine it is on.
 /// </summary>
 public static class ScoreboardVerb
@@ -26,8 +26,12 @@ public static class ScoreboardVerb
         "       grouplab scoreboard --corpus <folder> [--out <file.json>] [--table <file.md>] [--baseline <file.json>]\n" +
         "       grouplab scoreboard truth --scan <scan> --sheet <file.gltd.json> [--calibre <inches>] --out <truth.json>\n" +
         "  A corpus folder whose truth.json says \"target\": \"any\" is a store-bought target: picture, blank, count and dpi (entry 308).\n" +
+        "  A folder with blank.png, shot.png or both and no truth.json is one too, at 600 dpi with the count unknown (entry 325).\n" +
         "  --margin holes=1,false=1,center=0.005,worst=0.03,registration=0.005 overrides the baseline's own margin.\n" +
         "  Exits 1 naming each condition that fell beyond the margin against the baseline, 2 on a usage error.";
+
+    /// <summary>A store-bought target's blank scan and its shot one, in a folder with no truth file (entry 308's layout, entry 325).</summary>
+    public const string BlankScan = "blank.png", ShotScan = "shot.png";
 
     public static int Run(string[] args, TextWriter output, TextWriter error)
     {
@@ -209,8 +213,35 @@ public static class ScoreboardVerb
             error.WriteLine($"{name}: {marks.Count} marks, {(found is { } ff ? ff.ToString(CultureInfo.InvariantCulture) : "?")} found, {clock.ElapsedMilliseconds} ms");
         }
 
+        // Entries 325 and 327: a store-bought target's folder as it is filled, before anybody writes a truth file for it: blank.png, scanned
+        // before it is shot, and shot.png once it is, both at 600 dpi. It is read as an "any target" case; the shot scan's count stays unknown
+        // until a truth file names it. Either scan may be a crop of the target, so nothing here looks for the sheet's outline or its corners.
+        foreach (string dir in Directory.EnumerateDirectories(folder, "*", SearchOption.AllDirectories).Prepend(folder).Order(StringComparer.Ordinal))
+        {
+            bool blank = File.Exists(Path.Combine(dir, BlankScan)), shot = File.Exists(Path.Combine(dir, ShotScan));
+            if (File.Exists(Path.Combine(dir, "truth.json")) || !(blank || shot))
+            {
+                continue;
+            }
+
+            var truth = new JsonObject { ["target"] = "any" };
+            if (shot)
+            {
+                truth["picture"] = ShotScan;
+            }
+
+            if (blank)
+            {
+                truth["blank"] = BlankScan;
+            }
+
+            string name = dir == folder ? Path.GetFileName(Path.GetFullPath(folder).TrimEnd('\\', '/')) : Path.GetRelativePath(folder, dir).Replace('\\', '/');
+            scores.AddRange(AnyTarget(dir, truth, name, backend, error));
+        }
+
         return scores;
     }
+
 
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 308 section 4: a store-bought target, scanned blank before it was shot and again after, as an "any target"

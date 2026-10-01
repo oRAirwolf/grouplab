@@ -21,9 +21,10 @@ public sealed record HoleDetectionOptions(
 
 /// <summary>
 /// A detected hole, image pixels: the convex hull's centroid and equivalent diameter, the blob's pixel count over the
-/// hull's area, and the survey's appearance measures from the V channel, which is max(R, G, B).
+/// hull's area, the survey's appearance measures from the V channel, which is max(R, G, B), and how many corners its outline has
+/// (<see cref="NeutralDarknessHoleDetector.Corners"/>, entry 325).
 /// </summary>
-public sealed record DetectedHole(double X, double Y, double DiameterPixels, double DiameterInches, double Solidity, double PaperV, double CoreMeanV, double AnnulusMinimumV, double RaggednessInches = double.NaN);
+public sealed record DetectedHole(double X, double Y, double DiameterPixels, double DiameterInches, double Solidity, double PaperV, double CoreMeanV, double AnnulusMinimumV, double RaggednessInches = double.NaN, int Corners = 0);
 
 /// <summary>
 /// A blob refused by a size, compactness or elongation filter, with the reason. <see cref="Zone"/> names the exclusion zone when that is
@@ -58,6 +59,9 @@ public sealed record HoleDetection(double Dpi, double PaperLevel, IReadOnlyList<
 /// </summary>
 public static class NeutralDarknessHoleDetector
 {
+    /// <summary>An outline is simplified to within this share of its diameter before its corners are counted (<see cref="Corners"/>).</summary>
+    public const double CornerTolerance = 0.06;
+
     /// <summary>The paper's level on the survey's scans, docs/SCAN-MEASUREMENTS.md section 3.2, to which a local paper's darkness is scaled.</summary>
     public const double SurveyPaper = 245.65;
 
@@ -124,7 +128,7 @@ public static class NeutralDarknessHoleDetector
             }
 
             var (paperV, coreMean, annulusMinimum, ragged) = Characterise(maxChannel, cx, cy, diameter / 2, dpi);
-            holes.Add(new DetectedHole(cx, cy, diameter, diameter / dpi, solidity, paperV, coreMean, annulusMinimum, ragged / dpi));
+            holes.Add(new DetectedHole(cx, cy, diameter, diameter / dpi, solidity, paperV, coreMean, annulusMinimum, ragged / dpi, Corners(blob.Hull, CornerTolerance * diameter)));
         }
 
         return new HoleDetection(dpi, paper, holes, rejected);
@@ -198,6 +202,77 @@ public static class NeutralDarknessHoleDetector
         var p = image.Pixels;
         int w = image.Width;
         return ((1 - fy) * (((1 - fx) * p[(y0 * w) + x0]) + (fx * p[(y0 * w) + x1]))) + (fy * (((1 - fx) * p[(y1 * w) + x0]) + (fx * p[(y1 * w) + x1])));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entries 325 and 327: how many corners an outline has once it is simplified (Douglas and Peucker) to within
+    /// <paramref name="tolerance"/> pixels. A round hole keeps six or more at <see cref="CornerTolerance"/> of its diameter; a printed diamond
+    /// or square keeps four. A torn hole whose outline is a few spikes keeps few too, but is far from solid, so the two are told apart together.
+    /// </summary>
+    internal static int Corners(IReadOnlyList<PointD> hull, double tolerance)
+    {
+        if (hull.Count < 4)
+        {
+            return hull.Count;
+        }
+
+        static double Distance(PointD a, PointD b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));
+        int i0 = 0, j0 = 0;
+        double far = -1;
+        for (int i = 0; i < hull.Count; i++)
+        {
+            for (int j = i + 1; j < hull.Count; j++)
+            {
+                if (Distance(hull[i], hull[j]) > far)
+                {
+                    (far, i0, j0) = (Distance(hull[i], hull[j]), i, j);
+                }
+            }
+        }
+
+        var kept = new List<int>();
+        void Split(int from, int to)
+        {
+            var a = hull[from % hull.Count];
+            var b = hull[to % hull.Count];
+            double length = Math.Max(1e-9, Distance(a, b));
+            int worst = -1;
+            double most = tolerance;
+            for (int k = from + 1; k < to; k++)
+            {
+                var p = hull[k % hull.Count];
+                double off = Math.Abs(((b.X - a.X) * (a.Y - p.Y)) - ((a.X - p.X) * (b.Y - a.Y))) / length;
+                if (off > most)
+                {
+                    (most, worst) = (off, k);
+                }
+            }
+
+            if (worst >= 0)
+            {
+                Split(from, worst);
+                kept.Add(worst % hull.Count);
+                Split(worst, to);
+            }
+        }
+
+        kept.Add(i0);
+        Split(i0, j0);
+        kept.Add(j0);
+        Split(j0, i0 + hull.Count);
+
+        // A corner rounded by the print or the scan is two vertices close together, and counts once: the simplification starts from the two
+        // points farthest apart, which on a rounded corner are seldom its middle.
+        int corners = kept.Count;
+        for (int k = 0; k < kept.Count; k++)
+        {
+            if (Distance(hull[kept[k]], hull[kept[(k + 1) % kept.Count]]) < 2 * tolerance)
+            {
+                corners--;
+            }
+        }
+
+        return Math.Max(corners, 1);
     }
 
     /// <summary>A polygon's area and centroid, as OpenCV's contour moments give them.</summary>

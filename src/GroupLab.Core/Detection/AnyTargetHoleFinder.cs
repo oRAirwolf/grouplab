@@ -43,7 +43,8 @@ public sealed record AnyTargetFinding(double Dpi, IReadOnlyList<ProposedHole> Ho
 /// round dark piece with bright all round it is a hit's centre; a bright patch without one is printing, and is refused rather than proposed.
 /// Where hits were found, light spots are not looked for, because a piece of a ring is one.</item>
 /// </list>
-/// The three are merged, one proposal for one hole. The finder proposes and never decides: every proposal is shown to the person as a mark to
+/// The three are merged, one proposal for one hole. Entries 325 and 327: a solid dark shape with straight sides, a printed diamond, is refused
+/// in the first and third, and nothing assumes the sheet's outline or corners are in the picture, which is often a crop of the target. The finder proposes and never decides: every proposal is shown to the person as a mark to
 /// confirm, move or remove, and one it is unsure of carries its reason to the review queue.
 /// </summary>
 public static class AnyTargetHoleFinder
@@ -86,6 +87,15 @@ public static class AnyTargetHoleFinder
 
     /// <summary>A mark with more than this share of the ring around it dark print is part of a larger printed shape.</summary>
     public const double JoinedToPrint = 0.35;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 325: a dark shape this solid whose outline has no more than <see cref="PrintedCorners"/> corners is a
+    /// printed diamond or square, not a hole. A hole whose torn outline has few corners is made of spikes, and far less solid.
+    /// </summary>
+    public const double PrintedSolidity = 0.9;
+
+    /// <summary>The most corners a printed straight-sided shape is taken to have, its outline simplified as <see cref="NeutralDarknessHoleDetector.Corners"/> says.</summary>
+    public const int PrintedCorners = 4;
 
     /// <param name="value">max(R, G, B) per pixel, as the survey's detector reads it.</param>
     /// <param name="dpi">Pixels an inch on the target, from the scale the person set.</param>
@@ -202,6 +212,13 @@ public static class AnyTargetHoleFinder
                 continue;
             }
 
+            // Entry 325: a solid dark shape with straight sides, such as the black diamond printed in a colored aim disc, is printing.
+            if (Straight(hole.Corners, hole.Solidity))
+            {
+                rejected.Add(new RejectedBlob(at.X, at.Y, hole.DiameterInches, Words($"a solid printed shape with straight sides, {hole.Corners} corners")));
+                continue;
+            }
+
             string? doubt = SizeDoubt(hole.DiameterInches, calibre, 0.6, 1.7)
                 ?? (hole.Solidity < 0.7 ? "its outline is ragged, as printing or a tear can be" : null)
                 ?? (share > 0.2 ? "it touches printing" : null);
@@ -274,7 +291,9 @@ public static class AnyTargetHoleFinder
             why ??= RingShare(mask, cx, cy, radius, 0, 0.45, v => v > 0) < 0.6 ? "a light ring, not a light spot" : null;
             double core = Sample(print, cx, cy);
             double level = Sample(printLevel, cx, cy);
-            why ??= RingShare(print, cx, cy, radius, 1.6, 2.4, v => v < level + (0.5 * (core - level))) < 0.7 ? "a light spot without print all round it" : null;
+            // Entry 327: beyond the picture's edge is not print. A scan of a store-bought target is often a crop of it, and a piece of a light
+            // ring that the edge cuts off is otherwise a light spot with print on every side that is in the picture.
+            why ??= RingShare(print, cx, cy, radius, 1.6, 2.4, v => v < level + (0.5 * (core - level)), outsideFails: true) < 0.7 ? "a light spot without print all round it" : null;
             if (why is not null)
             {
                 rejected.Add(new RejectedBlob(at.X, at.Y, diameter, why));
@@ -348,10 +367,18 @@ public static class AnyTargetHoleFinder
 
             // A dark centre is round and has the bright all round it; a dark gap between printed bright shapes is neither.
             var at = new PointD(Up(px, fp), Up(py, fp));
-            double around = RingShare(cleaned, px, py, core * pdpi / 2, 1.4, 2.2, v => v > 0);
+            double around = RingShare(cleaned, px, py, core * pdpi / 2, 1.4, 2.2, v => v > 0, outsideFails: true);
             if (aspect > 2.5 || around < 0.6)
             {
                 rejected.Add(new RejectedBlob(at.X, at.Y, core, Words($"a dark piece in bright print, not a hit's center: {100 * around:0} percent bright around it, aspect {aspect:0.00}")));
+                continue;
+            }
+
+            // Entry 325: a printed dark diamond inside a bright aim disc has bright all round it too, but straight sides.
+            int corners = NeutralDarknessHoleDetector.Corners(piece.Hull, NeutralDarknessHoleDetector.CornerTolerance * core * pdpi);
+            if (Straight(corners, piece.Area / Math.Max(1.0, hullArea)))
+            {
+                rejected.Add(new RejectedBlob(at.X, at.Y, core, Words($"a solid printed shape with straight sides in bright print, {corners} corners")));
                 continue;
             }
 
@@ -366,6 +393,9 @@ public static class AnyTargetHoleFinder
         return holes;
     }
 
+    /// <summary>A solid outline with no more than <see cref="PrintedCorners"/> corners: a printed diamond or square.</summary>
+    private static bool Straight(int corners, double solidity) => corners <= PrintedCorners && solidity >= PrintedSolidity;
+
     /// <summary>A sentence when a hole's size is out of keeping with the bullet, from <paramref name="low"/> to <paramref name="high"/> of it.</summary>
     private static string? SizeDoubt(double inches, double? calibre, double low, double high)
     {
@@ -379,8 +409,12 @@ public static class AnyTargetHoleFinder
         return inches > 0.5 ? Words($"it is {inches:0.00} in across: it may be two holes, or printing") : null;
     }
 
-    /// <summary>The share of samples on rings from <paramref name="from"/> to <paramref name="to"/> times <paramref name="radius"/> that pass the test.</summary>
-    private static double RingShare(GrayImage image, double cx, double cy, double radius, double from, double to, Func<double, bool> test)
+    /// <summary>
+    /// The share of samples on rings from <paramref name="from"/> to <paramref name="to"/> times <paramref name="radius"/> that pass the test.
+    /// A sample beyond the picture's edge is left out, or, with <paramref name="outsideFails"/>, counted as failing: where something must lie
+    /// all round a mark, the picture cannot say it does past its own edge (entry 327).
+    /// </summary>
+    private static double RingShare(GrayImage image, double cx, double cy, double radius, double from, double to, Func<double, bool> test, bool outsideFails = false)
     {
         int passed = 0, total = 0;
         for (double k = from; k <= to + 1e-9; k += Math.Max(0.1, (to - from) / 4))
@@ -393,6 +427,7 @@ public static class AnyTargetHoleFinder
                 double x = cx + (r * Math.Cos(angle)), y = cy + (r * Math.Sin(angle));
                 if (x < 0 || y < 0 || x > image.Width - 1 || y > image.Height - 1)
                 {
+                    total += outsideFails ? 1 : 0;
                     continue;
                 }
 
