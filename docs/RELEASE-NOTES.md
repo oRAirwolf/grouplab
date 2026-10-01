@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.144
+
+**2026-10-01**, commit `05ed5bd`. Nightly.
+
+**What you will notice**
+
+- A target photographed from about 3 ft away is now read too, by looking again at each corner marker enlarged, where before none could be read.
+- A target photographed from about 2 ft away is now read, where before GroupLab found none of its corner markers and asked you to move closer.
+- On a photograph taken through a lens that bends the picture hard, markers near the edge of the frame are no longer left out of lining up the sheet when the lens explains where they are.
+
+**Under the hood**
+
+- GroupLab can now work out how much of a group's up and down spread the load's velocity spread explains at the distance shot, with an honest range, though no screen shows it yet.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.144)
+
+---
+
 ## 0.2.0-nightly.143
 
 **2026-09-30**, commit `2c25c28`. Nightly.
