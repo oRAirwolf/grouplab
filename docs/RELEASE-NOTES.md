@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.149
+
+**2026-10-01**, commit `b5a2b00`. Nightly.
+
+**What you will notice**
+
+- Chronograph files now include Garmin Xero exports as Excel files, a monthly export choosing its string by name, with deleted shots kept missing and the chronograph’s own figures checked.
+- Chronograph readings can now come from a file: a spreadsheet CSV, or, still experimental, a Labradar report or a Garmin Xero export, on the computer and the phone.
+
+**Under the hood**
+
+- A trial of recognizing store-bought targets from a small stored fingerprint was measured from the command line; nothing on screen changes.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.149)
+
+---
+
 ## 0.2.0-nightly.148
 
 **2026-10-01**, commit `c9c698a`. Nightly.
