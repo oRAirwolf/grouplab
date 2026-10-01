@@ -289,6 +289,14 @@ The ballistics screen keeps what the solver needs on your rifle and load records
 
 All of it is optional. A record without what the solver needs says which field is missing.
 
+**Chronograph readings.** Under the trajectory, **Chronograph** takes a session's velocities: type or paste them and press **Read the
+list**, or press **Import a file** for a CSV from a spreadsheet (the column of velocities found by its header, or chosen, in ft/s or
+m/s), a LabRadar report or a Garmin Xero export from ShotView. The LabRadar and Xero readers are Experimental: they follow those
+exports' published layouts and have not yet been checked against a real file. GroupLab then proposes pairing the readings with the
+shots in order; mark any reading that belongs to no shot, or any shot the chronograph missed, and press **Accept the mapping**. The
+readings' own spread becomes the load's velocity SD, and Velocity and the vertical uses them. On the phone the same is under Velocity
+and the vertical's **Add readings**.
+
 ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)
 
 **How the screen is laid out.** Three columns, like the analysis:

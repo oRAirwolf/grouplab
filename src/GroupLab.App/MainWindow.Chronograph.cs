@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Marking;
@@ -44,17 +45,95 @@ public sealed partial class MainWindow
         column.Children.Add(Line("A string of velocities for the session open in the analysis, pasted or typed. They are reconciled with the shots, never assumed to line up with them."));
         column.Children.Add(Row(FieldLabel("From"), chronoSource, FieldLabel("Date"), chronoDate));
         column.Children.Add(chronoReadings);
-        column.Children.Add(Row(Button("Read the list", () => ReadChronograph()), Button("Accept the mapping", AcceptChronograph), Button("Start again", () =>
+        column.Children.Add(Row(Button("Read the list", () => ReadChronograph()), Button("Import a file", () => _ = ImportChronographFile()), Button("Accept the mapping", AcceptChronograph), Button("Start again", () =>
         {
             chronoValues = [];
             chronoShotsWithNoReading.Clear();
             chronoReadingsOfNoShot.Clear();
             FillChronograph();
         })));
+        column.Children.Add(chronoImport);
         column.Children.Add(chronoLines);
         column.Children.Add(chronoPicture);
         column.Children.Add(chronoRows);
     }
+
+    /// <summary>Entry 331 section 2: what a chronograph file said, and for a generic CSV the column and the unit to choose again.</summary>
+    private readonly StackPanel chronoImport = new() { Spacing = Tokens.Space4 };
+
+    private string? chronoFileText;
+
+    /// <summary>Opens a chronograph file: a CSV from a spreadsheet, LabRadar's report or Garmin Xero's export.</summary>
+    private async Task ImportChronographFile()
+    {
+        DiagnosticLog.Info("dialog.open", ("dialog", "import-chronograph"));
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Import a chronograph file",
+            AllowMultiple = false,
+            FileTypeFilter = [new FilePickerFileType("CSV") { Patterns = ["*.csv", "*.txt"] }, FilePickerFileTypes.All],
+        });
+        if (files.FirstOrDefault()?.TryGetLocalPath() is not { } path)
+        {
+            return;
+        }
+
+        try
+        {
+            ImportChronograph(await File.ReadAllTextAsync(path), Path.GetFileNameWithoutExtension(path));
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            problem.Text = "That file could not be read: " + e.Message;
+        }
+    }
+
+    /// <summary>
+    /// A chronograph file's text read into the hand-entry box and read as a list, so the same reconciliation follows; for a generic CSV the
+    /// column and the unit can be chosen again. Internal for the headless tests.
+    /// </summary>
+    internal void ImportChronograph(string text, string source, int? column = null, bool? metres = null)
+    {
+        chronoImport.Children.Clear();
+        ChronographImport read;
+        try
+        {
+            read = ChronographFiles.Read(text, column, metres);
+        }
+        catch (FormatException e)
+        {
+            problem.Text = "That file could not be read as a chronograph file: " + e.Message;
+            return;
+        }
+
+        chronoFileText = text;
+        DiagnosticLog.Info("chronograph.import", ("format", read.Format.ToString()), ("readings", read.VelocitiesFps.Count));
+        chronoImport.Children.Add(Line(read.Said));
+        if (read.Format == ChronographFormat.Generic)
+        {
+            var columns = new ComboBox { ItemsSource = read.Columns, SelectedIndex = read.Column ?? -1, MinWidth = 200 };
+            var unit = new ComboBox { ItemsSource = new[] { "ft/s", "m/s" }, SelectedIndex = read.Said.Contains("in m/s", StringComparison.Ordinal) ? 1 : 0, MinWidth = 90 };
+            void Again()
+            {
+                if (columns.SelectedIndex >= 0 && chronoFileText is { } again)
+                {
+                    ImportChronograph(again, source, columns.SelectedIndex, unit.SelectedIndex == 1);
+                }
+            }
+
+            columns.SelectionChanged += (_, _) => Again();
+            unit.SelectionChanged += (_, _) => Again();
+            chronoImport.Children.Add(Row(FieldLabel("Column"), columns, FieldLabel("Unit"), unit));
+        }
+
+        if (read.VelocitiesFps.Count > 0)
+        {
+            ReadChronograph(source, null, string.Join(", ", read.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture))));
+        }
+    }
+
+    /// <summary>What the import said, for the headless tests.</summary>
+    internal IEnumerable<string> ChronographImportText => chronoImport.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 
     /// <summary>The shots a string is reconciled against: the ones the figures count, in the order the shot table lists them.</summary>
     private List<MarkedShot> ChronographShots() =>

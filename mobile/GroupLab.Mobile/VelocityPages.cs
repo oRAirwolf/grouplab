@@ -70,7 +70,54 @@ internal static class VelocityPages
             choices.Children.Add(Screens.Primary("Keep, paired in this order", () => Keep(readings, pairs)).Id("chrono-keep-paired"));
             choices.Children.Add(Screens.Choice("Keep without pairing", () => Keep(readings, null)).Id("chrono-keep-unpaired"));
         }).Id("chrono-read"));
+        // Entry 331 section 2: a chronograph file instead of typing, read into the same box and then read as the list is.
+        var columns = new WrapPanel();
+        void Imported(string text, int? chosen)
+        {
+            columns.Children.Clear();
+            ChronographImport read;
+            try
+            {
+                read = ChronographFiles.Read(text, chosen);
+            }
+            catch (FormatException e)
+            {
+                said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                return;
+            }
+
+            DiagnosticLog.Info("chronograph.import", ("format", read.Format.ToString()), ("readings", read.VelocitiesFps.Count));
+            box.Text = string.Join(", ", read.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture)));
+            said.Text = read.Said;
+            if (read.Format == ChronographFormat.Generic)
+            {
+                for (int i = 0; i < read.Columns.Count; i++)
+                {
+                    int at = i;
+                    columns.Children.Add(Screens.Choice((at == read.Column ? "Using " : "Use ") + read.Columns[at], () => Imported(text, at)));
+                }
+            }
+        }
+
+        column.Children.Add(Screens.Choice("Import a file", async () =>
+        {
+            if (TopLevel.GetTopLevel(column)?.StorageProvider is not { } storage)
+            {
+                return;
+            }
+
+            var files = await storage.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions { Title = "Import a chronograph file", AllowMultiple = false });
+            if (files.FirstOrDefault() is not { } file)
+            {
+                return;
+            }
+
+            await using var stream = await file.OpenReadAsync();
+            using var reader = new StreamReader(stream);
+            Imported(await reader.ReadToEndAsync(), null);
+        }).Id("chrono-import"));
         column.Children.Add(said);
+        column.Children.Add(columns);
         column.Children.Add(choices);
         column.Children.Add(Screens.Choice("Back", done));
         return Screens.Page(column);
