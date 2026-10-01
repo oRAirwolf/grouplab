@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01, entries 339 and 343 folded; worker A is on 340 and 341, then 344's engine and 342's application list;
-this session takes 342's data and tooling list.
+**Last rewritten:** 2026-10-01 12:35 UTC, entries 340 and 341 folded (recognition ships), entry 342's worker B list done;
+worker A takes entry 344's engine, then the Features picture and 342's application list.
 
 ---
 
@@ -61,7 +61,7 @@ this session takes 342's data and tooling list.
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **17** (68 DESIGN NEEDED, the phone's pairing screen; 67 TestFlight team distribution off; 66 the Store's cadence; 64 a second sheet of each store-bought target; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **16** (68 DESIGN NEEDED, the phone's pairing screen; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -91,7 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 340, 341, 342, 344.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 342, 344.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

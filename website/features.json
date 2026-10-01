@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "GroupLab now recognizes five Birchwood Casey targets on the computer and the phone",
+    "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch",
     "Find holes no longer proposes the solid black diamonds printed in a store-bought target",
     "When you import a Garmin Xero file, GroupLab now proposes which readings belong to your group",
     "Garmin Xero exports in metric units are now read in meters per second",

@@ -40,6 +40,25 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 340 and 341: store-bought targets recognized, with a warning on their scale
+
+Done 2026-10-01 by worker A.
+
+- **Recognition:** the five Birchwood Casey products, from fingerprints of 25 to 60 KB made by `grouplab store-fingerprints build` (no
+  scan or picture committed), with the trial's ORB features, colour layout and thresholds. On the trial's 200 pictures, 120 phone views
+  and 42 scans are named, none wrong, 2 now asked about; of 130 real pictures of other targets none is claimed. 0.5 to 1.2 s a picture
+  on this desktop; not measured on a phone.
+- **Where it shows:** on the computer, a picture naming no GroupLab sheet tries the five before asking which sheet; a recognized one is
+  named, its bulls placed and its printed size set as the scale, so Find holes is offered at once. On the phone it goes straight to the
+  hand-marking page with the bull and scale set.
+- **The family:** the Shoot-N-C bullseye at 6 and 8 in asks which, with GroupLab's own outline of each and Not sure, last answer first,
+  only when the picture cannot tell. Beyond the trial's rule, a size is named without asking only when clearly ahead (agreement 0.95 or
+  150 features), since the rule alone named the wrong size on 4 crops; on such tight crops the chosen scale can be about 10 percent off,
+  which the warning covers.
+- **The warning (entry 341):** under the scale, on the result and in the report's scale sentence, with Check the scale one click away;
+  never on a GroupLab sheet. Request 64 closed as not needed.
+- **Not done:** the Features page's own picture of it (the screenshot walk); recognition time on a phone.
+
 ## Entry 342, worker B: the audit, the pairing proposal, the Store route, triage
 
 2026-10-01, this session.

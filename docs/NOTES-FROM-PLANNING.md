@@ -24,6 +24,51 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 341: no second sheets; commercial scale is assumed, with a warning (amends entries 332 and 340)
+
+**Status: done 2026-10-01.** 1: request 64 closed as not needed. 2: the warning shows under the scale, on the result and in the report's scale sentence, with Check the scale one click away, never on a GroupLab sheet (e0695661). 3: unchanged. 4: the guide and the README in one sentence, with backing (76e9a876).
+
+Alan, 2026-10-01 10:27 UTC: "I do not plan on scanning other sheets. That is a waste of time. Just assume they are all the same size or
+within an acceptable error limit. Worst case scenario, just have a warning when using commercial targets that the scale was recorded but
+could be wrong and encourage the user to verify."
+
+1. **Close request 64** (a second sheet of each product) as not needed, Alan's decision, 2026-10-01. Nothing waits on print-to-print
+   consistency any more.
+2. **Entry 340 section 3 becomes:** a store-bought target's scale comes from its fingerprint and is used, with a visible warning on the
+   result wherever that scale is in play, in plain words, for example: "Scale from this target's printed size. Printed targets can vary
+   a little from sheet to sheet; check it against a ruler or a GroupLab sheet if the numbers matter." The scale check stays one tap away.
+   The warning does not block anything, and it is never shown for GroupLab's own sheets.
+3. The family question of entry 340 section 2 stays as written: it settles which size, not how exact the print is.
+4. The guide and the README say the same in one sentence, with its claims backing (Alan's decision, and the trial's 0.06% median on the
+   fingerprinted sheets themselves).
+
+Also from Alan: the download page's phone layout stays as drawn (store card first, the file list in "Everything else"); his only changes
+are the desktop ones already in entry 338. He has given Code his word in the panel to publish the TestFlight link, the Microsoft badge
+and the new download page.
+
+## 2026-10-01, entry 340: store-bought target recognition ships, and a look-alike asks which size
+
+**Status: done 2026-10-01 (worker A, e0695661), except the Features page's own picture**, which waits for the screenshot walk (docs/figures/SCREENSHOTS.md). The five products are recognized on the computer and the phone with the trial's thresholds; the Shoot-N-C family asks 6 in or 8 in only when the picture cannot tell, and names a size without asking only when clearly ahead (agreement 0.95 or 150 features), which the trial's rule alone got wrong on 4 crops. Recognition time on a phone is not measured.
+
+Alan, 2026-10-01 10:24 UTC, on the fingerprint trial (entry 332, `docs/notes/fingerprint-trial.md`): "How about for the two targets
+that could be mistaken because they are the same design but different size, just have a pop up that asks the user to confirm which size
+target it is?" Planning reads that as yes to shipping recognition, with this rule for look-alikes. After entries 335 to 339.
+
+1. **Recognition ships** for the five fingerprinted products: GroupLab names the target and places its bulls, in "Find holes" and in
+   the capture flow, on the desktop and the phone. Fingerprints only, never a scan or image of another maker's target (entry 332).
+2. **Families.** Products that share one artwork at different sizes are a family in the library (today: the Shoot-N-C bullseye at 6 in
+   and at 8 in; say if the trial found any other). When the best match is a family member and the picture cannot tell the sizes apart by
+   the trial's own measure, GroupLab asks: "Which target is this?", with each family member's name, printed size and a small drawing of
+   its outline (drawn by GroupLab, not the maker's art), plus "Not sure". The chosen size sets the scale and the bull positions;
+   "Not sure" falls back to a scale check. When the picture does tell them apart, no question is asked. The person's last answer for
+   that family is offered first next time. It is a small dialog in the app's existing style on both platforms; if it needs more than
+   that, DESIGN NEEDED as usual.
+3. **Trusting the scale.** Outside a family, and after a family answer, the fingerprint's scale is used with a plain note saying where it
+   came from ("Scale from the target's printed size"), and the scale check stays one tap away. Whether the note can drop once request 64's
+   second sheets show print-to-print consistency within about 0.2% is decided then.
+4. A test for each family member at the crops that fooled the trial: the question appears, each answer gives that member's scale, and a
+   picture that is clearly one size asks nothing.
+
 ## 2026-10-01, entry 327: the store-bought blanks are partial scans
 
 **Recovered 2026-10-01:** this fold and entries 325 and 327's commit were made by the peer session and never reached main; they were

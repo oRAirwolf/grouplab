@@ -118,6 +118,10 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | A picture to share | the analysis, with Share a picture | the Share a picture window with its results box |
 | The one-page report | the analysis | the one-page report itself |
 
+**Waiting for its own entry and picture:** store-bought targets recognized (entries 340 and 341), the newest; its two notes sit in
+`notFeatures` until the entry exists. The picture: a recognized Shoot-N-C with its bulls placed and the scale warning, and the window that
+asks the 6 inch or the 8 inch.
+
 ## Not published
 
 `docs/figures/screens/*.png` (2026-09-14), `before/` and `after/` (entry 247's comparison for Alan) are the record of their day. No

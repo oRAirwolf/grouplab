@@ -189,6 +189,21 @@ as a draft release and tell you it is ready.
 
 ---
 
+## 64. A second sheet of each store-bought target, scanned the same way, about five minutes a target, whenever suits (entry 332)
+
+**Closed 2026-10-01, not needed** (entry 341): "I do not plan on scanning other sheets. That is a waste of time. Just assume they are all
+the same size or within an acceptable error limit." A store-bought target's scale is now used with a plain warning and a check one tap
+away (entries 340 and 341).
+
+**Opened 2026-10-01.** **Why:** a trial shows GroupLab can recognize the five Birchwood Casey targets from a small fingerprint (nothing
+in the application yet), and finds their scale to about 0.06 percent, but only against the very sheet the fingerprint was made from.
+Whether a remembered scale can be trusted depends on how much one printed sheet differs from the next. **Needed:** for each of the five
+(the 6 in and 8 in Shoot-N-C bulls, the sight-in grid, the crosshair and the Eze-Scorer), one more unshot sheet scanned at 600 dpi in the
+same corner of the glass as its blank, from a second pack where you have one. Save it as `blank-2.png` in that target's folder under
+`C:\Dev\grouplab-local\commercial-targets\`, with a line in its `notes.txt` saying same pack or another. **A good answer:** "done, five
+second sheets" (or which ones). If a product's two sheets agree within about 0.2 percent, GroupLab may remember its scale; if not, it
+still finds the bulls but asks you for a scale check.
+
 ## 65. Garmin Xero exports for the chronograph reader (entries 333 and 334)
 
 **Opened and answered 2026-10-01** (entry 334): "All of the xlsx files in here are garmin chronograph files G:\My Drive\chronograph.files\2026
