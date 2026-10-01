@@ -40,6 +40,25 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 329: Velocity and the vertical flies the load in the conditions entered
+
+Done 2026-10-01, one worker on the main model.
+
+- **1, the solver's input:** `VelocityBlocks.Build` takes a `VelocityConditions` (the air and the shot angle, and where they came from)
+  and fills the solver with them, the rifle's sight height, zero, twist and direction, and the bullet's diameter and length. Sessions do
+  not carry conditions yet, so on the desktop they are the Ballistics screen's air and shot angle, and only when that screen has the
+  session's rifle and load chosen (`MainWindow.ConditionsForVelocity`). The phone's Ballistics air lives only while its page is open, so
+  the phone's block takes the standard day. No new form; a session's own conditions would need a DESIGN NEEDED.
+- **2, why:** one line names the conditions and their source ("Conditions: 90 F, 6000 ft of altitude, 50 percent humidity, shot level,
+  from Ballistics, for ..."), or says "Standard day assumed: no temperature or altitude entered."; the assumed sight height and zero are
+  named one by one.
+- **3, the command:** `grouplab velocity` takes `--temperature --altitude --pressure --humidity --angle --twist --diameter --length` and
+  the same names in the session file, prints the air, the humidity, the angle and the twist, and the standard-day line when none is given.
+- **4, the test:** the same group and readings at 59 F at sea level and at 90 F at 6,000 ft: the vertical from velocity alone changes by
+  the ratio of the solver's own heights per ft/s, the share by its square, the measured vertical not at all; with nothing entered, the
+  standard-day line (`TheConditionsEnteredChangeTheHeightPerFpsTheWayTheSolverSays`). The command's options are in the CLI test.
+- **5:** the guide's paragraph says the conditions are used and that why names them; claims all backed.
+
 ## Entry 323: Velocity and the vertical, Desktop B and Phone B
 
 Done 2026-10-01, one worker on the main model.

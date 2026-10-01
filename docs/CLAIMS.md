@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1479 |
 | measured | 1846 |
-| decided | 1272 |
+| decided | 1273 |
 | unbacked | 0 |
-| **total** | **4597** |
+| **total** | **4598** |
 
-**1123** of them were read one sentence at a time and their backing written against the sentence. The other **3474** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1123** of them were read one sentence at a time and their backing written against the sentence. The other **3475** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2323,6 +2323,7 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 158 program B: hole size against velocity and nose shape | **covered in part, and extended** | Step 1 is articles 1 and 2.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): What cannot yet be separated, and the test that would, is added to article 1's "What we still do not know".
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 322 section 2: why the lens fit leaves the far column of markers out on angled pictures | **not written** | The far column was off the sheet's plane in that one sitting, a lifted margin, and no lens model reaches it; four pictures of one sheet cannot say how often paper lifts or by how much, and docs/DETECTION-LEARNING-STUDY.md section 9 holds the measurement.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 324 section 1: a bent-sheet registration for a lifted far margin | **not yet written** | It would change what a developer builds (a smooth correction over the lens fit, taken only when it predicts the markers the flat fit left out), but it rests on two angled pictures of one sheet; worth an article once a second sitting with a lifted or curled sheet confirms it.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | ## Program A: the ST-4, 5 and 10 shot groups Entry 158 section 2, run on the 2026-09-20 ST-4 sheet with Alan's twenty groups and 115 shots, as entry 172 replaced step 1.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The ST-4 is the orange commercial target, so under the rules above no article names or shows it.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The printed 1 in grid's crossings are found from the orange lines and counted into a lattice, so every crossing's true place is known.

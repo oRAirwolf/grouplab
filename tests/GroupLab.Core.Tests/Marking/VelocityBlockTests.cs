@@ -169,6 +169,35 @@ public sealed class VelocityBlockTests
         Assert.EndsWith(", outside that range: check the distance, the BC, or the order the readings were matched in.", block.SlopeSentence, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Entry 329 section 4: the same group and readings at sea level and 59 F against 6,000 ft and 90 F. The solver's height per ft/s, and
+    /// so the vertical velocity alone makes, changes the way the solver itself says it does, and the share changes by its square; with
+    /// nothing entered the result is the standard day's, and why says so.
+    /// </summary>
+    [Fact]
+    public void TheConditionsEnteredChangeTheHeightPerFpsTheWayTheSolverSays()
+    {
+        double[] up = [3.0, -3.8, 1.0, 5.2, -2.0, -5.0, 4.0, -0.5, 2.2, -2.8];
+        var state = Group(up);
+        var standard = Build(state, Readings(Velocities));
+        var hot = VelocityBlocks.Build(state, G7Load, Readings(Velocities), [], UnitSettings.Imperial, Size,
+            conditions: new VelocityConditions(new AirInput(90, null, 6000), 0, "Ballistics, for the test"))!;
+
+        double mean = Velocities.Average();
+        double kStandard = Projection.DropPerFps(new BallisticInput(0.243, DragModel.G7, mean, 175), Yards);
+        double kHot = Projection.DropPerFps(new BallisticInput(0.243, DragModel.G7, mean, 175, TemperatureF: 90, AltitudeFt: 6000), Yards);
+        Assert.NotEqual(kStandard, kHot, 6);
+        double ratio = Math.Abs(kHot / kStandard);
+        Assert.Equal(ratio, hot.Bars[1].Value / standard.Bars[1].Value, 6);
+        Assert.Equal(ratio * ratio, hot.Share!.Value / standard.Share!.Value, 6);
+        Assert.Equal(standard.Bars[0].Value, hot.Bars[0].Value, 9);
+
+        Assert.Contains("Standard day assumed: no temperature or altitude entered.", standard.Why);
+        Assert.Contains("Sight height 1.5 in and zero 100 yd assumed: the rifle has neither recorded.", standard.Why);
+        Assert.Contains("Conditions: 90 F, 6000 ft of altitude, 50 percent humidity, shot level, from Ballistics, for the test.", hot.Why);
+        Assert.DoesNotContain(hot.Why, w => w.StartsWith("Standard day", StringComparison.Ordinal));
+    }
+
     /// <summary>A pairing from another string, or naming a shot left out, is not this string's, and is not drawn.</summary>
     [Fact]
     public void OnlyTheNewestStringsPairsOfCountedShotsAreDrawn()

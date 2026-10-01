@@ -12,7 +12,8 @@ namespace GroupLab.Cli;
 /// <code>
 /// {
 ///   "distanceYards": 100, "ballisticCoefficient": 0.243, "dragModel": "G7", "bulletWeightGrains": 175,
-///   "sightHeightInches": 1.5, "zeroRangeYards": 100, "temperatureF": 59, "altitudeFt": 0,
+///   "sightHeightInches": 1.5, "zeroRangeYards": 100, "temperatureF": 59, "altitudeFt": 0, "pressureInHg": 29.92, "humidityPct": 50,
+///   "angleDegrees": 0, "twistInches": 10, "bulletDiameterInches": 0.308, "bulletLengthInches": 1.24,
 ///   "shots": [ { "id": 1, "x": 0.12, "y": -0.30 }, ... ],
 ///   "velocitiesFps": [ 2701, 2695, ... ]          or   "chronograph": "2701, 2695 ...",
 ///   "shotVelocities": [ { "shotId": 1, "ordinal": 1 }, ... ]
@@ -26,7 +27,8 @@ public static class VelocityVerb
 {
     public const string Usage = """
         grouplab velocity <session.json> [--distance <yd>] [--bc <bc>] [--model G1|G7] [--weight <grains>] [--sight <in>] [--zero <yd>]
-                          [--confidence <0 to 1, 0.9 by default>]
+                          [--temperature <F>] [--altitude <ft>] [--pressure <inHg>] [--humidity <percent>] [--angle <degrees>]
+                          [--twist <in>] [--diameter <in>] [--length <in>] [--confidence <0 to 1, 0.9 by default>]
         """;
 
     public static int Run(string[] args, TextWriter output, TextWriter error)
@@ -63,7 +65,7 @@ public static class VelocityVerb
         ArgumentNullException.ThrowIfNull(error);
         var inv = CultureInfo.InvariantCulture;
         JsonObject root;
-        double? distance, bc, weight, sight, zero, temp, altitude;
+        double? distance, bc, weight, sight, zero, temp, altitude, pressure, humidity, angle, twist, diameter, length;
         double confidence = 0.90;
         DragModel? model;
         try
@@ -76,6 +78,12 @@ public static class VelocityVerb
             zero = Number(root, "zeroRangeYards");
             temp = Number(root, "temperatureF");
             altitude = Number(root, "altitudeFt");
+            pressure = Number(root, "pressureInHg");
+            humidity = Number(root, "humidityPct");
+            angle = Number(root, "angleDegrees");
+            twist = Number(root, "twistInches");
+            diameter = Number(root, "bulletDiameterInches");
+            length = Number(root, "bulletLengthInches");
             model = (string?)root["dragModel"] is { } m ? ParseModel(m) : null;
             for (int i = 0; i < options.Length; i++)
             {
@@ -90,6 +98,14 @@ public static class VelocityVerb
                     case "--weight": weight = Value(); break;
                     case "--sight": sight = Value(); break;
                     case "--zero": zero = Value(); break;
+                    case "--temperature": temp = Value(); break;
+                    case "--altitude": altitude = Value(); break;
+                    case "--pressure": pressure = Value(); break;
+                    case "--humidity": humidity = Value(); break;
+                    case "--angle": angle = Value(); break;
+                    case "--twist": twist = Value(); break;
+                    case "--diameter": diameter = Value(); break;
+                    case "--length": length = Value(); break;
                     case "--confidence": confidence = Value(); break;
                     default: throw new FormatException($"unknown option {option}");
                 }
@@ -155,7 +171,8 @@ public static class VelocityVerb
         }
 
         // The point-mass drop does not depend on the bullet's weight, which the BC already carries; the solver asks for one only for energy.
-        var input = new BallisticInput(bc.Value, model.Value, 1, weight ?? 150, sight ?? 1.5, zero ?? 100, temp ?? 59, null, altitude ?? 0);
+        var input = new BallisticInput(bc.Value, model.Value, 1, weight ?? 150, sight ?? 1.5, zero ?? 100, temp ?? 59, pressure, altitude ?? 0, humidity ?? 50,
+            0, angle ?? 0, TwistInches: twist, BulletDiameterInches: diameter, BulletLengthInches: length);
         VelocityVerticalResult? result;
         string? why;
         try
@@ -176,6 +193,11 @@ public static class VelocityVerb
 
         string level = string.Create(inv, $"{confidence * 100:0.#}%");
         output.WriteLine(string.Create(inv, $"{model} BC {bc:0.000}, sight {input.SightHeightInches:0.00} in, zeroed at {input.ZeroRangeYards:0} yd, {input.TemperatureF:0.#} F at {input.AltitudeFt:0} ft, shot at {distance:0} yd"));
+        output.WriteLine(string.Create(inv, $"Air {(input.PressureInHg is { } inHg ? $"{inHg:0.00} inHg" : "from the altitude")}, {input.HumidityPct:0} percent humidity, shot {(input.AngleDegrees == 0 ? "level" : $"at {input.AngleDegrees:0.#} degrees")}{(input.TwistInches is { } t ? $", twist 1 in {t:0.#} in" : "")}"));
+        if (temp is null && altitude is null && pressure is null)
+        {
+            output.WriteLine("Standard day assumed: no temperature or altitude entered.");
+        }
         output.WriteLine(string.Create(inv, $"Intervals at {level}."));
         output.WriteLine();
         output.WriteLine(string.Create(inv, $"Velocity            {result.Readings} readings, mean {result.MeanFps:0} fps, SD {result.VelocitySdFps.Value:0.0} fps ({result.VelocitySdFps.Lower:0.0} to {result.VelocitySdFps.Upper:0.0})"));

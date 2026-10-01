@@ -1413,13 +1413,29 @@ public sealed partial class MainWindow : Window
         var (readings, pairs) = sessions is not null && currentSession is { } id ? VelocityBlocks.Readings(sessions, id) : (null, []);
         double? distance = state.ShotDistanceInches;
         Velocity = VelocityBlocks.Build(state, book.FindLoad(state.Load), readings, pairs, units, inches => Sized(inches, distance).Value,
-            beneath: inches => Sized(inches, distance).Beneath);
+            beneath: inches => Sized(inches, distance).Beneath, conditions: ConditionsForVelocity(state));
         velocityPanel.IsVisible = Velocity is not null;
         velocityPanel.Child = Velocity is { } block
             ? VelocityBlockView.Build(block, VelocityAction, units.Speed, WhyOpen(VelocityWhyItem), open => RememberOpen(VelocityWhyItem, open))
             : null;
         plot.VelocityBand = Velocity?.Band;
         velocityBandBox.IsVisible = plot.VelocityBand is not null;
+    }
+
+    /// <summary>
+    /// Entry 329: the conditions the velocity block flies the load in. Sessions carry none of their own yet, so they are the Ballistics
+    /// screen's air and shot angle, and only where that screen has this session's rifle and load chosen; otherwise none, and the block
+    /// takes the standard day and says so.
+    /// </summary>
+    private VelocityConditions? ConditionsForVelocity(MarkingState state)
+    {
+        static bool Same(string? a, string? b) => a is not null && string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+        if (!Same(ChosenRifle?.Name, state.Rifle?.Name) || !Same(ChosenLoad?.Name, state.Load))
+        {
+            return null;
+        }
+
+        return new VelocityConditions(Air(), Signed(hitAngle) ?? 0, $"Ballistics, for {ChosenRifle!.Name} and {ChosenLoad!.Name}");
     }
 
     /// <summary>The button of states 3 and 4: the chronograph entry, the shot distance, or the session's load where its BC goes.</summary>

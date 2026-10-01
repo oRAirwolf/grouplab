@@ -24,6 +24,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 329: Velocity and the vertical uses the real conditions, not a standard day
+
+**Status: done 2026-10-01, every section.** Sessions do not carry conditions yet, so the desktop uses the Ballistics screen's air and shot angle when that screen has the session's rifle and load chosen; the phone keeps its Ballistics air only while the page is open, so on the phone the block uses the standard day and says so.
+
+Alan, 2026-10-01: yes, the velocity calculation should use the session's own conditions whenever they are entered. Today
+`VelocityBlock.Build` passes a `BallisticInput` with only the BC, drag model, BC reference, weight, sight height and zero (1.5 in and
+100 yd when the rifle has none), so the solver's height per fps comes from 59 F at sea level with no angle. Do this after entry 323 is
+folded, before entry 324's remainder; main model.
+
+1. Fill the solver's input from what the person entered, in this order of preference: the session's own conditions, then the conditions
+   on Ballistics for that rifle and load, then the standard day. That covers temperature, pressure or altitude, humidity, the shooting
+   angle, the rifle's sight height and zero distance, and the twist and bullet diameter where the solver uses them. If sessions do not
+   yet carry conditions, say so in the report and use the Ballistics page's ones for that rifle and load; do not invent a new form
+   without a DESIGN NEEDED.
+2. "why" says which conditions were used and where each came from, and when any of them fell back to the standard day or to the
+   assumed 1.5 in and 100 yd, it says that in one plain line ("Standard day assumed: no temperature or altitude entered").
+3. The CLI's `grouplab velocity` takes the same values as options and prints them, as it already does for temperature and altitude.
+4. A test: the same group and readings at sea level and 59 F against 6,000 ft and 90 F give different heights per fps, in the direction
+   the solver predicts, and the share changes accordingly; a session with nothing entered gives today's result and the fallback line.
+5. The guide's paragraph on Velocity and the vertical says the conditions are used; claims backing for that sentence.
+
 ## 2026-10-01, entry 323: where velocity's share of the vertical shows (Alan chose Desktop B and Phone B)
 
 **Status: done 2026-10-01, every section.** Not done inside it: the phone's own picture of the card (section 5) waits for request 50's sitting, as the entry says the device check does; and while building it a pre-existing overlap of the plot's toggles over its key at 1400x900 was found (question 78).

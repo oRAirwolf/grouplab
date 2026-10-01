@@ -104,6 +104,16 @@ public sealed record VelocityBlock(
         .Where(s => !string.IsNullOrEmpty(s)));
 }
 
+/// <summary>
+/// The conditions the solver flies the load in, NOTES-FROM-PLANNING.md entry 329: the air and the shooting angle as the person entered them,
+/// and where they were entered, said under "why". Null where nothing was entered, and then the solver takes the standard day and says so.
+/// </summary>
+public sealed record VelocityConditions(AirInput Air, double AngleDegrees, string From)
+{
+    /// <summary>Whether the air is the standard day's own: 59 F, no pressure stated, sea level.</summary>
+    public bool StandardAir => Air.TemperatureF == 59 && Air.PressureInHg is null && Air.AltitudeFt == 0;
+}
+
 /// <summary>Builds <see cref="VelocityBlock"/> from a marking, its records and the session's chronograph string.</summary>
 public static class VelocityBlocks
 {
@@ -114,12 +124,14 @@ public static class VelocityBlocks
     /// The block for a marking, or null where the group has fewer than two counted shots and so no vertical to compare with anything.
     /// <paramref name="readings"/> is the session's newest chronograph string, never several pooled, since two strings are two measurements;
     /// <paramref name="pairs"/> the accepted pairing of that string's readings with shots, ordinals counting readings from 1 as the store does.
+    /// <paramref name="conditions"/> is the air and angle the person entered, the session's own first and Ballistics' for that rifle and load
+    /// next (entry 329); the rifle gives the sight height, zero, and twist, and the load the bullet's diameter and length.
     /// <paramref name="size"/> writes a length at the target by the Group block's unit rule, and <paramref name="beneath"/> the size on the paper
     /// beneath it where that rule writes an angle. The sentences give heights on the paper, as the entry's own sample sentence does: an angle
     /// to two places reads 0.00 for the few hundredths of an inch velocity moves a hole at 100 yd.
     /// </summary>
     public static VelocityBlock? Build(MarkingState state, Load? load, ChronographString? readings, IReadOnlyList<ShotVelocity> pairs, UnitSettings units, Func<double, string> size,
-        double confidence = Confidence, Func<double, string?>? beneath = null)
+        double confidence = Confidence, Func<double, string?>? beneath = null, VelocityConditions? conditions = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(pairs);
@@ -151,8 +163,10 @@ public static class VelocityBlocks
 
         // The point-mass drop does not depend on the bullet's weight, which the BC already carries; the solver asks for one only for energy.
         var rifle = state.Rifle;
+        var air = conditions?.Air ?? new AirInput();
         var input = new BallisticInput(load.BallisticCoefficient.Value, model, 1, load.BulletWeightGrains ?? 150, rifle?.SightHeightInches ?? 1.5,
-            rifle?.ZeroDistanceYards ?? 100, Reference: load.BcReference ?? ReferenceAtmosphere.Icao);
+            rifle?.ZeroDistanceYards ?? 100, air.TemperatureF, air.PressureInHg, air.AltitudeFt, air.HumidityPct, 0, conditions?.AngleDegrees ?? 0,
+            load.BcReference ?? ReferenceAtmosphere.Icao, rifle?.TwistInches, rifle?.TwistDirection ?? 1, load.BulletDiameterInches, load.BulletLengthInches);
         double yards = distanceInches / 36;
         var byId = up.ToDictionary(p => p.Id, p => p.Up);
         var matched = pairs.Where(p => p.StringId == readings.Id && byId.ContainsKey(p.ShotId) && p.Ordinal >= 1 && p.Ordinal <= readings.VelocitiesFps.Count)
@@ -225,9 +239,16 @@ public static class VelocityBlocks
             $"Measured vertical SD over the shots: {Paper(result.MeasuredVerticalSdInches.Value)} over {result.Shots} shots ({Paper(result.MeasuredVerticalSdInches.Lower)} to {Paper(result.MeasuredVerticalSdInches.Upper)}).",
             $"Every range is at {level}.",
         };
+        why.Add(ConditionsLine(conditions));
         if (rifle?.SightHeightInches is not > 0 || rifle?.ZeroDistanceYards is not > 0)
         {
-            why.Add("The rifle has no sight height or zero distance recorded, so the solver took 1.5 in and 100 yd for whichever is missing.");
+            string missing = (rifle?.SightHeightInches is not > 0, rifle?.ZeroDistanceYards is not > 0) switch
+            {
+                (true, true) => "Sight height 1.5 in and zero 100 yd assumed: the rifle has neither recorded.",
+                (true, false) => "Sight height 1.5 in assumed: the rifle has none recorded.",
+                _ => "Zero 100 yd assumed: the rifle has no zero distance recorded.",
+            };
+            why.Add(missing);
         }
 
         why.Add(VelocityBlock.WhyClosing);
@@ -242,6 +263,25 @@ public static class VelocityBlocks
         ArgumentNullException.ThrowIfNull(store);
         var newest = store.ChronographStrings(session).LastOrDefault();
         return (newest, newest is null ? [] : [.. store.ShotVelocities(session).Where(v => v.StringId == newest.Id)]);
+    }
+
+    /// <summary>
+    /// The line under "why" saying which conditions the solver used and where they came from, or that it fell back to the standard day,
+    /// entry 329 section 2.
+    /// </summary>
+    public static string ConditionsLine(VelocityConditions? conditions)
+    {
+        var inv = CultureInfo.InvariantCulture;
+        if (conditions is null || conditions.StandardAir)
+        {
+            string angle = conditions is { AngleDegrees: not 0 } a ? string.Create(inv, $" Shot at {a.AngleDegrees:0.#} degrees, from {a.From}.") : "";
+            return "Standard day assumed: no temperature or altitude entered." + angle;
+        }
+
+        var air = conditions.Air;
+        string where = air.PressureInHg is { } p ? string.Create(inv, $"{p:0.00} inHg") : string.Create(inv, $"{air.AltitudeFt:0} ft of altitude");
+        string angleWords = conditions.AngleDegrees == 0 ? "level" : string.Create(inv, $"at {conditions.AngleDegrees:0.#} degrees");
+        return string.Create(inv, $"Conditions: {air.TemperatureF:0.#} F, {where}, {air.HumidityPct:0} percent humidity, shot {angleWords}, from {conditions.From}.");
     }
 
     private static VelocityBlock Empty(VelocityBlockState state, string sentence, string? action) =>

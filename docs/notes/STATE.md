@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 04:30 UTC, entry 323 done (Velocity and the vertical, Desktop B and Phone B); entry 324 is with the
-other session.
+**Last rewritten:** 2026-10-01 05:15 UTC, entry 329 done (Velocity and the vertical uses the conditions entered); entry 328, Unholy's
+two TestFlight bugs, is with the other session.
 
 ---
 
@@ -19,11 +19,10 @@ other session.
 - **Two Claude sessions share this working tree** (2026-10-01): grouplab-3b did entry 323; grouplab-1f is doing entry 324 (its section
   2, the sync options paper, is committed; section 1, the bent-sheet registration, runs in its own worktree). Each stages only its own
   files by name and says before pushing to main.
-- **Entry 323 on main:** the block "Velocity and the vertical" after the Group block, the velocity band with its remembered switch, the
-  phone's card above All figures with Add readings, a distance page and the band's chip; and the chronograph pairing stored from 1.
-  The screenshots workflow re-renders after the push; until its `[screens]` commit lands the site's stale check fails and the last good
-  site stays up.
-- **Nightly 144** (03:17 UTC) carries entry 322: targets read from 2 and 3 ft, the lens refit. The next nightly carries entry 323.
+- **Entries 323 and 324 section 1 on main** (fb088362 at the head, with the inbox line fixed); its build and the nightly that carries
+  both follow. The `[screens]` catch-up (7cbc13be) is on main and the site is live at 4ec87124, Velocity and the vertical included.
+- **Entry 329** (the block in the conditions entered) is committed after that nightly, not before, so nothing is cancelled.
+- **Nightly 144** (03:17 UTC) carries entry 322: targets read from 2 and 3 ft, the lens refit.
 - **iOS until 2026-10-01 02:00 UTC** (entry 290) is over; the summary is at the top of `for-alan.md`.
 - **The Microsoft Store's first submission** (request 38 Part B) is in certification; `store-status.yml` reads it every six hours.
 - **GroupLab Dev updates itself** (entry 288): the silent second update waits for the phones to be reachable over adb again.
@@ -36,7 +35,8 @@ other session.
   section 1, with the other session. **Holes on any target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
 - **Garmin Xero import** (Phase 5): needs one sample export file from anybody with a Xero.
-- **Velocity regression** (Phase 5): on both screens since entry 323; the phone's own picture waits for request 50's sitting.
+- **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
+  session's own conditions would need a form (DESIGN NEEDED if wanted); the phone's picture waits for request 50's sitting.
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
 - **iOS** (Phase 8): on TestFlight and on the iPad; the device checks need a sitting (50), the public beta request 59, GroupLab Dev
   on the iPad request 61, an App Store release Alan's word.
@@ -46,7 +46,7 @@ other session.
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Confirm entry 323's `[screens]` commit and the site publishing it; entry 326 as soon as request 63 is done, its fixes one at a time.
+1. The nightly after fb088362 (323 and 324), then 329's push; entry 326 as soon as request 63 is done.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
@@ -77,7 +77,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 ## Builds and the site
 
 - **Last nightly:** 0.2.0-nightly.144 (2026-10-01 03:17 UTC): entry 322's distance reading and lens refit.
-- **The site** publishes each push; entry 323's push waits for its `[screens]` commit (the stamp was after nightly 141).
+- **The site** is live at 4ec87124 (published by hand: a bot's `[screens]` push starts no other workflow).
 - Crash reports open: none.
 
 ## The inbox
@@ -87,8 +87,8 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 324, 325, 327 (the other
-session's) and 326 (this session's, on request 63).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 326 (this session's, on
+request 63) and 328 (the other session's: Unholy's two TestFlight bugs, fix first).
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

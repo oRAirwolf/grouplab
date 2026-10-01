@@ -204,14 +204,16 @@ Every edit shows a small message at the bottom of the screen saying what changed
 **Velocity and the vertical,** directly under the group's figures, says how much of the group's up-and-down spread comes from velocity
 alone. It needs the session's chronograph readings (Ballistics, Chronograph), the shot distance and the load's BC; without one of them
 it says which, with a button to it. The share is in amber with its range, at the confidence it states, then a meter from none to all of
-it and two bars on one scale: the vertical spread measured on the shots, and the spread velocity alone would make at that distance by the
-solver. Where the range reaches all of it, it says the data cannot tell, and more readings and shots narrow it. Where each reading was
-paired with its shot when the readings were accepted, a chart of height against velocity draws the measured slope and the solver's, and a
-sentence says whether they agree, and if not, to check the distance, the BC or the order the readings were paired in. Its why lists the
-readings' own spread, the solver's height per 10 fps, both vertical spreads, and that the range errs wide, never narrow. **Velocity
-band**, beside the plot's other toggles, draws the band velocity alone would make about the group center in amber, with the measured
-spread as dotted lines; it starts on and is remembered. On the phone the same is a card above All figures, with Velocity band under the
-plot; its Add readings opens a box to paste the readings into.
+it and two bars on one scale: the vertical spread measured on the shots, and the spread velocity alone would make at that distance by
+the solver, flown in the air and shot angle entered on Ballistics when that screen has the session's rifle and load chosen, or the
+standard day where nothing is entered. Where the range reaches all of it, it says the data cannot tell, and more readings and shots
+narrow it. Where each reading was paired with its shot when the readings were accepted, a chart of height against velocity draws the
+measured slope and the solver's, and a sentence says whether they agree, and if not, to check the distance, the BC or the order the
+readings were paired in. Its why lists the readings' own spread, the solver's height per 10 fps, both vertical spreads, and that the
+range errs wide, never narrow. It also says which conditions were used and where they came from, or that the standard day was assumed.
+**Velocity band**, beside the plot's other toggles, draws the band velocity alone would make about the group center in amber, with the
+measured spread as dotted lines; it starts on and is remembered. On the phone the same is a card above All figures, with Velocity band
+under the plot; its Add readings opens a box to paste the readings into.
 
 **Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
 

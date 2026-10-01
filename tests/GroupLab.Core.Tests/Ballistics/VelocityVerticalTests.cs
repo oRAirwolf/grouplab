@@ -149,6 +149,14 @@ public sealed class VelocityVerticalTests
             Assert.Contains("Shot by shot over 10 matched shots", text, StringComparison.Ordinal);
             Assert.Contains("Aerodynamic jump is not modeled.", text, StringComparison.Ordinal);
             Assert.Equal("", error.ToString());
+            Assert.Contains("Standard day assumed: no temperature or altitude entered.", text, StringComparison.Ordinal);
+
+            // Entry 329 section 3: the conditions as options, printed, and no fallback line once they are given.
+            var hot = new StringWriter();
+            Assert.Equal(0, GroupLab.Cli.VelocityVerb.Run([file, "--temperature", "90", "--altitude", "6000", "--angle", "5", "--humidity", "20"], hot, error));
+            Assert.Contains("90 F at 6000 ft", hot.ToString(), StringComparison.Ordinal);
+            Assert.Contains("Air from the altitude, 20 percent humidity, shot at 5 degrees", hot.ToString(), StringComparison.Ordinal);
+            Assert.DoesNotContain("Standard day assumed", hot.ToString(), StringComparison.Ordinal);
 
             Assert.Equal(2, GroupLab.Cli.VelocityVerb.Print("""{ "shots": [] }""", [], new StringWriter(), error));
             Assert.Contains("the distance, the BC and the drag model are required", error.ToString(), StringComparison.Ordinal);
