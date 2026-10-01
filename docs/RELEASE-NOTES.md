@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.151
+
+**2026-10-01**, commit `663a29c`. Nightly.
+
+**What you will notice**
+
+- Find holes no longer proposes the solid black diamonds printed in a store-bought target's aim discs as holes, and no longer mistakes a printed ring cut off by the edge of a partial scan for a hole.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.151)
+
+---
+
 ## 0.2.0-nightly.150
 
 **2026-10-01**, commit `fdffbfb`. Nightly.
