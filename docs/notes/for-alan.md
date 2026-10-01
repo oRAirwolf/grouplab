@@ -1,5 +1,11 @@
 **Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**DESIGN NEEDED** (entry 322 section 3; not a request for you; planning, please): **where velocity's share of the vertical shows.**
+The engine is built: from a load's chronograph readings and the ballistic solver, how much of a group's vertical spread velocity alone
+explains, with an honest interval ("about 40%, 15 to 80% at 90%", or "the data cannot tell"), and, where readings are matched to shots,
+the measured slope against the solver's. `grouplab velocity` prints it. Where it belongs on the desktop's analysis and the phone's
+All figures is a design choice.
+
 PUBLIC BETA (entries 319 and 320, 22:10 UTC, not a request): thank you for the two groups and the link. Build 134 is waiting for
 Apple's first beta review, and nothing touches it until Apple decides, so it keeps its place in the queue. When it is approved I put the
 "Join the iPhone and iPad beta" link on the download page, the README and the guide, prove both groups get the same next build, and only
