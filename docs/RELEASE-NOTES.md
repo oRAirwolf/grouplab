@@ -530,7 +530,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - The analysis screen's Advanced figures now say how many shots a zeroing group needs to land on the closest click, or within one click, 90, 95 and 99 times in 100; suggested by Jylee.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.117)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
