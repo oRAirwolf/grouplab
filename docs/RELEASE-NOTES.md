@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.146
+
+**2026-10-01**, commit `ba72c69`. Nightly.
+
+**What you will notice**
+
+- Velocity and the vertical now works out velocity's share in the air temperature, altitude and shot angle entered on the Ballistics screen for the session's rifle and load, and says when it assumed a standard day instead.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.146)
+
+---
+
 ## 0.2.0-nightly.145
 
 **2026-10-01**, commit `fb08836`. Nightly.
