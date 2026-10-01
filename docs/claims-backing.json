@@ -4946,6 +4946,11 @@
    "where": "measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md"
   },
   {
+   "surface": "^docs/PROOF-CHECKLIST\\.md$",
+   "kind": "measured",
+   "where": "entry 331 section 3: measured on 2026-10-01 with grouplab compare-photos, grouplab scoreboard --corpus and grouplab analyze over the local corpus and the test-data scans, and the test classes the document names; each result carries its date in the document, and an earlier result names its record"
+  },
+  {
    "surface": "^docs/(UPDATES|CRASH-REPORTING|SESSION-SCHEMA|VOLUNTEER-PACK)\\.md$",
    "kind": "code",
    "where": "describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs"
