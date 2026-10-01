@@ -50,6 +50,13 @@ public interface IImagingBackend
     /// item 3). A code that does not decode is left out.
     /// </summary>
     IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale);
+
+    /// <summary>
+    /// The payload of the one code in an image cut out around it, resampled by <paramref name="scale"/>: as <see cref="ReadCodes"/>, without
+    /// the search of a whole sheet's corners that <see cref="ReadCodes"/> falls back on. A cut-out's corners hold no whole code, so that
+    /// search can only spend time: entry 342 found it was most of the phone's 0.6 to 0.95 s reading a sheet's codes square on.
+    /// </summary>
+    IReadOnlyList<byte[]> ReadCutOut(GrayImage image, double scale) => ReadCodes(image, scale);
 }
 
 /// <summary>An image or page coordinate. Measurement happens in floating point; only the definition is integer.</summary>

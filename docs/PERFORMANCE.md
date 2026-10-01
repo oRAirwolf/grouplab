@@ -83,6 +83,40 @@ rounds themselves differed by up to 25 percent, because a second worker was buil
 percent cannot be bisected across nightlies here; the end to end case on an idle machine is still the measurement that would settle it,
 and the work added since (the lens refit, the second marker pass, the printed-shape test) is the expected cost if it holds.
 
+## The phone's pipeline, stage by stage, entry 342
+
+`PhoneAnalysis.Run` headless on this desktop (Release, the machine quiet), on the 600 dpi sample and the nine Fold 7 pictures of the
+2026-09-28 and 29 sittings (Alan's own, kept on his computer). Each stage's time is what the analysis logs as it goes (`read.stage`).
+
+**Where the time went before.** On the sample, of about 1.6 s: hole detection 0.62 s, reading the sheet's codes 0.49 s, finding the bulls
+0.22 s, making the working copy 0.20 s, the rest under 0.03 s each. On the eight ordinary Fold 7 pictures, of 1.3 to 2.0 s: reading the
+codes 0.60 to 0.95 s, the largest stage on every one, then holes 0.3 s and bulls 0.15 s. One picture of the nine (20260928-181549) took
+13 s, 12.4 of it reading codes: none read square on, so the whole picture was read at full, half and quarter size (3.7 s, finding none, as
+the corner search entry 195 needs on a scan) and then each code cut out and enlarged (7.7 s), where all four read.
+
+**What was slow inside reading the codes.** Each code is first cut out square on where the markers say it is, ten places on a sheet, and
+read. A cut-out that did not read went on to the search of a whole sheet's corners that the reader falls back on: thirds, quarters and
+eighths of the cut-out, eight more reads of pieces that cannot hold a whole code. About 100 ms a failed cut-out, against 30 to 70 ms for
+one that read. The cut-outs are now read as themselves only (`IImagingBackend.ReadCutOut`); a whole picture keeps the corner search.
+
+**After,** the old and new reading measured by turns in one process on the same ten pictures, three rounds each:
+
+| picture | reading the codes before | after |
+|---|---|---|
+| the 600 dpi sample | 462 ms | 208 ms |
+| eight ordinary Fold 7 pictures | 467 to 949 ms | 191 to 415 ms |
+| the one whose codes read only enlarged | 12.5 s | 8.5 s |
+
+The whole analysis is now 1.27 s on the sample (1.26 to 1.40) and 1.10 s on a Fold 7 picture (1.10 to 1.11). **Nothing moved:** every
+picture names the same sheet, tile and number of codes, and the Phase 0 spikes' tables (sheets, photos, markers, refinement, threshold,
+scale, field, detectors), the identify sweep, both scoreboards and the corpus counts are identical before and after but for their time
+columns (the identify sweep's d-sheet scans read in 300 and 380 ms where they took 553 and 648).
+
+**What is left, and why it was not changed here.** Hole detection (0.3 to 0.8 s) and the bull locator (0.15 to 0.3 s) are now the largest
+stages, and both decide figures, so a change there needs its own measurement against every gate. The slow picture's 3.7 s of whole-picture
+reading before its cut-outs could be skipped when the markers already placed the codes, but that changes which resolution a sheet is
+said to be read at in the identify sweep, so it is a decision rather than a speed-up.
+
 ## GroupLab Dev on an idle phone, entry 343
 
 **Not measured on a device.** What is held instead: GroupLab Dev's only background work is the update check, about every six hours,

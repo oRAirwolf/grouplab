@@ -363,6 +363,22 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     /// one byte per character, which Latin-1 turns back into the encoded bytes exactly: 29 of the 37 Phase 0 images gave a frame that decoded
     /// to the definition they were printed from, at full, half or quarter resolution.
     /// </summary>
+    /// <summary>One code cut out around its place: the image itself only, never its corners (entry 342).</summary>
+    public IReadOnlyList<byte[]> ReadCutOut(GrayImage image, double scale)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        using var full = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+        using var resized = new Mat();
+        var input = full;
+        if (scale is not 1.0)
+        {
+            Cv2.Resize(full, resized, new Size(0, 0), scale, scale, scale < 1 ? InterpolationFlags.Area : InterpolationFlags.Linear);
+            input = resized;
+        }
+
+        return [.. Read(input).Select(Payload)];
+    }
+
     public IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale)
     {
         ArgumentNullException.ThrowIfNull(image);

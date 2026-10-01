@@ -255,5 +255,7 @@ public static class CornerJournal
         public (PointD Shift, double Response) PhaseCorrelate(GrayImage reference, GrayImage moved) => inner.PhaseCorrelate(reference, moved);
 
         public IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale) => inner.ReadCodes(image, scale);
+
+        public IReadOnlyList<byte[]> ReadCutOut(GrayImage image, double scale) => inner.ReadCutOut(image, scale);
     }
 }

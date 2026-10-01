@@ -80,7 +80,7 @@ public static class SheetIdentification
                     continue;
                 }
 
-                var found = backend.ReadCodes(view.Image, 1.0);
+                var found = backend.ReadCutOut(view.Image, 1.0);
                 if (found.Count > 0)
                 {
                     squareOn.Add(found[0]);
@@ -149,7 +149,7 @@ public static class SheetIdentification
                     .Select(crop => CropScales.Select(s =>
                     {
                         cancellation.ThrowIfCancellationRequested();
-                        return backend.ReadCodes(crop, s);
+                        return backend.ReadCutOut(crop, s);
                     }).FirstOrDefault(r => r.Count > 0) ?? [])
                     .SelectMany(r => r.Take(1)).Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId == ids[0]).ToList();
                 if (more.Count > frames.Count)
@@ -177,7 +177,7 @@ public static class SheetIdentification
             {
                 // Entry 313 section 1.1: checked before each enlargement too, the slowest reading there is.
                 cancellation.ThrowIfCancellationRequested();
-                var found = backend.ReadCodes(crop, scale);
+                var found = backend.ReadCutOut(crop, scale);
                 if (found.Count > 0)
                 {
                     near.Add(found[0]); // a cut-out holds one code, however often the reader finds it
