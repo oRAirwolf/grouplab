@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.150
+
+**2026-10-01**, commit `fdffbfb`. Nightly.
+
+**What you will notice**
+
+- When you import a Garmin Xero file, GroupLab now proposes which readings belong to your group from the chronograph's own pauses, left-out shots and deleted shots, and says why; change any mark before accepting.
+- Garmin Xero exports in metric units are now read in meters per second, where before their speeds were taken as feet per second.
+- GroupLab Dev for Android now checks for updates only when the battery and the storage are not low, as well as on Wi-Fi; Update now in Settings still works any time.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.150)
+
+---
+
 ## 0.2.0-nightly.149
 
 **2026-10-01**, commit `b5a2b00`. Nightly.
