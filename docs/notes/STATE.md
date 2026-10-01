@@ -102,8 +102,8 @@ GitHub's secrets.
   shot was refused, and every other pairing was one reading off. Fixed in entry 323 on both platforms.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
-- **The logs were split again** on 2026-09-28 (entry 160's rule): the live files keep the newest fifteen entries and twelve results
-  sections; the rest is whole in `docs/notes/archive/`. A question is taken as open only when its line reads `**Status: open`.
+- **A worker's commits can be stranded in its worktree.** Entries 325 and 327's detection work and the fold of 324, 325 and 327 sat
+  unpushed in `.claude/worktrees/push-324` until entry 342 found them; compare a finished worker's subjects with main before removing it.
 - **The Mac packaging can be run by hand**: `gh workflow run package.yml --ref <branch> -f ref=<sha>` proves the signing and
   notarization on a commit without a nightly, and publishes nothing.
 - **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's

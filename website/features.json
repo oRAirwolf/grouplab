@@ -10,6 +10,9 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "When you import a Garmin Xero file, GroupLab now proposes which readings belong to your group",
+    "Garmin Xero exports in metric units are now read in meters per second",
+    "GroupLab Dev for Android now checks for updates only when the battery and the storage are not low",
     "On a store-bought target, Find holes no longer marks the printed black diamonds",
     "Chronograph readings can now come from a file",
     "Chronograph files now include Garmin Xero exports as Excel files",

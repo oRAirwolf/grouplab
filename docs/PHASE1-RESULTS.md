@@ -40,6 +40,27 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 342, worker B: the audit, the pairing proposal, the Store route, triage
+
+2026-10-01, this session.
+
+- **1, the audit by hand:** the README, the user guide, the release notes (current to nightly 149), the Features page and the tour
+  already said what the application does tonight; the testing guide knew only Android's routes and now names the Microsoft Store copy
+  and the iPhone and iPad beta. `scripts/consistency.py` now checks that the README and both guides link the Store and the beta the
+  download page offers, and that the README and user guide name every chronograph file the application reads.
+- **2, chronograph reconciliation:** an imported string that numbers its shots proposes its own marks, with a sentence for each: the
+  Xero's shot times split a string into runs at pauses (over five minutes and three times its median interval), and where exactly one
+  stretch of runs is as many as the group's shots the rest are no shot of it; then a shot the Xero left out of its own figures, then one
+  marked clean bore; and a skipped number gives the shot fired there no reading. Nothing is guessed where the file says nothing. On the
+  computer the marks are the rows' own; the phone pairs as proposed, and changing one mark there is request 68 (DESIGN NEEDED). Across
+  Alan's exports 534 strings carry times and 132 hold more than one run; tested on his 2026-04-25 string with synthetic shots.
+- **3, the Store route:** a dry run of `store-submit.yml` for 0.2.0 signed in, read the published submission and downloaded the package,
+  changing nothing; a real submission waits for request 66.
+- **4, triage:** no issue is open in the crash reports repository.
+- **On the way:** the Phase 0 gate record had failed on every push since entry 322's refit, on the photos table alone; re-recorded.
+  Entries 325 and 327's detection work and the fold of 324, 325 and 327 had never reached main and were recovered from a finished
+  worker's worktree; seven such worktrees, about 6 GB, went to the trash folder.
+
 ## Entries 324, 325 and 327: the bent sheet, the sync options, and the store-bought blanks
 
 Done 2026-10-01, one worker at a time, while another session did entry 323.
