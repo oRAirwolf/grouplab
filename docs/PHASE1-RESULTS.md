@@ -40,6 +40,22 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 326 and 330: TestFlight feedback reaches Code, privately
+
+Done 2026-10-01, once request 63 brought `CRASH_REPORTS_TOKEN` (entry 330).
+
+- **Filing** (`scripts/testflight-feedback.py`, `file_items`): each screenshot and crash submission is filed once in the private
+  `oRAirwolf/grouplab-crash-reports`, labelled `testflight-feedback`: the comment whole with any email, telephone number or web address
+  replaced, the build, device and iOS version, the screenshots put in that repository and shown in the issue, and for a crash its
+  exception lines and GroupLab's own frames. Never an email or a name: the API is asked for `FILE_FIELDS`, the summary's fields and the
+  screenshots alone. A hidden line with the submission's id keeps anything from being filed twice, so the half-hourly testflight run files
+  as items arrive; started by hand it looks back 14 days. The public log and summary say only how many were filed.
+- **The first run** (36831492456, 14 days): Unholy's two screenshots, issues 13 and 14, each linked to entry 328's commits; no crash in
+  the window. It then stopped on a refusal: a crash submission had been asked for screenshots, which it does not have. Fixed (crash
+  submissions are asked only for their own fields), with the self-test's made-up App Store Connect refusing the same way.
+- **Backups:** the nightly backup takes the private repository's tarball as well as its issues, since the screenshots are files there;
+  RESTORE.md has the line. The earlier attempt at reading through a sealed file (a worker's commit, never pushed) is in the trash folder.
+
 ## Entry 328: Unholy's two TestFlight reports (nightly 143, iPhone)
 
 Done 2026-10-01, one worker on the main model; ships in nightly 147.

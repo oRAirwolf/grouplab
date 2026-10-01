@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 06:50 UTC, entry 328 done (Unholy's keyboard and curl-note reports, in nightly 147); the other
-session has ended.
+**Last rewritten:** 2026-10-01 07:55 UTC, entries 328, 326 and 330 done; 331 (a batch that needs nobody) and 332 (a
+fingerprint trial) are next. Nightly 147 carries 328 for Unholy.
 
 ---
 
@@ -21,7 +21,10 @@ session has ended.
   files by name and says before pushing to main.
 - **Nightly 146** (06:21 UTC) carries entry 329; **nightly 147** carries entry 328, Unholy's two TestFlight bugs: the keyboard and
   the curl note. Unholy retests on 147 once Apple's test service has it.
-- **The other session ended** with entries 324, 325 and 327 folded only in its own worktrees; planning should know they are not on main.
+- **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback) by every testflight run;
+  each item is fixed in turn and its issue closed with the build (entry 326).
+- **A second session (grouplab-1f) ran until about 05:30 UTC** and ended with entries 324, 325 and 327 folded only in its worktrees;
+  324 section 1 and 325's request 58 part are on main. Planning should know those folds are not in the logs.
 - **iOS until 2026-10-01 02:00 UTC** (entry 290) is over; the summary is at the top of `for-alan.md`.
 - **The Microsoft Store's first submission** (request 38 Part B) is in certification; `store-status.yml` reads it every six hours.
 - **GroupLab Dev updates itself** (entry 288): the silent second update waits for the phones to be reachable over adb again.
@@ -45,7 +48,7 @@ session has ended.
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Nightly 147 for Unholy, and the site with it; entry 326 as soon as request 63 is done.
+1. Nightly 147 for Unholy; then close issues 13 and 14 with it and tell him which build to retest on.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
@@ -57,7 +60,7 @@ session has ended.
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **15** (63 a token so TestFlight feedback reaches Code, most urgent; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **14** (59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -86,8 +89,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 326 and 330 (request 63 is done; 326 is next). The
-ended session's folds of 324, 325 and 327 sit unpushed in its worktrees; 324 section 1 and 325's request 58 part are on main.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 331, then 332.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

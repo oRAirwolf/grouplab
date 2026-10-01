@@ -129,6 +129,31 @@ At the start of a run, the count of open requests in this file is printed and no
 
 # Answered requests
 
+## 63. A GitHub token so TestFlight feedback reaches me, about five minutes, as soon as suits (entry 326)
+
+**Answered 2026-10-01 06:35 UTC** (entry 330): "request 63 done"; the secret is set. **Opened 2026-10-01.** **Why:** Unholy's screenshot and comments went to App Store Connect, where only you can read them. I can read
+TestFlight with the key the nightly already has, but nothing I can run is allowed to write into the private
+`grouplab-crash-reports` repository, where a tester's words have to go (this repository is public, so they can never go here). With this
+token, every feedback item, comment and screenshot, is filed there as an issue by itself, the 14 days so far first; I read each one, fix
+it, and say here which nightly the fix is in. The token can do nothing except write issues and files in that one private repository.
+
+1. Open https://github.com/settings/personal-access-tokens/new signed in as oRAirwolf.
+2. **Token name** `grouplab-feedback`; **Expiration** 1 year; **Resource owner** oRAirwolf; **Repository access** "Only select
+   repositories", and pick **grouplab-crash-reports** alone.
+3. Under **Permissions**, **Repository permissions**: **Issues** "Read and write" and **Contents** "Read and write". Nothing else.
+4. **Generate token**, and copy it.
+5. In PowerShell, run this, and paste the token when it asks:
+
+```
+gh secret set CRASH_REPORTS_TOKEN -R oRAirwolf/grouplab
+```
+
+   A good result: a line saying the secret CRASH_REPORTS_TOKEN was set. The token is then only in GitHub's secrets.
+6. Tell planning "request 63 done".
+
+If you would rather not wait for me, you can also tell planning in your own words what Unholy reported; I fix from that, and the token
+still files the rest.
+
 ## 60. The iPad on a cable to this computer, like adb for Android, about fifteen minutes, whenever suits (entries 311 and 315)
 
 **Answered 2026-09-30: done, by Code from the Windows shell with Alan tapping Trust and turning on Developer Mode.** The iPad is paired over USB on Apple's own driver and answers (iPad14,2, iPadOS 27.0.1), with Developer Mode on. After the iPad restarts, re-plug the cable. Notes below.

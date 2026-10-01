@@ -179,8 +179,11 @@ class Pretend(Store):
     def app(self, bundle): return self.apps.get(bundle)
 
     def submissions(self, app, kind, fields=FIELDS):
-        # As the API does: only the fields asked for come back, so the summary's reading never sees a screenshot.
+        # As the API does: only the fields asked for come back, so the summary's reading never sees a screenshot, and a crash
+        # submission asked for screenshots is refused (the first filing run, 2026-10-01).
         wanted = set(fields.split(","))
+        if kind == "betaFeedbackCrashSubmissions" and "screenshots" in wanted:
+            raise RuntimeError("Refused: screenshots is not a field of a crash submission")
         return [{**d, "attributes": {k: v for k, v in d.get("attributes", {}).items() if k in wanted}} for d in self.data.get(kind, [])]
 
     def builds(self, included): return {"b140": "140"}
@@ -256,7 +259,8 @@ def file_items(store: Store, issues: Issues, since: _dt.datetime, get=fetch) -> 
             continue
         name = "GroupLab Dev" if bundle.endswith(".dev") else "GroupLab"
         for resource, kind in KINDS.items():
-            for data in store.submissions(app, resource, FILE_FIELDS):
+            # Only a screenshot submission has screenshots; asking a crash submission for them is refused by App Store Connect.
+            for data in store.submissions(app, resource, FILE_FIELDS if kind == "screenshot" else FIELDS):
                 attributes = data.get("attributes", {})
                 when = _dt.datetime.fromisoformat(attributes.get("createdDate", "1970-01-01T00:00:00+00:00").replace("Z", "+00:00"))
                 if when < since:
