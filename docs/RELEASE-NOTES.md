@@ -518,7 +518,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - On the phone, a set of tiled sheets can be shared as one large page with cut lines between them, for a plotter.
 - Every picture is still checked, but its score now counts how well the sheet's markers agree and no longer marks down a tilt GroupLab has corrected, so it follows how well a picture measures.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.121)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
