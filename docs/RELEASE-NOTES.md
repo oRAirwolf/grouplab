@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.152
+
+**2026-10-01**, commit `9590358`. Nightly.
+
+**What you will notice**
+
+- GroupLab now recognizes five Birchwood Casey targets on the computer and the phone: it names the target, places its bulls and sets the scale from its printed size, with a warning that printed sheets can vary and a button to check the scale.
+- When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch, GroupLab asks which target it is, with a small drawing of each, and offers your last answer first.
+
+**Under the hood**
+
+- GroupLab can now make the fingerprint of a store-bought target from a photograph, so new targets can be added to the library; nothing on screen uses it yet.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.152)
+
+---
+
 ## 0.2.0-nightly.151
 
 **2026-10-01**, commit `663a29c`. Nightly.
