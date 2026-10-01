@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 09:10 UTC, entries 333 and 334 done; entry 331 sections 1, 2 and 4 done, section 3 and entry 332 with
-worker A.
+**Last rewritten:** 2026-10-01 10:00 UTC, entries 331 and 332 folded and both workers stopped; 335 to
+338 are next (the Public Beta, the Microsoft Store, the download page).
 
 ---
 
@@ -44,7 +44,7 @@ worker A.
 - **iOS** (Phase 8): on TestFlight and on the iPad; the device checks need a sitting (50), the public beta request 59, GroupLab Dev
   on the iPad request 61, an App Store release Alan's word.
 - **Performance** (Phase 9): the baseline gate and any optimization; waits for planning to say the application has settled.
-- **Proof of the 27 "built, not proven" features**: the gates need real material: requests 9, 16, 20, 33, 56, 57, 58.
+- **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft in certification (38); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
@@ -61,14 +61,15 @@ worker A.
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **14** (59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **15** (64 a second sheet of each store-bought target; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
+- **79** five built-not-proven lines whose written gates are met (entry 331 section 3)
 - **78** the plot's toggles cover the last lines of its key at 1400x900 (found in entry 323; a change to the look)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
@@ -90,8 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 331 (section 3 with worker A) and
-332 (worker A).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 335, 336, 337, 338.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

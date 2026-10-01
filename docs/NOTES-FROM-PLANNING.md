@@ -44,6 +44,92 @@ worker:
 4. Update the testers' guide line about feedback if it says who reads it, and docs/RESTORE.md if the private repository's contents need
    a backup line.
 
+## 2026-10-01, entry 331: a batch that needs nobody, so the loop has real work
+
+**Status: done 2026-10-01, every section.** Section 1: Find holes on the five blanks went from 0, 0, 0, 3 and 8 marks to 0, 0, 0, 0 and 6, every any-target scoreboard line unchanged; the remaining six (printed dark numbers and letters, two white digits) cannot be told from a hole without refusing real ones. Section 2: a generic CSV, LabRadar and Garmin Xero, then entry 334's real files. Section 3: docs/PROOF-CHECKLIST.md (worker A). Section 4: docs/PERFORMANCE.md's second baseline. Section 5: the summary is at the top of for-alan.md.
+
+Alan, 2026-10-01 07:31 UTC: "It seems like code is idling a lot and is just waiting for stuff." Everything left in STATE.md's plan is
+blocked on him, on Apple or Microsoft, or on planning, so here is work that is not. One worker, main model, entry 317's budget; in this
+order, one commit per section where it allows. Bugs a tester or Alan hits still jump the queue.
+
+### 1. The store-bought blanks as a detection test now (request 58's material, entry 325 and 327)
+
+1. Run "Find holes (Experimental)" on the five blanks in `C:\Dev\grouplab-local\commercial-targets\`. A clean sheet must give zero
+   holes; list every false mark by cause (printed numbers, pasters, ring lines, the red centers, the cut edge of a partial scan) and fix
+   what can be fixed without making any existing case worse.
+2. Render synthetic holes into each blank (several calibers, touching pairs, holes on ring lines, on the red centers, on the grid lines,
+   and a Shoot-N-C style chartreuse halo where the real target shows one) with known positions, and score finding them, the way the
+   scoreboard does for GroupLab sheets. Kept local, never committed (request 58). Report the scores per target; the real shot scans will
+   check them later.
+
+### 2. Chronograph files that need no sample from Alan (DESIGN.md section 17)
+
+1. A generic CSV import: a column of velocities picked by header or by the person, units fps or m/s, everything else ignored. This is
+   the "most users arrive from a spreadsheet" route.
+2. LabRadar's CSV export, from its published layout, and Garmin Xero's CSV export from ShotView, from its published layout. A public
+   sample file under a license that allows it may be used as a test, recorded in samples/PROVENANCE.md; otherwise build the test from
+   the documented columns and label the reader Experimental until a real file passes. Never anything from a stranger's upload.
+3. All three behind the one import interface, ending in the same list of numbers the hand-entry box makes, then the existing
+   reconciliation. Place "Import a file" beside the existing entry on both platforms in the existing style; if it needs a new layout,
+   DESIGN NEEDED and build the readers anyway.
+
+### 3. The 27 "built, not proven" features: prove what existing material can
+
+Go through the 27 and, for each, say whether material already on Alan's computer or in test-data (the 2026-09-20 range photographs, the
+camera-0929 sitting, the corpus, the scale-test scans, Unholy's range screenshot, the commercial blanks) can prove it. Prove every one
+that it can. For the rest, name the exact material each needs, so the next request to Alan is one sitting with a checklist.
+
+### 4. Performance (Phase 9): a baseline only
+
+Planning says the application has settled enough to measure. Record a baseline, nothing optimized yet: desktop start time and memory,
+a GroupLab sheet read end to end on the desktop, and on the phone through the replay camera (entry 315) where no device is needed; the
+numbers into the gate record with their dates. Say what is slowest; planning decides what to optimize.
+
+### 5. When the loop stops
+
+When 1 to 4 are done or blocked and the inbox is empty: write the summary at the top of for-alan.md and end the loop. Do not wake to
+wait for Apple, Microsoft or a nightly; the scheduled checks already watch those.
+
+## 2026-10-01, entry 332: a fingerprint trial for store-bought targets (recognize the target, and its scale with it)
+
+**Status: done 2026-10-01, sections 1, 2 and 4 (worker A); section 3 is request 64.** Not measured: the phone through the replay path (desktop figures only), and Unholy's range screenshot (none of these products appears in any range picture on the computer). The trial is the command `grouplab fingerprint-trial`, a spike in the command line program; nothing reaches the desktop or phone application.
+
+Alan, 2026-10-01: "Is it possible to keep some type of hash or fingerprint for those store bought targets so they can be recognized if
+somebody scans them and remembers the scale?" Planning explained the approach and Alan said: "Yes add the fingerprint trial." A trial
+only: nothing ships in the application from this entry. Do it after entry 331 section 1 (it uses the same blanks); main model, one worker.
+
+### 1. Build the fingerprint
+
+From each blank in `C:\Dev\grouplab-local\commercial-targets\` (600 dpi, partial scans, entry 327), make a fingerprint with the OpenCV
+already in GroupLab: local features (ORB or AKAZE, whichever measures better; say which and why), their positions in inches on the
+target, the bull centers in the same frame, and a cheap global signature (color layout or a small thumbnail descriptor) for shortlisting.
+Report each fingerprint's size; the aim is well under 200 KB a target.
+
+### 2. Test recognition and registration
+
+Make test pictures from each blank, kept local: perspective warps up to 37 degrees (Guided's limit), rotation, scale from about 1 to 3
+ft as a phone would see it, crops to half the sheet, blur, uneven light, phone JPEG compression, and synthetic shot holes, including
+the Shoot-N-C chartreuse halos and pasters over some holes. Also Unholy's range screenshot and any range photograph that shows one of
+these products, if there is one. For each:
+
+1. Does it identify the right product, and never claim a match on a GroupLab sheet, a different product, or a blank wall? A wrong match
+   is worse than no match: report the false-match rate with the threshold chosen.
+2. How well does the fitted transform recover the scale and the bull centers? Error in percent of scale and in inches at the bulls.
+3. Time on the desktop, and on the phone through the replay path (entry 315) where no device is needed; memory.
+
+### 3. Print consistency: what is still unknown
+
+The scale from a fingerprint is only as good as the press. Write request 64 in for-alan.md: scan one more sheet of each of the five
+products at 600 dpi in the same corner of the glass, a sheet from a second pack where he has one. When those arrive, measure sheet to
+sheet scale differences; a remembered scale is trusted only if they agree within about 0.2%, otherwise recognition still finds the
+bulls but GroupLab asks for a scale check.
+
+### 4. Report and decision
+
+`docs/notes/fingerprint-trial.md`: sizes, rates, errors, times, and a recommendation planning takes to Alan (ship it, ship recognition
+without the scale, or not yet). Only fingerprints would ever ship, never a scan or image of another maker's target; that decision is
+Alan's and is not made here. The worth-an-article decision as usual.
+
 ## 2026-10-01, entry 333: two workers for this batch, and real Garmin Xero files are coming
 
 **Status: done 2026-10-01.** Two workers from 08:45 UTC: worker A (a worker in its own worktree) on entry 332 then entry 331 section 3; worker B (this session) on entry 331 sections 2 and 4, both done, then entry 334. Request 65 was written and answered the same hour (archived).

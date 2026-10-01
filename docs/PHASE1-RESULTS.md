@@ -40,6 +40,31 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 331: a batch that needs nobody, and entry 332's fingerprint trial
+
+Done 2026-10-01; sections 1, 2 and 4 by worker B (this session), section 3 and entry 332 by worker A.
+
+- **1, store-bought blanks:** Find holes gave 0, 0, 0, 3 and 8 marks on the five clean blanks; the crosshair's three were its solid black
+  diamonds, the EZE scorer's eight printed ring numbers and logo letters. `PrintedShape` refuses a solid straight-sided shape filling its
+  smallest rectangle, and a light mark in print made of strokes; a dark mark is never judged by its strokes, since a torn hole's dark rim
+  round a light centre is a thin ring (four real any-target holes were refused until it was so). Now 0, 0, 0, 0 and 6; every any-target
+  scoreboard line identical. `grouplab scoreboard --blanks` renders holes into each blank and scores them, nothing written: paper about
+  half found, ink most on the Shoot-N-C targets but none on the 6 in bull, ring lines almost none, red centres some, 0 to 7 false marks a
+  picture. Detail in the commit; the real shot scans will check it.
+- **2, chronograph files:** a generic CSV, LabRadar's report and Garmin Xero's export behind one interface, ending in the hand-entry box's
+  list, with "Import a file" on both platforms; entry 334 then proved the Xero reader on Alan's own files.
+- **3, the 31 features** (`docs/PROOF-CHECKLIST.md`): measured where material allowed. Not met: off-axis photographs (worst bull 0.0155 to
+  0.0216 in against 0.005), detection (197 of 198 holes, 2 false marks), the large-mark rule (7 rings on clean single holes). Met where a
+  written gate exists: hit probability inside a radius (7), the solver (22), the compareGroups keys of significance testing (6), the
+  Phase 6 capture gate in its own words (26: 97 of 100 holes, lens fitted on the device), and Phase 0's scan half (worst bull 0.00275 in).
+  Question 79 asks planning about their states. The rest are listed with the exact material each needs, as one checklist.
+- **4, performance:** `docs/PERFORMANCE.md`: start-up 1.9 s to a window, about 180 MB idle, the phone's pipeline 2.5 to 2.7 s on this
+  desktop's processor; the image cases 20 to 35 percent slower than 2026-09-20, not yet explained.
+- **Entry 332, the fingerprint trial** (`docs/notes/fingerprint-trial.md`, worker A): ORB features at two resolutions with a colour layout
+  checked through the fitted transform (AKAZE was slower and claimed a wrong product); 33 to 84 KB a target; 163 of 200 test pictures
+  identified, no wrong product, no false match on 123 non-targets; scale error median 0.06 percent, bulls 0.007 in; about 0.6 s on this
+  desktop. Recommendation: ship recognition, keep a scale check until request 64 measures sheet to sheet differences.
+
 ## Entry 334: Alan's chronograph exports, and entry 333's two workers
 
 Done 2026-10-01 by worker B (this session); worker A took entry 332 and entry 331 section 3 in its own worktree (entry 333).

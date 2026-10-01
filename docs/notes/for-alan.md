@@ -1,4 +1,4 @@
-**Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
@@ -71,6 +71,17 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 64. A second sheet of each store-bought target, scanned the same way, about five minutes a target, whenever suits (entry 332)
+
+**Opened 2026-10-01.** **Why:** a trial shows GroupLab can recognize the five Birchwood Casey targets from a small fingerprint (nothing
+in the application yet), and finds their scale to about 0.06 percent, but only against the very sheet the fingerprint was made from.
+Whether a remembered scale can be trusted depends on how much one printed sheet differs from the next. **Needed:** for each of the five
+(the 6 in and 8 in Shoot-N-C bulls, the sight-in grid, the crosshair and the Eze-Scorer), one more unshot sheet scanned at 600 dpi in the
+same corner of the glass as its blank, from a second pack where you have one. Save it as `blank-2.png` in that target's folder under
+`C:\Dev\grouplab-local\commercial-targets\`, with a line in its `notes.txt` saying same pack or another. **A good answer:** "done, five
+second sheets" (or which ones). If a product's two sheets agree within about 0.2 percent, GroupLab may remember its scale; if not, it
+still finds the bulls but asks you for a scale check.
 
 ## 62. Firebase Test Lab: GroupLab Dev on real phones every day, free, about ten minutes, whenever you choose (entry 318)
 

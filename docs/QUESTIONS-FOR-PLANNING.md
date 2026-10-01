@@ -21,6 +21,17 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-01, question 79: five "built, not proven" lines whose written gates are met
+
+**Status: open.** Nothing waits on it. Entry 331 section 3 (docs/PROOF-CHECKLIST.md) measured what existing material allows. These meet
+the gate written for them: hit probability inside a radius (README line 7, STATISTICS.md 15.3 and 15.5 point 5), the ballistic solver
+(line 22, docs/BALLISTICS-VALIDATION.md's tolerances), significance testing's compareGroups keys (line 6, though its MANOVA row and the
+dispersion ratio's interval have no fixture), the phone's capture path in the Phase 6 gate's own words (line 26: 97 of 100 holes, the lens
+fitted on the device in all four pictures), and Phase 0's scan half (worst bull 0.00275 in; the photograph half is not met). **The
+options.** A: mark 7, 22 and 26 Done, leave 6 Built, not proven until its two fixtures exist, and split Phase 0's line into its scan and
+photograph halves. B: leave every state until a whole phase's gate is met. I would choose A: the README's own definition of Done is "its
+gate has been met and recorded", and these have been.
+
 ## 2026-10-01, question 78: on the analysis at 1400x900, the plot's toggles cover the last lines of its key
 
 **Status: open.** Nothing waits on it. Seen in the screenshot walk while building entry 323, and already true in today's published
