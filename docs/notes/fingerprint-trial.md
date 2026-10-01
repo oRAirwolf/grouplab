@@ -159,4 +159,4 @@ grouplab fingerprint-trial make C:\Dev\grouplab-local\commercial-targets <scratc
 grouplab fingerprint-trial match <scratch folder> --method orb --side 3000
 ```
 
-The pictures are made from seed 332 and take about 600 MB; they were deleted after the run.
+The pictures are made from seed 332 and take about 190 MB; they and the fingerprints were deleted after the run.
