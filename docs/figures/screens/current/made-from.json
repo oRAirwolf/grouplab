@@ -10,7 +10,7 @@
     "equipment": "795f368c220b74578b915d31274853dd12de2b0df31f44bc064fbb6f2bf9f4e9",
     "firstrun": "35708108b1e1c41e4fe3df790a6bfdb56fe4bcf39e915df50b0844faa119c22d",
     "marking": "8c5086149889c2f42a56a813ee25f1de82fcf589f81613952f909525be6bfae7",
-    "marking-other": "99c29e5a52df2a0ee5cd24b49830b72358e5c7f8e6326774aef0bceccb68821f",
+    "marking-other": "5a3bd10152c14db302ed4fd01aae665905df525b95d098300f67408c14309c6f",
     "optic": "f035e20c2b85eaf9c3a97e1e95dd042db41937444c6cc558998e299e4dbab056",
     "optic-4x": "f035e20c2b85eaf9c3a97e1e95dd042db41937444c6cc558998e299e4dbab056",
     "scope-unit": "b4cdec02995475ba21fee11b2d4426db05e213daaf0e1faa06d5a1428fa78695",
@@ -34,9 +34,9 @@
     "sheet-zero-moa-100m": "39c63ae96cd9ef0a1742b2cdbd998b5218ca64e151c2792c9d7b1c79b8ad05a2",
     "sheet-zero-moa-100y": "77df2d487d5c236a5e71bb317d4e9e8be0d6b2d85d6a889d35ad9b74eaf4ff29",
     "shots-to-zero": "b743c440b403742aa09b38586f159f1ded979a9c7e7ed667568d72e2a1ed782e",
+    "store-target": "74c5f8112f01a26737ffbc32549f59fe2477fd86b77b2cfb1c28432bef1ba428",
     "targets": "912fadd5fa401b6ad9975afc350b547174b27deb5cd127e3b8f94d8784f6af9a",
     "targets-zero": "ef2b171e28f8cc96fa8348addc05eca09fb100066b07c11f786e46f99a8bc5ee",
-    "velocity": "3373d7f36ea7cb703521bcadbdc7f52e6cf15b67b80ec0eb870b3e2f88b8f91a",
-    "store-target": "74c5f8112f01a26737ffbc32549f59fe2477fd86b77b2cfb1c28432bef1ba428"
+    "velocity": "3373d7f36ea7cb703521bcadbdc7f52e6cf15b67b80ec0eb870b3e2f88b8f91a"
   }
 }
