@@ -515,7 +515,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - Each aim point's own figures and each shot's offset and clicks are worked out, ready for the screens being drawn, and the test build times the shutter step by step.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.122)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
