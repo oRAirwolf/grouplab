@@ -47,8 +47,10 @@ jobs:
         run: python scripts/testflight.py --run --wait-minutes ${{ github.event_name == 'workflow_run' && '30' || '0' }}
 
       # Entry 311 section 3 item 4: new beta feedback (a tester's screenshot shared from GroupLab) and crashes, a line each in this run's
-      # summary. Never a screenshot or a tester's email: the API is not even asked for them. The hour a half-hourly run looks back overlaps
-      # the next; after a nightly it looks back a day, and by hand a week. It never fails the run.
+      # summary, never a comment, a screenshot or a tester's email. Entry 326: each is also filed once in the private
+      # oRAirwolf/grouplab-crash-reports with CRASH_REPORTS_TOKEN, which can write there and nowhere else; here only the count is said.
+      # The hour a half-hourly run looks back overlaps the next; after a nightly it looks back a day, and by hand fourteen days. It never
+      # fails the run.
       - name: TestFlight feedback and crashes
         if: always()
         continue-on-error: true
@@ -56,4 +58,5 @@ jobs:
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
-        run: python scripts/testflight-feedback.py --run --since-hours ${{ github.event_name == 'workflow_run' && '24' || github.event_name == 'schedule' && '1' || '168' }}
+          CRASH_REPORTS_TOKEN: ${{ secrets.CRASH_REPORTS_TOKEN }}
+        run: python scripts/testflight-feedback.py --run --since-hours ${{ github.event_name == 'workflow_run' && '24' || github.event_name == 'schedule' && '1' || '336' }}

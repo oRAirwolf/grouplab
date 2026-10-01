@@ -213,6 +213,14 @@ def build(work: Path, steps: list[str]) -> list[Path]:
     files.append(crash)
     steps.append("crash reports")
 
+    # Entry 326: TestFlight feedback's screenshots are files in that repository, which the issue list above does not carry.
+    shots = work / "crash-reports-files.tar.gz"
+    tarball = subprocess.run(["gh", "api", f"repos/{OWNER}/grouplab-crash-reports/tarball"], capture_output=True)
+    if tarball.returncode == 0 and tarball.stdout:
+        shots.write_bytes(tarball.stdout)
+        files.append(shots)
+        steps.append("crash reports' files")
+
     for f in files:
         if f.stat().st_size > MOST_ASSET:
             raise RuntimeError(f"{f.name} is {f.stat().st_size >> 20} MB, over the 1.9 GB a release asset may be; split it before the next run")

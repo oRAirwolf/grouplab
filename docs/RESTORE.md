@@ -22,6 +22,7 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `C:\Dev\grouplab-submissions` | the private archive, every submission zipped and proven by SHA-256 | as each one arrives | `grouplab-submissions-archive` releases | `scripts\Test-SubmissionsArchive.ps1` restores and checks them; the sync copies any missing back |
 | `grouplab-submissions-archive` | this computer's `C:\Dev\grouplab-submissions`, checked against the manifest | nightly | this computer | nothing is deleted from the archive unless this copy verifies (entry 217) |
 | `grouplab-crash-reports` issues | their text and comments in the nightly backup | nightly | `grouplab-backups` | read them from the backup's `crash-reports.json` |
+| `grouplab-crash-reports` files (TestFlight screenshots, entry 326) | the repository's tarball in the nightly backup; App Store Connect keeps the originals | nightly | `grouplab-backups` | unpack `crash-reports-files.tar.gz` and push its `testflight/` folder back |
 | `grouplab` releases (the builds) | rebuilt from the tagged commit by the nightly workflow | on demand | GitHub Actions | run the workflow at the tag |
 | `grouplab-testdata` | its own git history, and the bundle of it in the nightly backup | nightly | `grouplab-backups` | as the repository |
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
