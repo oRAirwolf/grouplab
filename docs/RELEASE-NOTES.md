@@ -531,7 +531,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - The four zeroing grids are redrawn as design C3, chosen by Alan with Jylee and Unholy: squares the size of a scope's own clicks, a tick at one click, the numbers outside the grid and a diamond to aim at.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.118)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
