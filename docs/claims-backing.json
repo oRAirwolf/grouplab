@@ -4836,6 +4836,50 @@
   "The 0.08 in on the far column is the lifted margin, and what is next for it is a bent-sheet registration that keeps the far column, judged on these four pictures, or a photograph of the same sheet held flat to show the error leaves with the lift.": {
    "kind": "measured",
    "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "**A bent sheet over the lens fit (entry 324 section 1).** The lens fit stays as it was, fitted to the corners it kept.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "What it leaves at every marker corner is fitted by a smoothing thin-plate spline over the page, the spline the marker mesh of entry 260 passes through every corner with, its smoothing chosen by predicting each marker from a spline fitted without it; a pixel's page position is the lens fit's plus that correction there, and past the markers the correction fades to nothing over a quarter of an inch.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "It is taken only where the lens fit left out a marker at least 0.04 in off, each such marker is predicted from the rest to within 0.01 in or half its distance from the lens fit, the corners the lens fit kept fit no worse, the correction stays under 0.2 in over the markers, and more corners are kept than the lens fit kept.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "Every hole there is now within 0.03 in.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "The one that reads worse is near the bottom row, 0.002 and 0.005 in farther out; it is the hole that reads 0.034 in off on the flat 2026-09-26 picture of the same sheet.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "The registration figure a person is shown rises from 0.0036 to 0.0074 in and from 0.0035 to 0.0077 in, because it is now each marker predicted from a bend fitted without it, over every corner, where before it left the far column out though it was 0.08 in off.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "The synthetic board reads every one of its 27 lines the same to the last digit: its drawn sheets are flat, their lens fit keeps every corner or leaves a few out by a whisker, and the bend is never fitted.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "A drawn sheet with its right margin lifted 16 dmm at the far column registers through the bend 0.006 in off at its worst bull, where the lens fit alone is 0.026 in off.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "Requiring every left-out marker to be predicted within 0.01 in took the bend on no picture: the ends of a lifted column are predicted by reaching past their neighbours, and landed 0.016 to 0.019 in off on the 9 and 15 degree pictures, the one lifted far corner 0.034 in.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "Holding the correction at its edge value past the markers instead of fading it kept that false mark and added one beside the far column's last marker on the 1 degree picture.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "So the bend is for a lift the lens fit misses by 0.04 in or more, and below that the 1 and 2 degree pictures read as they did.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
   }
  },
  "rules": [

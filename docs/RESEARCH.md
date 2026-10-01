@@ -119,6 +119,7 @@ separate the effect from the confounds" and "already covered by article N".
 | Entry 252 sections 3 and 4: shots needed to zero, and entry 250 section 4's one-shot zero | **written**, `shots-to-zero` | It changes what a shooter does: within one click takes a handful of shots, the closest click can take hundreds, and a one-shot zero is honest only for large errors. |
 | Entry 158 program B: hole size against velocity and nose shape | **covered in part, and extended** | Step 1 is articles 1 and 2. What cannot yet be separated, and the test that would, is added to article 1's "What we still do not know". |
 | Entry 322 section 2: why the lens fit leaves the far column of markers out on angled pictures | **not written** | The far column was off the sheet's plane in that one sitting, a lifted margin, and no lens model reaches it; four pictures of one sheet cannot say how often paper lifts or by how much, and docs/DETECTION-LEARNING-STUDY.md section 9 holds the measurement. |
+| Entry 324 section 1: a bent-sheet registration for a lifted far margin | **not yet written** | It would change what a developer builds (a smooth correction over the lens fit, taken only when it predicts the markers the flat fit left out), but it rests on two angled pictures of one sheet; worth an article once a second sitting with a lifted or curled sheet confirms it. |
 
 ## Program A: the ST-4, 5 and 10 shot groups
 
