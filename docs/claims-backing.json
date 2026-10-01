@@ -5008,6 +5008,12 @@
  },
  "rules": [
   {
+   "surface": "^site:download/index\\.html$",
+   "match": "Version \\d+\\.\\d+\\.\\d+ today; the Store's page and GroupLab's Settings screen name it too",
+   "kind": "measured",
+   "where": "docs/notes/external-status.md, which store-status.yml writes from the Store API each time the Store's state changes (entries 336 and 338); the page reads it at build time (website/build.py store_version)"
+  },
+  {
    "surface": "^docs/MOBILE-CAPTURE\\.md$",
    "kind": "measured",
    "where": "entry 157's requirements, and the measurements made with grouplab capture-check and compare-photos as the document gives them, held by tests/GroupLab.Core.Tests/Capture/CaptureTests.cs"

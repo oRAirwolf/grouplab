@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1507 |
-| measured | 1939 |
+| code | 1506 |
+| measured | 1940 |
 | decided | 1283 |
 | unbacked | 0 |
 | **total** | **4729** |
 
-**1142** of them were read one sentence at a time and their backing written against the sentence. The other **3587** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1141** of them were read one sentence at a time and their backing written against the sentence. The other **3588** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3630,7 +3630,7 @@ one that matters.
 - *code* (website/build.py newest_build(): the newest nightly's number, date and commit, read from its own entry in docs/RELEASE-NOTES.md, which the nightly writes as it publishes (entry 338); the stable file names are the ones .github/workflows/nightly.yml uploads to the moving release): Windows Mac iPhone and iPad Android Linux Windows The installer Newest Download the installer grouplab-setup-win-x64.exe Nightly 151, built 2026-10-01 from commit 663a29c .
 - *code* (PrivilegesRequired=lowest in packaging/windows/grouplab.iss; src/GroupLab.Core/Updates/UpdateRun.cs asks, then installs silently (entry 119); .github/workflows/nightly.yml publishes only after ci.yml passes on windows, ubuntu and macos (entry 338 carries the honest line)): No administrator rights needed Keeps itself up to date: asks first, then updates in the background Rebuilt after every change that passes the tests on Windows, Linux and macOS Honestly: it passed the tests, which is not the same as somebody having used it.
 - *decided* (NOTES-FROM-PLANNING.md entries 336 and 338: GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ; the Store copy is signed by Microsoft, AppInfo's Store check in src/GroupLab.App/Diagnostics/AppInfo.cs): Microsoft Store Steady The Store keeps GroupLab up to date itself and installs it without the "Windows protected your PC" warning.
-- *code* (StoreUpdateWords in src/GroupLab.App/MainWindow.Updates.cs (entry 224 section 3.1); docs/PLATFORM-SUPPORT.md minimums and docs/store/LISTING.md (1809 for the Store package); the Settings screen's build line): Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy Windows 10 version 1809 or later Which build it is: the Store's page names its version, and so does GroupLab's Settings screen Not sure?
+- *measured* (docs/notes/external-status.md, which store-status.yml writes from the Store API each time the Store's state changes (entries 336 and 338); the page reads it at build time (website/build.py store_version)): Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy Windows 10 version 1809 or later Version 0.2.0 today; the Store's page and GroupLab's Settings screen name it too Not sure?
 - *code* (package-windows.ps1 and .github/workflows/package.yml build it; ci.yml tests on windows-latest): The zip: nothing to install grouplab-win-x64.zip Windows 10 and 11.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs; entry 116 section 5 and entry 147: the builds are unsigned): Nothing to install Tells you when a newer build exists; you download it yourself Download the zip When Windows says "Windows protected your PC" The Windows and Linux builds are unsigned, because signing costs money the project has not spent.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows says this about any program nobody has paid to sign.

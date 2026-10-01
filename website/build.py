@@ -70,6 +70,16 @@ GITHUB = "https://github.com/oRAirwolf/grouplab"
 NIGHTLY = GITHUB + "/releases/download/nightly/"
 # Entries 335 to 337: the Microsoft Store's listing and the TestFlight Public Beta's invitation, published with Alan's approval on 2026-10-01.
 STORE = "https://apps.microsoft.com/detail/9NWJCXBKZNPZ"
+
+
+def store_version() -> str | None:
+    """The version the Microsoft Store carries, as the Store check last wrote it in docs/notes/external-status.md (entries 336 and 338):
+    "0.2.0" for a package version "0.2.0.0"; None where the check has not recorded one."""
+    status = Path(__file__).resolve().parent.parent / "docs" / "notes" / "external-status.md"
+    if not status.exists():
+        return None
+    m = re.search(r"The Store carries package version (\d+)\.(\d+)\.(\d+)\.\d+", status.read_text(encoding="utf-8"))
+    return ".".join(m.groups()) if m else None
 TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
 # Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
 # the receiver is installed on the server and tested, because a button that leads nowhere is worse
@@ -916,7 +926,8 @@ def page_download() -> str:
         "The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning. It carries an older, steadier build than the newest one, and is updated by hand when a build has proven itself.",
         ["Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy",
          "Windows 10 version 1809 or later",
-         "Which build it is: the Store's page names its version, and so does GroupLab's Settings screen"]),
+         (f"Version {store_version()} today; the Store's page and GroupLab's Settings screen name it too" if store_version()
+          else "Which build it is: the Store's page names its version, and so does GroupLab's Settings screen")]),
         "Take the Microsoft Store copy if you want GroupLab to look after itself. Take the newest if you want each fix the day it is made and do not mind the odd broken build.",
         [fold("The zip: nothing to install", other(
             "Zip", "grouplab-win-x64.zip", "Windows 10 and 11. Unzip it anywhere and run GroupLab.App.exe.",
