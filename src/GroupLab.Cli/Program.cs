@@ -66,6 +66,7 @@ return args switch
     ["capture-check", .. var rest] => GroupLab.Cli.CaptureVerb.Run(rest, Console.Out, Console.Error),
     ["capture-tune", .. var rest] => GroupLab.Cli.CaptureTuneVerb.Run(rest, Console.Out, Console.Error),
     ["st4", .. var rest] => GroupLab.Cli.Spike.St4Verb.Run(rest, Console.Out, Console.Error),
+    ["fingerprint-trial", .. var rest] => GroupLab.Cli.Spike.FingerprintTrial.Run(rest, Console.Out, Console.Error),
     ["sample", .. var rest] => GroupLab.Cli.SampleVerb.Run(rest, Console.Out, Console.Error),
     ["bench", .. var rest] => GroupLab.Cli.BenchVerb.Run(rest, Console.Out, Console.Error),
     ["update-key"] => GroupLab.Cli.UpdateVerbs.Key(Console.Out),
@@ -537,6 +538,7 @@ static int Usage()
         grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
         grouplab capture-check <image>... [--library <directory>] [--sweep]
         grouplab st4 <st4-2026-09-20.json> [--frames <folder>]
+        grouplab fingerprint-trial build <blanks> <out> | make <blanks> <out> [--seed <n>] [--real <folder>]... | match <out> --method orb|akaze
         grouplab user-guide [<docs directory>]
         grouplab glossary [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
