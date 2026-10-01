@@ -75,11 +75,19 @@ public class Entry328Tests
     {
         foreach (var (width, height, keyboard) in Phones)
         {
+            // A caliber another test remembered would let Capture go straight on without asking, so none is remembered while the page is
+            // made, and the one there was is put back afterwards.
+            if (Phone.Platform is null)
+            {
+                Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
+            }
+
+            var (was, wasInches) = Phone.Settings.LoadShotSetup();
+            Phone.Settings.SaveShotSetup(null, null);
             var (shell, window) = Started(width, height);
             try
             {
                 var capture = shell.GetVisualDescendants().OfType<CapturePage>().Single();
-                Phone.Settings.SaveShotSetup(null, null);
                 capture.AskFirst(() => { });
                 Settle();
                 Assert.True(capture.Asking);
@@ -113,6 +121,7 @@ public class Entry328Tests
             finally
             {
                 window.Close();
+                Phone.Settings.SaveShotSetup(was, wasInches);
             }
         }
     }
