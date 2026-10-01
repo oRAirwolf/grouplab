@@ -51,6 +51,30 @@ approves (entry 320 section 1); then the download page, the README and the guide
 and only then does Alan turn automatic distribution off. The feedback summary already writes no tester's words, screenshots, name or
 email (entry 311's review); that covers public testers too. Unholy's address is written nowhere.
 
+## Entry 322: question 77, and an hour of three workers before the weekly reset
+
+Done 2026-10-01 between 01:02 and 01:45 UTC, three workers as Alan asked.
+
+- **Question 77, A and B (b5ff2465):** the guide says about 2 ft (60 cm); the next phone sitting and the first TestFlight sitting
+  photograph one sheet at 1.5, 2, 2.5 and 3 ft.
+- **1, markers at a distance (babcddcf, 176221d3):** measured first: markers are 15.5 px at 2 ft and 10.3 px at 3 ft in the working
+  picture, and a photograph's first pass guessed a sheet across half the frame (23.4 px markers), so its size gates threw every marker out
+  before decoding. A second pass sized for a sheet across a quarter of the frame reads 33 of 38 at 2 ft; at 3 ft, where every marker is
+  found and none decodes, each undecoded square no larger than a marker is cut out and read enlarged four times. Scoreboard: far 2 ft
+  0 to 48 of 50 holes, far 3 ft 0 to 44 of 50, no false marks; every other line identical; the seven real pictures identical. Desktop
+  Release, one far picture: 0.36 s and 0.6 s for the whole reading, peak 500 MB as at 1.25 ft. Not yet: the phone's full-resolution frame
+  for the cut-outs, and a phone measurement.
+- **2, the far column (20211cc4):** not the lens fit's fault: the same sheet photographed taped flat keeps 136 of 136 corners, and richer
+  lens models barely move the far column's misses (rms 3.82 to 3.77 dmm at 9 degrees); the far margin was lifted off the sheet's plane in
+  that sitting, so leaving those markers out is right. A real fault fixed on the way: the lens fit now refits until its kept corners
+  settle (a hard-bending lens at 30 degrees had kept 96 of 136 consistent corners). Real pictures unchanged in holes and false marks. One
+  local check moved: the 2026-09-20 range photograph at 32.4 degrees now measures 31.2; nothing says which is nearer the truth, and the
+  test records the move. The 0.08 in far-column errors need a bent-sheet registration or a photograph held flat.
+- **3, velocity regression (1c4a5b74):** velocity's share of the vertical with an F interval, the vertical SD velocity alone adds from
+  the solver's drop per ft/s, and where readings are paired with shots the measured slope against the solver's; `grouplab velocity`
+  prints it. Over 200 synthetic groups the true share fell inside its 90% interval at least 85% of the time. No screen: DESIGN NEEDED in
+  for-alan.md.
+
 ## Entry 321: the camera's level upright at a backer as well as flat over a table
 
 Done 2026-09-30 (e1c95abb), one worker. Gravity chooses the mode by itself with hysteresis: "Looking down" once the camera points more

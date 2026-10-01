@@ -284,7 +284,9 @@ public class CaptureTests
     {
         { "20260920_153325.jpg", 3.1 },
         { "20260920_165627.jpg", 12.1 },
-        { "20260920_153336.jpg", 32.4 },
+        // 32.4 until entry 322 section 2's settled lens refit kept more of this steep picture's corners; nothing measured says which
+        // angle is nearer the truth, so the move is recorded in PHASE1-RESULTS.md rather than judged.
+        { "20260920_153336.jpg", 31.2 },
     };
 
     /// <summary>What the 2026-09-20 range photographs measured, held so a change that moves them is seen: the markers' angle for three of them.</summary>

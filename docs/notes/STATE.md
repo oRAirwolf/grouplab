@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-09-30 22:55 UTC, entries 318 to 321 done; the inbox is empty.
+**Last rewritten:** 2026-10-01 01:45 UTC, entry 322 done (three workers before the weekly reset); the inbox is empty.
 
 ---
 
@@ -33,11 +33,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## The next three
 
 **What is left of the plan** (entry 318 section 5, for planning's next batch; one line each, with what blocks it):
-- **Detection, angled photos**: the far column's registration (the lens fit drops its markers); next in the study. **Holes on any
+- **Detection, angled photos**: the far column's 0.08 in errors come from a lifted margin (entry 322): a bent-sheet registration. **Holes on any
   target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
 - **Garmin Xero import** (Phase 5): needs one sample export file from anybody with a Xero.
-- **Velocity regression, predicted against measured vertical** (Phase 5): not started; nothing blocks but priority.
+- **Velocity regression** (Phase 5): the engine and `grouplab velocity` are built; where it shows is DESIGN NEEDED.
 - **Synchronization, cloud adapters over three-tier storage** (Phase 7): not started; needs planning's design.
 - **iOS** (Phase 8): on TestFlight and on the iPad; the device checks need a sitting (50), the public beta request 59, GroupLab Dev
   on the iPad request 61, an App Store release Alan's word.
@@ -65,9 +65,8 @@ range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple s
 
 ## Open questions
 
-Seven, all in `docs/QUESTIONS-FOR-PLANNING.md` (75 and 76 answered in entry 318, as built):
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (75 and 76 answered in entry 318, 77 in entry 322):
 
-- **77** the guide says stand about 2.5 ft away; the synthetic camera reads no marker at 2 ft (A proposed: measure at the next sitting)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page

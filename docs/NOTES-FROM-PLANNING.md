@@ -24,6 +24,33 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 322: question 77 answered, and an hour of three workers before the weekly reset
+
+**Status: done 2026-10-01 (all three workers and question 77); DESIGN NEEDED for where velocity's share shows.**
+
+From planning, 2026-10-01 01:00 UTC, for Alan. The weekly limit resets at 02:00 UTC; what is left of this week's allowance is otherwise
+lost, so Alan asks for three workers for this hour (entry 317 section 2 allows three when Alan asks). Commit small and often; when a
+limit is hit, write where each worker stopped, commit and stop. Nothing below needs Alan.
+
+## Question 77, answered: "Q77 A and B"
+
+B now: the guide, the camera's tip text and its distance words say "about 2 ft (60 cm)" instead of 2.5 ft. A as well: the next sitting
+(request 50) photographs the same sheet at 1.5, 2, 2.5 and 3 ft to measure where markers stop reading on a real phone; add it to the
+sitting's list and to the TestFlight sitting in docs/IOS-PLAN.md.
+
+## The three workers
+
+1. **Markers at a distance.** Why do corner codes stop reading at 2 to 3 ft (98 and 66 px per inch in the working picture)? Try the
+   cheap fixes first: search for marker candidates in the working picture, then read each candidate from the full-resolution frame at
+   its own crop (the existing "enlarge each code" path), before any larger working picture. Judge on the scoreboard's range cases and
+   the real sitting pictures; nothing may get worse; report memory and time on the phone.
+2. **Angled photos, the far column.** STATE.md's next item: the lens fit drops the far column's markers on angled photos. Continue it
+   against the scoreboard.
+3. **Velocity regression and predicted against measured vertical (Phase 5)**, engine and tests only: from a load's chronograph
+   string, its velocity SD, and the ballistic solver, predict the vertical spread velocity alone would add at the distance shot, and
+   compare it with the measured vertical spread with honest intervals; a `grouplab` command that prints it. No screen yet: when the
+   engine is done, post DESIGN NEEDED for where it shows.
+
 ## 2026-09-30, entry 321: the camera's level works on a target still on the backer, not only on a table
 
 **Status: done 2026-09-30 (e1c95abb); a device check at the next sitting, and question 77 on the distance.**
