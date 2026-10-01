@@ -10,6 +10,9 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On a store-bought target, Find holes no longer marks the printed black diamonds",
+    "Chronograph readings can now come from a file",
+    "Chronograph files now include Garmin Xero exports as Excel files",
     "On the phone, the keyboard no longer covers what you are typing",
     "After a picture, the note about a curled sheet no longer shows the same number twice",
     "Velocity and the vertical now works out velocity's share in the air temperature",
