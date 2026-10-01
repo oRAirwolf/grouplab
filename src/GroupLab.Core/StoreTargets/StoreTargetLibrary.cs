@@ -38,19 +38,76 @@ public static class StoreTargetLibrary
     /// <summary>The family of the Shoot-N-C bullseye, one artwork printed at 6 and at 8 inches.</summary>
     public const string ShootNCBullseye = "Shoot-N-C bullseye";
 
-    /// <summary>Every product, in the order they are tried.</summary>
-    public static IReadOnlyList<StoreTarget> All { get; } =
-    [
-        new("bc-34105-shoot-n-c-sight-in", "Birchwood Casey", "Shoot-N-C {size} sight-in grid", "8 in", "34105", null),
-        new("bc-34550-shoot-n-c-6in-bull", "Birchwood Casey", "Shoot-N-C {size} bullseye", "6 in", "34550", ShootNCBullseye),
-        new("bc-34805-shoot-n-c-8in-bull", "Birchwood Casey", "Shoot-N-C {size} bullseye", "8 in", "34805", ShootNCBullseye),
-        new("bc-34806-shoot-n-c-8in-crosshair", "Birchwood Casey", "Shoot-N-C {size} crosshair", "8 in", "34806", null),
-        new("bc-37826-eze-scorer-bull", "Birchwood Casey", "Eze-Scorer {size} bullseye", "paper", "37826", null),
-    ];
+    /// <summary>The built-in library's list, shipped beside the fingerprints in every build; <c>grouplab target-reference add</c> adds to it.</summary>
+    public const string ListResource = "GroupLab.Core.StoreTargets.Fingerprints.library.json";
+
+    private static readonly IReadOnlyList<StoreTarget> BuiltIn = ReadList();
+
+    private static IReadOnlyList<StoreTarget> installed = [];
 
     private static readonly Dictionary<string, TargetFingerprint> Loaded = new(StringComparer.Ordinal);
 
     private static readonly Lock Guard = new();
+
+    /// <summary>
+    /// Every product, in the order they are tried: the built-in library, then any newer one fetched and installed (entry 344 section 3), a
+    /// fetched product replacing a built-in one of the same name.
+    /// </summary>
+    public static IReadOnlyList<StoreTarget> All
+    {
+        get
+        {
+            lock (Guard)
+            {
+                return [.. BuiltIn.Where(b => installed.All(i => i.Id != b.Id)), .. installed];
+            }
+        }
+    }
+
+    /// <summary>The built-in products alone, as this build shipped them.</summary>
+    public static IReadOnlyList<StoreTarget> Shipped => BuiltIn;
+
+    /// <summary>
+    /// Entry 344 section 3: the products of a signed library fetched after this build, added to the built-in ones until the application
+    /// closes. Only a library whose signature checked reaches here (<see cref="StoreLibraryFile.Read"/>).
+    /// </summary>
+    public static void Install(IEnumerable<TargetReference> references)
+    {
+        ArgumentNullException.ThrowIfNull(references);
+        lock (Guard)
+        {
+            var list = references.ToList();
+            foreach (var r in list)
+            {
+                Loaded[r.Target.Id] = r.Fingerprint;
+            }
+
+            installed = [.. list.Select(r => r.Target)];
+        }
+    }
+
+    /// <summary>Takes away every installed product, leaving the built-in library, for the tests.</summary>
+    public static void Uninstall()
+    {
+        lock (Guard)
+        {
+            foreach (var t in installed.Where(i => BuiltIn.All(b => b.Id != i.Id)))
+            {
+                Loaded.Remove(t.Id);
+            }
+
+            installed = [];
+        }
+    }
+
+    private static List<StoreTarget> ReadList()
+    {
+        using var stream = typeof(StoreTargetLibrary).Assembly.GetManifestResourceStream(ListResource)
+            ?? throw new InvalidOperationException("the store-bought target list is not shipped");
+        var root = System.Text.Json.Nodes.JsonNode.Parse(stream)!;
+        return [.. root["targets"]!.AsArray().Select(t => new StoreTarget((string)t!["id"]!, (string)t["maker"]!, (string)t["name"]!, (string)t["size"]!,
+            (string)t["catalog"]!, (string?)t["family"]))];
+    }
 
     /// <summary>The product with this identifier, or null.</summary>
     public static StoreTarget? Find(string id) => All.FirstOrDefault(t => t.Id == id);

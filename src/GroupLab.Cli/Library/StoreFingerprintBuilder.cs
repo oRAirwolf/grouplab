@@ -104,7 +104,13 @@ public static class StoreFingerprintBuilder
     }
 
     /// <summary>A fingerprint of one blank scanned at 600 dpi.</summary>
-    public static TargetFingerprint Make(string product, Mat blank)
+    public static TargetFingerprint Make(string product, Mat blank) => Make(product, blank, ScanDpi);
+
+    /// <summary>
+    /// A fingerprint of one blank at <paramref name="sourceDpi"/> pixels an inch: a scan, or a photograph straightened to the target (entry
+    /// 344), where <paramref name="bulls"/> are the aim points the person confirmed, in inches, in place of the red ones found.
+    /// </summary>
+    public static TargetFingerprint Make(string product, Mat blank, double sourceDpi, IReadOnlyList<PointD>? bulls = null)
     {
         ArgumentNullException.ThrowIfNull(blank);
 
@@ -115,7 +121,7 @@ public static class StoreFingerprintBuilder
         foreach (var (dpi, most) in new[] { (ReferenceDpi, FingerprintFeatures), (ReferenceDpi / 2, FingerprintFeatures / 2) })
         {
             using var small = new Mat();
-            Cv2.Resize(blank, small, new Size(0, 0), dpi / ScanDpi, dpi / ScanDpi, InterpolationFlags.Area);
+            Cv2.Resize(blank, small, new Size(0, 0), dpi / sourceDpi, dpi / sourceDpi, InterpolationFlags.Area);
             using var gray = new Mat();
             Cv2.CvtColor(small, gray, ColorConversionCodes.BGR2GRAY);
 
@@ -129,15 +135,15 @@ public static class StoreFingerprintBuilder
         }
 
         byte[] descriptors = [.. parts.SelectMany(p => p)];
-        return new TargetFingerprint(product, points, descriptors, 32, Bulls(blank), MakeLayout(blank));
+        return new TargetFingerprint(product, points, descriptors, 32, bulls ?? Bulls(blank, sourceDpi), MakeLayout(blank, sourceDpi));
     }
 
-    private static ColourLayout MakeLayout(Mat blank)
+    private static ColourLayout MakeLayout(Mat blank, double sourceDpi)
     {
-        var box = ContentBox(blank);
+        var box = ContentBox(blank, sourceDpi);
         int cols = Math.Max(1, (int)Math.Round(box.Width / ColourLayout.Cell)), rows = Math.Max(1, (int)Math.Round(box.Height / ColourLayout.Cell));
         using var small = new Mat();
-        Cv2.Resize(blank, small, new Size(0, 0), LayoutDpi / ScanDpi, LayoutDpi / ScanDpi, InterpolationFlags.Area);
+        Cv2.Resize(blank, small, new Size(0, 0), LayoutDpi / sourceDpi, LayoutDpi / sourceDpi, InterpolationFlags.Area);
         using var lab = new Mat();
         Cv2.CvtColor(small, lab, ColorConversionCodes.BGR2Lab);
         Cv2.GaussianBlur(lab, lab, new Size(0, 0), LayoutSigma);
@@ -179,11 +185,12 @@ public static class StoreFingerprintBuilder
     /// The aim points: red marks at least a tenth of an inch across, compact rather than long (the crosshair's arms are long), ringed by
     /// black ink and at least an inch inside the printing, which leaves out the repair pasters in the corners. Found at 150 dpi; in inches.
     /// </summary>
-    private static PointD[] Bulls(Mat blank)
+    /// <summary>The aim points found on a blank at <paramref name="sourceDpi"/>, as <see cref="Make(string, Mat, double, IReadOnlyList{PointD})"/> proposes them.</summary>
+    public static PointD[] Bulls(Mat blank, double sourceDpi)
     {
         const double dpi = 150;
         using var small = new Mat();
-        Cv2.Resize(blank, small, new Size(0, 0), dpi / ScanDpi, dpi / ScanDpi, InterpolationFlags.Area);
+        Cv2.Resize(blank, small, new Size(0, 0), dpi / sourceDpi, dpi / sourceDpi, InterpolationFlags.Area);
         var ch = Cv2.Split(small);
         using var b = ch[0];
         using var g = ch[1];
@@ -208,7 +215,7 @@ public static class StoreFingerprintBuilder
             Cv2.MorphologyEx(red, red, MorphTypes.Open, kernel);
         }
 
-        var box = ContentBox(blank);
+        var box = ContentBox(blank, sourceDpi);
         using var gray = new Mat();
         Cv2.CvtColor(small, gray, ColorConversionCodes.BGR2GRAY);
         byte[] gp = OpenCvFingerprintBackend.Bytes(gray);
@@ -264,10 +271,10 @@ public static class StoreFingerprintBuilder
     }
 
     /// <summary>The printed area: the bounding box of everything not near white, in inches.</summary>
-    private static Rect2d ContentBox(Mat blank)
+    private static Rect2d ContentBox(Mat blank, double sourceDpi)
     {
         using var small = new Mat();
-        Cv2.Resize(blank, small, new Size(0, 0), 0.1, 0.1, InterpolationFlags.Area);
+        Cv2.Resize(blank, small, new Size(0, 0), 60 / sourceDpi, 60 / sourceDpi, InterpolationFlags.Area);
         using var gray = new Mat();
         Cv2.CvtColor(small, gray, ColorConversionCodes.BGR2GRAY);
         using var ink = new Mat();

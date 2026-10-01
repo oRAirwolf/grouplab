@@ -76,7 +76,7 @@ product. No picture of the target can be made from them: the colour layout is tw
 brightness changes around a point, not what the point looks like.
 
 **What is never committed or published.** The scans themselves, the packet photographs taken with them, and any picture made from either,
-including the trial's test pictures (entry 332) and the crops the tests make where the scans are on the computer. Those tests return at
+including the trial's test pictures (entry 332) and the crops the tests make where the scans are on the computer. A target fingerprinted from a camera photograph instead (entry 344, `grouplab target-reference`) follows the same rule: its reference file holds the fingerprint, the words, the bulls and the scale source, never the photograph. Those tests return at
 once anywhere else, so CI never needs them. The scans are Alan's to keep, and they stay on his computer.
 
 # The 2026-09-26 range day: three load sheets, the aim point card and two score sheets

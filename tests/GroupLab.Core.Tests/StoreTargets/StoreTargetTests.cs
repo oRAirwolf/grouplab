@@ -13,6 +13,7 @@ namespace GroupLab.Core.Tests.StoreTargets;
 /// the Shoot-N-C bullseye at 6 and 8 inches is a family whose sizes the person is asked about when the picture cannot tell them apart, and
 /// the printed size is used as the scale with a warning that is never shown for GroupLab's own sheets.
 /// </summary>
+[Collection("StoreTargetLibrary")]
 public class StoreTargetTests
 {
     private const string SixInch = "bc-34550-shoot-n-c-6in-bull";
@@ -50,7 +51,7 @@ public class StoreTargetTests
 
         // Entry 340 section 1: fingerprints only. No picture of another maker's target is a resource of the application.
         Assert.DoesNotContain(typeof(StoreTargetLibrary).Assembly.GetManifestResourceNames(),
-            n => n.Contains("StoreTargets", StringComparison.Ordinal) && !n.EndsWith(".glfp", StringComparison.Ordinal));
+            n => n.Contains("StoreTargets", StringComparison.Ordinal) && !n.EndsWith(".glfp", StringComparison.Ordinal) && n != StoreTargetLibrary.ListResource);
     }
 
     [Fact]

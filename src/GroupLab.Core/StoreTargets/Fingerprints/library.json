@@ -1,0 +1,10 @@
+{
+  "about": "NOTES-FROM-PLANNING.md entries 340 and 344: the store-bought targets GroupLab recognizes, each with its fingerprint beside this file. grouplab target-reference add adds to it.",
+  "targets": [
+    { "id": "bc-34105-shoot-n-c-sight-in", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} sight-in grid", "size": "8 in", "catalog": "34105", "family": null, "scaleSource": "Scan" },
+    { "id": "bc-34550-shoot-n-c-6in-bull", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} bullseye", "size": "6 in", "catalog": "34550", "family": "Shoot-N-C bullseye", "scaleSource": "Scan" },
+    { "id": "bc-34805-shoot-n-c-8in-bull", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} bullseye", "size": "8 in", "catalog": "34805", "family": "Shoot-N-C bullseye", "scaleSource": "Scan" },
+    { "id": "bc-34806-shoot-n-c-8in-crosshair", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} crosshair", "size": "8 in", "catalog": "34806", "family": null, "scaleSource": "Scan" },
+    { "id": "bc-37826-eze-scorer-bull", "maker": "Birchwood Casey", "name": "Eze-Scorer {size} bullseye", "size": "paper", "catalog": "37826", "family": null, "scaleSource": "Scan" }
+  ]
+}

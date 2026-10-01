@@ -14,6 +14,7 @@
     <EmbeddedResource Include="..\..\website\api\limits.json" LogicalName="GroupLab.limits.json" />
     <!-- NOTES-FROM-PLANNING.md entry 340: the store-bought targets' fingerprints, never a scan or picture of the maker's printing. -->
     <EmbeddedResource Include="StoreTargets\Fingerprints\*.glfp" LogicalName="GroupLab.Core.StoreTargets.Fingerprints.%(Filename).glfp" />
+    <EmbeddedResource Include="StoreTargets\Fingerprints\library.json" LogicalName="GroupLab.Core.StoreTargets.Fingerprints.library.json" />
   </ItemGroup>
 
   <ItemGroup>
