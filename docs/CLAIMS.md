@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1501 |
-| measured | 1930 |
+| code | 1502 |
+| measured | 1931 |
 | decided | 1283 |
 | unbacked | 0 |
-| **total** | **4714** |
+| **total** | **4716** |
 
-**1135** of them were read one sentence at a time and their backing written against the sentence. The other **3579** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1137** of them were read one sentence at a time and their backing written against the sentence. The other **3579** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -743,8 +743,10 @@ one that matters.
 - *measured* (the finder's run over scans/ against scans/phase1/measurements/holes-baseline.json and the two holes of docs/SCAN-MEASUREMENTS.md section 8, 2026-09-30 (entry 318 section 2); the 300_nm_hand_load case is AnyTargetHoleFinderTests.OnTheCommercialScanWithCheckedHolesItFindsWhatTheSurveyFoundAndNothingElse): On `300_nm_hand_load.jpg`, whose 27 holes a person checked, 25 are found and nothing else, as the survey found (`AnyTargetHoleFinderTests`); six of the marks not proposed again are the survey detector's own marks on the barcode of `338lmao.jpg`.
 - *measured* (grouplab st4 tests/GroupLab.Core.Tests/Analysis/st4-2026-09-20.json, with and without --any-target, on the local frames, 2026-09-30 (entry 318 section 2)): The National Target Company ST-4 of 2026-09-20, eight frames registered by its grid (`grouplab st4 --any-target`): 67 of the 410 shots in view found as a mark of their own and 29 marks near no group, where the survey's detector gives 54 of 400 and 13; the count of shots in view moves with the marks, because the grid is matched to the groups by them.
 - *measured* (grouplab st4 tests/GroupLab.Core.Tests/Analysis/st4-2026-09-20.json, with and without --any-target, on the local frames, 2026-09-30 (entry 318 section 2)): Five shot 6.5 Creedmoor groups at 100 yards run together, the finding of section 2, and the finder places one mark on such a group and says it is wider than one bullet.
-- *decided* (NOTES-FROM-PLANNING.md entry 308 section 4 and entry 318 section 2; docs/notes/for-alan.md request 58): The store-bought blank and shot scans of entry 308 are not on this machine yet (request 58); the scoreboard's corpus mode reads them with this finder when they are.
-- *measured* (the any-target scoreboard and the scans' run, 2026-09-30 (entry 318 section 2); docs/scoreboard/any-target-baseline.json): **What it cannot do yet:** a hole across the edge of a black bull; a hole in black print with a dark board behind it, where nothing lighter shows through; a light-cored hole with a thin rim on a scan; and a printed white center dot in a black bull, which is round and light, is proposed as a hole with no doubt unless it is wider than the bullet.
+- *decided* (NOTES-FROM-PLANNING.md entry 325: Alan's five blanks, none shot yet): **Store-bought blanks (entries 325 and 327, 2026-09-30, local only).** Five Birchwood Casey targets scanned blank at 600 dpi, none shot yet.
+- *measured* (NOTES-FROM-PLANNING.md entry 327, and the blank.png headers read 2026-09-30): Each scan is 4958 by 6458 pixels, 8.26 by 10.76 in, so the 8 in sheets and the Eze-Scorer run off one or more edges and the scanner's lid shows below the sheet: every scan is a crop of the target, and the shot scans will be too.
+- *measured* (a scratch run of the any-target finder against scans/phase1/measurements/holes-baseline.json, 2026-10-01 (entries 325 and 327), since deleted): On the fifteen committed commercial scans, measured before and after in the same way (a hole found within 0.1 in): with the .308 named, 331 of the 345 reference marks proposed again both times, with 351 proposals before and 350 after; with no bullet named, 330 both times, with 342 and 341.
+- *code* (tests/GroupLab.Core.Tests AnyTargetHoleFinderTests.OnTheCommercialScanWithCheckedHolesItFindsWhatTheSurveyFoundAndNothingElse): The hand-checked scan still gives 25 of 27 and nothing else.
 - *decided* (NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so): A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built) A photograph cannot measure how large a sheet was printed, because nothing in the frame has a known absolute size (`docs/WHAT-CAN-BE-MEASURED.md`).
 - *decided* (NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so): Entry 271 asked whether a card the size of a bank card, ISO/IEC 7810 ID-1, 85.60 by 53.98 mm, laid flat on the sheet, could supply one to better than about 0.5 percent at phone resolutions.
 - *decided* (NOTES-FROM-PLANNING.md entry 271 section 3: an estimate from the card geometry of ISO/IEC 7810 ID-1 and the capture distance in docs/USER-GUIDE.md section 3; not measured, and the section says so): **This is an estimate from the geometry, not a measurement, and nothing is promised until it has been measured on real photographs.** - **Resolution is not the limit.** A phone photograph of a Letter sheet from about 75 cm gives roughly 400 pixels an inch, so the card's long side spans about 1,350 pixels.

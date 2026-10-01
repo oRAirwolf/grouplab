@@ -4972,6 +4972,22 @@
   "On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device; **Send Beta Feedback** in TestFlight, or a screenshot shared to it, reaches the project.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "**Store-bought blanks (entries 325 and 327, 2026-09-30, local only).** Five Birchwood Casey targets scanned blank at 600 dpi, none shot yet.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 325: Alan's five blanks, none shot yet"
+  },
+  "Each scan is 4958 by 6458 pixels, 8.26 by 10.76 in, so the 8 in sheets and the Eze-Scorer run off one or more edges and the scanner's lid shows below the sheet: every scan is a crop of the target, and the shot scans will be too.": {
+   "kind": "measured",
+   "where": "NOTES-FROM-PLANNING.md entry 327, and the blank.png headers read 2026-09-30"
+  },
+  "On the fifteen committed commercial scans, measured before and after in the same way (a hole found within 0.1 in): with the .308 named, 331 of the 345 reference marks proposed again both times, with 351 proposals before and 350 after; with no bullet named, 330 both times, with 342 and 341.": {
+   "kind": "measured",
+   "where": "a scratch run of the any-target finder against scans/phase1/measurements/holes-baseline.json, 2026-10-01 (entries 325 and 327), since deleted"
+  },
+  "The hand-checked scan still gives 25 of 27 and nothing else.": {
+   "kind": "code",
+   "where": "tests/GroupLab.Core.Tests AnyTargetHoleFinderTests.OnTheCommercialScanWithCheckedHolesItFindsWhatTheSurveyFoundAndNothingElse"
   }
  },
  "rules": [
