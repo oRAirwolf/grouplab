@@ -24,6 +24,74 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 323: where velocity's share of the vertical shows (Alan chose Desktop B and Phone B)
+
+**Status: done 2026-10-01, every section.** Not done inside it: the phone's own picture of the card (section 5) waits for request 50's sitting, as the entry says the device check does; and while building it a pre-existing overlap of the plot's toggles over its key at 1400x900 was found (question 78).
+
+Answers the DESIGN NEEDED of entry 322 section 3. Canvas: claude.ai/artifact/2bN5w9Xgu13cWVaSvB3CXV (boards "Desktop B" and "Phone B",
+and "States, for either option"). Alan, 2026-10-01: "Desktop B with a toggle to turn off the velocity band on the composite target.
+Phone B. State wording fine." The numbers on the canvas are samples; every figure comes from `VelocityVertical` as `grouplab velocity`
+prints it. Main model; one worker.
+
+### 1. Desktop analysis: a block of its own, "Velocity and the vertical"
+
+In the right pane, directly after the Group block. From top to bottom:
+
+1. The heading "Velocity and the vertical", with "why" at the right (collapsed by default).
+2. The headline: the share as "about N%" in amber at the lead value size (the block's one amber figure), the interval beside it in dim
+   text ("18 to 87% at 90%"), at the confidence the result states.
+3. One sentence under it: "of this group's vertical comes from velocity alone; the rest is the rifle, the shooter and the wind."
+4. A meter from 0% to all of it: the interval as a tinted segment and the value as a mark; scale words "0%", "half", "all of it".
+5. Two bars on one shared scale: "Measured vertical SD" in the dim color, and "From velocity alone" in amber, each with its interval as
+   whiskers and its value at the right. The values follow the same unit rule as the Group block's figures.
+6. Only where readings were matched to shots by a reconciliation the person accepted: a chart "Height against velocity, shot by shot",
+   each shot a dot, the measured regression line solid and the solver's line dashed in amber, a small legend, and the slope sentence
+   under it ("Shot by shot, each 10 fps raised the hole 0.81 in (0.52 to 1.10). The solver says 0.70, inside that range.").
+7. "why" opens the lines the command prints (velocity SD with its interval, readings and mean; the solver's height per 10 fps at the
+   distance; vertical SD from velocity alone; measured vertical SD over the shots) and the closing sentence: "The predicted figures come
+   from the solver and the readings; only the measured vertical comes from the shots. The range errs wide, never narrow."
+
+### 2. Desktop picture: the velocity band, with a switch
+
+On the composite target picture, a "Velocity band" switch in the key, beside CEP and Extreme spread. On by default whenever section 1
+has a result; Alan must be able to turn it off, and the choice is remembered like the key's other switches. It draws a band one
+predicted vertical SD from velocity alone each way of the group center, amber at a light tint with dashed edges, labelled "velocity
+alone, 1 SD each way", and dotted lines one measured vertical SD each way, labelled "measured, 1 SD each way". Without a result the
+switch is not shown.
+
+### 3. Phone: a card of its own, above All figures
+
+On the result's figures, a card "Velocity and the vertical" above All figures, with the same content as section 1 in the same order
+(headline, sentence, meter, the two bars, the chart where shots are matched, the slope sentence, "why" collapsed). Full width; nothing
+squeezed at 320 wide (entry 295's rule). Phone parity (entry 258): the band of section 2 goes in the phone's Key the same way, with the
+same default and the same remembered switch.
+
+### 4. The states, wording approved
+
+The board "States, for either option" is approved word for word. In the block and the card:
+
+1. The data can tell: as above.
+2. The interval reaches all of it: the headline reads "the data cannot tell", then "Anywhere from N% to all of it, at 90%, from R
+   readings and S shots. More readings and shots narrow it." The meter's segment runs dashed to the end, with no mark.
+3. No chronograph readings: "Add this group's chronograph readings to see how much of its vertical comes from velocity." and an "Add
+   readings" button that opens the chronograph entry. No bars, no chart, no band.
+4. No distance, or no bullet BC: "The solver needs the distance shot and the bullet's BC to work this out." and a button that opens
+   whichever is missing. No bars, no chart, no band.
+5. Shot by shot disagrees with the solver (the solver's slope outside the measured slope's interval): "Shot by shot, each 10 fps raised
+   the hole X in (L to U). The solver says Y, outside that range: check the distance, the BC, or the order the readings were matched in."
+
+The confidence shown is the one the result states, never a fixed 90%.
+
+### 5. Everything public stays current (entry 267)
+
+README, guides, the Features page with its own picture of the block and the band (entry 256), the tour page for the analysis screen and
+the phone result, claims backing for any checkable sentence, and a release note in plain words.
+
+### 6. Done when
+
+Built on both platforms, tested (every state, the switch remembered, 320 wide), in the next nightly, and a line in for-alan.md saying
+where to look. The device check rides along with request 50's sitting.
+
 ## 2026-10-01, entry 322: question 77 answered, and an hour of three workers before the weekly reset
 
 **Status: done 2026-10-01 (all three workers and question 77); DESIGN NEEDED for where velocity's share shows.**

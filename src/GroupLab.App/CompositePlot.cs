@@ -195,6 +195,22 @@ internal sealed class CompositePlot : Control
         InvalidateVisual();
     }
 
+    /// <summary>
+    /// Entry 323 section 2: the vertical SD velocity alone would make and the vertical SD measured, in inches, where the block "Velocity and
+    /// the vertical" has a result. Drawn about the group center when <see cref="PlotMarks.VelocityBand"/> is on; null draws nothing.
+    /// </summary>
+    public (double PredictedSdInches, double MeasuredSdInches)? VelocityBand { get; set; }
+
+    /// <summary>Whether the band is drawn: there is one, its switch is on, and there is a centre to draw it about.</summary>
+    internal bool BandShown => Shown.VelocityBand && VelocityBand is not null && Centre is not null;
+
+    /// <summary>The band's edges, dashed, and the measured SD's lines, dotted.</summary>
+    private static readonly IDashStyle BandEdge = new DashStyle([5, 3], 0);
+
+    private static readonly IDashStyle MeasuredDots = new DashStyle([1, 3], 0);
+
+    internal const double BandTint = 0.16;
+
     /// <summary>The two shots that make the extreme spread, by id.</summary>
     public (int First, int Second)? SpreadPair { get; set; }
 
@@ -444,6 +460,13 @@ internal sealed class CompositePlot : Control
                 }
             }
 
+            // Entry 323 section 2: the band velocity alone would make, behind the shots: a light amber tint one predicted vertical SD each
+            // way of the group center with dashed edges, and dotted lines one measured vertical SD each way, each labelled at the right.
+            if (BandShown && VelocityBand is { } band && Centre is { } bandCentre)
+            {
+                DrawBand(context, ToScreen(bandCentre).Y, band.PredictedSdInches * scale, band.MeasuredSdInches * scale, area);
+            }
+
             // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre. A picked shot waits
             // for the top.
             var unpicked = Shots.Where(s => !Selected.Contains(s.Id)).OrderBy(s => !s.Excluded).ToList();
@@ -488,11 +511,56 @@ internal sealed class CompositePlot : Control
                 DrawOutline(context, shot, scale);
                 DrawShot(context, shot);
             }
+
+            if (BandShown && VelocityBand is { } labelled && Centre is { } labelCentre)
+            {
+                DrawBandLabels(context, ToScreen(labelCentre).Y, labelled.PredictedSdInches * scale, labelled.MeasuredSdInches * scale, area);
+            }
         }
 
         if (ShowKey)
         {
             DrawKey(context);
+        }
+    }
+
+    /// <summary>The velocity band across the whole plot about a height on screen, and the measured SD's two dotted lines.</summary>
+    private void DrawBand(DrawingContext context, double y, double predicted, double measured, Rect area)
+    {
+        var amber = Tokens.For(ActualThemeVariant).MarkAmber;
+        context.FillRectangle(new SolidColorBrush(amber, BandTint), new Rect(area.Left, y - predicted, area.Width, 2 * predicted));
+        var edge = new Pen(new SolidColorBrush(amber), Stroke, BandEdge);
+        var dots = new Pen(new SolidColorBrush(inks.Ink), Stroke, MeasuredDots);
+        foreach (double side in new[] { -1.0, 1.0 })
+        {
+            context.DrawLine(edge, new Point(area.Left, y + (side * predicted)), new Point(area.Right, y + (side * predicted)));
+            context.DrawLine(dots, new Point(area.Left, y + (side * measured)), new Point(area.Right, y + (side * measured)));
+        }
+
+    }
+
+    /// <summary>
+    /// The band's two labels, each just above its upper line at the right, drawn last on a backing of the paper so no circle or shot crosses
+    /// them; where the two lines are too close for both, the measured one goes below its lower line instead.
+    /// </summary>
+    private void DrawBandLabels(DrawingContext context, double y, double predicted, double measured, Rect area)
+    {
+        var amber = Tokens.For(ActualThemeVariant).MarkAmber;
+        var typeface = new Typeface(Tokens.Sans);
+        var band = new FormattedText(VelocityBlock.BandLabel, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, Tokens.SecondarySize, new SolidColorBrush(amber));
+        var spread = new FormattedText(VelocityBlock.MeasuredLabel, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, Tokens.SecondarySize, new SolidColorBrush(inks.Ink));
+        double bandTop = y - predicted - band.Height - 2;
+        double spreadTop = y - measured - spread.Height - 2;
+        if (Math.Abs(spreadTop - bandTop) < band.Height + 2)
+        {
+            spreadTop = y + measured + 2;
+        }
+
+        foreach (var (text, top) in new[] { (band, bandTop), (spread, spreadTop) })
+        {
+            var at = new Point(Math.Max(area.Left, area.Right - text.Width - 8), top);
+            context.FillRectangle(new SolidColorBrush(inks.Paper, 0.85), new Rect(at.X - 3, at.Y, text.Width + 6, text.Height));
+            context.DrawText(text, at);
         }
     }
 
@@ -577,6 +645,19 @@ internal sealed class CompositePlot : Control
             {
                 entries.Add(new KeyEntry($"CEP {percent}, the green {look} circle", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Group), p, 6, CepStroke, dash)));
             }
+        }
+
+        if (BandShown)
+        {
+            var amber = Tokens.For(ActualThemeVariant).MarkAmber;
+            entries.Add(new KeyEntry(VelocityBlock.BandLabel + ", the amber band", (c, p) =>
+            {
+                c.FillRectangle(new SolidColorBrush(amber, BandTint), new Rect(p.X - 8, p.Y - 5, 16, 10));
+                c.DrawLine(new Pen(new SolidColorBrush(amber), Stroke, BandEdge), p + new Vector(-8, -5), p + new Vector(8, -5));
+                c.DrawLine(new Pen(new SolidColorBrush(amber), Stroke, BandEdge), p + new Vector(-8, 5), p + new Vector(8, 5));
+            }));
+            entries.Add(new KeyEntry(VelocityBlock.MeasuredLabel + ", the dotted lines", (c, p) =>
+                c.DrawLine(new Pen(new SolidColorBrush(inks.Ink), Stroke, MeasuredDots), p + new Vector(-8, 0), p + new Vector(8, 0))));
         }
 
         if (Centre is not null)

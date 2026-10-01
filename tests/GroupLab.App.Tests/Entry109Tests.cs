@@ -481,6 +481,66 @@ public class Entry109Tests
                         window.ShowCompare(false);
                     }
 
+                    // Entry 323: the Features page's own picture of "Velocity and the vertical", the block and the band, after every other
+                    // screen so no other picture carries the readings. The synthetic sheet's group is a 100 yd group a tenth of an inch
+                    // across, and readings that made velocity a share of it would spread 2 ft/s; so the plain sample target, marked by hand,
+                    // with five shots on each bull spread as a good rifle groups at 300 yd, and readings made so that velocity is about a
+                    // third of the vertical and follows the solver's slope, each paired with its shot.
+                    string velocitySheet = PlainSample();
+                    try
+                    {
+                        window.OpenImage(velocitySheet);
+                        window.Session.SetCalibre(Calibre.Of(0.308));
+                        window.Session.SetShotDistance(300 * 36);
+                        window.Session.SetEquipment(rifle, null, "Test load");
+                        window.CalibreAnswered();
+                        Dispatcher.UIThread.RunJobs();
+                        window.Session.SetScale(new LengthReference(new PointD(PlainCentres[0].X - PlainOuter, PlainCentres[0].Y), new PointD(PlainCentres[0].X + PlainOuter, PlainCentres[0].Y), 2.0 * PlainOuter / PlainDpi));
+                        foreach (var centre in PlainCentres)
+                        {
+                            window.Session.AddBull(centre);
+                        }
+
+                        var spread = new Random(3231);
+                        double Gauss() => Math.Sqrt(-2 * Math.Log(1 - spread.NextDouble())) * Math.Cos(2 * Math.PI * spread.NextDouble());
+                        foreach (var centre in PlainCentres)
+                        {
+                            for (int shot = 0; shot < 5; shot++)
+                            {
+                                window.Session.AddShot(new PointD(centre.X + Math.Clamp(0.55 * PlainDpi * Gauss(), -190, 190), centre.Y + Math.Clamp(0.8 * PlainDpi * Gauss(), -250, 250)));
+                            }
+                        }
+
+                        window.Analyse();
+                        window.ShowBallistics();
+                        window.ReadChronograph("Chronograph", "2026-10-01", string.Join(", ", Enumerable.Repeat(2710, 200)));
+                        var order = window.ChronographPairing.Where(p => p.Shot is not null).Select(p => p.Shot!.Value).ToList();
+                        var state = window.Session.State;
+                        var byId = state.Shots.ToDictionary(s => s.Id);
+                        var offsets = GroupAnalysis.CompositeOffsets(state, [.. order.Select(id => byId[id])]);
+                        double[] up = [.. offsets.Select(o => -o.Y)];
+                        double meanUp = up.Average(), sdUp = Math.Sqrt(up.Sum(u => (u - meanUp) * (u - meanUp)) / (up.Length - 1));
+                        double k = GroupLab.Core.Ballistics.Projection.DropPerFps(new GroupLab.Core.Ballistics.BallisticInput(0.326, GroupLab.Core.Ballistics.DragModel.G7, 2710, 140, 1.75, 100), 300);
+                        var noise = new Random(323);
+                        double Normal() => Math.Sqrt(-2 * Math.Log(1 - noise.NextDouble())) * Math.Cos(2 * Math.PI * noise.NextDouble());
+                        var readings = up.Select(u => Math.Round(2710 + (0.36 * (u - meanUp) / k) + (0.48 * sdUp / k * Normal()), 1));
+                        window.ReadChronograph("Chronograph", "2026-10-01", string.Join(", ", readings.Select(r => r.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture))));
+                        window.AcceptChronograph();
+                        window.ShowBallistics(false);
+                        foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
+                        {
+                            window.SetTheme(theme);
+                            Dispatcher.UIThread.RunJobs();
+                            Assert.True(window.Velocity is { HasResult: true }, window.Velocity?.Sentence);
+                            window.BringVelocityIntoView();
+                            Save(window, $"velocity-{name}-{width}x{height}");
+                        }
+                    }
+                    finally
+                    {
+                        GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(velocitySheet)!);
+                    }
+
                     window.Close();
                 }
                 finally

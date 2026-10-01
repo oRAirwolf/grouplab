@@ -41,7 +41,8 @@ public sealed record ReportPlot(
 /// </summary>
 /// <param name="Cep99">Entry 227 section 3: CEP 99, off until chosen.</param>
 /// <param name="CustomPercent">Entry 227 section 3.2: a circle for any percent from 1 to 99.9, set under Advanced; none until one is typed.</param>
-public sealed record PlotMarks(bool Cep50, bool Cep90, bool Cep95, bool Spread, bool Cep99 = false, double? CustomPercent = null)
+/// <param name="VelocityBand">Entry 323 section 2: the band velocity alone would make, on wherever there is a result to draw it from.</param>
+public sealed record PlotMarks(bool Cep50, bool Cep90, bool Cep95, bool Spread, bool Cep99 = false, double? CustomPercent = null, bool VelocityBand = true)
 {
     /// <summary>CEP 50 and 90 and the extreme spread on, CEP 95 and 99 off, no percent of one's own.</summary>
     public static PlotMarks Default { get; } = new(true, true, false, true);

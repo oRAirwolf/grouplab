@@ -31,6 +31,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Pictures from any photo app | `any-photo-app` | on the phone | entry 292: Android's photo picker, From another app, and sharing one or several from any app; the phone's own, so the computer's row is Open by dropping or pasting. On iPhone and iPad: the Photos picker, Files, and a share extension, since iOS lets no app into Google Photos' library; the simulator proves the pickers open and a shared or opened picture is read, and choosing, iCloud and the share sheet wait for the TestFlight sitting | on a device |
 | The figures you read off a target | `six-figures` | on the phone | | on iOS |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page | on iOS |
+| Velocity and the vertical | `velocity` | on the phone | entry 323 section 3, Phone B: a card above All figures, the band's chip under the plot, readings pasted on a page of their own | on iOS |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures | on iOS |
 | Every figure explained | `why` | on the phone | entry 259 screen 1, the explanation sheet | on iOS |
 | Compare loads honestly | `compare` | on the phone | entry 259 screen 4, one figure at a time; entry 295: each name on its own line, sessions named by load, date and time, and extreme spread pointing to mean radius; entry 309 section 2: each load's group drawn in its own color, which the iOS self-test checks with two loads | on iOS |

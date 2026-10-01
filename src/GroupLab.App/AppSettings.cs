@@ -144,7 +144,8 @@ public sealed class AppSettingsStore(string path)
     /// <summary>Entry 204 section 1.4: the composite plot's toggles, remembered; <see cref="PlotMarks.Default"/> until one is changed.</summary>
     public PlotMarks LoadPlotMarks() => Read(file => file["plotMarks"] is JsonObject o
         ? new PlotMarks((bool?)o["cep50"] ?? true, (bool?)o["cep90"] ?? true, (bool?)o["cep95"] ?? false, (bool?)o["spread"] ?? true,
-            (bool?)o["cep99"] ?? false, (double?)o["cepPercent"] is { } p and >= PlotMarks.LeastPercent and <= PlotMarks.MostPercent ? p : null)
+            (bool?)o["cep99"] ?? false, (double?)o["cepPercent"] is { } p and >= PlotMarks.LeastPercent and <= PlotMarks.MostPercent ? p : null,
+            (bool?)o["velocityBand"] ?? true)
         : null) ?? PlotMarks.Default;
 
     /// <summary>Entry 210 section 2.1: whether the composite plot shows the whole target rather than the group; the group until chosen.</summary>
@@ -160,6 +161,7 @@ public sealed class AppSettingsStore(string path)
         ["spread"] = shown.Spread,
         ["cep99"] = shown.Cep99,
         ["cepPercent"] = shown.CustomPercent,
+        ["velocityBand"] = shown.VelocityBand,
     });
 
     /// <summary>The remembered theme, NOTES-FROM-PLANNING.md entry 42 section 2: dark, light, or following the system, which is the default.</summary>

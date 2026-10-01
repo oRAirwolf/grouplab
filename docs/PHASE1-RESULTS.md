@@ -40,6 +40,43 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 323: Velocity and the vertical, Desktop B and Phone B
+
+Done 2026-10-01, one worker on the main model.
+
+- **The one computation.** `VelocityBlocks.Build` (src/GroupLab.Core/Marking/VelocityBlock.cs) turns `VelocityVertical.Analyze` into
+  what both screens draw, so every figure is `grouplab velocity`'s: the session's newest chronograph string (never several pooled), the
+  pairs a person accepted for it, the session's load's BC and drag model, the rifle's sight height and zero where it records them (1.5 in
+  and 100 yd otherwise, said under why), and the counted shots' heights. Its five states carry the approved words; the confidence shown
+  is the result's own (`TheConfidenceShownIsTheResults` asks for 80%).
+- **1, the desktop block** (`VelocityBlockView`, shared with the phone): directly after the Group block, the heading with why at its
+  right, closed and remembered; the share at the lead size in amber with its interval; the sentence; the meter; the two bars with
+  whiskers, each value by the Group block's rule with the size on the paper beneath; the chart and its sentence where shots are paired;
+  why. The slope and why sentences give heights on the paper, as the entry's sample sentence does, because an angle to two places reads
+  0.00 for velocity's few hundredths of an inch at 100 yd.
+- **2, the band:** amber tint one predicted SD each way of the group center with dashed edges, dotted lines one measured SD each way,
+  both labelled on a backing drawn last; a Velocity band switch beside Extreme spread, shown only with a result, on by default, kept in
+  the remembered plot marks (`PlotMarks.VelocityBand`).
+- **3, the phone:** a card above All figures, full width; a Velocity band chip under the plot, and the phone's chips are now remembered
+  as the desktop's are. The phone had no chronograph entry and no way to set the distance after a picture was read, so a button there
+  would have opened nothing: Add readings opens a page to paste them, read, then "Keep, paired in this order" or "Keep without pairing";
+  Set the distance a page taking yards or metres; Set the load's BC opens Ballistics on the load's form. Where a phone session names no
+  load, the load the phone's Ballistics page uses (the first kept) is taken, and why names it.
+- **A real fault fixed on the way:** accepting a chronograph pairing on the desktop stored each reading's position counted from 0 where the
+  store counts from 1, so whenever the first reading belonged to a shot the store refused the pairing (a foreign key failure), and
+  otherwise every shot was paired with the reading after its own. Entry 115's test only passed because its first reading belonged to no
+  shot. Now stored from 1, on both platforms; that test now checks the positions. A pairing saved before this build with the first reading
+  marked as no shot reads one place off; none is known to exist.
+- **4, the states:** every one tested in Core (`VelocityBlockTests`, 9), on the desktop (`Entry323Tests`, 2: the order in the column,
+  readings to result, the switch shown only with a band and remembered, the BC button to Equipment) and on the phone (`Entry323Tests`, 2:
+  the card above All figures at 320 wide with nothing broken inside a word, readings pasted and paired, the chip remembered; the distance
+  page in yards and metres).
+- **5, everything public:** the README (velocity regression is no longer "not built"), the user guide's analysis section, the tour's
+  analysis stop on both sides, the Features page with its own picture (`velocity`, rendered by the screenshot walk at 600 yd with
+  readings made by the walk), PHONE-PARITY, the claims backing, and two release notes. The phone's own picture waits for request 50's
+  sitting, as the Features entry says.
+- **Found, not mine to change:** at 1400x900 the plot's toggles already cover the last lines of its key; question 78.
+
 ## Entries 319 and 320: the TestFlight groups, and Public Beta's first review left alone
 
 Done 2026-09-30 as far as Apple allows. Every testflight run since the groups were made (about 20:49 UTC) had stopped at App Store

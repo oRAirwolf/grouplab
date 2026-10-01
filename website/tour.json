@@ -236,7 +236,7 @@
     ],
     [
      "The key, top left",
-     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed. Toggles beside the plot turn CEP 50, 90 and 95 and the extreme spread on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
+     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed, and, where the session has chronograph readings, the amber velocity band. Toggles beside the plot turn CEP 50, 90 and 95, the extreme spread and the velocity band on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
     ],
     [
      "Zero correction",
@@ -245,6 +245,10 @@
     [
      "Group",
      "Center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. With the shot distance set each is an angle first, in your scope's unit, mil or MOA, with its size on the paper beneath; without it, the size on the paper and a button to set the distance. Hover over a figure for the range it could really be and the figure without any shot you left out."
+    ],
+    [
+     "Velocity and the vertical",
+     "How much of the group's up-and-down spread comes from velocity alone, from the session's chronograph readings and the load's BC at the distance shot: the share in amber with its range, a meter from none to all of it, and the measured vertical spread beside what velocity alone would make. Where each reading was paired with its shot, a chart of height against velocity says whether the shots follow the solver. Without readings, the distance or the BC it says which is missing, with a button to it; where the range reaches all of the spread it says the data cannot tell."
     ],
     [
      "Advanced, closed until you open it",
@@ -292,6 +296,13 @@
      "/research/when-to-adjust-zero/"
     ]
    ],
+   "moreShots": [
+    [
+     "velocity",
+     "Velocity and the vertical under the group's figures, with the velocity band on the plot and a chart of height against velocity",
+     "With a group's chronograph readings, Velocity and the vertical: about how much of the vertical comes from velocity alone, the two spreads side by side, and each shot's height against the reading paired with it, beside the solver's slope. The amber band on the plot is what velocity alone would make."
+    ]
+   ],
    "mobile": {
     "shot": "fold-result",
     "caption": "A result on a Galaxy Z Fold 7's cover screen, from a scan of 25 shots, nightly 115.",
@@ -307,6 +318,10 @@
      [
       "The plot",
       "Every shot on one bull, with the group's center, the circles and the extreme spread. Key explains the lines."
+     ],
+     [
+      "Velocity and the vertical",
+      "A card above All figures, the same as the desktop's block: how much of the vertical comes from velocity alone, from the session's readings. Add readings opens a box to paste them in, and Velocity band under the plot turns its band on and off."
      ],
      [
       "Share this session, Another target",

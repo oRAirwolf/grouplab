@@ -10,6 +10,9 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "A target photographed from about 3 ft away is now read too",
+    "A target photographed from about 2 ft away is now read",
+    "On a photograph taken through a lens that bends the picture hard",
     "A shot you leave out of the figures is now left out of every figure",
     "Importing shots from a CSV file now starts from GroupLab's guesses",
     "The glossary now says exactly how mean radius",
@@ -342,6 +345,26 @@
       "article": "shots-to-zero",
       "mobile": {
         "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "velocity",
+      "group": "The numbers",
+      "name": "Velocity and the vertical",
+      "sentence": "From a group's chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off. Where each reading is paired with its shot, a chart of height against velocity says whether the shots follow the solver.",
+      "shot": "velocity",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "since": "next",
+      "note": "shows how much of a group's up-and-down spread comes from velocity alone",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "the phone's card is photographed at the next sitting with the phone"
       }
     },
     {

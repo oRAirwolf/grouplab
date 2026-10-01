@@ -278,6 +278,9 @@ public sealed partial class MainWindow : Window
 
     private readonly CheckBox spreadBox = new() { Content = "Extreme spread", MinHeight = 44 };
 
+    /// <summary>Entry 323 section 2: the velocity band's switch, in the key beside CEP and Extreme spread, shown only where there is a band.</summary>
+    private readonly CheckBox velocityBandBox = new() { Content = "Velocity band", MinHeight = 44, IsVisible = false };
+
     /// <summary>Entry 210 section 2.1: the plot's framing, the group or the whole target, remembered.</summary>
     private readonly RadioButton groupView = new() { Content = "Group", GroupName = "plotFraming", MinHeight = 44 };
 
@@ -1047,6 +1050,8 @@ public sealed partial class MainWindow : Window
         // Entry 273: the one-time hint under the group's figures, until a number has been tapped once.
         unitHint.IsVisible = !settingsStore.LoadUnitTapped();
         figures.Children.Add(unitHint);
+        // Entry 323 section 1: velocity's share of the vertical, a block of its own directly after the Group block.
+        figures.Children.Add(velocityPanel);
         var advanced = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, Tokens.Space8, 0, 0) };
         advanced.Children.Add(advancedFigures);
         advanced.Children.Add(Ruled("A circle for any percent"));
@@ -1093,7 +1098,7 @@ public sealed partial class MainWindow : Window
         // Entry 280 section 2: Shots A, Share A, the aim points and Zero from this group, the phone's row 10 in the desktop's layout.
         BuildGroupTools(shotsColumn, figures);
         outlinesBox.MinHeight = 44;
-        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { groupView, wholeView, outlinesBox, cep50Box, cep90Box, cep95Box, cep99Box, spreadBox } };
+        outlinesToggle.Child = new WrapPanel { Orientation = Orientation.Horizontal, Children = { groupView, wholeView, outlinesBox, cep50Box, cep90Box, cep95Box, cep99Box, spreadBox, velocityBandBox } };
         bool wholeChosen = settingsStore.LoadPlotWholeTarget();
         plot.WholeTarget = wholeChosen;
         (groupView.IsChecked, wholeView.IsChecked) = (!wholeChosen, wholeChosen);
@@ -1109,13 +1114,13 @@ public sealed partial class MainWindow : Window
         };
         var shown = settingsStore.LoadPlotMarks();
         plot.Shown = shown;
-        (cep50Box.IsChecked, cep90Box.IsChecked, cep95Box.IsChecked, cep99Box.IsChecked, spreadBox.IsChecked) = (shown.Cep50, shown.Cep90, shown.Cep95, shown.Cep99, shown.Spread);
+        (cep50Box.IsChecked, cep90Box.IsChecked, cep95Box.IsChecked, cep99Box.IsChecked, spreadBox.IsChecked, velocityBandBox.IsChecked) = (shown.Cep50, shown.Cep90, shown.Cep95, shown.Cep99, shown.Spread, shown.VelocityBand);
         cepPercentBox.Text = shown.CustomPercent?.ToString("0.#", CultureInfo.CurrentCulture) ?? "";
-        foreach (var box in new[] { cep50Box, cep90Box, cep95Box, cep99Box, spreadBox })
+        foreach (var box in new[] { cep50Box, cep90Box, cep95Box, cep99Box, spreadBox, velocityBandBox })
         {
             box.IsCheckedChanged += (_, _) =>
             {
-                plot.Shown = plot.Shown with { Cep50 = cep50Box.IsChecked == true, Cep90 = cep90Box.IsChecked == true, Cep95 = cep95Box.IsChecked == true, Cep99 = cep99Box.IsChecked == true, Spread = spreadBox.IsChecked == true };
+                plot.Shown = plot.Shown with { Cep50 = cep50Box.IsChecked == true, Cep90 = cep90Box.IsChecked == true, Cep95 = cep95Box.IsChecked == true, Cep99 = cep99Box.IsChecked == true, Spread = spreadBox.IsChecked == true, VelocityBand = velocityBandBox.IsChecked == true };
                 settingsStore.SavePlotMarks(plot.Shown);
                 if (box == cep99Box)
                 {
@@ -1390,6 +1395,68 @@ public sealed partial class MainWindow : Window
         advancedFigures.Children.Add(shotOrder);
         advancedFigures.Children.Add(Note(shotOrder.Description));
     }
+
+    /// <summary>The block "Velocity and the vertical", entry 323 section 1, in its ruled border after the Group block.</summary>
+    private readonly Border velocityPanel = new() { BorderThickness = new Thickness(0, 1, 0, 0), Padding = new Thickness(0, Tokens.Space4, 0, 0), IsVisible = false, Classes = { AppStyles.Ruled } };
+
+    private const string VelocityWhyItem = "analysis-velocity-why";
+
+    /// <summary>The block as last built, for the headless tests.</summary>
+    internal VelocityBlock? Velocity { get; private set; }
+
+    /// <summary>
+    /// Entry 323 sections 1, 2 and 4: the block from the session's newest chronograph string and the pairing accepted for it, the load's BC and
+    /// the distance shot, sized by the Group block's rule; and the band on the plot with its switch, which is shown only where there is a band.
+    /// </summary>
+    private void ShowVelocity(MarkingState state)
+    {
+        var (readings, pairs) = sessions is not null && currentSession is { } id ? VelocityBlocks.Readings(sessions, id) : (null, []);
+        double? distance = state.ShotDistanceInches;
+        Velocity = VelocityBlocks.Build(state, book.FindLoad(state.Load), readings, pairs, units, inches => Sized(inches, distance).Value,
+            beneath: inches => Sized(inches, distance).Beneath);
+        velocityPanel.IsVisible = Velocity is not null;
+        velocityPanel.Child = Velocity is { } block
+            ? VelocityBlockView.Build(block, VelocityAction, units.Speed, WhyOpen(VelocityWhyItem), open => RememberOpen(VelocityWhyItem, open))
+            : null;
+        plot.VelocityBand = Velocity?.Band;
+        velocityBandBox.IsVisible = plot.VelocityBand is not null;
+    }
+
+    /// <summary>The button of states 3 and 4: the chronograph entry, the shot distance, or the session's load where its BC goes.</summary>
+    internal void VelocityAction(VelocityBlockState state)
+    {
+        switch (state)
+        {
+            case VelocityBlockState.NoReadings:
+                Go(Destination.Ballistics);
+                chronoReadings.Focus();
+                break;
+            case VelocityBlockState.NoDistance:
+                SetAnalysing(false);
+                shotDistance.Focus();
+                break;
+            case VelocityBlockState.NoBc:
+                if (book.FindLoad(session.State.Load) is { } load)
+                {
+                    equipmentKind = EquipmentKind.Load;
+                    equipmentEditing = load.Name;
+                    Go(Destination.Equipment);
+                    ShowEquipmentScreen();
+                }
+                else
+                {
+                    ShowEquipment(EquipmentKind.Load);
+                }
+
+                break;
+        }
+    }
+
+    /// <summary>Scrolls the figure column to the block, for the screenshot walk's picture of it.</summary>
+    internal void BringVelocityIntoView() => velocityPanel.BringIntoView();
+
+    /// <summary>The velocity band's switch, for the headless tests.</summary>
+    internal CheckBox VelocityBandToggle => velocityBandBox;
 
     /// <summary>What the shot order chart says, for the headless tests.</summary>
     internal string ShotOrderSays => shotOrder.Description;
@@ -2993,6 +3060,7 @@ public sealed partial class MainWindow : Window
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
         // Entry 219 item A4: the plot fills itself from the marking, the same way on the phone.
         var plotted = plot.Show(state, plotDefinition, units, ShotLabel, BullLabel);
+        ShowVelocity(state);
         outlinesBox.IsVisible = state.Calibre is not null;
         plotSelection.RemoveWhere(id => plotted.All(p => p.Id != id));
         if (canvas.Selected is { } selected && !plotSelection.Contains(selected))

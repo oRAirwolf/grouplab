@@ -56,6 +56,8 @@
     <Compile Include="..\..\src\GroupLab.App\SurveyQueue.cs" Link="Shared\SurveyQueue.cs" />
     <Compile Include="..\..\src\GroupLab.App\BenchmarkPanel.cs" Link="Shared\BenchmarkPanel.cs" />
     <Compile Include="..\..\src\GroupLab.App\CompositePlot.cs" Link="Shared\CompositePlot.cs" />
+    <!-- Entry 323 section 3: Velocity and the vertical, the same block as the desktop's. -->
+    <Compile Include="..\..\src\GroupLab.App\VelocityBlockView.cs" Link="Shared\VelocityBlockView.cs" />
     <!-- Entry 280 section 2, Share A: the picture with its results box, the same control as the desktop's window. -->
     <Compile Include="..\..\src\GroupLab.App\SharePicture.cs" Link="Shared\SharePicture.cs" />
     <Compile Include="..\..\src\GroupLab.App\ShotsCurve.cs" Link="Shared\ShotsCurve.cs" />

@@ -169,7 +169,8 @@ public class Entry115Tests
             Assert.Equal("Garmin Xero C1", kept.Source);
             Assert.Equal(shots + 1, kept.VelocitiesFps.Count);
             Assert.Equal(shots, window.Sessions.ShotVelocities(id).Count);
-            Assert.DoesNotContain(window.Sessions.ShotVelocities(id), v => v.Ordinal == 0);
+            Assert.DoesNotContain(window.Sessions.ShotVelocities(id), v => v.Ordinal == 1);
+            Assert.All(window.Sessions.ShotVelocities(id), v => Assert.InRange(v.Ordinal, 2, shots + 1));
 
             // The readings' own spread reaches the load, with where it came from, and the Ballistics screen says so.
             var load = window.Book.FindLoad("H4350 41.5")!;

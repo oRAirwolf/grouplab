@@ -41,6 +41,7 @@ Store listing uses 1920x1080.
 | `sessions` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/sessions/, README.md, docs/USER-GUIDE.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `settings` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/settings/, docs/USER-GUIDE.md | Entry109Tests synthetic sheet; no sheet at all |
 | `shots-to-zero` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/analysis-open/ | Entry109Tests synthetic sheet |
+| `velocity` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests plain sample target, marked by hand with a 300 yd group, and readings made by the walk, each paired with its shot |
 | `targets` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/targets/, README.md, docs/USER-GUIDE.md | built-in library sheet |
 | `targets-zero` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/targets/ | built-in library sheet |
 
@@ -90,7 +91,7 @@ sheet or view is not finished until the Features page has its own picture of it.
 
 **Their own picture now:** the E bull (`sheet-e-bull`), the C bull with its dot (`sheet-c-bull`), the zeroing grids (the four C3
 sheets, MOA and mil at 100 yd and 100 m, credited to Alan with Jylee and Unholy), large format on a home printer (`sheet-large-set`,
-the four Letter sheets), Shots Needed to Zero (credited to Jylee), Ballistics and hit chances (the Hit probability view), Made for
+the four Letter sheets), Shots Needed to Zero (credited to Jylee), Velocity and the vertical (the block and the band, entry 323), Ballistics and hit chances (the Hit probability view), Made for
 your optic, the Targets screen, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
 read off a target, and the three sharing choices (Settings, where they are made).
 

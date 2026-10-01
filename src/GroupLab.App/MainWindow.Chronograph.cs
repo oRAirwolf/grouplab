@@ -125,9 +125,11 @@ public sealed partial class MainWindow
         var pairs = ChronographPairs();
         long stringId = sessions.AddChronographString(session_, string.IsNullOrWhiteSpace(chronoSource.Text) ? "Chronograph" : chronoSource.Text!.Trim(),
             string.IsNullOrWhiteSpace(chronoDate.Text) ? null : chronoDate.Text!.Trim(), chronoValues);
+        // The store counts a string's readings from 1 and the pairing from 0. Mapping the index itself named the reading after the one paired,
+        // and where the first reading belonged to a shot it named a reading that does not exist, which the store refused (entry 323).
         foreach (var pair in pairs.Where(p => p is { ShotId: not null, Reading: not null }))
         {
-            sessions.MapShot(new ShotVelocity(session_, pair.ShotId!.Value, stringId, pair.Reading!.Value));
+            sessions.MapShot(new ShotVelocity(session_, pair.ShotId!.Value, stringId, pair.Reading!.Value + 1));
         }
 
         var kept = pairs.Where(p => p is { ShotId: not null, Reading: not null }).Select(p => chronoValues[p.Reading!.Value]).ToList();

@@ -38,6 +38,38 @@ internal sealed class FiguresView : UserControl
         Content = column;
     }
 
+    /// <summary>The session's id on the phone, where its chronograph readings are kept; null where it could not be saved.</summary>
+    public long? SessionId { get; set; }
+
+    /// <summary>What the card's button does in states 3 and 4; the result sets it.</summary>
+    public Action<VelocityBlockState>? VelocityAction { get; set; }
+
+    /// <summary>The card "Velocity and the vertical" as last built, for the tests.</summary>
+    internal VelocityBlock? Velocity { get; private set; }
+
+    private bool velocityWhyOpen;
+
+    /// <summary>
+    /// Entry 323 section 3: the block from the session's newest chronograph string and its accepted pairing, the distance shot, and the load:
+    /// the session's own, or where it names none the load the phone's Ballistics page uses, the first kept. Sizes follow the units switch.
+    /// </summary>
+    private VelocityBlock? BuildVelocity(Func<double, string> size, Func<double, string?> beneath)
+    {
+        try
+        {
+            var store = PhoneAnalysis.Store();
+            var book = store.LoadBook();
+            var load = book.FindLoad(state.Load) ?? (state.Load is null ? book.Loads.FirstOrDefault() : null);
+            var (readings, pairs) = SessionId is { } id ? VelocityBlocks.Readings(store, id) : (null, []);
+            return VelocityBlocks.Build(state, load, readings, pairs, units, size, beneath: beneath);
+        }
+        catch (Microsoft.Data.Sqlite.SqliteException e)
+        {
+            GroupLab.App.Diagnostics.DiagnosticLog.Exception(GroupLab.App.Diagnostics.LogLevel.Warn, "velocity.block", e);
+            return null;
+        }
+    }
+
     /// <summary>The explanation sheet, for the page to lay over everything at its bottom edge.</summary>
     public Control Sheet => sheet;
 
@@ -99,13 +131,22 @@ internal sealed class FiguresView : UserControl
             column.Children.Add(Screens.Dim("Enter the distance on Capture to see the angles."));
         }
 
-        // The plot and its chips: each circle drawn as on the desktop, and the sheet's own bulls behind the shots.
+        // The size of a figure as the tiles write it: the angle chosen above where the distance allows, the person's length otherwise.
+        var shownAngle = angle is { } a && state.ShotDistanceInches is not null ? units with { Angular = a } : null;
+        string Size(double inches) => shownAngle?.AngleText(inches, state.ShotDistanceInches) ?? units.Length(inches);
+        // As the tiles do, the size on the paper beneath a value shown as an angle.
+        Velocity = BuildVelocity(Size, inches => shownAngle is null ? null : units.Length(inches) + " on the paper");
+        plot.VelocityBand = Velocity?.Band;
+
+        // The plot and its chips: each circle drawn as on the desktop, and the sheet's own bulls behind the shots. Entry 323 section 3: the
+        // chips are remembered as the desktop's switches are.
         var chips = new WrapPanel();
         var marks = plot.Shown;
         void Toggle(string words, bool on, Func<PlotMarks, bool, PlotMarks> set) =>
             chips.Children.Add(Chip(words, on, () =>
             {
                 plot.Shown = set(plot.Shown, !on);
+                Phone.Settings.SavePlotMarks(plot.Shown);
                 plot.InvalidateVisual();
                 Build();
             }));
@@ -113,6 +154,11 @@ internal sealed class FiguresView : UserControl
         Toggle("CEP 90", marks.Cep90, (m, v) => m with { Cep90 = v });
         Toggle("CEP 95", marks.Cep95, (m, v) => m with { Cep95 = v });
         Toggle("CEP 99", marks.Cep99, (m, v) => m with { Cep99 = v });
+        if (plot.VelocityBand is not null)
+        {
+            Toggle("Velocity band", marks.VelocityBand, (m, v) => m with { VelocityBand = v });
+        }
+
         chips.Children.Add(Chip("Sheet", plot.WholeTarget, () =>
         {
             plot.WholeTarget = !plot.WholeTarget;
@@ -123,6 +169,12 @@ internal sealed class FiguresView : UserControl
 
         foreach (var section in sections)
         {
+            // Entry 323 section 3, Phone B: the card of its own, full width, directly above All figures.
+            if (section.Key == "all" && Velocity is { } velocity)
+            {
+                column.Children.Add(Screens.Card(VelocityBlockView.Build(velocity, VelocityAction, units.Speed, velocityWhyOpen, open => velocityWhyOpen = open)).Id("result-velocity"));
+            }
+
             var rows = new StackPanel { Spacing = 10 };
             foreach (var figure in section.Figures)
             {

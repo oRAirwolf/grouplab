@@ -88,6 +88,7 @@
     "src/GroupLab.App/Toast.cs",
     "src/GroupLab.App/TrajectoryGraph.cs",
     "src/GroupLab.App/UnitTap.cs",
+    "src/GroupLab.App/VelocityBlockView.cs",
     "src/GroupLab.App/VelocityStrip.cs",
     "src/GroupLab.Cli/",
     "src/GroupLab.Core/",

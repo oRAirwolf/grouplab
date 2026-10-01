@@ -21,6 +21,16 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-01, question 78: on the analysis at 1400x900, the plot's toggles cover the last lines of its key
+
+**Status: open.** Nothing waits on it. Seen in the screenshot walk while building entry 323, and already true in today's published
+`analysis-light-1400x900.png`: the toggles beside the plot (Group, Whole target, Caliber outlines, CEP 50 to 99, Extreme spread) wrap
+onto two rows and sit over the bottom of the key, so its last three or four entries ("CEP 90, the green solid circle", the group center,
+where you aimed) are hidden behind them. Entry 323's Velocity band switch joins the second row and its two key entries are among those
+covered when the band is on. **The options.** A: move the toggles under the plot, in a strip of their own, so the key never shares the
+space (a change to the look, so Alan's). B: open the key upward from its button, so its foot clears the toggles' rows. C: leave it; the
+key's entries are also in the tour and the guide. I would choose A: the key is the one place a reader learns what the lines are.
+
 ## 2026-09-30, question 77: the guide says stand about 2.5 ft away, and the synthetic camera reads no marker at 2 ft
 
 **Status: answered 2026-10-01.** Alan (entry 322): "Q77 A and B." The guide says about 2 ft (60 cm) now, and the next sitting measures the distance on a real phone. Nothing waits on it; the guide is unchanged. Entry 321 added range cases to the scoreboard: a Letter sheet photographed

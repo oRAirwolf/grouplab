@@ -173,6 +173,7 @@ public static class VelocityVertical
         return new VelocitySlope(n, slope, predictedInchesPerFps, inside, none, measured + verdict);
     }
 
-    private static string Percent(double share) =>
+    /// <summary>A share as a whole percent, or "under 1%" for a share above nothing that rounds to none.</summary>
+    public static string Percent(double share) =>
         share is > 0 and < 0.01 ? "under 1%" : string.Create(CultureInfo.InvariantCulture, $"{share * 100:0}%");
 }

@@ -68,6 +68,7 @@ public class BenchCoverageTests
         ["CalibreGuessList"] = "Twenty-two numbers and the nearest one to a reading. There is nothing in it whose speed or accuracy a figure could report.",
         ["CartridgeTable"] = "Forty names and fourteen diameters read once from an embedded file, and a list of strings for a box somebody is typing in. Entry 163.",
         ["TargetMaterial"] = "Two short lists of words and a check that a value is one of them. Entry 162.",
+        ["VelocityBlocks"] = "Words around VelocityVertical's one comparison, built once a screen refresh; nothing it adds costs time. Entry 323.",
         ["VelocityVertical"] = "Three solver runs to one distance and sums over a group's shots, once when a person asks for the comparison; no detection. Entry 322 section 3.",
         ["CanonicalJsonWriter"] = "Writing a definition back out happens in the editor's save, which is measured as a control.",
         ["MarkingFile"] = "Measured as part of saving and reopening a session, which is what writes and reads it.",

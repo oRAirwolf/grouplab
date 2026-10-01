@@ -1,10 +1,10 @@
 **Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
-**DESIGN NEEDED** (entry 322 section 3; not a request for you; planning, please): **where velocity's share of the vertical shows.**
-The engine is built: from a load's chronograph readings and the ballistic solver, how much of a group's vertical spread velocity alone
-explains, with an honest interval ("about 40%, 15 to 80% at 90%", or "the data cannot tell"), and, where readings are matched to shots,
-the measured slope against the solver's. `grouplab velocity` prints it. Where it belongs on the desktop's analysis and the phone's
-All figures is a design choice.
+**WHERE TO LOOK** (entry 323, not a request): **Velocity and the vertical** is built as you chose, Desktop B and Phone B. On the
+desktop it is the block under the group's figures; add a group's chronograph readings on Ballistics, Chronograph, and it shows how much of
+the vertical is velocity, with the amber band on the group picture and its Velocity band switch beside CEP and Extreme spread. On the
+phone it is the card above All figures, with Add readings and a Velocity band chip under the plot. It is in the next nightly; the phone
+check rides along with request 50's sitting.
 
 PUBLIC BETA (entries 319 and 320, 22:10 UTC, not a request): thank you for the two groups and the link. Build 134 is waiting for
 Apple's first beta review, and nothing touches it until Apple decides, so it keeps its place in the queue. When it is approved I put the
@@ -202,6 +202,9 @@ Fold 7 over that sheet; nothing else needs your hands.
 upright at a sheet taped to cardboard as well as flat over the table, in portrait and turned sideways; and the same sheet photographed
 from 1.5, 2, 2.5 and 3 ft (45, 60, 75 and 90 cm), so the distance at which GroupLab stops reading the corner codes is measured on a real
 phone. The steps come in the panel and at the top of this file when the sitting starts.
+
+**Added 2026-10-01 (entry 323), one more look, about two minutes:** the new Velocity and the vertical card on the Fold 7's cover screen,
+with readings pasted in, to see that nothing in it is squeezed and its band chip turns the band off.
 
 **Opened 2026-09-28 (entries 250 and 252).** **Needed:** the phone and the tablet on the charger, unlocked, Wireless debugging off and on,
 Stay awake on, for about twenty minutes, **once a line at the top of this file starting "READY FOR THE PHONE AND TABLET:" says so**; not

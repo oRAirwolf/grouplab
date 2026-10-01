@@ -54,7 +54,9 @@ public sealed class ResultView : UserControl
         definition = result.Definition;
         sessionId = result.SessionId;
         session = new MarkingSession(result.State);
-        full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition };
+        // Entry 323 section 3: the plot's chips as they were left, the velocity band's among them.
+        plot.Shown = Phone.Settings.LoadPlotMarks();
+        full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition, SessionId = result.SessionId, VelocityAction = VelocityAction };
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title(result.Definition?.Name ?? "The sheet"));
         if (result.Failure is { } failure)
@@ -376,6 +378,39 @@ public sealed class ResultView : UserControl
     {
         sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
         Refresh();
+    }
+
+    /// <summary>
+    /// Entry 323 section 4: where the velocity card's button goes. The readings and the distance open a page in place of the result and come
+    /// back to it; the BC opens Ballistics on its load.
+    /// </summary>
+    private void VelocityAction(VelocityBlockState state)
+    {
+        var back = Content;
+        void Return()
+        {
+            Content = back;
+            Refresh();
+        }
+
+        switch (state)
+        {
+            case VelocityBlockState.NoReadings:
+                Content = VelocityPages.Chronograph(sessionId, session.State, Return);
+                break;
+            case VelocityBlockState.NoDistance:
+                Content = VelocityPages.Distance(units, inches =>
+                {
+                    session.SetShotDistance(inches);
+                    sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+                    full.SessionId = sessionId;
+                    Return();
+                }, Return);
+                break;
+            case VelocityBlockState.NoBc:
+                Shell.Current?.ShowBallistics(session.State, open: "load");
+                break;
+        }
     }
 
     private void Refresh()

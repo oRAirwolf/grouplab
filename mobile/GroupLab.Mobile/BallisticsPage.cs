@@ -52,7 +52,7 @@ internal sealed class BallisticsPage : UserControl
 
     /// <param name="carried">The result's group, carried in from a result's section list, for the hit chance; null from the tab.</param>
     /// <param name="useZeroOffset">Carry the group's offset from its aim point into the dope as the zero offset.</param>
-    public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false)
+    public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false, string? openForm = null)
     {
         // Entry 280 section 2: the offset and its sentence are the desktop's own (ResultWords.ZeroOffsetFor).
         if (useZeroOffset && carried is not null && ResultWords.ZeroOffsetFor(carried, units) is { } offset)
@@ -82,6 +82,8 @@ internal sealed class BallisticsPage : UserControl
             }
         }
 
+        // Entry 323 section 4: the velocity card's "Set the load's BC" arrives with the load's form open.
+        open = openForm ?? open;
         Content = Screens.Page(column);
         Build();
     }

@@ -151,6 +151,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `shots-to-zero-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `shots-to-zero-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `shots-to-zero-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `velocity-dark-1280x720.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-dark-1400x900.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-dark-1920x1080.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-dark-2560x1440.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-light-1280x720.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-light-1400x900.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-light-1920x1080.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `velocity-light-2560x1440.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
 | `targets-zero-dark-1280x720.png` | built-in library sheet |
 | `targets-zero-dark-1400x900.png` | built-in library sheet |
 | `targets-zero-dark-1920x1080.png` | built-in library sheet |

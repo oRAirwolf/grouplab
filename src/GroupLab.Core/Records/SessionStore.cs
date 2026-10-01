@@ -61,6 +61,7 @@ public sealed record SessionSummary(
 public sealed record ChronographString(long Id, long SessionId, string Source, string? RecordedUtc, IReadOnlyList<double> VelocitiesFps);
 
 /// <summary>The explicit mapping section 15 requires: this shot of this session is this reading of this string.</summary>
+/// <summary>A shot paired with one reading of a string; <paramref name="Ordinal"/> counts the string's readings from 1, as the store keeps them.</summary>
 public sealed record ShotVelocity(long SessionId, int ShotId, long StringId, int Ordinal);
 
 /// <summary>
