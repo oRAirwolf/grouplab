@@ -4916,6 +4916,46 @@
   "So the bend is for a lift the lens fit misses by 0.04 in or more, and below that the 1 and 2 degree pictures read as they did.": {
    "kind": "measured",
    "where": "NOTES-FROM-PLANNING.md entry 324 section 1, measured 2026-10-01: grouplab scoreboard --synthetic and --corpus on the local corpus, and tests/GroupLab.Core.Tests BentSheetMappingTests"
+  },
+  "No administrator rights needed Keeps itself up to date: asks first, then updates in the background Rebuilt after every change that passes the tests on Windows, Linux and macOS Honestly: it passed the tests, which is not the same as somebody having used it.": {
+   "kind": "code",
+   "where": "PrivilegesRequired=lowest in packaging/windows/grouplab.iss; src/GroupLab.Core/Updates/UpdateRun.cs asks, then installs silently (entry 119); .github/workflows/nightly.yml publishes only after ci.yml passes on windows, ubuntu and macos (entry 338 carries the honest line)"
+  },
+  "Microsoft Store Steady The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 336 and 338: GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ; the Store copy is signed by Microsoft, AppInfo's Store check in src/GroupLab.App/Diagnostics/AppInfo.cs"
+  },
+  "Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy Windows 10 version 1809 or later Which build it is: the Store's page names its version, and so does GroupLab's Settings screen Not sure?": {
+   "kind": "code",
+   "where": "StoreUpdateWords in src/GroupLab.App/MainWindow.Updates.cs (entry 224 section 3.1); docs/PLATFORM-SUPPORT.md minimums and docs/store/LISTING.md (1809 for the Store package); the Settings screen's build line"
+  },
+  "The zip: nothing to install grouplab-win-x64.zip Windows 10 and 11.": {
+   "kind": "code",
+   "where": "package-windows.ps1 and .github/workflows/package.yml build it; ci.yml tests on windows-latest"
+  },
+  "Nothing to install Tells you when a newer build exists; you download it yourself Download the zip When Windows says \"Windows protected your PC\" The Windows and Linux builds are unsigned, because signing costs money the project has not spent.": {
+   "kind": "code",
+   "where": "UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs; entry 116 section 5 and entry 147: the builds are unsigned"
+  },
+  "No store copy for the Mac GroupLab is not in the Mac App Store.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 338 section 2 (Mac: 'no store yet'); docs/PLATFORM-SUPPORT.md: the Mac builds are tarballs on the nightly release"
+  },
+  "Nobody uses it day to day yet Reports from Linux are especially welcome Tells you when a newer build exists; you download it yourself Honestly: it passed the tests, which is not the same as somebody having used it.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md: hands-on Linux testing has not started (entries 147 and 166); UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs"
+  },
+  "Everything else What each device needs, what is supported and tested, how updating works, and every file of the newest build.": {
+   "kind": "code",
+   "where": "website/build.py page_download(): the Everything else fold and the four folds inside it (NOTES-FROM-PLANNING.md entry 338 (the download page, concept A))"
+  },
+  "What is supported and tested What is supported, and what is not Windows is the supported platform.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166; README and download page generated from it"
+  },
+  "Updating, and what you get The newest build is rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml publishes after ci.yml passes on windows-latest, ubuntu-latest and macos-latest; website.yml publishes the site within minutes (entry 144)"
   }
  },
  "rules": [
@@ -5154,6 +5194,12 @@
    "match": "New in (nightly\\.[0-9]+|the next build)|New in GroupLab",
    "kind": "code",
    "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes"
+  },
+  {
+   "surface": "^site:download/",
+   "match": "Nightly [0-9]+, built [0-9]{4}-[0-9]{2}-[0-9]{2} from commit [0-9a-f]{7,40} \\.$|^Every file in nightly [0-9]+, on GitHub The moving release on GitHub",
+   "kind": "code",
+   "where": "website/build.py newest_build(): the newest nightly's number, date and commit, read from its own entry in docs/RELEASE-NOTES.md, which the nightly writes as it publishes (entry 338); the stable file names are the ones .github/workflows/nightly.yml uploads to the moving release"
   }
  ]
 }

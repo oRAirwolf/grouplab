@@ -759,100 +759,289 @@ def platform_support() -> str:
     return '<h2 class="h3">What is supported, and what is not</h2>' + rendered
 
 
+# Entry 338: the download page, concept A, "pick your device". The five devices in the order the page shows them, with what a link names
+# each by: /download/?device=mac and so on, so a guide or a post can point at one.
+DEVICES = [("windows", "Windows"), ("mac", "Mac"), ("iphone", "iPhone and iPad"), ("android", "Android"), ("linux", "Linux")]
+
+# Every file the moving nightly release carries, in the order .github/workflows/nightly.yml publishes them, and what each one is for.
+NIGHTLY_FILES = [
+    ("grouplab-setup-win-x64.exe", "Windows, the installer"),
+    ("grouplab-win-x64.zip", "Windows, the zip"),
+    ("grouplab-linux-x64.tar.gz", "Linux, the tarball"),
+    ("grouplab-macos-arm64.tar.gz", "Mac with Apple silicon"),
+    ("grouplab-macos-x64.tar.gz", "Mac with an Intel processor, untested"),
+    ("grouplab-android-dev.apk", "Android, GroupLab Dev"),
+    ("grouplab-android.apk", "Android, the plain APK"),
+    ("grouplab-android.aab", "Android, the bundle Google Play takes"),
+    ("update-manifest.json", "what the updater in GroupLab reads, nothing to download by hand"),
+    ("update-manifest-2.json", "the same, for nightly 45 and after"),
+]
+
+
+def newest_build() -> dict:
+    """Entry 338: the newest published build's number, date and commit, from docs/RELEASE-NOTES.md, which each nightly writes its own
+    entry into as it publishes. Nothing on the page is typed: a build later, every figure on it has moved with the file."""
+    for version, section in release_sections().items():
+        if "nightly." not in version:
+            continue
+        date = re.search(r"\*\*(\d{4}-\d{2}-\d{2})\*\*", section)
+        commit = re.search(r"commit `([0-9a-f]{7,40})`", section)
+        if date is None or commit is None:
+            raise SystemExit(f"docs/RELEASE-NOTES.md: {version} names no date or no commit, and the download page shows both")
+        return {"version": version, "number": build_number(version), "date": date.group(1), "commit": commit.group(1),
+                "anchor": slug(version)}
+    raise SystemExit("docs/RELEASE-NOTES.md has no nightly build, and the download page names the newest one")
+
+
+# The device the visitor is on, guessed before the sections draw so nothing flickers: the page loads this small file without defer, just
+# above the device buttons. A link's ?device= wins, and the buttons change it. Without scripts none of this runs, the attribute is never
+# set, and every device's section shows in order. A file rather than an inline script, like send.js and survey.js, so it is fingerprinted
+# and cached, and so scripts/claims.py does not read code as sentences.
+DOWNLOAD_JS = """(function () {
+  var root = document.documentElement, ua = navigator.userAgent || "";
+  var names = ["windows", "mac", "iphone", "android", "linux"];
+  var alias = { ios: "iphone", ipad: "iphone", macos: "mac", win: "windows" };
+  var touchMac = navigator.maxTouchPoints > 1 && /Macintosh/.test(ua);
+  var guess = /iPhone|iPod|iPad/.test(ua) || touchMac ? "iphone" : /Android/.test(ua) ? "android" : /Windows/.test(ua) ? "windows"
+    : /Macintosh|Mac OS X/.test(ua) ? "mac" : /Linux|X11|CrOS/.test(ua) ? "linux" : "windows";
+  var phone = /iPhone|iPod/.test(ua) || (/Android/.test(ua) && /Mobile/.test(ua));
+  var words = phone ? "This phone" : (guess === "iphone" || guess === "android") ? "This tablet" : "This computer";
+  function known(d) { d = alias[d] || d; return names.indexOf(d) >= 0 ? d : null; }
+  var asked = /[?&]device=([a-z]+)/.exec(location.search);
+  root.setAttribute("data-device", (asked && known(asked[1])) || guess);
+  function mark() {
+    var now = root.getAttribute("data-device");
+    Array.prototype.forEach.call(document.querySelectorAll("[data-pick]"), function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-pick") === now));
+    });
+  }
+  function choose(d, keep) {
+    root.setAttribute("data-device", d);
+    mark();
+    if (keep) { try { history.replaceState(null, "", "?device=" + d + location.hash); } catch (e) {} }
+  }
+  function follow() {
+    var target = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    if (!target) { return; }
+    var owner = target.closest("[data-for]");
+    if (owner) { choose(owner.getAttribute("data-for"), false); }
+    for (var el = target; el; el = el.parentElement) { if (el.tagName === "DETAILS") { el.open = true; } }
+    target.scrollIntoView();
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-pick]"), function (b) {
+      if (b.getAttribute("data-pick") === guess) { b.querySelector(".dl-this").textContent = words; }
+      b.addEventListener("click", function () { choose(b.getAttribute("data-pick"), true); });
+    });
+    mark();
+    follow();
+  });
+  window.addEventListener("hashchange", follow);
+})();"""
+
+
 def page_download() -> str:
-    def card(title: str, file: str, desc: str, points: list[str], rec: bool = False, label: str | None = None, badge_words: str = "Recommended") -> str:
-        badge = f'<span class="badge mono">{badge_words}</span>' if rec else ""
-        lis = "".join(f"<li>{p}</li>" for p in points)
-        return f"""<div class="panel card{' card-rec' if rec else ''}">
-<div class="card-head"><h2 class="h3">{title}</h2>{badge}</div>
-<p class="mono teal small">{file}</p>
+    n = newest_build()
+    commit_link = f'<a class="mono" href="{GITHUB}/commit/{n["commit"]}">{n["commit"]}</a>'
+    built = f'<p class="small dim">Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>'
+
+    def points(items: list[str]) -> str:
+        return '<ul class="dim small-list">' + "".join(f"<li>{p}</li>" for p in items) + "</ul>"
+
+    def newest(title: str, file: str, desc: str, items: list[str], label: str, honest: bool = True) -> str:
+        """The left card: the newest build, in amber, one big button, the file, the build it is, three points and the honest line."""
+        line = '<p class="small faint">Honestly: it passed the tests, which is not the same as somebody having used it.</p>' if honest else ""
+        return f"""<article class="panel card card-rec dl-card">
+<div class="card-head"><h3 class="h3">{title}</h3><span class="badge mono">Newest</span></div>
+<div>{btn(label, NIGHTLY + file, True, big=True)}</div>
+<p class="mono teal small dl-file">{file}</p>
+{built}
 <p>{desc}</p>
-<ul class="dim small-list">{lis}</ul>
-<div class="card-foot">{btn(label or ("Download " + title.lower()), NIGHTLY + file, rec)}</div>
+{points(items)}
+{line}
+</article>"""
+
+    def steady(title: str, action: str, desc: str, items: list[str]) -> str:
+        """The right card: the copy a store keeps up to date, with the store's own badge or link."""
+        return f"""<article class="panel card dl-card">
+<div class="card-head"><h3 class="h3">{title}</h3><span class="badge badge-teal mono">Steady</span></div>
+<div>{action}</div>
+<p>{desc}</p>
+{points(items)}
+</article>"""
+
+    def other(title: str, file: str, desc: str, items: list[str], label: str) -> str:
+        """Another download for the same device, inside its fold."""
+        return f"""<div class="stack tight">
+<p class="mono teal small dl-file">{file}</p>
+<p>{desc}</p>
+{points(items)}
+<div>{btn(label, NIGHTLY + file)}</div>
 </div>"""
 
-    body = f"""
-<section class="wrap page-head">
-<p class="eyebrow">Download</p>
-<h1>The latest test build</h1>
-<p class="lead">Rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes. It may be broken: passing the tests is not the same as somebody having used it. There is no full release yet.</p>
-</section>
-<section class="wrap grid-3">
-{card("Installer", "grouplab-setup-win-x64.exe", "Windows 10 and 11. Installs into your own user account, with an entry in Add or remove programs.", ["No administrator rights needed", "Keeps itself up to date: asks first, then updates in the background"], True)}
-{card("Zip", "grouplab-win-x64.zip", "Windows 10 and 11. Unzip it anywhere and run GroupLab.App.exe.", ["Nothing to install", "Tells you when a newer build exists; you download it yourself"])}
-{card("Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.", ["Nobody uses it day to day yet", "Reports from Linux are especially welcome"])}
-</section>
-<section class="wrap section-sm grid-2">
-<div class="panel pad stack tight">
-<h2 class="h3">Windows, from the Microsoft Store</h2>
-<p class="small">The Store keeps GroupLab up to date itself and installs it without the "Windows protected your PC" warning. It carries an older, steadier build than the test build above, and is updated by hand when a build has proven itself.</p>
-<p><a href="{STORE}"><img class="only-dark" src="/assets/img/get-it-from-microsoft-dark.svg" alt="Get it from Microsoft" width="161" height="44"><img class="only-light" src="/assets/img/get-it-from-microsoft-light.svg" alt="Get it from Microsoft" width="161" height="44"></a></p>
+    def fold(title: str, inner: str, ident: str = "", cls: str = "") -> str:
+        id_attr = f' id="{ident}"' if ident else ""
+        return f"""<details class="dl-fold{(' ' + cls) if cls else ''}"{id_attr}>
+<summary>{title}</summary>
+<div class="dl-fold-body">
+{inner}
 </div>
-<div class="panel pad stack tight">
-<h2 class="h3">iPhone and iPad, the public beta</h2>
-<p class="small">GroupLab for iPhone and iPad is in a public beta through Apple's TestFlight. Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad. Each new beta build arrives through TestFlight.</p>
-<div class="card-foot">{btn("Join the iPhone and iPad beta", TESTFLIGHT)}</div>
+</details>"""
+
+    def section(key: str, name: str, cards: str, unsure: str, help_folds: list[str], keep: str = "", single: bool = False) -> str:
+        return f"""<section class="dl-sec" data-for="{key}" id="{key}" aria-labelledby="dl-{key}">
+<h2 class="h3 dl-sec-title" id="dl-{key}">{name}</h2>
+<div class="dl-cards{' dl-one' if single else ''}">
+{cards}
 </div>
-</section>
-<section class="wrap grid-3">
-{card("macOS, Apple silicon", "grouplab-macos-arm64.tar.gz", "For any Mac with Apple silicon. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93", "Signed, notarized and stapled: opens like any other Mac application", "Any Mac with Apple silicon (M-series). Not an Intel Mac"], label="Download for Apple silicon")}
-{card("macOS, Intel", "grouplab-macos-x64.tar.gz", "For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it", "Signed, notarized and stapled: opens like any other Mac application", "Intel only. Not an Apple silicon Mac"], label="Download for an Intel Mac")}
-<div class="panel pad stack tight">
-<h2 class="h3">Which Mac have you got?</h2>
-<p class="small">Apple menu, then About This Mac. A line saying <strong>Chip</strong> and a name beginning with M is Apple silicon. A line saying <strong>Processor</strong> and Intel is the Intel one.</p>
-<p class="small faint">Taking the wrong one gives you an application that will not open, with no useful message about why.</p>
-</div>
-</section>
-<section class="wrap grid-3">
-{card("GroupLab Dev", "grouplab-android-dev.apk", "For testing GroupLab on Android until it is published on the Play Store. An arm64 phone or tablet with Android 10 or later and 4 GB of memory. After the first install it keeps itself on the newest nightly, and fixes reach you the same day they are made.", ["Updates itself from every nightly: no computer and no adb after the first install", "Installs beside the Google Play test copy without replacing it", "Its logs are easy to send with a problem report", "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Export all my data"], True, label="Download GroupLab Dev", badge_words="Recommended download")}
-{card("Android", "grouplab-android.apk", "The same app under GroupLab's own name, signed like the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.", ["Open the file on the phone; allow your browser to install apps when Android asks", "Remove the Google Play copy first, if you have it: the two are signed with different keys", "Marking a target by hand is on the phone, as on the computer"], label="Download for Android")}
-<div class="panel pad stack tight">
-<h2 class="h3">Google Play, by invitation</h2>
-<p class="small">GroupLab's internal test on Google Play updates itself like any Play app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test's page</a>.</p>
-<p class="small faint">Take either the Play copy or the APK, not both: remove one before installing the other. GroupLab Dev is different: it installs beside either.</p>
-</div>
-</section>
-<section class="wrap section-sm">
-<div class="panel pad stack tight">
-<h2 class="h3">When Android says Google Play Protect is scanning the app</h2>
-<p class="small">Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>
-</div>
-</section>
-<section class="wrap section-sm grid-2">
-<div class="panel pad">
-<h2 class="h3">When Windows says "Windows protected your PC"</h2>
-<p>The Windows and Linux builds are unsigned, because signing costs money the project has not spent. Windows says this about any program nobody has paid to sign. The source of every build is public, at the commit the download names.</p>
+{keep}
+<p class="dl-unsure"><strong>Not sure?</strong> {unsure}</p>
+{('<div class="dl-help stack tight">' + "".join(help_folds) + "</div>") if help_folds else ""}
+</section>"""
+
+    files_rows = "".join(f'<tr><td><a href="{NIGHTLY}{f}"><code>{f}</code></a></td><td>{what}</td></tr>' for f, what in NIGHTLY_FILES)
+    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>
+<div class="dl-table"><table class="small"><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody>{files_rows}</tbody></table></div>
+<p class="small">The same build with its number in every file name, and the notes it was published with: <a href="{GITHUB}/releases/tag/v{n["version"]}">GroupLab {n["version"]} on GitHub</a>. What changed in it: <a href="/releases/#{n["anchor"]}">its release notes</a>.</p>"""
+    files_title = f"Every file in nightly {n['number']}, on GitHub"
+
+    windows = section("windows", "Windows", newest(
+        "The installer", "grouplab-setup-win-x64.exe",
+        "Windows 10 and 11. Installs into your own user account, with an entry in Add or remove programs.",
+        ["No administrator rights needed", "Keeps itself up to date: asks first, then updates in the background",
+         "Rebuilt after every change that passes the tests on Windows, Linux and macOS"],
+        "Download the installer") + steady(
+        "Microsoft Store",
+        f'<a href="{STORE}"><img class="only-dark" src="/assets/img/get-it-from-microsoft-dark.svg" alt="Get it from Microsoft" width="161" height="44"><img class="only-light" src="/assets/img/get-it-from-microsoft-light.svg" alt="Get it from Microsoft" width="161" height="44"></a>',
+        "The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning. It carries an older, steadier build than the newest one, and is updated by hand when a build has proven itself.",
+        ["Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy",
+         "Windows 10 version 1809 or later",
+         "Which build it is: the Store's page names its version, and so does GroupLab's Settings screen"]),
+        "Take the Microsoft Store copy if you want GroupLab to look after itself. Take the newest if you want each fix the day it is made and do not mind the odd broken build.",
+        [fold("The zip: nothing to install", other(
+            "Zip", "grouplab-win-x64.zip", "Windows 10 and 11. Unzip it anywhere and run GroupLab.App.exe.",
+            ["Nothing to install", "Tells you when a newer build exists; you download it yourself"], "Download the zip")),
+         fold("When Windows says \"Windows protected your PC\"", """<p>The Windows and Linux builds are unsigned, because signing costs money the project has not spent. Windows says this about any program nobody has paid to sign. The source of every build is public, at the commit the download names.</p>
 <ol class="text">
 <li>Click <strong>More info</strong>.</li>
 <li>Click <strong>Run anyway</strong>.</li>
 <li>If your antivirus quarantines it, the file it took is <code>GroupLab.App.exe</code>.</li>
 </ol>
-</div>
-<div class="panel pad">
-<h2 class="h3">Opening it on a Mac</h2>
-<p>From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move <code>GroupLab.app</code> into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.</p>
-</div>
-</section>
-<section class="wrap section-sm grid-2">
-<div class="panel pad">
-<h2 class="h3">What you get</h2>
+<p class="small">The Microsoft Store copy does not show this warning.</p>""")])
+
+    mac = section("mac", "Mac", newest(
+        "macOS, Apple silicon", "grouplab-macos-arm64.tar.gz",
+        "For any Mac with Apple silicon. Self-contained, built on macOS, and tested by the suite on every change.",
+        ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93",
+         "Signed, notarized and stapled: opens like any other Mac application",
+         "Any Mac with Apple silicon (M-series). Not an Intel Mac"],
+        "Download for Apple silicon") + """<div class="panel pad dl-none">
+<h3 class="h3">No store copy for the Mac</h3>
+<p>GroupLab is not in the Mac App Store. Every Mac download is the newest build, and GroupLab tells you when a newer one exists; you download it yourself.</p>
+</div>""",
+        "Apple menu, then About This Mac. A chip whose name begins with M is Apple silicon, and this is its download; Which Mac have I got, below, says more.",
+        [fold("The Intel build, untested", other(
+            # ClaimsAboutMeasuringTests holds this card's first four arguments to one line, the way the README's table says them.
+            "macOS, Intel", "grouplab-macos-x64.tar.gz", "For a Mac with an Intel processor. Self-contained, built on macOS, and tested by the suite on every change.", ["<strong>Untested on a real Mac.</strong> Nobody has run it",
+             "Signed, notarized and stapled: opens like any other Mac application", "Intel only. Not an Apple silicon Mac"], "Download for an Intel Mac")),
+         fold("Which Mac have I got?", """<p>Apple menu, then About This Mac. A line saying <strong>Chip</strong> and a name beginning with M is Apple silicon. A line saying <strong>Processor</strong> and Intel is the Intel one.</p>
+<p class="small faint">Taking the wrong one gives you an application that will not open, with no useful message about why.</p>""", ident="which-mac"),
+         fold("Opening it on a Mac", """<p>From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move <code>GroupLab.app</code> into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.</p>""")])
+
+    iphone = section("iphone", "iPhone and iPad", f"""<article class="panel card card-rec dl-card">
+<div class="card-head"><h3 class="h3">The public beta</h3><span class="badge mono">Public beta</span></div>
+<div>{btn("Join the iPhone and iPad beta", TESTFLIGHT, True, big=True)}</div>
+<p>GroupLab for iPhone and iPad is in a public beta through Apple's TestFlight. Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad. Each new beta build arrives through TestFlight.</p>
+{points(["Free, like every GroupLab download", "TestFlight installs each new beta build for you", "Not in the App Store itself yet"])}
+</article>""",
+        "Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad.",
+        [fold("Install TestFlight first", """<ol class="text">
+<li>On the iPhone or iPad, open the App Store and install <strong>TestFlight</strong>, Apple's own app for beta builds.</li>
+<li>On the same iPhone or iPad, open the invitation: <strong>Join the iPhone and iPad beta</strong>, above.</li>
+<li>TestFlight opens. Accept the invitation, then install GroupLab.</li>
+</ol>""", ident="install-testflight")], single=True)
+
+    android = section("android", "Android", newest(
+        "GroupLab Dev", "grouplab-android-dev.apk",
+        "For testing GroupLab on Android until it is published on the Play Store. An arm64 phone or tablet with Android 10 or later and 4 GB of memory. After the first install it keeps itself on the newest nightly, and fixes reach you the same day they are made.",
+        ["Updates itself from every nightly: no computer and no adb after the first install",
+         "Installs beside the Google Play test copy without replacing it",
+         "Its logs are easy to send with a problem report",
+         "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Export all my data"],
+        "Download GroupLab Dev", honest=False) + steady(
+        "Google Play, by invitation",
+        btn("Ask on the Discord", DISCORD),
+        f'GroupLab\'s internal test on Google Play updates itself like any Play app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
+        ["Updates come from Google Play, like any Play app", "One step first: ask on the Discord to be invited",
+         "Signed with a different key from the plain APK"]),
+        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. Take Google Play if you would rather Play looked after updates.",
+        [fold("The plain APK", other(
+            "Android", "grouplab-android.apk",
+            "The same app under GroupLab's own name, signed like the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.",
+            ["Open the file on the phone; allow your browser to install apps when Android asks",
+             "Remove the Google Play copy first, if you have it: the two are signed with different keys",
+             "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
+         fold("When Android says Google Play Protect is scanning the app", """<p>Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>""")],
+        keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other. GroupLab Dev is different: it installs beside either.</p>')
+
+    linux = section("linux", "Linux", newest(
+        "Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.",
+        ["Nobody uses it day to day yet", "Reports from Linux are especially welcome",
+         "Tells you when a newer build exists; you download it yourself"],
+        "Download the Linux tarball"),
+        "What each device needs, under Everything else below, lists the oldest distributions it runs on.", [], single=True)
+
+    picks = "".join(f'<button type="button" class="dl-pick" data-pick="{key}" aria-pressed="false" aria-controls="{key}">'
+                    f'<span>{name}</span><span class="dl-this mono"></span></button>' for key, name in DEVICES)
+
+    # The statement stays whole and in Alan's words; only its minimums table is shown on its own, under What each device needs.
+    statement = platform_support()
+    start = statement.find('<h3 class="h3">Minimums</h3>')
+    end = statement.find("<h3", start + 1)
+    if start < 0 or end < 0:
+        raise SystemExit("docs/PLATFORM-SUPPORT.md: the Minimums section was not found, and the download page shows it on its own")
+    minimums, supported = statement[start:end], statement[:start] + statement[end:]
+
+    updating = f"""<p>The newest build is rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes. It may be broken: passing the tests is not the same as somebody having used it. There is no full release yet.</p>
+<h3 class="h3">Updating</h3>
+<p><strong>Only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
+<p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
+<p>The Microsoft Store copy is updated by the Store, GroupLab Dev updates itself from every nightly, and the Google Play copy is updated by Google Play.</p>
+<h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
 <div><dt class="mono">Samples</dt><dd>Two sample sheets, so there is something to open in the first minute.</dd></div>
 <div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, and under your home folder elsewhere. An update check sends nothing about you.</dd></div>
 <div><dt class="mono">Which build</dt><dd>The Settings screen names the version, the train and the commit. Put that line in any report.</dd></div>
-</dl>
-</div>
-<div class="panel pad">
-<h2 class="h3">Updating</h2>
-<p><strong>Only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
-<p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
-</div>
+</dl>"""
+
+    body = f"""
+<section class="wrap page-head dl-head">
+<p class="eyebrow">Download</p>
+<h1>Download GroupLab</h1>
+<p class="lead">Free, for Windows, Mac, iPhone and iPad, Android and Linux. Choose your device: the newest build, and where a store carries GroupLab, the steadier copy it keeps up to date.</p>
+<script src="/assets/js/download.js"></script>
+<div class="dl-picks" role="group" aria-label="Your device">{picks}</div>
 </section>
-<section class="wrap section-sm">
-<div class="panel pad stack supported prose" id="supported">
-{platform_support()}
+<div class="wrap dl-stage">
+{windows}
+{mac}
+{iphone}
+{android}
+{linux}
+{fold(files_title, files_inner, ident="every-file", cls="dl-files dl-files-wide")}
 </div>
+<section class="wrap section-sm">
+<details class="dl-fold dl-else" id="everything-else">
+<summary>Everything else</summary>
+<div class="dl-fold-body">
+<p class="small">What each device needs, what is supported and tested, how updating works, and every file of the newest build.</p>
+{fold("What each device needs", '<div class="prose dl-table">' + minimums + "</div>", ident="needs")}
+{fold("What is supported and tested", '<div class="stack supported prose">' + supported + "</div>", ident="supported")}
+{fold("Updating, and what you get", updating, ident="updating")}
+{fold(files_title, files_inner, ident="every-file-phone", cls="dl-files dl-files-narrow")}
+</div>
+</details>
 </section>
 <section class="wrap section-sm last row-between">
 <p>Every build keeps a release of its own, so a bug report names something that still exists. If something does not work, the <a href="{DISCORD}">Discord</a> is somewhere to ask.</p>
@@ -860,7 +1049,7 @@ def page_download() -> str:
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
 """
-    return shell("/download/", "Download", "Download the latest GroupLab test build for Windows, Linux, macOS or Android: the installer, the zip, the Linux tarball or an untested Mac build.", body, "Download")
+    return shell("/download/", "Download", "Download GroupLab for Windows, Mac, iPhone and iPad, Android or Linux: the newest build, and the steadier copy a store keeps up to date.", body, "Download")
 
 
 def donor() -> dict:
@@ -2699,6 +2888,57 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .survey-stages .num{text-align:right}
 @media (max-width:900px){.grid-3{grid-template-columns:1fr}}
 
+/* Entry 338: the download page, concept A. With scripts off :root has no data-device, the buttons are hidden and every device's
+   section shows in order; with them on, only the chosen device's section shows, and its parts join the stage so the file list can
+   sit under its Not sure? line on the desktop. */
+.dl-head{padding-bottom:28px}
+.dl-picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:8px}
+:root:not([data-device]) .dl-picks{display:none}
+.dl-pick{font:inherit;font-size:17px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:6px;padding:16px 18px;min-height:76px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;text-align:left;cursor:pointer}
+.dl-pick:hover{border-color:var(--dim)}
+.dl-pick[aria-pressed="true"]{background:var(--amber-tint);border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.dl-this{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.dl-this:empty{display:none}
+.dl-stage{display:flex;flex-direction:column;gap:20px}
+.dl-sec{display:flex;flex-direction:column;gap:20px;padding-top:32px;border-top:1px solid var(--line)}
+.dl-sec:first-child{border-top:0;padding-top:0}
+:root[data-device] .dl-sec{display:none}
+:root[data-device="windows"] .dl-sec[data-for="windows"],:root[data-device="mac"] .dl-sec[data-for="mac"],:root[data-device="iphone"] .dl-sec[data-for="iphone"],:root[data-device="android"] .dl-sec[data-for="android"],:root[data-device="linux"] .dl-sec[data-for="linux"]{display:contents}
+:root[data-device] .dl-sec-title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.dl-sec-title{order:0;font-size:22px}
+.dl-cards{order:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.dl-keep{order:1;color:var(--text)}
+.dl-unsure{order:2;color:var(--text);font-size:15px}
+.dl-files-wide{order:3}
+.dl-help{order:4}
+.badge-teal{background:var(--teal-tint);border-color:var(--teal-tint-b);color:var(--teal)}
+.dl-file{overflow-wrap:anywhere}
+.dl-none{border-style:dashed;align-self:start}
+.dl-fold{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.dl-fold>summary{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 18px;cursor:pointer;list-style:none;font-weight:600;color:var(--text)}
+.dl-fold>summary::-webkit-details-marker{display:none}
+.dl-fold>summary::before{content:"";flex-shrink:0;width:8px;height:8px;border-right:2px solid var(--dim);border-bottom:2px solid var(--dim);transform:rotate(-45deg)}
+.dl-fold[open]>summary::before{transform:rotate(45deg)}
+.dl-fold-body{padding:4px 18px 20px;display:flex;flex-direction:column;gap:14px}
+.dl-fold-body p{font-size:15px}
+.dl-fold ol{margin:0;padding-left:20px;font-size:15px}
+.dl-else>summary{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-size:26px;font-weight:700}
+.dl-table{overflow-x:auto}
+.dl-table table{border-collapse:collapse;width:100%}
+.dl-table th,.dl-table td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;color:var(--text)}
+.dl-table th{color:var(--dim);font-weight:600}
+.dl-table code{overflow-wrap:anywhere}
+.dl-files-narrow{display:none}
+@media (max-width:860px){
+.dl-picks{display:flex;flex-wrap:wrap;gap:8px}
+.dl-pick{flex-direction:row;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;font-size:15px;gap:8px}
+.dl-this{font-size:11px}
+.dl-cards{grid-template-columns:minmax(0,1fr)}
+.dl-files-wide{display:none}
+.dl-files-narrow{display:block}
+.dl-fold-body{padding:4px 14px 16px}
+}
+
 /* footer */
 .site-footer{border-top:1px solid var(--line);padding:40px 0 48px}
 .footer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:48px}
@@ -3101,6 +3341,7 @@ def main() -> None:
     write("survey/index.html", page_survey())
     write("features/index.html", page_features())
     write("assets/js/survey.js", SURVEY_JS)
+    write("assets/js/download.js", DOWNLOAD_JS + "\n")
     write("404.html", page_404())
 
     pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH]
