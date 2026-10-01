@@ -146,14 +146,22 @@ internal static class SelfUpdate
         }
     }
 
-    /// <summary>The periodic check, on an unmetered network, which WorkManager guarantees before it runs the worker.</summary>
+    /// <summary>
+    /// The periodic check, on an unmetered network, and (entry 343) only while the battery and the storage are not low, all of which WorkManager
+    /// guarantees before it runs the worker; Update now in Settings still works on demand. The work is updated rather than kept, so a phone
+    /// that scheduled it before takes the new constraints, without moving when it next runs.
+    /// </summary>
     internal static void Schedule()
     {
-        var constraints = new Constraints.Builder().SetRequiredNetworkType(NetworkType.Unmetered!).Build();
+        var constraints = new Constraints.Builder()
+            .SetRequiredNetworkType(NetworkType.Unmetered!)
+            .SetRequiresBatteryNotLow(true)
+            .SetRequiresStorageNotLow(true)
+            .Build();
         var request = new PeriodicWorkRequest.Builder(Java.Lang.Class.FromType(typeof(UpdateWorker)), (long)AndroidUpdates.Every.TotalHours, Java.Util.Concurrent.TimeUnit.Hours!)
             .SetConstraints(constraints)
             .Build();
-        WorkManager.GetInstance(Context).EnqueueUniquePeriodicWork(WorkName, ExistingPeriodicWorkPolicy.Keep!, (PeriodicWorkRequest)request);
+        WorkManager.GetInstance(Context).EnqueueUniquePeriodicWork(WorkName, ExistingPeriodicWorkPolicy.Update!, (PeriodicWorkRequest)request);
     }
 
     /// <summary>

@@ -40,6 +40,18 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 339 and 343: the BulletSeeker's name, and GroupLab Dev while idle
+
+Done 2026-10-01.
+
+- **339:** format A's reader is named BulletSeeker everywhere a person sees it; still Experimental, its two shotless files said. Across
+  every Xero file no column names the device, so C1 and C2 read the same; the metric export's "Speed (MPS)" was read as ft/s and now
+  reads as m/s (23 strings), with a test.
+- **343, 1:** GroupLab Dev's update check now waits for battery not low and storage not low as well as an unmetered network, and existing
+  schedules are updated to it. **343, 2:** without an emulator in CI, a Core test reads the Android source: the pause releases the
+  camera, the torch and the level's sensor, and nothing else registers a sensor, location, wake lock, alarm or foreground service. The
+  idle-hour batterystats reading is for request 50's sitting.
+
 ## Entries 335 to 338: the Public Beta, the Microsoft Store, and the download page
 
 Done 2026-10-01.

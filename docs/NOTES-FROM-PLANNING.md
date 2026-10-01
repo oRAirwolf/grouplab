@@ -24,6 +24,32 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 343: GroupLab Dev while idle, two small tightenings
+
+**Status: section 1 done 2026-10-01; section 2 done only as a source test.** 1: the check now also needs the battery and the storage not low, and is updated rather than kept so existing phones take it. 2: no emulator runs in CI, so a Core test reads the source: leaving the screen lets go of the camera, the torch and the level's sensor, and nothing else registers. The batterystats reading waits for request 50's sitting; PERFORMANCE.md says "not measured on a device".
+
+Alan, 2026-10-01 10:39 UTC: "Is grouplab dev respecting battery and resource usage? ... when idling." Planning read the updater:
+idle cost is one WorkManager check about every six hours on an unmetered network only (one GET of the signed manifest), a download only
+when a newer build exists, on Wi-Fi, the file deleted after install; no foreground service, wake lock, location or alarm; the camera's
+sensors are registered only while the camera view is open. Good. Two tightenings, small, with Worker A's sweep in entry 342:
+
+1. Add WorkManager's `RequiresBatteryNotLow` and `RequiresStorageNotLow` to the periodic check, so a phone on low battery or low storage
+   is left alone until it recovers (Update now in Settings still works on demand). Test the constraints are set.
+2. A test (on the emulator) that sending GroupLab to the background releases the camera, the torch and the level's sensor, and that
+   nothing else stays registered. At request 50's sitting, read `adb shell dumpsys batterystats` for GroupLab Dev after an idle hour and
+   record it in docs/PERFORMANCE.md; until then say "not measured on a device".
+
+## 2026-10-01, entry 339: the 2023 radar export has a name: BulletSeeker
+
+**Status: done 2026-10-01 (commit a187d5e3).** Format A's reader is BulletSeeker in the code, the import list, the guide and the README, still Experimental, its two shotless files said. No Xero column or header names the device, so C1 and C2 cannot be told apart in the files. The metric exports wrote "Speed (MPS)", which the reader took for feet a second; fixed with a test.
+
+Entry 334 was amended at 08:42 UTC, after its first version was read: Alan, "The ones that have raw radar samples were from the
+bulletseeker chronograph that I had for a short time prior to the xero c1 and xero c2." Name format A's reader **BulletSeeker** in the
+code, the import list, the guide and the notes (it stays Experimental until every BulletSeeker file reads; two have no shots, which is
+fine if said). Report whether any Xero file differs between his Xero C1 and Xero C2 (a column, a header, a footer line), and the two
+metric exports in `garmin-xero\metric\` ("Speed (MPS)", "KE (J)", "Power Factor (N⋅s)", the "All shots included in the calculations"
+line) read correctly. Small; one commit.
+
 ## 2026-10-01, entry 326: TestFlight feedback reaches Code, privately
 
 **Status: done 2026-10-01, sections 1 to 4.** Request 63 brought the token (entry 330). Unholy's two items are issues 13 and 14 in the private repository, linked to entry 328's commits, closed when nightly 147 is published. Section 4: neither guide says who reads feedback, so no line changed; RESTORE.md and the nightly backup now cover the screenshot files in the private repository.

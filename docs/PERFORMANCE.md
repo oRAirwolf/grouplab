@@ -74,6 +74,14 @@ detection, as in the first record; start-up, 1.9 s; one sheet from file to figur
 pass for a sheet far away, the printed-shape test), and this machine's load during the run was not controlled; a run on an idle machine
 would tell the two apart, and is the first thing the Performance phase should do.
 
+## GroupLab Dev on an idle phone, entry 343
+
+**Not measured on a device.** What is held instead: GroupLab Dev's only background work is the update check, about every six hours,
+which WorkManager runs only on an unmetered network, with the battery not low and the storage not low; a download happens only when a
+newer build exists. Leaving the screen lets go of the camera, its torch and the level's sensor, and that sensor is the only one, with no
+location, wake lock, alarm or foreground service anywhere in the Android project; a test in the Core suite reads the source for all of it,
+since no emulator runs in CI. At request 50's sitting, `adb shell dumpsys batterystats` for GroupLab Dev after an idle hour goes here.
+
 ## The record
 
 Measured 2026-10-01 on TACIT-BLUE, 16 processors, Microsoft Windows NT 10.0.26300.0, Release build, commit a21be7c1, 5 timed runs of each case after one thrown away.

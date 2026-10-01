@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 11:20 UTC, entries 335 to 338 folded; 339 to 342 are next (BulletSeeker's name, recognition ships,
-scale assumed with a warning, the overnight list).
+**Last rewritten:** 2026-10-01, entries 339 and 343 folded; worker A is on 340 and 341, then 344's engine and 342's application list;
+this session takes 342's data and tooling list.
 
 ---
 
@@ -91,7 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 339 to 344.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 340, 341, 342, 344.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

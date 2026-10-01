@@ -1,4 +1,5 @@
 using System.Text;
+using GroupLab.Core.Tests.Support;
 using GroupLab.Core.Updates;
 
 namespace GroupLab.Core.Tests.Updates;
@@ -223,5 +224,53 @@ public class AndroidUpdatesTests : IDisposable
     {
         Assert.Equal("Updated to nightly 125", AndroidUpdates.UpdatedTo(SemanticVersion.Parse("0.2.0-nightly.125")!));
         Assert.Equal("Updated to GroupLab 0.3.0", AndroidUpdates.UpdatedTo(SemanticVersion.Parse("0.3.0")!));
+    }
+
+    /// <summary>
+    /// Entry 343: GroupLab Dev's periodic update check waits for an unmetered network, a battery that is not low and storage that is not low,
+    /// and is updated rather than kept so phones that scheduled it before take the new constraints. Read from the source, since the Android
+    /// project does not run in this suite.
+    /// </summary>
+    [Fact]
+    public void ThePeriodicCheckLeavesALowPhoneAlone()
+    {
+        string source = File.ReadAllText(Repo.PathTo("android", "GroupLab.Android", "Updates", "SelfUpdate.cs"));
+        Assert.Contains(".SetRequiredNetworkType(NetworkType.Unmetered!)", source, StringComparison.Ordinal);
+        Assert.Contains(".SetRequiresBatteryNotLow(true)", source, StringComparison.Ordinal);
+        Assert.Contains(".SetRequiresStorageNotLow(true)", source, StringComparison.Ordinal);
+        Assert.Contains("ExistingPeriodicWorkPolicy.Update!", source, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Entry 343 section 2, as far as it can be held without an emulator (there is none in CI): leaving the screen pauses the camera, the
+    /// pause lets go of the level's sensor, the torch and every camera use case, and the level's listener is the only sensor, location,
+    /// wake lock, alarm or foreground service the Android project takes. Measured on a phone at request 50's sitting.
+    /// </summary>
+    [Fact]
+    public void LeavingTheScreenLetsGoOfTheCameraTorchAndLevel()
+    {
+        string activity = File.ReadAllText(Repo.PathTo("android", "GroupLab.Android", "MainActivity.cs"));
+        string camera = File.ReadAllText(Repo.PathTo("android", "GroupLab.Android", "CameraView.cs"));
+        int pause = activity.IndexOf("protected override void OnPause()", StringComparison.Ordinal);
+        Assert.True(pause >= 0);
+        Assert.Contains("CameraSession.Active?.Pause();", activity[pause..activity.IndexOf("base.OnPause();", pause, StringComparison.Ordinal)], StringComparison.Ordinal);
+
+        int start = camera.IndexOf("public void Pause()", StringComparison.Ordinal);
+        Assert.Contains("Stop();", camera[start..camera.IndexOf('}', start)], StringComparison.Ordinal);
+        int stop = camera.IndexOf("public void Stop()", StringComparison.Ordinal);
+        string stopBody = camera[stop..camera.IndexOf("public void Pause()", StringComparison.Ordinal)];
+        foreach (string release in new[] { "sensors?.UnregisterListener(level);", "SetTorch(false);", "analysis?.ClearAnalyzer();", "provider?.UnbindAll();" })
+        {
+            Assert.Contains(release, stopBody, StringComparison.Ordinal);
+        }
+
+        string[] held = { "RegisterListener(", "RequestLocationUpdates", "NewWakeLock", "StartForeground", "AlarmManager" };
+        var takers = Directory.EnumerateFiles(Repo.PathTo("android", "GroupLab.Android"), "*.cs", SearchOption.AllDirectories)
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+                && !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .SelectMany(f => File.ReadLines(f).Where(l => held.Any(h => l.Contains(h, StringComparison.Ordinal) && !l.Contains("Unregister", StringComparison.Ordinal)))
+                .Select(l => $"{Path.GetFileName(f)}: {l.Trim()}"))
+            .ToList();
+        Assert.Equal(new[] { "CameraView.cs: sensors.RegisterListener(level, sensor, SensorDelay.Ui);" }, takers);
     }
 }
