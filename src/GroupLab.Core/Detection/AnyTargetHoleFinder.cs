@@ -140,6 +140,13 @@ public static class AnyTargetHoleFinder
                 continue;
             }
 
+            // Entry 331 section 1: printed numbers, letters and solid diamonds on store-bought targets, which no other test here refuses.
+            if (PrintedShape.Why(value, hole.Image.X, hole.Image.Y, hole.DiameterInches * dpi, hole.Look != HoleLook.LightInPrint) is { } printed)
+            {
+                rejected.Add(new RejectedBlob(hole.Image.X, hole.Image.Y, hole.DiameterInches, printed));
+                continue;
+            }
+
             // A scan's edge and a photograph's are where shadows and the scanner's own border lie.
             double edge = Math.Min(Math.Min(hole.Image.X, value.Width - 1 - hole.Image.X), Math.Min(hole.Image.Y, value.Height - 1 - hole.Image.Y));
             holes.Add(edge < EdgeInches * dpi && hole.Doubt is null ? hole with { Doubt = "it is at the edge of the picture" } : hole);

@@ -39,6 +39,11 @@ public static class ScoreboardVerb
             return Truth(args[1..], output, error);
         }
 
+        if (Array.IndexOf(args, "--blanks") is int b and >= 0 && b + 1 < args.Length)
+        {
+            return Blanks(args[b + 1], output);
+        }
+
 
         string? Option(string name) => Array.IndexOf(args, name) is int i and >= 0 && i + 1 < args.Length ? args[i + 1] : null;
         bool synthetic = args.Contains("--synthetic");
@@ -243,9 +248,90 @@ public static class ScoreboardVerb
             scores.Add(new PictureScore(condition, name + "/" + file, expected is null ? "count-unknown" : "count", expected, marks, hits, falseMarks,
                 null, null, null, null, null, true, clock.ElapsedMilliseconds));
             error.WriteLine($"{name}/{file}: {marks} marks{(expected is { } e ? $" against {e}" : "")}, {clock.ElapsedMilliseconds} ms");
+
+            // Entry 331 section 1: where each mark is, so a false one on a blank can be looked at and given its cause.
+            foreach (var hole in found.Holes)
+            {
+                error.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  mark at {hole.Image.X:0},{hole.Image.Y:0} px, {hole.DiameterInches:0.000} in, {hole.Look}{(hole.Doubt is { } d ? ", " + d : "")}"));
+            }
         }
 
         return scores;
+    }
+
+    /// <summary>
+    /// Entry 331 section 1.2: the store-bought blanks of request 58 with synthetic holes rendered in, scored by the any-target finder. Each
+    /// subfolder's blank.png is a 600 dpi colour scan, read at 200 dpi as the scoreboard's any-target pictures are; what lies under each pixel
+    /// comes from its colour. A subfolder whose name says Shoot-N-C is reactive. Nothing is written: the blanks and the scores stay local.
+    /// </summary>
+    private static int Blanks(string folder, TextWriter output)
+    {
+        const double Scanned = 600, Read = 200;
+        var backend = new OpenCvSharpBackend();
+        output.WriteLine("| Blank | Calibre | Seed | Found | False marks | Paper | Ink | Ring lines | Red | Touching |");
+        output.WriteLine("|---|---|---|---|---|---|---|---|---|---|");
+        foreach (string dir in Directory.EnumerateDirectories(folder).Order(StringComparer.Ordinal))
+        {
+            string file = Path.Combine(dir, "blank.png");
+            if (!File.Exists(file))
+            {
+                continue;
+            }
+
+            using var colour = Cv2.ImRead(file, ImreadModes.Color);
+            using var small = new Mat();
+            Cv2.Resize(colour, small, new OpenCvSharp.Size(0, 0), Read / Scanned, Read / Scanned, InterpolationFlags.Area);
+            int w = small.Width, h = small.Height;
+            var value = new byte[w * h];
+            var places = new BlankPlace[w * h];
+            var paper = new byte[w * h];
+            var ink = new byte[w * h];
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    var p = small.At<Vec3b>(y, x);
+                    byte bl = p.Item0, g = p.Item1, r = p.Item2;
+                    int k = (y * w) + x;
+                    value[k] = Math.Max(r, Math.Max(g, bl));
+                    places[k] = r > 140 && g < 110 && bl < 110 ? BlankPlace.Red
+                        : value[k] < 90 ? BlankPlace.Ink
+                        : Math.Min(r, Math.Min(g, bl)) > 190 ? BlankPlace.Paper
+                        : BlankPlace.Other;
+                    paper[k] = places[k] == BlankPlace.Paper ? (byte)255 : (byte)0;
+                    ink[k] = places[k] == BlankPlace.Ink ? (byte)255 : (byte)0;
+                }
+            }
+
+            // A ring line is ink within 0.02 in of paper, or paper within 0.02 in of ink: where a printed line and the paper meet.
+            int reach = (int)Math.Ceiling(0.02 * Read);
+            using var paperMat = Mat.FromPixelData(h, w, MatType.CV_8UC1, paper);
+            using var inkMat = Mat.FromPixelData(h, w, MatType.CV_8UC1, ink);
+            using var kernel = Cv2.GetStructuringElement(MorphShapes.Ellipse, new OpenCvSharp.Size((2 * reach) + 1, (2 * reach) + 1));
+            using var nearPaper = new Mat();
+            using var nearInk = new Mat();
+            Cv2.Dilate(paperMat, nearPaper, kernel);
+            Cv2.Dilate(inkMat, nearInk, kernel);
+            for (int k = 0; k < places.Length; k++)
+            {
+                int y = k / w, x = k % w;
+                if ((places[k] == BlankPlace.Ink && nearPaper.At<byte>(y, x) > 0) || (places[k] == BlankPlace.Paper && nearInk.At<byte>(y, x) > 0))
+                {
+                    places[k] = BlankPlace.RingLine;
+                }
+            }
+
+            string name = Path.GetFileName(dir);
+            bool reactive = name.Contains("shoot-n-c", StringComparison.OrdinalIgnoreCase);
+            foreach (var score in Scoreboard.ScoreBlank(name, new GrayImage(w, h, value), places, Read, reactive, backend))
+            {
+                string Of(string key) => score.ByPlace.TryGetValue(key, out var c) ? $"{c.Found}/{c.Total}" : "";
+                output.WriteLine(string.Create(CultureInfo.InvariantCulture,
+                    $"| {name} | {score.CalibreInches:0.000} | {score.Seed} | {score.Found}/{score.Holes} | {score.FalseMarks} | {Of("paper")} | {Of("ink")} | {Of("ringline")} | {Of("red")} | {Of("touching")} |"));
+            }
+        }
+
+        return 0;
     }
 
     /// <summary>
