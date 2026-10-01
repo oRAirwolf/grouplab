@@ -113,7 +113,12 @@ public sealed partial class MainWindow
         var detail = new Grid { Margin = new Thickness(Tokens.Space16, 0, 0, 0) };
         detail.ColumnDefinitions.Add(sheetWidth);
         detail.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
-        detail.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star) { MinWidth = 320 });
+        // Entry 342 item 3: at 1060 wide the sheet's column kept its width and the preview its 320, and Zoom in, Zoom out and Fit ran 89
+        // units past the window's edge. Now the preview keeps at least 250 and the sheet's column gives way to it, down to its own least,
+        // without forgetting the width it was dragged to.
+        const double previewLeast = 250;
+        detail.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star) { MinWidth = previewLeast });
+        detail.SizeChanged += (_, e) => sheetWidth.MaxWidth = Math.Clamp(e.NewSize.Width - GripWidth - previewLeast, LibrarySheetLeast, 900);
         Grid.SetColumn(sheetGrip, 1);
         detail.Children.Add(sheetGrip);
         var sheetColumn = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, 0, Tokens.Space16, 0) };

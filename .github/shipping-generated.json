@@ -55,6 +55,7 @@
     "src/GroupLab.App/MainWindow.Hit.cs",
     "src/GroupLab.App/MainWindow.Library.cs",
     "src/GroupLab.App/MainWindow.Loads.cs",
+    "src/GroupLab.App/MainWindow.Names.cs",
     "src/GroupLab.App/MainWindow.NewTarget.cs",
     "src/GroupLab.App/MainWindow.Panes.cs",
     "src/GroupLab.App/MainWindow.Printer.cs",

@@ -21,8 +21,8 @@ public sealed class ReportWindow : Window
     private readonly string? runLog;
     private readonly string? previousLog;
     // Entry 194 section 2.3: a report made by hand may keep its description, at most 500 characters.
-    private readonly TextBox description = new() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, Height = 90, MaxLength = 500, PlaceholderText = "What were you doing when it went wrong? Optional, up to 500 characters." };
-    private readonly TextBox contact = new() { PlaceholderText = "An email address, if you would like a reply. Optional." };
+    private readonly TextBox description = new() { [Avalonia.Automation.AutomationProperties.NameProperty] = "What happened", AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, Height = 90, MaxLength = 500, PlaceholderText = "What were you doing when it went wrong? Optional, up to 500 characters." };
+    private readonly TextBox contact = new() { [Avalonia.Automation.AutomationProperties.NameProperty] = "Contact", PlaceholderText = "An email address, if you would like a reply. Optional." };
     private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly Button reveal = new() { Content = "Show me the file", IsEnabled = false };
     private readonly Button send = new() { Content = "Send" };

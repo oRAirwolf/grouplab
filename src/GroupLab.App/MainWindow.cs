@@ -608,6 +608,7 @@ public sealed partial class MainWindow : Window
     internal MainWindow(AppSettingsStore settings)
     {
         settingsStore = settings;
+        NameTheFields();
 
         // Entry 273: a tap on any number with a unit switches that kind of unit, here as on the phone.
         UnitTap.Current = () => units ?? UnitSettings.Imperial;
@@ -741,6 +742,9 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(Heading("Review"));
         panel.Children.Add(review);
         AddHandler(KeyDownEvent, OnReviewKey, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        // Entry 342 item 3: whether the control with the focus was reached from the keyboard, so Space and Enter press it.
+        AddHandler(GotFocusEvent, (_, e) => focusFromKeyboard = e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional);
 
         // Entry 137: an image dropped on the window or pasted opens exactly as Open does.
         ListenForDropsAndPastes();
@@ -4640,12 +4644,22 @@ public sealed partial class MainWindow : Window
     /// choice, a bull's label typed and then Enter to reassign the selected shot, N for not a shot, Escape to clear what was typed. They are
     /// taken before a focused button sees them, so Space never presses the last button clicked.
     /// </summary>
+    /// <summary>Whether the control with the focus got it from Tab or the arrow keys rather than the pointer (entry 342 item 3).</summary>
+    private bool focusFromKeyboard;
+
     internal void OnReviewKey(object? sender, KeyEventArgs e)
     {
         // Any modifier but Shift means a shortcut, never a typed label: Control, Alt, and the Mac's Command key (entry 166).
         // Entry 154: a glossary word that has the focus takes its own Enter and Space, which open its explanation.
         if (e.Source is TextBox || (e.Source is TextBlock focused && focused.Classes.Contains(TermHelp.Class))
             || (e.KeyModifiers & ~KeyModifiers.Shift) != KeyModifiers.None)
+        {
+            return;
+        }
+
+        // Entry 342 item 3: a control reached with Tab takes its own Space and Enter, as a keyboard user expects. One the mouse clicked
+        // last does not, which is what the rule above was for: Space never presses the last button clicked.
+        if (focusFromKeyboard && e.Key is Key.Space or Key.Enter && bullTyped.Length == 0 && e.Source is Avalonia.Controls.Primitives.ToggleButton or Avalonia.Controls.Button or ComboBox or ListBox)
         {
             return;
         }
@@ -5486,6 +5500,8 @@ public sealed partial class MainWindow : Window
         // Entry 125 section 3: laid out the way the Units rows above are, in a grid with the label centred against its control. As two
         // wrapping rows the labels sat above the middle of the boxes beside them, which is what Alan's screenshot shows.
         var updateGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("160,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto"), RowSpacing = Tokens.Space8 };
+        Named(train, "Update train");
+        Named(often, "Check for updates");
         foreach (var (name, control, line) in new (string Name, Control Control, int Line)[] { ("Train", train, 0), ("Check", Row(often, Button("Check now", CheckForUpdates)), 1) })
         {
             var label = FieldLabel(name);

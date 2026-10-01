@@ -296,7 +296,7 @@ public sealed partial class MainWindow
             picture.ShowCircle = circle.IsChecked == true;
             picture.InvalidateVisual();
         };
-        var labelBox = new TextBox { PlaceholderText = "A label across the top", Text = state.SheetLabel ?? "" };
+        var labelBox = new TextBox { PlaceholderText = "A label across the top", [Avalonia.Automation.AutomationProperties.NameProperty] = "Label across the top", Text = state.SheetLabel ?? "" };
         var labelOn = new CheckBox { Content = "Label", IsChecked = false };
         void ShowLabel()
         {
@@ -306,13 +306,13 @@ public sealed partial class MainWindow
 
         labelOn.IsCheckedChanged += (_, _) => ShowLabel();
         labelBox.TextChanged += (_, _) => ShowLabel();
-        var style = new ComboBox { ItemsSource = new[] { "Box: dark", "Box: light", "Box: words only" }, SelectedIndex = 0, HorizontalAlignment = HorizontalAlignment.Stretch };
+        var style = new ComboBox { [Avalonia.Automation.AutomationProperties.NameProperty] = "Results box style", ItemsSource = new[] { "Box: dark", "Box: light", "Box: words only" }, SelectedIndex = 0, HorizontalAlignment = HorizontalAlignment.Stretch };
         style.SelectionChanged += (_, _) =>
         {
             picture.Style = (ShareBoxStyle)Math.Max(0, style.SelectedIndex);
             picture.InvalidateVisual();
         };
-        var crop = new ComboBox { ItemsSource = new[] { "Crop: whole picture", "Crop: around the group" }, SelectedIndex = 0, HorizontalAlignment = HorizontalAlignment.Stretch };
+        var crop = new ComboBox { [Avalonia.Automation.AutomationProperties.NameProperty] = "Crop", ItemsSource = new[] { "Crop: whole picture", "Crop: around the group" }, SelectedIndex = 0, HorizontalAlignment = HorizontalAlignment.Stretch };
         crop.SelectionChanged += (_, _) =>
         {
             picture.Crop = crop.SelectedIndex == 1 ? ShareCard.GroupArea(state, frameWidth, frameHeight) : null;

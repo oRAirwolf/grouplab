@@ -221,7 +221,7 @@ public sealed class PrintPanel : UserControl
     /// <summary>The settings file the bull color is remembered in, per sheet (entry 297); none in a panel a test makes alone.</summary>
     internal AppSettingsStore? Settings { get; init; }
 
-    private readonly ComboBox bullColour = new() { MinWidth = 140 };
+    private readonly ComboBox bullColour = new() { MinWidth = 140, [Avalonia.Automation.AutomationProperties.NameProperty] = "Bulls in" };
     private bool showingColour;
 
     /// <summary>The bull color chosen for the sheet showing.</summary>

@@ -149,7 +149,7 @@ public sealed partial class MainWindow
             {
                 var combo = new ComboBox { ItemsSource = choices, HorizontalAlignment = HorizontalAlignment.Stretch, Name = "EquipmentField_" + field.Key };
                 combo.SelectedIndex = value is null ? -1 : choices.FindIndex(c => string.Equals(c, value, StringComparison.OrdinalIgnoreCase));
-                box = combo;
+                box = Named(combo, field.Label);
             }
             else
             {
@@ -161,6 +161,7 @@ public sealed partial class MainWindow
                     MinHeight = field.Kind == FieldKind.Lines ? 60 : 0,
                     Name = "EquipmentField_" + field.Key,
                 };
+                Named(text, field.Unit is null ? field.Label : $"{field.Label} ({field.Unit})");
 
                 // Entry 131 section 7.5: as a person types, what they put in this field before, most used first.
                 if (field.Kind is FieldKind.Words or FieldKind.Number)

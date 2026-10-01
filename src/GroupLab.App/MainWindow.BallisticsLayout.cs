@@ -144,6 +144,15 @@ public partial class MainWindow
     {
         label.VerticalAlignment = VerticalAlignment.Center;
         label.TextWrapping = TextWrapping.Wrap;
+        foreach (var field in fields)
+        {
+            // Entry 342 item 3: the field is named by its label, which follows the units as they change.
+            if (Avalonia.Automation.AutomationProperties.GetLabeledBy(field) is null && string.IsNullOrWhiteSpace(Avalonia.Automation.AutomationProperties.GetName(field)))
+            {
+                Avalonia.Automation.AutomationProperties.SetLabeledBy(field, label);
+            }
+        }
+
         var needed = new TextBlock { Text = "needed", IsVisible = false, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Alert } };
         foreach (var field in fields)
         {
