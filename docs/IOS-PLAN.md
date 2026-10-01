@@ -105,29 +105,31 @@ no, and a no comes back as a note with what was seen.
    every second and a half, only while the paper is still dim; over glossy paper, or with a bright spot from the torch on the sheet, it
    steps down or goes off, and does not come back up to the level that glared; on paper already bright it goes off. It never flickers.
    The log's `camera.torch` lines give each change, its level of five and its reason, which the sitting's notes can quote.
-7. **The level.** Flat over a sheet on a table the dot sits in the ring and the whole crosshair turns green, as on Android (entry 311
+7. **How far away.** The same sheet photographed at 1.5, 2, 2.5 and 3 ft (45, 60, 75 and 90 cm), flat and upright at a backer: at which
+   distance the corner codes stop reading (question 77, answered "A and B": the guide says about 2 ft until this measures it).
+8. **The level.** Flat over a sheet on a table the dot sits in the ring and the whole crosshair turns green, as on Android (entry 311
    section 2); raising an edge sends it toward that edge, in portrait and in landscape. The log's `camera.level` lines give the gravity,
    the screen's turn and the tilt, when it turns green or stops and every two seconds.
-8. **Background and foreground.** With the camera open, go to the Home Screen and come back: the preview runs again, the torch is as
+9. **Background and foreground.** With the camera open, go to the Home Screen and come back: the preview runs again, the torch is as
    chosen, and the analysis carries on. The same with the iPad locked and unlocked, and with Split View or Slide Over opened over it.
-9. **End to end.** The picture taken is read: the picture check shows, then the result with the holes, and the session is saved with
+10. **End to end.** The picture taken is read: the picture check shows, then the result with the holes, and the session is saved with
    the sheet named; a picture taken in landscape is read the right way up.
-10. **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the
+11. **The shutter's timing.** The press is answered at once, with iOS's shutter sound and the white flash, within about 0.3 s, and the
     result follows as soon as the reading allows. Measured from a screen recording started in Control Center, frame by frame from the
     press to the flash and to the result; the log's `camera.shutter` lines hold the same steps, but the iPad cannot hand its log over yet.
-11. **Tap to focus.** A tap on the preview sharpens that part of the sheet and holds it until the next tap.
-12. **The Photos picker (entry 292).** Choose a photo opens Photos with no question about access; a photograph on the iPad is read
+12. **Tap to focus.** A tap on the preview sharpens that part of the sheet and holds it until the next tap.
+13. **The Photos picker (entry 292).** Choose a photo opens Photos with no question about access; a photograph on the iPad is read
     at its full size, and a HEIC one reads the right way up.
-13. **A photograph kept only in iCloud.** With Optimize iPad Storage on, a photograph not on the iPad downloads with the line saying how
+14. **A photograph kept only in iCloud.** With Optimize iPad Storage on, a photograph not on the iPad downloads with the line saying how
     far it has got, and Cancel stops it and returns to Capture. The same with Wi-Fi off says the iPad is offline.
-14. **Files.** From another app opens Files; a picture from iCloud Drive and one from Google Drive or OneDrive, where installed, are read.
-15. **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight
+15. **Files.** From another app opens Files; a picture from iCloud Drive and one from Google Drive or OneDrive, where installed, are read.
+16. **Shared from Google Photos.** GroupLab is in Google Photos' share sheet; sharing a photograph there opens GroupLab and reads it straight
     into analysis, with no question from iOS in between, or with only its "Open in GroupLab?" (note which). The same from Photos, and
     with three shared at once, which are read as a set.
-16. **Open in GroupLab.** From Files, Share, then GroupLab in the row of apps (or Open in), opens GroupLab and reads the picture.
-17. **A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it. If iOS will not let the share
+17. **Open in GroupLab.** From Files, Share, then GroupLab in the row of apps (or Open in), opens GroupLab and reads the picture.
+18. **A share while GroupLab is closed.** Quit GroupLab, share a picture into it: it opens and reads it. If iOS will not let the share
     sheet open GroupLab, the sheet says the picture is waiting, and opening GroupLab reads it.
-18. **The sheet beside the numbers (entry 290 section 6).** On the iPad mini in landscape, a result shows the sheet on one side and
+19. **The sheet beside the numbers (entry 290 section 6).** On the iPad mini in landscape, a result shows the sheet on one side and
     the numbers on the other, and turning the iPad back to portrait puts them one above the other again. The iPhone simulator cannot
     show it: in landscape it is 832 points wide inside its safe area, and the side by side layout starts at 840.
 

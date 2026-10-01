@@ -23,7 +23,7 @@ number is never reused and a question is never lost:
 
 ## 2026-09-30, question 77: the guide says stand about 2.5 ft away, and the synthetic camera reads no marker at 2 ft
 
-**Status: open.** Nothing waits on it; the guide is unchanged. Entry 321 added range cases to the scoreboard: a Letter sheet photographed
+**Status: answered 2026-10-01.** Alan (entry 322): "Q77 A and B." The guide says about 2 ft (60 cm) now, and the next sitting measures the distance on a real phone. Nothing waits on it; the guide is unchanged. Entry 321 added range cases to the scoreboard: a Letter sheet photographed
 at 1.75 ft finds 49 of 50 holes, but at 2 ft (98 pixels an inch in the phone's 8 megapixel working picture) and 3 ft (66) no corner
 marker is read, so nothing registers. The user guide (docs/USER-GUIDE.md, "stand about 2.5 ft (75 cm) from the sheet") and the camera's
 distance words were set from the Fold 7's sittings, where real pictures at about that distance did read; the synthetic markers may be

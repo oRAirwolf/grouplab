@@ -91,7 +91,7 @@ A sheet with one scoring bull takes a group. Every shot on it goes to that bull,
 GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the real resolution from the sheet's own printed markers and tells you both. Where the two disagree, the markers win, because they were printed at a known size and the file's number is only what the scanner meant to do.
 
 For photographs:
-- stand about 2.5 ft (75 cm) from the sheet;
+- stand about 2 ft (60 cm) from the sheet, close enough that the sheet nearly fills the frame;
 - use the phone's main camera, not its wide or zoom lens;
 - keep the whole sheet and all its corner squares in the frame;
 - do not crop the pictures, and do not send them through a messaging app, which shrinks them.

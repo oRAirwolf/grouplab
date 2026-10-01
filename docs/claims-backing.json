@@ -269,10 +269,6 @@
    "kind": "code",
    "where": "ScaleReference and StatedResolutionScale in src/GroupLab.Core/Marking; entry 171"
   },
-  "For photographs: stand about 2.5 ft (75 cm) from the sheet; use the phone's main camera, not its wide or zoom lens; keep the whole sheet and all its corner squares in the frame; do not crop the pictures, and do not send them through a messaging app, which shrinks them.": {
-   "kind": "decided",
-   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets"
-  },
   "On a GroupLab sheet the rest happens on its own: GroupLab reads the sheet's printed codes to name its definition.": {
    "kind": "code",
    "where": "AutomaticMarking.Run in src/GroupLab.Core/Marking/AutomaticMarking.cs: codes, registration, detection, assignment"
@@ -1148,10 +1144,6 @@
   "- For a load development sheet, fire one shot per bull, in order, starting at bull 1.": {
    "kind": "decided",
    "where": "how the sheets are designed to be shot, docs/TARGET-LIBRARY.md"
-  },
-  "For photographs: - stand about 2.5 ft (75 cm) from the sheet; - use the phone's main camera, not its wide or zoom lens; - keep the whole sheet and all its corner squares in the frame; - do not crop the pictures, and do not send them through a messaging app, which shrinks them.": {
-   "kind": "decided",
-   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets"
   },
   "GroupLab reads the sheet's printed codes to name its definition.": {
    "kind": "code",
@@ -4704,6 +4696,18 @@
   "Guided takes the picture by itself in either position under the same rules: square to the sheet within 37 degrees, steady, and the sheet read.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Capture/CaptureGuidance.cs Judge and GuidanceSteadier: the same checks at OffAxisLimit.Degrees whatever the phone's position, held by CameraReplayTests (entry 321)"
+  },
+  "For photographs: stand about 2 ft (60 cm) from the sheet, close enough that the sheet nearly fills the frame; use the phone's main camera, not its wide or zoom lens; keep the whole sheet and all its corner squares in the frame; do not crop the pictures, and do not send them through a messaging app, which shrinks them.": {
+   "kind": "decided",
+   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets; entry 322 answered question 77 B: about 2 ft"
+  },
+  "For photographs: - stand about 2 ft (60 cm) from the sheet, close enough that the sheet nearly fills the frame; - use the phone's main camera, not its wide or zoom lens; - keep the whole sheet and all its corner squares in the frame; - do not crop the pictures, and do not send them through a messaging app, which shrinks them.": {
+   "kind": "decided",
+   "where": "the photograph instructions, docs/VOLUNTEER-PACK.md and research/photographing-targets; entry 322 answered question 77 B: about 2 ft"
+  },
+  "**How far away.** The same sheet photographed at 1.5, 2, 2.5 and 3 ft (45, 60, 75 and 90 cm), flat and upright at a backer: at which distance the corner codes stop reading (question 77, answered \"A and B\": the guide says about 2 ft until this measures it).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 322 (question 77 answered A and B): the next sitting measures the distance"
   }
  },
  "rules": [

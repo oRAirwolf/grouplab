@@ -192,6 +192,11 @@ GroupLab 5x5 sheet on a table in ordinary room light for the camera test. The si
 website (entry 253). When the checks that need nobody are done, the panel and the top of this file give you a few short steps with the
 Fold 7 over that sheet; nothing else needs your hands.
 
+**Added 2026-10-01 (entries 321 and 322), two more things at that sitting, about five minutes:** the camera's level with the phone
+upright at a sheet taped to cardboard as well as flat over the table, in portrait and turned sideways; and the same sheet photographed
+from 1.5, 2, 2.5 and 3 ft (45, 60, 75 and 90 cm), so the distance at which GroupLab stops reading the corner codes is measured on a real
+phone. The steps come in the panel and at the top of this file when the sitting starts.
+
 **Opened 2026-09-28 (entries 250 and 252).** **Needed:** the phone and the tablet on the charger, unlocked, Wireless debugging off and on,
 Stay awake on, for about twenty minutes, **once a line at the top of this file starting "READY FOR THE PHONE AND TABLET:" says so**; not
 before. **Why:** three things can only be checked on the devices: the Targets preview now showing a sheet's words and Letter above A4 on the
