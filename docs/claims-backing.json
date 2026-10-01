@@ -4956,6 +4956,22 @@
   "Updating, and what you get The newest build is rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes.": {
    "kind": "code",
    "where": ".github/workflows/nightly.yml publishes after ci.yml passes on windows-latest, ubuntu-latest and macos-latest; website.yml publishes the site within minutes (entry 144)"
+  },
+  "The Microsoft Store also carries GroupLab for Windows ( Get it from Microsoft ), an older, steadier build that updates itself through the Store.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation on the device; Send Beta Feedback in TestFlight, or a screenshot shared to it, reaches the project.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "The Microsoft Store also carries GroupLab for Windows ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)), an older, steadier build that updates itself through the Store.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
+  },
+  "On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device; **Send Beta Feedback** in TestFlight, or a screenshot shared to it, reaches the project.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"
   }
  },
  "rules": [

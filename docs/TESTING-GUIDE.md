@@ -15,10 +15,15 @@ This page is for somebody who has never seen it. It is an unfinished test build,
 
 Nothing else is needed: the download carries its own .NET runtime.
 
+The Microsoft Store also carries GroupLab for Windows ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)), an older,
+steadier build that updates itself through the Store. For testing, take the nightly: it is the build to name in a bug report.
+
 ## On the phone
 
 GroupLab for Android is the APK on the [download page](https://grouplab.org/download/), or the Google Play internal test for those
-invited. Remove one before installing the other: they are signed with different keys. On the Capture screen, **Guided** takes the picture
+invited. Remove one before installing the other: they are signed with different keys. On an iPhone or iPad, GroupLab is in a public
+beta through Apple's TestFlight: install TestFlight from the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6)
+on the device; **Send Beta Feedback** in TestFlight, or a screenshot shared to it, reaches the project. On the Capture screen, **Guided** takes the picture
 by itself when everything is right and **Manual** leaves it to you; either way every picture is checked, with a score and notes on what
 GroupLab corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a tap on a number to switch its
 units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a sheet or the printer check page.

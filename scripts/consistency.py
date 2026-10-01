@@ -12,7 +12,9 @@ It runs every check the repository already has for this, and a few of its own, a
 - the newest nightly named in the README is the newest in the release notes, and (online) the live site names it too;
 - every feature on the Features page is named in the README's summary;
 - no retired wording remains (docs/RETIRED-WORDING.json), such as a claim that something waits on a lawyer;
-- (online) every external link in the README resolves, allowing for a temporary failure.
+- (online) every external link in the README resolves, allowing for a temporary failure;
+- every place that tells a person how to get GroupLab names the Microsoft Store and the iPhone beta, and every chronograph file the
+  application reads is named in the README and the user guide (entry 342: the testing guide still knew only Android's routes).
 
     python scripts/consistency.py                findings, exit 1 when there are any
     python scripts/consistency.py --warn         the same as warnings, always exit 0 (the ordinary build)
@@ -79,6 +81,29 @@ def readme_checks() -> list[str]:
     for f in book["features"]:
         if f"#{f['key']})" not in readme:
             found.append(f"the feature {f['name']!r} is on the Features page and not named in the README's summary")
+    return found
+
+
+GETTING = [README, REPO / "docs" / "USER-GUIDE.md", REPO / "docs" / "TESTING-GUIDE.md"]
+CHRONOGRAPH = REPO / "src" / "GroupLab.Core" / "Records" / "ChronographFiles.cs"
+
+
+def routes() -> list[str]:
+    """Where to get GroupLab, and which chronograph files it reads, said the same everywhere a person reads it."""
+    site = (REPO / "website" / "build.py").read_text(encoding="utf-8")
+    found = []
+    for name in ("STORE", "TESTFLIGHT"):
+        url = re.search(rf'^{name} = "([^"]+)"', site, re.M).group(1)
+        for doc in GETTING:
+            if url not in doc.read_text(encoding="utf-8"):
+                found.append(f"{doc.relative_to(REPO).as_posix()} does not link {url}, which the download page offers")
+    body = re.search(r"enum ChronographFormat\s*\{(.*?)\}", CHRONOGRAPH.read_text(encoding="utf-8"), re.S).group(1)
+    readers = [n for n in re.findall(r"^\s*([A-Z][A-Za-z]+),", body, re.M) if n != "Generic"]
+    for reader in readers:
+        words = re.sub(r"(?<=[a-z])(?=[A-Z][a-z])", " ", reader) if reader.startswith("Garmin") else reader
+        for doc in GETTING[:2]:
+            if words.lower() not in doc.read_text(encoding="utf-8").lower():
+                found.append(f"{doc.relative_to(REPO).as_posix()} does not name {words}, a chronograph file GroupLab reads")
     return found
 
 
@@ -162,7 +187,7 @@ def main() -> int:
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--issue", action="store_true")
     args = parser.parse_args()
-    found = checks_that_exist() + readme_checks() + retired() + ([] if args.offline else online())
+    found = checks_that_exist() + readme_checks() + routes() + retired() + ([] if args.offline else online())
     for f in found:
         print(f"::warning::{f}" if args.warn else f"- {f}")
     print(f"consistency: {len(found)} finding{'s' if len(found) != 1 else ''}")
