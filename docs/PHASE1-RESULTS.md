@@ -40,6 +40,24 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 334: Alan's chronograph exports, and entry 333's two workers
+
+Done 2026-10-01 by worker B (this session); worker A took entry 332 and entry 331 section 3 in its own worktree (entry 333).
+
+- **The files:** 387 copied from his Google Drive folder, read only, into `C:\Dev\grouplab-local\chronograph-samples\garmin-xero\`
+  (by year, and a `metric` folder of two Xero exports in m/s that appeared during the work); the 23 zips hold an app's database backups
+  (`dbBackup.db3`), not exports, and were left out; three photographs were left out.
+- **The reader** (`ChronographFiles.ReadFile`, through ExcelDataReader): Garmin Xero, format B, 92 files, 536 strings, 9,863 shots, every
+  one read; the 2023 radar export, format A, another maker's, 295 files and 2,860 shots, two files holding a string with no shots.
+  `grouplab chronograph-files <folder>` makes the count. Deleted shots stay gaps in the numbering. A shot the Xero shows as "--" in its
+  difference column is one it left out of its own figures; it is kept, marked and said, and the footer is checked against the others,
+  which took the disagreements from ten to three: two May 2024 footers stating an SD of 0.0, and one average 0.3 ft/s off.
+- **Location:** no reader reads a row it does not name, so the 2023 exports' location block never comes in;
+  `ChronographWorkbookTests.TheRadarExportReadsItsShotsAndNeverItsLocation` writes one with a place and coordinates and finds neither in the
+  result. Nothing of Alan's is committed; the tests write workbooks in both layouts, and a local test reads his whole folder where it is.
+- **On screen:** Import a file takes .xls, .xlsx and .xlsm on the desktop and the phone, a string chosen by its name where a workbook
+  holds several. Not yet: offering a file's projectile weight and weather to fill the load and the conditions (section 3.3).
+
 ## Entries 326 and 330: TestFlight feedback reaches Code, privately
 
 Done 2026-10-01, once request 63 brought `CRASH_REPORTS_TOKEN` (entry 330).

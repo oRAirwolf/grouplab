@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 07:55 UTC, entries 328, 326 and 330 done; 331 (a batch that needs nobody) and 332 (a
-fingerprint trial) are next. Nightly 147 carries 328 for Unholy.
+**Last rewritten:** 2026-10-01 09:10 UTC, entries 333 and 334 done; entry 331 sections 1, 2 and 4 done, section 3 and entry 332 with
+worker A.
 
 ---
 
@@ -36,7 +36,8 @@ fingerprint trial) are next. Nightly 147 carries 328 for Unholy.
 - **Detection, angled photos**: the far column's 0.08 in errors come from a lifted margin; the bent-sheet registration is entry 324
   section 1, with the other session. **Holes on any target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
-- **Garmin Xero import** (Phase 5): needs one sample export file from anybody with a Xero.
+- **Garmin Xero import** (Phase 5): reads every one of Alan's exports (entry 334); reconciling against marked shots needs a sheet shot
+  with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
   session's own conditions would need a form (DESIGN NEEDED if wanted); the phone's picture waits for request 50's sitting.
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
@@ -89,7 +90,8 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 331, then 332.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 331 (section 3 with worker A) and
+332 (worker A).
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.
@@ -109,7 +111,6 @@ GitHub's secrets.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **The check page is in the library but is not a target**: it counts as no sheet in the README, and a picture of it opened as a target
   goes to the printer check. A value on screen is tappable exactly when it shows a unit (`UnitTap.KindOf`).
-- **A disc can be a square** (entry 243 section 4): its diameter is the diagonal, and a square is measured as itself.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words.
 - **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary

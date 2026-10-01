@@ -44,6 +44,114 @@ worker:
 4. Update the testers' guide line about feedback if it says who reads it, and docs/RESTORE.md if the private repository's contents need
    a backup line.
 
+## 2026-10-01, entry 333: two workers for this batch, and real Garmin Xero files are coming
+
+**Status: done 2026-10-01.** Two workers from 08:45 UTC: worker A (a worker in its own worktree) on entry 332 then entry 331 section 3; worker B (this session) on entry 331 sections 2 and 4, both done, then entry 334. Request 65 was written and answered the same hour (archived).
+
+### 1. Two workers (Alan, 2026-10-01 08:20 UTC: "Can we have code use 2 workers instead of one? It seems to spend a lot of time idling.")
+
+Entry 317 allows two workers for separate areas; Alan now asks for two by default while the queue holds work for both. Split the open
+batch so the two never touch the same files:
+
+- **Worker A, detection:** entry 332 (the fingerprint trial), then entry 331 section 3 (prove what existing material can).
+- **Worker B, data and speed:** entry 331 section 2 (the chronograph imports), then section 4 (the performance baseline).
+
+Each worker commits its own sections; one of them folds an entry once all its sections are done. When one worker's list is empty it
+stops rather than waiting; one worker again when the queue has only one area. Keep entry 317's daily budget: if the day passes 12%,
+drop to one worker at a clean point and say so in for-alan.md. Main model for both.
+
+### 2. Real Garmin Xero exports (request 65)
+
+Alan owns a Xero and will export some strings into `C:\Dev\grouplab-local\chronograph-samples\garmin-xero\` (his own data: usable for
+tests; small enough files may be committed as test data with a line in samples/PROVENANCE.md, Alan 2026-10-01). Write request 65 in
+for-alan.md to track it. Worker B builds the Xero reader from the published layout now, and as soon as a file appears there, tests
+against it and drops the Experimental label when every file reads correctly (shot count, each velocity, units, deleted shots).
+
+## 2026-10-01, entry 334: request 65 answered, Alan's Garmin Xero exports, and an older chronograph's files beside them
+
+**Status: done 2026-10-01, except section 3.3's offer.** Every Garmin Xero export reads and the reader is no longer Experimental; the projectile weight and the 2023 export's weather are read and kept with each string, but no screen yet offers them to fill the load or the conditions, which needs a small design (where the offer sits beside the readings). A place name from the 2023 exports' location block was printed once into this session's own console during the first look at the files, before the reader existed; it was not written to any file, log or commit, and the reader never reads that block.
+
+Alan, 2026-10-01: "All of the xlsx files in here are garmin chronograph files G:\My Drive\chronograph.files\2026 and
+G:\My Drive\chronograph.files\2025. Check the older ones as the format may have changed." The folder also holds 2023 and 2024. About
+385 files: xlsx 294 (2023 and 2024), xls 87 (2024 to 2026), csv 2 and xlsx 1 (2026), xlsm 2 (2023), and 23 zip files (look inside;
+they may hold more exports). Google Drive for desktop; read it directly from G:\. Worker B, with entry 331 section 2; close request 65.
+
+**Correction from Alan, 2026-10-01 08:39 UTC:** "I think you may be confusing chronograph results from other chronograph makers with
+the garmin xero. I can tell you that I have had one since at least 6/1/2024 but no longer than that." So only Format B below is Garmin
+Xero (it first appears in May 2024). Format A, 2023 to early 2024, is **another maker's chronograph**, not a Xero format and not an
+older Xero version: do not label it Xero anywhere, in code, tests, the guide or release notes. Alan, 08:42 UTC: "The ones that have raw radar
+samples were from the bulletseeker chronograph that I had for a short time prior to the xero c1 and xero c2." So Format A is the
+**BulletSeeker** chronograph's export. The Xero reader is built and proven on Format B only. Format A gets its own reader, named
+BulletSeeker, behind the same import interface, Experimental until every BulletSeeker file reads, and it does not hold up closing
+request 65. Format B covers both of Alan's Garmins, the Xero C1 and the Xero C2: report whether anything in the files differs between
+the two (a column, a header, a footer line), and handle both.
+
+### 1. Copy, and the location rule
+
+Copy every xls, xlsx, xlsm, csv and any export inside a zip into `C:\Dev\grouplab-local\chronograph-samples\garmin-xero\`, keeping the
+year and date folders. Never write anything into G:\. **The older files carry where Alan shot: a "Location" name, "Latitude" and
+"Longitude".** Treat them as the CLAUDE.md rule treats GPS in a photograph: never read into GroupLab, never printed, logged, stored on a
+session or committed. The importer skips those rows by name; any file committed as test data has them removed first (and the place
+name), with a test that fails if a committed sample holds a coordinate.
+
+### 2. What planning saw in a sample of 15 (the reader must take all of these)
+
+**Format A, 2023 to early 2024, .xlsx and .xlsm, the BulletSeeker, NOT Garmin (see the correction above)**, sheets "Data" and "Chart". Shots run across columns, not down: a row "Shot Number"
+(Shot 1, Shot 2, ...), a row "Time" (US date and time), a row "Mean Speed [fps]" with whole-number speeds (the reading to use), then
+"Measurements [fps]" followed by many rows of the radar's raw samples per shot (ignore them). Two header variants above it: early files
+start "String", "Created", location rows, "Temperature" with "°F", "Pressure" with "inHg", "Humidity", "Notes"; later ones start "Name",
+"Created", then "Rifle" (Rifle Name, Barrel Length), "Ammunition" (Brand, Name, Powder Weight, Primer, Bullet Mass gr), "Statistics"
+(Min, Max, Avg, Deviation), a location block, "Weather" (Temperature, Pressure, Humidity, where one file stores humidity as a fraction,
+0.0154), "Notes". openpyxl in read-only mode sees only one cell in some of these (no stored dimensions): read them fully.
+
+**Format B, Garmin Xero, from May 2024 to now, .xls (old binary Excel), and in 2026 also .xlsx and .csv.** One sheet per string; a monthly export
+("Sessions_MAY_2024-MAY_2024.xls") holds many sheets. Row 1 is the string's name (sheet names are cut to 31 characters, so use row 1).
+Row 2 is the header: "#", "Speed (FPS)", "Δ AVG (FPS)" (later "Δ Avg (FPS)"), "KE (FT-LBS)" or "KE (FT-LB)", "Power Factor
+(kgr⋅ft/s)", "Time", "Clean Bore", "Cold Bore", "Shot Notes". Then one row per shot, numbers stored as text, and in September 2026 with
+thousands separators ("2,853.4"). Then a footer: "-", "AVERAGE SPEED", "AVERAGE POWER FACTOR", "STD DEV", "SPREAD", "Projectile Weight
+(GRAINS)", "AVG KINETIC ENERGY", "Session Note", "Date" ("SEPTEMBER 19, 2026 13:16" or "April 11, 2026 at 1:31 PM"). Times may contain a
+narrow no-break space before PM. The csv has the name on line 1 and a byte order mark at the start of line 2, not line 1.
+
+### 3. Reading them right
+
+1. Read speeds from the shot rows only, never the footer; check each string's mean, SD and spread against the footer's own figures where
+   it has them (and against "Statistics" in format A), and report any file that disagrees.
+2. Units from the header (FPS today; handle m/s if a header says so). Shot numbers with gaps mean deleted shots: keep the numbering.
+3. Clean Bore, Cold Bore and Shot Notes are kept with the shot when present; projectile weight, temperature, pressure and humidity may
+   fill the load and conditions only when the person accepts them (entry 329's conditions).
+4. Every Format B file must read, or be listed with why not; then drop the Experimental label from the Xero reader. Report the counts
+   by format and year, and list any file that fits neither format.
+
+### 4. Metric exports, from the latest ShotView (Alan, 2026-10-01 08:48 UTC)
+
+Alan switched ShotView (latest version) to metric and exported two files, now in
+`C:\Dev\grouplab-local\chronograph-samples\garmin-xero\metric\`: a monthly multi-session export (22 sheets) and a single-session export
+(93 shots). What they show, which the reader must handle:
+
+1. The metric header is "Speed (MPS)", not "M/S": then "Δ Avg (MPS)", "KE (J)", "Power Factor (N⋅s)". Projectile weight stays
+   "(GRAINS)" in metric. Units come from the bracket in the header, never from a setting or a guess; MPS converts to ft/s for GroupLab's
+   own figures and the original unit is kept with the string.
+2. Thousands separators appear in metric too ("1,460.4" in the energy column).
+3. A new last footer line: "All shots included in the calculations". Shots left out in ShotView probably change that line (and the
+   footer's figures); the reader keeps every shot row, marks any the footer says were excluded when it says so, and never uses the
+   footer's averages in place of the shots. If no file yet shows an exclusion, say so; planning will ask Alan for one.
+4. Sheet names now carry the date, time and an index ("1156arc1_2026-09-06_15-44_1"); the full string name stays in row 1.
+5. These two are Alan's own files: they may be committed as test data after the same location check (they carry none that planning
+   saw), with a line in samples/PROVENANCE.md.
+
+### 5. Finding the excluded shots without Alan (Alan, 08:49 UTC: "I definitely have files where I have excluded a shot. It is not obvious from what I remember.")
+
+Find them in the files themselves; do not ask him which. For every Format B string, across all his files:
+
+1. Any last footer line other than "All shots included in the calculations" is a candidate; record its exact words.
+2. Recompute the average, SD and spread from every shot row and compare with the footer. Where they differ, try leaving out each
+   shot, then each pair, and keep the set that reproduces the footer to its printed rounding. One unique answer is an exclusion found;
+   several answers, or none, is reported as such and never guessed.
+3. Also look for gaps in the shot numbers, a mark in Shot Notes, or anything else that differs in those rows.
+4. Report what ShotView does with an excluded shot (leaves the row out, keeps it with a mark, or keeps it unmarked and changes only
+   the footer), with the files that show it. The reader then imports every shot that was fired and marks the excluded ones as
+   excluded, so GroupLab's own figures can match ShotView's or include them, as the person chooses.
+
 ## 2026-10-01, entry 330: request 63 is done, and entry 328 is yours
 
 **Status: done 2026-10-01, every section.** Entry 328 was done first, then 326. On section 2: a second Claude Code session, grouplab-1f, did run on this computer until about 05:30 UTC and committed be2c0ab5, 4ee095c8 and 4ec87124 before it ended; nothing of 328 was committed by it, and its uncommitted start on 328 section 2 was carried over. From here every inbox entry is this session's (section 3).
