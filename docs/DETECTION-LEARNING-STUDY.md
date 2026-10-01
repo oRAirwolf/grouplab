@@ -434,7 +434,7 @@ with the shooter's head and shoulders in a hard shadow; a sideways smear of 6 px
 | angle 30 | 50 of 50 | 0 | 0.007 in | 0.070 in | 0.0001, 0.0003 in |
 | sun and shadow | 38 of 50 | 0 | 0.006 in | 0.057 in | 0.0002, 0.0006 in |
 | motion 6 px | 50 of 50 | 0 | 0.007 in | 0.021 in | 0.0017, 0.0018 in |
-| far 2 ft | not registered | | | | |
+| far 2 ft (entry 322) | 48 of 50 | 0 | 0.007 in | 0.026 in | 0.0004, 0.0005 in |
 | far 3 ft | not registered | | | | |
 
 Swept from 5 to 45 degrees in steps of 5, the turned sheet found every hole with no false mark at every angle, so the rendered sheet
@@ -445,6 +445,25 @@ backer. The phone's camera says "Less light" to paper the sun has clipped, and n
 the sheet 98 pixels an inch and not one marker is read; at 1.75 ft, 112 pixels an inch, 49 of 50 holes are found, and at 1.5 ft, on one
 seed, all 25. That is closer than the 2.5 ft the photograph instructions give, a question the range photographs can answer for a real
 phone's lens; the camera says "Move closer" when it cannot read the markers.
+
+**Markers at a distance (entry 322, 2026-10-01).** Measured first, on seed 291: the 4 mm marker is 15.5 px at 2 ft (a module of 1.9 px)
+and 10.3 px at 3 ft (1.3 px). At 2 ft the markers were never decoded because they were never looked at: a photograph's first pass sizes
+the detector for a Letter sheet across half the picture, 23.4 px a marker, and its size gates keep nothing under half that area, so all
+38 were refused before decoding. Asked for their own size, 33 of the 38 decode at the picture's own resolution. At 3 ft every marker is
+found as a square (39 candidates) and none decodes: that is resolution. The whole picture enlarged two, three and four times decodes 7, 12
+and 16 of the 38, where at 2 ft doubling decodes 38.
+
+The cheap fix is the first: where the first pass decodes no marker, a second is sized for a sheet across a quarter of the picture, and its
+median marker sizes the pass that measures, as before. It runs in the measurer and wherever a photograph's sheet is named by its markers;
+a picture whose first pass reads any marker is read exactly as it was. **Far 2 ft now registers on both seeds: 48 of 50 holes, no false
+mark, a median center error of 0.007 in and the registration 0.0004 in off at the bulls**, and it is no longer expected to fail. Every other
+synthetic line is unchanged to the last digit, far 3 ft still reads no marker, and the seven real photographs of the corpus read 172 of 173
+holes, all registered, with 2 false marks. Reading the candidates from enlarged cut-outs, the second cheap fix, was not built: at 3 ft it
+would read at most 16 of the 38 markers from the 8 megapixel picture the scoreboard has, and the phone's own full-resolution frame, which
+holds more, never reaches the reading. The cost, on the desktop for one far picture in a Release build: the extra pass takes 15 to 20 ms
+on an 8 megapixel picture and adds nothing to the peak memory (the test process's peak working set 507 MB at 1.25 ft and 510 MB at 2 and
+3 ft); the marker stage of a 2 ft picture takes 140 to 290 ms and the whole reading 0.45 to 1.2 s, against 0.45 to 1.3 s for a sheet at
+1.25 ft. A picture with no sheet in it pays the one extra pass.
 
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.

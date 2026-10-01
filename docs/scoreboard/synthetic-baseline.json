@@ -5,7 +5,8 @@
     "ScoreboardTests re-reads every condition in every build and fails on a drop beyond the margin. Written by grouplab scoreboard --synthetic --out;",
     "when a change makes a line better, move the baseline in the same commit and say why. A line marked expectedToFail is a known failure kept in view.",
     "NOTES-FROM-PLANNING.md entry 297 section 4: the red and blue lines, each held to the black line of its condition by ScoreboardTests, measured 2026-09-30.",
-    "NOTES-FROM-PLANNING.md entry 321 sections 3 and 4: the sheet on a backer at the range, two angles, strong sun with the shooter's shadow, a slight smear, and the sheet 2 and 3 ft away, measured 2026-09-30."
+    "NOTES-FROM-PLANNING.md entry 321 sections 3 and 4: the sheet on a backer at the range, two angles, strong sun with the shooter's shadow, a slight smear, and the sheet 2 and 3 ft away, measured 2026-09-30.",
+    "NOTES-FROM-PLANNING.md entry 322 section 1: the sheet 2 ft away registers and its holes are found, once a second pass sizes the marker detector for a sheet across a quarter of the picture, measured 2026-10-01."
   ],
   "measured": "2026-09-29",
   "seeds": [
@@ -391,19 +392,23 @@
       "condition": "far 2 ft",
       "truth": "holes",
       "pictures": 2,
-      "registered": 0,
+      "registered": 2,
       "holes": 50,
-      "marks": 0,
-      "found": 0,
+      "marks": 48,
+      "found": 48,
       "falseMarks": 0,
-      "medianMilliseconds": 16,
+      "medianCentreInches": 0.0074,
+      "worstCentreInches": 0.0256,
+      "medianRegistrationInches": 0.0004,
+      "worstRegistrationInches": 0.0005,
+      "medianMilliseconds": 448,
       "foundPerPicture": [
-        0,
-        0
+        24,
+        24
       ],
-      "recall": 0,
-      "expectedToFail": true,
-      "note": "no marker is read: at 2 ft the 8 megapixel working picture gives the sheet 98 pixels an inch, and a marker wants about 150 (photograph limit); at 1.75 ft, 112 pixels an inch, 49 of 50 are found. The camera says move closer"
+      "recall": 0.96,
+      "expectedToFail": false,
+      "note": "every marker was readable at 15.5 px, 98 pixels an inch, but the first pass sized the detector for a sheet across half the picture and its size gates refused them all; entry 322 adds a pass sized for a sheet across a quarter, which reads 33 of the 38 markers. 48 of 50 holes, no false mark"
     },
     {
       "condition": "far 3 ft",
@@ -421,7 +426,7 @@
       ],
       "recall": 0,
       "expectedToFail": true,
-      "note": "no marker is read, at 66 pixels an inch; the camera says move closer"
+      "note": "no marker is read, at 66 pixels an inch: a marker is 10.3 px, a module 1.3 px, and all 38 are found as squares but none decodes; enlarged four times, 16 of 38 decode (entry 322). The camera says move closer"
     },
     {
       "condition": "blue clean",

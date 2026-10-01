@@ -183,6 +183,21 @@ public static class SheetMeasurer
             ? known / 254
             : 0.5 * Math.Max(image.Width, image.Height) / Math.Max(definition.Page.Width, definition.Page.Height);
         var detection = backend.DetectMarkers(image, DetectionOptions(f.MarkerSize * pixelsPerDmm, options)).InIdentifierOrder();
+        if (dpi is null && detection.Markers.Count == 0)
+        {
+            // Entry 322 section 1: the first pass guesses that the sheet fills half the frame, and its size gates refuse a marker under
+            // half that guess's area. A sheet 2 ft away fills a third of an 8 megapixel picture, its markers 15.5 px against a guess of
+            // 23.4, so every one was refused unread although each reads at its own size. A pass sized for a sheet a quarter of the frame
+            // finds them; a picture that has none costs one more pass.
+            var smaller = backend.DetectMarkers(image, DetectionOptions(f.MarkerSize * pixelsPerDmm * FarGuess, options)).InIdentifierOrder();
+            if (smaller.Markers.Count > 0)
+            {
+                s2.Decide("first pass", string.Create(inv, $"sized for {f.MarkerSize * pixelsPerDmm * FarGuess:0.0} px"),
+                    string.Create(inv, $"a pass sized for {f.MarkerSize * pixelsPerDmm:0.0} px decoded none, as a sheet far from the camera gives"), "the first pass alone");
+                detection = smaller;
+            }
+        }
+
         if (dpi is null)
         {
             double[] sides = [.. detection.Markers.Select(MeanSide).Order()];
@@ -731,6 +746,13 @@ public static class SheetMeasurer
             string.Create(inv, $"{found.Count} of {results.Count} bulls located, mean {mean / 254:0.00000} in, worst {worst.Error / 254:0.00000} in at {worst.Name}"));
         return results;
     }
+
+    /// <summary>
+    /// Entry 322 section 1: the second guess at a photograph's marker size when the first, a sheet filling half the frame, decodes none: half
+    /// of it, a sheet a quarter of the frame, as one about 2 to 2.5 ft from a phone is. The size gates keep a marker down to 0.7 of the side
+    /// asked for, so this pass reads markers from about 8 px up, where a marker's module is one pixel and stops reading anyway.
+    /// </summary>
+    public const double FarGuess = 0.5;
 
     private static MarkerDetectionOptions DetectionOptions(double sidePixels, MeasureOptions o) =>
         new(MarkerFamily.AprilTag36h11, sidePixels, o.Refinement, o.RefinementWindowModules, o.ThresholdWindowMaxPixels, o.DownsampleFactor);

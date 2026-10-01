@@ -2709,6 +2709,66 @@
    "kind": "measured",
    "where": "a scratch degradation test (deleted after the run) of AutomaticMarking.Run on GL-CF25-LTR at 300 dpi with SyntheticSheet holes, seeds 261 and 262, 2026-09-28; conditions listed in docs/DETECTION-LEARNING-STUDY.md section 1 (entry 261)"
   },
+  "**Markers at a distance (entry 322, 2026-10-01).** Measured first, on seed 291: the 4 mm marker is 15.5 px at 2 ft (a module of 1.9 px) and 10.3 px at 3 ft (1.3": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "At 2 ft the markers were never decoded because they were never looked at: a photograph's first pass sizes the detector for a Letter sheet across half the pictur": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "Asked for their own size, 33 of the 38 decode at the picture's own resolution.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "At 3 ft every marker is found as a square (39 candidates) and none decodes: that is resolution.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "The whole picture enlarged two, three and four times decodes 7, 12 and 16 of the 38, where at 2 ft doubling decodes 38.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "**Far 2 ft now registers on both seeds: 48 of 50 holes, no false mark, a median center error of 0.007 in and the registration 0.0004 in off at the bulls**, and ": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "Every other synthetic line is unchanged to the last digit, far 3 ft still reads no marker, and the seven real photographs of the corpus read 172 of 173 holes, a": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "Reading the candidates from enlarged cut-outs, the second cheap fix, was not built: at 3 ft it would read at most 16 of the 38 markers from the 8 megapixel pict": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "The cost, on the desktop for one far picture in a Release build: the extra pass takes 15 to 20 ms on an 8 megapixel picture and adds nothing to the peak memory ": {
+   "kind": "measured",
+   "where": "a scratch timing test (deleted after the run) of SheetMeasurer.Measure and AutomaticMarking.Run on Scoreboard.Far(1.25), Far(2) and Far(3), seed 291, Release build on the desktop, three rounds each, 2026-10-01 (entry 322)"
+  },
+  "**Markers at a distance (entry 322, 2026-10-01).** Measured first, on seed 291: the 4 mm marker is 15.5 px at 2 ft (a module of 1.9 px) and 10.3 px at 3 ft (1.3 px).": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "At 2 ft the markers were never decoded because they were never looked at: a photograph's first pass sizes the detector for a Letter sheet across half the picture, 23.4 px a marker, and its size gates keep nothing under half that area, so all 38 were refused before decoding.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "**Far 2 ft now registers on both seeds: 48 of 50 holes, no false mark, a median center error of 0.007 in and the registration 0.0004 in off at the bulls**, and it is no longer expected to fail.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "Every other synthetic line is unchanged to the last digit, far 3 ft still reads no marker, and the seven real photographs of the corpus read 172 of 173 holes, all registered, with 2 false marks.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "Reading the candidates from enlarged cut-outs, the second cheap fix, was not built: at 3 ft it would read at most 16 of the 38 markers from the 8 megapixel picture the scoreboard has, and the phone's own full-resolution frame, which holds more, never reaches the reading.": {
+   "kind": "measured",
+   "where": "a scratch probe (deleted after the run) of OpenCvSharpBackend.DetectMarkers on Scoreboard.Far(2) and Far(3) of GL-CF25-LTR, seed 291, at the first guess, the true marker side and the picture enlarged 2, 3 and 4 times; and grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json and --corpus on the local corpus, 2026-10-01 (entry 322)"
+  },
+  "The cost, on the desktop for one far picture in a Release build: the extra pass takes 15 to 20 ms on an 8 megapixel picture and adds nothing to the peak memory (the test process's peak working set 507 MB at 1.25 ft and 510 MB at 2 and 3 ft); the marker stage of a 2 ft picture takes 140 to 290 ms and the whole reading 0.45 to 1.2 s, against 0.45 to 1.3 s for a sheet at 1.25 ft.": {
+   "kind": "measured",
+   "where": "a scratch timing test (deleted after the run) of SheetMeasurer.Measure and AutomaticMarking.Run on Scoreboard.Far(1.25), Far(2) and Far(3), seed 291, Release build on the desktop, three rounds each, 2026-10-01 (entry 322)"
+  },
   "Real photographs are the next step (section 2).": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are"

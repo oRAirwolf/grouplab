@@ -49,6 +49,22 @@ public static class LiveSheet
     /// </summary>
     public const double ReadableSidePixels = 20;
 
+    /// <summary>
+    /// The markers of a photograph whose scale is not known: sized first for a Letter sheet across half the picture, as the measurer does,
+    /// and where that decodes none, for one across a quarter of it (<see cref="Measurement.SheetMeasurer.FarGuess"/>). Entry 322 section 1:
+    /// a sheet 2 ft from the phone gave markers too small for the first guess's size gates, and none was read although every one could be.
+    /// </summary>
+    public static IReadOnlyList<DetectedMarker> PhotographMarkers(GrayImage image, IImagingBackend backend)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(backend);
+        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
+        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        return found.Count > 0
+            ? found
+            : backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess * Measurement.SheetMeasurer.FarGuess)).Markers;
+    }
+
     /// <summary>The longest page among the built-in sheets, in dmm, Letter's 11 in, for the first guess at a marker's size.</summary>
     private const double LongestPageDmm = 2794;
 
@@ -91,8 +107,7 @@ public static class LiveSheet
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
         ArgumentNullException.ThrowIfNull(backend);
-        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
-        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        var found = PhotographMarkers(image, backend);
         if (found.Count < LeastMarkers)
         {
             return [];
@@ -201,8 +216,7 @@ public static class LiveSheet
             return places;
         }
 
-        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
-        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        var found = PhotographMarkers(image, backend);
         var done = new List<(PointD Centre, double Side)>();
         foreach (var candidate in sameLayout)
         {
@@ -280,8 +294,7 @@ public static class LiveSheet
             return sameLayout.FirstOrDefault();
         }
 
-        double guess = 0.5 * Math.Max(image.Width, image.Height) / LongestPageDmm * 40;
-        var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, guess)).Markers;
+        var found = PhotographMarkers(image, backend);
         var scored = new List<(TargetDefinition Definition, double Correlation)>();
         foreach (var candidate in sameLayout)
         {
