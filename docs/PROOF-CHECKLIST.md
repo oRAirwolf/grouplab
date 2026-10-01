@@ -57,32 +57,33 @@ Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gat
 
 Not met against a written gate: 1, 2, 3, and point 2 of 5. Met only against a proposed gate: 15 and 16.
 
-## The checklist: material still needed, for one sitting each
+## The checklist: material still needed, one list for one sitting
 
-### At the range
+Entry 342 item 4: one list, ordered by how many of the 31 each piece of material would prove, then by how little it takes. Where it is
+done is in brackets. Nothing in it can be settled without Alan: every line needs paper shot, printed or photographed, or a person timed.
 
-1. **A sheet with two shots through one hole** somewhere on it, the count written down (items 4 and 13).
-2. **A doubles sheet**: two shots on chosen bulls on purpose (11).
-3. **A ladder sheet**: five or more loads, a few bulls each (8).
-4. **A sheet shot in a known order with its Garmin Xero string recorded**, the order written down (20 and 24).
-5. **One load shot at 100 yd and at 300 yd**, a group at each (25).
-6. Any of the five store-bought targets shot, for item 30 and request 58.
+1. **A sheet shot in a known order with its Garmin Xero string recorded**, the order written down: proves 20 and 24, and checks the
+   pairing the Xero's own timing now proposes (entry 342) against the truth. (Range, then the scanner.)
+2. **A sheet with two shots through one hole** somewhere on it, the count written down: proves 4 and 13. (Range.)
+3. **The dominus-k sheet** (or any shot GroupLab sheet), taped flat and photographed square, at about 20 degrees and at about 35 degrees;
+   its scan already exists: proves 1 and 12. (Home.)
+4. **Two minutes with the wrong-bull scan**: correct its misassignments with the keyboard alone, detailed logging on: proves 9 and 10.
+   (Home, at the computer.)
+5. **A shot store-bought target**, scanned and photographed, then marked by hand on both phones: proves 30 with request 9, and gives the
+   recognition of entries 340 and 341 its first shot sheet (request 58). (Range, home, the phone sitting.)
+6. **A doubles sheet**: two shots on chosen bulls on purpose: proves 11. (Range.)
+7. **A ladder sheet**: five or more loads, a few bulls each: proves 8. (Range.)
+8. **One load shot at 100 yd and at 300 yd**, a group at each: proves 25. (Range.)
+9. **One sheet printed with GroupLab's own Print** on Windows, then scanned at 600 dpi: proves 14. (Home.)
+10. **A volunteer pack printed**, its bull 1 to bull 5 distance measured with a ruler: proves 19. (Home.)
+11. **A capture on the iPhone and on the iPad** of a shot sheet that has a scan: proves 26 on Apple's phones. (Phone sitting.)
+12. **One session shared from a phone and opened on the desktop**: proves 27. (Phone sitting.)
+13. **A sheet printed from the phone's Targets screen**, then scanned: proves 28. (Phone sitting.)
+14. **The signed APK and the development build installed together** on one phone: proves 29 (request 50). (Phone sitting.)
+15. **One stapled, curled sheet photographed three times**, once the surface model has been changed: proves 2. (Home, later.)
+16. **The support page's address**, when there is one: proves 18.
 
-### At home, at the computer and the scanner
-
-1. **The dominus-k sheet** (or any shot GroupLab sheet), taped flat and photographed square, at about 20 degrees and at about 35 degrees
-   (1 and 12); its scan already exists.
-2. **One sheet printed with GroupLab's own Print** on Windows, then scanned at 600 dpi (14).
-3. **A volunteer pack printed**, its bull 1 to bull 5 distance measured with a ruler (19).
-4. **Two minutes with the wrong-bull scan**: correct its misassignments with the keyboard alone, with detailed logging on (9 and 10).
-5. Each sheet from the range list scanned at 600 dpi.
-6. The support page's address, when there is one (18).
-
-### At the phone sitting
-
-1. **A capture on the iPhone and on the iPad** of a shot sheet that has a scan (26).
-2. **One session shared from a phone and opened on the desktop** (27).
-3. **A sheet printed from the phone's Targets screen**, then scanned (28).
-4. **The signed APK and the development build installed together** on one phone (29, request 50).
-5. **A shot store-bought target marked by hand on both phones** (30, with request 9).
-6. One stapled, curled sheet photographed three times, once the surface model has been changed (2).
+Every sheet from the range is also scanned at 600 dpi, which is what lets each one be measured against its own photographs. Item 3
+needs a change to detection rather than more material (197 of 198 holes, 2 false marks), item 31 waits on planning writing Phase 9's
+gate, and items 5, 6, 7, 15, 16, 17, 21, 22 and 23 need nothing more from Alan (question 79 asks
+planning about the written gates found met).
