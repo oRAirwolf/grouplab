@@ -1,4 +1,4 @@
-**Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
@@ -72,6 +72,15 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 66. How often GroupLab goes to the Microsoft Store: your choice, two minutes, whenever suits (entry 337)
+
+**Opened 2026-10-01.** **Why:** the route is built: a run of "store submit" on GitHub sends a chosen build to the Store through
+Microsoft's own submission service, with the keys you set up for request 38, and its result appears in `docs/notes/external-status.md`.
+Nothing is sent until you say which builds go and how often. **My proposal:** a build goes to the Store when it has been the newest
+nightly for seven days with no new error report and no open TestFlight or feedback problem, at most once a week; I start the run and tell
+you here, and you can always say "not this one". **A good answer:** "yes to the proposal", or your own rule (for example "only when I
+say", or "every two weeks").
 
 ## 64. A second sheet of each store-bought target, scanned the same way, about five minutes a target, whenever suits (entry 332)
 

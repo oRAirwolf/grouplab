@@ -61,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **15** (64 a second sheet of each store-bought target; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **15** (66 the Store's cadence; 64 a second sheet of each store-bought target; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -100,19 +100,19 @@ GitHub's secrets.
 
 - **The chronograph store counts readings from 1**, and accepting a pairing used to store them from 0: the first reading paired with a
   shot was refused, and every other pairing was one reading off. Fixed in entry 323 on both platforms.
+- **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
+  at the start of a run (entries 335 and 336).
 - **The logs were split again** on 2026-09-28 (entry 160's rule): the live files keep the newest fifteen entries and twelve results
   sections; the rest is whole in `docs/notes/archive/`. A question is taken as open only when its line reads `**Status: open`.
 - **The Mac packaging can be run by hand**: `gh workflow run package.yml --ref <branch> -f ref=<sha>` proves the signing and
   notarization on a commit without a nightly, and publishes nothing.
 - **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
   own `camera.layout` log line instead (`scripts/device-capture-check.py`).
-- **Starting GroupLab Dev's main screen over the idle screen makes a second window, which crashes**; press Back first.
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **The check page is in the library but is not a target**: it counts as no sheet in the README, and a picture of it opened as a target
   goes to the printer check. A value on screen is tappable exactly when it shows a unit (`UnitTap.KindOf`).
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
-- **The tour and Features have two sides** (entry 249): every stop and phone feature needs a phone screenshot or words.
 - **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary
   (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
 - **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a

@@ -23,12 +23,26 @@ $renew = 'Make a new client secret for grouplab-store-publisher in Microsoft Ent
 function Write-Summary([string] $line) {
     Write-Host $line
     if ($env:GITHUB_STEP_SUMMARY) { $line | Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY }
+    # Entries 336 and 337: the same lines, without their headings' marks, for docs/notes/external-status.md.
+    if ($env:STATUS_OUT) { ($line -replace '^#+\s*', '' -replace '^-\s*', '') | Out-File -Append -Encoding utf8 $env:STATUS_OUT }
 }
 
 # Request 38 Part B: where the Store's submissions stand, read and never changed. The first submission was made by hand in Partner Center on
 # 2026-09-30, so this is how its certification result reaches the run's summary. A failure here is reported and never fails the login check.
 function Write-SubmissionState($product, [string] $access) {
     Write-Summary "Published in the Store: $(if ($product.lastPublishedApplicationSubmission) { 'yes' } else { 'not yet' })."
+    # Entries 336 and 337: which build the Store carries, from the published submission's packages.
+    if ($product.lastPublishedApplicationSubmission) {
+        try {
+            $published = Invoke-WebRequest -Method Get -SkipHttpErrorCheck -Headers @{ Authorization = "Bearer $access" } `
+                -Uri "https://manage.devcenter.microsoft.com/v1.0/my/$($product.lastPublishedApplicationSubmission.resourceLocation)"
+            if ($published.StatusCode -eq 200) {
+                $versions = @(($published.Content | ConvertFrom-Json).applicationPackages | Where-Object { $_.fileStatus -ne 'PendingDelete' } | ForEach-Object { $_.version }) | Sort-Object -Unique
+                Write-Summary "The Store carries package version $(if ($versions) { $versions -join ', ' } else { 'not stated' })."
+            }
+        }
+        catch { }
+    }
     $pending = $product.pendingApplicationSubmission
     if (-not $pending) {
         Write-Summary 'No submission is waiting on Microsoft.'

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   status:
@@ -25,3 +25,24 @@ jobs:
       - name: Read the Store's submissions
         shell: pwsh
         run: ./scripts/store-login-check.ps1
+        env:
+          STATUS_OUT: state-lines.txt
+
+      # Entries 335 and 336: a state that changed goes to docs/notes/external-status.md, which both sessions read, as a "[notes] " commit
+      # that starts no build. The same state again writes nothing.
+      - name: Note a changed state
+        if: always()
+        shell: bash
+        run: |
+          [ -f state-lines.txt ] || exit 0
+          grep -v '^::' state-lines.txt | grep -v 'Run it again' | python3 scripts/status-note.py --section store > said.txt
+          if ! grep -q '^changed' said.txt; then echo "the state is as it was"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/notes/external-status.md
+          git commit -m "[notes] External status: store changed" -m "Written by the store status workflow, entries 335 and 336."
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 10
+          done
+          echo "::warning::the changed state could not be pushed; the next run tries again"

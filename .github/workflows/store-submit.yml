@@ -1,0 +1,65 @@
+name: store submit
+
+# NOTES-FROM-PLANNING.md entry 337 section 4: a chosen build to the Microsoft Store, through the Store submission API, started only by hand.
+# Which builds go, and how often, is Alan's decision (for-alan.md); nothing is submitted until he agrees. The package is the MSIX on the
+# store-draft-<version> draft release that release.yml makes with store_draft. A dry run, the default, reads and changes nothing; a real
+# submission needs the version typed twice. The submission's status goes to docs/notes/external-status.md (entries 335 and 336).
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version whose store-draft package goes to the Store, such as 0.2.0-nightly.148'
+        required: true
+      confirm:
+        description: 'Type the version again to submit for real; anything else is a dry run'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: store-submit
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TENANT: ${{ secrets.AZURE_AD_TENANT_ID }}
+      CLIENT: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+      SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+      PRODUCT: ${{ vars.STORE_PRODUCT_ID }}
+      VERSION: ${{ inputs.version }}
+      CONFIRM: ${{ inputs.confirm }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: The package from its draft release
+        run: gh release download "store-draft-$VERSION" -R "$GITHUB_REPOSITORY" -p grouplab-win-x64.msix -D msix
+
+      - name: Submit, or say what a submission would do
+        shell: pwsh
+        env:
+          STATUS_OUT: state-lines.txt
+        run: |
+          if ($env:CONFIRM -eq $env:VERSION) { ./scripts/store-submit.ps1 -Msix msix/grouplab-win-x64.msix }
+          else { ./scripts/store-submit.ps1 -Msix msix/grouplab-win-x64.msix -DryRun }
+
+      - name: Note a changed state
+        if: ${{ always() && inputs.confirm == inputs.version }}
+        shell: bash
+        run: |
+          [ -f state-lines.txt ] || exit 0
+          python3 scripts/status-note.py --section store-submission < state-lines.txt > said.txt
+          if ! grep -q '^changed' said.txt; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/notes/external-status.md
+          git commit -m "[notes] External status: a Store submission" -m "Written by the store submit workflow, entry 337."
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 10
+          done
