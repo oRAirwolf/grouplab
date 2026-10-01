@@ -995,6 +995,26 @@ jobs:
             --target "$SHA" \
             release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab release/grouplab-android-dev.apk 2>/dev/null || true)
 
+      # 2026-10-01: nightly 148's run printed the moving release's address and left it a draft, so every download button on the site and in
+      # the README answered 404 until it was published by hand. Publish it if it is still a draft, then prove a download answers.
+      - name: The moving release is published and downloads
+        run: |
+          for attempt in 1 2 3; do
+            if [ "$(gh release view nightly --json isDraft --jq .isDraft)" = "true" ]; then
+              echo "::warning::the moving nightly release was left a draft; publishing it"
+              gh release edit nightly --draft=false
+            fi
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L "https://github.com/${GITHUB_REPOSITORY}/releases/download/nightly/update-manifest.json")
+            if [ "$code" = "200" ]; then
+              echo "the moving release downloads"
+              exit 0
+            fi
+            echo "attempt $attempt: a download from the moving release answered $code"
+            sleep 20
+          done
+          echo "::error::a download from the moving nightly release still fails; the site's download buttons are broken"
+          exit 1
+
       # Entry 119 section 2.4: keep the newest 30 nightly releases and delete older ones with their tags. Only releases this workflow made,
       # matched by the shape of their tag, are ever touched: a beta, a release, or anything else is left alone.
       - name: Keep the newest thirty
