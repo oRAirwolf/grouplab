@@ -382,6 +382,47 @@ Together: 172 of 173 holes found and 2 false marks, where it was 4. The shot pla
 on the result itself, on the desktop and the phone, ringed in amber and said as how many times the bullet across the mark is, until the
 person says the shot is on the hole or moves it.
 
+**Why the lens fit leaves the far column out (entry 322 section 2).** It is not the lens fit. The same printed sheet, photographed taped
+flat on 2026-09-26 and registered by the same model, keeps 136 of 136 marker corners within the 0.01 in rule. In every picture of the
+2026-09-29 sitting the far column is off, and by more the steeper the picture: 4 to 10 dmm (0.016 to 0.04 in) at 1 and 2 degrees, 15
+to 30 dmm (0.06 to 0.12 in) at 9 and 15. Each suspect was measured on the corners themselves, fitting every corner and none left out:
+
+| Model fitted to all 136 corners | 9 degrees, rms | 15 degrees, rms | Far column, worst |
+|---|---|---|---|
+| Homography alone | 4.92 dmm | 6.55 dmm | 6.6 to 16.3 dmm |
+| With the lens's two radial terms, as GroupLab fits it | 3.82 dmm | 5.70 dmm | 2.6 to 11.9 dmm |
+| A third radial term | 3.81 dmm | 5.70 dmm | unchanged |
+| Two decentering terms, with or without the third | 3.77 dmm | 5.62 dmm | unchanged |
+| The distortion's centre left free | 2.71 dmm | 3.65 dmm | 3.0 to 6.5 dmm, with the centre 0.8 to 1.5 half-widths off the picture |
+
+No lens model reaches them: the order and decentering change nothing, and only a "centre" outside the picture comes near, which is a
+bend, not a lens. Two more things say the sheet itself is off its plane there. Fitted through every corner, the column 1.5 in in from it
+is pushed 3 to 6.5 dmm one way while the far column is 3.5 to 9.5 dmm the other, and a lens moves neighbours alike. And each far-column
+marker is read about a tenth wider across the column than any plane allows, its outer corners 4 to 5 dmm farther off than its inner ones
+on a marker 40 dmm across, where the markers one column in show none: the marker is tilted toward the camera, as on a margin that has
+lifted. So the six markers are rightly left out by a model of a flat sheet, and keeping them needs a model of a bent one.
+
+One fault of the lens fit did turn up on the way, in the third suspect's place. A photograph's first homography keeps only corners
+within 0.05 in of a plain homography, and the lens fitted from those reclassified every corner once. On a flat sheet turned 30 degrees
+through a lens that bends hard (k1 -0.3), the homography kept 64 of 136 corners, the one reclassification 96, and refitting until the
+kept set stopped changing all 136; from 15 to 37 degrees through the other strengths tried, every corner was already kept. Refitting
+without a limit made three pictures of the sitting worse (the 1 degree one 22 of 25 found and a false mark, its worst center 0.050 in;
+the 15 degree one 0.090 in), because each round let the fit chase the lifted edge. So a later round is taken only while the residual over
+the first round's corners stays within a tenth of what it was. A 6 mm lift of the far column, at 1 degree and at 15, is still left out
+and nothing else is. Each picture, before and after:
+
+| Picture | Found | False marks | Median center error, before and after | Worst center error, before and after |
+|---|---|---|---|---|
+| 2026-09-29, 2 degrees off square | 25 of 25 | 0 | 0.0122, 0.0123 in | 0.0247, 0.0245 in |
+| 2026-09-29, 1 degree | 25 of 25 | 0 | 0.0136, 0.0136 in | 0.0453, 0.0453 in |
+| 2026-09-29, 9 degrees | 25 of 25 | 0 | 0.0125, 0.0130 in | 0.0808, 0.0800 in |
+| 2026-09-29, 15 degrees | 25 of 25 | 0 | 0.0136, 0.0136 in | 0.0825, 0.0825 in |
+| 2026-09-26, the three kitchen counter pictures | 72 of 73 | 2 | unchanged | unchanged |
+
+The synthetic board is unchanged: every line reads as it did with one reclassification, its drawn sheets being flat and their lens mild.
+The 0.08 in on the far column is the lifted margin, and what is next for it is a bent-sheet registration that keeps the
+far column, judged on these four pictures, or a photograph of the same sheet held flat to show the error leaves with the lift.
+
 **The sheet on a backer at the range (entry 321, 2026-09-30).** Six lines were added for a sheet photographed upright, each on both
 seeds: turned 15 and 30 degrees about its upright axis through the 26 mm lens the pipeline assumes, on a cardboard backer; strong sun
 with the shooter's head and shoulders in a hard shadow; a sideways smear of 6 px (0.02 in); and the sheet 2 and 3 ft away in the phone's

@@ -4708,6 +4708,46 @@
   "**How far away.** The same sheet photographed at 1.5, 2, 2.5 and 3 ft (45, 60, 75 and 90 cm), flat and upright at a backer: at which distance the corner codes stop reading (question 77, answered \"A and B\": the guide says about 2 ft until this measures it).": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 322 (question 77 answered A and B): the next sitting measures the distance"
+  },
+  "**Why the lens fit leaves the far column out (entry 322 section 2).** It is not the lens fit.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "The same printed sheet, photographed taped flat on 2026-09-26 and registered by the same model, keeps 136 of 136 marker corners within the 0.01 in rule.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "In every picture of the 2026-09-29 sitting the far column is off, and by more the steeper the picture: 4 to 10 dmm (0.016 to 0.04 in) at 1 and 2 degrees, 15 to 30 dmm (0.06 to 0.12 in) at 9 and 15.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "Fitted through every corner, the column 1.5 in in from it is pushed 3 to 6.5 dmm one way while the far column is 3.5 to 9.5 dmm the other, and a lens moves neighbours alike.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "And each far-column marker is read about a tenth wider across the column than any plane allows, its outer corners 4 to 5 dmm farther off than its inner ones on a marker 40 dmm across, where the markers one column in show none: the marker is tilted toward the camera, as on a margin that has lifted.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "A photograph's first homography keeps only corners within 0.05 in of a plain homography, and the lens fitted from those reclassified every corner once.": {
+   "kind": "code",
+   "where": "SheetMeasurer.FitLens and SheetMeasurer.CoreRmsAllowance in src/GroupLab.Core/Measurement/SheetMeasurer.cs, held by tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs (entry 322 section 2)"
+  },
+  "On a flat sheet turned 30 degrees through a lens that bends hard (k1 -0.3), the homography kept 64 of 136 corners, the one reclassification 96, and refitting until the kept set stopped changing all 136; from 15 to 37 degrees through the other strengths tried, every corner was already kept.": {
+   "kind": "code",
+   "where": "SheetMeasurer.FitLens and SheetMeasurer.CoreRmsAllowance in src/GroupLab.Core/Measurement/SheetMeasurer.cs, held by tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs (entry 322 section 2)"
+  },
+  "Refitting without a limit made three pictures of the sitting worse (the 1 degree one 22 of 25 found and a false mark, its worst center 0.050 in; the 15 degree one 0.090 in), because each round let the fit chase the lifted edge.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
+  },
+  "A 6 mm lift of the far column, at 1 degree and at 15, is still left out and nothing else is.": {
+   "kind": "code",
+   "where": "SheetMeasurer.FitLens and SheetMeasurer.CoreRmsAllowance in src/GroupLab.Core/Measurement/SheetMeasurer.cs, held by tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs (entry 322 section 2)"
+  },
+  "The 0.08 in on the far column is the lifted margin, and what is next for it is a bent-sheet registration that keeps the far column, judged on these four pictures, or a photograph of the same sheet held flat to show the error leaves with the lift.": {
+   "kind": "measured",
+   "where": "measured 2026-10-01 for entry 322 section 2 on the local corpus (never committed) with grouplab measure --model radial and a scratch fit of every marker corner (deleted after the run), and before and after with grouplab scoreboard --corpus and --synthetic; the synthetic cases are tests/GroupLab.Core.Tests/Measurement/LensFitKeepsConsistentTests.cs"
   }
  },
  "rules": [

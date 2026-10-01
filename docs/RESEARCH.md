@@ -118,6 +118,7 @@ separate the effect from the confounds" and "already covered by article N".
 | Entry 226 section 1: the zeroing grid could not be read through a scope | **not written** | Already covered by `designing-a-readable-target` and the visibility rule of `can-you-see-the-bull`; the grid's redesign is described in docs/TARGET-LIBRARY.md section 5. |
 | Entry 252 sections 3 and 4: shots needed to zero, and entry 250 section 4's one-shot zero | **written**, `shots-to-zero` | It changes what a shooter does: within one click takes a handful of shots, the closest click can take hundreds, and a one-shot zero is honest only for large errors. |
 | Entry 158 program B: hole size against velocity and nose shape | **covered in part, and extended** | Step 1 is articles 1 and 2. What cannot yet be separated, and the test that would, is added to article 1's "What we still do not know". |
+| Entry 322 section 2: why the lens fit leaves the far column of markers out on angled pictures | **not written** | The far column was off the sheet's plane in that one sitting, a lifted margin, and no lens model reaches it; four pictures of one sheet cannot say how often paper lifts or by how much, and docs/DETECTION-LEARNING-STUDY.md section 9 holds the measurement. |
 
 ## Program A: the ST-4, 5 and 10 shot groups
 

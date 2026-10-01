@@ -404,9 +404,8 @@ public static class SheetMeasurer
             string? failure = null;
             try
             {
-                var lens = LensFit.Fit(Select(imagePoints, inliers), Select(pagePoints, inliers), homography.Transform, image.Width, image.Height);
-                radialInliers = [.. imagePoints.Select((p, i) => Distance(lens.ToPage(p), pagePoints[i]) <= PageRegistration.RansacThreshold)];
-                radial = LensFit.Fit(Select(imagePoints, radialInliers), Select(pagePoints, radialInliers), homography.Transform, image.Width, image.Height);
+                (var lens, radialInliers) = FitLens(imagePoints, pagePoints, inliers, homography.Transform, image.Width, image.Height);
+                radial = lens;
             }
             catch (InvalidOperationException ex)
             {
@@ -745,6 +744,55 @@ public static class SheetMeasurer
         }
 
         return sum / 4;
+    }
+
+    /// <summary>How far a later round of <see cref="FitLens"/> may raise the residual over the corners its first round kept.</summary>
+    public const double CoreRmsAllowance = 1.1;
+
+    /// <summary>
+    /// The lens fit of a photograph and the corners it keeps (entry 322 section 2). It starts from the first homography's inliers, which
+    /// leave out every corner the lens bends more than <see cref="PhotographRansacThreshold"/> from a plain homography, then reclassifies
+    /// every corner against the lens fit at the scan threshold and refits. One reclassification was the rule before; a corner the
+    /// first lens fit could reach only by extrapolating, on the edge of a frame the lens bends hard, was left out though a perspective
+    /// and the lens together put it where it was read. So it repeats until the kept set stops changing, taking a round only while it
+    /// leaves the residual over the first round's corners within <see cref="CoreRmsAllowance"/> of what it was: refitting without
+    /// that limit let the fit chase a lifted edge on the 2026-09-29 sitting's pictures and made three of them worse.
+    /// </summary>
+    public static (RadialHomographyMapping Lens, bool[] Kept) FitLens(IReadOnlyList<PointD> image, IReadOnlyList<PointD> page, IReadOnlyList<bool> first, Homography start, int width, int height, int rounds = 5)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(page);
+        ArgumentNullException.ThrowIfNull(first);
+        var imageList = image.ToList();
+        var pageList = page.ToList();
+        bool[] kept = [.. first];
+        var lens = LensFit.Fit(Select(imageList, kept), Select(pageList, kept), start, width, height);
+        bool[]? core = null;
+        double coreRms = double.NaN;
+        for (int round = 0; round < rounds; round++)
+        {
+            bool[] next = [.. imageList.Select((p, i) => Distance(lens.ToPage(p), pageList[i]) <= PageRegistration.RansacThreshold)];
+            if (next.SequenceEqual(kept))
+            {
+                break;
+            }
+
+            var refit = LensFit.Fit(Select(imageList, next), Select(pageList, next), start, width, height);
+            if (core is null)
+            {
+                (core, coreRms) = (next, Rms(refit, imageList, pageList, next));
+            }
+            else if (Rms(refit, imageList, pageList, core) > coreRms * CoreRmsAllowance)
+            {
+                // A corner the lens and a perspective put where it was read joins without moving the fit where it already held; one
+                // off the sheet's plane, a lifted edge, only joins by bending the fit away from the rest, and is left out.
+                break;
+            }
+
+            (lens, kept) = (refit, next);
+        }
+
+        return (lens, kept);
     }
 
     private static double Distance(PointD a, PointD b) => Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
