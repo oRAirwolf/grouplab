@@ -91,6 +91,7 @@ public sealed class Shell : UserControl
     public Shell()
     {
         Current = this;
+        Keyboard = KeyboardRoom.For(this);
         foreach (var place in Enum.GetValues<Place>())
         {
             // Entry 246, look B: each place an icon over its name; the current one's icon sits in an amber pill.
@@ -336,7 +337,23 @@ public sealed class Shell : UserControl
     }
 
     /// <summary>Hides the bar along the bottom, or shows it again.</summary>
-    internal void Immersive(bool on) => nav.IsVisible = !on;
+    internal void Immersive(bool on)
+    {
+        immersive = on;
+        nav.IsVisible = !on && !keyboardUp;
+    }
+
+    private bool immersive, keyboardUp;
+
+    /// <summary>Entry 328 section 1: what keeps every field and its confirming button above the keyboard.</summary>
+    internal KeyboardRoom Keyboard { get; }
+
+    /// <summary>The bar along the bottom is put away while the keyboard is up, so the room it leaves goes to what is being typed.</summary>
+    internal void KeyboardUp(bool up)
+    {
+        keyboardUp = up;
+        nav.IsVisible = !immersive && !up;
+    }
 
     internal void Show(Place place)
     {
@@ -357,6 +374,9 @@ public sealed class Shell : UserControl
             _ => capture ??= new CapturePage(),
         };
     }
+
+    /// <summary>Any page in the page area, for the tests that hold every screen with a field to the keyboard (entry 328).</summary>
+    internal void ShowInPage(Control content) => page.Content = content;
 
     /// <summary>The desktop's icon for each place: the aim for Capture, the records for Sessions, the printer for Targets, the gear for Settings.</summary>
     private static string Icon(Place place) => place switch

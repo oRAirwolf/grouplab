@@ -129,6 +129,8 @@ public class Entry309Tests
             page.AskFirst(() => went = true);
             Assert.True(page.Asking);
             Assert.False(went);
+            // Entry 328: the sheet scrolls, so its fields are in the visual tree once it has been laid out.
+            page.UpdateLayout();
             var calibre = page.GetVisualDescendants().OfType<AutoCompleteBox>().Single();
             calibre.Text = ".308";
             Dispatcher.UIThread.RunJobs();

@@ -1,3 +1,4 @@
+using System.Globalization;
 using GroupLab.Core.Capture;
 using GroupLab.Core.Rendering;
 using GroupLab.Core.Tests.Support;
@@ -66,6 +67,30 @@ public class LargeFormatTests
         }
 
         Assert.Contains(says, advice, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Entry 328 section 2's pattern, two figures that contradict each other: a 22 by 26 in sheet gives a 12 MP phone about 123 pixels an
+    /// inch, and the advice said that was "below the 120 GroupLab needs". The figure it is below is now the one it is actually below.
+    /// </summary>
+    [Fact]
+    public void TheTwelveMegapixelFigureIsBelowTheOneItIsSaidToBeBelow()
+    {
+        for (double width = 9; width <= 48; width += 0.5)
+        {
+            for (double height = 12; height <= 48; height += 0.5)
+            {
+                string? advice = PhotographLimit.Advice(width, height);
+                var below = advice is null ? null : System.Text.RegularExpressions.Regex.Match(advice, "a 12 MP photograph is below the ([0-9]+)");
+                if (below is { Success: true })
+                {
+                    int given = int.Parse(System.Text.RegularExpressions.Regex.Match(advice!, "about 12 MP ([0-9]+)").Groups[1].Value, CultureInfo.InvariantCulture);
+                    Assert.True(given < int.Parse(below.Groups[1].Value, CultureInfo.InvariantCulture), advice);
+                }
+            }
+        }
+
+        Assert.Contains("below the 150 GroupLab needs to read its markers", PhotographLimit.Advice(22, 26), StringComparison.Ordinal);
     }
 
     [Fact]

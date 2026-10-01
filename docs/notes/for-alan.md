@@ -1,5 +1,14 @@
 **Open: 15.** Most urgent: **63**, a GitHub token so Unholy's TestFlight feedback reaches me (five minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**UNHOLY'S TESTFLIGHT REPORTS** (entry 328, not a request): both fixed, in **nightly 147**; Unholy can retest on it once it reaches
+TestFlight. 1. "Keyboard covers the fields": on the iPhone the number pad hid the distance on the caliber question, and it has no return
+key. Now, on every screen with a box to type in, the page moves up so the box and its Continue button stay above the keyboard, a bar on
+the keyboard says Next (to the next box) or Done (keeps what was typed and closes it), and tapping outside a box closes it too.
+2. "This text is nonsense": the note under a 95 picture said the markers agree "only to 0.005 in, where a flat sheet gives 0.005". The
+difference was too small to matter, so that note no longer appears unless the sheet is curled enough to cost the score, and then it
+says "The sheet looks slightly curled. GroupLab allowed for it; flattening the sheet would measure a little better." Two other notes
+that could print the same number twice were fixed the same way.
+
 **WHERE TO LOOK** (entry 323, not a request): **Velocity and the vertical** is built as you chose, Desktop B and Phone B. On the
 desktop it is the block under the group's figures; add a group's chronograph readings on Ballistics, Chronograph, and it shows how much of
 the vertical is velocity, with the amber band on the group picture and its Velocity band switch beside CEP and Extreme spread. On the

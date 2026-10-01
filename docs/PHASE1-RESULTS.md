@@ -40,6 +40,26 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 328: Unholy's two TestFlight reports (nightly 143, iPhone)
+
+Done 2026-10-01, one worker on the main model; ships in nightly 147.
+
+- **1, the keyboard** (`mobile/GroupLab.Mobile/KeyboardRoom.cs`, one place for every screen): while the keyboard is up the Shell gives
+  up the height it covers (read from the system's input pane as its top edge in the window, so a window the system already shrank gives
+  up nothing more) and puts the bottom bar away; the focused field is brought into view, and on the last field of a sheet or page its
+  confirming button with it; a bar on the keyboard says Next, to the next field in reading order (two side by side are one row), or
+  Done, which keeps the entry and closes the keyboard; a tap outside any field closes it. Capture's caliber sheet scrolls in the room left.
+  `Entry328Tests`: the sheet at 402 by 874 (his iPhone) and 320 by 568, the distance field and Continue clear of the keyboard and its bar,
+  Done and Next; and every field on Settings, Targets, Ballistics and its three forms, the chronograph and distance pages and the
+  printer check, at 320 by 568. Not checked on a device yet: the input pane's rectangle on a real iPhone and Android phone (request 50).
+- **2, the note** (`PictureCheck.RegistrationNote`): noted only from 0.00725 in, where the markers' disagreement alone would hold the
+  score to a noted picture's 95; nearer a flat sheet's 0.005 in it still counts in the score unannounced. In words, no figures: "The
+  sheet looks slightly curled. GroupLab allowed for it; flattening the sheet would measure a little better." The two other notes with two
+  figures that could print alike now cannot: an angle just over 37 degrees reads "a little over 37", and a large sheet's pixels an inch
+  are rounded down beside the 150 it falls short of. Begun in the ended session's worktree, carried over and checked here.
+- **3:** the plain words are at the top of for-alan.md; Unholy retests on nightly 147. His feedback files stay in
+  `C:\Dev\grouplab-local\testflight-feedback\`, never committed.
+
 ## Entry 329: Velocity and the vertical flies the load in the conditions entered
 
 Done 2026-10-01, one worker on the main model.

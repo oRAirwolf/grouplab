@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Velocity and the vertical now works out velocity's share in the air temperature",
     "Photographs taken at an angle where the far edge of the sheet has lifted off the table",
     "Accepting a chronograph string no longer fails when its first reading belongs to a shot",
     "On the phone, the chips under the group picture that turn the circles on and off are now remembered",

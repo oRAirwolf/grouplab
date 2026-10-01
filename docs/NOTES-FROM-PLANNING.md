@@ -24,6 +24,48 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 328: Unholy's two TestFlight reports (nightly 143, iPhone), fix first
+
+**Status: done 2026-10-01, every section.** Section 2 began in a worktree of the session that ended (grouplab-1f); its uncommitted diff was reviewed, carried over and finished here. On the smallest phone (320 by 568) a field far above its confirming button cannot share the room left above the keyboard with it, so there Done on the keyboard's bar confirms.
+
+Alan downloaded Unholy's beta feedback from App Store Connect; planning put it, without his email, in
+`C:\Dev\grouplab-local\testflight-feedback\2026-10-01\` (feedback-1 and feedback-2, each a JSON and its screenshot). Build 143,
+iPhone18,1, iOS 26.6.2, 402 by 874 points. Bugs a tester hit come before everything else (entry 317's priorities): do this next, ahead
+of entries 325 to 327 and the rest of 324, on the main model. Entry 326 still stands for the automatic route; these two are already in hand.
+
+### 1. The keyboard covers the field, and there is no way to confirm (feedback-1, 03:28 UTC)
+
+His words: "Keyboard covers the fields to enter information and I can't confirm data entry." The screenshot: Capture's "Which caliber are
+you shooting?" sheet; the caliber is chosen (.338 Lapua Magnum) and the distance field below it has focus, but the number pad covers it
+and the sheet does not move, so he cannot see what he types. The iPhone's decimal pad has no return key, so nothing closes it or
+confirms the entry.
+
+1. Every sheet and page with a text or number field keeps the focused field, and the button that confirms it, above the keyboard,
+   scrolling the sheet as needed, on iOS and Android, at the smallest supported phone heights.
+2. Every number pad gets a way to finish: a "Done" bar above the iOS decimal pad (and the Android equivalent where its pad lacks one)
+   that confirms the field and moves to the next or closes the keyboard; tapping outside the field also closes it.
+3. A test that opens this sheet at 402 by 874 and at the smallest height, focuses the distance field, and checks that the field and the
+   confirm button are not under the keyboard; the same check run over every screen with a field.
+
+### 2. A note that reads as nonsense (feedback-2, 03:30 UTC)
+
+His words: "This text is nonsense." The capture feedback on a GroupLab diamond sheet taped to a backer, score 95 Good, with note 1:
+"The markers agree only to 0.005 in, where a flat sheet gives 0.005: the paper may be curled or folded. GroupLab followed it; a flatter
+sheet would measure better." Both numbers print as 0.005, so the note warns about a difference it does not show.
+
+1. Find the rule behind this note. Where the measured agreement and the flat-sheet figure round to the same printed value, either show
+   enough digits for them to differ or do not raise the note at all, whichever the threshold's own margin says is honest; if the
+   difference is too small to matter at a 95 score, the note does not belong.
+2. Read the note as a shooter would: say what was seen and what to do in plain words, for example "The sheet looks slightly curled.
+   GroupLab allowed for it; flattening the sheet would measure a little better." Check every other capture note for the same pattern
+   (two figures that can print the same) and test it.
+
+### 3. Report
+
+Plain words in for-alan.md: what each was, what changed, and the nightly that carries it. Say which nightly Unholy should
+retest on. Unholy's screenshots and comments may be used for testing under his standing consent (samples/PROVENANCE.md); the email in
+App Store Connect never appears anywhere.
+
 ## 2026-10-01, entry 329: Velocity and the vertical uses the real conditions, not a standard day
 
 **Status: done 2026-10-01, every section.** Sessions do not carry conditions yet, so the desktop uses the Ballistics screen's air and shot angle when that screen has the session's rifle and load chosen; the phone keeps its Ballistics air only while the page is open, so on the phone the block uses the standard day and says so.

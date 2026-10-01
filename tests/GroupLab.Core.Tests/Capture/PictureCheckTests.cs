@@ -143,6 +143,28 @@ public class PictureCheckTests
         Assert.Contains("torch on", verdict.Fine);
     }
 
+    /// <summary>
+    /// Entry 328 section 2, Unholy's second TestFlight report: "The markers agree only to 0.005 in, where a flat sheet gives 0.005" on a
+    /// picture scoring 95. An error that prints as a flat sheet's is not worth a note; one that would hold the score to a noted picture's is,
+    /// in words with no figures to contradict each other.
+    /// </summary>
+    [Fact]
+    public void ACurlTooSmallToCostANoteIsNotNoted()
+    {
+        Assert.Null(PictureCheck.RegistrationNote(null));
+        Assert.Null(PictureCheck.RegistrationNote(0.0054));
+        Assert.Null(PictureCheck.RegistrationNote(PictureCheck.RegistrationFine));
+        Assert.Null(PictureCheck.RegistrationNote(PictureCheck.RegistrationNoted - 0.0001));
+        double part = (PictureCheck.RegistrationUseless - PictureCheck.RegistrationNoted) / (PictureCheck.RegistrationUseless - PictureCheck.RegistrationFine);
+        Assert.Equal(PictureCheck.WithNotesMost, 100 * part, 6);
+        Assert.Equal("The sheet looks slightly curled. GroupLab allowed for it; flattening the sheet would measure a little better.", PictureCheck.RegistrationNote(0.008));
+        Assert.Equal("The sheet looks curled or folded. GroupLab allowed for it; flattening the sheet would measure better.", PictureCheck.RegistrationNote(0.04));
+        for (double rms = 0; rms < 0.1; rms += 0.0001)
+        {
+            Assert.DoesNotMatch("[0-9]", PictureCheck.RegistrationNote(rms) ?? "");
+        }
+    }
+
     [Fact]
     public void BullNumbersReadAsAPersonSaysThem()
     {

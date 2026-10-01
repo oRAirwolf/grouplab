@@ -156,7 +156,8 @@ not.
 
 The refusal names both numbers: "This photograph was taken 52 degrees off square to the sheet, and GroupLab corrects up to 37 degrees. Hold
 the camera more squarely over the sheet and take it again." The automatic path gives it before anything is measured from the photograph
-(`CaptureTests.TheAutomaticPathRefusesAPhotographTooFarOffSquare`), and Find the paper's edges gives it too.
+(`CaptureTests.TheAutomaticPathRefusesAPhotographTooFarOffSquare`), and Find the paper's edges gives it too. An angle that would print as
+the limit, 37.3 degrees, is "a little over 37" (entry 328 section 2, `CaptureTests.TheRefusedAngleNeverPrintsAsTheLimit`).
 
 ### 4.3 The quality score
 
@@ -229,7 +230,10 @@ written beside the bar.
    would make the next one better:".
 4. **The notes**, numbered, say what GroupLab corrected where it did: a bull's paper under 80 percent of the median bull's is in shadow,
    "A shadow falls across bulls 21 to 25, evened out: check those 5 holes if you like"; off square beyond 25 degrees; the markers agreeing
-   worse than 0.005 in, which says the paper may be curled or folded; resolution under
+   worse than 0.00725 in, where the registration alone would hold the score to a noted picture's 95, "The sheet looks slightly curled.
+   GroupLab allowed for it; flattening the sheet would measure a little better." (entry 328 section 2: nearer a flat sheet's 0.005 in it
+   still counts in the score but is not noted, since Unholy read "agree only to 0.005 in, where a flat sheet gives 0.005" as nonsense);
+   resolution under
    150 pixels an inch; soft focus; dim or washed-out paper; markers not all read. **What was fine** lists sharp focus, even light, tags
    and codes read of how many, and whether the torch was on.
 5. **Live.** The capture screen's bar is the same score for the frame in view, placed in the band the picture would get

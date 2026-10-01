@@ -247,6 +247,22 @@ public class CaptureTests
             OffAxisLimit.Refusal(52.3));
     }
 
+    /// <summary>
+    /// Entry 328 section 2: no refusal says "37 degrees off square, and GroupLab corrects up to 37 degrees", the pattern of the curled-sheet
+    /// note Unholy read as nonsense. Every angle past the limit prints as something other than the limit.
+    /// </summary>
+    [Fact]
+    public void TheRefusedAngleNeverPrintsAsTheLimit()
+    {
+        Assert.StartsWith("This photograph was taken a little over 37 degrees off square", OffAxisLimit.Refusal(37.3), StringComparison.Ordinal);
+        for (double degrees = OffAxisLimit.Degrees + 0.01; degrees < 90; degrees += 0.01)
+        {
+            var figures = System.Text.RegularExpressions.Regex.Matches(OffAxisLimit.Refusal(degrees)!, "[0-9]+").Select(m => m.Value).ToList();
+            Assert.Equal(2, figures.Count);
+            Assert.True(figures[0] != figures[1] || OffAxisLimit.Refusal(degrees)!.Contains("a little over", StringComparison.Ordinal), $"{degrees}");
+        }
+    }
+
     /// <summary>Sections 3 and 5 in the pipeline: a photograph beyond the limit is refused before anything is measured, one inside it carries its record.</summary>
     [Fact]
     public void TheAutomaticPathRefusesAPhotographTooFarOffSquare()

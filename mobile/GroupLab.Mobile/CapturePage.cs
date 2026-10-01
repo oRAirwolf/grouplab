@@ -152,6 +152,10 @@ public sealed class CapturePage : UserControl
             askSaid,
             Screens.Primary("Continue", Continue).Id("capture-ask-continue"),
             Screens.Choice("Cancel", () => CloseAsk(false)).Id("capture-ask-cancel"));
+        // Entry 328 section 1: the sheet scrolls in whatever room the keyboard leaves, so its field and Continue can always be reached.
+        var askInside = ask.Child;
+        ask.Child = null;
+        ask.Child = new ScrollViewer { Content = askInside, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
         ask.IsVisible = false;
         ask.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
         ask.Margin = new Avalonia.Thickness(8);

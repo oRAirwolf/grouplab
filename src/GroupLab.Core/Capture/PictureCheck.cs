@@ -135,6 +135,21 @@ public static class PictureCheck
 
     public const double RegistrationUseless = 0.05;
 
+    /// <summary>
+    /// Entry 328 section 2: the registration's error from which it earns a note, where on its own it would hold the score to a noted
+    /// picture's 95 or below, 0.00725 in. Nearer a flat sheet's it still counts in the score but costs less than a note would; Unholy read
+    /// "agree only to 0.005 in, where a flat sheet gives 0.005" as nonsense.
+    /// </summary>
+    public const double RegistrationNoted = RegistrationFine + ((100 - WithNotesMost) / 100.0 * (RegistrationUseless - RegistrationFine));
+
+    /// <summary>The note on how well the markers agree, in a shooter's words, or null where it would not be worth a note.</summary>
+    public static string? RegistrationNote(double? registrationInches) => registrationInches switch
+    {
+        null or < RegistrationNoted => null,
+        < (RegistrationFine + RegistrationUseless) / 2 => "The sheet looks slightly curled. GroupLab allowed for it; flattening the sheet would measure a little better.",
+        _ => "The sheet looks curled or folded. GroupLab allowed for it; flattening the sheet would measure better.",
+    };
+
     public static PictureVerdict Of(GrayImage image, TargetDefinition? definition, AutomaticResult? result, int codesRead, bool torch)
     {
         ArgumentNullException.ThrowIfNull(image);
@@ -223,9 +238,9 @@ public static class PictureCheck
         // the others predict it. On the Phase 0 photographs it was what separated the pictures that measured badly from those that did not.
         double? registrationInches = result?.Measurement.Registration?.RmsResidual / 254;
         double registrationPart = registrationInches is { } rms ? Math.Clamp((RegistrationUseless - rms) / (RegistrationUseless - RegistrationFine), 0, 1) : 1;
-        if (registrationPart < 1 && cannot is null)
+        if (RegistrationNote(registrationInches) is { } curled && cannot is null)
         {
-            notes.Add((string.Create(CultureInfo.InvariantCulture, $"The markers agree only to {registrationInches:0.000} in, where a flat sheet gives {RegistrationFine:0.000}: the paper may be curled or folded. GroupLab followed it; a flatter sheet would measure better."), sheet));
+            notes.Add((curled, sheet));
         }
 
         if (quality?.FocusPart is >= 0.9)

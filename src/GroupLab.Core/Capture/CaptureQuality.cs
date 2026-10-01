@@ -287,7 +287,18 @@ public static class OffAxisLimit
     /// <summary>The limit in degrees.</summary>
     public const double Degrees = 37;
 
-    /// <summary>The refusal, naming the angle and the limit, or null inside it.</summary>
-    public static string? Refusal(double degrees) => degrees <= Degrees ? null : string.Create(CultureInfo.InvariantCulture,
-        $"This photograph was taken {degrees:0} degrees off square to the sheet, and GroupLab corrects up to {Degrees:0} degrees. Hold the camera more squarely over the sheet and take it again.");
+    /// <summary>
+    /// The refusal, naming the angle and the limit, or null inside it. Entry 328 section 2: an angle that prints as the limit, 37.3 degrees,
+    /// is "a little over 37", never "37 degrees, and GroupLab corrects up to 37".
+    /// </summary>
+    public static string? Refusal(double degrees)
+    {
+        if (degrees <= Degrees)
+        {
+            return null;
+        }
+
+        string angle = string.Create(CultureInfo.InvariantCulture, $"{degrees:0}"), limit = string.Create(CultureInfo.InvariantCulture, $"{Degrees:0}");
+        return $"This photograph was taken {(angle == limit ? "a little over " + limit : angle)} degrees off square to the sheet, and GroupLab corrects up to {limit} degrees. Hold the camera more squarely over the sheet and take it again.";
+    }
 }

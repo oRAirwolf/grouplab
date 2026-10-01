@@ -9,8 +9,8 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 05:15 UTC, entry 329 done (Velocity and the vertical uses the conditions entered); entry 328, Unholy's
-two TestFlight bugs, is with the other session.
+**Last rewritten:** 2026-10-01 06:50 UTC, entry 328 done (Unholy's keyboard and curl-note reports, in nightly 147); the other
+session has ended.
 
 ---
 
@@ -19,10 +19,9 @@ two TestFlight bugs, is with the other session.
 - **Two Claude sessions share this working tree** (2026-10-01): grouplab-3b did entry 323; grouplab-1f is doing entry 324 (its section
   2, the sync options paper, is committed; section 1, the bent-sheet registration, runs in its own worktree). Each stages only its own
   files by name and says before pushing to main.
-- **Entries 323 and 324 section 1 on main** (fb088362 at the head, with the inbox line fixed); its build and the nightly that carries
-  both follow. The `[screens]` catch-up (7cbc13be) is on main and the site is live at 4ec87124, Velocity and the vertical included.
-- **Entry 329** (the block in the conditions entered) is committed after that nightly, not before, so nothing is cancelled.
-- **Nightly 144** (03:17 UTC) carries entry 322: targets read from 2 and 3 ft, the lens refit.
+- **Nightly 146** (06:21 UTC) carries entry 329; **nightly 147** carries entry 328, Unholy's two TestFlight bugs: the keyboard and
+  the curl note. Unholy retests on 147 once Apple's test service has it.
+- **The other session ended** with entries 324, 325 and 327 folded only in its own worktrees; planning should know they are not on main.
 - **iOS until 2026-10-01 02:00 UTC** (entry 290) is over; the summary is at the top of `for-alan.md`.
 - **The Microsoft Store's first submission** (request 38 Part B) is in certification; `store-status.yml` reads it every six hours.
 - **GroupLab Dev updates itself** (entry 288): the silent second update waits for the phones to be reachable over adb again.
@@ -46,7 +45,7 @@ two TestFlight bugs, is with the other session.
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. The nightly after fb088362 (323 and 324), then 329's push; entry 326 as soon as request 63 is done.
+1. Nightly 147 for Unholy, and the site with it; entry 326 as soon as request 63 is done.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
@@ -76,7 +75,7 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.144 (2026-10-01 03:17 UTC): entry 322's distance reading and lens refit.
+- **Last nightly:** 0.2.0-nightly.146 (2026-10-01 06:21 UTC): entry 329; 145 carried 323 and 324 section 1.
 - **The site** is live at 4ec87124 (published by hand: a bot's `[screens]` push starts no other workflow).
 - Crash reports open: none.
 
@@ -87,8 +86,8 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 326 (this session's, on
-request 63) and 328 (the other session's: Unholy's two TestFlight bugs, fix first).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 326 and 330 (request 63 is done; 326 is next). The
+ended session's folds of 324, 325 and 327 sit unpushed in its worktrees; 324 section 1 and 325's request 58 part are on main.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

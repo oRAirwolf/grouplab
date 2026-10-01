@@ -41,13 +41,14 @@ public static class PhotographLimit
         }
 
         var ppi = PixelsPerInch(widthInches, heightInches);
-        string Of(int i) => string.Create(CultureInfo.InvariantCulture, $"{ppi[i].Camera} {ppi[i].PixelsPerInch:0}");
+        // Entry 328 section 2: rounded down, so 149.6 is never "150" beside "below the 150".
+        string Of(int i) => string.Create(CultureInfo.InvariantCulture, $"{ppi[i].Camera} {Math.Floor(ppi[i].PixelsPerInch):0}");
         string size = string.Create(CultureInfo.InvariantCulture, $"This sheet is {widthInches:0.#} by {heightInches:0.#} in, too large for a flatbed scanner.");
         string numbers = $"Photographed whole, a phone gives about {Of(0)} and {Of(1)} pixels an inch.";
         return ppi[0].PixelsPerInch >= Markers
             ? $"{size} {numbers} A 12 MP photograph of the whole sheet is enough; its codes may not read at that size, and then you choose the sheet from the list."
             : ppi[1].PixelsPerInch >= Markers
-                ? $"{size} {numbers} Photograph it whole only at a 50 MP phone's full resolution; a 12 MP photograph is below the {Good:0} GroupLab needs for a good reading. Tiled Letter or A4 pages are the better choice for a large target."
+                ? $"{size} {numbers} Photograph it whole only at a 50 MP phone's full resolution; a 12 MP photograph is below the {(ppi[0].PixelsPerInch < Good ? $"{Good:0} GroupLab needs for a good reading" : $"{Markers:0} GroupLab needs to read its markers")}. Tiled Letter or A4 pages are the better choice for a large target."
                 : $"{size} {numbers} That is too few to read its markers from one photograph: print tiled Letter or A4 pages instead, or photograph it in pieces.";
     }
 
