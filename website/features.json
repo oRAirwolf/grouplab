@@ -10,8 +10,6 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
-    "GroupLab now recognizes five Birchwood Casey targets on the computer and the phone",
-    "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch",
     "Find holes no longer proposes the solid black diamonds printed in a store-bought target",
     "When you import a Garmin Xero file, GroupLab now proposes which readings belong to your group",
     "Garmin Xero exports in metric units are now read in meters per second",
@@ -149,6 +147,28 @@
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",
       "article": "photographing-targets"
+    },
+    {
+      "key": "store-targets",
+      "group": "Reading a target",
+      "name": "Store-bought targets recognized",
+      "sentence": "Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.",
+      "shot": "store-target",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
+      "mobile": {
+        "noPicture": "recognition and the question on the phone are photographed at the next sitting with the phone"
+      },
+      "since": "next",
+      "note": [
+        "GroupLab now recognizes five Birchwood Casey targets on the computer and the phone",
+        "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch"
+      ],
+      "guide": "1-print-a-sheet"
     },
     {
       "key": "reads-itself",

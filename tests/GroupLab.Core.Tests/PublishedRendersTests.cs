@@ -37,6 +37,8 @@ public partial class PublishedRendersTests
         "Alan's own scans, entry 171",
         // Entry 274, answering question 66: a plain target the walk draws itself, with no markers or codes, marked by hand.
         "Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274)",
+        // Entries 340 and 341: no maker's artwork is published, so recognition is pictured on a bullseye the walk draws itself.
+        "Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341)",
     ];
 
     /// <summary>

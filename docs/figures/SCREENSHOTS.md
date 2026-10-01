@@ -118,9 +118,9 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | A picture to share | the analysis, with Share a picture | the Share a picture window with its results box |
 | The one-page report | the analysis | the one-page report itself |
 
-**Waiting for its own entry and picture:** store-bought targets recognized (entries 340 and 341), the newest; its two notes sit in
-`notFeatures` until the entry exists. The picture: a recognized Shoot-N-C with its bulls placed and the scale warning, and the window that
-asks the 6 inch or the 8 inch.
+**Store-bought targets recognized** (entries 340 and 341) has its own picture, `store-target`: a bullseye the walk draws itself, standing
+in for the Shoot-N-C since no maker's artwork is published, recognized with its bull placed and the scale warning, and the window that asks
+the 6 inch or the 8 inch laid over it.
 
 ## Not published
 

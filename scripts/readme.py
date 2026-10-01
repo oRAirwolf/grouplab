@@ -82,7 +82,8 @@ def features() -> dict:
 def feature_for(note: str, book: dict) -> dict | None:
     """The feature a release note belongs to: the one whose own note is in it, as the site's build decides."""
     for f in book["features"]:
-        if f.get("note") and f["note"].lower() in note.lower():
+        notes = [f["note"]] if isinstance(f.get("note"), str) else list(f.get("note") or [])
+        if any(n.lower() in note.lower() for n in notes):
             return f
     return None
 

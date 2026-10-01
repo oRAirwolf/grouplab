@@ -383,6 +383,79 @@ public class Entry109Tests
                             window.Session.SetEquipment(rifle, null, "Test load");
                             GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(other)!);
                         }
+
+                        // Entries 340 and 341, entry 256's own picture: a store-bought target recognized, its bull placed and the scale
+                        // warning beside it, with the window asking which size over the picture. The target is a stand-in GroupLab draws,
+                        // because a maker's artwork is never published (entry 340); recognition is given the numbers a crop of the 8 in
+                        // bullseye measured, so the window asks.
+                        string bought = StoreTargetStandIn();
+                        try
+                        {
+                            window.OpenImage(bought);
+                            window.Session.SetCalibre(Calibre.Of(0.308));
+                            window.Session.SetShotDistance(3600);
+                            window.CalibreAnswered();
+                            Dispatcher.UIThread.RunJobs();
+                            var eight = GroupLab.Core.StoreTargets.StoreTargetLibrary.Find("bc-34805-shoot-n-c-8in-bull")!;
+                            var six = GroupLab.Core.StoreTargets.StoreTargetLibrary.Find("bc-34550-shoot-n-c-6in-bull")!;
+                            GroupLab.Core.StoreTargets.StoreTargetCandidate Fit(GroupLab.Core.StoreTargets.StoreTarget t, double ppi, int features, double layout)
+                            {
+                                var bull = t.Fingerprint.Bulls[0];
+                                return new(t, features, new Homography([ppi, 0, StandInBull - (ppi * bull.X), 0, ppi, StandInBull - (ppi * bull.Y), 0, 0, 1]), layout);
+                            }
+
+                            var seen = GroupLab.Core.StoreTargets.StoreTargetRecognizer.Decide([Fit(eight, StandInDpi, 200, 0.988), Fit(six, StandInDpi * 8 / 6, 72, 0.928)]);
+                            var asked = window.ApplyRecognition(seen);
+                            Dispatcher.UIThread.RunJobs();
+                            var question = window.WhichTargetWindow!;
+                            Dispatcher.UIThread.RunJobs();
+                            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                            Dispatcher.UIThread.RunJobs();
+                            using var asking = question.CaptureRenderedFrame()!;
+                            string dialogFile = Path.Combine(Path.GetDirectoryName(bought)!, "question.png");
+                            asking.Save(dialogFile, new PngBitmapEncoderOptions());
+                            question.GetLogicalDescendants().OfType<Button>()
+                                .First(b => Avalonia.Automation.AutomationProperties.GetName(b) == "Shoot-N-C 8 in bullseye")
+                                .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                            Dispatcher.UIThread.RunJobs();
+                            asked.GetAwaiter().GetResult();
+                            window.Canvas.FitToView();
+                            Dispatcher.UIThread.RunJobs();
+                            window.ScaleInputs.BringIntoView();
+                            Dispatcher.UIThread.RunJobs();
+                            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                            Dispatcher.UIThread.RunJobs();
+                            using var behind = window.CaptureRenderedFrame()!;
+                            string behindFile = Path.Combine(Path.GetDirectoryName(bought)!, "behind.png");
+                            behind.Save(behindFile, new PngBitmapEncoderOptions());
+
+                            // The question laid over the picture's lower left, where it covers neither the bull nor the scale and its warning.
+                            using var whole = Cv2.ImRead(behindFile, ImreadModes.Unchanged);
+                            using var over = Cv2.ImRead(dialogFile, ImreadModes.Unchanged);
+                            int x = (int)(whole.Width * 0.04), y = Math.Max(0, whole.Height - over.Height - (int)(whole.Height * 0.06));
+                            var room = new OpenCvSharp.Rect(x, y, Math.Min(over.Width, whole.Width - x), Math.Min(over.Height, whole.Height - y));
+                            using (var into = new Mat(whole, room))
+                            using (var part = new Mat(over, new OpenCvSharp.Rect(0, 0, room.Width, room.Height)))
+                            {
+                                part.CopyTo(into);
+                            }
+
+                            Cv2.Rectangle(whole, room, Scalar.All(128), 1);
+                            foreach (string output in outputs)
+                            {
+                                Cv2.ImWrite(Path.Combine(output, $"store-target-{name}-{size}.png"), whole);
+                            }
+                        }
+                        finally
+                        {
+                            window.OpenImage(path);
+                            window.ApplyDetection(synthetic);
+                            window.Session.SetCalibre(Calibre.Of(0.308));
+                            window.Session.SetShotDistance(3600);
+                            window.Session.SetEquipment(rifle, null, "Test load");
+                            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(bought)!);
+                        }
+
                         window.CalibreAnswered();
                         window.Analyse();
                         window.SetEveryWhy(false);
@@ -620,6 +693,32 @@ public class Entry109Tests
     /// ring bulls with a solid center, no markers and no codes, five holes in each, and the words "Sample target" along the bottom. It carries
     /// nobody's design, so it may be shown anywhere.
     /// </summary>
+    /// <summary>The stand-in for a store-bought bullseye: an 8 by 8 in sheet at this many pixels an inch, its bull at the middle.</summary>
+    private const double StandInDpi = 100, StandInBull = 400;
+
+    /// <summary>
+    /// Entries 340 and 341: a stand-in for a store-bought bullseye, drawn by GroupLab with nothing of any maker's artwork: a black disc with
+    /// light rings and a red center on plain paper, with its own words, so the picture of recognition publishes no one else's printing.
+    /// </summary>
+    private static string StoreTargetStandIn()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-standin-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string file = Path.Combine(folder, "store-bought-stand-in.png");
+        using var image = new Mat(800, 800, MatType.CV_8UC3, new Scalar(236, 238, 240));
+        var middle = new OpenCvSharp.Point(StandInBull, StandInBull);
+        Cv2.Circle(image, middle, 300, new Scalar(35, 35, 35), -1, LineTypes.AntiAlias);
+        foreach (int r in new[] { 240, 180, 120 })
+        {
+            Cv2.Circle(image, middle, r, new Scalar(200, 200, 200), 2, LineTypes.AntiAlias);
+        }
+
+        Cv2.Circle(image, middle, 45, new Scalar(40, 40, 200), -1, LineTypes.AntiAlias);
+        Cv2.PutText(image, "Stand-in drawn by GroupLab", new OpenCvSharp.Point(200, 770), HersheyFonts.HersheySimplex, 0.8, new Scalar(90, 90, 90), 2, LineTypes.AntiAlias);
+        Cv2.ImWrite(file, image);
+        return file;
+    }
+
     private static string PlainSample()
     {
         string folder = Path.Combine(Path.GetTempPath(), $"grouplab-plain-{Guid.NewGuid():N}");

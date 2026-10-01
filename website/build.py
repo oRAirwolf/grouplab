@@ -2206,12 +2206,18 @@ def noticed(section: str) -> list[str]:
     return re.findall(r"^- (.*)$", m.group(1), re.M) if m else []
 
 
+def notes_of(f: dict) -> list[str]:
+    """A feature's release-note phrases: one, or several where the change it is came with more than one note (entry 340's two)."""
+    note = f.get("note")
+    return [note] if isinstance(note, str) else list(note or [])
+
+
 def arrived(f: dict) -> str | None:
     """The build a feature arrived in. "next" means the build after the newest published one: the first whose notes say its phrase, or
     None until one does, which the page shows as coming in the next build (entry 243, so a feature can be listed with its change)."""
     if f.get("since") != "next":
         return f.get("since")
-    found = [v for v, s in release_sections().items() if f.get("note") and f["note"] in s]
+    found = [v for v, s in release_sections().items() if any(n in s for n in notes_of(f))]
     return min(found, key=build_number) if found else None
 
 
@@ -2249,8 +2255,8 @@ def feature_problems() -> list[str]:
             pass
         elif section is None:
             found.append(f"{where}: no build {f.get('since')} in docs/RELEASE-NOTES.md")
-        elif f.get("note") and f["note"] not in section:
-            found.append(f"{where}: the {f['since']} notes do not say {f['note']!r}, so that is not where it arrived")
+        elif notes_of(f) and not any(n in section for n in notes_of(f)):
+            found.append(f"{where}: the {f['since']} notes do not say {notes_of(f)[0]!r}, so that is not where it arrived")
         if f.get("shot") is not None and f["shot"] not in shots:
             found.append(f"{where}: there is no screenshot {f['shot']!r}")
         for name, _ in f.get("sheets", []):
@@ -2274,7 +2280,7 @@ def feature_problems() -> list[str]:
         if f.get("article") and articles and f["article"] not in articles:
             found.append(f"{where}: no published article {f['article']!r}")
     # From checkedFrom on, every note a reader will notice belongs to a feature or is said not to be one.
-    claimed = [f["note"] for f in data["features"] if f.get("note")] + data.get("notFeatures", [])
+    claimed = [n for f in data["features"] for n in notes_of(f)] + data.get("notFeatures", [])
     for version, section in sections.items():
         if build_number(version) < build_number(data["checkedFrom"]):
             continue

@@ -217,6 +217,11 @@
      "marking-other",
      "A plain sample target, drawn by GroupLab for this picture, marked by hand: the scale set across one ring, then each bull and shot placed",
      "On a target GroupLab did not print, the same screen with the scale drawn across a ring of known width and the bulls and shots placed by hand. The target is a sample GroupLab drew, with no markers or codes. Marking by hand is on the computer and, under a crosshair, on the phone."
+    ],
+    [
+     "store-target",
+     "A bullseye recognized as a store-bought target: its bull placed, the scale from its printed size with Check the scale, and the window asking which size it is",
+     "A store-bought target GroupLab knows is named by itself: its bull placed and the scale taken from its printed size, with the note that printed targets vary a little and Check the scale beside it. Where a Shoot-N-C bullseye could be the 6 in or the 8 in, a small window asks which. The bullseye here is a stand-in GroupLab drew, because no maker's printing is published."
     ]
    ]
   },
