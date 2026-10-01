@@ -183,6 +183,8 @@ public static class SheetMeasurer
             ? known / 254
             : 0.5 * Math.Max(image.Width, image.Height) / Math.Max(definition.Page.Width, definition.Page.Height);
         var detection = backend.DetectMarkers(image, DetectionOptions(f.MarkerSize * pixelsPerDmm, options)).InIdentifierOrder();
+        MarkerDetection? far = null;
+        double firstGuess = f.MarkerSize * pixelsPerDmm;
         if (dpi is null && detection.Markers.Count == 0)
         {
             // Entry 322 section 1: the first pass guesses that the sheet fills half the frame, and its size gates refuse a marker under
@@ -190,6 +192,7 @@ public static class SheetMeasurer
             // 23.4, so every one was refused unread although each reads at its own size. A pass sized for a sheet a quarter of the frame
             // finds them; a picture that has none costs one more pass.
             var smaller = backend.DetectMarkers(image, DetectionOptions(f.MarkerSize * pixelsPerDmm * FarGuess, options)).InIdentifierOrder();
+            far = smaller;
             if (smaller.Markers.Count > 0)
             {
                 s2.Decide("first pass", string.Create(inv, $"sized for {f.MarkerSize * pixelsPerDmm * FarGuess:0.0} px"),
@@ -209,6 +212,22 @@ public static class SheetMeasurer
                     "the first pass alone");
                 pixelsPerDmm = side / f.MarkerSize;
                 detection = backend.DetectMarkers(image, DetectionOptions(side, options)).InIdentifierOrder();
+            }
+        }
+
+        if (dpi is null && detection.Markers.Count < 4 && far is { Undecoded.Count: >= 4 })
+        {
+            // Entry 322 section 1: a sheet 3 ft away gives markers of about 10 px, a module of 1.3 px; every one is found as a square and
+            // none decodes. Each square is cut out and read enlarged, as a code is, and only where the picture could not register without.
+            var read = EnlargedCandidates(image, far.Undecoded, firstGuess, backend, options);
+            if (read.Count >= 4)
+            {
+                double side = read.Select(MeanSide).Order().ElementAt(read.Count / 2);
+                s2.Decide("marker size", string.Create(inv, $"{side:0.0} px"),
+                    string.Create(inv, $"{read.Count} of {far.Undecoded.Count} squares the whole picture could not decode read cut out and enlarged {EnlargeCandidates} times"),
+                    "the whole picture alone");
+                pixelsPerDmm = side / f.MarkerSize;
+                detection = new MarkerDetection(read, [], []).InIdentifierOrder();
             }
         }
 
@@ -753,6 +772,66 @@ public static class SheetMeasurer
     /// asked for, so this pass reads markers from about 8 px up, where a marker's module is one pixel and stops reading anyway.
     /// </summary>
     public const double FarGuess = 0.5;
+
+    /// <summary>How many times a marker the whole picture found but could not decode is enlarged to be read (entry 322 section 1).</summary>
+    public const int EnlargeCandidates = 4;
+
+    /// <summary>The most squares <see cref="EnlargedCandidates"/> reads, so a picture full of square things costs a bounded time.</summary>
+    private const int MostCandidates = 200;
+
+    /// <summary>
+    /// Entry 322 section 1: each square the detector found and could not decode, cut out with a marker's width round it, enlarged
+    /// <see cref="EnlargeCandidates"/> times and read again; the markers read, one for each identifier, with their corners in the picture.
+    /// A square wider than <paramref name="largestSide"/> is left alone: a marker that size reads at the picture's own size, and a large
+    /// square, a bull's box or the sheet's edge, enlarged would cost hundreds of megabytes on a phone.
+    /// </summary>
+    public static IReadOnlyList<DetectedMarker> EnlargedCandidates(GrayImage image, IReadOnlyList<IReadOnlyList<PointD>> squares, double largestSide, IImagingBackend backend, MeasureOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(squares);
+        ArgumentNullException.ThrowIfNull(backend);
+        ArgumentNullException.ThrowIfNull(options);
+        const int k = EnlargeCandidates;
+        var read = new Dictionary<int, DetectedMarker>();
+        int tried = 0;
+        foreach (var square in squares)
+        {
+            double side = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                side += Distance(square[i], square[(i + 1) % 4]) / 4;
+            }
+
+            if (side > largestSide || ++tried > MostCandidates)
+            {
+                continue;
+            }
+
+            double cx = square.Average(p => p.X), cy = square.Average(p => p.Y);
+            int x0 = (int)Math.Max(0, Math.Floor(cx - (1.5 * side))), y0 = (int)Math.Max(0, Math.Floor(cy - (1.5 * side)));
+            int x1 = (int)Math.Min(image.Width, Math.Ceiling(cx + (1.5 * side))), y1 = (int)Math.Min(image.Height, Math.Ceiling(cy + (1.5 * side)));
+            if (x1 - x0 < 8 || y1 - y0 < 8)
+            {
+                continue;
+            }
+
+            var pixels = new byte[(x1 - x0) * (y1 - y0)];
+            for (int y = y0; y < y1; y++)
+            {
+                Array.Copy(image.Pixels, (y * image.Width) + x0, pixels, (y - y0) * (x1 - x0), x1 - x0);
+            }
+
+            // A pixel centre at u in the cut-out lands at k u + (k - 1) / 2 in the enlargement.
+            double shift = (k - 1) / 2.0;
+            var big = PortableImaging.WarpPerspective(new GrayImage(x1 - x0, y1 - y0, pixels), new Homography([k, 0, shift, 0, k, shift, 0, 0, 1]), (x1 - x0) * k, (y1 - y0) * k);
+            foreach (var marker in backend.DetectMarkers(big, DetectionOptions(side * k, options)).Markers)
+            {
+                read.TryAdd(marker.Id, new DetectedMarker(marker.Id, [.. marker.Corners.Select(p => new PointD(((p.X - shift) / k) + x0, ((p.Y - shift) / k) + y0))]));
+            }
+        }
+
+        return [.. read.Values];
+    }
 
     private static MarkerDetectionOptions DetectionOptions(double sidePixels, MeasureOptions o) =>
         new(MarkerFamily.AprilTag36h11, sidePixels, o.Refinement, o.RefinementWindowModules, o.ThresholdWindowMaxPixels, o.DownsampleFactor);

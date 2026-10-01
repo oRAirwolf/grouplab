@@ -2769,6 +2769,26 @@
    "kind": "measured",
    "where": "a scratch timing test (deleted after the run) of SheetMeasurer.Measure and AutomaticMarking.Run on Scoreboard.Far(1.25), Far(2) and Far(3), seed 291, Release build on the desktop, three rounds each, 2026-10-01 (entry 322)"
   },
+  "Every other synthetic line is unchanged to the last digit, and the seven real photographs of the corpus read 172 of 173 holes, all registered, with 2 false marks, the same before and after.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json (the far 2 ft and far 3 ft lines, held by ScoreboardTests) and --corpus on the local corpus before and after, with SheetMeasurer.EnlargedCandidates held by FarSheetMarkersTests, 2026-10-01 (entry 322)"
+  },
+  "**Far 3 ft now registers on both seeds: 15 of the 38 markers, 44 of 50 holes, no false mark, a median center error of 0.014 in and the registration 0.001 in off at the bulls (0.005 in at worst)**, and it too is no longer expected to fail.": {
+   "kind": "measured",
+   "where": "grouplab scoreboard --synthetic against docs/scoreboard/synthetic-baseline.json (the far 2 ft and far 3 ft lines, held by ScoreboardTests) and --corpus on the local corpus before and after, with SheetMeasurer.EnlargedCandidates held by FarSheetMarkersTests, 2026-10-01 (entry 322)"
+  },
+  "The cost, on the desktop for one far picture in a Release build, three rounds each: the marker stage of a 2 ft picture takes 140 ms and the whole reading 0.36 s, of a 3 ft picture 120 ms and 0.6 s, against 120 to 290 ms and 0.4 to 1.3 s for a sheet at 1.25 ft.": {
+   "kind": "measured",
+   "where": "a scratch timing test (deleted after the run) of SheetMeasurer.Measure and AutomaticMarking.Run on Scoreboard.Far(1.25), Far(2) and Far(3), seed 291, Release build on the desktop, three rounds each, 2026-10-01 (entry 322)"
+  },
+  "The test process's peak working set is 498 MB at 1.25 ft and 500 MB at 2 and 3 ft, so neither fix raises the peak: a first version enlarged every square, a bull's box with them, and reached 1.1 GB, which is why a square wider than the first guess's marker is left alone.": {
+   "kind": "measured",
+   "where": "a scratch timing test (deleted after the run) of SheetMeasurer.Measure and AutomaticMarking.Run on Scoreboard.Far(1.25), Far(2) and Far(3), seed 291, Release build on the desktop, three rounds each, 2026-10-01 (entry 322)"
+  },
+  "A picture with no sheet in it pays one extra pass of about 15 ms.": {
+   "kind": "measured",
+   "where": "a scratch timing test (deleted after the run) of SheetMeasurer.Measure and AutomaticMarking.Run on Scoreboard.Far(1.25), Far(2) and Far(3), seed 291, Release build on the desktop, three rounds each, 2026-10-01 (entry 322)"
+  },
   "Real photographs are the next step (section 2).": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 261, the study's recommendation and estimates, marked as estimates where they are"

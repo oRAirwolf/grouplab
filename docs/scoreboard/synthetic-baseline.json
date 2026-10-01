@@ -6,7 +6,7 @@
     "when a change makes a line better, move the baseline in the same commit and say why. A line marked expectedToFail is a known failure kept in view.",
     "NOTES-FROM-PLANNING.md entry 297 section 4: the red and blue lines, each held to the black line of its condition by ScoreboardTests, measured 2026-09-30.",
     "NOTES-FROM-PLANNING.md entry 321 sections 3 and 4: the sheet on a backer at the range, two angles, strong sun with the shooter's shadow, a slight smear, and the sheet 2 and 3 ft away, measured 2026-09-30.",
-    "NOTES-FROM-PLANNING.md entry 322 section 1: the sheet 2 ft away registers and its holes are found, once a second pass sizes the marker detector for a sheet across a quarter of the picture, measured 2026-10-01."
+    "NOTES-FROM-PLANNING.md entry 322 section 1: the sheet 2 and 3 ft away registers and its holes are found, once a second pass sizes the marker detector for a sheet across a quarter of the picture and the squares it cannot decode are read enlarged, measured 2026-10-01."
   ],
   "measured": "2026-09-29",
   "seeds": [
@@ -414,19 +414,23 @@
       "condition": "far 3 ft",
       "truth": "holes",
       "pictures": 2,
-      "registered": 0,
+      "registered": 2,
       "holes": 50,
-      "marks": 0,
-      "found": 0,
+      "marks": 44,
+      "found": 44,
       "falseMarks": 0,
-      "medianMilliseconds": 15,
+      "medianCentreInches": 0.0141,
+      "worstCentreInches": 0.049,
+      "medianRegistrationInches": 0.001,
+      "worstRegistrationInches": 0.0046,
+      "medianMilliseconds": 662,
       "foundPerPicture": [
-        0,
-        0
+        22,
+        22
       ],
-      "recall": 0,
-      "expectedToFail": true,
-      "note": "no marker is read, at 66 pixels an inch: a marker is 10.3 px, a module 1.3 px, and all 38 are found as squares but none decodes; enlarged four times, 16 of 38 decode (entry 322). The camera says move closer"
+      "recall": 0.88,
+      "expectedToFail": false,
+      "note": "at 66 pixels an inch a marker is 10.3 px and its module 1.3 px: every one is found as a square and none decodes at the picture's size; entry 322 cuts each square out and reads it enlarged four times, which reads 15 of the 38 and registers the sheet. 44 of 50 holes, no false mark"
     },
     {
       "condition": "blue clean",

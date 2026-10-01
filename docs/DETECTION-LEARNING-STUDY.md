@@ -435,7 +435,7 @@ with the shooter's head and shoulders in a hard shadow; a sideways smear of 6 px
 | sun and shadow | 38 of 50 | 0 | 0.006 in | 0.057 in | 0.0002, 0.0006 in |
 | motion 6 px | 50 of 50 | 0 | 0.007 in | 0.021 in | 0.0017, 0.0018 in |
 | far 2 ft (entry 322) | 48 of 50 | 0 | 0.007 in | 0.026 in | 0.0004, 0.0005 in |
-| far 3 ft | not registered | | | | |
+| far 3 ft (entry 322) | 44 of 50 | 0 | 0.014 in | 0.049 in | 0.0010, 0.0046 in |
 
 Swept from 5 to 45 degrees in steps of 5, the turned sheet found every hole with no false mark at every angle, so the rendered sheet
 cannot place the edge of what is square enough, as the rendered sheet of entry 238 could not; the real photographs placed it at 37
@@ -457,13 +457,21 @@ The cheap fix is the first: where the first pass decodes no marker, a second is 
 median marker sizes the pass that measures, as before. It runs in the measurer and wherever a photograph's sheet is named by its markers;
 a picture whose first pass reads any marker is read exactly as it was. **Far 2 ft now registers on both seeds: 48 of 50 holes, no false
 mark, a median center error of 0.007 in and the registration 0.0004 in off at the bulls**, and it is no longer expected to fail. Every other
-synthetic line is unchanged to the last digit, far 3 ft still reads no marker, and the seven real photographs of the corpus read 172 of 173
-holes, all registered, with 2 false marks. Reading the candidates from enlarged cut-outs, the second cheap fix, was not built: at 3 ft it
-would read at most 16 of the 38 markers from the 8 megapixel picture the scoreboard has, and the phone's own full-resolution frame, which
-holds more, never reaches the reading. The cost, on the desktop for one far picture in a Release build: the extra pass takes 15 to 20 ms
-on an 8 megapixel picture and adds nothing to the peak memory (the test process's peak working set 507 MB at 1.25 ft and 510 MB at 2 and
-3 ft); the marker stage of a 2 ft picture takes 140 to 290 ms and the whole reading 0.45 to 1.2 s, against 0.45 to 1.3 s for a sheet at
-1.25 ft. A picture with no sheet in it pays the one extra pass.
+synthetic line is unchanged to the last digit, and the seven real photographs of the corpus read 172 of 173 holes, all registered, with 2
+false marks, the same before and after.
+
+The second cheap fix reads the candidates from cut-outs: where the picture still has fewer than four markers, each square the
+far pass found and could not decode, no wider than the first guess's marker, is cut out with a marker's width round it, enlarged four times
+and read again. **Far 3 ft now registers on both seeds: 15 of the 38 markers, 44 of 50 holes, no false mark, a median center error of
+0.014 in and the registration 0.001 in off at the bulls (0.005 in at worst)**, and it too is no longer expected to fail. The cut-outs come
+from the working picture the reading is given; the phone's full-resolution frame, which would hold more, never reaches the reading, and
+passing it would be the next step. A picture that registered before never reaches either fix, so the corpus cannot change.
+
+The cost, on the desktop for one far picture in a Release build, three rounds each: the marker stage of a 2 ft picture takes 140 ms and the
+whole reading 0.36 s, of a 3 ft picture 120 ms and 0.6 s, against 120 to 290 ms and 0.4 to 1.3 s for a sheet at 1.25 ft. The test process's
+peak working set is 498 MB at 1.25 ft and 500 MB at 2 and 3 ft, so neither fix raises the peak: a first version enlarged every square,
+a bull's box with them, and reached 1.1 GB, which is why a square wider than the first guess's marker is left alone. A picture with no
+sheet in it pays one extra pass of about 15 ms.
 
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.
