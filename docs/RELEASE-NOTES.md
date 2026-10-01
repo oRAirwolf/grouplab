@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.145
+
+**2026-10-01**, commit `fb08836`. Nightly.
+
+**What you will notice**
+
+- A new block, Velocity and the vertical, shows how much of a group's up-and-down spread comes from velocity alone, from its chronograph readings, with a band on the group picture you can switch off; on the phone it is a card above All figures.
+- Photographs taken at an angle where the far edge of the sheet has lifted off the table now place the holes beside that edge correctly, instead of up to 0.08 in off.
+- Accepting a chronograph string no longer fails when its first reading belongs to a shot, and each reading is now kept beside its own shot rather than the next one's.
+- On the phone, the chips under the group picture that turn the circles on and off are now remembered, as they are on the computer.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.145)
+
+---
+
 ## 0.2.0-nightly.144
 
 **2026-10-01**, commit `05ed5bd`. Nightly.
