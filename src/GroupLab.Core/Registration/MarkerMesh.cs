@@ -114,8 +114,8 @@ public sealed class MarkerMesh : IPageMapping
 
     private static double Distance(PointD a, PointD b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));
 
-    /// <summary>A thin-plate spline from one plane to another, in normalised coordinates.</summary>
-    private sealed class Spline
+    /// <summary>A thin-plate spline from one plane to another, in normalised coordinates; the bent sheet of entry 324 fits its correction with it too.</summary>
+    internal sealed class Spline
     {
         private readonly PointD[] centres;
         private readonly double[] wx;
@@ -222,6 +222,9 @@ public sealed class MarkerMesh : IPageMapping
             double X(double[,] t) => (t[i, j] * (1 - a) * (1 - b)) + (t[i + 1, j] * a * (1 - b)) + (t[i, j + 1] * (1 - a) * b) + (t[i + 1, j + 1] * a * b);
             return new PointD(X(tx), X(ty));
         }
+
+        /// <summary>The spline's exact value, for a fit read at a few points only, where tabulating it would cost more than it saves.</summary>
+        public PointD Exactly(PointD p) => Exact((p.X - cx) / s, (p.Y - cy) / s);
 
         private PointD Exact(double u, double v)
         {

@@ -430,10 +430,11 @@ public static class SheetMeasurer
         IPageMapping mapping = new HomographyMapping(homography.Transform);
         bool[] inliers = [.. homography.Inliers];
         double? homographyRms = null;
+        double? betweenMarkers = null;
         if (model == RegistrationModel.Radial)
         {
             homographyRms = Rms(mapping, imagePoints, pagePoints, inliers);
-            IPageMapping? radial = null;
+            RadialHomographyMapping? radial = null;
             bool[]? radialInliers = null;
             string? failure = null;
             try
@@ -471,6 +472,19 @@ public static class SheetMeasurer
             {
                 mapping = radial;
                 inliers = radialInliers!;
+
+                // Entry 324 section 1: a margin lifted off the sheet's plane. Where the lens fit left markers out well off it and a smooth
+                // bend across the sheet puts each where the rest predict it, the bend is laid over the lens fit and the sheet keeps them.
+                if (BentSheetMapping.Fit(radial, imagePoints, pagePoints, inliers) is { } bent)
+                {
+                    stage.Decide("model", bent.Mapping.Model,
+                        string.Create(inv, $"the lens fit left {imagePoints.Count - keptByRadial} corners out, and a smooth bend across the sheet puts each lifted marker within {bent.WorstLiftedDmm / 254:0.000} in of where the rest predict it"),
+                        "homography with radial distortion");
+                    stage.Metric("bendMost", bent.MostDmm / 254, "in");
+                    mapping = bent.Mapping;
+                    inliers = [.. bent.Kept];
+                    betweenMarkers = bent.LeaveOneOutRms;
+                }
             }
         }
         else if (model == RegistrationModel.Surface)
@@ -574,6 +588,12 @@ public static class SheetMeasurer
         {
             rms = throughMarkers.LeaveOneOutRms;
         }
+
+        // A bent sheet's correction is smoothed but still follows its corners closely, so it too is worth its error between markers.
+        if (betweenMarkers is { } between)
+        {
+            rms = between;
+        }
         stage.Metric("markers", matches.Count, "markers");
         stage.Metric("inliers", count, "corners");
         stage.Metric("residualRms", rms / 254, "in");
@@ -622,7 +642,7 @@ public static class SheetMeasurer
 
         using var s4 = trace.Begin("S4.verify");
         LensReport? lens = null;
-        if (mapping is RadialHomographyMapping radial)
+        if (((mapping as BentSheetMapping)?.Lens ?? mapping as RadialHomographyMapping) is { } radial)
         {
             double edgePixels = 0, edgeInches = 0, markerInches = 0;
             foreach (var corner in (PointD[])[new(0, 0), new(image.Width - 1, 0), new(image.Width - 1, image.Height - 1), new(0, image.Height - 1)])

@@ -307,6 +307,15 @@ public static class MarkingFile
             ["parameters"] = JsonSerializer.SerializeToNode(s.Parameters, MappingOptions),
             ["page"] = new JsonArray(s.PageBounds.Left, s.PageBounds.Top, s.PageBounds.Right, s.PageBounds.Bottom),
         },
+        // Entry 324: a bent sheet is kept as its lens fit and the corrections its markers asked for, and the correction fitted again on reading.
+        BentSheetMapping b => new JsonObject
+        {
+            ["model"] = "bent",
+            ["lens"] = MappingDocument(b.Lens),
+            ["points"] = Points(b.Points),
+            ["corrections"] = Points(b.Corrections),
+            ["smoothing"] = b.Smoothing,
+        },
         // Entry 260: a curled sheet's mesh is kept as the marker corners it passes through, image and page, and fitted again on reading.
         MarkerMesh m => new JsonObject
         {
@@ -371,6 +380,8 @@ public static class MarkingFile
         "homography" => new HomographyMapping(Matrix(node!["h"]!)),
         "radial" => new RadialHomographyMapping((double)node!["centreX"]!, (double)node["centreY"]!, (double)node["scale"]!, (double)node["k1"]!, (double)node["k2"]!, Matrix(node["h"]!)),
         "mesh" when node!["image"] is JsonArray image && node["page"] is JsonArray page => MarkerMesh.Rebuild(Points(image), Points(page), (double?)node["leaveOneOutRms"] ?? 0),
+        "bent" when ReadMapping(node!["lens"]) is RadialHomographyMapping lens && node["points"] is JsonArray points && node["corrections"] is JsonArray corrections
+            => BentSheetMapping.Rebuild(lens, Points(points), Points(corrections), (double)node["smoothing"]!),
         "surface" when node!["page"] is JsonArray page => new SurfaceMapping(node["parameters"].Deserialize<SurfaceModel>(MappingOptions)!, (double)page[0]!, (double)page[1]!, (double)page[2]!, (double)page[3]!),
         _ => null,
     };

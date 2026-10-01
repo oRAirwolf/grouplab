@@ -27,6 +27,13 @@ internal static class MeasurementJson
             HomographyMapping h => new { model = h.Model, imageToPage = Matrix(h.ImageToPage) },
             RadialHomographyMapping r => new { model = r.Model, r.CentreX, r.CentreY, r.Scale, r.K1, r.K2, normalisedToPage = Matrix(r.NormalisedToPage) },
             SurfaceMapping surface => new { model = surface.Model, parameters = surface.Parameters },
+            BentSheetMapping b => new
+            {
+                model = b.Model,
+                lens = new { b.Lens.CentreX, b.Lens.CentreY, b.Lens.Scale, b.Lens.K1, b.Lens.K2, normalisedToPage = Matrix(b.Lens.NormalisedToPage) },
+                b.Smoothing,
+                corrections = b.Points.Select((p, i) => new { at = new[] { p.X, p.Y }, by = new[] { b.Corrections[i].X, b.Corrections[i].Y } }),
+            },
             _ => null,
         };
         var document = new

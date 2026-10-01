@@ -475,3 +475,38 @@ sheet in it pays one extra pass of about 15 ms.
 
 The 59 range photographs of 2026-09-20 are not in the corpus yet: their truth is per sheet, not per hole, and they need their own truth
 files before they can be scored the same way.
+
+**A bent sheet over the lens fit (entry 324 section 1).** The lens fit stays as it was, fitted to the corners it kept. What it leaves at
+every marker corner is fitted by a smoothing thin-plate spline over the page, the spline the marker mesh of entry 260 passes through every
+corner with, its smoothing chosen by predicting each marker from a spline fitted without it; a pixel's page position is the lens fit's plus
+that correction there, and past the markers the correction fades to nothing over a quarter of an inch. It is taken only where the lens fit
+left out a marker at least 0.04 in off, each such marker is predicted from the rest to within 0.01 in or half its distance from the lens
+fit, the corners the lens fit kept fit no worse, the correction stays under 0.2 in over the markers, and more corners are kept than the lens
+fit kept. The hole stage reads each bull's cell through it, so the expected drawing is bent across the cell before S5's one shift. The far
+column is the column of five bulls nearest the lifted edge. Each picture, before and after:
+
+| Picture | Found | False marks | Median center error, before and after | Worst center error, before and after | Far column worst, before and after |
+|---|---|---|---|---|---|
+| 2026-09-29, 2 degrees off square | 25 of 25 | 0 | 0.0123, 0.0123 in | 0.0245, 0.0245 in | 0.016, 0.016 in (not taken) |
+| 2026-09-29, 1 degree | 25 of 25 | 0 | 0.0136, 0.0136 in | 0.0453, 0.0453 in | 0.018, 0.018 in (not taken) |
+| 2026-09-29, 9 degrees | 25 of 25 | 0 | 0.0130, 0.0107 in | 0.0800, 0.0279 in | 0.080, 0.009 in |
+| 2026-09-29, 15 degrees | 25 of 25 | 0 | 0.0136, 0.0122 in | 0.0825, 0.0217 in | 0.083, 0.016 in |
+| 2026-09-26, the three kitchen counter pictures | 72 of 73 | 2 | unchanged | unchanged | unchanged |
+
+On the 9 and 15 degree pictures the bend keeps 132 and 128 of 136 corners where the lens fit kept 108 and 41, and the far column's median
+falls from 0.029 to 0.006 in and from 0.025 to 0.009 in. Every hole there is now within 0.03 in. The one that reads worse is near the
+bottom row, 0.002 and 0.005 in farther out; it is the hole that reads 0.034 in off on the flat 2026-09-26 picture of the same sheet. The
+registration figure a person is shown rises from 0.0036 to 0.0074 in and from 0.0035 to 0.0077 in, because it is now each marker predicted
+from a bend fitted without it, over every corner, where before it left the far column out though it was 0.08 in off. The synthetic board
+reads every one of its 27 lines the same to the last digit: its drawn sheets are flat, their lens fit keeps every corner or leaves a few out
+by a whisker, and the bend is never fitted. A drawn sheet with its right margin lifted 16 dmm at the far column registers through the bend
+0.006 in off at its worst bull, where the lens fit alone is 0.026 in off.
+
+Three versions were measured and not kept. Requiring every left-out marker to be predicted within 0.01 in took the bend on no picture: the
+ends of a lifted column are predicted by reaching past their neighbours, and landed 0.016 to 0.019 in off on the 9 and 15 degree pictures,
+the one lifted far corner 0.034 in. Taking it wherever a left-out marker was 0.02 in off brought in the 1 and 2 degree pictures, whose far
+columns are 0.024 to 0.039 in off: the 1 degree picture's worst fell from 0.0453 to 0.0393 in, but the 2 degree picture's rose from 0.0245
+to 0.0264 in on that bottom-row hole, and a false mark appeared on the border of the panel below the markers, which a correction carried on
+past them had moved 0.008 in. Holding the correction at its edge value past the markers instead of fading it kept that false mark and added
+one beside the far column's last marker on the 1 degree picture. So the bend is for a lift the lens fit misses by 0.04 in or more, and below that the 1 and
+2 degree pictures read as they did.
