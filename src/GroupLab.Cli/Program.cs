@@ -85,6 +85,7 @@ return args switch
     ["donor-pack", var repository] => GroupLab.Cli.DonorPackVerb.Run(repository, Console.Out),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
     ["velocity", .. var rest] => GroupLab.Cli.VelocityVerb.Run(rest, Console.Out, Console.Error),
+    ["chronograph-files", .. var rest] => GroupLab.Cli.ChronographFilesVerb.Run(rest, Console.Out, Console.Error),
     ["analyze", var image, .. var rest] => GroupLab.Cli.AnalyzeVerb.Run(image, rest, Console.Out, Console.Error),
     ["corpus", "counts", .. var rest] when rest.All(a => a == "--write") || rest is ["--local", _] or ["--local", _, "--write"] or ["--write", "--local", _] =>
         CorpusCounts.Run("scans/phase0", SampleSet.FrozenDirectory, "targets", rest.SkipWhile(a => a != "--local").Skip(1).FirstOrDefault(), rest.Contains("--write"), Console.Out),

@@ -5,6 +5,18 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "- **Built, not proven.** Garmin Xero import: every one of Alan's own exports reads, deleted shots and the ones the chronograph left out of its own figures kept as such, and each string checked against its own footer; reconciling one against marked shots waits for a sheet shot with its string.": {
+   "kind": "measured",
+   "where": "grouplab chronograph-files C:\\Dev\\grouplab-local\\chronograph-samples\\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)"
+  },
+  "Beside it, a generic CSV import (a column of velocities, in ft/s or m/s), LabRadar's report from its published layout, and a 2023 radar chronograph's export, the last two Experimental; each gives the same list of numbers as the box that is built.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/ChronographFiles.cs: Generic, LabRadar (ExperimentalWords), RadarTable (RadarWords); tests/GroupLab.Core.Tests/Records/ChronographFilesTests.cs and ChronographWorkbookTests.cs (entries 331 and 334)"
+  },
+  "The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and 2023 radar readers are Experimental.": {
+   "kind": "measured",
+   "where": "grouplab chronograph-files C:\\Dev\\grouplab-local\\chronograph-samples\\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)"
+  },
   "On the tour · In the user guide · The research behind it Made for your optic Give the distance, your lowest magnification or a red dot&#x27;s size and the number of shots, and GroupLab draws bulls you can center on through that optic.": {
    "kind": "code",
    "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"

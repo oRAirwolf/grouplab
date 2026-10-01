@@ -113,8 +113,50 @@ internal static class VelocityPages
             }
 
             await using var stream = await file.OpenReadAsync();
-            using var reader = new StreamReader(stream);
-            Imported(await reader.ReadToEndAsync(), null);
+            if (Path.GetExtension(file.Name).ToLowerInvariant() is ".csv" or ".txt" or "")
+            {
+                using var reader = new StreamReader(stream);
+                Imported(await reader.ReadToEndAsync(), null);
+                return;
+            }
+
+            // Entry 334: a workbook, a Garmin Xero monthly export holding many strings; each is a choice by its name.
+            using var copy = new MemoryStream();
+            await stream.CopyToAsync(copy);
+            copy.Position = 0;
+            IReadOnlyList<ChronographImport> strings;
+            try
+            {
+                strings = ChronographFiles.ReadFile(copy, file.Name, out _);
+            }
+            catch (Exception e) when (e is FormatException or NotSupportedException or IOException or ExcelDataReader.Exceptions.ExcelReaderException)
+            {
+                said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                return;
+            }
+
+            columns.Children.Clear();
+            void Choose(ChronographImport chosen)
+            {
+                box.Text = string.Join(", ", chosen.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture)));
+                said.Text = chosen.Said + (chosen.Disagrees is { } d ? " " + d : "");
+            }
+
+            if (strings.Count == 0)
+            {
+                said.Text = "That file holds no chronograph string GroupLab can read.";
+                return;
+            }
+
+            Choose(strings[0]);
+            if (strings.Count > 1)
+            {
+                foreach (var each in strings)
+                {
+                    var chosen = each;
+                    columns.Children.Add(Screens.Choice($"{chosen.Name ?? "A string"}, {chosen.VelocitiesFps.Count} shots", () => Choose(chosen)));
+                }
+            }
         }).Id("chrono-import"));
         column.Children.Add(said);
         column.Children.Add(columns);

@@ -71,7 +71,7 @@ public sealed partial class MainWindow
         {
             Title = "Import a chronograph file",
             AllowMultiple = false,
-            FileTypeFilter = [new FilePickerFileType("CSV") { Patterns = ["*.csv", "*.txt"] }, FilePickerFileTypes.All],
+            FileTypeFilter = [new FilePickerFileType("Chronograph files") { Patterns = [.. ChronographFiles.Extensions.Select(e => "*" + e)] }, FilePickerFileTypes.All],
         });
         if (files.FirstOrDefault()?.TryGetLocalPath() is not { } path)
         {
@@ -80,12 +80,70 @@ public sealed partial class MainWindow
 
         try
         {
-            ImportChronograph(await File.ReadAllTextAsync(path), Path.GetFileNameWithoutExtension(path));
+            string source = Path.GetFileNameWithoutExtension(path);
+            if (Path.GetExtension(path).ToLowerInvariant() is ".csv" or ".txt")
+            {
+                ImportChronograph(await File.ReadAllTextAsync(path), source);
+                return;
+            }
+
+            await using var stream = File.OpenRead(path);
+            ImportChronographStrings(ChronographFiles.ReadFile(stream, path, out _), source);
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException or NotSupportedException or ExcelDataReader.Exceptions.ExcelReaderException)
         {
             problem.Text = "That file could not be read: " + e.Message;
         }
+    }
+
+    /// <summary>
+    /// Entry 334: the strings of a chronograph workbook, a Garmin Xero monthly export holding many; the person chooses one by its name, and
+    /// its readings go into the box and are read as the list is. Internal for the headless tests.
+    /// </summary>
+    internal void ImportChronographStrings(IReadOnlyList<ChronographImport> strings, string source)
+    {
+        chronoImport.Children.Clear();
+        chronoFileText = null;
+        if (strings.Count == 0)
+        {
+            problem.Text = "That file holds no chronograph string GroupLab can read.";
+            return;
+        }
+
+        var names = strings.Select((s, i) => s.Name is { Length: > 0 } n ? $"{n}, {s.VelocitiesFps.Count} shots" : $"string {i + 1}, {s.VelocitiesFps.Count} shots").ToList();
+        var said = new StackPanel { Spacing = Tokens.Space4 };
+        void Show(int i)
+        {
+            said.Children.Clear();
+            var chosen = strings[i];
+            said.Children.Add(Line(chosen.Said));
+            if (chosen.Disagrees is { } disagrees)
+            {
+                said.Children.Add(Line(disagrees));
+            }
+
+            DiagnosticLog.Info("chronograph.import", ("format", chosen.Format.ToString()), ("readings", chosen.VelocitiesFps.Count));
+            if (chosen.VelocitiesFps.Count > 0)
+            {
+                ReadChronograph(chosen.Name ?? source, null, string.Join(", ", chosen.VelocitiesFps.Select(v => v.ToString("0.#", CultureInfo.InvariantCulture))));
+            }
+        }
+
+        if (strings.Count > 1)
+        {
+            var which = new ComboBox { ItemsSource = names, SelectedIndex = 0, MinWidth = 260 };
+            which.SelectionChanged += (_, _) =>
+            {
+                if (which.SelectedIndex >= 0)
+                {
+                    Show(which.SelectedIndex);
+                }
+            };
+            chronoImport.Children.Add(Row(FieldLabel("String"), which));
+        }
+
+        chronoImport.Children.Add(said);
+        Show(0);
     }
 
     /// <summary>

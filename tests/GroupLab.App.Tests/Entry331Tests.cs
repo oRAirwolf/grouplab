@@ -1,5 +1,6 @@
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
+using Avalonia.LogicalTree;
 using GroupLab.App;
 
 namespace GroupLab.App.Tests;
@@ -36,6 +37,20 @@ public class Entry331Tests
             window.ImportChronograph(csv, "range day", column: 1, metres: true);
             Settle();
             Assert.Equal((2700 + 1) / 0.3048, window.ChronographPairing[0].Reading!.Value, 0);
+
+            // Entry 334: a workbook of several strings; the first is read, and choosing another reads that one.
+            var strings = new[]
+            {
+                new GroupLab.Core.Records.ChronographImport(GroupLab.Core.Records.ChronographFormat.GarminXero, [.. Enumerable.Range(0, shots).Select(i => 2800.0 + i)], "first", false, [], 1) { Name = "first string" },
+                new GroupLab.Core.Records.ChronographImport(GroupLab.Core.Records.ChronographFormat.GarminXero, [.. Enumerable.Range(0, shots).Select(i => 2900.0 + i)], "second", false, [], 1) { Name = "second string" },
+            };
+            window.ImportChronographStrings(strings, "Sessions_SEP_2026");
+            Settle();
+            Assert.Equal(2800, window.ChronographPairing[0].Reading);
+            var which = window.GetLogicalDescendants().OfType<Avalonia.Controls.ComboBox>().Single(c => c.ItemsSource is IEnumerable<string> items && items.Any(i => i.StartsWith("second string", StringComparison.Ordinal)));
+            which.SelectedIndex = 1;
+            Settle();
+            Assert.Equal(2900, window.ChronographPairing[0].Reading);
 
             const string report = "Device ID;LBR-0000000;;\nUnits velocity;fps;;\nShot ID;V0;V10;\n0001;2701,40;2690,10;\n0002;2695,90;2684,70;\n";
             window.ImportChronograph(report, "LabRadar");

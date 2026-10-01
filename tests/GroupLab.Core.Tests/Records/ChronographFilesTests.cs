@@ -4,8 +4,8 @@ namespace GroupLab.Core.Tests.Records;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 331 section 2: chronograph files read into the same list of velocities the hand-entry box makes. The LabRadar
-/// and Garmin Xero files here are written from those exports' documented layouts, not copied from anybody's file, so those two readers stay
-/// Experimental until a real file passes.
+/// and Garmin Xero files here are written from those exports' documented layouts, not copied from anybody's file. LabRadar's reader stays
+/// Experimental until a real file passes; the Xero's passed on Alan's own exports (entry 334, ChronographWorkbookTests).
 /// </summary>
 public class ChronographFilesTests
 {
@@ -76,7 +76,8 @@ public class ChronographFilesTests
         var read = ChronographFiles.Read(export);
         Assert.Equal(ChronographFormat.GarminXero, read.Format);
         Assert.Equal([2701.4, 2695.9, 2710.2], read.VelocitiesFps);
-        Assert.True(read.Experimental);
+        Assert.False(read.Experimental); // entry 334: proven on Alan's own exports
+        Assert.Null(read.Disagrees);
 
         var metric = ChronographFiles.Read(export.Replace("SPEED (FPS)", "SPEED (M/S)", StringComparison.Ordinal).Replace("2701.4", "823.4", StringComparison.Ordinal));
         Assert.Equal(823.4 / 0.3048, metric.VelocitiesFps[0], 6);

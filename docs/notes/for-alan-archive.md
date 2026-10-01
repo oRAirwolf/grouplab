@@ -129,6 +129,13 @@ At the start of a run, the count of open requests in this file is printed and no
 
 # Answered requests
 
+## 65. Garmin Xero exports for the chronograph reader (entries 333 and 334)
+
+**Opened and answered 2026-10-01** (entry 334): "All of the xlsx files in here are garmin chronograph files G:\My Drive\chronograph.files\2026
+and G:\My Drive\chronograph.files\2025. Check the older ones as the format may have changed." Copied, read and checked: every Garmin Xero
+export reads (92 files, 536 strings, 9,863 shots); the 2023 radar exports, another maker's, read too, Experimental. Nothing was written
+to G:\, and no place name or coordinate is read in.
+
 ## 63. A GitHub token so TestFlight feedback reaches me, about five minutes, as soon as suits (entry 326)
 
 **Answered 2026-10-01 06:35 UTC** (entry 330): "request 63 done"; the secret is set. **Opened 2026-10-01.** **Why:** Unholy's screenshot and comments went to App Store Connect, where only you can read them. I can read

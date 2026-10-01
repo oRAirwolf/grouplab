@@ -50,7 +50,7 @@ Each one, with its picture, its platforms and the build it arrived in, is on the
 <summary><strong>Every screen, larger</strong></summary>
 
 These are the application as it is: the build renders every screen itself, in both themes at every size, every week, and
-`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: Garmin Xero import checked against a real file.
+`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: cloud provider adapters over three-tier storage.
 
 ![The analysis screen](docs/figures/screens/current/analysis-dark-1400x900.png)
 
@@ -327,7 +327,7 @@ New on the phone in the latest builds, as entries 258 and 259 bring it level wit
 - On the phone, the camera's level works upright at a sheet left on its backer as well as flat over a table, names which under the
   crosshair, and follows the sheet's own angle once its markers are read; Guided takes the picture in either position.
 
-What does not exist yet: Garmin Xero import checked against a real file, synchronization, and a released iOS build (it is in testing through TestFlight).
+What does not exist yet: synchronization, and a released iOS build (it is in testing through TestFlight).
 
 #### Before the first beta or stable release
 
@@ -447,7 +447,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 
 **Phase 5. Chronograph, solver, and comparison.**
 - **Built, not proven.** Chronograph strings entered by hand, with the reconciliation `DESIGN.md` section 15 requires: the readings are never assumed to line up with the shots, the in-order pairing is a proposal, a reading that belongs to no shot or a shot the chronograph missed is marked, and what is accepted is kept on the session. The readings' own spread becomes the load's velocity SD, with a note of where it came from.
-- **Built, not proven.** Garmin Xero import checked against a real file waits for a sample export: Garmin Xero's and LabRadar's readers are built from their published layouts, beside a generic CSV import (a column of velocities, in ft/s or m/s), and each gives the same list of numbers as the box that is built.
+- **Built, not proven.** Garmin Xero import: every one of Alan's own exports reads, deleted shots and the ones the chronograph left out of its own figures kept as such, and each string checked against its own footer; reconciling one against marked shots waits for a sheet shot with its string. Beside it, a generic CSV import (a column of velocities, in ft/s or m/s), LabRadar's report from its published layout, and another radar chronograph's export from before the Xero, the last two Experimental; each gives the same list of numbers as the box that is built.
 - **Built, not proven.** A ballistic solver, validated against an independent implementation: the point-mass solver ported from ballistics.js and corrected in five places, and `grouplab trajectory`, which prints a table from stated inputs. G1 and G7 agree with py-ballisticcalc well inside tolerances written down before the comparison. On screen since entry 112: the rifle and load records carry what it needs, all optional, and the Ballistics screen gives a dope table in your units and clicks with the air as an input; the analysis carries the zero correction to a second distance with its uncertainty, and keeps its refusal when the offset cannot be told from zero.
 - **Built, not proven.** Load against load on screen: sessions chosen in Session records, or one sheet's subgroups, side by side with their plots, figures and intervals, the tests with their verdicts and what each could have detected, and the shots it would take to resolve a smaller difference. The loads are never ranked by a point estimate, and overlapping intervals are said to leave them unseparated.
 - **Built, not proven.** Velocity regression, and predicted against measured vertical: `grouplab velocity` prints the vertical a load's velocity SD alone would add at the distance shot, through the solver, against the vertical measured, the share velocity accounts for with its interval, and, where readings are paired with shots, the slope of vertical on velocity against the solver's. On screen as Velocity and the vertical, a block after the group's figures on the desktop and a card above All figures on the phone, with a band on the group picture that can be switched off.

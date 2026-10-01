@@ -78,6 +78,7 @@ the outlines do.
 | Package | Licence | Used by | Purpose |
 |---|---|---|---|
 | Net.Codecrete.QrCodeGenerator | MIT | GroupLab.Core | QR symbols for the definition and instance codes |
+| ExcelDataReader | MIT | GroupLab.Core | Reading a chronograph's spreadsheet export, .xls and .xlsx (NOTES-FROM-PLANNING.md entry 334) |
 | Microsoft.Data.Sqlite, with SQLitePCLRaw and SQLite | MIT; SQLitePCLRaw Apache-2.0; SQLite public domain | GroupLab.Core | The session and records database of DESIGN.md section 15 (NOTES-FROM-PLANNING.md entry 112 section 1) |
 | OpenCvSharp4 and OpenCvSharp4.runtime.win, with OpenCV | Apache-2.0; OpenCV Apache-2.0 | GroupLab.Cli, and the tests through it | Marker detection, homography fitting and resampling behind `IImagingBackend` |
 | Avalonia.iOS, with Avalonia, SkiaSharp and HarfBuzzSharp | MIT | GroupLab.iOS | The iPhone and iPad application's window on UIKit (NOTES-FROM-PLANNING.md entry 290) |
