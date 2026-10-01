@@ -130,6 +130,19 @@ public class ChronographWorkbookTests
         Assert.Null(read.Disagrees);
     }
 
+    /// <summary>Entry 339: the Xero's metric export writes its unit as MPS, with KE in joules and the power factor in N⋅s.</summary>
+    [Fact]
+    public void TheXerosMetricExportIsReadInMetresASecond()
+    {
+        var rows = XeroString("metric export");
+        rows[1] = ["#", "Speed (MPS)", "Δ Avg (MPS)", "KE (J)", "Power Factor (N⋅s)", "Time", "Clean Bore", "Cold Bore", "Shot Notes"];
+        rows[2][1] = "870.0";
+        using var file = Workbook(("m", rows, false));
+        var read = Assert.Single(ChronographFiles.ReadFile(file, "m.xlsx", out _));
+        Assert.Equal(870.0 / 0.3048, read.VelocitiesFps[0], 6);
+        Assert.Contains("in m/s", read.Said, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void MetresASecondInTheHeaderAreConverted()
     {
@@ -146,7 +159,7 @@ public class ChronographWorkbookTests
     /// the place: the whole result written out holds no place name and no coordinate.
     /// </summary>
     [Fact]
-    public void TheRadarExportReadsItsShotsAndNeverItsLocation()
+    public void TheBulletSeekerExportReadsItsShotsAndNeverItsLocation()
     {
         string[][] rows =
         [
@@ -179,7 +192,7 @@ public class ChronographWorkbookTests
         var strings = ChronographFiles.ReadFile(file, "radar.xlsx", out int passedOver);
         var read = Assert.Single(strings);
         Assert.Equal(1, passedOver);
-        Assert.Equal(ChronographFormat.RadarExport2023, read.Format);
+        Assert.Equal(ChronographFormat.BulletSeeker, read.Format);
         Assert.True(read.Experimental);
         Assert.Equal([2507, 2500, 2504, 2483, 2507, 2518, 2484], read.VelocitiesFps);
         Assert.Equal("18.6 ARC 105 BTHP", read.Name);

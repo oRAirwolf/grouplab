@@ -37,7 +37,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Records/ChronographFiles.cs: Generic, LabRadar (ExperimentalWords), RadarTable (RadarWords); tests/GroupLab.Core.Tests/Records/ChronographFilesTests.cs and ChronographWorkbookTests.cs (entries 331 and 334)"
   },
-  "The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and 2023 radar readers are Experimental.": {
+  "The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and BulletSeeker readers are Experimental.": {
    "kind": "measured",
    "where": "grouplab chronograph-files C:\\Dev\\grouplab-local\\chronograph-samples\\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)"
   },

@@ -18,10 +18,10 @@ public enum ChronographFormat
     GarminXero,
 
     /// <summary>
-    /// A 2023 radar chronograph's Excel export, shots across the columns (entry 334's format A). Not a Garmin format: Alan has had his Xero
-    /// since mid 2024. Unnamed until Alan names the maker, and Experimental.
+    /// The BulletSeeker chronograph's Excel export, shots across the columns with the radar's raw samples below them (entry 334's format A,
+    /// named in entry 339). Not a Garmin format: Alan had a BulletSeeker for a short time before his Xero C1 and C2. Experimental.
     /// </summary>
-    RadarExport2023,
+    BulletSeeker,
 }
 
 /// <summary>One shot as the chronograph numbered it, with what the person noted about it where the file carries that.</summary>
@@ -56,7 +56,7 @@ public sealed record ChronographImport(ChronographFormat Format, IReadOnlyList<d
 /// Chronograph files, NOTES-FROM-PLANNING.md entries 331 section 2 and 334, and DESIGN.md section 17: one import interface whose every reader
 /// ends in the same list of numbers the hand-entry box makes (<see cref="Chronograph.Read"/>), which then goes through the same reconciliation
 /// with the shots. The Garmin Xero reader was proven on Alan's own exports from May 2024 on; LabRadar's is built from its published layout
-/// with no real file, and the 2023 radar export from a few of Alan's, so those two are Experimental and say so.
+/// with no real file, and BulletSeeker's from Alan's own files, so those two are Experimental and say so.
 /// <para>
 /// <b>Location.</b> Older exports carry where the person shot: a place name, a latitude and a longitude. No reader here reads those rows, or
 /// any row it does not name, so a location never enters GroupLab, as GPS in a photograph never does.
@@ -67,8 +67,8 @@ public static class ChronographFiles
     /// <summary>The words the Experimental readers add to what they say.</summary>
     public const string ExperimentalWords = "Experimental: read from the published layout, not yet checked against a real file.";
 
-    /// <summary>The words the 2023 radar export adds: it is read from a few real files, and its maker is not named yet.</summary>
-    public const string RadarWords = "Experimental: a 2023 radar chronograph's export, read from a few real files.";
+    /// <summary>The words the BulletSeeker reader adds: it is read from Alan's own files and stays Experimental.</summary>
+    public const string BulletSeekerWords = "Experimental: a BulletSeeker export.";
 
     private const double FeetPerMetre = 1 / 0.3048;
 
@@ -102,7 +102,7 @@ public static class ChronographFiles
                 rows.Add([.. Enumerable.Range(0, reader.FieldCount).Select(i => Cell(reader.GetValue(i)))]);
             }
 
-            if ((XeroTable(rows) ?? RadarTable(rows)) is { } read)
+            if ((XeroTable(rows) ?? BulletSeekerTable(rows)) is { } read)
             {
                 strings.Add(read);
             }
@@ -197,7 +197,8 @@ public static class ChronographFiles
         }
 
         var names = rows[header];
-        bool inMetres = names[speed].Contains("M/S", StringComparison.OrdinalIgnoreCase);
+        // "Speed (M/S)", or "Speed (MPS)" as the Xero's metric export writes it (entry 339).
+        bool inMetres = names[speed].Contains("M/S", StringComparison.OrdinalIgnoreCase) || names[speed].Contains("MPS", StringComparison.OrdinalIgnoreCase);
         int Column(string name) => Array.FindIndex(names, h => h.Trim().Equals(name, StringComparison.OrdinalIgnoreCase));
         int clean = Column("Clean Bore"), cold = Column("Cold Bore"), note = Column("Shot Notes");
         int delta = Array.FindIndex(names, h => h.Trim().StartsWith("Δ", StringComparison.Ordinal));
@@ -245,12 +246,12 @@ public static class ChronographFiles
     }
 
     /// <summary>
-    /// The 2023 radar export: shots across the columns, a row "Shot Number" (Shot 1, Shot 2, ...) and a row "Mean Speed [fps]" with the
+    /// The BulletSeeker export: shots across the columns, a row "Shot Number" (Shot 1, Shot 2, ...) and a row "Mean Speed [fps]" with the
     /// reading for each, above many rows of the radar's raw samples, which are not read. The string's name is the first row's; the
     /// "Statistics" block (Min, Max, Avg, Deviation), where there is one, checks the shots, and the weather rows are offered as conditions.
     /// Nothing else above the shots is read, the location block included.
     /// </summary>
-    private static ChronographImport? RadarTable(IReadOnlyList<string[]> rows)
+    private static ChronographImport? BulletSeekerTable(IReadOnlyList<string[]> rows)
     {
         int numbers = rows.ToList().FindIndex(r => r.Length > 1 && r[0].Trim().Equals("Shot Number", StringComparison.OrdinalIgnoreCase));
         int speeds = rows.ToList().FindIndex(r => r.Length > 1 && r[0].Trim().StartsWith("Mean Speed", StringComparison.OrdinalIgnoreCase));
@@ -258,7 +259,7 @@ public static class ChronographFiles
         {
             // A string saved with no shot in it: its header and nothing under it.
             bool header = rows.Count > 1 && rows[0].Length > 0 && rows[0][0].Trim() is "String" or "Name" && rows[1].Length > 0 && rows[1][0].Trim() == "Created";
-            return header ? new ChronographImport(ChronographFormat.RadarExport2023, [], $"A 2023 radar chronograph's export with no shots in it. {RadarWords}", true, [], null) : null;
+            return header ? new ChronographImport(ChronographFormat.BulletSeeker, [], $"A BulletSeeker export with no shots in it. {BulletSeekerWords}", true, [], null) : null;
         }
 
         bool inMetres = rows[speeds][0].Contains("m/s", StringComparison.OrdinalIgnoreCase);
@@ -286,8 +287,8 @@ public static class ChronographFiles
         double scale = inMetres ? FeetPerMetre : 1;
 
         // The statistics are of the radar's unrounded speeds, and the shots are given as whole numbers, so they agree within a foot a second.
-        return new ChronographImport(ChronographFormat.RadarExport2023, velocities,
-            $"A 2023 radar chronograph's export: {shots.Count} shots, in {(inMetres ? "m/s" : "ft/s")}. {RadarWords}", true, [.. rows[numbers]], null)
+        return new ChronographImport(ChronographFormat.BulletSeeker, velocities,
+            $"A BulletSeeker export: {shots.Count} shots, in {(inMetres ? "m/s" : "ft/s")}. {BulletSeekerWords}", true, [.. rows[numbers]], null)
         {
             Name = name,
             Shots = shots,
