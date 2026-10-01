@@ -1,5 +1,16 @@
 **Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**YOUR OVERNIGHT LIST, 1 OCTOBER** (entry 342, not a request): done apart from one item. In nightly 152: GroupLab recognizes the five
+store-bought targets you scanned, names them, places the bulls and sets the scale with a warning to check it, and asks 6 or 8 inch for
+the Shoot-N-C only when the picture cannot tell. In the next nightly: the phone reads a sheet's codes in about half the time, with every
+measurement unchanged; every box on the computer has a name a screen reader reads, the keyboard reaches and presses every button, and
+the Targets screen fits a small window. An imported Garmin Xero string now proposes which shots were this group from its own timing,
+and says why. The download page names the Store's version (0.2.0). `grouplab target-reference` makes a fingerprint from a photo of a
+poster on the computer; its screens wait for planning's drawings (69). **Next, and what each waits on:** the phone sweep on the
+emulators in CI (nothing; first tomorrow); the fingerprint and pairing screens on the phone (planning's concepts, 68 and 69); where a
+newer fingerprint library is published (planning, question 80); a Store submission (your cadence, 66); proving the 31 features (one
+sitting, docs/PROOF-CHECKLIST.md, now one ordered list). The day stopped at entry 317's share.
+
 **TESTFLIGHT FEEDBACK** (entry 326, not a request): thank you for the token. Every tester's screenshot, comment and crash is now
 filed privately as it arrives, and I fix each in turn; Unholy's two are filed and linked to their fixes below.
 
@@ -44,8 +55,8 @@ GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):
    (read over the cable). Request 59's groups are still needed for the public beta and to keep every build flowing. Crash reports 11
    and 12 are fixed in 137 and closed. The iPad's own log, copied over the cable, gave crash report 9 its missing stack: a reading
    failed when one of the sheets that look alike could not be drawn. Fixed and tested (10259c6e), in nightly 139 (17:07 UTC), and closed.
-4. Your usage (entry 317): 1 October so far 0.31 billion tokens with 2.0 million of cache creation, two workers; 29 September, the
-   hot day, was 1.31 billion. Within the day's share.
+4. Your usage (entry 317): 1 October 0.60 billion tokens by 14:20 UTC, two workers, and the run stopped there; this week so far 4.0
+   billion, last week 5.4. Tomorrow one worker.
 5. Also built, in the next nightly: GroupLab Dev can record the camera's last seconds and replay them to test Guided without anyone
    holding the phone; Firebase Test Lab would test on more phone models free (15 runs a day) but needs a Google project of yours, so
    nothing is set up. This file now holds only the open requests; answered ones and old notes are whole in for-alan-archive.md.

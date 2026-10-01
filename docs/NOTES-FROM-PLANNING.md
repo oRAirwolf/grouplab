@@ -46,6 +46,53 @@ Also from Alan: the download page's phone layout stays as drawn (store card firs
 are the desktop ones already in entry 338. He has given Code his word in the panel to publish the TestFlight link, the Microsoft badge
 and the new download page.
 
+## 2026-10-01, entry 342: the overnight list, so the loop always has work
+
+**Status: done 2026-10-01 except worker A's item 2, the phone sweep on the emulator and simulator in CI, not started: the day reached entry 317's share (about 0.6 billion tokens against last week's 5.4) and it is the largest item; it is first tomorrow.** Worker A 1: the slowdown was mostly the machine; the phone reads a sheet's codes in about half the time, every table identical. A3: the desktop sweep, about 50 fields named, Targets fits 1060 wide, Space and Enter work on a button reached by Tab. A4: one checklist. Worker B 1 to 4: the audit, the pairing proposal, the Store dry run, nothing open to triage.
+
+Alan, 2026-10-01 10:34 UTC, going to bed: "What can be worked on while I sleep? I know there are still plenty of features that need to
+be added so it should never be idle for a while." Order of work: entries 335 to 341 first (in number order), then this list, top to
+bottom. Two workers (entry 333) on separate areas; each takes the next item in its area when it finishes one. Bugs a tester hits jump
+the queue. Entry 317's budget still holds: at 12% of the weekly limit for the day, finish the item in hand, write the summary, stop.
+
+### Worker A: the application
+
+1. **Phase 9 starts now** (planning's word, entry 331 section 4 asked for it). First the regression: image work is 20 to 35% slower
+   than on 2026-09-20; find which change did it, by bisecting the bench across nightlies, and fix it or say why the cost is worth it.
+   Then the phone's pipeline (2.7 s headless for the 600 dpi sample; the Fold 7 photograph 2.5 s): profile, and speed up the slowest
+   stages. Every change keeps the scoreboard, the corpus and every synthetic case identical, or it is not kept; record before and after
+   in docs/PERFORMANCE.md.
+2. **A quality sweep of every screen on both phones** with the automation of entry 315 (command bridge, scenarios, replay camera) on the
+   Android emulator and the iOS simulator in CI: drive each screen and each control, every sheet and dialog, at the smallest and largest
+   supported sizes, both themes, large text, and rotation. Fix every crash, clipped label, unreachable control, field under the
+   keyboard (entry 328's rule) and dead end it finds; add each scenario to the nightly so it stays fixed.
+3. **The same sweep on the desktop**: every window at 1060 wide and at 4K scaling, keyboard only (every control reachable with Tab and
+   working with Enter or Space), and the screen reader names of every control. Fix what fails.
+4. **docs/PROOF-CHECKLIST.md and question 79**: settle what can be settled without Alan, and leave one consolidated checklist for his
+   next sitting, ordered by how many features each piece of material proves.
+
+### Worker B: data, site and tooling
+
+1. **The consistency audit, by hand once**: README, every page of grouplab.org, the three guides and the release notes against what the
+   application does tonight (velocity block, chronograph files, recognition, the Store and the beta). Fix every stale sentence, picture
+   and number; add what the weekly check should have caught to `scripts/consistency.py`.
+2. **Chronograph reconciliation**: when a session has both marked shots and an imported Xero string, propose the pairing (shot order
+   against time, the "--" exclusions, missing shots) for the person to accept, as DESIGN.md section 15 already describes, and build the
+   tests from Alan's real strings with synthetic shots. If a screen layout question comes up, DESIGN NEEDED and build the engine anyway.
+3. **Store submission automation** (entry 337 section 4): everything except Alan's credentials, ready to run once request lands.
+4. **Crash and feedback triage**: read every open issue in grouplab-crash-reports, fix what is fixable, close with the build.
+
+### When everything above is done
+
+Do not idle and do not invent features: write a short list in for-alan.md of what is next and what each item waits on (Alan's sync
+decision, a sitting, a design), then end the loop.
+
+### Devices tonight
+
+Alan's phones, tablets and iPad are asleep and not connected tonight (no wireless debugging, no cable). Nothing on this list uses them:
+the phone sweep runs on the emulator and the simulator in CI. If a step would need a real device, skip it, note it for request 50's
+sitting, and carry on; never wait for one.
+
 ## 2026-10-01, entry 344: fingerprints of any store-bought target, made from a camera photo (engine now, screens after concepts)
 
 **Status: sections 1, 2, 3 and 5 done 2026-10-01 as an engine and a command (worker A, 42c48394); section 4's screens wait for planning's concepts (request 69); the library's fetch on the update check is built and signed but not wired, question 80.** Measured on synthetic posters only: a GroupLab sheet in the photo, (b), was not the most accurate source at poster size.

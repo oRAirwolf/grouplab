@@ -10,6 +10,9 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "The phone reads a GroupLab sheet's codes in about half the time it took",
+    "Every box and choice on the computer now has a name a screen reader reads out",
+    "The Targets screen now fits a window 1060 wide",
     "Find holes no longer proposes the solid black diamonds printed in a store-bought target",
     "When you import a Garmin Xero file, GroupLab now proposes which readings belong to your group",
     "Garmin Xero exports in metric units are now read in meters per second",

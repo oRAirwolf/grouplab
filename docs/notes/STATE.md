@@ -9,26 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 13:30 UTC, entries 340, 341 and 344 folded; 342 remains, worker A on its items 1 and 3,
-this session on item 4.
+**Last rewritten:** 2026-10-01 14:30 UTC, entry 342 folded; the inbox is empty and the day's budget is reached.
 
 ---
 
 ## In flight
 
-- **Two Claude sessions share this working tree** (2026-10-01): grouplab-3b did entry 323; grouplab-1f is doing entry 324 (its section
-  2, the sync options paper, is committed; section 1, the bent-sheet registration, runs in its own worktree). Each stages only its own
-  files by name and says before pushing to main.
-- **Nightly 146** (06:21 UTC) carries entry 329; **nightly 147** carries entry 328, Unholy's two TestFlight bugs: the keyboard and
-  the curl note. Unholy retests on 147 once Apple's test service has it.
-- **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback) by every testflight run;
-  each item is fixed in turn and its issue closed with the build (entry 326).
-- **A second session (grouplab-1f) ran until about 05:30 UTC** and ended with entries 324, 325 and 327 folded only in its worktrees;
-  324 section 1 and 325's request 58 part are on main. Planning should know those folds are not in the logs.
-- **iOS until 2026-10-01 02:00 UTC** (entry 290) is over; the summary is at the top of `for-alan.md`.
-- **The Microsoft Store's first submission** (request 38 Part B) is in certification; `store-status.yml` reads it every six hours.
-- **GroupLab Dev updates itself** (entry 288): the silent second update waits for the phones to be reachable over adb again.
-- **Colored bulls** (entry 297): question 75 answered; request 57 for Alan.
+- **Nothing is running.** Entries 339 to 344 are folded; entry 342's worker A item 2 (the phone sweep on the emulator and simulator in
+  CI) is the one thing left, first tomorrow, on one worker.
+- **Nightly 152** carries store-bought recognition and the fingerprint engine; the next carries the faster code reading, the desktop
+  sweep's fixes and the recovered blanks fix of entries 325 and 327.
+- **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback); none is open.
+- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66, and the dry run of store-submit.yml passes.
+- **Waiting on planning:** concepts for requests 68 and 69, and questions 79 and 80.
 
 ## The next three
 
@@ -91,7 +84,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 342.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Nothing waits locally.
 
 Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
 GitHub's secrets.

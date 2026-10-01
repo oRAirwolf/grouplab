@@ -40,6 +40,24 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 342, worker A: the phone's pipeline, the desktop sweep, the checklist
+
+2026-10-01; items 1 and 3 by worker A, item 4 and item 1's first half by this session. Item 2 is not started (budget).
+
+- **1, the slowdown:** the 2026-09-20 and today's code benched by turns on one machine are within a few percent on image work; only the
+  end to end case looks about 7 percent slower, too noisy to bisect under load (docs/PERFORMANCE.md).
+- **1, the phone's pipeline:** reading the sheet's codes was the slowest stage on every picture (0.6 to 0.95 s of 1.3 to 2.0 s): a
+  cut-out that failed to read went through the whole-sheet corner search. Cut-outs are now read as themselves: 462 to 208 ms on the
+  600 dpi sample, 467 to 949 down to 191 to 415 ms on eight Fold 7 photos; the whole analysis 1.27 s and 1.10 s. Every Phase 0 table,
+  the identify sweep, both scoreboards and the corpus counts are identical but for their time columns. Left: hole detection and the bull
+  locator, which decide figures, and one photo's 3.7 s whole-picture read, which would change the sweep's "read at" column.
+- **3, the desktop sweep** (`DesktopSweepTests`): eight screens and four windows at 1060 x 720, 1920 x 1080 and 2560 x 1440: every control
+  named for a screen reader, a tab stop, reached by Tab, inside the window, and Space and Enter press a button reached by Tab. Fixed:
+  about 50 unnamed fields; Targets' zoom buttons 89 units past the edge at 1060; Space and Enter on the marking screen always going to
+  the review shortcuts. The headless platform cannot see scaling above one, hear a screen reader, see focus rings or reach system dialogs;
+  the printer wizard, the CSV import, the chronograph import picker and the Fudd buster window are not covered yet.
+- **4:** `docs/PROOF-CHECKLIST.md` is one list ordered by how many features each piece of material proves; question 79 stays open.
+
 ## Entry 344: a store-bought target's fingerprint from a camera photo, the engine
 
 Done 2026-10-01 by worker A; no screens (request 69).
