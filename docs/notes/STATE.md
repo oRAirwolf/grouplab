@@ -46,7 +46,7 @@ other session.
 - **Deferred on purpose**: the full visual designer and the full detector on a bought target (DESIGN.md section 3).
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Confirm entry 323's `[screens]` commit and the site publishing it; then planning's next batch.
+1. Confirm entry 323's `[screens]` commit and the site publishing it; entry 326 as soon as request 63 is done, its fixes one at a time.
 2. Watch the Store's certification (store-status.yml) and close request 38 when GroupLab is listed.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
@@ -58,7 +58,7 @@ other session.
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **14** (59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **15** (63 a token so TestFlight feedback reaches Code, most urgent; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 38 waits on Microsoft; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -85,9 +85,13 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 `docs/notes/inbox/` holds the entries below. A test reads this line and the directory and fails when
 they differ.
 
-**Holds:** 324, 325
+**Holds:** none
 
-Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 324 is the other session's to fold; 325 arrived during 323.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 324, 325, 327 (the other
+session's) and 326 (this session's, on request 63).
+
+Entry 323 is folded; its file is in `C:\Dev\grouplab-trash\2026-10-01\`. Entry 326 waits on request 63: no token can write to the private crash-reports repository, and the App Store Connect key is only in
+GitHub's secrets.
 
 ## Things that would surprise somebody who was not here yesterday
 

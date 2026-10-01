@@ -1,4 +1,4 @@
-**Open: 14.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 15.** Most urgent: **63**, a GitHub token so Unholy's TestFlight feedback reaches me (five minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **38** needs nothing from you now: it waits on Microsoft's certification. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **WHERE TO LOOK** (entry 323, not a request): **Velocity and the vertical** is built as you chose, Desktop B and Phone B. On the
 desktop it is the block under the group's figures; add a group's chronograph readings on Ballistics, Chronograph, and it shows how much of
@@ -59,6 +59,31 @@ printing to your printer; a Google Photos picture shared in; Send diagnostics. W
 myself, so you only point the camera.
 
 # Requests for Alan
+
+## 63. A GitHub token so TestFlight feedback reaches me, about five minutes, as soon as suits (entry 326)
+
+**Opened 2026-10-01.** **Why:** Unholy's screenshot and comments went to App Store Connect, where only you can read them. I can read
+TestFlight with the key the nightly already has, but nothing I can run is allowed to write into the private
+`grouplab-crash-reports` repository, where a tester's words have to go (this repository is public, so they can never go here). With this
+token, every feedback item, comment and screenshot, is filed there as an issue by itself, the 14 days so far first; I read each one, fix
+it, and say here which nightly the fix is in. The token can do nothing except write issues and files in that one private repository.
+
+1. Open https://github.com/settings/personal-access-tokens/new signed in as oRAirwolf.
+2. **Token name** `grouplab-feedback`; **Expiration** 1 year; **Resource owner** oRAirwolf; **Repository access** "Only select
+   repositories", and pick **grouplab-crash-reports** alone.
+3. Under **Permissions**, **Repository permissions**: **Issues** "Read and write" and **Contents** "Read and write". Nothing else.
+4. **Generate token**, and copy it.
+5. In PowerShell, run this, and paste the token when it asks:
+
+```
+gh secret set CRASH_REPORTS_TOKEN -R oRAirwolf/grouplab
+```
+
+   A good result: a line saying the secret CRASH_REPORTS_TOKEN was set. The token is then only in GitHub's secrets.
+6. Tell planning "request 63 done".
+
+If you would rather not wait for me, you can also tell planning in your own words what Unholy reported; I fix from that, and the token
+still files the rest.
 
 ## 62. Firebase Test Lab: GroupLab Dev on real phones every day, free, about ten minutes, whenever you choose (entry 318)
 
