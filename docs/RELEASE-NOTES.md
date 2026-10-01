@@ -535,7 +535,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - The target format can now draw the new C3 zeroing grid, with bold legends and its numbers outside the grid; the sheets wait for a detection question before they are offered.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.116)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
