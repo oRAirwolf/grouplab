@@ -24,6 +24,72 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 327: the store-bought blanks are partial scans
+
+**Recovered 2026-10-01:** this fold and entries 325 and 327's commit were made by the peer session and never reached main; they were
+found in its worktree during entry 342 and cherry-picked, after entries 331 and 339 had landed.
+
+**Status: done 2026-10-01 (2a5757bd): nothing assumes the sheet's outline or corners are in the picture.**
+
+Alan, 2026-10-01: "my scanner could not scan the entire targets ... there was no way to make the scan wider or taller than legal paper."
+Each `blank.png` of entry 325 is 4958 by 6458 px at 600 dpi (8.26 by 10.76 in), so the 8 in Shoot-N-C sheets and the Eze-Scorer sheet
+run off one or more edges. Treat every blank as a crop of the target, not the whole sheet: nothing may assume the sheet's outline or
+corners are in the picture. The shot scans will have the same limit, so ask in request 58 that the shot sheet go on the glass in the
+same corner as its blank, and lean on the phone photos for the whole sheet.
+
+## 2026-10-01, entry 325: request 58 in part, five store-bought blanks on Alan's computer
+
+**Status: done 2026-10-01 (2a5757bd); request 58 stays open for the shot scans (results under entry 324's section in PHASE1-RESULTS.md).**
+
+Alan scanned five Birchwood Casey targets blank at 600 dpi on 2026-09-30 and photographed each package front and back. Planning moved
+them into request 58's layout, under `C:\Dev\grouplab-local\commercial-targets\`, one folder each with `blank.png`, `package-front.jpg`,
+`package-back.jpg` and `notes.txt`:
+
+- `bc-34550-shoot-n-c-6in-bull`: Shoot-N-C 6 in bullseye, reactive, with pasters.
+- `bc-34105-shoot-n-c-sight-in`: Shoot-N-C 8 in sight-in grid with five diamonds.
+- `bc-34805-shoot-n-c-8in-bull`: Shoot-N-C 8 in bullseye.
+- `bc-34806-shoot-n-c-8in-crosshair`: Shoot-N-C 8 in crosshair with a red diamond bull.
+- `bc-37826-eze-scorer-bull`: Eze-Scorer plain paper bullseye (black and red; item number taken from the UPC).
+
+None is shot yet: `shot.png`, the shot counts and the phone photos of each shot target come later, so request 58 stays open with that
+left. These stay on Alan's computer only, never committed or published (request 58). The package photos are phone pictures: their
+metadata is never read. Until the shot scans arrive, use the blanks for whatever needs no holes (for example, each one read as a
+target GroupLab did not print, with no false holes found on a clean sheet). Fold this into entry 324's order after section 1; one worker.
+Update request 58 in for-alan.md to say what is in and what is left.
+
+## 2026-10-01, entry 324: the next batch for the overnight loop, and when the loop stops
+
+**Status: done 2026-10-01: sections 1 and 2 (da9cf190, be2c0ab5); section 3 kept; section 4 at the loop's end.**
+
+Alan started a `/loop` on 2026-10-01 03:05 UTC: "action the inbox (entry 323), then continue STATE.md's next items in order and keep
+going without me." This entry is that batch. Do it after entry 323, one worker, main model, entry 317's budget.
+
+### 1. Angled photos: a bent-sheet registration for the far column
+
+Entry 322 found the far column's 0.08 in errors come from a lifted margin. Build the bent-sheet registration (a smooth correction across
+the sheet, fitted from the markers, on top of the lens fit) and judge it on the scoreboard's range cases and the real sitting pictures.
+Nothing may get worse on any synthetic or real case; if it does, keep the study, not the change, as entry 318 did. Report the far
+column's errors before and after.
+
+### 2. Synchronization (Phase 7): an options paper only, no code
+
+Write `docs/notes/sync-options.md`: two or three ways to put cloud adapters over the three-tier storage of DESIGN.md section 18, each
+with what it costs Alan (accounts, money, secrets), what it backs up, how a conflict between two devices is settled, and what it needs
+from the stores' rules. No code and no new dependency. Planning reads it and decides with Alan; anything he must judge by looking comes
+back as concepts.
+
+### 3. Nothing else from "What is left of the plan" yet
+
+Holes on any target and blank paper wait on requests 54 and 58, Garmin Xero on a sample export, performance on planning, the proof gates
+on Alan's material, and the stores on Apple and Microsoft. Do not start them. Keep the six-hourly Microsoft check and watch for Apple's
+answer on build 134 (entries 319, 320) as before.
+
+### 4. When the loop stops
+
+When 323, 324 sections 1 and 2, and any new inbox entry are done, and only blocked items remain: write the summary at the top of
+for-alan.md, post the usual report, and end the loop (no idle wakeups). Stop at a clean point earlier if the day's usage passes entry
+317's 12%, and say so in for-alan.md.
+
 ## 2026-10-01, entry 343: GroupLab Dev while idle, two small tightenings
 
 **Status: section 1 done 2026-10-01; section 2 done only as a source test.** 1: the check now also needs the battery and the storage not low, and is updated rather than kept so existing phones take it. 2: no emulator runs in CI, so a Core test reads the source: leaving the screen lets go of the camera, the torch and the level's sensor, and nothing else registers. The batterystats reading waits for request 50's sitting; PERFORMANCE.md says "not measured on a device".

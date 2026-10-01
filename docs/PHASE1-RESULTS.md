@@ -40,6 +40,24 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 324, 325 and 327: the bent sheet, the sync options, and the store-bought blanks
+
+Done 2026-10-01, one worker at a time, while another session did entry 323.
+
+- **324 section 1, a bent-sheet registration (da9cf190):** a smoothed thin-plate correction over the lens fit from every marker corner,
+  taken only when the lens fit left a marker 0.04 in or more out and the bend predicts it without seeing it; the hole stage reads each
+  cell through it. The far column's worst error fell from 0.080 to 0.009 in at 9 degrees and from 0.083 to 0.016 in at 15; worst on
+  those pictures 0.080 to 0.028 and 0.083 to 0.022 in; found and false marks unchanged; every other real picture and all 27 synthetic
+  lines identical. The registration figure shown rises from about 0.0036 to 0.0075 in on those two pictures, because it now counts the
+  far column. Article: not yet, until a second sitting with a lifted sheet.
+- **324 section 2:** `docs/notes/sync-options.md` (a folder the person's cloud client syncs, recommended first; the providers' APIs; a
+  GroupLab service, not recommended).
+- **325 and 327, the five blanks (2a5757bd):** false marks on the clean sheets before and after: the 6 in and 8 in bulls and the sight-in
+  grid 0 and 0, the crosshair 3 and 0 (its solid printed diamonds, now refused as print), the Eze-Scorer 8 and 8 (printed numbers and
+  logo letters, which look like holes on every measure the finder has). The cut-off edge of a partial scan no longer counts as print or
+  as a bright ring (entry 327). The committed commercial scans and the hand-checked scan are unchanged. Request 58 asks for the shot
+  scans in the same corner of the glass, the shot counts and phone photos.
+
 ## Entries 339 and 343: the BulletSeeker's name, and GroupLab Dev while idle
 
 Done 2026-10-01.
