@@ -9,19 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-02 08:55 UTC, paused at Alan's word; entries 346 to 351 folded, entry 342's phone sweep half done.
+**Last rewritten:** 2026-10-02 10:30 UTC, entry 342's phone sweep merged; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Paused at Alan's word, 2026-10-02 08:55 UTC (02:55 his time), until 04:00 his time**, because his session's tokens ran low.
-- **Entry 342's phone sweep, half done:** worker A's unfinished work is saved, unreviewed and untested, as commit 130b4a8b on branch
-  `worktree-agent-a7f9a458c88c62fee` (worktree `.claude/worktrees/agent-a7f9a458c88c62fee`), never pushed. Next: read its diff, finish
-  `MobileSweepTests` and the simulator scenario in ios-app.yml, run the three suites, then cherry-pick.
-- **Nightly 156** is published: Add a store-bought target and the pairing rows (entries 348 and 351); 155 the library route (347);
-  154 the friend's keyboard fix (350) and the Xero correction (346).
-- **TestFlight feedback:** none open; 15 and 16 closed with nightly 154.
+- **Nothing is running.** The inbox is empty; entry 342 is finished, its phone sweep merged on 2026-10-02 after the pause. The first
+  simulator run of the sweep comes with the next nightly that changes the application.
+- **Nightly 156** carries Add a store-bought target and the pairing rows (entries 348 and 351); 155 the library route (347); 154 the
+  friend's keyboard fix (350).
+- **TestFlight feedback:** none open.
 - **The Microsoft Store carries 0.2.0**; a new submission waits for request 66.
 - **Waiting on planning:** question 79.
 
@@ -44,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; five are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 342's last item: the phone sweep on the emulator and the simulator in CI, on one worker.
+1. Read the first simulator run of the phone sweep, and fix what it finds.
 2. The phone pictures of the fingerprint and pairing screens, at the next sitting with a phone.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 

@@ -40,6 +40,20 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 342, worker A item 2: the phone sweep
+
+Done 2026-10-02 (worker A, finished after the pause). Two layers. **Headless, every push** (`MobileSweepTests`): every place along the
+bottom, a result, and every page or sheet one press away, at 320 x 568, 1024 x 1366 and both turned on their sides, both themes and large
+text: every control named for a screen reader, inside the window or scrolled into view, no text cut off, every field above the keyboard,
+and every button that changes nothing for good pressed without a throw or a dead end. **On the iOS simulator** (`ios-app.yml`, started
+by every nightly that changes the application): GroupLab Dev runs `scripts/scenarios/phone-sweep.json` plain, at the largest text size
+and dark, keeping a screenshot and a control tree of each screen, failing on a crash or a missing step; the same scenario runs headlessly
+on every push (`PhoneSweepScenarioTests`). **Found and fixed:** about forty fields and switches announced only as "text field" or "switch",
+and buttons announced by their panel's type, now named by the words a person reads (`FieldNames`); the bull picker's numbers 10 to 25
+cut off at 320 wide; on an upright iPad the keyboard made the result page wider than tall and flipped it to its side-by-side layout,
+losing the field. **Not done:** no Android emulator job, so Android is covered by the headless layer and the sittings only; the headless
+layer cannot see a real keyboard, camera, picker, share sheet or scaling, which the simulator pass and the sittings cover in part.
+
 ## Entries 348 and 351: adding a store-bought target, and changing a pairing one mark at a time
 
 Done 2026-10-02 by worker A, from Alan's concept A on both.

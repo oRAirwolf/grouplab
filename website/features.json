@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, every box, switch and button now has a name a screen reader reads out",
+    "On an iPad held upright, typing in a box on a result no longer flips the result",
     "On the phone, going back to the targets list after opening a sheet no longer fails",
     "A chronograph string imported in meters a second now shows its readings in meters a second",
     "On the iPhone, the bar with Done no longer stays floating over the screen",

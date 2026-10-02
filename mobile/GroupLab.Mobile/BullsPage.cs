@@ -96,6 +96,9 @@ internal sealed class BullsPage : UserControl
                     MinWidth = 44,
                     MinHeight = 44,
                     Margin = new Thickness(3),
+
+                    // Entry 342, the phone sweep: at 320 wide the button's own padding left a bull's number 11 points, and "10" to "25" were cut.
+                    Padding = new Thickness(2),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     HorizontalContentAlignment = HorizontalAlignment.Center,
                 };

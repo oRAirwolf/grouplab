@@ -57,6 +57,7 @@ internal sealed class PrinterCheckPage : UserControl
         var column = Column(1, "Check your printer");
         column.Children.Add(Screens.Dim("Printers often print a little small. Check once, and every photo of a GroupLab sheet from this printer measures in real inches."));
         var named = new TextBox { Text = name, MinHeight = Screens.Touch };
+        Avalonia.Automation.AutomationProperties.SetName(named, "The printer's name");
         column.Children.Add(Screens.Card(Screens.Dim("Name this printer"), named));
         column.Children.Add(Screens.Choice("Print the check page", () => Shell.Current?.Show(Shell.Place.Targets)));
         column.Children.Add(Screens.Dim("Then measure it one way:"));

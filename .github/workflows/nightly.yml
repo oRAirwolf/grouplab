@@ -818,6 +818,24 @@ jobs:
             build-dev-device.binlog
           retention-days: 7
 
+  # Entry 342, worker A item 2: the iOS simulator's checks (ios-app.yml: the self-test, GroupLab Dev's scenario and the screen sweep), started
+  # for every nightly that changes the application. Started rather than called, so its result is its own run and never colors the nightly
+  # or holds up publishing; the repository is public, so its macOS minutes are not billed, and it runs beside the nightly's own jobs.
+  ios-simulator:
+    name: start the iOS simulator checks
+    needs: name-it
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Start ios-app.yml on main
+        run: gh workflow run ios-app.yml -R "$GITHUB_REPOSITORY" --ref main
+
   publish:
     name: publish the nightly
     needs: [name-it, package, android]

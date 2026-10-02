@@ -32,6 +32,7 @@ internal static class PrinterCard
         if (PrinterProfile.FromScan(null, result.Measured, Today()) is { } measured)
         {
             var name = new TextBox { MinHeight = Screens.Touch, Text = Phone.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName };
+            Avalonia.Automation.AutomationProperties.SetName(name, "The printer's name");
             var offer = Screens.Line(PrinterProfile.Offer(measured.Scale));
             Button? use = null;
             use = Screens.Choice("Use it for photos", () =>
@@ -59,6 +60,7 @@ internal static class PrinterCard
             var reading = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "5 3/4 or 146 mm" };
             var keep = new CheckBox { Content = "Keep it for photos of sheets from this printer", IsChecked = true, MinHeight = Screens.Touch };
             var name = new TextBox { MinHeight = Screens.Touch, Text = Phone.Settings.LoadChosenPrinter()?.Name ?? PrinterProfile.DefaultName };
+            Avalonia.Automation.AutomationProperties.SetName(name, "The printer's name");
             var wrong = Screens.Dim("");
             wrong.IsVisible = false;
             Button? open = null;

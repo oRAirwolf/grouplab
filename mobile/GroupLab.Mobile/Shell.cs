@@ -348,6 +348,12 @@ public sealed class Shell : UserControl
     /// <summary>Entry 328 section 1: what keeps every field and its confirming button above the keyboard.</summary>
     internal KeyboardRoom Keyboard { get; }
 
+    /// <summary>Whether the places along the bottom are showing, a way back from any page (entry 342's phone sweep).</summary>
+    internal bool NavShowing => nav.IsEffectivelyVisible;
+
+    /// <summary>What the page area holds, for the phone sweep.</summary>
+    internal object? PageContent => page.Content;
+
     /// <summary>The bar along the bottom is put away while the keyboard is up, so the room it leaves goes to what is being typed.</summary>
     internal void KeyboardUp(bool up)
     {
@@ -489,6 +495,9 @@ internal static class Screens
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Classes = { PhoneStyles.Row },
         };
+
+        // Entry 342, the phone sweep: a row's button was announced "Avalonia.Controls.Grid", its content's type, to a screen reader.
+        Avalonia.Automation.AutomationProperties.SetName(button, detail is null ? words : words + ", " + detail);
         button.Click += (_, _) => chosen();
         return button;
     }
