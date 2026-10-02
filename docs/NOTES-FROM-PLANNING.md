@@ -25,6 +25,31 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-02, entry 352: tonight's list, one worker
+
+**Status: done 2026-10-02, every item, one worker.** 1: the Android emulator job is built and started by the nightly; its first run built, booted and installed GroupLab Dev, then failed copying files into it, fixed and run again; the iPhone sweep passes all three passes on a 300 dpi copy of the sample. 2: the Eze-Scorer's clean-sheet false marks 6 to 2 (the logo's letters remain), synthetic false marks 32 to 6, nothing else moved. 3: every reader refuses damaged, huge and hostile files in plain words; a damaged workbook used to close GroupLab. 4: the 7 percent was the machine (the new code is 3 percent faster on an idle run); holes and bulls now found in about half the time, every gate identical. 5: one draft article, unpublished; no other finding was owed one.
+
+Alan, 2026-10-02 10:23 UTC: he paused Code until his tokens reset and asked for work for while he sleeps. Everything through entry 351
+is done. **One worker tonight** (entry 317's default; he has just hit his limits). In this order; bugs a tester hits jump the queue;
+stop at a clean point at the day's 12%, or when the list is done, with the summary at the top of for-alan.md. No real devices tonight.
+
+1. **Android in the phone sweep.** Add an Android emulator job (x86_64 with KVM on the GitHub Linux runner) that runs the same sweep
+   scenarios as the iPhone simulator, with each nightly that changes the application, not on every push. If the runner cannot host it
+   reliably, say why in for-alan.md and stop there.
+2. **Eze-Scorer's six false holes** on a clean sheet (printed 6s, the logo's R, white digits; entry 331 section 1). Reduce them on the
+   blanks and the synthetic-hole scoring without any other line of the any-target scoreboard, the corpus or a GroupLab sheet getting
+   worse. Do not use a maker's artwork as a mask (entry 344's rule).
+3. **Every file GroupLab reads is untrusted.** Fuzz the generic CSV, LabRadar, Garmin Xero (xls, xlsx, csv, metric), BulletSeeker,
+   fingerprint reference and fingerprint library readers with malformed and hostile input (truncated, huge, deeply nested, wrong
+   encodings, formula cells, zip bombs inside xlsx, a library with a bad signature): never a crash, hang or unbounded memory; a plain
+   refusal the person can read; a library that fails its check is never loaded. Tests stay in the suite.
+4. **Phase 9, next round.** With the codes now about twice as fast, profile what is now slowest on the phone path and on the desktop's
+   whole file-to-figures path (an idle run settles the 7%); speed up what matters, every measurement identical, before and after in
+   docs/PERFORMANCE.md.
+5. **Write-ups, drafts only.** For each finding of the last week that docs/RESEARCH.md marks worth an article and that has none yet,
+   write the draft with front matter left unpublished, and list them in for-alan.md for Alan to read. Alan's own data may be used
+   (his standing consent), never a tester's, and never a location.
+
 ## 2026-10-02, entry 351: changing a chronograph pairing on the phone, concept A (request 68)
 
 **Status: done 2026-10-02 (worker A); request 68 closed.** The same four choices in the same words on the computer and the phone. Choices where the drawing left room: "This group, clean bore" and "Leave it out" are stored as no pairing and differ only in what they say; the proposal card scrolls with the list; the old re-pairing in order is gone, so nothing changes another mark silently but a swap, which says so. The computer's button stays "Accept the mapping".

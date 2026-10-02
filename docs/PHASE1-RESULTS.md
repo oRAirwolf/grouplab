@@ -40,6 +40,29 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 352: tonight's list, one worker
+
+Done 2026-10-02.
+
+- **1, Android in the phone sweep:** `.github/workflows/android-emulator.yml` (an API 34 x86_64 emulator with KVM, GroupLab Dev built for
+  x86_64 with its own OpenCV) runs `scripts/android-sweep.sh`, three passes like the iPhone's, judged by `scripts/phone-sweep-check.py`;
+  the nightly starts it when the application changed. First run: built, booted and installed, then the files piped into the app arrived
+  cut short; they now go through the shared temporary folder. The iPhone sweep passes plain, largest text and dark on a 300 dpi copy of
+  the sample (the 600 dpi read took 52 to 62 s on the runner and hit the one-minute limit).
+- **2, the Eze-Scorer:** bold print is strokes of even width closing round a small counter; a torn hole is a core with spikes narrowing
+  to nothing. Clean-sheet false marks 6 to 2 (the logo's letters, which have no counter), synthetic false marks 32 to 6, every other
+  scoreboard line, the corpus and the 15 commercial scans unchanged. Margins are thin (0.60 against 0.62).
+- **3, untrusted files:** chronograph files at most 10 MB, an xlsx counted before the workbook reader sees it (64 MB, 10,000 parts, 1,000
+  sheets, 4 million cells), text decoded by its byte order mark, formulas never worked out, fingerprints and references bounded, the
+  library refused unread past 64 MB. Before: a damaged xlsx closed GroupLab, and a fingerprint claiming 2^31 bulls ran out of memory.
+  `UntrustedFilesTests`, about one second.
+- **4, speed:** on an idle machine the 2026-09-20 and today's code by turns: today's is about 3 percent faster, so the 7 percent was the
+  machine. The two-centre split stops when its centres stop moving and finds its pixels once; cells and bulls run in parallel, results in
+  order. One sheet 924 to 486 ms, ten sheets 8279 to 3897 ms; the phone's sample 1485 to 1185 ms. Every Phase 0 table, scoreboard and
+  the corpus identical.
+- **5, write-ups:** the week's investigations each have a decision in docs/RESEARCH.md; one draft, "printed numbers are not holes",
+  unpublished.
+
 ## Entry 342, worker A item 2: the phone sweep
 
 Done 2026-10-02 (worker A, finished after the pause). Two layers. **Headless, every push** (`MobileSweepTests`): every place along the

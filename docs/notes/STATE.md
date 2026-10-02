@@ -9,17 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-02 10:30 UTC, entry 342's phone sweep merged; the inbox is empty.
+**Last rewritten:** 2026-10-02 12:55 UTC, entry 352 folded; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Nothing is running.** The inbox is empty; entry 342 is finished, its phone sweep merged on 2026-10-02 after the pause. The first
-  simulator run of the sweep comes with the next nightly that changes the application.
-- **Nightly 156** carries Add a store-bought target and the pairing rows (entries 348 and 351); 155 the library route (347); 154 the
-  friend's keyboard fix (350).
-- **TestFlight feedback:** none open.
+- **Nothing is waiting in the inbox.** Entry 352 is done; its Android emulator sweep is being re-run after a fix (run it with
+  `gh workflow run android-emulator.yml --ref main`; results in its android-emulator-sweep artifact).
+- **Nightly 157** reached TestFlight with the friend's keyboard fix; 154 to 156 never did, the iPhone head not compiling (fixed).
+- **A draft article** waits for Alan: website/research/printed-numbers-are-not-holes.md.
 - **The Microsoft Store carries 0.2.0**; a new submission waits for request 66.
 - **Waiting on planning:** question 79.
 
@@ -42,7 +41,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; five are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Read the first simulator run of the phone sweep, and fix what it finds.
+1. Read the Android emulator sweep's second run, and fix what it finds.
 2. The phone pictures of the fingerprint and pairing screens, at the next sitting with a phone.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 

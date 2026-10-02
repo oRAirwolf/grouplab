@@ -1,9 +1,13 @@
 **Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
-**EVERY PHONE SCREEN CHECKED** (entry 342, not a request): resumed at 04:00 your time and finished. Every phone screen is now checked
-on every change, at the smallest and largest sizes, turned sideways, dark and with large text, and on Apple's iPhone simulator with each
-nightly. It found and fixed: some forty boxes and switches a screen reader could not name, the bull numbers 10 to 25 cut off on a small
-phone, and an iPad turning a result sideways while you typed. Android has no emulator in the checks yet; your sittings cover it.
+**TONIGHT'S LIST, 2 OCTOBER** (entry 352, not a request): done, one worker. Reading a target is now about twice as fast on the computer
+and a quarter faster on a phone, every measurement exactly as before. Find holes no longer takes most of the Eze-Scorer's printed
+numbers for shots (6 false marks on a clean sheet down to 2, the logo's letters). A damaged or oversized chronograph or fingerprint file
+is refused with a plain sentence; a damaged spreadsheet could close GroupLab before. Every phone screen is checked on Apple's iPhone
+simulator with each nightly, and now on an Android emulator too (its first run is being repeated after a fix). **One draft to read,
+whenever suits:** "Printed numbers are not holes" (website/research/printed-numbers-are-not-holes.md, unpublished): why a scoring
+target's bold 6s fooled the hole finder and what tells them apart, from your blank scans and made-up holes only. Say "publish it" or what
+to change. All of it in the next nightly.
 
 **ADD A STORE-BOUGHT TARGET, AND CHANGING A PAIRING** (entries 348 and 351, not a request): both built as you chose, concept A,
 in **nightly 156**. On the phone and the computer, Targets has **Add a store-bought target**: five steps, from a photo of the blank

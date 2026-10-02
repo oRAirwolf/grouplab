@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Reading a target is faster: on the desktop a sheet goes from file to figures in about half the time",
     "On a store-bought target, Find holes no longer marks bold printed ring numbers",
     "A damaged or very large chronograph file is now refused with a sentence saying why",
     "The iPhone and iPad build works again",
