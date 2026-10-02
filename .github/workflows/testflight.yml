@@ -59,7 +59,9 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
           CRASH_REPORTS_TOKEN: ${{ secrets.CRASH_REPORTS_TOKEN }}
-        run: python scripts/testflight-feedback.py --run --since-hours ${{ github.event_name == 'workflow_run' && '24' || github.event_name == 'schedule' && '1' || '336' }}
+        # Entry 350: GitHub runs the half-hourly schedule as seldom as every three or four hours, so a scheduled run looks back a day; an
+        # item already filed is known by its marker and never filed twice.
+        run: python scripts/testflight-feedback.py --run --since-hours ${{ github.event_name == 'workflow_run' && '24' || github.event_name == 'schedule' && '24' || '336' }}
 
       # Entries 335 and 336: a state that changed goes to docs/notes/external-status.md, which both sessions read, as a "[notes] " commit
       # that starts no build. The same state again writes nothing.

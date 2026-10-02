@@ -22,6 +22,14 @@ namespace GroupLab.Mobile;
 /// keyboard's top edge is read from the system's input pane in the window's own coordinates, so a window the system has already shrunk
 /// for the keyboard gives up nothing more.
 /// </para>
+/// <para>
+/// Entry 350, from a friend's TestFlight reports of build 150 on the Targets screen: the bar was left floating over the screen after the
+/// keyboard had gone, and Done did nothing; and the number pad stayed up with no bar, so nothing closed it. Both came from trusting the
+/// system's keyboard events to arrive, and in order. So nothing here waits on them any more: a tap outside a field closes the keyboard
+/// whenever a field has the focus; Done always takes the focus away, asks the system to end editing, and puts everything back; the bar is
+/// shown only while a field has the focus, and takes itself away when none has; and when a field takes the focus with the keyboard
+/// already up, the pane's own state raises the bar.
+/// </para>
 /// </summary>
 internal sealed class KeyboardRoom
 {
@@ -33,6 +41,13 @@ internal sealed class KeyboardRoom
     private readonly Border bar;
     private IInputPane? pane;
     private bool barShown;
+    private readonly DispatcherTimer watch = new() { Interval = TimeSpan.FromMilliseconds(400) };
+
+    /// <summary>
+    /// Asks the system itself to put the keyboard away, where taking the focus alone may not: the iOS head sets it to end editing in every
+    /// window (entry 350). Null elsewhere.
+    /// </summary>
+    internal static Action? HideSystemKeyboard { get; set; }
 
     private KeyboardRoom(Shell shell)
     {
@@ -49,6 +64,8 @@ internal sealed class KeyboardRoom
         }.Id("keyboard-bar");
         shell.AddHandler(InputElement.PointerPressedEvent, OutsidePressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         shell.AddHandler(InputElement.GotFocusEvent, (_, _) => Dispatcher.UIThread.Post(Follow, DispatcherPriority.Background), RoutingStrategies.Bubble, handledEventsToo: true);
+        shell.AddHandler(InputElement.LostFocusEvent, (_, _) => Dispatcher.UIThread.Post(Check, DispatcherPriority.Background), RoutingStrategies.Bubble, handledEventsToo: true);
+        watch.Tick += (_, _) => Check();
         shell.AttachedToVisualTree += (_, _) => Listen();
         shell.DetachedFromVisualTree += (_, _) => Forget();
     }
@@ -111,18 +128,37 @@ internal sealed class KeyboardRoom
         Dispatcher.UIThread.Post(Follow, DispatcherPriority.Background);
     }
 
-    /// <summary>The keyboard is down: everything back as it was.</summary>
+    /// <summary>The keyboard is down: everything back as it was, whatever this room believed before (entry 350).</summary>
     internal void Closed()
     {
-        if (KeyboardTop is null)
-        {
-            return;
-        }
-
+        bool was = KeyboardTop is not null || barShown;
         KeyboardTop = null;
         shell.Margin = default;
         shell.KeyboardUp(false);
         ShowBar(null, 0, false);
+        if (was)
+        {
+            DiagnosticLog.Info("keyboard.closed");
+        }
+    }
+
+    /// <summary>Whether a field on this Shell has the focus, which is when the keyboard belongs up.</summary>
+    private bool Typing => Focused is { } f && (f is TextBox || f.GetVisualAncestors().Any(v => v is TextBox));
+
+    /// <summary>
+    /// Entry 350: the bar and the room given up stay only while a field has the focus and the system has not said the keyboard is down.
+    /// </summary>
+    internal void Check()
+    {
+        if (KeyboardTop is null && !barShown)
+        {
+            return;
+        }
+
+        if (!Typing || pane is { State: InputPaneState.Closed })
+        {
+            Closed();
+        }
     }
 
     private void ShowBar(TopLevel? level, double top, bool show)
@@ -130,6 +166,13 @@ internal sealed class KeyboardRoom
         var layer = OverlayLayer.GetOverlayLayer(shell);
         if (layer is null)
         {
+            if (!show && barShown && bar.GetVisualParent() is Panel holder)
+            {
+                holder.Children.Remove(bar);
+                barShown = false;
+            }
+
+            watch.IsEnabled = barShown;
             return;
         }
 
@@ -148,9 +191,12 @@ internal sealed class KeyboardRoom
         }
         else if (barShown)
         {
-            layer.Children.Remove(bar);
+            // Taken from whatever holds it, so a bar is never left behind where the layer has changed (entry 350).
+            (bar.GetVisualParent() as Panel ?? layer).Children.Remove(bar);
             barShown = false;
         }
+
+        watch.IsEnabled = barShown;
     }
 
     private Control? Focused => TopLevel.GetTopLevel(shell)?.FocusManager?.GetFocusedElement() as Control;
@@ -206,12 +252,14 @@ internal sealed class KeyboardRoom
     internal void CloseKeyboard()
     {
         TopLevel.GetTopLevel(shell)?.FocusManager?.Focus(null);
+        HideSystemKeyboard?.Invoke();
         Closed();
     }
 
     private void OutsidePressed(object? sender, PointerPressedEventArgs e)
     {
-        if (KeyboardTop is null || e.Source is not Visual source)
+        // Entry 350: a field with the focus is enough; the keyboard may be up without the system having said so.
+        if ((KeyboardTop is null && !barShown && !Typing) || e.Source is not Visual source)
         {
             return;
         }
@@ -230,6 +278,13 @@ internal sealed class KeyboardRoom
     /// </summary>
     internal void Follow()
     {
+        // Entry 350: the keyboard already up when a field takes the focus, and no event to say so; the pane's own state raises the bar.
+        if (KeyboardTop is null && Typing && pane is { State: InputPaneState.Open, OccludedRect: { Height: > 0 } shown })
+        {
+            Opened(shown.Y);
+            return;
+        }
+
         if (KeyboardTop is null || Focused is not { } field || field is not TextBox && !field.GetVisualAncestors().Any(v => v is TextBox))
         {
             return;

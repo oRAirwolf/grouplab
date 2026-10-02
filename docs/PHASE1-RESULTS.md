@@ -40,6 +40,15 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 350: a friend's TestFlight reports, the keyboard on Targets
+
+Done 2026-10-02. Issues 15 and 16 (build 150, an iPhone, Targets): the keyboard's bar was left over the screen after the keyboard went,
+with Done doing nothing, and the number pad stayed up with no bar. `KeyboardRoom` trusted the system's keyboard events to arrive and in
+order; it no longer does: a tap outside a field closes the keyboard whenever a field has the focus, Done always takes the focus, asks
+UIKit to end editing (the iOS head's `HideSystemKeyboard`) and puts everything back, the bar goes as soon as no field has the focus (on
+focus loss and every 400 ms while shown), and a field focused with the keyboard already up raises the bar from the pane's own state.
+`Entry350Tests`: three tests, each failing on the old code. The scheduled feedback run now looks back 24 hours, not one.
+
 ## Entry 345: the consistency audit of 2026-10-01
 
 Done 2026-10-01, in one change.

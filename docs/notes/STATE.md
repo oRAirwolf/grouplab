@@ -9,8 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-01 16:20 UTC, entry 345 (the consistency audit) folded; the inbox is empty and the day's budget
-is reached.
+**Last rewritten:** 2026-10-02 05:50 UTC, entry 350 folded; 346, 347, 349, 348 and 351 are next, then entry 342's phone sweep.
 
 ---
 
@@ -20,7 +19,8 @@ is reached.
   CI) is the one thing left, first tomorrow, on one worker.
 - **Nightly 152** carries store-bought recognition and the fingerprint engine; the next carries the faster code reading, the desktop
   sweep's fixes and the recovered blanks fix of entries 325 and 327.
-- **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback); none is open.
+- **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback); 15 and 16, a friend's
+  keyboard reports on Targets, are fixed for nightly 154 (entry 350).
 - **The Microsoft Store carries 0.2.0**; a new submission waits for request 66, and the dry run of store-submit.yml passes.
 - **Waiting on planning:** concepts for requests 68 and 69, and questions 79 and 80.
 
@@ -83,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Nothing waits locally.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 346, 347, 348, 349, 351.
 
 ## Things that would surprise somebody who was not here yesterday
 

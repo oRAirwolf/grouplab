@@ -1,5 +1,14 @@
 **Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**YOUR FRIEND'S TESTFLIGHT FEEDBACK** (entry 350, not a request): retrieved; you did not need to do anything. It came in on 1 October
+at 12:50 UTC from an iPhone on build 150, both on the Targets screen, and was filed privately an hour later (issues 15 and 16).
+1. "The Done button and bar ended up floating over the app and clicking done did nothing": after the number pad closed, the bar that
+sits on it stayed behind in the middle of the screen. 2. "Keyboard doesn't go away making the targets": the number pad stayed up and
+nothing closed it. Both came from GroupLab waiting for the iPhone to say when the keyboard opened and closed, which it did not always do.
+Now a tap anywhere outside a box closes the keyboard, Done always closes it and clears the bar, and the bar removes itself as soon as no
+box is being typed in. In **nightly 154**; your friend can retest once it reaches TestFlight. Also changed: the regular check for new
+feedback looked back only an hour but GitHub runs it every few hours, so it now looks back a day (nothing is ever filed twice).
+
 **YOUR OVERNIGHT LIST, 1 OCTOBER** (entry 342, not a request): done apart from one item. In nightly 152: GroupLab recognizes the five
 store-bought targets you scanned, names them, places the bulls and sets the scale with a warning to check it, and asks 6 or 8 inch for
 the Shoot-N-C only when the picture cannot tell. In the next nightly: the phone reads a sheet's codes in about half the time, with every

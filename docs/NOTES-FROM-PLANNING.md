@@ -25,6 +25,17 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-02, entry 350: a friend's new TestFlight feedback
+
+**Status: done 2026-10-02.** The feedback was filed (issues 15 and 16, 2026-10-01 13:00 UTC, after the main session's last look); a run by hand found nothing more. The half-hourly run looked back one hour while GitHub ran it every three or four, so a scheduled run now looks back a day. Both reports fixed in nightly 154; for-alan.md says so in plain words.
+
+Alan, 2026-10-02 05:04 UTC: "A friend submitted feedback through testflight. Can code retrieve it or do I need to?" Code can: entry 326
+files every new TestFlight screenshot, comment and crash as an issue in the private oRAirwolf/grouplab-crash-reports. First thing in this
+run: read the open issues there (`gh issue list -R oRAirwolf/grouplab-crash-reports --state open`); if the new feedback is not filed,
+run the feedback workflow by hand and say in for-alan.md why the half-hourly run missed it. Then fix what it reports, as bugs a tester
+hit (they jump the queue), and say in plain words in for-alan.md what the friend reported, what changed and which nightly carries it.
+The tester's name and email never appear in any file.
+
 ## 2026-10-01, entry 345: consistency audit, 2026-10-01
 
 **Status: done 2026-10-01, all fourteen.** 5: the platform statement's Store lines changed as facts only, as entries 166 and 306 did, so no line for Alan. 9: iPhone and iPad are on 39 features, held by the site build to PHONE-PARITY.md's fifth column; chronograph files are a sentence in Velocity and the vertical rather than an entry of their own, which would need its own picture. 3: the mounted photograph line stands (31 of 59 registered is still the latest).
