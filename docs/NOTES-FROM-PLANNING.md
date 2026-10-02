@@ -25,6 +25,32 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 346: correction, Garmin Xero has no "monthly export"
+
+**Status: done 2026-10-02, in one commit.** 1: the correction is the next nightly's note, kind changed; the published entry is untouched. 2: the three comments say "a workbook of the strings selected in ShotView, one sheet per string". 3: nothing else said monthly (the built site carries it only from the published notes, the guides and their PDFs never did, and no test or fixture name does); the reader assumes no whole month, its only gap being a deleted shot inside a string. 5: "monthly export" is retired wording, allowed only in the published release notes.
+
+Alan, 2026-10-01 21:31 UTC: "it seems that Claude is under the impression that Garmin [Xero] does monthly exports. I believe you are
+getting confused by the naming scheme of the file. If you select more than one session or string when you are doing an export it shows
+the month in the file name but it is not necessarily the entire month that has been exported. You should probably go back and fix the
+release notes and any other places that this assumption was made."
+
+The mistake was planning's (entry 334 called "Sessions_MAY_2024-MAY_2024.xls" a monthly export). The truth: ShotView exports either one
+string ("<name>_<date>_<time>.xls") or **the strings the person selected**, in one workbook with a sheet per string, named after the
+month or months of those strings ("Sessions_SEP_2026-SEP_2026.xls"). It may hold a few strings of that month, not the whole month.
+Nothing in the reader depends on it holding a whole month; check that is true (no "expect every day of the month", no gap warnings).
+
+Fix every place that says or assumes "monthly", in one commit, before the rest of the queue (small):
+
+1. `docs/RELEASE-NOTES.md` line 78, already published: **do not edit the published entry** (CLAUDE.md); the next nightly's notes carry
+   a correction in plain words, for example: "Correction: a Garmin Xero file with several strings holds the strings you selected when
+   exporting, not a whole month; earlier notes called it a monthly export." Kind `changed`.
+2. Code comments: `src/GroupLab.Core/Records/ChronographFiles.cs` line 82, `src/GroupLab.App/MainWindow.Chronograph.cs` line 104,
+   `mobile/GroupLab.Mobile/VelocityPages.cs` line 133: "a workbook of the strings selected in ShotView, one sheet per string".
+3. Any app text, guide, README, site page, test name or fixture name that says monthly (git grep found none beyond these, but check
+   the built site, the guide PDFs and the Features page texts).
+4. `docs/NOTES-FROM-PLANNING.md` keeps entry 334 as written (it is the log); this entry, folded on top, is its correction.
+5. Add "monthly export" for Xero to `docs/RETIRED-WORDING.json` so the consistency check catches it if it comes back.
+
 ## 2026-10-02, entry 350: a friend's new TestFlight feedback
 
 **Status: done 2026-10-02.** The feedback was filed (issues 15 and 16, 2026-10-01 13:00 UTC, after the main session's last look); a run by hand found nothing more. The half-hourly run looked back one hour while GitHub ran it every three or four, so a scheduled run now looks back a day. Both reports fixed in nightly 154; for-alan.md says so in plain words.

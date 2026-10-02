@@ -166,6 +166,14 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "monthly export",
+      "why": "entry 346: a Garmin Xero workbook holds the strings selected in ShotView, named after their month or months, not a whole month; nightly 145's published note said otherwise and is corrected in a later one",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md"
+      ]
     }
   ],
   "settled": []

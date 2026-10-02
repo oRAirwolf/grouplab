@@ -101,7 +101,7 @@ public sealed partial class MainWindow
     }
 
     /// <summary>
-    /// Entry 334: the strings of a chronograph workbook, a Garmin Xero monthly export holding many; the person chooses one by its name, and
+    /// Entry 334: the strings of a chronograph workbook, a Garmin Xero workbook of the strings selected in ShotView, one sheet per string; the person chooses one by its name, and
     /// its readings go into the box and are read as the list is. Internal for the headless tests.
     /// </summary>
     internal void ImportChronographStrings(IReadOnlyList<ChronographImport> strings, string source)

@@ -130,7 +130,7 @@ internal static class VelocityPages
                 return;
             }
 
-            // Entry 334: a workbook, a Garmin Xero monthly export holding many strings; each is a choice by its name.
+            // Entry 334: a workbook, a Garmin Xero workbook of the strings selected in ShotView, one sheet per string; each is a choice by its name.
             using var copy = new MemoryStream();
             await stream.CopyToAsync(copy);
             copy.Position = 0;

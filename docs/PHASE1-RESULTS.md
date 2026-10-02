@@ -40,6 +40,12 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 346: a Garmin Xero workbook is a selection, not a month
+
+Done 2026-10-02. ShotView's workbook holds the strings the person selected, named after their month or months. The three code comments
+are corrected, "monthly export" is retired wording (`docs/RETIRED-WORDING.json`), and the next nightly's notes carry the correction;
+nightly 145's published note stays as it was. The reader never assumed a whole month.
+
 ## Entry 350: a friend's TestFlight reports, the keyboard on Targets
 
 Done 2026-10-02. Issues 15 and 16 (build 150, an iPhone, Targets): the keyboard's bar was left over the screen after the keyboard went,

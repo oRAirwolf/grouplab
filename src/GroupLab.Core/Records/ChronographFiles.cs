@@ -79,7 +79,7 @@ public static class ChronographFiles
 
     /// <summary>
     /// Every string in a file, by its name: a text file through <see cref="Read"/>, an Excel workbook sheet by sheet, each sheet a string
-    /// (a monthly Xero export holds many). A sheet that is neither format is passed over and counted in <paramref name="passedOver"/>.
+    /// (a Xero workbook of the strings selected in ShotView, one sheet per string). A sheet that is neither format is passed over and counted in <paramref name="passedOver"/>.
     /// </summary>
     public static IReadOnlyList<ChronographImport> ReadFile(Stream stream, string fileName, out int passedOver)
     {
