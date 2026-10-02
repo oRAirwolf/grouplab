@@ -38,6 +38,7 @@ Store listing uses 1920x1080.
 | `marking` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /, /features/, /guides/user-guide/, /tour/, /tour/marking/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `optic` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/optic/ | sheet made by the generator |
 | `optic-4x` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/optic/ | sheet made by the generator |
+| `pairing` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
 | `scope-unit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | no sheet at all |
 | `sessions` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/sessions/, README.md, docs/USER-GUIDE.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `settings` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/settings/, docs/USER-GUIDE.md | Entry109Tests synthetic sheet; no sheet at all |
@@ -126,6 +127,10 @@ the 6 inch or the 8 inch laid over it.
 **Teach GroupLab a store-bought target** (entry 348) has its own picture, `fingerprint`: Add a store-bought target at its second step, How
 big is this target?, with a 12 by 18 in poster the walk draws and photographs itself, its corners found and its printed size typed. The
 phone's five steps wait for the next sitting with the phone.
+
+**Pair readings with shots, a row per reading** (entry 351) has its own picture, `pairing`: Ballistics, Chronograph, with a timed string
+the walk makes, a row per reading, a six minute pause between two groups, and the fourth reading's choices open under its row. The phone's
+rows and sheet wait for the next sitting with the phone.
 
 ## Not published
 

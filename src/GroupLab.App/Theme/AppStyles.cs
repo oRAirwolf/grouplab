@@ -144,6 +144,12 @@ public static class AppStyles
     /// <summary>A provenance chip: automatic in teal, corrected and manual neutral, as the concept's selected-detection panel draws them.</summary>
     public const string Chip = "chip";
 
+    /// <summary>
+    /// Entry 351: what a chronograph reading goes with, as one button on its row, on the computer and the phone: paired in teal
+    /// (<see cref="Good"/>), needing a look in amber (<see cref="Warn"/>), "Not this group" plain.
+    /// </summary>
+    public const string ReadingMark = "reading-mark";
+
     private sealed class GroupLabStyles : Styles
     {
     }
@@ -283,6 +289,12 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(StatusWord), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.LetterSpacingProperty, Tokens.SectionLabelSpacing)),
         Rule(x => x.OfType<Border>().Class(Chip), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(9)), (Border.PaddingProperty, new Thickness(Tokens.Space8, 1)), (Layoutable.MarginProperty, new Thickness(0, 0, Tokens.Space8, 0))),
         Rule(x => x.OfType<Border>().Class(Chip).Class(Good), (Border.BorderBrushProperty, Brush(p.TealTintBorder)), (Border.BackgroundProperty, Brush(p.TealTint))),
+        Rule(x => x.OfType<Button>().Class(ReadingMark), (TemplatedControl.CornerRadiusProperty, new CornerRadius(18)), (TemplatedControl.BackgroundProperty, Brush(p.Panel2)),
+            (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.BorderBrushProperty, Brush(p.Line2)), (TemplatedControl.BorderThicknessProperty, new Thickness(1))),
+        Rule(x => x.OfType<Button>().Class(ReadingMark).Class(Good), (TemplatedControl.BackgroundProperty, Brush(p.TealTint)), (TemplatedControl.ForegroundProperty, Brush(p.Teal)),
+            (TemplatedControl.BorderBrushProperty, Brush(p.TealTintBorder))),
+        Rule(x => x.OfType<Button>().Class(ReadingMark).Class(Warn), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint)), (TemplatedControl.ForegroundProperty, Brush(p.Amber)),
+            (TemplatedControl.BorderBrushProperty, Brush(p.AmberTintBorder))),
     ];
 
     /// <summary>Buttons, entry 42 section 4: 12 point at weight 500, padding 6 by 12, radius 4, margin 2.</summary>

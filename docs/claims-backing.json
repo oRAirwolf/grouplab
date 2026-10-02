@@ -5068,6 +5068,14 @@
   "On the phone; its picture comes at the next sitting Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/FingerprintPage.cs (entry 348), website/tour.json fingerprint, website/build.py page_tour_index"
+  },
+  "GroupLab then proposes what each reading goes with, a row per reading in the order fired: its number, its speed in the string's own unit, its time where the file has one, and its mark, Shot 2 in teal, one that needs a look, such as Shot 5, left out in ShotView or Shot 1, clean bore , in amber, and Not this group plain; a pause that split the string shows between the rows, such as 6 minute pause .": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 351 (Pairing A); src/GroupLab.Core/Records/ChronographMarks.cs Label, Tone, Set, Choices, Pauses; the computer's rows in src/GroupLab.App/MainWindow.Chronograph.cs FillChronograph and ChronographChoices, the phone's sheet in mobile/GroupLab.Mobile/PairingView.cs; tests/GroupLab.App.Tests/Entry351Tests.cs and tests/GroupLab.Mobile.Tests/Entry351Tests.cs"
+  },
+  "A chronograph string paired with the shots a row per reading: Not this group plain, Shot 2 in teal, Shot 1, clean bore in amber, and a click on a mark opens the same four choices the phone offers in a sheet.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entry 351 (Pairing A); src/GroupLab.Core/Records/ChronographMarks.cs Label, Tone, Set, Choices, Pauses; the computer's rows in src/GroupLab.App/MainWindow.Chronograph.cs FillChronograph and ChronographChoices, the phone's sheet in mobile/GroupLab.Mobile/PairingView.cs; tests/GroupLab.App.Tests/Entry351Tests.cs and tests/GroupLab.Mobile.Tests/Entry351Tests.cs"
   }
  },
  "rules": [

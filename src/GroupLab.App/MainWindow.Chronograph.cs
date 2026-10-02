@@ -36,11 +36,18 @@ public sealed partial class MainWindow
 
     private readonly VelocityStrip velocityStrip = new();
     private List<double> chronoValues = [];
-    private readonly HashSet<int> chronoShotsWithNoReading = [];
-    private readonly HashSet<int> chronoReadingsOfNoShot = [];
 
-    /// <summary>Why the marks an imported string proposed are there, entry 342; cleared when the list is read again by hand.</summary>
-    private IReadOnlyList<string> chronoReasons = [];
+    /// <summary>
+    /// Entry 351: each reading's mark, proposed as entry 342's reconciliation proposes it and changed a reading at a time from its row, with the
+    /// same choices in the same words as the phone's sheet. Null until a list is read.
+    /// </summary>
+    private ChronographMarks? chronoMarks;
+
+    /// <summary>The reading whose choices are open under its row, whether its shots are showing, and what the last change said.</summary>
+    private int? chronoChanging;
+
+    private bool chronoChoosingShot;
+    private string chronoSaid = "";
 
     private void BuildChronograph(StackPanel column)
     {
@@ -51,9 +58,7 @@ public sealed partial class MainWindow
         column.Children.Add(Row(Button("Read the list", () => ReadChronograph()), Button("Import a file", () => _ = ImportChronographFile()), Button("Accept the mapping", AcceptChronograph), Button("Start again", () =>
         {
             chronoValues = [];
-            chronoShotsWithNoReading.Clear();
-            chronoReadingsOfNoShot.Clear();
-            chronoReasons = [];
+            ForgetMarks();
             FillChronograph();
         })));
         column.Children.Add(chronoImport);
@@ -203,17 +208,24 @@ public sealed partial class MainWindow
     /// </summary>
     private void Propose(ChronographImport read)
     {
-        if (read.Shots.Count != chronoValues.Count || read.Shots.Count == 0)
+        if (chronoValues.Count == 0 || read.VelocitiesFps.Count != chronoValues.Count)
         {
             return;
         }
 
-        var proposal = ChronographReconciliation.Propose([.. ChronographShots().Select(s => s.Id)], read.Shots);
-        chronoShotsWithNoReading.UnionWith(proposal.ShotsWithNoReading);
-        chronoReadingsOfNoShot.UnionWith(proposal.ReadingsOfNoShot);
-        chronoReasons = proposal.Reasons;
-        DiagnosticLog.Info("chronograph.propose", ("readings", read.Shots.Count), ("noShot", proposal.ReadingsOfNoShot.Count), ("noReading", proposal.ShotsWithNoReading.Count));
+        // Entry 351: the marks the import's own evidence proposes, and the readings shown in the file's own unit.
+        bool numbered = read.Shots.Count == chronoValues.Count;
+        chronoMarks = new ChronographMarks([.. ChronographShots().Select(s => s.Id)], chronoValues, numbered ? read.Shots : null, ShotLabel, read.InMetres);
+        DiagnosticLog.Info("chronograph.propose", ("readings", chronoValues.Count), ("reasons", chronoMarks.Reasons.Count));
         FillChronograph();
+    }
+
+    private void ForgetMarks()
+    {
+        chronoMarks = null;
+        chronoChanging = null;
+        chronoChoosingShot = false;
+        chronoSaid = "";
     }
 
     /// <summary>What the import said, for the headless tests.</summary>
@@ -230,10 +242,13 @@ public sealed partial class MainWindow
         chronoDate.Text = date ?? chronoDate.Text;
         chronoReadings.Text = list ?? chronoReadings.Text;
         var (velocities, refusal) = Chronograph.Read(chronoReadings.Text ?? "");
-        chronoShotsWithNoReading.Clear();
-        chronoReadingsOfNoShot.Clear();
-        chronoReasons = [];
+        ForgetMarks();
         chronoValues = [.. velocities];
+        if (chronoValues.Count > 0)
+        {
+            chronoMarks = new ChronographMarks([.. ChronographShots().Select(s => s.Id)], chronoValues, null, ShotLabel);
+        }
+
         if (refusal is not null)
         {
             problem.Text = refusal;
@@ -242,31 +257,48 @@ public sealed partial class MainWindow
         FillChronograph();
     }
 
-    /// <summary>Marks a reading as belonging to no shot, or puts it back.</summary>
-    internal void ReadingOfNoShot(int reading)
+    /// <summary>
+    /// Entry 351: one reading's mark set from its row, as the phone's sheet sets it: a shot another reading has swaps the two, and says so;
+    /// nothing else changes.
+    /// </summary>
+    internal void SetReading(int reading, ReadingGoesWith kind, int? shot = null)
     {
-        if (!chronoReadingsOfNoShot.Add(reading))
+        if (chronoMarks is null)
         {
-            chronoReadingsOfNoShot.Remove(reading);
+            return;
         }
 
+        chronoSaid = chronoMarks.Set(reading, kind, shot) ?? "";
+        DiagnosticLog.Info("chronograph.mark", ("reading", reading + 1), ("kind", kind.ToString()), ("swap", chronoSaid.Contains("swapped", StringComparison.Ordinal)));
+        chronoChanging = null;
+        chronoChoosingShot = false;
         FillChronograph();
     }
 
-    /// <summary>Marks a shot as having no reading, or puts it back.</summary>
-    internal void ShotWithNoReading(int shot)
+    /// <summary>Opens a reading's choices under its row, or closes them, as clicking its mark does.</summary>
+    internal void ChangeReading(int? reading)
     {
-        if (!chronoShotsWithNoReading.Add(shot))
-        {
-            chronoShotsWithNoReading.Remove(shot);
-        }
-
+        chronoChanging = chronoChanging == reading ? null : reading;
+        chronoChoosingShot = false;
         FillChronograph();
     }
+
+    /// <summary>The chronograph section's proposal and rows, brought into view for the screenshot walk.</summary>
+    internal void BringChronographIntoView() => chronoLines.BringIntoView(new Rect(0, 0, Math.Max(1, chronoLines.Bounds.Width), 4000));
+
+    /// <summary>Start again, as its button does, for the screenshot walk.</summary>
+    internal void ClearChronograph()
+    {
+        chronoValues = [];
+        ForgetMarks();
+        FillChronograph();
+    }
+
+    /// <summary>The marks as they stand, for the headless tests.</summary>
+    internal ChronographMarks? ChronographMarks => chronoMarks;
 
     /// <summary>The pairing as it stands, which is a proposal until it is accepted.</summary>
-    private IReadOnlyList<ChronographPair> ChronographPairs() =>
-        Chronograph.Pair([.. ChronographShots().Select(s => s.Id)], chronoValues, chronoShotsWithNoReading, chronoReadingsOfNoShot);
+    private IReadOnlyList<ChronographPair> ChronographPairs() => chronoMarks?.Pairs() ?? [];
 
     /// <summary>
     /// Keeps the string on the session with the mapping a person has accepted, and sets the load's velocity SD from the readings kept, saying
@@ -311,9 +343,7 @@ public sealed partial class MainWindow
 
         status.Text = said;
         chronoValues = [];
-        chronoShotsWithNoReading.Clear();
-        chronoReadingsOfNoShot.Clear();
-        chronoReasons = [];
+        ForgetMarks();
         FillBallistics();
         Refresh();
     }
@@ -344,54 +374,152 @@ public sealed partial class MainWindow
             return;
         }
 
-        var shots = ChronographShots();
-        var pairs = ChronographPairs();
-        chronoLines.Children.Add(new TextBlock
+        if (chronoMarks is not { } marks || marks.Count != chronoValues.Count)
         {
-            Text = Chronograph.Describe(pairs, chronoValues.Count),
-            TextWrapping = TextWrapping.Wrap,
-            FontWeight = FontWeight.SemiBold,
-            Classes = { pairs.Any(p => p.ShotId is null || p.Reading is null) ? AppStyles.Warn : AppStyles.Good },
-        });
-        foreach (string reason in chronoReasons)
-        {
-            chronoLines.Children.Add(Line(reason));
+            return;
         }
 
-        var head = ChronographRow("shot", "reading, ft/s", null, heading: true);
-        chronoRows.Children.Add(head);
-        int index = 0;
-        foreach (var pair in pairs)
+        var pairs = ChronographPairs();
+        bool settled = pairs.All(p => p.ShotId is not null && p.Reading is not null);
+        chronoLines.Children.Add(new TextBlock
         {
-            string shot = pair.ShotId is { } shotId ? "Shot " + ShotLabel(shotId) : "no shot";
-            string reading = pair.Reading is { } r ? chronoValues[r].ToString("0.#", CultureInfo.InvariantCulture) : "no reading";
-            Button? mark = pair switch
+            Text = marks.Headline,
+            TextWrapping = TextWrapping.Wrap,
+            FontWeight = FontWeight.SemiBold,
+            Classes = { settled ? AppStyles.Good : AppStyles.Warn },
+        });
+        chronoLines.Children.Add(Line(Chronograph.Describe(pairs, chronoValues.Count)));
+        chronoLines.Children.Add(Line(marks.Says(touch: false)));
+        var without = marks.Shots.Where(s => marks.ReadingOf(s) is null).Select(ShotLabel).ToList();
+        if (without.Count > 0)
+        {
+            chronoLines.Children.Add(Line((without.Count == 1 ? "Shot " : "Shots ") + string.Join(", ", without) + (without.Count == 1 ? " has no reading." : " have no reading.")));
+        }
+
+        if (chronoSaid.Length > 0)
+        {
+            chronoLines.Children.Add(new TextBlock { Text = chronoSaid, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Warn } });
+        }
+
+        chronoRows.Children.Add(ChronographRow("#", marks.Unit, marks.Timed ? "time" : "", new TextBlock { Text = "goes with", Classes = { AppStyles.Dim } }, heading: true));
+        var pauses = marks.Pauses.ToDictionary(p => p.After);
+        for (int i = 0; i < marks.Count; i++)
+        {
+            int reading = i;
+            var mark = new Button { Content = marks.Label(i), MinWidth = 160, HorizontalContentAlignment = HorizontalAlignment.Left, Classes = { AppStyles.ReadingMark } };
+            switch (marks.Tone(i))
             {
-                { ShotId: { } s, Reading: not null } => Button("No reading for it", () => ShotWithNoReading(s)),
-                { ShotId: { } s } => Button("It has a reading", () => ShotWithNoReading(s)),
-                { Reading: { } k } when chronoReadingsOfNoShot.Contains(k) => Button("It is a shot's", () => ReadingOfNoShot(k)),
-                { Reading: { } k } => Button("Belongs to no shot", () => ReadingOfNoShot(k)),
-                _ => null,
-            };
-            var row = ChronographRow(shot, reading, mark, heading: false);
-            if (index++ % 2 == 1)
+                case MarkTone.Paired:
+                    mark.Classes.Add(AppStyles.Good);
+                    break;
+                case MarkTone.NeedsLook:
+                    mark.Classes.Add(AppStyles.Warn);
+                    break;
+            }
+
+            Avalonia.Automation.AutomationProperties.SetName(mark, string.Create(CultureInfo.InvariantCulture, $"Reading {i + 1}, {marks.Speed(i)} {marks.Unit}: {marks.Label(i)}. Change it"));
+            mark.Click += (_, _) => ChangeReading(reading);
+            var row = ChronographRow((i + 1).ToString(CultureInfo.InvariantCulture), marks.Speed(i), marks.Time(i), mark, heading: false);
+            if (chronoChanging == i)
+            {
+                row.Classes.Add(AppStyles.Warn);
+            }
+            else if (i % 2 == 1)
             {
                 row.Classes.Add(AppStyles.Shaded);
             }
 
             chronoRows.Children.Add(row);
+            if (chronoChanging == i)
+            {
+                chronoRows.Children.Add(ChronographChoices(marks, i));
+            }
+
+            if (pauses.TryGetValue(i, out var pause) && i < marks.Count - 1)
+            {
+                chronoRows.Children.Add(new TextBlock { Text = pause.Words, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, Tokens.Space4), FontSize = Tokens.DetailSize, Classes = { AppStyles.Dim } });
+            }
         }
     }
 
-    private Border ChronographRow(string shot, string reading, Button? mark, bool heading)
+    /// <summary>
+    /// Entry 351: the choices for one reading under its row, the phone's sheet on the computer: what it goes with, in the same words and order,
+    /// a shot of this group opening the shots to choose from, and Cancel.
+    /// </summary>
+    private Control ChronographChoices(ChronographMarks marks, int reading)
     {
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("120,120,*") };
-        var cells = new Control[]
+        var panel = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(Tokens.Space24, Tokens.Space4, 0, Tokens.Space8) };
+        panel.Children.Add(new TextBlock { Text = marks.Asks(reading), Classes = { AppStyles.Dim } });
+        var now = marks[reading];
+        var choices = new WrapPanel();
+        foreach (var (kind, words) in ChronographMarks.Choices)
         {
-            new TextBlock { Text = shot, FontFamily = heading ? Tokens.Sans : Mono, FontSize = Tokens.DetailSize, Classes = { heading ? AppStyles.Dim : AppStyles.Secondary } },
-            new TextBlock { Text = reading, FontFamily = heading ? Tokens.Sans : Mono, FontSize = Tokens.DetailSize, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { heading ? AppStyles.Dim : AppStyles.Secondary } },
-            mark ?? (Control)new TextBlock(),
+            var choice = new Button { Content = kind == ReadingGoesWith.Shot ? words + "\u2026" : words };
+            if (now.Kind == kind)
+            {
+                choice.Classes.Add(AppStyles.Chosen);
+            }
+
+            choice.Click += (_, _) =>
+            {
+                if (kind == ReadingGoesWith.Shot)
+                {
+                    chronoChoosingShot = true;
+                    FillChronograph();
+                    return;
+                }
+
+                SetReading(reading, kind);
+            };
+            choices.Children.Add(choice);
+        }
+
+        var cancel = new Button { Content = "Cancel" };
+        cancel.Click += (_, _) => ChangeReading(null);
+        choices.Children.Add(cancel);
+        panel.Children.Add(choices);
+        if (chronoChoosingShot)
+        {
+            var shots = new WrapPanel();
+            foreach (int shot in marks.Shots)
+            {
+                int at = shot;
+                int? holder = marks.ReadingOf(shot);
+                string name = "Shot " + ShotLabel(shot);
+                var button = new Button { Content = holder is { } h && h != reading ? string.Create(CultureInfo.InvariantCulture, $"{name}, reading {h + 1}") : name };
+                if (now.Kind == ReadingGoesWith.Shot && now.ShotId == shot)
+                {
+                    button.Classes.Add(AppStyles.Chosen);
+                }
+
+                Avalonia.Automation.AutomationProperties.SetName(button, holder is { } o && o != reading
+                    ? string.Create(CultureInfo.InvariantCulture, $"{name}, which reading {o + 1} has; the two swap")
+                    : name);
+                button.Click += (_, _) => SetReading(reading, ReadingGoesWith.Shot, at);
+                shots.Children.Add(button);
+            }
+
+            panel.Children.Add(shots);
+        }
+
+        return panel;
+    }
+
+    /// <summary>One reading's row: its number, its speed in the string's own unit and its time, then what it goes with.</summary>
+    private Border ChronographRow(string number, string speed, string time, Control mark, bool heading)
+    {
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("48,90,70,*") };
+        TextBlock Cell(string text, bool right) => new()
+        {
+            Text = text,
+            FontFamily = heading ? Tokens.Sans : Mono,
+            FontSize = Tokens.DetailSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = right ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+            Margin = new Thickness(0, 0, Tokens.Space12, 0),
+            Classes = { heading ? AppStyles.Dim : AppStyles.Secondary },
         };
+        var cells = new Control[] { Cell(number, false), Cell(speed, true), Cell(time, false), mark };
         for (int c = 0; c < cells.Length; c++)
         {
             Grid.SetColumn(cells[c], c);

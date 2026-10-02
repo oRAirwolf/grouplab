@@ -107,8 +107,9 @@ public class Entry115Tests
 
     /// <summary>
     /// Entry 115 section 3: a string of velocities entered by hand, reconciled with the shots rather than assumed to line up with them. With
-    /// the counts equal the in-order pairing is a proposal; a reading that belongs to no shot is marked and the rest pair in order; what is
-    /// accepted is kept on the session; and the readings' own spread is set on the load with a note of where it came from.
+    /// the counts equal the in-order pairing is a proposal; entry 351: each reading's mark is changed by itself, a shot another reading has
+    /// swapping the two and nothing else moving; what is accepted is kept on the session; and the readings' own spread is set on the load
+    /// with a note of where it came from.
     /// </summary>
     [AvaloniaFact]
     public void AChronographStringIsReconciledWithTheShotsAndItsSpreadReachesTheLoad()
@@ -146,21 +147,36 @@ public class Entry115Tests
             Assert.All(window.ChronographPairing, p => Assert.NotNull(p.Reading));
             Assert.Contains(window.ChronographText, t => t.StartsWith($"{shots} of {shots} readings sit beside a shot. The counts agree", StringComparison.Ordinal));
 
-            // One extra reading, the fouling round fired into the berm: it is marked, and the rest pair in order.
+            // One extra reading, the fouling round fired into the berm: nothing in a typed list says which, so the last is left over.
             window.ReadChronograph(list: string.Join(", ", readings.Prepend(2350)));
             Settle();
             Assert.Contains(window.ChronographText, t => t.Contains("1 reading belongs to no shot", StringComparison.Ordinal));
-            window.ReadingOfNoShot(0);
+            var order = window.ChronographMarks!.Shots;
+
+            // Entry 351: the fouling round is another group's, which leaves its shot with no reading and moves nothing else.
+            window.SetReading(0, GroupLab.Core.Records.ReadingGoesWith.NotThisGroup);
+            Settle();
+            Assert.Null(window.ChronographPairing.Single(p => p.Shot == order[0]).Reading);
+            Assert.Equal(readings[0], window.ChronographPairing.Single(p => p.Shot == order[1]).Reading);
+            Assert.Contains(window.ChronographText, t => t.Contains($"so shot", StringComparison.Ordinal) && t.Contains("has no reading", StringComparison.Ordinal));
+
+            // Each reading then given the shot fired in its place.
+            for (int i = 0; i < shots; i++)
+            {
+                window.SetReading(i + 1, GroupLab.Core.Records.ReadingGoesWith.Shot, order[i]);
+            }
+
             Settle();
             Assert.Contains(window.ChronographText, t => t.StartsWith($"{shots} of {shots + 1} readings sit beside a shot", StringComparison.Ordinal));
             Assert.Equal(2350, window.ChronographPairing.Single(p => p.Shot is null).Reading);
 
-            // A shot the chronograph missed is marked instead, and that shot keeps no reading.
-            int first = window.ChronographPairing[0].Shot!.Value;
-            window.ShotWithNoReading(first);
+            // A shot given the reading another shot has: the two swap, and it says so; swapped back, all is as it was.
+            window.SetReading(1, GroupLab.Core.Records.ReadingGoesWith.Shot, order[1]);
             Settle();
-            Assert.Null(window.ChronographPairing.Single(p => p.Shot == first).Reading);
-            window.ShotWithNoReading(first);
+            Assert.Contains(window.ChronographText, t => t.Contains("swapped places", StringComparison.Ordinal));
+            Assert.Equal(readings[0], window.ChronographPairing.Single(p => p.Shot == order[1]).Reading);
+            Assert.Equal(readings[1], window.ChronographPairing.Single(p => p.Shot == order[0]).Reading);
+            window.SetReading(1, GroupLab.Core.Records.ReadingGoesWith.Shot, order[0]);
             Settle();
 
             window.AcceptChronograph();

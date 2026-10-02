@@ -16,6 +16,7 @@
     "analysis-open": ["src/GroupLab.App/MainWindow.Figures.cs", "src/GroupLab.App/MainWindow.ShotsPerBull.cs", "src/GroupLab.App/CompositePlot.cs", "src/GroupLab.App/IntervalChart.cs", "src/GroupLab.App/SpreadStrips.cs", "src/GroupLab.App/ShotOrderChart.cs", "src/GroupLab.App/TermHelp.cs"],
     "shots-to-zero": ["src/GroupLab.App/MainWindow.Figures.cs", "src/GroupLab.App/MainWindow.ShotsToZero.cs"],
     "velocity": ["src/GroupLab.App/VelocityBlockView.cs", "src/GroupLab.App/CompositePlot.cs", "src/GroupLab.App/MainWindow.Chronograph.cs"],
+    "pairing": ["src/GroupLab.App/MainWindow.Chronograph.cs", "src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.Core/Records/ChronographMarks.cs", "src/GroupLab.Core/Records/ChronographProposal.cs", "tests/GroupLab.App.Tests/Entry109Tests.cs"],
     "settings": ["src/GroupLab.App/AppSettings.cs"],
     "sessions": ["src/GroupLab.App/MainWindow.SessionFiles.cs", "src/GroupLab.App/SessionsOverTime.cs", "src/GroupLab.App/SheetThumbnail.cs"],
     "targets": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs", "src/GroupLab.App/SheetThumbnail.cs"],

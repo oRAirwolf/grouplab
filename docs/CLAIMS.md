@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1515 |
+| code | 1516 |
 | measured | 1957 |
 | decided | 1281 |
 | unbacked | 0 |
-| **total** | **4753** |
+| **total** | **4754** |
 
-**1148** of them were read one sentence at a time and their backing written against the sentence. The other **3605** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1150** of them were read one sentence at a time and their backing written against the sentence. The other **3604** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3705,7 +3705,6 @@ one that matters.
 
 - *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.152 Store-bought targets recognized Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.145 Velocity and the vertical From a group&#x27;s chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off.
 - *measured* (PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6): Windows · macOS · Linux · Android · iPhone and iPad.
 - *code* (NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/Fingerprints/library.json, recognition in StoreTargetRecognizer, on the desktop src/GroupLab.App/MainWindow.StoreTargets.cs and on the phone mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion (6 in and 8 in, the Shoot-N-C bullseye family); the picture is Entry109Tests' stand-in bullseye (docs/figures/screens/current/SOURCES.md)): On the tour · In the user guide · The research behind it Store-bought targets recognized Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
@@ -3842,6 +3841,7 @@ one that matters.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Page 2: the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes): Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 - *measured* (grouplab chronograph-files C:\Dev\grouplab-local\chronograph-samples\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)): The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and BulletSeeker readers are Experimental.
+- *code* (NOTES-FROM-PLANNING.md entry 351 (Pairing A); src/GroupLab.Core/Records/ChronographMarks.cs Label, Tone, Set, Choices, Pauses; the computer's rows in src/GroupLab.App/MainWindow.Chronograph.cs FillChronograph and ChronographChoices, the phone's sheet in mobile/GroupLab.Mobile/PairingView.cs; tests/GroupLab.App.Tests/Entry351Tests.cs and tests/GroupLab.Mobile.Tests/Entry351Tests.cs): GroupLab then proposes what each reading goes with, a row per reading in the order fired: its number, its speed in the string's own unit, its time where the file has one, and its mark, Shot 2 in teal, one that needs a look, such as Shot 5, left out in ShotView or Shot 1, clean bore , in amber, and Not this group plain; a pause that split the string shows between the rows, such as 6 minute pause .
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): What costs the most lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
 - *code* (UpdateRun.DownloadAsync verifies the manifest's SHA-256, src/GroupLab.Core/Updates/UpdateRun.cs): When you do, GroupLab downloads the installer, checks it against the SHA-256 the release states, and hands it to Windows.
@@ -4842,6 +4842,7 @@ one that matters.
 
 ### site:tour/ballistics/index.html
 
+- *code* (NOTES-FROM-PLANNING.md entry 351 (Pairing A); src/GroupLab.Core/Records/ChronographMarks.cs Label, Tone, Set, Choices, Pauses; the computer's rows in src/GroupLab.App/MainWindow.Chronograph.cs FillChronograph and ChronographChoices, the phone's sheet in mobile/GroupLab.Mobile/PairingView.cs; tests/GroupLab.App.Tests/Entry351Tests.cs and tests/GroupLab.Mobile.Tests/Entry351Tests.cs): A chronograph string paired with the shots a row per reading: Not this group plain, Shot 2 in teal, Shot 1, clean bore in amber, and a click on a mark opens the same four choices the phone offers in a sheet.
 - *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): On the phone since nightly 119, as a fifth tab: the dope for your rifle and load, the trajectory, and the chance of a hit with a result&#x27;s group.
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): What this screen is for Everything else in GroupLab measures what your rifle did.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's columns; tests/GroupLab.App.Tests/Entry112Tests.cs the heading): Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step.

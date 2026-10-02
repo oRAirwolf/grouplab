@@ -635,6 +635,28 @@ public class Entry109Tests
                             window.BringVelocityIntoView();
                             Save(window, $"velocity-{name}-{width}x{height}");
                         }
+
+                        // Entry 351: a timed string pairing, a row per reading, the fourth's choices open under its row: four readings of an
+                        // earlier group, a six minute pause, then this group's, its first marked clean bore and its fifth left out.
+                        int groupShots = window.Session.State.Shots.Count(s => s.IsShot);
+                        var start = new TimeSpan(14, 2, 0);
+                        var timed = Enumerable.Range(0, groupShots + 4).Select(i => new GroupLab.Core.Records.ChronographShot(i + 1, 2700.0 + ((i * 7) % 23) - 11,
+                            CleanBore: i == 4, LeftOutByChronograph: i == 8, Time: start + TimeSpan.FromSeconds(30 * i) + (i >= 4 ? TimeSpan.FromMinutes(6) : TimeSpan.Zero))).ToList();
+                        window.ShowBallistics();
+                        window.ImportChronographStrings([new GroupLab.Core.Records.ChronographImport(GroupLab.Core.Records.ChronographFormat.GarminXero,
+                            [.. timed.Select(t => t.Fps)], "A Garmin Xero export.", false, [], 1) { Name = "afternoon", Shots = timed }], "Garmin Xero");
+                        window.ChangeReading(3);
+                        foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
+                        {
+                            window.SetTheme(theme);
+                            Dispatcher.UIThread.RunJobs();
+                            window.Confirmations.Clear();
+                            window.BringChronographIntoView();
+                            Save(window, $"pairing-{name}-{width}x{height}");
+                        }
+
+                        window.ClearChronograph();
+                        window.ShowBallistics(false);
                     }
                     finally
                     {

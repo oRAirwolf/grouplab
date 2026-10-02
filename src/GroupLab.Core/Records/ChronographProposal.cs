@@ -9,6 +9,12 @@ namespace GroupLab.Core.Records;
 /// </summary>
 public sealed record ChronographProposal(IReadOnlySet<int> ShotsWithNoReading, IReadOnlySet<int> ReadingsOfNoShot, IReadOnlyList<string> Reasons)
 {
+    /// <summary>
+    /// Entry 351: what each reading of no shot was proposed as, by the evidence that put it there: another group, from the pauses; left out,
+    /// where the chronograph left it out of its own figures; or this group's clean bore shot. A reading not here was not proposed apart.
+    /// </summary>
+    public IReadOnlyDictionary<int, ReadingGoesWith> Kinds { get; init; } = new Dictionary<int, ReadingGoesWith>();
+
     /// <summary>The pairing with these marks, as <see cref="Chronograph.Pair"/> makes it.</summary>
     public IReadOnlyList<ChronographPair> Pairs(IReadOnlyList<int> shots, IReadOnlyList<double> readings) =>
         Chronograph.Pair(shots, readings, ShotsWithNoReading, ReadingsOfNoShot);
@@ -45,13 +51,14 @@ public static class ChronographReconciliation
         ArgumentNullException.ThrowIfNull(readings);
         var noShot = new SortedSet<int>();
         var noReading = new HashSet<int>();
+        var kinds = new Dictionary<int, ReadingGoesWith>();
         var reasons = new List<string>();
         var inv = CultureInfo.InvariantCulture;
         int excess = readings.Count - shots.Count;
         bool saidWhich = false;
         if (shots.Count == 0 || readings.Count == 0)
         {
-            return new ChronographProposal(noReading, noShot, reasons);
+            return new ChronographProposal(noReading, noShot, reasons) { Kinds = kinds };
         }
 
         if (excess > 0)
@@ -79,6 +86,7 @@ public static class ChronographReconciliation
                         if (i < first || i > last)
                         {
                             noShot.Add(i);
+                            kinds[i] = ReadingGoesWith.NotThisGroup;
                         }
                     }
 
@@ -97,13 +105,13 @@ public static class ChronographReconciliation
 
         if (excess > 0)
         {
-            excess -= Mark(readings, noShot, excess, r => r.LeftOutByChronograph, reasons,
+            excess -= Mark(readings, noShot, kinds, ReadingGoesWith.LeftOut, excess, r => r.LeftOutByChronograph, reasons,
                 n => $"Shot {n} was left out of the chronograph's own figures, so it is proposed as belonging to no shot of this group.");
         }
 
         if (excess > 0)
         {
-            excess -= Mark(readings, noShot, excess, r => r.CleanBore, reasons,
+            excess -= Mark(readings, noShot, kinds, ReadingGoesWith.CleanBore, excess, r => r.CleanBore, reasons,
                 n => $"Shot {n} is marked clean bore on the chronograph, often a fouling shot fired off the paper, so it is proposed as belonging to no shot of this group.");
         }
 
@@ -137,7 +145,7 @@ public static class ChronographReconciliation
             }
         }
 
-        return new ChronographProposal(noReading, noShot, reasons);
+        return new ChronographProposal(noReading, noShot, reasons) { Kinds = kinds };
     }
 
     /// <summary>
@@ -182,13 +190,15 @@ public static class ChronographReconciliation
         return runs;
     }
 
-    private static int Mark(IReadOnlyList<ChronographShot> readings, SortedSet<int> noShot, int most, Func<ChronographShot, bool> which, List<string> reasons, Func<int, string> why)
+    private static int Mark(IReadOnlyList<ChronographShot> readings, SortedSet<int> noShot, Dictionary<int, ReadingGoesWith> kinds, ReadingGoesWith kind, int most,
+        Func<ChronographShot, bool> which, List<string> reasons, Func<int, string> why)
     {
         int marked = 0;
         for (int i = 0; i < readings.Count && marked < most; i++)
         {
             if (which(readings[i]) && noShot.Add(i))
             {
+                kinds[i] = kind;
                 marked++;
                 reasons.Add(why(readings[i].Number));
             }

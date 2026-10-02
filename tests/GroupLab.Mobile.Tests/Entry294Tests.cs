@@ -89,6 +89,12 @@ public class Entry294Tests
     [AvaloniaFact]
     public void TheFiguresFollowTheRiflesScopeUnit()
     {
+        // The figures' velocity card reads the phone's store, so the phone is started here rather than by whichever test ran first.
+        if (Phone.Platform is null)
+        {
+            Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
+        }
+
         var state = Off(new Rifle("Comp rifle", 0.1, AngularUnit.Mrad));
         var figures = new FiguresView(state, UnitSettings.Imperial, new CompositePlot(), null);
         figures.Show(state, UnitSettings.Imperial);

@@ -20,6 +20,7 @@ source that is not on the list below, or if any test writing into this folder co
 | `sheet made by the generator` | A sheet GroupLab's "Made for your optic" drew from numbers typed into it (entry 242). Nobody's target. |
 | `Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341)` | A plain bullseye the walk draws itself, saying so on it, given the numbers a crop of the 8 in Shoot-N-C bullseye measured so the question shows. Never a maker's artwork (entry 340).
 | `Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348)` | A 12 by 18 in poster the walk draws itself, rings, words and bulls with red centers, photographed by the walk at an angle on a dark board, its corners found. Never a maker's artwork (entry 348). |
+| `Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351)` | The velocity picture's target and group, with a string of readings the walk makes itself: four of an earlier group, a pause, then one for each shot, one marked clean bore and one left out. Nobody's chronograph file. |
 
 ## What is here
 
@@ -73,6 +74,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `fingerprint-light-1400x900.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `fingerprint-light-1920x1080.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `fingerprint-light-2560x1440.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `pairing-dark-1280x720.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-dark-1400x900.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-dark-1920x1080.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-dark-2560x1440.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-light-1280x720.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-light-1400x900.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-light-1920x1080.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
+| `pairing-light-2560x1440.png` | Entry109Tests plain sample target, marked by hand with a 300 yd group, and a timed chronograph string made by the walk (entry 351) |
 | `scope-unit-dark-1280x720.png` | no sheet at all |
 | `scope-unit-dark-1400x900.png` | no sheet at all |
 | `scope-unit-dark-1920x1080.png` | no sheet at all |

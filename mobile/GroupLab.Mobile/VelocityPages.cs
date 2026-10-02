@@ -14,15 +14,17 @@ namespace GroupLab.Mobile;
 internal static class VelocityPages
 {
     /// <summary>
-    /// The chronograph entry: the readings pasted or typed, read, and the in-order pairing proposed against the shots as their labels number
-    /// them. As on the desktop the readings are never assumed to line up with the shots (DESIGN.md section 15): the pairing is kept only when
-    /// the person presses for it, and "Keep without pairing" keeps the readings with no shot beside any of them.
+    /// The chronograph entry: the readings pasted or typed, read, and the pairing proposed against the shots as their labels number them. As
+    /// on the desktop the readings are never assumed to line up with the shots (DESIGN.md section 15). Entry 351, pairing A: reading the list
+    /// opens a row per reading with its mark, each changed from a sheet; the pairing is kept only when the person presses "Keep this pairing",
+    /// and "Leave unpaired" keeps the readings with no shot beside any of them.
     /// </summary>
     public static Control Chronograph(long? sessionId, MarkingState state, Action done)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(done);
         var column = new StackPanel { Spacing = 12 };
+        var host = new ContentControl();
         column.Children.Add(Screens.Title("Chronograph readings"));
         if (sessionId is not { } id)
         {
@@ -35,8 +37,8 @@ internal static class VelocityPages
         var box = new TextBox { AcceptsReturn = true, MinHeight = 96, TextWrapping = Avalonia.Media.TextWrapping.Wrap, PlaceholderText = "2705, 2711, 2698 ..." }.Id("chrono-readings");
         Screens.Numeric(box);
         var said = Screens.Line("");
-        var choices = new StackPanel { Spacing = 8 };
         var labels = ShotLabels.For(state);
+        string ShotName(int id) => labels.FirstOrDefault(l => l.ShotId == id)?.Text ?? id.ToString(CultureInfo.InvariantCulture);
         var shots = state.Shots.Where(s => s.IsShot && s.Exclusion is null && !GroupAnalysis.OnSighter(state, s))
             .OrderBy(s => int.TryParse(labels.FirstOrDefault(l => l.ShotId == s.Id)?.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int n) ? n : int.MaxValue)
             .Select(s => s.Id).ToList();
@@ -66,7 +68,6 @@ internal static class VelocityPages
         column.Children.Add(box);
         column.Children.Add(Screens.Primary("Read the list", () =>
         {
-            choices.Children.Clear();
             var (readings, refusal) = GroupLab.Core.Records.Chronograph.Read(box.Text ?? "");
             if (refusal is not null || readings.Count == 0)
             {
@@ -74,11 +75,12 @@ internal static class VelocityPages
                 return;
             }
 
-            var (pairs, reasons) = Proposed(shots, readings, box.Text == importedText ? imported : null);
-
-            said.Text = GroupLab.Core.Records.Chronograph.Describe(pairs, readings.Count) + reasons;
-            choices.Children.Add(Screens.Primary(reasons.Length > 0 ? "Keep, paired as proposed" : "Keep, paired in this order", () => Keep(readings, pairs)).Id("chrono-keep-paired"));
-            choices.Children.Add(Screens.Choice("Keep without pairing", () => Keep(readings, null)).Id("chrono-keep-unpaired"));
+            // Entry 351: a row per reading, its mark proposed by the import's own evidence where the list is still the import's.
+            var from = box.Text == importedText ? imported : null;
+            var marks = new ChronographMarks(shots, readings, from?.Shots, ShotName, from?.InMetres == true);
+            DiagnosticLog.Info("chronograph.pairing", ("readings", readings.Count), ("reasons", marks.Reasons.Count));
+            var entry = host.Content;
+            host.Content = new PairingView(marks, pairs => Keep(readings, pairs), () => host.Content = entry);
         }).Id("chrono-read"));
         // Entry 331 section 2: a chronograph file instead of typing, read into the same box and then read as the list is.
         var columns = new WrapPanel();
@@ -170,9 +172,9 @@ internal static class VelocityPages
         }).Id("chrono-import"));
         column.Children.Add(said);
         column.Children.Add(columns);
-        column.Children.Add(choices);
         column.Children.Add(Screens.Choice("Back", done));
-        return Screens.Page(column);
+        host.Content = Screens.Page(column);
+        return host;
     }
 
     /// <summary>

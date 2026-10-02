@@ -442,6 +442,27 @@
       }
     },
     {
+      "key": "chrono-pairing",
+      "group": "The numbers",
+      "name": "Pair readings with shots, a row per reading",
+      "sentence": "A chronograph string is paired with the shots a row per reading in the order fired, its speed and time beside a mark saying what it goes with, the pauses that split the string between the rows, and a card saying what is proposed and why; a click on the computer or a tap on the phone changes one mark with the same four choices, and a swap says so.",
+      "shot": "pairing",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "mobile": {
+        "noPicture": "the phone's rows and sheet are photographed at the next sitting with the phone"
+      },
+      "since": "next",
+      "note": "Changing what a chronograph reading goes with is now a row per reading",
+      "tour": "ballistics",
+      "guide": "8-the-zero-correction-at-another-distance-and-the-dope-table"
+    },
+    {
       "key": "cep",
       "group": "The numbers",
       "name": "CEP circles, any percent",

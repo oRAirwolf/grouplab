@@ -48,6 +48,9 @@ public sealed record ChronographImport(ChronographFormat Format, IReadOnlyList<d
 
     public IReadOnlyList<ChronographShot> Shots { get; init; } = [];
 
+    /// <summary>Whether the file gives its speeds in m/s; the readings are held in ft/s either way, and shown in the file's own unit (entry 351).</summary>
+    public bool InMetres { get; init; }
+
     public ChronographConditions? Conditions { get; init; }
 
     /// <summary>Where the file's own average, SD or spread differs from the shots' by more than its rounding, said; null where they agree.</summary>
@@ -173,7 +176,7 @@ public static class ChronographFiles
 
         return new ChronographImport(ChronographFormat.LabRadar, [.. shots.Select(s => s.Fps)],
             $"A LabRadar report: {shots.Count} shots, the muzzle velocity V0, in {(inMetres ? "m/s" : "ft/s")}. {ExperimentalWords}", true, names, v0)
-        { Shots = shots };
+        { Shots = shots, InMetres = inMetres };
     }
 
     /// <summary>
@@ -242,6 +245,7 @@ public static class ChronographFiles
         {
             Name = name,
             Shots = shots,
+            InMetres = inMetres,
             Conditions = grains is not null ? new ChronographConditions(grains, null, null, null) : null,
             Disagrees = Check(counted, average * scale, sd * scale, spread * scale, null, null, 0.15 * scale),
         };
@@ -293,6 +297,7 @@ public static class ChronographFiles
             $"A BulletSeeker export: {shots.Count} shots, in {(inMetres ? "m/s" : "ft/s")}. {BulletSeekerWords}", true, [.. rows[numbers]], null)
         {
             Name = name,
+            InMetres = inMetres,
             Shots = shots,
             Conditions = new ChronographConditions(null, Value("Temperature"), Value("Pressure"), humidity),
             Disagrees = Check(velocities, Value("Avg") * scale, Value("Deviation") * scale, null, Value("Min") * scale, Value("Max") * scale, 1.0 * scale),
@@ -370,7 +375,8 @@ public static class ChronographFiles
         string units = metres is not null ? "as you chose" : inMetres ? "as its header says" : "taken as ft/s; choose m/s if they are";
         return new ChronographImport(ChronographFormat.Generic, velocities,
             $"{velocities.Count} velocities from \"{header}\", {how}, in {(inMetres ? "m/s" : "ft/s")}, {units}{(skipped > 0 ? $"; {skipped} rows without a number were left out" : "")}.",
-            false, names, at);
+            false, names, at)
+        { InMetres = inMetres };
     }
 
     /// <summary>

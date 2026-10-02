@@ -643,6 +643,11 @@
      "ballistics-hit",
      "The Ballistics screen's Hit probability view: the first round's chance on a 30 inch circle at 600 yards",
      "The other view, Hit probability: the first round's chance on a target at a distance, the second round's after a correction, and what costs the most."
+    ],
+    [
+     "pairing",
+     "Ballistics, Chronograph: a row per reading with what it goes with, a six minute pause between two groups, and the fourth reading's choices open under its row",
+     "A chronograph string paired with the shots a row per reading: Not this group plain, Shot 2 in teal, Shot 1, clean bore in amber, and a click on a mark opens the same four choices the phone offers in a sheet."
     ]
    ],
    "mobile": {

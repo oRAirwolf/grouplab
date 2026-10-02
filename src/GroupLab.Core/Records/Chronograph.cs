@@ -73,7 +73,7 @@ public static class Chronograph
             parts.Add(string.Create(inv, $"{withoutShot} reading{(withoutShot == 1 ? " belongs" : "s belong")} to no shot"));
         }
 
-        return counts + ", and " + string.Join(" and ", parts) + ". Mark the odd ones and the rest pair in order.";
+        return counts + ", and " + string.Join(" and ", parts) + ". Change what a reading goes with to settle them.";
     }
 
     /// <summary>The readings' mean and standard deviation, on n minus 1, over the readings given; null where there are fewer than two.</summary>
