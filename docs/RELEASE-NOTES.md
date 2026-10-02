@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.155
+
+**2026-10-02**, commit `3124036`. Nightly.
+
+**What you will notice**
+
+- Store-bought targets added after your build now reach GroupLab without a new build: it looks for a newer signed list when it starts, and on a phone only on Wi-Fi with the battery and storage not low.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.155)
+
+---
+
 ## 0.2.0-nightly.154
 
 **2026-10-02**, commit `a81e61f`. Nightly.
