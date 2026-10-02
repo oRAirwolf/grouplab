@@ -499,7 +499,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - On the computer and the phone, a result now makes a one-page report and a picture to share with its results box and mean radius circle, and the computer gains the phone's Shots and clicks, Zero from this group window and aim point colors.
 - The 2 MOA sheets Unholy asked for are in the Targets library: nine 2.00 in bulls on a Letter or A4 page, as one page or a set of three, with the plain, C or E bull.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.126)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
