@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1514 |
-| measured | 1955 |
-| decided | 1280 |
+| code | 1515 |
+| measured | 1957 |
+| decided | 1281 |
 | unbacked | 0 |
-| **total** | **4749** |
+| **total** | **4753** |
 
-**1143** of them were read one sentence at a time and their backing written against the sentence. The other **3606** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1148** of them were read one sentence at a time and their backing written against the sentence. The other **3605** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3431,6 +3431,7 @@ one that matters.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): **Made for your optic.** Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover.
 - *measured* (The same sentence in the README; NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/StoreTargetLibrary.cs All, recognition in StoreTargetRecognizer.Recognize, on the desktop in src/GroupLab.App/MainWindow.StoreTargets.cs RecognizeStoreTarget and on the phone in mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion; the 0.06 percent median scale error on phone views made from the fingerprinted scans, docs/notes/fingerprint-trial.md Registration (entry 332, 2026-10-01), reproduced 2026-10-01 by tests/GroupLab.Core.Tests/StoreTargets/StoreTargetTests.cs OnTheBlanksTheCropsThatFooledTheTrialAskAndAWholeSheetDoesNot (within 0.5 percent about the bull)): **Store-bought targets.** Five Birchwood Casey targets are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent on the fingerprinted sheets, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike.
+- *measured* (grouplab poster-trial, entry 344 (docs/PHASE1-RESULTS.md, Entry 344): 12 computer-made photos of each of a 12 by 18 in and a 23 by 35 in poster, tilted 1 to 29 degrees, scale error median and largest: printed size 0.01 and 0.32 percent, 0.28 and 0.63; GroupLab sheet read in 8 of 12 at 12 by 18 in, 0.28 and 0.55, never at 23 by 35 in; two points 0.16 and 0.46, 0.40 and 0.80. The words in src/GroupLab.Core/StoreTargets/FingerprintSteps.cs FingerprintWords.Measured; entry 348 section 2 forbids calling any source the most accurate): Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size.
 - *code* (src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)): Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason.
 - *code* (the print screen's check line and targets/GL-CF25-LTR.gltd.json): **Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler.
 - *code* (targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5): On the Letter 5x5 sheet it is 5.98 in (152.0 mm).
@@ -3703,8 +3704,8 @@ one that matters.
 ### site:features/index.html
 
 - *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.152 Store-bought targets recognized Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.145 Velocity and the vertical From a group&#x27;s chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.130 Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.
 - *measured* (PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6): Windows · macOS · Linux · Android · iPhone and iPad.
 - *code* (NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/Fingerprints/library.json, recognition in StoreTargetRecognizer, on the desktop src/GroupLab.App/MainWindow.StoreTargets.cs and on the phone mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion (6 in and 8 in, the Shoot-N-C bullseye family); the picture is Entry109Tests' stand-in bullseye (docs/figures/screens/current/SOURCES.md)): On the tour · In the user guide · The research behind it Store-bought targets recognized Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
@@ -3800,6 +3801,7 @@ one that matters.
 - *code* (src/GroupLab.App/PrintPanel.cs Generate and src/GroupLab.Cli/Library/TargetGenerator.cs (entry 226 section 4)): Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover.
 - *measured* (NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/StoreTargetLibrary.cs All, recognition in StoreTargetRecognizer.Recognize, on the desktop in src/GroupLab.App/MainWindow.StoreTargets.cs RecognizeStoreTarget and on the phone in mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion; the 0.06 percent median scale error on phone views made from the fingerprinted scans, docs/notes/fingerprint-trial.md Registration (entry 332, 2026-10-01), reproduced 2026-10-01 by tests/GroupLab.Core.Tests/StoreTargets/StoreTargetTests.cs OnTheBlanksTheCropsThatFooledTheTrialAskAndAWholeSheetDoesNot (within 0.5 percent about the bull)): Five Birchwood Casey targets are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent on the fingerprinted sheets, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike.
+- *measured* (grouplab poster-trial, entry 344 (docs/PHASE1-RESULTS.md, Entry 344): 12 computer-made photos of each of a 12 by 18 in and a 23 by 35 in poster, tilted 1 to 29 degrees, scale error median and largest: printed size 0.01 and 0.32 percent, 0.28 and 0.63; GroupLab sheet read in 8 of 12 at 12 by 18 in, 0.28 and 0.55, never at 23 by 35 in; two points 0.16 and 0.46, 0.40 and 0.80. The words in src/GroupLab.Core/StoreTargets/FingerprintSteps.cs FingerprintWords.Measured; entry 348 section 2 forbids calling any source the most accurate): Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size.
 - *code* (src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)): Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason.
 - *code* (the print screen's check line and targets/GL-CF25-LTR.gltd.json): Measure from the center of bull 1 to the center of bull 5 with a ruler.
 - *code* (targets/GL-CF25-LTR.gltd.json: a 38.0 mm pitch, four pitches from bull 1 to bull 5): On the Letter 5x5 sheet it is 5.98 in (152.0 mm).
@@ -3859,7 +3861,6 @@ one that matters.
 
 ### site:index.html
 
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in GroupLab New in nightly.152 Store-bought targets recognized Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
@@ -3869,7 +3870,7 @@ one that matters.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (src/GroupLab.Core/Marking/AnalysisPanel.cs Zero, in the scope's unit from UnitSettings.Aiming; website/build.py home page (entry 294 section 1)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in your scope's unit, mil or MOA, each with its interval, and the reasoning one click away.
 - *code* (the analysis screen, src/GroupLab.App/MainWindow.cs (entry 169)): Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.
-- *decided* (README.md's phase list: hole detection on blank paper is Phase 4 and synchronization Phase 7, neither built; Garmin Xero import, hand marking on the phone and the iPhone and iPad beta have shipped (entry 345 finding 1)): Not built yet Hole detection on plain paper &#183; synchronization between devices The full status, phase by phase, on GitHub Every screen The tour has a page for each of the twelve screens: what it is for, what you are looking at, and what you would do there.
+- *decided* (README.md's phase list: hole detection on blank paper is Phase 4 and synchronization Phase 7, neither built (entry 345 finding 1); the tour's count from website/tour.json order, entry 348 adding Add a store-bought target): Not built yet Hole detection on plain paper &#183; synchronization between devices The full status, phase by phase, on GitHub Every screen The tour has a page for each of the thirteen screens: what it is for, what you are looking at, and what you would do there.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Get the donor pack One sheet of each, with instructions · PDF Free and open source under GPL-3.0.
 
 ### site:releases/index.html
@@ -4849,7 +4850,7 @@ one that matters.
 ### site:tour/capture/index.html
 
 - *measured* (docs/figures/screens/phone/SOURCES.md: taken over adb on 2026-09-28, nightly 115, entry 246): Capture on a Galaxy Z Fold 7&#x27;s cover screen, nightly 115.
-- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): &lsaquo; Made for your optic All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
+- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): &lsaquo; Add a store-bought target All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/compare/index.html
 
@@ -4861,6 +4862,11 @@ one that matters.
 ### site:tour/equipment/index.html
 
 - *code* (SolverUse.Missing in src/GroupLab.Core/Marking/SolverUse.cs): The extra fields are there because the ballistics page and the zero correction need them, and it says which one is missing when it cannot work something out.
+
+### site:tour/fingerprint/index.html
+
+- *decided* (NOTES-FROM-PLANNING.md entries 340 and 344 (recognition from a fingerprint; only Alan's files are added to the library, checked by hand); src/GroupLab.Core/StoreTargets/StoreTargetLibrary.cs All; entry 348's steps in src/GroupLab.App/FingerprintStepsView.cs and mobile/GroupLab.Mobile/FingerprintPage.cs): Where it fits Before you shoot a target GroupLab does not know.
+- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): &lsaquo; Made for your optic All screens Capture &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/firstrun/index.html
 
@@ -5057,10 +5063,11 @@ one that matters.
 ### site:tour/index.html
 
 - *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.
-- *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Twelve pages, one per screen, so you can see what using GroupLab is like before you download it.
+- *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Thirteen pages, one per screen, so you can see what using GroupLab is like before you download it.
 - *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting.
 - *decided* (docs/figures/screens/phone/SOURCES.md and samples/PROVENANCE.md, the 2026-09-26 range day, Alan's standing consent of entry 171): The result in them is Alan's own scan of a 25 shot group, published with his consent.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.
+- *code* (mobile/GroupLab.Mobile/FingerprintPage.cs (entry 348), website/tour.json fingerprint, website/build.py page_tour_index): On the phone; its picture comes at the next sitting Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.
 
 ### site:tour/marking/index.html
 
@@ -5081,7 +5088,7 @@ one that matters.
 - *code* (mobile/GroupLab.Mobile/TargetsPage.cs, Made for your optic; TargetGenerator (entry 242)): How far, and the lowest power you will shoot at: 1 for a red dot.
 - *code* (mobile/GroupLab.Mobile/TargetsPage.cs, the red dot field; TargetGenerator (entry 242)): Only at 1x: the dot's size in MOA, so the bull is one you can center on.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Where the 3.5 arcminute rule comes from is Can you see the bull?
-- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): The aim point test The Targets screen &lsaquo; Targets All screens Capture &rsaquo; Free and open source under GPL-3.0.
+- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): The aim point test The Targets screen &lsaquo; Targets All screens Add a store-bought target &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/sessions/index.html
 

@@ -47,7 +47,7 @@ public class Entry328Tests
     }
 
     /// <summary>Focuses the field, raises the keyboard, and checks the field and its confirming button are both clear of it.</summary>
-    private static void ClearOfTheKeyboard(Shell shell, Window window, TextBox field, double keyboard, string where)
+    internal static void ClearOfTheKeyboard(Shell shell, Window window, TextBox field, double keyboard, string where)
     {
         field.Focus();
         double top = window.Height - keyboard;

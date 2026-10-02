@@ -179,6 +179,27 @@
       "guide": "1-print-a-sheet"
     },
     {
+      "key": "add-store-target",
+      "group": "Reading a target",
+      "name": "Teach GroupLab a store-bought target",
+      "sentence": "A target GroupLab does not know, photographed blank and fingerprinted in five steps, one question at a time: its corners found, one true length from its printed size, a GroupLab sheet laid on it or two points a measured distance apart, its bulls confirmed, and a small file of the fingerprint, name, size and bulls saved, never the photo, to send so a later build recognizes it.",
+      "shot": "fingerprint",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "mobile": {
+        "noPicture": "the phone's five steps are photographed at the next sitting with the phone"
+      },
+      "since": "next",
+      "note": "Add a store-bought target, on the Targets screen of the computer and the phone",
+      "tour": "fingerprint",
+      "guide": "1-print-a-sheet"
+    },
+    {
       "key": "reads-itself",
       "group": "Reading a target",
       "name": "A GroupLab sheet reads itself",

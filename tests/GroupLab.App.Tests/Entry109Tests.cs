@@ -489,6 +489,33 @@ public class Entry109Tests
                         window.ChooseLibrarySheet(window.TargetsPanel.Sheets.First(s => s.File == "GL-ZERO-MIL-100Y.gltd.json").Definition.Name);
                         Save(window, $"targets-zero-{name}-{size}");
 
+                        // Entry 348: Add a store-bought target at its second step, a stand-in poster drawn by GroupLab, its corners found and its
+                        // printed size typed, as the Features page and the tour show it.
+                        string posterFolder = GroupLab.Tests.Support.Temp.Folder("fingerprint-walk");
+                        Directory.CreateDirectory(posterFolder);
+                        try
+                        {
+                            string poster = Path.Combine(posterFolder, "poster.jpg");
+                            GroupLab.Tests.Support.StandInPoster.Photograph(poster);
+                            var fingerprint = window.AddStoreTarget();
+                            fingerprint.UsePhoto(poster);
+                            fingerprint.GoOn();
+                            Assert.True(fingerprint.Work.Wait(TimeSpan.FromSeconds(60)));
+                            Dispatcher.UIThread.RunJobs();
+                            fingerprint.FieldNamed("Width in inches").Text = "12";
+                            fingerprint.FieldNamed("Height in inches").Text = "18";
+                            window.Confirmations.Clear();
+                            Save(window, $"fingerprint-{name}-{size}");
+                            fingerprint.GoBack();
+                            fingerprint.GoBack();
+                        }
+                        finally
+                        {
+                            GroupLab.Tests.Support.Temp.Delete(posterFolder);
+                        }
+
+                        window.ShowLibrary();
+
                         // Entry 242 section 1: "Made for your optic" filled in, for its tour stop: 100 yd through 10x, and through 4x, the set.
                         var ten = window.TargetsPanel.Generate("100", "10", "", 25)!;
                         Save(window, $"optic-{name}-{size}");

@@ -5036,6 +5036,38 @@
   "If a new build will not start On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in %APPDATA%\\GroupLab , which no installer or uninstaller touches.": {
    "kind": "decided",
    "where": "docs/TESTING-GUIDE.md: everything lives in %APPDATA%\\GroupLab, which no installer or uninstaller touches (entry 134); the Windows wording is entry 345's"
+  },
+  "Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size.": {
+   "kind": "measured",
+   "where": "grouplab poster-trial, entry 344 (docs/PHASE1-RESULTS.md, Entry 344): 12 computer-made photos of each of a 12 by 18 in and a 23 by 35 in poster, tilted 1 to 29 degrees, scale error median and largest: printed size 0.01 and 0.32 percent, 0.28 and 0.63; GroupLab sheet read in 8 of 12 at 12 by 18 in, 0.28 and 0.55, never at 23 by 35 in; two points 0.16 and 0.46, 0.40 and 0.80. The words in src/GroupLab.Core/StoreTargets/FingerprintSteps.cs FingerprintWords.Measured; entry 348 section 2 forbids calling any source the most accurate"
+  },
+  "&lsaquo; Add a store-bought target All screens Marking and review &rsaquo; Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()"
+  },
+  "&lsaquo; Made for your optic All screens Capture &rsaquo; Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()"
+  },
+  "The aim point test The Targets screen &lsaquo; Targets All screens Add a store-bought target &rsaquo; Free and open source under GPL-3.0.": {
+   "kind": "code",
+   "where": "the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()"
+  },
+  "Thirteen pages, one per screen, so you can see what using GroupLab is like before you download it.": {
+   "kind": "code",
+   "where": "website/tour.json order, counted by scripts/counts.py tour-screens"
+  },
+  "Not built yet Hole detection on plain paper &#183; synchronization between devices The full status, phase by phase, on GitHub Every screen The tour has a page for each of the thirteen screens: what it is for, what you are looking at, and what you would do there.": {
+   "kind": "decided",
+   "where": "README.md's phase list: hole detection on blank paper is Phase 4 and synchronization Phase 7, neither built (entry 345 finding 1); the tour's count from website/tour.json order, entry 348 adding Add a store-bought target"
+  },
+  "Where it fits Before you shoot a target GroupLab does not know.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 340 and 344 (recognition from a fingerprint; only Alan's files are added to the library, checked by hand); src/GroupLab.Core/StoreTargets/StoreTargetLibrary.cs All; entry 348's steps in src/GroupLab.App/FingerprintStepsView.cs and mobile/GroupLab.Mobile/FingerprintPage.cs"
+  },
+  "On the phone; its picture comes at the next sitting Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/FingerprintPage.cs (entry 348), website/tour.json fingerprint, website/build.py page_tour_index"
   }
  },
  "rules": [

@@ -33,6 +33,7 @@ Store listing uses 1920x1080.
 | `ballistics-hit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet |
 | `compare` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/compare/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `equipment` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/equipment/ | no sheet at all |
+| `fingerprint` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/fingerprint/ | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `firstrun` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/firstrun/ | no sheet at all |
 | `marking` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /, /features/, /guides/user-guide/, /tour/, /tour/marking/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `optic` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/optic/ | sheet made by the generator |
@@ -121,6 +122,10 @@ read off a target, and the three sharing choices (Settings, where they are made)
 **Store-bought targets recognized** (entries 340 and 341) has its own picture, `store-target`: a bullseye the walk draws itself, standing
 in for the Shoot-N-C since no maker's artwork is published, recognized with its bull placed and the scale warning, and the window that asks
 the 6 inch or the 8 inch laid over it.
+
+**Teach GroupLab a store-bought target** (entry 348) has its own picture, `fingerprint`: Add a store-bought target at its second step, How
+big is this target?, with a 12 by 18 in poster the walk draws and photographs itself, its corners found and its printed size typed. The
+phone's five steps wait for the next sitting with the phone.
 
 ## Not published
 

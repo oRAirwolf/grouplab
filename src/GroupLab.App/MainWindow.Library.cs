@@ -10,6 +10,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Rendering;
+using GroupLab.Core.StoreTargets;
 using GroupLab.Core.Trace;
 
 namespace GroupLab.App;
@@ -94,7 +95,8 @@ public sealed partial class MainWindow
         var head = new StackPanel { Spacing = Tokens.Space12 };
         head.Children.Add(new TextBlock { Text = "Targets", Classes = { AppStyles.Title } });
         head.Children.Add(Line("The built-in sheets, read only, and your own sheets from the designer. Choose one to print it: every sheet prints the same way, from the panel beside the list."));
-        head.Children.Add(Row(Button("Design your own sheet", () => OpenPrint(null, design: true))));
+        // Entry 348: a store-bought target GroupLab does not know yet, photographed and fingerprinted in five steps on this screen.
+        head.Children.Add(Row(Button("Design your own sheet", () => OpenPrint(null, design: true)), Button(FingerprintWords.Title, () => AddStoreTarget())));
 
         double width = Math.Max(LibraryListWidth, settingsStore.LoadColumnWidth("library") ?? LibraryListWidth);
         librarySplit.ColumnDefinitions = new ColumnDefinitions(string.Create(CultureInfo.InvariantCulture, $"{width},Auto,*"));
@@ -148,14 +150,55 @@ public sealed partial class MainWindow
         librarySplit.Children.Add(splitter);
         librarySplit.Children.Add(detail);
 
-        var whole = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), Margin = new Thickness(Tokens.Space24, Tokens.Space20) };
-        whole.Children.Add(head);
+        var list = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), Margin = new Thickness(Tokens.Space24, Tokens.Space20) };
+        list.Children.Add(head);
         Grid.SetRow(librarySplit, 1);
         librarySplit.Margin = new Thickness(0, Tokens.Space12, 0, 0);
-        whole.Children.Add(librarySplit);
+        list.Children.Add(librarySplit);
+        libraryListView = list;
+        var whole = new Panel { Children = { list } };
+        libraryWhole = whole;
         whole.IsVisible = false;
         return whole;
     }
+
+    private Grid libraryListView = null!;
+    private Panel libraryWhole = null!;
+    private FingerprintStepsView? fingerprintSteps;
+
+    /// <summary>
+    /// Entry 348: Targets, "Add a store-bought target": the five steps fill the screen in place of the list, and Back to Targets puts the list
+    /// back. Never a window of its own (entry 155).
+    /// </summary>
+    internal FingerprintStepsView AddStoreTarget()
+    {
+        Go(Destination.Library);
+        if (fingerprintSteps is { } open)
+        {
+            return open;
+        }
+
+        DiagnosticLog.Info("fingerprint.open");
+        var steps = new FingerprintStepsView(ShippedDefinitions, () =>
+        {
+            if (fingerprintSteps is { } shown)
+            {
+                libraryWhole.Children.Remove(shown);
+                fingerprintSteps = null;
+            }
+
+            libraryListView.IsVisible = true;
+            status.Text = LibraryStatus;
+        });
+        fingerprintSteps = steps;
+        libraryListView.IsVisible = false;
+        libraryWhole.Children.Add(steps);
+        status.Text = FingerprintWords.Offer;
+        return steps;
+    }
+
+    /// <summary>The fingerprint steps when they are showing, for the headless tests.</summary>
+    internal FingerprintStepsView? FingerprintSteps => fingerprintSteps;
 
     /// <summary>
     /// Zooms the preview, entry 120 section 10.3, which is what the status line promises. Zero means fit the page whole, which is where it

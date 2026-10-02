@@ -42,7 +42,9 @@ public sealed class TargetsPage : UserControl
         return Screens.Numeric(box);
     }
 
-    private static Control Field(string words, TextBox box) => new StackPanel { Spacing = 4, Children = { Screens.Dim(words), box } };
+    // The fields and choices are kept between visits to the list, so each is taken from the list it was last in: "Back to the targets"
+    // built the list again around fields that still had a parent, which Avalonia refuses (found by entry 348's Back from its steps).
+    private static Control Field(string words, TextBox box) => new StackPanel { Spacing = 4, Children = { Screens.Dim(words), Screens.Detach(box) } };
 
     private Control List()
     {
@@ -53,6 +55,8 @@ public sealed class TargetsPage : UserControl
         // Entry 246, look B: the optic's form on one card, two fields to a row, the choices as cards, and the one action in amber.
         static Control Pair(Control a, Control b)
         {
+            Screens.Detach(a);
+            Screens.Detach(b);
             Grid.SetColumn(b, 2);
             return new Grid { ColumnDefinitions = new ColumnDefinitions("*,12,*"), Children = { a, b } };
         }
@@ -68,7 +72,13 @@ public sealed class TargetsPage : UserControl
             Screens.Dim("Bull shape"),
             Pair(disc, diamond),
             Screens.Primary("Make the sheet", Generate),
-            said));
+            Screens.Detach(said)));
+
+        // Entry 348: a store-bought target GroupLab does not know yet, fingerprinted from a photo in five steps.
+        column.Children.Add(Screens.Card(
+            Screens.Heading("Store-bought targets"),
+            Screens.Dim(GroupLab.Core.StoreTargets.FingerprintWords.Offer),
+            Screens.Choice(GroupLab.Core.StoreTargets.FingerprintWords.Title, () => Content = new FingerprintPage(() => Content = List())).Id("targets-add-store")));
 
         column.Children.Add(Screens.Heading("The library"));
         IReadOnlyList<LibrarySheet> sheets;

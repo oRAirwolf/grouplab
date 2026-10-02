@@ -19,6 +19,7 @@ source that is not on the list below, or if any test writing into this folder co
 | `Alan's own scans, entry 171` | Alan's scans of his own targets, under his standing consent (entry 171 section 6); entry 243 section 1.3 allowed them here. The Compare loads picture is his two 6 ARC suppressor sheets of 2026-09-26, and the Session records list shows them beside the synthetic sheet. Nobody else's photograph or scan, Unholy's and other friends' included, appears here unless Alan says so. |
 | `sheet made by the generator` | A sheet GroupLab's "Made for your optic" drew from numbers typed into it (entry 242). Nobody's target. |
 | `Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341)` | A plain bullseye the walk draws itself, saying so on it, given the numbers a crop of the 8 in Shoot-N-C bullseye measured so the question shows. Never a maker's artwork (entry 340).
+| `Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348)` | A 12 by 18 in poster the walk draws itself, rings, words and bulls with red centers, photographed by the walk at an angle on a dark board, its corners found. Never a maker's artwork (entry 348). |
 
 ## What is here
 
@@ -64,6 +65,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `equipment-light-1400x900.png` | no sheet at all |
 | `equipment-light-1920x1080.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
+| `fingerprint-dark-1280x720.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-dark-1400x900.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-dark-1920x1080.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-dark-2560x1440.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-light-1280x720.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-light-1400x900.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-light-1920x1080.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
+| `fingerprint-light-2560x1440.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `scope-unit-dark-1280x720.png` | no sheet at all |
 | `scope-unit-dark-1400x900.png` | no sheet at all |
 | `scope-unit-dark-1920x1080.png` | no sheet at all |

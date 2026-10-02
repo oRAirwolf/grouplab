@@ -44,6 +44,11 @@
     <Compile Include="..\..\src\GroupLab.Cli\Library\TargetGenerator.cs" Link="Shared\Library\TargetGenerator.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\ParametricSheet.cs" Link="Shared\Library\ParametricSheet.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\LibraryBuilder.cs" Link="Shared\Library\LibraryBuilder.cs" />
+    <!-- Entry 348: the fingerprint steps' work, the same as the desktop's: entry 344's engine and the session both screens drive. -->
+    <Compile Include="..\..\src\GroupLab.Cli\Library\TargetReferenceMaker.cs" Link="Shared\Library\TargetReferenceMaker.cs" />
+    <Compile Include="..\..\src\GroupLab.Cli\Library\StoreFingerprintBuilder.cs" Link="Shared\Library\StoreFingerprintBuilder.cs" />
+    <Compile Include="..\..\src\GroupLab.Cli\Library\FingerprintSession.cs" Link="Shared\Library\FingerprintSession.cs" />
+    <Compile Include="..\..\src\GroupLab.App\FingerprintPicture.cs" Link="Shared\FingerprintPicture.cs" />
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
     <Compile Include="..\..\src\GroupLab.App\UnitTap.cs" Link="Shared\UnitTap.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />

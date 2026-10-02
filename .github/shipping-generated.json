@@ -35,6 +35,8 @@
     "src/GroupLab.App/CommandKey.cs",
     "src/GroupLab.App/CompositePlot.cs",
     "src/GroupLab.App/Diagnostics/",
+    "src/GroupLab.App/FingerprintPicture.cs",
+    "src/GroupLab.App/FingerprintStepsView.cs",
     "src/GroupLab.App/GroupLab.App.csproj",
     "src/GroupLab.App/HitGraphs.cs",
     "src/GroupLab.App/IntervalChart.cs",

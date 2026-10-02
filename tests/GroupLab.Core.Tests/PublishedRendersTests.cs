@@ -39,6 +39,8 @@ public partial class PublishedRendersTests
         "Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274)",
         // Entries 340 and 341: no maker's artwork is published, so recognition is pictured on a bullseye the walk draws itself.
         "Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341)",
+        // Entry 348: the fingerprint steps pictured on a poster the walk draws and photographs itself, never a maker's artwork.
+        "Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348)",
     ];
 
     /// <summary>
