@@ -9,18 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-02 12:55 UTC, entry 352 folded; the inbox is empty.
+**Last rewritten:** 2026-10-02 14:50 UTC, entry 352 shipped in nightly 158; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Nothing is waiting in the inbox.** Entry 352 is done; its Android emulator sweep is being re-run after a fix (run it with
-  `gh workflow run android-emulator.yml --ref main`; results in its android-emulator-sweep artifact).
-- **Nightly 157** reached TestFlight with the friend's keyboard fix; 154 to 156 never did, the iPhone head not compiling (fixed).
+- **Nothing is running, and the inbox is empty.** Entry 352 is done and in **nightly 158** (2026-10-02): reading about twice as fast,
+  the Eze-Scorer's printed numbers, hostile files refused in words, and the phone sweep on both the iPhone simulator and an Android
+  emulator, each started by every nightly that changes the application. Both sweeps pass all three passes.
+- **Nightly 157** carried the friend's keyboard fix to TestFlight; 154 to 156 never reached it (the iPhone head did not compile).
 - **A draft article** waits for Alan: website/research/printed-numbers-are-not-holes.md.
-- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66.
-- **Waiting on planning:** question 79.
+- **Watch:** the desktop drop test failed once on Windows (639c2e5e) and passed everywhere since.
+- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66. **Waiting on planning:** question 79.
 
 ## The next three
 
@@ -41,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; five are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Read the Android emulator sweep's second run, and fix what it finds.
+1. Read each nightly's two phone sweeps, and fix what they find.
 2. The phone pictures of the fingerprint and pairing screens, at the next sitting with a phone.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
@@ -69,7 +70,7 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.156 (2026-10-02): the store-bought target steps and the pairing rows.
+- **Last nightly:** 0.2.0-nightly.158 (2026-10-02): entry 352.
 - **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
 - Crash reports open: none.
 

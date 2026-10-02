@@ -7,7 +7,7 @@ is refused with a plain sentence; a damaged spreadsheet could close GroupLab bef
 simulator with each nightly, and now on an Android emulator too (its first run is being repeated after a fix). **One draft to read,
 whenever suits:** "Printed numbers are not holes" (website/research/printed-numbers-are-not-holes.md, unpublished): why a scoring
 target's bold 6s fooled the hole finder and what tells them apart, from your blank scans and made-up holes only. Say "publish it" or what
-to change. All of it in the next nightly.
+to change. All of it is in **nightly 158**, and both phone sweeps pass.
 
 **ADD A STORE-BOUGHT TARGET, AND CHANGING A PAIRING** (entries 348 and 351, not a request): both built as you chose, concept A,
 in **nightly 156**. On the phone and the computer, Targets has **Add a store-bought target**: five steps, from a photo of the blank
