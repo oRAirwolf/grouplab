@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.156
+
+**2026-10-02**, commit `3df5d04`. Nightly.
+
+**What you will notice**
+
+- Add a store-bought target, on the Targets screen of the computer and the phone, turns a photo of a target GroupLab does not know into a small file of its fingerprint, name, size and bulls, never the photo, in five steps, to send so a later build recognizes it.
+- On the phone, going back to the targets list after opening a sheet no longer fails.
+- Changing what a chronograph reading goes with is now a row per reading in the order fired, with one mark to tap or click, teal when paired and amber when it needs a look, and the same four choices on the phone and the computer; giving a reading a shot another reading has swaps the two and says so.
+- A chronograph string imported in meters a second now shows its readings in meters a second while you pair them.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.156)
+
+---
+
 ## 0.2.0-nightly.155
 
 **2026-10-02**, commit `3124036`. Nightly.
