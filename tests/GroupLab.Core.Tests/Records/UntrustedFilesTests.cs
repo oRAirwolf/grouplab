@@ -21,8 +21,11 @@ public class UntrustedFilesTests
 {
     private static readonly (string PrivateKeyBase64, string PublicKeyBase64) Key = UpdateSignature.NewKeyPair();
 
-    /// <summary>Generous for one file, so a slow machine never fails it, and far less than a hang.</summary>
-    private static readonly TimeSpan Quick = TimeSpan.FromSeconds(5);
+    /// <summary>
+    /// A hang, not a stopwatch: the slowest case takes about a second on a quiet desktop and took 5.3 s on a CI runner busy with the rest of
+    /// the suite (the run on 639c2e5e), so the limit is well past both and still far short of anything a person would wait out.
+    /// </summary>
+    private static readonly TimeSpan Quick = TimeSpan.FromSeconds(30);
 
     /// <summary>What a chronograph file gave: its strings, or the words of its refusal. Anything but a <see cref="FormatException"/> fails.</summary>
     private static string Chronograph(byte[] bytes, string name)
