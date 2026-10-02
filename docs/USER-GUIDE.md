@@ -304,7 +304,8 @@ choose the string by its name), a CSV from a spreadsheet (the column of velociti
 LabRadar report, or a BulletSeeker export. The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and
 BulletSeeker readers are Experimental. A shot deleted on the chronograph stays missing from the numbering, a shot the Xero left out of
 its own figures is kept and said, and where a file's own average, SD or spread differs from its shots GroupLab says so. A place name or
-coordinates in an older file are never read. GroupLab then proposes what each reading goes with, a row per reading in the order fired:
+coordinates in an older file are never read. A file larger than 10 MB, a workbook that would unpack to far more than any export, or a
+damaged file is refused with a sentence saying why, and a formula in a cell is never worked out. GroupLab then proposes what each reading goes with, a row per reading in the order fired:
 its number, its speed in the string's own unit, its time where the file has one, and its mark, **Shot 2** in teal, one that needs a
 look, such as **Shot 5, left out in ShotView** or **Shot 1, clean bore**, in amber, and **Not this group** plain; a pause that split the
 string shows between the rows, such as **6 minute pause**. Above the rows a card says what is proposed and why: a typed list pairs in

@@ -110,15 +110,40 @@ public sealed class TargetFingerprint
     public static TargetFingerprint Read(Stream stream)
     {
         ArgumentNullException.ThrowIfNull(stream);
+        try
+        {
+            return ReadUnchecked(stream);
+        }
+        catch (Exception e) when (e is IOException or ArgumentException or OverflowException or FormatException)
+        {
+            throw new InvalidDataException("the fingerprint is damaged or cut short", e);
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 352 item 3: what a fingerprint may unpack to and hold. The shipped ones unpack to well under a megabyte;
+    /// every count is checked before anything is made for it, so a damaged or hostile file cannot ask for more memory than this.
+    /// </summary>
+    public const int MostUnpackedBytes = 16 * 1024 * 1024, MostBulls = 10_000, MostLayoutCells = 1_000_000, MostDescriptorBytes = 256;
+
+    private static TargetFingerprint ReadUnchecked(Stream stream)
+    {
         using var zip = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
-        using var r = new BinaryReader(zip, Encoding.UTF8, leaveOpen: true);
+        using var bounded = new BoundedStream(zip, MostUnpackedBytes);
+        using var r = new BinaryReader(bounded, Encoding.UTF8, leaveOpen: true);
         if (r.ReadString() != Magic)
         {
             throw new InvalidDataException("not a GroupLab target fingerprint");
         }
 
         string product = r.ReadString();
-        var bulls = new PointD[r.ReadInt32()];
+        int bullCount = r.ReadInt32();
+        if (bullCount is < 0 or > MostBulls)
+        {
+            throw new InvalidDataException("the fingerprint is damaged: it says it has " + bullCount + " bulls");
+        }
+
+        var bulls = new PointD[bullCount];
         for (int i = 0; i < bulls.Length; i++)
         {
             bulls[i] = new PointD(r.ReadSingle(), r.ReadSingle());
@@ -126,8 +151,24 @@ public sealed class TargetFingerprint
 
         double x0 = r.ReadDouble(), y0 = r.ReadDouble();
         int cols = r.ReadInt32(), rows = r.ReadInt32();
-        var layout = new ColourLayout(x0, y0, cols, rows, r.ReadBytes(cols * rows * 3));
+        if (cols < 0 || rows < 0 || (long)cols * rows > MostLayoutCells)
+        {
+            throw new InvalidDataException("the fingerprint is damaged: its color layout is the wrong size");
+        }
+
+        byte[] lab = r.ReadBytes(cols * rows * 3);
+        if (lab.Length != cols * rows * 3)
+        {
+            throw new InvalidDataException("the fingerprint ends early");
+        }
+
+        var layout = new ColourLayout(x0, y0, cols, rows, lab);
         int n = r.ReadInt32(), size = r.ReadInt32();
+        if (n < 0 || size is < 0 or > MostDescriptorBytes || (long)n * (size + 8) > MostUnpackedBytes)
+        {
+            throw new InvalidDataException("the fingerprint is damaged: it says it has more features than it could hold");
+        }
+
         var points = new PointD[n];
         var descriptors = new byte[n * size];
         for (int i = 0; i < n; i++)
@@ -143,5 +184,38 @@ public sealed class TargetFingerprint
         }
 
         return new TargetFingerprint(product, points, descriptors, size, bulls, layout);
+    }
+
+    /// <summary>A stream read through to a limit, past which it is refused as damaged: an unpacked fingerprint never grows without end.</summary>
+    private sealed class BoundedStream(Stream inner, long limit) : Stream
+    {
+        private long read;
+
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position { get => read; set => throw new NotSupportedException(); }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int n = inner.Read(buffer, offset, count);
+            read += n;
+            return read > limit ? throw new InvalidDataException("the fingerprint unpacks to more than any fingerprint holds") : n;
+        }
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }

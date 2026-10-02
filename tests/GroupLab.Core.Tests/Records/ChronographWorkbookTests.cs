@@ -15,7 +15,7 @@ namespace GroupLab.Core.Tests.Records;
 public class ChronographWorkbookTests
 {
     /// <summary>A minimal .xlsx: each sheet a name and rows of cells; a cell that parses as a number is written as one where asked.</summary>
-    private static MemoryStream Workbook(params (string Name, string[][] Rows, bool Numbers)[] sheets)
+    internal static MemoryStream Workbook(params (string Name, string[][] Rows, bool Numbers)[] sheets)
     {
         var stream = new MemoryStream();
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Create, leaveOpen: true))
@@ -62,10 +62,10 @@ public class ChronographWorkbookTests
         return stream;
     }
 
-    private static readonly string[] XeroHeader = ["#", "Speed (FPS)", "Δ Avg (FPS)", "KE (FT-LB)", "Power Factor (kgr⋅ft/s)", "Time", "Clean Bore", "Cold Bore", "Shot Notes"];
+    internal static readonly string[] XeroHeader = ["#", "Speed (FPS)", "Δ Avg (FPS)", "KE (FT-LB)", "Power Factor (kgr⋅ft/s)", "Time", "Clean Bore", "Cold Bore", "Shot Notes"];
 
     /// <summary>A Xero string as the September 2026 exports are: text numbers with thousands separators, a deleted shot, a shot left out.</summary>
-    private static string[][] XeroString(string name) =>
+    internal static string[][] XeroString(string name) =>
     [
         [name],
         XeroHeader,

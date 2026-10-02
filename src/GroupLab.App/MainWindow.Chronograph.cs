@@ -90,14 +90,21 @@ public sealed partial class MainWindow
         try
         {
             string source = Path.GetFileNameWithoutExtension(path);
+
+            // Entry 352 item 3: read to a limit, so a huge file is refused in words rather than filling memory.
+            byte[] bytes;
+            await using (var stream = File.OpenRead(path))
+            {
+                bytes = await ChronographFiles.ReadBoundedAsync(stream);
+            }
+
             if (Path.GetExtension(path).ToLowerInvariant() is ".csv" or ".txt")
             {
-                ImportChronograph(await File.ReadAllTextAsync(path), source);
+                ImportChronograph(ChronographFiles.Text(bytes), source);
                 return;
             }
 
-            await using var stream = File.OpenRead(path);
-            ImportChronographStrings(ChronographFiles.ReadFile(stream, path, out _), source);
+            ImportChronographStrings(ChronographFiles.ReadFile(new MemoryStream(bytes, writable: false), path, out _), source);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException or NotSupportedException or ExcelDataReader.Exceptions.ExcelReaderException)
         {

@@ -227,6 +227,21 @@ public sealed record TargetReference(StoreTarget Target, TargetFingerprint Finge
     /// <summary>Reads a reference; throws <see cref="InvalidDataException"/> where it is not one.</summary>
     public static TargetReference Read(JsonNode? node)
     {
+        try
+        {
+            return ReadUnchecked(node);
+        }
+        catch (Exception e) when (e is InvalidOperationException or FormatException or ArgumentException or OverflowException or IOException or InvalidCastException)
+        {
+            throw new InvalidDataException("not a GroupLab target reference GroupLab can read: it is damaged or another kind of file", e);
+        }
+    }
+
+    /// <summary>NOTES-FROM-PLANNING.md entry 352 item 3: the largest reference read, far beyond one fingerprint and its words.</summary>
+    public const int MostChars = 32 * 1024 * 1024;
+
+    private static TargetReference ReadUnchecked(JsonNode? node)
+    {
         if (node is not JsonObject o || (string?)o["format"] != Format)
         {
             throw new InvalidDataException("not a GroupLab target reference");
@@ -245,5 +260,24 @@ public sealed record TargetReference(StoreTarget Target, TargetFingerprint Finge
             (double?)o["scaleUncertainty"] ?? 0, (string?)o["says"] ?? "");
     }
 
-    public static TargetReference Read(string json) => Read(JsonNode.Parse(json));
+    public static TargetReference Read(string json)
+    {
+        ArgumentNullException.ThrowIfNull(json);
+        if (json.Length > MostChars)
+        {
+            throw new InvalidDataException("not a GroupLab target reference: it is far larger than any reference");
+        }
+
+        JsonNode? node;
+        try
+        {
+            node = JsonNode.Parse(json);
+        }
+        catch (JsonException e)
+        {
+            throw new InvalidDataException("not a GroupLab target reference: it is not the JSON a reference is written in", e);
+        }
+
+        return Read(node);
+    }
 }

@@ -39,7 +39,23 @@ public static class StoreLibraryUpdate
             return "no fetched library kept";
         }
 
-        var (refusal, contents) = StoreLibraryFile.Read(File.ReadAllText(path), publicKey);
+        // Entry 352 item 3: a kept file is read only when it could be a library, and a file that cannot be read is said, never thrown.
+        string json;
+        try
+        {
+            if (new FileInfo(path).Length > StoreLibraryFile.MostChars)
+            {
+                return "the kept library was refused: " + StoreLibraryFile.Refusal.TooLarge;
+            }
+
+            json = File.ReadAllText(path);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return "the kept library could not be read";
+        }
+
+        var (refusal, contents) = StoreLibraryFile.Read(json, publicKey);
         if (contents is null)
         {
             return "the kept library was refused: " + refusal;

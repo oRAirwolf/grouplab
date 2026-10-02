@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1524 |
+| code | 1526 |
 | measured | 1960 |
 | decided | 1281 |
 | unbacked | 0 |
-| **total** | **4765** |
+| **total** | **4767** |
 
-**1153** of them were read one sentence at a time and their backing written against the sentence. The other **3612** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1155** of them were read one sentence at a time and their backing written against the sentence. The other **3612** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3483,6 +3483,7 @@ one that matters.
 - *code* (the screens they describe, src/GroupLab.App; pictures rendered from the build each week): ![Two loads compared](figures/screens/current/compare-light-1400x900.png) **The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads.
 - *code* (src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes): Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 - *measured* (grouplab chronograph-files C:\Dev\grouplab-local\chronograph-samples\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)): The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and BulletSeeker readers are Experimental.
+- *code* (src/GroupLab.Core/Records/ChronographFiles.cs MostBytes, MostUnpackedBytes, ReadFile and Unpacks; held by tests/GroupLab.Core.Tests/Records/UntrustedFilesTests.cs (entry 352 item 3)): A file larger than 10 MB, a workbook that would unpack to far more than any export, or a damaged file is refused with a sentence saying why, and a formula in a cell is never worked out.
 - *code* (src/GroupLab.App/MainWindow.BallisticsLayout.cs BallisticBar, BallisticSection, AtOneRange, ArrangeBallistics; tests/GroupLab.App.Tests/Entry247Tests.cs; entry 247): ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) **How the screen is laid out.** Three columns, like the analysis: - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes **Work out the chance** in the hit probability view.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): **The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): - **What costs the most** lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.
@@ -3848,6 +3849,7 @@ one that matters.
 - *code* (SessionReport in src/GroupLab.App/MainWindow.Report.cs): Page 2: the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
 - *code* (src/GroupLab.Core/Records/SessionNames.cs For(); tests/GroupLab.Core.Tests/Records/SessionNamesTests.cs TwoSessionsOnOneSheetOnOneDayAreToldApartByTheirTimes): Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 - *measured* (grouplab chronograph-files C:\Dev\grouplab-local\chronograph-samples\garmin-xero, 2026-10-01: GarminXero 92 files, 536 strings, 9,863 shots, none unread; tests/GroupLab.Core.Tests/Records/ChronographWorkbookTests.cs EveryOneOfAlansExportsReadsWhereTheyAreHere (entry 334)): The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and BulletSeeker readers are Experimental.
+- *code* (src/GroupLab.Core/Records/ChronographFiles.cs MostBytes, MostUnpackedBytes, ReadFile and Unpacks; held by tests/GroupLab.Core.Tests/Records/UntrustedFilesTests.cs (entry 352 item 3)): A file larger than 10 MB, a workbook that would unpack to far more than any export, or a damaged file is refused with a sentence saying why, and a formula in a cell is never worked out.
 - *code* (NOTES-FROM-PLANNING.md entry 351 (Pairing A); src/GroupLab.Core/Records/ChronographMarks.cs Label, Tone, Set, Choices, Pauses; the computer's rows in src/GroupLab.App/MainWindow.Chronograph.cs FillChronograph and ChronographChoices, the phone's sheet in mobile/GroupLab.Mobile/PairingView.cs; tests/GroupLab.App.Tests/Entry351Tests.cs and tests/GroupLab.Mobile.Tests/Entry351Tests.cs): GroupLab then proposes what each reading goes with, a row per reading in the order fired: its number, its speed in the string's own unit, its time where the file has one, and its mark, Shot 2 in teal, one that needs a look, such as Shot 5, left out in ShotView or Shot 1, clean bore , in amber, and Not this group plain; a pause that split the string shows between the rows, such as 6 minute pause .
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs): The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): What costs the most lists every error source by the hits it takes away, largest first with a bar for each, so you can tell whether to practice wind calls, work on the load or buy a rangefinder.

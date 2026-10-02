@@ -81,6 +81,133 @@ public static class ChronographFiles
     public static IReadOnlyList<string> Extensions { get; } = [".csv", ".txt", ".xls", ".xlsx", ".xlsm"];
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 352 item 3, every file a person gives GroupLab is untrusted: the largest chronograph file read, 10 MB,
+    /// about seventy times the largest of Alan's 387 exports (135 KB). A larger one is refused before any more of it is read.
+    /// </summary>
+    public const int MostBytes = 10 * 1024 * 1024;
+
+    /// <summary>What a workbook may unpack to, all its parts together; more is a file made to fill memory, not an export.</summary>
+    public const long MostUnpackedBytes = 64L * 1024 * 1024;
+
+    /// <summary>The most parts a workbook may hold.</summary>
+    public const int MostParts = 10_000;
+
+    /// <summary>The most sheets, and cells over all of them, a workbook may give: far beyond any export, and a bound on time and memory.</summary>
+    public const int MostSheets = 1_000, MostCells = 4_000_000;
+
+    /// <summary>What every refusal of a file too large says.</summary>
+    public const string TooLargeWords = "It is larger than any chronograph export (more than 10 MB), so GroupLab did not read it.";
+
+    /// <summary>What a workbook that cannot be read says.</summary>
+    public const string NotAWorkbookWords = "It is not a workbook GroupLab can read: it may be damaged, or another kind of file with a spreadsheet's name.";
+
+    /// <summary>A file's bytes, read to <see cref="MostBytes"/> at most; a <see cref="FormatException"/> saying so where it is larger.</summary>
+    public static byte[] ReadBounded(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        using var copy = new MemoryStream();
+        var buffer = new byte[81920];
+        int n;
+        while ((n = stream.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            if (copy.Length + n > MostBytes)
+            {
+                throw new FormatException(TooLargeWords);
+            }
+
+            copy.Write(buffer, 0, n);
+        }
+
+        return copy.ToArray();
+    }
+
+    /// <summary>The same, for a stream a file picker gives, read without holding the screen.</summary>
+    public static async Task<byte[]> ReadBoundedAsync(Stream stream, CancellationToken token = default)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        using var copy = new MemoryStream();
+        var buffer = new byte[81920];
+        int n;
+        while ((n = await stream.ReadAsync(buffer, token).ConfigureAwait(false)) > 0)
+        {
+            if (copy.Length + n > MostBytes)
+            {
+                throw new FormatException(TooLargeWords);
+            }
+
+            copy.Write(buffer, 0, n);
+        }
+
+        return copy.ToArray();
+    }
+
+    /// <summary>
+    /// A text file's words: by its byte order mark where it has one; UTF-16 without one where every other byte is zero; UTF-8, or where its
+    /// bytes are not UTF-8, Latin-1, which reads every byte. Anything else with zero bytes in it is not text, and is refused in words.
+    /// </summary>
+    public static string Text(byte[] bytes)
+    {
+        ArgumentNullException.ThrowIfNull(bytes);
+        if (bytes.Length > MostBytes)
+        {
+            throw new FormatException(TooLargeWords);
+        }
+
+        ReadOnlySpan<byte> b = bytes;
+        if (b.StartsWith((ReadOnlySpan<byte>)[0xEF, 0xBB, 0xBF]))
+        {
+            return new UTF8Encoding(false, false).GetString(b[3..]);
+        }
+
+        if (b.StartsWith((ReadOnlySpan<byte>)[0xFF, 0xFE]) || b.StartsWith((ReadOnlySpan<byte>)[0xFE, 0xFF]))
+        {
+            return (b[0] == 0xFF ? Encoding.Unicode : Encoding.BigEndianUnicode).GetString(b.Slice(2, (b.Length - 2) & ~1));
+        }
+
+        var head = b[..Math.Min(b.Length, 4096)];
+        if (head.Contains((byte)0))
+        {
+            int evenZeros = 0, oddZeros = 0;
+            for (int i = 0; i < head.Length; i++)
+            {
+                if (head[i] == 0 && i % 2 == 0)
+                {
+                    evenZeros++;
+                }
+                else if (head[i] == 0)
+                {
+                    oddZeros++;
+                }
+            }
+
+            int half = head.Length / 2;
+            if (oddZeros >= 0.4 * half && evenZeros < 0.1 * half)
+            {
+                return Encoding.Unicode.GetString(b[..(b.Length & ~1)]);
+            }
+
+            if (evenZeros >= 0.4 * half && oddZeros < 0.1 * half)
+            {
+                return Encoding.BigEndianUnicode.GetString(b[..(b.Length & ~1)]);
+            }
+
+            throw new FormatException("It is not a text file: it may be a workbook or a picture with a text file's name.");
+        }
+
+        try
+        {
+            return new UTF8Encoding(false, true).GetString(b);
+        }
+        catch (DecoderFallbackException)
+        {
+            return Encoding.Latin1.GetString(b);
+        }
+    }
+
+    /// <summary>A text file read to <see cref="MostBytes"/> at most and decoded as <see cref="Text"/> does.</summary>
+    public static string ReadText(Stream stream) => Text(ReadBounded(stream));
+
+    /// <summary>
     /// Every string in a file, by its name: a text file through <see cref="Read"/>, an Excel workbook sheet by sheet, each sheet a string
     /// (a Xero workbook of the strings selected in ShotView, one sheet per string). A sheet that is neither format is passed over and counted in <paramref name="passedOver"/>.
     /// </summary>
@@ -89,36 +216,104 @@ public static class ChronographFiles
         ArgumentNullException.ThrowIfNull(stream);
         ArgumentNullException.ThrowIfNull(fileName);
         passedOver = 0;
+        byte[] bytes = ReadBounded(stream);
         string extension = Path.GetExtension(fileName).ToLowerInvariant();
         if (extension is ".csv" or ".txt")
         {
-            using var text = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-            return [Read(text.ReadToEnd())];
+            return [Read(Text(bytes))];
+        }
+
+        // Entry 352 item 3: a workbook is a zip (xlsx, xlsm) or a compound file (xls). A zip is unpacked once, counting and keeping nothing,
+        // before the workbook reader sees it, so one that unpacks to far more than it holds is refused before anything holds it.
+        if (bytes.AsSpan().StartsWith("PK"u8))
+        {
+            Unpacks(bytes);
         }
 
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         var strings = new List<ChronographImport>();
-        using var reader = ExcelReaderFactory.CreateReader(stream);
-        do
+        int sheets = 0, cells = 0;
+        try
         {
-            var rows = new List<string[]>();
-            while (reader.Read())
+            using var reader = ExcelReaderFactory.CreateReader(new MemoryStream(bytes, writable: false));
+            do
             {
-                rows.Add([.. Enumerable.Range(0, reader.FieldCount).Select(i => Cell(reader.GetValue(i)))]);
-            }
+                if (++sheets > MostSheets)
+                {
+                    throw new FormatException("It holds more sheets than any chronograph export, so GroupLab did not read it.");
+                }
 
-            if ((XeroTable(rows) ?? BulletSeekerTable(rows)) is { } read)
-            {
-                strings.Add(read);
+                var rows = new List<string[]>();
+                while (reader.Read())
+                {
+                    cells += Math.Max(1, reader.FieldCount);
+                    if (cells > MostCells)
+                    {
+                        throw new FormatException("It holds more cells than any chronograph export, so GroupLab did not read it.");
+                    }
+
+                    rows.Add([.. Enumerable.Range(0, reader.FieldCount).Select(i => Cell(reader.GetValue(i)))]);
+                }
+
+                if ((XeroTable(rows) ?? BulletSeekerTable(rows)) is { } read)
+                {
+                    strings.Add(read);
+                }
+                else
+                {
+                    passedOver++;
+                }
             }
-            else
-            {
-                passedOver++;
-            }
+            while (reader.NextResult());
         }
-        while (reader.NextResult());
+        catch (FormatException)
+        {
+            throw;
+        }
+        catch (Exception e) when (e is not OutOfMemoryException)
+        {
+            // The workbook reader's own errors name its insides; a person is told what it means for them.
+            throw new FormatException(NotAWorkbookWords, e);
+        }
 
         return strings;
+    }
+
+    /// <summary>Every part of a zip unpacked and counted, nothing kept; a <see cref="FormatException"/> where it is damaged or unpacks to too much.</summary>
+    private static void Unpacks(byte[] bytes)
+    {
+        try
+        {
+            using var zip = new System.IO.Compression.ZipArchive(new MemoryStream(bytes, writable: false), System.IO.Compression.ZipArchiveMode.Read);
+            if (zip.Entries.Count > MostParts)
+            {
+                throw new FormatException("It holds more parts than any workbook, so GroupLab did not read it.");
+            }
+
+            long total = 0;
+            var buffer = new byte[81920];
+            foreach (var entry in zip.Entries)
+            {
+                using var part = entry.Open();
+                int n;
+                while ((n = part.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    total += n;
+                    if (total > MostUnpackedBytes)
+                    {
+                        throw new FormatException("It unpacks to far more than any chronograph export, as a file made to fill a computer's memory does, so GroupLab did not read it.");
+                    }
+                }
+            }
+        }
+        catch (FormatException)
+        {
+            throw;
+        }
+        catch (Exception e) when (e is InvalidDataException or IOException or NotSupportedException or ArgumentException or InvalidOperationException)
+        {
+            throw new FormatException(NotAWorkbookWords, e);
+        }
     }
 
     /// <summary>
@@ -128,6 +323,11 @@ public static class ChronographFiles
     public static ChronographImport Read(string text, int? column = null, bool? metres = null)
     {
         ArgumentNullException.ThrowIfNull(text);
+        if (text.Length > MostBytes)
+        {
+            throw new FormatException(TooLargeWords);
+        }
+
         var lines = text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n').Split('\n')
             .Select(l => l.TrimStart((char)0xFEFF)).Where(l => l.Trim().Length > 0).ToList();
         if (lines.Count == 0)

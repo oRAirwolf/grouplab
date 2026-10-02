@@ -26,7 +26,16 @@ public static class StoreLibraryFile
         WrongAlgorithm,
         BadSignature,
         UnknownFormat,
+
+        /// <summary>Entry 352 item 3: far larger than any library, so not read at all.</summary>
+        TooLarge,
     }
+
+    /// <summary>
+    /// The largest library file read: 64 MB of text, some four hundred products at the shipped fingerprints' size, signed and encoded
+    /// twice. A larger one is refused before it is parsed.
+    /// </summary>
+    public const int MostChars = 64 * 1024 * 1024;
 
     /// <summary>What a library file carries once its signature checks: its version and its products.</summary>
     public sealed record Contents(int Version, IReadOnlyList<TargetReference> Targets);
@@ -71,6 +80,12 @@ public static class StoreLibraryFile
             return (Refusal.NoKey, null);
         }
 
+        // Entry 352 item 3: a file far larger than any library is refused before it is parsed.
+        if (json is { Length: > MostChars })
+        {
+            return (Refusal.TooLarge, null);
+        }
+
         JsonObject? file;
         try
         {
@@ -81,12 +96,14 @@ public static class StoreLibraryFile
             file = null;
         }
 
-        if (file is null || (string?)file["payload"] is not { Length: > 0 } payload64 || (string?)file["signature"] is not { Length: > 0 } signature64)
+        // Each field only as text: a number or an object where text belongs is not a signed library, and never an error.
+        static string? TextOf(JsonNode? node) => node is JsonValue v && v.TryGetValue(out string? s) ? s : null;
+        if (file is null || TextOf(file["payload"]) is not { Length: > 0 } payload64 || TextOf(file["signature"]) is not { Length: > 0 } signature64)
         {
             return (Refusal.NotSigned, null);
         }
 
-        if ((string?)file["algorithm"] != UpdateSignature.Algorithm)
+        if (TextOf(file["algorithm"]) != UpdateSignature.Algorithm)
         {
             return (Refusal.WrongAlgorithm, null);
         }
@@ -111,15 +128,15 @@ public static class StoreLibraryFile
         try
         {
             var root = JsonNode.Parse(payload) as JsonObject;
-            if (root is null || (string?)root["format"] != Format)
+            if (root is null || TextOf(root["format"]) != Format || root["targets"] is not JsonArray list)
             {
                 return (Refusal.UnknownFormat, null);
             }
 
-            var targets = root["targets"]!.AsArray().Select(TargetReference.Read).ToList();
+            var targets = list.Select(TargetReference.Read).ToList();
             return (Refusal.None, new Contents((int?)root["version"] ?? 0, targets));
         }
-        catch (Exception ex) when (ex is JsonException or InvalidDataException or FormatException or InvalidOperationException or EndOfStreamException)
+        catch (Exception ex) when (ex is JsonException or InvalidDataException or FormatException or InvalidOperationException or EndOfStreamException or ArgumentException)
         {
             return (Refusal.UnknownFormat, null);
         }

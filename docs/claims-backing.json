@@ -5088,6 +5088,10 @@
   "The clean Eze-Scorer went from 6 marks to 2, the logo's letters, which have no counter and are left; the synthetic holes in the Eze-Scorer from 32 false marks to 6, with the same holes found.": {
    "kind": "measured",
    "where": "Entry 352 item 2, measured 2026-10-02 before and after on this machine: grouplab scoreboard --corpus and --blanks on the five local blanks (C:\\Dev\\grouplab-local\\commercial-targets), --any-target, --synthetic and --corpus on the local corpus (every line unchanged), and the fifteen scans of scans/phase1/measurements/holes-baseline.json (341 of 355 found, 352 proposals, both times); src/GroupLab.Core/Detection/PrintedShape.cs Why and Even; PrintedShapeTests"
+  },
+  "A file larger than 10 MB, a workbook that would unpack to far more than any export, or a damaged file is refused with a sentence saying why, and a formula in a cell is never worked out.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/ChronographFiles.cs MostBytes, MostUnpackedBytes, ReadFile and Unpacks; held by tests/GroupLab.Core.Tests/Records/UntrustedFilesTests.cs (entry 352 item 3)"
   }
  },
  "rules": [

@@ -124,22 +124,41 @@ internal static class VelocityPages
                 return;
             }
 
-            await using var stream = await file.OpenReadAsync();
+            // Entry 352 item 3: read to a limit, so a huge file is refused in words rather than filling the phone's memory.
+            byte[] bytes;
+            try
+            {
+                await using var stream = await file.OpenReadAsync();
+                bytes = await ChronographFiles.ReadBoundedAsync(stream);
+            }
+            catch (Exception e) when (e is FormatException or IOException or UnauthorizedAccessException)
+            {
+                said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                return;
+            }
+
             if (Path.GetExtension(file.Name).ToLowerInvariant() is ".csv" or ".txt" or "")
             {
-                using var reader = new StreamReader(stream);
-                Imported(await reader.ReadToEndAsync(), null);
+                string text;
+                try
+                {
+                    text = ChronographFiles.Text(bytes);
+                }
+                catch (FormatException e)
+                {
+                    said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                    return;
+                }
+
+                Imported(text, null);
                 return;
             }
 
             // Entry 334: a workbook, a Garmin Xero workbook of the strings selected in ShotView, one sheet per string; each is a choice by its name.
-            using var copy = new MemoryStream();
-            await stream.CopyToAsync(copy);
-            copy.Position = 0;
             IReadOnlyList<ChronographImport> strings;
             try
             {
-                strings = ChronographFiles.ReadFile(copy, file.Name, out _);
+                strings = ChronographFiles.ReadFile(new MemoryStream(bytes, writable: false), file.Name, out _);
             }
             catch (Exception e) when (e is FormatException or NotSupportedException or IOException or ExcelDataReader.Exceptions.ExcelReaderException)
             {
