@@ -84,6 +84,15 @@ jobs:
       - name: Build the site
         run: python website/build.py
 
+      # Entry 347: grouplab.org keeps a copy of the newest signed store-bought fingerprint library, which the application reads only when
+      # GitHub cannot be reached and trusts only by its own signature. A nightly from before the library existed carries none, and that is
+      # said rather than failed.
+      - name: The fingerprint library's copy
+        run: |
+          mkdir -p website/_site/library
+          gh release download nightly -R "$GITHUB_REPOSITORY" -p grouplab-target-library.json -D website/_site/library --clobber \
+            || echo "the newest nightly carries no fingerprint library yet"
+
       # Entry 144 section 1.2: the site's own gate. These are the checks that can tell whether a page is wrong: an article quoting a
       # constant the code no longer uses, an em dash or a banned term, a figure with no sample size, a releases page that has fallen behind
       # the tags, a render nobody declared, or a link to the old site. A minute or two, and none of it waits on a Windows test run, because

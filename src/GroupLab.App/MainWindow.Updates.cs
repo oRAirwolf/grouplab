@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
+using GroupLab.Core.StoreTargets;
 using GroupLab.Core.Updates;
 
 namespace GroupLab.App;
@@ -33,6 +34,28 @@ public partial class MainWindow
     /// key and so would refuse every manifest a test could sign. Nothing in the application ever writes to them.
     /// </summary>
     internal static BuildIdentity ThisBuild { get; set; } = AppInfo.Build;
+
+    /// <summary>Where a fetched library of store-bought fingerprints is kept between launches (entry 347).</summary>
+    internal static string LibraryFolder { get; set; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GroupLab", "library");
+
+    /// <summary>
+    /// Entry 347: the library kept from an earlier launch, then the newest one the nightly's signed manifest lists, each installed only when
+    /// its signature checks and it is newer than the built-in one. Never throws and never shows anything; the log says what happened.
+    /// </summary>
+    internal static async Task RefreshTargetLibraryAsync(CancellationToken token = default)
+    {
+        try
+        {
+            DiagnosticLog.Info("library.kept", ("result", StoreLibraryUpdate.LoadSaved(LibraryFolder, TrustedKey)));
+            string said = await StoreLibraryUpdate.CheckAsync(TheOutsideWorld.Current, LibraryFolder, UpdateTrain.Nightly, TrustedKey, token).ConfigureAwait(false);
+            DiagnosticLog.Info("library.check", ("result", said));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or OperationCanceledException)
+        {
+            DiagnosticLog.Info("library.check", ("result", ex.GetType().Name));
+        }
+    }
 
     internal static string TrustedKey { get; set; } = UpdateKeys.PublicKey;
 

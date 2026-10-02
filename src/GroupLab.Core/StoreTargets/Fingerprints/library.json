@@ -1,5 +1,6 @@
 {
   "about": "NOTES-FROM-PLANNING.md entries 340 and 344: the store-bought targets GroupLab recognizes, each with its fingerprint beside this file. grouplab target-reference add adds to it.",
+  "version": 1,
   "targets": [
     { "id": "bc-34105-shoot-n-c-sight-in", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} sight-in grid", "size": "8 in", "catalog": "34105", "family": null, "scaleSource": "Scan" },
     { "id": "bc-34550-shoot-n-c-6in-bull", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} bullseye", "size": "6 in", "catalog": "34550", "family": "Shoot-N-C bullseye", "scaleSource": "Scan" },

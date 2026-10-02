@@ -318,6 +318,12 @@ internal sealed class IosPhone : IPhonePlatform
     /// <summary>Whether the device has a way to the internet now, from Network's path monitor; null until it has said (Photos/Connection.cs).</summary>
     public bool? Online => Connection.Online;
 
+    /// <summary>Entry 347: Wi-Fi or a wired line, and not in Low Data Mode.</summary>
+    public bool? Unmetered => Connection.Unmetered;
+
+    /// <summary>Entry 347: Low Power Mode, which the person turns on, or iOS offers at 20 percent.</summary>
+    public bool? BatteryLow => Foundation.NSProcessInfo.ProcessInfo.LowPowerModeEnabled;
+
     /// <summary>iOS updates GroupLab through TestFlight and the App Store, so there is no updater card.</summary>
     public Avalonia.Controls.Control? UpdateCard() => null;
 

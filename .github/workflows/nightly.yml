@@ -932,12 +932,16 @@ jobs:
           set -o pipefail
           dotnet build src/GroupLab.Cli --configuration Release
           base="https://github.com/oRAirwolf/grouplab/releases/download/nightly"
+          # Entry 347: the store-bought fingerprint library, signed with the same key, listed in the manifest beside the downloads so the
+          # application reaches it on its regular check and knows its SHA-256 before it reads it.
+          dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- target-reference library release/grouplab-target-library.json
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-manifest \
             --version "$VERSION" --train nightly --commit "$SHA" --notes notes.md --versions versions.json \
             --out release/update-manifest.json \
             --asset windows installer release/grouplab-setup-win-x64.exe "$base/grouplab-setup-win-x64.exe" \
             --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
             --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz" \
+            --asset library targets release/grouplab-target-library.json "$base/grouplab-target-library.json" \
             $( [ -f release/grouplab-android-dev.apk ] && echo --asset android apk-dev release/grouplab-android-dev.apk "$base/grouplab-android-dev.apk" )
           # Checked with the key compiled into the build being published, not with the key that signed it: that is the stronger question,
           # because a build that cannot verify its own updates is broken however well the manifest was signed. A commit from before the key
@@ -975,7 +979,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab release/grouplab-*-android-native-symbols-*.zip 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-target-library.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab release/grouplab-*-android-native-symbols-*.zip 2>/dev/null || true)
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.
@@ -993,7 +997,7 @@ jobs:
             --notes-file rolling.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab release/grouplab-android-dev.apk 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-target-library.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab release/grouplab-android-dev.apk 2>/dev/null || true)
 
       # 2026-10-01: nightly 148's run printed the moving release's address and left it a draft, so every download button on the site and in
       # the README answered 404 until it was published by hand. Publish it if it is still a draft, then prove a download answers.

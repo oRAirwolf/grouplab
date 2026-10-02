@@ -108,6 +108,13 @@ internal sealed class TestPhone : IPhonePlatform
 
     public bool IsDevBuild { get; set; }
 
+    /// <summary>Entry 347's three conditions, unknown until a test sets them, as on a head that cannot tell.</summary>
+    public bool? Unmetered { get; set; }
+
+    public bool? BatteryLow { get; set; }
+
+    public bool? StorageLow { get; set; }
+
     /// <summary>What the build offers of the keep-pictures switch; null follows the development build, as Android does.</summary>
     public (bool Offered, bool OnByDefault)? Keeps { get; set; }
 

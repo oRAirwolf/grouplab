@@ -40,6 +40,18 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 347: the fingerprint library reaches people without a new build
+
+Done 2026-10-02. The nightly signs `grouplab-target-library.json` with the update key (`grouplab target-reference library`, the key
+from the nightly's secret), lists it in the signed manifest as platform `library`, kind `targets`, with its SHA-256, and attaches it to
+the numbered and the moving release; every older build's lookup passes the extra asset over. The site publish copies it to
+grouplab.org/library/. `StoreLibraryUpdate` reads the manifest, refuses it unless signed, skips the download when the kept file already
+has the listed SHA-256, checks the file against it and against its own signature, and installs it only when newer than the built-in
+list (`library.json` now carries `version`, which `target-reference add` raises). grouplab.org's copy is read only when GitHub is not
+reached, trusted only by its signature. The computer looks at launch on every copy; every phone copy looks at start on an unmetered
+connection with the battery and storage not low, at most every six hours (Android reads all three; the iPhone reads Wi-Fi, Low Data
+Mode and Low Power Mode). Tests: three in Core, one in Mobile.
+
 ## Entry 349: the download page and an Android tablet asking for the desktop site
 
 Done 2026-10-02. Firefox and Chrome on an Android tablet ask for the desktop site with "X11; Linux x86_64", so the page offered Linux

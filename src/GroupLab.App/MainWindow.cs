@@ -1205,6 +1205,12 @@ public sealed partial class MainWindow : Window
         // nothing newer, said so silently, and in doing that hid the "updated from A to B" line put there a moment earlier. The one launch
         // where the message matters was the one launch that threw it away. Checking again having just installed the newest build is
         // pointless in any case.
+        // Entry 347: the store-bought fingerprint library on every copy, the Store's included, since it changes data and not code.
+        if (CheckOnLaunchByDefault && !ThisBuild.IsDevelopment)
+        {
+            _ = RefreshTargetLibraryAsync();
+        }
+
         if (!justUpdated && !AppInfo.FromStore && CheckOnLaunchByDefault && UpdatePolicy.ShouldCheck(updates, DateTimeOffset.UtcNow, launching: true))
         {
             _ = CheckForUpdatesAsync(byHand: false);

@@ -6,6 +6,7 @@ using GroupLab.Core.Capture;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Registration;
 using GroupLab.Core.StoreTargets;
+using GroupLab.Core.Updates;
 using OpenCvSharp;
 
 namespace GroupLab.Cli;
@@ -25,7 +26,7 @@ public static class TargetReferenceVerb
         "[--bulls <x,y;x,y> | --bulls auto] [--out <file.glref>] [--straightened <png>]\n" +
         "grouplab target-reference check <file.glref> <photo>\n" +
         "grouplab target-reference add <file.glref> [--to <fingerprints folder>]\n" +
-        "grouplab target-reference library <out.gllib> --key <file holding the private key, base64 PKCS#8> [--version <n>]";
+        "grouplab target-reference library <out.json> [--key <file holding the private key, base64 PKCS#8>, else $" + UpdateKeys.SecretName + "] [--version <n>, else the built-in list's]";
 
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
@@ -234,6 +235,8 @@ public static class TargetReferenceVerb
             }
         }
 
+        // Entry 347: every product added makes a newer library, which is what a fetched copy is compared against.
+        root["version"] = ((int?)root["version"] ?? 1) + 1;
         targets.Add(new JsonObject
         {
             ["id"] = reference.Target.Id,
@@ -255,14 +258,16 @@ public static class TargetReferenceVerb
     /// <summary>The signed library file: every built-in product as a reference, signed with the key given.</summary>
     private static int Library(string file, IReadOnlyList<string> rest, TextWriter output, TextWriter error)
     {
-        if (Option(rest, "--key") is not { } keyFile)
+        // Entry 347: the nightly passes the update key in its secret, as update-manifest takes it; --key names a file instead.
+        string? keyText = Option(rest, "--key") is { } keyFile ? File.ReadAllText(keyFile) : Environment.GetEnvironmentVariable(UpdateKeys.SecretName);
+        if (string.IsNullOrWhiteSpace(keyText))
         {
             return Fail(error);
         }
 
-        int version = Option(rest, "--version") is { } v ? int.Parse(v, Inv) : 1;
+        int version = Option(rest, "--version") is { } v ? int.Parse(v, Inv) : StoreTargetLibrary.BuiltInVersion;
         var references = StoreTargetLibrary.Shipped.Select(t => new TargetReference(t, t.Fingerprint, ScaleSource.Scan, 0, "")).ToList();
-        byte[] key = Convert.FromBase64String(File.ReadAllText(keyFile).Trim());
+        byte[] key = Convert.FromBase64String(keyText.Trim());
         File.WriteAllText(file, StoreLibraryFile.Sign(StoreLibraryFile.Payload(version, references), key));
         output.WriteLine($"{file}: {references.Count} products, version {version}, signed.");
         return 0;

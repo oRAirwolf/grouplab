@@ -234,6 +234,57 @@ internal sealed class AndroidPhone : IPhonePlatform
         }
     }
 
+    /// <summary>Entry 347: Wi-Fi or another connection the person does not pay for by the byte, from the connectivity service.</summary>
+    public bool? Unmetered
+    {
+        get
+        {
+            try
+            {
+                var connectivity = (global::Android.Net.ConnectivityManager?)Context.GetSystemService(Context.ConnectivityService);
+                return connectivity?.ActiveNetwork is { } network
+                    && connectivity.GetNetworkCapabilities(network)?.HasCapability(global::Android.Net.NetCapability.NotMetered) == true;
+            }
+            catch (Java.Lang.SecurityException)
+            {
+                return null;
+            }
+        }
+    }
+
+    /// <summary>Entry 347: below 15 percent and not charging, or saving power, as Android's own "battery low" is near 15 percent.</summary>
+    public bool? BatteryLow
+    {
+        get
+        {
+            var battery = (global::Android.OS.BatteryManager?)Context.GetSystemService(Context.BatteryService);
+            var power = (global::Android.OS.PowerManager?)Context.GetSystemService(Context.PowerService);
+            if (battery is null)
+            {
+                return null;
+            }
+
+            int percent = battery.GetIntProperty((int)global::Android.OS.BatteryProperty.Capacity);
+            return power?.IsPowerSaveMode == true || (percent is > 0 and < 15 && !battery.IsCharging);
+        }
+    }
+
+    /// <summary>Entry 347: under 500 MB free where GroupLab keeps its files, which is when Android starts to say storage is low.</summary>
+    public bool? StorageLow
+    {
+        get
+        {
+            try
+            {
+                return new global::Android.OS.StatFs(FilesFolder).AvailableBytes < 500L * 1024 * 1024;
+            }
+            catch (Java.Lang.IllegalArgumentException)
+            {
+                return null;
+            }
+        }
+    }
+
     /// <summary>
     /// Entry 258: Paste a picture. Android lets an application read the clipboard only while it is in front, which it is when the button is
     /// pressed; the clipboard holds its content address; the picture is copied into <paramref name="folder"/>.

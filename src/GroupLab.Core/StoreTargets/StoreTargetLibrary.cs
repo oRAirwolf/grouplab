@@ -41,7 +41,15 @@ public static class StoreTargetLibrary
     /// <summary>The built-in library's list, shipped beside the fingerprints in every build; <c>grouplab target-reference add</c> adds to it.</summary>
     public const string ListResource = "GroupLab.Core.StoreTargets.Fingerprints.library.json";
 
-    private static readonly IReadOnlyList<StoreTarget> BuiltIn = ReadList();
+    private static readonly IReadOnlyList<StoreTarget> BuiltIn = ReadList(out builtInVersion);
+
+    private static int builtInVersion;
+
+    /// <summary>
+    /// Entry 347: the built-in list's version, which <c>grouplab target-reference add</c> raises with every product added; a fetched library
+    /// is installed only when it is newer, so the built-in one is the floor.
+    /// </summary>
+    public static int BuiltInVersion => builtInVersion;
 
     private static IReadOnlyList<StoreTarget> installed = [];
 
@@ -100,11 +108,12 @@ public static class StoreTargetLibrary
         }
     }
 
-    private static List<StoreTarget> ReadList()
+    private static List<StoreTarget> ReadList(out int version)
     {
         using var stream = typeof(StoreTargetLibrary).Assembly.GetManifestResourceStream(ListResource)
             ?? throw new InvalidOperationException("the store-bought target list is not shipped");
         var root = System.Text.Json.Nodes.JsonNode.Parse(stream)!;
+        version = (int?)root["version"] ?? 1;
         return [.. root["targets"]!.AsArray().Select(t => new StoreTarget((string)t!["id"]!, (string)t["maker"]!, (string)t["name"]!, (string)t["size"]!,
             (string)t["catalog"]!, (string?)t["family"]))];
     }

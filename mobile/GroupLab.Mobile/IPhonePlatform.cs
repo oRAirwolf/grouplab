@@ -89,6 +89,18 @@ public interface IPhonePlatform
     /// </summary>
     bool? Online => null;
 
+    /// <summary>
+    /// Whether the connection now is one the person does not pay for by the byte, Wi-Fi or a wired line (entry 347, as entry 343's rules for
+    /// GroupLab Dev's update check); null where the head cannot tell, and then nothing is fetched in the background.
+    /// </summary>
+    bool? Unmetered => null;
+
+    /// <summary>Whether the battery is low, or the phone is saving power; null where the head cannot tell (entry 347).</summary>
+    bool? BatteryLow => null;
+
+    /// <summary>Whether the phone's storage is low; null where the head cannot tell (entry 347).</summary>
+    bool? StorageLow => null;
+
     /// <summary>Copies a picture on the clipboard into <paramref name="folder"/> and returns its path, or null where there is none.</summary>
     Task<string?> PastePicture(string folder);
 

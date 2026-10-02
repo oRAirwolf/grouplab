@@ -25,6 +25,17 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-01, entry 347: question 80 answered, where a newer fingerprint library is published
+
+**Status: done 2026-10-02, as answered.** It costs Alan nothing: the library is signed with the update key the nightly already holds. One difference from the wording: Google Play's Android copy and the iPhone's have no update check to ride on, so every phone copy looks at start under entry 343's three rules (unmetered, battery not low, storage not low) and at most every six hours; GroupLab Dev's WorkManager job is unchanged. The computer looks at launch on every copy, the Store's included.
+
+Planning's answer (Alan has asked planning to settle routes like this; tell him if it costs him anything): the store-bought fingerprint
+library is published the way application updates already are. One signed library file, versioned, attached to each nightly release on
+GitHub and mirrored on grouplab.org, listed in the same signed manifest the updater already reads, with its SHA-256 and signature checked
+before use. The app fetches it on its existing update check (so entry 343's battery, storage and Wi-Fi rules apply on Android), keeps the
+built-in copy as the floor, and never loads a library that fails its check. The Microsoft Store and TestFlight copies use the same route,
+since it changes data, not code. A library changes only through Alan's submissions (entry 344). After entry 346.
+
 ## 2026-10-02, entry 349: the download page takes an Android tablet for Linux
 
 **Status: done 2026-10-02.** 1 and 3 as written, with the theme script's handheld test given the same rule. 2: "Looks like this device" where the guess rests on the touch screen (an iPad or an Android tablet asking for the desktop site). The cases run in Node inside the site build (`device_problems`), with each browser's published user agent; the Fold 7's is the published form for that model, not one captured from Alan's phone.

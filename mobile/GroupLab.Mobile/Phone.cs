@@ -3,6 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
+using GroupLab.Core.StoreTargets;
+using GroupLab.Core.Updates;
 
 namespace GroupLab.Mobile;
 
@@ -63,6 +65,10 @@ public static class Phone
         CrashReporter.Install(log);
         CrashReporter.BeginRun(log);
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields()]);
+        // Entry 347: the store-bought fingerprint library kept from an earlier fetch, then a look for a newer one where it is due.
+        LibraryFolder = Path.Combine(files, "library");
+        DiagnosticLog.Info("library.kept", ("result", StoreLibraryUpdate.LoadSaved(LibraryFolder)));
+        _ = RefreshLibraryAsync(DateTimeOffset.UtcNow);
         Errors = new ErrorQueue(Settings);
         Survey = new SurveyQueue(Settings, platform.Machine);
         _ = SendWaitingErrorsAsync();
@@ -76,6 +82,49 @@ public static class Phone
         // Entry 315 section 1, GroupLab Dev only: the automation bridge on the device's own loopback address, unless turned off.
         Dev.Bridge.StartUnlessTurnedOff();
 #endif
+    }
+
+    /// <summary>Where a fetched library of store-bought fingerprints is kept between starts (entry 347).</summary>
+    internal static string LibraryFolder { get; private set; } = "";
+
+    /// <summary>
+    /// Entry 347: the newest signed library on every phone copy, GroupLab Dev, Google Play's and the iPhone's alike, under entry 343's rules:
+    /// only on an unmetered connection, with the battery and the storage not low, and at most every six hours. Says what it did, for the
+    /// log; never throws.
+    /// </summary>
+    internal static async Task<string> RefreshLibraryAsync(DateTimeOffset now, IOutsideWorld? outside = null)
+    {
+        string said;
+        try
+        {
+            string stamp = Path.Combine(LibraryFolder, "checked");
+            if (Platform.Unmetered != true)
+            {
+                said = "not on an unmetered connection";
+            }
+            else if (Platform.BatteryLow != false || Platform.StorageLow == true)
+            {
+                said = "the battery or the storage is low, or the phone cannot say";
+            }
+            else if (File.Exists(stamp) && now - new DateTimeOffset(File.GetLastWriteTimeUtc(stamp), TimeSpan.Zero) < AndroidUpdates.Every)
+            {
+                said = "looked within six hours";
+            }
+            else
+            {
+                Directory.CreateDirectory(LibraryFolder);
+                File.WriteAllText(stamp, now.ToString("O", System.Globalization.CultureInfo.InvariantCulture));
+                File.SetLastWriteTimeUtc(stamp, now.UtcDateTime);
+                said = await StoreLibraryUpdate.CheckAsync(outside ?? TheOutsideWorld.Current, LibraryFolder).ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            said = ex.GetType().Name;
+        }
+
+        DiagnosticLog.Info("library.check", ("result", said));
+        return said;
     }
 
     /// <summary>What is waiting goes when the person chose Always; never a dialog, and a failure waits for the next start.</summary>
