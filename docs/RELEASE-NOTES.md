@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.154
+
+**2026-10-02**, commit `a81e61f`. Nightly.
+
+**What you will notice**
+
+- On the iPhone, the bar with Done no longer stays floating over the screen after the keyboard closes, Done always closes the keyboard, and a tap outside a box closes it.
+- Correction: a Garmin Xero file with several strings holds the strings you selected when exporting, not a whole month; earlier notes called it a monthly export.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.154)
+
+---
+
 ## 0.2.0-nightly.153
 
 **2026-10-01**, commit `828858f`. Nightly.
