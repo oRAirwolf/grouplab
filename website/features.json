@@ -10,6 +10,9 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On a store-bought target, Find holes no longer marks bold printed ring numbers",
+    "A damaged or very large chronograph file is now refused with a sentence saying why",
+    "The iPhone and iPad build works again",
     "On the phone, every box, switch and button now has a name a screen reader reads out",
     "On an iPad held upright, typing in a box on a result no longer flips the result",
     "On the phone, going back to the targets list after opening a sheet no longer fails",

@@ -49,6 +49,13 @@ put() {
 }
 
 failed=0
+# The same sheet at 300 dpi where ImageMagick is there: the 600 dpi scan took 52 s to read on the iPhone simulator and hit the one-minute
+# limit on a reading (run 36996193435); the sweep is about the screens, not the reading's speed.
+SAMPLE="$HERE/samples/gl-cf25-ltr-d-25-shots-600-dpi.png"
+if command -v convert > /dev/null; then
+  convert "$SAMPLE" -resize 50% -units PixelsPerInch -density 300 /tmp/sweep-sample.png && SAMPLE=/tmp/sweep-sample.png
+fi
+
 for pass in plain largest-text dark; do
   case "$pass" in
     plain) adb shell settings put system font_scale 1.0; adb shell cmd uimode night no > /dev/null ;;
@@ -58,7 +65,7 @@ for pass in plain largest-text dark; do
   adb shell am force-stop "$PKG"
   adb logcat -c || true
   adb shell run-as "$PKG" sh -c "'rm -rf files/scenario/results files/scenario/$NAME.ran; mkdir -p files/scenario'"
-  put "$HERE/samples/gl-cf25-ltr-d-25-shots-600-dpi.png" sample.png || { failed=1; continue; }
+  put "$SAMPLE" sample.png || { failed=1; continue; }
   put "$HERE/scripts/scenarios/phone-sweep.json" "$NAME" || { failed=1; continue; }
   adb shell am start -W -n "$COMPONENT" --es "$EXTRA" "$NAME" > /dev/null
 

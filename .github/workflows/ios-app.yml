@@ -659,7 +659,9 @@ jobs:
             xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
             mkdir -p "$folder"
             rm -rf "$folder/results" "$folder/scenario.json.ran"
-            cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$folder/sample.png"
+            # The same sheet at 300 dpi: the 600 dpi scan took 52 s to read on the simulator and its dark pass hit the one-minute limit on a
+            # reading (run 36996193435); the sweep is about the screens, not the reading's speed.
+            sips -Z 3300 -s dpiWidth 300 -s dpiHeight 300 samples/gl-cf25-ltr-d-25-shots-600-dpi.png --out "$folder/sample.png" > /dev/null
             cp scripts/scenarios/phone-sweep.json "$folder/scenario.json"
             xcrun simctl launch --console-pty "$UDID" org.grouplab.app.dev > "sweep-$pass-console.log" 2>&1 &
             launcher=$!
