@@ -699,6 +699,22 @@ public static class SheetMeasurer
         stage.Parameter("locator", options.Locator == BullLocatorKind.Centroid ? "thresholded ink-weighted centroid" : "edge fit to the declared disc radii");
         var reported = new HashSet<string>(StringComparer.Ordinal);
         var results = new List<BullLocation>(definition.Bulls.Count);
+
+        // Entry 352 item 4: each bull is located from the image and the mapping alone, which nothing writes to, so they are located at once;
+        // what the stage records is then written bull by bull in the order it always was, so the trace and every location are unchanged.
+        var locatedAll = new BullLocation?[definition.Bulls.Count];
+        Parallel.For(0, definition.Bulls.Count, i =>
+        {
+            var bull = definition.Bulls[i];
+            if (sets.TryGetValue(bull.RingSet, out var set))
+            {
+                var bands = RingGeometry.Bands(definition, set);
+                locatedAll[i] = options.Locator == BullLocatorKind.Centroid
+                    ? CentroidBullLocator.Locate(image, mapping, i, bull, options.MaskRadius ?? RingGeometry.MaskRadius(bands))
+                    : EdgeFitBullLocator.Locate(image, mapping, i, bull, bands);
+            }
+        });
+
         for (int i = 0; i < definition.Bulls.Count; i++)
         {
             var bull = definition.Bulls[i];
@@ -709,7 +725,7 @@ public static class SheetMeasurer
             }
 
             var bands = RingGeometry.Bands(definition, set);
-            BullLocation located;
+            BullLocation located = locatedAll[i]!;
             if (options.Locator == BullLocatorKind.Centroid)
             {
                 double radius = options.MaskRadius ?? RingGeometry.MaskRadius(bands);
@@ -717,8 +733,6 @@ public static class SheetMeasurer
                 {
                     stage.Parameter($"maskRadius[{set.Key}]", string.Create(inv, $"{radius:0.00} dmm = {radius * pixelsPerDmm:0.0} px"));
                 }
-
-                located = CentroidBullLocator.Locate(image, mapping, i, bull, radius);
             }
             else
             {
@@ -727,8 +741,6 @@ public static class SheetMeasurer
                     stage.Parameter($"edges[{set.Key}]", string.Create(inv,
                         $"{bands.Sum(b => b.Inner > 0 ? 2 : 1)} edges, {EdgeFitBullLocator.Rays} rays, up to {EdgeFitBullLocator.MaximumHalfWidth:0.0} dmm = {EdgeFitBullLocator.MaximumHalfWidth * pixelsPerDmm:0.0} px each side"));
                 }
-
-                located = EdgeFitBullLocator.Locate(image, mapping, i, bull, bands);
             }
 
             if (located.Failure is { } why)

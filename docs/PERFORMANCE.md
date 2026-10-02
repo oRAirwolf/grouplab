@@ -1,6 +1,6 @@
 # Performance
 
-**Nothing in GroupLab has been optimised.** This page is the baseline the Performance phase starts from, the method it will follow, and the wasteful things noticed while measuring. `DESIGN.md` section 21 Phase 9 is the phase itself; `NOTES-FROM-PLANNING.md` entry 117 is where it came from.
+**The Performance phase has begun, and has changed no figure.** Entries 342 and 352 made the first changes, each measured against every gate before it was kept; the record below is measured after them. This page is the baseline the phase started from, the method it follows, what each round changed, and the wasteful things noticed while measuring. `DESIGN.md` section 21 Phase 9 is the phase itself; `NOTES-FROM-PLANNING.md` entry 117 is where it came from.
 
 Alan's words are the reason it exists: "Once the program is working as intended, I want to add an optimization phase to work on making the software perform better. I can already tell it is somewhat slow running." He has not said where, and nothing here guesses: every operation is measured and the answer is left to name itself.
 
@@ -125,78 +125,130 @@ newer build exists. Leaving the screen lets go of the camera, its torch and the 
 location, wake lock, alarm or foreground service anywhere in the Android project; a test in the Core suite reads the source for all of it,
 since no emulator runs in CI. At request 50's sitting, `adb shell dumpsys batterystats` for GroupLab Dev after an idle hour goes here.
 
+## Entry 352: the 7 percent settled, and the next round
+
+**The 7 percent was the machine.** With nothing else running, the 2026-09-20 code (a506d666) and the code of entry 352 (d677caab), both
+Release, were benched by turns, four rounds of five runs each (`grouplab bench --area "end to end"`). A batch of ten sheets took 8645 to
+8685 ms on the old code and 8377 to 8420 on the new; one sheet from file to figures 966 to 971 against 938 to 949. The rounds agreed within
+half a percent, so the new code is about 3 percent faster than the old, not 7 slower: entry 342's difference came from the second worker
+building beside it.
+
+**Where the time went.** On the desktop's whole path, one generated sheet from file to figures (about 940 ms): finding the holes 614 ms,
+finding the bulls 154, reading the markers 44, the rest decoding and the small stages. Inside finding the holes, timed step by step: 315 ms
+was the two-centre split that every mark large enough to be two holes is given, so that a person told "this may be two shots" can take both;
+136 ms the alignment of each bull's cell by phase correlation; 84 ms the closing of the threshold mask; drawing and placing the expected
+artwork about 50 ms. On the phone's path (`PhoneAnalysis.Run` headless on this desktop, the same ten pictures as entry 342) the holes and
+the bulls were again the largest stages after reading the codes.
+
+**What changed, and why no figure can move.**
+
+- **The split** found the same pixels twenty times over, testing each against the mark's hull every time. The pixels that take part are
+  now found once, in the order they were always visited, and the twenty rounds run over them; a round that leaves both centres exactly
+  where they were ends the loop, since every later round would repeat it. The same additions in the same order give the same centres to
+  the last bit.
+- **The alignment** measures each bull's cell from images nothing writes to, so the cells are measured at once and gathered in their
+  order, which is all that reads them.
+- **The bulls** are located the same way: each from the image and the mapping alone, at once, and what the stage records is then written
+  bull by bull in the order it always was, so the trace is unchanged too.
+
+**Nothing moved.** The Phase 0 spikes' tables (sheets, photos, markers, refinement, threshold, scale, field, detectors) match
+`scans/phase0/measurements/tables` and the run before the change, the synthetic and any-target scoreboards and the local corpus's counts
+are the same line for line, all but their time columns, and every picture below finds the same number of holes.
+
+**Before and after on the desktop,** the same machine idle, five runs each, median in ms:
+
+| case | before | after |
+|---|---|---|
+| a batch of ten sheets | 8279 | 3897 |
+| a 600 dpi scan, stage by stage | 3623 | 2550 |
+| one sheet from file to figures | 924 | 486 |
+| the generated sheet, stage by stage | 838 | 407 |
+
+**Before and after on the phone's path,** median of three runs after one thrown away, in ms:
+
+| picture | whole reading | finding the bulls | finding the holes | reading the codes |
+|---|---|---|---|---|
+| the 600 dpi sample | 1485 to 1185 | 206 to 48 | 777 to 540 | 210 to 211 |
+| eight ordinary Fold 7 pictures | 880 to 1230, now 695 to 871 | 146 to 257, now 21 to 42 | 256 to 492, now 180 to 283 | 190 to 395, unchanged |
+| the one whose codes read only enlarged | 7832 to 7563 | 145 to 21 | 305 to 266 | 7163 to 7061 |
+
+**What is now slowest, and left.** On a photograph, reading the sheet's codes is again the largest stage (190 to 395 ms), and on the one
+picture read only enlarged it is 7 s of 7.6; skipping its whole-picture reads is the decision entry 342 named, not a speed-up. Finding the
+holes is next (180 to 540 ms), most of it now the closing of the threshold mask and the alignment's phase correlations, both inside
+OpenCV. On the desktop, decoding a 600 dpi PNG (630 ms) is the largest single step left in reading a scan.
+
 ## The record
 
-Measured 2026-10-01 on TACIT-BLUE, 16 processors, Microsoft Windows NT 10.0.26300.0, Release build, commit a21be7c1, 5 timed runs of each case after one thrown away.
+Measured 2026-10-02 on TACIT-BLUE, 16 processors, Microsoft Windows NT 10.0.26300.0, Release build, commit d677caab and entry 352 item 4, 5 timed runs of each case after one thrown away.
 
-Every figure is milliseconds: the median, and in brackets the fastest and slowest run. **Nothing here has been optimised**: this is the baseline the Performance phase's gate is written from.
+Every figure is milliseconds: the median, and in brackets the fastest and slowest run. The Performance phase measures every change against this record, and its gate will be written from it.
 
 ### The slowest first, which is the work queue
 
 | ms, median (low to high) | Case |
 |---|---|
-| 11780.6 (10387.1 to 13358.2) | end to end: a batch of ten sheets |
-| 4528.7 (4336.6 to 4896.1) | measurement: a 600 dpi scan, stage by stage |
-| 1254.8 (1149.9 to 1320.8) | measurement: the generated sheet, stage by stage |
-| 1145.1 (1135.1 to 1208.9) | end to end: one sheet from file to figures |
-| 794.6 (758.4 to 826.1) | images: load a 600 dpi Letter scan |
-| 343.2 (329.2 to 347.8) | measurement: find holes on a target GroupLab did not print |
-| 322.4 (298.9 to 325.2) | measurement: identify the sheet from its codes |
-| 188.6 (175.5 to 203.7) | images: load the same sheet at 300 dpi |
-| 148.5 (130.4 to 187.1) | rendering: the icon set |
-| 114.3 (110.1 to 119.1) | images: load the generated sample |
+| 3897.0 (3866.7 to 3976.0) | end to end: a batch of ten sheets |
+| 2549.9 (2532.2 to 2573.6) | measurement: a 600 dpi scan, stage by stage |
+| 630.6 (629.8 to 634.4) | images: load a 600 dpi Letter scan |
+| 485.8 (479.2 to 495.1) | end to end: one sheet from file to figures |
+| 407.1 (390.5 to 525.4) | measurement: the generated sheet, stage by stage |
+| 277.1 (270.2 to 283.1) | measurement: find holes on a target GroupLab did not print |
+| 182.2 (177.8 to 191.1) | measurement: identify the sheet from its codes |
+| 132.5 (132.0 to 133.6) | images: load the same sheet at 300 dpi |
+| 89.3 (88.4 to 92.6) | documents: user-guide PDF |
+| 87.6 (84.8 to 88.3) | images: load the generated sample |
 
 ### definitions
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| read a sheet definition | 0.3 (0.3 to 0.5) | Reading GL-CF25-LTR.gltd.json from disk into the model. 0 diagnostics. |
-| validate a sheet definition | 0.5 (0.5 to 0.7) | Every conformance check the validator makes, on one sheet. 0 diagnostics. |
-| derive the layout | 0.0 (0.0 to 0.1) | The bull lattice, the marker positions and ids, the code corners and the data block cells. 38 markers, 4 code corners, no data block, 15 grid lines, layout recognised. |
-| encode and decode the code payload | 0.5 (0.4 to 1.0) | The sheet to a GLTD-B body and frame, and back again. 70 byte frame, decoded back. |
+| read a sheet definition | 0.3 (0.3 to 0.4) | Reading GL-CF25-LTR.gltd.json from disk into the model. 0 diagnostics. |
+| validate a sheet definition | 0.4 (0.4 to 0.5) | Every conformance check the validator makes, on one sheet. 0 diagnostics. |
+| derive the layout | 0.1 (0.1 to 0.1) | The bull lattice, the marker positions and ids, the code corners and the data block cells. 38 markers, 4 code corners, no data block, 15 grid lines, layout recognised. |
+| encode and decode the code payload | 0.4 (0.4 to 0.5) | The sheet to a GLTD-B body and frame, and back again. 70 byte frame, decoded back. |
 
 ### rendering
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| sheet to PDF | 4.2 (4.0 to 21.7) | Building the sheet's pages and writing them as a PDF, which is what Save PDF does. 1 page, 99 kB. |
-| sheet drawn for the printer | 0.9 (0.9 to 1.2) | Laying the sheet out for a 600 dpi Letter printer and checking every mark against the paper and the margins. The device itself is excluded. 4443 items, fits. |
-| rasterise the sheet at 300 dpi | 74.3 (51.1 to 80.7) | Drawing the sheet into an image, which is what generates a sample and what the tests measure against. 2550 by 3300 px. |
-| the icon set | 148.5 (130.4 to 187.1) | Every Windows and Linux icon size from the mark, which is a build step rather than something a person waits for. 10 files. |
-| read the target library | 5.0 (4.0 to 5.2) | Every sheet in the library read and laid out, which is what the library screen shows. 42 sheets. |
+| sheet to PDF | 2.1 (1.9 to 10.6) | Building the sheet's pages and writing them as a PDF, which is what Save PDF does. 1 page, 99 kB. |
+| sheet drawn for the printer | 0.7 (0.7 to 0.7) | Laying the sheet out for a 600 dpi Letter printer and checking every mark against the paper and the margins. The device itself is excluded. 4443 items, fits. |
+| rasterise the sheet at 300 dpi | 46.9 (46.6 to 48.8) | Drawing the sheet into an image, which is what generates a sample and what the tests measure against. 2550 by 3300 px. |
+| the icon set | 84.3 (81.9 to 88.1) | Every Windows and Linux icon size from the mark, which is a build step rather than something a person waits for. 10 files. |
+| read the target library | 2.7 (2.6 to 10.9) | Every sheet in the library read and laid out, which is what the library screen shows. 42 sheets. |
 
 ### images
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| load a 600 dpi Letter scan | 794.6 (758.4 to 826.1) | Decoding the file and building the grey and strongest-channel images the analysis works on. 4958 by 6458 px, PNG. |
-| load the same sheet at 300 dpi | 188.6 (175.5 to 203.7) | Decoding the file and building the grey and strongest-channel images the analysis works on. 2479 by 3229 px, PNG. |
-| load a phone photograph | 69.4 (64.5 to 72.8) | Decoding the file and building the grey and strongest-channel images the analysis works on. 4000 by 3000 px, JPEG. |
-| load the generated sample | 114.3 (110.1 to 119.1) | Decoding the file and building the grey and strongest-channel images the analysis works on. 2550 by 3300 px, PNG. |
+| load a 600 dpi Letter scan | 630.6 (629.8 to 634.4) | Decoding the file and building the grey and strongest-channel images the analysis works on. 4958 by 6458 px, PNG. |
+| load the same sheet at 300 dpi | 132.5 (132.0 to 133.6) | Decoding the file and building the grey and strongest-channel images the analysis works on. 2479 by 3229 px, PNG. |
+| load a phone photograph | 45.8 (45.1 to 46.3) | Decoding the file and building the grey and strongest-channel images the analysis works on. 4000 by 3000 px, JPEG. |
+| load the generated sample | 87.6 (84.8 to 88.3) | Decoding the file and building the grey and strongest-channel images the analysis works on. 2550 by 3300 px, PNG. |
 
 ### measurement
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| identify the sheet from its codes | 322.4 (298.9 to 325.2) | Reading the printed codes and finding which definition they name, which is what happens before anything is measured. GroupLab 5x5 Load Development, Letter. |
-| the generated sheet, stage by stage | 1254.8 (1149.9 to 1320.8) | One analysis of the 25 shot sample, with every stage of the pipeline filed as its own figure from the stage record. 25 holes, 0 markers not found. |
+| identify the sheet from its codes | 182.2 (177.8 to 191.1) | Reading the printed codes and finding which definition they name, which is what happens before anything is measured. GroupLab 5x5 Load Development, Letter. |
+| the generated sheet, stage by stage | 407.1 (390.5 to 525.4) | One analysis of the 25 shot sample, with every stage of the pipeline filed as its own figure from the stage record. 25 holes, 0 markers not found. |
 | &nbsp;&nbsp;the generated sheet, stage by stage: S1.scale | 0.0 (0.0 to 0.0) | part of the generated sheet, stage by stage |
-| &nbsp;&nbsp;the generated sheet, stage by stage: S2.fiducials | 73.0 (67.0 to 84.0) | part of the generated sheet, stage by stage |
+| &nbsp;&nbsp;the generated sheet, stage by stage: S2.fiducials | 42.0 (42.0 to 53.0) | part of the generated sheet, stage by stage |
 | &nbsp;&nbsp;the generated sheet, stage by stage: S3.register | 0.0 (0.0 to 0.0) | part of the generated sheet, stage by stage |
 | &nbsp;&nbsp;the generated sheet, stage by stage: S4.verify | 0.0 (0.0 to 0.0) | part of the generated sheet, stage by stage |
-| &nbsp;&nbsp;the generated sheet, stage by stage: P0.bulls | 225.0 (202.0 to 242.0) | part of the generated sheet, stage by stage |
-| &nbsp;&nbsp;the generated sheet, stage by stage: S5-S8.holes | 900.0 (823.0 to 944.0) | part of the generated sheet, stage by stage |
-| &nbsp;&nbsp;the generated sheet, stage by stage: S9.assign | 5.0 (4.0 to 7.0) | part of the generated sheet, stage by stage |
-| a 600 dpi scan, stage by stage | 4528.7 (4336.6 to 4896.1) | The same pipeline on Alan's own 600 dpi scan, which has no holes in it: the registration cost at the resolution a scanner gives. 0 holes, 4 markers not found. |
+| &nbsp;&nbsp;the generated sheet, stage by stage: P0.bulls | 21.0 (18.0 to 27.0) | part of the generated sheet, stage by stage |
+| &nbsp;&nbsp;the generated sheet, stage by stage: S5-S8.holes | 301.0 (292.0 to 379.0) | part of the generated sheet, stage by stage |
+| &nbsp;&nbsp;the generated sheet, stage by stage: S9.assign | 4.0 (4.0 to 56.0) | part of the generated sheet, stage by stage |
+| a 600 dpi scan, stage by stage | 2549.9 (2532.2 to 2573.6) | The same pipeline on Alan's own 600 dpi scan, which has no holes in it: the registration cost at the resolution a scanner gives. 0 holes, 4 markers not found. |
 | &nbsp;&nbsp;a 600 dpi scan, stage by stage: S1.scale | 0.0 (0.0 to 0.0) | part of a 600 dpi scan, stage by stage |
-| &nbsp;&nbsp;a 600 dpi scan, stage by stage: S2.fiducials | 140.0 (111.0 to 181.0) | part of a 600 dpi scan, stage by stage |
+| &nbsp;&nbsp;a 600 dpi scan, stage by stage: S2.fiducials | 76.0 (72.0 to 77.0) | part of a 600 dpi scan, stage by stage |
 | &nbsp;&nbsp;a 600 dpi scan, stage by stage: S3.register | 0.0 (0.0 to 0.0) | part of a 600 dpi scan, stage by stage |
 | &nbsp;&nbsp;a 600 dpi scan, stage by stage: S4.verify | 0.0 (0.0 to 0.0) | part of a 600 dpi scan, stage by stage |
-| &nbsp;&nbsp;a 600 dpi scan, stage by stage: P0.bulls | 1051.0 (968.0 to 1139.0) | part of a 600 dpi scan, stage by stage |
-| &nbsp;&nbsp;a 600 dpi scan, stage by stage: S5-S8.holes | 2653.0 (2519.0 to 2789.0) | part of a 600 dpi scan, stage by stage |
+| &nbsp;&nbsp;a 600 dpi scan, stage by stage: P0.bulls | 105.0 (101.0 to 118.0) | part of a 600 dpi scan, stage by stage |
+| &nbsp;&nbsp;a 600 dpi scan, stage by stage: S5-S8.holes | 1729.0 (1718.0 to 1762.0) | part of a 600 dpi scan, stage by stage |
 | &nbsp;&nbsp;a 600 dpi scan, stage by stage: S9.assign | 0.0 (0.0 to 0.0) | part of a 600 dpi scan, stage by stage |
-| the review queue | 0.2 (0.2 to 0.6) | Everything the analysis wants settled before it will measure, raised from one marking. 4 items, 4 open. |
-| find holes on a target GroupLab did not print | 343.2 (329.2 to 347.8) | Find holes, experimental, on a drawn black-bull target at 200 dpi with the scale set by hand: the three ways a hole is told from the print, and their merge. 12 proposed for 16 holes. |
+| the review queue | 0.1 (0.1 to 0.2) | Everything the analysis wants settled before it will measure, raised from one marking. 4 items, 4 open. |
+| find holes on a target GroupLab did not print | 277.1 (270.2 to 283.1) | Find holes, experimental, on a drawn black-bull target at 200 dpi with the scale set by hand: the three ways a hole is told from the print, and their merge. 12 proposed for 16 holes. |
 | what to say about the sheet | 0.0 (0.0 to 0.0) | The sentences the marking screen shows when a sheet is imperfect: the print scale, the doubt, and the refusal with what to do next. Measured in the sheet's own inches; if the sheet was not pri. |
 | print the stage trace | 0.0 (0.0 to 0.0) | Laying the whole trace out as grouplab analyze prints it, at its fullest. 2625 characters over 9 stages. |
 
@@ -205,58 +257,58 @@ Every figure is milliseconds: the median, and in brackets the fastest and slowes
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
 | a chronograph string | 0.0 (0.0 to 0.0) | Reading a string of velocities, pairing it with the shots and taking its spread, as the Ballistics screen does. 25 pairs, SD 2.01 fps. |
-| save a session | 4.7 (4.0 to 4.9) | Writing one analysed sheet to the sessions database, as Save does. session 6. |
-| reopen a session | 1.0 (0.9 to 1.1) | Reading one back, which is what opening a session from the list does. 25 shots. |
-| query a few hundred sessions | 10.9 (10.4 to 11.8) | The Session records list over a database the benchmark fills itself with 300 sessions. 300 sessions, 43 on one rifle. |
-| export and import the database | 9.9 (9.5 to 10.4) | The whole database out as JSON and back into an empty one, which is what a person's backup is. 371 kB. |
+| save a session | 4.2 (3.7 to 4.5) | Writing one analysed sheet to the sessions database, as Save does. session 6. |
+| reopen a session | 1.3 (1.3 to 1.8) | Reading one back, which is what opening a session from the list does. 25 shots. |
+| query a few hundred sessions | 8.1 (7.9 to 8.6) | The Session records list over a database the benchmark fills itself with 300 sessions. 300 sessions, 43 on one rifle. |
+| export and import the database | 8.2 (8.0 to 8.2) | The whole database out as JSON and back into an empty one, which is what a person's backup is. 371 kB. |
 
 ### statistics
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
 | sigma and mean radius with intervals | 0.0 (0.0 to 0.0) | The Rayleigh estimate and its exact interval, which every headline figure comes from. sigma 0.0949 in. |
-| the CEP table | 0.4 (0.4 to 0.5) | CEP 50 and CEP 90 under both the correlated normal and the Grubbs-Patnaik approximations. CEP 50 0.1102 in. |
-| the bootstrap interval | 16.3 (15.9 to 18.5) | The resampled interval around the mean radius, at the committed number of resamples. 0.103 to 0.144 in. |
+| the CEP table | 0.4 (0.3 to 0.4) | CEP 50 and CEP 90 under both the correlated normal and the Grubbs-Patnaik approximations. CEP 50 0.1102 in. |
+| the bootstrap interval | 6.8 (6.8 to 6.9) | The resampled interval around the mean radius, at the committed number of resamples. 0.103 to 0.144 in. |
 | the shape tests | 0.0 (0.0 to 0.0) | The circularity test with its resamples and the vertical stringing test, which are the two judgement cards. circularity p 0.538, stringing correlation 0.22. |
-| the shot order trend | 1.2 (1.2 to 1.3) | Whether the group opened up as it was shot: a rank correlation against 9999 shuffles of the same shots, which is the slowest of the shape answers. correlation -0.13, p 0.520. |
-| the flyer calibration | 0.4 (0.3 to 0.6) | What the worst shot of a group this size is expected to be, which the worst-shot card is read against. worst expected at 2.727 sigma. |
-| group comparison | 2.8 (2.4 to 3.2) | Two groups compared by dispersion and by centre, with the tests' verdicts and what each could have detected. 1 pair. |
+| the shot order trend | 0.9 (0.9 to 0.9) | Whether the group opened up as it was shot: a rank correlation against 9999 shuffles of the same shots, which is the slowest of the shape answers. correlation -0.13, p 0.520. |
+| the flyer calibration | 0.3 (0.3 to 0.3) | What the worst shot of a group this size is expected to be, which the worst-shot card is read against. worst expected at 2.727 sigma. |
+| group comparison | 2.0 (2.0 to 2.1) | Two groups compared by dispersion and by centre, with the tests' verdicts and what each could have detected. 1 pair. |
 | hit probability | 0.0 (0.0 to 0.0) | The chance of a hit inside a named radius, at both ends of the sigma interval. 100.0 percent inside half an inch. |
 | the range statistic intervals | 0.0 (0.0 to 0.0) | Extreme spread and the other range statistics read off the simulated table, with their intervals. sigma 0.2155 in from a 1 in spread. |
-| the zero correction | 1.6 (1.1 to 1.8) | The group centre's offset from the point of aim with its uncertainty, and the refusal when it cannot be told from chance. a correction with its verdict. |
-| the whole analysis of a marking | 1.5 (1.4 to 1.9) | Every figure the analysis screen shows, from a marking: the path a person waits on after Accept. 25 shots measured. |
+| the zero correction | 1.1 (1.1 to 1.1) | The group centre's offset from the point of aim with its uncertainty, and the refusal when it cannot be told from chance. a correction with its verdict. |
+| the whole analysis of a marking | 1.1 (1.1 to 1.2) | Every figure the analysis screen shows, from a marking: the path a person waits on after Accept. 25 shots measured. |
 
 ### solver
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| one trajectory | 8.6 (6.9 to 141.5) | A single flight to 1000 yards at the solver's own step, which is what every dope table is made of. 11 points, 35.6 MOA at the far end. |
-| a dope table | 5.2 (4.5 to 5.9) | The table the Ballistics screen shows, in the person's own units and clicks. 21 rows. |
-| a hit probability | 102.4 (97.5 to 108.9) | Entry 156's answer at 600 yards on the middle confidence preset: ten thousand strings, the costs of every source and a curve against distance. 30 percent first round, 10 costs, 3 curve points. |
+| one trajectory | 37.9 (4.5 to 111.6) | A single flight to 1000 yards at the solver's own step, which is what every dope table is made of. 11 points, 35.6 MOA at the far end. |
+| a dope table | 4.3 (4.3 to 4.8) | The table the Ballistics screen shows, in the person's own units and clicks. 21 rows. |
+| a hit probability | 83.4 (80.1 to 90.2) | Entry 156's answer at 600 yards on the middle confidence preset: ten thousand strings, the costs of every source and a curve against distance. 30 percent first round, 10 costs, 3 curve points. |
 
 ### documents
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| user-guide PDF | 111.2 (106.7 to 131.4) | Laying USER-GUIDE.md out and writing it as a PDF, pictures and all. 1347 kB. |
-| testing-guide PDF | 16.0 (15.6 to 16.4) | Laying TESTING-GUIDE.md out and writing it as a PDF, pictures and all. 273 kB. |
-| the volunteer pack | 1.6 (1.1 to 9.0) | The sheet and its page of instructions together, as the print screen gives them. 103 kB. |
-| the one-page report | 96.5 (82.9 to 106.1) | One result's one-page report with its picture, and the box's lines and mean radius circle of a shared picture. 216 kB, 9 lines. |
+| user-guide PDF | 89.3 (88.4 to 92.6) | Laying USER-GUIDE.md out and writing it as a PDF, pictures and all. 1377 kB. |
+| testing-guide PDF | 13.9 (13.8 to 14.6) | Laying TESTING-GUIDE.md out and writing it as a PDF, pictures and all. 280 kB. |
+| the volunteer pack | 0.5 (0.5 to 6.6) | The sheet and its page of instructions together, as the print screen gives them. 103 kB. |
+| the one-page report | 68.8 (66.3 to 85.7) | One result's one-page report with its picture, and the box's lines and mean radius circle of a shared picture. 216 kB, 9 lines. |
 
 ### end to end
 
 | Case | ms, median (low to high) | What, and what it did |
 |---|---|---|
-| one sheet from file to figures | 1145.1 (1135.1 to 1208.9) | Everything a person waits for after choosing an image: decoding it, identifying the sheet, registering, finding the holes, assigning them and measuring the group. 25 shots, measured. |
+| one sheet from file to figures | 485.8 (479.2 to 495.1) | Everything a person waits for after choosing an image: decoding it, identifying the sheet, registering, finding the holes, assigning them and measuring the group. 25 shots, measured. |
 | &nbsp;&nbsp;one sheet from file to figures: S1.scale | 0.0 (0.0 to 0.0) | part of one sheet from file to figures |
-| &nbsp;&nbsp;one sheet from file to figures: S2.fiducials | 61.0 (56.0 to 64.0) | part of one sheet from file to figures |
+| &nbsp;&nbsp;one sheet from file to figures: S2.fiducials | 40.0 (39.0 to 42.0) | part of one sheet from file to figures |
 | &nbsp;&nbsp;one sheet from file to figures: S3.register | 0.0 (0.0 to 0.0) | part of one sheet from file to figures |
 | &nbsp;&nbsp;one sheet from file to figures: S4.verify | 0.0 (0.0 to 0.0) | part of one sheet from file to figures |
-| &nbsp;&nbsp;one sheet from file to figures: P0.bulls | 184.0 (181.0 to 203.0) | part of one sheet from file to figures |
-| &nbsp;&nbsp;one sheet from file to figures: S5-S8.holes | 732.0 (727.0 to 783.0) | part of one sheet from file to figures |
-| &nbsp;&nbsp;one sheet from file to figures: S9.assign | 5.0 (5.0 to 7.0) | part of one sheet from file to figures |
-| &nbsp;&nbsp;one sheet from file to figures: S10.group | 7.0 (6.0 to 8.0) | part of one sheet from file to figures |
-| a batch of ten sheets | 11780.6 (10387.1 to 13358.2) | Ten analyses one after another, as analyze-folder runs them, where no picture is kept for a timeline. 250 shots over ten sheets. |
+| &nbsp;&nbsp;one sheet from file to figures: P0.bulls | 20.0 (18.0 to 21.0) | part of one sheet from file to figures |
+| &nbsp;&nbsp;one sheet from file to figures: S5-S8.holes | 292.0 (289.0 to 294.0) | part of one sheet from file to figures |
+| &nbsp;&nbsp;one sheet from file to figures: S9.assign | 4.0 (4.0 to 5.0) | part of one sheet from file to figures |
+| &nbsp;&nbsp;one sheet from file to figures: S10.group | 5.0 (5.0 to 19.0) | part of one sheet from file to figures |
+| a batch of ten sheets | 3897.0 (3866.7 to 3976.0) | Ten analyses one after another, as analyze-folder runs them, where no picture is kept for a timeline. 250 shots over ten sheets. |
 
 ### Measured by name, and not measured
 

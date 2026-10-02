@@ -19,7 +19,7 @@ public static class BenchReport
         var text = new StringBuilder();
         text.Append("## The record\n\n");
         text.Append(CultureInfo.InvariantCulture, $"Measured {machine.Date} on {machine.Name}, {machine.Processors} processors, {machine.Operating}, {machine.Configuration} build, commit {machine.Commit}, {machine.Runs} timed runs of each case after one thrown away.\n\n");
-        text.Append("Every figure is milliseconds: the median, and in brackets the fastest and slowest run. **Nothing here has been optimised**: this is the baseline the Performance phase's gate is written from.\n\n");
+        text.Append("Every figure is milliseconds: the median, and in brackets the fastest and slowest run. The Performance phase measures every change against this record, and its gate will be written from it.\n\n");
 
         text.Append("### The slowest first, which is the work queue\n\n");
         text.Append("| ms, median (low to high) | Case |\n|---|---|\n");

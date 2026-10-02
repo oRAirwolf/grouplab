@@ -689,8 +689,13 @@ public static class RenderDifferenceHoleDetector
         int width = observed.Width, height = observed.Height;
         var found = new List<(int Left, int Top, int Right, int Bottom, PointD Shift)>();
         var shifts = new List<PointD>();
-        foreach (var cell in cells)
+
+        // Entry 352 item 4: each cell is measured on its own, from images nothing writes to, so the cells are measured at once and their
+        // results gathered in the cells' order, which is all that reads them: the same shifts, a fifth of the time on the bench's sheet.
+        var each = new (int Left, int Top, int Right, int Bottom, PointD Shift, bool Usable)[cells.Count];
+        Parallel.For(0, cells.Count, k =>
         {
+            var cell = cells[k];
             var corners = new[] { new PointD(cell.X - cell.HalfWidth, cell.Y - cell.HalfHeight), new PointD(cell.X + cell.HalfWidth, cell.Y - cell.HalfHeight), new PointD(cell.X + cell.HalfWidth, cell.Y + cell.HalfHeight), new PointD(cell.X - cell.HalfWidth, cell.Y + cell.HalfHeight) }
                 .Select(registration.ToImage).ToList();
             int left = Math.Max(0, (int)Math.Floor(corners.Min(c => c.X))), top = Math.Max(0, (int)Math.Floor(corners.Min(c => c.Y)));
@@ -698,8 +703,8 @@ public static class RenderDifferenceHoleDetector
             int w = right - left + 1, h = bottom - top + 1;
             if (w < 32 || h < 32)
             {
-                shifts.Add(new PointD(double.NaN, double.NaN));
-                continue;
+                each[k] = (left, top, right, bottom, new PointD(double.NaN, double.NaN), false);
+                return;
             }
 
             var e = new byte[w * h];
@@ -717,7 +722,12 @@ public static class RenderDifferenceHoleDetector
 
             var (shift, response) = backend.PhaseCorrelate(new GrayImage(w, h, e), new GrayImage(w, h, n));
             bool usable = response >= 0.05 && Math.Sqrt((shift.X * shift.X) + (shift.Y * shift.Y)) <= maximumShift;
-            shifts.Add(usable ? shift : new PointD(double.NaN, double.NaN));
+            each[k] = (left, top, right, bottom, usable ? shift : new PointD(double.NaN, double.NaN), usable);
+        });
+
+        foreach (var (left, top, right, bottom, shift, usable) in each)
+        {
+            shifts.Add(shift);
             if (usable)
             {
                 found.Add((left, top, right, bottom, shift));
@@ -1186,35 +1196,49 @@ public static class RenderDifferenceHoleDetector
     /// <summary>Two centres by residual-weighted two-means over the hull, started one standard deviation either side of the centroid along the major axis.</summary>
     private static (double X, double Y)[] Split(byte[] residual, int width, ImageBlob blob, BlobMoments m)
     {
+        // Entry 352 item 4: which pixels take part does not change between iterations, so they are found once, in the order they were
+        // always visited, rather than twenty times with a test against the hull for each; and once an iteration leaves both centres exactly
+        // where they were, every later one would too, so the loop stops there. The sums are the same additions in the same order, so the
+        // centres are the same to the last bit; this was half of finding the holes on the bench's sheet.
+        var pixels = new List<(int X, int Y, double Weight)>();
+        for (int y = blob.Top; y < blob.Top + blob.Height; y++)
+        {
+            for (int x = blob.Left; x < blob.Left + blob.Width; x++)
+            {
+                double weight = residual[(y * width) + x];
+                if (weight != 0 && Inside(blob.Hull, x, y))
+                {
+                    pixels.Add((x, y, weight));
+                }
+            }
+        }
+
         var centres = new (double X, double Y)[] { (m.X - (m.Major * m.AxisX), m.Y - (m.Major * m.AxisY)), (m.X + (m.Major * m.AxisX), m.Y + (m.Major * m.AxisY)) };
         for (int iteration = 0; iteration < 20; iteration++)
         {
             var sw = new double[2];
             var sx = new double[2];
             var sy = new double[2];
-            for (int y = blob.Top; y < blob.Top + blob.Height; y++)
+            foreach (var (x, y, weight) in pixels)
             {
-                for (int x = blob.Left; x < blob.Left + blob.Width; x++)
-                {
-                    double weight = residual[(y * width) + x];
-                    if (weight == 0 || !Inside(blob.Hull, x, y))
-                    {
-                        continue;
-                    }
-
-                    int k = Math.Pow(x - centres[0].X, 2) + Math.Pow(y - centres[0].Y, 2) <= Math.Pow(x - centres[1].X, 2) + Math.Pow(y - centres[1].Y, 2) ? 0 : 1;
-                    sw[k] += weight;
-                    sx[k] += weight * x;
-                    sy[k] += weight * y;
-                }
+                int k = Math.Pow(x - centres[0].X, 2) + Math.Pow(y - centres[0].Y, 2) <= Math.Pow(x - centres[1].X, 2) + Math.Pow(y - centres[1].Y, 2) ? 0 : 1;
+                sw[k] += weight;
+                sx[k] += weight * x;
+                sy[k] += weight * y;
             }
 
+            var before = (centres[0], centres[1]);
             for (int k = 0; k < 2; k++)
             {
                 if (sw[k] > 0)
                 {
                     centres[k] = (sx[k] / sw[k], sy[k] / sw[k]);
                 }
+            }
+
+            if (before == (centres[0], centres[1]))
+            {
+                break;
             }
         }
 

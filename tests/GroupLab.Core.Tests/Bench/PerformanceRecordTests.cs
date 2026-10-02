@@ -29,8 +29,8 @@ public class PerformanceRecordTests
         Assert.Contains("commit ", record, StringComparison.Ordinal);
         Assert.Contains("Release build", record, StringComparison.Ordinal);
 
-        // The record is the baseline for a phase that has not started, and saying so is the point of it.
-        Assert.Contains("has been optimised", record, StringComparison.Ordinal);
+        // The record says what has been optimised and that no figure moved, which is the point of it.
+        Assert.Contains("has changed no figure", record, StringComparison.Ordinal);
 
         // Every area the benchmark has is a section of the record, so a new area cannot land in a table nobody prints.
         foreach (string area in BenchSuite.Areas)
