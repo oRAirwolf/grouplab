@@ -507,7 +507,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - On the phone, a target with several aim points shows each in its own color with its own figures, and another can be added from the result.
 - On the phone, Zero from this group can hand the group's offset to Ballistics, whose dope then includes it at every range.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.124)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
