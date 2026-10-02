@@ -507,7 +507,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - Work toward the iPhone and iPad version: the phone's screens are now checked on every build on computers of all three kinds.
 - The phone's screens are now shared with the iPhone and iPad version being built, with nothing changed in what you see on Android.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.125)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
