@@ -40,7 +40,11 @@ UID_OF_APP=$(adb shell pm list packages -U "$PKG" | tr -d '\r' | grep "^package:
 # A file into GroupLab Dev's own scenario folder: exec-in carries the bytes untouched, and the size read back proves it arrived whole.
 put() {
   local from=$1 to=$2 size
-  adb exec-in "run-as $PKG sh -c 'cat > files/scenario/$to'" < "$from"
+  # Through the shared temporary folder: piping into run-as arrived cut short on the emulator (run 37002647081).
+  adb push "$from" "/data/local/tmp/$to" > /dev/null
+  adb shell chmod 644 "/data/local/tmp/$to"
+  adb shell run-as "$PKG" cp "/data/local/tmp/$to" "files/scenario/$to"
+  adb shell rm -f "/data/local/tmp/$to"
   size=$(adb exec-out "run-as $PKG stat -c %s files/scenario/$to 2>/dev/null" | tr -d '\r')
   if [ "$size" != "$(wc -c < "$from" | tr -d ' ')" ]; then
     echo "::error::$to arrived in GroupLab Dev's folder as $size bytes, not $(wc -c < "$from")"
@@ -52,9 +56,14 @@ failed=0
 # The same sheet at 300 dpi where ImageMagick is there: the 600 dpi scan took 52 s to read on the iPhone simulator and hit the one-minute
 # limit on a reading (run 36996193435); the sweep is about the screens, not the reading's speed.
 SAMPLE="$HERE/samples/gl-cf25-ltr-d-25-shots-600-dpi.png"
-if command -v convert > /dev/null; then
-  convert "$SAMPLE" -resize 50% -units PixelsPerInch -density 300 /tmp/sweep-sample.png && SAMPLE=/tmp/sweep-sample.png
-fi
+# ImageMagick is not on the runner, so Python's imaging library makes the copy, installed if it is not there.
+python3 -c "import PIL" 2> /dev/null || python3 -m pip install --quiet --user pillow > /dev/null 2>&1 || true
+python3 - "$SAMPLE" /tmp/sweep-sample.png <<'PY' && SAMPLE=/tmp/sweep-sample.png || echo "::warning::the sweep reads the 600 dpi sample"
+import sys
+from PIL import Image
+image = Image.open(sys.argv[1])
+image.resize((image.width // 2, image.height // 2), Image.LANCZOS).save(sys.argv[2], dpi=(300, 300))
+PY
 
 for pass in plain largest-text dark; do
   case "$pass" in
