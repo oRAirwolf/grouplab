@@ -83,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 347, 348, 349, 351.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 347, 348, 351.
 
 ## Things that would surprise somebody who was not here yesterday
 

@@ -40,6 +40,13 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 349: the download page and an Android tablet asking for the desktop site
+
+Done 2026-10-02. Firefox and Chrome on an Android tablet ask for the desktop site with "X11; Linux x86_64", so the page offered Linux
+and said "This computer". A touch screen with no fine pointer now counts as Android there (and as handheld for the Desktop or Mobile
+switch), a Linux laptop with a touch screen and a trackpad stays Linux, and a guess resting on the touch screen says "Looks like this
+device". `website/build.py` runs eight cases in Node on every build; on the old script the two tablets got Linux, as Alan saw.
+
 ## Entry 346: a Garmin Xero workbook is a selection, not a month
 
 Done 2026-10-02. ShotView's workbook holds the strings the person selected, named after their month or months. The three code comments

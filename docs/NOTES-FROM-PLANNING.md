@@ -25,6 +25,25 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-02, entry 349: the download page takes an Android tablet for Linux
+
+**Status: done 2026-10-02.** 1 and 3 as written, with the theme script's handheld test given the same rule. 2: "Looks like this device" where the guess rests on the touch screen (an iPad or an Android tablet asking for the desktop site). The cases run in Node inside the site build (`device_problems`), with each browser's published user agent; the Fold 7's is the published form for that model, not one captured from Alan's phone.
+
+Alan, 2026-10-02 05:04 UTC: "on my Samsung Galaxy tablet, when I go to the downloads page in Firefox, it defaults me to the Linux
+download and says THIS COMPUTER. It is an Android tablet running the mobile version of Firefox. On my Fold 7, it says it is Android."
+
+Cause, most likely: Firefox for Android on a large screen asks for the desktop site, and its desktop user agent says "X11; Linux
+x86_64", so `download.js` reads Linux. iPadOS has the same habit as a Mac, which the page already handles with `maxTouchPoints`.
+
+1. Treat "Linux" with a touch screen and no fine pointer (`maxTouchPoints > 0` and `matchMedia('(pointer: coarse)')` with no
+   `(any-pointer: fine)`) as Android, and say so; keep a Linux laptop with a touch screen and a mouse or trackpad as Linux.
+2. When the guess rests on a heuristic like this one or the iPad one, the chosen button says "Looks like this device" rather than
+   "This computer", so a wrong guess never sounds certain. A user agent that plainly says Android, iPhone or Windows keeps "This phone"
+   or "This computer".
+3. Tests for: Firefox Android tablet in desktop mode, Chrome Android tablet in desktop mode, iPad Safari desktop mode, a Linux laptop
+   with a touch screen, plain Linux, and the Fold 7's real user agent. Check the theme script's `handheld` test (theme.js) for the same
+   gap.
+
 ## 2026-10-01, entry 346: correction, Garmin Xero has no "monthly export"
 
 **Status: done 2026-10-02, in one commit.** 1: the correction is the next nightly's note, kind changed; the published entry is untouched. 2: the three comments say "a workbook of the strings selected in ShotView, one sheet per string". 3: nothing else said monthly (the built site carries it only from the published notes, the guides and their PDFs never did, and no test or fixture name does); the reader assumes no whole month, its only gap being a deleted shot inside a string. 5: "monthly export" is retired wording, allowed only in the published release notes.

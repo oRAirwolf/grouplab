@@ -813,10 +813,17 @@ DOWNLOAD_JS = """(function () {
   var names = ["windows", "mac", "iphone", "android", "linux"];
   var alias = { ios: "iphone", ipad: "iphone", macos: "mac", win: "windows" };
   var touchMac = navigator.maxTouchPoints > 1 && /Macintosh/.test(ua);
-  var guess = /iPhone|iPod|iPad/.test(ua) || touchMac ? "iphone" : /Android/.test(ua) ? "android" : /Windows/.test(ua) ? "windows"
+  // Entry 349: a tablet's browser asking for the desktop site says "X11; Linux x86_64" (Firefox and Chrome on Android both do); a touch
+  // screen with no fine pointer at all is taken for Android, while a Linux laptop with a touch screen and a mouse or trackpad stays Linux.
+  var touchOnly = navigator.maxTouchPoints > 0 && !!window.matchMedia && window.matchMedia("(pointer: coarse)").matches
+    && !window.matchMedia("(any-pointer: fine)").matches;
+  var touchLinux = touchOnly && /Linux|X11/.test(ua) && !/Android|CrOS/.test(ua);
+  var guess = /iPhone|iPod|iPad/.test(ua) || touchMac ? "iphone" : /Android/.test(ua) || touchLinux ? "android" : /Windows/.test(ua) ? "windows"
     : /Macintosh|Mac OS X/.test(ua) ? "mac" : /Linux|X11|CrOS/.test(ua) ? "linux" : "windows";
   var phone = /iPhone|iPod/.test(ua) || (/Android/.test(ua) && /Mobile/.test(ua));
-  var words = phone ? "This phone" : (guess === "iphone" || guess === "android") ? "This tablet" : "This computer";
+  // A guess resting on the touch screen rather than on what the browser says is never said as if certain.
+  var words = touchMac || touchLinux ? "Looks like this device" : phone ? "This phone"
+    : (guess === "iphone" || guess === "android") ? "This tablet" : "This computer";
   function known(d) { d = alias[d] || d; return names.indexOf(d) >= 0 ? d : null; }
   var asked = /[?&]device=([a-z]+)/.exec(location.search);
   root.setAttribute("data-device", (asked && known(asked[1])) || guess);
@@ -2321,6 +2328,61 @@ def download_problems() -> list:
     return found
 
 
+# Entry 349: what the download page and the Desktop or Mobile switch guess for each kind of device, run in Node with the browser's parts
+# stubbed. The user agents are the published forms of each browser, not ones captured from anybody.
+DEVICE_CASES = [
+    ("Firefox on an Android tablet asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 5, True, False, "android", "Looks like this device", "mobile"),
+    ("Chrome on an Android tablet asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 5, True, False, "android", "Looks like this device", "mobile"),
+    ("Safari on an iPad asking for the desktop site", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15", 5, True, False, "iphone", "Looks like this device", "mobile"),
+    ("a Linux laptop with a touch screen and a trackpad", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 10, False, True, "linux", "This computer", "desktop"),
+    ("Linux on a desktop", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 0, False, True, "linux", "This computer", "desktop"),
+    ("Chrome on a Galaxy Z Fold 7", "Mozilla/5.0 (Linux; Android 16; SM-F966U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36", 5, True, False, "android", "This phone", "mobile"),
+    ("Firefox on an Android phone", "Mozilla/5.0 (Android 16; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0", 5, True, False, "android", "This phone", "mobile"),
+    ("Windows on a laptop with a touch screen", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36", 10, False, True, "windows", "This computer", "desktop"),
+]
+
+DEVICE_HARNESS = r"""
+const cases = JSON.parse(process.argv[1]), scripts = JSON.parse(process.argv[2]), out = [];
+for (const [name, ua, touch, coarse, fine] of cases) {
+  const attrs = {}, ready = [], label = { textContent: "" };
+  Object.defineProperty(globalThis, "navigator", { value: { userAgent: ua, maxTouchPoints: touch }, configurable: true, writable: true });
+  global.window = { matchMedia: q => ({ matches: q === "(pointer: coarse)" ? coarse : q === "(any-pointer: fine)" ? fine : false }), addEventListener() {} };
+  global.location = { search: "", hash: "" };
+  global.history = { replaceState() {} };
+  global.localStorage = { getItem() { return null; }, setItem() {} };
+  global.document = {
+    documentElement: { setAttribute: (k, v) => { attrs[k] = v; }, getAttribute: k => attrs[k] },
+    addEventListener: (e, f) => ready.push(f),
+    querySelectorAll: sel => sel === "[data-pick]" ? [{ getAttribute: () => attrs["data-device"], querySelector: () => label, setAttribute() {}, addEventListener() {} }] : [],
+    getElementById: () => null,
+  };
+  for (const js of scripts) { new Function(js)(); }
+  ready.forEach(f => f());
+  out.push([name, attrs["data-device"], label.textContent, attrs["data-platform"]]);
+}
+console.log(JSON.stringify(out));
+"""
+
+
+def device_problems() -> list:
+    """Entry 349: every case in DEVICE_CASES gets the download and the words it should, and the switch the platform it should. Needs Node,
+    which GitHub's runners carry; where it is missing the check says so and passes."""
+    node = shutil.which("node")
+    if node is None:
+        print("device guess: Node is not here, so the download page's guesses were not run")
+        return []
+    cases = [list(c[:5]) for c in DEVICE_CASES]
+    run = subprocess.run([node, "-e", DEVICE_HARNESS, json.dumps(cases), json.dumps([DOWNLOAD_JS, JS])], capture_output=True, text=True, timeout=60)
+    if run.returncode != 0:
+        return [f"device guess: the scripts did not run in Node: {run.stderr.strip()[:300]}"]
+    found = []
+    for (name, device, words, platform), case in zip(json.loads(run.stdout), DEVICE_CASES):
+        want = case[5:]
+        if (device, words, platform) != want:
+            found.append(f"device guess: {name} gets {device!r}, {words!r} and {platform!r}, not {want[0]!r}, {want[1]!r} and {want[2]!r}")
+    return found
+
+
 def parity_problems() -> list:
     """Entry 258: every feature says whether it is on the phone, coming, or left out, in docs/PHONE-PARITY.md, and agrees with features.json."""
     found = []
@@ -3052,7 +3114,12 @@ JS = r"""/* GroupLab theme: follows the system unless the visitor has chosen, an
   var ua = navigator.userAgent || "";
   var forced = /[?&]platform=(mobile|desktop)(?:&|$)/.exec(location.search);
   var saved = stored();
-  var handheld = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+  // Entry 349: a tablet asking for the desktop site says Macintosh (an iPad) or "X11; Linux" (Android); a touch screen with no fine
+  // pointer is handheld either way.
+  var touchOnly = navigator.maxTouchPoints > 0 && !!window.matchMedia && window.matchMedia("(pointer: coarse)").matches
+    && !window.matchMedia("(any-pointer: fine)").matches;
+  var handheld = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua))
+    || (touchOnly && /Linux|X11/.test(ua) && !/CrOS/.test(ua));
   root.setAttribute("data-platform", forced ? forced[1] : (saved === "mobile" || saved === "desktop") ? saved : (handheld ? "mobile" : "desktop"));
   function mark() {
     var now = root.getAttribute("data-platform");
@@ -3400,6 +3467,7 @@ def main() -> None:
     problems += _screens_stamp.problems()
     problems += _readme_images.problems()
     problems += parity_problems()
+    problems += device_problems()
     problems += download_problems()
     problems += _how_it_works.problems(published_articles(), lambda rel: (REPO / rel).exists())
     if problems:
