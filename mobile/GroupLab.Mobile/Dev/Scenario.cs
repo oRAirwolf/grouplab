@@ -60,6 +60,9 @@ internal static class Scenario
     /// <summary>A scenario read before the application started, waiting for the screens.</summary>
     private static string? pending;
 
+    /// <summary>Whether the scenario wants the first run's questions answered, which is all but a scenario saying "firstRun": "ask".</summary>
+    private static bool answerFirst;
+
     /// <summary>Where a run's results, screenshots and log are written; emptied when a run starts.</summary>
     internal static string Results => Path.Combine(Folder, "results");
 
@@ -124,7 +127,8 @@ internal static class Scenario
             // Said in the results when it runs.
         }
 
-        if (root?["firstRun"]?.GetValueKind() != JsonValueKind.String || root["firstRun"]!.GetValue<string>() != "ask")
+        answerFirst = root?["firstRun"]?.GetValueKind() != JsonValueKind.String || root["firstRun"]!.GetValue<string>() != "ask";
+        if (answerFirst)
         {
             AnswerFirstRun(store);
         }
@@ -177,6 +181,21 @@ internal static class Scenario
         {
             // The first screen is built a moment after the application starts.
             await Task.Delay(TimeSpan.FromSeconds(2));
+
+            // Entry 352: on Android the application can have read its settings before the scenario answered the first run's questions on
+            // disk, and the first Android emulator sweep (run 37008821160) found every screen covered by "Before you start". The settings
+            // the application holds are answered too, and the screens built again.
+            if (answerFirst)
+            {
+                await OnUi(() =>
+                {
+                    AnswerFirstRun(Phone.Settings);
+                    Shell.Current?.Restart();
+                    return true;
+                });
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+
             await Run(text);
             Finished?.Invoke(Results);
         });
