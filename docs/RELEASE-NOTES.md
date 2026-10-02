@@ -12,6 +12,25 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.158
+
+**2026-10-02**, commit `e424c70`. Nightly.
+
+**What you will notice**
+
+- A damaged or very large chronograph file is now refused with a sentence saying why, where a damaged workbook could close GroupLab before, and a workbook built to fill memory is refused before it is opened.
+- On a store-bought target, Find holes no longer marks bold printed ring numbers, such as the 6s and 7s of a scoring bullseye, as holes.
+- Reading a target is faster: on the desktop a sheet goes from file to figures in about half the time, and on a phone a photograph is read about a quarter sooner, with every measurement exactly as before.
+
+**Under the hood**
+
+- The automatic Android screen check no longer finds every screen covered by the first-run questions.
+- Each nightly that changes the application now also walks every phone screen on an Android emulator, as it already did on the iPhone simulator, so a page that stops opening on Android is caught before anybody installs the build.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.158)
+
+---
+
 ## 0.2.0-nightly.157
 
 **2026-10-02**, commit `6fbe044`. Nightly.
