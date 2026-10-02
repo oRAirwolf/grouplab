@@ -429,6 +429,13 @@ results back to `testlab/results/` for Test Lab to pull, and closes. `.github/wo
 virtual phone chosen from Test Lab's own list by `scripts/testlab-devices.py`, inside the free plan; until request 62's project and key
 exist it says so and tests nothing.
 
+**The emulator's screen sweep** (entry 352 item 1): `.github/workflows/android-emulator.yml` builds GroupLab Dev for x86_64
+(`-p:GroupLabDev=true -p:GroupLabEmulator=true`, with OpenCV built for x86_64 from the phone's own build script), starts an x86_64
+emulator with hardware acceleration on GitHub's Linux machine, and runs `scripts/scenarios/phone-sweep.json`, the iOS simulator's sweep,
+named by the scenario extra, three times: as set, at the largest text size and dark. `scripts/android-sweep.sh` copies the results back
+over adb and fails on a crash or a step that could not find what it needed. The nightly starts it for every build that changes the
+application; a push never does.
+
 **The automation bridge** (entry 315 section 1), in GroupLab Dev only: a small command server on the device's own 127.0.0.1, port 47315,
 reached over the cable with `adb forward` (or `pymobiledevice3 usbmux forward` on iOS). Every scenario step is a command, one line of
 JSON each way, with the same code behind it, and the steps now include going back, reading a picture through to its result, choosing

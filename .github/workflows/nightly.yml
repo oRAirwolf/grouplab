@@ -836,6 +836,23 @@ jobs:
       - name: Start ios-app.yml on main
         run: gh workflow run ios-app.yml -R "$GITHUB_REPOSITORY" --ref main
 
+  # Entry 352 item 1: the same screen sweep on an Android emulator (android-emulator.yml), started the same way and for the same nightlies,
+  # so its result is its own run and never holds up publishing.
+  android-emulator:
+    name: start the Android emulator sweep
+    needs: name-it
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Start android-emulator.yml on main
+        run: gh workflow run android-emulator.yml -R "$GITHUB_REPOSITORY" --ref main
+
   publish:
     name: publish the nightly
     needs: [name-it, package, android]

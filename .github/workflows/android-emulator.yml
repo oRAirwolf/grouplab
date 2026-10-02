@@ -1,0 +1,109 @@
+name: android emulator
+
+# NOTES-FROM-PLANNING.md entry 352 item 1: the screen sweep on an Android emulator, beside the iOS simulator's (ios-app.yml). GroupLab Dev is
+# built for x86_64 with OpenCV built for x86_64, installed on an x86_64 emulator running with KVM on GitHub's Linux machine, and given
+# scripts/scenarios/phone-sweep.json through the scenario extra; scripts/android-sweep.sh reads the results back over adb and fails on a crash
+# or a step that could not find what it needed. The nightly starts this for every build that changes the application (nightly.yml,
+# android-emulator), never a push. Nothing built here is signed or published; the sample scan's consent is in samples/PROVENANCE.md.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: android-emulator-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    name: GroupLab Dev on the Android emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@v5
+
+      # The phone's build script, pointed at x86_64. It is copied rather than changed, so the arm64 library's cache, keyed on the script,
+      # is not thrown away; the check stops a script that no longer names its ABI on one line from building the wrong thing silently.
+      - name: The build script for x86_64
+        run: |
+          grep -q '^ABI=arm64-v8a$' android/opencv/build-extern.sh || { echo "::error::build-extern.sh no longer sets ABI=arm64-v8a on its own line"; exit 1; }
+          sed 's/^ABI=arm64-v8a$/ABI=x86_64/' android/opencv/build-extern.sh > "$RUNNER_TEMP/build-extern-x86_64.sh"
+
+      - name: Native library cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/android-native-x86_64
+          key: android-native-x86_64-${{ hashFiles('android/opencv/build-extern.sh') }}
+
+      - name: Build OpenCV and OpenCvSharp's native half for x86_64
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          bash "$RUNNER_TEMP/build-extern-x86_64.sh" "$RUNNER_TEMP/android-native-work" "$RUNNER_TEMP/android-native-x86_64" > "$RUNNER_TEMP/native.log" 2>&1 || { tail -60 "$RUNNER_TEMP/native.log"; exit 1; }
+          # The sources and the build tree are not needed again, and the emulator wants the disk.
+          rm -rf "$RUNNER_TEMP/android-native-work"
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: GroupLab Dev for x86_64
+        run: |
+          set -e
+          dotnet workload install android --skip-sign-check > /dev/null
+          mkdir -p android/native/x86_64
+          cp "$RUNNER_TEMP/android-native-x86_64/x86_64/libOpenCvSharpExtern.so" android/native/x86_64/
+          # Release, signed with the build machine's debug key, as android.yml builds it: a Debug APK expects Visual Studio's fast
+          # deployment and does not start on its own (entry 202).
+          dotnet build android/GroupLab.Android --configuration Release -p:GroupLabDev=true -p:GroupLabEmulator=true \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" > build.log 2>&1 || { grep -E 'error|Error' build.log | head -40; exit 1; }
+          apk=$(find android/GroupLab.Android/bin/Release -name 'org.grouplab.app.dev-Signed.apk' | head -1)
+          test -n "$apk"
+          for item in lib/x86_64/libOpenCvSharpExtern.so assets/targets/GL-CF25-LTR.gltd.json; do
+            unzip -l "$apk" | grep -q " $item$" || { echo "::error::GroupLab Dev for x86_64 does not carry $item"; exit 1; }
+          done
+          mkdir -p apk && cp "$apk" apk/grouplab-dev-x86_64.apk
+          ls -l apk/grouplab-dev-x86_64.apk
+
+      # GitHub's Linux machines allow hardware acceleration for the emulator once /dev/kvm is open to the runner's user, as the
+      # emulator runner's own instructions do it.
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules > /dev/null
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+
+      - name: The screen sweep
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 75
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-sweep.sh apk/grouplab-dev-x86_64.apk android-sweep
+
+      - name: Summary
+        if: success()
+        run: echo "### The screen sweep visited every place and its pages on the Android emulator, plain, at the largest text size and dark." >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: android-emulator-sweep
+          path: |
+            android-sweep
+            build.log
+          retention-days: 14
+          if-no-files-found: warn

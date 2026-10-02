@@ -36,6 +36,15 @@
   </PropertyGroup>
 
   <!--
+    NOTES-FROM-PLANNING.md entry 352 item 1: -p:GroupLabEmulator=true builds for an x86_64 Android emulator instead of a phone, with OpenCV
+    built for x86_64 in android/native/x86_64. Only .github/workflows/android-emulator.yml uses it, for the screen sweep; nothing built
+    this way is published.
+  -->
+  <PropertyGroup Condition="'$(GroupLabEmulator)' == 'true'">
+    <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <!--
     NOTES-FROM-PLANNING.md entry 288: the updater lives in its own flavor, -p:GroupLabUpdater=true, on by default for GroupLab Dev's APK and
     for nothing else yet (the sideloaded org.grouplab.app comes later). Without it the Updates folder, WorkManager and the permission to
     install packages are not in the build at all, and an AAB, which only ever goes to Google Play, is refused if it would carry them.
@@ -84,6 +93,7 @@
   <ItemGroup>
     <!-- OpenCV built for the phone by android/opencv/build-extern.sh; CI and a local build put it in android/native. -->
     <AndroidNativeLibrary Include="..\native\arm64-v8a\libOpenCvSharpExtern.so" Condition="Exists('..\native\arm64-v8a\libOpenCvSharpExtern.so')" />
+    <AndroidNativeLibrary Include="..\native\x86_64\libOpenCvSharpExtern.so" Condition="'$(GroupLabEmulator)' == 'true' and Exists('..\native\x86_64\libOpenCvSharpExtern.so')" />
     <AndroidAsset Include="..\..\targets\*.gltd.json" Link="Assets\targets\%(Filename)%(Extension)" />
     <!-- Entry 226 section 1: the definitions sheets were printed from before a redesign, so an old printout is still identified. -->
     <AndroidAsset Include="..\..\targets\frozen\**\*.gltd.json" Link="Assets\targets\frozen\%(Filename)%(Extension)" />
