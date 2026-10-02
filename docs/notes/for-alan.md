@@ -1,5 +1,8 @@
 **Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**PAUSED** (not a request): stopped at 02:55 your time on 2 October, as you asked, until 04:00. Everything is committed and pushed
+except the half-done phone sweep, which is saved on its worker's branch to finish after the pause. Nightly 156 is published.
+
 **ADD A STORE-BOUGHT TARGET, AND CHANGING A PAIRING** (entries 348 and 351, not a request): both built as you chose, concept A,
 in **nightly 156**. On the phone and the computer, Targets has **Add a store-bought target**: five steps, from a photo of the blank
 target to a small file of its fingerprint, name, size and bulls (never the photo), saved or shared for you to send. That nightly is the

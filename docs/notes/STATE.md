@@ -9,19 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-02 05:50 UTC, entry 350 folded; 346, 347, 349, 348 and 351 are next, then entry 342's phone sweep.
+**Last rewritten:** 2026-10-02 08:55 UTC, paused at Alan's word; entries 346 to 351 folded, entry 342's phone sweep half done.
 
 ---
 
 ## In flight
 
-- **Nothing is running.** Entries 339 to 344 are folded; entry 342's worker A item 2 (the phone sweep on the emulator and simulator in
-  CI) is the one thing left, first tomorrow, on one worker.
-- **Nightly 152** carries store-bought recognition and the fingerprint engine; the next carries the faster code reading, the desktop
-  sweep's fixes and the recovered blanks fix of entries 325 and 327.
-- **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback); 15 and 16, a friend's
-  keyboard reports on Targets, are fixed for nightly 154 (entry 350).
-- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66, and the dry run of store-submit.yml passes.
+- **Paused at Alan's word, 2026-10-02 08:55 UTC (02:55 his time), until 04:00 his time**, because his session's tokens ran low.
+- **Entry 342's phone sweep, half done:** worker A's unfinished work is saved, unreviewed and untested, as commit 130b4a8b on branch
+  `worktree-agent-a7f9a458c88c62fee` (worktree `.claude/worktrees/agent-a7f9a458c88c62fee`), never pushed. Next: read its diff, finish
+  `MobileSweepTests` and the simulator scenario in ios-app.yml, run the three suites, then cherry-pick.
+- **Nightly 156** is published: Add a store-bought target and the pairing rows (entries 348 and 351); 155 the library route (347);
+  154 the friend's keyboard fix (350) and the Xero correction (346).
+- **TestFlight feedback:** none open; 15 and 16 closed with nightly 154.
+- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66.
 - **Waiting on planning:** question 79.
 
 ## The next three
@@ -71,7 +72,7 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.153 (2026-10-01 15:00 UTC): the faster code reading and the desktop sweep; 152 carried recognition.
+- **Last nightly:** 0.2.0-nightly.156 (2026-10-02): the store-bought target steps and the pairing rows.
 - **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
 - Crash reports open: none.
 
