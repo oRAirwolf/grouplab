@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 155,
+  "afterNightly": 157,
   "screens": {
     "analysis": "bef55033d2b3a5a31212639e5ff74cf32cb2bf957fceb14188d6f658f7dd6b47",
     "analysis-open": "476f71f45452f3372dfebec9e1cf7fc8fc720edc12c703006874c2a08359a5f2",
@@ -14,7 +14,7 @@
     "marking-other": "0f76e03d7e0673d18a9d8985571e972b6fcb407a3a1a618afb5a1ab56b409817",
     "optic": "b9baab30fba7459bc5e8d7f8571f78fe3c0737b627eb7337311caadd051821ce",
     "optic-4x": "b9baab30fba7459bc5e8d7f8571f78fe3c0737b627eb7337311caadd051821ce",
-    "pairing": "da4f59360d6e39925871ebc61b000f68a9db83560e53257e0f0be1fa9f36190c",
+    "pairing": "57e18b644180217a5d5f0977b34538cfbcef14f9010683490fdfeb6ce2282356",
     "scope-unit": "94b0c7c2351d9f6b8e434b32d507d12cc6a7f8f04f077a447f43893a8046c6d0",
     "sessions": "d4ec7e55ea5f59b0ea5330020f9d2b4cc208ce505f7557b649fd9d3675e84072",
     "settings": "925e370a2b76bf2d6e764ec730d1fb8dea2a67b332e172b3226d328717beedc4",
@@ -39,6 +39,6 @@
     "store-target": "f27217dacecda387442fc8d508d88579afc28e9cd0fa3bcfc5899e054d3b8bcb",
     "targets": "1618d4d9e3a0fc6e9ddbb5977e111529764518b44708ada2026d032328f67766",
     "targets-zero": "998fd8f2dfa24c1b0a3c04a0e48abd101fa8a06cded1923163bf2f98c9db3f1a",
-    "velocity": "0a42b68e6086bd740a93f2f4552d46419663022b6f2236cd11ef0206108de2a9"
+    "velocity": "96dcd3ffe141a55dbfb484d9a9b03722a261b5be0027c9d082cd75098edbad96"
   }
 }
