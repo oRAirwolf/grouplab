@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.157
+
+**2026-10-02**, commit `6fbe044`. Nightly.
+
+**What you will notice**
+
+- The iPhone and iPad build works again; builds 154 to 156 did not reach Apple's test service, so this one carries their changes, among them the keyboard fix.
+- On the phone, every box, switch and button now has a name a screen reader reads out, and on a small phone the bull picker's numbers 10 to 25 are no longer cut off.
+- On an iPad held upright, typing in a box on a result no longer flips the result to its side-by-side layout and hides the box under the keyboard.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.157)
+
+---
+
 ## 0.2.0-nightly.156
 
 **2026-10-02**, commit `3df5d04`. Nightly.
