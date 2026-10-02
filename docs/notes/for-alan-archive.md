@@ -249,6 +249,28 @@ same corner of the glass as its blank, from a second pack where you have one. Sa
 second sheets" (or which ones). If a product's two sheets agree within about 0.2 percent, GroupLab may remember its scale; if not, it
 still finds the bulls but asks you for a scale check.
 
+## 69. DESIGN NEEDED: making a store-bought target's fingerprint from a camera photo, the screens, from planning's concepts (entry 344)
+
+**Answered 2026-10-02** (entry 348: "Fingerprint A on both."), and built the same day.
+
+**Opened 2026-10-01.** **Why:** you asked to photograph poster-sized targets that will not fit a scanner and have GroupLab make their
+fingerprints for everybody. The engine and a desktop command, `grouplab target-reference`, are being built now; the screens wait for the
+concepts planning is drawing today: the steps, choosing how the scale is found (the printed size typed in, a GroupLab sheet or card in
+the same photo, or two tapped points and a distance), confirming the bulls, and exporting the small file you send to Code. **A good
+answer:** planning's drawings; nothing is needed from you before then.
+
+## 68. DESIGN NEEDED: changing a chronograph pairing on the phone, for the planning session's concepts, no time from you now (entry 342)
+
+**Answered 2026-10-02** (entry 351: "Go with pairing A."), and built the same day.
+
+**Opened 2026-10-01.** **Why:** an imported Garmin Xero string now proposes its own pairing with the shots on both the computer and the
+phone: where the chronograph's pauses split a string into groups and only one stretch is as many shots as the sheet, the rest are marked
+as not this group's, then a shot the Xero left out, then one marked clean bore, and a skipped number gives the shot fired there no
+reading. About a quarter of your strings (132 of 534) hold more than one group. On the computer every mark is a button on its row; the
+phone shows the proposal and its reasons and can keep it, or keep the readings unpaired, but has no way yet to change a single mark.
+**Needed:** a concept for that screen on the phone (a row per shot and reading with a tap to mark it, perhaps, and where the reasons sit).
+**A good answer:** planning's drawing, or "keep it as it is" if the proposal and the computer are enough.
+
 ## 65. Garmin Xero exports for the chronograph reader (entries 333 and 334)
 
 **Opened and answered 2026-10-01** (entry 334): "All of the xlsx files in here are garmin chronograph files G:\My Drive\chronograph.files\2026

@@ -1,4 +1,11 @@
-**Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+
+**ADD A STORE-BOUGHT TARGET, AND CHANGING A PAIRING** (entries 348 and 351, not a request): both built as you chose, concept A,
+in **nightly 156**. On the phone and the computer, Targets has **Add a store-bought target**: five steps, from a photo of the blank
+target to a small file of its fingerprint, name, size and bulls (never the photo), saved or shared for you to send. That nightly is the
+one to try your Cabela's and Walmart targets with; the phone gets it from GroupLab Dev's own update, Google Play's test, or TestFlight
+once Apple has it. Changing what a chronograph reading goes with is now a row per reading with one mark to tap, the same choices on
+both. Also in nightly 155: a target added to the library later reaches every copy without a new build.
 
 **YOUR FRIEND'S TESTFLIGHT FEEDBACK** (entry 350, not a request): retrieved; you did not need to do anything. It came in on 1 October
 at 12:50 UTC from an iPhone on build 150, both on the Targets screen, and was filed privately an hour later (issues 15 and 16).
@@ -54,24 +61,6 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
-
-## 69. DESIGN NEEDED: making a store-bought target's fingerprint from a camera photo, the screens, from planning's concepts (entry 344)
-
-**Opened 2026-10-01.** **Why:** you asked to photograph poster-sized targets that will not fit a scanner and have GroupLab make their
-fingerprints for everybody. The engine and a desktop command, `grouplab target-reference`, are being built now; the screens wait for the
-concepts planning is drawing today: the steps, choosing how the scale is found (the printed size typed in, a GroupLab sheet or card in
-the same photo, or two tapped points and a distance), confirming the bulls, and exporting the small file you send to Code. **A good
-answer:** planning's drawings; nothing is needed from you before then.
-
-## 68. DESIGN NEEDED: changing a chronograph pairing on the phone, for the planning session's concepts, no time from you now (entry 342)
-
-**Opened 2026-10-01.** **Why:** an imported Garmin Xero string now proposes its own pairing with the shots on both the computer and the
-phone: where the chronograph's pauses split a string into groups and only one stretch is as many shots as the sheet, the rest are marked
-as not this group's, then a shot the Xero left out, then one marked clean bore, and a skipped number gives the shot fired there no
-reading. About a quarter of your strings (132 of 534) hold more than one group. On the computer every mark is a button on its row; the
-phone shows the proposal and its reasons and can keep it, or keep the readings unpaired, but has no way yet to change a single mark.
-**Needed:** a concept for that screen on the phone (a row per shot and reading with a tap to mark it, perhaps, and where the reasons sit).
-**A good answer:** planning's drawing, or "keep it as it is" if the proposal and the computer are enough.
 
 ## 67. Turn off GroupLab Team's automatic distribution in TestFlight, about one minute, whenever suits (entries 319, 320 and 335)
 

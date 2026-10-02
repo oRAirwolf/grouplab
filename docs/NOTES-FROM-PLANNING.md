@@ -25,6 +25,53 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-02, entry 351: changing a chronograph pairing on the phone, concept A (request 68)
+
+**Status: done 2026-10-02 (worker A); request 68 closed.** The same four choices in the same words on the computer and the phone. Choices where the drawing left room: "This group, clean bore" and "Leave it out" are stored as no pairing and differ only in what they say; the proposal card scrolls with the list; the old re-pairing in order is gone, so nothing changes another mark silently but a swap, which says so. The computer's button stays "Accept the mapping".
+
+Alan, 2026-10-02 05:18 UTC, on the canvas claude.ai/artifact/D1gW2dkr1p7ijdKzNcXBtu: "Go with pairing A." The board "Pairing A: a
+row per reading, tap to change" is the reference; its readings are samples. Close request 68. After entry 348.
+
+1. At the top, a short card stating the proposal and its reasons in plain words, as entry 342's pairing already writes them (the pause
+   that split the string, a reading left out in ShotView, a clean bore mark, a skipped number), ending "Tap any mark to change it."
+2. Below it, one row per reading in the order fired: its number, speed in the string's own unit, time, and on the right one tap target
+   showing what it goes with ("Shot 2", "Not this group", "Shot 5, left out in ShotView", "Shot 1, clean bore"); a pause between
+   readings shows as a thin labelled divider ("6 minute pause"). Paired marks in teal, marks that need a look in amber, "Not this group"
+   plain. The row being changed is highlighted.
+3. Tapping a mark opens a sheet from the bottom: "Reading N, X fps, goes with": Not this group; A shot of this group (then the shots to
+   choose from, a shot already taken by another reading swapping places); This group, clean bore; Leave it out. Changing one mark never
+   silently changes another, except a swap, which says so.
+4. At the bottom, "Keep this pairing" and "Leave unpaired" as today. The computer's row buttons and the phone's sheet must offer the same
+   choices with the same words.
+5. Long strings (Alan's run to 93 shots): the list scrolls and the proposal card stays readable; test at 320 wide, large text, both
+   themes, and with a 93-shot string.
+
+## 2026-10-02, entry 348: the fingerprint capture screens, concept A on both (request 69)
+
+**Status: done 2026-10-02 (worker A), except the phone pictures, which wait for a sitting with the phone; request 69 closed.** The scale choices carry what entry 344 measured, and no "Most accurate". Choices where the drawing left room: the two points are set on the Size and scale step; one name box and no maker box; the corner handles are drag-only, with no keyboard way to move them.
+
+Alan, 2026-10-02 05:04 UTC, on the canvas claude.ai/artifact/D1gW2dkr1p7ijdKzNcXBtu: "Fingerprint A on both." The boards
+"Fingerprint A: guided steps (desktop, step 2 of 5)", "Fingerprint A on a phone (step 2 of 5)" and "(step 4: the bulls)" are the
+reference; sample numbers are samples. Close request 69. Main model, after entries 346 and 347.
+
+1. Guided steps, one question at a time, five steps: Photo, Size and scale, Straighten, The bulls, Name and send. Desktop: the step
+   list on the left (done steps ticked in teal, the current one amber), the photo or straightened target in the middle, the step's
+   question on the right with Back and Next. Phone: full-screen steps with a five-part progress bar, Back at the top, one big button at
+   the bottom. Reached from Targets, "Add a store-bought target", on both.
+2. Size and scale: the three choices as drawn (printed size with width and height boxes; a GroupLab sheet in the photo; two points and
+   a distance), with the honest accuracy line under the choice for the source picked. **Correction to the drawing:** Code's entry 344
+   measured that at poster size a GroupLab sheet in the photo was not the most accurate source, so do not label any choice "Most
+   accurate" by fixed text; say what entry 344 measured for each source, or nothing.
+3. Straighten: the found corners as amber handles to drag. The bulls: rings numbered, tap or click to remove, "Add a bull", "These are
+   right". Name and send: the name box, the family notice when it matches a library artwork at another size, and "Save reference file"
+   (desktop) or "Save and share the file" (phone, through the share sheet), with the line "The fingerprint, name, size and bulls.
+   Never the photo." Only Alan's files are added to the library (entry 344).
+4. The usual: both themes, large text, 320 wide, every control a real button with a name; the tour and the guide describe it; a
+   Features picture.
+
+Alan has bought more store-bought targets from Cabela's and Walmart to try this on his phone when it is ready: say in for-alan.md which
+nightly carries the phone screens.
+
 ## 2026-10-01, entry 347: question 80 answered, where a newer fingerprint library is published
 
 **Status: done 2026-10-02, as answered.** It costs Alan nothing: the library is signed with the update key the nightly already holds. One difference from the wording: Google Play's Android copy and the iPhone's have no update check to ride on, so every phone copy looks at start under entry 343's three rules (unmetered, battery not low, storage not low) and at most every six hours; GroupLab Dev's WorkManager job is unchanged. The computer looks at launch on every copy, the Store's included.

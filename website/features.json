@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, going back to the targets list after opening a sheet no longer fails",
+    "A chronograph string imported in meters a second now shows its readings in meters a second",
     "On the iPhone, the bar with Done no longer stays floating over the screen",
     "Correction: a Garmin Xero file with several strings holds the strings you selected",
     "Store-bought targets added after your build now reach GroupLab without a new build",

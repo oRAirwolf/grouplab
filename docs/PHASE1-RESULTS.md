@@ -40,6 +40,21 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 348 and 351: adding a store-bought target, and changing a pairing one mark at a time
+
+Done 2026-10-02 by worker A, from Alan's concept A on both.
+
+- **348:** "Add a store-bought target" on Targets, computer and phone: Photo, Size and scale (the three sources, each with what entry
+  344's poster trial measured), Straighten (amber corner handles), The bulls (numbered rings, remove, add, "These are right"), Name and
+  send ("Save reference file", or "Save and share the file" through the share sheet; the fingerprint, name, size and bulls, never the
+  photo). One session drives both screens. A bug found on the way: on the phone, going back to the targets list after opening a sheet
+  failed, the list being rebuilt around fields that still had a parent.
+- **351:** a row per reading in the order fired, a mark on each (teal paired, amber to look at, plain "Not this group"), pauses as
+  dividers, a bottom sheet on the phone and the same four choices under the row on the computer; a shot already taken swaps, and says
+  so. Imports in m/s show m/s. Tested at 320 wide, large text, both themes and with a 93-shot string.
+- **Pictures:** `fingerprint` (a poster GroupLab draws) and `pairing` (a timed string) on the Features page and the tour; the phone's
+  pictures wait for a sitting.
+
 ## Entry 347: the fingerprint library reaches people without a new build
 
 Done 2026-10-02. The nightly signs `grouplab-target-library.json` with the update key (`grouplab target-reference library`, the key

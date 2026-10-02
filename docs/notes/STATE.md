@@ -22,7 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **TestFlight feedback is filed privately** in oRAirwolf/grouplab-crash-reports (label testflight-feedback); 15 and 16, a friend's
   keyboard reports on Targets, are fixed for nightly 154 (entry 350).
 - **The Microsoft Store carries 0.2.0**; a new submission waits for request 66, and the dry run of store-submit.yml passes.
-- **Waiting on planning:** concepts for requests 68 and 69, and questions 79 and 80.
+- **Waiting on planning:** question 79.
 
 ## The next three
 
@@ -44,7 +44,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
 1. Entry 342's last item: the phone sweep on the emulator and the simulator in CI, on one worker.
-2. Planning's concepts for requests 68 and 69, then the screens they draw.
+2. The phone pictures of the fingerprint and pairing screens, at the next sitting with a phone.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
 ## Blocked, and on what
@@ -53,7 +53,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **17** (69 DESIGN NEEDED, entry 344's fingerprint screens; 68 DESIGN NEEDED, the phone's pairing screen; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **15** (67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -82,7 +82,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 348, 351 (worker A).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Nothing waits locally.
 
 ## Things that would surprise somebody who was not here yesterday
 
