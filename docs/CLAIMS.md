@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1532 |
-| measured | 1970 |
-| decided | 1281 |
+| measured | 1997 |
+| decided | 1284 |
 | unbacked | 0 |
-| **total** | **4783** |
+| **total** | **4813** |
 
-**1155** of them were read one sentence at a time and their backing written against the sentence. The other **3628** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1155** of them were read one sentence at a time and their backing written against the sentence. The other **3658** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -2460,6 +2460,9 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): What cannot yet be separated, and the test that would, is added to article 1's "What we still do not know".
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 322 section 2: why the lens fit leaves the far column of markers out on angled pictures | **not written** | The far column was off the sheet's plane in that one sitting, a lifted margin, and no lens model reaches it; four pictures of one sheet cannot say how often paper lifts or by how much, and docs/DETECTION-LEARNING-STUDY.md section 9 holds the measurement.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 324 section 1: a bent-sheet registration for a lifted far margin | **not yet written** | It would change what a developer builds (a smooth correction over the lens fit, taken only when it predicts the markers the flat fit left out), but it rests on two angled pictures of one sheet; worth an article once a second sitting with a lifted or curled sheet confirms it.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 344: a fingerprint and its scale from a camera photo of a poster | **not yet** | Typing the printed size beat a GroupLab sheet beside a poster, which would change what a shooter does, but every photograph was synthetic, with no lens distortion; worth one after a real phone photo of a real poster (request 69's sitting).
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entry 334: Alan's 387 chronograph exports read | **not written** | Three strings of 831 whose own figures differ from their shots, two of them an SD of 0.0, is worth a line in the user guide (it is there) rather than an article; what a shooter would do differently is only to read the shots rather than the summary.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Entries 342 and 352 item 4: where the analysis spends its time | **not written** | Nothing a shooter does changes, and what a developer would take from it, profile before changing anything and keep every figure identical, is already the method on `docs/PERFORMANCE.md`.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | ## Program A: the ST-4, 5 and 10 shot groups Entry 158 section 2, run on the 2026-09-20 ST-4 sheet with Alan's twenty groups and 115 shots, as entry 172 replaced step 1.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The ST-4 is the orange commercial target, so under the rules above no article names or shows it.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The printed 1 in grid's crossings are found from the orange lines and counted into a lattice, so every crossing's true place is known.
@@ -4541,6 +4544,36 @@ one that matters.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): Sources The sheet and its ground truth: docs/NOTES-FROM-PLANNING.md , entry 120.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): The analysis as GroupLab produced it: docs/PHASE1-RESULTS.md , \"Entry 120\", section 7.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): The statistics behind the two tests: docs/STATISTICS.md sections 9.2 and 10.
+
+### site:research/printed-numbers-are-not-holes/index.html
+
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Written 2026-10-02; the data is from 2026-09-30.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): No figure: The targets are a maker&#x27;s printed artwork, which GroupLab does not publish, so the finding is given as numbers.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): A figure of drawn shapes, a bold 6, a torn hole and a crescent of rim, with their two measures, would show it without the artwork.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): What we found on a clean scoring bullseye, the finder took six printed marks for holes: two white 7s, two dark 6s and two letters of the maker&#x27;s logo.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Measuring how even a mark&#x27;s strokes are, and whether a dark mark closes round a small counter as a 6 does, removed four of the six and lost no real hole.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Evenness alone would have thrown away 44 real holes on scans of shot targets.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): A bold 6 printed between two rings is about the size of a .30 caliber hole, about as dark, and sits exactly where shots land.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): The developer scanned five store-bought targets blank, at 600 dpi, before shooting them.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): The fifth, a scoring bullseye with bold numbers on its rings, gave six: two white 7s in the black ring, two dark 6s on the white paper, and two letters of the maker's logo.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): So the bold 7s, whose strokes are wide, passed as holes, and the dark 6s were never asked.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Walk down the middle of a 6 and the distance to its edge is nearly the same everywhere.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Printed numbers and letters measured 0.63 to 0.92.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): The synthetic holes on GroupLab's scoreboards measured at most 0.60.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Both white 7s are now refused, and nothing else on any scoreboard changed.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): The trap in the obvious answer Applied to dark marks as well, the same measure refused 44 real holes on fifteen scans of shot commercial targets.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Those holes show as a crescent of dark rim, open on one side, and a crescent is drawn with one pen width too: its evenness reached 0.84.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): What a 6 has and a crescent never has is a small closed counter: the light hole inside the loop.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): On the printed 6s the counter was 5 to 7 percent of the filled mark.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): On the real scans, the dark holes as even as print enclosed at most 2 percent of themselves, and none met both tests.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): So a dark mark is refused as print only when its strokes are even and it closes round a small counter, as a 6, 8, 9 or 0 does.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Holes drawn into the five blanks at three calibers, on paper, on the ink, on ring lines and on the colored centers: false marks on the numbered target fell from 32 to 6, and every count of holes found stayed exactly as it was.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Every line of the any-target scoreboard, and the fifteen shot scans (341 of 355 holes found, 352 marks), are unchanged.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): GroupLab does not keep a picture of the target to compare against: it judges each mark by its own shape.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): What did not work Straight edges looked promising, since a 7 or an E is mostly straight lines.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Measured, the drawn holes' torn spikes are straight too: up to 0.69 of a synthetic hole's outline lay on straight runs, against 0.63 to 0.91 for the letters.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Sources The measurements and the before and after: docs/DETECTION-LEARNING-STUDY.md , \"Store-bought blanks\" and \"Entry 352, 2026-10-02: the Eze-Scorer's numbers\".
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-30): Why the earlier test left dark marks alone: docs/NOTES-FROM-PLANNING.md , entry 331 section 1.
 
 ### site:research/printer-true-size/index.html
 

@@ -5262,6 +5262,11 @@
    "where": "the article's own evidence: 3 sources, data from 2026-09-20"
   },
   {
+   "surface": "^site:research/printed\\-numbers\\-are\\-not\\-holes/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from 2026-09-30"
+  },
+  {
    "surface": "^site:research/printer\\-true\\-size/",
    "kind": "measured",
    "where": "the article's own evidence: 2 sources and its data files, data from GroupLab Phase 0 print tests, September 2026"
