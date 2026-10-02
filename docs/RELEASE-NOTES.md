@@ -501,7 +501,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 - After GroupLab Dev updates itself with your tap, it now says which nightly it updated to, with a link to what changed.
 - Each photo corrected to real inches with your printer's scale now says which day's printer check it used, and after you calibrate or service the printer GroupLab offers a new check.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.127)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
