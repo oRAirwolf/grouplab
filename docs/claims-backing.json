@@ -5076,6 +5076,18 @@
   "A chronograph string paired with the shots a row per reading: Not this group plain, Shot 2 in teal, Shot 1, clean bore in amber, and a click on a mark opens the same four choices the phone offers in a sheet.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entry 351 (Pairing A); src/GroupLab.Core/Records/ChronographMarks.cs Label, Tone, Set, Choices, Pauses; the computer's rows in src/GroupLab.App/MainWindow.Chronograph.cs FillChronograph and ChronographChoices, the phone's sheet in mobile/GroupLab.Mobile/PairingView.cs; tests/GroupLab.App.Tests/Entry351Tests.cs and tests/GroupLab.Mobile.Tests/Entry351Tests.cs"
+  },
+  "**Entry 352, 2026-10-02: the Eze-Scorer's numbers.** After entry 331 the clean Eze-Scorer still gave six marks: two white 7s in the black ring, two dark 6s on the paper, and two letters of the logo.": {
+   "kind": "measured",
+   "where": "Entry 352 item 2, measured 2026-10-02 before and after on this machine: grouplab scoreboard --corpus and --blanks on the five local blanks (C:\\Dev\\grouplab-local\\commercial-targets), --any-target, --synthetic and --corpus on the local corpus (every line unchanged), and the fifteen scans of scans/phase1/measurements/holes-baseline.json (341 of 355 found, 352 proposals, both times); src/GroupLab.Core/Detection/PrintedShape.cs Why and Even; PrintedShapeTests"
+  },
+  "A light mark in print with even strokes is refused; a dark one only when it also closes round a small counter, as a 6, 8, 9 or 0 does, because on the fifteen commercial scans a hole's dark crescent of rim is just as even, and even strokes alone refused 44 real holes there.": {
+   "kind": "measured",
+   "where": "Entry 352 item 2, measured 2026-10-02 before and after on this machine: grouplab scoreboard --corpus and --blanks on the five local blanks (C:\\Dev\\grouplab-local\\commercial-targets), --any-target, --synthetic and --corpus on the local corpus (every line unchanged), and the fifteen scans of scans/phase1/measurements/holes-baseline.json (341 of 355 found, 352 proposals, both times); src/GroupLab.Core/Detection/PrintedShape.cs Why and Even; PrintedShapeTests"
+  },
+  "The clean Eze-Scorer went from 6 marks to 2, the logo's letters, which have no counter and are left; the synthetic holes in the Eze-Scorer from 32 false marks to 6, with the same holes found.": {
+   "kind": "measured",
+   "where": "Entry 352 item 2, measured 2026-10-02 before and after on this machine: grouplab scoreboard --corpus and --blanks on the five local blanks (C:\\Dev\\grouplab-local\\commercial-targets), --any-target, --synthetic and --corpus on the local corpus (every line unchanged), and the fifteen scans of scans/phase1/measurements/holes-baseline.json (341 of 355 found, 352 proposals, both times); src/GroupLab.Core/Detection/PrintedShape.cs Why and Even; PrintedShapeTests"
   }
  },
  "rules": [

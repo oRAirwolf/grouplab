@@ -9,11 +9,26 @@ namespace GroupLab.Core.Detection;
 /// inside it is most of its own size, even torn. A printed number or letter is strokes, so the widest circle inside it is a stroke's width.
 /// A printed diamond or square is solid with straight sides and sharp corners, filling the smallest rectangle around it almost wholly,
 /// where a round hole fills about 0.79 of it and two touching holes less.
+/// <para>
+/// Entry 352 item 2: six marks were left on the Eze-Scorer, its printed 6s and 7s and two letters of its logo. Bold printing is strokes of
+/// one width all along, which a torn hole is not, and a 6 closes round a small counter, which a hole's rim never does. That refuses the
+/// numbers; the logo's two letters have no counter and stay, as no measure here tells them from a dark crescent of rim on a real scan.
+/// </para>
 /// </summary>
 public static class PrintedShape
 {
     /// <summary>Strokes: the widest circle inside, over the radius of a disc of the same area, below this.</summary>
     public const double StrokeRatio = 0.45;
+
+    /// <summary>
+    /// Entry 352 item 2, strokes of one width: stroke-like below these (the widest circle inside, with and without the counters filled), and
+    /// the ridge's median distance at least this share of its widest, for a light mark and a dark one. A printed glyph measured 0.63 to
+    /// 0.92; the synthetic holes of the scoreboards at most 0.60, the real holes of the fifteen commercial scans at most 0.84 dark.
+    /// </summary>
+    public const double EvenStrokeRatio = 0.5, EvenFilledRatio = 0.78, LightEven = 0.62, DarkEven = 0.75;
+
+    /// <summary>A small closed counter, as a share of the filled piece: a printed 6 measured 0.05 to 0.07.</summary>
+    public static readonly (double Least, double Most) SmallCounter = (0.04, 0.15);
 
     /// <summary>And still stroke-like with its enclosed counters filled, as an 8 or a 6 is, where a hole's dark rim filled is a disc.</summary>
     public const double FilledRatio = 0.85;
@@ -26,7 +41,57 @@ public static class PrintedShape
     {
         ArgumentNullException.ThrowIfNull(value);
         double r = Math.Max(3, diameterPixels / 2);
-        int half = (int)Math.Ceiling(1.3 * r) + 2;
+        var near = Piece(value, x, y, r, 1.3, dark);
+        if (near is { } p)
+        {
+            // Only for a light mark in print: a torn hole drawn dark on paper is often a dark rim round a grey or white centre, and its rim
+            // alone is a thin ring that reads as strokes, so a dark mark is never judged by its strokes alone (the any-target scoreboard's grid
+            // and diamond pictures, where four real holes were refused before this).
+            if (!dark && p.Ratio < StrokeRatio && p.FilledRatio < FilledRatio)
+            {
+                return $"thin strokes, as a printed number or letter is: the widest circle inside is {p.Ratio:0.00} of a hole's of the same area";
+            }
+
+            var (hullArea, rectangleArea) = HullAndRectangle(p.Filled, p.W, p.H);
+            if (hullArea > 0 && rectangleArea > 0 && p.FilledArea / hullArea > Solid && hullArea / rectangleArea > Rectangular)
+            {
+                return $"a solid shape with straight sides, as a printed diamond or square is: it fills {hullArea / rectangleArea:0.00} of the rectangle around it";
+            }
+        }
+
+        // Entry 352 item 2: a printed number or letter larger than the mark the finder saw in it runs off the crop above, so it is looked at
+        // again in a wider one, where it is whole; a piece that runs off that too is part of something larger, which the finder judges.
+        var whole = near ?? Piece(value, x, y, r, Wider, dark);
+        if (whole is not { } q)
+        {
+            return null;
+        }
+
+        // A printed number or letter is strokes of one width all along; a torn hole is a wide core with spikes that narrow to nothing. A
+        // light mark in print is judged by that alone. A dark one also needs a small closed counter, as a printed 6, 8, 9 or 0 has: a hole
+        // in a scan is often a dark crescent of rim, as even as a stroke, but it never closes round a small light counter (fifteen
+        // commercial scans, where 44 real holes were refused before this; a rim closed round the hole's light centre encloses most of itself).
+        double counter = (q.FilledArea - q.Area) / (double)q.FilledArea;
+        if (q.Ratio < EvenStrokeRatio && q.FilledRatio < EvenFilledRatio && counter < SmallCounter.Most
+            && (dark ? counter >= SmallCounter.Least && Even(q.Piece, q.W, q.H) >= DarkEven : Even(q.Piece, q.W, q.H) >= LightEven))
+        {
+            return dark
+                ? "strokes of one width round a small counter, as a printed 6, 8, 9 or 0 has"
+                : "strokes of one width all along, as a printed number or letter has";
+        }
+
+        return null;
+    }
+
+    /// <summary>The wider crop a mark is looked at again in, in the mark's radii from its centre.</summary>
+    private const double Wider = 2.5;
+
+    /// <summary>The mark's own piece, its enclosed regions filled, and how stroke-like each is; null where it runs off the crop.</summary>
+    private readonly record struct Shape(bool[] Piece, bool[] Filled, int W, int H, int Area, int FilledArea, double Ratio, double FilledRatio);
+
+    private static Shape? Piece(GrayImage value, double x, double y, double r, double reach, bool dark)
+    {
+        int half = (int)Math.Ceiling(reach * r) + 2;
         int x0 = Math.Max(0, (int)x - half), y0 = Math.Max(0, (int)y - half);
         int x1 = Math.Min(value.Width - 1, (int)x + half), y1 = Math.Min(value.Height - 1, (int)y + half);
         int w = x1 - x0 + 1, h = y1 - y0 + 1;
@@ -108,7 +173,7 @@ public static class PrintedShape
             }
         }
 
-        // A piece that runs off the crop is part of something larger than the mark, which the finder's own tests judge.
+        // A piece that runs off the crop is part of something larger than the mark.
         for (int i = 0; i < w; i++)
         {
             if (piece[i] || piece[((h - 1) * w) + i])
@@ -125,29 +190,16 @@ public static class PrintedShape
             }
         }
 
-        double ratio = Inscribed(piece, w, h) / Math.Sqrt(area / Math.PI);
         var filled = Filled(piece, w, h);
         int filledArea = filled.Count(f => f);
-        double filledRatio = Inscribed(filled, w, h) / Math.Sqrt(filledArea / Math.PI);
-        // Only for a light mark in print: a torn hole drawn dark on paper is often a dark rim round a grey or white centre, and its rim alone
-        // is a thin ring that reads as strokes, so a dark mark is never judged by its strokes (the any-target scoreboard's grid and diamond
-        // pictures, where four real holes were refused before this).
-        if (!dark && ratio < StrokeRatio && filledRatio < FilledRatio)
-        {
-            return $"thin strokes, as a printed number or letter is: the widest circle inside is {ratio:0.00} of a hole's of the same area";
-        }
-
-        var (hullArea, rectangleArea) = HullAndRectangle(filled, w, h);
-        if (hullArea > 0 && rectangleArea > 0 && filledArea / hullArea > Solid && hullArea / rectangleArea > Rectangular)
-        {
-            return $"a solid shape with straight sides, as a printed diamond or square is: it fills {hullArea / rectangleArea:0.00} of the rectangle around it";
-        }
-
-        return null;
+        return new Shape(piece, filled, w, h, area, filledArea, Inscribed(piece, w, h) / Math.Sqrt(area / Math.PI), Inscribed(filled, w, h) / Math.Sqrt(filledArea / Math.PI));
     }
 
     /// <summary>The radius of the widest circle inside the piece, in pixels, by a 3-4 chamfer distance.</summary>
-    private static double Inscribed(bool[] piece, int w, int h)
+    private static double Inscribed(bool[] piece, int w, int h) => Distances(piece, w, h).Max() / 3.0;
+
+    /// <summary>Each pixel's distance to the nearest pixel outside the piece, in thirds of a pixel, by a 3-4 chamfer.</summary>
+    private static int[] Distances(bool[] piece, int w, int h)
     {
         var d = new int[piece.Length];
         const int Big = int.MaxValue / 4;
@@ -171,7 +223,6 @@ public static class PrintedShape
             }
         }
 
-        int most = 0;
         for (int j = h - 1; j >= 0; j--)
         {
             for (int i = w - 1; i >= 0; i--)
@@ -183,11 +234,54 @@ public static class PrintedShape
                 }
 
                 d[k] = Math.Min(d[k], Math.Min(Math.Min(At(i + 1, j) + 3, At(i, j + 1) + 3), Math.Min(At(i + 1, j + 1) + 4, At(i - 1, j + 1) + 4)));
-                most = Math.Max(most, d[k]);
             }
         }
 
-        return most / 3.0;
+        return d;
+    }
+
+    /// <summary>
+    /// How even the piece's strokes are: the median distance along its ridge (each pixel at least as far inside as its eight neighbours, and a
+    /// pixel or more in) over the ridge's widest. A printed letter's strokes are one width all along; a torn hole is a wide core with spikes
+    /// that narrow to nothing.
+    /// </summary>
+    internal static double Even(bool[] piece, int w, int h)
+    {
+        var d = Distances(piece, w, h);
+        var ridge = new List<int>();
+        for (int j = 1; j < h - 1; j++)
+        {
+            for (int i = 1; i < w - 1; i++)
+            {
+                int k = (j * w) + i;
+                if (d[k] < 3)
+                {
+                    continue;
+                }
+
+                bool top = true;
+                for (int dj = -1; dj <= 1 && top; dj++)
+                {
+                    for (int di = -1; di <= 1 && top; di++)
+                    {
+                        top = d[((j + dj) * w) + i + di] <= d[k];
+                    }
+                }
+
+                if (top)
+                {
+                    ridge.Add(d[k]);
+                }
+            }
+        }
+
+        if (ridge.Count < 3)
+        {
+            return 0;
+        }
+
+        ridge.Sort();
+        return ridge[ridge.Count / 2] / (double)ridge[^1];
     }
 
     /// <summary>The piece with every region it encloses filled: the background not reachable from the crop's border.</summary>

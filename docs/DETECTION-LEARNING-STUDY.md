@@ -214,6 +214,16 @@ light mark at the top edge of `retumbo_0001.jpg`. The hand-checked scan still gi
 not fixed: on the measures the finder has they are as round, solid and hole-sized as a hole, and telling them apart cheaply would need the
 blank scan of the same target beside the shot one, which Find holes does not have.
 
+**Entry 352, 2026-10-02: the Eze-Scorer's numbers.** After entry 331 the clean Eze-Scorer still gave six marks: two white 7s in the black
+ring, two dark 6s on the paper, and two letters of the logo. Bold printing is strokes of one width all along, where a torn hole is a wide
+core with spikes that narrow to nothing, so the finder now measures how even a stroke-like mark's strokes are (the median distance along its
+ridge over the widest). A light mark in print with even strokes is refused; a dark one only when it also closes round a small counter, as a
+6, 8, 9 or 0 does, because on the fifteen commercial scans a hole's dark crescent of rim is just as even, and even strokes alone refused 44
+real holes there. A number larger than the mark the finder saw in it is looked at again whole. The clean Eze-Scorer went from 6 marks to
+2, the logo's letters, which have no counter and are left; the synthetic holes in the Eze-Scorer from 32 false marks to 6, with the same
+holes found. Every line of the any-target class, the GroupLab sheet scoreboard and the local corpus is unchanged, and on the fifteen scans
+every hole found and every proposal is the same. No maker's artwork is used.
+
 **What it cannot do yet:** a hole across the edge of a black bull; a hole in black print with a dark board behind it, where nothing lighter
 shows through; a light-cored hole with a thin rim on a scan; and a printed white center dot in a black bull, which is round and light, is
 proposed as a hole with no doubt unless it is wider than the bullet; nor are printed numbers and letters about a bullet's size, on paper or
