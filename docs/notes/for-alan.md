@@ -18,7 +18,7 @@ at 12:50 UTC from an iPhone on build 150, both on the Targets screen, and was fi
 sits on it stayed behind in the middle of the screen. 2. "Keyboard doesn't go away making the targets": the number pad stayed up and
 nothing closed it. Both came from GroupLab waiting for the iPhone to say when the keyboard opened and closed, which it did not always do.
 Now a tap anywhere outside a box closes the keyboard, Done always closes it and clears the bar, and the bar removes itself as soon as no
-box is being typed in. In **nightly 154**; your friend can retest once it reaches TestFlight. Also changed: the regular check for new
+box is being typed in. **Correction, 2 October 10:40 UTC:** it did not reach TestFlight in nightlies 154 to 156, because one line of the fix did not build for the iPhone and that build failed by itself while the rest published. Fixed; it reaches TestFlight with the next nightly that builds for the iPhone, which this file will name. Also changed: the regular check for new
 feedback looked back only an hour but GitHub runs it every few hours, so it now looks back a day (nothing is ever filed twice).
 
 **YOUR USAGE** (entry 317, not a request): 1 October ended at 0.65 billion tokens with two workers; 2 October so far 0.04 billion,

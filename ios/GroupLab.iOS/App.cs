@@ -35,15 +35,11 @@ public sealed class App : Avalonia.Application
         // Entry 312 section 4: the iOS decimal pad has no minus sign, so a field that may be below zero keeps the full keyboard.
         Screens.NumberPadHasMinus = false;
 
-        // Entry 350: Done and a tap outside a field ask UIKit itself to end editing in every window, so the number pad goes away even where
-        // taking the focus did not put it away.
+        // Entry 350: Done and a tap outside a field ask UIKit itself to put the keyboard away, so the number pad goes even where taking the
+        // focus did not: resignFirstResponder sent with no target reaches whatever holds the keyboard. (UIWindow's EndEditing is not in
+        // these bindings, which kept nightlies 154 to 156 from building for the iPhone.)
         KeyboardRoom.HideSystemKeyboard = () =>
-        {
-            foreach (var window in UIKit.UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIKit.UIWindowScene>().SelectMany(s => s.Windows))
-            {
-                window.EndEditing(true);
-            }
-        };
+            UIKit.UIApplication.SharedApplication.SendAction(new ObjCRuntime.Selector("resignFirstResponder"), null, null, null);
 
         // Entry 315 section 4: the device's thermal state (nominal, fair, serious, critical) for the log and the diagnostics overlay.
         DeviceHealth.Heat = () => Foundation.NSProcessInfo.ProcessInfo.ThermalState.ToString().ToLowerInvariant();
