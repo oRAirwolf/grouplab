@@ -9,6 +9,9 @@ Now a tap anywhere outside a box closes the keyboard, Done always closes it and 
 box is being typed in. In **nightly 154**; your friend can retest once it reaches TestFlight. Also changed: the regular check for new
 feedback looked back only an hour but GitHub runs it every few hours, so it now looks back a day (nothing is ever filed twice).
 
+**YOUR USAGE** (entry 317, not a request): 1 October ended at 0.65 billion tokens with two workers; 2 October so far 0.04 billion,
+this session and one worker.
+
 **YOUR OVERNIGHT LIST, 1 OCTOBER** (entry 342, not a request): done apart from one item. In nightly 152: GroupLab recognizes the five
 store-bought targets you scanned, names them, places the bulls and sets the scale with a warning to check it, and asks 6 or 8 inch for
 the Shoot-N-C only when the picture cannot tell. In the next nightly: the phone reads a sheet's codes in about half the time, with every

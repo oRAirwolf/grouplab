@@ -312,7 +312,7 @@ What exists and is tested:
 - an Android app, in testing, that photographs or opens a sheet and reads it with the same engine, and the same app for iPhone and
   iPad in a public beta through TestFlight
 - five store-bought targets recognized from a fingerprint, named, their bulls placed and their printed scale offered with a warning
-  to check it (built, not proven)
+  to check it, and a newer signed list of them reaching every copy with the updates, without a new build (built, not proven)
 - chronograph readings from a file (a spreadsheet CSV, a Garmin Xero export, and, Experimental, a LabRadar report or a BulletSeeker
   export), paired with the shots by a proposal a person accepts (built, not proven)
 - an intake tool that verifies donated photographs, refuses opt-outs, and strips location data without altering a pixel
