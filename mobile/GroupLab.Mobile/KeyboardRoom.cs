@@ -41,6 +41,18 @@ internal sealed class KeyboardRoom
     private readonly Border bar;
     private IInputPane? pane;
     private bool barShown;
+
+    /// <summary>A press outside any field while one was being typed in, waiting for its release (entry 353).</summary>
+    private bool pressedOutside;
+
+    /// <summary>
+    /// Entry 353: a finger is down. Nothing that moves the page happens until it is up, or the button under it never sees its click: the
+    /// focus leaving a field as a button is pressed, and the system saying the keyboard went, both wait for the release.
+    /// </summary>
+    private bool down;
+
+    /// <summary>The system said the keyboard went while a finger was down; done at the release.</summary>
+    private bool closedWhileDown;
     private readonly DispatcherTimer watch = new() { Interval = TimeSpan.FromMilliseconds(400) };
 
     /// <summary>
@@ -62,7 +74,6 @@ internal sealed class KeyboardRoom
             Classes = { PhoneStyles.Card },
             CornerRadius = new CornerRadius(0),
         }.Id("keyboard-bar");
-        shell.AddHandler(InputElement.PointerPressedEvent, OutsidePressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         shell.AddHandler(InputElement.GotFocusEvent, (_, _) => Dispatcher.UIThread.Post(Follow, DispatcherPriority.Background), RoutingStrategies.Bubble, handledEventsToo: true);
         shell.AddHandler(InputElement.LostFocusEvent, (_, _) => Dispatcher.UIThread.Post(Check, DispatcherPriority.Background), RoutingStrategies.Bubble, handledEventsToo: true);
         watch.Tick += (_, _) => Check();
@@ -82,9 +93,16 @@ internal sealed class KeyboardRoom
     /// <summary>What the bar's button says: Next where another field follows, Done on the last.</summary>
     internal string BarWords => next.Content as string ?? "";
 
+    private TopLevel? level;
+
     private void Listen()
     {
-        pane = TopLevel.GetTopLevel(shell)?.InputPane;
+        // Entry 353: the finger is followed at the window, not the Shell, because a pop-up such as the caliber box's list of suggestions
+        // sits above the Shell and a press on it never passed through the Shell's handlers.
+        level = TopLevel.GetTopLevel(shell);
+        level?.AddHandler(InputElement.PointerPressedEvent, OutsidePressed, RoutingStrategies.Tunnel, handledEventsToo: true);
+        level?.AddHandler(InputElement.PointerReleasedEvent, OutsideReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
+        pane = level?.InputPane;
         if (pane is not null)
         {
             pane.StateChanged += PaneChanged;
@@ -93,6 +111,9 @@ internal sealed class KeyboardRoom
 
     private void Forget()
     {
+        level?.RemoveHandler(InputElement.PointerPressedEvent, OutsidePressed);
+        level?.RemoveHandler(InputElement.PointerReleasedEvent, OutsideReleased);
+        level = null;
         if (pane is not null)
         {
             pane.StateChanged -= PaneChanged;
@@ -104,7 +125,12 @@ internal sealed class KeyboardRoom
     {
         if (e.NewState == InputPaneState.Open && e.EndRect is { Width: > 0, Height: > 0 })
         {
+            closedWhileDown = false;
             Opened(e.EndRect.Y);
+        }
+        else if (down)
+        {
+            closedWhileDown = true;
         }
         else
         {
@@ -132,6 +158,12 @@ internal sealed class KeyboardRoom
     internal void Closed()
     {
         bool was = KeyboardTop is not null || barShown;
+        if (!was)
+        {
+            // Entry 353: nothing was raised, so nothing is put back; the layout is left alone.
+            return;
+        }
+
         KeyboardTop = null;
         shell.Margin = default;
         shell.KeyboardUp(false);
@@ -150,7 +182,7 @@ internal sealed class KeyboardRoom
     /// </summary>
     internal void Check()
     {
-        if (KeyboardTop is null && !barShown)
+        if (down || (KeyboardTop is null && !barShown))
         {
             return;
         }
@@ -258,18 +290,49 @@ internal sealed class KeyboardRoom
 
     private void OutsidePressed(object? sender, PointerPressedEventArgs e)
     {
+        down = true;
         // Entry 350: a field with the focus is enough; the keyboard may be up without the system having said so.
         if ((KeyboardTop is null && !barShown && !Typing) || e.Source is not Visual source)
         {
             return;
         }
 
-        if (source is TextBox || source.GetVisualAncestors().Any(v => v is TextBox) || source == bar || source.GetVisualAncestors().Contains(bar))
+        // A field, the bar on the keyboard, or anything not on the Shell itself, such as a pop-up's list of suggestions, keeps the keyboard.
+        if (source is TextBox || source.GetVisualAncestors().Any(v => v is TextBox) || source == bar || source.GetVisualAncestors().Contains(bar)
+            || !source.GetVisualAncestors().Contains(shell))
         {
             return;
         }
 
-        CloseKeyboard();
+        // Entry 353, Fenix's report of build 157: closing here, on the press, gave the keyboard's room back between the finger going down
+        // and coming up, so the page moved under it and the button it was on never saw its click: Continue, Done, Take a picture, a
+        // suggested caliber. The keyboard is closed once the finger is up and whatever it pressed has done its work.
+        pressedOutside = true;
+    }
+
+    private void OutsideReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        down = false;
+        bool close = pressedOutside;
+        bool closed = closedWhileDown;
+        pressedOutside = closedWhileDown = false;
+
+        // After the click this release raises has been handled: whatever was tapped has done its work before the page moves.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (close)
+            {
+                CloseKeyboard();
+            }
+            else if (closed)
+            {
+                Closed();
+            }
+            else
+            {
+                Check();
+            }
+        }, DispatcherPriority.Background);
     }
 
     /// <summary>

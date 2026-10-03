@@ -1,5 +1,13 @@
 **Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**URGENT, FENIX'S REPORT ON THE IPHONE** (entry 353, not a request): on TestFlight builds 157 to 159, taps on the iPhone did nothing
+while a box had been typed in: Continue and Done for the caliber and distance, Take a picture, Choose photo, and a suggested caliber
+picked the wrong one. **What broke:** the fix for your friend's floating keyboard bar closed the keyboard the instant a finger touched
+the screen, so the page moved before the finger lifted and the button under it never saw the tap. **Why the checks missed it:** every
+automatic check pressed buttons directly, never the way a finger does, down then up, so the page never moved between the two. **Fixed:**
+the keyboard now closes only after the finger lifts and the button has done its job; tests now tap the way a finger does, and they fail
+on the old code. **Install nightly 160** when it reaches TestFlight; this file will confirm when both groups have it.
+
 **TONIGHT'S LIST, 2 OCTOBER** (entry 352, not a request): done, one worker. Reading a target is now about twice as fast on the computer
 and a quarter faster on a phone, every measurement exactly as before. Find holes no longer takes most of the Eze-Scorer's printed
 numbers for shots (6 false marks on a clean sheet down to 2, the logo's letters). A damaged or oversized chronograph or fingerprint file
