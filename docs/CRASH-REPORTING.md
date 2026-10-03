@@ -12,7 +12,8 @@ What GroupLab records when something goes wrong, what a report contains, and exa
   - no file path, because a path begins with the user's own name.
 - **How a file appears in a log:** by its extension and a salted hash of its path, so the log can say the same file was opened twice without saying where it lives or what it is called. Entry 164 section 4 removed the name, because a file name can carry a person's name or a place.
 - **If an image is ever wanted with a report,** that is a separate, explicit, per-file consent, and not a checkbox in a crash dialog.
-- **Nothing is sent without a click.** The report dialog shows what is in the package before it goes anywhere. Saving the file is the first choice, and sending is a separate button that is never the default. Nothing is ever sent silently, on a timer or at startup.
+- **This package is never sent without a click.** The report dialog shows what is in the package before it goes anywhere. Saving the file is the first choice, and sending is a separate button that is never the default. The package is never sent silently, on a timer or at startup.
+- **The automatic error report is a different thing** (entry 194): if the person chose to send error reports automatically, a short report of an error goes by itself, holding the build, the system, the error and the names of the last things done, never a log, a file name or anything typed. It is described, with everything else GroupLab sends, at [What GroupLab sends](https://grouplab.org/research/what-grouplab-sends/).
 - **The send address is empty by default,** and the Send button does not exist while it is empty. A copy of GroupLab built by anybody else never posts to anybody's server unless it is configured to.
 - **The server** accepts only the file names below. It refuses a package carrying anything else, including a photograph, even if a future client puts one in by mistake.
 
@@ -52,6 +53,7 @@ The receiver refuses any zip containing an entry that is not on this list. The n
 | `environment.txt` | yes | the expanded `app.start` block |
 | `description.txt` | optional | what the user typed, may be empty |
 | `contact.txt` | optional | may be empty |
+| `read-YYYYMMDD-HHmmss-<pid>.json` | never sent by this build | entry 357: the stage records of a picture GroupLab could not read, accepted by the server for when automatic reports carry the log, which is switched off |
 
 At most 24 entries, at most 40 MB unpacked, and at most a 100 to 1 compression ratio. The client's own cap is 2 MB for the zip; the server's wall is 5 MB.
 

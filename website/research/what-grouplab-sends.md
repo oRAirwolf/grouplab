@@ -47,7 +47,7 @@ Play updates it. "Install updates automatically" in Settings, About turns off th
 
 ## An error report, and only as you chose
 
-When GroupLab hits an error, or closes without shutting down, it writes a record to a folder on your own machine. The first time it can, it asks whether to send such reports to the project: automatically, only when you say so each time, or never. Until you choose, it asks each time. **This is built but not switched on yet**: until the project's receiver for it opens, GroupLab asks nothing and sends nothing, and a crash is reported by hand as before.
+When GroupLab hits an error, or closes without shutting down, it writes a record to a folder on your own machine. The first time it can, it asks whether to send such reports to the project: automatically, only when you say so each time, or never. Until you choose, it asks each time.
 
 **What a report holds:** the version of GroupLab and the system it runs on, the error and where in GroupLab it happened, and the names of the last few things done, such as setting the caliber, with nothing that was typed into them. Never a photograph or scan, a file name, a location, or anything you wrote. The same error several times goes as one report with a count, and a day's reports are capped at 20.
 

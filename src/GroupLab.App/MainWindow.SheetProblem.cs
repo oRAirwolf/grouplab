@@ -136,7 +136,10 @@ public sealed partial class MainWindow
         list.Add((OpeningWords.MarkByHand, MarkByHand));
         list.Add((OpeningWords.StoreOrDrawn, NotAGroupLabSheet));
         list.Add((OpeningWords.ShowWhatWentWrong, ShowWhatWentWrong));
-        bool sendable = ReceiverOpen && settingsStore.LoadSending().Choice is not (SendingChoice.Always or SendingChoice.Everything);
+        // Entry 357 section 3: the first run screen, Settings and What GroupLab sends promise that a picture GroupLab could not read is not
+        // sent, and Never that nothing is. Sending one from here is the Ask me each time level's question once "Send everything I open"
+        // is offered, whose words say an unread picture may go; until then the link is not shown, under any choice.
+        bool sendable = ReceiverOpen && SharingSwitches.EverythingOpen && settingsStore.LoadSending().Choice == SendingChoice.Ask;
         if (sendable)
         {
             list.Add((OpeningWords.SendToProject, SendFromProblem));
