@@ -197,7 +197,7 @@
       "key": "problem-dialog",
       "group": "Reading a target",
       "name": "A problem said in the middle of the window",
-      "sentence": "A picture of a target GroupLab did not print is asked about calmly, Which target is this?, with marking it by hand first; one that has a GroupLab sheet's corner squares but whose codes would not read says so in the middle of the window, with the picture's codes outlined, Choose the sheet first, and Not a GroupLab sheet? remembered for that picture. Dismissed, an amber bar brings it back.",
+      "sentence": "A picture of a target GroupLab did not print is asked about calmly, Which target is this?, with marking it by hand first; one that has a GroupLab sheet's corner squares but whose codes would not read says so in the middle of the window, with the picture's codes outlined, Choose the sheet first, Try again, reading harder, which reads each corner code on its own and looks for the printed name, and Not a GroupLab sheet? remembered for that picture. Dismissed, an amber bar brings it back.",
       "shot": "problem-dialog",
       "platforms": [
         "Windows",
@@ -212,7 +212,9 @@
       "since": "next",
       "note": [
         "Opening a picture of a target GroupLab did not print is no longer treated as an error",
-        "When a GroupLab sheet's codes cannot be read"
+        "When a GroupLab sheet's codes cannot be read",
+        "Try again, reading harder",
+        "Saying a picture is not a GroupLab sheet"
       ],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"

@@ -463,7 +463,7 @@ public class Entry109Tests
                         {
                             window.OpenImage(codeless);
                             Dispatcher.UIThread.RunJobs();
-                            window.ShowSheetProblemForScreens("GL-RF25-LTR");
+                            window.ShowSheetProblemForScreens(GroupLab.Core.Gltd.Binary.GltdBinary.Encode(GltdJsonReader.ReadFile(Path.Combine(AppContext.BaseDirectory, "targets", "GL-RF25-LTR.gltd.json")).Definition!).Encoding!.DefinitionId);
                             window.Canvas.FitToView();
                             Save(window, $"problem-dialog-{name}-{size}");
                             window.DismissProblem();
@@ -771,10 +771,6 @@ public class Entry109Tests
     /// <summary>The stand-in for a store-bought bullseye: an 8 by 8 in sheet at this many pixels an inch, its bull at the middle.</summary>
     private const double StandInDpi = 100, StandInBull = 400;
 
-    /// <summary>
-    /// Entries 340 and 341: a stand-in for a store-bought bullseye, drawn by GroupLab with nothing of any maker's artwork: a black disc with
-    /// light rings and a red center on plain paper, with its own words, so the picture of recognition publishes no one else's printing.
-    /// </summary>
     /// <summary>Entry 356: a GroupLab sheet printed without its codes, at 200 dpi, for the problem dialog's picture.</summary>
     private static string CodelessSheet()
     {
@@ -788,6 +784,10 @@ public class Entry109Tests
         return path;
     }
 
+    /// <summary>
+    /// Entries 340 and 341: a stand-in for a store-bought bullseye, drawn by GroupLab with nothing of any maker's artwork: a black disc with
+    /// light rings and a red center on plain paper, with its own words, so the picture of recognition publishes no one else's printing.
+    /// </summary>
     private static string StoreTargetStandIn()
     {
         string folder = Path.Combine(Path.GetTempPath(), $"grouplab-standin-{Guid.NewGuid():N}");

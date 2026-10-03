@@ -149,13 +149,13 @@ public sealed partial class MainWindow
     /// <summary>The card, centred over the scrim, with its title row and the dismiss button every dialog has.</summary>
     private Border ProblemCard(string title, double width, Control body)
     {
-        var dismiss = new Button { Content = "×", FontSize = 18, Classes = { AppStyles.Link }, MinWidth = 32, MinHeight = 32, VerticalAlignment = VerticalAlignment.Top };
+        var dismiss = new Button { Content = "×", FontSize = Tokens.TitleSize, Classes = { AppStyles.Link }, MinWidth = 32, MinHeight = 32, VerticalAlignment = VerticalAlignment.Top };
         AutomationProperties.SetName(dismiss, OpeningWords.Dismiss);
         dismiss.Click += (_, _) => DismissProblem();
         var heading = new DockPanel();
         DockPanel.SetDock(dismiss, Dock.Right);
         heading.Children.Add(dismiss);
-        heading.Children.Add(new TextBlock { Text = title, FontSize = 18, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center });
+        heading.Children.Add(new TextBlock { Text = title, FontSize = Tokens.TitleSize, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center });
         var column = new StackPanel { Spacing = Tokens.Space12 };
         column.Children.Add(heading);
         column.Children.Add(body);
@@ -254,7 +254,7 @@ public sealed partial class MainWindow
         var choices = new StackPanel { Spacing = Tokens.Space8 };
         foreach (var (choice, icon, first) in new[] { (OpeningWords.ByHand, Icons.Length, true), (OpeningWords.StoreBought, Icons.Impact, false), (OpeningWords.GroupLabSheet, Icons.Library, false) })
         {
-            var words = new StackPanel { Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+            var words = new StackPanel { Spacing = Tokens.Space4, VerticalAlignment = VerticalAlignment.Center };
             words.Children.Add(new TextBlock { Text = choice.Label, FontWeight = first ? FontWeight.SemiBold : FontWeight.Medium, TextWrapping = TextWrapping.Wrap });
             words.Children.Add(new TextBlock { Text = choice.Says, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
             var face = new DockPanel();

@@ -137,8 +137,11 @@ Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sh
 in the middle of the window, with **Mark it by hand** first (one true length: the sheet's size, a ring, or a ruler in the picture),
 **It is a store-bought target**, and **It is a GroupLab sheet**. A picture that has a GroupLab sheet's corner squares or codes, but whose
 codes would not read, says so in the middle of the window instead: the picture with its corner codes outlined, what got done and what did
-not, and **Choose the sheet** first, then **Mark it by hand**; under a line, **Not a GroupLab sheet?** for a store-bought or hand-drawn
-target, which GroupLab remembers for that picture; and **Show what went wrong**. Dismissed with Escape or its ×, it leaves an amber bar
+not, and **Choose the sheet** first, then **Try again, reading harder** and **Mark it by hand**; under a line, **Not a GroupLab sheet?**
+for a store-bought or hand-drawn target, which GroupLab remembers for that picture; and **Show what went wrong**. **Try again, reading
+harder** reads the picture at full size, then each corner code on its own, lit evenly and turned square on, then looks for the sheet's
+printed name, naming each step in the status line with Cancel beside it; it takes a minute or two, and is offered once a picture. A sheet it
+names is measured at once; if it names none, the window comes back saying so. Dismissed with Escape or its ×, it leaves an amber bar
 under the header with **Choose the sheet** and **All choices**, and Show work says **codes not read**. In any such window Enter takes the
 first choice and Escape closes it.
 
@@ -455,7 +458,8 @@ is read, the line under it names the step it is on, and **Cancel** stops it at o
 kept, to **Read it again**, **Choose which sheet it is** or **Forget it**. A reading that has not finished after a minute stops by itself,
 says what it was trying to read, and offers the sheets to choose from; time with the screen locked does not count, and a reading carries
 on when you come back to it. When a picture's square codes cannot be read, a sheet in the middle of the screen says so: what it got done,
-the sheet it looks like, **Choose the sheet**, **Take it again**, and **Store-bought or hand-drawn** for a target GroupLab did not print,
+the sheet it looks like, **Choose the sheet**, **Take it again**, **Try again, reading harder** once, which names each step and can be
+canceled, and **Store-bought or hand-drawn** for a target GroupLab did not print,
 which it remembers for that picture. A picture with no GroupLab marks at all asks **Which target is this?** instead, calmly, with **Mark it
 by hand** first.
 

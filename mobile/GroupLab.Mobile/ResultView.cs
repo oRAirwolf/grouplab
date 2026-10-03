@@ -97,6 +97,11 @@ public sealed class ResultView : UserControl
 
         var body = new StackPanel { Spacing = 11 };
         body.Children.Add(Screens.Card(stages));
+        if (harderSaid is { } said)
+        {
+            body.Children.Add(Screens.Line(said));
+        }
+
         if (result.LooksLike is { } likely)
         {
             body.Children.Add(Screens.Line(GroupLab.Core.Registration.OpeningWords.LooksLikeName(likely.Name)));
@@ -125,11 +130,74 @@ public sealed class ResultView : UserControl
         var more = ProblemSheet.Choice(GroupLab.Core.Registration.OpeningWords.MoreChoices, Back).Id("problem-more-choices");
         body.Children.Add(choose);
         body.Children.Add(take);
+        var choices = new List<Button> { choose, take };
+        if (!readHarderRan)
+        {
+            var harder = ProblemSheet.Choice(GroupLab.Core.Registration.OpeningWords.ReadHarder, () => _ = ReadHarder(behind, result, working, setup, units, again))
+                .Id("problem-read-harder");
+            body.Children.Add(harder);
+            choices.Add(harder);
+        }
+
         body.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(90, 128, 128, 128)) });
         body.Children.Add(Screens.Quiet(GroupLab.Core.Registration.OpeningWords.NotGroupLab));
         body.Children.Add(notOurs);
         body.Children.Add(more);
-        return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.CodesTitle, body, [choose, take, notOurs, more], Back);
+        choices.Add(notOurs);
+        choices.Add(more);
+        return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.CodesTitle, body, choices, Back);
+    }
+
+    /// <summary>Whether reading harder has run on this result's picture, so it is offered once.</summary>
+    private bool readHarderRan;
+
+    /// <summary>What reading harder found when it named no sheet GroupLab has, said plainly on the sheet that comes back.</summary>
+    private string? harderSaid;
+
+    /// <summary>
+    /// Entry 356 section 6 on the phone: the harder reading of the working picture, each step named, with Cancel and the time limit every
+    /// reading has. A sheet it names is read as that sheet; nothing named brings the sheet back without the button.
+    /// </summary>
+    private async Task ReadHarder(Control behind, PhoneResult result, WorkingImage working, ShotSetup setup, UnitSettings units, Action again)
+    {
+        readHarderRan = true;
+        var reading = new Reading("phone.harder");
+        var (page, line, stop) = Screens.Progress(GroupLab.Core.Registration.OpeningWords.ReadHarder);
+        stop.Click += (_, _) =>
+        {
+            reading.Stop();
+            line.Text = "Canceling…";
+        };
+        (behind.Parent as Panel)?.Children.Remove(behind);
+        Content = page;
+        ReadOutcome<GroupLab.Core.Registration.SheetIdentity> outcome;
+        using (Phone.Platform.KeepRunning("Reading harder"))
+        {
+            outcome = await reading.Run(token =>
+            {
+                var (grey, _) = GroupLab.Cli.Imaging.ImageLoader.Load(working.Path);
+                return GroupLab.Core.Registration.SheetIdentification.IdentifyHarder(grey, PhoneAnalysis.Library(), new GroupLab.Cli.Imaging.OpenCvSharpBackend(), new GroupLab.Core.Trace.TraceRecorder(),
+                    step => Dispatcher.UIThread.Post(() =>
+                    {
+                        if (!reading.Stopping)
+                        {
+                            line.Text = GroupLab.Core.Registration.SheetIdentification.HarderSteps[step] + "…";
+                        }
+                    }), token);
+            }, Reading.Limit, _ => { });
+        }
+
+        GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.harder", ("named", outcome.Value?.Definition is not null), ("stopped", outcome.Value is null));
+        if (outcome.Value?.Definition is { } named)
+        {
+            await AsSheet(working, named, setup, again);
+            return;
+        }
+
+        harderSaid = outcome.Value is null ? null
+            : outcome.Value.DefinitionId is { } id ? GroupLab.Core.Registration.OpeningWords.UnknownReason(id)
+            : "Reading harder did not read the codes either.";
+        Content = SheetProblem(behind, result, working, setup, units, again);
     }
 
     internal ResultView(PhoneResult result, ShotSetup setup, UnitSettings units, Action again)

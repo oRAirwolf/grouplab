@@ -187,7 +187,7 @@ public sealed partial class MainWindow
         storeOrDrawn.MinHeight = 34;
         notOurs.Children.Add(storeOrDrawn);
         right.Children.Add(new Border { Child = notOurs, Classes = { AppStyles.JudgementCard } });
-        var links = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 18 };
+        var links = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space16 };
         links.Children.Add(ProblemButton(OpeningWords.ShowWhatWentWrong, link: ""));
         if (sendable)
         {
@@ -222,7 +222,7 @@ public sealed partial class MainWindow
             canvasLayer.Children.Add(new Image { Source = picture, Width = w, Height = h, Stretch = Stretch.Fill });
         }
 
-        IBrush outline = Brushes.OrangeRed;
+        IBrush outline = new SolidColorBrush(Tokens.For(ActualThemeVariant).Alert);
         var boxes = p.Look.Codes.Count > 0
             ? p.Look.Codes.Select(b => (Left: b.Min(c => c.X) * scale, Top: b.Min(c => c.Y) * scale, Right: b.Max(c => c.X) * scale, Bottom: b.Max(c => c.Y) * scale)).ToList()
             : [(4.0, 4.0, 30.0, 30.0), (w - 30, 4.0, w - 4, 30.0), (4.0, h - 30, 30.0, h - 4), (w - 30, h - 30, w - 4, h - 4)];
@@ -329,11 +329,89 @@ public sealed partial class MainWindow
             ("Not now", () => { }));
     }
 
-    /// <summary>Whether "Try again, reading harder" is offered: only where a harder reading exists that has not run on this picture.</summary>
-    private bool CanReadHarder => HarderReadingExists && !readHarderRan;
+    /// <summary>Whether "Try again, reading harder" is offered: only where it has not run on this picture.</summary>
+    private bool CanReadHarder => !readHarderRan;
 
-    /// <summary>Whether this build has a reading harder than the first; section 6's passes are the part after this one.</summary>
-    private const bool HarderReadingExists = false;
+    /// <summary>The reading harder running now, for the headless tests.</summary>
+    internal Task? ReadHarderTask { get; private set; }
 
-    private Task ReadHarderAsync() => Task.CompletedTask;
+    /// <summary>"Try again, reading harder" as its button presses it, for the headless tests.</summary>
+    internal Task PressReadHarder()
+    {
+        PressProblemChoice(OpeningWords.ReadHarder);
+        return ReadHarderTask ?? Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Entry 356 section 6: the harder reading, away from the screen's thread, with each step named in the status line, the progress bar and
+    /// Cancel, as detection has. A sheet it names is detected at once; nothing named brings the dialog back without the button, saying so.
+    /// </summary>
+    private Task ReadHarderAsync() => ReadHarderTask = ReadHarderRun();
+
+    private async Task ReadHarderRun()
+    {
+        if (sheetProblem is not { } p)
+        {
+            return;
+        }
+
+        readHarderRan = true;
+        problemBar.IsVisible = true;
+        detection?.Cancel();
+        using var cancel = new CancellationTokenSource();
+        detection = cancel;
+        var token = cancel.Token;
+        var trace = new GroupLab.Core.Trace.TraceRecorder();
+        Follow(trace, cancel);
+        detectionProgress.IsVisible = cancelDetection.IsVisible = cancelDetection.IsEnabled = true;
+        status.Text = "Reading harder…";
+        var candidates = ShippedDefinitions().Concat(ownSheets.List().Select(s => s.Definition)).ToList();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        SheetIdentity? identity = null;
+        try
+        {
+            identity = await Task.Run(() => SheetIdentification.IdentifyHarder(p.Grey, candidates, new GroupLab.Cli.Imaging.OpenCvSharpBackend(), trace,
+                step => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (ReferenceEquals(detection, cancel))
+                    {
+                        status.Text = string.Create(System.Globalization.CultureInfo.InvariantCulture,
+                            $"Reading harder, {step + 1} of {SheetIdentification.HarderSteps.Count}: {SheetIdentification.HarderSteps[step]}…");
+                    }
+                }), token), token);
+        }
+        catch (OperationCanceledException)
+        {
+            DiagnosticLog.Info("opening.harder", ("outcome", "canceled"), ("ms", clock.ElapsedMilliseconds));
+            status.Text = "Reading harder canceled. The picture is as it was.";
+        }
+        finally
+        {
+            if (ReferenceEquals(detection, cancel))
+            {
+                detection = null;
+                detectionProgress.IsVisible = cancelDetection.IsVisible = false;
+            }
+        }
+
+        if (identity is null || !ReferenceEquals(p.Grey, grey))
+        {
+            return;
+        }
+
+        DiagnosticLog.Info("opening.harder", ("outcome", identity.Definition is null ? "nothing" : identity.ByPrintedName ? "printed name" : "codes"), ("ms", clock.ElapsedMilliseconds));
+        if (identity.Definition is { } named)
+        {
+            await DetectAs(named, (p.Grey, p.Value, p.Metadata));
+            status.Text = (identity.ByPrintedName ? $"Read harder: named {named.Name} by its printed name. " : $"Read harder: its codes name {named.Name}. ") + status.Text;
+            return;
+        }
+
+        // Nothing more to try: the dialog again, without the button, and the reason, in plain words.
+        sheetProblem = p with { Identity = identity };
+        ReopenSheetProblem();
+        status.Text = identity.DefinitionId is { } id
+            ? $"Reading harder read the codes: they name {id}, a sheet GroupLab does not have. Choose the sheet, or mark it by hand."
+            : "Reading harder did not read this sheet's codes either. Choose the sheet, or mark it by hand.";
+    }
 }

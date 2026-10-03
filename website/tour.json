@@ -227,7 +227,7 @@
     [
      "problem-dialog",
      "A GroupLab sheet whose corner codes would not read: the picture with its codes outlined, the stages, Choose the sheet first, and Not a GroupLab sheet below a line",
-     "When a picture has a GroupLab sheet's corner squares but its codes would not read, GroupLab says so in the middle of the window: the picture with its corner codes outlined, what got done and what did not, the reason, Choose the sheet in amber, Mark it by hand, and under a line, Not a GroupLab sheet? for a store-bought or hand-drawn target. Dismissed, an amber bar under the header brings it back."
+     "When a picture has a GroupLab sheet's corner squares but its codes would not read, GroupLab says so in the middle of the window: the picture with its corner codes outlined, what got done and what did not, the reason, Choose the sheet in amber, Try again, reading harder, which reads each corner code on its own and looks for the printed name, Mark it by hand, and under a line, Not a GroupLab sheet? for a store-bought or hand-drawn target. Dismissed, an amber bar under the header brings it back."
     ],
     [
      "problem-dismissed",

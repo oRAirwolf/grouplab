@@ -151,6 +151,50 @@ public class ProblemDialogTests
         }
     }
 
+    /// <summary>
+    /// Section 6: "Try again, reading harder" is offered once, shows its steps in the status line, and on a sheet printed without its codes
+    /// but with its words names it by its printed identifier and detects it.
+    /// </summary>
+    [AvaloniaFact]
+    public void ReadingHarderNamesASheetByItsPrintedNameAndDetectsIt()
+    {
+        var definition = GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(Path.Combine(AppContext.BaseDirectory, "targets", "GL-RF25-LTR.gltd.json")).Definition!;
+        var page = GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0];
+        var codeless = page with { Items = [.. page.Items.Where(i => i.Layer != GroupLab.Core.Rendering.SceneLayer.Codes)] };
+        var render = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(codeless, 200, words: true);
+        string path = Path.Combine(Path.GetTempPath(), $"grouplab-named-{Guid.NewGuid():N}.png");
+        using (var mat = Mat.FromPixelData(render.Height, render.Width, MatType.CV_8UC1, render.Pixels))
+        {
+            Cv2.ImWrite(path, mat);
+        }
+
+        try
+        {
+            var window = Opened(path);
+            Assert.Equal(OpeningWords.CodesTitle, window.ProblemTitle);
+            Assert.Contains(OpeningWords.ReadHarder, window.ProblemChoices);
+            var harder = window.PressReadHarder();
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            while (!harder.IsCompleted && clock.Elapsed < TimeSpan.FromSeconds(180))
+            {
+                Dispatcher.UIThread.RunJobs();
+                Thread.Sleep(10);
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(harder.IsCompleted);
+            Assert.False(window.ProblemOpen);
+            Assert.False(window.ProblemBarShown);
+            Assert.IsType<GroupLab.Core.Marking.SheetReference>(window.Session.State.Scale);
+            Assert.StartsWith("Read harder: named GroupLab", window.StatusText, StringComparison.Ordinal);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     [AvaloniaFact]
     public void AnyFailureCanBeSaidInTheMiddleWithItsChoices()
     {

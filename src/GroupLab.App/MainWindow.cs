@@ -2239,6 +2239,12 @@ public sealed partial class MainWindow : Window
         }
 
         var chosen = pendingSheets[Math.Min(sheetChoice.SelectedIndex, pendingSheets.Count - 1)];
+        await DetectAs(chosen, waiting);
+    }
+
+    /// <summary>Registers and detects the waiting picture as <paramref name="chosen"/>: a sheet chosen by name, or named by reading harder.</summary>
+    private async Task DetectAs(GroupLab.Core.Gltd.Model.TargetDefinition chosen, (GrayImage Grey, GrayImage Value, ImageMetadata Metadata) waiting)
+    {
         sheetChooser.IsVisible = false;
         ForgetSheetProblem();
         pendingDetection = null;

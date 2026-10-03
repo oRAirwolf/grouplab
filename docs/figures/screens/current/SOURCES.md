@@ -211,3 +211,27 @@ source that is not on the list below, or if any test writing into this folder co
 | `store-target-light-1400x900.png` | Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341) |
 | `store-target-light-1920x1080.png` | Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341) |
 | `store-target-light-2560x1440.png` | Entry109Tests stand-in bullseye, drawn by GroupLab, shown recognized as a store-bought target (entries 340 and 341) |
+| `problem-dialog-dark-1280x720.png` | built-in library sheet |
+| `problem-dialog-dark-1400x900.png` | built-in library sheet |
+| `problem-dialog-dark-1920x1080.png` | built-in library sheet |
+| `problem-dialog-dark-2560x1440.png` | built-in library sheet |
+| `problem-dialog-light-1280x720.png` | built-in library sheet |
+| `problem-dialog-light-1400x900.png` | built-in library sheet |
+| `problem-dialog-light-1920x1080.png` | built-in library sheet |
+| `problem-dialog-light-2560x1440.png` | built-in library sheet |
+| `problem-dismissed-dark-1280x720.png` | built-in library sheet |
+| `problem-dismissed-dark-1400x900.png` | built-in library sheet |
+| `problem-dismissed-dark-1920x1080.png` | built-in library sheet |
+| `problem-dismissed-dark-2560x1440.png` | built-in library sheet |
+| `problem-dismissed-light-1280x720.png` | built-in library sheet |
+| `problem-dismissed-light-1400x900.png` | built-in library sheet |
+| `problem-dismissed-light-1920x1080.png` | built-in library sheet |
+| `problem-dismissed-light-2560x1440.png` | built-in library sheet |
+| `which-target-dark-1280x720.png` | built-in library sheet |
+| `which-target-dark-1400x900.png` | built-in library sheet |
+| `which-target-dark-1920x1080.png` | built-in library sheet |
+| `which-target-dark-2560x1440.png` | built-in library sheet |
+| `which-target-light-1280x720.png` | built-in library sheet |
+| `which-target-light-1400x900.png` | built-in library sheet |
+| `which-target-light-1920x1080.png` | built-in library sheet |
+| `which-target-light-2560x1440.png` | built-in library sheet |

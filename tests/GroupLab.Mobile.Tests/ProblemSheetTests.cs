@@ -97,7 +97,7 @@ public class ProblemSheetTests
         Settle();
         Assert.Contains(OpeningWords.CodesTitle, view.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text));
         var ids = view.GetLogicalDescendants().OfType<Button>().Select(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b)).ToList();
-        Assert.Equal(["problem-choose-sheet", "problem-take-again", "problem-not-grouplab", "problem-more-choices"], ids.Where(i => i?.StartsWith("problem-", StringComparison.Ordinal) == true));
+        Assert.Equal(["problem-choose-sheet", "problem-take-again", "problem-read-harder", "problem-not-grouplab", "problem-more-choices"], ids.Where(i => i?.StartsWith("problem-", StringComparison.Ordinal) == true));
 
         int before = Phone.Settings.LoadNotGroupLabCount();
         view.GetLogicalDescendants().OfType<Button>().First(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "problem-not-grouplab")

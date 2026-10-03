@@ -18,6 +18,12 @@ public sealed record SheetIdentity(TargetDefinition? Definition, string? Definit
     /// they carry. A sheet GroupLab generated and printed without saving is one: its codes are the only copy of its definition.
     /// </summary>
     public bool FromItsCodes { get; init; }
+
+    /// <summary>Entry 356 section 6: the sheet was named by the harder reading, not the first.</summary>
+    public bool ReadHarder { get; init; }
+
+    /// <summary>Entry 356 section 6 item 4: the sheet was named by its printed identifier and title, its codes still unread.</summary>
+    public bool ByPrintedName { get; init; }
 }
 
 /// <summary>
@@ -34,7 +40,7 @@ public sealed record SheetIdentity(TargetDefinition? Definition, string? Definit
 /// is not among the candidates, are refused with the reason, and the caller asks for the definition instead.
 /// </para>
 /// </summary>
-public static class SheetIdentification
+public static partial class SheetIdentification
 {
     /// <summary>
     /// The resolutions tried, as multiples of the image's own, in order. Double comes second because a 300 DPI sheet's code modules are under

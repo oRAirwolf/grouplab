@@ -332,6 +332,93 @@ public static class LiveSheet
         return ranked.Count > 0 && (ranked.Count == 1 || ranked[0].Correlation - ranked[1].Correlation >= ClearlyMoreAlike) ? ranked[0].Definition : null;
     }
 
+    /// <summary>How alike, by correlation, a sheet's printed name must be to the picture's to name it: words that match, not a blank band.</summary>
+    public const double NameAlike = 0.5;
+
+    /// <summary>How much more alike the best printed name must be than the next.</summary>
+    public const double NameClearly = 0.1;
+
+    /// <summary>
+    /// Entry 356 section 6 item 4: among the sheets whose markers fit the picture's, the one whose printed identifier and title match the
+    /// picture's, drawn as the sheet prints them, words and all, compared in their own boxes only; null where none matches clearly. A sheet's
+    /// identifier is printed under its title, so two sheets sharing a layout differ there however alike their bulls are.
+    /// </summary>
+    public static TargetDefinition? ByPrintedName(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(candidates);
+        ArgumentNullException.ThrowIfNull(backend);
+        var fitting = SheetsByMarkers(image, candidates, backend);
+        if (fitting.Count == 0)
+        {
+            return null;
+        }
+
+        var found = PhotographMarkers(image, backend);
+        const double dpi = 100;
+        var scored = new List<(TargetDefinition Definition, double Correlation)>();
+        foreach (var candidate in fitting)
+        {
+            var byId = (candidate.Fiducials?.Markers ?? []).GroupBy(m => m.Id).Where(g => g.Count() == 1).ToDictionary(g => g.Key, g => g.First());
+            var page = new List<PointD>();
+            var seen = new List<PointD>();
+            foreach (var marker in found.Where(m => byId.ContainsKey(m.Id)))
+            {
+                page.Add(new PointD(byId[marker.Id].X, byId[marker.Id].Y));
+                seen.Add(Centre(marker));
+            }
+
+            var pages = Rendering.SceneBuilder.Build(candidate, new Rendering.RenderOptions(AllowInvalid: true)).Pages;
+            if (page.Count < LeastMarkers || HomographyEstimate.Fit(page, seen) is not { } pageToImage || pages.Count == 0)
+            {
+                continue;
+            }
+
+            var words = pages[0].Items.OfType<Rendering.TextRun>().Where(t => t.Layer is Rendering.SceneLayer.Identifier or Rendering.SceneLayer.Name).ToList();
+            if (words.Count == 0)
+            {
+                continue;
+            }
+
+            double dmmPerPixel = 254 / dpi;
+            int w = (int)(candidate.Page.Width / dmmPerPixel), h = (int)(candidate.Page.Height / dmmPerPixel);
+            var toRectified = Homography.Compose(pageToImage.Inverse(), new Homography([1 / dmmPerPixel, 0, 0, 0, 1 / dmmPerPixel, 0, 0, 0, 1]));
+            var rectified = PortableImaging.WarpPerspective(image, toRectified, w, h);
+            var drawing = Rendering.SceneRasterizer.Rasterize(pages[0] with { Items = [.. words] }, dpi, words: true);
+            double a = 0, b = 0, aa = 0, bb = 0, ab = 0;
+            long n = 0;
+            foreach (var word in words)
+            {
+                var points = Rendering.SheetGlyphs.Contours(word).SelectMany(c => c).ToList();
+                if (points.Count == 0)
+                {
+                    continue;
+                }
+
+                // The box in drawing pixels, half-dmm to pixels, with a little room round it for the registration.
+                double k = dpi / 508.0;
+                int x0 = Math.Max(0, (int)(points.Min(p => p.X) * k) - 4), x1 = Math.Min(Math.Min(w, drawing.Width) - 1, (int)(points.Max(p => p.X) * k) + 4);
+                int y0 = Math.Max(0, (int)(points.Min(p => p.Y) * k) - 4), y1 = Math.Min(Math.Min(h, drawing.Height) - 1, (int)(points.Max(p => p.Y) * k) + 4);
+                for (int y = y0; y <= y1; y++)
+                {
+                    for (int x = x0; x <= x1; x++)
+                    {
+                        double p = rectified.Pixels[(y * w) + x], q = drawing.Pixels[(y * drawing.Width) + x];
+                        (a, b, aa, bb, ab, n) = (a + p, b + q, aa + (p * p), bb + (q * q), ab + (p * q), n + 1);
+                    }
+                }
+            }
+
+            double cov = ab - (a * b / Math.Max(1, n)), va = aa - (a * a / Math.Max(1, n)), vb = bb - (b * b / Math.Max(1, n));
+            scored.Add((candidate, va > 0 && vb > 0 ? cov / Math.Sqrt(va * vb) : 0));
+        }
+
+        var ranked = scored.OrderByDescending(s => s.Correlation).ToList();
+        return ranked.Count > 0 && ranked[0].Correlation >= NameAlike && (ranked.Count == 1 || ranked[0].Correlation - ranked[1].Correlation >= NameClearly)
+            ? ranked[0].Definition
+            : null;
+    }
+
     private static double Correlation(GrayImage a, GrayImage b)
     {
         int w = Math.Min(a.Width, b.Width), h = Math.Min(a.Height, b.Height);
