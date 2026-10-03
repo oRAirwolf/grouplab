@@ -1,4 +1,37 @@
-**Open: 15.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 16.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+
+**WHAT THE SENDING SETTINGS DO, AND WHAT HAPPENED TO FENIX'S** (entries 354 and 355, not a request; to read and pass on)
+
+*What each setting sends, and when.*
+- **Send every target automatically**: a target goes by itself when you press **Accept and analyze**, at the level you chose. **Ask me
+  each time**: a short panel under the figures offers it then, and nothing goes until you press Send. **Never**: nothing goes. A
+  picture GroupLab could not read, or one you leave before Accept and analyze, is never sent, whatever the setting.
+- **Testing only**: used to test and improve detection, never published. **May be published**: may also be published in GroupLab's
+  public test data and research, only after it has been looked at.
+- **A target** carries: the image with its pixels untouched and every location, date, time and serial number taken out; what GroupLab
+  found before you changed anything; what you changed (every mark moved, added, deleted, split, reassigned or excluded); what you told
+  it (caliber, distance, rounds fired, paper, backing); the figures and how the scale was set; that session's log with file names
+  reduced to a code; and the version. A JPEG or PNG goes as it is; anything else (an iPhone's HEIC, say) goes as a lossless PNG, and
+  one still over 30 MB is not sent and says why. One that cannot go now is kept and tried at each start for seven days.
+- **Send error reports automatically**: a report goes when GroupLab hits an error or closes without shutting down. It carries the
+  version and the system, the error and where in GroupLab it happened, and the names of the last few things done. Never a photograph, a
+  file name, a location, or anything typed. A sheet that simply will not read is not an error to GroupLab, so it sends no report.
+- **Never in either**: a location (never read at all), your name (only a credit you type yourself, on the website), or a file path.
+
+*What happened to Fenix's.* Nothing from his desktop reached the server: the private archive for October holds only your own app
+submission of 1 October and his website upload of the two photos, and no error report came from him. The likeliest reason, from the
+code: a target goes only after **Accept and analyze**, and he stopped at the review of the 5x5 sheet (29 marks for 25 shots) and the
+diamond sheet never read, so there was nothing to send, and a sheet that fails to read is no error. That cannot be proven without his
+log; request 70 asks for it. The words in GroupLab's settings and on the "What GroupLab sends" page now say Accept and analyze plainly.
+
+*What happens to a submission afterwards.* The server's receiver puts it in quarantine; within minutes the intake worker rebuilds the
+picture from its pixels (dropping everything else) and moves it to a ready folder; the archive worker copies it into the private
+archive on GitHub (never public), proves the copy, and deletes it from the server. Your pull also copies it to this computer. One the
+server refuses is deleted after 7 days, one never archived after 60. **What Code does with them today:** reads them by hand when an
+entry names them, and adds them to the scoreboard as test cases (Fenix's two are being added now). **Not built yet:** the automatic
+comparison of GroupLab's marks with the person's corrections (DETECTION-LEARNING-STUDY.md section 6 describes it as planned).
+**Published:** nothing so far; a "may be published" target could be, by Code with your approval, after a look at it.
+
 
 **URGENT, FENIX'S REPORT ON THE IPHONE** (entry 353, not a request): on TestFlight builds 157 to 159, taps on the iPhone did nothing
 while a box had been typed in: Continue and Done for the caliber and distance, Take a picture, Choose photo, and a suggested caliber
@@ -78,6 +111,14 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 70. Fenix's report package from the desktop, five minutes for him, whenever suits (entry 354 section 4)
+
+**Opened 2026-10-03.** **Why:** nothing he read on the desktop on 2 October reached the server, and no error report did either. The code
+says a target goes only after Accept and analyze, so the likeliest reason is that he never got that far; his log would prove it, and show
+whether anything was tried and refused. **Steps for Fenix:** on the desktop, the gear at the bottom left, **Report a problem**, then send
+the zip it makes to you (it has the log and no photographs unless he adds them). **A good answer:** the zip, saved anywhere on this
+computer, and its path.
 
 ## 67. Turn off GroupLab Team's automatic distribution in TestFlight, about one minute, whenever suits (entries 319, 320 and 335)
 

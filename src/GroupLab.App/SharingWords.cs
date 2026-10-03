@@ -31,7 +31,7 @@ internal static class SharingWords
     /// <summary>Entry 299: the consent level's name alone, for the choice in Settings; the receiver's full description is under "More".</summary>
     public static string LevelName(ConsentLevel level) => level == ConsentLevel.Publishable ? MayBePublished.Trim() : TestingOnly.Trim();
 
-    public const string TargetsIntro = "Each target you analyze can go to the project, to test and improve detection. This is what goes:";
+    public const string TargetsIntro = "Each target you analyze, once you press Accept and analyze, can go to the project, to test and improve detection. A picture GroupLab could not read is not sent. This is what goes:";
 
     public const string TestingOnly = "Testing only. ";
 
