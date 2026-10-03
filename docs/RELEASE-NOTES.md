@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.163
+
+**2026-10-03**, commit `0a815d2`. Nightly.
+
+**What you will notice**
+
+- Try again, reading harder, in the window that says a GroupLab sheet's codes could not be read, now reads each corner code on its own, lit evenly and turned square on, and looks for the sheet's printed name, naming each step with Cancel beside it.
+- Saying a picture is not a GroupLab sheet is remembered for that picture, so opening it again asks which target it is straight away.
+- On the computer, a problem that stops your work, such as a file that could not be opened or saved, now opens a window in the middle of the screen with what to do next, where Enter takes the first choice and Escape closes it.
+- When a picture has a GroupLab sheet's corner squares but its codes cannot be read, GroupLab now says so in the middle of the window with Choose the sheet first, and an amber bar keeps the way back after you close it.
+- Opening a picture of a target GroupLab did not print is no longer treated as an error: GroupLab asks which target it is in the middle of the window, with marking it by hand first.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.163)
+
+---
+
 ## 0.2.0-nightly.162
 
 **2026-10-03**, commit `e586e5b`. Nightly.
