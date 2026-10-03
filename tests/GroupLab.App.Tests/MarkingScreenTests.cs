@@ -432,11 +432,20 @@ public class MarkingScreenTests
             Assert.IsType<SheetReference>(window.Session.State.Scale);
             Assert.NotNull(window.Session.State.RegistrationSummary);
 
+            // Entry 356 section 5: a picture with no GroupLab marks is not an error. It asks "Which target is this?", calmly, in the middle of
+            // the window, marking it by hand first; that it is a GroupLab sheet after all leads to the sheets by name.
             window.OpenImage(plain);
             Pump(window);
             Assert.Null(window.Session.State.Scale);
+            Assert.Equal(GroupLab.Core.Registration.OpeningOutcome.NotGroupLab, window.LastOpening);
+            Assert.True(window.ProblemOpen);
+            Assert.Equal("Which target is this?", window.ProblemTitle);
+            Assert.Equal(["Mark it by hand", "It is a store-bought target", "It is a GroupLab sheet"], window.ProblemChoices);
+            Assert.False(window.AskingWhichSheet);
+            window.PressProblemChoice("It is a GroupLab sheet");
+            Assert.False(window.ProblemOpen);
             Assert.True(window.AskingWhichSheet);
-            Assert.Contains("Which sheet is it?", window.StatusText, StringComparison.Ordinal);
+            Assert.Contains("Which GroupLab sheet is it?", window.StatusText, StringComparison.Ordinal);
             window.Close();
         }
         finally

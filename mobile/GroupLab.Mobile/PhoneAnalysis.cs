@@ -20,7 +20,7 @@ internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int Ori
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
 internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
     GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null, PaperEdge? Paper = null,
-    TargetDefinition? LooksLike = null, StoreTargetSeen? Recognized = null);
+    TargetDefinition? LooksLike = null, StoreTargetSeen? Recognized = null, GroupLab.Core.Registration.OpeningOutcome? Opening = null);
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 340: a store-bought target recognized in a picture that named no GroupLab sheet, and the working image's size
@@ -253,12 +253,24 @@ internal static class PhoneAnalysis
                 SittingRecord.Analyzed(picture, trace, "No sheet was named: " + (identity?.Failure ?? "none chosen"));
             }
 
+            // Entry 356 section 5: a picture that looks like a GroupLab sheet and would not read is a problem; anything else is a target
+            // GroupLab has not been told about, which is not one.
+            var opening = seen is not null ? GroupLab.Core.Registration.OpeningOutcome.StoreTarget
+                : GroupLab.Core.Registration.SheetOpening.Decide(identity ?? new SheetIdentity(null, null, 0, 0, null), false,
+                    () => GroupLab.Core.Registration.SheetLook.Of(grey, backend, codesRead));
+            DiagnosticLog.Info("phone.opening", ("outcome", opening.ToString()));
+            if (opening == GroupLab.Core.Registration.OpeningOutcome.NotGroupLab)
+            {
+                return new PhoneResult(session.State, null, GroupLab.Core.Registration.OpeningWords.WhichSays, null, working, AskWhichSheet: true, Check: unread,
+                    LooksLike: looksLike, Recognized: seen, Opening: opening);
+            }
+
             // Entry 354 section 2: codes that were read and named a sheet GroupLab does not have are not codes that could not be read.
             return new PhoneResult(session.State, null,
                 identity?.DefinitionId is { } named
                     ? $"GroupLab read the square codes: they name {named}, which is not among its sheets, and the description of the sheet they carry could not be read. Choose which sheet it is."
                     : "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
-                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike, Recognized: seen);
+                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike, Recognized: seen, Opening: opening);
         }
 
         // Entry 271: a photograph is corrected for the printer chosen, where one has been measured.

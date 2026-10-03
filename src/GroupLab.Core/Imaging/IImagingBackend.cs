@@ -57,6 +57,12 @@ public interface IImagingBackend
     /// search can only spend time: entry 342 found it was most of the phone's 0.6 to 0.95 s reading a sheet's codes square on.
     /// </summary>
     IReadOnlyList<byte[]> ReadCutOut(GrayImage image, double scale) => ReadCodes(image, scale);
+
+    /// <summary>
+    /// Where QR codes are in the image, read or not, each as its four corners in the image's own pixels: what a GroupLab sheet's codes look
+    /// like before they are decoded (NOTES-FROM-PLANNING.md entry 356 section 5). A backend that cannot locate without decoding finds none.
+    /// </summary>
+    IReadOnlyList<IReadOnlyList<PointD>> LocateCodes(GrayImage image) => [];
 }
 
 /// <summary>An image or page coordinate. Measurement happens in floating point; only the definition is integer.</summary>

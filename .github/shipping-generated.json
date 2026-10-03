@@ -62,6 +62,7 @@
     "src/GroupLab.App/MainWindow.Panes.cs",
     "src/GroupLab.App/MainWindow.Printer.cs",
     "src/GroupLab.App/MainWindow.PrinterWizard.cs",
+    "src/GroupLab.App/MainWindow.Problems.cs",
     "src/GroupLab.App/MainWindow.Report.cs",
     "src/GroupLab.App/MainWindow.Saving.cs",
     "src/GroupLab.App/MainWindow.Sending.cs",

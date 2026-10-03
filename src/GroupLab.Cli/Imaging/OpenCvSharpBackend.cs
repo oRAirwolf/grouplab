@@ -379,6 +379,35 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         return [.. Read(input).Select(Payload)];
     }
 
+    /// <summary>
+    /// Entry 356 section 5: every QR code's corners the two detectors find, decoded or not, at the image's own size. The WeChat detector,
+    /// without its models, locates a code it cannot decode, which is what a sheet whose codes will not read still shows.
+    /// </summary>
+    public IReadOnlyList<IReadOnlyList<PointD>> LocateCodes(GrayImage image)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        using var input = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+        using var locator = new WeChatQRCode("", "", "", "");
+        using var detector = new QRCodeDetector();
+        var boxes = new List<IReadOnlyList<PointD>>();
+        locator.DetectAndDecode(input, out Point2f[][] found);
+        boxes.AddRange(found.Where(b => b.Length == 4).Select(b => (IReadOnlyList<PointD>)[.. b.Select(p => new PointD(p.X, p.Y))]));
+        if (detector.DetectMulti(input, out Point2f[] corners))
+        {
+            for (int i = 0; i + 3 < corners.Length; i += 4)
+            {
+                var box = corners.Skip(i).Take(4).Select(p => new PointD(p.X, p.Y)).ToList();
+                // One code found by both detectors is one code.
+                if (!boxes.Any(b => Math.Abs(b.Average(p => p.X) - box.Average(p => p.X)) < 10 && Math.Abs(b.Average(p => p.Y) - box.Average(p => p.Y)) < 10))
+                {
+                    boxes.Add(box);
+                }
+            }
+        }
+
+        return boxes;
+    }
+
     public IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale)
     {
         ArgumentNullException.ThrowIfNull(image);

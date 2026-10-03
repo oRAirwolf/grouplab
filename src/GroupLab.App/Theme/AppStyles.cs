@@ -117,6 +117,15 @@ public static class AppStyles
     public const string ReviewCard = "review-card";
 
     /// <summary>
+    /// The problem dialog's card, NOTES-FROM-PLANNING.md entry 356: the panel's own colour, a line all round and rounded corners, over the
+    /// scrim in the middle of the window, as the canvas's boards draw it.
+    /// </summary>
+    public const string ProblemCard = "problem-card";
+
+    /// <summary>The amber bar a dismissed problem leaves under the header, with the way back to it (entry 356 section 6).</summary>
+    public const string ProblemBar = "problem-bar";
+
+    /// <summary>
     /// A judgement card in the analysis state, NOTES-FROM-PLANNING.md entry 103 section 2: a bold verdict and its evidence, divided from what is
     /// above it by a hairline and not boxed (entry 109 section 1). Neutral, because amber means something needs a person and a judgement is read,
     /// not acted on.
@@ -283,6 +292,8 @@ public static class AppStyles
         Rule(x => x.OfType<Border>().Class(Keycap), (Border.BackgroundProperty, Brush(p.Sunk)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.SurfaceRadius), (Border.PaddingProperty, new Thickness(Tokens.Space4, 0)), (Layoutable.MarginProperty, new Thickness(Tokens.Space8, 0, 0, 0))),
         Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),
+        Rule(x => x.OfType<Border>().Class(ProblemCard), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(8)), (Border.PaddingProperty, new Thickness(Tokens.Space24))),
+        Rule(x => x.OfType<Border>().Class(ProblemBar), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(0, 0, 0, 1)), (Border.PaddingProperty, new Thickness(Tokens.Space16, Tokens.Space8))),
         Rule(x => x.OfType<Border>().Class(ReviewCard), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
         Rule(x => x.OfType<Border>().Class(DropTarget), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(3)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.MarginProperty, new Thickness(Tokens.Space16))),
         Rule(x => x.OfType<Border>().Class(JudgementCard), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(0, 1, 0, 0)), (Border.PaddingProperty, new Thickness(0, Tokens.Space12, 0, 0))),

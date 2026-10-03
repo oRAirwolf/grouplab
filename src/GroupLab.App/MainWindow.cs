@@ -1182,6 +1182,8 @@ public sealed partial class MainWindow : Window
         // Entry 131 section 9: the toasts sit over everything, at the bottom right, and never take a click that is not on one of them.
         var layered = new Panel();
         layered.Children.Add(whole);
+        // Entry 356: a dialog that needs the person sits over the work, under the toasts and the first run's questions.
+        layered.Children.Add(BuildProblemLayer());
         layered.Children.Add(toaster.Layer);
         layered.Children.Add(BuildFirstRun());
         Content = layered;
@@ -2148,7 +2150,27 @@ public sealed partial class MainWindow : Window
                 return;
             }
 
-            OfferTheSheet(g, v, m, identity.Failure, identity.DefinitionId);
+            // Entry 356 section 5: a picture that looks like a GroupLab sheet and would not read is a problem; anything else is a target
+            // GroupLab has not been told about, which is not one.
+            var look = await Task.Run(() => SheetLook.Of(g, new OpenCvSharpBackend(), identity.CodesRead), token);
+            token.ThrowIfCancellationRequested();
+            var outcome = SheetOpening.Decide(identity, false, () => look);
+            LastOpening = outcome;
+            DiagnosticLog.Info("detect.opening", ("outcome", outcome.ToString()), ("markers", look.Markers), ("codes", look.Codes.Count), ("read", look.CodesRead));
+            if (!ReferenceEquals(g, grey))
+            {
+                return;
+            }
+
+            if (outcome == OpeningOutcome.LooksLikeGroupLab)
+            {
+                OfferTheSheet(g, v, m, identity.Failure, identity.DefinitionId);
+            }
+            else
+            {
+                AskWhichTargetIsThis(g, v, m);
+            }
+
             return;
         }
 
@@ -2171,6 +2193,9 @@ public sealed partial class MainWindow : Window
     /// Entry 115 section 4: the sheet's codes could not be read, so the screen asks which sheet it is, by name, from the library and the
     /// person's own sheets. A sheet with no codes registers off its markers exactly as any other does. Marking it by hand stays beside it.
     /// </summary>
+    /// <summary>What opening the picture open now decided, where its codes named no sheet, for the headless tests.</summary>
+    internal OpeningOutcome? LastOpening { get; private set; }
+
     private void OfferTheSheet(GrayImage g, GrayImage v, ImageMetadata m, string? why, string? named = null)
     {
         pendingDetection = (g, v, m);
@@ -2182,6 +2207,15 @@ public sealed partial class MainWindow : Window
         sheetChooser.IsVisible = true;
         // Entry 354 section 2: codes that were read and named a sheet this computer does not have are not codes that could not be read, and
         // saying they could not be read sent the person looking for a fault in their photograph.
+        if (why is null && named is null)
+        {
+            // Entry 356 section 5: the person said it is a GroupLab sheet, so this is a question and not a failure.
+            status.Text = "Which GroupLab sheet is it?";
+            problem.Text = "Choose it below, or take the picture again with its corner codes in view. A sheet whose codes cannot be read still registers from its markers.";
+            DiagnosticLog.Info("detect.offer", ("sheets", sheets.Count), ("failure", "asked"));
+            return;
+        }
+
         status.Text = named is null ? "GroupLab could not read this sheet's codes. Which sheet is it?" : $"This sheet's codes name {named}, which GroupLab does not have. Which sheet is it?";
         problem.Text = named is null
             ? $"GroupLab looked for the square codes near the sheet's corners, which name the sheet, and could not read them ({why}). A sheet whose codes did not print cleanly, or that the picture cut off, still registers from its markers: choose which sheet it is, or mark it by hand. A flat scan at 300 dpi reads the codes most reliably."
@@ -4661,6 +4695,12 @@ public sealed partial class MainWindow : Window
 
     internal void OnReviewKey(object? sender, KeyEventArgs e)
     {
+        // Entry 356 section 3: while a dialog is open its keys are its own, Enter its first choice and Escape to dismiss it.
+        if (ProblemKey(e))
+        {
+            return;
+        }
+
         // Any modifier but Shift means a shortcut, never a typed label: Control, Alt, and the Mac's Command key (entry 166).
         // Entry 154: a glossary word that has the focus takes its own Enter and Space, which open its explanation.
         if (e.Source is TextBox || (e.Source is TextBlock focused && focused.Classes.Contains(TermHelp.Class))

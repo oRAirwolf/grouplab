@@ -38,6 +38,37 @@ public sealed class ResultView : UserControl
     private long? sessionId;
     private readonly Action again;
 
+    /// <summary>
+    /// Entry 356 section 5: "Which target is this?", a sheet over the choices behind it, each with the line that says what it needs. Marking
+    /// it by hand opens Marking A; a store-bought target opens Add a store-bought target; a GroupLab sheet leaves the list of sheets behind it.
+    /// </summary>
+    private Control WhichTargetIsThis(Control behind, WorkingImage working, ShotSetup setup, UnitSettings units, Action again)
+    {
+        void Back()
+        {
+            // The choices behind the sheet come back as the screen, out of the layer they sat in.
+            Content = null;
+            (behind.Parent as Panel)?.Children.Remove(behind);
+            Content = behind;
+        }
+
+        var byHand = Screens.Row(GroupLab.Core.Registration.OpeningWords.ByHand.Label, GroupLab.Core.Registration.OpeningWords.ByHand.Says, () =>
+            Content = new MarkingAPage(working.Path, working.Metadata.Orientation, setup, units, marked => Content = new ResultView(marked, setup, units, again), Back), explain: false)
+            .Id("which-target-by-hand");
+        var store = Screens.Row(GroupLab.Core.Registration.OpeningWords.StoreBought.Label, GroupLab.Core.Registration.OpeningWords.StoreBought.Says,
+            () => Content = new FingerprintPage(Back), explain: false).Id("which-target-store");
+        var sheet = Screens.Row(GroupLab.Core.Registration.OpeningWords.GroupLabSheet.Label, GroupLab.Core.Registration.OpeningWords.GroupLabSheet.Says, Back, explain: false)
+            .Id("which-target-grouplab");
+        byHand.Classes.Add(PhoneStyles.Primary);
+        var body = new StackPanel { Spacing = 10 };
+        body.Children.Add(Screens.Dim(GroupLab.Core.Registration.OpeningWords.WhichSays));
+        body.Children.Add(byHand);
+        body.Children.Add(store);
+        body.Children.Add(sheet);
+        body.Children.Add(Screens.Quiet(GroupLab.Core.Registration.OpeningWords.WhichFooter));
+        return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.WhichTitle, body, [byHand, store, sheet], Back);
+    }
+
     internal ResultView(PhoneResult result, ShotSetup setup, UnitSettings units, Action again)
     {
         // Entry 273: a tap on any number switches units everywhere; this result shows them again.
@@ -88,6 +119,15 @@ public sealed class ResultView : UserControl
                 again();
             }));
             Content = Screens.Page(column);
+
+            // Entry 356 section 5, board "Not an error": a target GroupLab has not been told about asks which it is, calmly, over the choices,
+            // marking it by hand first.
+            if (result.Opening == GroupLab.Core.Registration.OpeningOutcome.NotGroupLab && result.Image is { } unknown)
+            {
+                var choicesPage = (Control)Content!;
+                Content = null;
+                Content = WhichTargetIsThis(choicesPage, unknown, setup, units, again);
+            }
 
             // Entry 340 section 1: a store-bought target GroupLab knows goes straight to marking it, its bulls placed and its printed size as
             // the scale, after "Which target is this?" where the picture cannot tell its sizes apart. Cancel comes back to the choices above.
