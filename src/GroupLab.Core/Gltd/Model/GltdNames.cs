@@ -52,7 +52,10 @@ public static class GltdNames
         ("roll-24", Model.PageSize.Roll24),
         ("roll-36", Model.PageSize.Roll36),
         ("roll-42", Model.PageSize.Roll42),
-        ("custom", Model.PageSize.Custom));
+        ("custom", Model.PageSize.Custom),
+        ("a6", Model.PageSize.A6),
+        ("label-4x6", Model.PageSize.Label4x6),
+        ("label-100x150", Model.PageSize.Label100x150));
 
     public static NameTable<Orientation> Orientation { get; } = new(
         ("portrait", Model.Orientation.Portrait),

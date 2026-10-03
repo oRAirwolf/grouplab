@@ -21,7 +21,15 @@ public sealed record LibrarySheet(string File, string Family, string? DesignedFo
             var page = Definition.Page;
             string size = string.Create(CultureInfo.InvariantCulture, $"{page.Width / 10.0:0.#} by {page.Height / 10.0:0.#} mm, {page.Width / 254.0:0.##} by {page.Height / 254.0:0.##} in");
             // Entry 113 section 7: a roll by its width in words, never the page size's own name.
-            string name = page.Size switch { PageSize.Roll24 => "24 in roll", PageSize.Roll36 => "36 in roll", PageSize.Roll42 => "42 in roll", _ => page.Size.ToString() };
+            string name = page.Size switch
+            {
+                PageSize.Roll24 => "24 in roll",
+                PageSize.Roll36 => "36 in roll",
+                PageSize.Roll42 => "42 in roll",
+                PageSize.Label4x6 => "4x6 label",
+                PageSize.Label100x150 => "100 x 150 mm label",
+                _ => page.Size.ToString(),
+            };
             return page.Size == PageSize.Custom ? size : $"{name}, {size}";
         }
     }
@@ -107,8 +115,8 @@ public static class TargetLibrary
         int us = size switch
         {
             PageSize.Letter => 0,
-            PageSize.Legal or PageSize.Tabloid or PageSize.Roll24 or PageSize.Roll36 or PageSize.Roll42 => 1,
-            PageSize.A4 or PageSize.A3 or PageSize.A5 => 2,
+            PageSize.Legal or PageSize.Tabloid or PageSize.Roll24 or PageSize.Roll36 or PageSize.Roll42 or PageSize.Label4x6 => 1,
+            PageSize.A4 or PageSize.A3 or PageSize.A5 or PageSize.A6 or PageSize.Label100x150 => 2,
             _ => 3,
         };
         return letterFirst || us == 3 ? us : us == 2 ? 0 : us + 1;

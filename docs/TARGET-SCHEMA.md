@@ -111,7 +111,7 @@ This is not an arbitrary pick between three equally good conventions. A derived 
 
 | Field | Type | Required | Meaning |
 |---|---|---|---|
-| `size` | string | yes | One of `letter`, `legal`, `tabloid`, `a3`, `a4`, `a5`, `roll-24`, `roll-36`, `roll-42`, `custom` |
+| `size` | string | yes | One of `letter`, `legal`, `tabloid`, `a3`, `a4`, `a5`, `roll-24`, `roll-36`, `roll-42`, `custom`, and the label sizes of NOTES-FROM-PLANNING.md entry 358: `a6` (1050 by 1480), `label-4x6` (1016 by 1524) and `label-100x150` (1000 by 1500) |
 | `width` | integer dmm | yes | Always written explicitly, even for a named size |
 | `height` | integer dmm | yes | Always written explicitly |
 | `orientation` | string | no | `portrait` or `landscape`, purely a hint to the print dialog. `width` and `height` are already final and are not swapped by it |
@@ -805,10 +805,11 @@ Page block                                        3, 5 or 7 bytes
   pageCode    1 byte   0=custom 1=letter 2=legal 3=tabloid
                        4=a3 5=a4 6=a5
                        7=roll-24 8=roll-36 9=roll-42
+                       10=a6 11=label-4x6 12=label-100x150 (entry 358)
   if pageCode == 0:
     width     2 bytes  uint16 quanta
     height    2 bytes  uint16 quanta
-  if pageCode >= 7:
+  if pageCode is 7, 8 or 9:
     height    2 bytes  uint16 quanta   (width is implied)
   orientation 1 byte   0=portrait 1=landscape
   quantum     1 byte   0 = 0.1 mm, 1 = 0.2 mm,
@@ -1139,7 +1140,8 @@ Published at `https://grouplab.invalid/schema/gltd-1.schema.json`, versioned by 
       "required": ["size", "width", "height"],
       "properties": {
         "size": { "enum": ["letter","legal","tabloid","a3","a4","a5",
-                           "roll-24","roll-36","roll-42","custom"] },
+                           "roll-24","roll-36","roll-42","custom",
+                           "a6","label-4x6","label-100x150"] },
         "width":  { "$ref": "#/$defs/dmm", "minimum": 500 },
         "height": { "$ref": "#/$defs/dmm", "minimum": 500 },
         "orientation": { "enum": ["portrait","landscape"] }

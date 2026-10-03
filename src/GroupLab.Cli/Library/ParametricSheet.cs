@@ -71,7 +71,16 @@ public static class ParametricSheet
     /// <summary>The bull spacing entry 56 section 7 sets as the rule: at least 6 sigma at the shooting distance, where 1 shot in 185 is misassigned.</summary>
     public const double SpacingInSigmas = 6;
 
-    public static IReadOnlyList<string> Pages { get; } = ["letter", "a4", "tabloid", "a3"];
+    public static IReadOnlyList<string> Pages { get; } = ["letter", "a4", "tabloid", "a3", "4x6", "a6", "100x150"];
+
+    /// <summary>A page key as the designer's list shows it: "Letter", "A4", "4x6 label".</summary>
+    public static string PageWords(string page) => page switch
+    {
+        "a4" or "a3" or "a6" => page.ToUpperInvariant(),
+        "4x6" => "4x6 label",
+        "100x150" => "100 x 150 mm label",
+        _ => char.ToUpperInvariant(page[0]) + page[1..],
+    };
 
     /// <summary>The units a bull's size can be given in, in the designer (entry 303 item 1): inches, MOA and mil at the sheet's distance.</summary>
     public static IReadOnlyList<string> BullUnits { get; } = ["in", "MOA", "mil"];
@@ -106,6 +115,10 @@ public static class ParametricSheet
         ["a4"] = (PageSize.A4, 2100, 2970),
         ["tabloid"] = (PageSize.Tabloid, 2794, 4318),
         ["a3"] = (PageSize.A3, 2970, 4200),
+        // Entry 358 section 1: the label sizes, beside Letter and A4.
+        ["4x6"] = (PageSize.Label4x6, 1016, 1524),
+        ["a6"] = (PageSize.A6, 1050, 1480),
+        ["100x150"] = (PageSize.Label100x150, 1000, 1500),
     };
 
     /// <summary>

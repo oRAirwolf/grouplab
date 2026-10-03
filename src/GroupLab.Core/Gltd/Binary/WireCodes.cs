@@ -53,6 +53,9 @@ internal static class WireCodes
         PageSize.Roll24 => 7,
         PageSize.Roll36 => 8,
         PageSize.Roll42 => 9,
+        PageSize.A6 => 10,
+        PageSize.Label4x6 => 11,
+        PageSize.Label100x150 => 12,
         _ => throw new ArgumentOutOfRangeException(nameof(size), size, null),
     };
 
@@ -68,8 +71,17 @@ internal static class WireCodes
         7 => PageSize.Roll24,
         8 => PageSize.Roll36,
         9 => PageSize.Roll42,
+        10 => PageSize.A6,
+        11 => PageSize.Label4x6,
+        12 => PageSize.Label100x150,
         _ => null,
     };
+
+    /// <summary>
+    /// The roll presets, whose page block carries the height (TARGET-SCHEMA.md section 5.2). Entry 358 added standard sizes after them, so a
+    /// code above 9 is a named size again and carries nothing.
+    /// </summary>
+    public static bool IsRoll(byte pageCode) => pageCode is >= 7 and <= 9;
 
     /// <summary>The family table of section 5.5 is in the same order as <see cref="FiducialFamily"/>.</summary>
     public static byte FamilyCode(FiducialFamily family) => (byte)family;

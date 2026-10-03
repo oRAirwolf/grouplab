@@ -43,6 +43,10 @@ public static class LibraryBuilder
         ["roll24"] = (PageSize.Roll24, 6096, 7112),
         ["roll36"] = (PageSize.Roll36, 9144, 6096),
         ["roll42"] = (PageSize.Roll42, 10668, 6096),
+        // Entry 358 section 1: the label sizes.
+        ["4x6"] = (PageSize.Label4x6, 1016, 1524),
+        ["a6"] = (PageSize.A6, 1050, 1480),
+        ["100x150"] = (PageSize.Label100x150, 1000, 1500),
     };
 
     private static readonly Dictionary<string, string> Names = new(StringComparer.Ordinal)

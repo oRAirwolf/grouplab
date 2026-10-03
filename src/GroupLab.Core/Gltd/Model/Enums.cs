@@ -13,6 +13,15 @@ public enum PageSize
     Roll36,
     Roll42,
     Custom,
+
+    /// <summary>A6, 105 by 148 mm, a label size (NOTES-FROM-PLANNING.md entry 358 section 1).</summary>
+    A6,
+
+    /// <summary>The 4 by 6 in shipping label, 101.6 by 152.4 mm (entry 358 section 1).</summary>
+    Label4x6,
+
+    /// <summary>The 100 by 150 mm shipping label (entry 358 section 1).</summary>
+    Label100x150,
 }
 
 /// <summary>A hint to the print dialog only, TARGET-SCHEMA.md section 3.2: page width and height are already final.</summary>

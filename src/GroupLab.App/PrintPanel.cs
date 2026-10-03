@@ -85,7 +85,7 @@ public sealed class PrintPanel : UserControl
 
     private readonly TextBox designName = new() { Width = 260, Text = "My sheet" };
 
-    private readonly ComboBox designPage = new() { ItemsSource = ParametricSheet.Pages.Select(p => p.ToUpperInvariant() == "A4" || p.ToUpperInvariant() == "A3" ? p.ToUpperInvariant() : char.ToUpperInvariant(p[0]) + p[1..]).ToList(), SelectedIndex = 0, MinWidth = 120 };
+    private readonly ComboBox designPage = new() { ItemsSource = ParametricSheet.Pages.Select(ParametricSheet.PageWords).ToList(), SelectedIndex = 0, MinWidth = 120 };
 
     private readonly NumericUpDown designColumns = new() { Minimum = 1, Maximum = 12, Value = 5, Increment = 1, FormatString = "0", Width = 120 };
 

@@ -30,7 +30,8 @@
       "required": ["size", "width", "height"],
       "properties": {
         "size": { "enum": ["letter","legal","tabloid","a3","a4","a5",
-                           "roll-24","roll-36","roll-42","custom"] },
+                           "roll-24","roll-36","roll-42","custom",
+                           "a6","label-4x6","label-100x150"] },
         "width":  { "$ref": "#/$defs/dmm", "minimum": 500 },
         "height": { "$ref": "#/$defs/dmm", "minimum": 500 },
         "orientation": { "enum": ["portrait","landscape"] }

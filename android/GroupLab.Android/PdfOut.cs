@@ -26,7 +26,7 @@ internal static class PdfOut
         }
 
         var attributes = new PrintAttributes.Builder();
-        if (paper switch { PageSize.Letter => PrintAttributes.MediaSize.NaLetter, PageSize.A4 => PrintAttributes.MediaSize.IsoA4, PageSize.Tabloid => PrintAttributes.MediaSize.NaTabloid, PageSize.A3 => PrintAttributes.MediaSize.IsoA3, _ => null } is { } size)
+        if (paper switch { PageSize.Letter => PrintAttributes.MediaSize.NaLetter, PageSize.A4 => PrintAttributes.MediaSize.IsoA4, PageSize.Tabloid => PrintAttributes.MediaSize.NaTabloid, PageSize.A3 => PrintAttributes.MediaSize.IsoA3, PageSize.A6 => PrintAttributes.MediaSize.IsoA6, PageSize.Label4x6 => PrintAttributes.MediaSize.NaIndex4x6, PageSize.Label100x150 => new PrintAttributes.MediaSize("GROUPLAB_100X150", "100 x 150 mm", 3937, 5906), _ => null } is { } size)
         {
             attributes.SetMediaSize(size);
         }

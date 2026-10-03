@@ -83,6 +83,10 @@ public static class PrintFit
         ("Legal", 4318, 7112),
         ("Tabloid", 5588, 8636),
         ("A3", 5940, 8400),
+        // Entry 358 section 1: the label sizes a thermal label printer takes.
+        ("4x6 label", 2032, 3048),
+        ("A6", 2100, 2960),
+        ("100 x 150 mm label", 2000, 3000),
     ];
 
     /// <summary>The mapping that draws a scene at actual size on this printer.</summary>

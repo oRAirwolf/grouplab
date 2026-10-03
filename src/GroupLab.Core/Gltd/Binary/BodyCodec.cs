@@ -26,7 +26,7 @@ public static class BodyCodec
             U16(w, page.Width);
             U16(w, page.Height);
         }
-        else if (page.PageCode >= 7)
+        else if (WireCodes.IsRoll(page.PageCode))
         {
             U16(w, page.Height);
         }
@@ -197,7 +197,7 @@ public static class BodyCodec
             width = r.U16("the page width");
             height = r.U16("the page height");
         }
-        else if (pageCode >= 7)
+        else if (WireCodes.IsRoll(pageCode))
         {
             height = r.U16("the roll page height");
         }

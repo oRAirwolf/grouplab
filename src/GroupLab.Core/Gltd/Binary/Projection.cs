@@ -203,7 +203,7 @@ public static class Projection
             byte pageCode = WireCodes.PageCode(size);
             var bodyPage = new BodyPage(pageCode,
                 pageCode == 0 ? Q(page.Width) : (ushort)0,
-                pageCode == 0 || pageCode >= 7 ? Q(page.Height) : (ushort)0,
+                pageCode == 0 || WireCodes.IsRoll(pageCode) ? Q(page.Height) : (ushort)0,
                 page.Orientation == Orientation.Landscape ? (byte)1 : (byte)0,
                 (byte)quantumCode);
 
