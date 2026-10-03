@@ -129,6 +129,77 @@ public class PhoneTouchScenarioTests
         }
     }
 
+    /// <summary>
+    /// The first simulator run (37087711129) refused to tap Continue: its hold was worked out just after the keyboard raised the caliber
+    /// question, when the places had been laid out again but the question had not yet been drawn there, and a press is judged against what
+    /// was drawn. Here the same: looked at at once, Continue's middle reaches the page under it; the hold looks again until Continue stays
+    /// put and a press at its middle reaches it, and only then asks for the tap.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task AHoldWaitsUntilTheRaisedQuestionIsDrawn()
+    {
+        if (Phone.Platform is null)
+        {
+            Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
+        }
+
+        var (was, wasInches) = Phone.Settings.LoadShotSetup();
+        Scenario.AnswerFirstRun(Phone.Settings);
+        Phone.Settings.SaveShotSetup(null, null);
+        var shell = new Shell();
+        var window = new Window { Width = 402, Height = Height, Content = shell };
+        window.Show();
+        void Drawn()
+        {
+            Settle();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Settle();
+        }
+
+        Drawn();
+        try
+        {
+            var capture = shell.GetVisualDescendants().OfType<CapturePage>().Single();
+            capture.AskFirst(() => { });
+            Drawn();
+            capture.GetVisualDescendants().OfType<TextBox>().Single(t => Avalonia.Automation.AutomationProperties.GetAutomationId(t) == "capture-distance").Focus();
+            Drawn();
+            shell.Keyboard.Opened(Height - KeyboardHeight);
+
+            // At once, before anything is drawn again: what the run's hold saw. The hold's own first look is given exactly that, since
+            // here the dispatcher draws before the step can look, where on the simulator the screenshot before it held the thread.
+            var behind = Scenario.HoldFor("capture-ask-continue");
+            Assert.False(behind["reached"]!.GetValue<bool>());
+            int looks = 0;
+            Scenario.Look = tap => looks++ == 0 ? behind.DeepClone().AsObject() : Scenario.HoldFor(tap);
+
+            Directory.CreateDirectory(Scenario.Results);
+            string hold = Path.Combine(Scenario.Results, Scenario.HoldFile);
+            var step = Scenario.Do(new Scenario.Step("hold", new JsonObject { ["do"] = "hold", ["tap"] = "capture-ask-continue", ["name"] = "settling", ["seconds"] = 30.0 }));
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            while (!File.Exists(hold) && clock.Elapsed < TimeSpan.FromSeconds(20))
+            {
+                Drawn();
+                await Task.Delay(50);
+            }
+
+            Assert.True(File.Exists(hold), $"no hold written: {step.Status} {step.Exception?.InnerException?.Message} {(step.IsCompletedSuccessfully ? step.Result.Item2 : "")}");
+            var said = JsonNode.Parse(File.ReadAllText(hold))!.AsObject();
+            Assert.True(said["reached"]!.GetValue<bool>(), $"Continue is still covered by {said["under"]} after {said["settledMs"]} ms");
+            Assert.NotNull(TapPoint(said).At);
+            File.WriteAllText(Path.Combine(Scenario.Results, Scenario.TappedFile), new JsonObject { ["ok"] = true, ["detail"] = "tapped" }.ToJsonString());
+            File.Delete(hold);
+            var (ok, detail) = await step;
+            Assert.True(ok, detail);
+        }
+        finally
+        {
+            Scenario.Look = Scenario.HoldFor;
+            window.Close();
+            Phone.Settings.SaveShotSetup(was, wasInches);
+        }
+    }
+
     /// <summary>The scenario names only controls the Capture screen has, so a renamed id fails here and not on the simulator.</summary>
     [Fact]
     public void TheScenarioTapsOnlyIdsTheCaptureScreenHas()

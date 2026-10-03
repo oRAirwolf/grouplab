@@ -821,7 +821,7 @@ internal static class Scenario
         string hold = Path.Combine(Results, HoldFile);
         string tapped = Path.Combine(Results, TappedFile);
         File.Delete(tapped);
-        var said = await OnUi(() => HoldFor(tap));
+        var said = await Settled(tap);
         logMark = LogLines(null)?.Split('\n').Length ?? 0;
         string text = said.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(Path.Combine(Results, name + ".json"), text);
@@ -863,6 +863,48 @@ internal static class Scenario
             File.Delete(tapped);
         }
     }
+
+    /// <summary>How a hold looks at the screen: <see cref="HoldFor"/>, which a test replaces to give a first look that is behind.</summary>
+    internal static Func<string, JsonObject> Look { get; set; } = HoldFor;
+
+    /// <summary>The longest a hold waits for the control to be drawn where it lies (<see cref="Settled"/>).</summary>
+    internal static TimeSpan MostSettling { get; set; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// Entry 353, the first run on the simulator (run 37087711129): the hold for Continue, worked out 0.4 s after the keyboard raised the
+    /// caliber question and while the screenshot before it held the screen's thread, found the page under Continue's middle and refused
+    /// to tap. The places come from a layout run there and then, but what a press reaches is found in what was last drawn, and the
+    /// question had not yet been drawn in its new place. A person taps what is drawn, and the press is judged against the same drawing,
+    /// so a person never meets this; the test did, by looking before the screen had caught up. So a hold looks again a fifth of a second
+    /// later until the control has stayed in one place and a press at its middle reaches it, <see cref="MostSettling"/> at most, and says
+    /// how long that took. One that never settles is said as before, and is then the application's fault, not the test's.
+    /// </summary>
+    private static async Task<JsonObject> Settled(string tap)
+    {
+        var clock = Stopwatch.StartNew();
+        var said = await OnUi(() => Look(tap));
+        int looks = 1;
+        while (clock.Elapsed < MostSettling)
+        {
+            await Task.Delay(200);
+            var again = await OnUi(() => Look(tap));
+            looks++;
+            bool still = Where(again, tap) is { } now && now == Where(said, tap);
+            said = again;
+            if (still && said["reached"]?.GetValueKind() == JsonValueKind.True)
+            {
+                break;
+            }
+        }
+
+        said["settledMs"] = clock.ElapsedMilliseconds;
+        said["looks"] = looks;
+        return said;
+    }
+
+    /// <summary>The place on the screen a hold gives the control it names, as text to compare; null where it is not showing.</summary>
+    private static string? Where(JsonObject said, string tap) =>
+        said["controls"]?.AsArray().OfType<JsonObject>().FirstOrDefault(c => c["id"]?.GetValue<string>() == tap)?["screen"]?.ToJsonString();
 
     /// <summary>What a hold says to the script that taps: see <see cref="Hold"/>.</summary>
     internal static JsonObject HoldFor(string tap)
