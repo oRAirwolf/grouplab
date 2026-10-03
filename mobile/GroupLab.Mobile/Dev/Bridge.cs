@@ -49,7 +49,7 @@ internal static partial class Bridge
     internal static readonly string[] Own = ["ping", "tree", "log", "timings", "memory"];
 
     /// <summary>The scenario steps, for <c>ping</c> to list.</summary>
-    internal static readonly string[] Steps = ["open", "back", "picture", "read", "wait", "press", "type", "choose", "scroll", "setting", "reset", "screenshot", "tree", "sleep", "log", "replay", "record"];
+    internal static readonly string[] Steps = ["open", "back", "picture", "read", "wait", "press", "type", "choose", "scroll", "setting", "reset", "screenshot", "tree", "sleep", "log", "replay", "record", "hold", "expect"];
 
     private static readonly Lock Gate = new();
     private static readonly SemaphoreSlim OneAtATime = new(1, 1);

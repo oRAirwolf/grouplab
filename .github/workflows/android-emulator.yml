@@ -53,6 +53,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: GroupLab Dev for x86_64
+        id: build
         run: |
           set -e
           dotnet workload install android --skip-sign-check > /dev/null
@@ -94,9 +95,29 @@ jobs:
           disable-animations: true
           script: bash scripts/android-sweep.sh apk/grouplab-dev-x86_64.apk android-sweep
 
+      # Entry 353 step 2: real taps, adb's input where GroupLab Dev says each control is (scripts/android-touch.sh). Its own emulator start,
+      # so it runs even when the sweep failed and the two answers come apart.
+      - name: Real taps
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 40
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-touch.sh apk/grouplab-dev-x86_64.apk android-touch
+
       - name: Summary
         if: success()
-        run: echo "### The screen sweep visited every place and its pages on the Android emulator, plain, at the largest text size and dark." >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### The screen sweep visited every place and its pages on the Android emulator, plain, at the largest text size and dark." >> "$GITHUB_STEP_SUMMARY"
+          echo "### Real taps on the emulator: Take a picture, Choose a photo, Done and Continue each did their job, with the keyboard up and down." >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v6
         if: always()
@@ -104,6 +125,7 @@ jobs:
           name: android-emulator-sweep
           path: |
             android-sweep
+            android-touch
             build.log
           retention-days: 14
           if-no-files-found: warn

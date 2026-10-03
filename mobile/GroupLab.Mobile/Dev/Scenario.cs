@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -42,7 +43,9 @@ namespace GroupLab.Mobile.Dev;
 /// settings file by its key; <c>reset</c>, the settings and the sessions taken away and every page made again, as a first run;
 /// <c>screenshot</c>; <c>tree</c>, the visible controls with their ids, names, words, places and whether each is enabled; <c>sleep</c>;
 /// <c>log</c>, the newest lines of the log; <c>replay</c>, a camera clip or a picture played through the capture screen in place of the
-/// camera, and <c>record</c>, the camera's last seconds kept as clips (<see cref="CameraReplay"/>). A step it does not know fails and says so. Before the
+/// camera, and <c>record</c>, the camera's last seconds kept as clips (<see cref="CameraReplay"/>); <c>hold</c>, a wait while a script
+/// outside taps the control named <c>"tap"</c> with a real touch, and <c>expect</c>, what that tap should have done (entry 353, see
+/// <see cref="Hold"/>). A step it does not know fails and says so. Before the
 /// application starts, the first run's questions are answered unless the scenario has <c>"firstRun": "ask"</c>, and <c>"caliber"</c> with
 /// <c>"distanceInches"</c> are saved as the Capture screen's setup. <c>"stopOnFailure": false</c> carries on past a step that failed.
 /// </summary>
@@ -364,6 +367,10 @@ internal static class Scenario
                 return await CameraReplay.Step(step);
             case "record":
                 return await OnUi(() => CameraReplay.RecordStep(step));
+            case "hold":
+                return await Hold(step.Text("tap"), Name(step.Text("name"), "hold"), TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 120), 1, 1800)));
+            case "expect":
+                return await Expect(step, TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 5), 0, 600)));
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -721,7 +728,33 @@ internal static class Scenario
         return (true, Path.GetFileName(file));
     }
 
-    /// <summary>The controls showing, each with its type, automation name, words, place on screen and whether it can be used.</summary>
+    /// <summary>
+    /// Entry 353: where the application's view sits on the screen, in the units a tool that taps the screen works in, and whether those
+    /// units are the screen's pixels. The Android head sets it, because <c>adb shell input</c> taps in pixels from the screen's corner;
+    /// left unset, the view fills the screen from its corner and Avalonia's units are the screen's own, as on iOS, whose taps are in points.
+    /// </summary>
+    internal static Func<(double X, double Y, bool Pixels)>? ScreenPlace { get; set; }
+
+    /// <summary>A rectangle in the window's coordinates as it lies on the screen, in the units a tap is given in.</summary>
+    internal static Rect OnScreen(TopLevel top, Rect box)
+    {
+        var (x, y, pixels) = ScreenPlace?.Invoke() ?? (0, 0, false);
+        double scale = pixels ? top.RenderScaling : 1;
+        return new Rect(x + box.X * scale, y + box.Y * scale, box.Width * scale, box.Height * scale);
+    }
+
+    private static JsonObject Place(Rect box) => new()
+    {
+        ["x"] = Math.Round(box.X, 1),
+        ["y"] = Math.Round(box.Y, 1),
+        ["width"] = Math.Round(box.Width, 1),
+        ["height"] = Math.Round(box.Height, 1),
+    };
+
+    /// <summary>
+    /// The controls showing, each with its type, automation name, words, place in the window and on the screen (<see cref="ScreenPlace"/>),
+    /// and whether it can be used.
+    /// </summary>
     internal static JsonArray Elements()
     {
         var all = new JsonArray();
@@ -751,11 +784,209 @@ internal static class Scenario
                 ["y"] = Math.Round(box.Y),
                 ["width"] = Math.Round(box.Width),
                 ["height"] = Math.Round(box.Height),
+                ["screen"] = Place(OnScreen(top, box)),
                 ["enabled"] = visual.IsEffectivelyEnabled,
             });
         }
 
         return all;
+    }
+
+    /// <summary>The file a <c>hold</c> step writes for the script that taps, and takes away once the tap is done.</summary>
+    internal const string HoldFile = "hold.json";
+
+    /// <summary>What the script that taps writes before it takes the hold away: <c>{"ok": true, "detail": "..."}</c>.</summary>
+    internal const string TappedFile = "tapped.json";
+
+    /// <summary>How many lines the log had when the last hold began; <c>expect</c>'s <c>"log"</c> looks only at the lines after it.</summary>
+    private static int logMark;
+
+    /// <summary>
+    /// Entry 353, Fenix's report of TestFlight build 157: every button did nothing on an iPhone while a field had the focus, and the sweep
+    /// passed, because it presses buttons by raising their click and a finger's press never went through the screen's input at all. A
+    /// <c>hold</c> stops the scenario and writes <see cref="HoldFile"/> into the results: the control to tap (<c>"tap"</c>, an automation
+    /// id), every control showing with its place on the screen (<see cref="Elements"/>), the view's own place, the top of whatever covers
+    /// the bottom of the screen while the keyboard is up, and whether a press at the middle of the control would reach it. A script outside
+    /// (scripts/touch-test.py) taps there with the platform's own touch, an XCUITest runner on the simulator and adb on Android, writes
+    /// <see cref="TappedFile"/>, and takes the hold away; the scenario then goes on, and an <c>expect</c> step says whether the tap did its
+    /// job. The hold is kept as <c>name.json</c> beside the results.
+    /// </summary>
+    private static async Task<(bool, string)> Hold(string? tap, string name, TimeSpan most)
+    {
+        if (tap is not { Length: > 0 })
+        {
+            return (false, "hold needs a \"tap\", the automation id of the control to tap");
+        }
+
+        string hold = Path.Combine(Results, HoldFile);
+        string tapped = Path.Combine(Results, TappedFile);
+        File.Delete(tapped);
+        var said = await OnUi(() => HoldFor(tap));
+        logMark = LogLines(null)?.Split('\n').Length ?? 0;
+        string text = said.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        await File.WriteAllTextAsync(Path.Combine(Results, name + ".json"), text);
+        // Written whole and then renamed, so the script never reads half of it.
+        await File.WriteAllTextAsync(hold + ".part", text);
+        File.Move(hold + ".part", hold, overwrite: true);
+        DiagnosticLog.Info("scenario.hold", ("tap", tap));
+
+        var clock = Stopwatch.StartNew();
+        while (File.Exists(hold) && clock.Elapsed < most)
+        {
+            await Task.Delay(100);
+        }
+
+        if (File.Exists(hold))
+        {
+            File.Delete(hold);
+            return (false, $"nothing tapped {tap} in {most.TotalSeconds:0} s");
+        }
+
+        if (!File.Exists(tapped))
+        {
+            return (false, $"the script took the hold for {tap} away without saying what it did");
+        }
+
+        try
+        {
+            var answer = JsonNode.Parse(await File.ReadAllTextAsync(tapped)) as JsonObject;
+            bool ok = answer?["ok"]?.GetValueKind() == JsonValueKind.True;
+            string detail = answer?["detail"]?.GetValueKind() == JsonValueKind.String ? answer["detail"]!.GetValue<string>() : "";
+            return (ok, $"{tap}: {detail}");
+        }
+        catch (JsonException e)
+        {
+            return (false, $"{tap}: what the script wrote is not JSON: {e.Message}");
+        }
+        finally
+        {
+            File.Delete(tapped);
+        }
+    }
+
+    /// <summary>What a hold says to the script that taps: see <see cref="Hold"/>.</summary>
+    internal static JsonObject HoldFor(string tap)
+    {
+        var said = new JsonObject { ["tap"] = tap };
+        if (Shell.Current is not { } shell || TopLevel.GetTopLevel(shell) is not { } top)
+        {
+            said["controls"] = new JsonArray();
+            return said;
+        }
+
+        var controls = Elements();
+        var (_, _, pixels) = ScreenPlace?.Invoke() ?? (0, 0, false);
+        said["units"] = pixels ? "pixels" : "points";
+        said["view"] = Place(OnScreen(top, new Rect(top.Bounds.Size)));
+        // The keyboard is the system's, outside what Avalonia can find under a point, so its top is said; the bar on it is Avalonia's own.
+        double? covered = shell.Keyboard.KeyboardTop is { } keyboardTop ? keyboardTop - KeyboardRoom.BarHeight : null;
+        said["coveredFrom"] = covered is { } from ? Math.Round(OnScreen(top, new Rect(0, from, 0, 0)).Y, 1) : null;
+
+        // Whether a press at the middle of the control reaches it, or something lies over it there.
+        var target = Showing().OfType<Control>().FirstOrDefault(c => AutomationProperties.GetAutomationId(c) == tap);
+        if (target?.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), top) is { } middle)
+        {
+            var under = top.InputHitTest(middle) as Visual;
+            bool reached = under is not null && (under == target || target.IsVisualAncestorOf(under));
+            said["reached"] = reached && (covered is null || middle.Y < covered);
+            said["under"] = under?.GetType().Name;
+        }
+
+        said["controls"] = controls;
+        return said;
+    }
+
+    /// <summary>
+    /// Entry 353: what a tap should have done, looked at until it is so or <paramref name="most"/> has passed. A control <c>"name"</c>d
+    /// (automation id, automation name or words) is <c>"showing"</c> or not, and says <c>"text"</c>; the keyboard is up or not
+    /// (<c>"keyboard"</c>); the camera, or the line asking for it, is on the Capture screen or not (<c>"camera"</c>); a line in the log since
+    /// the last hold holds one of <c>"log"</c>'s words, several separated by |. All that is given must be so at once.
+    /// </summary>
+    private static async Task<(bool, string)> Expect(Step step, TimeSpan most)
+    {
+        string? name = step.Text("name");
+        string? text = step.Text("text");
+        string? log = step.Text("log");
+        bool? showing = Flag(step, "showing");
+        bool? keyboard = Flag(step, "keyboard");
+        bool? camera = Flag(step, "camera");
+        if (name is null && keyboard is null && camera is null && log is null)
+        {
+            return (false, "expect needs a \"name\", \"keyboard\", \"camera\" or \"log\"");
+        }
+
+        var clock = Stopwatch.StartNew();
+        string why;
+        while (true)
+        {
+            why = await OnUi(() => Unmet(name, text, showing, keyboard, camera)) ?? "";
+            if (why.Length == 0 && log is not null)
+            {
+                string since = string.Join('\n', (LogLines(null) ?? "").Split('\n').Skip(logMark));
+                why = log.Split('|').Any(l => since.Contains(l, StringComparison.Ordinal)) ? "" : $"no line in the log with {log} since the last hold";
+            }
+
+            if (why.Length == 0)
+            {
+                return (true, $"as expected after {clock.Elapsed.TotalSeconds:0.0} s");
+            }
+
+            if (clock.Elapsed >= most)
+            {
+                return (false, why);
+            }
+
+            await Task.Delay(200);
+        }
+    }
+
+    private static bool? Flag(Step step, string name) => step.Fields[name]?.GetValueKind() switch
+    {
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        _ => null,
+    };
+
+    /// <summary>The first of what was expected that is not so, in words; null where all of it is.</summary>
+    private static string? Unmet(string? name, string? text, bool? showing, bool? keyboard, bool? camera)
+    {
+        var controls = Showing().OfType<Control>().ToList();
+        if (name is not null)
+        {
+            var control = Find(controls, name);
+            if (showing == false)
+            {
+                if (control is not null)
+                {
+                    return name + " is still showing";
+                }
+            }
+            else if (control is null)
+            {
+                return name + " is not showing";
+            }
+            else if (text is not null && Words(control) != text)
+            {
+                return $"{name} says \"{Words(control)}\", not \"{text}\"";
+            }
+        }
+
+        if (keyboard is { } up && (Shell.Current?.Keyboard.KeyboardTop is not null) != up)
+        {
+            return up ? "the keyboard is not up" : "the keyboard is still up";
+        }
+
+        if (camera is { } wanted)
+        {
+            bool open = controls.OfType<CapturePage>().Any(p => Phone.Platform.IsCamera(p.Content))
+                || controls.OfType<TextBlock>().Any(t => t.Text == CapturePage.CameraWords);
+            if (open != wanted)
+            {
+                return wanted ? "neither the camera nor the line asking for it is showing" : "the camera is still showing";
+            }
+        }
+
+        return null;
     }
 
     private static (bool, string) Tree(string name)

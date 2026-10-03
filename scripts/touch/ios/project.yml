@@ -1,0 +1,42 @@
+# NOTES-FROM-PLANNING.md entry 353 step 2: the finger on the iOS simulator. simctl has no tap, so this XCUITest runner, made into an Xcode
+# project by XcodeGen in ios-app.yml, waits in the simulator for scripts/touch-test.py to ask for a tap and presses there for real, through
+# the springboard, which reaches whatever application is showing. The host application is only there because a UI test needs one; it is
+# never opened. Nothing here is GroupLab or ships with it.
+name: GroupLabTouch
+options:
+  bundleIdPrefix: org.grouplab.touch
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    GENERATE_INFOPLIST_FILE: YES
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+targets:
+  TouchHost:
+    type: application
+    platform: iOS
+    sources: [Host]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.grouplab.touch.host
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+  TouchTests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: TouchHost
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.grouplab.touch.tests
+        TEST_TARGET_NAME: TouchHost
+schemes:
+  GroupLabTouch:
+    build:
+      targets:
+        TouchHost: all
+        TouchTests: [test]
+    test:
+      targets: [TouchTests]

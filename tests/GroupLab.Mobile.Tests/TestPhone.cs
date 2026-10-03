@@ -68,7 +68,10 @@ internal sealed class TestPhone : IPhonePlatform
 
     public double MemoryBudgetMegabytes() => 2048;
 
-    public bool CameraAllowed() => false;
+    public bool CameraAllowed() => AllowCamera;
+
+    /// <summary>Whether the camera may be used; off unless a test opens it, as entry 353's touch scenario does.</summary>
+    public bool AllowCamera { get; set; }
 
     /// <summary>Whether the test has allowed the camera since Capture asked for it (entry 312 section 6).</summary>
     public bool Granted { get; set; }

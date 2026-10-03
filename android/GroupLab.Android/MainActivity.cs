@@ -89,6 +89,14 @@ public class MainActivity : AvaloniaMainActivity
 #if GROUPLAB_DEV
         // Entry 315 section 2: a scenario named by the extra, or waiting in files/scenario, read before the application starts.
         bool scenario = GroupLab.Mobile.Dev.Scenario.Prepare(FilesDir!.AbsolutePath, TestLoop(Intent) ?? Intent?.GetStringExtra(TestScenarioExtra));
+
+        // Entry 353: where GroupLab's view sits on the screen, in pixels, so a script tapping with adb's input taps where a control is.
+        GroupLab.Mobile.Dev.Scenario.ScreenPlace = () =>
+        {
+            int[] at = new int[2];
+            FindViewById(global::Android.Resource.Id.Content)?.GetLocationOnScreen(at);
+            return (at[0], at[1], true);
+        };
 #endif
         base.OnCreate(savedInstanceState);
         Shared(Intent);

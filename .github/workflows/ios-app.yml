@@ -707,6 +707,58 @@ jobs:
           [ "$failed" = 0 ] && echo "### The screen sweep visited every place and its pages on the simulator, plain, at the largest text size and dark." >> "$GITHUB_STEP_SUMMARY"
           exit $failed
 
+      # Entry 353 step 2: real taps. TestFlight build 157 ignored every tap on the Capture screen while a field had the focus, and the sweep
+      # above passed, because it presses buttons by raising their click and never goes through the screen's input. Here GroupLab Dev runs
+      # scripts/scenarios/phone-touch.json, which stops at each control to tap; scripts/touch-test.py reads where it is on the screen from
+      # GroupLab Dev's own record and has an XCUITest runner (scripts/touch/ios, made into a project by XcodeGen) press there for real:
+      # Take a picture, Choose a photo, Done on the caliber and distance row and Continue on the caliber's question, two of them with the
+      # keyboard up. The scenario's own steps then say whether each did its job, from what GroupLab Dev shows and logs afterwards. It runs
+      # even when the sweep failed, so the two answers come apart.
+      - name: Real taps
+        if: ${{ !cancelled() && env.UDID != '' }}
+        timeout-minutes: 40
+        run: |
+          brew install xcodegen > touch-xcodegen.log 2>&1 || { tail -20 touch-xcodegen.log; exit 1; }
+          xcodegen generate --spec scripts/touch/ios/project.yml --quiet
+          project=scripts/touch/ios/GroupLabTouch.xcodeproj
+          built="$RUNNER_TEMP/touch-build"
+          xcodebuild build-for-testing -project "$project" -scheme GroupLabTouch -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath "$built" > touch-build.log 2>&1 || { grep -E "error" touch-build.log | head -40; echo "::error::The XCUITest runner did not build"; exit 1; }
+          taps="$RUNNER_TEMP/taps"
+          rm -rf "$taps" && mkdir -p "$taps"
+          xcrun simctl ui "$UDID" appearance light || true
+          xcrun simctl ui "$UDID" content_size large || true
+          xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
+          data=$(xcrun simctl get_app_container "$UDID" org.grouplab.app.dev data)
+          folder="$data/Documents/scenario"
+          mkdir -p "$folder"
+          rm -rf "$folder/results" "$folder/scenario.json.ran"
+          TEST_RUNNER_GROUPLAB_TAPS="$taps" xcodebuild test-without-building -project "$project" -scheme GroupLabTouch \
+            -destination "platform=iOS Simulator,id=$UDID" -derivedDataPath "$built" -only-testing:TouchTests/TouchTests/testTaps > touch-runner.log 2>&1 &
+          runner=$!
+          start=$(date +%s)
+          until [ -f "$taps/ready" ]; do
+            if ! kill -0 "$runner" 2>/dev/null; then tail -40 touch-runner.log; echo "::error::The XCUITest runner ended before it could tap"; exit 1; fi
+            if [ $(( $(date +%s) - start )) -gt 300 ]; then tail -40 touch-runner.log; echo "::error::The XCUITest runner was not ready in 300 s"; exit 1; fi
+            sleep 2
+          done
+          echo "The XCUITest runner was ready after $(( $(date +%s) - start )) s"
+          # The scenario waits in Documents/scenario as the sweep's does; launching GroupLab Dev brings it in front of the runner.
+          cp scripts/scenarios/phone-touch.json "$folder/scenario.json"
+          xcrun simctl launch --console-pty "$UDID" org.grouplab.app.dev > touch-console.log 2>&1 &
+          launcher=$!
+          failed=0
+          python3 scripts/touch-test.py ios --data "$data" --taps "$taps" --pid "$launcher" --seconds 900 || failed=1
+          touch "$taps/stop"
+          xcrun simctl io "$UDID" screenshot touch-last.png > /dev/null || true
+          xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
+          wait "$runner" || echo "::warning::The XCUITest runner ended with an error; touch-runner.log has it"
+          mkdir -p touch
+          cp -R "$folder/results/." touch/ 2>/dev/null || true
+          python3 scripts/touch-test.py check touch scripts/scenarios/phone-touch.json || failed=1
+          [ "$failed" = 0 ] && echo "### Real taps on the simulator: Take a picture, Choose a photo, Done and Continue each did their job, with the keyboard up and down." >> "$GITHUB_STEP_SUMMARY"
+          exit $failed
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -716,6 +768,9 @@ jobs:
             sweep
             sweep-*-console.log
             sweep-*-last.png
+            touch
+            touch-*.log
+            touch-last.png
             dev-console.log
             dev-last-screen.png
             build-dev-simulator.log
