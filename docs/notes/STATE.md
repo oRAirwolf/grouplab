@@ -24,6 +24,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   (the X6 labels and check labels) on branch `worktree-agent-a2a1221f838518e94` (`.claude/worktrees/agent-a2a1221f838518e94`). Only their
   own test groups ran: run the three suites, the site build and consistency before cherry-picking. Not started: sections 4
   (printer framework), 6 (darkness) and 8 (public pages).
+- **Red, not yet looked at:** the Android emulator's real taps failed on 2cce12a1 (run of 11:14 UTC): Continue on the caliber
+  question not showing, the keyboard not up, and the picture picker not reached; 3fe07c31 and the two runs after it were green. First thing
+  next session, before any new block.
 - **Entry 359 is unread** (corrections, per entry 360's order after 358). **Entry 361 is on hold** at Alan's word (11:12 UTC: "We will look again tomorrow").
 - **Entry 360's hook has no finishing flag yet** (section 3): the session's safety check refused the change; Alan's to decide (for-alan.md).
 - **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 and 73 (the label
