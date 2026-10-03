@@ -1,5 +1,13 @@
 **Open: 19.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**THE WEEKLY BUDGET, ENTRY 360** (not a request): the hard stop is in place. A check runs before every action Code takes, workers
+included, and refuses to go on once the week reads **85%** or more; I stop starting anything at **80%**. The last real reading of your
+week is **60%**, from Claude Code's own record at 09:55 UTC on 3 October (window resets 8 October 02:00 UTC). The status line that
+should refresh that figure every minute does not run in this VS Code session (no reading appeared), so the number cannot be kept
+fresh here; as entry 360 says, I am finishing only the step in hand and starting nothing new. The worker on entry 358 stops at its next
+commit. To get live readings, start Code from a terminal (`claude` in C:\Dev\grouplab), where the status line runs; the stop works
+either way.
+
 **FOR FENIX, HIS TWO PHOTOS** (entry 354, not a request; to pass on): "Thanks for the two photos, they found three real problems. On the
 load development sheet GroupLab marked 32 spots for your 25 shots: the torn top corner and the curled top edge where the board showed
 through, the printed 'Print at actual size' line along the lifted bottom edge, and the bull numbers '25' and 'S2', which the photo's

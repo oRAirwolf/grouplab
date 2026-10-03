@@ -32,3 +32,6 @@ docs/notes/panel.md
 android/native/
 # OpenCV for iOS, fetched from the ios workflow's artifact for a build (entry 290); never committed.
 ios/native/
+
+# Entry 360: the weekly allowance as the status line last read it; local only.
+docs/notes/usage-now.json
