@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.164
+
+**2026-10-03**, commit `2cce12a`. Nightly.
+
+**Under the hood**
+
+- The window that says a picture's codes could not be read keeps the picture back, as the sending question promises, until sending every picture is switched on.
+- Error reports that carry GroupLab's log are built but switched off, waiting for the store privacy answers to be confirmed; a report holds what it held before.
+- Sending every picture you open is built but switched off, waiting for the store privacy answers to be confirmed; nothing GroupLab sends has changed.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.164)
+
+---
+
 ## 0.2.0-nightly.163
 
 **2026-10-03**, commit `0a815d2`. Nightly.
