@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.162
+
+**2026-10-03**, commit `e586e5b`. Nightly.
+
+**What you will notice**
+
+- A sheet made with GroupLab's target generator and printed without saving it now opens and reads: GroupLab takes the sheet's design from its own square codes, where before it refused the sheet.
+- When a sheet's codes name a sheet GroupLab cannot use, it now says so in plain words instead of saying the codes could not be read, and your own saved sheets are recognized from their codes as well.
+- On a photograph of a crinkled, curled or torn sheet, GroupLab no longer marks the torn corners, the curled edges, the board showing behind the paper or a bull's printed number as shots.
+- A hole beside one of the sheet's small square markers is no longer counted twice, once for the hole and once for the edge of the marker.
+- The review count now counts shots, so it never says more need review than there are, and when more marks are found than rounds fired the review starts with the marks on the sheet's own printing.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.162)
+
+---
+
 ## 0.2.0-nightly.161
 
 **2026-10-03**, commit `3fe07c3`. Nightly.
