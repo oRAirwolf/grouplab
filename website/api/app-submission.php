@@ -294,7 +294,7 @@ function package_problem(array $package): ?string
             return 'the package does not carry its picture code';
         }
         $follows = $submission['follows'] ?? null;
-        if ($follows !== null && (!is_string($follows) || !preg_match('/^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$/', $follows))) {
+        if ($follows !== null && (!is_string($follows) || !preg_match('/^(\d{4}-\d{2}-\d{2}_)?[0-9a-f]{8}$/', $follows))) {
             return 'the earlier version the package names is not a reference';
         }
     }
