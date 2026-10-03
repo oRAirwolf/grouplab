@@ -20,7 +20,8 @@ internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int Ori
 /// <summary>What one photograph came to: the marking, the sheet it was analyzed as, and why it stopped, where it did.</summary>
 internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
     GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null, PaperEdge? Paper = null,
-    TargetDefinition? LooksLike = null, StoreTargetSeen? Recognized = null, GroupLab.Core.Registration.OpeningOutcome? Opening = null);
+    TargetDefinition? LooksLike = null, StoreTargetSeen? Recognized = null, GroupLab.Core.Registration.OpeningOutcome? Opening = null,
+    GroupLab.Core.Registration.SheetLook? Look = null, string? PictureHash = null);
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 340: a store-bought target recognized in a picture that named no GroupLab sheet, and the working image's size
@@ -39,6 +40,19 @@ internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
 /// </summary>
 internal static class PhoneAnalysis
 {
+    /// <summary>The SHA-256 of a picture, how "not a GroupLab sheet" is remembered for it (entry 356 section 7); null where it cannot be read.</summary>
+    internal static string? PictureHash(string path)
+    {
+        try
+        {
+            return File.Exists(path) ? Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(path))) : null;
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+    }
+
     private static IReadOnlyList<TargetDefinition>? library;
 
     /// <summary>
@@ -255,9 +269,17 @@ internal static class PhoneAnalysis
 
             // Entry 356 section 5: a picture that looks like a GroupLab sheet and would not read is a problem; anything else is a target
             // GroupLab has not been told about, which is not one.
+            GroupLab.Core.Registration.SheetLook? lookSeen = null;
             var opening = seen is not null ? GroupLab.Core.Registration.OpeningOutcome.StoreTarget
                 : GroupLab.Core.Registration.SheetOpening.Decide(identity ?? new SheetIdentity(null, null, 0, 0, null), false,
-                    () => GroupLab.Core.Registration.SheetLook.Of(grey, backend, codesRead));
+                    () => lookSeen = GroupLab.Core.Registration.SheetLook.Of(grey, backend, codesRead));
+            // Entry 356 section 7: a picture the person said is not a GroupLab sheet is asked about calmly, as it was then.
+            string? hash = PictureHash(working.Path);
+            if (opening == GroupLab.Core.Registration.OpeningOutcome.LooksLikeGroupLab && hash is not null && Phone.Settings.LoadNotGroupLab(hash))
+            {
+                opening = GroupLab.Core.Registration.OpeningOutcome.NotGroupLab;
+            }
+
             DiagnosticLog.Info("phone.opening", ("outcome", opening.ToString()));
             if (opening == GroupLab.Core.Registration.OpeningOutcome.NotGroupLab)
             {
@@ -270,7 +292,8 @@ internal static class PhoneAnalysis
                 identity?.DefinitionId is { } named
                     ? $"GroupLab read the square codes: they name {named}, which is not among its sheets, and the description of the sheet they carry could not be read. Choose which sheet it is."
                     : "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
-                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike, Recognized: seen, Opening: opening);
+                null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike, Recognized: seen, Opening: opening,
+                Look: lookSeen, PictureHash: hash);
         }
 
         // Entry 271: a photograph is corrected for the printer chosen, where one has been measured.

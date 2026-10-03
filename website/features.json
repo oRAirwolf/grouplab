@@ -194,6 +194,30 @@
       "guide": "1-print-a-sheet"
     },
     {
+      "key": "problem-dialog",
+      "group": "Reading a target",
+      "name": "A problem said in the middle of the window",
+      "sentence": "A picture of a target GroupLab did not print is asked about calmly, Which target is this?, with marking it by hand first; one that has a GroupLab sheet's corner squares but whose codes would not read says so in the middle of the window, with the picture's codes outlined, Choose the sheet first, and Not a GroupLab sheet? remembered for that picture. Dismissed, an amber bar brings it back.",
+      "shot": "problem-dialog",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "mobile": {
+        "noPicture": "the phone's sheet in the middle of the screen is photographed at the next sitting with the phone"
+      },
+      "since": "next",
+      "note": [
+        "Opening a picture of a target GroupLab did not print is no longer treated as an error",
+        "When a GroupLab sheet's codes cannot be read"
+      ],
+      "tour": "marking",
+      "guide": "4-mark-it-and-settle-the-review-queue"
+    },
+    {
       "key": "add-store-target",
       "group": "Reading a target",
       "name": "Teach GroupLab a store-bought target",

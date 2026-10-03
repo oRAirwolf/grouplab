@@ -317,6 +317,36 @@ public sealed class AppSettingsStore(string path)
         file["familyAnswers"] = all;
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 356 section 7: the pictures the person said are not GroupLab sheets, by the SHA-256 of the file, so the
+    /// same picture opened again goes straight to "Which target is this?". Only the hashes are kept, the last <see cref="NotGroupLabKept"/>.
+    /// </summary>
+    public bool LoadNotGroupLab(string pictureHash) => Read(file => file["notGroupLab"] is JsonArray all && all.Any(h => (string?)h == pictureHash));
+
+    /// <summary>How many times "not a GroupLab sheet" has been chosen on a picture GroupLab took for one: the count that tunes the test.</summary>
+    public int LoadNotGroupLabCount() => Read(file => file["notGroupLabCount"]?.GetValueKind() == JsonValueKind.Number ? file["notGroupLabCount"]!.GetValue<int>() : 0);
+
+    /// <summary>Remembers a picture as not a GroupLab sheet, and counts the choice. No picture is kept or sent.</summary>
+    public bool SaveNotGroupLab(string pictureHash) => Save(file =>
+    {
+        var all = file["notGroupLab"] as JsonArray ?? [];
+        if (!all.Any(h => (string?)h == pictureHash))
+        {
+            all.Add(pictureHash);
+        }
+
+        while (all.Count > NotGroupLabKept)
+        {
+            all.RemoveAt(0);
+        }
+
+        file["notGroupLab"] = all;
+        file["notGroupLabCount"] = (file["notGroupLabCount"]?.GetValueKind() == JsonValueKind.Number ? file["notGroupLabCount"]!.GetValue<int>() : 0) + 1;
+    });
+
+    /// <summary>The most pictures remembered as not GroupLab sheets.</summary>
+    public const int NotGroupLabKept = 200;
+
     /// <summary>Entry 273: whether a number has ever been tapped to switch units; the one-time hint shows until one has.</summary>
     public bool LoadUnitTapped() => Read(file => file["unitTapped"]?.GetValueKind() == JsonValueKind.True);
 

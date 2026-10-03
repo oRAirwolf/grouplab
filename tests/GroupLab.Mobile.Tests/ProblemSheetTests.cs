@@ -63,4 +63,51 @@ public class ProblemSheetTests
         Assert.Contains(view.GetLogicalDescendants().OfType<Button>(), b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "result-mark-by-hand");
         window.Close();
     }
+
+    /// <summary>
+    /// Board "B, final candidate, on a phone": a GroupLab sheet whose codes would not read, stacked, Choose the sheet first; "Store-bought or
+    /// hand-drawn" is remembered for the picture and counted, and the same picture is asked about calmly from then on.
+    /// </summary>
+    [AvaloniaFact]
+    public void ASheetWhoseCodesWouldNotReadSaysSoAndNotOursIsRemembered()
+    {
+        if (Phone.Platform is null)
+        {
+            Phone.Start(ThePhone, Avalonia.Application.Current!, () => "US", null);
+        }
+
+        var definition = GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(Repo.PathTo("targets", "GL-RF25-LTR.gltd.json")).Definition!;
+        var page = GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0];
+        var codeless = page with { Items = [.. page.Items.Where(i => i.Layer != GroupLab.Core.Rendering.SceneLayer.Codes)] };
+        var render = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(codeless, 200);
+        string copy = Path.Combine(ThePhone.CacheFolder, $"codeless-356-{Guid.NewGuid():N}.png");
+        using (var mat = Mat.FromPixelData(render.Height, render.Width, MatType.CV_8UC1, render.Pixels))
+        {
+            Cv2.ImWrite(copy, mat);
+        }
+
+        var setup = new ShotSetup(Calibre.Of(0.308), 3600);
+        var result = PhoneAnalysis.Run(copy, setup, UnitSettings.Imperial, null, CancellationToken.None);
+        Assert.Equal(OpeningOutcome.LooksLikeGroupLab, result.Opening);
+
+        var window = new Avalonia.Controls.Window { Width = 390, Height = 844, FontSize = 16 };
+        var view = new ResultView(result, setup, UnitSettings.Imperial, () => { });
+        window.Content = view;
+        window.Show();
+        Settle();
+        Assert.Contains(OpeningWords.CodesTitle, view.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text));
+        var ids = view.GetLogicalDescendants().OfType<Button>().Select(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b)).ToList();
+        Assert.Equal(["problem-choose-sheet", "problem-take-again", "problem-not-grouplab", "problem-more-choices"], ids.Where(i => i?.StartsWith("problem-", StringComparison.Ordinal) == true));
+
+        int before = Phone.Settings.LoadNotGroupLabCount();
+        view.GetLogicalDescendants().OfType<Button>().First(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "problem-not-grouplab")
+            .RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Settle();
+        Assert.Contains(OpeningWords.WhichTitle, view.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text));
+        Assert.Equal(before + 1, Phone.Settings.LoadNotGroupLabCount());
+        window.Close();
+
+        var again = PhoneAnalysis.Run(copy, setup, UnitSettings.Imperial, null, CancellationToken.None);
+        Assert.Equal(OpeningOutcome.NotGroupLab, again.Opening);
+    }
 }

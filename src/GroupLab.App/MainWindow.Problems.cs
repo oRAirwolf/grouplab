@@ -38,6 +38,9 @@ public sealed partial class MainWindow
     /// <summary>The choices of the dialog open now, as their buttons say them, for the headless tests.</summary>
     internal IReadOnlyList<string> ProblemChoices => [.. problemChoices.Select(c => c.Label)];
 
+    /// <summary>Every button of the dialog open now, its × included, for the headless tests.</summary>
+    internal IReadOnlyList<Button> ProblemButtons => [.. problemLayer.GetLogicalDescendants().OfType<Button>()];
+
     /// <summary>Whether a dialog is open in the middle of the window.</summary>
     internal bool ProblemOpen => problemLayer.IsVisible;
 
@@ -45,6 +48,35 @@ public sealed partial class MainWindow
     {
         problemLayer.Background = new SolidColorBrush(Tokens.Scrim);
         return problemLayer;
+    }
+
+    /// <summary>
+    /// The layer moved, once, into the window's overlay, which is drawn over everything in the window: the side columns' scrolling panels
+    /// were drawn over a layer that was only last among the window's children. It follows the window's size from then on.
+    /// </summary>
+    private void RaiseProblemLayer()
+    {
+        if (problemLayer.Parent is Avalonia.Controls.Primitives.OverlayLayer || Avalonia.Controls.Primitives.OverlayLayer.GetOverlayLayer(this) is not { } overlay)
+        {
+            return;
+        }
+
+        (problemLayer.Parent as Panel)?.Children.Remove(problemLayer);
+        overlay.Children.Add(problemLayer);
+        void Fit()
+        {
+            problemLayer.Width = ClientSize.Width;
+            problemLayer.Height = ClientSize.Height;
+        }
+
+        Fit();
+        PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ClientSizeProperty)
+            {
+                Fit();
+            }
+        };
     }
 
     /// <summary>Presses the named choice of the dialog open now, as a click does, for the headless tests and the keyboard.</summary>
@@ -147,7 +179,15 @@ public sealed partial class MainWindow
         ProblemTitle = title;
         problemChoices = choices;
         problemDismissed = dismissed;
+        // Centred over the picture, clear of the right column where the window is wide enough, as the boards place it over the sheet: the
+        // headless renderer drew the right column's scrolling panel over anything laid across it.
+        if (ClientSize.Width - Tokens.RightColumnWidth - 64 >= card.Width + Tokens.Space24)
+        {
+            card.Margin = new Thickness(0, 0, Tokens.RightColumnWidth, 0);
+        }
+
         problemLayer.Children.Add(card);
+        RaiseProblemLayer();
         problemLayer.IsVisible = true;
         DiagnosticLog.Info("problem.open", ("title", title), ("choices", choices.Count));
         Avalonia.Threading.Dispatcher.UIThread.Post(() => card.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b => !b.Classes.Contains(AppStyles.Link))?.Focus());

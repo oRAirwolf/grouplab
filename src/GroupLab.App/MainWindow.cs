@@ -1164,10 +1164,14 @@ public sealed partial class MainWindow : Window
         // Entry 123 section 2: the update bar sits under the header, above the work, so it is seen without covering anything.
         var updateLine = BuildUpdateBar();
         DockPanel.SetDock(updateLine, Dock.Top);
+        // Entry 356 section 6: a dismissed problem leaves its amber bar here, under the header, with the way back to it.
+        var problemLine = BuildProblemBar();
+        DockPanel.SetDock(problemLine, Dock.Top);
         DockPanel.SetDock(statusBar, Dock.Bottom);
         DockPanel.SetDock(workBar, Dock.Bottom);
         dock.Children.Add(header);
         dock.Children.Add(updateLine);
+        dock.Children.Add(problemLine);
         dock.Children.Add(statusBar);
         dock.Children.Add(workBar);
         dock.Children.Add(body);
@@ -1766,6 +1770,9 @@ public sealed partial class MainWindow : Window
         // A new image is a new session. Found by entry 243: opening a second sheet by Open, drop or paste kept the first one's session, and
         // analyzing the second saved it over the first. Reopening a saved session sets it again after this.
         currentSession = null;
+        // Entry 356: a new picture leaves no problem of the last one open, and reading harder is offered afresh.
+        ForgetSheetProblem();
+        readHarderRan = false;
         OpenCvSharp.Cv2.ImEncode(".png", colourImage, out byte[] png);
         using var stream = new MemoryStream(png);
         grey = image;
@@ -2164,7 +2171,7 @@ public sealed partial class MainWindow : Window
 
             if (outcome == OpeningOutcome.LooksLikeGroupLab)
             {
-                OfferTheSheet(g, v, m, identity.Failure, identity.DefinitionId);
+                ShowSheetProblem(g, v, m, identity, look);
             }
             else
             {
@@ -2233,6 +2240,7 @@ public sealed partial class MainWindow : Window
 
         var chosen = pendingSheets[Math.Min(sheetChoice.SelectedIndex, pendingSheets.Count - 1)];
         sheetChooser.IsVisible = false;
+        ForgetSheetProblem();
         pendingDetection = null;
         problem.Text = "";
         status.Text = $"Registering and detecting as {chosen.Name}…";
@@ -3647,7 +3655,10 @@ public sealed partial class MainWindow : Window
     private void ShowWorkAttention()
     {
         int failed = stages.Count(r => r.Status == StageStatus.Failed), degraded = stages.Count(r => r.Status == StageStatus.Degraded);
-        string label = workShown || failed + degraded == 0
+        // Entry 356 section 2: a dismissed problem is named by Show work, the way back to what went wrong.
+        failed = sheetProblem is not null ? Math.Max(1, failed) : failed;
+        string label = !workShown && sheetProblem is not null ? OpeningWords.ShowWorkSays
+            : workShown || failed + degraded == 0
             ? "Show work"
             : failed > 0
                 ? $"Show work: {failed} stage{(failed == 1 ? "" : "s")} failed"

@@ -59,7 +59,7 @@ public class ProblemDialogTests
             Assert.Equal(OpeningWords.WhichTitle, window.StatusText);
 
             // Every button in the dialog has a name to be read out.
-            var buttons = window.GetLogicalDescendants().OfType<Button>().Where(b => b.FindLogicalAncestorOfType<Border>() is { } card && card.Classes.Contains(Theme.AppStyles.ProblemCard)).ToList();
+            var buttons = window.ProblemButtons;
             Assert.True(buttons.Count >= 4);
             Assert.All(buttons, b => Assert.False(string.IsNullOrWhiteSpace(AutomationProperties.GetName(b))));
 
@@ -89,6 +89,60 @@ public class ProblemDialogTests
             Dispatcher.UIThread.RunJobs();
             Assert.False(window.ProblemOpen);
             Assert.Null(window.Session.State.Scale);
+            window.Close();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>A GroupLab sheet with its codes left out of the print, written as a file: it looks like a sheet and its codes cannot read.</summary>
+    private static string CodelessSheet()
+    {
+        var definition = GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(Path.Combine(AppContext.BaseDirectory, "targets", "GL-RF25-LTR.gltd.json")).Definition!;
+        var page = GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0];
+        var codeless = page with { Items = [.. page.Items.Where(i => i.Layer != GroupLab.Core.Rendering.SceneLayer.Codes)] };
+        var render = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(codeless, 200);
+        string path = Path.Combine(Path.GetTempPath(), $"grouplab-codeless-{Guid.NewGuid():N}.png");
+        using var mat = Mat.FromPixelData(render.Height, render.Width, MatType.CV_8UC1, render.Pixels);
+        Cv2.ImWrite(path, mat);
+        return path;
+    }
+
+    /// <summary>
+    /// Section 7: "Not a GroupLab sheet?" is remembered for that picture and counted, nothing sent; the same picture opened again goes
+    /// straight to the calm question. Every button of board B has a name a screen reader says.
+    /// </summary>
+    [AvaloniaFact]
+    public void NotAGroupLabSheetIsRememberedForThePictureAndCounted()
+    {
+        string path = CodelessSheet();
+        try
+        {
+            var window = Opened(path);
+            Assert.Equal(OpeningOutcome.LooksLikeGroupLab, window.LastOpening);
+            Assert.Equal(OpeningWords.CodesTitle, window.ProblemTitle);
+            var buttons = window.ProblemButtons;
+            Assert.All(buttons, b => Assert.False(string.IsNullOrWhiteSpace(AutomationProperties.GetName(b))));
+            Assert.Contains(buttons, b => AutomationProperties.GetName(b) == OpeningWords.ShowWhatWentWrong);
+
+            window.PressProblemChoice(OpeningWords.StoreOrDrawn);
+            Assert.Equal(OpeningWords.WhichTitle, window.ProblemTitle);
+            Assert.False(window.ProblemBarShown);
+            Assert.Equal(1, window.Settings.LoadNotGroupLabCount());
+
+            window.DismissProblem();
+            window.OpenImage(path);
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            while (window.DetectionTask is { IsCompleted: false } && clock.Elapsed < TimeSpan.FromSeconds(120))
+            {
+                Dispatcher.UIThread.RunJobs();
+                Thread.Sleep(10);
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(OpeningWords.WhichTitle, window.ProblemTitle);
             window.Close();
         }
         finally

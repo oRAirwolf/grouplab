@@ -69,6 +69,69 @@ public sealed class ResultView : UserControl
         return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.WhichTitle, body, [byHand, store, sheet], Back);
     }
 
+    /// <summary>
+    /// Entry 356 section 7, board "B, final candidate, on a phone", stacked: the stages with "Looks like a GroupLab sheet" ticked, the sheet it
+    /// looks like where the markers and the drawing say, Choose the sheet in amber, Take it again, then "Not a GroupLab sheet?" with
+    /// Store-bought or hand-drawn, and More choices, which is everything behind the sheet.
+    /// </summary>
+    private Control SheetProblem(Control behind, PhoneResult result, WorkingImage working, ShotSetup setup, UnitSettings units, Action again)
+    {
+        void Back()
+        {
+            Content = null;
+            (behind.Parent as Panel)?.Children.Remove(behind);
+            Content = behind;
+        }
+
+        int of = Math.Max(GroupLab.Core.Registration.OpeningWords.CornerCodes, result.Look?.Codes.Count ?? 0);
+        var stages = new StackPanel { Spacing = 6 };
+        foreach (var (mark, words, dim) in new[]
+        {
+            ("✓", GroupLab.Core.Registration.OpeningWords.LooksLikeGroupLab, false),
+            ("✕", GroupLab.Core.Registration.OpeningWords.CornerCodesStage(0, of), false),
+            ("○", GroupLab.Core.Registration.OpeningWords.WhichSheetThenHoles, true),
+        })
+        {
+            stages.Children.Add(dim ? Screens.Quiet($"{mark}  {words}") : Screens.Line($"{mark}  {words}"));
+        }
+
+        var body = new StackPanel { Spacing = 11 };
+        body.Children.Add(Screens.Card(stages));
+        if (result.LooksLike is { } likely)
+        {
+            body.Children.Add(Screens.Line(GroupLab.Core.Registration.OpeningWords.LooksLikeName(likely.Name)));
+        }
+
+        var choose = ProblemSheet.Choice(GroupLab.Core.Registration.OpeningWords.ChooseSheet, Back, primary: true).Id("problem-choose-sheet");
+        var take = ProblemSheet.Choice(GroupLab.Core.Registration.OpeningWords.TakeAgain, () =>
+        {
+            PhoneAnalysis.Discard(result.Image);
+            again();
+        }).Id("problem-take-again");
+        var notOurs = ProblemSheet.Choice(GroupLab.Core.Registration.OpeningWords.StoreOrDrawnShort, () =>
+        {
+            // Remembered for this picture and counted; no picture is sent.
+            if (result.PictureHash is { } hash)
+            {
+                Phone.Settings.SaveNotGroupLab(hash);
+            }
+
+            GroupLab.App.Diagnostics.DiagnosticLog.Info("phone.not-grouplab", ("count", Phone.Settings.LoadNotGroupLabCount()));
+            Back();
+            var choicesPage = (Control)Content!;
+            Content = null;
+            Content = WhichTargetIsThis(choicesPage, working, setup, units, again);
+        }).Id("problem-not-grouplab");
+        var more = ProblemSheet.Choice(GroupLab.Core.Registration.OpeningWords.MoreChoices, Back).Id("problem-more-choices");
+        body.Children.Add(choose);
+        body.Children.Add(take);
+        body.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(90, 128, 128, 128)) });
+        body.Children.Add(Screens.Quiet(GroupLab.Core.Registration.OpeningWords.NotGroupLab));
+        body.Children.Add(notOurs);
+        body.Children.Add(more);
+        return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.CodesTitle, body, [choose, take, notOurs, more], Back);
+    }
+
     internal ResultView(PhoneResult result, ShotSetup setup, UnitSettings units, Action again)
     {
         // Entry 273: a tap on any number switches units everywhere; this result shows them again.
@@ -127,6 +190,13 @@ public sealed class ResultView : UserControl
                 var choicesPage = (Control)Content!;
                 Content = null;
                 Content = WhichTargetIsThis(choicesPage, unknown, setup, units, again);
+            }
+            else if (result.Opening == GroupLab.Core.Registration.OpeningOutcome.LooksLikeGroupLab && result.Image is { } sheetLike)
+            {
+                // Entry 356 section 7, board "B, final candidate, on a phone": it looks like a GroupLab sheet and its codes would not read.
+                var choicesPage = (Control)Content!;
+                Content = null;
+                Content = SheetProblem(choicesPage, result, sheetLike, setup, units, again);
             }
 
             // Entry 340 section 1: a store-bought target GroupLab knows goes straight to marking it, its bulls placed and its printed size as

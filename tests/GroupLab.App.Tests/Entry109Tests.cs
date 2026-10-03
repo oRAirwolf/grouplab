@@ -456,6 +456,32 @@ public class Entry109Tests
                             GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(bought)!);
                         }
 
+                        // Entry 356, board B: a GroupLab sheet whose corner codes would not read, said in the middle of the window, and
+                        // board "Not an error", the calm question for a target GroupLab does not know.
+                        string codeless = CodelessSheet();
+                        try
+                        {
+                            window.OpenImage(codeless);
+                            Dispatcher.UIThread.RunJobs();
+                            window.ShowSheetProblemForScreens("GL-RF25-LTR");
+                            window.Canvas.FitToView();
+                            Save(window, $"problem-dialog-{name}-{size}");
+                            window.DismissProblem();
+                            Save(window, $"problem-dismissed-{name}-{size}");
+                            window.ShowWhichTargetForScreens();
+                            Save(window, $"which-target-{name}-{size}");
+                            window.DismissProblem();
+                        }
+                        finally
+                        {
+                            window.OpenImage(path);
+                            window.ApplyDetection(synthetic);
+                            window.Session.SetCalibre(Calibre.Of(0.308));
+                            window.Session.SetShotDistance(3600);
+                            window.Session.SetEquipment(rifle, null, "Test load");
+                            File.Delete(codeless);
+                        }
+
                         window.CalibreAnswered();
                         window.Analyse();
                         window.SetEveryWhy(false);
@@ -749,6 +775,19 @@ public class Entry109Tests
     /// Entries 340 and 341: a stand-in for a store-bought bullseye, drawn by GroupLab with nothing of any maker's artwork: a black disc with
     /// light rings and a red center on plain paper, with its own words, so the picture of recognition publishes no one else's printing.
     /// </summary>
+    /// <summary>Entry 356: a GroupLab sheet printed without its codes, at 200 dpi, for the problem dialog's picture.</summary>
+    private static string CodelessSheet()
+    {
+        var definition = GltdJsonReader.ReadFile(Path.Combine(AppContext.BaseDirectory, "targets", "GL-RF25-LTR.gltd.json")).Definition!;
+        var page = GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0];
+        var codeless = page with { Items = [.. page.Items.Where(i => i.Layer != GroupLab.Core.Rendering.SceneLayer.Codes)] };
+        var render = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(codeless, 200);
+        string path = Path.Combine(Path.GetTempPath(), $"grouplab-codeless-{Guid.NewGuid():N}.png");
+        using var mat = Mat.FromPixelData(render.Height, render.Width, MatType.CV_8UC1, render.Pixels);
+        Cv2.ImWrite(path, mat);
+        return path;
+    }
+
     private static string StoreTargetStandIn()
     {
         string folder = Path.Combine(Path.GetTempPath(), $"grouplab-standin-{Guid.NewGuid():N}");

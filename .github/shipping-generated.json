@@ -67,6 +67,7 @@
     "src/GroupLab.App/MainWindow.Saving.cs",
     "src/GroupLab.App/MainWindow.Sending.cs",
     "src/GroupLab.App/MainWindow.SessionFiles.cs",
+    "src/GroupLab.App/MainWindow.SheetProblem.cs",
     "src/GroupLab.App/MainWindow.ShotsPerBull.cs",
     "src/GroupLab.App/MainWindow.ShotsToZero.cs",
     "src/GroupLab.App/MainWindow.StoreTargets.cs",

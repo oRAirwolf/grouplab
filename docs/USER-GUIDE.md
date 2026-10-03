@@ -133,6 +133,15 @@ Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sh
 3. It finds the holes by comparing the image with the sheet as printed.
 4. It gives each hole to a bull.
 
+**When a picture names no sheet.** A picture of a target GroupLab did not print is not a mistake: GroupLab asks **Which target is this?**
+in the middle of the window, with **Mark it by hand** first (one true length: the sheet's size, a ring, or a ruler in the picture),
+**It is a store-bought target**, and **It is a GroupLab sheet**. A picture that has a GroupLab sheet's corner squares or codes, but whose
+codes would not read, says so in the middle of the window instead: the picture with its corner codes outlined, what got done and what did
+not, and **Choose the sheet** first, then **Mark it by hand**; under a line, **Not a GroupLab sheet?** for a store-bought or hand-drawn
+target, which GroupLab remembers for that picture; and **Show what went wrong**. Dismissed with Escape or its ×, it leaves an amber bar
+under the header with **Choose the sheet** and **All choices**, and Show work says **codes not read**. In any such window Enter takes the
+first choice and Escape closes it.
+
 Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners again and enter the new size, or choose the length or rectangle tool and **Change the length of the scale in use**; every figure follows. Typing a caliber offers the calibers and cartridges that match, with spacing and points forgiven, so "65 creed" finds 6.5 Creedmoor, and choosing one from the list, with a click or with Enter, sets it at once. **Caliber box shows** in Settings, the same on the phone, chooses what the list offers: **Calibers**, the bullet diameters with their usual names, such as .308 (7.62 mm, .30); **Cartridges**, the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or **Both**, calibers first and then cartridges, which is where it starts. Any other diameter can still be typed in inches or in millimeters.
 
 With the rectangle tool, **Find the paper's edges** places the four corners on the paper itself when the sheet stands out from what is
@@ -445,8 +454,10 @@ take you to either in one press, the one showing in the highlight color, and the
 is read, the line under it names the step it is on, and **Cancel** stops it at once, at any step: Capture shows again with the picture
 kept, to **Read it again**, **Choose which sheet it is** or **Forget it**. A reading that has not finished after a minute stops by itself,
 says what it was trying to read, and offers the sheets to choose from; time with the screen locked does not count, and a reading carries
-on when you come back to it. When a picture's square codes cannot be read,
-GroupLab says which sheet it looks like, for you to confirm or choose another.
+on when you come back to it. When a picture's square codes cannot be read, a sheet in the middle of the screen says so: what it got done,
+the sheet it looks like, **Choose the sheet**, **Take it again**, and **Store-bought or hand-drawn** for a target GroupLab did not print,
+which it remembers for that picture. A picture with no GroupLab marks at all asks **Which target is this?** instead, calmly, with **Mark it
+by hand** first.
 
 **Show diagnostics on the camera.** Settings, About, **Show diagnostics on the camera** is off until you turn it on, on Android, iPhone
 and iPad alike. With it on, a small block of numbers sits in the bottom corner of the camera: how many frames a second the camera is
@@ -509,7 +520,7 @@ tab of its own: the dope, the trajectory and the chance of a hit. Targets prints
 PDF, and prints the printer check page; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
-**A target GroupLab did not print** is marked by hand: when its codes cannot be read, choose **Not a GroupLab sheet: mark it by hand**. The
+**A target GroupLab did not print** is marked by hand: choose **Mark it by hand** when GroupLab asks which target it is. The
 picture moves under a crosshair that stays in the middle: set the two ends of a length you know and type it, set the aim point, then
 **Add hole here** on each hole, with **Undo**. A mark under the crosshair can be removed; once the scale is known the crosshair's ring is
 your bullet's size. In GroupLab Dev, the development build, **Find holes (Experimental)** at the holes proposes them, as on the computer:

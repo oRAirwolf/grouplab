@@ -241,7 +241,19 @@ public class Entry115Tests
             await window.DetectionTask!;
             Settle();
 
+            // Entry 356: a sheet that looks like a GroupLab sheet and would not read says so in the middle of the window, board B, with
+            // Choose the sheet first. Dismissed, the amber bar stays and Show work names it.
+            Assert.Equal(GroupLab.Core.Registration.OpeningOutcome.LooksLikeGroupLab, window.LastOpening);
+            Assert.Equal("GroupLab could not read this sheet's codes", window.ProblemTitle);
+            Assert.Equal("Choose the sheet", window.ProblemChoices[0]);
+            Assert.Contains("Mark it by hand", window.ProblemChoices);
+            Assert.Contains("It is a store-bought or hand-drawn target", window.ProblemChoices);
+            window.DismissProblem();
+            Assert.True(window.ProblemBarShown);
+            Assert.Equal("Show work: codes not read", window.WorkBar.Label);
+
             // It asks which sheet, by name, and says why, rather than stopping with the identity as the reason.
+            window.ChooseSheetFromBar();
             Assert.True(window.AskingWhichSheet);
             Assert.Equal("GroupLab could not read this sheet's codes. Which sheet is it?", window.StatusText);
             var texts = window.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
@@ -257,6 +269,7 @@ public class Entry115Tests
             Assert.True(window.Session.State.Shots.Count(s => s.IsShot) >= 20, $"{window.Session.State.Shots.Count} marks");
             Assert.NotNull(window.Session.State.Scale);
             Assert.StartsWith("Detected ", window.StatusText, StringComparison.Ordinal);
+            Assert.False(window.ProblemBarShown);
             window.Close();
         }
         finally
