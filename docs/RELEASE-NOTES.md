@@ -469,7 +469,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - On iPhone and iPad the torch on Auto now comes on gently, steps up only while the paper is dim, and dims or goes off on glare.
 - The iPhone and iPad test run follows the new Capture start with Choose a photo and its links.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.134)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
