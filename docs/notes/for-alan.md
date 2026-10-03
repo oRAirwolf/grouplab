@@ -1,4 +1,4 @@
-**Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 19.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **FOR FENIX, HIS TWO PHOTOS** (entry 354, not a request; to pass on): "Thanks for the two photos, they found three real problems. On the
 load development sheet GroupLab marked 32 spots for your 25 shots: the torn top corner and the curled top edge where the board showed
@@ -123,6 +123,34 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 73. When the Phomemo M834 arrives: two recordings from your Android phone, about twenty minutes, that day or later (entry 358)
+
+**Opened 2026-10-03.** **Why:** Phomemo publishes nothing about how the M834 talks, so GroupLab learns it from one page printed by
+Phomemo's own app while the phone records the Bluetooth traffic. Nothing is sent anywhere; you copy two files to this computer.
+**Steps:**
+1. **The scan.** Install **nRF Connect for Mobile** (Nordic Semiconductor) from Google Play. Turn the M834 on. Open nRF Connect, tab
+   **Scanner**, press **Scan**. Find the printer in the list (its name may be a code or a serial number rather than "M834"; it is the
+   entry whose signal grows strong when the phone is next to it). Press **Connect** on it. When the list of services appears, press
+   the three dots at the top right, **Save** or **Share** the log, and save it as a file. If it never appears in nRF Connect, say so:
+   that tells us it uses classic Bluetooth instead.
+2. **The recording.** On the phone, Settings, About phone, tap **Build number** seven times to unlock Developer options (skip if done).
+   Settings, Developer options, turn on **Enable Bluetooth HCI snoop log**. Turn Bluetooth off and on again. Open the **Phomemo app**,
+   print **one** page with a little text on it, and nothing else. Back in Developer options, turn the snoop log **off**.
+3. **Getting the recording off the phone.** Connect the phone to this computer with the cable (USB debugging on, as for GroupLab Dev),
+   and in PowerShell run: `adb bugreport C:\Dev\grouplab-local\printers\m834-bugreport.zip`. It takes a minute or two. Copy the nRF
+   Connect file into the same folder.
+**A good answer:** "both saved in grouplab-local\printers", or what went differently.
+
+## 72. When the 4x6 Bluetooth label printer arrives: one scan from your phone, about five minutes, that day or later (entry 358)
+
+**Opened 2026-10-03.** **Why:** GroupLab will print straight to it over Bluetooth, with no maker's app. To do that it must know how the
+printer appears to a phone: as a Bluetooth LE device (which an iPhone can use) or only as classic Bluetooth. **Steps:** install **nRF
+Connect for Mobile** (Nordic Semiconductor) from Google Play or the App Store; turn the printer on; in nRF Connect, **Scanner**, **Scan**;
+find the printer (it may show a code or serial number rather than its model; it is the one whose signal grows strongest next to the
+phone); press **Connect**; when its services are listed, take a screenshot of the list, scroll and take another until all are captured,
+and save them in `C:\Dev\grouplab-local\printers\`. If it never appears in nRF Connect, say so: that means classic Bluetooth only.
+**A good answer:** "screenshots saved", or "it does not appear".
 
 ## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
 
