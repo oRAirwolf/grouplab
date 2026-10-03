@@ -5092,6 +5092,10 @@
   "A file larger than 10 MB, a workbook that would unpack to far more than any export, or a damaged file is refused with a sentence saying why, and a formula in a cell is never worked out.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Records/ChronographFiles.cs MostBytes, MostUnpackedBytes, ReadFile and Unpacks; held by tests/GroupLab.Core.Tests/Records/UntrustedFilesTests.cs (entry 352 item 3)"
+  },
+  "Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sending.cs OfferToSend (entries 165 and 355); the phone has no sender yet (entry 357, question 81)"
   }
  },
  "rules": [

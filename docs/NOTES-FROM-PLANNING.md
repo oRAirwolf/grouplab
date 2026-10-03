@@ -25,6 +25,76 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-03, entry 357: a second sending level, "everything I open", and error reports that carry the log
+
+**Status: built 2026-10-03 behind two switches, both off (one worker, three commits); switching on waits for Alan (request 71).** With them off the build sends and says exactly what it did. Not done: the phone has no target sender at all (question 81), so "Send everything I open" sends nothing from a phone; the receivers ship with the next site publish, the intake, archive and error workers change only when Alan runs install.py. Found on the way: entry 356's "Send it to the project" broke the promise that an unread picture is never sent, and now waits behind the switch; "What GroupLab sends" called automatic error reports not yet switched on, and CRASH-REPORTING.md said nothing is sent silently, both corrected; typed-text removal goes by field name, so a library's exception quoting typed words would still pass.
+
+Alan, 2026-10-03 05:17 UTC, after reading the answers to entry 355: "Maybe give the user an option to upload anything opened in
+grouplab and as much data as is generated during the workflow or to only upload once it has been completely analyzed? Shouldn't an
+error report send detailed log files as well?" Fenix's case (entries 354 and 355) is the reason: he had automatic sending on, and the
+two pictures we most needed (a sheet that never read, and one he stopped reviewing) were the two that could not be sent. Main model.
+Do it after entries 354 and 356, since section 1 here meets section 2 of 356 ("Send this picture to the project").
+
+### 1. Sending targets: two automatic levels instead of one
+
+The sending question (first run screen and Settings, under Sharing; desktop and phone alike) becomes:
+
+- **Send everything I open, to help improve GroupLab** (new). Every picture opened in GroupLab is sent, whether or not it was read,
+  finished or accepted, with everything GroupLab worked out along the way: every stage record, the failed stage and its reason, what
+  was detected, the person's corrections so far, what they entered, the problem dialog shown and the choice made, and the session log
+  for that picture (file names reduced to the usual code). It goes when the person leaves the picture (opens another, closes it, or
+  quits), and at the next start after a crash. If the same picture is later accepted, the finished version goes too, linked to the
+  first as one submission, never as a duplicate.
+- **Send finished targets only** (the current "Send every target automatically", renamed so the difference is plain): sent at Accept
+  and analyze, exactly as today.
+- **Ask me each time**: as today, and also when a picture fails to read (the problem dialog's "Send this picture to the project" is
+  that question).
+- **Never**: as today.
+
+Rules that go with the new level:
+- The words must say plainly that it means every picture, even one GroupLab could not read and even one that is not a target. Give
+  the picture's menu a "Do not send this picture" that works until the picture is left, so someone who opens the wrong photo can stop
+  it.
+- On a phone, the new level waits for Wi-Fi by default (a lossless PNG of a phone photo is large), with a switch to allow mobile
+  data. The 30 MB limit and the seven days of retries stay.
+- "May be published" still means only after review. An unread or unfinished picture is never published on its own; it is a test case.
+- **Nobody is moved silently.** Everyone who chose "Send every target automatically" stays on finished targets only. Show those people
+  the new choice once, as a question (not a default), the next time they open Settings or start the app, whichever comes first.
+- The receiver, the intake rebuild and the archive must accept a submission with no accepted result (a state such as "unread",
+  "stopped at review", "accepted") and the pull script must show that state. The scoreboard intake sorts them the same way.
+
+### 2. Error reports carry the log
+
+Today the automatic report (ErrorReports.cs, entry 194) carries only the names of the last twenty events, while "Report a problem"
+already sends the full log. Make the automatic report carry the same log as "Report a problem": this run's log and the previous run's,
+the stage records and the crash record, inside the existing 2 MB cap and the server's file list (CRASH-REPORTING.md section 1).
+
+- Paths stay a salted hash and file names stay a code, as now. Still never an image, a location or a settings file.
+- Free text the person typed (notes, session names, a description, a credit name) is replaced in the log by its length before the
+  report is built; numbers they entered (caliber, distance, rounds) may stay, since they are what a failure is usually about. Check
+  every log event for typed text and add a test that a report built from a log containing typed notes carries none of them.
+- Under "Send everything I open", a failed read counts as an event worth a report: send one with the picture's stage records, so the
+  report and the picture's submission can be matched by a shared code.
+- The same rule as section 1: everyone who chose automatic error reports under the old, thinner wording is asked once more under the
+  new wording before anything larger goes.
+
+### 3. Words and promises to bring up to date in the same change
+
+- ErrorReports.WhatIsSent, SharingWords.cs, the first run screen and Settings on desktop and phone.
+- The "What GroupLab sends" page (RELEASE-PLAN.md item 4: it must list everything the build can send, and nothing else),
+  docs/CRASH-REPORTING.md, the privacy policy in docs/store/LISTING.md.
+- Apple's App Privacy answers in App Store Connect, Google Play's Data safety form and the Microsoft Store listing: compare each with
+  what the build will now send. If any needs changing, that is a request for Alan with the exact answers to choose, and the build that
+  sends more does not go to TestFlight, Play or the Store until he says it is done.
+- Release note: "Settings now offer to send every picture you open, even ones GroupLab could not read, to help fix reading problems.
+  Error reports now include GroupLab's log, with typed text removed. Nobody's choice changes without being asked." (adjust to fit)
+
+### 4. Tell Alan
+
+In for-alan.md, in plain words: the four choices as a person will see them, exactly what each sends, and what an error report now
+holds. If anything here would weaken a promise already made somewhere (a page, a store answer, the first run screen), stop at that
+point and ask in for-alan.md rather than changing the promise.
+
 ## 2026-10-03, entry 356: a failure that stops the work is said in the middle of the screen, with what to do next
 
 **Status: done 2026-10-03 (one worker, four commits), except two parts.** Not done: the phone half of section 3, since the phone has no status line and its failures sit as a line on each page, so making them centred sheets is page by page and left for a later entry; and no automated test reaches the "codes read but the sheet is unknown" state after reading harder, though both platforms say it. Measured: the "looks like a GroupLab sheet" test fired on 0 of 70 pictures with no GroupLab marks; on 95 GroupLab pictures 62 named themselves, 16 got the error dialog and 17 the calm question. Reading harder rescues 6 of the 18 the first reading could not name (all 5 steep photographs, one range photograph) in 31 to 69 s; the printed-name lookup rescued none of the real pictures. A second decoder was not used: OpenCV's WeChat reader is Apache 2.0, but its models would have to be fetched. To speed up next: the "looks like" test costs 5.4 s on average, 24 s at most, before the calm question appears.

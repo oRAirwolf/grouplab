@@ -1,4 +1,4 @@
-**Open: 16.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 17.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
 **FOR FENIX, HIS TWO PHOTOS** (entry 354, not a request; to pass on): "Thanks for the two photos, they found three real problems. On the
 load development sheet GroupLab marked 32 spots for your 25 shots: the torn top corner and the curled top edge where the board showed
@@ -123,6 +123,25 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
+
+**Opened 2026-10-03.** **Why:** both are built and switched off, so no build sends more than before. Switching them on changes two
+things you have promised: today a picture GroupLab could not read is never sent (the app's words, the website's "What GroupLab sends"
+page and nightly 161's notes say so), and today an error report holds only the names of the last few things done. On, the choices
+become **Send everything I open** (every picture opened, read or not, with what GroupLab worked out and the log), **Send finished
+targets only** (today's automatic sending, renamed; nobody is moved without being asked), **Ask me each time** and **Never**; and an
+automatic error report also carries GroupLab's log from this run and the last, with anything typed replaced by its length. **What you
+would check in each store** (the repository does not record your current answers):
+- **Apple, App Store Connect, App Privacy:** today the honest answers are Diagnostics (crash data; performance data from the survey)
+  and an identifier (the survey's random installation number), not linked to you, not used for tracking, all optional. Once switched
+  on, add Other Diagnostic Data and Product Interaction (the log). Photos change only when the phone can send targets, which it cannot
+  yet (question 81).
+- **Google Play, Data safety:** today App info and performance (crash logs, diagnostics) and Device or other IDs, collected, optional,
+  encrypted in transit, not shared. Once on, add App activity (app interactions). Photos as for Apple.
+- **Microsoft Store:** the privacy link stays the "What GroupLab sends" page; no questionnaire answer changes.
+**A good answer:** "yes, switch them on" (or only one), and "the forms are updated" once you have done Apple and Google. Nothing goes
+on until you say so.
 
 ## 70. Fenix's report package from the desktop, five minutes for him, whenever suits (entry 354 section 4)
 

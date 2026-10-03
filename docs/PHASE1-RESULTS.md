@@ -40,6 +40,16 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 357: a second sending level, and error reports with the log, built switched off
+
+Built 2026-10-03 behind `sendEverythingOpen` and `fullLogErrorReports` in website/api/limits.json, both false. On, the four choices are
+Send everything I open (a picture goes when it is left, as unread or stopped at review, with its stage records and log; the accepted
+version later is linked to it), Send finished targets only (renamed; existing users asked once, never moved), Ask me each time and
+Never, with "Do not send this picture" and Wi-Fi only on phones; and an automatic error report also sends the Report a problem package
+(this run's and the last run's log, typed values replaced by their length) and, for a failed read, its stage records matched to the
+picture's submission. The receivers record a submission's state; the intake refuses to publish anything not accepted. Off, nothing
+changes. The phone has no target sender (question 81).
+
 ## Entry 356: a failure in the middle of the window, option B final
 
 Done 2026-10-03 by one worker. Opening a picture now decides: a GroupLab sheet that reads, a store-bought target recognized, a

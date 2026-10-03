@@ -21,6 +21,14 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-03, question 81: the phone asks whether to send targets, and cannot send one
+
+**Status: open.** Found in entry 357. The phone's first run and Settings ask the sending question, but no phone code sends a target,
+finished or not; the Features page and PHONE-PARITY.md said it did and now say "coming". **The options.** A: build the phone's sender
+(the desktop's package and queue, Wi-Fi only by default, entry 357's rules), which also gives "Send everything I open" its phone half and
+changes the store privacy answers (Photos). B: hide the sending question on the phone until a sender exists. I would choose A, since a
+phone photograph is what fails most often, but it needs Alan's store answers first (request 71).
+
 ## 2026-10-01, question 80: how a newer fingerprint library reaches people without a new build
 
 **Status: answered 2026-10-02 (entry 347): with the updates, signed, listed in the manifest, mirrored on grouplab.org.** Nothing waits on it but entry 344 section 3's last step. The signed library file and its reader exist and are tested;

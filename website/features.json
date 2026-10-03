@@ -212,7 +212,7 @@
       "since": "next",
       "note": [
         "Opening a picture of a target GroupLab did not print is no longer treated as an error",
-        "When a GroupLab sheet's codes cannot be read",
+        "When a GroupLab sheet's codes cannot be read", "corner squares but its codes cannot be read",
         "Try again, reading harder",
         "Saying a picture is not a GroupLab sheet",
         "a problem that stops your work"
@@ -832,18 +832,13 @@
       "platforms": [
         "Windows",
         "macOS",
-        "Linux",
-        "Android",
-        "iPhone and iPad"
+        "Linux"
       ],
       "since": "0.2.0-nightly.102",
       "note": "After you analyze a target, GroupLab now offers to send it to the project",
       "tour": "settings",
       "guide": "12-settings",
-      "article": "what-grouplab-sends",
-      "mobile": {
-        "shot": "fold-settings"
-      }
+      "article": "what-grouplab-sends"
     },
     {
       "key": "error-reports",

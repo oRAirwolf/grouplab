@@ -9,19 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-03, entry 356 folded; the inbox is empty.
+**Last rewritten:** 2026-10-03, entry 357 folded (built, switched off); the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 357** is built with both switches off; request 71 asks Alan to switch on and update the store forms; question 81 asks
+  planning about a phone sender.
 - **Entries 353 to 356 are done.** 354 (Fenix's .22 sheets) is in nightly 162; 356 (the problem dialog, option B final) goes into the
   next nightly; build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
 - **Request 70:** Fenix's report package, to prove why his desktop sent nothing.
 - **Issues 17 to 20** (TestFlight build 153: Next jumps a section, the keyboard on Targets, back to the targets list, a second target)
   are next after entry 354.
 - **A draft article** waits for Alan: website/research/printed-numbers-are-not-holes.md.
-- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66. **Waiting on planning:** question 79.
+- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66. **Waiting on planning:** questions 79 and 81.
 
 ## The next three
 
@@ -52,7 +54,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **15** (67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **17** (71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
