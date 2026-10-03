@@ -3,9 +3,11 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-10-02 20:46 UTC
+## TestFlight, 2026-10-03 01:51 UTC
 
-- Both groups have build 159.
+- Build 160 added to Public Beta, with its release notes as What to Test.
+- Build 160 submitted for Beta App Review.
+- Both groups have build 160.
 <!-- /status:testflight -->
 
 <!-- status:store -->
