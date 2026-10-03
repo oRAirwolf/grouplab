@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.160
+
+**2026-10-03**, commit `6b3eb5b`. Nightly.
+
+**What you will notice**
+
+- On the iPhone, buttons work again while a box is being typed in: Continue on the caliber question, Done, Take a picture, Choose a photo and a suggested caliber each do their job on the first tap.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.160)
+
+---
+
 ## 0.2.0-nightly.159
 
 **2026-10-02**, commit `e424c70`. Nightly.
