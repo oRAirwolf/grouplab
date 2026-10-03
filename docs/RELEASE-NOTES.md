@@ -480,7 +480,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - In Settings, the three sharing sections now show their choice and one short line, with the full explanation one tap away under More.
 - On the phone, the torch on Auto now starts low, brightens only while the paper is too dim, and dims or turns off on glare or in bright light.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.132)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
