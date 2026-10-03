@@ -90,7 +90,8 @@ internal sealed class TestPhone : IPhonePlatform
             camera.AttachedToVisualTree += (_, _) =>
             {
                 GroupLab.App.Diagnostics.DiagnosticLog.Info("camera.none", ("fallback", "picker"));
-                Avalonia.Threading.Dispatcher.UIThread.Post(choose);
+                // A moment later, as the simulator's picker comes: a close that looks only once finds nothing yet.
+                Avalonia.Threading.DispatcherTimer.RunOnce(choose, TimeSpan.FromMilliseconds(600));
             };
         }
 

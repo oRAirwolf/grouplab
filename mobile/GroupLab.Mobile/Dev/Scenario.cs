@@ -373,7 +373,7 @@ internal static class Scenario
             case "expect":
                 return await Expect(step, TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 5), 0, 600)));
             case "close":
-                return await OnUi(Close);
+                return await Close(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 15), 1, 120)));
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -748,23 +748,73 @@ internal static class Scenario
     internal static Func<bool>? CloseSystemSheet { get; set; }
 
     /// <summary>
-    /// Entry 353: whatever the last tap opened over the Capture screen, closed: the system's sheet where one is up, or else the camera.
-    /// The second run on the simulator (37089660899) left the photo picker that Take a picture opens there, having no camera, over the
-    /// screen, and every tap after it chose pictures in the picker instead of pressing GroupLab's buttons.
+    /// Entry 353: whatever the last tap opened over the Capture screen, closed: the system's sheet where one is up, or else the camera,
+    /// and then made sure of. The second run on the simulator (37089660899) left the photo picker that Take a picture opens there, having
+    /// no camera, over the screen, and every tap after it chose pictures in the picker instead of pressing GroupLab's buttons. The third
+    /// (37091489314) closed once, found nothing, and said so, while the picker was still on its way: the camera's place asks for it a
+    /// moment after it shows. So this keeps closing whatever appears until nothing has been up for <see cref="Quiet"/>, and fails, saying
+    /// so, where a system sheet is still up when <paramref name="most"/> has passed.
     /// </summary>
-    private static (bool, string) Close()
+    private static async Task<(bool, string)> Close(TimeSpan most)
+    {
+        var closed = new List<string>();
+        var clock = Stopwatch.StartNew();
+        var quiet = Stopwatch.StartNew();
+        while (clock.Elapsed < most)
+        {
+            string? what = await OnUi(CloseOne);
+            if (what is not null)
+            {
+                closed.Add(what);
+                quiet.Restart();
+            }
+            else if (quiet.Elapsed >= Quiet && !await OnUi(() => SystemSheetUp?.Invoke() == true))
+            {
+                if (PickerLeftOpen() is { } open)
+                {
+                    return (false, open);
+                }
+
+                return (true, (closed.Count == 0 ? "nothing was open" : "closed " + string.Join(", then ", closed))
+                    + $"; nothing up for {Quiet.TotalSeconds:0.#} s");
+            }
+
+            await Task.Delay(200);
+        }
+
+        bool sheet = await OnUi(() => SystemSheetUp?.Invoke() == true);
+        string said = closed.Count == 0 ? "nothing closed" : "closed " + string.Join(", then ", closed);
+        return sheet ? (false, $"a system sheet is still up after {most.TotalSeconds:0} s ({said})") : (true, said);
+    }
+
+    /// <summary>
+    /// A check that does not trust the look for a system sheet: every photo picker opened since the last hold (the log's <c>ios.pick</c>)
+    /// must have answered (<c>phone.pick</c>) or been closed by the scenario (<c>scenario.sheet</c>). Where one has done neither, the look
+    /// did not see it, and the taps after it would land in it; said here, where it happened, rather than as every later step failing.
+    /// </summary>
+    private static string? PickerLeftOpen()
+    {
+        string since = string.Join('\n', (LogLines(null) ?? "").Split('\n').Skip(logMark));
+        int opened = System.Text.RegularExpressions.Regex.Count(since, @"\bios\.pick\s");
+        int ended = System.Text.RegularExpressions.Regex.Count(since, @"\b(phone\.pick|scenario\.sheet)\s");
+        return opened > ended
+            ? $"the photo picker was opened {opened} time(s) since the last hold and answered or closed {ended}: it is still over the screen, and the look for a system sheet does not see it"
+            : null;
+    }
+
+    /// <summary>How long nothing may be open before <c>close</c> is sure the screen is GroupLab's own again.</summary>
+    internal static TimeSpan Quiet { get; set; } = TimeSpan.FromSeconds(2);
+
+    /// <summary>One thing over the Capture screen closed, and which; null where nothing was.</summary>
+    private static string? CloseOne()
     {
         if (CloseSystemSheet?.Invoke() == true)
         {
-            return (true, "the system's sheet");
+            return "the system's sheet";
         }
 
-        if (Shell.Current is { Showing: Shell.Place.Capture } shell && shell.GetVisualDescendants().OfType<CapturePage>().FirstOrDefault()?.CloseCamera() == true)
-        {
-            return (true, "the camera");
-        }
-
-        return (true, "nothing was open");
+        // The Shell's own back, which closes the camera on Capture and does nothing else there.
+        return Shell.Current is { Showing: Shell.Place.Capture } shell && shell.Back() ? "the camera" : null;
     }
 
     /// <summary>A rectangle in the window's coordinates as it lies on the screen, in the units a tap is given in.</summary>

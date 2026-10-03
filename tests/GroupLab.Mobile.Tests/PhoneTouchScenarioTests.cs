@@ -70,7 +70,19 @@ public class PhoneTouchScenarioTests
     [AvaloniaFact]
     public Task EveryTapDoesItsJobOnASimulatorWithNoCamera() => TapThrough(noCamera: true);
 
-    private static async Task TapThrough(bool noCamera)
+    /// <summary>
+    /// The third simulator run (37091489314): close looked for the picker, did not see it, and said "nothing was open", and every later
+    /// step failed. Where the look for a system sheet is blind, close now fails there and says why, from the log's own record of the
+    /// picker opening with nothing answering or closing it.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task CloseFailsWhereAPickerItCannotSeeIsStillOpen()
+    {
+        var failed = await TapThrough(noCamera: true, blind: true);
+        Assert.Contains(failed, f => f.StartsWith("11 close: the photo picker was opened", StringComparison.Ordinal) && f.Contains("does not see it", StringComparison.Ordinal));
+    }
+
+    private static async Task<List<string>> TapThrough(bool noCamera, bool blind = false)
     {
         if (Phone.Platform is null)
         {
@@ -84,7 +96,7 @@ public class PhoneTouchScenarioTests
         Phone.Settings.SaveShotSetup(null, null);
         phone.AllowCamera = true;
         phone.NoCameraOpensPicker = noCamera;
-        if (noCamera)
+        if (noCamera && !blind)
         {
             Scenario.SystemSheetUp = () => phone.PickerUp;
             Scenario.CloseSystemSheet = phone.ClosePicker;
@@ -140,8 +152,13 @@ public class PhoneTouchScenarioTests
             var failed = results["steps"]!.AsArray()
                 .Where(s => !s!["ok"]!.GetValue<bool>())
                 .Select(s => $"{s!["step"]} {s["do"]}: {s["detail"]}").ToList();
-            Assert.True(failed.Count == 0, string.Join(Environment.NewLine, failed));
-            Assert.Equal(10, taps.Count);
+            if (!blind)
+            {
+                Assert.True(failed.Count == 0, string.Join(Environment.NewLine, failed));
+                Assert.Equal(10, taps.Count);
+            }
+
+            return failed;
         }
         finally
         {

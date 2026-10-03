@@ -11,6 +11,28 @@ public sealed class App : Avalonia.Application
 {
     public override void Initialize() => Phone.Initialize(this);
 
+#if GROUPLAB_DEV
+    /// <summary>Entry 353: the sheet presented over GroupLab Dev in any window, the photo picker above all; null where none is up.</summary>
+    private static UIKit.UIViewController? Sheet()
+    {
+        foreach (var window in UIKit.UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIKit.UIWindowScene>().SelectMany(s => s.Windows))
+        {
+            var presented = window.RootViewController?.PresentedViewController;
+            while (presented?.PresentedViewController is { } above)
+            {
+                presented = above;
+            }
+
+            if (presented is { IsBeingDismissed: false })
+            {
+                return presented;
+            }
+        }
+
+        return null;
+    }
+
+#endif
     public override void OnFrameworkInitializationCompleted()
     {
         bool selfTest = SelfTest.Asked();
@@ -26,21 +48,23 @@ public sealed class App : Avalonia.Application
         bool scenario = !selfTest && !tour && GroupLab.Mobile.Dev.Scenario.Prepare(IosPhone.Documents, SelfTest.Value("--scenario"));
 
         // Entry 353: the photo picker over the screen, which the real taps' scenario has to see and close, as the self-test closes it.
-        GroupLab.Mobile.Dev.Scenario.SystemSheetUp = () => IosPhone.Top()?.PresentingViewController is not null;
+        // Looked for in every window of every scene, and one already going away is not counted, so a close is not repeated on it.
+        GroupLab.Mobile.Dev.Scenario.SystemSheetUp = () => Sheet() is not null;
         GroupLab.Mobile.Dev.Scenario.CloseSystemSheet = () =>
         {
-            if (PhotoPickers.CancelOpen())
+            if (Sheet() is not { } sheet)
             {
-                return true;
+                return false;
             }
 
-            if (IosPhone.Top() is { PresentingViewController: not null } sheet)
+            bool canceled = PhotoPickers.CancelOpen();
+            if (!canceled)
             {
-                sheet.DismissViewController(false, null);
-                return true;
+                (sheet.PresentingViewController ?? sheet).DismissViewController(false, null);
             }
 
-            return false;
+            DiagnosticLog.Info("scenario.sheet", ("closed", sheet.GetType().Name), ("asCancel", canceled));
+            return true;
         };
 #endif
 
