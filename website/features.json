@@ -10,6 +10,11 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "A sheet made with GroupLab's target generator and printed without saving it now opens and reads",
+    "When a sheet's codes name a sheet GroupLab cannot use, it now says so in plain words",
+    "On a photograph of a crinkled, curled or torn sheet, GroupLab no longer marks the torn corners",
+    "A hole beside one of the sheet's small square markers is no longer counted twice",
+    "The review count now counts shots, so it never says more need review than there are",
     "The question about sending targets now says plainly that a target goes once you",
     "On the iPhone, buttons work again while a box is being typed in",
     "Reading a target is faster: on the desktop a sheet goes from file to figures in about half the time",

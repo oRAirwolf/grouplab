@@ -1,5 +1,17 @@
 **Open: 16.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 
+**FOR FENIX, HIS TWO PHOTOS** (entry 354, not a request; to pass on): "Thanks for the two photos, they found three real problems. On the
+load development sheet GroupLab marked 32 spots for your 25 shots: the torn top corner and the curled top edge where the board showed
+through, the printed 'Print at actual size' line along the lifted bottom edge, and the bull numbers '25' and 'S2', which the photo's
+slight blur made look like small holes; on some readings the square marker beside the hole between bulls 12 and 13 was counted as a
+second shot. GroupLab now ignores marks in a photo's margin unless they are clean round bullet holes, knows its own printed numbers and
+words, and no longer counts a marker's edge as a shot: on your photo it finds 24 of your 25 holes and nothing else. The one it still
+misses, on bull 23, touches a marker; add that one by hand. The '49 of 29 need review' counter counted questions instead of shots; it
+now counts shots. The diamond sheet failed for a different reason: you made it with the target generator and printed it without saving
+it, so GroupLab had no copy and refused it, although the codes on the sheet read fine and hold the whole design, and it wrongly said the
+codes could not be read. GroupLab now reads the sheet's design from those codes and finds all 25 holes; check a few white centres it
+marks on the wavy left side before you accept. Both fixes are in the next nightly."
+
 **WHAT THE SENDING SETTINGS DO, AND WHAT HAPPENED TO FENIX'S** (entries 354 and 355, not a request; to read and pass on)
 
 *What each setting sends, and when.*

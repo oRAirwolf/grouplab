@@ -40,6 +40,20 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 354: Fenix's .22 LR targets
+
+Done 2026-10-03 by one worker.
+
+- **The load sheet** (002_IMG_3819, .22 at 50 yd), marks before and after, found and false: camera reading 32/24/8 to 24/24/0; the
+  server's PNG 29/21/8 to 24/21/3; with no metadata 27/21/6 to 22/20/2. A photograph's candidate past everything the sheet prints is
+  refused unless it is a clean round bullet-sized hole (scans keep their margin: scan 5 of 2026-09-20 has a real shot 0.2 in from a
+  corner); a mark wholly on the sheet's printed words is those words; a split half inside a marker or code zone is refused. The review
+  counts shots ("2 of 29 and 1 more"), and with more marks than rounds starts with marks off the bulls and beside the printing. Bull 23's
+  hole, touching a marker, is still missed. Corpus: the kitchen counter line 2 false marks to 1; every other line identical.
+- **The diamond sheet** (001_IMG_3817, generated, 50 yd, 6x): its codes read, but a sheet never saved is on no list, so it was refused
+  and the desktop wrongly said the codes could not be read. Identification now takes the design from the codes; 35 of 36 markers, all 25
+  holes, 5 false on the wavy left side. Both photos are 22 LR scoreboard cases and test-data files.
+
 ## Entries 353 and 355: the iPhone ignoring taps, and what the sending settings send
 
 Done 2026-10-03.

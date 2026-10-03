@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-03 04:40 UTC, entries 353 and 355 folded; 354 is with a worker.
+**Last rewritten:** 2026-10-03 06:00 UTC, entry 354 folded; 356 is with a worker.
 
 ---
 
 ## In flight
 
-- **Entry 354**, Fenix's .22 targets (false holes on the 5x5 sheet, a diamond sheet that will not read), with a worker. Entries 353 and
-  355 are done: build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
+- **Entry 356** (problem dialogs, option B final) is with a worker. Entries 353 to 355 are done (354: Fenix's .22 sheets read; the next
+  nightly carries it); build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
 - **Request 70:** Fenix's report package, to prove why his desktop sent nothing.
 - **Issues 17 to 20** (TestFlight build 153: Next jumps a section, the keyboard on Targets, back to the targets list, a second target)
   are next after entry 354.
@@ -81,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 354.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 356.
 
 ## Things that would surprise somebody who was not here yesterday
 
