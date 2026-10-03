@@ -115,6 +115,18 @@ internal static class SharingWords
 
     public const string ErrorsLater = "You can change this at any time in Settings, under Sharing.";
 
+    /// <summary>Entry 357 section 2: the explanation where a report carries the log.</summary>
+    public const string ErrorsIntroFullLog = "When GroupLab hits an error, or cannot read a picture you chose to send, a report of it can go to the project, where it is fixed. A report now carries GroupLab's log, the same one Report a problem sends, with anything you typed in words replaced by its length. This is what a report holds:";
+
+    /// <summary>The explanation, as the switch stands.</summary>
+    public static string ErrorsIntroNow => SharingSwitches.FullLogOpen ? ErrorsIntroFullLog : ErrorsIntro;
+
+    /// <summary>
+    /// Entry 357 section 2: said above the question to somebody who chose automatic reports under the thinner wording. Nothing larger goes
+    /// until they answer again.
+    /// </summary>
+    public const string ErrorsWordingChanged = "What an error report holds has changed since you chose to send them automatically: a report now carries GroupLab's log. Until you answer again, your reports hold only what they held before.";
+
     /// <summary>The error report choices, in the order they are offered on the first run screen.</summary>
     public static IReadOnlyList<(ErrorReportChoice Choice, string Words)> ErrorChoices { get; } =
         [(ErrorReportChoice.Always, "Send them automatically"), (ErrorReportChoice.Ask, "Ask me each time"), (ErrorReportChoice.Never, "Never send them")];

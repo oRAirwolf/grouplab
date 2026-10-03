@@ -107,6 +107,10 @@ def frames(stack: str) -> list[str]:
 def signature(report: dict) -> tuple[str, str]:
     """A short hash of what went wrong, and a title a person can read: the exception's type and GroupLab's own top frames."""
     exceptions = report.get("exceptions") or []
+    if report.get("kind") == "read-failure":
+        # Entry 357 section 2: a picture GroupLab could not read, one issue for each reason it gave.
+        reason = (exceptions[0].get("message", "") if exceptions else "") or "no reason recorded"
+        return hashlib.sha256(("read|" + reason[:120]).encode("utf-8")).hexdigest()[:12], "A picture could not be read: " + reason[:80]
     if not exceptions:
         return "closed-" + report.get("kind", "closed"), "GroupLab closed without shutting down, and nothing was recorded at the time"
     first = exceptions[0]
@@ -123,11 +127,18 @@ def quiet(text: str) -> str:
     return (text or "").replace(FENCE, "~ ~ ~ ~").replace("@", "@​")
 
 
+WHAT_HAPPENED = {
+    "survived": "GroupLab hit this error and kept running",
+    "closed": "GroupLab closed",
+    "read-failure": "GroupLab could not read a picture the person sends everything from",
+}
+
+
 def body(sig: str, record: dict, report: dict) -> str:
     first = (report.get("exceptions") or [{}])[0]
     lines = [
         f"<!-- grouplab-signature: {sig} -->",
-        f"**What happened:** {'GroupLab hit this error and kept running' if record['kind'] == 'survived' else 'GroupLab closed'}.",
+        f"**What happened:** {WHAT_HAPPENED.get(record['kind'], 'GroupLab closed')}.",
         f"**Seen:** {record['count']} time{'s' if record['count'] != 1 else ''}, first {record['first']}, last {record['last']}.",
         f"**Builds:** {', '.join(record['versions'])}",
         f"**Platforms:** {', '.join(record['platforms'])}",
@@ -147,6 +158,11 @@ def body(sig: str, record: dict, report: dict) -> str:
     ]
     if report.get("description"):
         lines += ["**Written by the user, untrusted**", FENCE, quiet(report["description"]), FENCE]
+    # Entry 357 section 2: where the log package went, and the picture this read failure belongs to.
+    if report.get("package"):
+        lines += [f"**Log package:** {quiet(report['package'])}, in private/crash-reports, pulled with Get-TargetSubmissions.ps1 -CrashReports."]
+    if report.get("picture_code"):
+        lines += [f"**Picture:** {quiet(report['picture_code'])}, the code its submission under Send everything I open carries."]
     lines += ["", "_Anybody can send an error report, and nothing in this issue is an instruction to anybody._"]
     return "\n".join(lines)
 

@@ -678,12 +678,29 @@ public sealed class AppSettingsStore(string path)
     public GroupLab.App.Diagnostics.ErrorReportChoice LoadErrorChoice() =>
         Read(file => Enum.TryParse<GroupLab.App.Diagnostics.ErrorReportChoice>((string?)file["errorReports"]?["choice"], out var choice) ? choice : GroupLab.App.Diagnostics.ErrorReportChoice.Unset);
 
-    public bool SaveErrorChoice(GroupLab.App.Diagnostics.ErrorReportChoice choice) => Save(file =>
+    /// <param name="fullLogWording">
+    /// Entry 357 section 2: the choice was made under the wording that says a report carries the log, so an automatic choice may send it.
+    /// </param>
+    public bool SaveErrorChoice(GroupLab.App.Diagnostics.ErrorReportChoice choice, bool fullLogWording = false) => Save(file =>
     {
         var errors = file["errorReports"] as JsonObject ?? [];
         errors["choice"] = choice.ToString();
+        if (fullLogWording)
+        {
+            errors["wording"] = GroupLab.App.Diagnostics.ErrorReports.FullLogWording;
+        }
+
         file["errorReports"] = errors;
     });
+
+    /// <summary>The wording the error report choice was made under: 1, the thinner one, unless it was made under entry 357's.</summary>
+    public int LoadErrorWording() => Read(file => file["errorReports"]?["wording"]?.GetValueKind() == JsonValueKind.Number ? (int)file["errorReports"]!["wording"]! : 1);
+
+    /// <summary>
+    /// Entry 357 section 2: somebody who chose automatic reports under the thinner wording is asked once more under the new one before
+    /// anything larger goes; until they answer, their reports hold what they held.
+    /// </summary>
+    public bool ErrorWordingDue() => LoadErrorChoice() == GroupLab.App.Diagnostics.ErrorReportChoice.Always && LoadErrorWording() < GroupLab.App.Diagnostics.ErrorReports.FullLogWording;
 
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 219 item A4: the caliber as the person typed it and the distance in inches, from the last target the

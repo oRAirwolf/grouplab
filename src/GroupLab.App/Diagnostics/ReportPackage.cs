@@ -35,7 +35,29 @@ public static partial class ReportPackage
         @"^environment\.txt$",
         @"^description\.txt$",
         @"^contact\.txt$",
+        @"^read-\d{8}-\d{6}-\d+\.json$",
     ];
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 357 section 2: the log fields whose values can be words a person typed or named, which an automatic
+    /// report replaces with their length: the names of their own sheets and store targets, a bull's label, and anything noted or described.
+    /// Every log event was read for typed text when this list was made; numbers a person entered (caliber, distance, rounds) stay.
+    /// </summary>
+    public static IReadOnlyList<string> TypedKeys { get; } = ["sheet", "copy", "looksLike", "decided", "bull", "notes", "note", "description", "credit", "name_typed", "session_name"];
+
+    /// <summary>A log with every typed value replaced by its length, as "sheet=&lt;12 characters typed&gt;".</summary>
+    public static string WithoutTypedText(string log)
+    {
+        ArgumentNullException.ThrowIfNull(log);
+        return TypedValue().Replace(log, m =>
+        {
+            string value = m.Groups["quoted"].Success ? m.Groups["quoted"].Value : m.Groups["bare"].Value;
+            return string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{m.Groups["key"].Value}=\"<{value.Length} characters typed>\"");
+        });
+    }
+
+    [GeneratedRegex(@"(?<=\s)(?<key>sheet|copy|looksLike|decided|bull|notes|note|description|credit|name_typed|session_name)=(?:""(?<quoted>[^""]*)""|(?<bare>\S+))")]
+    private static partial Regex TypedValue();
 
     /// <summary>
     /// Whether a name may be an entry: flat, with no slash, backslash or <c>..</c>, and matching one of the patterns. It uses ASCII digits, as
@@ -52,16 +74,17 @@ public static partial class ReportPackage
     /// <param name="crashRecord">The crash record's path, or null for a report without a crash.</param>
     /// <param name="runLog">The log of the run the report concerns: the crashed run, or this one.</param>
     /// <param name="previousLog">The log of the run before, or null.</param>
-    public static PackageResult Build(string zipPath, string? crashRecord, string? runLog, string? previousLog, string environment, string? description, string? contact, long capBytes = ClientCapBytes)
+    /// <param name="withoutTypedText">Entry 357 section 2: the logs with typed text replaced by its length, as an automatic report sends them.</param>
+    public static PackageResult Build(string zipPath, string? crashRecord, string? runLog, string? previousLog, string environment, string? description, string? contact, long capBytes = ClientCapBytes, bool withoutTypedText = false)
     {
         ArgumentNullException.ThrowIfNull(zipPath);
         ArgumentNullException.ThrowIfNull(environment);
-        var entries = Write(zipPath, crashRecord, runLog, previousLog, environment, description, contact);
+        var entries = Write(zipPath, crashRecord, runLog, previousLog, environment, description, contact, withoutTypedText);
         long bytes = new FileInfo(zipPath).Length;
         bool dropped = false;
         if (bytes > capBytes && previousLog is not null)
         {
-            entries = Write(zipPath, crashRecord, runLog, null, environment, description, contact);
+            entries = Write(zipPath, crashRecord, runLog, null, environment, description, contact, withoutTypedText);
             bytes = new FileInfo(zipPath).Length;
             dropped = true;
         }
@@ -86,7 +109,7 @@ public static partial class ReportPackage
         return text.ToString();
     }
 
-    private static List<string> Write(string zipPath, string? crashRecord, string? runLog, string? previousLog, string environment, string? description, string? contact)
+    private static List<string> Write(string zipPath, string? crashRecord, string? runLog, string? previousLog, string environment, string? description, string? contact, bool withoutTypedText = false)
     {
         var names = new List<string>();
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(zipPath))!);
@@ -104,7 +127,17 @@ public static partial class ReportPackage
             var entry = zip.CreateEntry(name, CompressionLevel.Optimal);
             using var source = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
             using var target = entry.Open();
-            source.CopyTo(target);
+            if (withoutTypedText && name.EndsWith(".log", StringComparison.Ordinal))
+            {
+                using var reader = new StreamReader(source);
+                using var writer = new StreamWriter(target, new UTF8Encoding(false));
+                writer.Write(WithoutTypedText(reader.ReadToEnd()));
+            }
+            else
+            {
+                source.CopyTo(target);
+            }
+
             names.Add(name);
         }
 

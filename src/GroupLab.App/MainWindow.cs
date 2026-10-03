@@ -2178,6 +2178,7 @@ public sealed partial class MainWindow : Window
 
             if (outcome == OpeningOutcome.LooksLikeGroupLab)
             {
+                NoteFailedRead(identity.Failure ?? "the sheet's codes could not be read", trace);
                 ShowSheetProblem(g, v, m, identity, look);
             }
             else
@@ -2320,6 +2321,10 @@ public sealed partial class MainWindow : Window
     {
         RecordAnalysis(trace);
         lastTrace = trace;
+        if (result.Failure is { } failed)
+        {
+            NoteFailedRead(failed, trace);
+        }
         DiagnosticLog.Current.Write(result.Failure is null ? LogLevel.Info : LogLevel.Warn, "detect.run", [("ms", milliseconds), ("stages", trace.Records.Count), ("summary", result.Summary), ("failure", result.Failure)]);
         foreach (var record in trace.Records)
         {

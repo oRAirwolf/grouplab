@@ -26,7 +26,10 @@ public sealed class ErrorQueue(AppSettingsStore settings)
 
         var now = DateTime.UtcNow;
         var groups = new List<IReadOnlyList<string>>();
-        foreach (var group in ErrorReports.Waiting(DiagnosticLog.Current.Directory, now))
+        // Entry 357 section 2: the log goes with a report only while the switch is on and the person chose automatic reports, or answered,
+        // under the wording that says so; a choice made under the thinner wording sends what it promised.
+        bool fullLog = SharingSwitches.FullLogOpen && settings.LoadErrorWording() >= ErrorReports.FullLogWording;
+        foreach (var group in ErrorReports.Waiting(DiagnosticLog.Current.Directory, now, withReads: fullLog))
         {
             if (sentThisSession.Contains(ErrorReports.Key(group[0])))
             {
@@ -47,7 +50,8 @@ public sealed class ErrorQueue(AppSettingsStore settings)
             return 0;
         }
 
-        int sent = await ErrorReports.SendAsync(TheOutsideWorld.Current, ReceiverTerms.Current.ErrorReceiver, groups, budget, ActionsFor, token);
+        int sent = await ErrorReports.SendAsync(TheOutsideWorld.Current, ReceiverTerms.Current.ErrorReceiver, groups, budget, ActionsFor, token,
+            fullLog ? ReceiverTerms.Current.CrashReceiver : null);
         foreach (var group in groups.Where(g => ErrorReports.IsSent(g[0])))
         {
             sentThisSession.Add(ErrorReports.Key(group[0]));

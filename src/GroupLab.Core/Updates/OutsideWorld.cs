@@ -57,6 +57,12 @@ public interface IOutsideWorld
     Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token);
 
     /// <summary>
+    /// Sends an error report's log package, NOTES-FROM-PLANNING.md entry 357 section 2: the zip Report a problem builds, in the file field
+    /// <c>report</c> with the version in <c>version</c>, to grouplab.org's crash receiver. Null where nothing answered.
+    /// </summary>
+    Task<PostAnswer?> PostReportPackageAsync(string address, byte[] zip, string version, CancellationToken token);
+
+    /// <summary>
     /// Sends a hardware survey report, NOTES-FROM-PLANNING.md entries 207 and 208: its JSON in the form field <c>report</c>, to
     /// grouplab.org. Null where nothing answered.
     /// </summary>
@@ -158,6 +164,27 @@ public sealed class TheOutsideWorld : IOutsideWorld
     }
 
     public Task<PostAnswer?> PostSurveyAsync(string address, string report, CancellationToken token) => PostErrorReportAsync(address, report, token);
+
+    public async Task<PostAnswer?> PostReportPackageAsync(string address, byte[] zip, string version, CancellationToken token)
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Post, address);
+            request.Headers.UserAgent.ParseAdd(UserAgent);
+            using var form = new MultipartFormDataContent();
+            var file = new ByteArrayContent(zip);
+            file.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/zip");
+            form.Add(file, "report", "report.zip");
+            form.Add(new StringContent(version, System.Text.Encoding.UTF8), "version");
+            request.Content = form;
+            using var response = await Http.SendAsync(request, token).ConfigureAwait(false);
+            return new PostAnswer((int)response.StatusCode, await response.Content.ReadAsStringAsync(token).ConfigureAwait(false));
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or UriFormatException)
+        {
+            return null;
+        }
+    }
 
     public async Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token)
     {
@@ -325,6 +352,12 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     /// <summary>Every error report posted: the address and its JSON, in order.</summary>
     public List<(string Address, string Report)> Reports { get; } = [];
 
+    /// <summary>The answer to a report's log package, entry 357; none by default, which is no answer.</summary>
+    public Func<byte[], PostAnswer?>? PackageAnswer { get; set; }
+
+    /// <summary>Every report log package posted: the address and the zip, in order.</summary>
+    public List<(string Address, byte[] Zip)> Packages { get; } = [];
+
     /// <summary>What a survey report is answered with. Nothing set answers nothing, which is an unreachable receiver.</summary>
     public Func<string, PostAnswer?>? SurveyAnswer { get; set; }
 
@@ -355,6 +388,8 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         Posted.Clear();
         ReportAnswer = null;
         Reports.Clear();
+        PackageAnswer = null;
+        Packages.Clear();
         SurveyAnswer = null;
         Surveys.Clear();
         Clipboard = ClipboardContents.Nothing;
@@ -383,6 +418,13 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         _asked.Add(("survey", address));
         Surveys.Add((address, report));
         return Task.FromResult(SurveyAnswer?.Invoke(report));
+    }
+
+    public Task<PostAnswer?> PostReportPackageAsync(string address, byte[] zip, string version, CancellationToken token)
+    {
+        _asked.Add(("package", address));
+        Packages.Add((address, zip));
+        return Task.FromResult(PackageAnswer?.Invoke(zip));
     }
 
     public Task<PostAnswer?> PostErrorReportAsync(string address, string report, CancellationToken token)

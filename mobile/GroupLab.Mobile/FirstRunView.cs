@@ -27,7 +27,8 @@ public sealed class FirstRunView : UserControl
     /// <summary>Entry 357 section 1: somebody who chose every target automatically is asked once about everything they open.</summary>
     private static bool EverythingDue(AppSettingsStore settings) => Shell.TargetsOpen && SharingSwitches.EverythingOpen && settings.EverythingQuestionDue();
 
-    private static bool ErrorsDue(AppSettingsStore settings) => Shell.ErrorsOpen && settings.LoadErrorChoice() == ErrorReportChoice.Unset;
+    private static bool ErrorsDue(AppSettingsStore settings) => Shell.ErrorsOpen
+        && (settings.LoadErrorChoice() == ErrorReportChoice.Unset || SharingSwitches.FullLogOpen && settings.ErrorWordingDue());
 
     /// <summary>Sends the survey report when one is due, after a benchmark the person ran.</summary>
     internal static Task SendSurvey() => Phone.Survey?.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None) ?? Task.CompletedTask;
@@ -135,13 +136,18 @@ public sealed class FirstRunView : UserControl
         targets.Children.Add(Screens.Dim(SharingWords.TargetsLater));
 
         errors.Children.Add(Screens.Heading(SharingWords.ErrorsQuestion));
-        errors.Children.Add(Screens.Card([Screens.Dim(SharingWords.ErrorsIntro), .. ErrorReports.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))]));
+        if (SharingSwitches.FullLogOpen && settings.ErrorWordingDue())
+        {
+            errors.Children.Add(Screens.Line(SharingWords.ErrorsWordingChanged));
+        }
+
+        errors.Children.Add(Screens.Card([Screens.Dim(SharingWords.ErrorsIntroNow), .. ErrorReports.WhatIsSentNow.Select(line => (Control)Screens.Dim("• " + line))]));
 
         foreach (var (choice, words) in SharingWords.ErrorChoices)
         {
             errors.Children.Add(Screens.Choice(words, () =>
             {
-                settings.SaveErrorChoice(choice);
+                settings.SaveErrorChoice(choice, SharingSwitches.FullLogOpen);
                 DiagnosticLog.Info("errors.first-run", ("choice", choice.ToString()));
                 errors.IsVisible = false;
                 _ = Phone.SendWaitingErrorsAsync();

@@ -39,7 +39,82 @@ internal static class ErrorReports
         "Never a photograph or scan, a file name, a location, or anything you wrote.",
     ];
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 357 section 2: what a report holds where it carries the log, in the words the first run screen and
+    /// Settings show while <see cref="SharingSwitches.FullLogOpen"/> is on.
+    /// </summary>
+    public static IReadOnlyList<string> WhatIsSentFullLog { get; } =
+    [
+        "The version of GroupLab, and the system it runs on.",
+        "What went wrong: the error, and where in GroupLab it happened.",
+        "GroupLab's log of this run and the one before, the same log Report a problem sends: what was done, in order, with the numbers you entered such as the caliber and the distance. Anything you typed in words, such as a sheet's name or a note, is replaced by how many characters it had.",
+        "The record of each stage of reading a picture, where GroupLab was reading one, and under Send everything I open a report for each picture it could not read, matched to that picture by a code.",
+        "Never a photograph or scan, a file name, a path, a location, or the settings file.",
+    ];
+
+    /// <summary>What a report holds, as the switch stands.</summary>
+    public static IReadOnlyList<string> WhatIsSentNow => SharingSwitches.FullLogOpen ? WhatIsSentFullLog : WhatIsSent;
+
+    /// <summary>
+    /// Entry 357 section 2: the wording an automatic choice was made under. A choice made under the thinner wording sends what it promised
+    /// until the person answers again under this one.
+    /// </summary>
+    public const int FullLogWording = 2;
+
+    /// <summary>The kind of record a picture GroupLab could not read writes, under "Send everything I open".</summary>
+    public const string ReadFailure = "read-failure";
+
     public static bool IsSent(string record) => File.Exists(record + SentSuffix);
+
+    /// <summary>
+    /// Entry 357 section 2: a picture GroupLab could not read, under "Send everything I open" with automatic reports that carry the log,
+    /// recorded as a report of its own: the reason, the stage records, and the picture code its submission carries, so the two are matched.
+    /// Returns the record's path, or null where it could not be written.
+    /// </summary>
+    public static string? RecordReadFailure(string? directory, string failure, JsonArray stages, string picture)
+    {
+        ArgumentNullException.ThrowIfNull(failure);
+        ArgumentNullException.ThrowIfNull(stages);
+        if (directory is null)
+        {
+            return null;
+        }
+
+        try
+        {
+            var now = DateTime.UtcNow;
+            string path = Path.Combine(directory, string.Create(CultureInfo.InvariantCulture, $"read-{now:yyyyMMdd-HHmmss}-{Environment.ProcessId}.json"));
+            var record = CrashReporter.Describe(new InvalidDataException(DiagnosticLog.Scrub(failure)), now, ReadFailure);
+            record["exceptions"] = new JsonArray(new JsonObject { ["type"] = "GroupLab.ReadFailure", ["message"] = DiagnosticLog.Scrub(failure), ["stack"] = "" });
+            record["stages"] = stages.DeepClone();
+            record["picture_code"] = picture;
+            File.WriteAllText(path, record.ToJsonString());
+            DiagnosticLog.Info("errors.read-failure", ("stages", stages.Count));
+            return path;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "errors.read-failure", ex);
+            return null;
+        }
+    }
+
+    /// <summary>The kind a record says, a read failure where it is one and otherwise as the crash reporter reads it.</summary>
+    public static string KindOf(string record)
+    {
+        try
+        {
+            if ((string?)JsonNode.Parse(File.ReadAllText(record))?["kind"] == ReadFailure)
+            {
+                return ReadFailure;
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+        }
+
+        return CrashReporter.KindOfRecord(record);
+    }
 
     /// <summary>Marks a record done with, sent or let go, so it is never sent again.</summary>
     public static void MarkSent(string record, string how)
@@ -59,7 +134,11 @@ internal static class ErrorReports
     {
         try
         {
-            return CrashReporter.GroupKey(JsonNode.Parse(File.ReadAllText(record))) + "|" + CrashReporter.KindOfRecord(record);
+            var node = JsonNode.Parse(File.ReadAllText(record));
+            // Entry 357: a picture that could not be read is a report of its own, matched to its picture.
+            return (string?)node?["kind"] == ReadFailure
+                ? ReadFailure + "|" + (string?)node?["picture_code"] + "|" + Path.GetFileName(record)
+                : CrashReporter.GroupKey(node) + "|" + CrashReporter.KindOfRecord(record);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {
@@ -68,7 +147,8 @@ internal static class ErrorReports
     }
 
     /// <summary>The records not yet sent, grouped by error, oldest first. A record kept past seven days is let go, with a line in the log.</summary>
-    public static IReadOnlyList<IReadOnlyList<string>> Waiting(string? directory, DateTime now)
+    /// <param name="withReads">Entry 357: whether read failure records are reports too, which they are only while reports carry the log.</param>
+    public static IReadOnlyList<IReadOnlyList<string>> Waiting(string? directory, DateTime now, bool withReads = false)
     {
         if (directory is null || !Directory.Exists(directory))
         {
@@ -76,7 +156,13 @@ internal static class ErrorReports
         }
 
         var fresh = new List<string>();
-        foreach (string record in Directory.EnumerateFiles(directory, "crash-*.json").Where(r => !IsSent(r)).Order(StringComparer.Ordinal))
+        var records = Directory.EnumerateFiles(directory, "crash-*.json");
+        if (withReads)
+        {
+            records = records.Concat(Directory.EnumerateFiles(directory, "read-*.json"));
+        }
+
+        foreach (string record in records.Where(r => !IsSent(r)).Order(StringComparer.Ordinal))
         {
             if (now - File.GetLastWriteTimeUtc(record) > KeptFor)
             {
@@ -95,7 +181,8 @@ internal static class ErrorReports
     /// The report for the records of one error: the first record's build, system and error, the count, and the names of the last things
     /// done. Its identifier comes from the records themselves, so the same records always make the same report and the receiver takes it once.
     /// </summary>
-    public static string Build(IReadOnlyList<string> records, IReadOnlyList<string> lastActions)
+    /// <param name="package">Entry 357 section 2: the crash receiver's reference for the log package sent with this report, or null.</param>
+    public static string Build(IReadOnlyList<string> records, IReadOnlyList<string> lastActions, string? package = null)
     {
         ArgumentNullException.ThrowIfNull(records);
         ArgumentNullException.ThrowIfNull(lastActions);
@@ -114,11 +201,11 @@ internal static class ErrorReports
 
         var app = first["app"];
         var environment = first["environment"];
-        return new JsonObject
+        var report = new JsonObject
         {
             ["schema"] = Schema,
             ["report_id"] = id,
-            ["kind"] = CrashReporter.KindOfRecord(records[0]),
+            ["kind"] = KindOf(records[0]),
             ["made"] = "automatic",
             ["count"] = records.Count,
             ["app"] = new JsonObject { ["version"] = (string?)app?["version"] ?? AppInfo.Version, ["commit"] = (string?)app?["commit"] ?? "", ["channel"] = (string?)app?["channel"] ?? "" },
@@ -131,7 +218,79 @@ internal static class ErrorReports
             },
             ["exceptions"] = exceptions,
             ["last_actions"] = new JsonArray([.. lastActions.Select(a => (JsonNode?)a)]),
-        }.ToJsonString();
+        };
+        if (package is not null)
+        {
+            report["package"] = package;
+        }
+
+        if ((string?)first["picture_code"] is { Length: 32 } picture)
+        {
+            report["picture_code"] = picture;
+        }
+
+        return report.ToJsonString();
+    }
+
+    /// <summary>
+    /// Entry 357 section 2: the log package for a group's first record, the zip Report a problem builds with typed text replaced by its
+    /// length, sent to the crash receiver. Returns its reference; null with Keep where it should be tried again with the report; null
+    /// without Keep where it cannot go (over the cap, or refused for what it is), and the report goes without it.
+    /// </summary>
+    public static async Task<(bool Keep, string? Reference)> SendPackageAsync(IOutsideWorld outside, string address, string record, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(outside);
+        var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, KindOf(record) == ReadFailure ? null : record);
+        string zip = Path.Combine(Path.GetTempPath(), $"grouplab-report-{Guid.NewGuid():N}.zip");
+        try
+        {
+            var made = ReportPackage.Build(zip, record, runLog, previousLog, ReportPackage.EnvironmentText(null), null, null, withoutTypedText: true);
+            if (made.TooLargeToSend)
+            {
+                DiagnosticLog.Info("errors.package", ("sent", false), ("reason", "over the cap"));
+                return (false, null);
+            }
+
+            var answer = await outside.PostReportPackageAsync(address, File.ReadAllBytes(zip), AppInfo.Version, token).ConfigureAwait(true);
+            if (answer is null)
+            {
+                return (true, null);
+            }
+
+            JsonNode? reply = null;
+            try
+            {
+                reply = JsonNode.Parse(answer.Body);
+            }
+            catch (JsonException)
+            {
+            }
+
+            if (reply?["ok"]?.GetValueKind() == JsonValueKind.True && (string?)reply["reference"] is { Length: > 0 } reference)
+            {
+                DiagnosticLog.Info("errors.package", ("sent", true), ("reference", reference));
+                return (false, reference);
+            }
+
+            bool again = reply?["retry"]?.GetValueKind() == JsonValueKind.True || answer.Status is 429 or >= 500;
+            DiagnosticLog.Info("errors.package", ("sent", false), ("status", answer.Status), ("retry", again));
+            return (again, null);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "errors.package", ex);
+            return (false, null);
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(zip);
+            }
+            catch (IOException)
+            {
+            }
+        }
     }
 
     /// <summary>The names of the last events in a log, what the person did last, and none of the values that follow each name.</summary>
@@ -169,8 +328,9 @@ internal static class ErrorReports
     /// a limit or a closed receiver is kept for the next try; one refused for what it is, which trying again cannot mend, is let go. Never a
     /// dialog: the person is not interrupted by a report failing. Returns how many went.
     /// </summary>
+    /// <param name="packageAddress">Entry 357 section 2: where each report's log package goes first, or null for a report without one.</param>
     public static async Task<int> SendAsync(IOutsideWorld outside, string address, IReadOnlyList<IReadOnlyList<string>> groups, int budget,
-        Func<string, IReadOnlyList<string>> actionsFor, CancellationToken token)
+        Func<string, IReadOnlyList<string>> actionsFor, CancellationToken token, string? packageAddress = null)
     {
         ArgumentNullException.ThrowIfNull(outside);
         ArgumentNullException.ThrowIfNull(groups);
@@ -184,7 +344,20 @@ internal static class ErrorReports
                 break;
             }
 
-            string report = Build(group, actionsFor(group[0]));
+            string? package = null;
+            if (packageAddress is not null)
+            {
+                var (keep, reference) = await SendPackageAsync(outside, packageAddress, group[0], token).ConfigureAwait(true);
+                if (keep)
+                {
+                    DiagnosticLog.Info("errors.kept", ("reason", "the log package did not go"));
+                    continue;
+                }
+
+                package = reference;
+            }
+
+            string report = Build(group, actionsFor(group[0]), package);
             var answer = await outside.PostErrorReportAsync(address, report, token).ConfigureAwait(true);
             if (answer is null)
             {

@@ -57,6 +57,9 @@ const ALLOWED_ENTRIES = [
     '/^environment\.txt$/',
     '/^description\.txt$/',
     '/^contact\.txt$/',
+    // Entry 357 section 2: the stage records of a picture GroupLab could not read, sent with an automatic report under "Send
+    // everything I open", carrying the picture code its submission has.
+    '/^read-\d{8}-\d{6}-\d+\.json$/',
 ];
 
 function respond(int $status, array $payload): never

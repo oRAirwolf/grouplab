@@ -86,15 +86,20 @@ public sealed partial class MainWindow
     private void FillFirstRunErrors(StackPanel part, Action answered)
     {
         part.Children.Add(new TextBlock { Text = SharingWords.ErrorsQuestion, Classes = { AppStyles.Title } });
-        part.Children.Add(Line(SharingWords.ErrorsIntro));
-        foreach (string line in ErrorReports.WhatIsSent)
+        if (SharingSwitches.FullLogOpen && settingsStore.ErrorWordingDue())
+        {
+            part.Children.Add(Line(SharingWords.ErrorsWordingChanged));
+        }
+
+        part.Children.Add(Line(SharingWords.ErrorsIntroNow));
+        foreach (string line in ErrorReports.WhatIsSentNow)
         {
             part.Children.Add(Line("• " + line));
         }
 
         void Choose(ErrorReportChoice choice)
         {
-            settingsStore.SaveErrorChoice(choice);
+            settingsStore.SaveErrorChoice(choice, SharingSwitches.FullLogOpen);
             DiagnosticLog.Info("errors.first-run", ("choice", choice.ToString()));
             part.IsVisible = false;
             answered();
@@ -131,7 +136,7 @@ public sealed partial class MainWindow
             {
                 if (radio.IsChecked == true && settingsStore.LoadErrorChoice() != value)
                 {
-                    settingsStore.SaveErrorChoice(value);
+                    settingsStore.SaveErrorChoice(value, SharingSwitches.FullLogOpen);
                     DiagnosticLog.Info("errors.choice", ("choice", value.ToString()));
                 }
             };
@@ -140,10 +145,24 @@ public sealed partial class MainWindow
 
         errorSettings.Children.Add(choices);
         errorSettings.Children.Add(Line(SharingWords.ErrorsShort));
+        // Entry 357 section 2: somebody on automatic reports under the thinner wording is asked here too, until they answer.
+        if (SharingSwitches.FullLogOpen && settingsStore.ErrorWordingDue())
+        {
+            errorSettings.Children.Add(Line(SharingWords.ErrorsWordingChanged));
+            errorSettings.Children.Add(Row(Button("Send them with the log", () =>
+            {
+                settingsStore.SaveErrorChoice(ErrorReportChoice.Always, fullLogWording: true);
+                FillErrorSettings();
+            }), Button(SharingWords.ErrorChoices.First(c => c.Choice == ErrorReportChoice.Ask).Words, () =>
+            {
+                settingsStore.SaveErrorChoice(ErrorReportChoice.Ask, fullLogWording: true);
+                FillErrorSettings();
+            })));
+        }
 
         // Entry 299: what a report holds and how many have gone, under "More".
-        var more = new List<Control> { Line(SharingWords.ErrorsIntro) };
-        foreach (string line in ErrorReports.WhatIsSent)
+        var more = new List<Control> { Line(SharingWords.ErrorsIntroNow) };
+        foreach (string line in ErrorReports.WhatIsSentNow)
         {
             more.Add(Line("• " + line));
         }

@@ -51,7 +51,9 @@ public sealed class ReportPackageTests : IDisposable
         Assert.Equal(receivers, ReportPackage.PermittedEntryPatterns);
 
         Assert.Equal(
-            [@"^crash-\d{8}-\d{6}-\d+\.json$", @"^grouplab-\d{8}-\d{6}-\d+\.log$", @"^environment\.txt$", @"^description\.txt$", @"^contact\.txt$"],
+            [@"^crash-\d{8}-\d{6}-\d+\.json$", @"^grouplab-\d{8}-\d{6}-\d+\.log$", @"^environment\.txt$", @"^description\.txt$", @"^contact\.txt$",
+                // Entry 357 section 2: a picture GroupLab could not read, its stage records and its picture code.
+                @"^read-\d{8}-\d{6}-\d+\.json$"],
             ReportPackage.PermittedEntryPatterns);
         Assert.False(ReportPackage.IsPermitted("IMG_1580.jpg"));
         Assert.False(ReportPackage.IsPermitted("settings.json"));

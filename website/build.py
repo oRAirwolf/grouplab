@@ -1214,7 +1214,7 @@ def limit_problems() -> list:
 
     # Entry 357: the application's receiver takes "Send everything I open" only while limits.json offers it, and the error receivers take
     # the log package's reference only while limits.json says error reports carry it.
-    for file, const, key in [("app-submission.php", "SEND_EVERYTHING_OPEN", "sendEverythingOpen")]:
+    for file, const, key in [("app-submission.php", "SEND_EVERYTHING_OPEN", "sendEverythingOpen"), ("error-report.php", "FULL_LOG_REPORTS", "fullLogErrorReports")]:
         source = need(REPO / "website" / "api" / file).read_text(encoding="utf-8")
         want = "true" if limit[key] else "false"
         if f"const {const} = {want};" not in source:

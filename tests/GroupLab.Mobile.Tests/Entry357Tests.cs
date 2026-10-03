@@ -117,4 +117,31 @@ public class Entry357Tests
             Directory.Delete(folder, recursive: true);
         }
     }
+
+    /// <summary>Section 2 on the phone: automatic reports chosen under the thinner wording are asked about again only once the log goes.</summary>
+    [AvaloniaFact]
+    public void AutomaticReportsAreAskedAgainUnderTheNewWording()
+    {
+        var store = Fresh(out string folder);
+        try
+        {
+            Start();
+            store.SaveScopeAnswer(ScopeAnswer.Moa, GroupLab.Core.Marking.LinearUnit.Inch);
+            store.SaveSending(SendingChoice.Never, null);
+            store.SaveSurveyChoice(GroupLab.Core.Survey.SurveyChoice.No);
+            store.SaveErrorChoice(GroupLab.App.Diagnostics.ErrorReportChoice.Always);
+            SharingSwitches.FullLogOverride = false;
+            Assert.False(FirstRunView.Due(store));
+            SharingSwitches.FullLogOverride = true;
+            Assert.Equal(ReceiverTerms.Current.ErrorReportsOpen, FirstRunView.Due(store));
+            Assert.Contains(SharingWords.ErrorsWordingChanged, Words(new FirstRunView(store, () => { })));
+            store.SaveErrorChoice(GroupLab.App.Diagnostics.ErrorReportChoice.Always, fullLogWording: true);
+            Assert.False(FirstRunView.Due(store));
+        }
+        finally
+        {
+            SharingSwitches.FullLogOverride = null;
+            Directory.Delete(folder, recursive: true);
+        }
+    }
 }

@@ -176,6 +176,27 @@ public sealed partial class MainWindow
         };
     }
 
+    /// <summary>
+    /// Entry 357 section 2: a picture GroupLab could not read. Its stage records are kept for the package, and under "Send everything I
+    /// open", with automatic reports that carry the log, it is a report of its own, matched to the picture's submission by its picture code.
+    /// </summary>
+    private void NoteFailedRead(string failure, TraceRecorder trace)
+    {
+        lastTrace = trace;
+        if (!SendingEverything || !ErrorsOpen || !SharingSwitches.FullLogOpen || settingsStore.LoadErrorChoice() != ErrorReportChoice.Always
+            || settingsStore.LoadErrorWording() < ErrorReports.FullLogWording || session.State.ImagePath is not { } path || !File.Exists(path)
+            || doNotSend == path)
+        {
+            return;
+        }
+
+        string code = TargetPackages.PictureCode(settingsStore.LoadPictureSalt(), File.ReadAllBytes(path));
+        if (ErrorReports.RecordReadFailure(DiagnosticLog.Current.Directory, failure, CrashReporter.StagesOf(trace), code) is not null)
+        {
+            _ = SendWaitingErrorsAsync();
+        }
+    }
+
     /// <summary>A problem shown on this picture, and later the choice made, for the package.</summary>
     private void NoteProblem(string title, string? choice)
     {

@@ -236,7 +236,7 @@ public sealed class SettingsView : UserControl
                 {
                     if (radio.IsChecked == true && settings.LoadErrorChoice() != value)
                     {
-                        settings.SaveErrorChoice(value);
+                        settings.SaveErrorChoice(value, SharingSwitches.FullLogOpen);
                         DiagnosticLog.Info("errors.choice", ("choice", value.ToString()));
                         _ = Phone.SendWaitingErrorsAsync();
                     }
@@ -245,8 +245,15 @@ public sealed class SettingsView : UserControl
             }
 
             column.Children.Add(Screens.Dim(SharingWords.ErrorsShort));
+            // Entry 357 section 2: somebody on automatic reports under the thinner wording is asked here too, until they answer.
+            if (SharingSwitches.FullLogOpen && settings.ErrorWordingDue())
+            {
+                column.Children.Add(Screens.Line(SharingWords.ErrorsWordingChanged));
+                column.Children.Add(Screens.Choice("Send them with the log", () => settings.SaveErrorChoice(ErrorReportChoice.Always, fullLogWording: true)).Id("settings-errors-with-log"));
+            }
+
             column.Children.Add(MoreFold.Make(settings, "errors",
-                [Screens.Dim(SharingWords.ErrorsIntro), .. ErrorReports.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))], Screens.Touch));
+                [Screens.Dim(SharingWords.ErrorsIntroNow), .. ErrorReports.WhatIsSentNow.Select(line => (Control)Screens.Dim("• " + line))], Screens.Touch));
         }
 
         column.Children.Add(Screens.Heading("Hardware survey"));

@@ -456,6 +456,25 @@ foreach ([
     check($what . ' is refused', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
 }
 
+// Entry 357 section 2: the log package's reference and a read failure's picture code, only while limits.json says reports carry the log.
+$linked = error_report(['package' => '2026-10-03_0000aaaa', 'picture_code' => str_repeat('c', 32)]);
+error_request($root, $errorSource, $linked);
+$kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $linked['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
+check('while the log does not go with reports, a package reference is dropped as any unknown field is',
+    !array_key_exists('package', $kept ?? []) && !array_key_exists('picture_code', $kept ?? []));
+$r = error_request($root, $errorSource, error_report(['kind' => 'read-failure']));
+check('and a read failure is refused, as before', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
+$fullLog = str_replace('const FULL_LOG_REPORTS = false;', 'const FULL_LOG_REPORTS = true;', $errorSource);
+$linked = error_report(['package' => '2026-10-03_0000aaab', 'picture_code' => str_repeat('c', 32), 'kind' => 'read-failure']);
+$r = error_request($root, $fullLog, $linked);
+$kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $linked['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
+check('once it does, a read failure is kept with its package reference and picture code',
+    ($kept['kind'] ?? '') === 'read-failure' && ($kept['package'] ?? '') === '2026-10-03_0000aaab' && ($kept['picture_code'] ?? '') === str_repeat('c', 32), $r['raw']);
+$odd = error_report(['package' => '../../etc/passwd']);
+$r = error_request($root, $fullLog, $odd);
+$kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $odd['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
+check('a package reference that is not one is dropped', !array_key_exists('package', $kept ?? []), $r['raw']);
+
 $r = request($root, $errorSource, ['report' => str_repeat('{', 300000)], []);
 check('a report over 256 KB is refused', ($r['json']['code'] ?? '') === 'too_large', $r['raw']);
 

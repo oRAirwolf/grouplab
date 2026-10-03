@@ -311,7 +311,8 @@ public sealed partial class MainWindow
         // Entry 357 section 1: somebody who chose every target automatically is asked once about everything they open, as a question.
         bool everythingDue = ReceiverOpen && SharingSwitches.EverythingOpen && settingsStore.EverythingQuestionDue();
         bool targetsDue = ReceiverOpen && settingsStore.LoadSending().Choice == SendingChoice.Unset || everythingDue;
-        bool errorsDue = ErrorsOpen && settingsStore.LoadErrorChoice() == GroupLab.App.Diagnostics.ErrorReportChoice.Unset;
+        bool errorsDue = ErrorsOpen && (settingsStore.LoadErrorChoice() == GroupLab.App.Diagnostics.ErrorReportChoice.Unset
+            || SharingSwitches.FullLogOpen && settingsStore.ErrorWordingDue());
         // Entry 208: the survey is the third question on the same screen. Somebody who answered the other two before sees the screen once
         // more, with only the survey to answer and a line saying their earlier answers are kept.
         bool surveyDue = SurveyOpen && settingsStore.LoadSurveyChoice() == GroupLab.Core.Survey.SurveyChoice.Unset;

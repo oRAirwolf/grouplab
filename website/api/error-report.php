@@ -46,6 +46,13 @@ const MAX_ACTIONS     = 20;
 const MAX_ACTION      = 100;
 const MAX_DESCRIPTION = 500;
 
+/**
+ * Entry 357 section 2: whether a report may name the log package sent with it to crash-report.php, and the picture code of a picture
+ * GroupLab could not read, which is a report of the kind read-failure. limits.json's fullLogErrorReports, which the site's build holds this
+ * to. While it is false those fields are dropped as any unknown field is, and a read-failure report is refused, as before.
+ */
+const FULL_LOG_REPORTS = false;
+
 function respond(int $status, array $payload): never
 {
     http_response_code($status);
@@ -166,7 +173,7 @@ function clean(array $in): array
         return [null, 'the report is not one this receiver reads'];
     }
     $kind = $in['kind'] ?? null;
-    if ($kind !== 'survived' && $kind !== 'closed') {
+    if ($kind !== 'survived' && $kind !== 'closed' && !(FULL_LOG_REPORTS && $kind === 'read-failure')) {
         return [null, 'the report does not say whether GroupLab survived the error or closed'];
     }
     $made = $in['made'] ?? null;
@@ -227,6 +234,13 @@ function clean(array $in): array
         'exceptions'   => $exceptions,
         'last_actions' => $actions,
     ];
+    // Entry 357 section 2: the log package's reference, and the picture code that matches a read failure to the picture's submission.
+    if (FULL_LOG_REPORTS && is_string($in['package'] ?? null) && preg_match('/^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$/', $in['package']) === 1) {
+        $out['package'] = $in['package'];
+    }
+    if (FULL_LOG_REPORTS && is_string($in['picture_code'] ?? null) && preg_match('/^[0-9a-f]{32}$/', $in['picture_code']) === 1) {
+        $out['picture_code'] = $in['picture_code'];
+    }
     // Entry 194 section 2.3: an automatic report carries no free text at all; one made by hand may keep its description.
     if ($made === 'by hand' && is_string($in['description'] ?? null)) {
         $out['description'] = text($in['description'], MAX_DESCRIPTION);
