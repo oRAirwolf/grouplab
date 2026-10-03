@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 157,
+  "afterNightly": 160,
   "screens": {
     "analysis": "bef55033d2b3a5a31212639e5ff74cf32cb2bf957fceb14188d6f658f7dd6b47",
     "analysis-open": "476f71f45452f3372dfebec9e1cf7fc8fc720edc12c703006874c2a08359a5f2",
@@ -9,7 +9,7 @@
     "compare": "05bae565987d14a3ded4586b159425c420afbc9dd5929c7bb78a1bc08a85a370",
     "equipment": "e34a1ef27701d7fe457de4e0d067b9ec1c78c14753847379153426607255337e",
     "fingerprint": "97c2c476e05d732b3f6507e5597a224c243bf728a6577d1644c4dfb1e3fb4b02",
-    "firstrun": "4304dba7fe8dd27458002da3d82b964097591221f2ab4f20e3687073a9b47c5c",
+    "firstrun": "2c8e8a11dae60053bc1eb953bc3b37f6b9f41f5b08844965c7f437b743eb8cec",
     "marking": "641fadebc3ed2c3cd89542178372457b33700042c91f51c22d059bf349c5ca14",
     "marking-other": "0f76e03d7e0673d18a9d8985571e972b6fcb407a3a1a618afb5a1ab56b409817",
     "optic": "b9baab30fba7459bc5e8d7f8571f78fe3c0737b627eb7337311caadd051821ce",

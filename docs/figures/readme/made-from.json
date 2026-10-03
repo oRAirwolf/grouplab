@@ -8,16 +8,16 @@
     "docs/figures/screens/phone/fold-capture-dark.png": "44ad8b627fc9b5f0de854e1dfeab82ce0eb22f93f0a650da5725575078bcd5e0",
     "docs/figures/screens/current/marking-dark-1400x900.png": "432ebd251214fadfeccf0621fd39f71bd78517117e0a2f8558f71cdad630b4d1",
     "docs/figures/screens/current/analysis-open-dark-1400x900.png": "da816fb464123b1d5b8b57a3d78db0cbcf6d5fd26bb9fd246f3270704f6a2c1f",
-    "docs/figures/screens/current/compare-dark-1400x900.png": "51f2776a2236ee8b2a2f7f162d9082be74ba9a3c0a30868679dd5784244d87dc",
+    "docs/figures/screens/current/compare-dark-1400x900.png": "952561073081f8005ddca476d8b77482161bfc4945feaf6b9b899dafab592aaf",
     "docs/figures/screens/current/ballistics-hit-dark-1400x900.png": "cc915fbb24790c6854c670da15fe10cf2f2626ccd60c579106c2e89c96fb152e",
-    "docs/figures/screens/current/analysis-light-1400x900.png": "5b74d8ea309d797234e36618c60a296a0c5f1adffa4054788fe810ec576fc2a6",
+    "docs/figures/screens/current/analysis-light-1400x900.png": "d29558276c42921174085a2e27206e51103cc924203081e71b01747293c48bad",
     "docs/figures/screens/phone/fold-result-light.png": "553587354105b9676c7900455ccd2fec3d5cfa4dd0715c160818d41ee0a0d0ca",
     "docs/figures/screens/current/targets-light-1400x900.png": "e49ef7fef0bc5634f61e74863e8672bacdb9e0e743aa6e139446295132bad93c",
     "docs/figures/screens/phone/fold-capture-light.png": "8ba68832c73e5c6801743284689d09ac25135d6bb00b877ed5f1d1f6e26d74c2",
-    "docs/figures/screens/current/marking-light-1400x900.png": "1fd249953c83581da5eea9ad99d87e41f8701719537fc5ff5bf4b295c43a5792",
-    "docs/figures/screens/current/analysis-open-light-1400x900.png": "35cfbb26cb029aea80fd871294f5ed0eb836f7e20d138b61862caee2a3bbf038",
-    "docs/figures/screens/current/compare-light-1400x900.png": "79b21a9844704127916ae4c1853ed04d23d2b92d617110153a8f0ef9bdf03782",
-    "docs/figures/screens/current/ballistics-hit-light-1400x900.png": "ec3ae3bfab22104746e441b68169f6210e4cf5532e6374d755ab1a4282380fc0",
+    "docs/figures/screens/current/marking-light-1400x900.png": "75d1bf58afe060b8b9c4a14495bf2f19e462ea3b31b911fb405eebc5703300c9",
+    "docs/figures/screens/current/analysis-open-light-1400x900.png": "6a3e249992a7705decc934baab0a202fcde763cbc8283708de2f5fd740aede42",
+    "docs/figures/screens/current/compare-light-1400x900.png": "9eed89e808be9a82f12adf706b1bf5a9bc1f82a4452b96f5ceeccd5bac2763f1",
+    "docs/figures/screens/current/ballistics-hit-light-1400x900.png": "368f441185ffd63c7e1ea8d0d95aa8214fbd67cfb62906edd62c761e3f5880af",
     "scripts/readme-images.py": "faa267cfad5a99e6c6341fc5d853f068f49117ebc52b34b7f119233658941a3a"
   }
 }
