@@ -187,7 +187,11 @@ public static class AutomaticMarking
 
                 // The detector works in the sheet's own inches, so a real bullet is converted into them: on a sheet printed at 96.2 percent
                 // a 0.308 in hole spans 0.320 of the sheet's inches. Entry 171 section 1.
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre / printScale, KeepResidual: trace.KeepArtefacts));
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre / printScale, KeepResidual: trace.KeepArtefacts,
+                    // Entry 354 section 1.2: a photograph's margin is where its curled or torn edge and the board behind show. A picture whose
+                    // stated resolution would make the sheet print at a size no printer makes, as a phone photograph rebuilt at 300 dpi does,
+                    // is a photograph too; only a scan GroupLab believes holds its paper flat.
+                    RefuseMargin: SheetReference.Correction(measurement.Scale) is null));
             }
             catch (InvalidOperationException ex)
             {
@@ -288,7 +292,7 @@ public static class AutomaticMarking
                 : h.JoinedHoles is { } whole ? new DetectedOversize(whole, false, CalibreHoles: h.CalibreHoles, Joined: true,
                     AcrossInches: h.JoinedAcrossInches * printScale, AcrossHoles: h.JoinedAcrossHoles)
                 : null,
-            h.SizeHoles is { } size && !h.PossibleMerge ? new MarkSize(size, h.SplitA, h.SplitB) : null)).ToList();
+            h.SizeHoles is { } size && !h.PossibleMerge ? new MarkSize(size, h.SplitA, h.SplitB, h.Beside) : null)).ToList();
         var rejected = holes.Rejected.Select(r => new RejectedCandidate(new PointD(r.X, r.Y), r.DiameterInches, r.Reason)).ToList();
 
         string summary = string.Create(CultureInfo.InvariantCulture,

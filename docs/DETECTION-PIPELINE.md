@@ -191,6 +191,8 @@ Requirements:
 
 The exclusion is a hard mask, not a penalty. A candidate whose hull centroid falls inside an exclusion zone is dropped at S7 and recorded as a rejection with the zone named, so the trace says "rejected, inside dataBlock" rather than "rejected, score 0.28". A candidate that straddles a zone boundary is kept and flagged, because a shot can legitimately clip the edge of a printed region.
 
+**What else the sheet printed, entry 354.** A crinkled .22 sheet photographed on a board showed three more kinds of mark the definition already explains. On a photograph, a candidate centred past everything the sheet prints, its words and the print instruction included, is on the margin, where a curled or torn edge and the board behind it show, and is refused; a flatbed scan holds the paper flat under glass, and a stray shot in its margin is kept. A candidate lying wholly on a line of the sheet's words, within what a crinkle moves them, is those words: the expected artwork leaves words out and relies on the opening, and a photograph's blur thickens a bull's number past it. A split half that falls inside a zone is the printing's own edge and is refused, and the other half is the hole. A hole centred in a marker's zone is still refused whole: keeping the part outside the zone found one such hole on the .22 sheet, and on range photographs of several sheets it kept the board beside a sheet's edge as well. Each kept mark carries the printing it lies beside, so a review with more marks than rounds can name those first.
+
 ### S6. Difference
 
 Subtract the expected image from the observed and produce a residual field.

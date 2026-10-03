@@ -14,8 +14,12 @@ public sealed record DetectedShot(PointD Image, AssignedShot Assignment, double?
 /// How many single holes' area a detected mark holds, and where its two halves would sit if it is two, NOTES-FROM-PLANNING.md entry 95
 /// section 2. It rides on every detected mark rather than only on flagged ones, because when a person says how many rounds they fired and
 /// the count disagrees, the marks nearest the threshold are the ones to look at, and those are mostly below it.
+/// <para>
+/// <see cref="Beside"/> names the sheet's own printing the mark lies on or within a crinkle's reach of, "marker 18" or the printed words
+/// "25", where there is any: with more marks than rounds those are looked at first (NOTES-FROM-PLANNING.md entry 354 section 1.6).
+/// </para>
 /// </summary>
-public sealed record MarkSize(double Holes, PointD? SplitA = null, PointD? SplitB = null);
+public sealed record MarkSize(double Holes, PointD? SplitA = null, PointD? SplitB = null, string? Beside = null);
 
 /// <summary>
 /// A detection flagged as oversized, NOTES-FROM-PLANNING.md entry 82 section 6: about how many single holes' area it holds, and whether the

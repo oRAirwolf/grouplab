@@ -4218,7 +4218,7 @@ public sealed partial class MainWindow : Window
         int shots = CountedShots(state);
         var count = new TextBlock
         {
-            Text = ReviewItems.Count == 0 ? (state.Assignment is null ? "Nothing detected to review." : "Nothing needs review.") : $"{open} of {shots} need review",
+            Text = ReviewItems.Count == 0 ? (state.Assignment is null ? "Nothing detected to review." : "Nothing needs review.") : ReviewQueue.CountWords(ReviewItems, shots),
             FontFamily = Mono,
             VerticalAlignment = VerticalAlignment.Center,
             Classes = { open > 0 ? AppStyles.Warn : AppStyles.Secondary },
@@ -5885,9 +5885,10 @@ public sealed partial class MainWindow : Window
     {
         string document = state.ImagePath is { } path ? Path.GetFileName(path) : "no image open";
         int shots = CountedShots(state);
-        int open = ReviewQueue.Open(ReviewQueue.For(state, analyseSighters));
+        var items = ReviewQueue.For(state, analyseSighters);
+        int open = ReviewQueue.Open(items);
         reviewPill.IsVisible = shots > 0;
-        reviewCount.Text = FormattableString.Invariant($"{open} of {shots} need review");
+        reviewCount.Text = ReviewQueue.CountWords(items, shots);
 
         // Entry 143, question 42. The label is shorter than the one it replaces, so nothing in the header moves.
         if (detectButton is not null)

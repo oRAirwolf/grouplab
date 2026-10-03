@@ -157,6 +157,51 @@ public class SubgroupAndSplitTests
         Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 354 section 1.6: more marks than rounds, and one of them sits beside a printed marker. That one is named
+    /// first and is the one the item offers to take away, whatever its size; the submitted sheet's review offered the smallest mark first and left the
+    /// marker's edge further down. Where the detector says what printing a mark lies beside, the file keeps it.
+    /// </summary>
+    [Fact]
+    public void TooManyMarksNameTheOneOnTheSheetsPrintingFirst()
+    {
+        var session = Sized(new double[] { 0.95, 0.41, 1.02, 0.91, 1.12 });
+        session.Load(session.State with { Shots = [.. session.State.Shots.Select(s => s.Size!.Holes == 1.02 ? s with { Size = s.Size with { Beside = "marker 18" } } : s)] });
+        session.SetExpectedShots(4);
+
+        var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
+        Assert.Contains("You fired 4 and 5 are marked. Least like a hole: those off the bulls or on the sheet's own printing first, then the smallest: shot 3 at 1.02 holes, on or beside marker 18, shot 2 at 0.41 holes", item.Sentence, StringComparison.Ordinal);
+        Assert.Equal("Shot 3 is not a shot", item.Choices[0].Label);
+
+        var (read, _) = MarkingFile.Read(MarkingFile.Write(session.State));
+        Assert.Equal("marker 18", read.Shots[2].Size!.Beside);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 354 section 1.5: the submitted sheet's header read "49 of 29 need review", open items over shots. A shot with three
+    /// things open about it is one shot that needs review, and the count of rounds is about the sheet, not a shot.
+    /// </summary>
+    [Fact]
+    public void TheReviewCountCountsShotsAndNeverMoreThanThereAre()
+    {
+        var at = new PointD(0, 0);
+        ReviewItem Item(string key, ReviewKind kind, int? shot, bool resolved = false) => new(key, kind, shot, null, at, "", [], resolved);
+        var items = new[]
+        {
+            Item("count", ReviewKind.Count, 1),
+            Item("contested:1", ReviewKind.Contested, 1),
+            Item("oversized:1", ReviewKind.Oversized, 1),
+            Item("doubled:1", ReviewKind.Doubled, 1),
+            Item("contested:2", ReviewKind.Contested, 2),
+            Item("contested:3", ReviewKind.Contested, 3, resolved: true),
+            Item("refused:4", ReviewKind.Refused, null),
+        };
+
+        Assert.Equal("2 of 3 and 2 more need review", ReviewQueue.CountWords(items, 3));
+        Assert.Equal("1 of 1 and 2 more need review", ReviewQueue.CountWords(items, 1));
+        Assert.Equal("1 of 2 need review", ReviewQueue.CountWords([Item("contested:1", ReviewKind.Contested, 1), Item("oversized:1", ReviewKind.Oversized, 1)], 2));
+    }
+
     /// <summary>With no count stated, or one that agrees, there is no item; and the count survives the marking file.</summary>
     [Fact]
     public void AnAgreeingOrMissingCountRaisesNothingAndTheCountIsSaved()

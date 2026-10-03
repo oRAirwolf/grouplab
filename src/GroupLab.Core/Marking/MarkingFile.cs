@@ -110,6 +110,7 @@ public static class MarkingFile
                         holes = size.Holes,
                         splitA = size.SplitA is { } sa ? new { x = sa.X, y = sa.Y } : null,
                         splitB = size.SplitB is { } sb ? new { x = sb.X, y = sb.Y } : null,
+                        beside = size.Beside,
                     }
                     : null,
                 oversize = s.Oversize is { } flag
@@ -200,7 +201,7 @@ public static class MarkingFile
                 ? new DetectedOversize((double)flag["holes"]!, (bool?)flag["tentative"] ?? false, Point(flag["splitA"]), Point(flag["splitB"]), (double?)flag["calibreHoles"], (bool?)flag["joined"] ?? false,
                     (double?)flag["acrossInches"], (double?)flag["acrossHoles"])
                 : null,
-            s["size"] is JsonObject size ? new MarkSize((double)size["holes"]!, Point(size["splitA"]), Point(size["splitB"])) : null)
+            s["size"] is JsonObject size ? new MarkSize((double)size["holes"]!, Point(size["splitA"]), Point(size["splitB"]), (string?)size["beside"]) : null)
         {
             Flyer = (bool?)s["flyer"] ?? false,
             Sighter = (bool?)s["sighter"] ?? false,

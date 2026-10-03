@@ -98,7 +98,14 @@ public sealed record RenderDifferenceOptions(
     /// The most of the mark's own area the hole-sized part may keep. Holes merged with each other survive the opening nearly whole, so a
     /// part that keeps more than this is the mark itself, and it is judged as it always was.
     /// </summary>
-    double JoinedKeepsAtMost = 0.75);
+    double JoinedKeepsAtMost = 0.75,
+    /// <summary>
+    /// Whether a mark past everything the sheet printed is refused as the sheet's margin, NOTES-FROM-PLANNING.md entry 354 section 1.2. Set
+    /// for a photograph, where a curled or torn edge, its shadow and the board behind the paper show in the margin. A flatbed scan holds the
+    /// paper flat under glass, and a stray shot in its margin is a shot: scan 5 of 2026-09-20 has one 0.2 in from its edge, which Alan's
+    /// own table counts.
+    /// </summary>
+    bool RefuseMargin = false);
 
 /// <summary>Where the size of a single hole came from, NOTES-FROM-PLANNING.md entry 82.</summary>
 public enum HoleSizeSource
@@ -157,12 +164,16 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// <see cref="JoinedAcrossInches"/> is the whole mark's hull across, inches, and <see cref="JoinedAcrossHoles"/> the same in single holes
 /// across, so the person can be told how much bigger than the bullet the mark was (NOTES-FROM-PLANNING.md entry 318 section 1).
 /// </para>
+/// <para>
+/// <see cref="Beside"/> names the sheet's own printing a mark lies on or within a crinkle's reach of, a marker, a code or a line of words,
+/// so that when there are more marks than rounds the review can show those first (NOTES-FROM-PLANNING.md entry 354 section 1.6).
+/// </para>
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
     double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN,
     double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null, double? JoinedHoles = null, double? JoinedAcrossInches = null,
-    double? JoinedAcrossHoles = null);
+    double? JoinedAcrossHoles = null, string? Beside = null);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -218,7 +229,7 @@ public sealed record RenderDifferenceResult(double Dpi, double InkFraction, doub
 /// 25th percentile whole mark.</item>
 /// </list>
 /// </summary>
-public static class RenderDifferenceHoleDetector
+public static partial class RenderDifferenceHoleDetector
 {
     private sealed record Zone(string Name, double Left, double Top, double Right, double Bottom);
 
@@ -315,6 +326,7 @@ public static class RenderDifferenceHoleDetector
 
         // S8: filters, declared zones, the position prior, and the weighted centre.
         var zones = Zones(definition, scene, tile);
+        var printed = Printed(definition, tile);
         // NOTES-FROM-PLANNING.md entry 83 section 2: every size is converted at the blob's own scale. One scale for the whole image read holes
         // on the near side of an oblique photograph up to 30 percent large, which is what the oversize flags on those frames were.
         double largestSquareInches = Math.PI * Math.Pow(options.MaximumDiameterInches / 2, 2);
@@ -366,14 +378,27 @@ public static class RenderDifferenceHoleDetector
                 : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
                 : null;
 
+            // NOTES-FROM-PLANNING.md entry 354 section 1. A mark past everything the sheet printed is on its margin, not on the sheet: the submitted
+            // .22 sheet, stapled crinkled to a board, gave marks on its torn top corner, along its curled top edge and on the print instruction
+            // at its lifted bottom edge, where the board behind showed through. And a mark lying wholly on a bull's printed number, within what
+            // a crinkle moves it, is the number: the expected artwork leaves words out, and a photograph's blur thickens them past the opening.
+            // A clean round hole of a bullet's size is still a stray shot there: scan 5 of 2026-09-20 has one 0.2 in from the corner, and the
+            // range photographs of that sheet showed it. What the margin gave on the .22 sheet was torn, split from a long mark or too small.
+            bool cleanHole = solidity >= CleanHoleSolidity && aspect <= CleanHoleAspect && moments.Elongation < options.SplitElongation
+                && (calibreHoles is { } holesOfCalibre ? holesOfCalibre >= CleanHoleOfCalibre : diameterIn >= options.SmallestHoleInches);
+            bool pastThePrint = !tooSmall && options.RefuseMargin && !cleanHole && IsPastThePrint(printed, page);
+            string? words = tooSmall || pastThePrint ? null : WordsUnder(printed, blob.Hull, registration);
+
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
+                : pastThePrint ? PastThePrint
+                : words is not null ? $"the sheet's own printed words, \"{words}\""
                 : !nearTheGrid ? OutsideTheGrid.TooFarOut
                 : null);
 
             // Entry 291 section 7 item 4: a mark large enough that it may be a hole joined to what lies beside it is kept aside, whatever its
             // shape made of it, and looked at again once the size of a single hole is known.
-            if (!tooSmall && zone is null && nearTheGrid && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
+            if (!tooSmall && zone is null && !pastThePrint && words is null && nearTheGrid && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
             {
                 large.Add((blob, hx, hy, ppi, markAreaIn));
             }
@@ -442,9 +467,22 @@ public static class RenderDifferenceHoleDetector
                 continue;
             }
 
-            foreach (var (mx, my) in Split(residual, width, blob, moments))
+            // NOTES-FROM-PLANNING.md entry 354 section 1.3: a half that lies in a marker or a code is that marker's or code's own printing, joined
+            // to a hole beside it, exactly as a whole mark there is refused. the submitted .22 sheet split a hole and the edge of the marker beside it
+            // into two shots, 12b and 12c. The other half is the hole, alone.
+            var halves = Split(residual, width, blob, moments);
+            var onPrint = halves.Select(h => registration.ToPage(new PointD(h.X, h.Y)))
+                .Select(p => zones.FirstOrDefault(z => p.X >= z.Left && p.X <= z.Right && p.Y >= z.Top && p.Y <= z.Bottom)).ToList();
+            for (int k = 0; k < halves.Length; k++)
             {
-                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: true, CalibreHoles: calibreHoles, InkFraction: moments.Ink,
+                var (mx, my) = halves[k];
+                if (onPrint[k] is { } printedZone)
+                {
+                    rejected.Add(new RejectedBlob(mx, my, diameterIn, $"inside {printedZone.Name}, half of a mark joined to a hole beside it", printedZone.Name));
+                    continue;
+                }
+
+                holes.Add(new RenderDifferenceHole(mx, my, hx, hy, diameterIn, solidity, moments.Ink > 0.3, closure, moments.Elongation, PossibleMerge: onPrint.All(z => z is null), CalibreHoles: calibreHoles, InkFraction: moments.Ink,
                     AreaInches: markAreaIn, Aspect: BoxAspect(blob), HullAreaInches: areaIn));
             }
         }
@@ -517,6 +555,13 @@ public static class RenderDifferenceHoleDetector
 
         // DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 98 section 5: the residual is the stage's own picture, the printed artwork
         // gone and the holes left, and it is kept only when an interactive analysis asks, so a batch run pays nothing for it.
+        // Entry 354 section 1.6: the printing each mark lies on or beside, named, so a review with more marks than rounds can lead with them.
+        for (int k = 0; k < holes.Count; k++)
+        {
+            double reach = (holes[k].DiameterInches / 2) + MovedPrintInches;
+            holes[k] = holes[k] with { Beside = Beside(zones, printed, registration.ToPage(new PointD(holes[k].X, holes[k].Y)), reach * 254) };
+        }
+
         return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null);
     }
 

@@ -296,15 +296,22 @@ public static class ReviewQueue
 
         var inv = CultureInfo.InvariantCulture;
         bool tooFew = found < expected;
+        // NOTES-FROM-PLANNING.md entry 354 section 1.6: with more marks than rounds, the marks to look at first are the ones off every bull and
+        // the ones on or beside the sheet's own printing, a marker, a code or its words, and only then the smallest. the submitted sheet led with the
+        // smallest mark and left a marker's edge and a bull's number further down.
         var ranked = (tooFew
                 ? shots.Where(s => s.Size is not null).OrderByDescending(s => s.Size!.Holes)
-                : shots.Where(s => s.Size is not null).OrderBy(s => s.Size!.Holes))
+                : shots.Where(s => s.Size is not null).OrderBy(s => s.Bull is null ? 0 : s.Size!.Beside is not null ? 1 : 2).ThenBy(s => s.Size!.Holes))
             .Take(CountCandidates)
             .ToList();
+        bool printFirst = !tooFew && ranked.Any(s => s.Bull is null || s.Size!.Beside is not null);
+        string Why(MarkedShot s) => tooFew ? "" : s.Bull is null ? ", off every bull" : s.Size!.Beside is { } beside ? $", on or beside {beside}" : "";
         string list = ranked.Count == 0
             ? " No mark carries a measured size, so there is nothing to rank: look at the sheet."
-            : (tooFew ? " Most likely to be two, closest to two holes' size first: " : " Least like a hole, smallest first: ")
-              + string.Join(", ", ranked.Select(s => string.Create(inv, $"shot {labels[s.Id]} at {s.Size!.Holes:0.00} holes"))) + ".";
+            : (tooFew ? " Most likely to be two, closest to two holes' size first: "
+                : printFirst ? " Least like a hole: those off the bulls or on the sheet's own printing first, then the smallest: "
+                : " Least like a hole, smallest first: ")
+              + string.Join(", ", ranked.Select(s => string.Create(inv, $"shot {labels[s.Id]} at {s.Size!.Holes:0.00} holes{Why(s)}"))) + ".";
         // NOTES-FROM-PLANNING.md entry 140: "You fired 25" was said to Alan on a sheet where he had typed nothing, because the number came
         // from the sheet's own twenty five bulls. He read it as the last sheet's count following him across, and it is worth seeing why that
         // reading was reasonable: the sentence claimed he had said something he had not. A number the sheet worked out says so, and says what
@@ -392,6 +399,21 @@ public static class ReviewQueue
 
     /// <summary>How many items still want a decision.</summary>
     public static int Open(IReadOnlyList<ReviewItem> items) => items?.Count(i => !i.Resolved) ?? 0;
+
+    /// <summary>
+    /// The header's count, "2 of 26 need review": how many of the shots have something open about them, never more than there are shots.
+    /// NOTES-FROM-PLANNING.md entry 354 section 1.5: it counted open items over shots, and a shot can carry several items, so the submitted sheet
+    /// read "49 of 29 need review". An open question about the sheet as a whole, the count of rounds or a bull with no shot, is not a shot,
+    /// so it is counted after the shots: "2 of 29 and 1 more need review".
+    /// </summary>
+    public static string CountWords(IReadOnlyList<ReviewItem> items, int shots)
+    {
+        var open = (items ?? []).Where(i => !i.Resolved).ToList();
+        int needing = open.Where(i => i.Kind != ReviewKind.Count && i.ShotId is not null).Select(i => i.ShotId!.Value).Distinct().Count();
+        int sheet = open.Count(i => i.Kind == ReviewKind.Count || i.ShotId is null);
+        string counted = string.Create(CultureInfo.InvariantCulture, $"{Math.Min(needing, Math.Max(shots, 0))} of {Math.Max(shots, 0)}");
+        return sheet == 0 ? counted + " need review" : counted + string.Create(CultureInfo.InvariantCulture, $" and {sheet} more need review");
+    }
 
     /// <summary>Carries out a choice on the session, as one undoable step, and returns the shot it concerned.</summary>
     public static int? Apply(MarkingSession session, ReviewItem item, ReviewChoice choice)

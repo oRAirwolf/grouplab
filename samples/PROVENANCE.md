@@ -228,3 +228,30 @@ GroupLab's own `GL-CF25-LTR-D`, printed with no scaling selected, which GroupLab
 On this paper and backing a hole measures 0.301 in across the middle, **1.14 times the bullet**, where the earlier scans on other paper
 measured 0.765 to 0.949. That is entry 161's finding and entry 162's reason paper and backing are now recorded fields.
 
+
+# Submission 36d3e498, 2026-10-03: two .22 LR sheets photographed on a board
+
+Two phone photographs sent through the upload page on 2026-10-03, and passed on by Alan with the shooter's report (entry 354). The sender's
+name is not recorded here or anywhere in the repository; the submission is named by its identifier.
+
+## Consent
+
+| | |
+|---|---|
+| **Given by** | The sender, on the upload page |
+| **Given on** | 2026-10-03, 02:16 UTC |
+| **Level** | `publishable`, consent version `consent_v2` |
+| **What was agreed** | "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published." |
+| **Covers** | The two photographs below: for testing, and published on the `test-data` release and in research articles |
+| **Licence** | GPL-3.0 |
+
+## The files
+
+The server keeps each upload rebuilt as a PNG, 4284 by 5712. Nothing from their metadata was read, printed or logged: each was decoded to
+pixels and written again as a JPEG at quality 95 with no metadata of any kind. The phone's focal length, which a photograph's registration
+needs, is taken from the submission's own record, where the server wrote it, and given to the tests in their fixture instead.
+
+| Published file | Bytes | SHA-256 | From | What it is |
+|---|---|---|---|---|
+| `photo-22lr-load-sheet-2026-10-03.jpg` | 5,809,550 | `5435d397065c2fc20db1338521e2a336bca8647f9cf095fe70c6aebf2fb17b0b` | `002_IMG_3819.png`, SHA-256 `395a92f65fab45012cf25b63c7a6b95885500b74c24f2a39be0469b5616b93de` | GroupLab's 5x5 load development sheet on Letter, `GL-CF25-LTR`, 25 shots of .22 LR at 50 yd, stapled to corrugated plastic |
+| `photo-22lr-diamond-2026-10-03.jpg` | 5,205,022 | `99bdaf388fb3aecdc735fcf7995aa736ee155a91fd6360ca1b71e9a8c8ee6630` | `001_IMG_3817.png`, SHA-256 `0e1942a0916c32d9193909e04868584a65ad82885e86418f87e7661206817abc` | A sheet the target generator made, 50 yd, 6x, diamond, `GL-MBTW-2V2M-JTPE-4518`, 25 shots of .22 LR at 50 yd |
