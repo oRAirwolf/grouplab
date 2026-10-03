@@ -10,7 +10,7 @@ misses, on bull 23, touches a marker; add that one by hand. The '49 of 29 need r
 now counts shots. The diamond sheet failed for a different reason: you made it with the target generator and printed it without saving
 it, so GroupLab had no copy and refused it, although the codes on the sheet read fine and hold the whole design, and it wrongly said the
 codes could not be read. GroupLab now reads the sheet's design from those codes and finds all 25 holes; check a few white centres it
-marks on the wavy left side before you accept. Both fixes are in the next nightly."
+marks on the wavy left side before you accept. Both fixes are in nightly 162, published 3 October."
 
 **WHAT THE SENDING SETTINGS DO, AND WHAT HAPPENED TO FENIX'S** (entries 354 and 355, not a request; to read and pass on)
 
