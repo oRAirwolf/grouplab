@@ -40,6 +40,18 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entry 356: a failure in the middle of the window, option B final
+
+Done 2026-10-03 by one worker. Opening a picture now decides: a GroupLab sheet that reads, a store-bought target recognized, a
+picture that looks like a GroupLab sheet (its corner markers, code blocks or a printed "GL-" name) whose codes would not read, which is
+the error dialog of board B final, or anything else, which is the calm "Which target is this?" with Mark it by hand first. The error
+dialog shows the picture with its codes outlined and the stages, Choose the sheet first, Try again reading harder (once a picture), Mark
+it by hand, and "Not a GroupLab sheet?", remembered for that picture and counted; dismissing it leaves an amber bar. Reading harder squares
+and evenly lights each code where the markers predict it, reads it at several thresholds and enlargements, uses one code to find the
+others, and looks for the printed name: 6 of 18 unread pictures rescued. On the computer every failure that stops the work is now a
+dialog (Enter takes the first choice, Escape closes), information stays in the status line. The "looks like" test fired on none of 70
+pictures without GroupLab marks, but costs about 5.4 s on such a picture. Not done: the phone's page-by-page failures as sheets.
+
 ## Entry 354: Fenix's .22 LR targets
 
 Done 2026-10-03 by one worker.

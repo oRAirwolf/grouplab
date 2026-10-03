@@ -25,6 +25,76 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-03, entry 356: a failure that stops the work is said in the middle of the screen, with what to do next
+
+**Status: done 2026-10-03 (one worker, four commits), except two parts.** Not done: the phone half of section 3, since the phone has no status line and its failures sit as a line on each page, so making them centred sheets is page by page and left for a later entry; and no automated test reaches the "codes read but the sheet is unknown" state after reading harder, though both platforms say it. Measured: the "looks like a GroupLab sheet" test fired on 0 of 70 pictures with no GroupLab marks; on 95 GroupLab pictures 62 named themselves, 16 got the error dialog and 17 the calm question. Reading harder rescues 6 of the 18 the first reading could not name (all 5 steep photographs, one range photograph) in 31 to 69 s; the printed-name lookup rescued none of the real pictures. A second decoder was not used: OpenCV's WeChat reader is Apache 2.0, but its models would have to be fetched. To speed up next: the "looks like" test costs 5.4 s on average, 24 s at most, before the calm question appears.
+
+Alan, 2026-10-03 02:50 UTC, with a screenshot of the desktop on nightly 159 opening Fenix's diamond sheet (001_IMG_3817.png, entry 354):
+the only sign of trouble was "GroupLab could not read this sheet's codes. Which sheet is it?" in small text in the bottom left corner,
+with "Show work: 1 stage failed" at the top and "Nothing detected to review." "Something happened, but having this error in the bottom
+left corner in small text is not very helpful. Errors like this should probably show up in the center of the screen as a warning that
+needs to be dismissed and maybe some options." Do it with entry 354 (the same case); main model.
+
+1. **One rule for the whole application, desktop and phone:** anything that stops the work or needs the person's decision (a picture
+   that cannot be read or opened, codes that cannot be read, no sheet matched, nothing detected, a save, export, send or print that
+   failed, a scale that cannot be found) appears as a dialog in the middle of the window, in the existing dialog style: a short title
+   that says what happened, one or two plain sentences on why, as far as GroupLab knows, and the choices as buttons, the most useful one
+   first. It stays until the person picks a choice or dismisses it. Information that needs no decision (saved, sent, copied) stays in
+   the status line as now. On the phone the same as a centered sheet. If any of this needs a new layout, DESIGN NEEDED as usual.
+2. **This case's choices**, for example: "Choose the sheet" (the library and recent sheets, the sheet's printed name offered first when
+   it can be read as text, here "GL-MBTW-2V2M-JTPE-4518"); "Try again, reading harder" (where a slower pass exists); "Mark it by hand"
+   (any-target mode, with the scale steps); "Show what went wrong" (Show work, at the failed stage); and "Send this picture to the
+   project" where sending is not already automatic. A dismissed dialog leaves a visible way back to it (the Show work button names it).
+3. Go through every message the application can show today in the status line and sort it into "decision or failure: dialog" and
+   "information: status line"; list the sorting in the commit. Keyboard: Enter takes the first choice, Escape dismisses, every button
+   has a name for a screen reader.
+4. The root cause of this particular failure (the codes on Fenix's photo look large and sharp) is entry 354 section 2; this entry is
+   about how any such failure is told.
+
+### 5. Amendment (Alan, 2026-10-03 03:42 UTC): most pictures are not GroupLab sheets, and that is not an error
+
+"Not every sheet that is loaded is going to have QR codes on it and may be a commercial or drawn target." So the opening of any picture
+decides, in order: (1) a GroupLab sheet whose codes read: carry on; (2) a store-bought target its fingerprint recognizes: carry on, with
+the scale note (entries 340, 341); (3) **a picture that looks like a GroupLab sheet** (its corner markers, its QR blocks or a printed
+"GL-" name seen) **but whose codes would not read**: the problem dialog of section 2, which is an error; (4) **anything else**: not an
+error, no warning mark and no amber, but a calm "Which target is this?" dialog (canvas claude.ai/artifact/2N23sjw7SqztYFekkfBgHr, board
+"Not an error"): "Mark it by hand" first (one true length: the sheet's size, a ring, or a ruler), "It is a store-bought target" (pick
+from the library or Add a store-bought target), "It is a GroupLab sheet" (choose it, or retake with the corners in view). Measure on
+the scoreboard's commercial and blank cases that case 3 never fires on a target that has no GroupLab marks, and say how often it would
+have. Alan's choice between the canvas's options A and B for the error dialog is to come; build the sorting and the engine first.
+
+### 6. Alan's choice (2026-10-03 03:45 UTC): option B, and "Try again, reading harder" kept
+
+"I like the concept for B and I like the idea of an option to try harder." The error dialog is board B on the canvas (desktop and
+phone): the small picture with the unread codes outlined, the stage list (opened, codes N of 4, which sheet, holes), the plain reason,
+the printed name when it can be read, two big buttons and the rest as links. Keep the amber bar after dismissing (planning's default,
+Alan may say otherwise). "Try again, reading harder" becomes a button beside the two, shown only when a harder pass exists that has not
+run on this picture, and it must do more than the first reading already does; today `SheetIdentification.Identify` already tries
+several resolutions and reads each code cut out and enlarged. The harder pass, measured on Fenix's diamond sheet and the scoreboard's
+failures before it ships:
+
+1. Full resolution with the working-size cap lifted (the phone's lower cap and the desktop's 8000 px), within a memory limit.
+2. Each corner code on its own: lit evenly (local contrast normalization against glare and shade), several thresholds, its own
+   perspective corrected from its finder squares, a curled corner flattened, and read at each enlargement.
+3. One code read is used to find the others: the sheet's layout says where they must be.
+4. The printed name under the title ("GL-MBTW-2V2M-JTPE-4518"), read as text, looked up in the person's sheets and the library.
+5. A second decoder library where one is available under a licence GroupLab can ship.
+
+It shows progress and can be cancelled. If it reads the codes but the sheet itself is unknown (a sheet another person's GroupLab made),
+the dialog says that plainly and what to do instead of "could not read". Phone: the same, with "Take it again" before it.
+
+### 7. Final choice (Alan, 2026-10-03 04:27 UTC): "Go with B final"
+
+Build the boards "B, final candidate: reading harder, and not a GroupLab sheet" (desktop) and "B, final candidate, on a phone" on the
+canvas claude.ai/artifact/2N23sjw7SqztYFekkfBgHr; they replace section 6's description where the two differ. Desktop: the picture with
+the unread codes outlined and the stage list, now with "Looks like a GroupLab sheet" ticked so the reason for the error shows; the
+title, the reason and the printed name; the buttons "Choose the sheet" (amber, first), "Try again, reading harder" (only when such a
+pass has not run), "Mark it by hand"; under a rule, "Not a GroupLab sheet?" with "It is a store-bought or hand-drawn target", which opens
+the calm "Which target is this?" dialog of section 5; and the links "Show what went wrong" and "Send it to the project". Phone, stacked:
+Choose the sheet, Take it again, Try again reading harder, then "Not a GroupLab sheet?" with "Store-bought or hand-drawn", then More
+choices. The amber bar after dismissing stays. Choosing "not a GroupLab sheet" is remembered for that picture, and counted (no picture
+sent) so the "looks like a GroupLab sheet" test can be tuned if it misfires.
+
 ## 2026-10-03, entry 354: Fenix's .22 LR targets on the Windows desktop, nightly 159: many false holes, and a diamond sheet that will not read
 
 **Status: done 2026-10-03, every section (one worker for 1 to 3; section 4 with entry 355).** The entry's photo 1 (the load sheet) is 002_IMG_3819.png and photo 2 (the diamond) 001_IMG_3817.png. 1: on the camera reading, 32 marks to 24, all real; bull 23 is still missed where its hole touches a marker; the bent-sheet registration was not in play there (taken on the diamond). 2: the codes read fine; a generator sheet never saved was on no list, so identification now takes the design from the codes themselves (25 of 25 holes, 5 false on its wavy left side). Both are scoreboard cases and test-data files. 4: nothing from Fenix's desktop reached the server (entry 355, request 70). Found on the way: the server's rebuilt PNG says 300 dpi, so a submission opened directly reads as a scan at 161 percent; GroupLab now treats such a picture as a photograph.

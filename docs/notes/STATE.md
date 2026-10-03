@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-03 06:00 UTC, entry 354 folded; 356 is with a worker.
+**Last rewritten:** 2026-10-03, entry 356 folded; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 356** (problem dialogs, option B final) is with a worker. Entries 353 to 355 are done (354: Fenix's .22 sheets read; the next
-  nightly carries it); build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
+- **Entries 353 to 356 are done.** 354 (Fenix's .22 sheets) is in nightly 162; 356 (the problem dialog, option B final) goes into the
+  next nightly; build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
 - **Request 70:** Fenix's report package, to prove why his desktop sent nothing.
 - **Issues 17 to 20** (TestFlight build 153: Next jumps a section, the keyboard on Targets, back to the targets list, a second target)
   are next after entry 354.
@@ -42,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; five are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Read each nightly's two phone sweeps, and fix what they find.
+1. Speed up the "looks like a GroupLab sheet" test (5.4 s on a picture with no GroupLab marks), and make the phone's page failures sheets.
 2. The phone pictures of the fingerprint and pairing screens, at the next sitting with a phone.
 3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
 
@@ -81,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 356.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Nothing waits locally.
 
 ## Things that would surprise somebody who was not here yesterday
 
