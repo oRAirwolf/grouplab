@@ -96,8 +96,11 @@ public static class Projection
             : null;
 
         var c = body.Codes;
-        var codes = new Codes(c.Count, CodeVersion, (EcLevel)c.EcLevel, c.ModuleSize * q, CodeQuietZone, CodePlacement.Corners1,
-            true, Corners1.Positions(width, height, dataBlock?.Height ?? 0, c.Count, c.ModuleSize * q));
+        var codes = c.Placement == WireCodes.ExplicitCodePlacement
+            ? new Codes(c.Count, c.Version, (EcLevel)c.EcLevel, c.ModuleSize * q, CodeQuietZone, CodePlacement.Explicit,
+                true, [.. c.Positions.Select(p => new PointDmm(p.X * q, p.Y * q))])
+            : new Codes(c.Count, CodeVersion, (EcLevel)c.EcLevel, c.ModuleSize * q, CodeQuietZone, CodePlacement.Corners1,
+                true, Corners1.Positions(width, height, dataBlock?.Height ?? 0, c.Count, c.ModuleSize * q));
 
         Tiling? tiling = body.Tiling is { } t
             ? new Tiling(t.Cols, t.Rows, t.SheetWidth * q, t.SheetHeight * q, t.Overlap * q)
@@ -221,7 +224,13 @@ public static class Projection
                 checked((byte)(f.QuietZone / q)), _inkIndex[f.Ink]);
 
             var c = d.Codes!;
-            var codes = new BodyCodes((byte)c.Count, (byte)c.EcLevel, checked((byte)(c.ModuleSize / q)), 0);
+            var codes = c.Placement == CodePlacement.Explicit
+                ? new BodyCodes((byte)c.Count, (byte)c.EcLevel, checked((byte)(c.ModuleSize / q)), WireCodes.ExplicitCodePlacement)
+                {
+                    Version = (byte)(c.Version ?? CodeVersion),
+                    Positions = [.. c.Positions.Select(p => (Q(p.X), Q(p.Y)))],
+                }
+                : new BodyCodes((byte)c.Count, (byte)c.EcLevel, checked((byte)(c.ModuleSize / q)), 0);
 
             BodyDataBlock? dataBlock = d.DataBlock is { } db
                 ? new BodyDataBlock(Q(db.X), Q(db.Y), Q(db.Width), Q(db.Height), (byte)db.Layout, (byte)db.FieldSet,
@@ -447,16 +456,23 @@ public static class Projection
 
             if (c.Placement == CodePlacement.Explicit)
             {
-                Refuse("encode.explicitCodes", "/codes/placement",
-                    "Explicit code placement has no byte layout (TARGET-SCHEMA.md section 11, question 13), so the positions could not be carried.");
-            }
+                // Entry 358 section 3: the version and every centre are carried, so neither is assumed.
+                if (c.Count < 1 || c.Positions.Count != c.Count)
+                {
+                    Refuse("encode.explicitCodes", "/codes/positions", $"Explicit placement carries one centre for each code: {c.Count} codes, {c.Positions.Count} centres.");
+                }
 
-            if (!Corners1.Supports(c.Count))
+                if (c.Version is not (>= 1 and <= 40))
+                {
+                    Refuse("encode.explicitCodes", "/codes/version", "Explicit placement carries the code version, so it has to be stated, from 1 to 40.");
+                }
+            }
+            else if (!Corners1.Supports(c.Count))
             {
                 Refuse("encode.codeCount", "/codes/count", $"corners-1 places 0, 2 or 4 codes, not {c.Count}.");
             }
 
-            if (c.Version is { } version && version != CodeVersion)
+            if (c.Placement != CodePlacement.Explicit && c.Version is { } version && version != CodeVersion)
             {
                 Refuse("encode.notCarried", "/codes/version",
                     $"The body carries no code version and a decoder assumes {CodeVersion} (question 11), so {version} would not survive.");

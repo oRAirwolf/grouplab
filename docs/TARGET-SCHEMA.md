@@ -867,12 +867,17 @@ Fiducial block                                      6 bytes
   quietZone   1 byte   uint8 quanta
   inkIdx      1 byte
 
-Code block                                          4 bytes
+Code block                                          4 bytes, or 5 + 4 per code
   count       1 byte
   ecLevel     1 byte   0=L 1=M 2=Q 3=H
   moduleSize  1 byte   uint8 quanta
   placement   1 byte   0 = corners-1, 1 = explicit
-                       positions are derived, never carried
+                       corners-1: positions are derived, never carried
+  if placement == 1 (entry 358):
+    version   1 byte   the QR version, 1 to 40
+    per code:
+      x       2 bytes  uint16 quanta, the code's centre
+      y       2 bytes  uint16 quanta
 
 Data block, flag bit 6                             13 bytes
   x           2 bytes uint16 quanta
@@ -1530,6 +1535,6 @@ An implementation is conformant when it passes all of the following. These are w
 
 11. **Values the body cannot carry have to be fixed somewhere.** A decoder has to produce something for `codes.version`, `codes.quietZone` and `codes.humanReadableId`, for the measurement grid `style` byte, and for the choice of quantum. The reference encoder assumes version 10, quiet zone 16, human-readable id true, style 1 meaning 2/3/4 dmm strokes with axis and label in the major ink, and quantum 0 in parametric mode. Those are defaults, not decisions; they should be written into section 5 as one or the other. One of them is now settled: `corners-1` fixes its footprint at 65 modules rather than deriving it from `codes.version`, so the code positions no longer depend on an invented value. The rest still do, and the same treatment probably suits them.
 
-13. **`explicit` code placement has no byte layout.** `corners-1` needs none because the rule derives the centres, but a definition that sets placement to `explicit` has positions the binary cannot carry, in exactly the way flag bits 2 to 5 have blocks the binary cannot carry. Either the code block grows a position list behind a flag, or `explicit` is refused by the encoder and the enumeration exists for GLTD-J only. Nothing in the built-in library uses it.
+13. **`explicit` code placement has no byte layout.** `corners-1` needs none because the rule derives the centres, but a definition that sets placement to `explicit` has positions the binary cannot carry, in exactly the way flag bits 2 to 5 have blocks the binary cannot carry. Either the code block grows a position list behind a flag, or `explicit` is refused by the encoder and the enumeration exists for GLTD-J only. Nothing in the built-in library uses it. **Answered by NOTES-FROM-PLANNING.md entry 358 with the first option:** the label sheets carry one code in a band at the top, so placement 1 is followed by the version and each centre (section 5.2), and the footprint is the version's own, (4 x version + 17) modules plus the quiet zone.
 
 12. **The erasure shares are named but not defined.** Section 5.6 specifies Reed-Solomon over GF(256) with k=2 and n=4 without saying which four shares. The reference implementation uses D0, D1, D0 xor D1, and D0 xor 2*D1 with polynomial 0x11D, which does let any two reconstruct the body. That should be in the specification rather than in one implementation.

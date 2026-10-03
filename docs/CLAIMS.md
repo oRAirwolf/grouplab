@@ -21,10 +21,10 @@ one that matters.
 | code | 1553 |
 | measured | 2001 |
 | decided | 1283 |
-| unbacked | 0 |
-| **total** | **4837** |
+| unbacked | 1 |
+| **total** | **4838** |
 
-**1157** of them were read one sentence at a time and their backing written against the sentence. The other **3680** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1156** of them were read one sentence at a time and their backing written against the sentence. The other **3682** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -398,7 +398,7 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 278 section 6, Alan's decision of 2026-09-28 that iOS is built; docs/IOS-PLAN.md): iOS** | **In progress** | built and signed on CI | | **9.
 - *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started.
 - *decided* (NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, sections 2, 7, 10 and 11, checked against docs/ANDROID.md section 3, .github/workflows/nightly.yml and the phase items): #### What each phase holds **Phase 0a.
-- *code* (targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289)): - **Done.** A validator, and 38 built-in target sheets.
+- *code* (targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289); the nine X6 label sets from LibraryBuilder LabelPages, held by LabelSheetTests (entry 358)): - **Done.** A validator, and 47 built-in target sheets.
 - *code* (the compare-photos command, src/GroupLab.Cli/Measurement/PhotoVerb.cs): For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - *decided* (the README's Planned: each state set in the same commit as its feature, held by ReadmeTests): - **Done.** The caliber entered as a cartridge name, such as 6.5 Creedmoor, or as the bullet's diameter in inches or in millimeters marked mm.
@@ -3342,6 +3342,7 @@ one that matters.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): Those are defaults, not decisions; they should be written into section 5 as one or the other.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): One of them is now settled: `corners-1` fixes its footprint at 65 modules rather than deriving it from `codes.version`, so the code positions no longer depend on an invented value.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **`explicit` code placement has no byte layout.** `corners-1` needs none because the rule derives the centres, but a definition that sets placement to `explicit` has positions the binary cannot carry, in exactly the way flag bits 2 to 5 have blocks the binary cannot carry.
+- *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **Answered by NOTES-FROM-PLANNING.md entry 358 with the first option:** the label sheets carry one code in a band at the top, so placement 1 is followed by the version and each centre (section 5.2), and the footprint is the version's own, (4 x version + 17) modules plus the quiet zone.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): **The erasure shares are named but not defined.** Section 5.6 specifies Reed-Solomon over GF(256) with k=2 and n=4 without saying which four shares.
 - *code* (the format and library the code implements: src/GroupLab.Core/Gltd and targets/, held by the conformance tests): The reference implementation uses D0, D1, D0 xor D1, and D0 xor 2*D1 with polynomial 0x11D, which does let any two reconstruct the body.
 
@@ -3904,7 +3905,7 @@ one that matters.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.
 - *code* (GroupAnalysis.SmallGroupShots = 20 and the intervals' real coverage, STATISTICS.md section 9): 5 to 20 Prints each figure with its interval's real coverage, not a comfortable 95 percent.
-- *code* (targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289)): 01 Print a GroupLab sheet Thirty-eight built-in sheets, printed at actual size.
+- *unbacked*: 01 Print a GroupLab sheet Thirty-eight built-in sheets, printed at actual size.
 - *decided* (how the sheets are designed to be shot, docs/TARGET-LIBRARY.md): 02 Shoot it One shot per bull, in order.
 - *measured* (research/scanner-traps and research/scans-against-photos): 03 Scan or photograph it A flat 600 dpi scan is best.
 - *code* (src/GroupLab.Core/Marking/AnalysisPanel.cs Zero, in the scope's unit from UnitSettings.Aiming; website/build.py home page (entry 294 section 1)): 04 Read the analysis Mean radius, extreme spread, CEP and the zero correction in your scope's unit, mil or MOA, each with its interval, and the reasoning one click away.

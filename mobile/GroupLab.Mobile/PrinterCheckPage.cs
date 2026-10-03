@@ -36,7 +36,7 @@ internal sealed class PrinterCheckPage : UserControl
     /// <summary>The check pages in the library; the one for this phone's paper first.</summary>
     private static IReadOnlyList<TargetDefinition> Pages() =>
         [.. PhoneAnalysis.Library().Where(PrinterCheck.IsCheckPage)
-            .OrderBy(d => (d.Page.Size == PageSize.Letter) == AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? 0 : 1)];
+            .OrderBy(d => PageSizes.IsLabel(d.Page.Size) ? 2 : (d.Page.Size == PageSize.Letter) == AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? 0 : 1)];
 
     private static StackPanel Dots(int on)
     {

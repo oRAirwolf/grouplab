@@ -53,6 +53,43 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     /// </summary>
     public DateOnly? ChangedOn { get; init; }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 358 section 3: the paper a thermal printer was checked on, "4x6 labels", or null for an office printer's
+    /// check, which holds for any paper. A thermal printer's feed scale depends on its paper, so its check belongs to the printer and the paper
+    /// together, and the name it is saved under says both.
+    /// </summary>
+    public string? Paper { get; init; }
+
+    /// <summary>The paper a check on a page of this size belongs to: a label size's words, or null for every other page.</summary>
+    public static string? PaperOf(PageSize size) => size switch
+    {
+        PageSize.Label4x6 => "4x6 labels",
+        PageSize.A6 => "A6 labels",
+        PageSize.Label100x150 => "100 x 150 mm labels",
+        _ => null,
+    };
+
+    /// <summary>This profile as the check of a printer on a label paper, its name saying both; unchanged for any other page.</summary>
+    public PrinterProfile OnPaper(PageSize size) => PaperOf(size) is { } paper && Paper is null
+        ? this with { Name = $"{Name}, {paper}", Paper = paper }
+        : this;
+
+    /// <summary>
+    /// The profile a photograph of a sheet on <paramref name="size"/> is corrected with (entry 358 section 3): on a label, the check made on that
+    /// label paper where there is one, else the chosen printer's where it is not a label check; on any other page, the chosen printer's unless it
+    /// is a label check, then the last office check saved.
+    /// </summary>
+    public static PrinterProfile? For(PageSize size, IReadOnlyList<PrinterProfile> saved, PrinterProfile? chosen)
+    {
+        ArgumentNullException.ThrowIfNull(saved);
+        if (PaperOf(size) is { } paper)
+        {
+            return saved.LastOrDefault(p => p.Paper == paper) ?? (chosen?.Paper is null ? chosen : null);
+        }
+
+        return chosen is { Paper: null } ? chosen : saved.LastOrDefault(p => p.Paper is null);
+    }
+
     /// <summary>The button under a printer in Settings that says it was changed, entry 291 section 5.2.</summary>
     public const string ChangedWords = "Printer calibrated or serviced";
 
@@ -193,6 +230,11 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
             json["changedOn"] = changed.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         }
 
+        if (Paper is { } paper)
+        {
+            json["paper"] = paper;
+        }
+
         return json;
     }
 
@@ -212,7 +254,7 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
 
             // Entry 291 section 5.2: a profile saved before a printer could be marked changed reads as never changed.
             DateOnly? changed = DateOnly.TryParseExact((string?)o["changedOn"], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var c) ? c : null;
-            return new PrinterProfile(Named(name), across, down, method, on, uncertainty) { ChangedOn = changed };
+            return new PrinterProfile(Named(name), across, down, method, on, uncertainty) { ChangedOn = changed, Paper = (string?)o["paper"] };
         }
         catch (Exception ex) when (ex is InvalidOperationException or FormatException)
         {

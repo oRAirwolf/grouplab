@@ -2192,7 +2192,7 @@ public sealed partial class MainWindow : Window
         status.Text = automatic ? $"Recognized {named.Name}. Registering and detecting…" : "Registering and detecting…";
         CrashReporter.InFlight = trace;
         var calibre = session.State.Calibre;
-        var printer = settingsStore.PrinterForPhotos();
+        var printer = settingsStore.PrinterForPhotos(named.Page.Size);
         // An interactive run keeps each stage's picture for the timeline; a batch run never asks, so it pays nothing (DESIGN.md section 19).
         var result = await Task.Run(() => AutomaticMarking.Run(g, v, m, named, new OpenCvSharpBackend(), trace, token, calibre, artefacts: true, printer: printer), token);
         CrashReporter.InFlight = null;
@@ -2261,7 +2261,7 @@ public sealed partial class MainWindow : Window
         var trace = new TraceRecorder();
         var clock = System.Diagnostics.Stopwatch.StartNew();
         var calibre = session.State.Calibre;
-        var printer = settingsStore.PrinterForPhotos();
+        var printer = settingsStore.PrinterForPhotos(chosen.Page.Size);
         detectionMetadata = waiting.Metadata;
 
         // Entry 243 section 3.2: the same progress and Cancel as a sheet that named itself; this path had neither.

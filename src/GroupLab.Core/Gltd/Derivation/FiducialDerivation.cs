@@ -18,6 +18,15 @@ public static class FiducialDerivation
     /// <summary>A candidate footprint inside this distance of the page edge is dropped.</summary>
     public const int SafeEdge = 60;
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 358 section 3: the edge on a label page, which a thermal printer prints to within a millimetre or two of
+    /// the label's own edge. Only the label sizes use it, and they did not exist before, so no sheet already printed is placed differently.
+    /// </summary>
+    public const int LabelSafeEdge = 20;
+
+    /// <summary>The edge a page's markers keep clear of.</summary>
+    public static int SafeEdgeFor(Page page) => page is not null && PageSizes.IsLabel(page.Size) ? LabelSafeEdge : SafeEdge;
+
     public const int CodeGap = 20;
     public const int RingGap = 10;
     public const int DataBlockGap = 10;
@@ -67,9 +76,18 @@ public static class FiducialDerivation
     /// <summary>The outer edge of a marker plus its quiet zone on both sides.</summary>
     public static int Footprint(Fiducials f) => f.MarkerSize + (2 * f.QuietZone);
 
-    /// <summary>Code footprints placed by <c>corners-1</c>, which the drop tests avoid.</summary>
+    /// <summary>
+    /// Code footprints placed by <c>corners-1</c>, or stated by <c>explicit</c> placement (entry 358, whose codes the binary carries since; no
+    /// sheet with explicit codes could be printed before), which the drop tests avoid.
+    /// </summary>
     public static IReadOnlyList<Box2> CodeBoxes(TargetDefinition d)
     {
+        if (d.Codes is { Placement: CodePlacement.Explicit, Version: { } version } stated)
+        {
+            int footprint = (((4 * version) + 17) * stated.ModuleSize) + (2 * (stated.QuietZone ?? (4 * stated.ModuleSize)));
+            return [.. stated.Positions.Select(p => Box2.Square(p.X, p.Y, footprint))];
+        }
+
         if (d.Codes is not { Placement: CodePlacement.Corners1 } codes || !Corners1.Supports(codes.Count))
         {
             return [];
@@ -187,8 +205,9 @@ public static class FiducialDerivation
         foreach (var p in candidates)
         {
             var box = Box2.Square(p.X, p.Y, footprint);
-            if (box.X0 < 2 * SafeEdge || box.Y0 < 2 * SafeEdge
-                || box.X1 > 2L * (d.Page.Width - SafeEdge) || box.Y1 > 2L * (d.Page.Height - SafeEdge)
+            int edge = SafeEdgeFor(d.Page);
+            if (box.X0 < 2 * edge || box.Y0 < 2 * edge
+                || box.X1 > 2L * (d.Page.Width - edge) || box.Y1 > 2L * (d.Page.Height - edge)
                 || codes.Any(c => box.Overlaps(c, CodeGap))
                 || rings.Any(r => r.Clashes(box, RingGap))
                 || (dataBlock is { } block && box.Overlaps(block, DataBlockGap)))
@@ -276,8 +295,9 @@ public static class FiducialDerivation
 
             unique++;
             var box = new Box2(x2 - footprint, y2 - footprint, x2 + footprint, y2 + footprint);
-            if (box.X0 < 2 * SafeEdge || box.Y0 < 2 * SafeEdge
-                || box.X1 > 2L * (d.Page.Width - SafeEdge) || box.Y1 > 2L * (d.Page.Height - SafeEdge - dataBlockHeight)
+            int edge = SafeEdgeFor(d.Page);
+                        if (box.X0 < 2 * edge || box.Y0 < 2 * edge
+                || box.X1 > 2L * (d.Page.Width - edge) || box.Y1 > 2L * (d.Page.Height - edge - dataBlockHeight)
                 || codes.Any(c => box.Overlaps(c, CodeGap))
                 || (dataBlock is { } block && box.Overlaps(block, DataBlockGap)))
             {

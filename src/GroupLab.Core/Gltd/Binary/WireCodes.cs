@@ -83,6 +83,9 @@ internal static class WireCodes
     /// </summary>
     public static bool IsRoll(byte pageCode) => pageCode is >= 7 and <= 9;
 
+    /// <summary>The code block's placement byte for <c>explicit</c>, which since entry 358 carries a version and the centres after it.</summary>
+    public const byte ExplicitCodePlacement = 1;
+
     /// <summary>The family table of section 5.5 is in the same order as <see cref="FiducialFamily"/>.</summary>
     public static byte FamilyCode(FiducialFamily family) => (byte)family;
 

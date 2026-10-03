@@ -1,0 +1,172 @@
+{
+  "gltd": 1,
+  "revision": 0,
+  "id": "GL-40ZG-DJV5-MPY1-H02Q",
+  "name": "GroupLab Printer Check, A6 Label",
+  "description": "The printer check label: print it on the label printer and the labels you will use, and measure it once with a card and one photo, or a digital caliper, across and along the feed. A thermal printer's feed depends on its paper, so this checks that printer on that paper. It is not a target.",
+  "author": "GroupLab built-in library",
+  "licence": "CC0-1.0",
+  "created": "2026-10-03",
+  "units": "dmm",
+  "page": {
+    "size": "a6",
+    "width": 1050,
+    "height": 1480,
+    "orientation": "portrait"
+  },
+  "inks": [
+    {
+      "key": "black",
+      "srgb": "#000000",
+      "role": "artwork"
+    },
+    {
+      "key": "paper",
+      "srgb": "#FFFFFF",
+      "role": "paper"
+    },
+    {
+      "key": "fid",
+      "srgb": "#000000",
+      "role": "fiducial"
+    },
+    {
+      "key": "code",
+      "srgb": "#000000",
+      "role": "code"
+    },
+    {
+      "key": "text",
+      "srgb": "#000000",
+      "role": "text"
+    }
+  ],
+  "ringSets": [
+    {
+      "key": "cross",
+      "discs": [
+        {
+          "diameter": 46,
+          "ink": "black"
+        },
+        {
+          "diameter": 38,
+          "ink": "paper"
+        }
+      ]
+    }
+  ],
+  "bulls": [
+    {
+      "x": 125,
+      "y": 952,
+      "ringSet": "cross",
+      "scoring": false
+    },
+    {
+      "x": 925,
+      "y": 952,
+      "ringSet": "cross",
+      "scoring": false
+    },
+    {
+      "x": 925,
+      "y": 1352,
+      "ringSet": "cross",
+      "scoring": false
+    }
+  ],
+  "fiducials": {
+    "scheme": "field-ring-1",
+    "family": "apriltag-36h11",
+    "markerSize": 40,
+    "quietZone": 10,
+    "ink": "fid",
+    "markers": [
+      {
+        "id": 0,
+        "x": 980,
+        "y": 70
+      },
+      {
+        "id": 1,
+        "x": 275,
+        "y": 1152
+      },
+      {
+        "id": 2,
+        "x": 475,
+        "y": 1152
+      },
+      {
+        "id": 3,
+        "x": 625,
+        "y": 1152
+      },
+      {
+        "id": 4,
+        "x": 775,
+        "y": 1152
+      },
+      {
+        "id": 5,
+        "x": 125,
+        "y": 1420
+      },
+      {
+        "id": 6,
+        "x": 525,
+        "y": 1420
+      },
+      {
+        "id": 7,
+        "x": 775,
+        "y": 1420
+      }
+    ]
+  },
+  "codes": {
+    "count": 1,
+    "version": 7,
+    "ecLevel": "Q",
+    "moduleSize": 4,
+    "quietZone": 16,
+    "placement": "explicit",
+    "humanReadableId": true,
+    "positions": [
+      {
+        "x": 136,
+        "y": 136
+      }
+    ]
+  },
+  "print": {
+    "scaling": "none",
+    "minimumDpi": 300,
+    "colourMode": "mono",
+    "generator": "GroupLab 0.1.0",
+    "notes": "Print at 100 percent. Do not use fit to page."
+  },
+  "grids": [
+    {
+      "key": "check",
+      "centreX": 525,
+      "centreY": 572,
+      "half": 100,
+      "divisions": 10,
+      "majorEvery": 1,
+      "unit": "cm",
+      "distance": 100,
+      "distanceUnit": "m",
+      "minorInk": "black",
+      "majorInk": "black",
+      "axisInk": "black",
+      "minorStroke": 4,
+      "majorStroke": 4,
+      "axisStroke": 4,
+      "labelStep": 0,
+      "labelInk": "black",
+      "style": 4
+    }
+  ]
+}

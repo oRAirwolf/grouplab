@@ -117,12 +117,22 @@ public class FrameDecodingTests
     }
 
     [Fact]
-    public void ExplicitCodePlacementByteIsRejected()
+    public void ExplicitCodePlacementWithNoVersionIsRejected()
     {
+        // Entry 358 answered question 13: explicit placement carries its version and centres, so a frame with version 0 is malformed.
         var (model, _) = Projection.ToBody(GltdJsonReader.Read(Encoding.UTF8.GetBytes(Spec.Section4Example)).Definition!);
         var (body, flags) = BodyCodec.Write(model! with { Codes = model.Codes with { Placement = 1 } });
 
-        AssertRejected(FrameCodec.Replicated(body, flags), "question 13");
+        AssertRejected(FrameCodec.Replicated(body, flags), "Unknown code version 0");
+    }
+
+    [Fact]
+    public void AnUnknownCodePlacementByteIsRejected()
+    {
+        var (model, _) = Projection.ToBody(GltdJsonReader.Read(Encoding.UTF8.GetBytes(Spec.Section4Example)).Definition!);
+        var (body, flags) = BodyCodec.Write(model! with { Codes = model.Codes with { Placement = 2 } });
+
+        AssertRejected(FrameCodec.Replicated(body, flags), "Unknown code placement 2");
     }
 
     [Fact]

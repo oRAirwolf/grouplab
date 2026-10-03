@@ -596,15 +596,17 @@ public static class GltdValidator
                 }
             }
 
+            // Entry 358 section 3: a label is printed nearly to its edge, so its own edge is the tight one.
+            int edge = Derivation.FiducialDerivation.SafeEdgeFor(d.Page) == Derivation.FiducialDerivation.LabelSafeEdge ? Derivation.FiducialDerivation.LabelSafeEdge : TightEdge;
             foreach (var e in elements)
             {
                 if (!e.Box.Within(d.Page.Width, d.Page.Height))
                 {
                     Error("validate.offPage", e.Path, $"{Capitalise(e.Name)} extends beyond the page.", "13");
                 }
-                else if (e.Box.X0 < 2 * TightEdge || e.Box.Y0 < 2 * TightEdge || e.Box.X1 > 2L * (d.Page.Width - TightEdge) || e.Box.Y1 > 2L * (d.Page.Height - TightEdge))
+                else if (e.Box.X0 < 2 * edge || e.Box.Y0 < 2 * edge || e.Box.X1 > 2L * (d.Page.Width - edge) || e.Box.Y1 > 2L * (d.Page.Height - edge))
                 {
-                    Warn("validate.tightMargin", e.Path, $"{Capitalise(e.Name)} comes within {TightEdge} dmm of the page edge.", null);
+                    Warn("validate.tightMargin", e.Path, $"{Capitalise(e.Name)} comes within {edge} dmm of the page edge.", null);
                 }
             }
 

@@ -38,12 +38,14 @@ public class EncoderRefusalTests
     }
 
     [Fact]
-    public void ExplicitCodePlacementIsRefusedPerQuestion13()
+    public void ExplicitCodePlacementWithoutAVersionIsRefused()
     {
+        // Entry 358 answered question 13: explicit placement carries the version and the centres, so the version has to be stated.
         var doc = Spec.Section4Node();
         doc["codes"]!["placement"] = "explicit";
+        doc["codes"]!.AsObject().Remove("version");
 
-        AssertRefused(doc, "encode.explicitCodes", "/codes/placement");
+        AssertRefused(doc, "encode.explicitCodes", "/codes/version");
     }
 
     [Fact]

@@ -16,7 +16,7 @@
 | `docs/FIDUCIAL-DECISION.md` | section 9 | AprilTag `tag36h11`, and the measurements behind it |
 | `docs/DETECTION-PIPELINE.md` | section 12 | Eleven stages, written against the real scans |
 | `docs/STATISTICS.md` | section 14 | Estimators, tests, and validation against shotGroups |
-| `docs/TARGET-LIBRARY.md` | section 9 | <!--count:sheets:Words-->Thirty-eight<!--/count--> built-in sheets, all geometry-validated |
+| `docs/TARGET-LIBRARY.md` | section 9 | <!--count:sheets:Words-->Forty-seven<!--/count--> built-in sheets, all geometry-validated |
 | `docs/SCAN-MEASUREMENTS.md` | section 6 | 343 holes measured across 15 files |
 | `docs/ONTARGET-DIMENSIONS.md` | section 9 | Dimensional survey of 47 shipped competitor sheets |
 

@@ -311,8 +311,14 @@ public static class LibraryBuilder
         }
 
         added.AddRange(TwoMoa());
+        added.AddRange(LabelSets());
         added.Add(CheckPage("GL-SCALE-LTR-1", "GroupLab Printer Check, Letter", "letter"));
         added.Add(CheckPage("GL-SCALE-A4-1", "GroupLab Printer Check, A4", "a4"));
+
+        // Entry 358 section 3: the check label, for a thermal printer on its own paper.
+        added.Add(CheckPage("GL-SCALE-4X6-1", "GroupLab Printer Check, 4x6 Label", "4x6"));
+        added.Add(CheckPage("GL-SCALE-A6-1", "GroupLab Printer Check, A6 Label", "a6"));
+        added.Add(CheckPage("GL-SCALE-100X150-1", "GroupLab Printer Check, 100 x 150 mm Label", "100x150"));
         return added;
     }
 
@@ -331,22 +337,118 @@ public static class LibraryBuilder
         var grid = new MeasurementGrid("check", card.X + (GridStyle4.CardWidthDmm / 2), card.Y + (GridStyle4.CardHeightDmm / 2), 100, 10, 1,
             GridUnit.Cm, 100, DistanceUnit.Metres, "black", "black", "black", GridStyle4.LineStroke, GridStyle4.LineStroke, GridStyle4.LineStroke,
             0, "black", GridStyle4.Style);
-        const string description = "The printer check page: print it at Actual size (100%) and measure it once, with a card and one photo, a digital "
-            + "caliper, a ruler or a scanner, and every photograph of a GroupLab sheet from that printer measures in real inches. It is not a target.";
+        bool label = GridStyle4.IsLabel(page);
+        string description = label
+            ? "The printer check label: print it on the label printer and the labels you will use, and measure it once with a card and one photo, or a "
+                + "digital caliper, across and along the feed. A thermal printer's feed depends on its paper, so this checks that printer on that paper. It is not a target."
+            : "The printer check page: print it at Actual size (100%) and measure it once, with a card and one photo, a digital "
+                + "caliper, a ruler or a scanner, and every photograph of a GroupLab sheet from that printer measures in real inches. It is not a target.";
+        var codes = label
+            ? new Codes(1, GridStyle4.LabelCodeVersion, EcLevel.Q, GridStyle4.LabelCodeModule, Projection.CodeQuietZone, CodePlacement.Explicit, true, [GridStyle4.LabelCode(page)])
+            : Codes(width, height, 0, 2);
         var definition = new TargetDefinition(
-            1, 0, null, name, description, "GroupLab built-in library", "CC0-1.0", CheckPageCreated, "dmm",
+            1, 0, null, name, description, "GroupLab built-in library", "CC0-1.0", label ? LabelCreated : CheckPageCreated, "dmm",
             page,
             Inks,
             [new RingSet("cross", [new Disc(GridStyle4.RingOuter, "black"), new Disc(GridStyle4.RingInner, "paper")])],
             [.. GridStyle4.Crosshairs(page).Select(c => new Bull(c.X, c.Y, "cross", null, false, null))],
             null,
             new Fiducials("field-ring-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
-            Codes(width, height, 0, 2),
+            codes,
             Print,
             null,
             null,
             null,
             [grid],
+            []);
+        return Finish(name, stem, definition);
+    }
+
+    internal const string LabelCreated = "2026-10-03";
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 358 section 3: the X6 label family. Alan: the 25-bull Letter sheets' bull is as small as a single bull
+    /// should be, and only larger from there; at those sheets' 38.0 mm pitch a label holds six, 2 by 3. Each is a set of five labels, 30
+    /// bulls, read and pooled as the 300 yard tiles are, each label naming itself "Label n of 5".
+    /// </summary>
+    public static readonly (string Page, string Stem, string PageWords, int Version, EcLevel Level)[] LabelPages =
+    [
+        // The code each label takes, measured against the frame these definitions make (LabelSheetTests): version 8 at level H on 4x6, and
+        // version 7 at level Q on the two shorter labels, where version 8 would leave under 2 mm above the code and below the markers.
+        ("4x6", "GL-X6-4X6", "4x6", 8, EcLevel.H),
+        ("a6", "GL-X6-A6", "A6", 7, EcLevel.Q),
+        ("100x150", "GL-X6-100X150", "100 x 150 mm", 7, EcLevel.Q),
+    ];
+
+    /// <summary>Six bulls a label, 2 by 3, five labels a set.</summary>
+    public const int LabelColumns = 2, LabelRows = 3, LabelsInSet = 5;
+
+    /// <summary>The 25-bull Letter sheets' pitch, 38.0 mm.</summary>
+    public const int LabelPitch = 380;
+
+    /// <summary>The space between the code's quiet zone and the top markers' quiet zones, and the code's module, in dmm.</summary>
+    public const int LabelCodeGap = 20, LabelModule = 4;
+
+    private static IEnumerable<BuiltInTarget> LabelSets()
+    {
+        foreach (var (pageKey, stem, pageWords, version, level) in LabelPages)
+        {
+            foreach (char style in "PCE")
+            {
+                yield return Label(pageKey, stem + (style == 'P' ? "" : "-" + style), pageWords, version, level, style);
+            }
+        }
+    }
+
+    /// <summary>
+    /// One X6 set on one label size. The 2 by 3 grid is centred across the label; the code's footprint, quiet zone and all, stands at the
+    /// top, its left edge in line with the left markers' quiet zones, and the grid's markers sit <see cref="LabelCodeGap"/> below it, so
+    /// the margin above the code and the margin below the bottom markers are equal.
+    /// </summary>
+    internal static BuiltInTarget Label(string pageKey, string stem, string pageWords, int version, EcLevel level, char style)
+    {
+        var (size, width, height) = Pages[pageKey];
+        int footprint = (((4 * version) + 17) * LabelModule) + (2 * Projection.CodeQuietZone);
+        const int markerReach = 30; // half a 40 dmm marker and its 10 dmm quiet zone
+        int gridHeight = LabelRows * LabelPitch, gridWidth = LabelColumns * LabelPitch;
+        int margin = (height - footprint - LabelCodeGap - gridHeight - (2 * markerReach)) / 2;
+        int gridLeft = (width - gridWidth) / 2, gridTop = margin + footprint + LabelCodeGap + markerReach;
+        var code = new PointDmm(gridLeft - markerReach + (footprint / 2), margin + (footprint / 2));
+
+        var bulls = new List<Bull>();
+        for (int row = 0; row < LabelRows; row++)
+        {
+            for (int column = 0; column < LabelColumns; column++)
+            {
+                bulls.Add(new Bull(gridLeft + (LabelPitch / 2) + (column * LabelPitch), gridTop + (LabelPitch / 2) + (row * LabelPitch), "std",
+                    (bulls.Count + 1).ToString(CultureInfo.InvariantCulture), true, null));
+            }
+        }
+
+        var (ringSet, bullWords, styleName) = style switch
+        {
+            'C' => (new RingSet("std", CDiscs(CDiagonal)), "black diamonds standing on a point, 1.25 in point to point, the C bull of the 25-bull Letter sheets", "C Bull, "),
+            'E' => (new RingSet("std", EDiscs(254)), "1.00 in black discs with a white center and a dot, the E bull of the 25-bull Letter sheets", "E Bull, "),
+            _ => (new RingSet("std", Discs(254)), "1.00 in ringed bulls, the bull of the 25-bull Letter sheets", ""),
+        };
+        string name = $"GroupLab X6 Labels, {styleName}{pageWords}";
+        string description = string.Create(CultureInfo.InvariantCulture,
+            $"One label of a set of {LabelsInSet}: six scoring bulls, 2 by 3 on the 25-bull Letter sheets' {LabelPitch / 10.0:0.0} mm grid, {6 * LabelsInSet} in the set, ")
+            + $"{bullWords}. Made for a thermal label printer, and prints on any printer that takes {pageWords} labels. Each label reads itself, and GroupLab pools the set and says which label is still missing.";
+        var definition = new TargetDefinition(
+            1, 0, null, name, description, "GroupLab built-in library", "CC0-1.0", LabelCreated, "dmm",
+            new Page(size, width, height, Orientation.Portrait),
+            Inks,
+            [ringSet],
+            bulls,
+            null,
+            new Fiducials("grid-boundary-1", FiducialFamily.AprilTag36h11, 40, 10, "fid", null),
+            new Codes(1, version, level, LabelModule, Projection.CodeQuietZone, CodePlacement.Explicit, true, [code]),
+            new PrintSettings(PrintScaling.None, 203, ColourMode.Mono, null, "GroupLab 0.2.0", "Print at 100 percent on a label of this size. Do not use fit to page."),
+            null,
+            null,
+            new Tiling(LabelsInSet, 1, width, height, 0),
+            null,
             []);
         return Finish(name, stem, definition);
     }

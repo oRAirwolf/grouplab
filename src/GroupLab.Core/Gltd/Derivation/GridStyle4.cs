@@ -66,12 +66,54 @@ public static class GridStyle4
 
     public const int RingInner = 38;
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 358 section 3: the printer check label, on 4x6, A6 and 100 x 150 mm. A thermal printer's feed scale
+    /// depends on its paper as well as on the printer, so the label is the check for that printer on that paper, across and along the feed.
+    /// The same parts as the page, smaller: one code in the band at the top with the words beside it, the card outline, crosshairs
+    /// <see cref="LabelAcrossDmm"/> apart across and <see cref="LabelFeedDmm"/> along the feed, and a millimetre ruler along the feed.
+    /// </summary>
+    public static bool IsLabel(Page page) => page is not null && PageSizes.IsLabel(page.Size);
+
+    /// <summary>The label's crosshairs across, 80.00 mm, and along the feed, 40.00 mm.</summary>
+    public const int LabelAcrossDmm = 800, LabelFeedDmm = 400;
+
+    /// <summary>The label's graduated ruler along the feed, 30 mm.</summary>
+    public const int LabelRulerDmm = 300;
+
+    /// <summary>The label's code: version 7 at level Q, 4 dmm modules, its footprint's corner this far from the label's top left.</summary>
+    public const int LabelCodeVersion = 7, LabelCodeModule = 4, LabelInset = 30;
+
+    /// <summary>The label code's footprint, quiet zone and all: 45 modules and 4 each side, 212 dmm.</summary>
+    public const int LabelCodeFootprint = (((4 * LabelCodeVersion) + 17) * LabelCodeModule) + (2 * 4 * LabelCodeModule);
+
+    /// <summary>The label code's centre.</summary>
+    public static PointDmm LabelCode(Page page) => new(LabelInset + (LabelCodeFootprint / 2), LabelInset + (LabelCodeFootprint / 2));
+
+    /// <summary>The caliper's span across: 150.00 mm on the page, 80.00 mm on a label.</summary>
+    public static int CaliperAcross(Page page) => IsLabel(page) ? LabelAcrossDmm : CaliperDmm;
+
+    /// <summary>The caliper's span down the page, which on a label is along the feed: 150.00 mm, or 40.00 mm.</summary>
+    public static int CaliperDown(Page page) => IsLabel(page) ? LabelFeedDmm : CaliperDmm;
+
     /// <summary>The three crosshair centers: the corner of the L at the top left, then across, then down.</summary>
     public static IReadOnlyList<PointDmm> Crosshairs(Page page)
     {
         ArgumentNullException.ThrowIfNull(page);
+        if (IsLabel(page))
+        {
+            int middle = page.Width / 2, y = Card(page).Y + CardHeightDmm + OutlineGap + 80;
+            return [new(middle - (LabelAcrossDmm / 2), y), new(middle + (LabelAcrossDmm / 2), y), new(middle + (LabelAcrossDmm / 2), y + LabelFeedDmm)];
+        }
+
         int x0 = 380, y0 = 794;
         return [new(x0, y0), new(x0 + CaliperDmm, y0), new(x0 + CaliperDmm, y0 + CaliperDmm)];
+    }
+
+    /// <summary>The label's ruler along the feed: its x, and its first and last millimetre.</summary>
+    public static (int X, int Top, int Bottom) LabelRuler(Page page)
+    {
+        var c = Crosshairs(page);
+        return (c[0].X, c[0].Y + 80, c[0].Y + 80 + LabelRulerDmm);
     }
 
     /// <summary>The ruler down the left side: its x, and its top and bottom ends.</summary>
@@ -90,9 +132,14 @@ public static class GridStyle4
         return (2606, left, left + RulerAcrossDmm);
     }
 
-    /// <summary>The card outline's top left corner: centered under the two top crosshairs.</summary>
+    /// <summary>The card outline's top left corner: centered under the two top crosshairs; on a label, centred under the code band.</summary>
     public static PointDmm Card(Page page)
     {
+        if (IsLabel(page))
+        {
+            return new PointDmm((page.Width / 2) - (CardWidthDmm / 2), LabelInset + LabelCodeFootprint + OutlineGap + 30);
+        }
+
         var c = Crosshairs(page);
         return new PointDmm(((c[0].X + c[1].X) / 2) - (CardWidthDmm / 2), 1058);
     }
@@ -104,6 +151,18 @@ public static class GridStyle4
     public static IReadOnlyList<PointDmm> MarkerSpots(Page page)
     {
         ArgumentNullException.ThrowIfNull(page);
+        if (IsLabel(page))
+        {
+            // On a label: one at the top right beside the words, a row between the across crosshairs and the bottom one, and a row along the bottom.
+            int middle = page.Width / 2, between = Crosshairs(page)[0].Y + 200, bottom = page.Height - 60;
+            return
+            [
+                new(page.Width - 70, 70),
+                new(middle - 250, between), new(middle - 50, between), new(middle + 100, between), new(middle + 250, between),
+                new(middle - (LabelAcrossDmm / 2), bottom), new(middle, bottom), new(middle + 250, bottom),
+            ];
+        }
+
         var card = Card(page);
         int left = card.X - 150, right = card.X + CardWidthDmm + 150;
         int[] rows = [794, 1300, 1800, 2294];
@@ -118,7 +177,22 @@ public static class GridStyle4
     }
 
     /// <summary>The page's short name, printed under its title: GL-SCALE-LTR-1 on Letter, GL-SCALE-A4-1 on A4.</summary>
-    public static string PageName(Page page) => page.Size == PageSize.A4 ? "GL-SCALE-A4-1 · A4" : "GL-SCALE-LTR-1 · Letter";
+    public static string PageName(Page page) => page.Size switch
+    {
+        PageSize.A4 => "GL-SCALE-A4-1 · A4",
+        PageSize.Label4x6 => "GL-SCALE-4X6-1 · 4x6 label",
+        PageSize.A6 => "GL-SCALE-A6-1 · A6 label",
+        PageSize.Label100x150 => "GL-SCALE-100X150-1 · 100 x 150 mm label",
+        _ => "GL-SCALE-LTR-1 · Letter",
+    };
+
+    /// <summary>The line under a check label's name: what it measures.</summary>
+    public const string LabelPurpose = "This printer, on this paper";
+
+    /// <summary>The words beside a label's crosshairs.</summary>
+    public static string LabelAcrossWords => string.Create(CultureInfo.InvariantCulture, $"{LabelAcrossDmm / 10.0:0.00} mm across, center to center");
+
+    public static string LabelFeedWords => string.Create(CultureInfo.InvariantCulture, $"{LabelFeedDmm / 10.0:0.00} mm along the feed");
 
     public const string Title = "GroupLab printer check";
 

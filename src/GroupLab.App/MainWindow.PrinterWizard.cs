@@ -66,7 +66,7 @@ public sealed partial class MainWindow
     /// <summary>The check page for this machine's paper: A4, except where Letter is the paper sold.</summary>
     private TargetDefinition? CheckPageDefinition() => ShippedDefinitions()
         .Where(PrinterCheck.IsCheckPage)
-        .OrderBy(d => (d.Page.Size == PageSize.Letter) == AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? 0 : 1)
+        .OrderBy(d => PageSizes.IsLabel(d.Page.Size) ? 2 : (d.Page.Size == PageSize.Letter) == AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? 0 : 1)
         .FirstOrDefault();
 
     /// <summary>Opens the printer check, or brings it forward where it is open; <paramref name="name"/> names a printer checked again.</summary>

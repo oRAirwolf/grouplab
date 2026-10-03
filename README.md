@@ -306,8 +306,11 @@ The newest build is named under [Download](#download), and what it changed under
 What exists and is tested:
 
 - the GLTD target definition format, in JSON (GLTD-J) and as a binary QR payload (GLTD-B)
-- a validator, and <!--count:sheets:digits-->38<!--/count--> built-in target sheets, and a generator that sizes a sheet for your optic
+- a validator, and <!--count:sheets:digits-->47<!--/count--> built-in target sheets, and a generator that sizes a sheet for your optic
 - a PDF renderer, a Targets screen that prints at true size, and a designer for your own sheets
+- label targets for a thermal label printer: 4x6, A6 and 100 x 150 mm labels beside Letter and A4, six of the 5x5 Letter sheets' bulls to a
+  label in sets of five that pool like the 300 yard tiles, a printer check label, and a thermal print mode that draws every dot as the
+  printer will make it (no label printer has been tested yet)
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
 - the statistics engine, validated key for key against the R package `shotGroups`
@@ -398,7 +401,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 
 **Phase 0a. Format and renderer.**
 - **Done.** The GLTD definition format, in JSON and as a binary QR payload.
-- **Done.** A validator, and <!--count:sheets:digits-->38<!--/count--> built-in target sheets.
+- **Done.** A validator, and <!--count:sheets:digits-->47<!--/count--> built-in target sheets.
 - **Done.** A PDF renderer, with the printed name and identifier on every sheet.
 
 **Phase 0. Registration spike.**

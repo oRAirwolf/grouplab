@@ -28,10 +28,12 @@ public static class SetPool
         var once = read.GroupBy(s => s.SetSheet!.Value).Select(g => g.First()).ToList();
         var figures = GroupAnalysis.Pooled(once);
         int shots = figures?.Shots ?? 0;
-        return new SetPoolResult(size, found, missing, repeated, bulls, shots, figures, Words(size, found, missing, repeated, bulls, shots));
+        // Entry 358 section 3: a set of labels says label, not sheet.
+        string noun = PageSizes.IsLabel(definition.Page.Size) ? "label" : "sheet";
+        return new SetPoolResult(size, found, missing, repeated, bulls, shots, figures, Words(size, found, missing, repeated, bulls, shots, noun));
     }
 
-    private static string Words(int size, IReadOnlyList<int> found, IReadOnlyList<int> missing, IReadOnlyList<int> repeated, int bulls, int shots)
+    private static string Words(int size, IReadOnlyList<int> found, IReadOnlyList<int> missing, IReadOnlyList<int> repeated, int bulls, int shots, string noun)
     {
         static string List(IEnumerable<int> sheets)
         {
@@ -45,16 +47,18 @@ public static class SetPool
         }
 
         string said = found.Count == 0
-            ? string.Create(CultureInfo.InvariantCulture, $"None of the {size} sheets of this set has been read yet.")
+            ? string.Create(CultureInfo.InvariantCulture, $"None of the {size} {noun}s of this set has been read yet.")
             : missing.Count == 0
-                ? string.Create(CultureInfo.InvariantCulture, $"All {size} sheets of the set are here.")
-                : string.Create(CultureInfo.InvariantCulture, $"Sheet{(found.Count == 1 ? "" : "s")} {List(found)} of {size} {(found.Count == 1 ? "is" : "are")} here; {List(missing)} {(missing.Count == 1 ? "is" : "are")} still missing.");
+                ? string.Create(CultureInfo.InvariantCulture, $"All {size} {noun}s of the set are here.")
+                : string.Create(CultureInfo.InvariantCulture, $"{Upper(noun)}{(found.Count == 1 ? "" : "s")} {List(found)} of {size} {(found.Count == 1 ? "is" : "are")} here; {List(missing)} {(missing.Count == 1 ? "is" : "are")} still missing.");
         said += string.Create(CultureInfo.InvariantCulture, $" {shots} shot{(shots == 1 ? "" : "s")} pooled, of the {bulls} bulls the set holds, one shot to a bull.");
         if (repeated.Count > 0)
         {
-            said += string.Create(CultureInfo.InvariantCulture, $" Sheet{(repeated.Count == 1 ? "" : "s")} {List(repeated)} {(repeated.Count == 1 ? "was" : "were")} read more than once and count{(repeated.Count == 1 ? "s" : "")} once.");
+            said += string.Create(CultureInfo.InvariantCulture, $" {Upper(noun)}{(repeated.Count == 1 ? "" : "s")} {List(repeated)} {(repeated.Count == 1 ? "was" : "were")} read more than once and count{(repeated.Count == 1 ? "s" : "")} once.");
         }
 
         return said;
     }
+
+    private static string Upper(string word) => char.ToUpperInvariant(word[0]) + word[1..];
 }

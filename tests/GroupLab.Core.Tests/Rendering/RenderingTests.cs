@@ -82,6 +82,14 @@ public partial class RenderingTests
                     Assert.Contains(rects, r => r.Height > r.Width && r.X + (r.Width / 2) == 2L * c.X && r.Y + (r.Height / 2) == 2L * c.Y);
                 }
 
+                if (GridStyle4.IsLabel(d.Page))
+                {
+                    // Entry 358 section 3: the check label's ruler along the feed, its stated length tick to tick.
+                    var (rx, rtop, rbottom) = GridStyle4.LabelRuler(d.Page);
+                    Assert.Contains(rects, r => r.X + (r.Width / 2) == 2L * rx && r.Y == 2L * rtop && r.Height == 2L * (rbottom - rtop) && rbottom - rtop == GridStyle4.LabelRulerDmm);
+                    continue;
+                }
+
                 var (dx, top, bottom) = GridStyle4.RulerDown(d.Page);
                 Assert.Contains(rects, r => r.X + (r.Width / 2) == 2L * dx && r.Y == 2L * top && r.Height == 2L * (bottom - top) && bottom - top == GridStyle4.RulerDownDmm);
                 var (ay, left, right) = GridStyle4.RulerAcross(d.Page);

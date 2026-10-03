@@ -165,10 +165,74 @@ public static class SceneBuilder
             AddMarkers(items, tile);
             AddCodes(items, tile);
             AddDataBlock(items);
-            AddIdentifier(items, tile);
-            AddPrintNote(items);
-            AddName(items, tile);
+            if (LabelBand is { } band)
+            {
+                AddLabelWords(items, tile, band);
+            }
+            else
+            {
+                AddIdentifier(items, tile);
+                AddPrintNote(items);
+                AddName(items, tile);
+            }
+
             return new Scene(2L * d.Page.Width, 2L * d.Page.Height, tile, items);
+        }
+
+        /// <summary>
+        /// NOTES-FROM-PLANNING.md entry 358 section 3: a label carries one code in a band at the top, and its words go beside it, because a
+        /// label has no margin below its markers for the identifier or the print note. The code's footprint in dmm (its centre and side), or
+        /// null for any other sheet.
+        /// </summary>
+        private (int X, int Y, int Side)? LabelBand =>
+            PageSizes.IsLabel(d.Page.Size) && d.Codes is { Placement: CodePlacement.Explicit, Count: 1, Version: { } version } c && c.Positions.Count == 1
+                ? (c.Positions[0].X, c.Positions[0].Y, (((4 * version) + 17) * c.ModuleSize) + (2 * (c.QuietZone ?? (4 * c.ModuleSize))))
+                : null;
+
+        /// <summary>A label set's word for one of its pages.</summary>
+        internal const string LabelNoun = "Label";
+
+        /// <summary>
+        /// The words beside a label's code, top to bottom: the name in bold, the bulls, "Label n of N" in a set, the identifier, and the print
+        /// note when a print asks for it. Each line is as large as fits between the code and the label's right margin.
+        /// </summary>
+        private void AddLabelWords(List<SceneItem> items, int tile, (int X, int Y, int Side) band)
+        {
+            bool check = d.Grids?.Any(g => g.StyleOrDefault == GridStyle4.Style) == true;
+            long left = 2L * (band.X + (band.Side / 2) + 20);
+            // The check label keeps its top right corner for a marker.
+            long right = 2L * (d.Page.Width - (check ? 120 : band.X - (band.Side / 2)));
+            long top = 2L * (band.Y - (band.Side / 2));
+            int scoring = d.Bulls.Count(b => b.Scoring);
+            var lines = new List<(SceneLayer Layer, string Text, long Size, bool Bold)>
+            {
+                (SceneLayer.Name, d.Name ?? "GroupLab", 64, true),
+                (SceneLayer.Name, check ? GridStyle4.LabelPurpose : string.Create(CultureInfo.InvariantCulture, $"{scoring} bulls") + (d.Tiling is { } set ? string.Create(CultureInfo.InvariantCulture, $", {scoring * set.Cols * set.Rows} in the set") : ""), 48, false),
+            };
+            if (d.Tiling is { } t)
+            {
+                lines.Add((SceneLayer.Name, string.Create(CultureInfo.InvariantCulture, $"{LabelNoun} {tile + 1} of {t.Cols * t.Rows}"), 48, true));
+            }
+
+            lines.Add((SceneLayer.Identifier, _encoding!.DefinitionId, 44, false));
+            if (!string.IsNullOrWhiteSpace(options.PrintNote))
+            {
+                lines.Add((SceneLayer.PrintNote, "Print at actual size, never fit to page", 40, false));
+            }
+
+            var colour = RoleColour(InkRole.Text);
+            long baseline = top;
+            foreach (var (layer, text, most, bold) in lines)
+            {
+                long size = most;
+                while (size > 24 && HelveticaMetrics.TextWidth(text, size, bold) > right - left)
+                {
+                    size -= 2;
+                }
+
+                baseline += (long)Math.Ceiling(size * 1.3) + 6;
+                items.Add(new TextRun(layer, colour, left, baseline, size, text, TextAnchor.Left, bold));
+            }
         }
 
         /// <summary>The print instruction centred along the bottom edge, when the print asks for one, shrunk to fit inside 300 dmm of each side.</summary>
@@ -554,6 +618,11 @@ public static class SceneBuilder
 
             var page = d.Page;
             int middle = page.Width / 2;
+            if (GridStyle4.IsLabel(page))
+            {
+                AddCheckLabel(items, Rect, Text);
+                return;
+            }
 
             // The title block, between the two top codes.
             Text(middle, 150, 44, GridStyle4.Title, TextAnchor.Centre, bold: true);
@@ -626,6 +695,51 @@ public static class SceneBuilder
 
                 items.Add(new TextRun(layer, ink, 2 * start, 2 * baselineY, size, string.Join(' ', lineWords), TextAnchor.Left));
             }
+        }
+
+        /// <summary>
+        /// Entry 358 section 3: the printer check label. Its name and purpose are beside its code (<see cref="AddLabelWords"/>); here are the
+        /// card outline and its words, the crosshairs' arms across and along the feed with their spans, and the millimetre ruler along the feed.
+        /// </summary>
+        private void AddCheckLabel(List<SceneItem> items, Action<long, long, long, long> rect, Action<long, long, int, string, TextAnchor, bool, long> text)
+        {
+            var page = d.Page;
+            long line = GridStyle4.LineStroke, arm = GridStyle4.CrossArm;
+            var card = GridStyle4.Card(page);
+            long o = GridStyle4.OutlineStroke / 2, gap = GridStyle4.OutlineGap, w = GridStyle4.CardWidthDmm, h = GridStyle4.CardHeightDmm;
+            rect(card.X - gap - o, card.Y - gap - o, w + (2 * (gap + o)), o);
+            rect(card.X - gap - o, card.Y + h + gap, w + (2 * (gap + o)), o);
+            rect(card.X - gap - o, card.Y - gap, o, h + (2 * gap));
+            rect(card.X + w + gap, card.Y - gap, o, h + (2 * gap));
+            long cx = card.X + (w / 2);
+            text(cx, card.Y + (h / 2) - 30, 26, GridStyle4.CardHeading, TextAnchor.Centre, true, w - 60);
+            text(cx, card.Y + (h / 2) + 30, 20, GridStyle4.CardSize, TextAnchor.Centre, false, 0);
+            text(cx, card.Y + (h / 2) + 80, 18, GridStyle4.CardNote, TextAnchor.Centre, false, 0);
+
+            var cross = GridStyle4.Crosshairs(page);
+            foreach (var c in cross)
+            {
+                rect(c.X - arm, c.Y - (line / 2), 2 * arm, line);
+                rect(c.X - (line / 2), c.Y - arm, line, 2 * arm);
+            }
+
+            text((cross[0].X + cross[1].X) / 2, cross[0].Y - 20, 20, GridStyle4.LabelAcrossWords, TextAnchor.Centre, false, cross[1].X - cross[0].X - (2 * arm) - 40);
+            text(cross[2].X - arm - 30, cross[2].Y + 8, 18, GridStyle4.LabelFeedWords, TextAnchor.Right, false, 0);
+
+            // The ruler along the feed: a tick at every millimetre, longer at five and ten, numbered every ten.
+            var (rx, top, bottom) = GridStyle4.LabelRuler(page);
+            rect(rx - (line / 2), top, line, bottom - top);
+            for (long y = top, mm = 0; y <= bottom; y += 10, mm++)
+            {
+                long length = mm % 10 == 0 ? 40 : mm % 5 == 0 ? 28 : 18;
+                rect(rx, y - 1, length, 2);
+                if (mm % 10 == 0)
+                {
+                    text(rx + 50, y + 8, 14, mm.ToString(CultureInfo.InvariantCulture), TextAnchor.Left, false, 0);
+                }
+            }
+
+            text(rx + 50, bottom + 40, 14, "mm along the feed", TextAnchor.Left, false, 0);
         }
 
         /// <summary>The check bar below the numbers: 4 in or 10 cm, a tick at every inch or centimetre, and a line saying so.</summary>

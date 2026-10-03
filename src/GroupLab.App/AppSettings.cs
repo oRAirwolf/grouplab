@@ -360,6 +360,13 @@ public sealed class AppSettingsStore(string path)
     /// <summary>The profile photographs are corrected with now: the one chosen, unless correction is turned off.</summary>
     public PrinterProfile? PrinterForPhotos() => LoadPrinterCorrection() ? LoadChosenPrinter() : null;
 
+    /// <summary>
+    /// Entry 358 section 3: the profile a photograph of a sheet on this paper is corrected with, a thermal printer's check belonging to its
+    /// paper (<see cref="PrinterProfile.For"/>), unless correction is turned off.
+    /// </summary>
+    public PrinterProfile? PrinterForPhotos(GroupLab.Core.Gltd.Model.PageSize paper) =>
+        LoadPrinterCorrection() ? PrinterProfile.For(paper, LoadPrinters(), LoadChosenPrinter()) : null;
+
     /// <summary>Deletes a saved profile; the chosen one, deleted, leaves none chosen.</summary>
     public bool DeletePrinter(string name) => Save(file =>
     {

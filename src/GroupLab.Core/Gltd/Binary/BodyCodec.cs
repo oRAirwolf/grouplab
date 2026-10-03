@@ -113,6 +113,16 @@ public static class BodyCodec
         w.Add(c.EcLevel);
         w.Add(c.ModuleSize);
         w.Add(c.Placement);
+        if (c.Placement == WireCodes.ExplicitCodePlacement)
+        {
+            // Entry 358 section 3: the version, then each centre.
+            w.Add(c.Version);
+            foreach (var (x, y) in c.Positions)
+            {
+                U16(w, x);
+                U16(w, y);
+            }
+        }
 
         if (model.DataBlock is { } d)
         {
@@ -310,10 +320,25 @@ public static class BodyCodec
         var codes = new BodyCodes(r.U8("the code count"), r.U8("the error correction level"),
             r.U8("the module size"), r.U8("the code placement"));
         Require(codes.EcLevel <= 3, $"Unknown error correction level {codes.EcLevel}.");
-        Require(codes.Placement != 1,
-            "Explicit code placement has no byte layout (TARGET-SCHEMA.md section 11, question 13).");
-        Require(codes.Placement == 0, $"Unknown code placement {codes.Placement}.");
-        Require(Corners1.Supports(codes.Count), $"corners-1 places 0, 2 or 4 codes, not {codes.Count}.");
+        Require(codes.Placement <= WireCodes.ExplicitCodePlacement, $"Unknown code placement {codes.Placement}.");
+        if (codes.Placement == WireCodes.ExplicitCodePlacement)
+        {
+            // Entry 358 section 3: explicit placement carries the version and every centre.
+            byte version = r.U8("the code version");
+            Require(version is >= 1 and <= 40, $"Unknown code version {version}.");
+            Require(codes.Count >= 1, "Explicit code placement needs at least one code.");
+            var positions = new List<(ushort, ushort)>(codes.Count);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                positions.Add((r.U16("a code centre"), r.U16("a code centre")));
+            }
+
+            codes = codes with { Version = version, Positions = positions };
+        }
+        else
+        {
+            Require(Corners1.Supports(codes.Count), $"corners-1 places 0, 2 or 4 codes, not {codes.Count}.");
+        }
 
         BodyDataBlock? dataBlock = null;
         if ((flags & WireCodes.DataBlockFlag) != 0)

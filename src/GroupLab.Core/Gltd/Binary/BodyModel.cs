@@ -67,7 +67,17 @@ public sealed record BodyBull(ushort X, ushort Y, byte RingSetIndex, bool Scorin
 public sealed record BodyFiducials(byte Scheme, byte Family, ushort MarkerSize, byte QuietZone, byte InkIndex);
 
 /// <summary>The code block, section 5.2. Positions are derived by <c>corners-1</c>, never carried (section 3.8).</summary>
-public sealed record BodyCodes(byte Count, byte EcLevel, byte ModuleSize, byte Placement);
+public sealed record BodyCodes(byte Count, byte EcLevel, byte ModuleSize, byte Placement)
+{
+    /// <summary>
+    /// For <c>explicit</c> placement only (NOTES-FROM-PLANNING.md entry 358 section 3, answering question 13 with its first option): the QR
+    /// version the codes are printed at, carried because their footprint cannot be derived.
+    /// </summary>
+    public byte Version { get; init; }
+
+    /// <summary>For <c>explicit</c> placement only: each code's centre, in quanta, one per code.</summary>
+    public IReadOnlyList<(ushort X, ushort Y)> Positions { get; init; } = [];
+}
 
 /// <summary>The data block, section 5.2, present when flag bit 6 is set.</summary>
 public sealed record BodyDataBlock(ushort X, ushort Y, ushort Width, ushort Height, byte Layout, byte FieldSet, ushort Reserve, byte InkIndex);

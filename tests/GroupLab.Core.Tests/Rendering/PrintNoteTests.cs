@@ -28,10 +28,15 @@ public class PrintNoteTests
             Assert.Equal(plain.Pages[p].Items, page.Items.Where(i => i.Layer != SceneLayer.PrintNote));
 
             var note = Assert.Single(page.Items.OfType<TextRun>(), t => t.Layer == SceneLayer.PrintNote);
-            Assert.Equal(SceneBuilder.PrintNoteFontSize, note.FontSize);
             var box = Box(note);
-            Assert.True(page.Height - box.Y1 >= 2 * 36, $"{file}: the note comes within {(page.Height - box.Y1) / 2:0} dmm of the bottom edge");
-            Assert.True(box.X0 >= 600 && box.X1 <= page.Width - 600, $"{file}: the note runs into the side margins");
+            // Entry 358 section 3: a label has no margin below its markers, so its note is the last line of the words beside its code.
+            if (!GroupLab.Core.Gltd.Model.PageSizes.IsLabel(definition.Page.Size))
+            {
+                Assert.Equal(SceneBuilder.PrintNoteFontSize, note.FontSize);
+                Assert.True(page.Height - box.Y1 >= 2 * 36, $"{file}: the note comes within {(page.Height - box.Y1) / 2:0} dmm of the bottom edge");
+                Assert.True(box.X0 >= 600 && box.X1 <= page.Width - 600, $"{file}: the note runs into the side margins");
+            }
+
             foreach (var item in page.Items.Where(i => i.Layer != SceneLayer.PrintNote))
             {
                 var other = Box(item);
@@ -50,7 +55,7 @@ public class PrintNoteTests
     {
         var sheets = TargetLibrary.Load(Repo.PathTo("targets"));
         Assert.Equal(BuiltIns.Files.Count(), sheets.Count);
-        Assert.Equal(42, sheets.Count); // entry 243 added the three E bull sheets and the three C bull sheets; entry 273 the two printer check pages; entry 289 the twelve 2 MOA sheets
+        Assert.Equal(54, sheets.Count); // entry 243 added the three E bull sheets and the three C bull sheets; entry 273 the two printer check pages; entry 289 the twelve 2 MOA sheets; entry 358 the nine X6 label sets and three check labels
         Assert.All(sheets, s =>
         {
             Assert.NotEqual(TargetLibrary.OtherFamily, s.Family);

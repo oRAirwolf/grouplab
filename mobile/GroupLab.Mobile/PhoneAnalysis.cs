@@ -303,7 +303,7 @@ internal static class PhoneAnalysis
             return new PhoneResult(session.State, definition, "This is the printer check page. To measure your printer with it, open Settings, then Printers, then Add a printer or Check again.", null, working);
         }
 
-        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre, printer: Phone.Settings.PrinterForPhotos());
+        var result = AutomaticMarking.Run(grey, value, working.Metadata, definition, backend, trace, token, setup.Calibre, printer: Phone.Settings.PrinterForPhotos(definition.Page.Size));
         survey?.Record(new AnalysisFacts(working.OriginalWidth, working.OriginalHeight, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
         // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
         DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),

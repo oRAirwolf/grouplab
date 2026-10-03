@@ -47,6 +47,12 @@ public class PrintedNameTests
             // the same clearances as any other sheet's.
             // A C3 zeroing sheet (entry 251) gives the top to its legend, which says what the sheet is ("MIL · 100 YD"), and prints no name;
             // the printer check page (entry 273) gives it to its own title, "GroupLab printer check".
+            // A label (entry 358 section 3) has its name in the band beside its one code, with its other words; LabelSheetTests holds them.
+            if (GroupLab.Core.Gltd.Model.PageSizes.IsLabel(definition.Page.Size))
+            {
+                continue;
+            }
+
             if ((definition.Tiling is not null || definition.Grids?.Any(g => g.StyleOrDefault is GroupLab.Core.Gltd.Derivation.GridStyle3.Style or GroupLab.Core.Gltd.Derivation.GridStyle4.Style) == true) && names.Count == 0)
             {
                 continue;

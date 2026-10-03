@@ -4101,13 +4101,13 @@
    "kind": "code",
    "where": "ios/opencv/build-extern.sh and .github/workflows/ios.yml, entry 290 section 2 item 2"
   },
-  "- **Done.** A validator, and 38 built-in target sheets.": {
+  "- **Done.** A validator, and 47 built-in target sheets.": {
    "kind": "code",
-   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289)"
+   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289); the nine X6 label sets from LibraryBuilder LabelPages, held by LabelSheetTests (entry 358)"
   },
-  "01 Print a GroupLab sheet Thirty-eight built-in sheets, printed at actual size.": {
+  "01 Print a GroupLab sheet Forty-seven built-in sheets, printed at actual size.": {
    "kind": "code",
-   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289)"
+   "where": "targets/*.gltd.json, counted by scripts/counts.py sheets; the twelve 2 MOA sheets from src/GroupLab.Cli/Library/LibraryBuilder.cs TwoMoaSheets, held by TwoMoaSheetTests (entry 289); the nine X6 label sets from LibraryBuilder LabelPages, held by LabelSheetTests (entry 358)"
   },
   "The sheets that come with GroupLab cannot be edited.": {
    "kind": "code",

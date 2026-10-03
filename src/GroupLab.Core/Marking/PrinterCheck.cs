@@ -39,7 +39,7 @@ public static class PrinterCheck
 
         if (PrinterProfile.FromScan(name, measured.Scale, today) is { } scan)
         {
-            return new PrinterCheckResult(scan, null, null, null);
+            return new PrinterCheckResult(scan.OnPaper(page.Page.Size), null, null, null);
         }
 
         var paper = PaperEdgeCheck.Measure(grey, registration.Mapping);
@@ -52,8 +52,9 @@ public static class PrinterCheck
             return new PrinterCheckResult(null, NoCard, paper, null);
         }
 
+        // Entry 358 section 3: a check label measures that printer on that paper, across and along the feed.
         var profile = new PrinterProfile(string.IsNullOrWhiteSpace(name) ? PrinterProfile.DefaultName : name.Trim(), card.Across, card.Down,
-            PrinterMethod.Card, today, PrinterProfile.CardUncertainty);
+            PrinterMethod.Card, today, PrinterProfile.CardUncertainty).OnPaper(page.Page.Size);
         return new PrinterCheckResult(profile, null, paper, card);
     }
 

@@ -71,6 +71,8 @@ public static class TargetLibrary
         ("GL-ZERO-MOA-100M", "Zeroing", "100 m"),
         ("GL-ZERO-MIL-100Y", "Zeroing", "100 yd"),
         ("GL-ZERO-MIL-100M", "Zeroing", "100 m"),
+        // Entry 358 section 3: the X6 labels, six of the 25-bull Letter sheets' bulls to a label, for a thermal label printer.
+        ("GL-X6-", "Thermal labels", "100 yd"),
         // Entry 273: the page a printer is checked on, which is not a target.
         ("GL-SCALE-", "Printer check", "not a target"),
     ];
