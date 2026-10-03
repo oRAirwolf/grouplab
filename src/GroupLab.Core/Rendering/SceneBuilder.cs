@@ -978,7 +978,10 @@ public static class SceneBuilder
                         col++;
                     }
 
-                    items.Add(new RectFill(layer, colour, left + (start * module), top + (row * module), (col - start) * module, module));
+                    items.Add(new RectFill(layer, colour, left + (start * module), top + (row * module), (col - start) * module, module)
+                    {
+                        Module = new ModuleCell(module, size, start, row),
+                    });
                 }
             }
         }

@@ -85,6 +85,7 @@ public sealed partial class MainWindow
             libraryPreview.Scene = page;
             SetLibraryZoom(libraryZoom);
         };
+        targetsPanel.DotsShown += dots => libraryPreview.Dots = dots;
         targetsPanel.SheetsChanged += () => FillLibrary();
         targetsPanel.SheetChosen += sheet =>
         {

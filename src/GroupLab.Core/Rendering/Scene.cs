@@ -64,7 +64,21 @@ public sealed record DiscBand(
 }
 
 /// <summary>An axis-aligned filled rectangle, used for marker and QR modules, rules and grid lines.</summary>
-public sealed record RectFill(SceneLayer Layer, Rgb Colour, long X, long Y, long Width, long Height) : SceneItem(Layer, Colour);
+public sealed record RectFill(SceneLayer Layer, Rgb Colour, long X, long Y, long Width, long Height) : SceneItem(Layer, Colour)
+{
+    /// <summary>
+    /// Where this run of modules sits in its marker or code, or null for anything that is not a module: NOTES-FROM-PLANNING.md entry 358
+    /// section 2. A thermal printer draws a symbol with every module the same whole number of dots, which needs to know the symbol, not only
+    /// the rectangle; a rectangle snapped edge by edge prints modules 3 and 4 dots wide at random.
+    /// </summary>
+    public ModuleCell? Module { get; init; }
+}
+
+/// <summary>
+/// A run of modules' place in its symbol: the module's size in half-dmm, the symbol's size in modules, and the run's first column and its row.
+/// Relative to the rectangle, so a page moved whole (a cut sheet) keeps it true.
+/// </summary>
+public sealed record ModuleCell(long Size, int Modules, int Column, int Row);
 
 /// <summary>
 /// A line of Helvetica text. <see cref="X"/> is the anchor point and <see cref="Baseline"/> the baseline. <see cref="Bold"/> sets it in

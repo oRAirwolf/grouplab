@@ -16,6 +16,7 @@ using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Printing;
+using GroupLab.Core.Printing.Thermal;
 using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
 using RenderOptions = GroupLab.Core.Rendering.RenderOptions;
@@ -179,8 +180,24 @@ public sealed class PrintPanel : UserControl
             DiagnosticLog.Info("print.color", ("sheet", selected.File), ("color", BullColours.Name(chosen)));
             ShowPreview();
         };
-        var colourLabel = new TextBlock { Text = "Bulls in", VerticalAlignment = VerticalAlignment.Center };
+        // Entry 358 section 2: what the sheet prints on; a thermal printer draws the page one bit deep at its own dots.
+        printOn.ItemsSource = new[] { OfficeWords }.Concat(ThermalChoices.Select(c => c.Words)).ToList();
+        printOn.SelectedIndex = 0;
+        printOn.SelectionChanged += (_, _) =>
+        {
+            DiagnosticLog.Info("print.printer", ("thermal", Head is not null), ("dpi", Head?.DotsPerInch ?? 0));
+            colourRow.IsVisible = Head is null;
+            thermalNote.IsVisible = Head is not null;
+            ShowPreview();
+        };
         details.Children.Add(new StackPanel
+        {
+            Spacing = Tokens.Space4,
+            Children = { Row(new TextBlock { Text = "Print on", VerticalAlignment = VerticalAlignment.Center }, printOn), thermalNote },
+        });
+
+        var colourLabel = new TextBlock { Text = "Bulls in", VerticalAlignment = VerticalAlignment.Center };
+        details.Children.Add(colourRow = new StackPanel
         {
             Spacing = Tokens.Space4,
             Children =
@@ -217,6 +234,40 @@ public sealed class PrintPanel : UserControl
             Fail("The library is missing", "The built-in library was not found beside the application.");
         }
     }
+
+    /// <summary>What the "Print on" list offers first: anything that prints through the system, or a PDF.</summary>
+    internal const string OfficeWords = "An office printer, or a PDF";
+
+    /// <summary>The line under "Print on" when a thermal printer is chosen.</summary>
+    internal const string ThermalWords = "A thermal printer prints in black only, one dot at a time, at actual size: the preview shows every dot as it will print, and bull colors are not offered.";
+
+    /// <summary>
+    /// The thermal printers "Print on" offers, by their print heads: the common 4 inch heads at 8 dots a millimetre (203 dpi) and 300 dpi, and
+    /// the 8.5 inch head of a portable printer that takes Letter and A4.
+    /// </summary>
+    internal static IReadOnlyList<(string Words, PrintHead Head)> ThermalChoices { get; } =
+    [
+        ("A 4 inch thermal printer, 203 dpi", new PrintHead(203.2, 832)),
+        ("A 4 inch thermal printer, 300 dpi", new PrintHead(300, 1248)),
+        ("An 8.5 inch thermal printer, 203 dpi (Letter and A4)", new PrintHead(203.2, 1728)),
+        ("An 8.5 inch thermal printer, 300 dpi (Letter and A4)", new PrintHead(300, 2560)),
+    ];
+
+    private readonly ComboBox printOn = new() { MinWidth = 260, [Avalonia.Automation.AutomationProperties.NameProperty] = "Print on" };
+    private readonly TextBlock thermalNote = new() { Text = ThermalWords, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary }, IsVisible = false };
+    private StackPanel colourRow = new();
+
+    /// <summary>The thermal printer's head the sheet will print on, or null for an office printer or a PDF.</summary>
+    internal PrintHead? Head => printOn.SelectedIndex > 0 ? ThermalChoices[printOn.SelectedIndex - 1].Head : null;
+
+    /// <summary>Chooses what to print on as the list does, 0 for an office printer, for the headless tests.</summary>
+    internal void ChoosePrintOn(int index) => printOn.SelectedIndex = index;
+
+    /// <summary>Raised with the thermal print of the page showing, or null when the page is drawn as vectors (entry 358 section 2).</summary>
+    internal event Action<DotPreview?>? DotsShown;
+
+    /// <summary>The last thermal print shown, for the headless tests.</summary>
+    internal ThermalPage? ThermalShown { get; private set; }
 
     /// <summary>The settings file the bull color is remembered in, per sheet (entry 297); none in a panel a test makes alone.</summary>
     internal AppSettingsStore? Settings { get; init; }
@@ -637,8 +688,8 @@ public sealed class PrintPanel : UserControl
             Mode: fill ? DataBlockMode.Filled : DataBlockMode.Blank,
             Instance: instance,
             PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null,
-            OneSheet: oneSheet.IsVisible && oneSheet.IsChecked == true,
-            BullColour: Colour));
+            OneSheet: Head is null && oneSheet.IsVisible && oneSheet.IsChecked == true,
+            BullColour: Head is null ? Colour : BullColour.Black));
         if (result.Pdf is null)
         {
             Fail("This sheet cannot be printed as set", "This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)));
@@ -653,10 +704,13 @@ public sealed class PrintPanel : UserControl
     /// <summary>Writes the PDF, every sheet of a tiled set in order. Returns false with the reason in the message line.</summary>
     internal bool SavePdf(string path)
     {
-        if (Render() is not { Pdf: { } pdf } result)
+        if (Render() is not { Pdf: { } office } result)
         {
             return false;
         }
+
+        // Entry 358 section 2: for a thermal printer, the dots it will print, at actual size, one image pixel to a dot.
+        byte[] pdf = Head is { } head ? ThermalPdf.Write([.. result.Pages.Select(p => (p, ThermalRaster.Render(p, head)))], head) : office;
 
         try
         {
@@ -763,10 +817,38 @@ public sealed class PrintPanel : UserControl
         }
 
         // Entry 300: the scene itself, not a picture of it; the preview draws it as vectors at the screen's own resolution.
-        var scenes = SceneBuilder.Build(selected.Definition, new RenderOptions(TileIndex: page, PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null, BullColour: Colour));
+        var scenes = SceneBuilder.Build(selected.Definition, new RenderOptions(TileIndex: page, PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null, BullColour: Head is null ? Colour : BullColour.Black));
         shown = scenes.Pages.Count > 0 ? scenes.Pages[0] : null;
         PageShown?.Invoke(shown);
+        ShowDots();
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
+    }
+
+    /// <summary>
+    /// Entry 358 section 2: with a thermal printer chosen, the preview is the one-bit image as it will print, and anything the head cannot
+    /// reach is said before printing.
+    /// </summary>
+    private void ShowDots()
+    {
+        ThermalShown = null;
+        if (Head is not { } head || shown is null)
+        {
+            DotsShown?.Invoke(null);
+            return;
+        }
+
+        var print = ThermalRaster.Render(shown, head);
+        ThermalShown = print;
+        var grey = print.Image.ToGray();
+        using var mat = OpenCvSharp.Mat.FromPixelData(grey.Height, grey.Width, OpenCvSharp.MatType.CV_8UC1, grey.Pixels);
+        OpenCvSharp.Cv2.ImEncode(".png", mat, out byte[] png);
+        using var stream = new MemoryStream(png);
+        double s = head.DotsPerUnit;
+        DotsShown?.Invoke(new DotPreview(new Bitmap(stream), print.CutLeft / s, print.Image.Width / s, print.Image.Height / s));
+        if (print.CutOff is { } cut)
+        {
+            SetStatus(cut, StatusKind.Alert);
+        }
     }
 
     /// <summary>
@@ -991,6 +1073,13 @@ public sealed class PrintPanel : UserControl
     /// </summary>
     private void PrintHere()
     {
+        if (Head is not null)
+        {
+            // Entry 358 section 2: a thermal printer gets the dots GroupLab drew, through the PDF and the system's own dialog.
+            Print();
+            return;
+        }
+
         if (!OperatingSystem.IsWindows() || selected is null || Render() is not { } result)
         {
             return;

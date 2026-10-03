@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using GroupLab.Core.Gltd.Binary;
 using GroupLab.App.Theme;
 using GroupLab.Core.Gltd.Model;
@@ -20,6 +21,9 @@ internal sealed class SheetView : Control
 {
     public static readonly StyledProperty<Scene?> SceneProperty = AvaloniaProperty.Register<SheetView, Scene?>(nameof(Scene));
 
+    /// <summary>Entry 358 section 2: the page as a thermal printer will print it, drawn in place of the vectors where it is set.</summary>
+    public static readonly StyledProperty<DotPreview?> DotsProperty = AvaloniaProperty.Register<SheetView, DotPreview?>(nameof(Dots));
+
     /// <summary>The page's longer side in device-independent pixels at a zoom of 1, where the view is not told a size.</summary>
     public const double NaturalLongerSide = 900;
 
@@ -27,7 +31,7 @@ internal sealed class SheetView : Control
 
     static SheetView()
     {
-        AffectsRender<SheetView>(SceneProperty);
+        AffectsRender<SheetView>(SceneProperty, DotsProperty);
         AffectsMeasure<SheetView>(SceneProperty);
     }
 
@@ -41,6 +45,13 @@ internal sealed class SheetView : Control
     {
         get => GetValue(SceneProperty);
         set => SetValue(SceneProperty, value);
+    }
+
+    /// <summary>The one-bit image a thermal printer will print, with where it sits on the page; null to draw the vectors.</summary>
+    public DotPreview? Dots
+    {
+        get => GetValue(DotsProperty);
+        set => SetValue(DotsProperty, value);
     }
 
     /// <summary>The page's size at a zoom of 1, its longer side <see cref="NaturalLongerSide"/>.</summary>
@@ -87,6 +98,19 @@ internal sealed class SheetView : Control
         double left = (Bounds.Width - (scene.Width * scale)) / 2, top = (Bounds.Height - (scene.Height * scale)) / 2;
         var page = new Rect(left, top, scene.Width * scale, scene.Height * scale);
         context.FillRectangle(new SolidColorBrush(Tokens.SheetPaper), page);
+        if (Dots is { } dots)
+        {
+            // Every dot as a sharp square, never smoothed: the preview is the print, dot for dot.
+            var at = new Rect(left + (dots.Left * scale), top, dots.Width * scale, dots.Height * scale);
+            using (context.PushRenderOptions(new Avalonia.Media.RenderOptions { BitmapInterpolationMode = BitmapInterpolationMode.None }))
+            {
+                context.DrawImage(dots.Image, new Rect(dots.Image.Size), at);
+            }
+
+            context.DrawRectangle(null, new Pen(new SolidColorBrush(Tokens.SheetEdge), 1), page);
+            return;
+        }
+
         using (context.PushTransform(Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(left, top)))
         {
             foreach (var (ink, shape) in drawn)
@@ -190,3 +214,6 @@ internal sealed class SheetView : Control
         pen.EndFigure(true);
     }
 }
+
+/// <summary>A thermal print's dots for <see cref="SheetView"/>: the image, and where it lies on the page in half-dmm.</summary>
+internal sealed record DotPreview(Bitmap Image, double Left, double Width, double Height);
