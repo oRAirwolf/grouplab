@@ -253,8 +253,11 @@ internal static class PhoneAnalysis
                 SittingRecord.Analyzed(picture, trace, "No sheet was named: " + (identity?.Failure ?? "none chosen"));
             }
 
+            // Entry 354 section 2: codes that were read and named a sheet GroupLab does not have are not codes that could not be read.
             return new PhoneResult(session.State, null,
-                "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
+                identity?.DefinitionId is { } named
+                    ? $"GroupLab read the square codes: they name {named}, which is not among its sheets, and the description of the sheet they carry could not be read. Choose which sheet it is."
+                    : "GroupLab could not read the square codes that name the sheet. Choose which sheet it is, or take the picture again with the whole sheet in view, square on, in even light.",
                 null, working, AskWhichSheet: true, Check: unread, LooksLike: looksLike, Recognized: seen);
         }
 

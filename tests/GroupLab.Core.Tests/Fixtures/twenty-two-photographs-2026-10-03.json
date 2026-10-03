@@ -1,5 +1,5 @@
 {
- "why": "NOTES-FROM-PLANNING.md entry 354: phone photographs of GroupLab sheets shot with .22 LR at 50 yd, each with its 25 holes marked by eye from the picture, one a bull, sheet inches from the top left. Each hole was looked at on a crop of the photograph and placed at its centre. The photographs carry no metadata; the phone's focal length is given here, as the camera recorded it.",
+ "why": "NOTES-FROM-PLANNING.md entry 354: two phone photographs of GroupLab sheets shot with .22 LR at 50 yd, each with its 25 holes marked by eye from the picture, one a bull, sheet inches from the top left. Each hole was looked at on a crop of the photograph and placed at its centre. The photographs carry no metadata; the phone's focal length is given here, as the camera recorded it.",
  "focalLengthMm": 6.765,
  "focalLength35mm": 24,
  "calibre": 0.223,
@@ -14,6 +14,18 @@
     [1.440, 5.602], [3.351, 5.613], [4.651, 5.258], [5.843, 5.010], [7.736, 5.636],
     [1.385, 6.465], [2.838, 6.869], [4.503, 6.595], [6.107, 7.045], [7.212, 6.997],
     [1.158, 8.610], [2.911, 8.197], [5.078, 8.703], [5.973, 8.466], [7.689, 8.284]
+   ]
+  },
+  {
+   "photo": "photo-22lr-diamond-2026-10-03.jpg",
+   "sheet": null,
+   "what": "A sheet made by the target generator, 50 yd, 6x, diamond, on Letter, GL-MBTW-2V2M-JTPE-4518. It is on no list GroupLab ships, so its definition is read from its own codes.",
+   "shots": [
+    [1.727, 2.891], [3.131, 2.956], [4.597, 3.050], [6.005, 2.932], [7.412, 3.023],
+    [1.618, 4.385], [3.109, 4.572], [4.550, 4.374], [6.078, 4.341], [7.296, 4.273],
+    [1.736, 5.950], [3.233, 5.774], [4.734, 5.751], [6.123, 5.707], [7.445, 5.723],
+    [1.544, 7.316], [3.067, 7.418], [4.504, 7.451], [5.828, 7.353], [7.392, 7.587],
+    [1.489, 8.878], [2.989, 8.625], [4.372, 8.891], [6.041, 8.766], [7.354, 8.766]
    ]
   }
  ]

@@ -2131,7 +2131,9 @@ public sealed partial class MainWindow : Window
         // Entry 41 section 5: a crash during detection carries the stages that ran, which already hold the resolved parameters and decisions.
         CrashReporter.InFlight = trace;
         detectionMetadata = m;
-        var identity = await Task.Run(() => SheetIdentification.Identify(g, ShippedDefinitions(), new OpenCvSharpBackend(), trace, token), token);
+        // Entry 354 section 2: the person's own sheets are looked for by their codes too, not only offered once the codes have failed.
+        var candidates = ShippedDefinitions().Concat(ownSheets.List().Select(s => s.Definition)).ToList();
+        var identity = await Task.Run(() => SheetIdentification.Identify(g, candidates, new OpenCvSharpBackend(), trace, token), token);
         CrashReporter.InFlight = null;
         token.ThrowIfCancellationRequested();
         DiagnosticLog.Info("detect.identify", ("definition", identity.DefinitionId), ("tile", identity.TileIndex), ("codes", identity.CodesRead), ("failure", identity.Failure), ("automatic", automatic));
@@ -2146,7 +2148,7 @@ public sealed partial class MainWindow : Window
                 return;
             }
 
-            OfferTheSheet(g, v, m, identity.Failure);
+            OfferTheSheet(g, v, m, identity.Failure, identity.DefinitionId);
             return;
         }
 
@@ -2169,7 +2171,7 @@ public sealed partial class MainWindow : Window
     /// Entry 115 section 4: the sheet's codes could not be read, so the screen asks which sheet it is, by name, from the library and the
     /// person's own sheets. A sheet with no codes registers off its markers exactly as any other does. Marking it by hand stays beside it.
     /// </summary>
-    private void OfferTheSheet(GrayImage g, GrayImage v, ImageMetadata m, string? why)
+    private void OfferTheSheet(GrayImage g, GrayImage v, ImageMetadata m, string? why, string? named = null)
     {
         pendingDetection = (g, v, m);
         var sheets = ShippedDefinitions().Concat(ownSheets.List().Select(s => s.Definition))
@@ -2178,8 +2180,12 @@ public sealed partial class MainWindow : Window
         sheetChoice.ItemsSource = sheets.Select(d => d.Name).ToList();
         sheetChoice.SelectedIndex = sheets.Count > 0 ? 0 : -1;
         sheetChooser.IsVisible = true;
-        status.Text = "GroupLab could not read this sheet's codes. Which sheet is it?";
-        problem.Text = $"GroupLab looked for the square codes near the sheet's corners, which name the sheet, and could not read them ({why}). A sheet whose codes did not print cleanly, or that the picture cut off, still registers from its markers: choose which sheet it is, or mark it by hand. A flat scan at 300 dpi reads the codes most reliably.";
+        // Entry 354 section 2: codes that were read and named a sheet this computer does not have are not codes that could not be read, and
+        // saying they could not be read sent the person looking for a fault in their photograph.
+        status.Text = named is null ? "GroupLab could not read this sheet's codes. Which sheet is it?" : $"This sheet's codes name {named}, which GroupLab does not have. Which sheet is it?";
+        problem.Text = named is null
+            ? $"GroupLab looked for the square codes near the sheet's corners, which name the sheet, and could not read them ({why}). A sheet whose codes did not print cleanly, or that the picture cut off, still registers from its markers: choose which sheet it is, or mark it by hand. A flat scan at 300 dpi reads the codes most reliably."
+            : $"GroupLab read the square codes near the sheet's corners. They name {named}, which is not among the sheets on this computer, and the description of the sheet they carry could not be read ({why}). If you made this sheet with the target generator, make it again with the same settings, choose Save to your own sheets, and open the picture again; or choose which sheet it is below, or mark it by hand.";
         DiagnosticLog.Info("detect.offer", ("sheets", sheets.Count), ("failure", why));
     }
 

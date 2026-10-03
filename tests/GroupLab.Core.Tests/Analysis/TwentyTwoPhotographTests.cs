@@ -10,8 +10,8 @@ using GroupLab.Core.Tests.Support;
 namespace GroupLab.Core.Tests.Analysis;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 354: a phone photograph of a GroupLab sheet shot with .22 LR at 50 yd, sent with consent to publish, read
-/// as the desktop reads a phone photograph with the calibre given as 0.223 in, and held to its 25 holes marked by eye.
+/// NOTES-FROM-PLANNING.md entry 354: two phone photographs of GroupLab sheets shot with .22 LR at 50 yd, sent with consent to publish, read
+/// as the desktop reads a phone photograph with the calibre given as 0.223 in. Each is held to its 25 holes marked by eye.
 /// <para>
 /// <b>The load sheet</b> was stapled crinkled to a board, its top corners torn and its bottom edge lifted. Before entry 354 the photograph
 /// read 32 marks, 24 of them holes: the torn corner, the curled top edge and the print instruction at the lifted bottom edge, where the
@@ -19,6 +19,10 @@ namespace GroupLab.Core.Tests.Analysis;
 /// Bull 23's hole touches the marker below it and is refused with the marker, as a hole centred in a marker's zone always has been (the
 /// 6.5 sheet of <see cref="PhotoAgainstScanTests"/> loses one the same way): keeping the part outside the zone found it here, and on
 /// photographs of several sheets at a range it kept the board beside a sheet's edge too, so it was not kept.
+/// </para>
+/// <para>
+/// <b>The diamond sheet</b> was made by the target generator and printed without being saved, so no definition here has its identifier, and
+/// GroupLab refused it outright although its codes read perfectly. Its definition is now read from the codes themselves.
 /// </para>
 /// </summary>
 public class TwentyTwoPhotographTests
@@ -30,6 +34,8 @@ public class TwentyTwoPhotographTests
     {
         // The photograph, the holes it must find of its 25, and the most false marks it may make.
         { "photo-22lr-load-sheet-2026-10-03.jpg", 24, 0 },
+        // Four bulls' white centres and the edge of one black diamond, on the crinkled left of the sheet, are still read as marks.
+        { "photo-22lr-diamond-2026-10-03.jpg", 25, 5 },
     };
 
     [Theory]
@@ -50,10 +56,11 @@ public class TwentyTwoPhotographTests
         var (value, _) = ImageLoader.LoadMaxChannel(path);
         metadata = metadata with { FocalLengthMm = (double)fixture["focalLengthMm"]!, FocalLength35mm = (int)fixture["focalLength35mm"]! };
 
-        // The sheet names itself, as the desktop finds it.
+        // The sheet names itself, as the desktop finds it: from the library, or for the generated sheet from its own codes.
         var backend = new OpenCvSharpBackend();
         var identity = SheetIdentification.Identify(grey, SheetIdentification.Candidates([Repo.PathTo("targets")]), backend, new GroupLab.Core.Trace.TraceRecorder());
         Assert.True(identity.Definition is not null, identity.Failure);
+        Assert.Equal(sheet["sheet"] is null, identity.FromItsCodes);
 
         var result = AutomaticMarking.Run(grey, value, metadata, identity.Definition!, backend, calibre: Calibre.Of((double)fixture["calibre"]!));
         Assert.Null(result.Failure);

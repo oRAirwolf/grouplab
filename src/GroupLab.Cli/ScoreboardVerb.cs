@@ -167,7 +167,8 @@ public static class ScoreboardVerb
 
             string picture = Path.Combine(dir, (string)truth["picture"]!);
             string sheetFile = (string)truth["sheet"]!;
-            var definition = Sheet(File.Exists(sheetFile) ? sheetFile : Path.Combine("targets", sheetFile));
+            // Entry 354: a sheet the generator made is in no library, so its definition sits beside the picture in the corpus folder.
+            var definition = Sheet(File.Exists(Path.Combine(dir, sheetFile)) ? Path.Combine(dir, sheetFile) : File.Exists(sheetFile) ? sheetFile : Path.Combine("targets", sheetFile));
             string kind = (string?)truth["truth"] ?? "count-unknown";
             string condition = (string?)truth["condition"] ?? "real";
             string name = Path.GetRelativePath(folder, dir).Replace('\\', '/');

@@ -11,7 +11,14 @@ namespace GroupLab.Core.Registration;
 /// What a sheet's printed codes say it is: the identifier they carry, the candidate definition with that identifier, the tile index in the
 /// frame, how many codes were read, and the resolution the frame was read at as a multiple of the image's own; or, with no definition, why not.
 /// </summary>
-public sealed record SheetIdentity(TargetDefinition? Definition, string? DefinitionId, int TileIndex, int CodesRead, string? Failure, double? Scale = null);
+public sealed record SheetIdentity(TargetDefinition? Definition, string? DefinitionId, int TileIndex, int CodesRead, string? Failure, double? Scale = null)
+{
+    /// <summary>
+    /// Entry 354 section 2: the definition was rebuilt from the codes themselves, because no definition on this machine has the identifier
+    /// they carry. A sheet GroupLab generated and printed without saving is one: its codes are the only copy of its definition.
+    /// </summary>
+    public bool FromItsCodes { get; init; }
+}
 
 /// <summary>
 /// The sheet's definition read off the sheet, NOTES-FROM-PLANNING.md entry 35 section 6 item 3, so that <c>grouplab analyze</c> needs no
@@ -93,12 +100,12 @@ public static class SheetIdentification
             stage.Detail(string.Create(inv, $"square on where the markers put them: {views.Count} places, {squareOn.Count} codes read, {viewFrames.Count} valid frames, {(long)System.Diagnostics.Stopwatch.GetElapsedTime(viewsBegan).TotalMilliseconds} ms"));
             var viewIds = viewFrames.Select(f => f.DefinitionId!).Distinct(StringComparer.Ordinal).ToList();
             var viewTiles = viewFrames.Select(f => (int)f.TileIndex).Distinct().ToList();
-            if (viewIds.Count == 1 && viewTiles.Count == 1 && candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == viewIds[0]) is { } viewMatch)
+            if (viewIds.Count == 1 && viewTiles.Count == 1 && Named(candidates, viewFrames, viewIds[0]) is { } viewMatch)
             {
                 stage.Parameter("definition", viewIds[0]);
                 stage.Metric("codes decoded", viewFrames.Count, "count");
-                stage.Done(StageStatus.Ok, string.Create(inv, $"{viewIds[0]}{(viewMatch.Tiling is null ? "" : $", tile {viewTiles[0]}")}, from {viewFrames.Count} codes square on where the markers put them"));
-                return new SheetIdentity(viewMatch, viewIds[0], viewTiles[0], read, null, null);
+                stage.Done(StageStatus.Ok, string.Create(inv, $"{viewIds[0]}{(viewMatch.Definition.Tiling is null ? "" : $", tile {viewTiles[0]}")}, from {viewFrames.Count} codes square on where the markers put them{FromCodesWords(viewMatch.FromItsCodes)}"));
+                return new SheetIdentity(viewMatch.Definition, viewIds[0], viewTiles[0], read, null, null) { FromItsCodes = viewMatch.FromItsCodes };
             }
         }
 
@@ -134,11 +141,14 @@ public static class SheetIdentification
                 return Failed(stage, ids[0], read, $"the codes of {ids[0]} name more than one tile, {string.Join(" and ", tiles)}");
             }
 
-            var match = candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == ids[0]);
-            if (match is null)
+            // Entry 354 section 2: a definition on no list here is rebuilt from the codes, which carry it whole (TARGET-SCHEMA.md section 6);
+            // only codes that decode to no valid definition are refused.
+            if (Named(candidates, frames, ids[0]) is not { } named)
             {
-                return Failed(stage, ids[0], read, string.Create(inv, $"the sheet's codes name {ids[0]}, which is not among the {candidates.Count} definitions searched"));
+                return Failed(stage, ids[0], read, string.Create(inv, $"the sheet's codes name {ids[0]}, which is not among the {candidates.Count} definitions searched, and the codes do not hold a definition GroupLab can read"));
             }
+
+            var match = named.Definition;
 
             // Entry 282 section 5: "1 of 2 codes read" on every good picture of the camera test, because reading stops at the first
             // resolution that gives one. Where fewer than the sheet has were read, the rest are read cut out where the markers put them, so
@@ -162,8 +172,8 @@ public static class SheetIdentification
 
             stage.Parameter("definition", ids[0]);
             stage.Metric("codes decoded", frames.Count, "count");
-            stage.Done(StageStatus.Ok, string.Create(inv, $"{ids[0]}{(match.Tiling is null ? "" : $", tile {tiles[0]}")}, from {frames.Count} codes at {scale:0.##} times full resolution"));
-            return new SheetIdentity(match, ids[0], tiles[0], read, null, scale);
+            stage.Done(StageStatus.Ok, string.Create(inv, $"{ids[0]}{(match.Tiling is null ? "" : $", tile {tiles[0]}")}, from {frames.Count} codes at {scale:0.##} times full resolution{FromCodesWords(named.FromItsCodes)}"));
+            return new SheetIdentity(match, ids[0], tiles[0], read, null, scale) { FromItsCodes = named.FromItsCodes };
         }
 
         // Entry 282 section 5: the codes cut out where the sheet's markers put them, and read enlarged. On the Fold 7's pictures a module
@@ -191,16 +201,32 @@ public static class SheetIdentification
         stage.Detail(string.Create(inv, $"cut out where the markers put them and enlarged: {near.Count} codes read, {nearFrames.Count} valid frames, {(long)System.Diagnostics.Stopwatch.GetElapsedTime(cutBegan).TotalMilliseconds} ms"));
         var nearIds = nearFrames.Select(f => f.DefinitionId!).Distinct(StringComparer.Ordinal).ToList();
         var nearTiles = nearFrames.Select(f => (int)f.TileIndex).Distinct().ToList();
-        if (nearIds.Count == 1 && nearTiles.Count == 1 && candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == nearIds[0]) is { } nearMatch)
+        if (nearIds.Count == 1 && nearTiles.Count == 1 && Named(candidates, nearFrames, nearIds[0]) is { } nearMatch)
         {
             stage.Parameter("definition", nearIds[0]);
             stage.Metric("codes decoded", nearFrames.Count, "count");
-            stage.Done(StageStatus.Ok, string.Create(inv, $"{nearIds[0]}, from {nearFrames.Count} codes cut out where the markers put them"));
-            return new SheetIdentity(nearMatch, nearIds[0], nearTiles[0], read, null, null);
+            stage.Done(StageStatus.Ok, string.Create(inv, $"{nearIds[0]}, from {nearFrames.Count} codes cut out where the markers put them{FromCodesWords(nearMatch.FromItsCodes)}"));
+            return new SheetIdentity(nearMatch.Definition, nearIds[0], nearTiles[0], read, null, null) { FromItsCodes = nearMatch.FromItsCodes };
         }
 
         return Failed(stage, null, read, read == 0 ? "no code on the sheet could be read" : "no code on the sheet held a valid GroupLab frame");
     }
+
+    /// <summary>
+    /// The definition the codes name: the candidate with that identifier, or, where no candidate has it, the definition the codes carry
+    /// (entry 354 section 2). Null only where neither exists.
+    /// </summary>
+    private static (TargetDefinition Definition, bool FromItsCodes)? Named(IReadOnlyList<TargetDefinition> candidates, IReadOnlyList<DecodeResult> frames, string id)
+    {
+        if (candidates.FirstOrDefault(c => GltdBinary.Encode(c).Encoding?.DefinitionId == id) is { } listed)
+        {
+            return (listed, false);
+        }
+
+        return frames.FirstOrDefault(f => f.DefinitionId == id && f.Definition is not null)?.Definition is { } carried ? (carried, true) : null;
+    }
+
+    private static string FromCodesWords(bool fromCodes) => fromCodes ? "; no definition here has it, so it was read from the codes themselves" : "";
 
     /// <summary>The enlargements a code cut out of the picture is read at, in order: a phone picture's module of about 3 pixels read at three times.</summary>
     public static IReadOnlyList<double> CropScales { get; } = [2.0, 3.0, 4.0];

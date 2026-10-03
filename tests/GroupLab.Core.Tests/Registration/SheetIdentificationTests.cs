@@ -69,17 +69,31 @@ public class SheetIdentificationTests
         Assert.Contains("more than one tile", tiles.Failure, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 354 section 2: a definition on no list here is the one the codes carry, read from them, and never one
+    /// that is on the list. the submitted generated diamond sheet was refused this way on the desktop although its codes read perfectly: a sheet
+    /// made by the generator and printed is on no list unless it was saved, and its codes are the only copy of it.
+    /// </summary>
     [Fact]
-    public void ADefinitionNotAmongTheCandidatesIsNamedAndNotReplacedByOneThatIs()
+    public void ADefinitionNotAmongTheCandidatesIsReadFromItsCodesAndNotReplacedByOneThatIs()
     {
         var blank = new GrayImage(8, 8, new byte[64]);
         var candidates = new[] { BuiltIns.Load("GL-RF25-LTR.gltd.json") };
-        var identity = SheetIdentification.Identify(blank, candidates, new Codes(Frame("GL-CF25-LTR.gltd.json")), new TraceRecorder());
+        var trace = new TraceRecorder();
+        var identity = SheetIdentification.Identify(blank, candidates, new Codes(Frame("GL-CF25-LTR.gltd.json")), trace);
 
         string id = Id(BuiltIns.Load("GL-CF25-LTR.gltd.json"));
-        Assert.Null(identity.Definition);
+        Assert.Null(identity.Failure);
+        Assert.True(identity.FromItsCodes);
         Assert.Equal(id, identity.DefinitionId);
-        Assert.Contains($"name {id}, which is not among the 1 definitions searched", identity.Failure, StringComparison.Ordinal);
+        Assert.Equal(id, Id(identity.Definition!));
+        Assert.Equal(BuiltIns.Load("GL-CF25-LTR.gltd.json").Bulls.Count, identity.Definition!.Bulls.Count);
+        Assert.Contains(trace.Records, r => r.Stage == "S0.identify" && r.Summary.Contains("read from the codes themselves", StringComparison.Ordinal));
+
+        // Where the library has it, the library's own definition is used, with its name and its words, as before.
+        var listed = SheetIdentification.Identify(blank, Library, new Codes(Frame("GL-CF25-LTR.gltd.json")), new TraceRecorder());
+        Assert.False(listed.FromItsCodes);
+        Assert.Same(Library.First(d => Id(d) == id), listed.Definition);
     }
 
     [Fact]
