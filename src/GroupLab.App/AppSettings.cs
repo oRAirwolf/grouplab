@@ -609,6 +609,71 @@ public sealed class AppSettingsStore(string path)
         file["sending"] = sending;
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 357 section 1: whether somebody who chose "Send every target automatically" before "Send everything I
+    /// open" existed has yet to be asked about it, once. Their choice stays finished targets only until they answer: nobody is moved silently.
+    /// </summary>
+    public bool EverythingQuestionDue() => Read(file =>
+        (string?)file["sending"]?["choice"] == nameof(GroupLab.Core.Publication.SendingChoice.Always) && file["sending"]?["everythingAsked"]?.GetValueKind() != JsonValueKind.True);
+
+    /// <summary>Records that the question has been answered, whatever the answer.</summary>
+    public bool SaveEverythingAsked() => Save(file => Sending(file)["everythingAsked"] = true);
+
+    /// <summary>Entry 357 section 1: whether, on a phone, "Send everything I open" may use mobile data. Off until the person turns it on.</summary>
+    public bool LoadMobileData() => Read(file => file["sending"]?["mobileData"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveMobileData(bool allowed) => Save(file => Sending(file)["mobileData"] = allowed);
+
+    /// <summary>
+    /// The salt the picture code is made with, random and made the first time it is needed, so two versions of one picture share a code
+    /// and the code says nothing about the picture to anyone else.
+    /// </summary>
+    public string LoadPictureSalt()
+    {
+        if (Read(file => (string?)file["sending"]?["salt"]) is { Length: 32 } kept)
+        {
+            return kept;
+        }
+
+        string made = Convert.ToHexStringLower(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16));
+        Save(file => Sending(file)["salt"] = made);
+        return made;
+    }
+
+    /// <summary>The reference the project gave the first version of a picture sent under "Send everything I open", by its picture code.</summary>
+    public string? LoadPictureReference(string code) => Read(file => (string?)file["sending"]?["pictures"]?[code]);
+
+    /// <summary>Keeps a picture's first reference, the newest <see cref="PicturesKept"/>; a later version never replaces the first.</summary>
+    public bool SavePictureReference(string code, string reference) => Save(file =>
+    {
+        var pictures = Sending(file)["pictures"] as JsonObject ?? [];
+        if (pictures.ContainsKey(code))
+        {
+            return;
+        }
+
+        pictures[code] = reference;
+        while (pictures.Count > PicturesKept)
+        {
+            pictures.Remove(pictures.First().Key);
+        }
+
+        Sending(file)["pictures"] = pictures;
+    });
+
+    public const int PicturesKept = 200;
+
+    private static JsonObject Sending(JsonObject file)
+    {
+        if (file["sending"] is not JsonObject sending)
+        {
+            sending = [];
+            file["sending"] = sending;
+        }
+
+        return sending;
+    }
+
     /// <summary>NOTES-FROM-PLANNING.md entry 194 section 2.1: whether error reports go by themselves. Unset until the person chooses, which is asking.</summary>
     public GroupLab.App.Diagnostics.ErrorReportChoice LoadErrorChoice() =>
         Read(file => Enum.TryParse<GroupLab.App.Diagnostics.ErrorReportChoice>((string?)file["errorReports"]?["choice"], out var choice) ? choice : GroupLab.App.Diagnostics.ErrorReportChoice.Unset);

@@ -22,7 +22,10 @@ public sealed class FirstRunView : UserControl
 
     private static bool SurveyDue(AppSettingsStore settings) => Shell.SurveyOpen && settings.LoadSurveyChoice() == SurveyChoice.Unset;
 
-    private static bool TargetsDue(AppSettingsStore settings) => Shell.TargetsOpen && settings.LoadSending().Choice == SendingChoice.Unset;
+    private static bool TargetsDue(AppSettingsStore settings) => Shell.TargetsOpen && settings.LoadSending().Choice == SendingChoice.Unset || EverythingDue(settings);
+
+    /// <summary>Entry 357 section 1: somebody who chose every target automatically is asked once about everything they open.</summary>
+    private static bool EverythingDue(AppSettingsStore settings) => Shell.TargetsOpen && SharingSwitches.EverythingOpen && settings.EverythingQuestionDue();
 
     private static bool ErrorsDue(AppSettingsStore settings) => Shell.ErrorsOpen && settings.LoadErrorChoice() == ErrorReportChoice.Unset;
 
@@ -85,8 +88,18 @@ public sealed class FirstRunView : UserControl
         scope.Children.Add(Screens.Dim("You can change either in Settings, under Units, and give each rifle its own scope unit and click."));
 
         var terms = ReceiverTerms.Current;
-        targets.Children.Add(Screens.Heading(SharingWords.TargetsQuestion));
-        targets.Children.Add(Screens.Card([Screens.Dim(SharingWords.TargetsIntro), .. TargetPackages.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line))]));
+        bool everythingDue = EverythingDue(settings);
+        targets.Children.Add(Screens.Heading(everythingDue ? SharingWords.EverythingQuestion : SharingWords.TargetsQuestion));
+        if (everythingDue)
+        {
+            targets.Children.Add(Screens.Line(SharingWords.EverythingQuestionSays));
+        }
+
+        targets.Children.Add(Screens.Card([Screens.Dim(SharingWords.TargetsIntroNow), .. SharingWords.TargetsWhatIsSentNow.Select(line => (Control)Screens.Dim("• " + line))]));
+        if (SharingSwitches.EverythingOpen)
+        {
+            targets.Children.Add(Screens.Dim(SharingWords.EverythingWaitsForWifi));
+        }
 
         var testing = Screens.Radio("firstRunLevel", SharingWords.TestingOnly + terms.TestingText, false);
         var publishable = Screens.Radio("firstRunLevel", SharingWords.MayBePublished + terms.PublishableText, false);
@@ -98,14 +111,21 @@ public sealed class FirstRunView : UserControl
         {
             targets.Children.Add(Screens.Choice(words, () =>
             {
-                ConsentLevel? level = testing.IsChecked == true ? ConsentLevel.Testing : publishable.IsChecked == true ? ConsentLevel.Publishable : null;
-                if (choice == SendingChoice.Always && level is null)
+                // Entry 357: nothing is chosen for the person, and somebody answering the one-time question keeps the level they chose before.
+                ConsentLevel? level = testing.IsChecked == true ? ConsentLevel.Testing : publishable.IsChecked == true ? ConsentLevel.Publishable
+                    : everythingDue ? settings.LoadSending().Level : null;
+                if (choice is SendingChoice.Always or SendingChoice.Everything && level is null)
                 {
                     why.Text = SharingWords.LevelFirst;
                     return;
                 }
 
                 settings.SaveSending(choice, level);
+                if (SharingSwitches.EverythingOpen)
+                {
+                    settings.SaveEverythingAsked();
+                }
+
                 DiagnosticLog.Info("send.first-run", ("choice", choice.ToString()), ("level", level?.ToString()));
                 targets.IsVisible = false;
                 Answered();

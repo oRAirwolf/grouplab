@@ -19,6 +19,12 @@ internal static class SharingWords
     /// </summary>
     public const string TargetsShort = "Targets you analyze can go to the project to test and improve detection.";
 
+    /// <summary>Entry 357 section 1: the same line where "Send everything I open" is offered.</summary>
+    public const string TargetsShortEverything = "Targets you analyze can go to the project to test and improve detection, or, if you choose, every picture you open.";
+
+    /// <summary>The short line Settings shows, as the switch stands.</summary>
+    public static string TargetsShortNow => SharingSwitches.EverythingOpen ? TargetsShortEverything : TargetsShort;
+
     public const string ErrorsShort = "A report of an error can go to the project, where it is fixed.";
 
     public const string SurveyShort = "Once a week, what GroupLab runs on and how fast.";
@@ -32,6 +38,38 @@ internal static class SharingWords
     public static string LevelName(ConsentLevel level) => level == ConsentLevel.Publishable ? MayBePublished.Trim() : TestingOnly.Trim();
 
     public const string TargetsIntro = "Each target you analyze, once you press Accept and analyze, can go to the project, to test and improve detection. A picture GroupLab could not read is not sent. This is what goes:";
+
+    /// <summary>
+    /// Entry 357 section 1: the explanation where "Send everything I open" is offered. It says plainly that it means every picture, even one
+    /// GroupLab could not read and even one that is not a target, and that an unfinished one is never published on its own.
+    /// </summary>
+    public const string TargetsIntroEverything = "With Send finished targets only, each target goes once you press Accept and analyze. With Send everything I open, every picture you open in GroupLab goes when you leave it, even one GroupLab could not read and even one that is not a target, with everything GroupLab worked out on it; if you finish it later, the finished version goes too, as the same submission. A picture that was not finished is used for testing only and is never published on its own. This is what goes:";
+
+    /// <summary>The explanation, as the switch stands.</summary>
+    public static string TargetsIntroNow => SharingSwitches.EverythingOpen ? TargetsIntroEverything : TargetsIntro;
+
+    /// <summary>Entry 357 section 1: the line under the choice "Send everything I open".</summary>
+    public const string EverythingSays = "Every picture you open goes to the project when you leave it, read or not, even one that is not a target. To keep one back, choose Do not send this picture in the picture's menu before you leave it.";
+
+    /// <summary>Entry 357 section 1: the phone's line, since a lossless picture from a phone camera is large.</summary>
+    public const string EverythingWaitsForWifi = "On the phone, pictures wait for Wi-Fi unless you allow mobile data below.";
+
+    /// <summary>Entry 357 section 1: the phone's switch under the choice.</summary>
+    public const string MobileData = "Also send over mobile data";
+
+    /// <summary>Entry 357 section 1: the picture's menu item, which works until the picture is left.</summary>
+    public const string DoNotSendThis = "Do not send this picture";
+
+    /// <summary>What the menu item says once chosen, until the picture is left.</summary>
+    public const string NotSendingThis = "This picture will not be sent";
+
+    /// <summary>
+    /// Entry 357 section 1: the question asked once of somebody who chose "Send every target automatically", whose choice stays finished
+    /// targets only. It is a question, never a default: nobody is moved silently.
+    /// </summary>
+    public const string EverythingQuestion = "GroupLab can now send every picture you open";
+
+    public const string EverythingQuestionSays = "You chose to send every target automatically. That is now called Send finished targets only, and it stays your choice unless you pick another. GroupLab can also send every picture you open, even one it could not read, which is what helps most with pictures it cannot read. Nothing more is sent until you answer.";
 
     public const string TestingOnly = "Testing only. ";
 
@@ -49,9 +87,27 @@ internal static class SharingWords
     public static IReadOnlyList<(ConsentLevel Level, string Words)> Levels(ReceiverTerms terms) =>
         [(ConsentLevel.Testing, TestingOnly + terms.TestingText), (ConsentLevel.Publishable, MayBePublished + terms.PublishableText)];
 
-    /// <summary>The target choices, in the order they are offered.</summary>
-    public static IReadOnlyList<(SendingChoice Choice, string Words)> TargetChoices { get; } =
+    /// <summary>What goes with a target, as the switch stands.</summary>
+    public static IReadOnlyList<string> TargetsWhatIsSentNow => SharingSwitches.EverythingOpen ? TargetPackages.WhatIsSentEverything : TargetPackages.WhatIsSent;
+
+    /// <summary>The target choices, in the order they are offered, as before entry 357's switch.</summary>
+    public static IReadOnlyList<(SendingChoice Choice, string Words)> TargetChoicesBefore { get; } =
         [(SendingChoice.Always, "Send every target automatically"), (SendingChoice.Ask, "Ask me each time"), (SendingChoice.Never, "Never")];
+
+    /// <summary>
+    /// Entry 357 section 1: the four choices where "Send everything I open" is offered, the old automatic choice renamed so the difference
+    /// is plain. Ask me each time also asks when a picture fails to read, which is the problem dialog's Send it to the project.
+    /// </summary>
+    public static IReadOnlyList<(SendingChoice Choice, string Words)> TargetChoicesEverything { get; } =
+    [
+        (SendingChoice.Everything, "Send everything I open, to help improve GroupLab"),
+        (SendingChoice.Always, "Send finished targets only"),
+        (SendingChoice.Ask, "Ask me each time"),
+        (SendingChoice.Never, "Never"),
+    ];
+
+    /// <summary>The target choices, in the order they are offered, as the switch stands.</summary>
+    public static IReadOnlyList<(SendingChoice Choice, string Words)> TargetChoices => SharingSwitches.EverythingOpen ? TargetChoicesEverything : TargetChoicesBefore;
 
     public const string ErrorsQuestion = "Send error reports to the project?";
 

@@ -375,7 +375,7 @@ foreach ($dir in $new) {
 # disagrees now, something changed the bytes between there and here.
 $toCheck = if ($VerifyAll) { $remote | Where-Object { Test-Path (Join-Path $LocalRoot $_) } } else { $pulled }
 
-$bad = @(); $checked = 0; $optOut = @(); $notScanned = 0
+$bad = @(); $checked = 0; $optOut = @(); $notScanned = 0; $states = @()
 foreach ($dir in $toCheck) {
     $metaPath = Join-Path $LocalRoot "$dir\meta.json"
     if (-not (Test-Path $metaPath)) {
@@ -407,7 +407,18 @@ foreach ($dir in $toCheck) {
     $from = if ($meta.PSObject.Properties.Name -contains 'source') { "$($meta.source)" } else { 'web' }
     $words = if ($level -eq 'testing') { 'TESTING ONLY. Never publish this submission: its contributor agreed to testing and improving detection, and nothing more.' }
              else { 'May be published: its contributor agreed to publication in the public test data and in research articles.' }
-    Set-Content -Path (Join-Path $LocalRoot "$dir\CONSENT.txt") -Encoding utf8 -Value @($words, "Consent level: $level. Consent version: $($meta.consent.version). Sent from: $from.")
+    # Entry 357 section 1: a picture sent under "Send everything I open" says the state it was left in and the code its versions share.
+    # One that is not accepted is a test case and is never published on its own, whatever its consent level.
+    $state = if ($meta.PSObject.Properties.Name -contains 'state') { "$($meta.state)" } else { $null }
+    $lines = @($words, "Consent level: $level. Consent version: $($meta.consent.version). Sent from: $from.")
+    if ($state) {
+        $picture = "$($meta.picture)"
+        $follows = if ($meta.follows) { " It follows $($meta.follows)." } else { '' }
+        $lines += "State: $state. Picture code: $picture.$follows"
+        if ($state -ne 'accepted') { $lines += 'UNFINISHED: a test case only. Never publish this submission on its own.' }
+        $states += [pscustomobject]@{ Dir = $dir; State = $state; Picture = $picture; Follows = "$($meta.follows)" }
+    }
+    Set-Content -Path (Join-Path $LocalRoot "$dir\CONSENT.txt") -Encoding utf8 -Value $lines
 }
 
 # ------------------------------------------------------------------ summary --
@@ -482,6 +493,17 @@ if (-not $CrashReports -and (Get-Command python -ErrorAction SilentlyContinue)) 
 if ($notScanned -gt 0) {
     Write-Host ""
     Write-Host "The scanner did not run on $notScanned file(s). They were rebuilt from their pixels, but ClamAV on the server is not working: read the worker's journal." -ForegroundColor Red
+}
+
+if ($states.Count) {
+    # Entry 357 section 1: the versions of one picture together, as one submission, newest state last.
+    Write-Host ""
+    Write-Host "Sent under Send everything I open, by picture:" -ForegroundColor Cyan
+    foreach ($group in ($states | Group-Object Picture)) {
+        $line = ($group.Group | Sort-Object Dir | ForEach-Object { "$($_.Dir) $($_.State)" }) -join ', then '
+        Write-Host ("  {0}: {1}" -f $group.Name.Substring(0, [Math]::Min(8, $group.Name.Length)), $line)
+    }
+    Write-Host "  An unread or stopped-at-review version is a test case; only an accepted one may be published." -ForegroundColor Yellow
 }
 
 if ($optOut.Count) {

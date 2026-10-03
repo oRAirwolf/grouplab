@@ -338,6 +338,39 @@ check('a package that is not JSON is refused', ($r['json']['code'] ?? '') === 'b
 $r = request($root, $appSource, ['package' => str_repeat('x', 4 * 1024 * 1024 + 1)], []);
 check('a package over the limit is refused', ($r['json']['code'] ?? '') === 'too_large', $r['raw']);
 
+// Entry 357 section 1: a picture sent under "Send everything I open" carries a submission block.
+$unread = static function (array $p): array {
+    $p['submission'] = ['state' => 'unread', 'picture' => str_repeat('ab', 16), 'follows' => null, 'stages' => []];
+    return $p;
+};
+$r = app_request($root, $appSource, $limits, 'testing', $unread);
+check('while limits.json does not offer everything I open, a package with a state is kept to try again and nothing is stored',
+    ($r['json']['code'] ?? '') === 'state_closed' && ($r['json']['retry'] ?? false) === true, $r['raw']);
+$everything = str_replace('const SEND_EVERYTHING_OPEN = false;', 'const SEND_EVERYTHING_OPEN = true;', $appSource);
+$r = app_request($root, $everything, $limits, 'publishable', $unread);
+check('an unread picture is taken once everything I open is offered', ($r['json']['ok'] ?? false) === true, $r['raw']);
+$first = $r['json']['id'] ?? '';
+$dir = glob($root . '/private/quarantine/*_' . $first)[0] ?? null;
+if ($dir !== null) {
+    $meta = json_decode((string) file_get_contents($dir . '/meta.json'), true);
+    check('its state and picture code are recorded beside its consent', ($meta['state'] ?? '') === 'unread' && ($meta['picture'] ?? '') === str_repeat('ab', 16));
+}
+$r = app_request($root, $everything, $limits, 'publishable', static function (array $p) use ($first): array {
+    $p['submission'] = ['state' => 'accepted', 'picture' => str_repeat('ab', 16), 'follows' => $first];
+    return $p;
+});
+$dir = glob($root . '/private/quarantine/*_' . ($r['json']['id'] ?? 'none'))[0] ?? null;
+$meta = $dir !== null ? json_decode((string) file_get_contents($dir . '/meta.json'), true) : [];
+check('the finished version names the first and shares its picture code', ($meta['state'] ?? '') === 'accepted' && ($meta['follows'] ?? '') === $first, $r['raw']);
+$r = app_request($root, $everything, $limits, 'testing', static function (array $p): array { $p['submission'] = ['state' => 'half done', 'picture' => str_repeat('ab', 16)]; return $p; });
+check('a state the receiver does not know is refused', ($r['json']['code'] ?? '') === 'bad_package', $r['raw']);
+$r = app_request($root, $everything, $limits, 'testing', static function (array $p): array { $p['submission'] = ['state' => 'unread', 'picture' => 'not a code']; return $p; });
+check('a picture code that is not one is refused', ($r['json']['code'] ?? '') === 'bad_package', $r['raw']);
+$r = app_request($root, $everything, $limits, 'testing');
+$dir = glob($root . '/private/quarantine/*_' . ($r['json']['id'] ?? 'none'))[0] ?? null;
+$meta = $dir !== null ? json_decode((string) file_get_contents($dir . '/meta.json'), true) : [];
+check('a package without a state is recorded exactly as before', $dir !== null && !array_key_exists('state', $meta), $r['raw']);
+
 $big = make($root, 'big.png', 'png', 1024);
 $big['error'] = UPLOAD_ERR_INI_SIZE;
 $r = app_request($root, $appSource, $limits, 'testing', null, [], $big);

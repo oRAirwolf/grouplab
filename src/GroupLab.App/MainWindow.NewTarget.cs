@@ -136,6 +136,8 @@ public sealed partial class MainWindow
     /// <summary>Everything New target clears, with the marking it starts from: empty, or shots imported from a CSV (entry 169 section 8).</summary>
     private void ClearSheet(MarkingState start)
     {
+        // Entry 357 section 1: clearing the sheet leaves its picture.
+        LeavePicture(closing: false);
         session.Load(start);
         grey = null;
         valueImage = null;

@@ -136,7 +136,7 @@ public sealed partial class MainWindow
         list.Add((OpeningWords.MarkByHand, MarkByHand));
         list.Add((OpeningWords.StoreOrDrawn, NotAGroupLabSheet));
         list.Add((OpeningWords.ShowWhatWentWrong, ShowWhatWentWrong));
-        bool sendable = ReceiverOpen && settingsStore.LoadSending().Choice != SendingChoice.Always;
+        bool sendable = ReceiverOpen && settingsStore.LoadSending().Choice is not (SendingChoice.Always or SendingChoice.Everything);
         if (sendable)
         {
             list.Add((OpeningWords.SendToProject, SendFromProblem));
@@ -319,13 +319,13 @@ public sealed partial class MainWindow
         problemBar.IsVisible = sheetProblem is not null;
         if (settingsStore.LoadSending().Level is { } level)
         {
-            _ = SendThisTargetAsync(level);
+            _ = SendThisTargetAsync(level, "unread");
             return;
         }
 
         ShowProblem("Send it to the project?", "The picture, what GroupLab found and the log from this session go to the project, to make reading sheets like it better.",
-            ("Testing only", () => _ = SendThisTargetAsync(ConsentLevel.Testing)),
-            ("May also be published", () => _ = SendThisTargetAsync(ConsentLevel.Publishable)),
+            ("Testing only", () => _ = SendThisTargetAsync(ConsentLevel.Testing, "unread")),
+            ("May also be published", () => _ = SendThisTargetAsync(ConsentLevel.Publishable, "unread")),
             ("Not now", () => { }));
     }
 

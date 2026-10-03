@@ -105,6 +105,13 @@ public static partial class Intake
             });
         }
 
+        // Entry 357 section 1: a picture sent unfinished under "Send everything I open" is a test case, never published on its own; its
+        // finished version, sent with the same picture code, is the one that may be.
+        if (meta["state"] is { } state && (string?)state != "accepted")
+        {
+            return Refuse($"this picture was sent unfinished (its state is {state.ToJsonString()}), so it is a test case and is never published on its own");
+        }
+
         if (meta["schema_version"] is not { } version || version.GetValueKind() != JsonValueKind.Number || version.GetValue<double>() != SchemaVersion)
         {
             return Refuse($"meta.json's schema_version is {meta["schema_version"]?.ToJsonString() ?? "missing"}, and this tool reads only version {SchemaVersion}");

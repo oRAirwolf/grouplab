@@ -89,6 +89,7 @@ public sealed partial class MainWindow
         }
 
         DiagnosticLog.Info("problem.choice", ("title", ProblemTitle), ("choice", label));
+        NoteProblem(ProblemTitle ?? "", label);
         CloseProblem();
         choice.Act();
     }
@@ -190,6 +191,7 @@ public sealed partial class MainWindow
         RaiseProblemLayer();
         problemLayer.IsVisible = true;
         DiagnosticLog.Info("problem.open", ("title", title), ("choices", choices.Count));
+        NoteProblem(title, null);
         Avalonia.Threading.Dispatcher.UIThread.Post(() => card.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b => !b.Classes.Contains(AppStyles.Link))?.Focus());
     }
 

@@ -1212,6 +1212,14 @@ def limit_problems() -> list:
     if f"const OPEN = {want};" not in survey:
         found.append(f"website/api/survey.php: OPEN is not {want}, and limits.json's surveyOpen is {limit['surveyOpen']}")
 
+    # Entry 357: the application's receiver takes "Send everything I open" only while limits.json offers it, and the error receivers take
+    # the log package's reference only while limits.json says error reports carry it.
+    for file, const, key in [("app-submission.php", "SEND_EVERYTHING_OPEN", "sendEverythingOpen")]:
+        source = need(REPO / "website" / "api" / file).read_text(encoding="utf-8")
+        want = "true" if limit[key] else "false"
+        if f"const {const} = {want};" not in source:
+            found.append(f"website/api/{file}: {const} is not {want}, and limits.json's {key} is {limit[key]}")
+
     # Entry 129, Alan's decision 6: no PDF. The refusal has to be in the receiver, not only on the page.
     if "'application/pdf'" in php.split("const ACCEPTED")[-1].split("];")[0]:
         found.append("website/api/upload.php: PDF is in ACCEPTED, and Alan's decision 6 refuses it")

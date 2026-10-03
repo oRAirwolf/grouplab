@@ -342,6 +342,9 @@ public static class CrashReporter
         }
     }
 
+    /// <summary>A reading's stage records as a crash record holds them, for entry 357's packages and reports.</summary>
+    internal static JsonArray StagesOf(TraceRecorder? trace) => Stages(trace);
+
     private static JsonArray Stages(TraceRecorder? trace)
     {
         static JsonNode? Number(double value) => double.IsFinite(value) ? value : null;

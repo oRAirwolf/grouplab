@@ -152,6 +152,17 @@ def consent(folder: Path) -> str:
     return "testing" if meta.get("exclude_from_public_dataset") else "publishable"
 
 
+def sent_state(folder: Path) -> dict:
+    """Entry 357 section 1: the state a picture was sent in and the code its versions share, where "Send everything I open" sent it; nothing
+    otherwise, so the manifest of every other submission is as before."""
+    try:
+        meta = json.loads((folder / "meta.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    found = {k: meta[k] for k in ("state", "picture", "follows") if isinstance(meta.get(k), str)}
+    return found
+
+
 def zipped(folder: Path, into: Path) -> Path:
     out = into / f"{folder.name}.zip"
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
@@ -180,6 +191,7 @@ def archive(folder: Path, token: str) -> None:
         digest = hashlib.sha256(data).hexdigest()
         asset = upload(release, asset_name, data, "application/zip", token)
         listed = {"name": folder.name, "bytes": len(data), "sha256": digest, "consent": consent(folder)}
+        listed.update(sent_state(folder))
     else:
         asset = assets[asset_name]
 

@@ -538,8 +538,11 @@ def one(folder: Path, tool: str | None) -> tuple[bool, str]:
 
     READY.mkdir(parents=True, exist_ok=True)
     shutil.move(str(folder), str(READY / folder.name))
+    # Entry 357 section 1: a picture sent under "Send everything I open" says the state it was left in; one that is not accepted is a test
+    # case. The worker takes it as it takes any other, and says which it is.
+    state = record.get("state") if isinstance(record.get("state"), str) else None
     log(f"{folder.name}: ready, {len(rebuilt)} files" + (f", {record['notScanned']} NOT SCANNED" if record["notScanned"] else "")
-        + (", opted out of the public data set" if opt_out else ""))
+        + (", opted out of the public data set" if opt_out else "") + (f", sent {state}" if state else ""))
     return True, "ready"
 
 

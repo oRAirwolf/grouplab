@@ -66,6 +66,17 @@ const ACCEPTED = [
 /** The parts every package carries beside the manifest and the consent. */
 const PARTS = ['detected', 'corrected', 'told', 'analysis', 'environment', 'log'];
 
+/**
+ * Entry 357 section 1: whether a package may carry a `submission` block, which "Send everything I open" adds: the state the picture was
+ * sent in, a picture code the versions of one picture share, and the reference of an earlier version. limits.json's sendEverythingOpen,
+ * which the site's build holds this to. While it is false a package with the block is refused, to be tried again later, and every other
+ * package is taken exactly as before.
+ */
+const SEND_EVERYTHING_OPEN = false;
+
+/** The states a picture is sent in. Anything but accepted is a test case and never published on its own. */
+const STATES = ['unread', 'stopped-at-review', 'accepted'];
+
 const MAX_STEM_LEN = 100;
 
 function respond(int $status, array $payload): never
@@ -274,6 +285,19 @@ function package_problem(array $package): ?string
             return 'the package\'s ' . $part . ' is not a record';
         }
     }
+    if (array_key_exists('submission', $package)) {
+        $submission = $package['submission'];
+        if (!is_array($submission) || !in_array($submission['state'] ?? null, STATES, true)) {
+            return 'the package does not say which state the picture was sent in';
+        }
+        if (!is_string($submission['picture'] ?? null) || !preg_match('/^[0-9a-f]{32}$/', $submission['picture'])) {
+            return 'the package does not carry its picture code';
+        }
+        $follows = $submission['follows'] ?? null;
+        if ($follows !== null && (!is_string($follows) || !preg_match('/^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$/', $follows))) {
+            return 'the earlier version the package names is not a reference';
+        }
+    }
     return null;
 }
 
@@ -309,6 +333,9 @@ if (strlen($raw) > MAX_PACKAGE_BYTES) {
 $package = json_decode($raw, true, 64);
 if (!is_array($package)) {
     fail(400, 'The package could not be read.', 'bad_package');
+}
+if (array_key_exists('submission', $package) && !SEND_EVERYTHING_OPEN) {
+    fail(503, 'GroupLab does not take unfinished pictures from the application yet. Nothing is wrong with yours; it is kept and tried again later.', 'state_closed', true);
 }
 $problem = package_problem($package);
 if ($problem !== null) {
@@ -446,6 +473,15 @@ $meta = [
     ]],
     'stage' => 'quarantine',
 ];
+
+// Entry 357 section 1: a picture sent under "Send everything I open" says the state it was sent in and the code its versions share, so
+// the pull script and the intake show one submission, and an unfinished one is never published on its own.
+if (isset($package['submission'])) {
+    $meta['state']   = $package['submission']['state'];
+    $meta['picture'] = $package['submission']['picture'];
+    $meta['follows'] = $package['submission']['follows'] ?? null;
+    $meta['app']['submission'] = $package['submission'];
+}
 
 file_put_contents($dirPath . '/meta.json', json_encode($meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n", LOCK_EX);
 @chmod($dirPath . '/meta.json', 0640);

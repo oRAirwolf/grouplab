@@ -14,6 +14,12 @@ public enum SendingChoice
     /// <summary>Not yet chosen: the first run screen asks, once, when the receiver is open.</summary>
     Unset,
 
+    /// <summary>
+    /// Entry 357 section 1, offered only while <see cref="ReceiverTerms.SendEverythingOpen"/>: every picture opened goes when it is left,
+    /// read or not, and the finished version too where it is accepted, linked to the first.
+    /// </summary>
+    Everything,
+
     /// <summary>Every target goes after Accept and analyze, with no further question.</summary>
     Always,
 
@@ -61,6 +67,9 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
             MaxErrorReportsPerDay = root.GetProperty("maxErrorReportsPerDay").GetInt32(),
             SurveyOpen = root.GetProperty("surveyOpen").GetBoolean(),
             SurveyReceiver = root.GetProperty("surveyReceiver").GetString()!,
+            CrashReceiver = root.GetProperty("crashReceiver").GetString()!,
+            SendEverythingOpen = root.GetProperty("sendEverythingOpen").GetBoolean(),
+            FullLogErrorReports = root.GetProperty("fullLogErrorReports").GetBoolean(),
         };
     });
 
@@ -84,6 +93,21 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
 
     /// <summary>Where survey reports go: grouplab.org.</summary>
     public string SurveyReceiver { get; init; } = "";
+
+    /// <summary>Where a report's log package goes, the zip Report a problem builds: grouplab.org's crash receiver.</summary>
+    public string CrashReceiver { get; init; } = "";
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 357 section 1: whether the level "Send everything I open" is offered. False until Alan confirms the store
+    /// privacy answers; while it is false nothing about sending targets differs from before the entry.
+    /// </summary>
+    public bool SendEverythingOpen { get; init; }
+
+    /// <summary>
+    /// Entry 357 section 2: whether an automatic error report carries the log package, as Report a problem does. False until the store
+    /// answers are confirmed; while it is false a report holds what it held before.
+    /// </summary>
+    public bool FullLogErrorReports { get; init; }
 
     /// <summary>The terms this build carries.</summary>
     public static ReceiverTerms Current => Built.Value;
@@ -126,6 +150,29 @@ public static class TargetPackages
         "The figures the analysis showed and how the scale was set.",
         "This session's log, with file names reduced to a code, and the version of GroupLab.",
     ];
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 357 section 1: what goes under "Send everything I open", the list above and how far a picture got.
+    /// </summary>
+    public static IReadOnlyList<string> WhatIsSentEverything { get; } =
+    [
+        .. WhatIsSent,
+        "Under Send everything I open, also every picture you open, even one GroupLab could not read or that is not a target, and how far it got: each stage of reading it, where it stopped and why, any problem shown and what you chose.",
+    ];
+
+    /// <summary>The states a picture can be sent in under "Send everything I open", as the receiver records them.</summary>
+    public static IReadOnlyList<string> States { get; } = ["unread", "stopped-at-review", "accepted"];
+
+    /// <summary>
+    /// Entry 357 section 1: the code two versions of one picture share, so the finished version is linked to the first as one submission:
+    /// the picture's SHA-256 with this installation's own random salt, so the code says nothing about the picture to anyone else.
+    /// </summary>
+    public static string PictureCode(string salt, byte[] picture)
+    {
+        ArgumentNullException.ThrowIfNull(salt);
+        ArgumentNullException.ThrowIfNull(picture);
+        return Convert.ToHexStringLower(SHA256.HashData([.. Encoding.UTF8.GetBytes(salt), .. SHA256.HashData(picture)]))[..32];
+    }
 
     /// <summary>
     /// The image as it may leave the machine: a JPEG or PNG with its compressed pixels copied byte for byte and only the camera and exposure
@@ -254,7 +301,11 @@ public static class TargetPackages
     }
 
     /// <summary>The package, with its manifest naming the image by its size and SHA-256.</summary>
-    public static TargetPackage Build(byte[] image, string imageName, IReadOnlyList<MarkedShot> detected, IReadOnlyList<MarkedShot> final, JsonObject told, JsonObject analysis, JsonObject environment, string log, ConsentLevel level, ReceiverTerms terms)
+    /// <param name="submission">
+    /// Entry 357 section 1, only under "Send everything I open": the state the picture was left in, its picture code, the reference of
+    /// an earlier version where one was sent, and how far it got. Null, and absent from the package, otherwise, as before the entry.
+    /// </param>
+    public static TargetPackage Build(byte[] image, string imageName, IReadOnlyList<MarkedShot> detected, IReadOnlyList<MarkedShot> final, JsonObject told, JsonObject analysis, JsonObject environment, string log, ConsentLevel level, ReceiverTerms terms, JsonObject? submission = null)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(terms);
@@ -274,6 +325,11 @@ public static class TargetPackages
             ["environment"] = environment,
             ["log"] = log,
         };
+        if (submission is not null)
+        {
+            package["submission"] = submission;
+        }
+
         return new TargetPackage(image, imageName, package.ToJsonString());
     }
 }

@@ -53,7 +53,7 @@ public sealed partial class MainWindow
     private string PendingFolder => Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? ".",
         Path.GetFileNameWithoutExtension(settingsStore.Path) == "settings" ? "pending-targets" : Path.GetFileNameWithoutExtension(settingsStore.Path) + ".pending-targets");
 
-    private TargetSender Sender => new(TheOutsideWorld.Current, PendingFolder);
+    private TargetSender Sender => new(TheOutsideWorld.Current, PendingFolder) { Sent = RememberPicture };
 
     /// <summary>
     /// After Accept and analyze: sends without a question where the choice is Always, and otherwise shows the question at the foot of the
@@ -70,6 +70,19 @@ public sealed partial class MainWindow
         var (choice, level) = settingsStore.LoadSending();
         if (choice == SendingChoice.Never)
         {
+            return;
+        }
+
+        if (choice == SendingChoice.Everything && SendingEverything && level is { } every)
+        {
+            // Entry 357 section 1: the finished version goes at once, linked to any earlier one, and leaving sends nothing more.
+            sendAnsweredFor = image;
+            if (doNotSend != image)
+            {
+                acceptedSentFor = image;
+                _ = SendThisTargetAsync(every, "accepted");
+            }
+
             return;
         }
 
@@ -153,8 +166,11 @@ public sealed partial class MainWindow
         sendPanel.IsVisible = true;
     }
 
-    /// <summary>The package for this target, or null where its image cannot be read or cannot go without loss.</summary>
-    private TargetPackage? PackageFor(ConsentLevel level)
+    /// <summary>
+    /// The package for this target, or null where its image cannot be read or cannot go without loss. Entry 357: with
+    /// <paramref name="sentState"/>, while the switch is on, it carries the submission block, the state the picture was in and how far it got.
+    /// </summary>
+    private TargetPackage? PackageFor(ConsentLevel level, string? sentState = null)
     {
         var state = session.State;
         if (state.ImagePath is not { } path || !File.Exists(path))
@@ -163,7 +179,8 @@ public sealed partial class MainWindow
         }
 
         var terms = ReceiverTerms.Current;
-        var (image, name, refusal) = TargetPackages.PrepareImage(File.ReadAllBytes(path), "target" + Path.GetExtension(path), terms.MaxImageBytes, LosslessPng);
+        byte[] file = File.ReadAllBytes(path);
+        var (image, name, refusal) = TargetPackages.PrepareImage(file, "target" + Path.GetExtension(path), terms.MaxImageBytes, LosslessPng);
         if (image is null)
         {
             sentLine.Text = "Not sent: " + refusal + ".";
@@ -197,7 +214,8 @@ public sealed partial class MainWindow
         var environment = new JsonObject { ["text"] = ReportPackage.EnvironmentText(RenderScaling) };
         // What detection left, the state Discard edits returns to, before any person changed a mark.
         IReadOnlyList<MarkedShot> detected = detectedState is { } left ? [.. left.Shots] : [];
-        return TargetPackages.Build(image, name, detected, [.. state.Shots], told, figures, environment, SessionLog(), level, terms);
+        var submission = sentState is not null && SharingSwitches.EverythingOpen ? Submission(file, sentState) : null;
+        return TargetPackages.Build(image, name, detected, [.. state.Shots], told, figures, environment, SessionLog(), level, terms, submission);
     }
 
     /// <summary>This session's log, as the diagnostics already write it, with anything that looks like a path taken out, the last 1.5 MB.</summary>
@@ -230,9 +248,9 @@ public sealed partial class MainWindow
     }
 
     /// <summary>Sends this target, or keeps it to try again, and says what happened in one quiet line.</summary>
-    private async Task SendThisTargetAsync(ConsentLevel level)
+    private async Task SendThisTargetAsync(ConsentLevel level, string? state = null)
     {
-        if (PackageFor(level) is not { } package)
+        if (PackageFor(level, state) is not { } package)
         {
             return;
         }
@@ -290,7 +308,9 @@ public sealed partial class MainWindow
     {
         // Entry 194 section 2.1: the error report question sits beside this one, each shown only while its receiver is open and it has
         // not been answered. The screen closes when every question on it has been.
-        bool targetsDue = ReceiverOpen && settingsStore.LoadSending().Choice == SendingChoice.Unset;
+        // Entry 357 section 1: somebody who chose every target automatically is asked once about everything they open, as a question.
+        bool everythingDue = ReceiverOpen && SharingSwitches.EverythingOpen && settingsStore.EverythingQuestionDue();
+        bool targetsDue = ReceiverOpen && settingsStore.LoadSending().Choice == SendingChoice.Unset || everythingDue;
         bool errorsDue = ErrorsOpen && settingsStore.LoadErrorChoice() == GroupLab.App.Diagnostics.ErrorReportChoice.Unset;
         // Entry 208: the survey is the third question on the same screen. Somebody who answered the other two before sees the screen once
         // more, with only the survey to answer and a line saying their earlier answers are kept.
@@ -329,9 +349,14 @@ public sealed partial class MainWindow
         FillFirstRunScope(scope, Answered);
         FillFirstRunErrors(errors, Answered);
         FillFirstRunSurvey(survey, Answered, earlierKept: !targetsDue && !errorsDue);
-        card.Children.Add(new TextBlock { Text = SharingWords.TargetsQuestion, Classes = { AppStyles.Title } });
-        card.Children.Add(Line(SharingWords.TargetsIntro));
-        foreach (string line in TargetPackages.WhatIsSent)
+        card.Children.Add(new TextBlock { Text = everythingDue ? SharingWords.EverythingQuestion : SharingWords.TargetsQuestion, Classes = { AppStyles.Title } });
+        if (everythingDue)
+        {
+            card.Children.Add(Line(SharingWords.EverythingQuestionSays));
+        }
+
+        card.Children.Add(Line(SharingWords.TargetsIntroNow));
+        foreach (string line in SharingWords.TargetsWhatIsSentNow)
         {
             card.Children.Add(Line("• " + line));
         }
@@ -348,14 +373,21 @@ public sealed partial class MainWindow
         card.Children.Add(why);
         void Choose(SendingChoice choice)
         {
-            ConsentLevel? level = testing.IsChecked == true ? ConsentLevel.Testing : publishable.IsChecked == true ? ConsentLevel.Publishable : null;
-            if (choice == SendingChoice.Always && level is null)
+            // Entry 357: nothing is chosen for the person, and somebody answering the one-time question keeps the level they chose before.
+            ConsentLevel? level = testing.IsChecked == true ? ConsentLevel.Testing : publishable.IsChecked == true ? ConsentLevel.Publishable
+                : everythingDue ? settingsStore.LoadSending().Level : null;
+            if (choice is SendingChoice.Always or SendingChoice.Everything && level is null)
             {
                 why.Text = SharingWords.LevelFirst;
                 return;
             }
 
             settingsStore.SaveSending(choice, level);
+            if (everythingDue || SharingSwitches.EverythingOpen)
+            {
+                settingsStore.SaveEverythingAsked();
+            }
+
             DiagnosticLog.Info("send.first-run", ("choice", choice.ToString()), ("level", level?.ToString()));
             card.IsVisible = false;
             Answered();
@@ -424,6 +456,19 @@ public sealed partial class MainWindow
         var (choice, level) = settingsStore.LoadSending();
         var terms = ReceiverTerms.Current;
         var choices = new StackPanel { Spacing = Tokens.Space4 };
+        // Entry 357 section 1: the question, where it is still due, above the choices; choosing any of them answers it.
+        if (SharingSwitches.EverythingOpen && settingsStore.EverythingQuestionDue())
+        {
+            sendingSettings.Children.Add(new TextBlock { Text = SharingWords.EverythingQuestion, Classes = { AppStyles.Label } });
+            sendingSettings.Children.Add(Line(SharingWords.EverythingQuestionSays));
+            sendingSettings.Children.Add(Button("Keep finished targets only", () =>
+            {
+                settingsStore.SaveEverythingAsked();
+                DiagnosticLog.Info("send.everything-asked", ("choice", nameof(SendingChoice.Always)));
+                FillSendingSettings();
+            }));
+        }
+
         foreach (var (value, words) in SharingWords.TargetChoices)
         {
             var radio = new RadioButton { GroupName = "sendingChoice", Content = Wrapped(words), IsChecked = choice == value };
@@ -433,17 +478,27 @@ public sealed partial class MainWindow
                 {
                     settingsStore.SaveSending(value, settingsStore.LoadSending().Level);
                     DiagnosticLog.Info("send.choice", ("choice", value.ToString()));
+                    if (SharingSwitches.EverythingOpen)
+                    {
+                        settingsStore.SaveEverythingAsked();
+                        FillSendingSettings();
+                    }
                 }
             };
             choices.Children.Add(radio);
         }
 
         sendingSettings.Children.Add(choices);
-        sendingSettings.Children.Add(Line(SharingWords.TargetsShort));
+        if (choice == SendingChoice.Everything && SharingSwitches.EverythingOpen)
+        {
+            sendingSettings.Children.Add(Line(SharingWords.EverythingSays));
+        }
+
+        sendingSettings.Children.Add(Line(SharingWords.TargetsShortNow));
         sendingSettings.Children.Add(FieldLabel(SharingWords.LevelHeading));
         var levels = new StackPanel { Spacing = Tokens.Space4 };
         // Entry 299: the level's name on the choice, and the receiver's description of each under "More".
-        var more = new List<Control> { Line(SharingWords.TargetsIntro) };
+        var more = new List<Control> { Line(SharingWords.TargetsIntroNow) };
         foreach (var (value, words) in SharingWords.Levels(terms))
         {
             more.Add(Line(words));
@@ -461,7 +516,7 @@ public sealed partial class MainWindow
 
         sendingSettings.Children.Add(levels);
         more.Add(FieldLabel("What is sent"));
-        foreach (string line in TargetPackages.WhatIsSent)
+        foreach (string line in SharingWords.TargetsWhatIsSentNow)
         {
             more.Add(Line("• " + line));
         }
@@ -563,6 +618,9 @@ internal sealed class TargetSender(IOutsideWorld outside, string folder)
 {
     public static readonly TimeSpan KeptFor = TimeSpan.FromDays(7);
 
+    /// <summary>Told the package and the reference of each that the receiver took, entry 357's link between versions of one picture.</summary>
+    public Action<string, string>? Sent { get; init; }
+
     public async Task<SendOutcome> SendAsync(TargetPackage package, string address, CancellationToken token)
     {
         var outcome = await Post(package, address, token).ConfigureAwait(true);
@@ -596,6 +654,7 @@ internal sealed class TargetSender(IOutsideWorld outside, string folder)
         if (reply?["ok"]?.GetValueKind() == JsonValueKind.True && (string?)reply["id"] is { Length: > 0 } id)
         {
             DiagnosticLog.Info("send.sent", ("reference", id));
+            Sent?.Invoke(package.Json, id);
             return new SendOutcome(SendResult.Sent, id, $"Sent to the project. Its reference is {id}.");
         }
 
@@ -607,7 +666,8 @@ internal sealed class TargetSender(IOutsideWorld outside, string folder)
             : new SendOutcome(SendResult.Refused, null, "The target was not sent: " + why);
     }
 
-    private void Keep(TargetPackage package, DateTime now)
+    /// <summary>Keeps a package in its own folder, to be sent at the next try.</summary>
+    public void Keep(TargetPackage package, DateTime now)
     {
         string into = Path.Combine(folder, now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture) + "-" + Guid.NewGuid().ToString("N")[..8]);
         Directory.CreateDirectory(into);

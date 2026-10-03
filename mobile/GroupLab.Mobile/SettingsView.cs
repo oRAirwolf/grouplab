@@ -154,6 +154,18 @@ public sealed class SettingsView : UserControl
         else
         {
             var (choice, level) = settings.LoadSending();
+            // Entry 357 section 1: the question, where it is still due, above the choices; choosing any of them answers it.
+            if (SharingSwitches.EverythingOpen && settings.EverythingQuestionDue())
+            {
+                column.Children.Add(Screens.Line(SharingWords.EverythingQuestion));
+                column.Children.Add(Screens.Dim(SharingWords.EverythingQuestionSays));
+                column.Children.Add(Screens.Choice("Keep finished targets only", () =>
+                {
+                    settings.SaveEverythingAsked();
+                    DiagnosticLog.Info("send.everything-asked", ("choice", nameof(SendingChoice.Always)));
+                }).Id("settings-keep-finished"));
+            }
+
             foreach (var (value, words) in SharingWords.TargetChoices)
             {
                 var radio = Screens.Radio("sendingChoice", words, choice == value);
@@ -162,15 +174,33 @@ public sealed class SettingsView : UserControl
                     if (radio.IsChecked == true && settings.LoadSending().Choice != value)
                     {
                         settings.SaveSending(value, settings.LoadSending().Level);
+                        if (SharingSwitches.EverythingOpen)
+                        {
+                            settings.SaveEverythingAsked();
+                        }
+
                         DiagnosticLog.Info("send.choice", ("choice", value.ToString()));
                     }
                 };
                 column.Children.Add(radio);
             }
 
-            column.Children.Add(Screens.Dim(SharingWords.TargetsShort));
+            if (SharingSwitches.EverythingOpen)
+            {
+                // Entry 357 section 1: on a phone everything waits for Wi-Fi unless mobile data is allowed.
+                column.Children.Add(Screens.Dim(SharingWords.EverythingSays + " " + SharingWords.EverythingWaitsForWifi));
+                var mobileData = new CheckBox { Content = SharingWords.MobileData, IsChecked = settings.LoadMobileData(), MinHeight = Screens.Touch };
+                mobileData.IsCheckedChanged += (_, _) =>
+                {
+                    settings.SaveMobileData(mobileData.IsChecked == true);
+                    DiagnosticLog.Info("send.mobile-data", ("allowed", mobileData.IsChecked == true));
+                };
+                column.Children.Add(mobileData.Id("settings-mobile-data"));
+            }
+
+            column.Children.Add(Screens.Dim(SharingWords.TargetsShortNow));
             column.Children.Add(Screens.Dim(SharingWords.LevelHeading));
-            var more = new List<Control> { Screens.Dim(SharingWords.TargetsIntro) };
+            var more = new List<Control> { Screens.Dim(SharingWords.TargetsIntroNow) };
             foreach (var (value, words) in SharingWords.Levels(ReceiverTerms.Current))
             {
                 more.Add(Screens.Dim(words));
@@ -187,7 +217,7 @@ public sealed class SettingsView : UserControl
             }
 
             more.Add(Screens.Dim("What is sent:"));
-            more.AddRange(TargetPackages.WhatIsSent.Select(line => (Control)Screens.Dim("• " + line)));
+            more.AddRange(SharingWords.TargetsWhatIsSentNow.Select(line => (Control)Screens.Dim("• " + line)));
             column.Children.Add(MoreFold.Make(settings, "sending", more, Screens.Touch));
         }
 

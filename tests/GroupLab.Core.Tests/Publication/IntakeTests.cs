@@ -130,6 +130,24 @@ public class IntakeTests : IDisposable
         Assert.Null(JsonNode.Parse(File.ReadAllText(Path.Combine(without, "2026-09-14_1a8f39ad", PublicationCheck.ProvenanceFile)))!["statedSheetSize"]);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 357 section 1: a picture sent unfinished under "Send everything I open" is a test case and never published
+    /// on its own; the finished version, sent as accepted, goes through as any other.
+    /// </summary>
+    [Fact]
+    public void APictureSentUnfinishedIsNeverPublishedOnItsOwn()
+    {
+        string publicRoot = Path.Combine(root, "donated");
+        foreach (string state in new[] { "unread", "stopped-at-review" })
+        {
+            var refused = Intake.Run(Submission(meta => meta["state"] = state), publicRoot, NoOptOuts, Triage).Refused;
+            Assert.Contains("never published on its own", refused, StringComparison.Ordinal);
+            Assert.False(Directory.Exists(Path.Combine(publicRoot, "2026-09-14_1a8f39ad")));
+        }
+
+        Assert.Null(Intake.Run(Submission(meta => meta["state"] = "accepted"), publicRoot, NoOptOuts, Triage).Refused);
+    }
+
     [Fact]
     public void APersonCanAcceptWhatTriageHeld()
     {

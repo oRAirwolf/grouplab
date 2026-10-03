@@ -666,6 +666,8 @@ public sealed partial class MainWindow : Window
 
             // Entry 165: the one first run question, and whatever was waiting to be sent, only while the receiver is open.
             ShowFirstRunIfDue();
+            // Entry 357 section 1: a picture open when GroupLab last stopped without closing is kept to send, before the retry sends it.
+            SendPictureLeftOpen();
             _ = RetryPendingAsync();
 
             // Entry 194: the error reports waiting, where the person chose to send them by themselves.
@@ -678,6 +680,7 @@ public sealed partial class MainWindow : Window
         CrashReporter.Recorded += ErrorRecorded;
         Closed += (_, _) =>
         {
+            LeavePicture(closing: true);
             CrashReporter.Recorded -= OnCrashRecorded;
             CrashReporter.Recorded -= ErrorRecorded;
             errorSendSoon?.Stop();
@@ -1767,6 +1770,9 @@ public sealed partial class MainWindow : Window
         var (image, max, colour, meta) = ImageLoader.LoadForEditor(path);
         using var colourImage = colour;
 
+        // Entry 357 section 1: the picture open until now is left, and under "Send everything I open" it goes in the state it was left in.
+        LeavePicture(closing: false);
+
         // A new image is a new session. Found by entry 243: opening a second sheet by Open, drop or paste kept the first one's session, and
         // analyzing the second saved it over the first. Reopening a saved session sets it again after this.
         currentSession = null;
@@ -1814,6 +1820,7 @@ public sealed partial class MainWindow : Window
         SetAnalysing(false);
         // Entry 41 section 2: the file's name, a salted hash of its path, and the whitelisted image facts, never its metadata block.
         DiagnosticLog.Info("image.open", [.. DiagnosticLog.File(path), .. ImageFacts.Of(meta)]);
+        PictureOpened(path);
         canvas.SetImage(new Bitmap(stream), max);
         int turns = session.State.ViewQuarterTurns;
         string orientation = ViewRotation.ExifMirrors(meta.Orientation)
@@ -2312,6 +2319,7 @@ public sealed partial class MainWindow : Window
     private void LogDetection(AutomaticResult result, TraceRecorder trace, long milliseconds)
     {
         RecordAnalysis(trace);
+        lastTrace = trace;
         DiagnosticLog.Current.Write(result.Failure is null ? LogLevel.Info : LogLevel.Warn, "detect.run", [("ms", milliseconds), ("stages", trace.Records.Count), ("summary", result.Summary), ("failure", result.Failure)]);
         foreach (var record in trace.Records)
         {
@@ -5690,6 +5698,17 @@ public sealed partial class MainWindow : Window
             menu.Items.Add(item);
         }
 
+        // Entry 357 section 1: under "Send everything I open", a picture opened by mistake can be kept back until it is left.
+        var notThis = new MenuItem { Header = SharingWords.DoNotSendThis, IsVisible = false };
+        notThis.Click += (_, _) => DoNotSendThisPicture();
+        menu.Items.Add(notThis);
+        menu.Opening += (_, _) =>
+        {
+            notThis.IsVisible = SendingEverything && session.State.ImagePath is not null;
+            notThis.Header = NotSendingThisPicture ? SharingWords.NotSendingThis : SharingWords.DoNotSendThis;
+            notThis.IsEnabled = !NotSendingThisPicture;
+        };
+
         var button = new Button { Content = Icons.Draw(Icons.More), Flyout = menu, Margin = new Thickness(Tokens.ControlMargin), Classes = { AppStyles.IconButton } };
         ToolTip.SetTip(button, "Open, export or report a problem");
         Avalonia.Automation.AutomationProperties.SetName(button, "More");
@@ -5701,7 +5720,8 @@ public sealed partial class MainWindow : Window
         [.. emptyCanvas.Children.OfType<TextBlock>().Select(t => t.Text ?? "")];
 
     /// <summary>The header menu's items, for the headless tests.</summary>
-    internal IReadOnlyList<string> MenuItems => [.. editorActions.Children.OfType<Button>().Last().Flyout is MenuFlyout menu ? menu.Items.OfType<MenuItem>().Select(i => i.Header as string ?? "") : []];
+    internal IReadOnlyList<string> MenuItems => [.. editorActions.Children.OfType<Button>().Last().Flyout is MenuFlyout menu ? menu.Items.OfType<MenuItem>()
+        .Where(i => i.Header as string != SharingWords.DoNotSendThis || (SendingEverything && session.State.ImagePath is not null)).Select(i => i.Header as string ?? "") : []];
 
     private Button? undoButton;
 
