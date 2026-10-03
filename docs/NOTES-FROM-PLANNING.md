@@ -25,6 +25,75 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-03, entry 360: stop before 85% of the weekly limit, measured, with a hard stop that cannot be missed
+
+**Status: done 2026-10-03, except two parts.** Built: the status line script that records the week's percentage (`scripts/usage-statusline.js`) and the hook that refuses every tool call at 85% (`scripts/usage-guard.js`), both switched on in the local settings, which were backed up first. The hook also reads Claude Code's own cached figure, since the status line does not run in the VS Code extension. Not done: section 3's "finishing" flag and 88% backstop, which Claude Code's safety check refused to let the session write into its own guard (for-alan.md has it for Alan); and section 2's live per-block measuring, because in VS Code no fresh reading exists, so section 4 applied: the entry in hand (358) stopped at its next commit, nothing else started, and the session stopped at 11:14 UTC with the week last read at 60% (09:55 UTC). The scripts went in `scripts/`, not `tools/`, which is read only. Entry 361 (run from a terminal) is on hold at Alan's word.
+
+Alan, 2026-10-03 11:02 UTC, going to bed: "I dont want to use more than 85% of my weekly token allowance. Can we make sure that code
+stops before then?" **Do this first, before anything else in the inbox and before the next section of entry 358 or 359.** Main model,
+no worker. It is small.
+
+### 1. Measure the weekly percentage (the status line)
+
+Claude Code passes the status line command `rate_limits.seven_day.used_percentage`, `rate_limits.seven_day.resets_at` and the same
+for `five_hour` (claude.ai Pro and Max only, and only after the session's first API response). ccusage counts tokens, not the
+percentage of the limit, so it cannot do this.
+
+- Write a small status line script under `tools/` (PowerShell or Node, whichever runs cleanly from Claude Code on this computer) that
+  reads the JSON on stdin, writes `{ "seven_day": <pct>, "five_hour": <pct>, "seven_day_resets_at": <epoch>, "written_utc": <now> }`
+  to `docs/notes/usage-now.json` (add it to .gitignore; never commit it), and prints a short line such as `week 63% | 5h 20%`.
+- Point `statusLine` at it in `C:\Dev\grouplab\.claude\settings.local.json`, keeping every key already there, with
+  `"refreshInterval": 60` so it keeps writing while the main session waits on a worker.
+- Check that `usage-now.json` appears with a real number within a minute or two. Write the number in your panel and in for-alan.md.
+
+### 2. Amended by Alan, 2026-10-03 11:05 UTC: get as close to 85% as possible, and never stop in the middle of something
+
+"I dont want it to stop in the middle of publishing a new build or anything. Just try to stop as close to 85% as possible if it is
+going to hit that number overnight." So there is no early stop at 80%. Instead, plan each block so it ends cleanly below 85%.
+
+- **Measure what a block costs.** Read `usage-now.json` before and after every block (an entry section, a worker's task, a build, a
+  release, a CI fix), and keep a short running list in `docs/notes/usage-log.md` (local, not committed): what the block was and how
+  many points of the week it took.
+- **Start a block only if it fits.** Before starting one, take the current percentage plus what a similar block cost (the largest of
+  the last few, and at least 2 points if there is no history yet). Start it only if the total stays under 85. If it does not fit,
+  look for a smaller block that does (a test, a note, a small fix); when nothing fits, stop cleanly.
+- **Never stop in the middle of:** a publish, a release or nightly being made, a store or TestFlight step, a merge, a commit and push,
+  or a migration. A block that has started is finished, committed and pushed before stopping. That is why the check is made before a
+  block starts, never in the middle.
+- **Stopping cleanly** means: everything committed and pushed, worktrees merged or left with their state written down, STATE.md
+  rewritten, one line at the top of for-alan.md ("Stopped at NN% of the week, HH:MM UTC, after <what>; next: <what>"), any /loop or
+  scheduled wakeup ended so nothing starts again by itself, and then stop.
+- If `written_utc` is more than 10 minutes old, the number is unknown: start no new block until it refreshes.
+- The nightly build itself runs on GitHub on its schedule and uses no Claude tokens, so stopping Code never interrupts it.
+
+### 3. The safety net (a hook) that cannot cut a publish in half
+
+Add a `PreToolUse` hook (all tools, matcher "*") to the same settings.local.json that runs a small, fast script (no network, no npx)
+reading `usage-now.json`:
+- Under 85: exit 0.
+- At 85 or more, and the file `docs/notes/finishing.flag` does **not** exist: print "Weekly budget reached (85%). Alan said to stop.
+  Stop now." to stderr and exit 2, which blocks the tool call, in workers too.
+- At 85 or more with `finishing.flag` present: exit 0, so a block already under way (above all a publish) can finish. Create the flag
+  when a block starts and delete it when the block is committed and pushed. The flag counts only if it is less than 45 minutes old.
+- At 88 or more: exit 2 whatever the flag says. This should never happen if section 2 is followed; it is the last line.
+- With the file missing or unreadable: exit 0 (a broken measure must not lock the project; section 4 covers that case).
+Test it by hand with sample files (84, 85, 85 with the flag, 88 with the flag) before turning it on. Keep `finishing.flag` and
+`usage-log.md` out of git.
+
+### 4. If the percentage cannot be read
+
+If `rate_limits` never appears (for example the session is not signed in with Alan's subscription), the budget cannot be measured.
+Then finish the entry in hand, do not start another, write that in for-alan.md, and stop. Do not guess the percentage from token
+counts.
+
+### 5. After the stop
+
+Stay stopped until Alan says otherwise, even after the weekly window resets. Entry 317's daily 12% stays in force as well; whichever
+limit comes first wins. The status line and the hook stay in place from now on, with 85% as the standing number until Alan changes it.
+
+Commit the scripts and the .gitignore line (not settings.local.json, which is local). Then carry on with the inbox (358, then 359's
+corrections) under these rules.
+
 ## 2026-10-03, entry 357: a second sending level, "everything I open", and error reports that carry the log
 
 **Status: built 2026-10-03 behind two switches, both off (one worker, three commits); switching on waits for Alan (request 71).** With them off the build sends and says exactly what it did. Not done: the phone has no target sender at all (question 81), so "Send everything I open" sends nothing from a phone; the receivers ship with the next site publish, the intake, archive and error workers change only when Alan runs install.py. Found on the way: entry 356's "Send it to the project" broke the promise that an unread picture is never sent, and now waits behind the switch; "What GroupLab sends" called automatic error reports not yet switched on, and CRASH-REPORTING.md said nothing is sent silently, both corrected; typed-text removal goes by field name, so a library's exception quoting typed words would still pass.

@@ -383,6 +383,12 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 360: a hard stop at 85% of the week
+
+- The hook refuses every tool call once either reading of the week (the status line's file, or Claude Code's cached figure) is 85 or more; about 32 ms a call; with no reading it lets the call through, as section 3 asked.
+- The status line does not run in the VS Code extension, so this session had no fresh reading after 09:55 UTC (60%). Under section 4 it finished the step in hand of entry 358 (sections 1 to 3, unmerged on the worker's branch) and stopped at 11:14 UTC.
+- Not done: the finishing flag and the 88% backstop (refused by the session's safety check; Alan's to decide), and per-block measuring, which needs a live reading.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

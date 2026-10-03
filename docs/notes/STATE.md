@@ -9,21 +9,25 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-03, entry 357 folded (built, switched off); the inbox is empty.
+**Last rewritten:** 2026-10-03 11:14 UTC, stopped under entry 360 (budget); entry 358 part built on a worker's branch.
 
 ---
 
 ## In flight
 
-- **Entry 357** is built with both switches off; request 71 asks Alan to switch on and update the store forms; question 81 asks
-  planning about a phone sender.
-- **Entries 353 to 356 are done.** 354 (Fenix's .22 sheets) is in nightly 162; 356 (the problem dialog, option B final) goes into the
-  next nightly; build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
-- **Request 70:** Fenix's report package, to prove why his desktop sent nothing.
-- **Issues 17 to 20** (TestFlight build 153: Next jumps a section, the keyboard on Targets, back to the targets list, a second target)
-  are next after entry 354.
-- **A draft article** waits for Alan: website/research/printed-numbers-are-not-holes.md.
-- **The Microsoft Store carries 0.2.0**; a new submission waits for request 66. **Waiting on planning:** questions 79 and 81.
+- **STOPPED at Alan's word (entry 360), 2026-10-03 11:14 UTC.** Stay stopped until he says otherwise, even after the weekly window
+  resets (2026-10-08 02:00 UTC). Last real reading: **60% of the week** at 09:55 UTC; the status line does not run in the VS Code
+  extension, so no fresh reading exists here. Before starting anything: read the week (docs/notes/usage-now.json, or Claude Code's
+  cachedUsageUtilization in ~/.claude.json); start nothing at 80% or more, or when the reading is over 10 minutes old.
+  `scripts/usage-guard.js`, a PreToolUse hook in .claude/settings.local.json, refuses every tool call at 85%.
+- **Entry 358, sections 1 to 3 built, not merged:** commits 6175d457 (label page sizes), 6ab485e6 (thermal print mode) and 9472f323
+  (the X6 labels and check labels) on branch `worktree-agent-a2a1221f838518e94` (`.claude/worktrees/agent-a2a1221f838518e94`). Only their
+  own test groups ran: run the three suites, the site build and consistency before cherry-picking. Not started: sections 4
+  (printer framework), 6 (darkness) and 8 (public pages).
+- **Entry 359 is unread** (corrections, per entry 360's order after 358). **Entry 361 is on hold** at Alan's word (11:12 UTC: "We will look again tomorrow").
+- **Entry 360's hook has no finishing flag yet** (section 3): the session's safety check refused the change; Alan's to decide (for-alan.md).
+- **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 and 73 (the label
+  printers on arrival). **Waiting on planning:** questions 79 and 81.
 
 ## The next three
 
@@ -83,7 +87,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Nothing waits locally.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 358 (part built, see In flight), 359, and 361 (on hold).
 
 ## Things that would surprise somebody who was not here yesterday
 
