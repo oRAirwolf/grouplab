@@ -60,7 +60,17 @@ public class PhoneTouchScenarioTests
     }
 
     [AvaloniaFact]
-    public async Task EveryTapDoesItsJobAsAFingerPressesIt()
+    public Task EveryTapDoesItsJobAsAFingerPressesIt() => TapThrough(noCamera: false);
+
+    /// <summary>
+    /// The second simulator run (37089660899): the simulator has no camera, so Take a picture opened the photo picker in its place, the
+    /// scenario's "back" did not close it, and every tap after it landed in the picker and chose a photograph. Here the same simulator:
+    /// the camera's place opens a picker that stays until closed, and a tap while it is up reaches the picker, not GroupLab.
+    /// </summary>
+    [AvaloniaFact]
+    public Task EveryTapDoesItsJobOnASimulatorWithNoCamera() => TapThrough(noCamera: true);
+
+    private static async Task TapThrough(bool noCamera)
     {
         if (Phone.Platform is null)
         {
@@ -73,6 +83,13 @@ public class PhoneTouchScenarioTests
         // As the scenario's "caliber": "" has it on a device: no caliber yet, so Take a picture asks for one first.
         Phone.Settings.SaveShotSetup(null, null);
         phone.AllowCamera = true;
+        phone.NoCameraOpensPicker = noCamera;
+        if (noCamera)
+        {
+            Scenario.SystemSheetUp = () => phone.PickerUp;
+            Scenario.CloseSystemSheet = phone.ClosePicker;
+        }
+
         var shell = new Shell();
         var window = new Window { Width = 402, Height = Height, Content = shell };
         window.Show();
@@ -90,7 +107,12 @@ public class PhoneTouchScenarioTests
                     var said = JsonNode.Parse(File.ReadAllText(hold))!.AsObject();
                     Assert.Equal("points", said["units"]?.GetValue<string>());
                     var (at, why) = TapPoint(said);
-                    if (at is { } point)
+                    if (phone.PickerUp)
+                    {
+                        // The picker is over the screen: the finger lands in it, and GroupLab never sees the tap.
+                        why += ", in the photo picker";
+                    }
+                    else if (at is { } point)
                     {
                         window.MouseDown(point, MouseButton.Left);
                         Settle();
@@ -124,7 +146,11 @@ public class PhoneTouchScenarioTests
         finally
         {
             window.Close();
+            phone.ClosePicker();
             phone.AllowCamera = false;
+            phone.NoCameraOpensPicker = false;
+            Scenario.SystemSheetUp = null;
+            Scenario.CloseSystemSheet = null;
             Phone.Settings.SaveShotSetup(was, wasInches);
         }
     }

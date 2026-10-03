@@ -81,7 +81,57 @@ internal sealed class TestPhone : IPhonePlatform
     /// <summary>A web address a screen asked to open, recorded and never opened.</summary>
     public void OpenAddress(string address) => Asked.Add(("open", address));
 
-    public Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => new TextBlock { Text = "camera" };
+    public Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null)
+    {
+        var camera = new TextBlock { Text = "camera" };
+        if (NoCameraOpensPicker)
+        {
+            // As the iOS head's NoCamera does on the simulator: once showing, it says so and opens the photo picker in its place.
+            camera.AttachedToVisualTree += (_, _) =>
+            {
+                GroupLab.App.Diagnostics.DiagnosticLog.Info("camera.none", ("fallback", "picker"));
+                Avalonia.Threading.Dispatcher.UIThread.Post(choose);
+            };
+        }
+
+        return camera;
+    }
+
+    /// <summary>
+    /// Entry 353: the iOS Simulator, which has no camera: Take a picture opens the photo picker instead, and the picker stays over the
+    /// screen until it is closed (<see cref="ClosePicker"/>).
+    /// </summary>
+    public bool NoCameraOpensPicker { get; set; }
+
+    private TaskCompletionSource<IReadOnlyList<PhotoHandle>>? picking;
+
+    /// <summary>Whether the stand-in photo picker is open.</summary>
+    public bool PickerUp => picking is not null;
+
+    /// <summary>Closes the stand-in photo picker as its Cancel would; true where it was open.</summary>
+    public bool ClosePicker()
+    {
+        if (picking is not { } open)
+        {
+            return false;
+        }
+
+        picking = null;
+        open.TrySetResult([]);
+        return true;
+    }
+
+    public Task<IReadOnlyList<PhotoHandle>> PickPhotos(PhotoSource source, TopLevel? top)
+    {
+        if (!NoCameraOpensPicker)
+        {
+            return PhotoIntake.FromFilePicker(top, several: false);
+        }
+
+        GroupLab.App.Diagnostics.DiagnosticLog.Info("ios.pick", ("source", source.ToString()));
+        picking = new TaskCompletionSource<IReadOnlyList<PhotoHandle>>();
+        return picking.Task;
+    }
 
     public bool IsCamera(object? content) => content is TextBlock { Text: "camera" };
 

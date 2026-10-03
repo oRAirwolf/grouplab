@@ -24,6 +24,24 @@ public sealed class App : Avalonia.Application
 #if GROUPLAB_DEV
         // Entry 315 section 2, GroupLab Dev only: a scenario named by --scenario, or waiting in Documents/scenario, read before the start.
         bool scenario = !selfTest && !tour && GroupLab.Mobile.Dev.Scenario.Prepare(IosPhone.Documents, SelfTest.Value("--scenario"));
+
+        // Entry 353: the photo picker over the screen, which the real taps' scenario has to see and close, as the self-test closes it.
+        GroupLab.Mobile.Dev.Scenario.SystemSheetUp = () => IosPhone.Top()?.PresentingViewController is not null;
+        GroupLab.Mobile.Dev.Scenario.CloseSystemSheet = () =>
+        {
+            if (PhotoPickers.CancelOpen())
+            {
+                return true;
+            }
+
+            if (IosPhone.Top() is { PresentingViewController: not null } sheet)
+            {
+                sheet.DismissViewController(false, null);
+                return true;
+            }
+
+            return false;
+        };
 #endif
 
         // Entry 290 section 6: the bar along the bottom reaches the bottom edge, under the home indicator, as an iPhone's bars do.

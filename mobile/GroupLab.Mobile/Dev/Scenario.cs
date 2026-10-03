@@ -45,7 +45,8 @@ namespace GroupLab.Mobile.Dev;
 /// <c>log</c>, the newest lines of the log; <c>replay</c>, a camera clip or a picture played through the capture screen in place of the
 /// camera, and <c>record</c>, the camera's last seconds kept as clips (<see cref="CameraReplay"/>); <c>hold</c>, a wait while a script
 /// outside taps the control named <c>"tap"</c> with a real touch, and <c>expect</c>, what that tap should have done (entry 353, see
-/// <see cref="Hold"/>). A step it does not know fails and says so. Before the
+/// <see cref="Hold"/>); <c>close</c>, the system's own sheet over the screen, such as the photo picker, closed as its Cancel would, or
+/// else the camera. A step it does not know fails and says so. Before the
 /// application starts, the first run's questions are answered unless the scenario has <c>"firstRun": "ask"</c>, and <c>"caliber"</c> with
 /// <c>"distanceInches"</c> are saved as the Capture screen's setup. <c>"stopOnFailure": false</c> carries on past a step that failed.
 /// </summary>
@@ -371,6 +372,8 @@ internal static class Scenario
                 return await Hold(step.Text("tap"), Name(step.Text("name"), "hold"), TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 120), 1, 1800)));
             case "expect":
                 return await Expect(step, TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 5), 0, 600)));
+            case "close":
+                return await OnUi(Close);
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -735,6 +738,35 @@ internal static class Scenario
     /// </summary>
     internal static Func<(double X, double Y, bool Pixels)>? ScreenPlace { get; set; }
 
+    /// <summary>
+    /// Entry 353: whether the system's own sheet is up over GroupLab Dev, the photo picker above all, which GroupLab does not draw and a
+    /// tap cannot be aimed at. The iOS head sets it; null where the system's pickers are activities of their own, as on Android.
+    /// </summary>
+    internal static Func<bool>? SystemSheetUp { get; set; }
+
+    /// <summary>Closes the system's own sheet as its Cancel would; true where one was up. The iOS head sets it.</summary>
+    internal static Func<bool>? CloseSystemSheet { get; set; }
+
+    /// <summary>
+    /// Entry 353: whatever the last tap opened over the Capture screen, closed: the system's sheet where one is up, or else the camera.
+    /// The second run on the simulator (37089660899) left the photo picker that Take a picture opens there, having no camera, over the
+    /// screen, and every tap after it chose pictures in the picker instead of pressing GroupLab's buttons.
+    /// </summary>
+    private static (bool, string) Close()
+    {
+        if (CloseSystemSheet?.Invoke() == true)
+        {
+            return (true, "the system's sheet");
+        }
+
+        if (Shell.Current is { Showing: Shell.Place.Capture } shell && shell.GetVisualDescendants().OfType<CapturePage>().FirstOrDefault()?.CloseCamera() == true)
+        {
+            return (true, "the camera");
+        }
+
+        return (true, "nothing was open");
+    }
+
     /// <summary>A rectangle in the window's coordinates as it lies on the screen, in the units a tap is given in.</summary>
     internal static Rect OnScreen(TopLevel top, Rect box)
     {
@@ -941,7 +973,9 @@ internal static class Scenario
     /// <summary>
     /// Entry 353: what a tap should have done, looked at until it is so or <paramref name="most"/> has passed. A control <c>"name"</c>d
     /// (automation id, automation name or words) is <c>"showing"</c> or not, and says <c>"text"</c>; the keyboard is up or not
-    /// (<c>"keyboard"</c>); the camera, or the line asking for it, is on the Capture screen or not (<c>"camera"</c>); a line in the log since
+    /// (<c>"keyboard"</c>); the camera, or the line asking for it, is on the Capture screen or not (<c>"camera"</c>; where the device has no
+    /// camera, as the iOS Simulator, the photo picker it opens instead counts: the log says <c>camera.none</c> and the system's sheet is
+    /// up); a line in the log since
     /// the last hold holds one of <c>"log"</c>'s words, several separated by |. All that is given must be so at once.
     /// </summary>
     private static async Task<(bool, string)> Expect(Step step, TimeSpan most)
@@ -961,10 +995,10 @@ internal static class Scenario
         string why;
         while (true)
         {
-            why = await OnUi(() => Unmet(name, text, showing, keyboard, camera)) ?? "";
+            string since = string.Join('\n', (LogLines(null) ?? "").Split('\n').Skip(logMark));
+            why = await OnUi(() => Unmet(name, text, showing, keyboard, camera, since)) ?? "";
             if (why.Length == 0 && log is not null)
             {
-                string since = string.Join('\n', (LogLines(null) ?? "").Split('\n').Skip(logMark));
                 why = log.Split('|').Any(l => since.Contains(l, StringComparison.Ordinal)) ? "" : $"no line in the log with {log} since the last hold";
             }
 
@@ -990,7 +1024,7 @@ internal static class Scenario
     };
 
     /// <summary>The first of what was expected that is not so, in words; null where all of it is.</summary>
-    private static string? Unmet(string? name, string? text, bool? showing, bool? keyboard, bool? camera)
+    private static string? Unmet(string? name, string? text, bool? showing, bool? keyboard, bool? camera, string since)
     {
         var controls = Showing().OfType<Control>().ToList();
         if (name is not null)
@@ -1021,10 +1055,11 @@ internal static class Scenario
         if (camera is { } wanted)
         {
             bool open = controls.OfType<CapturePage>().Any(p => Phone.Platform.IsCamera(p.Content))
-                || controls.OfType<TextBlock>().Any(t => t.Text == CapturePage.CameraWords);
+                || controls.OfType<TextBlock>().Any(t => t.Text == CapturePage.CameraWords)
+                || (since.Contains("camera.none", StringComparison.Ordinal) && SystemSheetUp?.Invoke() == true);
             if (open != wanted)
             {
-                return wanted ? "neither the camera nor the line asking for it is showing" : "the camera is still showing";
+                return wanted ? "neither the camera, the line asking for it, nor the picker that stands in for it is showing" : "the camera is still showing";
             }
         }
 
