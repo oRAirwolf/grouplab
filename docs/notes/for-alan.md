@@ -39,7 +39,7 @@ picked the wrong one. **What broke:** the fix for your friend's floating keyboar
 the screen, so the page moved before the finger lifted and the button under it never saw the tap. **Why the checks missed it:** every
 automatic check pressed buttons directly, never the way a finger does, down then up, so the page never moved between the two. **Fixed:**
 the keyboard now closes only after the finger lifts and the button has done its job; tests now tap the way a finger does, and they fail
-on the old code. **Install build 160 from TestFlight:** both groups have it as of 2 October 19:51 your time; Fenix and Unholy can update now.
+on the old code. **Install build 160 from TestFlight:** both groups have it as of 2 October 19:51 your time; Fenix and Unholy can update now. Real taps on Apple's iPhone simulator and an Android emulator now check this with every nightly, and all pass.
 
 **TONIGHT'S LIST, 2 OCTOBER** (entry 352, not a request): done, one worker. Reading a target is now about twice as fast on the computer
 and a quarter faster on a phone, every measurement exactly as before. Find holes no longer takes most of the Eze-Scorer's printed

@@ -25,6 +25,67 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-03, entry 355: tell Alan, in plain words, what the sending settings send and what happens to a submission afterwards
+
+**Status: done 2026-10-03.** The account is at the top of for-alan.md. Confirmed and corrected: a target goes only after Accept and analyze, never for a picture that did not read; an error report only for an error, not for a sheet that will not read; the archive worker, not only Alan's pull, files submissions since entry 222. Nothing from Fenix's desktop reached the server or the archive; request 70 asks for his report package to prove why. The automatic comparison with corrections is planned, not built. The settings' question and the "What GroupLab sends" page said two things wrong, now fixed.
+
+Alan, 2026-10-03 02:39 UTC: "Can you have code tell you what information was submitted via the app and if it had all of the photos and
+diagnostics. I am not aware of exactly what happens when those settings are enabled." And: "I also dont know what code does with those
+submissions." Do this with entry 354 section 4 (it is the same search); a report, not a feature.
+
+What planning found already, to confirm or correct:
+- An app submission's meta.json (for example 2026-10-01_5553a760) holds the rebuilt image, the marks GroupLab found, the person's
+  corrected marks and removals, what they told it (caliber, distance, rounds, paper, backing), the figures, the scale and registration
+  lines, the version and train, and the session's log; its manifest names six parts and one file is kept.
+- Alan's pull on 2026-10-03 found **one** submission, Fenix's web upload of two photos. **No app submission from Fenix's desktop**,
+  although he has "Send every target automatically" with "May be published" on. So either they are still waiting on his machine, were
+  refused, never sent, or went somewhere else. Find out which, using his error reports and the server's receiver logs (diagnosis only).
+
+Write in for-alan.md, under one heading, short and plain, for Alan to read and to pass to his testers:
+1. **What each setting sends, and when**: "Send every target automatically", "Ask me each time", "Never"; "Testing only" against "May be
+   published"; "Send error reports automatically". The exact contents of a target submission and of an error report, and what is never
+   in either (location, name unless typed as credit, file paths).
+2. **What happened to Fenix's**: what arrived for nightly 159, part by part (each photo, the marks, the corrections, the log, any
+   error report with the diamond sheet's failure), or why it did not.
+3. **What happens to a submission afterwards, end to end**: the server's rebuild and quarantine, Alan's pull, the private archive, how
+   long each copy lives, and what Code does with them today: which are used as tests or on the scoreboard, whether anything compares
+   GroupLab's marks with the person's corrections automatically (DETECTION-LEARNING-STUDY.md describes such a hook: built or not), and
+   what is ever published, by whom and after what check. Say plainly what is planned rather than built.
+4. If anything in the published "What GroupLab sends" article (website/research/what-grouplab-sends.md) or the settings' own words
+   disagrees with what the code does, fix the words and say so.
+
+## 2026-10-03, entry 353: URGENT, the iPhone app ignores taps on build 157 (Fenix)
+
+**Status: done 2026-10-03, every step.** 1: the cause was entry 350's KeyboardRoom, suspect 1: it gave the keyboard's room back during the press (a press outside a field, the focus leaving a field for a button, and the system's own close all moved the page), so the release missed; reproduced headlessly with press, layout, release. resignFirstResponder (suspect 2) and the sweep's fixes (suspect 3) were not the cause. 2: fixed in 6b3eb5bf; real taps on the iPhone simulator (XCUITest through the springboard) and the Android emulator (adb, held 0.15 s) pass all ten checks and run with each nightly that changes the application. 3: TestFlight build 160 reached both groups the same night; nothing needed expiring. 4: issue 22, Fenix's words, closed with build 160, as is 21.
+
+Alan, 2026-10-03 00:53 UTC, passing on Fenix's report from Discord (he is on TestFlight **build 157**, an iPhone): "iOS app can't open
+camera at all. Take a picture button does nothing. Choose photo does nothing. Done for caliber and distance doesn't work either."
+Untrusted report as always, but from a known tester; treat it as real. This comes before everything else; one worker, main model.
+
+What planning sees (to check, not to assume): builds 154 to 156 never reached Apple (entry 350's first keyboard hook did not compile),
+so **157 is the first iPhone build carrying entry 350's keyboard changes and entry 342's sweep fixes**. Fenix's own reports on build
+150 were about the keyboard only, so buttons worked then. Suspects, in order:
+
+1. `KeyboardRoom.OutsidePressed`, a tunnelling PointerPressed handler on the whole Shell (handledEventsToo). If `KeyboardTop` or
+   `barShown` is stale, every press anywhere runs `CloseKeyboard()` (focus to null, `resignFirstResponder` sent to nil, `Closed()`
+   giving the room back), so the layout moves under the finger between press and release and the button's Click never fires; or the
+   focus change itself cancels the press.
+2. `HideSystemKeyboard` in `ios/GroupLab.iOS/App.cs`: `resignFirstResponder` sent with no target reaches whatever is first responder,
+   which may be Avalonia's own view, not a text field; check what that does to Avalonia's iOS input.
+3. Entry 342's sweep fixes (screen-reader names and anything else touching input on iOS), and the iPad orientation change.
+
+Steps:
+1. Reproduce on the iOS simulator with **real touches** (simctl or XCUITest taps on screen coordinates), not the command bridge: the
+   sweep passed because the bridge presses controls directly and never goes through touch input. Then bisect between the 150 and 157
+   heads until the cause is certain. Check Android on the emulator with real touches too.
+2. Fix it, keep Fenix's and Unholy's keyboard fixes working (Done closes the keyboard, the bar never floats, a field stays above the
+   keyboard), and add a real-touch test to the nightly's simulator job: tap Take a picture, Choose photo, the caliber question's Done,
+   and a button with the keyboard up, and assert each did its job.
+3. Ship it in the next nightly at once and confirm it reaches both TestFlight groups. In for-alan.md, in plain words: what broke, why
+   the checks missed it, which build to install. If the fix cannot reach TestFlight within a few hours, say so at the top of for-alan.md
+   and propose expiring 157 and 158 in TestFlight so testers fall back to the last working build; do not expire anything without Alan.
+4. File it in grouplab-crash-reports with Fenix's words (no name or email), linked to the fix.
+
 ## 2026-10-02, entry 352: tonight's list, one worker
 
 **Status: done 2026-10-02, every item, one worker.** 1: the Android emulator job is built and started by the nightly; its first run built, booted and installed GroupLab Dev, then failed copying files into it, fixed and run again; the iPhone sweep passes all three passes on a 300 dpi copy of the sample. 2: the Eze-Scorer's clean-sheet false marks 6 to 2 (the logo's letters remain), synthetic false marks 32 to 6, nothing else moved. 3: every reader refuses damaged, huge and hostile files in plain words; a damaged workbook used to close GroupLab. 4: the 7 percent was the machine (the new code is 3 percent faster on an idle run); holes and bulls now found in about half the time, every gate identical. 5: one draft article, unpublished; no other finding was owed one.

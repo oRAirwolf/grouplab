@@ -40,6 +40,23 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
+## Entries 353 and 355: the iPhone ignoring taps, and what the sending settings send
+
+Done 2026-10-03.
+
+- **353:** on TestFlight builds 157 to 159 a tap did nothing while a field had been typed in. Entry 350's KeyboardRoom gave the
+  keyboard's room back during the press: a press outside a field closed the keyboard at once, the focus leaving a field for a button
+  closed it, and the system's own close did too; the page moved under the finger and the release missed. Now nothing moves the page
+  while a finger is down (followed at the window, so a pop-up counts), the keyboard closes after the release, and closing does nothing
+  when nothing was raised. Entry353Tests press as a finger does and fail on build 157's code. Build 160 reached both TestFlight groups
+  the same night. Real taps now run with each nightly that changes the application: XCUITest on the iPhone simulator and held adb
+  swipes on the Android emulator, ten checks each, all passing; getting the iPhone run right took three fixes to the test itself (it
+  read a control's place before it was drawn, expected a camera the simulator does not have, and could not see the photo picker it
+  opens instead).
+- **355:** the account of the sending settings at the top of for-alan.md. Nothing from Fenix's desktop reached the server or the archive;
+  a target goes only after Accept and analyze, so the likeliest reason is that he never pressed it (request 70). The settings' question
+  and the "What GroupLab sends" page now say Accept and analyze, and that the archive worker files submissions.
+
 ## Entry 352: tonight's list, one worker
 
 Done 2026-10-02.

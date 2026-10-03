@@ -9,18 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-03 02:30 UTC, entry 353 fixed and in TestFlight build 160; its iOS real-tap test still being settled.
+**Last rewritten:** 2026-10-03 04:40 UTC, entries 353 and 355 folded; 354 is with a worker.
 
 ---
 
 ## In flight
 
-- **Entry 353, urgent, mostly done:** taps did nothing on the iPhone in TestFlight builds 157 to 159 while a box had been typed in.
-  Fixed in 6b3eb5bf (KeyboardRoom no longer moves the page while a finger is down); **build 160 is in both TestFlight groups**; issues
-  21 and 22 closed. Left: the real-tap test (entry 353 step 2) passes on the Android emulator, and on the iPhone simulator its hold
-  refused Continue as covered; a worker is finding what covers it. The entry stays in the inbox until that is settled.
-- **Issues 17 to 20** (TestFlight build 153: Next jumps a section, the keyboard not closing on Targets, back to the targets list, a
-  second target) are open, next after entry 353.
+- **Entry 354**, Fenix's .22 targets (false holes on the 5x5 sheet, a diamond sheet that will not read), with a worker. Entries 353 and
+  355 are done: build 160 fixed the iPhone's taps and is in both TestFlight groups; real taps run with each nightly on both phones.
+- **Request 70:** Fenix's report package, to prove why his desktop sent nothing.
+- **Issues 17 to 20** (TestFlight build 153: Next jumps a section, the keyboard on Targets, back to the targets list, a second target)
+  are next after entry 354.
 - **A draft article** waits for Alan: website/research/printed-numbers-are-not-holes.md.
 - **The Microsoft Store carries 0.2.0**; a new submission waits for request 66. **Waiting on planning:** question 79.
 
@@ -82,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 353 (its iOS real-tap test).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 354.
 
 ## Things that would surprise somebody who was not here yesterday
 
