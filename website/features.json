@@ -214,7 +214,8 @@
         "Opening a picture of a target GroupLab did not print is no longer treated as an error",
         "When a GroupLab sheet's codes cannot be read",
         "Try again, reading harder",
-        "Saying a picture is not a GroupLab sheet"
+        "Saying a picture is not a GroupLab sheet",
+        "a problem that stops your work"
       ],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"

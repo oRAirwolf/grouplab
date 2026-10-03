@@ -1515,7 +1515,7 @@ public sealed partial class MainWindow : Window
         units = chosen;
         if (!settingsStore.SaveUnits(chosen))
         {
-            status.Text = "The unit choice could not be saved to " + settingsStore.Path + ", so it lasts until GroupLab closes.";
+            Failed("The unit choice was not saved", "The unit choice could not be saved to " + settingsStore.Path + ", so it lasts until GroupLab closes.");
         }
 
         ShowUnits();
@@ -1544,7 +1544,7 @@ public sealed partial class MainWindow : Window
         ApplyTheme(theme);
         if (!settingsStore.SaveTheme(theme))
         {
-            status.Text = "The theme choice could not be saved to " + settingsStore.Path + ", so it lasts until GroupLab closes.";
+            Failed("The theme choice was not saved", "The theme choice could not be saved to " + settingsStore.Path + ", so it lasts until GroupLab closes.");
         }
     }
 
@@ -2083,7 +2083,7 @@ public sealed partial class MainWindow : Window
     {
         if (grey is null || valueImage is null || metadata is null)
         {
-            status.Text = "Open an image first.";
+            Failed("There is no picture open", "Open an image first.");
             return;
         }
 
@@ -2343,6 +2343,16 @@ public sealed partial class MainWindow : Window
             // Entry 120 section 1: a failure that arrives without a full stop used to run into the next sentence.
             problem.Text = advice.TrimEnd() + (advice.TrimEnd().EndsWith('.') ? " " : ". ") + "You can mark this image by hand instead, against a reference length or rectangle.";
             status.Text = "The sheet could not be read. What to do next is in the panel, and each stage is in Show work.";
+            // Entry 356 section 3: the failure in the middle of the window, with the ways on from it.
+            if (pendingDetection is null && detectionMetadata is not null && grey is not null && valueImage is not null)
+            {
+                var (g, v, m) = (grey, valueImage, detectionMetadata);
+                ShowProblem("GroupLab could not measure this sheet", problem.Text,
+                    (OpeningWords.ChooseSheet, () => OfferTheSheet(g, v, m, result.Failure ?? "no registration")),
+                    (OpeningWords.MarkByHand, MarkByHand),
+                    (OpeningWords.ShowWhatWentWrong, ShowWhatWentWrong));
+            }
+
             return;
         }
 
@@ -3326,7 +3336,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Microsoft.Data.Sqlite.SqliteException ex)
         {
-            status.Text = "The session could not be saved: " + ex.Message;
+            Failed("The session could not be saved", "The session could not be saved: " + ex.Message);
             DiagnosticLog.Exception(LogLevel.Warn, "session.save", ex);
         }
     }
@@ -4580,7 +4590,7 @@ public sealed partial class MainWindow : Window
         {
             if (sessions is null)
             {
-                status.Text = "The session database could not be opened, so the records last until GroupLab closes.";
+                Failed("The records cannot be saved", "The session database could not be opened, so the records last until GroupLab closes.");
                 return;
             }
 
@@ -4588,7 +4598,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Microsoft.Data.Sqlite.SqliteException ex)
         {
-            status.Text = "The records could not be saved to the database (" + ex.Message + "), so they last until GroupLab closes.";
+            Failed("The records could not be saved", "The records could not be saved to the database (" + ex.Message + "), so they last until GroupLab closes.");
         }
     }
 
@@ -4990,7 +5000,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or IOException)
         {
-            status.Text = "That page could not be opened here: " + address;
+            Failed("The page could not be opened", "That page could not be opened here: " + address);
         }
     }
 
@@ -5629,7 +5639,7 @@ public sealed partial class MainWindow : Window
             }
             else
             {
-                status.Text = SupportLink.NoAddressYet;
+                Failed("There is no support page yet", SupportLink.NoAddressYet);
             }
         })));
         column.Children.Add(Line(SupportLink.Exists ? SupportLink.OpensTheSupportPage : SupportLink.NoAddressYet));

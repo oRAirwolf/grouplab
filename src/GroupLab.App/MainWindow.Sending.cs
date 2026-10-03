@@ -245,7 +245,15 @@ public sealed partial class MainWindow
 
         sentLine.Text = outcome.Message;
         sentLine.IsVisible = true;
-        toaster.Say(outcome.Message);
+        if (outcome.Result == SendResult.Refused)
+        {
+            // Entry 356 section 3: a send that failed for good is a failure, in the middle; one kept to try again is information.
+            Failed("The target was not sent", outcome.Message);
+        }
+        else
+        {
+            toaster.Say(outcome.Message);
+        }
         FillSendingSettings();
     }
 

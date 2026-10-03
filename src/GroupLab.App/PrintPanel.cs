@@ -214,7 +214,7 @@ public sealed class PrintPanel : UserControl
 
         if (library().Count == 0)
         {
-            SetStatus("The built-in library was not found beside the application.", StatusKind.Alert);
+            Fail("The library is missing", "The built-in library was not found beside the application.");
         }
     }
 
@@ -579,6 +579,16 @@ public sealed class PrintPanel : UserControl
     /// Shows a message with the state it reports, NOTES-FROM-PLANNING.md entry 70 section 6. The line used to be red for everything,
     /// including a successful save, which teaches people to read past red; the next red message may be the one that matters.
     /// </summary>
+    /// <summary>Entry 356 section 3: where a failure goes to be said in the middle of the window; the window sets it.</summary>
+    internal Action<string, string>? Problem { get; set; }
+
+    /// <summary>A failure: in the status line as before, and said in the middle of the window with <paramref name="title"/>.</summary>
+    private void Fail(string title, string text)
+    {
+        SetStatus(text, StatusKind.Alert);
+        Problem?.Invoke(title, text);
+    }
+
     private void SetStatus(string text, StatusKind kind)
     {
         status.Text = text;
@@ -631,7 +641,7 @@ public sealed class PrintPanel : UserControl
             BullColour: Colour));
         if (result.Pdf is null)
         {
-            SetStatus("This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)), StatusKind.Alert);
+            Fail("This sheet cannot be printed as set", "This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)));
             DiagnosticLog.Warn("print.render", ("sheet", selected.File), ("filled", fill), ("errors", result.Diagnostics.Count(d => d.Severity == Severity.Error)));
             return null;
         }
@@ -655,7 +665,7 @@ public sealed class PrintPanel : UserControl
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            SetStatus("The PDF could not be written: " + ex.Message, StatusKind.Alert);
+            Fail("The PDF could not be written", "The PDF could not be written: " + ex.Message);
             DiagnosticLog.Exception(LogLevel.Warn, "file.save", ex, [.. DiagnosticLog.File(path), ("kind", "pdf")]);
             return false;
         }
@@ -853,7 +863,7 @@ public sealed class PrintPanel : UserControl
         }
         catch (Win32Exception ex)
         {
-            SetStatus("No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
+            Fail("The PDF could not be opened to print", "No application could open the PDF (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.");
             DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved PDF"));
             return;
         }
@@ -888,7 +898,7 @@ public sealed class PrintPanel : UserControl
         }
         catch (Win32Exception ex)
         {
-            SetStatus("No application could open the PDF (" + ex.Message + "). It is saved at " + path + ".", StatusKind.Alert);
+            Fail("The PDF could not be opened", "No application could open the PDF (" + ex.Message + "). It is saved at " + path + ".");
             DiagnosticLog.Exception(LogLevel.Warn, "print.pdf", ex);
         }
     }
@@ -911,7 +921,7 @@ public sealed class PrintPanel : UserControl
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
-            SetStatus("The pack could not be written: " + ex.Message, StatusKind.Alert);
+            Fail("The pack could not be written", "The pack could not be written: " + ex.Message);
             DiagnosticLog.Exception(LogLevel.Warn, "file.save", ex, [.. DiagnosticLog.File(path), ("kind", "pack")]);
             return false;
         }
@@ -944,7 +954,7 @@ public sealed class PrintPanel : UserControl
         }
         catch (Win32Exception ex)
         {
-            SetStatus("No application could open the pack (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.", StatusKind.Alert);
+            Fail("The pack could not be opened to print", "No application could open the pack (" + ex.Message + "). It is saved at " + path + "; print it from elsewhere at actual size.");
             DiagnosticLog.Exception(LogLevel.Warn, "print.open", ex, ("fallback", "the saved pack"));
             return;
         }
@@ -1000,7 +1010,7 @@ public sealed class PrintPanel : UserControl
                 Confirm(outcome.Message, "Printed", PrinterOffer?.Invoke(selected.Definition));
                 break;
             default:
-                SetStatus(outcome.Message, StatusKind.Alert);
+                Fail("The sheet was not printed", outcome.Message);
                 Confirm(outcome.Message, "Not printed");
                 break;
         }

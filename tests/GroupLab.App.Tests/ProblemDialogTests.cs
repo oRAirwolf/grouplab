@@ -210,4 +210,36 @@ public class ProblemDialogTests
         Assert.False(window.ProblemOpen);
         window.Close();
     }
+
+    /// <summary>
+    /// Entry 356 section 3: a failure that stops the work, here a file that is not a picture, opens in the middle of the window, and the
+    /// status line keeps its record; Escape closes it.
+    /// </summary>
+    [AvaloniaFact]
+    public void AFileThatIsNotAPictureIsSaidInTheMiddleAndInTheStatusLine()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-not-a-picture-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "not-a-picture.png");
+        File.WriteAllText(path, "These are words, not a picture.");
+        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
+        var window = new MainWindow(store) { Width = 1400, Height = 900 };
+        window.Show();
+        try
+        {
+            window.OpenDropped([path]);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.ProblemOpen);
+            Assert.Equal("The picture could not be opened", window.ProblemTitle);
+            Assert.Contains("could not be opened as an image", window.StatusText, StringComparison.Ordinal);
+            window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(window.ProblemOpen);
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.Delete(folder);
+        }
+    }
 }

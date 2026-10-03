@@ -48,7 +48,7 @@ public sealed partial class MainWindow
     {
         if (sessions is null)
         {
-            toaster.Say("There is no database to export on this computer.");
+            Failed("There is nothing to export", "There is no database to export on this computer.");
             return false;
         }
 
@@ -67,7 +67,7 @@ public sealed partial class MainWindow
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
             DiagnosticLog.Exception(LogLevel.Warn, "data.export", e);
-            toaster.Say("The file could not be written: " + e.Message);
+            Failed("The file could not be written", "The file could not be written: " + e.Message);
             return false;
         }
     }

@@ -75,6 +75,9 @@ public sealed class BenchmarkPanel : StackPanel
     /// <summary>Sets what the panel says before anything has run: Settings shows the last run here.</summary>
     public void Say(string text) => status.Text = text;
 
+    /// <summary>Entry 356 section 3: where a failure is said in the middle of the window, on the desktop; the phone leaves it in the panel.</summary>
+    public Action<string, string>? Problem { get; set; }
+
     public void Start()
     {
         if (Running is { IsCompleted: false })
@@ -86,6 +89,7 @@ public sealed class BenchmarkPanel : StackPanel
         if (definition is null)
         {
             status.Text = "The benchmark's target is missing from this installation.";
+            Problem?.Invoke("The benchmark cannot run", status.Text);
             return;
         }
 
@@ -136,6 +140,7 @@ public sealed class BenchmarkPanel : StackPanel
             {
                 DiagnosticLog.Exception(LogLevel.Warn, "survey.benchmark.failed", ex, []);
                 status.Text = SharingWords.BenchmarkFailed;
+                Problem?.Invoke("The benchmark did not finish", status.Text);
             }
             finally
             {

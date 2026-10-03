@@ -233,6 +233,15 @@ public sealed partial class MainWindow
     }
 
     /// <summary>
+    /// Entry 356 section 3: a failure that stops the work, in the middle of the window and in the status line, which keeps its record of it.
+    /// </summary>
+    internal void Failed(string title, string said, params (string Label, Action Act)[] choices)
+    {
+        status.Text = said;
+        ShowProblem(title, said, choices);
+    }
+
+    /// <summary>
     /// Entry 356 section 5, board "Not an error": a picture that is no GroupLab sheet and no store-bought target GroupLab knows. Not an error,
     /// so no warning mark and no amber bar: "Which target is this?", marking it by hand first.
     /// </summary>

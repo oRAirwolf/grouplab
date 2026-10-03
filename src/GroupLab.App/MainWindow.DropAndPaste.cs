@@ -98,7 +98,7 @@ public sealed partial class MainWindow
         ArgumentNullException.ThrowIfNull(paths);
         if (paths.Count == 0)
         {
-            status.Text = $"That is not an image GroupLab can open. It opens {ImageWords}.";
+            Failed("That is not an image", $"That is not an image GroupLab can open. It opens {ImageWords}.");
             return;
         }
 
@@ -129,7 +129,7 @@ public sealed partial class MainWindow
 
         if (clipboard.Bytes is not { Length: > 0 } bytes)
         {
-            status.Text = $"There is no image on the clipboard. Copy an image file or an image itself, then press {CommandKey.Label("V")}. GroupLab opens {ImageWords}.";
+            Failed("There is no image to paste", $"There is no image on the clipboard. Copy an image file or an image itself, then press {CommandKey.Label("V")}. GroupLab opens {ImageWords}.");
             return;
         }
 
@@ -142,7 +142,7 @@ public sealed partial class MainWindow
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            status.Text = "The pasted image could not be written to GroupLab's own folder, so it was not opened.";
+            Failed("The pasted image was not opened", "The pasted image could not be written to GroupLab's own folder, so it was not opened.");
             return;
         }
 
@@ -172,7 +172,7 @@ public sealed partial class MainWindow
         catch (Exception ex) when (ex is InvalidDataException or IOException or UnauthorizedAccessException or OpenCvSharp.OpenCVException)
         {
             DiagnosticLog.Info("image.refused", DiagnosticLog.File(path));
-            status.Text = $"That file could not be opened as an image. GroupLab opens {ImageWords}.";
+            Failed("The picture could not be opened", $"That file could not be opened as an image. GroupLab opens {ImageWords}.");
             return false;
         }
     }

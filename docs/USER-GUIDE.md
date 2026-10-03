@@ -142,8 +142,10 @@ for a store-bought or hand-drawn target, which GroupLab remembers for that pictu
 harder** reads the picture at full size, then each corner code on its own, lit evenly and turned square on, then looks for the sheet's
 printed name, naming each step in the status line with Cancel beside it; it takes a minute or two, and is offered once a picture. A sheet it
 names is measured at once; if it names none, the window comes back saying so. Dismissed with Escape or its ×, it leaves an amber bar
-under the header with **Choose the sheet** and **All choices**, and Show work says **codes not read**. In any such window Enter takes the
-first choice and Escape closes it.
+under the header with **Choose the sheet** and **All choices**, and Show work says **codes not read**. Any other problem that stops the
+work on the computer, such as a picture or a file that could not be opened, a save, export, send or print that failed, or Find holes
+without a scale, opens the same kind of window with what to do next; what needs no decision, such as saved or sent, stays in the status
+line. In any such window Enter takes the first choice and Escape closes it.
 
 Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners again and enter the new size, or choose the length or rectangle tool and **Change the length of the scale in use**; every figure follows. Typing a caliber offers the calibers and cartridges that match, with spacing and points forgiven, so "65 creed" finds 6.5 Creedmoor, and choosing one from the list, with a click or with Enter, sets it at once. **Caliber box shows** in Settings, the same on the phone, chooses what the list offers: **Calibers**, the bullet diameters with their usual names, such as .308 (7.62 mm, .30); **Cartridges**, the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or **Both**, calibers first and then cartridges, which is where it starts. Any other diameter can still be typed in inches or in millimeters.
 

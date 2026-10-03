@@ -31,7 +31,8 @@ public sealed partial class MainWindow
     {
         if (valueImage is not { } value || !FindHoles.Offered(session.State))
         {
-            status.Text = "Set the scale first: Find holes needs to know how big an inch is on this picture.";
+            Failed("Find holes needs the scale first", "Set the scale first: Find holes needs to know how big an inch is on this picture.",
+                ("Set the scale", () => SetTool(MarkingTool.Length)), ("Not now", () => { }));
             return;
         }
 
@@ -44,7 +45,7 @@ public sealed partial class MainWindow
         }
         catch (Exception ex) when (ex is InvalidOperationException or OpenCvSharp.OpenCVException)
         {
-            status.Text = "Find holes could not read this picture. Mark the holes by hand.";
+            Failed("Find holes could not read this picture", "Find holes could not read this picture. Mark the holes by hand.", ("Mark it by hand", MarkByHand));
             DiagnosticLog.Exception(LogLevel.Warn, "marking.findholes", ex);
             return;
         }

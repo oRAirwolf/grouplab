@@ -57,7 +57,7 @@ public sealed partial class MainWindow
 
     private BenchmarkPanel NewBenchmarkPanel(string runWords, Action? later)
     {
-        var panel = new BenchmarkPanel(settingsStore, BenchmarkWork, () => SendSurveyIfDueAsync(), runWords, later);
+        var panel = new BenchmarkPanel(settingsStore, BenchmarkWork, () => SendSurveyIfDueAsync(), runWords, later) { Problem = (title, said) => ShowProblem(title, said) };
 
         // A run from the first run screen is what Settings then shows as the last run.
         panel.Ended += () =>
@@ -233,7 +233,14 @@ public sealed partial class MainWindow
             Button(SharingWords.DeleteReports, async () =>
             {
                 bool taken = await Survey.DeleteAsync(SurveyOpen, CancellationToken.None);
-                toaster.Say(taken ? SharingWords.DeleteReportsSaid : SharingWords.DeleteReportsFailed);
+                if (taken)
+        {
+            toaster.Say(SharingWords.DeleteReportsSaid);
+        }
+        else
+        {
+            Failed("The reports could not be deleted", SharingWords.DeleteReportsFailed);
+        }
             })));
     }
 

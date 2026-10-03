@@ -51,7 +51,7 @@ public sealed partial class MainWindow
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
         {
-            status.Text = "That file could not be read as CSV: " + e.Message;
+            Failed("The file could not be read", "That file could not be read as CSV: " + e.Message);
             return;
         }
 

@@ -79,7 +79,7 @@ public sealed partial class MainWindow
     /// </summary>
     private Control BuildLibrary()
     {
-        targetsPanel = new PrintPanel(LibrarySheets, ownSheets) { PrinterOffer = PrinterOfferAfterPrinting, Settings = settingsStore };
+        targetsPanel = new PrintPanel(LibrarySheets, ownSheets) { PrinterOffer = PrinterOfferAfterPrinting, Settings = settingsStore, Problem = (title, said) => ShowProblem(title, said) };
         targetsPanel.PageShown += page =>
         {
             libraryPreview.Scene = page;
@@ -413,7 +413,7 @@ public sealed partial class MainWindow
         }
         catch (ArgumentException ex)
         {
-            status.Text = ex.Message.Split(" (Parameter", StringSplitOptions.None)[0];
+            Failed("The sheet could not be renamed", ex.Message.Split(" (Parameter", StringSplitOptions.None)[0]);
         }
     }
 
