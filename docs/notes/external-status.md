@@ -19,7 +19,7 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:store -->
 
 <!-- status:store-submission -->
-## store-submission, 2026-10-04 11:30 UTC
+## store-submission, 2026-10-04 11:36 UTC
 
-- The Store submission of grouplab-win-x64.msix, 92773848 bytes
+- The Store submission of grouplab-win-x64.msix, 92773834 bytes
 <!-- /status:store-submission -->
