@@ -459,7 +459,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - A separate development build for iPhone and iPad, GroupLab Dev, is now made every night beside GroupLab, for testing only; GroupLab itself carries none of its tools.
 - GroupLab Dev can now run a written list of steps by itself and save what happened, with pictures of each screen, for testing without anyone's hands.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.137)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
