@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:30 UTC, after entry 367 (today's range kit, with the hole size test); the inbox is empty.
+**Last rewritten:** 2026-10-04 12:30 UTC, after entry 368 (today's range kit, with the hole size test and the C and E bulls); the inbox is empty.
 
 ---
 
@@ -22,7 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
   scale markers A to D. **Not done:** 365's Features page picture (a step in Entry109Tests).
 - **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
-- **Entries 366 and 367 done**: today's range kit, the hole size test in it, in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
+- **Entries 366 to 368 done**: today's range kit, the hole size test and the C and E bulls in it, in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
   72, 73 (the M834's recordings), 74, 75, 76.
 

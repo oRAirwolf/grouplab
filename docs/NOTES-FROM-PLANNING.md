@@ -25,6 +25,20 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 368: the C and E bulls in the range kit
+
+**Status: done 2026-10-04.** 08 GL-CF25-LTR-C and 09 GL-CF25-LTR-E, print 1 each; the checklist's item 3, right after the hole size test, as the entry words it; still one page, 18 pages to print. Entry 367's checklist is in C:\Dev\grouplab-trash\2026-10-04\range-kit-367.
+
+Alan, 2026-10-04 10:58 UTC: "Will I be testing the new filled in and diamond bulls?" Yes. **Do this now**, as a small addition to the
+range kit of entries 366 and 367 in `C:\Dev\grouplab-local\range-2026-10-04\`. Main model, no worker.
+
+1. Add, numbered after the existing files: one **GL-CF25-LTR-C** (the C bull, a black diamond standing on a point) and one
+   **GL-CF25-LTR-E** (the E bull, a black disc with a white centre), "print 1" each.
+2. Add a checklist item right after the hole size test: .22 LR, one shot to a bull on as many bulls as time allows (at least 10 a
+   sheet), some aimed to land in the black and some on its edge, since a hole inside solid black is the hard case for finding holes.
+   Photograph each with GroupLab at the bench; scan at home at 600 dpi. Same distance as the rest is fine.
+3. Keep the checklist to one page and update the page count. One line at the top of for-alan.md when ready.
+
 ## 2026-10-04, entry 367: rebuild the range kit with the hole size test in it
 
 **Status: done 2026-10-04.** 06 and 07 renamed without OPTIONAL (07 "print 10, all at once on the same paper"); 04 now print 2, the separate chronograph group gone; CHECKLIST.pdf rewritten on one page in the entry's order: the hole size core set at 50 yd (25 yd for the whole set if not), its shooting order and ammunition, the extras, the Xero up for every sheet with its string number on the load block; 16 pages to print. entry 366's files are in C:\Dev\grouplab-trash\2026-10-04\range-kit-366.
