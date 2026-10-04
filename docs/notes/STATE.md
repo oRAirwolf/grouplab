@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 04:55 UTC, after entries 358 and 359 (label targets, the printer framework).
+**Last rewritten:** 2026-10-04 05:20 UTC, after entry 362's follow-up; the inbox is empty.
 
 ---
 
@@ -27,8 +27,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 362 done** (store-bought targets: upright photos, a new corner finder `StoreTargetOutline`, zoom, magnifier, snap with Undo,
   Rotate), for nightly 165. Four of Alan's five counter photos found, the Rigid crosshair a close guess; request 74 asks for a wooden
   table photo; question 82 on the shared loaders. `grouplab outline-trial <photos> -o <folder>` draws what the finder found.
-- **Next: entry 362's follow-up** (Alan, 2026-10-04: two more blank photos into the corner and orientation tests, and the six
-  package photos for the targets' names and printed sizes), then the inbox is empty.
+- **Entry 362's follow-up done** (2026-10-04): six of Alan's seven photos found; the bull finder finds no bulls on the sight-in
+  grids or the splash bull (added by hand on The bulls). The inbox is empty.
 - **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 (steps for Unholy's
   4x6 printer) and 73 (the M834's recordings, Bluetooth only), 74 (a kitchen table photo). **Waiting on planning:** questions 79, 81 and 82.
 

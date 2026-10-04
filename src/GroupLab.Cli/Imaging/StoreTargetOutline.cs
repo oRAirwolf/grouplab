@@ -26,7 +26,8 @@ public sealed record StoreTargetOutlineResult(bool Found, PointD[] Corners, stri
 /// light region is the third. Each rough outline is then snapped a side at a time to the outermost nearby line on which the colour across
 /// it changes the same way all along (or a thin line of one colour runs, the shadow of a lifted edge), and every outline is scored the same
 /// way: how much of its weakest side lies on such an edge, and how far its edges run on past its corners, as a counter's edge or a shadow does
-/// and a paper's edge does not. The largest outline that passes wins, since the paper's edge lies outside any printed border. Each side is
+/// and a paper's edge does not. The largest outline that passes wins, since the paper's edge lies outside any printed border, unless a
+/// smaller one that passes lies inside it with a strip of counter between them, a side gone past the target onto the counter's own edge. Each side is
 /// then refined at full size to the strongest colour change across it, averaged along the side, twice.
 /// </para>
 /// <para>
@@ -88,23 +89,27 @@ public static class StoreTargetOutline
                 new Line(new PointD(0, 0), new PointD(0, 1), h), new Line(new PointD(w - 1, 0), new PointD(0, 1), h)]);
         }
 
-        var quads = Quads(lines, gradients, w, h);
-        candidates.AddRange(quads);
-        candidates.AddRange(quads.Where(c => c.Weakest >= 0.5).OrderByDescending(c => c.Area).Take(4)
-            .Select(c => Score(Snap(c.Corners, gradients, w, h), gradients, w, h, "edges, snapped")));
-        tried.Add(string.Create(CultureInfo.InvariantCulture, $"edges: {lines.Count} straight lines, {candidates.Count} four-sided shapes scored, edge threshold {floor:0.0}"));
-
+        // The colour region first: what it learns of the counter's colour is used in scoring every outline after it.
+        var regionCandidates = new List<Candidate>();
         if (ColourRegion(gradients, w, h, out string colourWhy) is { } region)
         {
-            candidates.Add(Score(region, gradients, w, h, colourWhy.Length == 0 ? "colour region, unsnapped" : "printed extent, unsnapped"));
+            regionCandidates.Add(Score(region, gradients, w, h, colourWhy.Length == 0 ? "colour region, unsnapped" : "printed extent, unsnapped"));
             var c = Score(Snap(region, gradients, w, h), gradients, w, h, colourWhy.Length == 0 ? "colour region" : "printed extent");
-            candidates.Add(c);
+            regionCandidates.Add(c);
             tried.Add(string.Create(CultureInfo.InvariantCulture, $"{c.Method}: found, weakest side {c.Weakest:0.00} on an edge, edges run on past the corners {c.RunOn:0.00}"));
         }
         else
         {
             tried.Add("colour region: " + colourWhy);
         }
+
+        var quads = Quads(lines, gradients, w, h);
+        candidates.AddRange(quads);
+        candidates.AddRange(quads.Where(c => c.Weakest >= 0.5).OrderByDescending(c => c.Area).Take(4)
+            .Select(c => Score(Snap(c.Corners, gradients, w, h), gradients, w, h, "edges, snapped")));
+        tried.Add(string.Create(CultureInfo.InvariantCulture, $"edges: {lines.Count} straight lines, {candidates.Count} four-sided shapes scored, edge threshold {floor:0.0}"));
+
+        candidates.AddRange(regionCandidates);
 
         // The GroupLab sheet's own finder, scored the same way, so a sheet it finds well is not lost.
         using (var grey = new Mat())
@@ -128,7 +133,23 @@ public static class StoreTargetOutline
         var good = candidates.Where(c => c.Weakest >= (c.Method == "colour region" ? RegionShare : SideShare) && c.RunOn <= MostRunOn).ToList();
         if (good.Count > 0)
         {
-            var best = good.MaxBy(c => c.Area)!;
+            // The largest that passes, unless a smaller one that passes lies inside it with only counter between them: then a side went
+            // past the target onto something of the counter's, and the smaller is the target.
+            var ordered = good.OrderByDescending(c => c.Area).ToList();
+            var best = ordered[0];
+            if (!scan)
+            {
+                double margin = 0.015 * Math.Min(w, h);
+                foreach (var smaller in ordered.Skip(1).Where(c => c.Area >= 0.4 * best.Area && c.Corners.All(p => InsideQuad(p, best.Corners) || Near(p, best.Corners, margin))))
+                {
+                    bool between = CounterBetween(best.Corners, smaller.Corners, gradients, out double share);
+                    if (between)
+                    {
+                        tried.Add(string.Create(CultureInfo.InvariantCulture, $"{best.Method} lost: {100 * share:0}% of what lies between it and the {smaller.Method} inside it is counter"));
+                        best = smaller;
+                    }
+                }
+            }
             // Twice: a side that starts several working pixels off moves most of the way the first time and settles the second.
             var full = Refine(colour, best.Corners.Select(p => Up(p, k)).ToArray(), (int)Math.Ceiling(5 * k) + 2, k);
             full = Refine(colour, full, (int)Math.Ceiling(2 * k) + 2, k);
@@ -281,6 +302,14 @@ public static class StoreTargetOutline
 
         /// <summary>A flatbed scan, whose border may be two of the target's sides.</summary>
         public bool Scan { get; init; }
+
+        /// <summary>
+        /// Each pixel's colour distance from what lies round the picture's border, and the distance past which it is not the counter, once
+        /// the colour region has been looked for; null before, or where nothing differed.
+        /// </summary>
+        public byte[]? Distance { get; set; }
+
+        public byte DistanceThreshold { get; set; }
 
         public float[] Magnitude { get; }
 
@@ -581,6 +610,8 @@ public static class StoreTargetOutline
             return null;
         }
 
+        (gradients.Distance, gradients.DistanceThreshold) = (distance, threshold);
+
         var mask = new byte[w * h];
         for (int i = 0; i < mask.Length; i++)
         {
@@ -751,6 +782,81 @@ public static class StoreTargetOutline
         }
 
         return mean;
+    }
+
+    /// <summary>
+    /// Whether the ring between an outline and a smaller one inside it is the counter, by the colour region's own test: a side that went past
+    /// the target onto a counter's own edge or a shadow encloses a strip of counter, where the white margin between a paper's edge and its
+    /// printed border is paper. False where that test has not been made, or where the ring is thinner than a twentieth of the outline.
+    /// </summary>
+    private static bool CounterBetween(PointD[] outer, PointD[] inner, Gradients gradients, out double share)
+    {
+        share = 0;
+        if (gradients.Distance is not { } distance)
+        {
+            return false;
+        }
+
+        double x0 = outer.Min(p => p.X), x1 = outer.Max(p => p.X), y0 = outer.Min(p => p.Y), y1 = outer.Max(p => p.Y);
+        int counter = 0, counted = 0;
+        for (int i = 0; i < 60; i++)
+        {
+            for (int j = 0; j < 60; j++)
+            {
+                var p = new PointD(x0 + ((x1 - x0) * (i + 0.5) / 60), y0 + ((y1 - y0) * (j + 0.5) / 60));
+                if (!InsideQuad(p, outer) || InsideQuad(p, inner))
+                {
+                    continue;
+                }
+
+                int x = (int)Math.Round(p.X), y = (int)Math.Round(p.Y);
+                if (x < 0 || y < 0 || x >= gradients.Width || y >= gradients.Height)
+                {
+                    continue;
+                }
+
+                counted++;
+                counter += distance[(y * gradients.Width) + x] <= gradients.DistanceThreshold ? 1 : 0;
+            }
+        }
+
+        share = counted == 0 ? 0 : counter / (double)counted;
+        // A ring a twentieth of the outline or more: a paper's thin white margin, as pale as the counter, is not a strip of counter.
+        return counted >= 180 && counter >= 0.8 * counted;
+    }
+
+    /// <summary>Whether a point lies within <paramref name="margin"/> of a quadrilateral's outline.</summary>
+    private static bool Near(PointD p, PointD[] q, double margin)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            PointD a = q[i], b = q[(i + 1) % 4];
+            double dx = b.X - a.X, dy = b.Y - a.Y, t = Math.Clamp((((p.X - a.X) * dx) + ((p.Y - a.Y) * dy)) / ((dx * dx) + (dy * dy)), 0, 1);
+            if (Math.Sqrt(Math.Pow(p.X - (a.X + (t * dx)), 2) + Math.Pow(p.Y - (a.Y + (t * dy)), 2)) <= margin)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool InsideQuad(PointD p, PointD[] q)
+    {
+        int sign = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            PointD a = q[i], b = q[(i + 1) % 4];
+            int s = Math.Sign(((b.X - a.X) * (p.Y - a.Y)) - ((b.Y - a.Y) * (p.X - a.X)));
+            if (s != 0 && sign != 0 && s != sign)
+            {
+                return false;
+            }
+
+            sign = s != 0 ? s : sign;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -991,6 +1097,7 @@ public static class StoreTargetOutline
             var points = Enumerable.Range(0, samples).Select(i => 0.04 + (0.92 * i / (samples - 1))).Select(t => new PointD(a.X + ((b.X - a.X) * t), a.Y + ((b.Y - a.Y) * t))).ToList();
             var (means, on) = Coherent(gradients, points, normal);
             weakest = Math.Min(weakest, on.Count(x => x) / (double)samples);
+
 
             // Past each end, a short way: a paper's edge stops at its corner.
             foreach (var (from, sign) in new[] { (a, -1.0), (b, 1.0) })

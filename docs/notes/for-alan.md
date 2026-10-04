@@ -25,6 +25,8 @@ magnifier above your finger shows the point under it with a crosshair; and a cor
 nearest it, with Undo. The same finder handles four of the five 600 dpi Birchwood scans on this computer (the fifth is larger than the
 scanner, so it has no four corners in it).
 
+*Your second set* (the ST-4 and the Shoot-N-C 12 in sight-in): both found, and both are now in the tests, so six of your seven photos are found. The Shoot-N-C sat next to the counter's edge, which at first was taken for the target's side; that is fixed. With the names and 12 by 12 in sizes from your package photos, the five packaged targets go through all five steps to a saved file. One thing still for you to do by hand: on the two sight-in grids and the splash bull, GroupLab does not find the bulls by itself, so tap each one on **The bulls** step.
+
 *Before and after*, left as the screen showed it, right as it finds it now:
 ![Sight-in](entry-362/allen-ezaim-sight-in-55134A.jpg)
 ![Splash bull](entry-362/allen-splash-bull-55124A.jpg)

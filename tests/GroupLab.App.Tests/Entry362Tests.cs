@@ -182,8 +182,10 @@ public class Entry362Tests
 
     /// <summary>
     /// The corners found on each, upright, in full size pixels, as checked by eye on 2026-10-04 against crops of each corner: within about
-    /// ten pixels on the sight-in, splash bull and Eze-Scorer bull, about twenty five on one corner of the sight-in grid. The rigid crosshair's
-    /// paper edge barely shows on the counter, so it is not called found; the guess its handles start on is within about twenty pixels.
+    /// ten pixels on the sight-in, splash bull, Eze-Scorer bull, NTC ST-4 and Shoot-N-C 12 in sight-in, about twenty five on one corner of
+    /// the sight-in grid. The rigid crosshair's paper edge barely shows on the counter, so it is not called found; the guess its handles start
+    /// on is within about twenty pixels. The Shoot-N-C lies beside the counter's own edge, which once made a larger outline (Alan's second
+    /// set of photographs, 2026-10-04).
     /// </summary>
     public static TheoryData<string, bool, double[]> Corners => new()
     {
@@ -192,11 +194,89 @@ public class Entry362Tests
         { Path.Combine(Photos, "birchwood-rigid-crosshair.jpg"), false, [1119, 239, 3628, 250, 3617, 2763, 1108, 2752] },
         { Path.Combine(Photos, "eze-scorer-bull.jpg"), true, [273, 577, 2899, 572, 2910, 3189, 280, 3212] },
         { Path.Combine(Photos, "eze-scorer-sight-in-grid.jpg"), true, [208, 516, 2844, 459, 2845, 3137, 204, 3137] },
+        { Path.Combine(Photos, "ntc-st4-100yd-precision-rifle.jpg"), true, [170, 221, 2831, 213, 2864, 3246, 154, 3260] },
+        { Path.Combine(Photos, "birchwood-shoot-n-c-12in-sight-in.jpg"), true, [849, 178, 3530, 159, 3522, 2815, 876, 2844] },
         { Path.Combine(Blanks, "bc-34105-shoot-n-c-sight-in", "blank.png"), true, [3, 3, 4956, 3, 4956, 4875, 3, 4890] },
         { Path.Combine(Blanks, "bc-34550-shoot-n-c-6in-bull", "blank.png"), true, [3, 3, 3721, 3, 3727, 3708, 3, 3719] },
         { Path.Combine(Blanks, "bc-34805-shoot-n-c-8in-bull", "blank.png"), true, [3, 3, 4956, 3, 4956, 4947, 3, 4975] },
         { Path.Combine(Blanks, "bc-34806-shoot-n-c-8in-crosshair", "blank.png"), true, [3, 3, 4956, 3, 4956, 4887, 3, 4912] },
     };
+
+    /// <summary>Each photograph's size as it reads upright: all seven carry orientation 3 or 6, and the screen once showed them unturned.</summary>
+    [Theory]
+    [InlineData("allen-ezaim-sight-in-55134A.jpg", 4000, 3000)]
+    [InlineData("allen-splash-bull-55124A.jpg", 4000, 3000)]
+    [InlineData("birchwood-rigid-crosshair.jpg", 4000, 3000)]
+    [InlineData("eze-scorer-bull.jpg", 3000, 4000)]
+    [InlineData("eze-scorer-sight-in-grid.jpg", 3000, 4000)]
+    [InlineData("ntc-st4-100yd-precision-rifle.jpg", 3000, 4000)]
+    [InlineData("birchwood-shoot-n-c-12in-sight-in.jpg", 4000, 3000)]
+    public void AlansPhotographsReadUpright(string file, int width, int height)
+    {
+        string path = Path.Combine(Photos, file);
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        var metadata = GroupLab.Core.Imaging.ImageMetadataReader.Read(File.ReadAllBytes(path));
+        Assert.True(metadata.Orientation is 3 or 6, $"{file} carries orientation {metadata.Orientation}");
+        using var session = new FingerprintSession(() => []);
+        Assert.Null(session.Load(path));
+        Assert.Equal((width, height), (session.Width, session.Height));
+    }
+
+    /// <summary>
+    /// The whole five steps on each photograph whose package Alan photographed, with the package's name and printed size
+    /// (packaging/ beside the photographs, 2026-10-04): every one is 12 by 12 in, both green Eze-Scorer targets come in one package, and the
+    /// file written names the target and its size. Where the bull finder finds none, the bull is added by hand, as on the screen.
+    /// </summary>
+    [Theory]
+    [InlineData("allen-ezaim-sight-in-55134A.jpg", "Allen EZ Aim Sight-In Grid Target 55134A")]
+    [InlineData("allen-splash-bull-55124A.jpg", "Allen GWG Dual Splash Adhesive Bullseye Target 55124A")]
+    [InlineData("eze-scorer-bull.jpg", "Birchwood Casey Eze-Scorer 12 in bullseye")]
+    [InlineData("eze-scorer-sight-in-grid.jpg", "Birchwood Casey Eze-Scorer 12 in sight-in grid")]
+    [InlineData("birchwood-shoot-n-c-12in-sight-in.jpg", "Birchwood Casey Shoot-N-C 12 in sight-in")]
+    public void EachPackagedTargetGoesThroughTheFiveStepsAtItsPrintedSize(string file, string name)
+    {
+        string path = Path.Combine(Photos, file);
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        string folder = Temp.Folder("entry362-package");
+        Directory.CreateDirectory(folder);
+        try
+        {
+            using var session = new FingerprintSession(() => []);
+            Assert.Null(session.Load(path));
+            Assert.True(session.CornersFound, $"{file}: corners not found");
+            Assert.Null(session.Next());
+            session.Source = GroupLab.Core.StoreTargets.ScaleSource.PrintedSize;
+            (session.WidthInches, session.HeightInches) = (12, 12);
+            Assert.Null(session.Next());
+            Assert.Null(session.Next());
+            Assert.Equal(GroupLab.Core.StoreTargets.FingerprintStep.Bulls, session.Step);
+            if (session.Bulls.Count == 0)
+            {
+                // GroupLab's bull finder finds none on the sight-in grids and the splash bull's diamonds and rings (entry 362, 2026-10-04): the
+                // person adds them on The bulls, as here, the middle one.
+                session.AddBull(new PointD(6, 6));
+            }
+
+            Assert.NotEmpty(session.Bulls);
+            Assert.Null(session.Next());
+            session.Name = name;
+            var reference = session.Write(Path.Combine(folder, session.FileName));
+            Assert.Equal(name, reference.Target.Name);
+            Assert.Equal("12 by 12 in", session.Size);
+        }
+        finally
+        {
+            Temp.Delete(folder);
+        }
+    }
 
     [Theory]
     [MemberData(nameof(Corners))]
