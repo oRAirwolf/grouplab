@@ -2,7 +2,12 @@
 
 NOTES-FROM-PLANNING.md entry 253 section 1, as of 2026-09-28. Alan: "at some point code should update all of the screenshots on the
 website." This is the list: every picture on grouplab.org, in the README and in the guides that shows GroupLab, where each is used, what
-it was made from and the build it shows. **Every one is produced by the screenshot walk or the phone sitting; there is no gap.**
+it was made from and the build it shows. **Every one is produced by the screenshot walk or the phone sitting; the one gap is listed under Waiting for a picture.**
+
+## Waiting for a picture
+
+- **Targets, Scale markers** (entry 365): the Features page's entry `scale-markers` has no picture of its own yet. It needs a step in
+  `Entry109Tests` that opens the Scale markers section on Targets, and the phone's card at the next sitting.
 
 ## How they are kept current
 

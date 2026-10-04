@@ -281,6 +281,27 @@ public sealed class AppSettingsStore(string path)
         file["printer"] = printer.Name;
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 365 section C: the target boards measured, each with its four stickers, kept with the rest of the
+    /// settings so they travel with them. A board measured again under the same name replaces the old.
+    /// </summary>
+    public IReadOnlyList<GroupLab.Core.ScaleMarkers.ScaleBoard> LoadBoards() => Read(file => file["boards"] is JsonArray all
+        ? all.Select(GroupLab.Core.ScaleMarkers.ScaleBoard.FromJson).OfType<GroupLab.Core.ScaleMarkers.ScaleBoard>().ToList()
+        : null) ?? [];
+
+    public bool SaveBoard(GroupLab.Core.ScaleMarkers.ScaleBoard board) => Save(file =>
+    {
+        var kept = LoadBoardsFrom(file).Where(b => b.Name != board.Name).ToList();
+        kept.Add(board);
+        file["boards"] = new JsonArray([.. kept.Select(b => (JsonNode)b.ToJson())]);
+    });
+
+    public bool ForgetBoard(string name) => Save(file => file["boards"] = new JsonArray([.. LoadBoardsFrom(file).Where(b => b.Name != name).Select(b => (JsonNode)b.ToJson())]));
+
+    private static List<GroupLab.Core.ScaleMarkers.ScaleBoard> LoadBoardsFrom(JsonObject file) => file["boards"] is JsonArray all
+        ? [.. all.Select(GroupLab.Core.ScaleMarkers.ScaleBoard.FromJson).OfType<GroupLab.Core.ScaleMarkers.ScaleBoard>()]
+        : [];
+
     /// <summary>Entry 273: whether the printer check has been offered, at first run or after the first print; it is offered once.</summary>
     public bool LoadPrinterOffered() => Read(file => file["printerOffered"]?.GetValueKind() == JsonValueKind.True);
 

@@ -98,6 +98,8 @@ public sealed partial class MainWindow
         head.Children.Add(Line("The built-in sheets, read only, and your own sheets from the designer. Choose one to print it: every sheet prints the same way, from the panel beside the list."));
         // Entry 348: a store-bought target GroupLab does not know yet, photographed and fingerprinted in five steps on this screen.
         head.Children.Add(Row(Button("Design your own sheet", () => OpenPrint(null, design: true)), Button(FingerprintWords.Title, () => AddStoreTarget())));
+        // Entry 365: the scale markers, folded away until opened.
+        head.Children.Add(ScaleMarkersSection());
 
         double width = Math.Max(LibraryListWidth, settingsStore.LoadColumnWidth("library") ?? LibraryListWidth);
         librarySplit.ColumnDefinitions = new ColumnDefinitions(string.Create(CultureInfo.InvariantCulture, $"{width},Auto,*"));
@@ -190,7 +192,7 @@ public sealed partial class MainWindow
 
             libraryListView.IsVisible = true;
             status.Text = LibraryStatus;
-        });
+        }, settingsStore);
         fingerprintSteps = steps;
         libraryListView.IsVisible = false;
         libraryWhole.Children.Add(steps);

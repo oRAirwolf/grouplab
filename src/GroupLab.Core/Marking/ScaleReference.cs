@@ -120,6 +120,36 @@ public sealed record RectangleReference : ScaleReference
 /// screen reports and a scanner's own x and y differ by more than a printer's.
 /// </para>
 /// </summary>
+/// <summary>
+/// Entry 365: scale markers in the photo (corner brackets, scale bars, a measured board's stickers or a bank card), fitted as one plane from
+/// the photo's pixels to inches on the surface they lie on, which takes out the camera's angle where they fix it.
+/// </summary>
+public sealed record MarkerReference(Homography ImageToInches, string Summary) : ScaleReference
+{
+    public override PointD ToTarget(PointD image) => ImageToInches.Apply(image);
+
+    public override string Description => Summary;
+
+    public override string Describe(UnitSettings units) => Summary;
+
+    public override bool AssumesSquareOn => false;
+
+    /// <summary>Turned by <see cref="Upright"/> so the photo's right is the target's right at the middle of the picture.</summary>
+    public override bool AxesFollowImage => true;
+
+    /// <summary>
+    /// The plane turned about its own origin so that, at <paramref name="centre"/>, the photo's x runs along the target's x: a marker's own
+    /// axes run along whichever way it was laid, and "right" and "low" have to mean the picture's.
+    /// </summary>
+    public static MarkerReference Upright(Homography imageToInches, PointD centre, string summary)
+    {
+        ArgumentNullException.ThrowIfNull(imageToInches);
+        var (xx, _, yx, _) = imageToInches.Jacobian(centre);
+        double angle = -Math.Atan2(yx, xx), c = Math.Cos(angle), s = Math.Sin(angle);
+        return new MarkerReference(Homography.Compose(imageToInches, new Homography([c, -s, 0, s, c, 0, 0, 0, 1])), summary);
+    }
+}
+
 public sealed record SheetReference(IPageMapping Mapping, string Summary) : ScaleReference
 {
     /// <summary>

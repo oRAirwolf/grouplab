@@ -5144,6 +5144,22 @@
   "Android.** - **Done.** The camera capture path, with the capture screen's checks, and a sheet opened from the phone's files; the analysis runs on the device with the desktop's engine, lens distortion included, and its gate, capture and lens distortion fitted on the device, has been met on the Fold 7, as docs/PROOF-CHECKLIST.md records.": {
    "kind": "measured",
    "where": "docs/PROOF-CHECKLIST.md row 26: four Fold 7 captures of 2026-09-29, lens fitted on the phone in every one, 97 of 100 holes; Alan's answer to question 79, entry 363 section 1"
+  },
+  "On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15.": {
+   "kind": "measured",
+   "where": "grouplab marker-trial --photos 20 (seed 365), run 2026-10-04: 20 computer-made photos each of a 12 by 12 in and a 23 by 35 in target, tilted up to 30 degrees; docs/PHASE1-RESULTS.md, entry 365"
+  },
+  "Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/ScaleMarkers/ScaleMarkerReading.cs, ScaleMarkerReading.Read (the printer's Across and Down scale the printed pieces) and UncheckedPrint = 0.015"
+  },
+  "A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/ScaleMarkerFinder.cs, ScaleMarkerFinder.Find (blanks every copy) and ForMarking; src/GroupLab.App/MainWindow.MarkerScale.cs, HasCard (a picture with a card is never sent); tests/GroupLab.App.Tests/Entry365Tests.cs"
+  },
+  "A bank card , driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/ScaleMarkerFinder.cs, ScaleMarkerFinder.Find (blanks every copy) and ForMarking; src/GroupLab.App/MainWindow.MarkerScale.cs, HasCard (a picture with a card is never sent); tests/GroupLab.App.Tests/Entry365Tests.cs"
   }
  },
  "rules": [

@@ -114,6 +114,8 @@ public static class FingerprintWords
     {
         ScaleSource.PrintedSize => "Its printed size",
         ScaleSource.GroupLabSheet => "A GroupLab sheet in the photo",
+        ScaleSource.Markers => ScaleMarkers.ScaleMarkerWords.Choice,
+        ScaleSource.Card => ScaleMarkers.ScaleMarkerWords.CardChoice,
         _ => "Two points and a distance",
     };
 
@@ -122,6 +124,8 @@ public static class FingerprintWords
     {
         ScaleSource.PrintedSize => phone ? "From the package. Fastest." : "The sheet's outside size, from the package. Fastest.",
         ScaleSource.GroupLabSheet => phone ? "Lay one on the target, then take the photo." : "Lay any GroupLab sheet or card on the target and take the photo again.",
+        ScaleSource.Markers => ScaleMarkers.ScaleMarkerWords.How(card: false, phone),
+        ScaleSource.Card => ScaleMarkers.ScaleMarkerWords.How(card: true, phone),
         _ => phone ? "Tap both ends of something you measured, as far apart as the target allows, and type the length; ends close together give a poor scale."
             : "Click both ends of something you measured, as far apart as the target allows, then type its length; ends close together give a poor scale.",
     };
@@ -133,6 +137,8 @@ public static class FingerprintWords
     public static string Measured(ScaleSource source) => source switch
     {
         ScaleSource.PrintedSize => "Measured on computer-made photos of two test posters: typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in, 0.63 percent at worst.",
+        ScaleSource.Markers => ScaleMarkers.ScaleMarkerWords.TrialAll,
+        ScaleSource.Card => ScaleMarkers.ScaleMarkerWords.TrialCard,
         ScaleSource.GroupLabSheet => "Measured on the same photos: a Letter sheet was read in 8 of 12 at 12 by 18 in, typically within 0.28 percent, 0.55 at worst, and in none at 23 by 35 in, where it was too small to read.",
         _ => "Measured on the same photos: typically within 0.16 percent at 12 by 18 in and 0.40 percent at 23 by 35 in, 0.80 percent at worst.",
     };

@@ -52,8 +52,8 @@ public sealed class ResultView : UserControl
             Content = behind;
         }
 
-        var byHand = Screens.Row(GroupLab.Core.Registration.OpeningWords.ByHand.Label, GroupLab.Core.Registration.OpeningWords.ByHand.Says, () =>
-            Content = new MarkingAPage(working.Path, working.Metadata.Orientation, setup, units, marked => Content = new ResultView(marked, setup, units, again), Back), explain: false)
+        var byHand = Screens.Row(GroupLab.Core.Registration.OpeningWords.ByHand.Label, GroupLab.Core.Registration.OpeningWords.ByHand.Says, async () =>
+            Content = await MarkingAPage.ByHand(working.Path, working.Metadata.Orientation, setup, units, marked => Content = new ResultView(marked, setup, units, again), Back), explain: false)
             .Id("which-target-by-hand");
         var store = Screens.Row(GroupLab.Core.Registration.OpeningWords.StoreBought.Label, GroupLab.Core.Registration.OpeningWords.StoreBought.Says,
             () => Content = new FingerprintPage(Back), explain: false).Id("which-target-store");
@@ -235,7 +235,7 @@ public sealed class ResultView : UserControl
 
                 // Entry 279 section 2: a target GroupLab did not print is marked by hand, Marking A.
                 var failed = Screens.Page(column);
-                column.Children.Add(Screens.Choice("Not a GroupLab sheet: mark it by hand", () => Content = new MarkingAPage(working.Path, working.Metadata.Orientation, setup, units,
+                column.Children.Add(Screens.Choice("Not a GroupLab sheet: mark it by hand", async () => Content = await MarkingAPage.ByHand(working.Path, working.Metadata.Orientation, setup, units,
                     marked => Content = new ResultView(marked, setup, units, again), () => Content = failed)).Id("result-mark-by-hand"));
                 column.Children.Add(Screens.Line(result.LooksLike is null ? "Which sheet is it?" : "Or another sheet:"));
                 foreach (var sheet in PhoneAnalysis.Library().OrderBy(d => d.Name, StringComparer.CurrentCultureIgnoreCase))

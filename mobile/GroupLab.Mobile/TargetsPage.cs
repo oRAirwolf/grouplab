@@ -81,6 +81,9 @@ public sealed class TargetsPage : UserControl
             Screens.Dim(GroupLab.Core.StoreTargets.FingerprintWords.Offer),
             Screens.Choice(GroupLab.Core.StoreTargets.FingerprintWords.Title, () => Content = new FingerprintPage(() => Content = List())).Id("targets-add-store")));
 
+        // Entry 365: the scale markers, printed or shared at actual size, and the boards measured.
+        column.Children.Add(ScaleMarkers());
+
         // Entry 363 section 2a: a thermal label printer through its own app, the darkness test first.
         var darknessSaid = Screens.Line("");
         column.Children.Add(Screens.Card(
@@ -217,6 +220,88 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
         column.Children.Add(Screens.Choice("Back to the targets", () => Content = List()));
         return Screens.Page(column);
+    }
+
+    /// <summary>
+    /// Entry 365: Targets, "Scale markers" on the phone: the corner brackets, scale bars and board stickers on the region's paper, printed or
+    /// shared; the stickers for a label printer's own app; a board measured from a photo; the boards saved, each with Forget.
+    /// </summary>
+    private Control ScaleMarkers()
+    {
+        var paper = AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? GroupLab.Core.ScaleMarkers.MarkerPaper.Letter : GroupLab.Core.ScaleMarkers.MarkerPaper.A4;
+        var bars = paper == GroupLab.Core.ScaleMarkers.MarkerPaper.A4 ? GroupLab.Core.ScaleMarkers.MarkerKind.MetricBar : GroupLab.Core.ScaleMarkers.MarkerKind.InchBar;
+        var said = Screens.Line("");
+        var boards = new StackPanel { Spacing = 8 };
+        void Fill()
+        {
+            boards.Children.Clear();
+            var saved = Phone.Settings.LoadBoards();
+            if (saved.Count == 0)
+            {
+                boards.Children.Add(Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.NoBoards));
+            }
+
+            foreach (var board in saved)
+            {
+                string name = board.Name;
+                boards.Children.Add(Screens.Line(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BoardLine(board)));
+                boards.Children.Add(Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Forget + " " + name, () =>
+                {
+                    Phone.Settings.ForgetBoard(name);
+                    Fill();
+                }));
+            }
+        }
+
+        void Print(GroupLab.Core.ScaleMarkers.MarkerKind kind)
+        {
+            var size = paper == GroupLab.Core.ScaleMarkers.MarkerPaper.A4 ? GroupLab.Core.Gltd.Model.PageSize.A4 : GroupLab.Core.Gltd.Model.PageSize.Letter;
+            said.Text = Phone.Platform.PrintPdf(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Pdf(kind, paper), GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Title(kind, paper), size) ?? "";
+            DiagnosticLog.Info("markers.print", ("kind", kind.ToString()));
+        }
+
+        async Task Measure()
+        {
+            var picked = await PhotoPages.Pick(this, PhotoSource.Photos, "board", words => said.Text = words);
+            if (picked.FirstOrDefault() is not { } photo)
+            {
+                return;
+            }
+
+            said.Text = "Measuring the board…";
+            string name = GroupLab.Core.ScaleMarkers.ScaleMarkerWords.NextBoard(Phone.Settings.LoadBoards());
+            var printer = Phone.Settings.LoadChosenPrinter();
+            var (board, words) = await Task.Run(() => GroupLab.Cli.Library.ScaleMarkerFinder.MeasureBoard(photo.Path, PhoneAnalysis.Library(), printer, name,
+                DateOnly.FromDateTime(DateTime.Today), GroupLab.Core.Imaging.WorkingSize.PhoneMegapixels * 2));
+            if (board is not null)
+            {
+                Phone.Settings.SaveBoard(board);
+                Fill();
+            }
+
+            said.Text = words;
+        }
+
+        Fill();
+        return Screens.Card(
+            Screens.Heading(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Heading),
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Intro),
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Brackets + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BracketsGive),
+            Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintBrackets, () => Print(GroupLab.Core.ScaleMarkers.MarkerKind.Bracket)).Id("targets-markers-brackets"),
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Bars + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BarsGive),
+            Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintBars, () => Print(bars)).Id("targets-markers-bars"),
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Stickers + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.StickersGive),
+            Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintStickers, () => Print(GroupLab.Core.ScaleMarkers.MarkerKind.Sticker)).Id("targets-markers-stickers"),
+            Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelStickers, () =>
+            {
+                var (pngs, pdf) = PrinterAppFiles.Make(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Pages(GroupLab.Core.ScaleMarkers.MarkerKind.Sticker, GroupLab.Core.ScaleMarkers.MarkerPaper.Label4x6));
+                said.Text = Share(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.FileName(GroupLab.Core.ScaleMarkers.MarkerKind.Sticker, GroupLab.Core.ScaleMarkers.MarkerPaper.Label4x6), pngs, pdf, picture: true, "Board stickers");
+            }).Id("targets-markers-label"),
+            Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.MeasureBoard.TrimEnd('…'), () => _ = Measure()).Id("targets-markers-board"),
+            boards,
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),
+            said);
     }
 
     /// <summary>What sharing for a printer app makes, said under its two choices.</summary>

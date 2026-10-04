@@ -383,6 +383,40 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 365: scale markers beside a target, A to D
+
+- **One engine.** `ScaleMarkerLayout` keeps tag36h11 555 to 586 for markers (the library's sheets reach 150; the validator warns of any
+  that would reach 555). `MarkerFit` fits one plane to every bracket, bar, board and card found, each a rigid body of known shape, its
+  doubt from the fit's own covariance; three or more brackets are held softly to a rectangle (0.5 mm, 0.5 degree). `ScaleMarkerFinder`
+  reads the codes at four sizes and finds a card by its rounded corners, opposite sides and fill, refitting its sides at full size.
+- **Accuracy, `grouplab marker-trial --photos 20`, seed 365,** computer-made photos tilted up to 30 degrees, markers printed exactly
+  (error = larger of width and height, percent; columns: found, median, 95th, worst, claimed median, within claim):
+
+```
+brackets   12x12    20/20    0.068   0.131   0.185      0.171           19/20
+brackets   23x35    20/20    0.203   0.696   0.753      0.353           17/20
+one bar    12x12    20/20    0.054   0.334   0.575      1.278           20/20
+one bar    23x35    16/20    0.061   0.509   0.525      1.004           16/16
+two bars   12x12    20/20    0.074   0.444   0.452      1.045           20/20
+two bars   23x35    19/20    0.064   0.336   0.838      0.997           19/19
+board      12x12    20/20    0.015   0.025   0.026      0.112           20/20
+board      23x35    19/20    0.014   0.023   0.028      0.113           19/19
+card       12x12    19/20    0.161   0.265   0.313      1.232           19/19
+card       23x35    11/20    0.135   0.251   0.251      1.115           11/11
+all        12x12    20/20    0.015   0.023   0.024      0.247           20/20
+all        23x35    20/20    0.014   0.027   0.072      0.247           20/20
+```
+
+- **What the trial changed.** A hard bracket rectangle took 0.3 mm of placement into 1.2 percent, so it is soft. Fitting codes by their
+  centres was worse than by their corners (brackets 0.13 against 0.04 percent). 22 mm bracket codes on 28 mm arms were worse than 16 mm on
+  22 mm (thin white border). Bars' codes went from 10 to 12 mm (inch) and 16 mm (metric), which took the poster bars from 4 to 16 of 20
+  found. The card finder took a bracket's L and a silhouette for cards until it refused quads near codes and ones not filled or not
+  nearly parallelogram.
+- **Where it shows.** Add a store-bought target: Markers in the photo (chosen by itself when found) and A bank card in the photo; four
+  brackets replace the corner finder's corners. Marking by hand, computer and phone: the scale is set from markers by itself. A card is
+  blanked in every copy at once, the marking is made on a blanked copy, and no picture with a card in it is ever sent.
+- **Not done:** the Features page's own picture (listed in docs/figures/SCREENSHOTS.md). Request 76: the figures on real paper.
+
 ## Entry 364: Alan's seven reference files
 
 - Every file read and recognized its own photograph (836 to 1511 features, layout 0.979 to 0.999) and none of the other six.

@@ -287,6 +287,7 @@ public static class MarkingFile
             scales = perBull.Scales.Select(s => new { bull = s.Bull, across = new { a = s.Across.A, b = s.Across.B, inches = s.Across.Inches }, upDown = s.UpDown is { } u ? new { a = u.A, b = u.B, inches = u.Inches } : null }),
             bulls = perBull.Bulls.Select(b => new { bull = b.Key, at = b.Value }),
         },
+        MarkerReference markers => new { kind = "markers", summary = markers.Summary, imageToInches = Enumerable.Range(0, 9).Select(i => markers.ImageToInches[i / 3, i % 3]).ToArray() },
         SheetReference sheet => new { kind = "sheet", summary = sheet.Summary, markersFound = sheet.MarkersFound, markersExpected = sheet.MarkersExpected, inches = sheet.RealInches ? "real" : "sheet", printScale = sheet.PrintScale, printScaleAcross = sheet.PrintScaleAcross, printScaleDown = sheet.PrintScaleDown, scaleFrom = sheet.ScaleFrom, mapping = MappingDocument(sheet.Mapping) },
         _ => null,
     };
@@ -388,6 +389,10 @@ public static class MarkingFile
         _ => null,
     };
 
+    internal static JsonNode? WriteScaleForTest(ScaleReference scale) => System.Text.Json.JsonSerializer.SerializeToNode(ScaleDocument(scale));
+
+    internal static ScaleReference? ReadScaleForTest(JsonNode? node) => ReadScale(node, []);
+
     private static ScaleReference? ReadScale(JsonNode? node, List<string> notes)
     {
         switch ((string?)node?["kind"])
@@ -403,6 +408,8 @@ public static class MarkingFile
                 return new PerBullReference(
                     [.. node!["scales"]!.AsArray().Select(s => new BullScale((int)s!["bull"]!, Length(s["across"]!), s["upDown"] is JsonObject u ? Length(u) : null))],
                     node["bulls"]!.AsArray().ToDictionary(b => (int)b!["bull"]!, b => Point(b!["at"])!.Value));
+            case "markers" when node!["imageToInches"] is JsonArray m && m.Count == 9:
+                return new MarkerReference(new Homography([.. m.Select(v => (double)v!)]), (string?)node["summary"] ?? "");
             case "sheet" when ReadMapping(node!["mapping"]) is { } mapping:
                 return new SheetReference(mapping, (string?)node["summary"] ?? "") { MarkersFound = (int?)node["markersFound"], MarkersExpected = (int?)node["markersExpected"], PrintScale = (double?)node["printScale"], PrintScaleAcross = (double?)node["printScaleAcross"], PrintScaleDown = (double?)node["printScaleDown"], ScaleFrom = (string?)node["scaleFrom"] };
             case "sheet":

@@ -3,6 +3,8 @@ using GroupLab.Cli.Imaging;
 using GroupLab.Core.Capture;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Marking;
+using GroupLab.Core.ScaleMarkers;
 using GroupLab.Core.StoreTargets;
 using OpenCvSharp;
 
@@ -74,6 +76,19 @@ public sealed class FingerprintSession : IDisposable
 
     public bool SheetTried { get; private set; }
 
+    /// <summary>Entry 365: the scale markers found in the photo, and what was said of any that could not be used.</summary>
+    public MarkerFinding? Markers { get; private set; }
+
+    public string? MarkersSaid { get; private set; }
+
+    /// <summary>A bank card found in the photo, already blanked out of every copy here (entry 365 section D).</summary>
+    public CardSighting? Card { get; private set; }
+
+    /// <summary>The printer check that printed markers are corrected by, and the boards measured: set by the screen before a photo is loaded.</summary>
+    public PrinterProfile? Printer { get; set; }
+
+    public IReadOnlyList<ScaleBoard> Boards { get; set; } = [];
+
     /// <summary>The target straightened, once the corners are confirmed.</summary>
     public StraightenedTarget? Target { get; private set; }
 
@@ -134,6 +149,7 @@ public sealed class FingerprintSession : IDisposable
         Height = grey.Height;
         (Shown, ShownScale) = Encode(colour);
         FindCorners();
+        ReadMarkers(choose: true);
         turnedBulls = null;
         PointA = PointB = null;
         Sheet = null;
@@ -157,6 +173,45 @@ public sealed class FingerprintSession : IDisposable
         CornersTried = found.Tried;
         cornerPixels = found.Found ? 2 : 3;
     }
+
+    /// <summary>
+    /// Entry 365: the markers and any card in the photo. A card is blanked out of the picture, its grey copies and the one shown before anything
+    /// else uses them; four brackets give the target's corners, so the corner finder's are replaced; and where markers were found they are the
+    /// scale chosen, as the Size step says, when <paramref name="choose"/>.
+    /// </summary>
+    private void ReadMarkers(bool choose)
+    {
+        if (grey is null || value is null || colour is null)
+        {
+            return;
+        }
+
+        var (finding, said, sighting) = ScaleMarkerFinder.Read(grey, colour, Printer, Boards, value);
+        Markers = finding;
+        MarkersSaid = said;
+        Card = sighting.Card;
+        if (sighting.Blanked is not null)
+        {
+            (Shown, ShownScale) = Encode(colour);
+        }
+
+        if (finding?.TargetCorners is { } corners)
+        {
+            Corners = [.. corners];
+            CornersFound = true;
+            CornersSaid = null;
+            cornerPixels = 1;
+        }
+
+        // Printed markers or a board are chosen by themselves; a card only by the person, since a box printed on a target can look like one.
+        if (choose && finding is not null && finding.Used.Any(u => u.Kind != MarkerKind.Card))
+        {
+            Source = ScaleSource.Markers;
+        }
+    }
+
+    /// <summary>The card alone, for the Size step's own choice of it.</summary>
+    private MarkerFinding? CardOnly => Card is null ? null : ScaleMarkerReading.Read([], Card, null, []).Finding;
 
     /// <summary>
     /// Entry 362 section 5: the picture turned a quarter turn, for a photo whose orientation tag is missing or wrong or a target photographed
@@ -189,6 +244,7 @@ public sealed class FingerprintSession : IDisposable
             Corners = [.. Enumerable.Range(0, 4).Select(i => before[(first + i) % 4])];
         }
 
+        ReadMarkers(choose: false);
         PointA = PointA is { } a ? Upright.Turn(a, clockwise, w, h) : null;
         PointB = PointB is { } b ? Upright.Turn(b, clockwise, w, h) : null;
         Sheet = null;
@@ -371,6 +427,8 @@ public sealed class FingerprintSession : IDisposable
         {
             ScaleSource.PrintedSize => WidthInches is > 0 && HeightInches is > 0 ? null : FingerprintWords.NeedSize,
             ScaleSource.GroupLabSheet => Sheet is null ? FingerprintWords.NeedSheet : null,
+            ScaleSource.Markers => Markers is null ? MarkersSaid ?? ScaleMarkerWords.NeedMarkers : null,
+            ScaleSource.Card => Card is null ? ScaleMarkerWords.NeedCard : null,
             _ => Placed == 2 && Distance is > 0 && Apart(PointA!.Value, PointB!.Value) >= 10 ? null : FingerprintWords.NeedPoints,
         },
         FingerprintStep.Bulls => Bulls.Count == 0 ? FingerprintWords.NeedBull : null,
@@ -430,6 +488,8 @@ public sealed class FingerprintSession : IDisposable
             {
                 ScaleSource.PrintedSize => TargetStraightening.FromPrintedSize(Corners, WidthInches!.Value, HeightInches!.Value, cornerPixels),
                 ScaleSource.GroupLabSheet => TargetStraightening.FromGroupLabSheet(Sheet!.Value.Plane, Corners, Sheet.Value.ResidualInches, Sheet.Value.SheetInches, printerMeasured: false),
+                ScaleSource.Markers => TargetStraightening.FromMarkers(Markers!, Corners, Width, Height, metadata),
+                ScaleSource.Card => TargetStraightening.FromMarkers(CardOnly!, Corners, Width, Height, metadata),
                 _ => TargetStraightening.FromTwoPoints(Corners, PointA!.Value, PointB!.Value, Distance!.Value, Width, Height, metadata),
             };
         }

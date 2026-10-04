@@ -173,7 +173,7 @@ public sealed partial class MainWindow
     private TargetPackage? PackageFor(ConsentLevel level, string? sentState = null)
     {
         var state = session.State;
-        if (state.ImagePath is not { } path || !File.Exists(path))
+        if (state.ImagePath is not { } path || !File.Exists(path) || path == cardNotBlanked || HasCard(path))
         {
             return null;
         }

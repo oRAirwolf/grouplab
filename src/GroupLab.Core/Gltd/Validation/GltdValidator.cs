@@ -416,6 +416,13 @@ public static class GltdValidator
                     $"The assembly needs {assignment.AssemblyCount} markers and the family holds {dictionary}, so identifiers repeat and only the tile index disambiguates them (section 3.7).", "34");
             }
 
+            // Entry 365: the top of tag36h11 is kept for scale markers, so a photo cannot take a sheet's marker for one or one for a sheet's.
+            if (f.Family == FiducialFamily.AprilTag36h11 && Math.Min(assignment.AssemblyCount, dictionary) > ScaleMarkers.ScaleMarkerLayout.First)
+            {
+                Warn("validate.markerIdsReserved", "/fiducials",
+                    $"The assembly's markers reach identifier {ScaleMarkers.ScaleMarkerLayout.First}; {ScaleMarkers.ScaleMarkerLayout.First} to {ScaleMarkers.ScaleMarkerLayout.Last} are kept for GroupLab's scale markers, and a photo could take one of these for a scale marker.", "34");
+            }
+
             if (f.Markers is { } stored && !stored.SequenceEqual(assignment.Markers))
             {
                 Error("validate.markersMismatch", "/fiducials/markers",

@@ -63,7 +63,8 @@ public sealed record SheetLook(int Markers, IReadOnlyList<IReadOnlyList<PointD>>
         foreach (double side in new[] { guess, 2 * guess, guess * Measurement.SheetMeasurer.FarGuess })
         {
             var found = backend.DetectMarkers(image, new MarkerDetectionOptions(MarkerFamily.AprilTag36h11, side));
-            markers = Math.Max(markers, found.Markers.Select(m => m.Id).Concat(found.Rejected.Select(r => r.Id)).Distinct().Count());
+            // Entry 365: scale markers beside a target are not a GroupLab sheet's; their codes are kept apart for that.
+            markers = Math.Max(markers, found.Markers.Select(m => m.Id).Concat(found.Rejected.Select(r => r.Id)).Where(id => !ScaleMarkers.ScaleMarkerLayout.IsMarker(id)).Distinct().Count());
             if (markers >= LeastMarkers)
             {
                 break;

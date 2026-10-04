@@ -221,6 +221,7 @@
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"
     },
+    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.", "shot": null, "noPicture": "waiting for the screenshot walk's picture of Targets, Scale markers (docs/figures/SCREENSHOTS.md)", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"noPicture": "the phone's Scale markers card is photographed at the next sitting with the phone"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it"], "guide": "1-print-a-sheet"},
     {
       "key": "add-store-target",
       "group": "Reading a target",

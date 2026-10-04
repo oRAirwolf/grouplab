@@ -8,6 +8,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using GroupLab.App.Diagnostics;
+using GroupLab.Core.ScaleMarkers;
 using GroupLab.App.Theme;
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd.Model;
@@ -49,9 +50,10 @@ public sealed class FingerprintStepsView : UserControl
 
     /// <param name="sheets">The GroupLab sheets a sheet in the photo is identified among.</param>
     /// <param name="leave">Back to Targets.</param>
-    public FingerprintStepsView(Func<IReadOnlyList<TargetDefinition>> sheets, Action leave)
+    public FingerprintStepsView(Func<IReadOnlyList<TargetDefinition>> sheets, Action leave, AppSettingsStore? settings = null)
     {
-        session = new FingerprintSession(sheets);
+        // Entry 365: printed markers are corrected by the chosen printer's check, and a board's stickers are found by the boards measured.
+        session = new FingerprintSession(sheets) { Printer = settings?.LoadChosenPrinter(), Boards = settings?.LoadBoards() ?? [] };
         this.leave = leave ?? throw new ArgumentNullException(nameof(leave));
         AutomationProperties.SetName(picture, "The photo of the target");
         AutomationProperties.SetName(name, FingerprintWords.NameBox);
@@ -80,7 +82,7 @@ public sealed class FingerprintStepsView : UserControl
         width.TextChanged += (_, _) => session.WidthInches = Number(width.Text);
         height.TextChanged += (_, _) => session.HeightInches = Number(height.Text);
         distance.TextChanged += (_, _) => session.Distance = Number(distance.Text);
-        foreach (var source in new[] { ScaleSource.PrintedSize, ScaleSource.GroupLabSheet, ScaleSource.TwoPoints })
+        foreach (var source in new[] { ScaleSource.Markers, ScaleSource.PrintedSize, ScaleSource.GroupLabSheet, ScaleSource.TwoPoints, ScaleSource.Card })
         {
             var radio = new RadioButton { GroupName = "fingerprint-scale", IsChecked = source == session.Source, VerticalContentAlignment = VerticalAlignment.Top };
             AutomationProperties.SetName(radio, FingerprintWords.Choice(source));
@@ -426,6 +428,15 @@ public sealed class FingerprintStepsView : UserControl
                     if (source == ScaleSource.PrintedSize)
                     {
                         inside.Children.Add(new WrapPanel { Children = { Detach(width), Small(FingerprintWords.By), Detach(height), Small(FingerprintWords.Inches) } });
+                    }
+                    else if (source == ScaleSource.Markers)
+                    {
+                        // Entry 365: what was found, as soon as the photo was read.
+                        inside.Children.Add(Line(session.Markers is { } m ? m.Says(m.UncertaintyAt(session.Corners)) : session.MarkersSaid ?? ScaleMarkerWords.NeedMarkers));
+                    }
+                    else if (source == ScaleSource.Card && session.Card is not null)
+                    {
+                        inside.Children.Add(Line(ScaleMarkerWords.CardBlanked));
                     }
                     else if (source == ScaleSource.TwoPoints && session.Source == ScaleSource.TwoPoints)
                     {

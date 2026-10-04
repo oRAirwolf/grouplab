@@ -9,28 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 05:20 UTC, after entry 362's follow-up; the inbox is empty.
+**Last rewritten:** 2026-10-04 11:00 UTC, after entry 365; entry 363's section 3 queue (3.3 to 3.5) is next.
 
 ---
 
 ## In flight
 
-- **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 62% of the
-  week at 03:06 UTC. Plan each block to end under 85% (entry 360 section 2, costs in the local docs/notes/usage-log.md). The hook
-  `scripts/usage-guard.js` blocks from 85 unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
-- **Entries 358 and 359 done but for the radio:** label pages, the thermal print mode, the X6 labels and check label (merged from
-  the worker), the printer framework in `src/GroupLab.Core/Printing/Labels` (profiles in `printers.json`, four encoders, a paced
-  job), the darkness test page and rule, the heat and sun warning. **Not built:** any platform's Bluetooth or USB link (no printer
-  to record until requests 72 and 73), density and speed on the print panel, the low battery warning, reading a darkness photo.
-- **The Android real taps red on 2cce12a1 was the emulator, not GroupLab:** its launcher hung and the "isn't responding" box took
-  the taps. Both emulator scripts now switch those boxes off; dispatched run 37173283370 proves it.
-- **Entry 362 done** (store-bought targets: upright photos, a new corner finder `StoreTargetOutline`, zoom, magnifier, snap with Undo,
-  Rotate), for nightly 165. Four of Alan's five counter photos found, the Rigid crosshair a close guess; request 74 asks for a wooden
-  table photo; question 82 on the shared loaders. `grouplab outline-trial <photos> -o <folder>` draws what the finder found.
-- **Entry 362's follow-up done** (2026-10-04): six of Alan's seven photos found; the bull finder finds no bulls on the sight-in
-  grids or the splash bull (added by hand on The bulls). The inbox is empty.
-- **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 (steps for Unholy's
-  4x6 printer) and 73 (the M834's recordings, Bluetooth only), 74 (a kitchen table photo). **Waiting on planning:** questions 79, 81 and 82.
+- **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 69% of the
+  week at 09:33 UTC. Plan each block to end under 85% (entry 360 section 2). The hook `scripts/usage-guard.js` blocks from 85
+  unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
+- **Entry 363**: sections 1, 2 (the M834 files, the recording reader; the list at the top of for-alan) and 3.1 (aiming marks) and
+  3.2 (issue 19's real cause, Next took the focus) done; an iOS simulator run (37190923013) was dispatched to prove 3.2 before
+  closing issue 19. **Left:** 3.3 the sheet-look speed, 3.4 the phone's page failures as the centred dialog, 3.5 the phone sender.
+- **Entry 364 done**: four of Alan's reference files in the library (nine recognized), three held with request 75.
+- **Entry 365 done but the Features picture**: scale markers A to D on both platforms, `grouplab marker-trial` measured them
+  (board 0.015 percent, bar 0.06, brackets 0.07 on 12 in and 0.2 on a poster, card 0.15); request 76 for real paper.
+- **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
+- **Waiting on Alan:** requests 70, 72, 73 (the M834's recordings), 74, 75, 76, and "forms updated" for the phones' sharing switches.
 
 ## The next three
 
@@ -48,12 +43,12 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Performance** (Phase 9): the baseline gate and any optimization; waits for planning to say the application has settled.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft published, carrying 0.2.0, new submissions on request 66; Google Play past internal test is Alan's call; Test Lab waits on request 62.
-- **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; five are recognized by fingerprint.
+- **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Speed up the "looks like a GroupLab sheet" test (5.4 s on a picture with no GroupLab marks), and make the phone's page failures sheets.
-2. The phone pictures of the fingerprint and pairing screens, at the next sitting with a phone.
-3. Each nightly's notes need placing in `website/features.json`, or the site stops building (144's went to notFeatures).
+1. Entry 363 section 3.3: the "looks like a GroupLab sheet" check, 5.4 s on a picture with no marks; scale markers are now left out of it.
+2. Entry 363 sections 3.4 and 3.5: the phone's page failures as the centred dialog, then the phone sender (ships after "forms updated").
+3. The Features page's picture of Targets, Scale markers (a step in Entry109Tests), and the phone pictures at the next sitting.
 
 ## Blocked, and on what
 
@@ -61,7 +56,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **20** (74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **21** (76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -81,10 +76,10 @@ Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.158 (2026-10-02): entry 352.
+- **Last nightly:** 0.2.0-nightly.166 (2026-10-04): entry 363 section 2, the M834 files.
 - **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
-- Crash reports open: **issue 19**, a tester on build 153 (iPhone): on Targets, Made for your optic, the keyboard bar's Next
-  goes to the next section, not the next box; needs the iOS simulator's taps or a device (`KeyboardRoom.Following`). No entry covers it.
+- Crash reports open: **issue 19** (iPhone, the keyboard bar's Next): fixed in ee435491, Next no longer takes the focus; closed
+  once the simulator's real taps pass.
 
 ## The inbox
 
@@ -93,7 +88,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 363 (its section 3 queue).
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -116,4 +111,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
 - **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a
   push that should make a nightly must not be one.
+- **Tag36h11 555 to 586 are scale markers' (entry 365)**: the sheets' markers must stay below; the sheet look and the validator know.
+- **A picture with a bank card in it is never sent**, and marking by hand works on a blanked copy (entry 365 section D).
 - **Entry 317's budget is in force:** one worker by default, the ccusage line once a day in for-alan.md.

@@ -307,5 +307,8 @@ public sealed partial class MainWindow
         pendingDetection = null;
         SetTool(MarkingTool.Length);
         status.Text = OpeningWords.ByHandStatus;
+
+        // Entry 365: markers in the photo set the scale by themselves.
+        ScaleFromMarkers();
     }
 }

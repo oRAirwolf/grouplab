@@ -25,6 +25,78 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 365: scale markers beside a target, all four concepts (A, B, C and D)
+
+**Status: done 2026-10-04, except the Features page's own picture** (the screenshot walk needs a step for Targets, Scale markers; listed in docs/figures/SCREENSHOTS.md). All four built on the computer and the phone, measured by `grouplab marker-trial` (docs/PHASE1-RESULTS.md, entry 365), the app's words using the measured figures; request 76 asks for the real-paper photos.
+
+Alan, 2026-10-04 08:48 UTC: "Can you make some concepts for rulers or markers that I can place beside a target so you can figure out
+the scale without me having to do it?" Concepts: claude.ai/artifact/RGsLxip8s9i5pQ29YZnVsF (boards Main, Brackets, Bar, Backer, Card).
+Alan, 08:55 UTC: **"A, B, C, and D"**: build all four. After entries 363 (the M834 first) and 364, before 363 section 3's queue. Main
+model; entry 360's budget; workers only for truly separate parts.
+
+### 0. One engine, four kinds of marker
+
+Every kind is "something in the photo whose true size or spacing GroupLab knows". Build one marker finder that looks for all of them in
+any photo, on the desktop and the phone, and returns the scale, its uncertainty and, where the kind allows, the plane (the camera's
+angle) and the target's corners. When several are present, use the best or combine them, and say which. Use AprilTag `tag36h11` as the
+sheets do (docs/FIDUCIAL-DECISION.md), from an ID range reserved for markers so a marker can never be taken for a sheet's code or the
+reverse; check the range against every ID the sheets already use. Each printed marker states its kind and size in its codes or a short
+printed line, never only in the app.
+
+Where markers count: **Add a store-bought target** (the Size and scale step offers "Markers in the photo", chosen by itself when found,
+with what was measured), **any-target mode / Find holes**, and **the analysis of a shot target** that GroupLab does not know (C above
+all). A GroupLab sheet's own codes still come first on a GroupLab sheet.
+
+Printed markers (A, B, C) are corrected by the chosen printer's check like any GroupLab print, and say so when no check exists.
+
+### A. Corner brackets (board "Brackets")
+
+One Letter or A4 page: four L-shaped pieces with cut lines, each with two codes a known distance apart and a printed number 1 to 4.
+Tucked against the target's corners, they give scale, the plane, and the target's four corners exactly: the inside corner of each L is
+the target's corner, so the corner finder is not needed when all four are found (fall back to it, and to partial brackets, when fewer
+are). Pieces may sit slightly under the target's edge; say in the guide that they must lie flat on the same surface.
+
+### B. A scale bar (board "Bar")
+
+One Letter page, printed sideways: two bars, each with a code at both ends whose centres are 10.000 in apart (a metric version, 250 mm,
+on A4), inch or centimetre marks and a printed line so a person can read it too. One bar gives scale along it; two bars at right angles
+(an L) give the plane as well; two laid end to end, their codes saying which is which, give 20 in for a poster target. Choose code size
+and margins so the whole bar prints inside common printers' margins; say if a printer cannot.
+
+### C. A measured backer (board "Backer")
+
+Four code stickers (printable on adhesive labels, including the label printers of entry 358, or taped on) placed near the corners of a
+target board. **Once:** photograph the board with a GroupLab sheet on it; GroupLab measures where the stickers are and saves it under a
+name ("Board 1"), several boards allowed. **After:** any photo with those stickers gets scale and plane with nothing placed or typed.
+Check every time that the four still agree with the saved layout (cardboard bends and swells); when they do not, say so and offer to
+measure again. Boards are saved settings, kept with the rest, synced or exported like them.
+
+### D. Nothing printed: a bank card (board "Card")
+
+An ID-1 card (ISO/IEC 7810: 85.60 by 53.98 mm, corner radius about 3.18 mm), the size of any bank card, driver's license or gift card,
+laid flat on or beside the target, **back side up**. Find its rounded rectangle and take the scale from it; say plainly that it is the
+least accurate and why (small, rounded corners, its thickness). **Privacy, without exception:** the card's area is never kept, shown in
+a saved or exported picture, logged or sent: blank it in every stored copy and every submission, and say so on screen. Never try to
+read anything on a card.
+
+### Printing and the words
+
+- On Targets, under a "Scale markers" heading: the bracket page, the scale bar page and the backer stickers, Letter and A4, at actual
+  size, with the thermal print mode where the printer is thermal. The card needs nothing printed; it is a choice in the Size step.
+- The user guide, the tour and the Features page: one short section, with the four as the concepts show them.
+- Anything that needs a layout not drawn on the canvas: DESIGN NEEDED as usual, and carry on with the rest.
+
+### Accuracy, measured, not guessed
+
+The canvas's accuracy lines are planning estimates. Measure each kind on rendered photos at several angles and distances (the way entry
+344 measured the poster sources), report the real figures, and use those in the app's words, never the estimates. Then write one request
+for Alan: print the bracket page and the bar page, set up a backer with four stickers, and photograph a known target with each (and one
+with a bank card back side up), so the figures are checked on real paper.
+
+### Tell Alan
+
+In for-alan.md: what each kind gives, the measured accuracy, which nightly carries it, and the request.
+
 ## 2026-10-04, entry 364: Alan's seven reference files, for the shared library
 
 **Status: done 2026-10-04.** All seven files read, each recognizes its own photograph and no other, and their bulls sit on the marks (the Shoot-N-C's a quarter turn round, as the build Alan used stored photos sideways). Added with maker, catalogue and a name that says what it is: the Shoot-N-C 12 in 5-bull sight-in (BC-34207), the Eze-Scorer 12 in sight-in grid ("Green", BC-37087), the Rigid crosshair and the National Target Company ST-4; the ids stay Alan's, since each fingerprint carries its own. Held: the splash bull and the Eze-Scorer bullseye ("Green 2") at about 7 percent, and the EZ Aim at 1.86 percent until a tape measure; by its own printed inch squares its paper is about 13.6 by 12.5 in, larger than the 12 in grid. Request 75. The two-points choice now says to measure far apart (there was no 1 in default), and the last step warns past 2 percent.

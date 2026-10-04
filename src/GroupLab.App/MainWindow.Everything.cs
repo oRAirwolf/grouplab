@@ -135,7 +135,7 @@ public sealed partial class MainWindow
         }
 
         ForgetOpenPicture();
-        if (path is null || !SendingEverything || !File.Exists(path))
+        if (path is null || !SendingEverything || !File.Exists(path) || HasCard(path))
         {
             return;
         }

@@ -1,4 +1,4 @@
-**Open: 20.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 21.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 Working from the terminal, 4 October, at 65% of the week (a live reading); entry 363: the M834 is ready, then the queue in its section 3.
 
 **THE STORE FORMS, SO THE PHONES CAN SEND MORE** (request 71, answered "switch both on"; entry 363). On the computer both are on
@@ -8,6 +8,16 @@ from nightly 166. The phones keep both off until you write **"forms updated"**. 
 - **Google Play, Data safety:** keep App info and performance (crash logs, diagnostics) and Device or other IDs; **add App activity, App
   interactions**. All: collected, optional, encrypted in transit, not shared.
 - **Later, with the phone's sender (question 81, last in the queue):** Photos, in both, when that build is ready; I will say when.
+
+**SCALE MARKERS, ALL FOUR** (entry 365, not a request; in nightly 167 or the first after it whose notes say so). On Targets, under
+Scale markers: **corner brackets** (A), four L pieces cut from one page, give the scale, the camera's angle and the target's corners;
+**scale bars** (B), codes 10.000 in apart (250 mm on A4), one for the scale, two in an L for the angle too; **board stickers** (C),
+four on your backer measured once with Measure a board, then every photo of a target on it has its scale with nothing placed; and a
+**bank card** (D), back side up, nothing printed, blanked out of the photo at once and never kept or sent. They count in Add a
+store-bought target (Markers in the photo, chosen by itself) and when you mark a target by hand. Measured on computer-made photos,
+before any printer error: board 0.015 percent, bar 0.06, brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, card 0.15
+(found in 30 of 40). Printed markers lean on your printer check; without one they can be off by up to 1.5 percent. Request 76 checks
+all this on real paper. Not yet done: the Features page's picture of it (the screenshot walk needs a step for it).
 
 **YOUR SEVEN REFERENCE FILES** (entry 364, not a request; in the library from nightly 167). Each file recognizes its own photo and none
 of the others, and its bulls sit on the marks. **Added (4):** Birchwood Casey Shoot-N-C 12 in 5-bull sight-in (BC-34207), Eze-Scorer
@@ -188,6 +198,20 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
+
+**Why:** every accuracy figure for the four scale markers comes from computer-made photos with a perfect print; real paper, a real
+printer and a real card decide whether they hold.
+**Steps,** with nightly 167 or later (Targets, Scale markers, on the computer):
+1. Print **corner brackets** and **scale bars** on Letter at Actual size, with your printer check in place if you have one. Cut them out.
+2. Print **board stickers**, stick the four of set A near the corners of a target backer, then **Measure a board** with any GroupLab
+   sheet lying on the backer among them.
+3. Photograph one target you know the size of (a Shoot-N-C 12 in, say), from where you would normally stand, four times: with the
+   four brackets tucked against its corners; with one bar along its bottom edge; on the measured backer with nothing else; and with a
+   bank card back side up beside it. Then open each in Add a store-bought target and write down the line under Markers in the photo.
+**A good answer:** the four photos in `C:\Dev\grouplab-local\scale-markers\`, and the four lines GroupLab showed, such as "Scale from
+4 corner brackets in the photo: good to about 0.15 percent."
 
 ## 75. Two reference files again, and a tape measure on two sheets, fifteen minutes, whenever suits (entry 364)
 

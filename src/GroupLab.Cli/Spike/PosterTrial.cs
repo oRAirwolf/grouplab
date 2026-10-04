@@ -24,9 +24,9 @@ public static class PosterTrial
 {
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
-    private const int Width = 4000, Height = 3000;
+    internal const int Width = 4000, Height = 3000;
 
-    private const double Focal = 2900, PosterDpi = 150;
+    internal const double Focal = 2900, PosterDpi = 150;
 
     public static int Run(IReadOnlyList<string> args, TextWriter output, TextWriter error)
     {
@@ -184,14 +184,14 @@ public static class PosterTrial
 
     private static double Distance(PointD a, PointD b) => Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
 
-    private static double Gauss(Random rng, double sigma)
+    internal static double Gauss(Random rng, double sigma)
     {
         double u1 = 1 - rng.NextDouble(), u2 = rng.NextDouble();
         return sigma * Math.Sqrt(-2 * Math.Log(u1)) * Math.Cos(2 * Math.PI * u2);
     }
 
     /// <summary>A poster GroupLab draws: a coloured ground, a border, bulls of rings with their numbers, words, a silhouette and a scoring grid.</summary>
-    private static Mat Draw(double w, double h, Random rng)
+    internal static Mat Draw(double w, double h, Random rng)
     {
         int pw = (int)(w * PosterDpi), ph = (int)(h * PosterDpi);
         var grounds = new[] { new Scalar(235, 240, 245), new Scalar(200, 230, 245), new Scalar(190, 235, 200) };
@@ -283,7 +283,7 @@ public static class PosterTrial
     }
 
     /// <summary>A flat picture at <paramref name="dpi"/> warped onto the photograph, its own inches taken by <paramref name="inchesToImage"/>.</summary>
-    private static void Place(Mat photo, Mat picture, double dpi, double[] inchesToImage)
+    internal static void Place(Mat photo, Mat picture, double dpi, double[] inchesToImage)
     {
         double[] h = Multiply(inchesToImage, [1 / dpi, 0, 0, 0, 1 / dpi, 0, 0, 0, 1]);
         double scale = Math.Sqrt(Math.Abs((h[0] * h[4]) - (h[1] * h[3])));
@@ -295,7 +295,7 @@ public static class PosterTrial
         Cv2.WarpPerspective(small, photo, hm, photo.Size(), InterpolationFlags.Linear, BorderTypes.Transparent);
     }
 
-    private static double[] Rodrigues(double rx, double ry)
+    internal static double[] Rodrigues(double rx, double ry)
     {
         double theta = Math.Sqrt((rx * rx) + (ry * ry));
         if (theta < 1e-12)
@@ -307,9 +307,9 @@ public static class PosterTrial
         return [c + (kx * kx * v), kx * ky * v, ky * s, kx * ky * v, c + (ky * ky * v), -kx * s, -ky * s, kx * s, c];
     }
 
-    private static double[] RotZ(double a) => [Math.Cos(a), -Math.Sin(a), 0, Math.Sin(a), Math.Cos(a), 0, 0, 0, 1];
+    internal static double[] RotZ(double a) => [Math.Cos(a), -Math.Sin(a), 0, Math.Sin(a), Math.Cos(a), 0, 0, 0, 1];
 
-    private static double[] Multiply(double[] a, double[] b)
+    internal static double[] Multiply(double[] a, double[] b)
     {
         var r = new double[9];
         for (int i = 0; i < 3; i++)

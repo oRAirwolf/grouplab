@@ -77,6 +77,16 @@ internal sealed class MarkingAPage : UserControl
         if (existing is not null && (existing.Scale is not null || existing.Bulls.Count > 0))
         {
             session.Load(existing);
+            if (existing.Calibre is null)
+            {
+                session.SetCalibre(setup.Calibre);
+            }
+
+            if (existing.ShotDistanceInches is null)
+            {
+                session.SetShotDistance(setup.DistanceInches);
+            }
+
             step = existing.Scale is null || checkTheScale ? Step.Scale : Step.Aim;
         }
         else
@@ -110,6 +120,18 @@ internal sealed class MarkingAPage : UserControl
         column.Children.Add(Screens.Choice("Cancel", cancel));
         Content = new ScrollViewer { Content = column };
         Show();
+    }
+
+    /// <summary>
+    /// Entry 365: marking by hand, the markers in the photo looked for first. Where they give a scale the page opens at the point of aim;
+    /// a card is blanked into a copy, which is what is marked.
+    /// </summary>
+    internal static async Task<MarkingAPage> ByHand(string path, int? orientation, ShotSetup setup, UnitSettings units, Action<PhoneResult> done, Action cancel)
+    {
+        var printer = Phone.Settings.LoadChosenPrinter();
+        var boards = Phone.Settings.LoadBoards();
+        var (state, said, use) = await Task.Run(() => GroupLab.Cli.Library.ScaleMarkerFinder.ForMarking(path, orientation, printer, boards, Path.Combine(PhoneAnalysis.Files, "blanked")));
+        return new MarkingAPage(use, orientation, setup, units, done, cancel, state, said: said);
     }
 
     private int Shots => session.State.Shots.Count(s => s.IsShot);

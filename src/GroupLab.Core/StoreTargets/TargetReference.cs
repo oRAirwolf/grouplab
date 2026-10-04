@@ -24,6 +24,12 @@ public enum ScaleSource
 
     /// <summary>A 600 dpi flatbed scan, as the first five products were made.</summary>
     Scan,
+
+    /// <summary>Entry 365, A to C: corner brackets, scale bars or a measured board's stickers in the photo.</summary>
+    Markers,
+
+    /// <summary>Entry 365, D: a bank card, back side up, in the photo.</summary>
+    Card,
 }
 
 /// <summary>
@@ -189,6 +195,73 @@ public static class TargetStraightening
         double u = 2 * Math.Sqrt((taps * taps) + Math.Pow(TypedInches / inches, 2) + (shape * shape));
         return new StraightenedTarget(new HomographyPlane(h), ScaleSource.TwoPoints, aspect * k, k, u, Said(ScaleSource.TwoPoints, u,
             string.Create(CultureInfo.InvariantCulture, $"two points {inches:0.###} in apart, the corners taking out the angle ({angle.Degrees:0} degrees, the shape from {CameraGeometry.Describe(angle.Focal)})")));
+    }
+
+    /// <summary>
+    /// Entry 365: markers in the photo. Where they fix the surface (brackets, a board, two bars in an L), the target is straightened by their
+    /// plane and its doubt is the fit's at the target's corners; where they give only a scale (one bar, bars in a line, a card), the corners
+    /// give the shape as for two points, and the markers' known lengths the size.
+    /// </summary>
+    public static StraightenedTarget FromMarkers(ScaleMarkers.MarkerFinding finding, IReadOnlyList<PointD> corners, int width, int height, ImageMetadata? metadata)
+    {
+        ArgumentNullException.ThrowIfNull(finding);
+        ArgumentNullException.ThrowIfNull(corners);
+        var source = finding.Used.All(u => u.Kind == ScaleMarkers.MarkerKind.Card) ? ScaleSource.Card : ScaleSource.Markers;
+        if (finding.ScaleOnly && finding.Lengths.Count > 0)
+        {
+            double pixels = source == ScaleSource.Card ? ScaleMarkers.ScaleMarkerReading.CardPixels : ScaleMarkers.ScaleMarkerReading.TagPixels;
+            return FromKnownLengths(corners, finding.Lengths, pixels, width, height, metadata, source,
+                Math.Sqrt((finding.Print * finding.Print) + (finding.Extra * finding.Extra)), finding);
+        }
+
+        var plane = StraightenedTarget.Anchored(finding.Plane, corners, out double w, out double h);
+        double u = finding.UncertaintyAt(corners);
+        var byPlane = new StraightenedTarget(plane, source, w, h, u, finding.Says(u));
+
+        // Bars or a card beside brackets or a board: their lengths with the corners' shape may be the better of the two, and the doubt says which.
+        if (finding.Lengths.Count > 0 && finding.TargetCorners is null)
+        {
+            double pixels = source == ScaleSource.Card ? ScaleMarkers.ScaleMarkerReading.CardPixels : ScaleMarkers.ScaleMarkerReading.TagPixels;
+            var byLengths = FromKnownLengths(corners, finding.Lengths, pixels, width, height, metadata, source,
+                Math.Sqrt((finding.Print * finding.Print) + (finding.Extra * finding.Extra)), finding);
+            return byLengths.Uncertainty < byPlane.Uncertainty ? byLengths : byPlane;
+        }
+
+        return byPlane;
+    }
+
+    /// <summary>
+    /// Known lengths in the photo with the corners giving the shape: <see cref="FromTwoPoints"/> with every length at once, each point found to
+    /// <paramref name="pointPixels"/>, and <paramref name="fixedDoubt"/> (the print scale, a card's thickness) that no number of points shrinks.
+    /// </summary>
+    internal static StraightenedTarget FromKnownLengths(IReadOnlyList<PointD> corners, IReadOnlyList<(PointD A, PointD B, double Inches)> lengths, double pointPixels,
+        int width, int height, ImageMetadata? metadata, ScaleSource source, double fixedDoubt, ScaleMarkers.MarkerFinding finding)
+    {
+        var unit = HomographyEstimate.Fit([new(0, 0), new(1, 0), new(1, 1), new(0, 1)], corners)
+            ?? throw new ArgumentException("the four corners do not make a rectangle's image", nameof(corners));
+        var angle = CameraGeometry.Measure(unit, width, height, metadata);
+        double aspect = angle.Aspect;
+        var shaped = HomographyEstimate.Fit(corners, [new(0, 0), new(aspect, 0), new(aspect, 1), new(0, 1)])!;
+
+        // Each length says how many inches the shaped unit is; weighted by its length in the photo, which is how much it can be trusted.
+        double weights = 0, sum = 0, pixelsTotal = 0;
+        foreach (var (a, b, inches) in lengths)
+        {
+            double measured = StraightenedTarget.Distance(shaped.Apply(a), shaped.Apply(b));
+            double pixels = StraightenedTarget.Distance(a, b);
+            sum += pixels * inches / measured;
+            weights += pixels;
+            pixelsTotal += pixels * pixels;
+        }
+
+        double k = sum / weights;
+        var h = Homography.Compose(shaped, new Homography([k, 0, 0, 0, k, 0, 0, 0, 1]));
+        double points = Math.Sqrt(2) * pointPixels / Math.Sqrt(pixelsTotal);
+        double focal = angle.Focal switch { FocalSource.Camera => 0.01, FocalSource.Solved => 0.03, _ => 0.1 };
+        double shape = Math.Pow(Math.Tan(angle.Degrees * Math.PI / 180), 2) * focal;
+        double u = Math.Sqrt(Math.Pow(2 * points, 2) + Math.Pow(2 * shape, 2) + (fixedDoubt * fixedDoubt));
+        return new StraightenedTarget(new HomographyPlane(h), source, aspect * k, k, u, finding.Says(u).Replace(" in the photo:", string.Create(CultureInfo.InvariantCulture,
+            $" in the photo, the corners taking out the angle ({angle.Degrees:0} degrees):"), StringComparison.Ordinal));
     }
 
     private static IEnumerable<double> Sides(IReadOnlyList<PointD> c) =>

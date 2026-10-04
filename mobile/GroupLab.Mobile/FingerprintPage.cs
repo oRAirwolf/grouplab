@@ -23,7 +23,12 @@ namespace GroupLab.Mobile;
 /// </summary>
 internal sealed class FingerprintPage : UserControl
 {
-    private readonly FingerprintSession session = new(PhoneAnalysis.Library, GroupLab.Core.Imaging.WorkingSize.PhoneMegapixels * 2);
+    // Entry 365: printed markers are corrected by the chosen printer's check, and a board's stickers are found by the boards measured.
+    private readonly FingerprintSession session = new(PhoneAnalysis.Library, GroupLab.Core.Imaging.WorkingSize.PhoneMegapixels * 2)
+    {
+        Printer = Phone.Settings.LoadChosenPrinter(),
+        Boards = Phone.Settings.LoadBoards(),
+    };
     private readonly Action leave;
     private readonly FingerprintPicture picture = new() { Reach = 32 };
     private readonly TextBlock said = Screens.Line("");
@@ -317,7 +322,7 @@ internal sealed class FingerprintPage : UserControl
                 bottom = Next(step);
                 break;
             case FingerprintStep.Scale:
-                foreach (var source in new[] { ScaleSource.PrintedSize, ScaleSource.GroupLabSheet, ScaleSource.TwoPoints })
+                foreach (var source in new[] { ScaleSource.Markers, ScaleSource.PrintedSize, ScaleSource.GroupLabSheet, ScaleSource.TwoPoints, ScaleSource.Card })
                 {
                     column.Children.Add(Source(source));
                 }
@@ -463,6 +468,14 @@ internal sealed class FingerprintPage : UserControl
         if (source == ScaleSource.PrintedSize)
         {
             inside.Children.Add(new WrapPanel { Children = { Screens.Detach(width), Words(FingerprintWords.By), Screens.Detach(height), Words(FingerprintWords.Inches) } });
+        }
+        else if (source == ScaleSource.Markers)
+        {
+            inside.Children.Add(Screens.Line(session.Markers is { } m ? m.Says(m.UncertaintyAt(session.Corners)) : session.MarkersSaid ?? GroupLab.Core.ScaleMarkers.ScaleMarkerWords.NeedMarkers));
+        }
+        else if (source == ScaleSource.Card && session.Card is not null)
+        {
+            inside.Children.Add(Screens.Line(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardBlanked));
         }
         else if (source == ScaleSource.TwoPoints && chosen)
         {
