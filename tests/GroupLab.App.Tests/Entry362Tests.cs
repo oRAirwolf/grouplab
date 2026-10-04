@@ -227,6 +227,44 @@ public class Entry362Tests
     }
 
     /// <summary>
+    /// Entry 363 section 3.1: the aiming marks the red finder did not see, on Alan's photographs at 12 by 12 in and on the Birchwood scans at
+    /// the size their corners measure: the five diamonds of the EZ Aim and the ST-4 sight-in grids, the splash bull's centre, and on the scans
+    /// exactly the marks of each target, no repair paster. Still missed and so not held here: the Rigid crosshair's centre, and three of
+    /// the Eze-Scorer grid's five dots.
+    /// </summary>
+    [Theory]
+    [InlineData("corner-photos-2026-10-03/allen-ezaim-sight-in-55134A.jpg", "2.2,1.6 10.2,1.6 6.2,5.8 2.2,10.0 10.2,10.0")]
+    [InlineData("corner-photos-2026-10-03/ntc-st4-100yd-precision-rifle.jpg", "2.0,2.5 10.0,2.5 6.0,6.0 2.0,9.6 10.0,9.6")]
+    [InlineData("corner-photos-2026-10-03/allen-splash-bull-55124A.jpg", "6.1,6.1")]
+    [InlineData("corner-photos-2026-10-03/eze-scorer-bull.jpg", "6.0,6.0")]
+    [InlineData("bc-34105-shoot-n-c-sight-in/blank.png", "1.6,1.6 6.5,1.6 4.0,4.0 1.6,6.5 6.5,6.5")]
+    [InlineData("bc-34550-shoot-n-c-6in-bull/blank.png", "3.1,3.1")]
+    [InlineData("bc-34805-shoot-n-c-8in-bull/blank.png", "4.2,4.1")]
+    [InlineData("bc-34806-shoot-n-c-8in-crosshair/blank.png", "4.0,4.0")]
+    [InlineData("bc-37826-eze-scorer-bull/blank.png", "4.0,4.1")]
+    public void TheBullsStepFindsTheAimingMarks(string file, string marks)
+    {
+        string path = Path.Combine(Blanks, file.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        using var session = new FingerprintSession(() => []);
+        Assert.Null(session.Load(path));
+        Assert.Null(session.Next());
+        var c = session.Corners;
+        (session.WidthInches, session.HeightInches) = file.EndsWith(".png", StringComparison.Ordinal)
+            ? (Math.Round(Apart(c[0], c[1]) / 600, 2), Math.Round(Apart(c[1], c[2]) / 600, 2))
+            : (12, 12);
+        Assert.Null(session.Next());
+        Assert.Null(session.Next());
+        var expected = marks.Split(' ').Select(m => m.Split(',')).Select(m => new PointD(double.Parse(m[0], System.Globalization.CultureInfo.InvariantCulture), double.Parse(m[1], System.Globalization.CultureInfo.InvariantCulture))).ToList();
+        Assert.Equal(expected.Count, session.Bulls.Count);
+        Assert.All(expected, e => Assert.Contains(session.Bulls, b => Apart(b, e) < 0.3));
+    }
+
+    /// <summary>
     /// The whole five steps on each photograph whose package Alan photographed, with the package's name and printed size
     /// (packaging/ beside the photographs, 2026-10-04): every one is 12 by 12 in, both green Eze-Scorer targets come in one package, and the
     /// file written names the target and its size. Where the bull finder finds none, the bull is added by hand, as on the screen.
@@ -260,8 +298,8 @@ public class Entry362Tests
             Assert.Equal(GroupLab.Core.StoreTargets.FingerprintStep.Bulls, session.Step);
             if (session.Bulls.Count == 0)
             {
-                // GroupLab's bull finder finds none on the sight-in grids and the splash bull's diamonds and rings (entry 362, 2026-10-04): the
-                // person adds them on The bulls, as here, the middle one.
+                // Where the bull finder finds none (entry 363 section 3.1 left the Eze-Scorer grid partly found), the person adds them on The
+                // bulls, as here, the middle one.
                 session.AddBull(new PointD(6, 6));
             }
 

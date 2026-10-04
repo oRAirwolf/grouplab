@@ -452,7 +452,8 @@ public sealed class FingerprintSession : IDisposable
         StraightShownScale = scale * dpi;
         Bulls.Clear();
         // Numbered as they are read: by rows half an inch deep, top first, then left to right. Bulls turned with the picture are kept.
-        Bulls.AddRange(((IEnumerable<PointD>?)turnedBulls ?? StoreFingerprintBuilder.Bulls(picture, dpi)).OrderBy(b => Math.Round(b.Y * 2)).ThenBy(b => b.X));
+        // Entry 363 section 3.1: the red finder's marks, and the aiming marks drawn as shapes round a point that it does not see.
+        Bulls.AddRange(((IEnumerable<PointD>?)turnedBulls ?? AimMarks.Merge(StoreFingerprintBuilder.Bulls(picture, dpi), AimMarks.Find(picture, dpi))).OrderBy(b => Math.Round(b.Y * 2)).ThenBy(b => b.X));
         turnedBulls = null;
         Family = null;
         return null;

@@ -48,6 +48,7 @@
     <Compile Include="..\..\src\GroupLab.Cli\Library\TargetReferenceMaker.cs" Link="Shared\Library\TargetReferenceMaker.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\StoreFingerprintBuilder.cs" Link="Shared\Library\StoreFingerprintBuilder.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\FingerprintSession.cs" Link="Shared\Library\FingerprintSession.cs" />
+    <Compile Include="..\..\src\GroupLab.Cli\Library\AimMarks.cs" Link="Shared\Library\AimMarks.cs" />
     <Compile Include="..\..\src\GroupLab.App\FingerprintPicture.cs" Link="Shared\FingerprintPicture.cs" />
     <Compile Include="..\..\src\GroupLab.App\SheetGestures.cs" Link="Shared\SheetGestures.cs" />
     <Compile Include="..\..\src\GroupLab.App\CommandKey.cs" Link="Shared\CommandKey.cs" />
