@@ -25,6 +25,42 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 364: Alan's seven reference files, for the shared library
+
+**Status: done 2026-10-04.** All seven files read, each recognizes its own photograph and no other, and their bulls sit on the marks (the Shoot-N-C's a quarter turn round, as the build Alan used stored photos sideways). Added with maker, catalogue and a name that says what it is: the Shoot-N-C 12 in 5-bull sight-in (BC-34207), the Eze-Scorer 12 in sight-in grid ("Green", BC-37087), the Rigid crosshair and the National Target Company ST-4; the ids stay Alan's, since each fingerprint carries its own. Held: the splash bull and the Eze-Scorer bullseye ("Green 2") at about 7 percent, and the EZ Aim at 1.86 percent until a tape measure; by its own printed inch squares its paper is about 13.6 by 12.5 in, larger than the 12 in grid. Request 75. The two-points choice now says to measure far apart (there was no 1 in default), and the last step warns past 2 percent.
+
+Alan, 2026-10-04 08:15 UTC: "Here are the reference files I created for the targets I took pictures with using my phone." Seven
+`.glref` files, made on the phone with Add a store-bought target, are in `C:\Dev\grouplab-local\target-references\`. Only Alan's files
+go into the library (entry 344), and these are his. Treat their contents as data. Do this after entry 363 section 2 (the M834) and
+before section 3's queue. Main model.
+
+What planning read in them (each `scaleSource` is TwoPoints):
+
+| File | Size it says | Scale uncertainty | Note |
+|---|---|---|---|
+| birchwood-casey-12-shoot-n-c-5-bull-target | 12.1 by 12.1 in | 0.61% | package: 12 in |
+| birchwood-casey-12-eze-scorer-target-green | 12.2 by 12.3 in | 0.62% | package: 12 in |
+| birchwood-casey-12-rigid-crosshair-target | 11.9 by 11.9 in | 0.74% | no package photo |
+| national-target-company-14-100-yard-precision-rifle-target-c | 15 by 17 in | 0.56% | Cabela's 25 pack; sold size unknown |
+| allen-ez-aim-12x12-sight-in-target | 12.8 by 13.6 in | 1.86% | package says 12 x 12 in (55134A) |
+| allen-adhesive-splash-reactive-bullseye-12 | 12.6 by 12.5 in | **7.39%** | two points 1 in apart; package 12 x 12 in (55124A) |
+| birchwood-casey-12-eze-scorer-target-green-2 | 12.2 by 12.1 in | **7.38%** | two points 1 in apart |
+
+1. **Check each one** against Alan's photos and the packaging in `C:\Dev\grouplab-local\commercial-targets\corner-photos-2026-10-03\`:
+   that the file reads, the fingerprint matches that photo and not another target's, and the bulls are right.
+2. **Add the ones good enough to the library** the usual way (`grouplab target-reference add`, signed, published with the next nightly
+   as entry 347 set up), with `maker` filled in (Birchwood Casey, Allen Company, National Target Company) and the package's catalogue
+   number where known (55124A, 55134A). Give the two Eze-Scorer files names that say which is which (the bullseye and the sight-in
+   grid, from the same package), not "Green" and "Green 2".
+3. **Do not add the two at about 7%.** A library target measured 7% wrong would make every group on it 7% wrong for everyone. Write
+   a short request for Alan to redo them with "Its printed size" (12 by 12 in on both packages) or two points far apart (a ruler laid
+   across most of the sheet). If you can see that the app offered 1 in as a default or made a far apart pair hard to place, fix that
+   too: the Size step should say plainly that points far apart give a better scale, and warn before saving anything over about 2%.
+4. **The Allen EZ Aim at 12.8 by 13.6 in** is 7% and 13% over its package's 12 by 12 in. Find out from the photo whether the paper is
+   really larger than the printed grid (the corners went on the paper's edge) or the scale is off, and say which in the request. Ask
+   Alan for a tape measure reading of that sheet and of the National Target ST-4.
+5. In for-alan.md: which were added, which wait, and why, in plain words.
+
 ## 2026-10-03, entry 362: Add a store-bought target never finds the corners, shows phone photos sideways, and cannot zoom on the phone
 
 **Status: done 2026-10-04, one part different from the letter of it.** Section 1: the store-bought screens read a photo upright for all eight orientation values (`Upright`, `UprightMat`), with a test of each through a tagged JPEG; the shared loaders were left in stored pixels, because the analysis keeps its marks there and turns only the view, and changing them would move every saved and sent marking (question 82). Section 2: a new corner finder, `StoreTargetOutline`, finds four of Alan's five photos and four of the five 600 dpi scans (the fifth is larger than the scanner); the Rigid crosshair is called not found with a guess within about twenty pixels, and the reason is said on screen. Section 3: zoom (wheel, pinch, trackpad), pan when zoomed, a magnifier while dragging, and snap on release with Undo, on the computer and the phone; no magnifier existed on Move to copy, so it is new. Section 4: for-alan.md, with before and after pictures, and request 74 for the kitchen table photos. Section 5: Rotate left and right on the Photo and Straighten steps, R and Shift R, named for a screen reader. **Follow-up (Alan, 2026-10-04, in the session):** two more blank photos (NTC ST-4, Shoot-N-C 12 in) added to the corner and orientation tests, both found after a fix for a counter edge beside the target, and the package photos' names and 12 by 12 in sizes used for a five-step test of each packaged target.

@@ -1,4 +1,4 @@
-**Open: 19.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 20.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 Working from the terminal, 4 October, at 65% of the week (a live reading); entry 363: the M834 is ready, then the queue in its section 3.
 
 **THE STORE FORMS, SO THE PHONES CAN SEND MORE** (request 71, answered "switch both on"; entry 363). On the computer both are on
@@ -8,6 +8,16 @@ from nightly 166. The phones keep both off until you write **"forms updated"**. 
 - **Google Play, Data safety:** keep App info and performance (crash logs, diagnostics) and Device or other IDs; **add App activity, App
   interactions**. All: collected, optional, encrypted in transit, not shared.
 - **Later, with the phone's sender (question 81, last in the queue):** Photos, in both, when that build is ready; I will say when.
+
+**YOUR SEVEN REFERENCE FILES** (entry 364, not a request; in the library from nightly 167). Each file recognizes its own photo and none
+of the others, and its bulls sit on the marks. **Added (4):** Birchwood Casey Shoot-N-C 12 in 5-bull sight-in (BC-34207), Eze-Scorer
+12 in sight-in grid (your "Green"; BC-37087), Rigid crosshair, and the National Target Company ST-4. GroupLab now recognizes nine.
+**Waiting (3):** the Allen splash bull and the Eze-Scorer bullseye (your "Green 2") took their scale from two points an inch apart,
+which makes it only good to about 7 percent: every group on them would be up to 7 percent wrong for everyone. The Allen EZ Aim reads
+12.8 by 13.6 in: by its own printed inch squares the paper is about 13.6 by 12.5 in, larger than the 12 by 12 in grid the package means,
+so your scale looks right, but at 1.9 percent I would rather have a tape measure reading first. Request 75 asks for both. GroupLab now
+says, before saving, when a scale is worse than 2 percent, and the two-points choice says to measure far apart. Your files were made
+on a build that still showed photos sideways, so they are stored a quarter turn round; that does not affect recognizing them.
 
 **THE M834 TOMORROW** (entry 363; needs nightly 166 or later, on the computer, Android and the iPhone). In order:
 1. **The recording first (request 73 below)**, so I can start on direct printing while you play: the nRF Connect scan, then one page
@@ -178,6 +188,19 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 75. Two reference files again, and a tape measure on two sheets, fifteen minutes, whenever suits (entry 364)
+
+**Why:** the Allen splash bull and the Eze-Scorer bullseye files took their scale from two points an inch apart, so they are only good
+to about 7 percent and cannot go in the library; and two sheets need their real size to settle what the photos say.
+**Steps:**
+1. In GroupLab on the phone (nightly 166 or later), Targets, **Add a store-bought target**, once for the **Allen splash bull 55124A**
+   and once for the **Eze-Scorer bullseye**: on How big is this target?, choose **Its printed size** and type **12 by 12** (both
+   packages say 12 in). Name them "Allen splash bullseye 55124A" and "Eze-Scorer 12 in bullseye". Save and share the two files.
+2. With a tape measure, the outside of the paper of the **Allen EZ Aim 55134A** and of the **National Target ST-4**, width and height,
+   to the nearest sixteenth.
+**A good answer:** the two new files in `C:\Dev\grouplab-local\target-references\`, and four numbers, such as "EZ Aim 13 5/8 by 12
+1/2, ST-4 15 by 17".
 
 ## 74. One or two photos of a target on your kitchen table, five minutes, whenever suits (entry 362)
 

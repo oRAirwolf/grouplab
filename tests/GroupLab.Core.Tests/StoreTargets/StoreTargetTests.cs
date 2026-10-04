@@ -37,7 +37,7 @@ public class StoreTargetTests
     [Fact]
     public void EveryProductShipsAFingerprintAndNothingElse()
     {
-        Assert.Equal(5, StoreTargetLibrary.All.Count);
+        Assert.Equal(9, StoreTargetLibrary.All.Count); // the five from scans and four of Alan's (entry 364)
         foreach (var target in StoreTargetLibrary.All)
         {
             var fp = target.Fingerprint;

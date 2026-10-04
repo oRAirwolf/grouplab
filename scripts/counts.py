@@ -57,7 +57,11 @@ def counts() -> dict[str, int]:
     import json
     tour = json.loads((REPO / "website" / "tour.json").read_text(encoding="utf-8"))
 
+    # Entry 364: the store-bought targets the built-in library recognizes, as its own list says.
+    library = json.loads((REPO / "src" / "GroupLab.Core" / "StoreTargets" / "Fingerprints" / "library.json").read_text(encoding="utf-8"))
+
     return {
+        "store-targets": len(library["targets"]),
         "sheets": len(sheets),
         "library-entries": len(targets),
         "tiled-layouts": len(targets) - len(sheets),

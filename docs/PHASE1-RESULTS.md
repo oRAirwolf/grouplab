@@ -383,6 +383,13 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 364: Alan's seven reference files
+
+- Every file read and recognized its own photograph (836 to 1511 features, layout 0.979 to 0.999) and none of the other six.
+- Added to the built-in library, now nine: Shoot-N-C 12 in 5-bull sight-in (0.61 percent), Eze-Scorer 12 in sight-in grid (0.62), Rigid crosshair (0.74), ST-4 (0.56).
+- Held: Allen splash bull 55124A (7.39 percent) and the Eze-Scorer bullseye (7.38), both from two points an inch apart; Allen EZ Aim 55134A (1.86, 12.8 by 13.6 in) until a tape measure. Its photo's printed inch squares put the paper at about 13.6 by 12.5 in, so the paper, not the scale, is what exceeds the package's 12 by 12 in.
+- The Size step now says to measure far apart, and the last step warns when the scale is worse than 2 percent.
+
 ## Entries 358 and 359: thermal label targets, a printer framework, darkness
 
 - **Sections 1 to 3** (a worker's three commits, merged after the three suites): 4x6, A6 and 100 by 150 mm pages beside Letter and A4; the thermal print mode (one bit at the head's own dot pitch, every code and marker on whole dots, black only, never fitted to the page, the cut-off named before printing); the X6 labels, six of the Letter sheets' bulls to a label in sets of five that pool, and a printer check label.

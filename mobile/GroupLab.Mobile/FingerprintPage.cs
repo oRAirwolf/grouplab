@@ -373,6 +373,10 @@ internal sealed class FingerprintPage : UserControl
                 if (session.Target is { } target)
                 {
                     column.Children.Add(Screens.Quiet(target.Says));
+                    if (target.Uncertainty > FingerprintWords.PoorScale)
+                    {
+                        column.Children.Add(Screens.Card(Screens.Line(FingerprintWords.ScaleWarning(target.Uncertainty))));
+                    }
                 }
 
                 if (session.FamilySaid is { } family)

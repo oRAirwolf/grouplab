@@ -488,6 +488,10 @@ public sealed class FingerprintStepsView : UserControl
                 if (session.Target is { } target)
                 {
                     body.Children.Add(Line(target.Says));
+                    if (target.Uncertainty > FingerprintWords.PoorScale)
+                    {
+                        body.Children.Add(new TextBlock { Text = FingerprintWords.ScaleWarning(target.Uncertainty), TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Warn } });
+                    }
                 }
 
                 if (session.FamilySaid is { } family)

@@ -75,3 +75,18 @@ public class PrinterAppFilesTests
         Assert.Equal(5, bands);
     }
 }
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 364: two of Alan's first reference files took their scale from two points an inch apart and came out about
+/// 7 percent uncertain. The last step now warns past 2 percent, and the two-points choice says to measure far apart.
+/// </summary>
+public class PoorScaleWarningTests
+{
+    [Fact]
+    public void AScaleWorseThanTwoPercentIsWarnedOfAndFarApartIsAdvised()
+    {
+        Assert.Equal(0.02, GroupLab.Core.StoreTargets.FingerprintWords.PoorScale);
+        Assert.StartsWith("This scale is only good to about 7.4 percent", GroupLab.Core.StoreTargets.FingerprintWords.ScaleWarning(0.0739), StringComparison.Ordinal);
+        Assert.Contains("as far apart as the target allows", GroupLab.Core.StoreTargets.FingerprintWords.How(GroupLab.Core.StoreTargets.ScaleSource.TwoPoints, phone: true), StringComparison.Ordinal);
+    }
+}

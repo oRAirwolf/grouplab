@@ -145,14 +145,14 @@ public class TargetReferenceTests
     [Fact]
     public void AFetchedLibraryAddsToTheBuiltInOneUntilTakenAway()
     {
-        Assert.Equal(5, StoreTargetLibrary.Shipped.Count);
+        Assert.Equal(9, StoreTargetLibrary.Shipped.Count); // entry 364 added four of Alan's to the five
         var fp = StoreTargetLibrary.Find("bc-34805-shoot-n-c-8in-bull")!.Fingerprint;
         var added = new TargetReference(new StoreTarget("fetched-poster", "Maker", "Poster {size}", "12 x 18 in", "", null),
             new TargetFingerprint("fetched-poster", fp.Points, fp.Descriptors, fp.DescriptorBytes, fp.Bulls, fp.Layout), ScaleSource.PrintedSize, 0.006, "");
         try
         {
             StoreTargetLibrary.Install([added]);
-            Assert.Equal(6, StoreTargetLibrary.All.Count);
+            Assert.Equal(10, StoreTargetLibrary.All.Count);
             Assert.Same(added.Fingerprint, StoreTargetLibrary.Find("fetched-poster")!.Fingerprint);
         }
         finally
@@ -160,7 +160,7 @@ public class TargetReferenceTests
             StoreTargetLibrary.Uninstall();
         }
 
-        Assert.Equal(5, StoreTargetLibrary.All.Count);
+        Assert.Equal(9, StoreTargetLibrary.All.Count);
         Assert.Null(StoreTargetLibrary.Find("fetched-poster"));
     }
 

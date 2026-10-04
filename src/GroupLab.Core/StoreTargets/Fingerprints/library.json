@@ -1,11 +1,91 @@
 {
   "about": "NOTES-FROM-PLANNING.md entries 340 and 344: the store-bought targets GroupLab recognizes, each with its fingerprint beside this file. grouplab target-reference add adds to it.",
-  "version": 1,
+  "version": 5,
   "targets": [
-    { "id": "bc-34105-shoot-n-c-sight-in", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} sight-in grid", "size": "8 in", "catalog": "34105", "family": null, "scaleSource": "Scan" },
-    { "id": "bc-34550-shoot-n-c-6in-bull", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} bullseye", "size": "6 in", "catalog": "34550", "family": "Shoot-N-C bullseye", "scaleSource": "Scan" },
-    { "id": "bc-34805-shoot-n-c-8in-bull", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} bullseye", "size": "8 in", "catalog": "34805", "family": "Shoot-N-C bullseye", "scaleSource": "Scan" },
-    { "id": "bc-34806-shoot-n-c-8in-crosshair", "maker": "Birchwood Casey", "name": "Shoot-N-C {size} crosshair", "size": "8 in", "catalog": "34806", "family": null, "scaleSource": "Scan" },
-    { "id": "bc-37826-eze-scorer-bull", "maker": "Birchwood Casey", "name": "Eze-Scorer {size} bullseye", "size": "paper", "catalog": "37826", "family": null, "scaleSource": "Scan" }
+    {
+      "id": "bc-34105-shoot-n-c-sight-in",
+      "maker": "Birchwood Casey",
+      "name": "Shoot-N-C {size} sight-in grid",
+      "size": "8 in",
+      "catalog": "34105",
+      "family": null,
+      "scaleSource": "Scan"
+    },
+    {
+      "id": "bc-34550-shoot-n-c-6in-bull",
+      "maker": "Birchwood Casey",
+      "name": "Shoot-N-C {size} bullseye",
+      "size": "6 in",
+      "catalog": "34550",
+      "family": "Shoot-N-C bullseye",
+      "scaleSource": "Scan"
+    },
+    {
+      "id": "bc-34805-shoot-n-c-8in-bull",
+      "maker": "Birchwood Casey",
+      "name": "Shoot-N-C {size} bullseye",
+      "size": "8 in",
+      "catalog": "34805",
+      "family": "Shoot-N-C bullseye",
+      "scaleSource": "Scan"
+    },
+    {
+      "id": "bc-34806-shoot-n-c-8in-crosshair",
+      "maker": "Birchwood Casey",
+      "name": "Shoot-N-C {size} crosshair",
+      "size": "8 in",
+      "catalog": "34806",
+      "family": null,
+      "scaleSource": "Scan"
+    },
+    {
+      "id": "bc-37826-eze-scorer-bull",
+      "maker": "Birchwood Casey",
+      "name": "Eze-Scorer {size} bullseye",
+      "size": "paper",
+      "catalog": "37826",
+      "family": null,
+      "scaleSource": "Scan"
+    },
+    {
+      "id": "birchwood-casey-12-eze-scorer-target-green",
+      "maker": "Birchwood Casey",
+      "name": "Eze-Scorer {size} sight-in grid",
+      "size": "12 in",
+      "catalog": "37087",
+      "family": null,
+      "scaleSource": "TwoPoints",
+      "scaleUncertainty": 0.00615
+    },
+    {
+      "id": "birchwood-casey-12-rigid-crosshair-target",
+      "maker": "Birchwood Casey",
+      "name": "Rigid {size} crosshair",
+      "size": "11.9 by 11.9 in",
+      "catalog": "",
+      "family": null,
+      "scaleSource": "TwoPoints",
+      "scaleUncertainty": 0.00741
+    },
+    {
+      "id": "birchwood-casey-12-shoot-n-c-5-bull-target",
+      "maker": "Birchwood Casey",
+      "name": "Shoot-N-C {size} 5-bull sight-in",
+      "size": "12 in",
+      "catalog": "34207",
+      "family": null,
+      "scaleSource": "TwoPoints",
+      "scaleUncertainty": 0.00613
+    },
+    {
+      "id": "national-target-company-14-100-yard-precision-rifle-target-c",
+      "maker": "National Target Company",
+      "name": "ST-4 100-yard precision rifle, {size}",
+      "size": "15 by 17 in",
+      "catalog": "ST-4",
+      "family": null,
+      "scaleSource": "TwoPoints",
+      "scaleUncertainty": 0.0056
+    }
   ]
 }

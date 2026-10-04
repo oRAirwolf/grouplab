@@ -78,6 +78,16 @@ public static class FingerprintWords
 
     public const string UndoSnap = "Undo";
 
+    /// <summary>The scale worse than this, as a share, is warned of before the file is saved (entry 364).</summary>
+    public const double PoorScale = 0.02;
+
+    /// <summary>
+    /// Entry 364: said on the last step where the scale is worse than <see cref="PoorScale"/>: two of Alan's first files took it from two
+    /// points an inch apart and came out about 7 percent uncertain, which would make every group on the target that much wrong.
+    /// </summary>
+    public static string ScaleWarning(double uncertainty) => FormattableString.Invariant(
+        $"This scale is only good to about {100 * uncertainty:0.#} percent, so every group measured on this target could be that much wrong. Go back to How big is this target? and use its printed size, or two points far apart.");
+
     public const string TakePhoto = "Take a photo";
 
     public const string ChoosePhoto = "Choose a photo";
@@ -112,7 +122,8 @@ public static class FingerprintWords
     {
         ScaleSource.PrintedSize => phone ? "From the package. Fastest." : "The sheet's outside size, from the package. Fastest.",
         ScaleSource.GroupLabSheet => phone ? "Lay one on the target, then take the photo." : "Lay any GroupLab sheet or card on the target and take the photo again.",
-        _ => phone ? "Tap both ends, type the length." : "Click both ends of something you measured, then type its length.",
+        _ => phone ? "Tap both ends of something you measured, as far apart as the target allows, and type the length; ends close together give a poor scale."
+            : "Click both ends of something you measured, as far apart as the target allows, then type its length; ends close together give a poor scale.",
     };
 
     /// <summary>

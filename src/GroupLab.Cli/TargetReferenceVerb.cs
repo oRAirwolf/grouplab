@@ -202,6 +202,9 @@ public static class TargetReferenceVerb
                 : string.Create(Inv, $"{other.Title} claims it at {ratio:0.00} times the size: family should be \"{family}\", the reference says \"{reference.Target.Family}\" ({(right ? "right" : "WRONG")})."));
         }
 
+        // Entry 364: what the file says, so its bulls and size can be checked against the photograph by eye.
+        output.WriteLine(string.Create(Inv, $"It says: {reference.Target.Name}, {reference.Target.Size}, scale from {reference.Source} to about {100 * reference.Uncertainty:0.00} percent."));
+        output.WriteLine("Its bulls, inches from the top left: " + string.Join("  ", reference.Fingerprint.Bulls.Select(b => string.Create(Inv, $"({b.X:0.00}, {b.Y:0.00})"))));
         output.WriteLine(ok ? "The reference passes." : "The reference does not pass.");
         return ok ? 0 : 1;
 

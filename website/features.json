@@ -174,7 +174,7 @@
       "key": "store-targets",
       "group": "Reading a target",
       "name": "Store-bought targets recognized",
-      "sentence": "Five Birchwood Casey targets are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.",
+      "sentence": "Store-bought targets from Birchwood Casey and the National Target Company are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.",
       "shot": "store-target",
       "platforms": [
         "Windows",
@@ -189,6 +189,7 @@
       "since": "next",
       "note": [
         "GroupLab now recognizes five Birchwood Casey targets on the computer and the phone",
+        "GroupLab now recognizes nine store-bought targets",
         "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch"
       ],
       "guide": "1-print-a-sheet"
@@ -237,7 +238,7 @@
         "noPicture": "the phone's five steps are photographed at the next sitting with the phone"
       },
       "since": "next",
-      "note": ["Add a store-bought target, on the Targets screen of the computer and the phone", "Photos in Add a store-bought target now show the right way up", "Add a store-bought target now finds the corners", "While placing the corners you can zoom in", "Add a store-bought target no longer takes the edge of the counter"],
+      "note": ["Add a store-bought target, on the Targets screen of the computer and the phone", "Photos in Add a store-bought target now show the right way up", "Add a store-bought target now finds the corners", "While placing the corners you can zoom in", "Add a store-bought target no longer takes the edge of the counter", "Add a store-bought target now finds the aiming marks", "Add a store-bought target now warns before saving"],
       "tour": "fingerprint",
       "guide": "1-print-a-sheet"
     },
