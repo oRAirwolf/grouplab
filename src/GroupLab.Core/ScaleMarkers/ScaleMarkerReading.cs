@@ -91,7 +91,11 @@ public sealed record ScaleBoard(string Name, char Set, DateOnly MeasuredOn, doub
 }
 
 /// <summary>Entry 365 section D: a bank card's four corners in the photo, where its straight sides would meet, top left first, clockwise.</summary>
-public sealed record CardSighting(IReadOnlyList<PointD> Corners);
+public sealed record CardSighting(IReadOnlyList<PointD> Corners)
+{
+    /// <summary>Found by its magnetic stripe, whose length is taken for the card's width: half a percent more doubt, for a stripe set in.</summary>
+    public bool FromStripe { get; init; }
+}
 
 /// <summary>What the markers in one photo gave: the plane, how far it can be trusted, and what was found and used.</summary>
 public sealed class MarkerFinding
@@ -253,7 +257,8 @@ public static class ScaleMarkerReading
         var used = fit.Bodies.Select(b => (b.Kind, b.Piece)).ToList();
         bool printed = used.Any(u => u.Kind is MarkerKind.Bracket or MarkerKind.InchBar or MarkerKind.MetricBar);
         double print = printed ? printer is { } p ? p.Uncertainty : UncheckedPrint : 0;
-        double extra = Math.Sqrt(Math.Pow(used.Any(u => u.Kind == MarkerKind.Card) ? CardThickness : 0, 2) + (boardDoubt * boardDoubt));
+        double stripe = card is { FromStripe: true } && used.Any(u => u.Kind == MarkerKind.Card) ? 0.005 : 0;
+        double extra = Math.Sqrt(Math.Pow(used.Any(u => u.Kind == MarkerKind.Card) ? CardThickness : 0, 2) + (boardDoubt * boardDoubt) + (stripe * stripe));
 
         // Only bars all in one line, or a card alone, give the scale along them and not the angle.
         var bars = fit.Bodies.Where(b => b.Kind is MarkerKind.InchBar or MarkerKind.MetricBar).ToList();

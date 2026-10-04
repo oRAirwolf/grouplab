@@ -217,16 +217,129 @@ public static class ScaleMarkerFinder
     /// fifth of a percent to eight percent of the photo, nearly filled by its outline, and with rounded corners: the outline stands off each
     /// sharp corner by about 1.5 percent of the card's width, where a printed box's meets it. That last is what tells a card from a label.
     /// </summary>
-    public static CardSighting? Card(GrayImage grey, IReadOnlyList<DetectedMarker>? markers = null, Action<string>? trace = null)
+    public static CardSighting? Card(GrayImage grey, IReadOnlyList<DetectedMarker>? markers = null, Action<string>? trace = null) =>
+        CardAt(grey, markers, trace, 1600, 30, 90) ?? ByStripe(grey, markers, trace);
+
+    /// <summary>
+    /// A light card lying on white paper (Alan's two photos on the kitchen table, 2026-10-04): its own edges are faint and the target's grid
+    /// lines run into them, so its outline never closes. Its magnetic stripe does not fade: a dark band from one short edge of the card to the
+    /// other. So the stripe gives the short edges and the card's direction; the long edges are the strongest steps parallel to it, one within
+    /// a few millimetres of the stripe, the other a card's height across; the corners are refined at full size as for any card, and the
+    /// result must still run 1.38 to 1.84 to 1.
+    /// </summary>
+    private static CardSighting? ByStripe(GrayImage grey, IReadOnlyList<DetectedMarker>? markers, Action<string>? trace)
     {
-        ArgumentNullException.ThrowIfNull(grey);
         using var full = Mat.FromPixelData(grey.Height, grey.Width, MatType.CV_8UC1, grey.Pixels);
         double f = Math.Min(1, 1600.0 / Math.Max(grey.Width, grey.Height));
         using var small = new Mat();
         Cv2.Resize(full, small, new Size(0, 0), f, f, InterpolationFlags.Area);
+        var codes = (markers ?? []).Select(m => m.Corners.Select(c => new PointD(c.X * f, c.Y * f)).ToArray()).ToList();
+
+        // The stripe is near black; a dark print round it (the Eze-Scorer's dark green) joins it at a lighter threshold, so darker ones follow.
+        var all = new List<Point[]>();
+        foreach (int level in new[] { 70, 45, 30 })
+        {
+            using var dark = new Mat();
+            Cv2.Threshold(small, dark, level, 255, ThresholdTypes.BinaryInv);
+            Cv2.FindContours(dark, out Point[][] found, out _, RetrievalModes.External, ContourApproximationModes.ApproxSimple);
+            all.AddRange(found);
+        }
+
+        foreach (var contour in all.OrderByDescending(c => Cv2.ContourArea(c)))
+        {
+            var box = Cv2.MinAreaRect(contour);
+            double longer = Math.Max(box.Size.Width, box.Size.Height), shorter = Math.Min(box.Size.Width, box.Size.Height);
+            if (shorter < 4 || longer / shorter is < 5 or > 12 || Cv2.ContourArea(contour) < 0.85 * longer * shorter || longer < 0.05 * Math.Max(small.Width, small.Height))
+            {
+                if (longer > 0.05 * Math.Max(small.Width, small.Height))
+                {
+                    trace?.Invoke($"dark {longer:0}x{shorter:0} fill {Cv2.ContourArea(contour) / Math.Max(1, longer * shorter):0.00}");
+                }
+
+                continue;
+            }
+
+            // The stripe's axis, its two ends, and the normal across it.
+            double angle = (box.Size.Width >= box.Size.Height ? box.Angle : box.Angle + 90) * Math.PI / 180;
+            var u = new PointD(Math.Cos(angle), Math.Sin(angle));
+            var n = new PointD(-u.Y, u.X);
+            var centre = new PointD(box.Center.X, box.Center.Y);
+            if (codes.Any(code => code.Any(p => Math.Abs(((p.X - centre.X) * u.X) + ((p.Y - centre.Y) * u.Y)) < longer && Math.Abs(((p.X - centre.X) * n.X) + ((p.Y - centre.Y) * n.Y)) < longer)))
+            {
+                continue;
+            }
+
+            double mm = longer / ScaleMarkerLayout.CardWidth, height = ScaleMarkerLayout.CardHeight * mm;
+
+            // The step across lines parallel to the stripe at offset t (pixels along n from the stripe's middle), summed along its length.
+            double Step(double t)
+            {
+                double sum = 0;
+                for (int i = 1; i < 20; i++)
+                {
+                    double a = (i / 20.0) - 0.5;
+                    var p = new PointD(centre.X + (u.X * a * longer * 0.9) + (n.X * t), centre.Y + (u.Y * a * longer * 0.9) + (n.Y * t));
+                    sum += Math.Abs(SampleMat(small, p.X + n.X, p.Y + n.Y) - SampleMat(small, p.X - n.X, p.Y - n.Y));
+                }
+
+                return sum / 19;
+            }
+
+            // The near long edge within 1 to 9 mm beyond the stripe's side, on whichever side it is clearer; the far one exactly a card's height
+            // across, since the stripe's length is the card's width and the far edge, out on the target's print, is the one a grid line can
+            // take (Alan's Rigid crosshair: searched for, it made the card 1.54 to 1 and the target 1.7 percent small).
+            double half = shorter / 2;
+            (double At, double Strength) Strongest(double sign, double from, double to)
+            {
+                (double, double) best = (from, -1);
+                for (double t = from; t <= to; t += 0.5)
+                {
+                    double s = Step(sign * t);
+                    if (s > best.Item2)
+                    {
+                        best = (t, s);
+                    }
+                }
+
+                return best;
+            }
+
+            var chosen = new[] { 1.0, -1.0 }.Select(sign =>
+            {
+                var near = Strongest(sign, half + (1 * mm), half + (9 * mm));
+                return (NearT: sign * near.At, FarT: sign * (near.At - height), Score: near.Strength);
+            }).MaxBy(c => c.Score);
+
+            PointD At(double along, double across) => new((centre.X + (u.X * along) + (n.X * across)) / f, (centre.Y + (u.Y * along) + (n.Y * across)) / f);
+            PointD[] rough = [At(-longer / 2, chosen.NearT), At(longer / 2, chosen.NearT), At(longer / 2, chosen.FarT), At(-longer / 2, chosen.FarT)];
+            // Its own shape by construction, so no ratio test: the stripe must lie on something card-sized and light, which its near edge's
+            // step says.
+            trace?.Invoke($"stripe {longer:0}x{shorter:0}, near edge step {chosen.Score:0}");
+            if (chosen.Score >= 8)
+            {
+                return new CardSighting(Ordered(rough)) { FromStripe = true };
+            }
+        }
+
+        return null;
+    }
+
+    private static double SampleMat(Mat m, double x, double y)
+    {
+        int xi = Math.Clamp((int)Math.Round(x), 0, m.Width - 1), yi = Math.Clamp((int)Math.Round(y), 0, m.Height - 1);
+        return m.At<byte>(yi, xi);
+    }
+
+    private static CardSighting? CardAt(GrayImage grey, IReadOnlyList<DetectedMarker>? markers, Action<string>? trace, double most, int low, int high)
+    {
+        ArgumentNullException.ThrowIfNull(grey);
+        using var full = Mat.FromPixelData(grey.Height, grey.Width, MatType.CV_8UC1, grey.Pixels);
+        double f = Math.Min(1, most / Math.Max(grey.Width, grey.Height));
+        using var small = new Mat();
+        Cv2.Resize(full, small, new Size(0, 0), f, f, InterpolationFlags.Area);
         Cv2.GaussianBlur(small, small, new Size(5, 5), 0);
         using var edges = new Mat();
-        Cv2.Canny(small, edges, 30, 90);
+        Cv2.Canny(small, edges, low, high);
         using (var k = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3)))
         {
             Cv2.Dilate(edges, edges, k);

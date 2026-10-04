@@ -383,6 +383,19 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Alan's photos on wood (requests 74 and 76, 2026-10-04)
+
+- **Corners.** The light kitchen table: 4 of 4 right. The dark grained floor: only the tilted Shoot-N-C; the others ran onto the boards'
+  seams (weakest side on an edge 0.67, 0.75, 0.88) and were called found. Now below 0.9 the finder says it is not sure and offers the
+  outline as a guess; every right outline here, on the counter and on the scans had 0.92 or more. A largest-bright-region candidate was
+  tried for the floor and scored 0.69 and 0.00: the floor itself is not solved.
+- **Bars** were taken into the target's outline, an inch too tall; painted out of the corner search they give 11.88 to 11.99 in on both
+  targets. **Brackets** give the rectangle they enclose: 12.05 in (Rigid, touching) and 12.21 in (Eze-Scorer, a gap on purpose).
+- **A light card on white paper** was not found: its edges are faint and the target's grid lines run into them. It is now found by its
+  magnetic stripe, which runs the card's width: the near long edge searched beside the stripe, the far one placed a card's height across.
+  Eze-Scorer 11.98 in (one bar 11.99), Rigid 11.87 in (bars 11.91 to 11.95); half a percent of doubt added for a stripe set in. The
+  card photos stay local and in no test, as Alan's notes ask; the computer-made trial is unchanged (30 of 40 cards, none wrong).
+
 ## Entry 363 sections 3.4 and 3.5: the phone's failures, and its sender
 
 - **3.4.** `ProblemSheet.Stop` puts a failure that stops the work on the centred sheet over the page it happened on, its choices first,
