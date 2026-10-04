@@ -155,12 +155,12 @@ What the newest builds changed that you would notice, from their release notes.
 
 - Six-bull label targets for thermal label printers are in the Targets library on 4x6, A6 and 100 x 150 mm labels, in sets of five that pool into one group, with a printer check label that measures a label printer on its own paper across and along the feed. [Pool the sheets of a set](https://grouplab.org/features/#pool-set)
 - The Targets screen can now print for a thermal label printer: the preview shows every dot as the printer will make it, codes and markers land on whole dots, and anything a narrow printer would cut off is named before you print. [Print a sheet from the phone](https://grouplab.org/features/#phone-targets)
-- Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels as well as Letter and A4, and the sheet designer offers the three label sizes.
-- While placing the corners you can zoom in, a magnifier shows the point under your finger, and a corner you let go settles on the nearest clear corner, with Undo.
-- Add a store-bought target no longer takes the edge of the counter beside a target for one of the target's sides.
-- Photos in Add a store-bought target now show the right way up, and Rotate left and Rotate right turn a target photographed sideways.
-- Add a store-bought target now finds the corners of white paper on a light counter from the paper's edges and color, and says why when it cannot.
-- When printing for a thermal printer, GroupLab now warns that thermal paper darkens in heat and fades in sunlight, so a thermal target is best photographed the day it is shot.
+- Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels as well as Letter and A4, and the sheet designer offers the three label sizes. [Label targets for a thermal printer](https://grouplab.org/features/#label-targets)
+- While placing the corners you can zoom in, a magnifier shows the point under your finger, and a corner you let go settles on the nearest clear corner, with Undo. [Teach GroupLab a store-bought target](https://grouplab.org/features/#add-store-target)
+- Add a store-bought target no longer takes the edge of the counter beside a target for one of the target's sides. [Teach GroupLab a store-bought target](https://grouplab.org/features/#add-store-target)
+- Photos in Add a store-bought target now show the right way up, and Rotate left and Rotate right turn a target photographed sideways. [Teach GroupLab a store-bought target](https://grouplab.org/features/#add-store-target)
+- Add a store-bought target now finds the corners of white paper on a light counter from the paper's edges and color, and says why when it cannot. [Teach GroupLab a store-bought target](https://grouplab.org/features/#add-store-target)
+- When printing for a thermal printer, GroupLab now warns that thermal paper darkens in heat and fades in sunlight, so a thermal target is best photographed the day it is shot. [Label targets for a thermal printer](https://grouplab.org/features/#label-targets)
 
 **0.2.0-nightly.164**, 2026-10-03
 
