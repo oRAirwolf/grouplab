@@ -7,6 +7,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Cli.Library;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Gltd;
+using GroupLab.Core.Printing.Thermal;
 using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
 using RadioButton = Avalonia.Controls.RadioButton;
@@ -79,6 +80,14 @@ public sealed class TargetsPage : UserControl
             Screens.Heading("Store-bought targets"),
             Screens.Dim(GroupLab.Core.StoreTargets.FingerprintWords.Offer),
             Screens.Choice(GroupLab.Core.StoreTargets.FingerprintWords.Title, () => Content = new FingerprintPage(() => Content = List())).Id("targets-add-store")));
+
+        // Entry 363 section 2a: a thermal label printer through its own app, the darkness test first.
+        var darknessSaid = Screens.Line("");
+        column.Children.Add(Screens.Card(
+            Screens.Heading("Thermal label printers"),
+            Screens.Dim("Each sheet's page offers Share for a printer app. The darkness test page shows what each darkness setting in the printer's app does to fine lines: print it once at each setting and write the setting on it."),
+            Screens.Choice("Share the darkness test page", () => darknessSaid.Text = DarknessForPrinterApp(picture: true)).Id("targets-darkness"),
+            darknessSaid));
 
         column.Children.Add(Screens.Heading("The library"));
         IReadOnlyList<LibrarySheet> sheets;
@@ -195,6 +204,10 @@ public sealed class TargetsPage : UserControl
         }));
         column.Children.Add(offer);
         column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false)));
+        // Entry 363 section 2a: for a thermal label printer's own app, such as the Phomemo M834's, before GroupLab prints to one itself.
+        column.Children.Add(Screens.Choice("Share for a printer app, as a picture", () => result.Text = ForPrinterApp(sheet, picture: true)).Id("targets-printer-app-picture"));
+        column.Children.Add(Screens.Choice("Share for a printer app, as a PDF", () => result.Text = ForPrinterApp(sheet, picture: false)).Id("targets-printer-app-pdf"));
+        column.Children.Add(Screens.Dim(PrinterAppWords));
         // Entry 258: a set of tiles as one large page with cut lines between them, for a plotter, shared rather than printed on the phone.
         if (GroupLab.Core.Rendering.CutSheet.Refusal(sheet.Definition) is null)
         {
@@ -204,6 +217,47 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
         column.Children.Add(Screens.Choice("Back to the targets", () => Content = List()));
         return Screens.Page(column);
+    }
+
+    /// <summary>What sharing for a printer app makes, said under its two choices.</summary>
+    internal const string PrinterAppWords = "For a thermal label printer's own app: the sheet in black and white at 300 dots an inch, every dot where GroupLab put it, at its true size. In the app, print at 100 percent or actual size, never fit to page.";
+
+    /// <summary>
+    /// Entry 363 section 2a: the sheet as the thermal print mode draws it at 300 dpi, shared as a picture (the first page; the PDF has every
+    /// page) or as a PDF. A sentence for the screen, or "" where it was handed to the share sheet.
+    /// </summary>
+    internal static string ForPrinterApp(LibrarySheet sheet, bool picture)
+    {
+        var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+        if (scenes.Pages.Count == 0)
+        {
+            return "This sheet has no page to share.";
+        }
+
+        var (pngs, pdf) = PrinterAppFiles.Make(scenes.Pages);
+        return Share(Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(sheet.File)), pngs, pdf, picture, sheet.Definition.Name);
+    }
+
+    /// <summary>The darkness test page, Letter, for a printer app: printed once at each darkness the app offers, the setting written on it.</summary>
+    internal static string DarknessForPrinterApp(bool picture)
+    {
+        var (pngs, pdf) = PrinterAppFiles.DarknessPage();
+        return Share("darkness-test", pngs, pdf, picture, "Darkness test");
+    }
+
+    private static string Share(string stem, IReadOnlyList<byte[]> pngs, byte[] pdf, bool picture, string title)
+    {
+        string name = $"{stem}-{PrinterAppFiles.Suffix(PrinterAppFiles.DefaultDpi)}";
+        DiagnosticLog.Info("print.printer-app", ("picture", picture), ("pages", pngs.Count));
+        if (!picture)
+        {
+            return Phone.Platform.SharePdf(pdf, name) ?? "";
+        }
+
+        string path = Path.Combine(Phone.Platform.CacheFolder, name + ".png");
+        File.WriteAllBytes(path, pngs[0]);
+        string? refused = Phone.Platform.ShareFile(path, "image/png", title);
+        return refused ?? (pngs.Count > 1 ? $"Page 1 of {pngs.Count} shared; share the PDF for them all." : "");
     }
 
     private static void Out(LibrarySheet sheet, TextBlock result, bool print, bool oneSheet = false)

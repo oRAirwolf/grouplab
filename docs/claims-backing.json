@@ -5128,6 +5128,14 @@
   "**Label targets are for a thermal label printer.** Each 4x6, A6 or 100 by 150 mm label holds six bulls the size of the Letter sheets', in a set of five labels that pool into one group like the 300 yard tiles; a printer check label measures a label printer on its own paper, across and along the feed.": {
    "kind": "code",
    "where": "entry 358 sections 1 to 3 and 8: targets/GL-X6-*.gltd.json and src/GroupLab.Cli/Library/LibraryBuilder.cs (six bulls of the 25 bull Letter sheets' size, five labels a set, the printer check label GL-SCALE-4X6-1), src/GroupLab.Core/Printing/Thermal/ThermalRaster.cs (one dot at a time, black only, whole-dot codes and markers, the cut-off named), src/GroupLab.Core/Printing/Labels/printers.json (every profile tested: false; IOutsideWorld.FindPrintersAsync finds no printer on any platform yet)"
+  },
+  "Until GroupLab prints to a label printer itself, Save for a printer app… on the computer, or Share for a printer app on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Printing/Thermal/PrinterAppFiles.cs and ThermalPng.cs (300 dpi, the pHYs resolution, the PDF at the page's true size; tests/GroupLab.Core.Tests/Printing/PrinterAppFilesTests.cs), src/GroupLab.App/PrintPanel.cs SaveForApp, mobile/GroupLab.Mobile/TargetsPage.cs ForPrinterApp (entry 363 section 2a)"
+  },
+  "Until GroupLab prints to a label printer itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Printing/Thermal/PrinterAppFiles.cs and ThermalPng.cs (300 dpi, the pHYs resolution, the PDF at the page's true size; tests/GroupLab.Core.Tests/Printing/PrinterAppFilesTests.cs), src/GroupLab.App/PrintPanel.cs SaveForApp, mobile/GroupLab.Mobile/TargetsPage.cs ForPrinterApp (entry 363 section 2a)"
   }
  },
  "rules": [

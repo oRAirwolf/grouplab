@@ -68,7 +68,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame; on iPhone and iPad the panel sits above the preview, not over it (entry 313 section 2) | on a device |
 | Every picture checked | `picture-check` | on the phone | | on iOS |
 | The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | on iOS |
-| Label targets for a thermal printer | `label-targets` | left out | entry 358: the label targets are in the phone's Targets library, but the thermal print mode is on the computer's print panel only, and no platform prints to a label printer by itself yet | left out |
+| Label targets for a thermal printer | `label-targets` | left out | entry 358: the label targets are in the phone's Targets library and the phone shares any sheet for a label printer's own app (entry 363), but the preview of the dots is on the computer's print panel only, and no platform prints to a label printer by itself yet | left out |
 | Every shot, and which count | `shots-table` | on the phone | entry 280 section 2, Shots A: the Shots page from a result; on the computer, Shots and clicks under the shot table | on iOS |
 | Zero from this group | `zero-from` | on the phone | entry 280 section 2, board ZeroFrom: its own page, and the offset handed to Ballistics; a window on the computer | on iOS |
 | Several aim points on one target | `aim-points` | on the phone | entry 280 section 2, board MultiAim: a chip per aim point in its own color and "+ Aim point" | on iOS |

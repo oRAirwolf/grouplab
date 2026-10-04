@@ -188,12 +188,13 @@ public sealed class PrintPanel : UserControl
             DiagnosticLog.Info("print.printer", ("thermal", Head is not null), ("dpi", Head?.DotsPerInch ?? 0));
             colourRow.IsVisible = Head is null;
             thermalNote.IsVisible = Head is not null;
+            darknessRow.IsVisible = Head is not null;
             ShowPreview();
         };
         details.Children.Add(new StackPanel
         {
             Spacing = Tokens.Space4,
-            Children = { Row(new TextBlock { Text = "Print on", VerticalAlignment = VerticalAlignment.Center }, printOn), thermalNote },
+            Children = { Row(new TextBlock { Text = "Print on", VerticalAlignment = VerticalAlignment.Center }, printOn), thermalNote, darknessRow },
         });
 
         var colourLabel = new TextBlock { Text = "Bulls in", VerticalAlignment = VerticalAlignment.Center };
@@ -251,10 +252,13 @@ public sealed class PrintPanel : UserControl
         ("A 4 inch thermal printer, 300 dpi", new PrintHead(300, 1248)),
         ("An 8.5 inch thermal printer, 203 dpi (Letter and A4)", new PrintHead(203.2, 1728)),
         ("An 8.5 inch thermal printer, 300 dpi (Letter and A4)", new PrintHead(300, 2560)),
+        ("Phomemo M834, 300 dpi (Letter and A4), not yet tested", new PrintHead(300, 2560)),
     ];
 
     private readonly ComboBox printOn = new() { MinWidth = 260, [Avalonia.Automation.AutomationProperties.NameProperty] = "Print on" };
     private readonly TextBlock thermalNote = new() { Text = ThermalWords, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary }, IsVisible = false };
+
+    private StackPanel darknessRow = new() { IsVisible = false };
     private StackPanel colourRow = new();
 
     /// <summary>The thermal printer's head the sheet will print on, or null for an office printer or a PDF.</summary>
@@ -1057,13 +1061,92 @@ public sealed class PrintPanel : UserControl
     {
         var open = Button("Open to print", Print);
         var save = Button("Save PDF…", async () => await SaveDialog());
+        // Entry 363 section 2a: for a thermal printer's own app, before GroupLab prints to one itself.
+        var app = Button("Save for a printer app…", async () => await SaveForAppDialog());
+        ToolTip.SetTip(app, AppWords);
+        darknessRow = new StackPanel { IsVisible = Head is not null, Children = { Button("Save the darkness test page…", async () => await SaveForAppDialog(darkness: true)) } };
         if (!OperatingSystem.IsWindows())
         {
-            return Row(save, open);
+            return Row(save, open, app);
         }
 
         open.Classes.Add(AppStyles.Primary);
-        return Row(open, save, Button("Print…", PrintHere));
+        return Row(open, save, Button("Print…", PrintHere), app);
+    }
+
+    /// <summary>What Save for a printer app makes, said where it is offered and after it has saved.</summary>
+    internal const string AppWords = "For a thermal label printer's own app: each page as a black and white picture at the printer's dots (300 dpi unless a thermal printer is chosen above) and a PDF, both at the page's true size. In the app, print at 100 percent or actual size, never fit to page.";
+
+    private async Task SaveForAppDialog(bool darkness = false)
+    {
+        if ((selected is null && !darkness) || TopLevel.GetTopLevel(this)?.StorageProvider is not { } storage)
+        {
+            return;
+        }
+
+        double dpi = Head?.DotsPerInch ?? PrinterAppFiles.DefaultDpi;
+        string stem = darkness ? "darkness-test" : Path.GetFileName(selected!.File).Replace(".gltd.json", "", StringComparison.Ordinal);
+        DiagnosticLog.Info("dialog.open", ("dialog", "save-printer-app"), ("darkness", darkness));
+        var file = await storage.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = darkness ? "Save the darkness test page for a printer app" : "Save the target for a printer app",
+            SuggestedFileName = $"{stem}-{PrinterAppFiles.Suffix(dpi)}.png",
+            DefaultExtension = "png",
+        });
+        DiagnosticLog.Info("dialog.result", ("dialog", "save-printer-app"), ("chosen", file is not null));
+        if (file?.TryGetLocalPath() is { } path)
+        {
+            SaveForApp(path, darkness);
+        }
+    }
+
+    /// <summary>
+    /// Writes the files a thermal printer's app takes: beside <paramref name="pngPath"/>, one PNG a page (numbered where there are several)
+    /// and one PDF of them all. False with the reason in the message line.
+    /// </summary>
+    internal bool SaveForApp(string pngPath, bool darkness = false)
+    {
+        double dpi = Head?.DotsPerInch ?? PrinterAppFiles.DefaultDpi;
+        IReadOnlyList<byte[]> pngs;
+        byte[] pdf;
+        if (darkness)
+        {
+            (pngs, pdf) = PrinterAppFiles.DarknessPage(dpi: dpi);
+        }
+        else if (Render() is { } result)
+        {
+            (pngs, pdf) = PrinterAppFiles.Make(result.Pages, dpi);
+        }
+        else
+        {
+            return false;
+        }
+
+        string folder = Path.GetDirectoryName(Path.GetFullPath(pngPath))!, stem = Path.GetFileNameWithoutExtension(pngPath);
+        var written = new List<string>();
+        try
+        {
+            Directory.CreateDirectory(folder);
+            for (int i = 0; i < pngs.Count; i++)
+            {
+                string name = Path.Combine(folder, pngs.Count == 1 ? stem + ".png" : FormattableString.Invariant($"{stem}-page{i + 1}.png"));
+                File.WriteAllBytes(name, pngs[i]);
+                written.Add(name);
+            }
+
+            File.WriteAllBytes(Path.Combine(folder, stem + ".pdf"), pdf);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Fail("The files could not be written", "The files could not be written: " + ex.Message);
+            DiagnosticLog.Exception(LogLevel.Warn, "file.save", ex, [.. DiagnosticLog.File(pngPath), ("kind", "printer-app")]);
+            return false;
+        }
+
+        DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(pngPath), ("kind", "printer-app"), ("pages", pngs.Count), ("dpi", dpi), ("darkness", darkness)]);
+        SetStatus(string.Create(CultureInfo.InvariantCulture,
+            $"Saved {pngs.Count} {(pngs.Count == 1 ? "picture" : "pictures")} and a PDF at {dpi:0} dpi in {folder}. In the printer's app, print at 100 percent or actual size, never fit to page."), StatusKind.Success);
+        return true;
     }
 
     /// <summary>

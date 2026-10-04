@@ -59,3 +59,40 @@ public class Entry358ThermalTests
         }
     }
 }
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 363 section 2a: Save for a printer app writes a picture and a PDF of the sheet at 300 dpi, named so they
+/// cannot be mistaken for an office printer's PDF, and the darkness test page beside it; the Phomemo M834 is a choice of its own.
+/// </summary>
+public class Entry363PrinterAppTests
+{
+    [AvaloniaFact]
+    public void SaveForAPrinterAppWritesThePictureAndThePdfAndTheDarknessPage()
+    {
+        var panel = TargetsScreen.Open();
+        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-printer-app-{Guid.NewGuid():N}");
+        try
+        {
+            panel.Select("GL-SCALE-LTR-1.gltd.json");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains(PrintPanel.ThermalChoices, c => c.Words.StartsWith("Phomemo M834, 300 dpi", StringComparison.Ordinal) && c.Head.DotsPerInch == 300);
+
+            Assert.True(panel.SaveForApp(Path.Combine(folder, "GL-SCALE-LTR-1-thermal-300dpi.png")));
+            byte[] png = File.ReadAllBytes(Path.Combine(folder, "GL-SCALE-LTR-1-thermal-300dpi.png"));
+            Assert.Equal(300, GroupLab.Core.Printing.Thermal.ThermalPng.Dpi(png)!.Value, 1);
+            Assert.True(File.Exists(Path.Combine(folder, "GL-SCALE-LTR-1-thermal-300dpi.pdf")));
+            Assert.Contains("never fit to page", panel.StatusText, StringComparison.Ordinal);
+
+            Assert.True(panel.SaveForApp(Path.Combine(folder, "darkness-test-thermal-300dpi.png"), darkness: true));
+            Assert.True(File.Exists(Path.Combine(folder, "darkness-test-thermal-300dpi.pdf")));
+        }
+        finally
+        {
+            panel.Close();
+            if (Directory.Exists(folder))
+            {
+                Directory.Delete(folder, true);
+            }
+        }
+    }
+}

@@ -1054,7 +1054,7 @@
       "sheets": [["x6-4x6", "A six-bull label on 4x6, as it prints"], ["x6-4x6-thermal", "The same label as a 203 dpi thermal printer makes it, one dot to a pixel"]],
       "platforms": ["Windows", "macOS", "Linux"],
       "since": "next",
-      "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns"],
+      "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns", "for a thermal label printer's own app"],
       "tour": "targets",
       "guide": "1-print-a-sheet"
     },

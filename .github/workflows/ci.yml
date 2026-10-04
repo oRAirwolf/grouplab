@@ -206,6 +206,9 @@ jobs:
       - name: The archive worker, against a stand-in GitHub
         run: python3 tests/python/archive-worker-tests.py
 
+      - name: The printer recording reader, on recordings made here (entry 363)
+        run: python3 tests/python/printer-recording-tests.py
+
       # Entries 226 section 3 and 229 section 5: the aim point score sheet asks only for magnifications a scope has, never twice.
       - name: The aim point score sheet's rows
         run: python3 tests/python/aim-card-tests.py

@@ -1,6 +1,19 @@
-**Open: 20.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
-Running from the terminal since 03:06 UTC, 4 October, at 62% of the week (a live reading from the status line); working on entry 362 (store-bought targets), then the rest of 358.
-Done, from entry 361: the hook lets a block already under way finish between 85% and 88% while its finishing flag is fresh, and stops everything at 88%.
+**Open: 20.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+Working from the terminal, 4 October, at 65% of the week (a live reading); entry 363: the M834 is ready, then the queue in its section 3.
+
+**THE M834 TOMORROW** (entry 363; needs nightly 166 or later, on the computer, Android and the iPhone). In order:
+1. **The recording first (request 73 below)**, so I can start on direct printing while you play: the nRF Connect scan, then one page
+   printed from the Phomemo app with the snoop log on, then the bug report. Both files into `C:\Dev\grouplab-local\printers\`.
+2. **A target through the Phomemo app.** Computer: Targets, a Letter sheet, Print on **Phomemo M834**, **Save for a printer app…** (a
+   picture and a PDF, both named `-thermal-300dpi`). Phone: Targets, a sheet, **Share for a printer app**, then the Phomemo app. In the
+   app choose 100%, actual or original size, never fit to page. Good: the corner squares sharp and black, the sheet's ruler line true.
+3. **The darkness test page** (Targets, Thermal label printers, on the phone; **Save the darkness test page…** on the computer once Print
+   on says M834): print it once at each darkness the app offers, write the setting on each in pen, scan them at 600 dpi.
+4. **The printer check page** (the GroupLab printer check sheet) through the app, scanned at 600 dpi, opened in the printer check. Good:
+   across and along both within about half a percent.
+5. **Shoot or poke a target** printed on the M834 with a pen, photograph it with GroupLab, and look at the result.
+Send back: the scans and photos into the same folder, and one line on anything that looked wrong.
+
 
 **THE WEEKLY BUDGET, ENTRIES 360 AND 361** (not a request): Code now runs from a terminal, where the status line keeps the week's
 reading fresh every minute. A check before every action refuses to go on at **85%**, unless a block already under way (above all a
@@ -188,7 +201,8 @@ computer. **Steps:**
    **Full report**; when the phone says it is ready, share it to yourself (Google Drive, email or Quick Share to this computer) and save
    it as `C:\Dev\grouplab-local\printers\m834-bugreport.zip`. With the phone's cable instead (USB debugging on, as for GroupLab Dev),
    in PowerShell: `adb bugreport C:\Dev\grouplab-local\printers\m834-bugreport.zip`. Either way, put the nRF Connect file in the same
-   folder.
+   folder. I read them with `python scripts/printer-recording.py` (entry 363), which says what the app sent and whether the M834 is
+   Bluetooth LE or classic only.
 **A good answer:** "both saved in grouplab-local\printers", or what went differently.
 
 ## 72. For Unholy's 4x6 label printer: steps to pass to him, once you have its model number (entries 358 and 359)

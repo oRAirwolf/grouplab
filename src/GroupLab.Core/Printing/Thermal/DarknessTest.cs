@@ -35,25 +35,47 @@ public static class DarknessTest
         var page = new DotImage(widthDots, (Strip * settings.Count) + 8);
         for (int i = 0; i < settings.Count; i++)
         {
-            int top = (i * Strip) + 8;
-            int x = Number(page, settings[i], 4, top + 8, 3);
-            x += 12;
-            page.Fill(x, top + 4, x + 40, top + 44);
-            x += 52;
-            foreach (int width in LineDots)
-            {
-                page.Fill(x, top + 4, x + width, top + 44);
-                x += width + 12;
-            }
-
-            foreach (int side in SquareDots)
-            {
-                page.Fill(x, top + 24 - (side / 2), x + side, top + 24 - (side / 2) + side);
-                x += side + 12;
-            }
+            DrawStrip(page, (i * Strip) + 8, settings[i]);
         }
 
         return page;
+    }
+
+    /// <summary>
+    /// A whole page <paramref name="widthDots"/> by <paramref name="heightDots"/> with <paramref name="strips"/> strips spread down it,
+    /// numbered by place from the top, for printing through a printer's own app once at each darkness it offers.
+    /// </summary>
+    public static DotImage Sheet(int widthDots, int heightDots, int strips)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(strips);
+        var page = new DotImage(widthDots, heightDots);
+        int gap = Math.Max(Strip, (heightDots - Strip) / Math.Max(1, strips));
+        for (int i = 0; i < strips; i++)
+        {
+            int top = Math.Min(heightDots - Strip, (Strip / 2) + (i * gap));
+            DrawStrip(page, top, i + 1);
+        }
+
+        return page;
+    }
+
+    private static void DrawStrip(DotImage page, int top, int label)
+    {
+        int x = Number(page, label, 4, top + 8, 3);
+        x += 12;
+        page.Fill(x, top + 4, x + 40, top + 44);
+        x += 52;
+        foreach (int width in LineDots)
+        {
+            page.Fill(x, top + 4, x + width, top + 44);
+            x += width + 12;
+        }
+
+        foreach (int side in SquareDots)
+        {
+            page.Fill(x, top + 24 - (side / 2), x + side, top + 24 - (side / 2) + side);
+            x += side + 12;
+        }
     }
 
     /// <summary>
