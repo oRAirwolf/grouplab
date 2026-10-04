@@ -21,6 +21,17 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-04, question 82: entry 362 asks to apply the orientation tag in the shared loader, which would move every saved mark
+
+**Status: open.** Entry 362 section 1 says to apply the photo's orientation "the same way in all three" of
+`FingerprintSession.Load`, `ImageLoader.Load` and `ImageLoader.LoadMaxChannel`, "before anything else". The two loaders feed the
+analysis on both platforms, which keeps every mark in the photo's stored pixels and turns only the view (`ViewRotation`, entry 26); the
+marking file records the tag beside the marks (`exifOrientation`), and a sent target is the stored pixels with those marks. Turning the
+pixels in the loaders would put every saved marking, and every sent one, a quarter or half turn off its picture. **Done instead:** the
+store-bought screens turn their own copies (`Upright`, `UprightMat`), all eight values, and the analysis, any-target mode, the phone's
+working copy and sending were checked and already show the picture upright through the view. **The options.** A: leave it so (my
+choice). B: move the analysis to upright pixels, with a migration that turns every saved marking and a version on the marking file.
+
 ## 2026-10-03, question 81: the phone asks whether to send targets, and cannot send one
 
 **Status: open.** Found in entry 357. The phone's first run and Settings ask the sending question, but no phone code sends a target,

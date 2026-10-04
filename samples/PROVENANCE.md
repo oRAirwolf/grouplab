@@ -255,3 +255,26 @@ needs, is taken from the submission's own record, where the server wrote it, and
 |---|---|---|---|---|
 | `photo-22lr-load-sheet-2026-10-03.jpg` | 5,809,550 | `5435d397065c2fc20db1338521e2a336bca8647f9cf095fe70c6aebf2fb17b0b` | `002_IMG_3819.png`, SHA-256 `395a92f65fab45012cf25b63c7a6b95885500b74c24f2a39be0469b5616b93de` | GroupLab's 5x5 load development sheet on Letter, `GL-CF25-LTR`, 25 shots of .22 LR at 50 yd, stapled to corrugated plastic |
 | `photo-22lr-diamond-2026-10-03.jpg` | 5,205,022 | `99bdaf388fb3aecdc735fcf7995aa736ee155a91fd6360ca1b71e9a8c8ee6630` | `001_IMG_3817.png`, SHA-256 `0e1942a0916c32d9193909e04868584a65ad82885e86418f87e7661206817abc` | A sheet the target generator made, 50 yd, 6x, diamond, `GL-MBTW-2V2M-JTPE-4518`, 25 shots of .22 LR at 50 yd |
+
+
+# Entry 362: Alan's five photographs of blank store-bought targets, as small before and after pictures
+
+| | |
+|---|---|
+| **Whose** | Alan's own photographs, taken 2026-10-03 on his kitchen counter: Allen EZ Aim sight-in 55134A, Allen splash bull 55124A, Birchwood Rigid crosshair, and two Birchwood Eze-Scorer targets |
+| **Consent** | Alan's standing consent for his own photographs (entry 171 section 6); he sent these for this work (entry 362) |
+| **Kept where** | the originals stay in `C:\Dev\grouplab-local\commercial-targets\corner-photos-2026-10-03\`, never committed |
+| **Licence** | GPL-3.0 |
+
+Each published picture is 360 pixels on its longer side, two halves side by side: the photograph as the screen showed it before (unturned,
+with the fixed rectangle it offered) and as GroupLab finds it now. They were decoded to pixels and written again as JPEG with no metadata of
+any kind; only each original's orientation tag was read, never a location. The maker's printing shows in them, as it does in any photograph
+of a target, and none of it is published as a target of its own.
+
+| Published file | Bytes | SHA-256 |
+|---|---|---|
+| `docs/notes/entry-362/allen-ezaim-sight-in-55134A.jpg` | 33,304 | `f43c601b8550987185ea52a9ccd69af1e65f441144a9df142bbce051087d4ec8` |
+| `docs/notes/entry-362/allen-splash-bull-55124A.jpg` | 41,095 | `77879eb2c74e126bc511043b3559a4199dd4164952ef4b1e3573dc2597a5189f` |
+| `docs/notes/entry-362/birchwood-rigid-crosshair.jpg` | 28,776 | `31d9b25a07683d06ce8928d16a62f715c811f9b07ee1194965fe008e2741d8e4` |
+| `docs/notes/entry-362/eze-scorer-bull.jpg` | 33,005 | `a711afea2dde5e7933df10564f55deaadc32d9af6e803792f88741d35dfc6eb4` |
+| `docs/notes/entry-362/eze-scorer-sight-in-grid.jpg` | 38,902 | `e1f0386388b71108dfa9487548f923303310c67d2323b9b87e3e3c442a5b4372` |

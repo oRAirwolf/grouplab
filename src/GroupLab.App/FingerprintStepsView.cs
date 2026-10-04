@@ -61,7 +61,19 @@ public sealed class FingerprintStepsView : UserControl
             session.MoveCorner(i, to);
             Draw();
         };
+        picture.CornerReleased += Released;
         picture.PointTapped += Touched;
+        KeyDown += (_, e) =>
+        {
+            // Entry 362 section 5: R turns the picture clockwise and Shift and R the other way, on the steps that show the photo, but never
+            // while a field is being typed in.
+            if (e.Key == Avalonia.Input.Key.R && (e.KeyModifiers & ~Avalonia.Input.KeyModifiers.Shift) == 0 && e.Source is not TextBox
+                && session.Step is FingerprintStep.Photo or FingerprintStep.Straighten && session.Shown is not null)
+            {
+                Rotate(clockwise: (e.KeyModifiers & Avalonia.Input.KeyModifiers.Shift) == 0);
+                e.Handled = true;
+            }
+        };
         back.Click += (_, _) => GoBack();
         next.Click += (_, _) => _ = GoOn();
         name.TextChanged += (_, _) => session.Name = name.Text ?? "";
@@ -206,6 +218,31 @@ public sealed class FingerprintStepsView : UserControl
             }), TaskScheduler.Default);
         }
 
+        Show();
+    }
+
+    /// <summary>Entry 362 section 5: the picture a quarter turn round, the corners looked for again on it.</summary>
+    internal void Rotate(bool clockwise)
+    {
+        if (session.Shown is null)
+        {
+            return;
+        }
+
+        session.Rotate(clockwise);
+        DiagnosticLog.Info("fingerprint.rotate", ("clockwise", clockwise), ("corners", session.CornersFound));
+        shown = session.Shown is { } jpeg ? new Bitmap(new MemoryStream(jpeg)) : shown;
+        straightShown = null;
+        said.Text = "";
+        Show();
+    }
+
+    /// <summary>A corner let go: onto the clear corner of the picture near it, where there is one, with Undo.</summary>
+    private void Released(int corner)
+    {
+        bool snapped = session.SnapCorner(corner);
+        DiagnosticLog.Info("fingerprint.corner", ("corner", corner), ("snapped", snapped));
+        said.Text = snapped ? FingerprintWords.Snapped : "";
         Show();
     }
 
@@ -374,7 +411,8 @@ public sealed class FingerprintStepsView : UserControl
                 body.Children.Add(choose);
                 if (session.Shown is not null)
                 {
-                    body.Children.Add(Line(session.CornersFound ? "Corners found." : FingerprintWords.CornersNotFound));
+                    body.Children.Add(RotateButtons());
+                    body.Children.Add(Line(session.CornersFound ? "Corners found." : FingerprintWords.CornersMissed(session.CornersSaid)));
                 }
 
                 break;
@@ -406,13 +444,16 @@ public sealed class FingerprintStepsView : UserControl
                 }
 
                 body.Children.Add(new TextBlock { Text = FingerprintWords.Measured(session.Source), TextWrapping = TextWrapping.Wrap, FontFamily = Tokens.Mono, FontSize = Tokens.SecondarySize, Classes = { AppStyles.Dim } });
+                AddUndo();
                 break;
             case FingerprintStep.Straighten:
                 if (!session.CornersFound)
                 {
-                    explain.Text = FingerprintWords.CornersNotFound;
+                    explain.Text = FingerprintWords.CornersMissed(session.CornersSaid);
                 }
 
+                body.Children.Add(RotateButtons());
+                AddUndo();
                 break;
             case FingerprintStep.Bulls:
                 for (int i = 0; i < session.Bulls.Count; i++)
@@ -478,7 +519,7 @@ public sealed class FingerprintStepsView : UserControl
         empty.IsVisible = picture.Image is null;
         pictureLine.Text = step switch
         {
-            FingerprintStep.Scale or FingerprintStep.Straighten when session.Shown is not null => session.CornersFound ? FingerprintWords.Explain(FingerprintStep.Straighten, false) : FingerprintWords.CornersNotFound,
+            FingerprintStep.Scale or FingerprintStep.Straighten when session.Shown is not null => session.CornersFound ? FingerprintWords.Explain(FingerprintStep.Straighten, false) : FingerprintWords.CornersMissed(session.CornersSaid),
             FingerprintStep.Bulls => FingerprintWords.Explain(FingerprintStep.Bulls, false),
             _ => "",
         };
@@ -526,6 +567,39 @@ public sealed class FingerprintStepsView : UserControl
             AutomationProperties.SetName(row, $"{FingerprintWords.Steps[i]}, {(done ? "done" : now ? "now" : "to come")}");
             stepList.Children.Add(row);
         }
+    }
+
+    /// <summary>Rotate left and Rotate right, with the keys that do the same.</summary>
+    private StackPanel RotateButtons()
+    {
+        var left = new Button { Content = "↺ " + FingerprintWords.RotateLeft };
+        var right = new Button { Content = "↻ " + FingerprintWords.RotateRight };
+        AutomationProperties.SetName(left, FingerprintWords.RotateLeftName);
+        AutomationProperties.SetName(right, FingerprintWords.RotateRightName);
+        ToolTip.SetTip(left, FingerprintWords.RotateKeys);
+        ToolTip.SetTip(right, FingerprintWords.RotateKeys);
+        left.Click += (_, _) => Rotate(clockwise: false);
+        right.Click += (_, _) => Rotate(clockwise: true);
+        return new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8, Children = { left, right } };
+    }
+
+    /// <summary>Undo, while the last corner let go has just snapped.</summary>
+    private void AddUndo()
+    {
+        if (session.LastSnap is null)
+        {
+            return;
+        }
+
+        var undo = new Button { Content = FingerprintWords.UndoSnap };
+        AutomationProperties.SetName(undo, "Undo the corner's snap");
+        undo.Click += (_, _) =>
+        {
+            session.UndoSnap();
+            said.Text = "";
+            Show();
+        };
+        body.Children.Add(undo);
     }
 
     private static TextBlock Line(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };

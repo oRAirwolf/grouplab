@@ -957,7 +957,11 @@
     ],
     [
      "The photo in the middle",
-     "The target as photographed, its outline found and its four corners as amber handles to drag where one is off."
+     "The target the way up it was taken, its outline found from the paper's edges and color and its four corners as amber handles to drag where one is off. Scroll or pinch to zoom; while a corner is dragged a magnifier above it shows the point under the finger, and a corner let go lands on the clear corner nearest it, with Undo."
+    ],
+    [
+     "Rotate left and Rotate right",
+     "On the Photo and Straighten steps, a quarter turn for a photo taken sideways or one whose camera did not say which way up it was; R and Shift R do the same on the computer. The corners are looked for again on the turned picture."
     ],
     [
      "How big is this target?",

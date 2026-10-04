@@ -5096,6 +5096,10 @@
   "Send a target to the project After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Sending.cs OfferToSend (entries 165 and 355); the phone has no sender yet (entry 357, question 81)"
+  },
+  "It finds the corners from the paper's edges and color, so white paper on a light counter works; where it cannot, it says why and starts four amber handles at its best guess for you to drag.": {
+   "kind": "measured",
+   "where": "tests/GroupLab.App.Tests/Entry362Tests.cs OnAlansPhotographsAndScansTheCornersAreWhereTheyWereChecked: four of Alan's five counter photographs of 2026-10-03 found, the fifth guessed within about twenty pixels, checked by eye on 2026-10-04 (entry 362, docs/PHASE1-RESULTS.md); src/GroupLab.Cli/Imaging/StoreTargetOutline.cs"
   }
  },
  "rules": [

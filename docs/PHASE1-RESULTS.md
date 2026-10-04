@@ -383,6 +383,14 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 362: store-bought targets, upright, their corners found, zoomed and turned
+
+- **Why every photo failed.** `SheetOutline` takes the largest light region by brightness; on Alan's white counter that region was the counter, which touches the frame, so all five were refused as "runs out of the frame" and the screen offered a fixed rectangle. Four of the five carry orientation 3 or 6, which the screen ignored (`FingerprintSession.Load` decoded with `IgnoreOrientation`).
+- **The finder** (`StoreTargetOutline`): colour edges (lightness and both colour axes, the colour axes weighted 2.5), printed lines left out by the colour beyond both sides, a second Hough for long faint edges; the region whose colour differs from the picture's border (target paper is bluer than a cream counter); the sheet finder's light region; each outline snapped side by side to the outermost consistent edge, scored by its weakest side and by how far its edges run on past its corners, then refined at full size, averaged along the side, twice.
+- **Alan's five photos** (4000 by 3000): sight-in, splash bull, Eze-Scorer bull and Eze-Scorer sight-in grid found, corners within about ten pixels by eye on crops, about twenty five on one corner of the grid; Rigid crosshair not found (its edge shows on about a fifth of each side), guess within about twenty pixels. 0.3 to 1.0 s each.
+- **The 600 dpi scans**: four found, two or three sides on the scan's own edges where the target reaches them; the Eze-Scorer bull is larger than the scanner and is the whole scan, not found. The GroupLab sheet cases and the stand-in poster are unchanged; `SheetOutline` itself was not changed.
+- **Placing a corner**: wheel, pinch and trackpad zoom to twelve times, a drag pans once zoomed, a magnifier four times larger above the finger while dragging, and on release a snap to the strongest corner within a hundredth of the picture where it is at least four times the typical strength and twice any rival, with Undo. Rotate left and right on the Photo and Straighten steps turn everything placed with the picture.
+
 ## Entry 361: the finishing flag, and a live reading
 
 - The hook now follows entry 360 as amended: under 85 it lets every call through; from 85 it blocks unless `docs/notes/finishing.flag` is under 45 minutes old; from 88 it blocks whatever the flag says. The six cases above were run by hand with sample files.

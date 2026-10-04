@@ -1,14 +1,36 @@
-**Open: 19.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 20.** Most urgent: **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 Running from the terminal since 03:06 UTC, 4 October, at 62% of the week (a live reading from the status line); working on entry 362 (store-bought targets), then the rest of 358.
 Done, from entry 361: the hook lets a block already under way finish between 85% and 88% while its finishing flag is fresh, and stops everything at 88%.
 
-**THE WEEKLY BUDGET, ENTRY 360** (not a request): the hard stop is in place. A check runs before every action Code takes, workers
-included, and refuses to go on once the week reads **85%** or more; I stop starting anything at **80%**. The last real reading of your
-week is **60%**, from Claude Code's own record at 09:55 UTC on 3 October (window resets 8 October 02:00 UTC). The status line that
-should refresh that figure every minute does not run in this VS Code session (no reading appeared), so the number cannot be kept
-fresh here; as entry 360 says, I am finishing only the step in hand and starting nothing new. The worker on entry 358 stops at its next
-commit. To get live readings, start Code from a terminal (`claude` in C:\Dev\grouplab), where the status line runs; the stop works
-either way.
+**THE WEEKLY BUDGET, ENTRIES 360 AND 361** (not a request): Code now runs from a terminal, where the status line keeps the week's
+reading fresh every minute. A check before every action refuses to go on at **85%**, unless a block already under way (above all a
+publish) has marked itself as finishing in the last 45 minutes, and refuses everything at **88%** whatever. Blocks are planned to end
+under 85%.
+
+**ADD A STORE-BOUGHT TARGET, WHAT WAS WRONG AND WHAT CHANGED** (entry 362, not a request; arrives in nightly 165)
+
+*What was wrong.* Three things. Your photos were shown the way the camera stored them, not the way they were taken: four of the five
+carry a "turn this 180 degrees" or "turn this a quarter" tag, and that screen ignored it. The corner finder was the one built for
+GroupLab sheets, which looks for the largest light area by brightness alone; on your white counter that area was the counter itself,
+which runs off the edge of the picture, so it gave up on every photo and showed the same fixed rectangle each time. And the picture
+could not be zoomed.
+
+*What changed.* The photo is shown the right way up, and **Rotate left** and **Rotate right** turn it a quarter turn on the Photo and
+Straighten steps (R and Shift R on the computer). A new corner finder looks for the paper's straight edges and its colour, not only its
+brightness: target paper is bluer than a cream counter, and a shadow changes brightness far more than colour. On your five photos it
+finds four outright, within about ten pixels in a 4000 pixel photo, about twenty five on one corner of the green grid. On the Rigid
+crosshair the paper's edge barely shows against the counter; it says so and starts the corners within about twenty pixels of the right
+place, so Next is usually all it needs. Where it cannot find them it now says why. Scroll or pinch to zoom; while you drag a corner a
+magnifier above your finger shows the point under it with a crosshair; and a corner let go lands on the clear corner of the picture
+nearest it, with Undo. The same finder handles four of the five 600 dpi Birchwood scans on this computer (the fifth is larger than the
+scanner, so it has no four corners in it).
+
+*Before and after*, left as the screen showed it, right as it finds it now:
+![Sight-in](entry-362/allen-ezaim-sight-in-55134A.jpg)
+![Splash bull](entry-362/allen-splash-bull-55124A.jpg)
+![Rigid crosshair, a close guess](entry-362/birchwood-rigid-crosshair.jpg)
+![Eze-Scorer bull](entry-362/eze-scorer-bull.jpg)
+![Eze-Scorer sight-in grid](entry-362/eze-scorer-sight-in-grid.jpg)
 
 **FOR FENIX, HIS TWO PHOTOS** (entry 354, not a request; to pass on): "Thanks for the two photos, they found three real problems. On the
 load development sheet GroupLab marked 32 spots for your 25 shots: the torn top corner and the curled top edge where the board showed
@@ -133,6 +155,16 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 74. One or two photos of a target on your kitchen table, five minutes, whenever suits (entry 362)
+
+**What:** the photos you took of a blank target on the natural wood table, the ones that failed the same way as the counter, sent the
+way the counter photos came (into `C:\Dev\grouplab-local\commercial-targets\`, any folder name).
+
+**Why:** the new corner finder was checked on your white counter and on flatbed scans, never on wood. Wood grain is full of straight
+lines, which is exactly what could fool it, so one real wooden photo is worth more than any guess.
+
+**A good answer:** one or two photos, all four corners of the target in each. Nothing else needed.
 
 ## 73. When the Phomemo M834 arrives: two recordings from your Android phone, about twenty minutes, that day or later (entry 358)
 

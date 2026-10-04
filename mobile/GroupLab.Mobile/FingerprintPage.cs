@@ -42,6 +42,14 @@ internal sealed class FingerprintPage : UserControl
         AutomationProperties.SetName(picture, "The photo of the target");
         AutomationProperties.SetName(name, FingerprintWords.NameBox);
         picture.CornerMoved += (i, to) => session.MoveCorner(i, to);
+        picture.CornerReleased += corner =>
+        {
+            // Entry 362 section 3: a corner let go lands on the clear corner of the picture near it, where there is one, with Undo.
+            bool snapped = session.SnapCorner(corner);
+            DiagnosticLog.Info("fingerprint.corner", ("corner", corner), ("snapped", snapped));
+            said.Text = snapped ? FingerprintWords.Snapped : "";
+            Show();
+        };
         picture.PointTapped += Touched;
         ActualThemeVariantChanged += (_, _) => Show();
         Show();
@@ -291,7 +299,7 @@ internal sealed class FingerprintPage : UserControl
         column.Children.Add(Screens.Title(FingerprintWords.Question(step)));
         if (step != FingerprintStep.Scale)
         {
-            column.Children.Add(Screens.Dim(step == FingerprintStep.Straighten && !session.CornersFound ? FingerprintWords.CornersNotFound : FingerprintWords.Explain(step, touch: true)));
+            column.Children.Add(Screens.Dim(step == FingerprintStep.Straighten && !session.CornersFound ? FingerprintWords.CornersMissed(session.CornersSaid) : FingerprintWords.Explain(step, touch: true)));
         }
 
         Control bottom;
@@ -300,7 +308,8 @@ internal sealed class FingerprintPage : UserControl
             case FingerprintStep.Photo:
                 if (session.Shown is not null)
                 {
-                    column.Children.Add(Screens.Line(session.CornersFound ? "Corners found." : FingerprintWords.CornersNotFound));
+                    column.Children.Add(RotateButtons());
+                    column.Children.Add(Screens.Line(session.CornersFound ? "Corners found." : FingerprintWords.CornersMissed(session.CornersSaid)));
                 }
 
                 column.Children.Add(Screens.Choice(FingerprintWords.TakePhoto, Camera).Id("fingerprint-camera"));
@@ -374,6 +383,20 @@ internal sealed class FingerprintPage : UserControl
                 column.Children.Add(Screens.Quiet(FingerprintWords.Never));
                 bottom = Next(step);
                 break;
+            case FingerprintStep.Straighten:
+                column.Children.Add(RotateButtons());
+                if (session.LastSnap is not null)
+                {
+                    column.Children.Add(Screens.Choice(FingerprintWords.UndoSnap, () =>
+                    {
+                        session.UndoSnap();
+                        said.Text = "";
+                        Show();
+                    }).Id("fingerprint-undo-snap"));
+                }
+
+                bottom = Next(step);
+                break;
             default:
                 bottom = Next(step);
                 break;
@@ -388,6 +411,34 @@ internal sealed class FingerprintPage : UserControl
         dock.Children.Add(foot);
         dock.Children.Add(Screens.Page(column));
         Content = dock;
+    }
+
+    /// <summary>Entry 362 section 5: the picture a quarter turn round, the corners looked for again on it.</summary>
+    internal void Rotate(bool clockwise)
+    {
+        if (session.Shown is null || busy)
+        {
+            return;
+        }
+
+        session.Rotate(clockwise);
+        DiagnosticLog.Info("fingerprint.rotate", ("clockwise", clockwise), ("corners", session.CornersFound));
+        shown = session.Shown is { } jpeg ? new Bitmap(new MemoryStream(jpeg)) : shown;
+        straightShown = null;
+        said.Text = "";
+        Show();
+    }
+
+    /// <summary>Rotate left and Rotate right, side by side.</summary>
+    private Grid RotateButtons()
+    {
+        var left = Screens.Choice("↺ " + FingerprintWords.RotateLeft, () => Rotate(clockwise: false)).Id("fingerprint-rotate-left");
+        var right = Screens.Choice("↻ " + FingerprintWords.RotateRight, () => Rotate(clockwise: true)).Id("fingerprint-rotate-right");
+        AutomationProperties.SetName(left, FingerprintWords.RotateLeftName);
+        AutomationProperties.SetName(right, FingerprintWords.RotateRightName);
+        var pair = new Grid { ColumnDefinitions = new ColumnDefinitions("*,12,*"), Children = { left, right } };
+        Grid.SetColumn(right, 2);
+        return pair;
     }
 
     private Button Next(FingerprintStep step)

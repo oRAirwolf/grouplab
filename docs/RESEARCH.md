@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| Finding a store-bought target's corners on a counter, entry 362 (src/GroupLab.Cli/Imaging/StoreTargetOutline.cs) | **not yet** | It would change what a shooter does (a plain, darker surface; no shadow over an edge) and what another developer builds (colour, not brightness, separates white paper from a cream counter), but it rests on five photographs on one counter; worth one once the kitchen table photos (request 74) and a few more surfaces show which of the methods carries which surface. |
 | A fingerprint of store-bought targets, entry 332 (docs/notes/fingerprint-trial.md) | **not yet** | what a shooter needs from it, whether a remembered scale can be trusted, waits on a second sheet of each product (request 64), and every picture in the trial was synthetic; worth one after that, with real photographs of shot targets |
 | The detector under synthetic degradations, entry 261 (docs/DETECTION-LEARNING-STUDY.md section 1) | **not yet** | synthetic holes on one sheet cannot separate what a condition does from what a real hole does; worth one once the scoreboard has real sent photographs by condition, and the curl result is fixed first |
 | Nineteen angled photographs of one scanned sheet (entry 238) | written, as a section of curled-angled-paper, with a figure | It tells a shooter how steep a phone can be held and why, and it moved GroupLab's own limit from 40 to 37 degrees. |

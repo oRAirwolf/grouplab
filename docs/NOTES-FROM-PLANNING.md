@@ -25,6 +25,82 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-03, entry 362: Add a store-bought target never finds the corners, shows phone photos sideways, and cannot zoom on the phone
+
+**Status: done 2026-10-04, one part different from the letter of it.** Section 1: the store-bought screens read a photo upright for all eight orientation values (`Upright`, `UprightMat`), with a test of each through a tagged JPEG; the shared loaders were left in stored pixels, because the analysis keeps its marks there and turns only the view, and changing them would move every saved and sent marking (question 82). Section 2: a new corner finder, `StoreTargetOutline`, finds four of Alan's five photos and four of the five 600 dpi scans (the fifth is larger than the scanner); the Rigid crosshair is called not found with a guess within about twenty pixels, and the reason is said on screen. Section 3: zoom (wheel, pinch, trackpad), pan when zoomed, a magnifier while dragging, and snap on release with Undo, on the computer and the phone; no magnifier existed on Move to copy, so it is new. Section 4: for-alan.md, with before and after pictures, and request 74 for the kitchen table photos. Section 5: Rotate left and right on the Photo and Straighten steps, R and Shift R, named for a screen reader.
+
+Alan, 2026-10-04 02:54 UTC, nightly 164 on the desktop and the phone, with five screenshots: "The commercial target function needs
+help. I dont think it is even trying to find the corners on either the desktop or mobile application. Also, all of the targets are in
+the wrong orientation when loading the pictures. The mobile application also does not allow you to zoom into the targets to set the
+corners, which makes it extremely difficult to use. Can you work on the corner detection? I realize they are on a white counter top,
+but I also tried on my kitchen table which has a natural wood finish and had the same exact result."
+
+**Priority:** a bug Alan hit. Do it first in the next session, right after the Android real-tap check STATE.md names, and before the
+rest of entry 358. Main model. Entry 360's budget rules apply.
+
+**Material** (local, never committed): `C:\Dev\grouplab-local\commercial-targets\corner-photos-2026-10-03\`: five of Alan's original
+phone photos of blank targets on his white counter (Allen EZ Aim sight-in 55134A, Allen splash bull 55124A, Birchwood Rigid crosshair,
+two Birchwood Eze-Scorer), and `screenshots\` with what the desktop showed for each. The photos keep their metadata: read only the
+orientation tag, never any location. Ask Alan in for-alan.md for one or two of the kitchen table photos if they would help.
+
+### 1. Orientation: the photos are shown sideways or upside down
+
+The five photos carry EXIF orientation 3 (180 degrees) or 6 (90 degrees), and the screens show them unrotated. In
+`src/GroupLab.Cli/Library/FingerprintSession.cs` `Load`, the colour copy is decoded with `ImreadModes.IgnoreOrientation`, and
+`ImageLoader.Load` and `LoadMaxChannel` seemingly do not apply it either. Apply the orientation once, the same way in all three, before
+anything else (the corners, the shown picture, the bulls and the fingerprint all work on the turned image). Then check every other
+place a photo is decoded (analysis, any-target mode, capture, the phone's picker, sending) for the same fault, and add a test with a
+small image for each orientation value 1 to 8.
+
+### 2. Corner finding
+
+`SheetOutline.Find` was built for GroupLab sheets: the largest light region by Otsu's threshold. It failed on all five photos and on
+the wood table, and the screens then offered the same fixed rectangle every time, which looks like nothing was tried. First find out
+why, from the photos (write each photo's refusal reason; also check whether the unapplied orientation upsets anything). Then make it
+work for store-bought targets, which differ from GroupLab sheets: large dark or coloured areas (a black bull filling most of the sheet,
+dark green squares, solid orange), white paper on a white or cream counter, a hand or phone shadow across the sheet, glare, a slight
+curl, and a hanging hole punched near an edge. Ideas to weigh, not orders:
+- Even out the lighting first (divide by a heavily blurred copy) so a shadow is not an edge.
+- Take the background's colour from the border of the photo and find the paper as what differs from it in colour (Lab), not only in
+  brightness, so white on cream or wood separates.
+- Find straight edges directly (edge map, then line fitting such as LSD or Hough), and choose the four lines that make the best
+  convex quadrilateral by straightness, area, and right angles after perspective.
+- Fall back on the printed artwork's outer boundary (most targets have a printed border or a clear edge of ink) when the paper's edge
+  is too faint; the Size step then says which of the two the size refers to.
+- Fill the closing to the sheet's size rather than a fixed hundredth of the frame, so a large black bull does not leave a hole.
+Score candidates from several methods and keep the best; say in Show work which method won and why the others lost.
+
+**When it still fails:** start the four handles at the best partial guess (the paper's bounding box, or the artwork's) rather than a
+fixed inset, and say plainly why it failed ("the paper and the counter are the same colour; a darker surface helps", or "a shadow
+crosses the edge").
+
+**A good result:** all four corners found within a few pixels on all five photos, checked by eye against each photo, and on the five
+600 dpi Birchwood scans already on this computer; the existing GroupLab sheet cases unchanged. Put the five as tests that read the
+local folder and skip when it is absent, like the other local samples.
+
+### 3. Placing a corner by hand, on the phone and the computer
+
+- **Phone:** pinch to zoom and drag to pan on the Straighten step (and on The bulls), and while a corner is being dragged a magnifier
+  above the finger shows the corner under it with a crosshair, as Move already does on a result. The finger must never hide the point
+  being placed.
+- **Computer:** the mouse wheel zooms around the pointer, and the same magnifier while dragging.
+- **Both:** when a corner is let go, it snaps to the strongest corner within a short distance (with Undo, and only if one is clearly
+  there), so a rough placement lands exactly.
+
+### 4. Tell Alan
+
+In for-alan.md: what was wrong, the before and after on his five photos (a small picture of each with the corners found would be
+best), and which nightly carries it. Release note in plain words.
+
+### 5. Amendment (Alan, 2026-10-04 03:06 UTC): a rotate button
+
+"I would like the commercial target screen to have a image rotate button as well." On the Photo and Straighten steps, on the computer
+and the phone: **Rotate** turns the picture a quarter turn (one button turning clockwise is enough; a second for counter clockwise if it
+fits without crowding), for a photo whose orientation tag is missing or wrong and for a target photographed sideways. The corners, the
+bulls already placed and anything measured turn with it, and corner finding runs again on the turned picture. The fingerprint, size and
+bulls are saved the way the target reads upright, so the same target photographed in any orientation is recognized. A keyboard
+shortcut on the computer (R, and Shift+R the other way), and a name a screen reader reads.
+
 ## 2026-10-03, entry 361: entry 360 as amended, run from a terminal so the reading stays live
 
 **Status: done 2026-10-04.** The hold was lifted by Alan on 2026-10-04. Section 1: `scripts/usage-guard.js` now lets a call through between 85 and 88 while `docs/notes/finishing.flag` is under 45 minutes old, and blocks from 88 whatever the flag says; tested at 84 (passes), 85 (blocks), 85 with the flag (passes), 85 with a 50 minute old flag (blocks), 88 with the flag (blocks) and no file (passes). Section 2: run from a terminal, the status line's reading was 62% at 03:06 UTC and fresh; entry 360's commit was already on main (6d7100e4); entry 358's worker branch is merged under entry 358. Section 3 continues as entries 362 and 358.

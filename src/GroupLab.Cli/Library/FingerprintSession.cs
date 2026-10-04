@@ -27,6 +27,7 @@ public sealed class FingerprintSession : IDisposable
     private Mat? colour;
     private Mat? straight;
     private double cornerPixels = 3;
+    private List<PointD>? turnedBulls;
 
     /// <param name="sheets">The GroupLab sheets a sheet in the photograph is identified among.</param>
     /// <param name="mostMegapixels">The photograph is read at no more than this, as the phone reads a picture; null at its own size.</param>
@@ -93,8 +94,16 @@ public sealed class FingerprintSession : IDisposable
     public TargetReference? Reference { get; private set; }
 
     /// <summary>
-    /// Reads the photograph and looks for the target's four corners; where they are not found, a rectangle inside the picture is offered
-    /// to be dragged onto them. A sentence where the file is not a picture, else null.
+    /// Why the corners were not found, in a sentence for the screen, or null where they were (entry 362 section 2); and every method tried,
+    /// for Show work.
+    /// </summary>
+    public string? CornersSaid { get; private set; }
+
+    public IReadOnlyList<string> CornersTried { get; private set; } = [];
+
+    /// <summary>
+    /// Reads the photograph upright, as its orientation tag says it reads (entry 362 section 1), and looks for the target's four corners;
+    /// where they are not found, the best guess at them is offered to be dragged onto them. A sentence where the file is not a picture, else null.
     /// </summary>
     public string? Load(string path)
     {
@@ -108,10 +117,13 @@ public sealed class FingerprintSession : IDisposable
                 return "That file is not a picture GroupLab can read.";
             }
 
-            var c = new Mat();
-            Cv2.Resize(full, c, new Size(g.Width, g.Height), 0, 0, InterpolationFlags.Area);
+            // Every copy turned once, the same way, before anything else: the corners, the picture shown, the bulls and the fingerprint
+            // all work on the target as it reads.
+            using var stored = new Mat();
+            Cv2.Resize(full, stored, new Size(g.Width, g.Height), 0, 0, InterpolationFlags.Area);
+            var c = UprightMat.Apply(stored, m.Orientation);
             Forget();
-            (grey, value, metadata, colour) = (g, v, m, c);
+            (grey, value, metadata, colour) = (Upright.Apply(g, m.Orientation), Upright.Apply(v, m.Orientation), m, c);
         }
         catch (Exception e) when (e is IOException or InvalidDataException or OpenCVException or UnauthorizedAccessException)
         {
@@ -121,20 +133,8 @@ public sealed class FingerprintSession : IDisposable
         Width = grey.Width;
         Height = grey.Height;
         (Shown, ShownScale) = Encode(colour);
-        if (SheetOutline.Find(grey, out _) is { } quad)
-        {
-            Corners = [.. quad.Corners];
-            CornersFound = true;
-            cornerPixels = Math.Max(1.5, quad.EdgeRmsPixels);
-        }
-        else
-        {
-            double dx = Width * 0.12, dy = Height * 0.12;
-            Corners = [new(dx, dy), new(Width - dx, dy), new(Width - dx, Height - dy), new(dx, Height - dy)];
-            CornersFound = false;
-            cornerPixels = 3;
-        }
-
+        FindCorners();
+        turnedBulls = null;
         PointA = PointB = null;
         Sheet = null;
         SheetTried = false;
@@ -144,6 +144,73 @@ public sealed class FingerprintSession : IDisposable
         Family = null;
         Reference = null;
         return null;
+    }
+
+    /// <summary>The corners looked for on the picture as it now stands; where they are not found, the best guess.</summary>
+    private void FindCorners()
+    {
+        // A flatbed scan states its resolution and names no camera; a photograph with its details stripped, as some apps send it, does neither.
+        var found = StoreTargetOutline.Find(colour!, scan: metadata is { IsCamera: false, DpiX: >= 150 });
+        Corners = found.Corners;
+        CornersFound = found.Found;
+        CornersSaid = found.Found ? null : found.Said;
+        CornersTried = found.Tried;
+        cornerPixels = found.Found ? 2 : 3;
+    }
+
+    /// <summary>
+    /// Entry 362 section 5: the picture turned a quarter turn, for a photo whose orientation tag is missing or wrong or a target photographed
+    /// sideways. The two ends of a measured length and any bulls already placed turn with it, and the corners are looked for again on the
+    /// turned picture; where they are not found, the ones there were turn with it. The fingerprint, size and bulls are then made from the
+    /// target as it reads upright, so the same target photographed any way round is recognized.
+    /// </summary>
+    public void Rotate(bool clockwise)
+    {
+        if (colour is null || grey is null || value is null)
+        {
+            return;
+        }
+
+        double w = Width, h = Height;
+        var turned = UprightMat.Turn(colour, clockwise);
+        colour.Dispose();
+        colour = turned;
+        grey = Upright.Turn(grey, clockwise);
+        value = Upright.Turn(value, clockwise);
+        Width = grey.Width;
+        Height = grey.Height;
+        (Shown, ShownScale) = Encode(colour);
+        var before = Corners.Select(p => Upright.Turn(p, clockwise, w, h)).ToArray();
+        FindCorners();
+        if (!CornersFound && before.Length == 4)
+        {
+            // Turned, they are still clockwise but start from another corner: begin again from the one now at the top left.
+            int first = Enumerable.Range(0, 4).MinBy(i => before[i].X + before[i].Y);
+            Corners = [.. Enumerable.Range(0, 4).Select(i => before[(first + i) % 4])];
+        }
+
+        PointA = PointA is { } a ? Upright.Turn(a, clockwise, w, h) : null;
+        PointB = PointB is { } b ? Upright.Turn(b, clockwise, w, h) : null;
+        Sheet = null;
+        SheetTried = false;
+        if (Target is { } t)
+        {
+            // Kept for the next straightening, which would otherwise look for the bulls afresh and lose the ones placed by hand.
+            turnedBulls = [.. Bulls.Select(p => Upright.TurnInches(p, clockwise, t.WidthInches, t.HeightInches))];
+            Bulls.Clear();
+            Bulls.AddRange(turnedBulls);
+            (WidthInches, HeightInches) = (HeightInches, WidthInches);
+        }
+        else if (WidthInches is not null || HeightInches is not null)
+        {
+            (WidthInches, HeightInches) = (HeightInches, WidthInches);
+        }
+
+        Target = null;
+        StraightShown = null;
+        straight?.Dispose();
+        straight = null;
+        Family = null;
     }
 
     /// <summary>A corner dragged to where the person put it, in the photograph's pixels, kept inside it.</summary>
@@ -156,6 +223,98 @@ public sealed class FingerprintSession : IDisposable
 
         Corners[corner] = new PointD(Math.Clamp(to.X, 0, Width - 1), Math.Clamp(to.Y, 0, Height - 1));
         cornerPixels = 3;
+        LastSnap = null;
+    }
+
+    /// <summary>The corner last snapped and where it was let go, for Undo; null when there is nothing to undo.</summary>
+    public (int Corner, PointD From)? LastSnap { get; private set; }
+
+    /// <summary>
+    /// Entry 362 section 3: a corner let go is moved to the strongest corner in the picture within a short distance of it, a hundredth of the
+    /// picture's longer side, and only where one clearly stands out there: at least four times the typical corner strength round it, and
+    /// twice any other within the same distance. True where it moved; <see cref="UndoSnap"/> puts it back.
+    /// </summary>
+    public bool SnapCorner(int corner)
+    {
+        LastSnap = null;
+        if (grey is null || corner < 0 || corner >= Corners.Length)
+        {
+            return false;
+        }
+
+        var at = Corners[corner];
+        int reach = Math.Max(6, (int)Math.Round(0.01 * Math.Max(Width, Height)));
+        int x0 = (int)Math.Round(at.X) - (2 * reach), y0 = (int)Math.Round(at.Y) - (2 * reach), size = (4 * reach) + 1;
+        if (x0 < 0 || y0 < 0 || x0 + size > Width || y0 + size > Height)
+        {
+            return false;
+        }
+
+        using var whole = new Mat(Height, Width, MatType.CV_8UC1);
+        whole.SetArray(grey.Pixels);
+        using var crop = new Mat(whole, new Rect(x0, y0, size, size)).Clone();
+        using var strength = new Mat();
+        Cv2.CornerMinEigenVal(crop, strength, 5, 3);
+        strength.GetArray(out float[] values);
+        var sorted = (float[])values.Clone();
+        Array.Sort(sorted);
+        double typical = sorted[sorted.Length / 2];
+
+        // The strongest within reach of where it was let go, and the strongest of the rest of that disc away from it.
+        int best = -1, centre = 2 * reach;
+        for (int i = 0; i < values.Length; i++)
+        {
+            int dx = (i % size) - centre, dy = (i / size) - centre;
+            if ((dx * dx) + (dy * dy) <= reach * reach && (best < 0 || values[i] > values[best]))
+            {
+                best = i;
+            }
+        }
+
+        if (best < 0)
+        {
+            return false;
+        }
+
+        int bx = best % size, by = best / size;
+        double rival = 0;
+        for (int i = 0; i < values.Length; i++)
+        {
+            int dx = (i % size) - centre, dy = (i / size) - centre, ox = (i % size) - bx, oy = (i / size) - by;
+            if ((dx * dx) + (dy * dy) <= reach * reach && (ox * ox) + (oy * oy) > 9)
+            {
+                rival = Math.Max(rival, values[i]);
+            }
+        }
+
+        double strongest = values[best];
+        if (strongest < 4 * Math.Max(typical, 1e-12) || strongest < 2 * rival)
+        {
+            return false;
+        }
+
+        var refined = new[] { new Point2f(bx, by) };
+        refined = Cv2.CornerSubPix(crop, refined, new Size(3, 3), new Size(-1, -1), new TermCriteria(CriteriaTypes.Eps | CriteriaTypes.MaxIter, 30, 0.01));
+        var to = new PointD(x0 + refined[0].X, y0 + refined[0].Y);
+        if (Apart(to, at) < 0.5)
+        {
+            return false;
+        }
+
+        LastSnap = (corner, at);
+        Corners[corner] = to;
+        return true;
+    }
+
+    /// <summary>The last snap undone: the corner back where it was let go.</summary>
+    public void UndoSnap()
+    {
+        if (LastSnap is { } snap && snap.Corner < Corners.Length)
+        {
+            Corners[snap.Corner] = snap.From;
+        }
+
+        LastSnap = null;
     }
 
     /// <summary>The nearest corner within <paramref name="reach"/> photograph pixels of <paramref name="at"/>, or null.</summary>
@@ -292,8 +451,9 @@ public sealed class FingerprintSession : IDisposable
         (StraightShown, double scale) = Encode(picture);
         StraightShownScale = scale * dpi;
         Bulls.Clear();
-        // Numbered as they are read: by rows half an inch deep, top first, then left to right.
-        Bulls.AddRange(StoreFingerprintBuilder.Bulls(picture, dpi).OrderBy(b => Math.Round(b.Y * 2)).ThenBy(b => b.X));
+        // Numbered as they are read: by rows half an inch deep, top first, then left to right. Bulls turned with the picture are kept.
+        Bulls.AddRange(((IEnumerable<PointD>?)turnedBulls ?? StoreFingerprintBuilder.Bulls(picture, dpi)).OrderBy(b => Math.Round(b.Y * 2)).ThenBy(b => b.X));
+        turnedBulls = null;
         Family = null;
         return null;
     }

@@ -49,13 +49,34 @@ public static class FingerprintWords
     {
         FingerprintStep.Photo => "Lay the target flat and unshot, and take the photo square on, all four corners in it and the target filling most of the picture.",
         FingerprintStep.Scale => "GroupLab needs one true length to know the scale. Pick whichever you have.",
-        FingerprintStep.Straighten => "Corners found. Drag a corner if it is off.",
+        FingerprintStep.Straighten => touch ? "Corners found. Drag a corner if it is off; pinch to zoom in." : "Corners found. Drag a corner if it is off; scroll to zoom in.",
         FingerprintStep.Bulls => touch ? "Tap a ring to remove it; tap the picture to add one." : "Click a ring to remove it; click the picture to add one.",
         _ => "Give it the name on its package.",
     };
 
     /// <summary>Said in place of "Corners found" where the photo's outline could not be found by itself.</summary>
     public const string CornersNotFound = "GroupLab could not find all four corners. Drag each amber corner onto a corner of the target.";
+
+    /// <summary>Entry 362 section 2: the same, saying why, where the corner finder said; its best guess is what the handles start on.</summary>
+    public static string CornersMissed(string? why) => string.IsNullOrWhiteSpace(why)
+        ? CornersNotFound
+        : $"GroupLab could not find all four corners: {why}. The amber corners start at its best guess; drag each onto a corner of the target.";
+
+    /// <summary>Entry 362 section 5: the two Rotate buttons, what a screen reader says for them, and the keys on the computer.</summary>
+    public const string RotateRight = "Rotate right";
+
+    public const string RotateLeft = "Rotate left";
+
+    public const string RotateRightName = "Rotate the picture a quarter turn clockwise";
+
+    public const string RotateLeftName = "Rotate the picture a quarter turn counterclockwise";
+
+    public const string RotateKeys = "R turns the picture clockwise, Shift and R the other way.";
+
+    /// <summary>Entry 362 section 3: said when a corner let go moves onto a clear corner of the picture near it, and the button that undoes it.</summary>
+    public const string Snapped = "The corner moved onto the clear corner nearest where you let it go.";
+
+    public const string UndoSnap = "Undo";
 
     public const string TakePhoto = "Take a photo";
 

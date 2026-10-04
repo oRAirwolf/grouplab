@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 03:20 UTC, after entry 361 (the finishing flag) and the Android real-tap check.
+**Last rewritten:** 2026-10-04 04:00 UTC, after entry 362 (store-bought targets).
 
 ---
 
@@ -23,10 +23,13 @@ If something here disagrees with the logs, the logs are right and this file is o
   own test groups ran: run the three suites, the site build and consistency before cherry-picking. Not started: sections 4
   (printer framework), 6 (darkness) and 8 (public pages).
 - **The Android real taps red on 2cce12a1 was the emulator, not GroupLab:** its launcher hung and the "isn't responding" box took
-  the taps. Both emulator scripts now switch those boxes off; a dispatched run proves it.
-- **Next: entry 362** (store-bought targets: orientation, corners, zoom, rotate), then 358 with 359's corrections.
+  the taps. Both emulator scripts now switch those boxes off; dispatched run 37173283370 proves it.
+- **Entry 362 done** (store-bought targets: upright photos, a new corner finder `StoreTargetOutline`, zoom, magnifier, snap with Undo,
+  Rotate), for nightly 165. Four of Alan's five counter photos found, the Rigid crosshair a close guess; request 74 asks for a wooden
+  table photo; question 82 on the shared loaders. `grouplab outline-trial <photos> -o <folder>` draws what the finder found.
+- **Next: entry 358** (merge the worker's three sections, then 4, 6 and 8) with 359's corrections read first.
 - **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 and 73 (the label
-  printers on arrival). **Waiting on planning:** questions 79 and 81.
+  printers on arrival), 74 (a kitchen table photo). **Waiting on planning:** questions 79, 81 and 82.
 
 ## The next three
 
@@ -57,15 +60,17 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **17** (71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **20** (74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
-- - **79** five built-not-proven lines whose written gates are met (entry 331 section 3)
+- **82** entry 362's shared loaders: apply the orientation there, which moves every saved mark, or not (my choice: not)
+- **81** the phone asks whether to send targets and cannot send one; **80** a newer fingerprint library without a new build
+- **79** five built-not-proven lines whose written gates are met (entry 331 section 3)
 - **78** the plot's toggles cover the last lines of its key at 1400x900 (found in entry 323; a change to the look)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
@@ -86,7 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 358 (part built, see In flight), 359 and 362.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 358 (part built, see In flight) and 359.
 
 ## Things that would surprise somebody who was not here yesterday
 
