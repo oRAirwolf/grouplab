@@ -60,6 +60,7 @@ public static class FingerprintWords
     /// <summary>Entry 362 section 2: the same, saying why, where the corner finder said; its best guess is what the handles start on.</summary>
     public static string CornersMissed(string? why) => string.IsNullOrWhiteSpace(why)
         ? CornersNotFound
+        : why.StartsWith("GroupLab is not sure", StringComparison.Ordinal) ? why + "."
         : $"GroupLab could not find all four corners: {why}. The amber corners start at its best guess; drag each onto a corner of the target.";
 
     /// <summary>Entry 362 section 5: the two Rotate buttons, what a screen reader says for them, and the keys on the computer.</summary>

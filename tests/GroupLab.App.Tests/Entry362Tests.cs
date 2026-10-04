@@ -326,6 +326,28 @@ public class Entry362Tests
         }
     }
 
+    /// <summary>
+    /// On the dark grained floor the finder's outlines ran onto the boards' seams on three of Alan's four photos and were still called found;
+    /// now an outline whose weakest side is less than <see cref="StoreTargetOutline.SureShare"/> on an edge says it is not sure.
+    /// </summary>
+    [Theory]
+    [InlineData("floor-rigid-crosshair-square.jpg")]
+    [InlineData("floor-rigid-crosshair-tilted.jpg")]
+    [InlineData("floor-shoot-n-c-square.jpg")]
+    public void OnTheGrainedFloorAnOutlineItCannotTrustSaysSo(string file)
+    {
+        string path = Path.Combine(Wood, file);
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        using var session = new FingerprintSession(() => []);
+        Assert.Null(session.Load(path));
+        Assert.False(session.CornersFound);
+        Assert.StartsWith("GroupLab is not sure", session.CornersSaid, StringComparison.Ordinal);
+    }
+
     [Theory]
     [MemberData(nameof(Corners))]
     public void OnAlansPhotographsAndScansTheCornersAreWhereTheyWereChecked(string path, bool found, double[] corners)

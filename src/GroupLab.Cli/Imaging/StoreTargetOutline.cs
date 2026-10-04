@@ -59,6 +59,15 @@ public static class StoreTargetOutline
 
     public const string SameColour = "the paper's edge could not be told from what it lies on all the way round; a darker or plainer surface helps";
 
+    /// <summary>
+    /// How much of its weakest side the chosen outline must have on an edge to be called found; below it the outline is offered as a guess.
+    /// Alan's photos on a dark grained floor (2026-10-04): the three outlines that ran onto the boards' seams chose 0.67, 0.75 and 0.88, and
+    /// every right one on the floor, the table, the counter and the scans 0.92 or more.
+    /// </summary>
+    public const double SureShare = 0.9;
+
+    public const string NotSure = "GroupLab is not sure of these corners: lines in what the target lies on, a wood grain or tiles, run close to its edges. Drag each onto the target's corner";
+
     public const string Broken = "one side of the target is hidden or broken, by a shadow, glare or something lying over it";
 
     private readonly record struct Line(PointD Point, PointD Direction, double Length);
@@ -159,6 +168,12 @@ public static class StoreTargetOutline
             }
 
             tried.Add(string.Create(CultureInfo.InvariantCulture, $"chose {best.Method}: weakest side {best.Weakest:0.00} on an edge, {100 * best.Area / (w * h):0}% of the picture"));
+            if (!scan && best.Weakest < SureShare)
+            {
+                tried.Add("not sure: " + NotSure);
+                return new StoreTargetOutlineResult(false, full, best.Method, NotSure, tried);
+            }
+
             return new StoreTargetOutlineResult(true, full, best.Method, "found from the target's edges", tried);
         }
 
