@@ -28,9 +28,10 @@ function Say([string] $line) {
 
 function Call([string] $method, [string] $path, $body = $null) {
     $request = @{ Method = $method; Uri = "$api/$path"; Headers = @{ Authorization = "Bearer $script:access" }; SkipHttpErrorCheck = $true }
-    # The API takes JSON only, a POST with nothing to send included ("Only JSON content is accepted", entry 369's first run).
+    # The API takes JSON only, a POST with nothing to send included ("Only JSON content is accepted", entry 369's first run), and an empty
+    # body, not {}, which it reads as a submission with no listings.
     $request.ContentType = 'application/json'
-    if ($null -ne $body) { $request.Body = ($body | ConvertTo-Json -Depth 20) } elseif ($method -eq 'Post') { $request.Body = '{}' }
+    if ($null -ne $body) { $request.Body = ($body | ConvertTo-Json -Depth 20) } elseif ($method -eq 'Post') { $request.Body = '' }
     $answer = Invoke-WebRequest @request
     # Entry 369: Microsoft's own words go with the code, cut short, since a 400 says nothing by itself.
     if ($answer.StatusCode -ge 300) { throw "The Store API answered $($answer.StatusCode) to $method $path$(if ($answer.Content) { ': ' + ([string]$answer.Content).Substring(0, [Math]::Min(600, ([string]$answer.Content).Length)) })." }
