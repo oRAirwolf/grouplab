@@ -161,5 +161,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/notes/store-follow.json docs/notes/external-status.md
           git diff --cached --quiet && exit 0
-          git commit -m "[notes] The Store: $VERSION submitted" -m "Written by store-follow.yml, entry 369."
+          said=$([ "${{ job.status }}" = "success" ] && echo "submitted" || echo "not submitted, the run failed")
+          git commit -m "[notes] The Store: $VERSION $said" -m "Written by store-follow.yml, entry 369."
           for attempt in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 10; done
