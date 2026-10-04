@@ -144,6 +144,25 @@ public static class ScaleMarkerFinder
         return (state, finding.Says(u) + (sighting.Blanked is null ? "" : " " + ScaleMarkerWords.CardBlanked), use);
     }
 
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> CardChecked = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Entry 365 section D, without exception: a picture is never sent with a bank card in it, whatever was or was not done with it on the
+    /// screen. Checked once a picture, at a reduced size; a picture that cannot be read is taken to have none (it cannot be sent either).
+    /// </summary>
+    public static bool ContainsCard(string path) => CardChecked.GetOrAdd(path, p =>
+    {
+        try
+        {
+            var (g, _) = ImageLoader.Load(p, 4);
+            return Card(g) is not null;
+        }
+        catch (Exception e) when (e is IOException or InvalidDataException or OpenCVException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    });
+
     /// <summary>Every marker code in the photo, each once, read at the finest size that found it.</summary>
     public static IReadOnlyList<DetectedMarker> Codes(GrayImage grey)
     {

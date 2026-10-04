@@ -29,6 +29,12 @@ internal static class SharingSwitches
     /// <summary>Whether "Send everything I open" is offered, section 1.</summary>
     public static bool EverythingOpen => EverythingOverride ?? Everything;
 
+    /// <summary>A test's own value for <see cref="TargetsFromPhone"/>, or null for the build's.</summary>
+    internal static bool? TargetsFromPhoneOverride { get; set; }
+
+    /// <summary>Entry 363 section 3.5: whether the phone's sender of targets is on, off until the stores' privacy answers are updated.</summary>
+    public static bool TargetsFromPhone => TargetsFromPhoneOverride ?? ReceiverTerms.Current.SendTargetsPhones;
+
     /// <summary>Whether an automatic error report carries the log package, section 2.</summary>
     public static bool FullLogOpen => FullLogOverride ?? FullLog;
 }

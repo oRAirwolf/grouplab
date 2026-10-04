@@ -18,30 +18,17 @@ public partial class MainWindow
     /// <summary>A picture with a card in it that could not be blanked: it is never sent (entry 365 section D).</summary>
     private string? cardNotBlanked;
 
-    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> CardChecked = new(StringComparer.Ordinal);
-
-    /// <summary>
-    /// Entry 365 section D, without exception: a picture is never sent with a bank card in it, whatever was or was not done with it on the
-    /// screen. Checked once a picture, at a reduced size, and a picture that cannot be read is taken to have none (it cannot be sent either).
-    /// </summary>
-    internal static bool HasCard(string path) => CardChecked.GetOrAdd(path, p =>
+    /// <summary>Entry 365 section D: a picture with a bank card in it is never sent.</summary>
+    internal static bool HasCard(string path)
     {
-        try
+        bool found = ScaleMarkerFinder.ContainsCard(path);
+        if (found)
         {
-            var (g, _) = GroupLab.Cli.Imaging.ImageLoader.Load(p, 4);
-            bool found = ScaleMarkerFinder.Card(g) is not null;
-            if (found)
-            {
-                DiagnosticLog.Info("markers.card.held");
-            }
+            DiagnosticLog.Info("markers.card.held");
+        }
 
-            return found;
-        }
-        catch (Exception e) when (e is IOException or InvalidDataException or OpenCvSharp.OpenCVException or UnauthorizedAccessException)
-        {
-            return false;
-        }
-    });
+        return found;
+    }
 
     /// <summary>Looks for markers off the screen's thread, where the picture has no scale yet.</summary>
     private void ScaleFromMarkers()

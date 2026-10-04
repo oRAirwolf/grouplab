@@ -52,7 +52,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Photographs at an angle | `angle` | on the phone | | on iOS |
 | Sessions between phone and computer | `share-session` | on the phone | | on iOS |
 | The phone follows your region | `phone-region` | on the phone | | on iOS |
-| Send a target to the project | `send-targets` | coming | entry 357: the phone asks the sending question but has no sender yet; built on the computer | not yet |
+| Send a target to the project | `send-targets` | coming | entry 363 section 3.5: built, the computer's package and queue, Wi-Fi only unless mobile data is allowed, a target read and shown sent or asked about as chosen; off in every phone build until the stores' privacy answers are updated (`sendTargetsPhones`) | not yet |
 | Error reports | `error-reports` | on the phone | | on iOS |
 | The hardware survey | `survey` | on the phone | | on iOS |
 | Words explained where they appear | `explain-words` | on the phone | a figure's name opens its explanation by a tap (entry 259 screen 1), and a secondary line naming a glossary word explains it by a tap (entry 258) | on iOS |

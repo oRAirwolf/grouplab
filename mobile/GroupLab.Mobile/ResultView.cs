@@ -221,6 +221,12 @@ public sealed class ResultView : UserControl
         full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition, SessionId = result.SessionId, VelocityAction = VelocityAction };
         var column = new StackPanel { Spacing = 12 };
         column.Children.Add(Screens.Title(result.Definition?.Name ?? "The sheet"));
+
+        // Entry 363 section 3.5: a target read and shown goes, or is asked about, as the person chose; off until the stores' answers allow it.
+        if (result.Failure is null && PhoneSending.After(result.State, session.State) is { } sending)
+        {
+            column.Children.Add(sending);
+        }
         if (result.Failure is { } failure)
         {
             column.Children.Add(Screens.Line(failure));

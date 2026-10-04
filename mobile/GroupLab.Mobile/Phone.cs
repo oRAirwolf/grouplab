@@ -76,6 +76,8 @@ public static class Phone
         Survey = new SurveyQueue(Settings, platform.Machine);
         _ = SendWaitingErrorsAsync();
         _ = Survey.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None);
+        // Entry 363 section 3.5: targets kept to send are tried again, on Wi-Fi unless mobile data is allowed; nothing while the switch is off.
+        _ = PhoneSending.RetryAsync();
         if (application.ApplicationLifetime is ISingleViewApplicationLifetime single)
         {
             single.MainView = new Shell();

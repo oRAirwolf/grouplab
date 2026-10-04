@@ -9,23 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 11:00 UTC, after entry 365; entry 363's section 3 queue (3.3 to 3.5) is next.
+**Last rewritten:** 2026-10-04 12:00 UTC, after entry 363; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 69% of the
-  week at 09:33 UTC. Plan each block to end under 85% (entry 360 section 2). The hook `scripts/usage-guard.js` blocks from 85
+- **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 70% of the
+  week at 10:25 UTC. Plan each block to end under 85% (entry 360 section 2). The hook `scripts/usage-guard.js` blocks from 85
   unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
-- **Entry 363**: sections 1, 2 (the M834 files, the recording reader; the list at the top of for-alan) and 3.1 (aiming marks) and
-  3.2 (issue 19's real cause, Next took the focus) done; an iOS simulator run (37190923013) was dispatched to prove 3.2 before
-  closing issue 19. **Left:** 3.3 the sheet-look speed, 3.4 the phone's page failures as the centred dialog, 3.5 the phone sender.
-- **Entry 364 done**: four of Alan's reference files in the library (nine recognized), three held with request 75.
-- **Entry 365 done but the Features picture**: scale markers A to D on both platforms, `grouplab marker-trial` measured them
-  (board 0.015 percent, bar 0.06, brackets 0.07 on 12 in and 0.2 on a poster, card 0.15); request 76 for real paper.
+- **Entries 363, 364 and 365 done** (2026-10-04), for nightly 167: the M834 files (166), aiming marks, issue 19 (closed), the
+  sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
+  scale markers A to D. **Not done:** 365's Features page picture (a step in Entry109Tests).
 - **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
-- **Waiting on Alan:** requests 70, 72, 73 (the M834's recordings), 74, 75, 76, and "forms updated" for the phones' sharing switches.
+- **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
+  72, 73 (the M834's recordings), 74, 75, 76.
 
 ## The next three
 
@@ -46,9 +44,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 363 section 3.3: the "looks like a GroupLab sheet" check, 5.4 s on a picture with no marks; scale markers are now left out of it.
-2. Entry 363 sections 3.4 and 3.5: the phone's page failures as the centred dialog, then the phone sender (ships after "forms updated").
-3. The Features page's picture of Targets, Scale markers (a step in Entry109Tests), and the phone pictures at the next sitting.
+1. The Features page's picture of Targets, Scale markers (a step in Entry109Tests), then the phone pictures at the next sitting.
+2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
+3. The M834: the recording reader waits for request 73's recordings; then the printer's own protocol.
 
 ## Blocked, and on what
 
@@ -62,11 +60,10 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
-- **82** entry 362's shared loaders: apply the orientation there, which moves every saved mark, or not (my choice: not)
-- **81** the phone asks whether to send targets and cannot send one; **80** a newer fingerprint library without a new build
-- **79** five built-not-proven lines whose written gates are met (entry 331 section 3)
+- **83** identification takes 34 s on a photo with no codes (my choice: full size only when no marker is found)
+- **80** a newer fingerprint library without a new build
 - **78** the plot's toggles cover the last lines of its key at 1400x900 (found in entry 323; a change to the look)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
@@ -78,8 +75,7 @@ Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 - **Last nightly:** 0.2.0-nightly.166 (2026-10-04): entry 363 section 2, the M834 files.
 - **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
-- Crash reports open: **issue 19** (iPhone, the keyboard bar's Next): fixed in ee435491, Next no longer takes the focus; closed
-  once the simulator's real taps pass.
+- Crash reports open: none. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
 
@@ -88,7 +84,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 363 (its section 3 queue).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 366 (a range kit for today), being done now.
 
 ## Things that would surprise somebody who was not here yesterday
 

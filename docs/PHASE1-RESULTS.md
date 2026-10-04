@@ -383,6 +383,17 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 363 sections 3.4 and 3.5: the phone's failures, and its sender
+
+- **3.4.** `ProblemSheet.Stop` puts a failure that stops the work on the centred sheet over the page it happened on, its choices first,
+  and puts the page back on the x or any choice. Converted: a photo Add a store-bought target cannot use, its file not written, the
+  one-page report, CSV and chronograph files not read (five places), a share picture, a sheet that cannot be printed, a print or share
+  the phone refused, a board not measured. Information (saved, shared, sent, progress) stays on its line. `Entry363StopTests`.
+- **3.5.** `PhoneSending`: the computer's package (`TargetPackages.Build`) and queue (`TargetSender`, now its own file, compiled by the
+  phone), sent when the choice is to send every target, asked about with Ask me each time, kept for Wi-Fi on mobile data unless allowed,
+  retried at start; never a picture with a bank card in it. Off in every phone build behind `sendTargetsPhones` until Alan writes
+  "forms updated" (Photos joins the store forms' checklist). `Entry363SenderTests`.
+
 ## Entry 363 section 3.3: the "looks like a GroupLab sheet" check
 
 - The check's cost was locating QR codes a second time: `OpenCvSharpBackend.LocateCodes` ran WeChat and DetectMulti at full size, 8.3 of

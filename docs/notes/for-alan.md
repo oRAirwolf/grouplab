@@ -1,5 +1,9 @@
 **Open: 21.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
-Working from the terminal, 4 October, at 65% of the week (a live reading); entry 363: the M834 is ready, then the queue in its section 3.
+Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
+
+<!-- automation-week: written by scripts/automation-report.py each week; not a request -->
+**This week, by itself** (not a request): backed up on 4 October (1686 MB, backup-2026-10-04); the restore test passed on 4 October; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: archive 7; the server's own backup is from 2026-10-03; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
+<!-- /automation-week -->
 
 **THE STORE FORMS, SO THE PHONES CAN SEND MORE** (request 71, answered "switch both on"; entry 363). On the computer both are on
 from nightly 166. The phones keep both off until you write **"forms updated"**. Ten minutes:
@@ -7,7 +11,10 @@ from nightly 166. The phones keep both off until you write **"forms updated"**. 
   Diagnostic Data** and, under Usage Data, **Product Interaction** (the log). All: not linked to you, not used for tracking, optional.
 - **Google Play, Data safety:** keep App info and performance (crash logs, diagnostics) and Device or other IDs; **add App activity, App
   interactions**. All: collected, optional, encrypted in transit, not shared.
-- **Later, with the phone's sender (question 81, last in the queue):** Photos, in both, when that build is ready; I will say when.
+- **The phone's sender is built (question 81, nightly 167), and off with the rest:** add **Photos** in both forms too: Apple, Photos or Videos,
+  not linked to you, not used for tracking, optional; Google Play, Photos and videos, Photos, collected, optional, encrypted in transit,
+  not shared. "forms updated" then switches on all three on the phones: the log with error reports, Send everything I open, and sending
+  targets, over Wi-Fi only unless you allow mobile data in Settings.
 
 **SCALE MARKERS, ALL FOUR** (entry 365, not a request; in nightly 167 or the first after it whose notes say so). On Targets, under
 Scale markers: **corner brackets** (A), four L pieces cut from one page, give the scale, the camera's angle and the target's corners;

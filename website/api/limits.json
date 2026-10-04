@@ -31,7 +31,8 @@
     "",
     "Entry 363 section 1: Alan said yes to both on 2026-10-04. They are on for the computer, where the Microsoft Store needs no form change,",
     "and for the receivers, which take what the computer sends. sendEverythingOpenPhones and fullLogErrorReportsPhones keep both off on",
-    "Android and the iPhone until Alan writes \"forms updated\" for Apple's App Privacy and Google Play's Data safety (for-alan.md)."
+    "Android and the iPhone until Alan writes \"forms updated\" for Apple's App Privacy and Google Play's Data safety (for-alan.md).",
+    "sendTargetsPhones does the same for the phone's own sender of targets (question 81 A, entry 363 section 3.5)."
   ],
   "open": true,
   "maxFiles": 10,
@@ -64,5 +65,6 @@
   "sendEverythingOpen": true,
   "fullLogErrorReports": true,
   "sendEverythingOpenPhones": false,
-  "fullLogErrorReportsPhones": false
+  "fullLogErrorReportsPhones": false,
+  "sendTargetsPhones": false
 }

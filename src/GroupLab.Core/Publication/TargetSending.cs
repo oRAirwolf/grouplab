@@ -72,6 +72,7 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
             FullLogErrorReports = root.GetProperty("fullLogErrorReports").GetBoolean(),
             SendEverythingOpenPhones = root.GetProperty("sendEverythingOpenPhones").GetBoolean(),
             FullLogErrorReportsPhones = root.GetProperty("fullLogErrorReportsPhones").GetBoolean(),
+            SendTargetsPhones = root.TryGetProperty("sendTargetsPhones", out var phones) && phones.GetBoolean(),
         };
     });
 
@@ -118,6 +119,12 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
     public bool SendEverythingOpenPhones { get; init; }
 
     public bool FullLogErrorReportsPhones { get; init; }
+
+    /// <summary>
+    /// Entry 363 section 3.5, question 81 A: whether a phone sends targets at all, off until the same store answers are updated. The phone's
+    /// sender exists and nothing of it is shown, asked or sent while this is false.
+    /// </summary>
+    public bool SendTargetsPhones { get; init; }
 
     /// <summary>The terms this build carries.</summary>
     public static ReceiverTerms Current => Built.Value;

@@ -25,6 +25,59 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 363: Alan's answers, the M834 ready for tomorrow, then the queue
+
+**Status: done 2026-10-04.** Section 1 (95b3c73d); section 2, the M834 files and the recording reader (24c25c21, 080a6d8f, nightly 166); 3.1 the aiming marks (3c8bb640); 3.2 issue 19, Next no longer takes the focus, proven by the iOS simulator's real taps in run 37190923013 and the issue closed; 3.3 the sheet look reuses identification's located codes, 8.4 s to 0.15 s (question 83 on identification's own 34 s); 3.4 the phone's failures as the centred sheet; 3.5 the phone sender, built and off until "forms updated". Entries 364 and 365 were done between 3.2 and 3.3, as entry 365 asked.
+
+Alan, 2026-10-04 07:01 UTC.
+
+### 1. Answers
+
+- **Question 82: A, leave it.** The analysis keeps stored pixels and turns the view; only the store-bought screens turn their copies.
+- **Question 81: A, build the phone's sender** (the desktop's package and queue, Wi-Fi only by default, entry 357's rules). Queue it last
+  in section 3; it changes the store answers (Photos), so it ships to TestFlight and Play only after Alan confirms the forms.
+- **Request 71: yes, switch both on.** On the desktop now (the Microsoft Store needs no form change). For the phones, give Alan the exact
+  Apple App Privacy and Google Play Data safety answers to set, as a short checklist at the top of for-alan.md, and keep the phone side
+  off in TestFlight and Play builds until he writes "forms updated". Close request 71 into that checklist.
+- **Question 79: A.** Mark the five whose written gates are met as Done; leave compareGroups Built, not proven until its fixtures exist;
+  split Phase 0's line into its scan and photograph halves.
+
+### 2. First: the Phomemo M834 arrives tomorrow (4 October, US daytime), and Alan wants to play with it and test it
+
+"My 8.5x11 label printer is getting delivered tomorrow and I would like to play with it and test it. Please have that ready." It is the
+Phomemo M834 (entries 358 and 359: Bluetooth only, never USB, never Phomemo's driver). Its protocol is unknown until request 73's
+recording, so tomorrow has two parts. Make both ready before anything else in this entry:
+
+a. **Printing tomorrow through Phomemo's own app, with no GroupLab Bluetooth code.** On the phone (Android first, iPhone too if it is
+   the same work) and the computer, a plain way to hand any target to the printer's app at true size in the thermal print mode: a
+   1-bit image at 300 dpi of exactly the page (and a PDF), through the share sheet on the phone and "Save for a printer app" on the
+   computer, named so it is obvious which is which. Include the darkness test page and the printer check page, so the M834's scale
+   on thermal paper can be measured with the scanner like any printer. Check that the files carry their true size (dpi in the PNG,
+   page size in the PDF) so an app that honours it prints 1 to 1.
+b. **Getting the recording to you fast.** Request 73 stays as written. Have a script ready that takes the bug report zip and the nRF
+   Connect log, pulls the Bluetooth HCI snoop log out, finds the printer's service and write characteristic, and lays out what the
+   Phomemo app sent (header, raster lines, feed, end), compared against the page it printed. With that, the encoder for
+   `src/GroupLab.Core/Printing/Labels` can follow the same day. If the M834 turns out to be classic Bluetooth only, say so plainly and
+   plan the Android path.
+
+**At the top of for-alan.md**, before he wakes: "THE M834 TOMORROW", a short ordered list for Alan, in plain words, under 15 lines:
+first request 73's recording (so you can start while he plays), then printing a target through the Phomemo app from GroupLab (with the
+app's setting for 100% or actual size, never fit to page), then the darkness page and the printer check page, then a target shot or
+poked with a pen and photographed with GroupLab. Say what a good result looks like at each step and what to send back.
+
+### 3. Then, in this order, as the budget allows (entry 360: plan each block to end under 85%)
+
+1. **The bull finder on store-bought targets:** it found no bulls on the two sight-in grids or the splash bull in Alan's photos (entry
+   362's follow-up), so he would add them by hand. Make it find the aiming marks on those (diamonds, squares, circles inside a grid),
+   tested on his photos and the Birchwood scans.
+2. **Issue 19:** on the iPhone (build 153), Targets, Made for your optic: the keyboard bar's Next goes to the next section instead of
+   the next box (`KeyboardRoom.Following`). Prove it with the simulator's real taps.
+3. **The "looks like a GroupLab sheet" check:** about 5.4 s on a picture with no GroupLab marks. Make it fast without losing a case.
+4. **The phone's page-by-page failures as the centred dialog** (entry 356's unfinished part).
+5. **The phone's sender** (question 81 A), as in section 1.
+
+Write the week's reading in for-alan.md when you stop.
+
 ## 2026-10-04, entry 365: scale markers beside a target, all four concepts (A, B, C and D)
 
 **Status: done 2026-10-04, except the Features page's own picture** (the screenshot walk needs a step for Targets, Scale markers; listed in docs/figures/SCREENSHOTS.md). All four built on the computer and the phone, measured by `grouplab marker-trial` (docs/PHASE1-RESULTS.md, entry 365), the app's words using the measured figures; request 76 asks for the real-paper photos.
