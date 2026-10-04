@@ -45,7 +45,9 @@ Each is one line, as Partner Center takes them.
 
 ## Search terms
 
-group size, shooting, target, MOA, reloading, ballistics, precision, accuracy, rifle, grouping
+The Store takes seven; entry 369: GroupLab first, then the six most useful. store-follow.yml sends these with every submission.
+
+GroupLab, group size, shooting target, MOA, reloading, ballistics, precision rifle
 
 ## Category
 

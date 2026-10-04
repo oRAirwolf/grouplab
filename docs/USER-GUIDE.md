@@ -23,9 +23,9 @@ each shot's offset, Zero from this group, and group sizes shown as angles. With 
 such as "dial 0.30 mil left, 3 clicks left", with no MOA next to it. The other unit is never far: tap a number to
 switch it, or press and hold it for every unit it can take, and GroupLab remembers that figure's choice.
 
-**Getting GroupLab.** The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries an older,
-steadier build that updates itself ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip
-there are the newest test build. On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from
+**Getting GroupLab.** The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries GroupLab too
+and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ([Get it from
+Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made. On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from
 the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device.
 
 ## 1. Print a sheet

@@ -5160,6 +5160,22 @@
   "A bank card , driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card.": {
    "kind": "code",
    "where": "src/GroupLab.Cli/Library/ScaleMarkerFinder.cs, ScaleMarkerFinder.Find (blanks every copy) and ForMarking; src/GroupLab.App/MainWindow.MarkerScale.cs, HasCard (a picture with a card is never sent); tests/GroupLab.App.Tests/Entry365Tests.cs"
+  },
+  "The Microsoft Store also carries GroupLab for Windows ( Get it from Microsoft ), which gets every nightly once Microsoft has certified it and updates itself through the Store.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 369: Alan, 2026-10-04, every nightly to the Microsoft Store; .github/workflows/store-follow.yml submits each published nightly, the Store's certification taking about a day"
+  },
+  "On Windows, the Microsoft Store carries GroupLab too and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ( Get it from Microsoft ); the installer and the zip there are the newest test build the moment it is made.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 369: Alan, 2026-10-04, every nightly to the Microsoft Store; .github/workflows/store-follow.yml submits each published nightly, the Store's certification taking about a day"
+  },
+  "The Microsoft Store also carries GroupLab for Windows ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)), which gets every nightly once Microsoft has certified it and updates itself through the Store.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 369: Alan, 2026-10-04, every nightly to the Microsoft Store; .github/workflows/store-follow.yml submits each published nightly, the Store's certification taking about a day"
+  },
+  "On Windows, the Microsoft Store carries GroupLab too and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 369: Alan, 2026-10-04, every nightly to the Microsoft Store; .github/workflows/store-follow.yml submits each published nightly, the Store's certification taking about a day"
   }
  },
  "rules": [

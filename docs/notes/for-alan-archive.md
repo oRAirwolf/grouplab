@@ -3,6 +3,17 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 66. How often GroupLab goes to the Microsoft Store: your choice, two minutes, whenever suits (entry 337)
+
+**Opened 2026-10-01.** **Why:** the route is built: a run of "store submit" on GitHub sends a chosen build to the Store through
+Microsoft's own submission service, with the keys you set up for request 38, and its result appears in `docs/notes/external-status.md`.
+Nothing is sent until you say which builds go and how often. **My proposal:** a build goes to the Store when it has been the newest
+nightly for seven days with no new error report and no open TestFlight or feedback problem, at most once a week; I start the run and tell
+you here, and you can always say "not this one". **A good answer:** "yes to the proposal", or your own rule (for example "only when I
+say", or "every two weeks").
+
+**Answered 2026-10-04 (entry 369):** every nightly goes to the Store, from now on, automatically (store-follow.yml); "yes, submit" the newest now.
+
 ## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
 
 **Answered 2026-10-04 (entry 363 section 1):** "yes, switch both on". On for the computer from nightly 166; the phones wait for "forms updated", the checklist at the top of for-alan.md.

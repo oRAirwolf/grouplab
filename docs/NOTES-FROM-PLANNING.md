@@ -25,6 +25,33 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 369: the Microsoft Store gets every nightly, starting now
+
+**Status: done 2026-10-04, the first submission dispatched as the last step.** store-follow.yml sends every nightly that published whole: built from its tag with the certification kit, the search terms (GroupLab first) and its notes as What's new; one in certification is never cancelled and the newest waits; a failed certification stops it and tells Alan; scripts/store-follow.py keeps docs/notes/store-follow.json. The store status workflow checks the Store's own search API for GroupLab every run, records a change, and drafts the support ticket after eight days not found (not found on 2026-10-04). LISTING.md's terms, and the README, the guides and the download page no longer call the Store copy older or steadier. Request 66 closed.
+
+Alan, 2026-10-04 11:08 UTC. GroupLab does not appear in Microsoft Store search, in the Store app or on apps.microsoft.com in a private
+window, though its direct link works. Alan checked Partner Center: Public audience, and "Make this product available and discoverable
+in the Microsoft Store", so nothing is hidden; it is Microsoft's search not having indexed a new, unrated app. His answers: **"yes,
+submit"**, and **"GroupLab nightlies should be sent to the Microsoft Store every time they are generated/published to github"**. This
+answers request 66; close it. Do this before entry 363 section 3.5. Main model.
+
+1. **Now:** submit the newest published nightly through the existing "store submit" route (entry 337), visibility unchanged (Public,
+   available and discoverable). In the listing's search terms (Microsoft allows 7), make **GroupLab** the first, then the six most useful
+   of `docs/store/LISTING.md`'s list (for example: group size, shooting target, MOA, reloading, ballistics, precision rifle), and
+   update LISTING.md to match. Change nothing else in the listing.
+2. **From now on, automatically:** when a nightly is published to GitHub, the same workflow submits it to the Store. Rules:
+   - Only a nightly that published cleanly (its release made and its checks green). A failed or partial nightly is never sent.
+   - Microsoft allows one submission in progress. If the previous one is still in certification when a new nightly publishes, do not
+     cancel it (that would restart certification and could mean nothing ever finishes); keep the newest nightly waiting and submit it
+     as soon as the previous one is published or fails. Never queue more than the newest.
+   - A failed certification: record Microsoft's reason in `docs/notes/external-status.md` and at the top of for-alan.md in plain words,
+     and stop automatic submissions until it is dealt with.
+   - Each submission's "What's new" text comes from that nightly's release notes, shortened to what the Store allows.
+3. **Search:** check apps.microsoft.com search for "GroupLab" once a day from the status workflow and record found or not in
+   external-status.md. If it is still not found 7 days after this submission is published, draft the text of a Partner Center support
+   ticket for Alan (what was checked, the product ID 9NWJCXBKZNPZ, the dates) at the top of for-alan.md.
+4. The download page, README and guide that call the Store copy "steady" or older: make them true now that it follows the nightlies.
+
 ## 2026-10-04, entry 370: a shorter range kit
 
 **Status: done 2026-10-04, but for the results note, which waits for the results.** CHECKLIST.pdf rewritten on one short page: the three range items, what to bring, and Later, at home; 7 pages to print; 07 renamed print 4; 01 to 05 moved to later-at-home. When the results come, RANGE-PLAN-HOLE-SIZE.md says this run is one sheet each of three loads (STATE.md carries the reminder). Entry 368's checklist is in C:\Dev\grouplab-trash\2026-10-04\range-kit-368.

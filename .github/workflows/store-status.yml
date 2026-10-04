@@ -28,6 +28,22 @@ jobs:
         env:
           STATUS_OUT: state-lines.txt
 
+      # Entry 369 section 3: whether the Store's search finds GroupLab by name, recorded when it changes; after eight days of not, the text
+      # of a support ticket for Alan at the top of for-alan.md.
+      - name: Search the Store for GroupLab
+        if: always()
+        shell: bash
+        run: |
+          python3 scripts/store-follow.py search > search-lines.txt || true
+          python3 scripts/status-note.py --section store-search < search-lines.txt > search-said.txt || true
+          if ! grep -q '^changed' search-said.txt && git diff --quiet -- docs/notes/for-alan.md docs/notes/store-follow.json; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/notes/external-status.md docs/notes/for-alan.md docs/notes/store-follow.json
+          git diff --cached --quiet && exit 0
+          git commit -m "[notes] External status: the Store's search" -m "Written by the store status workflow, entry 369."
+          for attempt in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 10; done
+
       # Entries 335 and 336: a state that changed goes to docs/notes/external-status.md, which both sessions read, as a "[notes] " commit
       # that starts no build. The same state again writes nothing.
       - name: Note a changed state

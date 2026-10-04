@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:30 UTC, after entry 370 (the range kit, shorter); the inbox is empty.
+**Last rewritten:** 2026-10-04 12:30 UTC, after entry 369 (the Microsoft Store follows the nightlies); the inbox is empty.
 
 ---
 
@@ -26,6 +26,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
   72, 73 (the M834's recordings), 74, 75, 76.
 
+- **Entry 369 done**: store-follow.yml sends every published nightly to the Microsoft Store (one in certification at a time; a
+  failure stops it); the Store's search did not find GroupLab on 2026-10-04, and a ticket is drafted for Alan after eight days.
+
 ## The next three
 
 **What is left of the plan** (entry 318 section 5, one line each, with what blocks it):
@@ -41,7 +44,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   61, an App Store release Alan's word.
 - **Performance** (Phase 9): the baseline gate and any optimization; waits for planning to say the application has settled.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
-- **Stores**: Microsoft published, carrying 0.2.0, new submissions on request 66; Google Play past internal test is Alan's call; Test Lab waits on request 62.
+- **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
@@ -58,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **21** (76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 66 the Store's cadence; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **20** (76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

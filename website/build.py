@@ -722,7 +722,7 @@ def page_home() -> str:
 </div>
 <div class="panel status">
 <h3>What it is today</h3>
-<p>Test builds for Windows, macOS, Linux and Android, an iPhone and iPad public beta through TestFlight, and a steadier Windows copy in the Microsoft Store. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
+<p>Test builds for Windows, macOS, Linux and Android, an iPhone and iPad public beta through TestFlight, and a Windows copy in the Microsoft Store that follows the nightlies. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
 <p class="mono dim small">Not built yet</p>
 <p class="text">Hole detection on plain paper &#183; synchronization between devices</p>
 <a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
@@ -931,7 +931,7 @@ def page_download() -> str:
         "Download the installer") + steady(
         "Microsoft Store",
         f'<a href="{STORE}"><img class="only-dark" src="/assets/img/get-it-from-microsoft-dark.svg" alt="Get it from Microsoft" width="161" height="44"><img class="only-light" src="/assets/img/get-it-from-microsoft-light.svg" alt="Get it from Microsoft" width="161" height="44"></a>',
-        "The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning. It carries an older, steadier build than the newest one, and is updated by hand when a build has proven itself.",
+        "The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning. It gets every nightly too, once Microsoft has certified it, usually a day or so after it is published.",
         ["Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy",
          "Windows 10 version 1809 or later",
          (f"Version {store_version()} today; the Store's page and GroupLab's Settings screen name it too" if store_version()
@@ -1038,7 +1038,7 @@ def page_download() -> str:
 <section class="wrap page-head dl-head">
 <p class="eyebrow">Download</p>
 <h1>Download GroupLab</h1>
-<p class="lead">Free, for Windows, Mac, iPhone and iPad, Android and Linux. Choose your device: the newest build, and where a store carries GroupLab, the steadier copy it keeps up to date.</p>
+<p class="lead">Free, for Windows, Mac, iPhone and iPad, Android and Linux. Choose your device: the newest build, and where a store carries GroupLab, the copy it keeps up to date.</p>
 <script src="/assets/js/download.js"></script>
 <div class="dl-picks" role="group" aria-label="Your device">{picks}</div>
 </section>
@@ -1068,7 +1068,7 @@ def page_download() -> str:
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
 """
-    return shell("/download/", "Download", "Download GroupLab for Windows, Mac, iPhone and iPad, Android or Linux: the newest build, and the steadier copy a store keeps up to date.", body, "Download")
+    return shell("/download/", "Download", "Download GroupLab for Windows, Mac, iPhone and iPad, Android or Linux: the newest build, and the copy a store keeps up to date.", body, "Download")
 
 
 def donor() -> dict:

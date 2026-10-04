@@ -1,4 +1,4 @@
-**Open: 21.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 20.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 
@@ -302,15 +302,6 @@ Beta with nobody touching App Store Connect, so the group's own automatic distri
 build, is no longer needed, and with it off the two groups can never drift apart. **Steps:** in App Store Connect open Apps, GroupLab,
 TestFlight; under Internal Testing choose GroupLab Team; in the group's settings turn off automatic distribution of new builds. **A good
 answer:** "done". If the setting is named differently, a screenshot of the group's page is enough.
-
-## 66. How often GroupLab goes to the Microsoft Store: your choice, two minutes, whenever suits (entry 337)
-
-**Opened 2026-10-01.** **Why:** the route is built: a run of "store submit" on GitHub sends a chosen build to the Store through
-Microsoft's own submission service, with the keys you set up for request 38, and its result appears in `docs/notes/external-status.md`.
-Nothing is sent until you say which builds go and how often. **My proposal:** a build goes to the Store when it has been the newest
-nightly for seven days with no new error report and no open TestFlight or feedback problem, at most once a week; I start the run and tell
-you here, and you can always say "not this one". **A good answer:** "yes to the proposal", or your own rule (for example "only when I
-say", or "every two weeks").
 
 ## 62. Firebase Test Lab: GroupLab Dev on real phones every day, free, about ten minutes, whenever you choose (entry 318)
 

@@ -15,8 +15,8 @@ This page is for somebody who has never seen it. It is an unfinished test build,
 
 Nothing else is needed: the download carries its own .NET runtime.
 
-The Microsoft Store also carries GroupLab for Windows ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)), an older,
-steadier build that updates itself through the Store. For testing, take the nightly: it is the build to name in a bug report.
+The Microsoft Store also carries GroupLab for Windows ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)), which
+gets every nightly once Microsoft has certified it and updates itself through the Store. For testing, take the nightly: it is the build to name in a bug report.
 
 ## On the phone
 

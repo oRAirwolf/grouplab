@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
 NOTES-FROM-PLANNING.md entry 337 section 4: a chosen build to the Microsoft Store as a new submission, through the Store submission API, with
-the app registration request 38 already set up (Manager role in Partner Center). Started only by hand, from store-submit.yml.
+the app registration request 38 already set up (Manager role in Partner Center). Started by hand from store-submit.yml, and since entry 369 for every nightly by store-follow.yml.
 
 .DESCRIPTION
 Takes the MSIX of a store-draft-<version> draft release (made by release.yml with store_draft), and either says what it would do (DryRun,
@@ -10,8 +10,12 @@ new one, uploads it, commits the submission, and reports its status. Which build
 (for-alan.md); nothing is submitted until he agrees, and the workflow asks for the version twice.
 #>
 param(
-    [Parameter(Mandatory)] [string] $Msix,
-    [switch] $DryRun
+    [string] $Msix = '',
+    [switch] $DryRun,
+    # Entry 369: what the follow workflow asks first, and what a submission carries besides its package.
+    [switch] $Check,
+    [string[]] $SearchTerms = @(),
+    [string] $WhatsNew = ''
 )
 $ErrorActionPreference = 'Stop'
 $api = 'https://manage.devcenter.microsoft.com/v1.0/my'
@@ -30,7 +34,7 @@ function Call([string] $method, [string] $path, $body = $null) {
     if ($answer.Content) { return $answer.Content | ConvertFrom-Json } else { return $null }
 }
 
-if (-not (Test-Path $Msix)) { throw "There is no package at $Msix." }
+if (-not $Check -and -not (Test-Path $Msix)) { throw "There is no package at $Msix." }
 foreach ($name in 'TENANT', 'CLIENT', 'SECRET', 'PRODUCT') {
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name is not set (request 38's secrets and the STORE_PRODUCT_ID variable)." }
 }
@@ -43,6 +47,31 @@ $script:access = ($token.Content | ConvertFrom-Json).access_token
 if ($env:GITHUB_ACTIONS) { Write-Host "::add-mask::$script:access" }
 
 $product = Call Get "applications/$env:PRODUCT"
+
+# Entry 369 section 2: free when nothing is waiting on Microsoft; busy while a submission is in certification, which is never cancelled;
+# failed when one was refused, with Microsoft's reason, which stops automatic submissions until Alan has dealt with it.
+if ($Check) {
+    $state = 'free'
+    $reason = ''
+    if ($product.pendingApplicationSubmission) {
+        $pending = Call Get "applications/$env:PRODUCT/submissions/$($product.pendingApplicationSubmission.id)/status"
+        $state = if ($pending.status -match 'Failed$') { 'failed' } else { 'busy' }
+        $reason = (@($pending.statusDetails.errors) + @($pending.statusDetails.warnings) | Where-Object { $_ } | ForEach-Object { "$($_.code): $($_.details)" }) -join ' '
+        if (-not $reason) { $reason = "submission $($product.pendingApplicationSubmission.id) is $($pending.status)" }
+        Say "The Store: submission $($product.pendingApplicationSubmission.id) is $($pending.status)."
+    }
+    else {
+        Say "The Store: nothing waiting; the published submission is $($product.lastPublishedApplicationSubmission.id)."
+    }
+
+    if ($env:GITHUB_OUTPUT) {
+        "state=$state" | Out-File -Append -Encoding utf8 $env:GITHUB_OUTPUT
+        "reason=$($reason -replace '[\r\n]+', ' ')" | Out-File -Append -Encoding utf8 $env:GITHUB_OUTPUT
+    }
+
+    return
+}
+
 if ($product.pendingApplicationSubmission) {
     throw "A submission is already waiting on Microsoft or in Partner Center ($($product.pendingApplicationSubmission.id)); finish or delete it there first."
 }
@@ -54,6 +83,14 @@ if ($DryRun) {
 }
 
 $submission = Call Post "applications/$env:PRODUCT/submissions"
+
+# Entry 369 section 1: the search terms (seven at most, GroupLab first) and this build's notes as What's new, in every listing; nothing
+# else in the listing changes, and the visibility is the published submission's, cloned.
+foreach ($language in @($submission.listings.PSObject.Properties.Name)) {
+    $base = $submission.listings.$language.baseListing
+    if ($SearchTerms.Count -gt 0) { $base.keywords = @($SearchTerms | Select-Object -First 7) }
+    if ($WhatsNew) { $base.releaseNotes = $WhatsNew.Substring(0, [Math]::Min(1500, $WhatsNew.Length)) }
+}
 foreach ($package in @($submission.applicationPackages)) { $package.fileStatus = 'PendingDelete' }
 $new = [pscustomobject]@{ fileName = 'grouplab-win-x64.msix'; fileStatus = 'PendingUpload'; minimumDirectXVersion = 'None'; minimumSystemRam = 'None' }
 $submission.applicationPackages = @($submission.applicationPackages) + $new

@@ -1,0 +1,165 @@
+# NOTES-FROM-PLANNING.md entry 369: the Microsoft Store follows the nightlies. Alan, 2026-10-04: "GroupLab nightlies should be sent to the
+# Microsoft Store every time they are generated/published to github." A nightly that published whole is built as the Store package from its
+# own tag, exactly as release.yml's msix job builds it (the certification kit included), and submitted by scripts/store-submit.ps1 with the
+# listing's search terms and that nightly's notes as What's new. scripts/store-follow.py keeps the rules of section 2:
+#
+# - only a nightly whose release is published whole, and never one already sent;
+# - one submission in Microsoft's hands at a time: one in certification is never cancelled, the newest nightly waits, and the run every three
+#   hours sends it once the Store is free, so nothing older than the newest is ever queued;
+# - a failed certification stops every later run until Alan has dealt with it, with Microsoft's reason in external-status.md and for-alan.md.
+#
+# What it records is a "[notes] " commit, which starts no build.
+name: store follow
+
+on:
+  workflow_run:
+    workflows: ["nightly"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "41 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: store-follow
+  cancel-in-progress: false
+
+jobs:
+  decide:
+    name: which nightly, and whether the Store is free
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      go: ${{ steps.free.outputs.go }}
+      version: ${{ steps.which.outputs.version }}
+      tag: ${{ steps.which.outputs.tag }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TENANT: ${{ secrets.AZURE_AD_TENANT_ID }}
+      CLIENT: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+      SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+      PRODUCT: ${{ vars.STORE_PRODUCT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: The newest nightly not yet sent
+        id: which
+        run: python3 scripts/store-follow.py decide
+
+      - name: Whether the Store has a submission in hand
+        id: store
+        if: steps.which.outputs.go == 'true'
+        shell: pwsh
+        run: ./scripts/store-submit.ps1 -Check
+
+      - name: Go, wait, or stop
+        id: free
+        env:
+          WHICH: ${{ steps.which.outputs.go }}
+          STATE: ${{ steps.store.outputs.state }}
+          REASON: ${{ steps.store.outputs.reason }}
+          WHY: ${{ steps.which.outputs.why }}
+        run: |
+          if [ "$WHICH" != "true" ]; then echo "### Nothing to send: $WHY" >> "$GITHUB_STEP_SUMMARY"; echo "go=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          case "$STATE" in
+            free) echo "go=true" >> "$GITHUB_OUTPUT" ;;
+            busy) echo "### ${{ steps.which.outputs.version }} waits: $REASON" >> "$GITHUB_STEP_SUMMARY"; echo "go=false" >> "$GITHUB_OUTPUT" ;;
+            failed)
+              echo "go=false" >> "$GITHUB_OUTPUT"
+              python3 scripts/store-follow.py failed "$REASON"
+              echo "Store submissions stopped: a certification failed. $REASON" | python3 scripts/status-note.py --section store-follow > said.txt || true
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add docs/notes/store-follow.json docs/notes/for-alan.md docs/notes/external-status.md
+              git commit -m "[notes] The Store refused a build; automatic submissions stop" -m "Written by store-follow.yml, entry 369."
+              for attempt in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 10; done
+              exit 1 ;;
+            *) echo "::error::the Store's state could not be read"; exit 1 ;;
+          esac
+
+  msix:
+    name: the Store package of that nightly
+    needs: decide
+    if: needs.decide.outputs.go == 'true'
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      STORE_IDENTITY_NAME: ${{ vars.STORE_IDENTITY_NAME }}
+      STORE_PUBLISHER: ${{ vars.STORE_PUBLISHER }}
+      STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.STORE_PUBLISHER_DISPLAY_NAME }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.decide.outputs.tag }}
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build the MSIX
+        shell: pwsh
+        run: ./scripts/package-msix.ps1 -Version '${{ needs.decide.outputs.version }}' -Train release -IdentityName $env:STORE_IDENTITY_NAME -Publisher $env:STORE_PUBLISHER -PublisherDisplayName $env:STORE_PUBLISHER_DISPLAY_NAME
+
+      - name: Check the MSIX, with the certification kit
+        shell: pwsh
+        run: ./scripts/check-msix.ps1 -Msix out/package/grouplab-win-x64.msix -Report out/wack/wack-report.xml -Certify
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-msix
+          path: out/package/grouplab-win-x64.msix
+          retention-days: 7
+
+  submit:
+    name: submit it
+    needs: [decide, msix]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TENANT: ${{ secrets.AZURE_AD_TENANT_ID }}
+      CLIENT: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+      SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+      PRODUCT: ${{ vars.STORE_PRODUCT_ID }}
+      VERSION: ${{ needs.decide.outputs.version }}
+      TAG: ${{ needs.decide.outputs.tag }}
+    steps:
+      # The scripts as main has them, whatever the nightly's own tag carried.
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/download-artifact@v6
+        with:
+          name: windows-msix
+          path: msix
+
+      - name: What's new, from the nightly's notes
+        run: python3 scripts/store-follow.py whats-new "$TAG" > whats-new.txt
+
+      - name: Submit
+        shell: pwsh
+        env:
+          STATUS_OUT: state-lines.txt
+        run: |
+          # Entry 369 section 1: GroupLab first, then the six most useful of docs/store/LISTING.md's search terms.
+          $terms = @('GroupLab', 'group size', 'shooting target', 'MOA', 'reloading', 'ballistics', 'precision rifle')
+          ./scripts/store-submit.ps1 -Msix msix/grouplab-win-x64.msix -SearchTerms $terms -WhatsNew (Get-Content -Raw whats-new.txt)
+
+      - name: Record it
+        if: ${{ always() }}
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then python3 scripts/store-follow.py submitted "$VERSION"; fi
+          [ -f state-lines.txt ] && python3 scripts/status-note.py --section store-submission < state-lines.txt > said.txt || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/notes/store-follow.json docs/notes/external-status.md
+          git diff --cached --quiet && exit 0
+          git commit -m "[notes] The Store: $VERSION submitted" -m "Written by store-follow.yml, entry 369."
+          for attempt in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 10; done
