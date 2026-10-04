@@ -94,6 +94,7 @@
     "src/GroupLab.App/SupportLink.cs",
     "src/GroupLab.App/SurveyQueue.cs",
     "src/GroupLab.App/TargetOutline.cs",
+    "src/GroupLab.App/TargetSender.cs",
     "src/GroupLab.App/TermHelp.cs",
     "src/GroupLab.App/Theme/",
     "src/GroupLab.App/Toast.cs",
