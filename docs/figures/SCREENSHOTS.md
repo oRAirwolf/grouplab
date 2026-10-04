@@ -33,7 +33,7 @@ Store listing uses 1920x1080.
 | `ballistics-hit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet |
 | `compare` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/compare/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `equipment` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/equipment/ | no sheet at all |
-| `scale-markers` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | built-in library sheet |
 | `fingerprint` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/fingerprint/ | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `firstrun` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/firstrun/ | no sheet at all |
 | `marking` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /, /features/, /guides/user-guide/, /tour/, /tour/marking/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
