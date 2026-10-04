@@ -5,6 +5,17 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-01, question 78: on the analysis at 1400x900, the plot's toggles cover the last lines of its key
+
+**Status: answered 2026-10-04, A (Alan): the toggles in a strip of their own under the plot; built the same day.** Nothing waits on it. Seen in the screenshot walk while building entry 323, and already true in today's published
+`analysis-light-1400x900.png`: the toggles beside the plot (Group, Whole target, Caliber outlines, CEP 50 to 99, Extreme spread) wrap
+onto two rows and sit over the bottom of the key, so its last three or four entries ("CEP 90, the green solid circle", the group center,
+where you aimed) are hidden behind them. Entry 323's Velocity band switch joins the second row and its two key entries are among those
+covered when the band is on. **The options.** A: move the toggles under the plot, in a strip of their own, so the key never shares the
+space (a change to the look, so Alan's). B: open the key upward from its button, so its foot clears the toggles' rows. C: leave it; the
+key's entries are also in the tour and the guide. I would choose A: the key is the one place a reader learns what the lines are.
+
+
 ## 2026-10-04, question 82: entry 362 asks to apply the orientation tag in the shared loader, which would move every saved mark
 
 **Answered 2026-10-04 (entry 363 section 1): A, leave it.** The analysis keeps stored pixels and turns the view; only the store-bought screens turn their copies.

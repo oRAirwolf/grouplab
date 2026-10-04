@@ -14,10 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 23 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 24 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 82, 81, 79, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
 
@@ -42,16 +42,6 @@ three things are not mine to decide. Where it is published (a file on grouplab.o
 moving release); whether CI signs it with the update key on every change to the built-in list, or only Code by hand when Alan's
 submission is added; and how often the application looks (with the update check, about every six hours on the phone and at start on
 the computer, is what I would do). I would choose grouplab.org, signed in CI, on the update check.
-
-## 2026-10-01, question 78: on the analysis at 1400x900, the plot's toggles cover the last lines of its key
-
-**Status: open.** Nothing waits on it. Seen in the screenshot walk while building entry 323, and already true in today's published
-`analysis-light-1400x900.png`: the toggles beside the plot (Group, Whole target, Caliber outlines, CEP 50 to 99, Extreme spread) wrap
-onto two rows and sit over the bottom of the key, so its last three or four entries ("CEP 90, the green solid circle", the group center,
-where you aimed) are hidden behind them. Entry 323's Velocity band switch joins the second row and its two key entries are among those
-covered when the band is on. **The options.** A: move the toggles under the plot, in a strip of their own, so the key never shares the
-space (a change to the look, so Alan's). B: open the key upward from its button, so its foot clears the toggles' rows. C: leave it; the
-key's entries are also in the tour and the guide. I would choose A: the key is the one place a reader learns what the lines are.
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 

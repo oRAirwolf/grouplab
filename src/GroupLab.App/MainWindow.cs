@@ -1140,9 +1140,14 @@ public sealed partial class MainWindow : Window
         }
 
         cepPercentBox.TextChanged += (_, _) => SetCepPercent(cepPercentBox.Text);
-        var plotArea = new Panel();
-        plotArea.Children.Add(plot);
+        // Question 78, Alan's A: the toggles in a strip of their own under the plot, so they never cover the last lines of its key, which at
+        // 1400x900 they did when they wrapped onto a second row over it.
+        var plotArea = new DockPanel { LastChildFill = true };
+        outlinesToggle.HorizontalAlignment = HorizontalAlignment.Stretch;
+        outlinesToggle.VerticalAlignment = VerticalAlignment.Stretch;
+        DockPanel.SetDock(outlinesToggle, Dock.Bottom);
         plotArea.Children.Add(outlinesToggle);
+        plotArea.Children.Add(plot);
         analysisBody.Children.Add(Columns("analysis", leftColumn, plotArea, figureColumn));
         plot.ShotsClicked += (_, ids) => PickShots(ids);
 

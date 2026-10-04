@@ -32,8 +32,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## The next three
 
 **What is left of the plan** (entry 318 section 5, one line each, with what blocks it):
-- **Detection, angled photos**: the far column's 0.08 in errors come from a lifted margin; the bent-sheet registration is entry 324
-  section 1, with the other session. **Holes on any target**: Experimental, measured; harder cases wait on request 58.
+- **Detection, angled photos**: done in entry 324 section 1 (da9cf190): the far column from 0.08 to 0.01 or 0.02 in on the 9 and 15
+  degree photos, nothing else changed. **Holes on any target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
 - **Chronograph files** (Phase 5): every one of Alan's Xero exports reads, and a timed string proposes its pairing (entry 342);
   checking a proposal needs a sheet shot with its string.
@@ -67,11 +67,10 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 - **83** identification takes 34 s on a photo with no codes (my choice: full size only when no marker is found)
 - **80** a newer fingerprint library without a new build
-- **78** the plot's toggles cover the last lines of its key at 1400x900 (found in entry 323; a change to the look)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
