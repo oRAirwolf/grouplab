@@ -841,6 +841,11 @@
    ],
    "moreShots": [
     [
+     "scale-markers",
+     "Targets with Scale markers open: the corner brackets, scale bars, board stickers and bank card, each with what it gives, the paper, the print buttons and Measure a board",
+     "Scale markers, opened: corner brackets, scale bars and board stickers to print on Letter or A4, the stickers for a label printer's app, Measure a board, and the bank card that needs nothing printed. Put one beside a target GroupLab did not print and the photo carries its scale."
+    ],
+    [
      "targets-zero",
      "Targets with the mil zeroing grid for 100 yards chosen: design C3, its legend and numbers drawn in the preview",
      "A zeroing grid, design C3: squares of 0.2 mil or 0.5 MOA with a tick for each click, every line's distance from the aim written outside the grid, and a legend above it to read through the scope."

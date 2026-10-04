@@ -19,6 +19,16 @@ public partial class MainWindow
 {
     private readonly StackPanel boardList = new() { Spacing = 4 };
     private readonly TextBlock markerSaid = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
+    private Expander? markersSection;
+
+    /// <summary>Opens or closes the Scale markers section, for the screenshot walk's picture of it (entry 365).</summary>
+    internal void ShowScaleMarkers(bool open)
+    {
+        if (markersSection is not null)
+        {
+            markersSection.IsExpanded = open;
+        }
+    }
 
     private Control ScaleMarkersSection()
     {
@@ -42,7 +52,8 @@ public partial class MainWindow
         body.Children.Add(boardList);
         body.Children.Add(markerSaid);
         FillBoards();
-        return new Expander { Header = ScaleMarkerWords.Heading, Content = body, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch };
+        markersSection = new Expander { Header = ScaleMarkerWords.Heading, Content = body, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch };
+        return markersSection;
     }
 
     private void FillBoards()

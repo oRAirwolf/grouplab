@@ -26,6 +26,7 @@
     "targets-zero": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs", "src/GroupLab.App/SheetThumbnail.cs", "src/GroupLab.Core/Gltd/Derivation/GridStyle3.cs", "targets/GL-ZERO-MOA-100Y.gltd.json"],
     "optic": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs"],
     "fingerprint": ["src/GroupLab.App/FingerprintStepsView.cs", "src/GroupLab.App/FingerprintPicture.cs", "src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.Cli/Library/FingerprintSession.cs", "src/GroupLab.Core/StoreTargets/FingerprintSteps.cs", "tests/GroupLab.App.Tests/Entry109Tests.cs", "tests/Shared/StandInPoster.cs"],
+    "scale-markers": ["src/GroupLab.App/MainWindow.ScaleMarkers.cs", "src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.Core/ScaleMarkers/ScaleMarkerWords.cs", "tests/GroupLab.App.Tests/Entry109Tests.cs"],
     "optic-4x": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs"],
     "ballistics": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/TrajectoryGraph.cs", "src/GroupLab.App/BallisticMeasures.cs"],
     "ballistics-hit": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/MainWindow.Hit.cs", "src/GroupLab.App/HitGraphs.cs"],

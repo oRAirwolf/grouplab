@@ -25,7 +25,7 @@ four on your backer measured once with Measure a board, then every photo of a ta
 store-bought target (Markers in the photo, chosen by itself) and when you mark a target by hand. Measured on computer-made photos,
 before any printer error: board 0.015 percent, bar 0.06, brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, card 0.15
 (found in 30 of 40). Printed markers lean on your printer check; without one they can be off by up to 1.5 percent. Request 76 checks
-all this on real paper. Not yet done: the Features page's picture of it (the screenshot walk needs a step for it).
+all this on real paper.
 
 **YOUR SEVEN REFERENCE FILES** (entry 364, not a request; in the library from nightly 167). Each file recognizes its own photo and none
 of the others, and its bulls sit on the marks. **Added (4):** Birchwood Casey Shoot-N-C 12 in 5-bull sight-in (BC-34207), Eze-Scorer

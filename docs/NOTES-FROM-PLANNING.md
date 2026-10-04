@@ -152,7 +152,7 @@ Write the week's reading in for-alan.md when you stop.
 
 ## 2026-10-04, entry 365: scale markers beside a target, all four concepts (A, B, C and D)
 
-**Status: done 2026-10-04, except the Features page's own picture** (the screenshot walk needs a step for Targets, Scale markers; listed in docs/figures/SCREENSHOTS.md). All four built on the computer and the phone, measured by `grouplab marker-trial` (docs/PHASE1-RESULTS.md, entry 365), the app's words using the measured figures; request 76 asks for the real-paper photos.
+**Status: done 2026-10-04.** The Features page's own picture followed in a second commit: a screenshot walk step for Targets, Scale markers, on the Features page and the Targets tour stop. All four built on the computer and the phone, measured by `grouplab marker-trial` (docs/PHASE1-RESULTS.md, entry 365), the app's words using the measured figures; request 76 asks for the real-paper photos.
 
 Alan, 2026-10-04 08:48 UTC: "Can you make some concepts for rulers or markers that I can place beside a target so you can figure out
 the scale without me having to do it?" Concepts: claude.ai/artifact/RGsLxip8s9i5pQ29YZnVsF (boards Main, Brackets, Bar, Backer, Card).

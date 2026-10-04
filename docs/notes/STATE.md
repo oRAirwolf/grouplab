@@ -20,7 +20,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
 - **Entries 363, 364 and 365 done** (2026-10-04), for nightly 167: the M834 files (166), aiming marks, issue 19 (closed), the
   sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
-  scale markers A to D. **Not done:** 365's Features page picture (a step in Entry109Tests).
+  scale markers A to D.
 - **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
 - **Entries 366 to 368 done**: today's range kit, the hole size test and the C and E bulls in it, in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
@@ -45,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. The Features page's picture of Targets, Scale markers (a step in Entry109Tests), then the phone pictures at the next sitting.
+1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
 3. The M834: the recording reader waits for request 73's recordings; then the printer's own protocol.
 

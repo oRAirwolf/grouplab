@@ -542,6 +542,11 @@ public class Entry109Tests
 
                         window.ShowLibrary();
 
+                        // Entry 365: Targets with Scale markers open, the Features page's picture of the four markers.
+                        window.ShowScaleMarkers(true);
+                        Save(window, $"scale-markers-{name}-{size}");
+                        window.ShowScaleMarkers(false);
+
                         // Entry 242 section 1: "Made for your optic" filled in, for its tour stop: 100 yd through 10x, and through 4x, the set.
                         var ten = window.TargetsPanel.Generate("100", "10", "", 25)!;
                         Save(window, $"optic-{name}-{size}");

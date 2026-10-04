@@ -2,12 +2,7 @@
 
 NOTES-FROM-PLANNING.md entry 253 section 1, as of 2026-09-28. Alan: "at some point code should update all of the screenshots on the
 website." This is the list: every picture on grouplab.org, in the README and in the guides that shows GroupLab, where each is used, what
-it was made from and the build it shows. **Every one is produced by the screenshot walk or the phone sitting; the one gap is listed under Waiting for a picture.**
-
-## Waiting for a picture
-
-- **Targets, Scale markers** (entry 365): the Features page's entry `scale-markers` has no picture of its own yet. It needs a step in
-  `Entry109Tests` that opens the Scale markers section on Targets, and the phone's card at the next sitting.
+it was made from and the build it shows. **Every one is produced by the screenshot walk or the phone sitting; there is no gap.**
 
 ## How they are kept current
 
@@ -38,6 +33,7 @@ Store listing uses 1920x1080.
 | `ballistics-hit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet |
 | `compare` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/compare/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `equipment` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/equipment/ | no sheet at all |
+| `scale-markers` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | no sheet at all: Targets with Scale markers open (entry 365) |
 | `fingerprint` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/fingerprint/ | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `firstrun` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/firstrun/ | no sheet at all |
 | `marking` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /, /features/, /guides/user-guide/, /tour/, /tour/marking/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |

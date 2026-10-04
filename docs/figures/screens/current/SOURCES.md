@@ -66,6 +66,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `equipment-light-1400x900.png` | no sheet at all |
 | `equipment-light-1920x1080.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
+| `scale-markers-dark-1280x720.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-dark-1400x900.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-dark-1920x1080.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-dark-2560x1440.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-light-1280x720.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-light-1400x900.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-light-1920x1080.png` | no sheet at all: Targets with Scale markers open (entry 365) |
+| `scale-markers-light-2560x1440.png` | no sheet at all: Targets with Scale markers open (entry 365) |
 | `fingerprint-dark-1280x720.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `fingerprint-dark-1400x900.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `fingerprint-dark-1920x1080.png` | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
