@@ -217,7 +217,7 @@ public static class MarkerTrial
         return (decoded, new Homography(wallToImage), tilt * 180 / Math.PI, new ScaleBoard("Trial board", 'A', new DateOnly(2026, 10, 4), 0.001, layout), cardCorners);
     }
 
-    private sealed record Piece(Mat Picture, Mat Mask, PointD Origin) : IDisposable
+    internal sealed record Piece(Mat Picture, Mat Mask, PointD Origin) : IDisposable
     {
         public void Dispose()
         {
@@ -227,7 +227,7 @@ public static class MarkerTrial
     }
 
     /// <summary>A piece drawn in its own millimetres at <see cref="PieceDpi"/>, laid on the wall at <paramref name="at"/> inches, turned by <paramref name="angle"/>.</summary>
-    private static void Put(Mat photo, Mat picture, Mat mask, PointD origin, double[] wallToImage, PointD at, double angle)
+    internal static void Put(Mat photo, Mat picture, Mat mask, PointD origin, double[] wallToImage, PointD at, double angle)
     {
         double c = Math.Cos(angle), s = Math.Sin(angle), px = 25.4 / PieceDpi;
         double[] pieceToWall = [c / 25.4, -s / 25.4, at.X, s / 25.4, c / 25.4, at.Y, 0, 0, 1];
@@ -243,7 +243,7 @@ public static class MarkerTrial
 
     private static int Px(double mm) => (int)Math.Round(mm * PieceDpi / 25.4);
 
-    private static (Mat, Mat, PointD) Bracket(int piece)
+    internal static (Mat, Mat, PointD) Bracket(int piece)
     {
         var outline = ScaleMarkerLayout.BracketOutline(piece);
         double x0 = outline.Min(p => p.X), y0 = outline.Min(p => p.Y);
@@ -259,7 +259,7 @@ public static class MarkerTrial
         return (picture, mask, new PointD(x0, y0));
     }
 
-    private static Piece Bar(int number)
+    internal static Piece Bar(int number)
     {
         var tags = ScaleMarkerLayout.Bar(false, number);
         // White beyond each code as far as the page's edge, 6.7 mm on Letter.
@@ -289,7 +289,7 @@ public static class MarkerTrial
     }
 
     /// <summary>A card, light or dark at random, with a dark stripe and some marks: its sharp corners are its own millimetres' 0 to 85.6 and 0 to 53.98.</summary>
-    private static Piece Card(Random rng)
+    internal static Piece Card(Random rng)
     {
         int w = Px(ScaleMarkerLayout.CardWidth), h = Px(ScaleMarkerLayout.CardHeight), r = Px(ScaleMarkerLayout.CardRadius);
         bool light = rng.Next(2) == 0;

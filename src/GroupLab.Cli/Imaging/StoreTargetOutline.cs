@@ -60,11 +60,11 @@ public static class StoreTargetOutline
     public const string SameColour = "the paper's edge could not be told from what it lies on all the way round; a darker or plainer surface helps";
 
     /// <summary>
-    /// How much of its weakest side the chosen outline must have on an edge to be called found; below it the outline is offered as a guess.
-    /// Alan's photos on a dark grained floor (2026-10-04): the three outlines that ran onto the boards' seams chose 0.67, 0.75 and 0.88, and
-    /// every right one on the floor, the table, the counter and the scans 0.92 or more.
+    /// How much of its weakest side the chosen outline must have on an edge to be called found, with another way agreeing (entry 371); below
+    /// it the outline is offered as a guess. Alan's grained floor (2026-10-04) first set it at 0.9 alone; the surface trial showed the
+    /// weakest side alone leaves one "found" in seven wrong at any threshold, and agreement is what separates them.
     /// </summary>
-    public const double SureShare = 0.9;
+    public const double SureShare = 0.8;
 
     public const string NotSure = "GroupLab is not sure of these corners: lines in what the target lies on, a wood grain or tiles, run close to its edges. Drag each onto the target's corner";
 
@@ -167,8 +167,15 @@ public static class StoreTargetOutline
                 tried.Add(Lost(c, best));
             }
 
-            tried.Add(string.Create(CultureInfo.InvariantCulture, $"chose {best.Method}: weakest side {best.Weakest:0.00} on an edge, {100 * best.Area / (w * h):0}% of the picture"));
-            if (!scan && best.Weakest < SureShare)
+            // Entry 371: how many outlines found another way lie on the same corners, within 1.5 percent of the picture's size.
+            double near = 0.015 * Math.Max(w, h);
+            static string Way(string method) => method.Split(',')[0];
+            int agree = candidates.Where(c => Way(c.Method) != Way(best.Method) && Enumerable.Range(0, 4).All(i => Math.Sqrt(Math.Pow(c.Corners[i].X - best.Corners[i].X, 2) + Math.Pow(c.Corners[i].Y - best.Corners[i].Y, 2)) <= near)).Select(c => Way(c.Method)).Distinct().Count();
+            tried.Add(string.Create(CultureInfo.InvariantCulture, $"chose {best.Method}: weakest side {best.Weakest:0.00} on an edge, {100 * best.Area / (w * h):0}% of the picture, {agree} other ways agree, run on {best.RunOn:0.00}"));
+            // Entry 371 section 1: called found only where its weakest side is on an edge for most of its length and another way of looking
+            // (colour, edges, the light region, the printed extent) put the corners in the same places. On 112 computer-made scenes over 14
+            // surfaces this left 1 wrong outline in 38 called found, against 21 in 86 before; Alan's photos are the held-out check.
+            if (!scan && (best.Weakest < SureShare || agree < 1))
             {
                 tried.Add("not sure: " + NotSure);
                 return new StoreTargetOutlineResult(false, full, best.Method, NotSure, tried);

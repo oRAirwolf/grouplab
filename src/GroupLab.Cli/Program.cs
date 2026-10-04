@@ -71,6 +71,7 @@ return args switch
     ["target-reference", .. var rest] => GroupLab.Cli.TargetReferenceVerb.Run(rest, Console.Out, Console.Error),
     ["poster-trial", .. var rest] => GroupLab.Cli.Spike.PosterTrial.Run(rest, Console.Out, Console.Error),
     ["marker-trial", .. var rest] => GroupLab.Cli.Spike.MarkerTrial.Run(rest, Console.Out, Console.Error),
+    ["surface-trial", .. var rest] => GroupLab.Cli.Spike.SurfaceTrial.Run(rest, Console.Out, Console.Error),
     ["outline-trial", .. var rest] => GroupLab.Cli.Spike.OutlineTrial.Run(rest, Console.Out, Console.Error),
     ["sample", .. var rest] => GroupLab.Cli.SampleVerb.Run(rest, Console.Out, Console.Error),
     ["bench", .. var rest] => GroupLab.Cli.BenchVerb.Run(rest, Console.Out, Console.Error),

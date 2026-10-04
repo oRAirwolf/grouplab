@@ -183,6 +183,8 @@ public class Entry362Tests
     private const string Wood = @"C:\Dev\grouplab-local\commercial-targets\wood-2026-10-04";
 
     /// <summary>
+    /// Entry 371: "found" now needs another way of looking to agree, so five of these whose corners are right start as "not sure" (the
+    /// splash bull, the ST-4, the Eze-Scorer grid on the table twice, the tilted Shoot-N-C on the floor); their corners are held as before.
     /// The corners found on each, upright, in full size pixels, as checked by eye on 2026-10-04 against crops of each corner: within about
     /// ten pixels on the sight-in, splash bull, Eze-Scorer bull, NTC ST-4 and Shoot-N-C 12 in sight-in, about twenty five on one corner of
     /// the sight-in grid. The rigid crosshair's paper edge barely shows on the counter, so it is not called found; the guess its handles start
@@ -192,20 +194,20 @@ public class Entry362Tests
     public static TheoryData<string, bool, double[]> Corners => new()
     {
         { Path.Combine(Photos, "allen-ezaim-sight-in-55134A.jpg"), true, [668, 121, 3503, 152, 3528, 2802, 668, 2847] },
-        { Path.Combine(Photos, "allen-splash-bull-55124A.jpg"), true, [847, 152, 3506, 185, 3524, 2845, 831, 2874] },
+        { Path.Combine(Photos, "allen-splash-bull-55124A.jpg"), false, [847, 152, 3506, 185, 3524, 2845, 831, 2874] },
         { Path.Combine(Photos, "birchwood-rigid-crosshair.jpg"), false, [1119, 239, 3628, 250, 3617, 2763, 1108, 2752] },
         { Path.Combine(Photos, "eze-scorer-bull.jpg"), true, [273, 577, 2899, 572, 2910, 3189, 280, 3212] },
         { Path.Combine(Photos, "eze-scorer-sight-in-grid.jpg"), true, [208, 516, 2844, 459, 2845, 3137, 204, 3137] },
-        { Path.Combine(Photos, "ntc-st4-100yd-precision-rifle.jpg"), true, [170, 221, 2831, 213, 2864, 3246, 154, 3260] },
+        { Path.Combine(Photos, "ntc-st4-100yd-precision-rifle.jpg"), false, [170, 221, 2831, 213, 2864, 3246, 154, 3260] },
         { Path.Combine(Photos, "birchwood-shoot-n-c-12in-sight-in.jpg"), true, [849, 178, 3530, 159, 3522, 2815, 876, 2844] },
         // Request 74, Alan's photos on wood (2026-10-04), checked by eye: the light kitchen table all four, the dark grained floor only the
         // tilted Shoot-N-C. On the floor the Rigid crosshair's outlines run past the paper and the square Shoot-N-C's takes most of the
         // photo, each still called found; those three are not held here, and wait on the corner finder.
-        { Path.Combine(Wood, "table-eze-scorer-grid-square.jpg"), true, [71, 525, 2899, 536, 2909, 3337, 84, 3373] },
-        { Path.Combine(Wood, "table-eze-scorer-grid-tilted.jpg"), true, [351, 753, 2699, 729, 2922, 3266, 110, 3244] },
+        { Path.Combine(Wood, "table-eze-scorer-grid-square.jpg"), false, [71, 525, 2899, 536, 2909, 3337, 84, 3373] },
+        { Path.Combine(Wood, "table-eze-scorer-grid-tilted.jpg"), false, [351, 753, 2699, 729, 2922, 3266, 110, 3244] },
         { Path.Combine(Wood, "table-rigid-crosshair-square.jpg"), true, [99, 550, 2853, 523, 2893, 3294, 103, 3315] },
         { Path.Combine(Wood, "table-rigid-crosshair-tilted.jpg"), true, [361, 793, 2705, 795, 2901, 3320, 124, 3284] },
-        { Path.Combine(Wood, "floor-shoot-n-c-tilted.jpg"), true, [317, 720, 2601, 664, 2823, 3091, 145, 3110] },
+        { Path.Combine(Wood, "floor-shoot-n-c-tilted.jpg"), false, [317, 720, 2601, 664, 2823, 3091, 145, 3110] },
         { Path.Combine(Blanks, "bc-34105-shoot-n-c-sight-in", "blank.png"), true, [3, 3, 4956, 3, 4956, 4875, 3, 4890] },
         { Path.Combine(Blanks, "bc-34550-shoot-n-c-6in-bull", "blank.png"), true, [3, 3, 3721, 3, 3727, 3708, 3, 3719] },
         { Path.Combine(Blanks, "bc-34805-shoot-n-c-8in-bull", "blank.png"), true, [3, 3, 4956, 3, 4956, 4947, 3, 4975] },
@@ -299,7 +301,8 @@ public class Entry362Tests
         {
             using var session = new FingerprintSession(() => []);
             Assert.Null(session.Load(path));
-            Assert.True(session.CornersFound, $"{file}: corners not found");
+            // Entry 371: a right outline may start as "not sure" where no second way agrees (the splash bull); the steps go on from it.
+            Assert.Equal(4, session.Corners.Length);
             Assert.Null(session.Next());
             session.Source = GroupLab.Core.StoreTargets.ScaleSource.PrintedSize;
             (session.WidthInches, session.HeightInches) = (12, 12);
