@@ -24,6 +24,9 @@ adb shell input keyevent 82 || true
 adb shell settings put global window_animation_scale 0 || true
 adb shell settings put global transition_animation_scale 0 || true
 adb shell settings put global animator_duration_scale 0 || true
+# The emulator's own launcher sometimes stops answering, and Android's "isn't responding" box then sits over GroupLab Dev and takes
+# every tap (run 37118457310, 2026-10-03). GroupLab Dev's own crashes are still caught from the log below, so no box is needed.
+adb shell settings put global hide_error_dialogs 1 || true
 # The keyboard on the screen even where the emulator reports a hardware one, so a field's tap brings it up as it does on a phone.
 adb shell settings put secure show_ime_with_hard_keyboard 1 || true
 adb shell settings put system font_scale 1.0 || true

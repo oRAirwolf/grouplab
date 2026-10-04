@@ -383,6 +383,12 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 361: the finishing flag, and a live reading
+
+- The hook now follows entry 360 as amended: under 85 it lets every call through; from 85 it blocks unless `docs/notes/finishing.flag` is under 45 minutes old; from 88 it blocks whatever the flag says. The six cases above were run by hand with sample files.
+- From a terminal the status line runs and `docs/notes/usage-now.json` stays fresh: 62% of the week at 03:06 UTC, 2026-10-04. Each block's cost goes in the local `docs/notes/usage-log.md`.
+- The Android emulator's red real taps on 2cce12a1 (run 37118457310) were not GroupLab: the emulator's own launcher stopped answering and Android's "Pixel Launcher isn't responding" box covered the screen, so every tap after the first went to the box. Both emulator scripts now switch those boxes off (`hide_error_dialogs`); GroupLab Dev's own crashes are still caught from its log.
+
 ## Entry 360: a hard stop at 85% of the week
 
 - The hook refuses every tool call once either reading of the week (the status line's file, or Claude Code's cached figure) is 85 or more; about 32 ms a call; with no reading it lets the call through, as section 3 asked.

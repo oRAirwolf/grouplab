@@ -9,26 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-03 11:14 UTC, stopped under entry 360 (budget); entry 358 part built on a worker's branch.
+**Last rewritten:** 2026-10-04 03:20 UTC, after entry 361 (the finishing flag) and the Android real-tap check.
 
 ---
 
 ## In flight
 
-- **STOPPED at Alan's word (entry 360), 2026-10-03 11:14 UTC.** Stay stopped until he says otherwise, even after the weekly window
-  resets (2026-10-08 02:00 UTC). Last real reading: **60% of the week** at 09:55 UTC; the status line does not run in the VS Code
-  extension, so no fresh reading exists here. Before starting anything: read the week (docs/notes/usage-now.json, or Claude Code's
-  cachedUsageUtilization in ~/.claude.json); start nothing at 80% or more, or when the reading is over 10 minutes old.
-  `scripts/usage-guard.js`, a PreToolUse hook in .claude/settings.local.json, refuses every tool call at 85%.
+- **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 62% of the
+  week at 03:06 UTC. Plan each block to end under 85% (entry 360 section 2, costs in the local docs/notes/usage-log.md). The hook
+  `scripts/usage-guard.js` blocks from 85 unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
 - **Entry 358, sections 1 to 3 built, not merged:** commits 6175d457 (label page sizes), 6ab485e6 (thermal print mode) and 9472f323
   (the X6 labels and check labels) on branch `worktree-agent-a2a1221f838518e94` (`.claude/worktrees/agent-a2a1221f838518e94`). Only their
   own test groups ran: run the three suites, the site build and consistency before cherry-picking. Not started: sections 4
   (printer framework), 6 (darkness) and 8 (public pages).
-- **Red, not yet looked at:** the Android emulator's real taps failed on 2cce12a1 (run of 11:14 UTC): Continue on the caliber
-  question not showing, the keyboard not up, and the picture picker not reached; 3fe07c31 and the two runs after it were green. First thing
-  next session, before any new block.
-- **Entry 359 is unread** (corrections, per entry 360's order after 358). **Entry 361 is on hold** at Alan's word (11:12 UTC: "We will look again tomorrow").
-- **Entry 360's hook has no finishing flag yet** (section 3): the session's safety check refused the change; Alan's to decide (for-alan.md).
+- **The Android real taps red on 2cce12a1 was the emulator, not GroupLab:** its launcher hung and the "isn't responding" box took
+  the taps. Both emulator scripts now switch those boxes off; a dispatched run proves it.
+- **Next: entry 362** (store-bought targets: orientation, corners, zoom, rotate), then 358 with 359's corrections.
 - **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 and 73 (the label
   printers on arrival). **Waiting on planning:** questions 79 and 81.
 
@@ -90,7 +86,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 358 (part built, see In flight), 359, and 361 (on hold).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 358 (part built, see In flight), 359 and 362.
 
 ## Things that would surprise somebody who was not here yesterday
 

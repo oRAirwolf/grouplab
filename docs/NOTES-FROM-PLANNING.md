@@ -25,6 +25,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-03, entry 361: entry 360 as amended, run from a terminal so the reading stays live
+
+**Status: done 2026-10-04.** The hold was lifted by Alan on 2026-10-04. Section 1: `scripts/usage-guard.js` now lets a call through between 85 and 88 while `docs/notes/finishing.flag` is under 45 minutes old, and blocks from 88 whatever the flag says; tested at 84 (passes), 85 (blocks), 85 with the flag (passes), 85 with a 50 minute old flag (blocks), 88 with the flag (blocks) and no file (passes). Section 2: run from a terminal, the status line's reading was 62% at 03:06 UTC and fresh; entry 360's commit was already on main (6d7100e4); entry 358's worker branch is merged under entry 358. Section 3 continues as entries 362 and 358.
+
+
+Alan, 2026-10-03 11:15 UTC. Two things the VS Code session missed:
+
+1. **Entry 360 was amended at 11:05 UTC, before its scripts were written; re-read it.** Sections 2 and 3 now say: no stop at 80%. Plan
+   each block so it ends under 85%, from what similar blocks cost (keep `docs/notes/usage-log.md`, local). Never stop in the middle of a
+   publish, a release, a store or TestFlight step, a merge, or a commit and push. The hook honours `docs/notes/finishing.flag` (under 45
+   minutes old) between 85 and 88, and blocks at 88 whatever the flag says. Bring `scripts/usage-guard.js` and the rule into line with
+   that, and test 84, 85, 85 with the flag, and 88 with the flag.
+2. **This session runs in a terminal (`claude` in C:\Dev\grouplab), where the status line runs**, so `usage-now.json` stays fresh. The
+   VS Code session was stopped by Alan to make the switch. Before anything else:
+   - Read docs/notes/STATE.md. Entry 358's worker was in `.claude/worktrees/agent-a2a1221f838518e94` (commits 6175d457 and 6ab485e6
+     and anything after). Check its state, keep what is committed, finish or set aside anything half done, and merge.
+   - Commit 1c9c4bdf (entry 360) is local. Push only once nightly 164's run has finished, as the VS Code session intended.
+   - Confirm the status line shows the week's percentage and `usage-now.json` is fresh; write the reading in for-alan.md.
+3. Then carry on with the inbox under entry 360: the rest of 358, with 359's corrections read first. Stop cleanly as close to 85% as
+   the blocks allow, and stay stopped until Alan says otherwise.
+
 ## 2026-10-03, entry 360: stop before 85% of the weekly limit, measured, with a hard stop that cannot be missed
 
 **Status: done 2026-10-03, except two parts.** Built: the status line script that records the week's percentage (`scripts/usage-statusline.js`) and the hook that refuses every tool call at 85% (`scripts/usage-guard.js`), both switched on in the local settings, which were backed up first. The hook also reads Claude Code's own cached figure, since the status line does not run in the VS Code extension. Not done: section 3's "finishing" flag and 88% backstop, which Claude Code's safety check refused to let the session write into its own guard (for-alan.md has it for Alan); and section 2's live per-block measuring, because in VS Code no fresh reading exists, so section 4 applied: the entry in hand (358) stopped at its next commit, nothing else started, and the session stopped at 11:14 UTC with the week last read at 60% (09:55 UTC). The scripts went in `scripts/`, not `tools/`, which is read only. Entry 361 (run from a terminal) is on hold at Alan's word.

@@ -1,11 +1,14 @@
-// NOTES-FROM-PLANNING.md entry 360 section 3: the hard stop. A PreToolUse hook on every tool call, in workers too: at 85% or more of the
-// weekly allowance, as docs/notes/usage-now.json last recorded it (scripts/usage-statusline.js writes it), it says so and exits 2, which
-// blocks the call. Under 85, or with the file missing or unreadable, it exits 0: a broken measure must not lock the project (section 4
-// covers that case). No network and nothing slow, since it runs before every tool call.
+// NOTES-FROM-PLANNING.md entry 360 section 3 as amended (entry 361 section 1): the hard stop. A PreToolUse hook on every tool call, in
+// workers too, reading the week's percentage as docs/notes/usage-now.json last recorded it (scripts/usage-statusline.js writes it).
+// Under 85: exit 0. From 85: exit 2, which blocks the call, unless docs/notes/finishing.flag exists and is under 45 minutes old, so a
+// block already under way (above all a publish) can finish. From 88: exit 2 whatever the flag says. With the file missing or unreadable
+// it exits 0: a broken measure must not lock the project (section 4 covers that case). No network and nothing slow.
 const fs = require("fs");
 const path = require("path");
 
 const LIMIT = 85;
+const BACKSTOP = 88;
+const FLAG_MINUTES = 45;
 // Two readings of the same subscription figure: the status line's file, and Claude Code's own cache of the usage it last fetched
 // (cachedUsageUtilization in ~/.claude.json), which is there even where no status line runs, as in the VS Code extension. Either at 85
 // or more blocks; neither is a guess from token counts.
@@ -25,10 +28,23 @@ function readings() {
   return found.filter((v) => typeof v === "number" && isFinite(v));
 }
 
-const blocked = readings().some((v) => v >= LIMIT);
+function finishing() {
+  try {
+    const flag = process.env.GROUPLAB_FINISHING_FLAG || path.join(__dirname, "..", "docs", "notes", "finishing.flag");
+    return Date.now() - fs.statSync(flag).mtimeMs < FLAG_MINUTES * 60 * 1000;
+  } catch {
+    return false;
+  }
+}
 
-if (blocked) {
-  process.stderr.write("Weekly budget reached (85%). Alan said to stop. Commit nothing more; stop.\n");
+const highest = Math.max(-Infinity, ...readings());
+
+if (highest >= BACKSTOP) {
+  process.stderr.write("Weekly budget reached (88%), the last line. Alan said to stop. Stop now.\n");
+  process.exit(2);
+}
+if (highest >= LIMIT && !finishing()) {
+  process.stderr.write("Weekly budget reached (85%). Alan said to stop. Stop now.\n");
   process.exit(2);
 }
 process.exit(0);

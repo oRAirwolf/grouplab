@@ -26,6 +26,9 @@ adb shell input keyevent 82 || true
 adb shell settings put global window_animation_scale 0 || true
 adb shell settings put global transition_animation_scale 0 || true
 adb shell settings put global animator_duration_scale 0 || true
+# The emulator's own launcher sometimes stops answering, and Android's "isn't responding" box then sits over GroupLab Dev and takes
+# every tap (run 37118457310, 2026-10-03). GroupLab Dev's own crashes are still caught from the log below, so no box is needed.
+adb shell settings put global hide_error_dialogs 1 || true
 
 # -g grants every permission the manifest asks for, so the camera's question never covers the screens.
 adb install -r -g "$APK" > "$OUT/install.log" 2>&1 || { cat "$OUT/install.log"; echo "::error::GroupLab Dev did not install on the emulator"; exit 1; }
