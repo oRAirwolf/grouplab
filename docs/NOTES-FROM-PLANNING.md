@@ -25,6 +25,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 367: rebuild the range kit with the hole size test in it
+
+**Status: done 2026-10-04.** 06 and 07 renamed without OPTIONAL (07 "print 10, all at once on the same paper"); 04 now print 2, the separate chronograph group gone; CHECKLIST.pdf rewritten on one page in the entry's order: the hole size core set at 50 yd (25 yd for the whole set if not), its shooting order and ammunition, the extras, the Xero up for every sheet with its string number on the load block; 16 pages to print. entry 366's files are in C:\Dev\grouplab-trash\2026-10-04\range-kit-366.
+
+Alan, 2026-10-04 10:56 UTC. Entry 366's kit in `C:\Dev\grouplab-local\range-2026-10-04\` is done, but he can bring rifles in 6.5
+Creedmoor, 6mm ARC, .22 LR, .300 Blackout and 8.6 Blackout, so the hole size test is on. **Do this now.** Small: main model, no worker.
+
+1. Files 06 and 07 are no longer optional: rename them without "OPTIONAL" ("06 hole size plan - print 1", "07 load sheet
+   GL-CF25-LTR-D - print 10, all at once on the same paper"). Keep the numbering so the print order stays obvious.
+2. Rewrite `CHECKLIST.pdf`, still one page, in this order: (1) the store-bought targets; (2) **the hole size test**, core set from
+   `docs/RANGE-PLAN-HOLE-SIZE.md`, in its shooting order, with the ammunition it needs (50 rounds each of .22 LR subsonic, .22 LR high
+   velocity, .300 Blackout subsonic and 6.5 Creedmoor; 6mm ARC and 8.6 Blackout subsonic as the "if time" extras), the note that one
+   sheet of each load still helps if the day runs short, and **the Xero up for every sheet**, its string number written on the sheet's
+   load block (that is also the chronograph pairing check, so drop the separate chronograph group); (3) the scale markers and the
+   backer; (4) the phone camera at the backer; (5) red bulls only if time allows; (6) the plain target for the home page only if time
+   allows. Update the page count at the top, and keep the "what to bring" list (add the three rifles and the ammunition).
+3. One line at the top of for-alan.md when it is ready.
+
+4. **Distance** (Alan, 10:56 UTC: ".300 Blackout, 8.6 Blackout and .22 LR at closer ranges like 25 or 50 yards"): the checklist says
+   50 yd for every hole size sheet, the 6.5 Creedmoor included, so all loads share one distance. If 50 is not possible, shoot the whole
+   set at 25 yd rather than mixing, and write the distance on every load block. The store-bought targets, markers and camera photos
+   can be at any distance.
+
 ## 2026-10-04, entry 366: a range kit for today, printed tonight
 
 **Status: done 2026-10-04.** `C:\Dev\grouplab-local\range-2026-10-04\` holds, from the current code: 01 corner brackets, 02 scale bars, 03 board stickers, 04 the 5x5 sheet GL-CF25-LTR (print 3), and optional 05 red bulls, 06 the hole size plan, 07 its load sheet (print 10), each named with how many to print, and `CHECKLIST.pdf`, one page in the entry's order, with what to bring and where the results go; an empty `results\` folder. The line is at the top of for-alan.md.
