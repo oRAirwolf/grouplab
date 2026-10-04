@@ -330,7 +330,7 @@ What exists and is tested:
 - an Android app, in testing, that photographs or opens a sheet and reads it with the same engine, and the same app for iPhone and
   iPad in a public beta through TestFlight
 - <!--count:store-targets-->nine<!--/count--> store-bought targets recognized from a fingerprint, named, their bulls placed and their printed scale offered with a warning
-- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale
+- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, scale labels from a label printer such as the Phomemo M220, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale
   to check it, and a newer signed list of them reaching every copy with the updates, without a new build (built, not proven)
 - chronograph readings from a file (a spreadsheet CSV, a Garmin Xero export, and, Experimental, a LabRadar report or a BulletSeeker
   export), paired with the shots by a proposal a person accepts (built, not proven)
