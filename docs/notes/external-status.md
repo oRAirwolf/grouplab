@@ -24,3 +24,9 @@ Written by scripts/status-note.py from the testflight and store status workflows
 - The Store submission of grouplab-win-x64.msix, 92773850 bytes
 - Submission 1152921505702038415: Certification.
 <!-- /status:store-submission -->
+
+<!-- status:store-search -->
+## store-search, 2026-10-04 12:22 UTC
+
+- Store search for GroupLab: not found
+<!-- /status:store-search -->
