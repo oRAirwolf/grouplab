@@ -17,3 +17,9 @@ Written by scripts/status-note.py from the testflight and store status workflows
 - The Store carries package version 0.2.0.0.
 - No submission is waiting on Microsoft.
 <!-- /status:store -->
+
+<!-- status:store-submission -->
+## store-submission, 2026-10-04 11:24 UTC
+
+- The Store submission of grouplab-win-x64.msix, 92773830 bytes
+<!-- /status:store-submission -->
