@@ -27,8 +27,8 @@ public class ScaleMarkerTests
     public void TheMarkersKeepTheTopOfTheFamilyAndNoSheetReachesIt()
     {
         Assert.Equal(586, ScaleMarkerLayout.Last);
-        Assert.Equal(32, ScaleMarkerLayout.Last - ScaleMarkerLayout.First + 1);
-        for (int id = ScaleMarkerLayout.First; id <= ScaleMarkerLayout.Last; id++)
+        Assert.Equal(470, ScaleMarkerLayout.First);
+        foreach (int id in Enumerable.Range(ScaleLabels.First, ScaleLabels.Last - ScaleLabels.First + 1).Concat(Enumerable.Range(ScaleMarkerLayout.BracketFirst, 32)))
         {
             Assert.Equal(id, ScaleMarkerLayout.Tag(id)!.Id);
         }
@@ -83,6 +83,22 @@ public class ScaleMarkerTests
         double across = Distance(plane.ToInches(Camera.Apply(corners[0])), plane.ToInches(Camera.Apply(corners[1]))) * 25.4;
         double down = Distance(plane.ToInches(Camera.Apply(corners[0])), plane.ToInches(Camera.Apply(corners[3]))) * 25.4;
         Assert.True(Math.Abs((across / w) - 1) < 0.001 && Math.Abs((down / h) - 1) < 0.001, $"{across:0.000} by {down:0.000} mm");
+    }
+
+    /// <summary>Entry 372: a 70 by 80 mm label's two rows each give the scale across the label; its width is in its identifiers.</summary>
+    [Fact]
+    public void AScaleLabelsRowsGiveTheScaleAcrossTheLabel()
+    {
+        var pairs = ScaleLabels.Pairs(70, 80, 3);
+        Assert.Equal(2, pairs.Count);
+        Assert.NotEqual(pairs[0].Left, pairs[1].Left);
+        var seen = pairs.SelectMany((p, r) => new[] { p.Left, p.Right }.Select(id => Seen(ScaleMarkerLayout.Tag(id)!, 0.1, new PointD(100, 100 + (10.5 * r))))).ToList();
+        var (finding, _) = ScaleMarkerReading.Read(seen, null, null, []);
+        Assert.NotNull(finding);
+        Assert.True(finding.ScaleOnly);
+        Assert.All(finding.Lengths, l => Assert.Equal(60 / 25.4, l.Inches, 6));
+        Assert.Contains("rows of scale labels", finding.Says(0.01), StringComparison.Ordinal);
+        Assert.Throws<ArgumentException>(() => ScaleLabels.Pairs(33, 30, 1));
     }
 
     [Fact]

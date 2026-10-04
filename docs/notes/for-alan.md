@@ -1,4 +1,4 @@
-**Open: 20.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 21.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 
@@ -222,6 +222,17 @@ printer and a real card decide whether they hold.
    bank card back side up beside it. Then open each in Add a store-bought target and write down the line under Markers in the photo.
 **A good answer:** the four photos in `C:\Dev\grouplab-local\scale-markers\`, and the four lines GroupLab showed, such as "Scale from
 4 corner brackets in the photo: good to about 0.15 percent."
+
+## 77. Scale labels on your M220, twenty minutes, whenever suits (entry 372)
+
+**Why:** the labels are measured on computer-made photos only (a single 70 x 80 mm label typically within about 0.1 percent); your
+printer, your roll and your camera decide whether that holds.
+**Steps,** with nightly 168 or later:
+1. On the computer, Targets, Scale markers: check **Label size loaded** says 70 x 80 mm, then **Save four scale labels for the printer's
+   app**. Print all four from the Phomemo app at 100 percent on the roll you have loaded.
+2. Stick two on a blank store-bought target, at opposite corners, flat, where you would not shoot, and one on a GroupLab sheet.
+3. Photograph each, square on, and put the photos in `C:\Dev\grouplab-local\m220-labels\`.
+**A good answer:** the photos in that folder. (The printer check label for the M220 comes in a later build.)
 
 ## 75. Two reference files again, and a tape measure on two sheets, fifteen minutes, whenever suits (entry 364)
 

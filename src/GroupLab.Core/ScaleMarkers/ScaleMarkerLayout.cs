@@ -20,6 +20,9 @@ public enum MarkerKind
 
     /// <summary>D: a bank card, nothing printed.</summary>
     Card,
+
+    /// <summary>Entry 372: a thermal printer's scale label, rows of two codes across its width (<see cref="ScaleLabels"/>).</summary>
+    Label,
 }
 
 /// <summary>One printed code of a marker: its identifier and its four corners in its piece's own millimetres, top left first, clockwise.</summary>
@@ -45,8 +48,8 @@ public sealed record MarkerTag(int Id, MarkerKind Kind, int Piece, PointD Centre
 /// </summary>
 public static class ScaleMarkerLayout
 {
-    /// <summary>The first identifier kept for markers.</summary>
-    public const int First = 555;
+    /// <summary>The first identifier kept for markers: entry 372's scale labels from 470, entry 365's markers from 555.</summary>
+    public const int First = ScaleLabels.First;
 
     /// <summary>The last: tag36h11 holds 587 codes, 0 to 586.</summary>
     public const int Last = 586;
@@ -147,7 +150,7 @@ public static class ScaleMarkerLayout
         >= InchBarFirst and < MetricBarFirst => Bar(false, ((id - InchBarFirst) / 2) + 1)[(id - InchBarFirst) % 2],
         >= MetricBarFirst and < StickerFirst => Bar(true, ((id - MetricBarFirst) / 2) + 1)[(id - MetricBarFirst) % 2],
         >= StickerFirst and <= Last => Sticker(Sets[(id - StickerFirst) / 4], ((id - StickerFirst) % 4) + 1),
-        _ => null,
+        _ => ScaleLabels.Tag(id),
     };
 
     /// <summary>The set a sticker belongs to.</summary>
@@ -162,6 +165,7 @@ public static class ScaleMarkerLayout
         MarkerKind.Bracket => string.Create(CultureInfo.InvariantCulture, $"corner bracket {piece}"),
         MarkerKind.InchBar or MarkerKind.MetricBar => string.Create(CultureInfo.InvariantCulture, $"scale bar {piece}"),
         MarkerKind.Sticker => string.Create(CultureInfo.InvariantCulture, $"board sticker {Sets[(piece - 1) / 4]}{((piece - 1) % 4) + 1}"),
+        MarkerKind.Label => "scale label",
         _ => "bank card",
     };
 }

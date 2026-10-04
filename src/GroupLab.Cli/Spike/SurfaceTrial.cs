@@ -47,6 +47,11 @@ public static partial class SurfaceTrial
         }
 
         output.WriteLine(string.Create(Inv, $"{flats.Count} targets, {Surfaces.Length} surfaces, {scenes} scenes each, seed {seed}"));
+        if (args.Contains("--labels"))
+        {
+            return Labels(flats.Where(f => f.Name.StartsWith("scan", StringComparison.Ordinal)).ToList(), scenes, rng, output);
+        }
+
         if (args.Contains("--markers"))
         {
             return Markers(flats.Where(f => f.Name.StartsWith("scan", StringComparison.Ordinal)).ToList(), scenes, rng, output);
@@ -185,6 +190,52 @@ public static partial class SurfaceTrial
         return 0;
     }
 
+    /// <summary>
+    /// Entry 372 section 3: scale labels stuck on the target, one in its top left or two at opposite corners, 70 by 80 and 50 by 30 mm, on
+    /// four surfaces: how often they are read and the scale's error, the target's corners taking out the angle as in the app.
+    /// </summary>
+    private static int Labels(List<Flat> flats, int scenes, Random rng, TextWriter output)
+    {
+        var printer = new PrinterProfile("trial", 1, 1, PrinterMethod.Scan, new DateOnly(2026, 10, 4), 0.001);
+        output.WriteLine("surface          label    count  read   median error  worst error  claimed (median), percent");
+        int serial = 1;
+        foreach (string surface in new[] { "dark wood", "white counter", "cardboard", "black table" })
+        {
+            foreach (var (lw, lh) in new[] { (70, 80), (50, 30) })
+            {
+                foreach (int count in new[] { 1, 2 })
+                {
+                    var errors = new List<double>();
+                    var claimed = new List<double>();
+                    for (int n = 0; n < scenes; n++)
+                    {
+                        var flat = flats[rng.Next(flats.Count)];
+                        var (photo, truth) = Scene(flat, surface, rng, false, out var wallToImage, null, (lw, lh, count, serial));
+                        serial += count;
+                        using (photo)
+                        {
+                            using var greyMat = new Mat();
+                            Cv2.CvtColor(photo, greyMat, ColorConversionCodes.BGR2GRAY);
+                            var (finding, _) = ScaleMarkerReading.Read(ScaleMarkerFinder.Codes(OpenCvSharpBackend.Copy(greyMat)), null, printer, []);
+                            if (finding is null)
+                            {
+                                continue;
+                            }
+
+                            var plane = TargetStraightening.FromMarkers(finding, truth, W, H, null);
+                            errors.Add(100 * Math.Max(Math.Abs((plane.WidthInches / flat.Width) - 1), Math.Abs((plane.HeightInches / flat.Height) - 1)));
+                            claimed.Add(100 * plane.Uncertainty);
+                        }
+                    }
+
+                    output.WriteLine(string.Create(Inv, $"{surface,-16} {lw}x{lh}  {count,5}  {errors.Count,2}/{scenes}  {Median(errors),12:0.000}  {(errors.Count > 0 ? errors.Max() : double.NaN),11:0.000}  {Median(claimed),8:0.000}"));
+                }
+            }
+        }
+
+        return 0;
+    }
+
     private static double Median(List<double> v) => v.Count == 0 ? double.NaN : v.Order().ElementAt(v.Count / 2);
 
     /// <summary>The weakest side of the outline the finder chose, from what it said it tried; NaN where it chose none.</summary>
@@ -198,7 +249,8 @@ public static partial class SurfaceTrial
     /// A scene: the target on the surface, photographed. With <paramref name="gap"/> the four brackets lie that many millimetres off the
     /// target's corners and two bars that far off its bottom and left edges (null: no markers).
     /// </summary>
-    private static (Mat Photo, PointD[] Truth) Scene(Flat flat, string surface, Random rng, bool outOfFrame, out double[] wallToImage, double? gap = null)
+    private static (Mat Photo, PointD[] Truth) Scene(Flat flat, string surface, Random rng, bool outOfFrame, out double[] wallToImage, double? gap = null,
+        (int Width, int Height, int Count, int Serial)? labels = null)
     {
         double w = flat.Width, h = flat.Height, margin = gap is null ? 1.5 : 5;
         double left = -margin, top = -margin, right = w + margin, bottom = h + margin;
@@ -240,6 +292,20 @@ public static partial class SurfaceTrial
             using (var bar = MarkerTrial.Bar(2))
             {
                 MarkerTrial.Put(photo, bar.Picture, bar.Mask, bar.Origin, wallToImage, new PointD(-off - half - 1.0, (h / 2) - (length / 2)), (Math.PI / 2) + PosterTrial.Gauss(rng, 0.5 * Math.PI / 180));
+            }
+        }
+
+        if (labels is { } l)
+        {
+            // Stuck an inch in from the top left corner, and the second an inch in from the bottom right, square to the target.
+            var pages = GroupLab.Core.ScaleMarkers.ScaleLabels.Pages(l.Width, l.Height, l.Serial, l.Count, "M220");
+            PointD[] at = [new(1, 1), new(w - 1 - (l.Width / 25.4), h - 1 - (l.Height / 25.4))];
+            for (int i = 0; i < l.Count; i++)
+            {
+                var (pw, ph, bgr) = GroupLab.Core.Rendering.SceneRasterizer.RasterizeBgr(pages[i], 25.4 * 16, words: true);
+                using var picture = Mat.FromPixelData(ph, pw, MatType.CV_8UC3, bgr);
+                using var mask = new Mat(picture.Size(), MatType.CV_8UC1, Scalar.White);
+                MarkerTrial.Put(photo, picture, mask, new PointD(0, 0), wallToImage, at[i], PosterTrial.Gauss(rng, 1 * Math.PI / 180));
             }
         }
 

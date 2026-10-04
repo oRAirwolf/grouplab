@@ -23,6 +23,18 @@ public class Entry365Tests
         Assert.Equal(Enumerable.Range(first, count), ids);
     }
 
+    /// <summary>Entry 372: a scale label's codes are read back from its page as a label printer prints it, 203 dpi.</summary>
+    [Theory]
+    [InlineData(70, 80)]
+    [InlineData(50, 30)]
+    public void AScaleLabelsCodesAreReadBack(int width, int height)
+    {
+        var page = Assert.Single(ScaleLabels.Pages(width, height, 7, 1, "M220"));
+        var grey = SceneRasterizer.Rasterize(page, 203);
+        var expected = ScaleLabels.Pairs(width, height, 7).SelectMany(p => new[] { p.Left, p.Right }).Order();
+        Assert.Equal(expected, ScaleMarkerFinder.Codes(grey).Select(m => m.Id));
+    }
+
     [Fact]
     public void ACardIsFoundByItsRoundedCornersAndBlankedInEveryCopy()
     {

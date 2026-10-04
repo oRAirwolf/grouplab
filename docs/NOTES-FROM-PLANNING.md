@@ -25,6 +25,53 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 372: scale labels printed on the Phomemo M220
+
+**Status: partly done 2026-10-04, stopped at the 78 percent overnight limit's margin.** Done: the label kind and its layouts (every width 20 to 75 mm, 70 x 80 and 50 x 30 first), the reading (rows across only, the across scale), saving and sharing four at 203 dpi with the size remembered, the measured accuracy on simulated scenes, the words and request 77. **Not done, next session:** section 2's own Bluetooth encoder and the LE or classic question, the M220 printer check label, the size in the printer's profile rather than the settings, the phone's own size choice. Results: docs/PHASE1-RESULTS.md, entry 372.
+
+Alan, 2026-10-04 13:00 UTC: "Go ahead with the M220 scale target generation and adding it to grouplab. I think that will be a fun test.
+I have the 70x80mm stickers now, but I will order the sizes you suggested as well. Keep in mind it is a pain to swap labels on the
+printer, so I don't want to be doing it often." The study is the planning project's `claude/m220-scale-label-study.md`; its points
+that bind here are below. **After entry 371**, under the same 78% overnight stop (go by the higher reading); what does not fit
+carries on next session. Main model.
+
+### 1. The label
+- One more marker kind for entry 365's marker finder: a self-adhesive thermal label stuck flat on a target where it will not be shot.
+- **Codes across the label's width only** (across the printhead), never relying on spacing along the paper feed: the head's dot pitch
+  is fixed, the feed is not. AprilTag `tag36h11` from a range reserved for scale labels, separate from sheets and entry 365's markers;
+  every printed label gets its own IDs (a running serial), so two labels on one target are told apart.
+- Modules a whole number of dots at 203 dpi: 8 dots (1 mm), so an 8 mm code with a 1 mm white margin; nothing round or dot-like that
+  could be taken for a hole; a short printed line ("GroupLab scale label", its serial, the printer).
+- Layouts for every M220 size from 20 to 75 mm wide, generated from the label size, with two sizes first: **50 x 30 mm** (two codes about
+  40 mm apart, and a second row if it fits) and **70 x 80 mm** (Alan has these now: four codes, about 60 mm apart across, in two rows).
+- **One label size per printer, remembered**: Alan does not want to swap rolls. The printer's profile keeps the loaded size, every
+  label is laid out for it, and the app never asks for another size unless he changes it in the profile.
+
+### 2. Printing
+- Now: "Save for a printer app" (a 1-bit PNG at 203 dpi of exactly the label, and a PDF) and the phone's share sheet to the Phomemo
+  app, as entry 363 did for the M834, with the app's setting at 100%.
+- Direct over Bluetooth: phomemo-tools (GPL-3.0, so compatible with GroupLab's licence) reports that the M220 takes the M110's raster
+  format (ESC/POS `GS v 0`, at most 1200 lines a command). Write GroupLab's own encoder in `src/GroupLab.Core/Printing/Labels` from that
+  description (credit the project), for the M220 profile. Whether the M220 is Bluetooth LE or classic decides which phones can reach
+  it; find out from public reports first, and if it needs Alan, one short request (an nRF Connect scan, as request 73 describes).
+- The printer check for the M220: a label with fine marks across and along, scanned at 600 dpi, giving the across scale (expected
+  exact) and the feed scale (expected not), saved with the printer. The finder uses the across direction for scale and treats the
+  feed direction as measured or unknown.
+
+### 3. Reading it
+- One label: the scale, and the plane only as far as a small patch can give it (say so). Two labels at opposite corners: scale and
+  plane over the whole target. With the target's corners also found, combine.
+- It counts wherever entry 365's markers count: Add a store-bought target, any-target mode, and a shot target GroupLab does not know.
+- Measure accuracy on entry 371's simulated scenes (one label, two labels, 50 x 30 and 70 x 80, several surfaces and tilts) and report
+  real numbers, not the study's estimates.
+
+### 4. Words and a request
+- On Targets, under Scale markers: "Scale labels (M220 and other label printers)", with where to stick them (flat, two at opposite
+  corners, away from where you will shoot).
+- One request for Alan, short: print a few labels on the 70 x 80 roll he has loaded, stick two on a blank store-bought target and one on
+  a GroupLab sheet (whose own codes give the true scale to compare), photograph each, and run the printer check label through the
+  scanner. In for-alan.md, plainly, with the measured accuracy.
+
 ## 2026-10-04, entry 371: corner and marker finding, a real tuning study, with simulated surfaces
 
 **Status: done 2026-10-04 at 74 to 75 percent of the week, except parts of section 3.** Sections 1, 2, 4 and 5 done: the surface trial (14 procedural surfaces; curl and a lifted corner not simulated), found only where a second way agrees (simulated wrong "found" 24 to 2.6 percent; Alan's real photos 3 of 14 to 0 of 6), brackets touching and bars either, in the app's words and the guide. Section 3 not done: the printed border, right angles, the live outline and tap hint, the surface suggestion, any learned model. Results: docs/PHASE1-RESULTS.md, entry 371.

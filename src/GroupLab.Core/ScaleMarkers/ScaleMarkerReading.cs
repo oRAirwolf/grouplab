@@ -201,7 +201,13 @@ public static class ScaleMarkerReading
             foreach (var tag in piece)
             {
                 var image = markers.First(m => m.Id == tag.Id).Corners;
-                PointD Printed(PointD p) => tag.Kind == MarkerKind.Bracket ? new PointD(p.X * across, p.Y * down) : new PointD(p.X * down, p.Y * across);
+                // A label's row runs across its printer's head (entry 372), so only the across scale applies to it.
+                PointD Printed(PointD p) => tag.Kind switch
+                {
+                    MarkerKind.Bracket => new PointD(p.X * across, p.Y * down),
+                    MarkerKind.Label => new PointD(p.X * across, p.Y * across),
+                    _ => new PointD(p.X * down, p.Y * across),
+                };
                 points.AddRange(Code(image, [.. tag.Corners.Select(Printed)]));
             }
 
@@ -255,21 +261,21 @@ public static class ScaleMarkerReading
         }
 
         var used = fit.Bodies.Select(b => (b.Kind, b.Piece)).ToList();
-        bool printed = used.Any(u => u.Kind is MarkerKind.Bracket or MarkerKind.InchBar or MarkerKind.MetricBar);
+        bool printed = used.Any(u => u.Kind is MarkerKind.Bracket or MarkerKind.InchBar or MarkerKind.MetricBar or MarkerKind.Label);
         double print = printed ? printer is { } p ? p.Uncertainty : UncheckedPrint : 0;
         double stripe = card is { FromStripe: true } && used.Any(u => u.Kind == MarkerKind.Card) ? 0.005 : 0;
         double extra = Math.Sqrt(Math.Pow(used.Any(u => u.Kind == MarkerKind.Card) ? CardThickness : 0, 2) + (boardDoubt * boardDoubt) + (stripe * stripe));
 
         // Only bars all in one line, or a card alone, give the scale along them and not the angle.
-        var bars = fit.Bodies.Where(b => b.Kind is MarkerKind.InchBar or MarkerKind.MetricBar).ToList();
-        bool scaleOnly = fit.Bodies.All(b => b.Kind is MarkerKind.InchBar or MarkerKind.MetricBar or MarkerKind.Card)
+        var bars = fit.Bodies.Where(b => b.Kind is MarkerKind.InchBar or MarkerKind.MetricBar or MarkerKind.Label).ToList();
+        bool scaleOnly = fit.Bodies.All(b => b.Kind is MarkerKind.InchBar or MarkerKind.MetricBar or MarkerKind.Label or MarkerKind.Card)
             && (fit.Bodies.Count == 1 || (bars.Count == fit.Bodies.Count && bars.Count > 1 && Parallel(fit, bars)));
 
         var lengths = new List<(PointD, PointD, double)>();
         for (int i = 0; i < fit.Bodies.Count; i++)
         {
             var body = fit.Bodies[i];
-            if (body.Kind is MarkerKind.InchBar or MarkerKind.MetricBar)
+            if (body.Kind is MarkerKind.InchBar or MarkerKind.MetricBar or MarkerKind.Label)
             {
                 lengths.Add((Diagonals([.. body.Points.Take(4).Select(p => p.Image)]), Diagonals([.. body.Points.Skip(4).Take(4).Select(p => p.Image)]),
                     Distance(body.Points[0].Model, body.Points[4].Model) / 25.4));

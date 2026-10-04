@@ -31,6 +31,15 @@ public static class ScaleMarkerWords
 
     public const string CardGives = "Any bank card, driver's license or gift card, back side up, laid flat on or beside the target. Nothing to print, and the least accurate of the four.";
 
+    /// <summary>Entry 372: the scale labels, under Scale markers.</summary>
+    public const string Labels = "Scale labels (M220 and other label printers)";
+
+    public const string LabelsGive = "A label with rows of codes across its width, stuck flat on the target where you will not shoot: one gives the scale, two at opposite corners the camera's angle too. Every label has its own codes, so two on one target are told apart.";
+
+    public const string LabelSize = "Label size loaded";
+
+    public const string SaveLabels = "Save four scale labels for the printer's app…";
+
     /// <summary>The print buttons.</summary>
     public const string PrintBrackets = "Print corner brackets", PrintBars = "Print scale bars", PrintStickers = "Print board stickers", MeasureBoard = "Measure a board…";
 
@@ -112,6 +121,12 @@ public static class ScaleMarkerWords
         if (bars > 0)
         {
             parts.Add(bars == 1 ? "a scale bar" : string.Create(CultureInfo.InvariantCulture, $"{bars} scale bars"));
+        }
+
+        int labels = used.Count(u => u.Kind == MarkerKind.Label);
+        if (labels > 0)
+        {
+            parts.Add(labels == 1 ? "a scale label" : string.Create(CultureInfo.InvariantCulture, $"{labels} rows of scale labels"));
         }
 
         if (used.Any(u => u.Kind == MarkerKind.Sticker))

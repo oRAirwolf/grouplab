@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:30 UTC, after entry 371 (corners tuned on 14 simulated surfaces); stopped at 75 percent for the night; the inbox is empty.
+**Last rewritten:** 2026-10-04 12:30 UTC, after entries 371 and 372 (corners tuned; M220 scale labels); stopped at 75 percent for the night; the inbox is empty.
 
 ---
 
@@ -28,8 +28,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 369 done**: every published nightly goes to the Microsoft Store (store-follow.yml); 166 is in certification.
 
-- **Entry 371 done but section 3's wider ideas**: corners are called found only where two ways agree (`grouplab surface-trial`);
-  brackets must touch, bars may not. Next: the printed border, right angles, the live outline on the camera.
+- **Entry 372 partly done**: labels made, read and measured; its encoder, check label and profile size are next.
+- **Entry 371 done but section 3's wider ideas** (`grouplab surface-trial`): found only where two ways agree; brackets must touch.
 
 ## The next three
 
@@ -63,7 +63,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **20** (76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **21** (77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

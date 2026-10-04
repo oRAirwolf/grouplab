@@ -302,6 +302,18 @@ public sealed class AppSettingsStore(string path)
         ? [.. all.Select(GroupLab.Core.ScaleMarkers.ScaleBoard.FromJson).OfType<GroupLab.Core.ScaleMarkers.ScaleBoard>()]
         : [];
 
+    /// <summary>
+    /// Entry 372: the scale label size loaded in the label printer, remembered so it is never asked for again (Alan: "it is a pain to swap
+    /// labels on the printer"), 70 by 80 mm until changed; and the next label's serial, so every label has its own codes.
+    /// </summary>
+    public (int Width, int Height) LoadLabelSize() => Read(file => file["labelSize"] is JsonArray a && a.Count == 2 ? ((int)a[0]!, (int)a[1]!) : ((int, int)?)null) ?? (70, 80);
+
+    public bool SaveLabelSize(int width, int height) => Save(file => file["labelSize"] = new JsonArray(width, height));
+
+    public int LoadLabelSerial() => Read(file => (int?)file["labelSerial"]) ?? 1;
+
+    public bool SaveLabelSerial(int next) => Save(file => file["labelSerial"] = next);
+
     /// <summary>Entry 273: whether the printer check has been offered, at first run or after the first print; it is offered once.</summary>
     public bool LoadPrinterOffered() => Read(file => file["printerOffered"]?.GetValueKind() == JsonValueKind.True);
 

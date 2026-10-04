@@ -49,6 +49,19 @@ public partial class MainWindow
             Button(ScaleMarkerWords.PrintStickers, () => PrintMarkers(MarkerKind.Sticker, Paper()))));
         body.Children.Add(Row(Button(ScaleMarkerWords.LabelStickers + "…", SaveLabelStickers), Button(ScaleMarkerWords.MeasureBoard, MeasureBoardDialog)));
         body.Children.Add(Line(ScaleMarkerWords.PrintNote));
+
+        // Entry 372: scale labels for a label printer, the size loaded remembered.
+        body.Children.Add(Line(ScaleMarkerWords.Labels + ". " + ScaleMarkerWords.LabelsGive));
+        var loaded = settingsStore.LoadLabelSize();
+        var sizes = ScaleLabels.Sizes.Select(z => $"{z.Width} x {z.Height} mm").ToList();
+        var size = new ComboBox { ItemsSource = sizes, SelectedIndex = Math.Max(0, Array.IndexOf(ScaleLabels.Sizes, loaded)), MinWidth = 140 };
+        Avalonia.Automation.AutomationProperties.SetName(size, ScaleMarkerWords.LabelSize);
+        size.SelectionChanged += (_, _) =>
+        {
+            var z = ScaleLabels.Sizes[Math.Max(0, size.SelectedIndex)];
+            settingsStore.SaveLabelSize(z.Width, z.Height);
+        };
+        body.Children.Add(Row(new TextBlock { Text = ScaleMarkerWords.LabelSize, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center }, size, Button(ScaleMarkerWords.SaveLabels, SaveScaleLabels)));
         body.Children.Add(boardList);
         body.Children.Add(markerSaid);
         FillBoards();
@@ -97,6 +110,39 @@ public partial class MainWindow
 
         DiagnosticLog.Info("markers.print", ("kind", kind.ToString()), ("paper", paper.ToString()));
         markerSaid.Text = "Opened " + ScaleMarkerPages.Title(kind, paper) + " to print. Print at Actual size (100%), never Fit to page.";
+    }
+
+    /// <summary>Four scale labels of the size loaded, each its own serial, as 203 dpi pictures and a PDF for the label printer's app.</summary>
+    private async Task SaveScaleLabels()
+    {
+        var folder = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions { Title = "Choose where to save the scale labels", AllowMultiple = false });
+        if (folder.Count == 0 || folder[0].TryGetLocalPath() is not { } into)
+        {
+            return;
+        }
+
+        var (w, h) = settingsStore.LoadLabelSize();
+        int serial = settingsStore.LoadLabelSerial();
+        var (pngs, pdf) = PrinterAppFiles.Make(ScaleLabels.Pages(w, h, serial, 4, "M220"), 203);
+        string stem = Path.Combine(into, $"grouplab-scale-labels-{w}x{h}mm-S{serial}-203dpi");
+        try
+        {
+            for (int i = 0; i < pngs.Count; i++)
+            {
+                File.WriteAllBytes($"{stem}-{i + 1}.png", pngs[i]);
+            }
+
+            File.WriteAllBytes(stem + ".pdf", pdf);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            markerSaid.Text = "The labels could not be saved: " + e.Message;
+            return;
+        }
+
+        settingsStore.SaveLabelSerial(serial + 4);
+        DiagnosticLog.Info("markers.labels", ("size", $"{w}x{h}"));
+        markerSaid.Text = $"Saved four {w} x {h} mm scale labels, S{serial} to S{serial + 3}, in {into}. In the printer's app, print at 100 percent.";
     }
 
     /// <summary>The stickers of set A on a 4 by 6 label, as a label printer's own app takes them: a 300 dpi picture and a PDF.</summary>

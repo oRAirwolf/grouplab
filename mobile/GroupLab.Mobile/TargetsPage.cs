@@ -304,6 +304,16 @@ public sealed class TargetsPage : UserControl
                 said.Text = Share(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.FileName(GroupLab.Core.ScaleMarkers.MarkerKind.Sticker, GroupLab.Core.ScaleMarkers.MarkerPaper.Label4x6), pngs, pdf, picture: true, "Board stickers");
             }).Id("targets-markers-label"),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.MeasureBoard.TrimEnd('…'), () => _ = Measure()).Id("targets-markers-board"),
+            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Labels + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelsGive),
+            Screens.Choice("Share four scale labels for the printer's app", () =>
+            {
+                // Entry 372: the size loaded in the printer, as Settings keeps it; each label its own serial.
+                var (w, h) = Phone.Settings.LoadLabelSize();
+                int serial = Phone.Settings.LoadLabelSerial();
+                var (pngs, pdf) = PrinterAppFiles.Make(GroupLab.Core.ScaleMarkers.ScaleLabels.Pages(w, h, serial, 4, "M220"), 203);
+                said.Text = Phone.Platform.SharePdf(pdf, $"grouplab-scale-labels-{w}x{h}mm-S{serial}") ?? $"Shared four {w} x {h} mm labels, S{serial} to S{serial + 3}.";
+                Phone.Settings.SaveLabelSerial(serial + 4);
+            }).Id("targets-markers-labels"),
             boards,
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),

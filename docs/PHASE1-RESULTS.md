@@ -383,6 +383,39 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 372: scale labels for the Phomemo M220
+
+- `ScaleLabels`: rows of two 8 mm tag36h11 codes (1 mm modules, 8 dots at 203 dpi) across the label's width only, 5 mm in from each side;
+  each width from 20 to 75 mm has its own block of ten identifiers in 470 to 549, so the spacing comes from the identifier, and a running
+  serial gives each label its own pair. Two rows on a label 26 mm or more high, each its own piece (the feed is not trusted). Only the
+  printer's across scale applies. Targets: the size loaded, remembered, and four labels saved (computer) or shared (phone) at 203 dpi.
+- `grouplab surface-trial --labels --scenes 4` (one label an inch in from the top left, or two at opposite corners, square to the target,
+  the target's corners taking out the angle; percent):
+
+```
+surface          label    count  read   median error  worst error  claimed (median), percent
+dark wood        70x80      1   4/4         0.051        0.133     1.630
+dark wood        70x80      2   4/4         0.051        0.186     1.612
+dark wood        50x30      1   4/4         0.069        0.246     1.963
+dark wood        50x30      2   4/4         0.041        0.073     1.780
+white counter    70x80      1   4/4         0.048        0.468     0.897
+white counter    70x80      2   4/4         0.266        0.426     1.653
+white counter    50x30      1   4/4         0.475        0.651     2.385
+white counter    50x30      2   4/4         0.236        0.398     1.117
+cardboard        70x80      1   4/4         0.145        0.243     1.428
+cardboard        70x80      2   4/4         0.196        0.458     1.462
+cardboard        50x30      1   4/4         0.077        0.086     1.399
+cardboard        50x30      2   4/4         0.050        0.440     2.147
+black table      70x80      1   4/4         0.883        0.933     1.981
+black table      70x80      2   4/4         0.202        0.358     0.985
+black table      50x30      1   4/4         0.110        0.278     1.708
+black table      50x30      2   4/4         0.188        0.740     1.450
+```
+
+- Not done: GroupLab's own M220 encoder over Bluetooth (ESC/POS GS v 0, after phomemo-tools' description) and whether the M220 is
+  Bluetooth LE or classic; the M220 printer check label; the size kept in the printer's own profile (it is kept in the settings); a size
+  choice on the phone (it uses the remembered one).
+
 ## Entry 371: corner and marker finding on simulated surfaces
 
 - **The simulator.** `grouplab surface-trial` lays Alan's four 600 dpi Birchwood Casey scans and six of his phone photos, flattened by
