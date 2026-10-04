@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 163,
+  "afterNightly": 164,
   "screens": {
     "analysis": "4eef90371543b78ee22eaa2e1ae3dce9e75e1af7c398f74def6c1486b94aa8a8",
     "analysis-open": "7b8630446a5f174eb504a92cd4adcf90143a41612b06366aa9edeb04354cdb24",
@@ -8,7 +8,7 @@
     "ballistics-hit": "1f9a5999d666c5fb31d6912af1de13668bb4c40dd9195d0779144d3148785169",
     "compare": "8a651f022ea97ddd99dec9e09c5ff6d3e48874a4f850546094e2e960891cb71d",
     "equipment": "b651023ef35016b341e03c9e4412293e36579d060eb0ecd640d72a107a81c467",
-    "fingerprint": "687956cfa9e68d78c5454e9dda1a62ded1a8096846b3a148229fcabced952e43",
+    "fingerprint": "f67de1caeee4fbed53eb92f3d7cfe81492a27534593b214e0224e1458211a1f1",
     "firstrun": "8d604aa087385e72b33d7643d33442c56d197273f4fcb6661189493486ebe0a4",
     "marking": "7fb7d002b39a1f88021973f944d15420645fd12c3de0fa15bdd80c483939e761",
     "marking-other": "62b5a79ba517363c0ec87cd4944276ce8d9c9211a7d9e2f00a71221a094e107d",
