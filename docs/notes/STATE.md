@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:00 UTC, after entry 363; the inbox is empty.
+**Last rewritten:** 2026-10-04 12:30 UTC, after entry 366 (today's range kit); the inbox is empty.
 
 ---
 
@@ -22,6 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
   scale markers A to D. **Not done:** 365's Features page picture (a step in Entry109Tests).
 - **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
+- **Entry 366 done**: today's range kit in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
   72, 73 (the M834's recordings), 74, 75, 76.
 
@@ -84,7 +85,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 366 (a range kit for today), being done now.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

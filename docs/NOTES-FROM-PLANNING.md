@@ -25,6 +25,41 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 366: a range kit for today, printed tonight
+
+**Status: done 2026-10-04.** `C:\Dev\grouplab-local\range-2026-10-04\` holds, from the current code: 01 corner brackets, 02 scale bars, 03 board stickers, 04 the 5x5 sheet GL-CF25-LTR (print 3), and optional 05 red bulls, 06 the hole size plan, 07 its load sheet (print 10), each named with how many to print, and `CHECKLIST.pdf`, one page in the entry's order, with what to bring and where the results go; an empty `results\` folder. The line is at the top of for-alan.md.
+
+Alan, 2026-10-04 10:38 UTC: he goes to his rifle club later today and will test whatever needs testing there; anything to print must
+be printed before he leaves (his home printer, Letter; the M834 is not here yet). **Do this now, before the rest of entry 363.** Small:
+main model, no worker, mostly files and one page of words.
+
+Make a folder `C:\Dev\grouplab-local\range-2026-10-04\` holding every page to print, from the current code (not the last nightly, since
+the scale marker pages are not in a published build yet), each a PDF at actual size with its name saying what it is and how many to
+print, plus `CHECKLIST.pdf`, one page, in plain words, in this order of value:
+
+1. **Store-bought targets, shot (request 58).** Shoot 5 to 10 shots on each of the recognized ones he has: Shoot-N-C 5-bull, Eze-Scorer
+   sight-in grid, Rigid crosshair, National Target ST-4 (and the Allen splash bull and EZ Aim if he likes). Photograph each with
+   GroupLab on the phone at the bench, square on and once tilted; write the shot count on the sheet. Bring them home flat for a 600 dpi
+   scan in the same corner of the glass as the blank.
+2. **Scale markers on real paper (request 76, early).** Print the bracket page and the scale bar page (card stock if he has it) and
+   the four board stickers. At the range: tape the four stickers to his backer around the target, photograph the backer once with a
+   GroupLab sheet on it (the one time measurement), then photograph the store-bought targets of item 1 with brackets at the corners,
+   then with a bar along an edge. Say plainly that Measure a board and Markers in the photo arrive in nightly 167, so today he only
+   takes the photos and the app reads them later.
+3. **Chronograph pairing (Phase 5).** One 5 shot group on a GroupLab Letter sheet with the Garmin Xero recording the string; note the
+   string number and the time. Later: export the string and import it, so the timed pairing is checked on a real string.
+4. **The phone's camera at a target on its backer (request 50's range half).** A GroupLab 5x5 Letter sheet on the backer: GroupLab's
+   camera with the phone upright (the level should say "Upright"), from about 1.5, 2, 2.5 and 3 ft, once each.
+5. **Red bulls (request 57)**: GL-CF25-LTR with red bulls, five shots, three photos in daylight. Only if time allows.
+6. **The hole size test (request 20)**: only if he brings those cartridges; include `docs/RANGE-PLAN-HOLE-SIZE.pdf` and its sheets,
+   marked optional.
+7. **A plain target for the home page (request 54)**: one store-bought target whose logo can be cropped off, five shots, one square
+   photo in daylight. Only if time allows.
+
+At the end of the checklist: what to bring (tape, stapler, a marker pen, the store-bought blanks, the Xero), and where to put the
+photos and scans afterwards (`C:\Dev\grouplab-local\range-2026-10-04\results\`). Count the pages to print at the top so he knows the
+total. Then add one line at the top of for-alan.md naming the folder, and carry on with entry 363 section 3.5.
+
 ## 2026-10-04, entry 363: Alan's answers, the M834 ready for tomorrow, then the queue
 
 **Status: done 2026-10-04.** Section 1 (95b3c73d); section 2, the M834 files and the recording reader (24c25c21, 080a6d8f, nightly 166); 3.1 the aiming marks (3c8bb640); 3.2 issue 19, Next no longer takes the focus, proven by the iOS simulator's real taps in run 37190923013 and the issue closed; 3.3 the sheet look reuses identification's located codes, 8.4 s to 0.15 s (question 83 on identification's own 34 s); 3.4 the phone's failures as the centred sheet; 3.5 the phone sender, built and off until "forms updated". Entries 364 and 365 were done between 3.2 and 3.3, as entry 365 asked.
