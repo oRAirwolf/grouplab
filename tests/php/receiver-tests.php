@@ -343,10 +343,12 @@ $unread = static function (array $p): array {
     $p['submission'] = ['state' => 'unread', 'picture' => str_repeat('ab', 16), 'follows' => null, 'stages' => []];
     return $p;
 };
-$r = app_request($root, $appSource, $limits, 'testing', $unread);
+// Entry 363 section 1 switched it on in the real file; the off case is the file with it switched off.
+$appOff = str_replace('const SEND_EVERYTHING_OPEN = true;', 'const SEND_EVERYTHING_OPEN = false;', $appSource);
+$r = app_request($root, $appOff, $limits, 'testing', $unread);
 check('while limits.json does not offer everything I open, a package with a state is kept to try again and nothing is stored',
     ($r['json']['code'] ?? '') === 'state_closed' && ($r['json']['retry'] ?? false) === true, $r['raw']);
-$everything = str_replace('const SEND_EVERYTHING_OPEN = false;', 'const SEND_EVERYTHING_OPEN = true;', $appSource);
+$everything = str_replace('const SEND_EVERYTHING_OPEN = false;', 'const SEND_EVERYTHING_OPEN = true;', $appOff);
 $r = app_request($root, $everything, $limits, 'publishable', $unread);
 check('an unread picture is taken once everything I open is offered', ($r['json']['ok'] ?? false) === true, $r['raw']);
 $first = $r['json']['id'] ?? '';
@@ -458,13 +460,14 @@ foreach ([
 
 // Entry 357 section 2: the log package's reference and a read failure's picture code, only while limits.json says reports carry the log.
 $linked = error_report(['package' => '2026-10-03_0000aaaa', 'picture_code' => str_repeat('c', 32)]);
-error_request($root, $errorSource, $linked);
+$errorOff = str_replace('const FULL_LOG_REPORTS = true;', 'const FULL_LOG_REPORTS = false;', $errorSource);
+error_request($root, $errorOff, $linked);
 $kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $linked['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
 check('while the log does not go with reports, a package reference is dropped as any unknown field is',
     !array_key_exists('package', $kept ?? []) && !array_key_exists('picture_code', $kept ?? []));
-$r = error_request($root, $errorSource, error_report(['kind' => 'read-failure']));
+$r = error_request($root, $errorOff, error_report(['kind' => 'read-failure']));
 check('and a read failure is refused, as before', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
-$fullLog = str_replace('const FULL_LOG_REPORTS = false;', 'const FULL_LOG_REPORTS = true;', $errorSource);
+$fullLog = str_replace('const FULL_LOG_REPORTS = false;', 'const FULL_LOG_REPORTS = true;', $errorOff);
 $linked = error_report(['package' => '2026-10-03_0000aaab', 'picture_code' => str_repeat('c', 32), 'kind' => 'read-failure']);
 $r = error_request($root, $fullLog, $linked);
 $kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $linked['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
