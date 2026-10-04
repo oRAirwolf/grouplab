@@ -383,29 +383,44 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     /// Entry 356 section 5: every QR code's corners the two detectors find, decoded or not, at the image's own size. The WeChat detector,
     /// without its models, locates a code it cannot decode, which is what a sheet whose codes will not read still shows.
     /// </summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 363 section 3.3: the codes each picture's whole, full-size reading located, kept for that picture. The
+    /// "looks like a GroupLab sheet" check asks where the codes are after identification has read the same picture at full size with the same
+    /// two detectors, which took up to eight seconds a second time on a photo with no codes; it now gets the same boxes without the search.
+    /// </summary>
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<GrayImage, IReadOnlyList<IReadOnlyList<PointD>>> Located = new();
+
     public IReadOnlyList<IReadOnlyList<PointD>> LocateCodes(GrayImage image)
     {
         ArgumentNullException.ThrowIfNull(image);
-        using var input = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
-        using var locator = new WeChatQRCode("", "", "", "");
-        using var detector = new QRCodeDetector();
-        var boxes = new List<IReadOnlyList<PointD>>();
-        locator.DetectAndDecode(input, out Point2f[][] found);
-        boxes.AddRange(found.Where(b => b.Length == 4).Select(b => (IReadOnlyList<PointD>)[.. b.Select(p => new PointD(p.X, p.Y))]));
-        if (detector.DetectMulti(input, out Point2f[] corners))
+        if (Located.TryGetValue(image, out var seen))
         {
-            for (int i = 0; i + 3 < corners.Length; i += 4)
-            {
-                var box = corners.Skip(i).Take(4).Select(p => new PointD(p.X, p.Y)).ToList();
-                // One code found by both detectors is one code.
-                if (!boxes.Any(b => Math.Abs(b.Average(p => p.X) - box.Average(p => p.X)) < 10 && Math.Abs(b.Average(p => p.Y) - box.Average(p => p.Y)) < 10))
-                {
-                    boxes.Add(box);
-                }
-            }
+            return seen;
         }
 
+        using var input = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+        var boxes = new List<IReadOnlyList<PointD>>();
+        Read(input, boxes);
         return boxes;
+    }
+
+    /// <summary>The boxes of both detectors, one code found by both counted once.</summary>
+    private static void AddBoxes(List<IReadOnlyList<PointD>> boxes, Point2f[][] found, Point2f[]? corners)
+    {
+        boxes.AddRange(found.Where(b => b.Length == 4).Select(b => (IReadOnlyList<PointD>)[.. b.Select(p => new PointD(p.X, p.Y))]));
+        if (corners is null)
+        {
+            return;
+        }
+
+        for (int i = 0; i + 3 < corners.Length; i += 4)
+        {
+            var box = corners.Skip(i).Take(4).Select(p => new PointD(p.X, p.Y)).ToList();
+            if (!boxes.Any(b => Math.Abs(b.Average(p => p.X) - box.Average(p => p.X)) < 10 && Math.Abs(b.Average(p => p.Y) - box.Average(p => p.Y)) < 10))
+            {
+                boxes.Add(box);
+            }
+        }
     }
 
     public IReadOnlyList<byte[]> ReadCodes(GrayImage image, double scale)
@@ -420,7 +435,12 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             input = resized;
         }
 
-        var texts = Read(input);
+        List<IReadOnlyList<PointD>>? located = scale is 1.0 ? [] : null;
+        var texts = Read(input, located);
+        if (located is not null)
+        {
+            Located.AddOrUpdate(image, located);
+        }
 
         // NOTES-FROM-PLANNING.md entry 195 section 4, question 56: on Unholy's 600 dpi scan of GL-ZERO-MIL-100Y neither detector found a
         // single code in the whole 5100 by 7013 image, at full or half resolution, and in each corner third of it the WeChat detector found
@@ -509,7 +529,8 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     private static readonly System.Text.UTF8Encoding Utf8Strict = new(false, true);
 
     /// <summary>Every code the two detectors find in an image, each decoded by the plain decoder at the corners found; the empty ones left out.</summary>
-    private static List<string> Read(Mat input)
+    /// <summary>Every code both detectors read in the picture; where <paramref name="located"/> is given, where each was found, read or not.</summary>
+    private static List<string> Read(Mat input, List<IReadOnlyList<PointD>>? located = null)
     {
         using var locator = new WeChatQRCode("", "", "", "");
         using var decoder = new QRCodeDetector();
@@ -520,7 +541,13 @@ public sealed class OpenCvSharpBackend : IImagingBackend
             texts.Add(decoder.Decode(input, box) ?? "");
         }
 
-        if (decoder.DetectMulti(input, out Point2f[] corners) && decoder.DecodeMulti(input, corners, out string?[] decoded))
+        bool multi = decoder.DetectMulti(input, out Point2f[] corners);
+        if (located is not null)
+        {
+            AddBoxes(located, boxes, multi ? corners : null);
+        }
+
+        if (multi && decoder.DecodeMulti(input, corners, out string?[] decoded))
         {
             texts.AddRange(decoded.Select(t => t ?? ""));
         }

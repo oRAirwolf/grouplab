@@ -383,6 +383,15 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 363 section 3.3: the "looks like a GroupLab sheet" check
+
+- The check's cost was locating QR codes a second time: `OpenCvSharpBackend.LocateCodes` ran WeChat and DetectMulti at full size, 8.3 of
+  its 8.5 s on Alan's Rigid crosshair photo. Identification had just read the same picture at full size with the same two detectors.
+- Now the full-size reading keeps where it located codes, for that picture object, and the check reuses them: 8.4 s to 0.15 s there, and
+  0.05 s against 0.9 to 1.1 s on three corpus photos of sheets, with the same markers and codes found every time (`Entry363LookTests`).
+- Scale markers (entry 365) are left out of the marker count, so brackets beside a target do not make it look like a GroupLab sheet.
+- Identification itself took 33.9 s on that photo; question 83.
+
 ## Entry 365: scale markers beside a target, A to D
 
 - **One engine.** `ScaleMarkerLayout` keeps tag36h11 555 to 586 for markers (the library's sheets reach 150; the validator warns of any
