@@ -5136,6 +5136,14 @@
   "Until GroupLab prints to a label printer itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Printing/Thermal/PrinterAppFiles.cs and ThermalPng.cs (300 dpi, the pHYs resolution, the PDF at the page's true size; tests/GroupLab.Core.Tests/Printing/PrinterAppFilesTests.cs), src/GroupLab.App/PrintPanel.cs SaveForApp, mobile/GroupLab.Mobile/TargetsPage.cs ForPrinterApp (entry 363 section 2a)"
+  },
+  "Registration spike** | **Built, not proven** | worst bull center within 0.005 in: on a 600 DPI scan of a printed sheet, met (0.00275 in, the worst of the recorded scans); on an off-axis photograph of a sheet held flat, not yet | | **1.": {
+   "kind": "measured",
+   "where": "docs/PROOF-CHECKLIST.md (Phase 0's scan half, worst bull 0.00275 in, entry 331 section 3; row 1, the photograph half, not met); Alan's answer to question 79, entry 363 section 1"
+  },
+  "Android.** - **Done.** The camera capture path, with the capture screen's checks, and a sheet opened from the phone's files; the analysis runs on the device with the desktop's engine, lens distortion included, and its gate, capture and lens distortion fitted on the device, has been met on the Fold 7, as docs/PROOF-CHECKLIST.md records.": {
+   "kind": "measured",
+   "where": "docs/PROOF-CHECKLIST.md row 26: four Fold 7 captures of 2026-09-29, lens fitted on the phone in every one, 97 of 100 holes; Alan's answer to question 79, entry 363 section 1"
   }
  },
  "rules": [

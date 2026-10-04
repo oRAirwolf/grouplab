@@ -51,7 +51,7 @@ const MAX_DESCRIPTION = 500;
  * GroupLab could not read, which is a report of the kind read-failure. limits.json's fullLogErrorReports, which the site's build holds this
  * to. While it is false those fields are dropped as any unknown field is, and a read-failure report is refused, as before.
  */
-const FULL_LOG_REPORTS = false;
+const FULL_LOG_REPORTS = true;
 
 function respond(int $status, array $payload): never
 {

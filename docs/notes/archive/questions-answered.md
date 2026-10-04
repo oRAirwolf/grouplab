@@ -5,6 +5,42 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-04, question 82: entry 362 asks to apply the orientation tag in the shared loader, which would move every saved mark
+
+**Answered 2026-10-04 (entry 363 section 1): A, leave it.** The analysis keeps stored pixels and turns the view; only the store-bought screens turn their copies.
+
+**Status: answered.** Entry 362 section 1 says to apply the photo's orientation "the same way in all three" of
+`FingerprintSession.Load`, `ImageLoader.Load` and `ImageLoader.LoadMaxChannel`, "before anything else". The two loaders feed the
+analysis on both platforms, which keeps every mark in the photo's stored pixels and turns only the view (`ViewRotation`, entry 26); the
+marking file records the tag beside the marks (`exifOrientation`), and a sent target is the stored pixels with those marks. Turning the
+pixels in the loaders would put every saved marking, and every sent one, a quarter or half turn off its picture. **Done instead:** the
+store-bought screens turn their own copies (`Upright`, `UprightMat`), all eight values, and the analysis, any-target mode, the phone's
+working copy and sending were checked and already show the picture upright through the view. **The options.** A: leave it so (my
+choice). B: move the analysis to upright pixels, with a migration that turns every saved marking and a version on the marking file.
+
+## 2026-10-03, question 81: the phone asks whether to send targets, and cannot send one
+
+**Answered 2026-10-04 (entry 363 section 1): A, build the phone's sender**, last in entry 363's queue; it ships to TestFlight and Play only after Alan confirms the store forms.
+
+**Status: answered.** Found in entry 357. The phone's first run and Settings ask the sending question, but no phone code sends a target,
+finished or not; the Features page and PHONE-PARITY.md said it did and now say "coming". **The options.** A: build the phone's sender
+(the desktop's package and queue, Wi-Fi only by default, entry 357's rules), which also gives "Send everything I open" its phone half and
+changes the store privacy answers (Photos). B: hide the sending question on the phone until a sender exists. I would choose A, since a
+phone photograph is what fails most often, but it needs Alan's store answers first (request 71).
+
+## 2026-10-01, question 79: five "built, not proven" lines whose written gates are met
+
+**Answered 2026-10-04 (entry 363 section 1): A.** Lines 7, 22 and 26 marked Done, line 6 left Built, not proven. Phase 0 keeps one row and one state (the README test holds a phase to one, as DESIGN.md has it), and its gate now says the scan half is met (0.00275 in) and the photograph half is not; its two feature lines already split the halves.
+
+**Status: answered.** Nothing waits on it. Entry 331 section 3 (docs/PROOF-CHECKLIST.md) measured what existing material allows. These meet
+the gate written for them: hit probability inside a radius (README line 7, STATISTICS.md 15.3 and 15.5 point 5), the ballistic solver
+(line 22, docs/BALLISTICS-VALIDATION.md's tolerances), significance testing's compareGroups keys (line 6, though its MANOVA row and the
+dispersion ratio's interval have no fixture), the phone's capture path in the Phase 6 gate's own words (line 26: 97 of 100 holes, the lens
+fitted on the device in all four pictures), and Phase 0's scan half (worst bull 0.00275 in; the photograph half is not met). **The
+options.** A: mark 7, 22 and 26 Done, leave 6 Built, not proven until its two fixtures exist, and split Phase 0's line into its scan and
+photograph halves. B: leave every state until a whole phase's gate is met. I would choose A: the README's own definition of Done is "its
+gate has been met and recorded", and these have been.
+
 ## 2026-09-30, question 77: the guide says stand about 2.5 ft away, and the synthetic camera reads no marker at 2 ft
 
 **Status: answered 2026-10-01.** Alan (entry 322): "Q77 A and B." The guide says about 2 ft (60 cm) now, and the next sitting measures the distance on a real phone. Nothing waits on it; the guide is unchanged. Entry 321 added range cases to the scoreboard: a Letter sheet photographed

@@ -27,7 +27,11 @@
     "level Send everything I open, which sends every picture opened, read or not, when it is left, and asks once those who chose finished",
     "targets. fullLogErrorReports makes an automatic error report carry the log package Report a problem builds, typed text replaced by",
     "its length, to crashReceiver, and asks once more those who chose automatic reports. While a switch is false the application and the",
-    "receivers behave and word themselves as before it existed; app-submission.php and error-report.php hold the same two values."
+    "receivers behave and word themselves as before it existed; app-submission.php and error-report.php hold the same two values.",
+    "",
+    "Entry 363 section 1: Alan said yes to both on 2026-10-04. They are on for the computer, where the Microsoft Store needs no form change,",
+    "and for the receivers, which take what the computer sends. sendEverythingOpenPhones and fullLogErrorReportsPhones keep both off on",
+    "Android and the iPhone until Alan writes \"forms updated\" for Apple's App Privacy and Google Play's Data safety (for-alan.md)."
   ],
   "open": true,
   "maxFiles": 10,
@@ -57,6 +61,8 @@
   "surveyOpen": true,
   "surveyReceiver": "https://grouplab.org/api/survey.php",
   "crashReceiver": "https://grouplab.org/api/crash-report.php",
-  "sendEverythingOpen": false,
-  "fullLogErrorReports": false
+  "sendEverythingOpen": true,
+  "fullLogErrorReports": true,
+  "sendEverythingOpenPhones": false,
+  "fullLogErrorReportsPhones": false
 }

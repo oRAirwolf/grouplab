@@ -7,6 +7,8 @@ the `test-data` release, and the result. Everything that still needs Alan is gat
 This file decides no state. Where a written gate was found met, it is listed under "For planning" for planning to decide; README.md is
 unchanged.
 
+**Entry 363 (Alan's answer to question 79, 2026-10-04):** rows 7, 22 and 26 are now Done in the README, and Phase 0's row says its scan half is met and its photograph half (row 1) is not. Row 6 stays Built, not proven until its MANOVA and ratio-interval fixtures exist.
+
 ## The 31
 
 Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gate nobody has written yet.

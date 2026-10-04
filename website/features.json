@@ -835,7 +835,7 @@
         "Linux"
       ],
       "since": "0.2.0-nightly.102",
-      "note": "After you analyze a target, GroupLab now offers to send it to the project",
+      "note": ["After you analyze a target, GroupLab now offers to send it to the project", "Settings on the computer now offers Send everything I open"],
       "tour": "settings",
       "guide": "12-settings",
       "article": "what-grouplab-sends"

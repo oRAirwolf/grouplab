@@ -4,7 +4,7 @@ description: Five things leave your machine, all of them only when you ask. Here
 group: How GroupLab is built
 number: 26
 written: 2026-09-22
-data_date: 2026-09-22
+data_date: 2026-10-04
 samples: not a measurement: an account of the code, with the test that keeps it true
 state: published
 no_figure: "A list of network calls has no picture. The one thing a reader could look at, the crash report contents, is quoted in full in the article."
@@ -49,7 +49,7 @@ Play updates it. "Install updates automatically" in Settings, About turns off th
 
 When GroupLab hits an error, or closes without shutting down, it writes a record to a folder on your own machine. The first time it can, it asks whether to send such reports to the project: automatically, only when you say so each time, or never. Until you choose, it asks each time.
 
-**What a report holds:** the version of GroupLab and the system it runs on, the error and where in GroupLab it happened, and the names of the last few things done, such as setting the caliber, with nothing that was typed into them. Never a photograph or scan, a file name, a location, or anything you wrote. The same error several times goes as one report with a count, and a day's reports are capped at 20.
+**What a report holds:** the version of GroupLab and the system it runs on, the error and where in GroupLab it happened, and the names of the last few things done, such as setting the caliber, with nothing that was typed into them. Since 4 October 2026, on the computer, an automatic report also carries GroupLab's log from this run and the last, with anything typed replaced by its length; GroupLab asks once more before it does, those who chose automatic reports. On the phone a report holds what it held before. Never a photograph or scan, a file name, a location, or anything you wrote. The same error several times goes as one report with a count, and a day's reports are capped at 20.
 
 It goes to grouplab.org, not to GitHub, and the application holds no key or token. The project's server turns it into an issue in a private repository, and the token that lets it do that lives on the server and nowhere else.
 
@@ -65,7 +65,9 @@ Two things about all of it are deliberate:
 
 If you send a target from the page, that is an upload you started, to a page you visited, with a consent record written at the time.
 
-GroupLab can also send one itself, and it asks first. After you press **Accept and analyze** on a target (a picture GroupLab could not read, or one left before that button, is never sent), a short panel under the figures offers to send it: the image, the holes GroupLab found, the ones you moved, added or removed, what you told it, the figures and the log from that session. Nothing goes until you press Send and choose one of two levels of consent, testing only or may be published. Settings lets you say instead that every target should go, or none. The first time GroupLab opens after an update that carries it, one screen asks which you want, and nothing is chosen for you.
+GroupLab can also send one itself, and it asks first. After you press **Accept and analyze** on a target, a short panel under the figures offers to send it: the image, the holes GroupLab found, the ones you moved, added or removed, what you told it, the figures and the log from that session. Nothing goes until you press Send and choose one of two levels of consent, testing only or may be published. Settings lets you say instead that every target should go, or none. The first time GroupLab opens after an update that carries it, one screen asks which you want, and nothing is chosen for you.
+
+**Since 4 October 2026, on the computer, a third choice: Send everything I open.** Every picture you open goes when you leave it, whether GroupLab could read it or not, with what it worked out, the state it was left in and the log, because a picture GroupLab could not read is the one that shows what to fix. The old automatic choice is now **Send finished targets only**, under which a picture GroupLab could not read, or one left before Accept and analyze, is never sent; nobody is moved from one to the other without being asked. On the phone none of this is offered yet.
 
 **Unlike a crash report, a target you agreed to send is tried again.** If it cannot go at that moment it is kept on your machine and tried when GroupLab next starts, for seven days, then deleted. Settings shows anything waiting, with a button to discard it. That is the one thing GroupLab may send when it opens, and only because you already said yes to it.
 

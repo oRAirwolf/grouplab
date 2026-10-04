@@ -72,7 +72,7 @@ const PARTS = ['detected', 'corrected', 'told', 'analysis', 'environment', 'log'
  * which the site's build holds this to. While it is false a package with the block is refused, to be tried again later, and every other
  * package is taken exactly as before.
  */
-const SEND_EVERYTHING_OPEN = false;
+const SEND_EVERYTHING_OPEN = true;
 
 /** The states a picture is sent in. Anything but accepted is a test case and never published on its own. */
 const STATES = ['unread', 'stopped-at-review', 'accepted'];

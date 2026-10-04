@@ -70,6 +70,8 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
             CrashReceiver = root.GetProperty("crashReceiver").GetString()!,
             SendEverythingOpen = root.GetProperty("sendEverythingOpen").GetBoolean(),
             FullLogErrorReports = root.GetProperty("fullLogErrorReports").GetBoolean(),
+            SendEverythingOpenPhones = root.GetProperty("sendEverythingOpenPhones").GetBoolean(),
+            FullLogErrorReportsPhones = root.GetProperty("fullLogErrorReportsPhones").GetBoolean(),
         };
     });
 
@@ -108,6 +110,14 @@ public sealed record ReceiverTerms(string ConsentVersion, string TestingText, st
     /// answers are confirmed; while it is false a report holds what it held before.
     /// </summary>
     public bool FullLogErrorReports { get; init; }
+
+    /// <summary>
+    /// Entry 363 section 1: the same two switches on Android and the iPhone, off until Alan has updated Apple's App Privacy and Google Play's
+    /// Data safety answers, so no phone build sends more than its store listing says before then.
+    /// </summary>
+    public bool SendEverythingOpenPhones { get; init; }
+
+    public bool FullLogErrorReportsPhones { get; init; }
 
     /// <summary>The terms this build carries.</summary>
     public static ReceiverTerms Current => Built.Value;

@@ -182,40 +182,51 @@ public class Entry165Tests
     [AvaloniaFact]
     public void TheFirstRunScreenAsksOnceAndSettingsShowsTheAnswer()
     {
-        var (window, path) = Ready(SendingChoice.Unset, null);
+        // The screen as it reads with entry 357's switches off; Entry357Tests holds it with them on (entry 363 turned them on on the computer).
+        SharingSwitches.EverythingOverride = false;
+        SharingSwitches.FullLogOverride = false;
         try
         {
-            window.ShowFirstRunIfDue();
-            Settle();
-            Assert.True(window.FirstRunShown);
+            var (window, path) = Ready(SendingChoice.Unset, null);
+            try
+            {
+                window.ShowFirstRunIfDue();
+                Settle();
+                Assert.True(window.FirstRunShown);
 
-            window.PressSend("Send every target automatically");
-            Settle();
-            Assert.True(window.FirstRunShown);
-            Assert.Equal((SendingChoice.Unset, (ConsentLevel?)null), window.SettingsStore.LoadSending());
+                window.PressSend("Send every target automatically");
+                Settle();
+                Assert.True(window.FirstRunShown);
+                Assert.Equal((SendingChoice.Unset, (ConsentLevel?)null), window.SettingsStore.LoadSending());
 
-            window.PressSend("Testing only");
-            window.PressSend("Ask me each time");
-            Settle();
-            Assert.False(window.FirstRunShown);
-            Assert.Equal((SendingChoice.Ask, (ConsentLevel?)ConsentLevel.Testing), window.SettingsStore.LoadSending());
+                window.PressSend("Testing only");
+                window.PressSend("Ask me each time");
+                Settle();
+                Assert.False(window.FirstRunShown);
+                Assert.Equal((SendingChoice.Ask, (ConsentLevel?)ConsentLevel.Testing), window.SettingsStore.LoadSending());
 
-            window.ShowFirstRunIfDue();
-            Assert.False(window.FirstRunShown);
+                window.ShowFirstRunIfDue();
+                Assert.False(window.FirstRunShown);
 
-            var text = window.SendingSettingsText.ToList();
-            Assert.Contains("Send every target automatically", text);
-            Assert.Contains("Ask me each time", text);
-            Assert.Contains("Never", text);
-            Assert.Contains("Testing only. " + ReceiverTerms.Current.TestingText, text);
-            Assert.Contains("May be published. " + ReceiverTerms.Current.PublishableText, text);
-            Assert.Contains("• " + TargetPackages.WhatIsSent[0], text);
-            Assert.Contains("No targets have been sent from this computer.", text);
-            Assert.Empty(Outside.Posted);
+                var text = window.SendingSettingsText.ToList();
+                Assert.Contains("Send every target automatically", text);
+                Assert.Contains("Ask me each time", text);
+                Assert.Contains("Never", text);
+                Assert.Contains("Testing only. " + ReceiverTerms.Current.TestingText, text);
+                Assert.Contains("May be published. " + ReceiverTerms.Current.PublishableText, text);
+                Assert.Contains("• " + TargetPackages.WhatIsSent[0], text);
+                Assert.Contains("No targets have been sent from this computer.", text);
+                Assert.Empty(Outside.Posted);
+            }
+            finally
+            {
+                Finish(window, path);
+            }
         }
         finally
         {
-            Finish(window, path);
+            SharingSwitches.EverythingOverride = null;
+            SharingSwitches.FullLogOverride = null;
         }
     }
 

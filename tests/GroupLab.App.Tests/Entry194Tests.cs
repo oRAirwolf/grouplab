@@ -247,26 +247,37 @@ public class Entry194Tests
     [AvaloniaFact]
     public void TheFirstRunScreenAsksAndSettingsShowsTheAnswer()
     {
-        var opened = Open(ErrorReportChoice.Unset, open: true, _ => { });
+        // The screen as it reads with entry 357's switches off; Entry357Tests holds it with them on (entry 363 turned them on on the computer).
+        SharingSwitches.EverythingOverride = false;
+        SharingSwitches.FullLogOverride = false;
         try
         {
-            opened.Window.Show();
-            Settle();
-            opened.Window.ShowFirstRunIfDue();
-            Assert.True(opened.Window.FirstRunShown);
-            opened.Window.PressSend("Send them automatically");
-            Settle();
-            Assert.False(opened.Window.FirstRunShown);
-            Assert.Equal(ErrorReportChoice.Always, opened.Window.SettingsStore.LoadErrorChoice());
-            opened.Window.FillErrorSettings();
-            var text = opened.Window.ErrorSettingsText.ToList();
-            Assert.Contains("Send them automatically", text);
-            Assert.Contains("• " + ErrorReports.WhatIsSent[^1], text);
-            Assert.Contains("No error reports have been sent from this computer.", text);
+            var opened = Open(ErrorReportChoice.Unset, open: true, _ => { });
+            try
+            {
+                opened.Window.Show();
+                Settle();
+                opened.Window.ShowFirstRunIfDue();
+                Assert.True(opened.Window.FirstRunShown);
+                opened.Window.PressSend("Send them automatically");
+                Settle();
+                Assert.False(opened.Window.FirstRunShown);
+                Assert.Equal(ErrorReportChoice.Always, opened.Window.SettingsStore.LoadErrorChoice());
+                opened.Window.FillErrorSettings();
+                var text = opened.Window.ErrorSettingsText.ToList();
+                Assert.Contains("Send them automatically", text);
+                Assert.Contains("• " + ErrorReports.WhatIsSent[^1], text);
+                Assert.Contains("No error reports have been sent from this computer.", text);
+            }
+            finally
+            {
+                Close(opened);
+            }
         }
         finally
         {
-            Close(opened);
+            SharingSwitches.EverythingOverride = null;
+            SharingSwitches.FullLogOverride = null;
         }
     }
 

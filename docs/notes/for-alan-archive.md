@@ -3,6 +3,27 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
+
+**Answered 2026-10-04 (entry 363 section 1):** "yes, switch both on". On for the computer from nightly 166; the phones wait for "forms updated", the checklist at the top of for-alan.md.
+
+**Opened 2026-10-03.** **Why:** both are built and switched off, so no build sends more than before. Switching them on changes two
+things you have promised: today a picture GroupLab could not read is never sent (the app's words, the website's "What GroupLab sends"
+page and nightly 161's notes say so), and today an error report holds only the names of the last few things done. On, the choices
+become **Send everything I open** (every picture opened, read or not, with what GroupLab worked out and the log), **Send finished
+targets only** (today's automatic sending, renamed; nobody is moved without being asked), **Ask me each time** and **Never**; and an
+automatic error report also carries GroupLab's log from this run and the last, with anything typed replaced by its length. **What you
+would check in each store** (the repository does not record your current answers):
+- **Apple, App Store Connect, App Privacy:** today the honest answers are Diagnostics (crash data; performance data from the survey)
+  and an identifier (the survey's random installation number), not linked to you, not used for tracking, all optional. Once switched
+  on, add Other Diagnostic Data and Product Interaction (the log). Photos change only when the phone can send targets, which it cannot
+  yet (question 81).
+- **Google Play, Data safety:** today App info and performance (crash logs, diagnostics) and Device or other IDs, collected, optional,
+  encrypted in transit, not shared. Once on, add App activity (app interactions). Photos as for Apple.
+- **Microsoft Store:** the privacy link stays the "What GroupLab sends" page; no questionnaire answer changes.
+**A good answer:** "yes, switch them on" (or only one), and "the forms are updated" once you have done Apple and Google. Nothing goes
+on until you say so.
+
 ## Summaries moved 2026-10-01 (entry 345), superseded by the public beta and the Store
 
 GOOD MORNING (the run of 30 September, from 12:50 UTC; updated as it goes):

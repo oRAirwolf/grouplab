@@ -1,5 +1,13 @@
-**Open: 20.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 19.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 Working from the terminal, 4 October, at 65% of the week (a live reading); entry 363: the M834 is ready, then the queue in its section 3.
+
+**THE STORE FORMS, SO THE PHONES CAN SEND MORE** (request 71, answered "switch both on"; entry 363). On the computer both are on
+from nightly 166. The phones keep both off until you write **"forms updated"**. Ten minutes:
+- **Apple, App Store Connect, App Privacy:** keep Crash Data, Performance Data and the Identifier (the survey's random number); **add Other
+  Diagnostic Data** and, under Usage Data, **Product Interaction** (the log). All: not linked to you, not used for tracking, optional.
+- **Google Play, Data safety:** keep App info and performance (crash logs, diagnostics) and Device or other IDs; **add App activity, App
+  interactions**. All: collected, optional, encrypted in transit, not shared.
+- **Later, with the phone's sender (question 81, last in the queue):** Photos, in both, when that build is ready; I will say when.
 
 **THE M834 TOMORROW** (entry 363; needs nightly 166 or later, on the computer, Android and the iPhone). In order:
 1. **The recording first (request 73 below)**, so I can start on direct printing while you play: the nRF Connect scan, then one page
@@ -223,25 +231,6 @@ printer appears to a phone.
 
 **A good answer:** Unholy's screenshots, model number and label size, saved in `C:\Dev\grouplab-local\printers\`, or "it does not
 appear in the scan".
-
-## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
-
-**Opened 2026-10-03.** **Why:** both are built and switched off, so no build sends more than before. Switching them on changes two
-things you have promised: today a picture GroupLab could not read is never sent (the app's words, the website's "What GroupLab sends"
-page and nightly 161's notes say so), and today an error report holds only the names of the last few things done. On, the choices
-become **Send everything I open** (every picture opened, read or not, with what GroupLab worked out and the log), **Send finished
-targets only** (today's automatic sending, renamed; nobody is moved without being asked), **Ask me each time** and **Never**; and an
-automatic error report also carries GroupLab's log from this run and the last, with anything typed replaced by its length. **What you
-would check in each store** (the repository does not record your current answers):
-- **Apple, App Store Connect, App Privacy:** today the honest answers are Diagnostics (crash data; performance data from the survey)
-  and an identifier (the survey's random installation number), not linked to you, not used for tracking, all optional. Once switched
-  on, add Other Diagnostic Data and Product Interaction (the log). Photos change only when the phone can send targets, which it cannot
-  yet (question 81).
-- **Google Play, Data safety:** today App info and performance (crash logs, diagnostics) and Device or other IDs, collected, optional,
-  encrypted in transit, not shared. Once on, add App activity (app interactions). Photos as for Apple.
-- **Microsoft Store:** the privacy link stays the "What GroupLab sends" page; no questionnaire answer changes.
-**A good answer:** "yes, switch them on" (or only one), and "the forms are updated" once you have done Apple and Google. Nothing goes
-on until you say so.
 
 ## 70. Fenix's report package from the desktop, five minutes for him, whenever suits (entry 354 section 4)
 
