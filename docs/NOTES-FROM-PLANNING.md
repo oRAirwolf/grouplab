@@ -25,6 +25,35 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 370: a shorter range kit
+
+**Status: done 2026-10-04, but for the results note, which waits for the results.** CHECKLIST.pdf rewritten on one short page: the three range items, what to bring, and Later, at home; 7 pages to print; 07 renamed print 4; 01 to 05 moved to later-at-home. When the results come, RANGE-PLAN-HOLE-SIZE.md says this run is one sheet each of three loads (STATE.md carries the reminder). Entry 368's checklist is in C:\Dev\grouplab-trash\2026-10-04\range-kit-368.
+
+Alan, 2026-10-04 11:11 UTC: "I dont know that I am going to have time to deal with all of this tomorrow. Can we pare this down? Remove
+the 300 blackout and 8.6 blackout." He may go tomorrow (5 October) rather than today. **Do this now**: rewrite `CHECKLIST.pdf` in
+`C:\Dev\grouplab-local\range-2026-10-04\`, still one page but much shorter, and rename the files so the print list matches. Main model,
+no worker.
+
+**At the range (shooting only), about an hour:**
+1. **Store-bought targets** (request 58): 5 shots of .22 LR on each of three or four he has, the shot count written on each, one
+   GroupLab photo each at the bench.
+2. **The hole size test, cut down** (request 20): **one sheet each** of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, in
+   that order, 25 shots a sheet, all at 50 yd (or all at 25), the Xero up for each, its string number on the load block. No .300
+   Blackout, no 8.6 Blackout. Ammunition: 25 rounds of each of the three, plus .22 LR for items 1 and 3.
+3. **The C and E bulls**: .22 LR, at least 10 shots a sheet, some in the black and some on its edge; one GroupLab photo each.
+
+**At home afterwards, no range needed:** the scale markers (brackets, a bar, the backer stickers) and the phone camera distances are
+done with the shot targets on the table or a board at home, and the scans. Put them on the checklist under "Later, at home", in a few
+lines, not as range steps. Drop red bulls and the home page target from this kit.
+
+**Print tonight:** 06 the plan (1), 07 load sheets (3, plus 1 spare, all at once on the same paper), 08 C bull (1), 09 E bull (1).
+Rename 07 to "print 4". Move 01 to 05 into a subfolder `later-at-home\` so they are not printed by mistake. Update the page count
+(7 pages) and the date line ("Sunday 4 or Monday 5 October; write the real date on each load block").
+
+In `docs/RANGE-PLAN-HOLE-SIZE.md`'s results, when they come, say plainly that this run is one sheet each of three loads, so it shows the
+speed effect at .22 width (subsonic against high velocity) and a centrefire point, but not speed against width without the .300
+Blackout subsonic sheet; that can come on another day. One line at the top of for-alan.md when ready.
+
 ## 2026-10-04, entry 368: the C and E bulls in the range kit
 
 **Status: done 2026-10-04.** 08 GL-CF25-LTR-C and 09 GL-CF25-LTR-E, print 1 each; the checklist's item 3, right after the hole size test, as the entry words it; still one page, 18 pages to print. Entry 367's checklist is in C:\Dev\grouplab-trash\2026-10-04\range-kit-367.

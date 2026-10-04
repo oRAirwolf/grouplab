@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:30 UTC, after entry 368 (today's range kit, with the hole size test and the C and E bulls); the inbox is empty.
+**Last rewritten:** 2026-10-04 12:30 UTC, after entry 370 (the range kit, shorter); the inbox is empty.
 
 ---
 
@@ -22,7 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
   scale markers A to D.
 - **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
-- **Entries 366 to 368 done**: today's range kit, the hole size test and the C and E bulls in it, in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
+- **Entries 366 to 370 done**: the range kit, cut down by 370 to an hour (three loads one sheet each, store-bought targets, C and E bulls), in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
   72, 73 (the M834's recordings), 74, 75, 76.
 
@@ -48,6 +48,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
 3. The M834: the recording reader waits for request 73's recordings; then the printer's own protocol.
+
+- **When the range results come (entry 370):** RANGE-PLAN-HOLE-SIZE.md's results say this run is one sheet each of three loads: the
+  speed effect at .22 width and a centrefire point, not speed against width without the .300 Blackout subsonic sheet.
 
 ## Blocked, and on what
 
