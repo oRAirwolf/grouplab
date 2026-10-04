@@ -31,8 +31,12 @@ FOR_ALAN = REPO / "docs" / "notes" / "for-alan.md"
 PRODUCT = "9NWJCXBKZNPZ"
 NIGHTLY = re.compile(r"^v(\d+\.\d+\.\d+-nightly\.(\d+))$")
 
-# The assets a nightly's release has when it was published whole (nightly.yml uploads them together).
-WHOLE = {"grouplab-win-x64.zip", "grouplab-setup-win-x64.exe", "grouplab-linux-x64.tar.gz"}
+# The assets a nightly's release has when it was published whole (nightly.yml uploads them together), named with its version and commit:
+# grouplab-0.2.0-nightly.166-win-x64-080a6d8.zip, grouplab-setup-0.2.0-nightly.166-win-x64-080a6d8.exe and so on.
+WHOLE = {"the Windows zip": re.compile(r"^grouplab-.+-win-x64-[0-9a-f]+\.zip$"),
+         "the Windows installer": re.compile(r"^grouplab-setup-.+-win-x64-[0-9a-f]+\.exe$"),
+         "the Linux archive": re.compile(r"^grouplab-.+-linux-x64-[0-9a-f]+\.tar\.gz$"),
+         "the update manifest": re.compile(r"^update-manifest\.json$")}
 
 
 def load() -> dict:
@@ -81,9 +85,10 @@ def decide() -> int:
         output(go="false", why=f"{version} was sent already")
         return 0
 
-    assets = {a["name"] for a in json.loads(gh("release", "view", tag, "--json", "assets"))["assets"]}
-    if not WHOLE <= assets:
-        output(go="false", why=f"{tag} is not published whole: missing {', '.join(sorted(WHOLE - assets))}")
+    assets = [a["name"] for a in json.loads(gh("release", "view", tag, "--json", "assets"))["assets"]]
+    missing = [what for what, pattern in WHOLE.items() if not any(pattern.match(name) for name in assets)]
+    if missing:
+        output(go="false", why=f"{tag} is not published whole: missing {', '.join(missing)}")
         return 0
 
     output(go="true", version=version, tag=tag, why=f"{version} is the newest nightly and has not been sent")
