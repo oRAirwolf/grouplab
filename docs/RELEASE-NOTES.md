@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.166
+
+**2026-10-04**, commit `080a6d8`. Nightly.
+
+**What you will notice**
+
+- Targets can now save or share any sheet for a thermal label printer's own app, such as the Phomemo M834's: a black and white picture at 300 dpi and a PDF at the page's true size, with a darkness test page.
+- On the Targets screen, Save for a printer app sits on its own line under the print buttons, where it is never cut off.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.166)
+
+---
+
 ## 0.2.0-nightly.165
 
 **2026-10-04**, commit `d417e36`. Nightly.
