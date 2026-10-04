@@ -93,7 +93,7 @@ sheet or view is not finished until the Features page has its own picture of it.
 
 **Their own picture now:** the E bull (`sheet-e-bull`), the C bull with its dot (`sheet-c-bull`), the zeroing grids (the four C3
 sheets, MOA and mil at 100 yd and 100 m, credited to Alan with Jylee and Unholy), large format on a home printer (`sheet-large-set`,
-the four Letter sheets), Shots Needed to Zero (credited to Jylee), Velocity and the vertical (the block and the band, entry 323), Ballistics and hit chances (the Hit probability view), Made for
+the four Letter sheets), the six-bull label on 4x6 as it prints and as a thermal printer's dots (`sheet-x6-4x6`, `sheet-x6-4x6-thermal`), Shots Needed to Zero (credited to Jylee), Velocity and the vertical (the block and the band, entry 323), Ballistics and hit chances (the Hit probability view), Made for
 your optic, the Targets screen, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
 read off a target, and the three sharing choices (Settings, where they are made).
 

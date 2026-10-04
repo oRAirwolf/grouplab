@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 04:00 UTC, after entry 362 (store-bought targets).
+**Last rewritten:** 2026-10-04 04:55 UTC, after entries 358 and 359 (label targets, the printer framework).
 
 ---
 
@@ -18,18 +18,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 62% of the
   week at 03:06 UTC. Plan each block to end under 85% (entry 360 section 2, costs in the local docs/notes/usage-log.md). The hook
   `scripts/usage-guard.js` blocks from 85 unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
-- **Entry 358, sections 1 to 3 built, not merged:** commits 6175d457 (label page sizes), 6ab485e6 (thermal print mode) and 9472f323
-  (the X6 labels and check labels) on branch `worktree-agent-a2a1221f838518e94` (`.claude/worktrees/agent-a2a1221f838518e94`). Only their
-  own test groups ran: run the three suites, the site build and consistency before cherry-picking. Not started: sections 4
-  (printer framework), 6 (darkness) and 8 (public pages).
+- **Entries 358 and 359 done but for the radio:** label pages, the thermal print mode, the X6 labels and check label (merged from
+  the worker), the printer framework in `src/GroupLab.Core/Printing/Labels` (profiles in `printers.json`, four encoders, a paced
+  job), the darkness test page and rule, the heat and sun warning. **Not built:** any platform's Bluetooth or USB link (no printer
+  to record until requests 72 and 73), density and speed on the print panel, the low battery warning, reading a darkness photo.
 - **The Android real taps red on 2cce12a1 was the emulator, not GroupLab:** its launcher hung and the "isn't responding" box took
   the taps. Both emulator scripts now switch those boxes off; dispatched run 37173283370 proves it.
 - **Entry 362 done** (store-bought targets: upright photos, a new corner finder `StoreTargetOutline`, zoom, magnifier, snap with Undo,
   Rotate), for nightly 165. Four of Alan's five counter photos found, the Rigid crosshair a close guess; request 74 asks for a wooden
   table photo; question 82 on the shared loaders. `grouplab outline-trial <photos> -o <folder>` draws what the finder found.
-- **Next: entry 358** (merge the worker's three sections, then 4, 6 and 8) with 359's corrections read first.
-- **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 and 73 (the label
-  printers on arrival), 74 (a kitchen table photo). **Waiting on planning:** questions 79, 81 and 82.
+- **Next: entry 362's follow-up** (Alan, 2026-10-04: two more blank photos into the corner and orientation tests, and the six
+  package photos for the targets' names and printed sizes), then the inbox is empty.
+- **Waiting on Alan:** requests 70 (Fenix's report package), 71 (switching on entry 357, the store forms), 72 (steps for Unholy's
+  4x6 printer) and 73 (the M834's recordings, Bluetooth only), 74 (a kitchen table photo). **Waiting on planning:** questions 79, 81 and 82.
 
 ## The next three
 
@@ -91,7 +92,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 358 (part built, see In flight) and 359.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

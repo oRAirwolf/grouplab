@@ -239,7 +239,7 @@ public sealed class PrintPanel : UserControl
     internal const string OfficeWords = "An office printer, or a PDF";
 
     /// <summary>The line under "Print on" when a thermal printer is chosen.</summary>
-    internal const string ThermalWords = "A thermal printer prints in black only, one dot at a time, at actual size: the preview shows every dot as it will print, and bull colors are not offered.";
+    internal const string ThermalWords = "A thermal printer prints in black only, one dot at a time, at actual size: the preview shows every dot as it will print, and bull colors are not offered. Thermal paper darkens in heat (a car dashboard in sun reaches about 70 °C, 158 °F, where the coating starts to develop) and fades in sunlight over days, so photograph a thermal target the day you shoot it.";
 
     /// <summary>
     /// The thermal printers "Print on" offers, by their print heads: the common 4 inch heads at 8 dots a millimetre (203 dpi) and 300 dpi, and

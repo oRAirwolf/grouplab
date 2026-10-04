@@ -937,5 +937,11 @@ public class Entry109Tests
         // Entry 289: the 2 MOA page, whole, as it prints on Letter, and its set of three pages.
         Save("two-moa", SceneRasterizer.Rasterize(SceneBuilder.Build(Load("GL-CF9-LTR.gltd.json")).Pages[0], 60, words: true));
         SetPicture("two-moa-set", "GL-CF9-T.gltd.json", 40);
+
+        // Entry 358 section 8: a six-bull label on 4x6 as it prints on paper, and the same label as a 203 dpi thermal printer's dots, one
+        // picture pixel to a dot, so the whole-dot codes and the black-only bulls can be seen.
+        var label = SceneBuilder.Build(Load("GL-X6-4X6.gltd.json")).Pages[0];
+        Save("x6-4x6", SceneRasterizer.Rasterize(label, 100, words: true));
+        Save("x6-4x6-thermal", GroupLab.Core.Printing.Thermal.ThermalRaster.Render(label, new GroupLab.Core.Printing.Thermal.PrintHead(203.2, 832)).Image.ToGray());
     }
 }

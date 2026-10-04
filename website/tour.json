@@ -793,6 +793,10 @@
      "Adds a line along the bottom edge of each sheet telling whoever prints it to choose Actual size and never Fit. Leave it on unless you are printing for yourself and know the driver."
     ],
     [
+     "Label targets and thermal printers",
+     "Six-bull labels on 4x6, A6 and 100 by 150 mm, in sets of five that pool, and a printer check label. With a thermal printer chosen under Print on, the preview shows every dot as it will print, in black only. No label printer has been tested yet: until one prints GroupLab's check page, it should work but is not proven."
+    ],
+    [
      "Open to print, Save PDF and Print",
      "Open to print hands the PDF to your usual viewer, which is the safest route today. Save PDF writes the file. Print goes straight to a driver, on Windows."
     ],

@@ -1,0 +1,54 @@
+// NOTES-FROM-PLANNING.md entry 358 section 4: the label printers GroupLab knows, as data. A new printer is an entry here plus, at most,
+// one small encoder in PrinterEncoders.cs. "tested": false means no real one has printed GroupLab's check page yet: "should work".
+// The M220 has no profile on purpose (entry 358 section 5); the M834 waits on request 73's recordings and the 4x6 printer on request 72.
+{
+  "printers": [
+    {
+      "id": "tspl-4x6-203",
+      "name": "A 4 inch TSPL label printer, 203 dpi (the Labeer Y43BT kind)",
+      "encoder": "tspl",
+      "services": [],
+      "nameHints": [ "Y43", "Y4", "Labeer", "FlashLabel" ],
+      "transports": [ "BluetoothLe", "BluetoothClassic", "UsbSerial", "SystemDialog" ],
+      "dotsPerInch": 203.2,
+      "headDots": 832,
+      "pageWidthsMm": [ 101.6, 105, 100 ],
+      "chunkBytes": 180,
+      "pacingMs": 20,
+      "density": { "min": 0, "max": 15, "default": 10, "higherIsMore": true },
+      "speed": { "min": 1, "max": 6, "default": 3, "higherIsMore": true },
+      "tested": false,
+      "source": "TSC TSPL/TSPL2 programming manual (SIZE, GAP, DENSITY 0 to 15, SPEED, BITMAP); tspl-cups-driver confirms the Y43BT speaks TSPL at 203 dpi; its Bluetooth services wait on request 72"
+    },
+    {
+      "id": "zpl-4in-203",
+      "name": "A 4 inch ZPL label printer, 203 dpi",
+      "encoder": "zpl",
+      "transports": [ "UsbSerial", "BluetoothClassic", "SystemDialog" ],
+      "dotsPerInch": 203.2,
+      "headDots": 832,
+      "pageWidthsMm": [ 101.6, 105, 100 ],
+      "chunkBytes": 512,
+      "pacingMs": 0,
+      "density": { "min": 0, "max": 30, "default": 20, "higherIsMore": true },
+      "speed": { "min": 2, "max": 6, "default": 3, "higherIsMore": true },
+      "tested": false,
+      "source": "Zebra ZPL II programming guide (~SD darkness 0 to 30, ^PR speed in inches a second, ^GF graphic field)"
+    },
+    {
+      "id": "escpos-80mm-203",
+      "name": "An 80 mm ESC/POS printer, 203 dpi",
+      "encoder": "escpos",
+      "transports": [ "BluetoothClassic", "BluetoothLe", "UsbSerial", "SystemDialog" ],
+      "services": [ "000018f0-0000-1000-8000-00805f9b34fb" ],
+      "write": "00002af1-0000-1000-8000-00805f9b34fb",
+      "dotsPerInch": 203.2,
+      "headDots": 576,
+      "pageWidthsMm": [ 72 ],
+      "chunkBytes": 128,
+      "pacingMs": 20,
+      "tested": false,
+      "source": "ESC/POS GS v 0 raster; the ISSC transparent UART service 18f0 appears across brands, so it is matched only where nothing else claims the printer"
+    }
+  ]
+}

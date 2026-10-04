@@ -383,6 +383,14 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entries 358 and 359: thermal label targets, a printer framework, darkness
+
+- **Sections 1 to 3** (a worker's three commits, merged after the three suites): 4x6, A6 and 100 by 150 mm pages beside Letter and A4; the thermal print mode (one bit at the head's own dot pitch, every code and marker on whole dots, black only, never fitted to the page, the cut-off named before printing); the X6 labels, six of the Letter sheets' bulls to a label in sets of five that pool, and a printer check label.
+- **The framework** (`src/GroupLab.Core/Printing/Labels`): a printer is an entry in `printers.json` (services, name hints, transports, characteristics, dpi, head dots, page widths, chunk and pacing, density and speed ranges, media codes, encoder, tested, source) plus at most one encoder. Encoders written here for TSPL (rows turned over, since its BITMAP takes a set bit as paper), the Phomemo ESC family, ZPL and ESC/POS, each tested on exact bytes. Three profiles ship, none tested; no M220 profile (section 5), none for the M834 or the 4x6 printer until their recordings (requests 73 and 72).
+- **Not built:** the radio on any platform. `IOutsideWorld.FindPrintersAsync` and `ConnectPrinterAsync` answer "nothing" everywhere until a printer has been recorded, so a test can never open a real connection and nothing claims a printer works.
+- **Darkness:** the test page (a strip per setting: its number, a solid square, lines 1 to 4 dots, squares 3 to 6 dots) and the rule (the darkest setting whose lines grow by no more than half a dot) are built and tested; reading the photograph and each printer's real ranges wait on the test printers.
+- **Entry 359:** requests 72 and 73 rewritten; nothing built used USB to the M834.
+
 ## Entry 362: store-bought targets, upright, their corners found, zoomed and turned
 
 - **Why every photo failed.** `SheetOutline` takes the largest light region by brightness; on Alan's white counter that region was the counter, which touches the frame, so all five were refused as "runs out of the frame" and the screen offered a fixed rectangle. Four of the five carry orientation 3 or 6, which the screen ignored (`FingerprintSession.Load` decoded with `IgnoreOrientation`).

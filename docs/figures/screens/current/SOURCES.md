@@ -192,6 +192,8 @@ source that is not on the list below, or if any test writing into this folder co
 | `sheet-large-set.png` | built-in library sheet |
 | `sheet-two-moa.png` | built-in library sheet |
 | `sheet-two-moa-set.png` | built-in library sheet |
+| `sheet-x6-4x6.png` | built-in library sheet |
+| `sheet-x6-4x6-thermal.png` | built-in library sheet |
 | `sheet-zero-mil-100m.png` | built-in library sheet |
 | `sheet-zero-mil-100y.png` | built-in library sheet |
 | `sheet-zero-moa-100m.png` | built-in library sheet |

@@ -330,7 +330,7 @@ public static class BodyCodec
             var positions = new List<(ushort, ushort)>(codes.Count);
             for (int i = 0; i < codes.Count; i++)
             {
-                positions.Add((r.U16("a code centre"), r.U16("a code centre")));
+                positions.Add((r.U16("a code center"), r.U16("a code center")));
             }
 
             codes = codes with { Version = version, Positions = positions };

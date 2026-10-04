@@ -191,6 +191,164 @@ limit comes first wins. The status line and the hook stay in place from now on, 
 Commit the scripts and the .gitignore line (not settings.local.json, which is local). Then carry on with the inbox (358, then 359's
 corrections) under these rules.
 
+## 2026-10-03, entry 359: corrections to entry 358 (the M834 is Bluetooth only; no 4x6 printer for Alan)
+
+**Status: done 2026-10-04.** Request 73 rewritten for Bluetooth only, with a cable-free way to copy the recording and what it means if the M834 is classic Bluetooth only; request 72 rewritten as the steps Alan passes to Unholy, waiting for the model number. Nothing in entry 358's built work used USB to the M834 or assumed Alan was buying a 4x6 printer.
+
+Two corrections that reached the planning session after Code had started entry 358. Read this before finishing 358 if it is still
+in progress, and change whatever 358 already built or wrote that disagrees.
+
+### 1. The M834 is Bluetooth only
+
+Alan, 2026-10-03: "I dont want to use usb for my phomemo printer. Only bluetooth."
+
+- Drop the "system print dialog first, Phomemo's Windows driver over USB" step from entry 358 section 7. GroupLab never prints to the
+  M834 over USB and never asks Alan to install Phomemo's driver or connect the printer by cable.
+- The first real M834 result is therefore direct Bluetooth, after the recordings in request 73. Until then, the thermal print mode,
+  the Letter targets in thermal mode and the printer check on thermal paper are built and tested against recorded byte streams only.
+- Phomemo says its Letter printers connect to computers by USB only; that describes Phomemo's own software, not the radio. Whether
+  the desktop can reach the M834 over Bluetooth depends on what request 73 shows (Bluetooth LE or classic). Say so in the request,
+  and if it turns out to be classic only, the phone apps (Android first) are the M834 path and the iPhone cannot be.
+- Getting the recordings off the phone (request 73, step 3) may still use the phone's own cable or any other way of copying a file;
+  that is about the phone, not the printer. Offer a cable-free way too (sharing the file from the phone to this computer), since Alan
+  prefers fewer cables.
+
+### 2. Alan is not buying a 4x6 printer
+
+If request 72 was written for a 4x6 printer of Alan's arriving, rewrite it: the 4x6 printer is Unholy's, and its model number is
+coming. The request becomes the steps Alan passes to Unholy (an nRF Connect scan of his printer, a screenshot of the service list,
+and the label size he uses), written so that someone who has never used nRF Connect can follow them, and it waits until Alan has the
+model. Do not ask Alan to buy anything.
+
+### 3. Everything else in 358 stands
+
+The 4x6 targets, the target designer's thermal awareness (section 3a), the printer framework, TSPL against the published manual,
+Unholy's credit, and no further work on the M220.
+
+## 2026-10-03, entry 358: thermal printers, label targets and direct Bluetooth printing
+
+**Status: done 2026-10-04, except the parts that need a printer.** Sections 1 to 3 built by a worker (label page sizes; the thermal print mode; the X6 label family and the printer check label) and merged after the three suites. Section 4: the framework is built (`Printing/Labels`: printer profiles as data in `printers.json`, recognition by service before name, encoders for TSPL, the Phomemo ESC family, ZPL and ESC/POS, a paced print job, and the printer hooks in `IOutsideWorld`); **not done**: each platform's Bluetooth, USB and system-dialog link, which waits on a real printer to record (requests 72 and 73), so no platform finds a printer yet. Section 6: density and speed are in the profiles, the darkness test page and the rule that picks a setting are built, and the print panel warns about heat and sunlight; **not done**: density and speed on the print panel and the low battery warning (both need direct printing), and reading a photo of the darkness test (needs a real print). Section 7: request 73. Section 8: the Features page with its own pictures of a label as it prints and as a thermal printer's dots, the guide, the tour and the claims; no printer is called tested. Entry 359's corrections applied.
+
+Alan, 2026-10-03, after a test print on his Phomemo M220: "I think we should send this to claude code for inclusion, however, i
+think we should see if there is a way to slow down the printing or another method to increase the print quality and ensure that the
+black spots on the thermal paper are as dark as possible. I do not think we should use 70x80mm. For now, I would do 4x6, A6,
+100x150, letter, and A4. We should also probably add a framework for adding compatibility with other bluetooth label printers if at
+all possible." On bull size: "I think the bulls on the 5x5 letter sheets are as small as I would want a single bull to be and they
+should only get bigger from there."
+
+Background (the planning session's study, measured 2026-10-02 and 03): direct thermal printers are 1 bit, usually 203 or 300 dpi,
+cheap, often battery powered and Bluetooth; 4x6 adhesive shipping labels cost 2 to 4 cents each and stick flat to a target board,
+which removes curl. No consumer thermal printer publishes feed accuracy, and "300 dpi" heads come as 300 or 304.8 dpi (a 1.6%
+difference), so every printer goes through the printer check. Application code, so main model. One worker.
+
+### 1. Page sizes
+
+Add label page sizes **4x6 (101.6 x 152.4 mm), A6 (105 x 148 mm) and 100 x 150 mm** beside Letter and A4. Not 70 x 80 mm. Letter
+and A4 also count as thermal sizes (portable thermal printers print them on rolls, folded stacks or loose sheets).
+
+### 2. Thermal print mode
+
+A print mode chosen per printer profile, used for every thermal printer whatever the page size:
+
+- Render 1 bit at the printer's own dot pitch: pure black and white, no anti-aliasing, no grey, no dithering of artwork. Bull colours
+  (blue, red) are not offered on a thermal printer; black only.
+- **Snap every edge to whole dots.** Measured on a simulated 203 dpi print: a QR code placed between dots prints squares 3 and 4 dots
+  wide at random, the same code snapped prints clean. Tag modules are 0.5 mm, exactly 4 dots at 8 dots per mm; at 203 dpi the QR
+  module becomes 0.375 mm (3 dots). On the real printer 3 and 4 dot tags and 3 and 4 dot QR codes all printed and were read.
+- Never fit to page. If the page is wider than the head, say what will be cut off before printing.
+- The print preview shows the 1 bit raster as it will print.
+
+### 3. Label targets: the X6 family
+
+Alan's rule: no bull smaller than the 25 bull Letter sheets' bull (the 1.00 in ring stack, or the 31.8 mm C diamond); larger is
+fine. At the Letter sheets' 38.0 mm pitch a label holds **six bulls, 2 by 3**, with `grid-boundary-1` tags on every cell corner (12
+tags) and **one** code in a band at the top (two codes do not fit with six bulls):
+
+| Page | Code | Footprint at 0.375 mm module | Top and bottom margin |
+|---|---|---|---|
+| 4x6 | version 8, level H (84 bytes) | 21.4 mm | 4.0 mm |
+| 100 x 150 mm | version 7, level Q (86 bytes) | 19.9 mm | 3.6 mm |
+| A6 | version 7, level Q (86 bytes) | 19.9 mm | 2.6 mm |
+
+Measure the real payload for these definitions first; if a frame does not fit, raise a question rather than shrinking the bulls. The
+bull selector (rings, E, C) applies as on the Letter sheets. Each label prints "Label n of N" and pools with its set exactly as the
+300 yard tiles do (no alignment, a missing label named in the pooling checklist). Five labels give 30 bulls. Concepts, drawn to this
+geometry: canvas "Thermal label targets" (claude.ai/artifact/QCArrHHm8v2hdsdFcVCGL2), bottom row. Larger-bull label designs (one or
+two big bulls for groups and pistols) wait for Alan's choice: do not build them yet.
+
+Also a **printer check label** for 4x6, A6 and 100 x 150 (card outline, crosshair pairs across and along the feed, a ruler), and the
+printer check for thermal printers keyed to **printer plus paper**, measuring both directions, because feed scale depends on the
+paper.
+
+### 4. A framework for Bluetooth label printers
+
+One driver model so a new printer is a data file plus, at most, one small encoder. Alan: "add a framework for adding
+compatibility with other bluetooth label printers if at all possible."
+
+- **Printer profile (data):** how to recognise it (GATT service UUIDs after connecting, name prefixes as a hint only: the M220
+  advertises as "Q155" plus a serial number, not "M220"), transport, write and notify characteristics, dpi, head width in dots, page
+  widths it takes, chunk size and pacing, density and speed ranges and their commands, media type codes, the encoder it uses.
+- **Encoders (code, written here):** the Phomemo ESC family first (below), then TSPL `BITMAP` (most 4x6 shipping printers), ZPL `^GF`,
+  plain ESC/POS `GS v 0`. Write them in this repository. phomemo-tools (GPL-3.0) is compatible and may be used; MIT and Apache
+  projects (pyphomemo, labelife, TiMini-Print) are references only. Never bundle the Brother or Zebra SDKs (proprietary).
+- **Transports:** Bluetooth LE first (it is the only kind iOS allows without MFi certification), Classic RFCOMM where the platform
+  allows, USB serial, and the operating system's print dialog as the fallback. Everything that touches a device goes through
+  `IOutsideWorld`, so tests never open a real connection.
+- **Platforms, in order:** Android, Windows desktop, iOS, Linux. macOS builds the same code but nobody can test it.
+- **Never rely on the maker's app.** The Phomemo app resampled the test image (a 1 dot line came out 2 dots, edges jagged); direct
+  printing put every dot where it was drawn.
+
+### 5. What the M220 test proved (reference only, no more M220 work)
+
+Alan, 2026-10-03: he will not use the M220 for GroupLab at all (it stays his ammunition label printer). Do not build an M220 profile,
+do not ask him to test anything on it. What the one test proved, for the framework:
+
+- Direct printing over Bluetooth LE works with no maker's app, at true scale: a 560 x 640 dot image printed **60.00 mm across and
+  60.00 mm along the feed** (caliper), every dot where it was drawn (1 to 4 dot lines measured 0.10, 0.225, 0.35, 0.50 mm), all
+  eight tags and both QR codes read from the photograph. The Phomemo app, for comparison, resampled the image.
+- The Phomemo ESC family as the M220 speaks it (from phomemo-tools' M110/M120/M220 filter): service `0000ff00-...`, write `ff02`,
+  notify `ff01` and `ff03`; job `1B 4E 0D n` speed, `1B 4E 04 n` density, `1F 11 m` media (0A gaps, 0B continuous, 26 marks),
+  `1D 76 30 00 wL wH hL hH` raster (1 = black, MSB first), then `1F F0 05 00` and `1F F0 03 00`; 128 byte writes every 20 ms.
+  Notifications `01 07`, `02 f4 00`, then `01 01` per write, read (unconfirmed) as send credits and a 244 byte packet limit.
+- Printers can advertise a serial number instead of a model name (the M220 shows as "Q155" plus a serial), and the same Bluetooth
+  module UUIDs appear across brands (the ISSC transparent UART service, `18f0`, and the `e7810a71-...` service the Niimbot projects
+  use). Recognise printers by service after connecting.
+
+### 5a. Test hardware for this entry
+
+- A cheap 4x6 Bluetooth printer from the FlashLabel Y4xBT family (Alan is choosing; the Labeer Y43BT is the one the open
+  tspl-cups-driver project has confirmed speaks **TSPL**, 203 dpi). Make TSPL the first encoder. On arrival, ask Alan (through
+  `for-alan.md`, steps written out) for an nRF Connect scan so the profile knows whether it is Bluetooth LE.
+- The Phomemo M834 (section 7).
+
+### 6. Darkness and print quality
+
+Alan wants the blacks as dark as possible without losing detail.
+
+- Expose density and speed in the printer profile and the print panel (TSPL `DENSITY 0..15` and `SPEED`; the Phomemo ESC family
+  `1B 4E 04 n` and `1B 4E 0D n`, or `1F 11 02 n` and `1F 11 23 n` on related models in TiMini-Print). Find each command's real
+  range and direction on the test hardware in section 5a, never on the M220.
+- A **darkness test** print: the same small test pattern (solid black, 1 to 4 dot lines, 3 to 6 dot tags) at several settings, each
+  labelled with its setting. GroupLab reads a photo of it with its own tags and recommends the darkest setting that does not grow
+  fine features by more than half a dot. Baseline from the first prints: black and paper differ by a factor of about 8.5 in the
+  photograph, the same through the app and direct.
+- Warn on low battery when the printer reports it (Phomemo's help says prints fade below about 30%), and say on the print panel that
+  thermal targets darken in heat (a car dashboard in sun reaches about 70 C, where the coating starts to develop) and fade in sun over
+  days, so a target is photographed the day it is shot.
+
+### 7. Phomemo M834 (Alan is ordering one)
+
+300 dpi, Letter, A4 and 110 mm paper on rolls, folded stacks or loose sheets, Bluetooth to phones, USB to computers. Its protocol is
+not published (labelife's catalogue guesses Classic SPP with LZO compression, untested). When it arrives: an nRF Connect scan, then
+an Android Bluetooth HCI snoop log of the Phomemo app printing one page. Write the steps for Alan into `for-alan.md` ahead of time,
+written out in full, so they are ready the day it arrives.
+
+### 8. Everything public
+
+README, website Features page (its own picture of a label target and of a thermal print), the guides, release notes and claims
+backing, in the same change, as usual. The tour and Features pages say which printers are tested (none until the section 5a
+printers pass) and that the rest is "should work" until someone tests it.
+
 ## 2026-10-03, entry 357: a second sending level, "everything I open", and error reports that carry the log
 
 **Status: built 2026-10-03 behind two switches, both off (one worker, three commits); switching on waits for Alan (request 71).** With them off the build sends and says exactly what it did. Not done: the phone has no target sender at all (question 81), so "Send everything I open" sends nothing from a phone; the receivers ship with the next site publish, the intake, archive and error workers change only when Alan runs install.py. Found on the way: entry 356's "Send it to the project" broke the promise that an unread picture is never sent, and now waits behind the switch; "What GroupLab sends" called automatic error reports not yet switched on, and CRASH-REPORTING.md said nothing is sent silently, both corrected; typed-text removal goes by field name, so a library's exception quoting typed words would still pass.

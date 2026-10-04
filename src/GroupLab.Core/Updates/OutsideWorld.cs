@@ -69,6 +69,18 @@ public interface IOutsideWorld
     Task<PostAnswer?> PostSurveyAsync(string address, string report, CancellationToken token);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 358 section 4: the label printers within reach over <paramref name="transport"/>, looked for for
+    /// <paramref name="wait"/>. None here: each platform's own radio code answers it once a real printer has been recorded (requests 72 and
+    /// 73), and until then no platform finds one.
+    /// </summary>
+    Task<IReadOnlyList<GroupLab.Core.Printing.Labels.FoundPrinter>> FindPrintersAsync(GroupLab.Core.Printing.Labels.PrinterTransport transport, TimeSpan wait, CancellationToken token) =>
+        Task.FromResult<IReadOnlyList<GroupLab.Core.Printing.Labels.FoundPrinter>>([]);
+
+    /// <summary>A connection to a printer found, spoken to as <paramref name="profile"/> says; null where it cannot be made.</summary>
+    Task<GroupLab.Core.Printing.Labels.IPrinterLink?> ConnectPrinterAsync(GroupLab.Core.Printing.Labels.FoundPrinter printer, GroupLab.Core.Printing.Labels.PrinterProfile profile, CancellationToken token) =>
+        Task.FromResult<GroupLab.Core.Printing.Labels.IPrinterLink?>(null);
+
+    /// <summary>
     /// Downloads a file, reporting the share done as it goes. It returns the bytes written, so a caller can tell a short download from a
     /// whole one, and throws nothing on a refusal: it returns null.
     /// </summary>

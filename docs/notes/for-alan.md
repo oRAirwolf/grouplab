@@ -166,33 +166,47 @@ lines, which is exactly what could fool it, so one real wooden photo is worth mo
 
 **A good answer:** one or two photos, all four corners of the target in each. Nothing else needed.
 
-## 73. When the Phomemo M834 arrives: two recordings from your Android phone, about twenty minutes, that day or later (entry 358)
+## 73. When the Phomemo M834 arrives: two recordings from your Android phone, about twenty minutes, that day or later (entries 358 and 359)
 
-**Opened 2026-10-03.** **Why:** Phomemo publishes nothing about how the M834 talks, so GroupLab learns it from one page printed by
-Phomemo's own app while the phone records the Bluetooth traffic. Nothing is sent anywhere; you copy two files to this computer.
-**Steps:**
+**Opened 2026-10-03, rewritten 2026-10-04 (entry 359: Bluetooth only).** **Why:** GroupLab will print to the M834 over Bluetooth only,
+never by USB cable and never through Phomemo's driver. Phomemo publishes nothing about how it talks, so GroupLab learns it from one page
+printed by Phomemo's own app while the phone records the Bluetooth traffic. Until then the thermal print mode, the Letter targets in it
+and the printer check on thermal paper are built and tested against recordings only. Nothing is sent anywhere; you copy two files to this
+computer. **Steps:**
 1. **The scan.** Install **nRF Connect for Mobile** (Nordic Semiconductor) from Google Play. Turn the M834 on. Open nRF Connect, tab
    **Scanner**, press **Scan**. Find the printer in the list (its name may be a code or a serial number rather than "M834"; it is the
    entry whose signal grows strong when the phone is next to it). Press **Connect** on it. When the list of services appears, press
    the three dots at the top right, **Save** or **Share** the log, and save it as a file. If it never appears in nRF Connect, say so:
-   that tells us it uses classic Bluetooth instead.
+   that means it uses classic Bluetooth only, and then the phone apps (Android first) are the M834's way to print and an iPhone cannot
+   be, since an iPhone talks only Bluetooth LE to a printer without Apple's accessory programme.
 2. **The recording.** On the phone, Settings, About phone, tap **Build number** seven times to unlock Developer options (skip if done).
    Settings, Developer options, turn on **Enable Bluetooth HCI snoop log**. Turn Bluetooth off and on again. Open the **Phomemo app**,
    print **one** page with a little text on it, and nothing else. Back in Developer options, turn the snoop log **off**.
-3. **Getting the recording off the phone.** Connect the phone to this computer with the cable (USB debugging on, as for GroupLab Dev),
-   and in PowerShell run: `adb bugreport C:\Dev\grouplab-local\printers\m834-bugreport.zip`. It takes a minute or two. Copy the nRF
-   Connect file into the same folder.
+3. **Getting the recording off the phone**, whichever is easier. Without a cable: Settings, Developer options, **Take bug report**,
+   **Full report**; when the phone says it is ready, share it to yourself (Google Drive, email or Quick Share to this computer) and save
+   it as `C:\Dev\grouplab-local\printers\m834-bugreport.zip`. With the phone's cable instead (USB debugging on, as for GroupLab Dev),
+   in PowerShell: `adb bugreport C:\Dev\grouplab-local\printers\m834-bugreport.zip`. Either way, put the nRF Connect file in the same
+   folder.
 **A good answer:** "both saved in grouplab-local\printers", or what went differently.
 
-## 72. When the 4x6 Bluetooth label printer arrives: one scan from your phone, about five minutes, that day or later (entry 358)
+## 72. For Unholy's 4x6 label printer: steps to pass to him, once you have its model number (entries 358 and 359)
 
-**Opened 2026-10-03.** **Why:** GroupLab will print straight to it over Bluetooth, with no maker's app. To do that it must know how the
-printer appears to a phone: as a Bluetooth LE device (which an iPhone can use) or only as classic Bluetooth. **Steps:** install **nRF
-Connect for Mobile** (Nordic Semiconductor) from Google Play or the App Store; turn the printer on; in nRF Connect, **Scanner**, **Scan**;
-find the printer (it may show a code or serial number rather than its model; it is the one whose signal grows strongest next to the
-phone); press **Connect**; when its services are listed, take a screenshot of the list, scroll and take another until all are captured,
-and save them in `C:\Dev\grouplab-local\printers\`. If it never appears in nRF Connect, say so: that means classic Bluetooth only.
-**A good answer:** "screenshots saved", or "it does not appear".
+**Opened 2026-10-03, rewritten 2026-10-04 (entry 359: the 4x6 printer is Unholy's, not one you are buying).** Nothing to buy. **Waits
+until** you have the printer's model number from Unholy; then send him the steps below, and his three answers come back to this folder.
+**Why:** GroupLab will print straight to a 4x6 label printer over Bluetooth, with no maker's app, and to do that it must know how his
+printer appears to a phone.
+
+**The steps for Unholy, as written for someone who has never used nRF Connect:**
+1. On your phone, install **nRF Connect for Mobile** (by Nordic Semiconductor; free, on Google Play and the App Store).
+2. Turn the label printer on and keep the phone next to it.
+3. Open nRF Connect. On the **Scanner** tab, press **Scan**. A list of nearby devices appears. The printer may be listed by a code or a
+   serial number rather than its model name; it is the one whose signal number gets closest to zero when the phone touches the printer.
+4. Press **Connect** beside it. After a few seconds a list of "services" appears. Take a screenshot; scroll down and take another until
+   the whole list is captured. If the printer never appears in the Scanner list, that is an answer too: say so.
+5. Send the screenshots, the printer's model number, and the size of labels you use (4x6 inch, or 100 by 150 mm).
+
+**A good answer:** Unholy's screenshots, model number and label size, saved in `C:\Dev\grouplab-local\printers\`, or "it does not
+appear in the scan".
 
 ## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
 

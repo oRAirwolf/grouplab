@@ -1046,6 +1046,19 @@
       }
     },
     {
+      "key": "label-targets",
+      "group": "Sheets and printing",
+      "name": "Label targets for a thermal printer",
+      "sentence": "Six bulls of the Letter sheets' size on a 4x6, A6 or 100 by 150 mm label, in sets of five that pool into one group, with a printer check label, printed one dot at a time in black only with every code and marker on whole dots. No label printer has been tested yet, so until one has printed GroupLab's check page this is \"should work\".",
+      "shot": "targets",
+      "sheets": [["x6-4x6", "A six-bull label on 4x6, as it prints"], ["x6-4x6-thermal", "The same label as a 203 dpi thermal printer makes it, one dot to a pixel"]],
+      "platforms": ["Windows", "macOS", "Linux"],
+      "since": "next",
+      "note": "Six-bull label targets for thermal label printers",
+      "tour": "targets",
+      "guide": "1-print-a-sheet"
+    },
+    {
       "key": "dev-build",
       "group": "Updates and platforms",
       "name": "GroupLab Dev for testers",

@@ -459,7 +459,7 @@ public static class Projection
                 // Entry 358 section 3: the version and every centre are carried, so neither is assumed.
                 if (c.Count < 1 || c.Positions.Count != c.Count)
                 {
-                    Refuse("encode.explicitCodes", "/codes/positions", $"Explicit placement carries one centre for each code: {c.Count} codes, {c.Positions.Count} centres.");
+                    Refuse("encode.explicitCodes", "/codes/positions", $"Explicit placement carries one center for each code: {c.Count} codes, {c.Positions.Count} centers.");
                 }
 
                 if (c.Version is not (>= 1 and <= 40))
