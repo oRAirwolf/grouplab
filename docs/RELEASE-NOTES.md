@@ -465,7 +465,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - The automatic iPad check now photographs every screen with the iPad turned on its side as well as upright.
 - The automatic iPhone and iPad check now also photographs every screen on an iPad and on an iPhone turned on its side.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.136)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
