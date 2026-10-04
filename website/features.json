@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, a failure that stops the work",
+    "Opening a photo of a target that is not a GroupLab sheet is faster",
     "On the Targets screen, Save for a printer app sits on its own line under the print buttons", "On the phone, Next on the bar above the keyboard now moves to the next box", "A sheet made with GroupLab's target generator and printed without saving it now opens and reads",
     "When a sheet's codes name a sheet GroupLab cannot use, it now says so in plain words",
     "On a photograph of a crinkled, curled or torn sheet, GroupLab no longer marks the torn corners",

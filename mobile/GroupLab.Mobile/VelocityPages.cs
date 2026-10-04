@@ -94,7 +94,7 @@ internal static class VelocityPages
             }
             catch (FormatException e)
             {
-                said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                ProblemSheet.Stop(said, said, "That file could not be read", "That file could not be read as a chronograph file: " + e.Message);
                 return;
             }
 
@@ -133,7 +133,7 @@ internal static class VelocityPages
             }
             catch (Exception e) when (e is FormatException or IOException or UnauthorizedAccessException)
             {
-                said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                ProblemSheet.Stop(said, said, "That file could not be read", "That file could not be read as a chronograph file: " + e.Message);
                 return;
             }
 
@@ -146,7 +146,7 @@ internal static class VelocityPages
                 }
                 catch (FormatException e)
                 {
-                    said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                    ProblemSheet.Stop(said, said, "That file could not be read", "That file could not be read as a chronograph file: " + e.Message);
                     return;
                 }
 
@@ -162,7 +162,7 @@ internal static class VelocityPages
             }
             catch (Exception e) when (e is FormatException or NotSupportedException or IOException or ExcelDataReader.Exceptions.ExcelReaderException)
             {
-                said.Text = "That file could not be read as a chronograph file: " + e.Message;
+                ProblemSheet.Stop(said, said, "That file could not be read", "That file could not be read as a chronograph file: " + e.Message);
                 return;
             }
 

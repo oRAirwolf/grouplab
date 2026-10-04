@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
+using GroupLab.App.Diagnostics;
 using Avalonia.Media;
 
 namespace GroupLab.Mobile;
@@ -55,6 +57,56 @@ internal static class ProblemSheet
             }
         };
         return layer;
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 363 section 3.4, the phone half of entry 356 section 3: a failure that stops the work, on the page that
+    /// <paramref name="near"/> sits on, as the centred sheet with its choices, the first the most useful; every choice and the × put the page
+    /// back. Where <paramref name="near"/> is on no page yet, <paramref name="line"/> says it instead, as before.
+    /// </summary>
+    public static void Stop(Control near, TextBlock? line, string title, string why, params (string Words, Action Chosen)[] choices)
+    {
+        ArgumentNullException.ThrowIfNull(near);
+        if (near.FindLogicalAncestorOfType<UserControl>(includeSelf: true) is not { Content: Control behind } page)
+        {
+            if (line is not null)
+            {
+                line.Text = why;
+            }
+
+            return;
+        }
+
+        if (line is not null)
+        {
+            line.Text = "";
+        }
+
+        page.Content = null;
+        void Close()
+        {
+            if (page.Content is Panel layer)
+            {
+                layer.Children.Remove(behind);
+            }
+
+            page.Content = behind;
+        }
+
+        var all = choices.Length == 0 ? [("Close", () => { })] : choices;
+        var buttons = all.Select((c, i) => Choice(c.Words, () =>
+        {
+            Close();
+            c.Chosen();
+        }, primary: i == 0)).ToList();
+        var body = new StackPanel { Spacing = 11, Children = { Screens.Line(why) } };
+        foreach (var button in buttons)
+        {
+            body.Children.Add(button);
+        }
+
+        page.Content = Over(behind, title, body, buttons, Close);
+        DiagnosticLog.Info("problem.sheet", ("title", title));
     }
 
     /// <summary>A choice on a sheet: a big button with its name for a screen reader.</summary>

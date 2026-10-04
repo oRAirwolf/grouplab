@@ -177,7 +177,7 @@ public sealed class SessionsPage : UserControl
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
         {
-            said.Text = "That file could not be read as CSV: " + e.Message;
+            ProblemSheet.Stop(said, said, "That file could not be read", "That file could not be read as CSV: " + e.Message);
             return;
         }
 

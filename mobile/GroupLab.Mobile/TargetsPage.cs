@@ -256,7 +256,10 @@ public sealed class TargetsPage : UserControl
         void Print(GroupLab.Core.ScaleMarkers.MarkerKind kind)
         {
             var size = paper == GroupLab.Core.ScaleMarkers.MarkerPaper.A4 ? GroupLab.Core.Gltd.Model.PageSize.A4 : GroupLab.Core.Gltd.Model.PageSize.Letter;
-            said.Text = Phone.Platform.PrintPdf(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Pdf(kind, paper), GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Title(kind, paper), size) ?? "";
+            if (Phone.Platform.PrintPdf(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Pdf(kind, paper), GroupLab.Core.ScaleMarkers.ScaleMarkerPages.Title(kind, paper), size) is { } refused)
+            {
+                ProblemSheet.Stop(said, said, "The page could not be printed", refused);
+            }
             DiagnosticLog.Info("markers.print", ("kind", kind.ToString()));
         }
 
@@ -277,9 +280,12 @@ public sealed class TargetsPage : UserControl
             {
                 Phone.Settings.SaveBoard(board);
                 Fill();
+                said.Text = words;
             }
-
-            said.Text = words;
+            else
+            {
+                ProblemSheet.Stop(said, said, "The board could not be measured", words, ("Choose another photo", () => _ = Measure()));
+            }
         }
 
         Fill();
@@ -351,11 +357,18 @@ public sealed class TargetsPage : UserControl
         var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, OneSheet: oneSheet, BullColour: colour));
         if (rendered.Pdf is not { } pdf)
         {
-            result.Text = "This sheet cannot be printed as it is: " + string.Join(" ", rendered.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message));
+            ProblemSheet.Stop(result, result, "This sheet cannot be printed", "This sheet cannot be printed as it is: " + string.Join(" ", rendered.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)));
             return;
         }
 
-        result.Text = (print ? Phone.Platform.PrintPdf(pdf, sheet.Definition.Name, sheet.Definition.Page.Size) : Phone.Platform.SharePdf(pdf, sheet.Definition.Name)) ?? "";
+        if ((print ? Phone.Platform.PrintPdf(pdf, sheet.Definition.Name, sheet.Definition.Page.Size) : Phone.Platform.SharePdf(pdf, sheet.Definition.Name)) is { } refused)
+        {
+            ProblemSheet.Stop(result, result, print ? "The sheet could not be printed" : "The sheet could not be shared", refused);
+        }
+        else
+        {
+            result.Text = "";
+        }
     }
 
     /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>

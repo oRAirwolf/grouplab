@@ -165,7 +165,7 @@ internal sealed class SharePage : UserControl
         catch (IOException ex)
         {
             DiagnosticLog.Exception(LogLevel.Warn, "share.picture", ex);
-            said.Text = "The picture could not be made: " + ex.Message;
+            ProblemSheet.Stop(said, said, "The picture could not be made", "The picture could not be made: " + ex.Message);
         }
     }
 }

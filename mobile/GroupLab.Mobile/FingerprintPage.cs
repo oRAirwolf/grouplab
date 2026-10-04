@@ -92,8 +92,12 @@ internal sealed class FingerprintPage : UserControl
                 straightShown = null;
             }
 
-            said.Text = why ?? "";
+            said.Text = "";
             Show();
+            if (why is not null)
+            {
+                ProblemSheet.Stop(said, said, "That photo could not be used", why, ("Choose another photo", () => _ = Choose()));
+            }
         }), TaskScheduler.Default);
         return Work;
     }
@@ -236,7 +240,7 @@ internal sealed class FingerprintPage : UserControl
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
             DiagnosticLog.Exception(LogLevel.Warn, "fingerprint.save", e);
-            said.Text = "The file could not be written: " + e.Message;
+            ProblemSheet.Stop(said, said, "The reference file could not be saved", "The file could not be written: " + e.Message, ("Try again", SaveAndShare));
             return;
         }
 

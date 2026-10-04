@@ -61,7 +61,7 @@ internal sealed class OnePageReportPage : UserControl
         catch (IOException ex)
         {
             DiagnosticLog.Exception(LogLevel.Warn, "report.one-page", ex);
-            said.Text = "The report could not be made: " + ex.Message;
+            ProblemSheet.Stop(said, said, "The report could not be made", "The report could not be made: " + ex.Message);
             return null;
         }
     }
