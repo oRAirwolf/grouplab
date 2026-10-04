@@ -237,7 +237,7 @@
         "noPicture": "the phone's five steps are photographed at the next sitting with the phone"
       },
       "since": "next",
-      "note": "Add a store-bought target, on the Targets screen of the computer and the phone",
+      "note": ["Add a store-bought target, on the Targets screen of the computer and the phone", "Photos in Add a store-bought target now show the right way up", "Add a store-bought target now finds the corners", "While placing the corners you can zoom in", "Add a store-bought target no longer takes the edge of the counter"],
       "tour": "fingerprint",
       "guide": "1-print-a-sheet"
     },
@@ -1054,7 +1054,7 @@
       "sheets": [["x6-4x6", "A six-bull label on 4x6, as it prints"], ["x6-4x6-thermal", "The same label as a 203 dpi thermal printer makes it, one dot to a pixel"]],
       "platforms": ["Windows", "macOS", "Linux"],
       "since": "next",
-      "note": "Six-bull label targets for thermal label printers",
+      "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns"],
       "tour": "targets",
       "guide": "1-print-a-sheet"
     },
