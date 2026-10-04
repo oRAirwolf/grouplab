@@ -12,6 +12,34 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.167
+
+**2026-10-04**, commit `18d6bb7`. Nightly.
+
+**What you will notice**
+
+- GroupLab can now take a target's scale from markers laid beside it in the photo: corner brackets, scale bars or board stickers printed from Targets, or a bank card, which is blanked out of the picture at once and never kept or sent.
+- GroupLab now recognizes nine store-bought targets, with four added from Alan's photographs: the Birchwood Casey Shoot-N-C 12 in 5-bull sight-in, the Eze-Scorer 12 in sight-in grid, the Rigid crosshair, and the National Target Company ST-4.
+- Settings on the computer now offers Send everything I open, which sends every picture you open, read or not, and an automatic error report can now carry GroupLab's log with anything typed replaced by its length; GroupLab asks before either.
+- A light bank card lying on white paper is now found, by its magnetic stripe, so it can give a target its scale. (Request 76).
+- Add a store-bought target now says when it is not sure of the corners it found, as on a grained wooden floor, instead of presenting a wrong outline as found. (Request 74).
+- Add a store-bought target no longer takes a scale bar lying along the target's edge for part of the target. (Request 74, 76).
+- Add a store-bought target now finds the aiming marks of sight-in grids and bullseyes drawn as diamonds, rings and dots, such as the Allen EZ Aim's and the National Target ST-4's, so fewer have to be tapped in by hand.
+- On the phone, Next on the bar above the keyboard now moves to the next box; a tap on it used to close the keyboard instead. (Issue 19).
+- On the analysis, the switches for the group, the whole target, the outlines, the circles and the velocity band now sit in their own row under the plot, so they no longer hide the last lines of the plot's key. (Question 78).
+- On the phone, a failure that stops the work, such as a photo that cannot be used, a file that cannot be read or a report that cannot be made, now appears in the middle of the screen with what to do next, instead of a line on the page.
+- Opening a photo of a target that is not a GroupLab sheet is faster: the check for a GroupLab sheet's marks no longer searches the picture a second time, which took up to eight seconds.
+- Add a store-bought target now warns before saving when its scale is worse than about 2 percent, and asks for the two points to be far apart.
+
+**Under the hood**
+
+- The website now shows Targets with Scale markers open, on the Features page and the tour.
+- The phone can now send targets to the project as the computer does, over Wi-Fi unless you allow mobile data; it stays switched off until the app stores' privacy answers are updated, so nothing changes in this build.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.167)
+
+---
+
 ## 0.2.0-nightly.166
 
 **2026-10-04**, commit `080a6d8`. Nightly.
