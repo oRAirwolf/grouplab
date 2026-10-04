@@ -180,6 +180,8 @@ public class Entry362Tests
 
     private const string Blanks = @"C:\Dev\grouplab-local\commercial-targets";
 
+    private const string Wood = @"C:\Dev\grouplab-local\commercial-targets\wood-2026-10-04";
+
     /// <summary>
     /// The corners found on each, upright, in full size pixels, as checked by eye on 2026-10-04 against crops of each corner: within about
     /// ten pixels on the sight-in, splash bull, Eze-Scorer bull, NTC ST-4 and Shoot-N-C 12 in sight-in, about twenty five on one corner of
@@ -196,6 +198,14 @@ public class Entry362Tests
         { Path.Combine(Photos, "eze-scorer-sight-in-grid.jpg"), true, [208, 516, 2844, 459, 2845, 3137, 204, 3137] },
         { Path.Combine(Photos, "ntc-st4-100yd-precision-rifle.jpg"), true, [170, 221, 2831, 213, 2864, 3246, 154, 3260] },
         { Path.Combine(Photos, "birchwood-shoot-n-c-12in-sight-in.jpg"), true, [849, 178, 3530, 159, 3522, 2815, 876, 2844] },
+        // Request 74, Alan's photos on wood (2026-10-04), checked by eye: the light kitchen table all four, the dark grained floor only the
+        // tilted Shoot-N-C. On the floor the Rigid crosshair's outlines run past the paper and the square Shoot-N-C's takes most of the
+        // photo, each still called found; those three are not held here, and wait on the corner finder.
+        { Path.Combine(Wood, "table-eze-scorer-grid-square.jpg"), true, [71, 525, 2899, 536, 2909, 3337, 84, 3373] },
+        { Path.Combine(Wood, "table-eze-scorer-grid-tilted.jpg"), true, [351, 753, 2699, 729, 2922, 3266, 110, 3244] },
+        { Path.Combine(Wood, "table-rigid-crosshair-square.jpg"), true, [99, 550, 2853, 523, 2893, 3294, 103, 3315] },
+        { Path.Combine(Wood, "table-rigid-crosshair-tilted.jpg"), true, [361, 793, 2705, 795, 2901, 3320, 124, 3284] },
+        { Path.Combine(Wood, "floor-shoot-n-c-tilted.jpg"), true, [317, 720, 2601, 664, 2823, 3091, 145, 3110] },
         { Path.Combine(Blanks, "bc-34105-shoot-n-c-sight-in", "blank.png"), true, [3, 3, 4956, 3, 4956, 4875, 3, 4890] },
         { Path.Combine(Blanks, "bc-34550-shoot-n-c-6in-bull", "blank.png"), true, [3, 3, 3721, 3, 3727, 3708, 3, 3719] },
         { Path.Combine(Blanks, "bc-34805-shoot-n-c-8in-bull", "blank.png"), true, [3, 3, 4956, 3, 4956, 4947, 3, 4975] },

@@ -163,10 +163,10 @@ public sealed class FingerprintSession : IDisposable
     }
 
     /// <summary>The corners looked for on the picture as it now stands; where they are not found, the best guess.</summary>
-    private void FindCorners()
+    private void FindCorners(Mat? picture = null)
     {
         // A flatbed scan states its resolution and names no camera; a photograph with its details stripped, as some apps send it, does neither.
-        var found = StoreTargetOutline.Find(colour!, scan: metadata is { IsCamera: false, DpiX: >= 150 });
+        var found = StoreTargetOutline.Find(picture ?? colour!, scan: metadata is { IsCamera: false, DpiX: >= 150 });
         Corners = found.Corners;
         CornersFound = found.Found;
         CornersSaid = found.Found ? null : found.Said;
@@ -201,6 +201,13 @@ public sealed class FingerprintSession : IDisposable
             CornersFound = true;
             CornersSaid = null;
             cornerPixels = 1;
+        }
+        else if (finding is not null && finding.Used.Any(u => u.Kind is MarkerKind.InchBar or MarkerKind.MetricBar))
+        {
+            // A bar along the target's edge is not part of it: the corners are looked for again with the bars painted out.
+            using var painted = colour.Clone();
+            ScaleMarkerFinder.PaintOverBars(painted, finding);
+            FindCorners(painted);
         }
 
         // Printed markers or a board are chosen by themselves; a card only by the person, since a box printed on a target can look like one.

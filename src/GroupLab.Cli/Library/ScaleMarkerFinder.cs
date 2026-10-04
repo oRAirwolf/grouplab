@@ -163,6 +163,36 @@ public static class ScaleMarkerFinder
         }
     });
 
+    /// <summary>
+    /// The scale bars found, painted over with the surface beside them, on a copy for the corner finder: a bar laid along the target's edge,
+    /// touching it, was taken for part of the target and made it an inch taller (Alan's photos on wood, 2026-10-04). The colour is the surface
+    /// a little beyond the bar on the side away from the middle of the photo, where the target is.
+    /// </summary>
+    public static void PaintOverBars(Mat colour, MarkerFinding finding)
+    {
+        ArgumentNullException.ThrowIfNull(colour);
+        ArgumentNullException.ThrowIfNull(finding);
+        var middle = new PointD(colour.Width / 2.0, colour.Height / 2.0);
+        for (int i = 0; i < finding.Fit.Bodies.Count; i++)
+        {
+            var body = finding.Fit.Bodies[i];
+            if (body.Kind is not (MarkerKind.InchBar or MarkerKind.MetricBar))
+            {
+                continue;
+            }
+
+            // The strip from the outer edge of one code to the outer edge of the other and 8 mm on, whichever code was read first.
+            double x0 = body.Points.Min(p => p.Model.X) - 8, x1 = body.Points.Max(p => p.Model.X) + 8;
+            PointD[] strip = [new(x0, -14), new(x1, -14), new(x1, 14), new(x0, 14)];
+            var outline = strip.Select(p => finding.Fit.InImage(i, p)).Select(p => new Point((int)Math.Round(p.X), (int)Math.Round(p.Y))).ToArray();
+            var sides = new[] { 24.0, -24.0 }.Select(y => finding.Fit.InImage(i, new PointD((x0 + x1) / 2, y))).ToArray();
+            var away = sides.OrderByDescending(p => Math.Pow(p.X - middle.X, 2) + Math.Pow(p.Y - middle.Y, 2)).First();
+            int ax = Math.Clamp((int)away.X - 8, 0, colour.Width - 17), ay = Math.Clamp((int)away.Y - 8, 0, colour.Height - 17);
+            using var patch = new Mat(colour, new Rect(ax, ay, 16, 16));
+            Cv2.FillPoly(colour, [outline], Cv2.Mean(patch));
+        }
+    }
+
     /// <summary>Every marker code in the photo, each once, read at the finest size that found it.</summary>
     public static IReadOnlyList<DetectedMarker> Codes(GrayImage grey)
     {

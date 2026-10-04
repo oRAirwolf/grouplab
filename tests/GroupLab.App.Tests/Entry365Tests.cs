@@ -67,6 +67,38 @@ public class Entry365Tests
         Assert.Equal(1 / s / 25.4 * 25.4, finding.Fit.MillimetresPerPixel(new PointD(cx, cy)), 2);
     }
 
+    /// <summary>
+    /// Request 76's first photos (Alan, 2026-10-04, on the kitchen table, square on, no printer check): the size each marker gives the target
+    /// through Add a store-bought target. The bars agree with the Rigid crosshair's reference file (11.9 in) once they are painted out of
+    /// the corner search; the brackets give the rectangle they enclose, larger by any gap between the paper and the pieces (on the
+    /// Eze-Scorer grid Alan left one on purpose). The card photos are not here: a light card lying on white paper is not found yet.
+    /// </summary>
+    [Theory]
+    [InlineData("table-rigid-crosshair-bar.jpg", 11.95, 11.90)]
+    [InlineData("table-rigid-crosshair-two-bars-L.jpg", 11.91, 11.91)]
+    [InlineData("table-rigid-crosshair-brackets.jpg", 12.05, 12.01)]
+    [InlineData("table-eze-scorer-grid-bar.jpg", 11.99, 11.99)]
+    [InlineData("table-eze-scorer-grid-two-bars-L.jpg", 11.88, 12.02)]
+    [InlineData("table-eze-scorer-grid-brackets.jpg", 12.21, 12.21)]
+    public void OnAlansPhotosTheMarkersGiveTheTargetsSize(string file, double width, double height)
+    {
+        string path = Path.Combine(@"C:\Dev\grouplab-local\commercial-targets\wood-2026-10-04\markers", file);
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        using var session = new FingerprintSession(() => []);
+        Assert.Null(session.Load(path));
+        Assert.NotNull(session.Markers);
+        Assert.Equal(GroupLab.Core.StoreTargets.ScaleSource.Markers, session.Source);
+        Assert.Null(session.Next());
+        Assert.Null(session.Next());
+        Assert.Null(session.Next());
+        var target = session.Target!;
+        Assert.True(Math.Abs(target.WidthInches - width) < 0.03 && Math.Abs(target.HeightInches - height) < 0.03, $"{target.WidthInches:0.000} by {target.HeightInches:0.000} in");
+    }
+
     [Fact]
     public void APlainPrintedBoxIsNotTakenForACard()
     {
