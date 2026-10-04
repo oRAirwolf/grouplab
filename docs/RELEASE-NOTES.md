@@ -441,7 +441,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - A picture of a sheet that shares its layout with others no longer fails to read on the phone when one of your own saved sheets cannot be drawn. (Error report 9).
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.139)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
@@ -453,7 +453,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - The developer copy can now play a recorded camera clip or a saved picture through the capture screen in place of the camera, and record the camera's last few seconds on the device, so the guidance and the automatic shutter can be tested again on every build; the published app is unchanged.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.138)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
