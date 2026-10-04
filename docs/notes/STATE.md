@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:30 UTC, after entry 369 (the Microsoft Store follows the nightlies); the inbox is empty.
+**Last rewritten:** 2026-10-04 12:30 UTC, after entry 371 (corners tuned on 14 simulated surfaces); stopped at 75 percent for the night; the inbox is empty.
 
 ---
 
@@ -26,8 +26,10 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
   72, 73 (the M834's recordings), 74, 75, 76.
 
-- **Entry 369 done**: store-follow.yml sends every published nightly to the Microsoft Store (one in certification at a time; a
-  failure stops it); the Store's search did not find GroupLab on 2026-10-04, and a ticket is drafted for Alan after eight days.
+- **Entry 369 done**: every published nightly goes to the Microsoft Store (store-follow.yml); 166 is in certification.
+
+- **Entry 371 done but section 3's wider ideas**: corners are called found only where two ways agree (`grouplab surface-trial`);
+  brackets must touch, bars may not. Next: the printed border, right angles, the live outline on the camera.
 
 ## The next three
 

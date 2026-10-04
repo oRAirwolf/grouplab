@@ -5176,6 +5176,10 @@
   "On Windows, the Microsoft Store carries GroupLab too and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 369: Alan, 2026-10-04, every nightly to the Microsoft Store; .github/workflows/store-follow.yml submits each published nightly, the Store's certification taking about a day"
+  },
+  "Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right.": {
+   "kind": "measured",
+   "where": "grouplab surface-trial --markers --scenes 4 (seed 371), 2026-10-04: brackets set 0, 2, 5, 10 and 20 mm off a target on four surfaces; 2 mm gave the size 1.9 to 2.6 percent large, touching 0.01 to 0.06 percent; docs/PHASE1-RESULTS.md, entry 371"
   }
  },
  "rules": [

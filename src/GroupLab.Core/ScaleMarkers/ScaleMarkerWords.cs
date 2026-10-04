@@ -16,11 +16,12 @@ public static class ScaleMarkerWords
     /// <summary>The four kinds as the concepts name them, and what each gives.</summary>
     public const string Brackets = "Corner brackets";
 
-    public const string BracketsGive = "Four L shaped pieces, cut from one page, tucked against the target's four corners. Gives the scale, the camera's angle and the target's corners.";
+    /// <summary>Entry 371 section 4: touching, measured; a gap of g mm makes the target read about 2g/width large, the scale unchanged.</summary>
+    public const string BracketsGive = "Four L shaped pieces, cut from one page, tucked against the target's four corners, touching them: a gap of 2 mm makes the target read about 2 percent large. Gives the scale, the camera's angle and the target's corners.";
 
     public const string Bars = "Scale bars";
 
-    public const string BarsGive = "Two strips with a code at each end, 10 inches apart (250 mm on A4), laid flat along an edge. One gives the scale; two in an L give the angle too; two end to end give 20 inches for a poster.";
+    public const string BarsGive = "Two strips with a code at each end, 10 inches apart (250 mm on A4), laid flat along an edge. One gives the scale; two in an L give the angle too; two end to end give 20 inches for a poster. Touching the target or a little apart, the scale is the same.";
 
     public const string Stickers = "Board stickers";
 

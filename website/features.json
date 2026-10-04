@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Add a store-bought target now calls the corners found only when two ways",
     "A light bank card lying on white paper is now found",
     "Add a store-bought target no longer takes a scale bar",
     "On the analysis, the switches for the group",

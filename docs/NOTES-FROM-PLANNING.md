@@ -25,6 +25,54 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-04, entry 371: corner and marker finding, a real tuning study, with simulated surfaces
+
+**Status: done 2026-10-04 at 74 to 75 percent of the week, except parts of section 3.** Sections 1, 2, 4 and 5 done: the surface trial (14 procedural surfaces; curl and a lifted corner not simulated), found only where a second way agrees (simulated wrong "found" 24 to 2.6 percent; Alan's real photos 3 of 14 to 0 of 6), brackets touching and bars either, in the app's words and the guide. Section 3 not done: the printed border, right angles, the live outline and tap hint, the surface suggestion, any learned model. Results: docs/PHASE1-RESULTS.md, entry 371.
+
+Alan, 2026-10-04 12:40 UTC, after the wood photo results: "I am surprised at how quickly that work was finished. Was there not more to
+do? There seems to be a lot of tuning that could be done from those photos. Also, determining if having the scale markers next to the
+targets or slightly away from them also seems helpful. Can code simulate the targets being on other surfaces like a black table? On a
+target board? Think outside the box here."
+
+**Budget:** this runs overnight with a hard stop of its own at **78% of the week** (go by the higher of the terminal and the desktop
+app's readings), before entry 360's 85%. Plan blocks to end under 78%; commit, push and stop cleanly there. Main model; one worker
+only if a part is truly separate (for example the simulator while the main session tunes).
+
+### 1. Honesty first (do this before any tuning)
+On the dark floor three of four results were wrong and still called "found". Give the corner finder a calibrated confidence: measure,
+on everything below, how often "found" is wrong, and set the threshold so a wrong result is almost never called found. When unsure, the
+app says so and starts the corners at its best guess. Report the false "found" rate before and after.
+
+### 2. A simulator, so tuning is not limited to Alan's 30 photos
+Build a test generator (local, never committed beyond the code and small synthetic fixtures) that composites real blank targets (Alan's
+600 dpi scans and his phone photos, each with its known corners) onto many surfaces, with a known ground truth for corners and scale:
+- **Surfaces:** black and dark grey tables, dark and light wood with strong grain, white and cream counters, brown cardboard target
+  boards, plywood and OSB, foam board, a target backer full of old holes, staples and tape, a target stapled on top of older shot
+  targets, grass and gravel at a range, carpet. Use real texture photos where licence allows, procedural otherwise; say which.
+- **Conditions:** perspective tilt to about 30 degrees, rotation, sheet curl and a lifted corner, a hand or phone shadow across an edge,
+  glare on glossy targets (the Shoot-N-C and Allen splash bull are glossy), warm and cool light, blur, phone noise and JPEG, the target
+  partly out of frame, tape over a corner.
+- **Markers in the same scenes:** brackets and bars touching the target and set off by a small gap (2 to 20 mm), on both kinds of
+  surface; and the card on light and dark targets.
+Hold Alan's real photos out as the final check: tune on simulated scenes, then report on the real ones separately, so the simulator
+cannot fool the result.
+
+### 3. Tune, and think wider than one detector
+Ideas to try and keep only what measures better: combine several cues (colour difference from the border, straight edges, the
+printed artwork's outline, texture difference, since a printed target is smooth where wood grain is busy); find the target's printed
+border when the paper edge is invisible; score candidate quadrilaterals by right angles after perspective and by the printed content
+inside them; on the phone, show the found outline live on the camera preview so the person can move until it is right, and allow one
+tap on the target as a hint; suggest a darker or lighter surface when contrast is the problem. A small learned model is allowed only if
+it runs on the phone, is measured to beat the classical methods, and is trained only on material we may use.
+
+### 4. Touching or gap: the answer
+From sections 2 and 3, say plainly whether brackets and bars are better touching the target or set off by a gap, by how much, and on
+which surfaces, and make the app's and the printed pages' instructions say that.
+
+### 5. Report
+In for-alan.md, plainly: the before and after (corners right, false "found", scale error) on simulated scenes by surface, and on Alan's
+real photos; the touching or gap answer; a few pictures. Then stop.
+
 ## 2026-10-04, entry 369: the Microsoft Store gets every nightly, starting now
 
 **Status: done 2026-10-04, the first submission dispatched as the last step.** store-follow.yml sends every nightly that published whole: built from its tag with the certification kit, the search terms (GroupLab first) and its notes as What's new; one in certification is never cancelled and the newest waits; a failed certification stops it and tells Alan; scripts/store-follow.py keeps docs/notes/store-follow.json. The store status workflow checks the Store's own search API for GroupLab every run, records a change, and drafts the support ticket after eight days not found (not found on 2026-10-04). LISTING.md's terms, and the README, the guides and the download page no longer call the Store copy older or steadier. Request 66 closed.

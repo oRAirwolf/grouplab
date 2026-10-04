@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1581 |
-| measured | 2008 |
+| measured | 2009 |
 | decided | 1284 |
 | unbacked | 0 |
-| **total** | **4873** |
+| **total** | **4874** |
 
-**1170** of them were read one sentence at a time and their backing written against the sentence. The other **3703** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1171** of them were read one sentence at a time and their backing written against the sentence. The other **3703** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3485,6 +3485,7 @@ one that matters.
 - *code* (src/GroupLab.Cli/Library/ScaleMarkerFinder.cs, ScaleMarkerFinder.Find (blanks every copy) and ForMarking; src/GroupLab.App/MainWindow.MarkerScale.cs, HasCard (a picture with a card is never sent); tests/GroupLab.App.Tests/Entry365Tests.cs): A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card.
 - *measured* (grouplab marker-trial --photos 20 (seed 365), run 2026-10-04: 20 computer-made photos each of a 12 by 12 in and a 23 by 35 in target, tilted up to 30 degrees; docs/PHASE1-RESULTS.md, entry 365): On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15.
 - *code* (src/GroupLab.Core/ScaleMarkers/ScaleMarkerReading.cs, ScaleMarkerReading.Read (the printer's Across and Down scale the printed pieces) and UncheckedPrint = 0.015): Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent.
+- *measured* (grouplab surface-trial --markers --scenes 4 (seed 371), 2026-10-04: brackets set 0, 2, 5, 10 and 20 mm off a target on four surfaces; 2 mm gave the size 1.9 to 2.6 percent large, touching 0.01 to 0.06 percent; docs/PHASE1-RESULTS.md, entry 371): Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right.
 - *measured* (tests/GroupLab.App.Tests/Entry362Tests.cs OnAlansPhotographsAndScansTheCornersAreWhereTheyWereChecked: six of Alan's seven counter photographs of 2026-10-03 and 04 found, the seventh guessed within about twenty pixels, checked by eye on 2026-10-04 (entry 362, docs/PHASE1-RESULTS.md); src/GroupLab.Cli/Imaging/StoreTargetOutline.cs): It finds the corners from the paper's edges and color, so white paper on a light counter works; where it cannot, it says why and starts four amber handles at its best guess for you to drag.
 - *measured* (grouplab poster-trial, entry 344 (docs/PHASE1-RESULTS.md, Entry 344): 12 computer-made photos of each of a 12 by 18 in and a 23 by 35 in poster, tilted 1 to 29 degrees, scale error median and largest: printed size 0.01 and 0.32 percent, 0.28 and 0.63; GroupLab sheet read in 8 of 12 at 12 by 18 in, 0.28 and 0.55, never at 23 by 35 in; two points 0.16 and 0.46, 0.40 and 0.80. The words in src/GroupLab.Core/StoreTargets/FingerprintSteps.cs FingerprintWords.Measured; entry 348 section 2 forbids calling any source the most accurate): Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size.
 - *code* (src/GroupLab.Core/Detection/AnyTargetHoleFinder.cs, src/GroupLab.Core/Marking/FindHoles.cs, MarkingSession.ProposeHoles and ReviewQueue (ReviewKind.Proposed) (entry 318 section 2)): Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason.

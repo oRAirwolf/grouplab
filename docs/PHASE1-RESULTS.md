@@ -383,6 +383,72 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 371: corner and marker finding on simulated surfaces
+
+- **The simulator.** `grouplab surface-trial` lays Alan's four 600 dpi Birchwood Casey scans and six of his phone photos, flattened by
+  their checked corners, on 14 procedural surfaces (no texture photograph, so no licence question) under the poster trial's camera:
+  tilt to 30 degrees, turn, a shadow across an edge (30 percent), glare on the glossy targets, tape over a corner (15 percent), a
+  corner out of the frame (8 percent), warm or cool light, blur, noise and JPEG. Not simulated: curl and a lifted corner.
+- **Section 1, honesty.** 112 scenes, seed 371 (corners right within 1.2 percent of the width on a scan, 3 percent on a flattened photo,
+  whose own corners were checked to about 1 percent):
+
+```
+surface             scenes  right  found  found and wrong  not sure but right
+black table              8      7      6                0                   1
+dark grey table          8      8      5                0                   3
+dark wood                8      4      4                2                   2
+light wood               8      5      5                1                   1
+white counter            8      6      6                0                   0
+cream counter            8      5      3                0                   2
+cardboard                8      6      6                1                   1
+OSB                      8      1      2                1                   0
+foam board               8      3      4                2                   1
+backer with holes        8      5      6                1                   0
+over old targets         8      5      1                0                   4
+grass                    8      6      3                0                   3
+gravel                   8      4      3                0                   1
+carpet                   8      5      4                0                   1
+all                    112     70     58                8                  20
+```
+
+  Before (weakest side 0.7 or more): 86 called found, 21 wrong (24 percent). The weakest side alone stays about one in seven wrong at
+  any threshold (0.98: 48 found, 5 wrong). Now, the weakest side 0.8 or more and a second way of looking (colour, edges, the light
+  region, the printed extent) on the same corners: 38 found, 1 wrong (2.6 percent); 33 right outlines start as not sure. **Alan's 15
+  real photos, held out:** before 14 found, 3 wrong (the grained floor); now 6 found, none wrong; 5 right ones start as not sure.
+- **Section 4, touching or a gap** (`--markers`, four scenes each, brackets and two bars together):
+
+```
+surface          gap mm  brackets: corner off mm, size error percent | bars: corners right, scale error percent
+dark wood             0    0.09 mm,  0.02 percent (3/4) | 0/4 right, 0.022 percent
+dark wood             2    2.87 mm,  1.97 percent (4/4) | 0/4 right, 0.171 percent
+dark wood             5    7.11 mm,  4.85 percent (4/4) | 0/4 right, 0.100 percent
+dark wood            10   14.19 mm, 12.72 percent (4/4) | 0/4 right, 0.028 percent
+dark wood            20   28.35 mm, 19.35 percent (4/4) | 0/4 right, 0.221 percent
+white counter         0    0.18 mm,  0.06 percent (2/4) | 0/4 right, 0.083 percent
+white counter         2    2.88 mm,  2.58 percent (4/4) | 0/4 right, 0.041 percent
+white counter         5    7.14 mm,  4.84 percent (4/4) | 0/4 right, 0.043 percent
+white counter        10   14.20 mm,  9.69 percent (4/4) | 0/4 right, 0.059 percent
+white counter        20   28.33 mm, 19.33 percent (4/4) | 0/4 right, 0.031 percent
+cardboard             0    0.09 mm,  0.04 percent (2/4) | 0/4 right, 0.045 percent
+cardboard             2    2.94 mm,  1.96 percent (4/4) | 0/4 right, 0.055 percent
+cardboard             5    7.11 mm,  4.86 percent (4/4) | 0/4 right, 0.121 percent
+cardboard            10   14.20 mm, 12.72 percent (4/4) | 0/4 right, 0.216 percent
+cardboard            20   28.34 mm, 19.35 percent (4/4) | 1/4 right, 0.010 percent
+black table           0    0.09 mm,  0.01 percent (4/4) | 0/4 right, 0.022 percent
+black table           2    2.86 mm,  1.93 percent (4/4) | 0/4 right, 0.045 percent
+black table           5    7.11 mm,  4.79 percent (4/4) | 0/4 right, 0.019 percent
+black table          10   14.24 mm,  9.70 percent (4/4) | 0/4 right, 0.276 percent
+black table          20   28.33 mm, 19.38 percent (4/4) | 0/4 right, 0.079 percent
+```
+
+  Brackets must touch: touching, the corners are within 0.1 mm and the size within 0.06 percent; each millimetre of gap moves each
+  corner about 1.4 mm and makes a 12 in target read about 1 percent larger, 2 mm about 2 percent, the scale itself unchanged. Bars may
+  touch or lie apart: the scale is 0.01 to 0.28 percent at every gap. (The bars' corner column is confounded: the brackets were in the
+  same scenes; on Alan's real photos the bars once joined the outline, and are now painted out.)
+- **Section 3, not done in this run's budget:** the printed border as its own cue, right angles after perspective as a score, the
+  outline live on the camera preview with a tap as a hint, and a surface suggestion where contrast is the problem. Pictures:
+  C:\Dev\grouplab-local\surface-trial-2026-10-04\ (one scene a surface, the truth in magenta, the outline green where found and orange where not sure).
+
 ## Alan's photos on wood (requests 74 and 76, 2026-10-04)
 
 - **Corners.** The light kitchen table: 4 of 4 right. The dark grained floor: only the tilted Shoot-N-C; the others ran onto the boards'

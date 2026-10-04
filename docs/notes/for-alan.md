@@ -17,6 +17,8 @@ from nightly 166. The phones keep both off until you write **"forms updated"**. 
   not shared. "forms updated" then switches on all three on the phones: the log with error reports, Send everything I open, and sending
   targets, over Wi-Fi only unless you allow mobile data in Settings.
 
+**CORNERS AND MARKERS, TUNED ON 14 SURFACES** (entry 371, not a request). GroupLab now drew your blank targets onto 14 made-up surfaces (black and grey tables, dark and light wood with seams, white and cream counters, cardboard, OSB, foam board, a shot-up backer, old targets, grass, gravel, carpet) in 112 photos. **Being honest about corners:** it used to call 86 outlines found, 21 of them wrong; now it says found only when two different ways of looking agree, and 38 found had 1 wrong. On your 15 real photos: before, 3 of 14 "found" were wrong (your floor); now 0 of 6, and 5 right ones start as "not sure" for you to check. **Touching or a gap:** brackets must touch the corners (each 2 mm of gap makes a 12 in target read about 2 percent large); bars can touch or lie apart, the scale is the same. The app's words say so. Still to try: the target's printed border, right angles, a live outline on the camera. Pictures: `C:\Dev\grouplab-local\surface-trial-2026-10-04\`.
+
 **SCALE MARKERS, ALL FOUR** (entry 365, not a request; in nightly 167 or the first after it whose notes say so). On Targets, under
 Scale markers: **corner brackets** (A), four L pieces cut from one page, give the scale, the camera's angle and the target's corners;
 **scale bars** (B), codes 10.000 in apart (250 mm on A4), one for the scale, two in an L for the angle too; **board stickers** (C),
