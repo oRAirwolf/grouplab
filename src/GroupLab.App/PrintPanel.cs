@@ -1065,13 +1065,14 @@ public sealed class PrintPanel : UserControl
         var app = Button("Save for a printer app…", async () => await SaveForAppDialog());
         ToolTip.SetTip(app, AppWords);
         darknessRow = new StackPanel { IsVisible = Head is not null, Children = { Button("Save the darkness test page…", async () => await SaveForAppDialog(darkness: true)) } };
+        // On a line of its own: beside the three print buttons it does not fit the panel at the narrowest window.
         if (!OperatingSystem.IsWindows())
         {
-            return Row(save, open, app);
+            return new StackPanel { Spacing = Tokens.Space8, Children = { Row(save, open), Row(app) } };
         }
 
         open.Classes.Add(AppStyles.Primary);
-        return Row(open, save, Button("Print…", PrintHere), app);
+        return new StackPanel { Spacing = Tokens.Space8, Children = { Row(open, save, Button("Print…", PrintHere)), Row(app) } };
     }
 
     /// <summary>What Save for a printer app makes, said where it is offered and after it has saved.</summary>
