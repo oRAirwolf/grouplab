@@ -79,7 +79,7 @@ public class PhoneTouchScenarioTests
     public async Task CloseFailsWhereAPickerItCannotSeeIsStillOpen()
     {
         var failed = await TapThrough(noCamera: true, blind: true);
-        Assert.Contains(failed, f => f.StartsWith("11 close: the photo picker was opened", StringComparison.Ordinal) && f.Contains("does not see it", StringComparison.Ordinal));
+        Assert.Contains(failed, f => f.StartsWith("23 close: the photo picker was opened", StringComparison.Ordinal) && f.Contains("does not see it", StringComparison.Ordinal));
     }
 
     private static async Task<List<string>> TapThrough(bool noCamera, bool blind = false)
@@ -155,7 +155,7 @@ public class PhoneTouchScenarioTests
             if (!blind)
             {
                 Assert.True(failed.Count == 0, string.Join(Environment.NewLine, failed));
-                Assert.Equal(10, taps.Count);
+                Assert.Equal(15, taps.Count);
             }
 
             return failed;
@@ -243,17 +243,24 @@ public class PhoneTouchScenarioTests
         }
     }
 
-    /// <summary>The scenario names only controls the Capture screen has, so a renamed id fails here and not on the simulator.</summary>
+    /// <summary>
+    /// The scenario names only controls the screens it taps have, so a renamed id fails here and not on the simulator: the Capture screen's,
+    /// and since entry 363 (issue 19) the Targets screen's distance box and the keyboard bar's Next.
+    /// </summary>
     [Fact]
-    public void TheScenarioTapsOnlyIdsTheCaptureScreenHas()
+    public void TheScenarioTapsOnlyIdsTheScreensHave()
     {
         var scenario = JsonNode.Parse(File.ReadAllText(Repo.PathTo("scripts", "scenarios", "phone-touch.json")))!.AsObject();
         var taps = scenario["steps"]!.AsArray().Where(s => s!["do"]!.GetValue<string>() == "hold").Select(s => s!["tap"]!.GetValue<string>()).ToHashSet();
         // Entry 353's four: Take a picture, Choose a photo, Done on the caliber and distance row, Continue on the caliber's question; and
-        // the distance field, whose tap brings the keyboard up for the buttons pressed while it is.
-        string[] wanted = ["capture-ask-continue", "capture-change", "capture-choose-photo", "capture-distance", "capture-take-picture"];
-        Assert.Equal(wanted, taps.Order(StringComparer.Ordinal).ToArray());
-        string capture = File.ReadAllText(Repo.PathTo("mobile", "GroupLab.Mobile", "CapturePage.cs"));
-        Assert.All(taps, t => Assert.Contains($".Id(\"{t}\")", capture, StringComparison.Ordinal));
+        // the distance field, whose tap brings the keyboard up for the buttons pressed while it is. Issue 19's two.
+        var source = new Dictionary<string, string>
+        {
+            ["capture-ask-continue"] = "CapturePage.cs", ["capture-change"] = "CapturePage.cs", ["capture-choose-photo"] = "CapturePage.cs",
+            ["capture-distance"] = "CapturePage.cs", ["capture-take-picture"] = "CapturePage.cs", ["keyboard-next"] = "KeyboardRoom.cs",
+            ["targets-distance"] = "TargetsPage.cs",
+        };
+        Assert.Equal(source.Keys.Order(StringComparer.Ordinal), taps.Order(StringComparer.Ordinal));
+        Assert.All(taps, t => Assert.Contains($".Id(\"{t}\")", File.ReadAllText(Repo.PathTo("mobile", "GroupLab.Mobile", source[t])), StringComparison.Ordinal));
     }
 }

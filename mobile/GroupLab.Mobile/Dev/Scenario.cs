@@ -401,7 +401,15 @@ internal static class Scenario
         }
 
         shell.UpdateLayout();
-        return shell.GetVisualDescendants().Where(v => v.IsEffectivelyVisible).ToList();
+        var showing = shell.GetVisualDescendants().Where(v => v.IsEffectivelyVisible).ToList();
+        // Entry 363, issue 19: the keyboard's bar lives in the overlay above the shell, and its Next is a tap like any other.
+        if (shell.Keyboard.Bar is { } bar && bar.GetVisualParent() is not null && bar.IsEffectivelyVisible)
+        {
+            showing.Add(bar);
+            showing.AddRange(bar.GetVisualDescendants().Where(v => v.IsEffectivelyVisible));
+        }
+
+        return showing;
     }
 
     /// <summary>A picture in the scenario folder, or in the files folder itself, read as a photograph chosen on the Capture screen.</summary>
@@ -1002,15 +1010,22 @@ internal static class Scenario
         var (_, _, pixels) = ScreenPlace?.Invoke() ?? (0, 0, false);
         said["units"] = pixels ? "pixels" : "points";
         said["view"] = Place(OnScreen(top, new Rect(top.Bounds.Size)));
-        // The keyboard is the system's, outside what Avalonia can find under a point, so its top is said; the bar on it is Avalonia's own.
-        double? covered = shell.Keyboard.KeyboardTop is { } keyboardTop ? keyboardTop - KeyboardRoom.BarHeight : null;
+        // The keyboard is the system's, outside what Avalonia can find under a point, so its top is said; the bar on it is Avalonia's own,
+        // and covers the page, but not itself: a tap on the bar's Next (issue 19) is measured against the keyboard alone.
+        bool onBar = Showing().OfType<Control>().FirstOrDefault(c => AutomationProperties.GetAutomationId(c) == tap) is { } aimed
+            && aimed.GetVisualAncestors().OfType<Avalonia.Controls.Primitives.OverlayLayer>().Any();
+        double? covered = shell.Keyboard.KeyboardTop is { } keyboardTop ? keyboardTop - (onBar ? 0 : KeyboardRoom.BarHeight) : null;
         said["coveredFrom"] = covered is { } from ? Math.Round(OnScreen(top, new Rect(0, from, 0, 0)).Y, 1) : null;
 
         // Whether a press at the middle of the control reaches it, or something lies over it there.
         var target = Showing().OfType<Control>().FirstOrDefault(c => AutomationProperties.GetAutomationId(c) == tap);
         if (target?.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), top) is { } middle)
         {
-            var under = top.InputHitTest(middle) as Visual;
+            // A control in the overlay, as the keyboard's bar is, is hit tested there: the window's own test reaches the page beneath it.
+            var overlay = target.GetVisualAncestors().OfType<Avalonia.Controls.Primitives.OverlayLayer>().FirstOrDefault();
+            var under = overlay is not null && target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), overlay) is { } inLayer
+                ? overlay.InputHitTest(inLayer) as Visual
+                : top.InputHitTest(middle) as Visual;
             bool reached = under is not null && (under == target || target.IsVisualAncestorOf(under));
             said["reached"] = reached && (covered is null || middle.Y < covered);
             said["under"] = under?.GetType().Name;
@@ -1026,7 +1041,8 @@ internal static class Scenario
     /// (<c>"keyboard"</c>); the camera, or the line asking for it, is on the Capture screen or not (<c>"camera"</c>; where the device has no
     /// camera, as the iOS Simulator, the photo picker it opens instead counts: the log says <c>camera.none</c> and the system's sheet is
     /// up); a line in the log since
-    /// the last hold holds one of <c>"log"</c>'s words, several separated by |. All that is given must be so at once.
+    /// the last hold holds one of <c>"log"</c>'s words, several separated by |; the control <c>"focused"</c> names has the focus
+    /// (entry 363, issue 19: where the keyboard bar's Next goes). All that is given must be so at once.
     /// </summary>
     private static async Task<(bool, string)> Expect(Step step, TimeSpan most)
     {
@@ -1036,9 +1052,10 @@ internal static class Scenario
         bool? showing = Flag(step, "showing");
         bool? keyboard = Flag(step, "keyboard");
         bool? camera = Flag(step, "camera");
-        if (name is null && keyboard is null && camera is null && log is null)
+        string? focused = step.Text("focused");
+        if (name is null && keyboard is null && camera is null && log is null && focused is null)
         {
-            return (false, "expect needs a \"name\", \"keyboard\", \"camera\" or \"log\"");
+            return (false, "expect needs a \"name\", \"keyboard\", \"camera\", \"focused\" or \"log\"");
         }
 
         var clock = Stopwatch.StartNew();
@@ -1046,7 +1063,7 @@ internal static class Scenario
         while (true)
         {
             string since = string.Join('\n', (LogLines(null) ?? "").Split('\n').Skip(logMark));
-            why = await OnUi(() => Unmet(name, text, showing, keyboard, camera, since)) ?? "";
+            why = await OnUi(() => Unmet(name, text, showing, keyboard, camera, since) ?? NotFocused(focused)) ?? "";
             if (why.Length == 0 && log is not null)
             {
                 why = log.Split('|').Any(l => since.Contains(l, StringComparison.Ordinal)) ? "" : $"no line in the log with {log} since the last hold";
@@ -1072,6 +1089,25 @@ internal static class Scenario
         JsonValueKind.False => false,
         _ => null,
     };
+
+    /// <summary>Why the control named does not have the focus, in words; null where it does, or where nothing was named.</summary>
+    private static string? NotFocused(string? focused)
+    {
+        if (focused is null)
+        {
+            return null;
+        }
+
+        var control = Find(Showing().OfType<Control>().ToList(), focused);
+        var holder = Shell.Current is { } shell ? TopLevel.GetTopLevel(shell)?.FocusManager?.GetFocusedElement() as Control : null;
+        if (control is null)
+        {
+            return focused + " is not showing";
+        }
+
+        return holder is not null && (ReferenceEquals(holder, control) || holder.GetVisualAncestors().Contains(control)) ? null
+            : $"{focused} does not have the focus; {(holder is null ? "nothing" : AutomationProperties.GetAutomationId(holder) ?? holder.GetType().Name)} has it";
+    }
 
     /// <summary>The first of what was expected that is not so, in words; null where all of it is.</summary>
     private static string? Unmet(string? name, string? text, bool? showing, bool? keyboard, bool? camera, string since)

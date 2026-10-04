@@ -37,7 +37,9 @@ internal sealed class KeyboardRoom
     internal const double BarHeight = 48;
 
     private readonly Shell shell;
-    private readonly Button next = new() { MinHeight = 40, MinWidth = 88, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center };
+    // Entry 363, issue 19: Next never takes the focus. A real press on it moved the focus from the field to the button, the bar closed with
+    // the keyboard as a field lost the focus, and the click never came: Next did nothing, or closed the keyboard as Done does.
+    private readonly Button next = new Button { MinHeight = 40, MinWidth = 88, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center, Focusable = false, IsTabStop = false }.Id("keyboard-next");
     private readonly Border bar;
     private IInputPane? pane;
     private bool barShown;

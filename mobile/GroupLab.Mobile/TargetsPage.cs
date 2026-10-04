@@ -22,10 +22,10 @@ namespace GroupLab.Mobile;
 /// </summary>
 public sealed class TargetsPage : UserControl
 {
-    private readonly TextBox distance = Number("100");
-    private readonly TextBox magnification = Number("");
-    private readonly TextBox dot = Number("");
-    private readonly TextBox shots = Number("25");
+    private readonly TextBox distance = Number("100").Id("targets-distance");
+    private readonly TextBox magnification = Number("").Id("targets-magnification");
+    private readonly TextBox dot = Number("").Id("targets-dot");
+    private readonly TextBox shots = Number("25").Id("targets-shots");
     private readonly RadioButton letter = Screens.Radio("page", "Letter", AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
     private readonly RadioButton a4 = Screens.Radio("page", "A4", !AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
     private readonly RadioButton disc = Screens.Radio("shape", "Disc", true);
