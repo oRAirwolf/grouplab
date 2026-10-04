@@ -83,7 +83,8 @@ Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 - **Last nightly:** 0.2.0-nightly.158 (2026-10-02): entry 352.
 - **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
-- Crash reports open: none.
+- Crash reports open: **issue 19**, a tester on build 153 (iPhone): on Targets, Made for your optic, the keyboard bar's Next
+  goes to the next section, not the next box; needs the iOS simulator's taps or a device (`KeyboardRoom.Following`). No entry covers it.
 
 ## The inbox
 
