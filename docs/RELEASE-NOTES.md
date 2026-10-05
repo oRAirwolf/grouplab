@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.170
+
+**2026-10-05**, commit `bbb5a03`. Nightly.
+
+**What you will notice**
+
+- On Android, Targets can now print a sheet straight to a Phomemo M834 over Bluetooth at its true size, without the Phomemo app, which turned out to print a Letter sheet about 5 percent small; no real M834 has printed from it yet. (Request 73).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.170)
+
+---
+
 ## 0.2.0-nightly.169
 
 **2026-10-04**, commit `13d882d`. Nightly.
