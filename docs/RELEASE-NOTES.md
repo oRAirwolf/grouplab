@@ -453,7 +453,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - The developer copy for Android can now be run by Google's phone testing service on real Samsung, Pixel and other phones, once the free account is set up.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.140)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
