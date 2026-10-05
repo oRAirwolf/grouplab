@@ -195,12 +195,14 @@ public sealed class FingerprintSession : IDisposable
             (Shown, ShownScale) = Encode(colour);
         }
 
-        if (finding?.TargetCorners is { } corners)
+        if (finding?.NearCorners is not null)
         {
+            // Entry 375: the target's own corners, from its paper edges between the brackets, in the codes' plane; never the cut L's corners.
+            var (corners, found) = ScaleMarkerFinder.CornersNearBrackets(colour, finding);
             Corners = [.. corners];
-            CornersFound = true;
-            CornersSaid = null;
-            cornerPixels = 1;
+            CornersFound = found;
+            CornersSaid = found ? null : ScaleMarkerWords.BracketCornersNotSure;
+            cornerPixels = found ? 2 : 3;
         }
         else if (finding is not null && finding.Used.Any(u => u.Kind is MarkerKind.InchBar or MarkerKind.MetricBar))
         {

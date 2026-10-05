@@ -6,7 +6,7 @@ namespace GroupLab.Core.ScaleMarkers;
 /// <summary>The kinds of thing in a photo whose true size GroupLab knows, NOTES-FROM-PLANNING.md entry 365 (concepts A to D).</summary>
 public enum MarkerKind
 {
-    /// <summary>A: an L shaped piece tucked against one of the target's corners, two codes on it.</summary>
+    /// <summary>A: an L shaped piece placed near one of the target's corners, two codes on it (entry 375: anywhere close, cut roughly).</summary>
     Bracket,
 
     /// <summary>B: a printed strip with a code at each end, 10.000 in apart.</summary>

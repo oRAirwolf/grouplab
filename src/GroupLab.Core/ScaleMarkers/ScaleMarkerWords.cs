@@ -16,8 +16,8 @@ public static class ScaleMarkerWords
     /// <summary>The four kinds as the concepts name them, and what each gives.</summary>
     public const string Brackets = "Corner brackets";
 
-    /// <summary>Entry 371 section 4: touching, measured; a gap of g mm makes the target read about 2g/width large, the scale unchanged.</summary>
-    public const string BracketsGive = "Four L shaped pieces, cut from one page, tucked against the target's four corners, touching them: a gap of 2 mm makes the target read about 2 percent large. Gives the scale, the camera's angle and the target's corners.";
+    /// <summary>Entry 375: the printed codes give the scale, so neither the cut nor a gap moves it; the corners come from the paper's own edges.</summary>
+    public const string BracketsGive = "Four L shaped pieces, cut roughly from one page, one placed flat near each corner of the target, anywhere close. The printed codes give the scale and the camera's angle, so the cut does not need to be neat; GroupLab finds the target's corners from its own edges where they show against the surface.";
 
     public const string Bars = "Scale bars";
 
@@ -30,6 +30,9 @@ public static class ScaleMarkerWords
     public const string Card = "A bank card";
 
     public const string CardGives = "Any bank card, driver's license or gift card, back side up, laid flat on or beside the target. Nothing to print, and the least accurate of the four.";
+
+    /// <summary>Entry 375: where the target's own corners were not found sure beside the brackets.</summary>
+    public const string BracketCornersNotSure = "GroupLab is not sure of the target's corners beside the brackets. Drag each onto the target's own corner; the brackets have given the scale.";
 
     /// <summary>Entry 372: the scale labels, under Scale markers.</summary>
     public const string Labels = "Scale labels (M220 and other label printers)";

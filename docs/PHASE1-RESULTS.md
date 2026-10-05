@@ -383,6 +383,35 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 375: corner brackets that do not depend on the cut (2026-10-05)
+
+- **The scale never came from the cut**, and now nothing else does either. The plane (pixels to inches) is fitted to the brackets'
+  printed codes; only the target's corners, and so a reference file's width and height, came from the L's inside corners
+  (`MarkerFinding.NearCorners`, renamed from `TargetCorners` to say so).
+- **The corners now come from the paper's own edges** (`ScaleMarkerFinder.CornersNearBrackets`): a strip 16 mm either side of the
+  line between two brackets, straightened in the codes' millimetres along the middle of each side clear of the arms, its steps found
+  every 2 mm, and the line most of them hold; the four lines meet at the corners. They are called sure only where the four make a
+  rectangle in the codes' plane (square to 1 degree, opposite sides within 1.5 mm), step the same way by much the same, darker going
+  out, with the surface just outside. Painting the brackets out (the first try) left flat patches the outline finder took for the
+  target, and is gone.
+- **Measured** with `grouplab surface-trial --brackets` (4 surfaces, gaps 0, 2, 5 and 10 mm, laid square or roughly: each piece up to
+  2 mm astray and about 2 degrees turned, which is what a crooked cut does once laid against the paper; 177 scenes). The target's size
+  from the cut corners was 2.0 to 3.1 percent out at a 2 mm gap, 4.8 to 5.6 at 5 mm and 9.4 to 12.3 at 10 mm. The codes' scale was
+  0.03 to 0.13 percent (median by row), 0.23 worst, at every gap and laid either way. Corners were sure in 44 of 177 scenes, every one
+  within 0.6 mm of the true corner; the rest start at the brackets for the person to drag, as before entry 371.
+- **Where it is never sure:** a white target on a white counter (its edge does not show, and a printed frame 10 mm inside one was
+  taken for it until the darker-going-out rule), a target inked to its edge on a light surface, and a target too small to leave 20 mm
+  of edge between the arms (about 7.8 in a side).
+- **The fit's rectangle loosened** (`MarkerFit.SoftRectangle.Laid` and `Square`) from 0.5 mm and 0.5 degree to 3 mm and 3 degrees,
+  since the pieces are now laid anywhere close. `grouplab marker-trial`: brackets alone 0.12 percent median, 0.75 worst (0.78
+  before); every marker together on the 23 by 35 poster 0.14 worst against 0.04, one photo; the surface trial's scale did not move.
+- **The words** (section 3): the Scale markers screen, the printed bracket page and the user guide now say to cut roughly and place
+  one near each corner, flat, anywhere close. `ScaleMarkerTests.BracketsSetOffOrLaidRoughlyGiveTheSameScale` holds the scale to 0.1
+  percent with gaps of 0, 2, 5 and 10 mm and pieces 2 mm and 2 degrees astray.
+- **Section 2:** the L stays. It holds both codes in one rigid piece, which the fit uses, and lets a piece sit round a corner without
+  covering the target; it does not help the edge search, which skips the 81 mm each arm lies along. Tiles were not made (see the
+  status line in NOTES-FROM-PLANNING.md).
+
 ## Entry 373: the consistency audit of 2026-10-04 (2026-10-05)
 
 All twelve findings fixed in one change; no `consistency` issue was open. README: iPhone and iPad in the platforms sentence and badge;

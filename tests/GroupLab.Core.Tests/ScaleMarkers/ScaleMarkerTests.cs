@@ -49,9 +49,9 @@ public class ScaleMarkerTests
         var seen = Enumerable.Range(1, 4).SelectMany(n => ScaleMarkerLayout.Bracket(n).Select(t => Seen(t, 0, corners[n - 1]))).ToList();
         var (finding, _) = ScaleMarkerReading.Read(seen, null, null, []);
         Assert.NotNull(finding);
-        Assert.NotNull(finding.TargetCorners);
+        Assert.NotNull(finding.NearCorners);
         var plane = finding.Plane;
-        var c = finding.TargetCorners!.Select(plane.ToInches).ToArray();
+        var c = finding.NearCorners!.Select(plane.ToInches).ToArray();
         Assert.Equal(w / 25.4, Distance(c[0], c[1]), 4);
         Assert.Equal(h / 25.4, Distance(c[0], c[3]), 4);
         Assert.False(finding.ScaleOnly);
@@ -75,6 +75,36 @@ public class ScaleMarkerTests
         {
             var at = new PointD(corners[n - 1].X + Gauss(0.3), corners[n - 1].Y + Gauss(0.3));
             double turn = Gauss(0.5 * Math.PI / 180);
+            seen.AddRange(ScaleMarkerLayout.Bracket(n).Select(t => Seen(t, turn, at)));
+        }
+
+        var (finding, _) = ScaleMarkerReading.Read(seen, null, null, []);
+        var plane = finding!.Plane;
+        double across = Distance(plane.ToInches(Camera.Apply(corners[0])), plane.ToInches(Camera.Apply(corners[1]))) * 25.4;
+        double down = Distance(plane.ToInches(Camera.Apply(corners[0])), plane.ToInches(Camera.Apply(corners[3]))) * 25.4;
+        Assert.True(Math.Abs((across / w) - 1) < 0.001 && Math.Abs((down / h) - 1) < 0.001, $"{across:0.000} by {down:0.000} mm");
+    }
+
+    /// <summary>
+    /// Entry 375: the scale comes from the brackets' printed codes, so brackets set off from the corners, or laid as roughly as a quick cut by
+    /// eye leaves them, give the same scale: a gap of 2, 5 or 10 mm and each piece up to 2 mm and 2 degrees astray.
+    /// </summary>
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(2, 2)]
+    [InlineData(5, 3)]
+    [InlineData(10, 4)]
+    public void BracketsSetOffOrLaidRoughlyGiveTheSameScale(double gap, int seed)
+    {
+        var rng = new Random(seed);
+        const double w = 300, h = 300;
+        PointD[] corners = [new(0, 0), new(w, 0), new(w, h), new(0, h)];
+        var seen = new List<DetectedMarker>();
+        for (int n = 1; n <= 4; n++)
+        {
+            var (sx, sy) = ScaleMarkerLayout.Signs(n);
+            var at = new PointD(corners[n - 1].X - (sx * gap) + ((rng.NextDouble() * 4) - 2), corners[n - 1].Y - (sy * gap) + ((rng.NextDouble() * 4) - 2));
+            double turn = ((rng.NextDouble() * 4) - 2) * Math.PI / 180;
             seen.AddRange(ScaleMarkerLayout.Bracket(n).Select(t => Seen(t, turn, at)));
         }
 

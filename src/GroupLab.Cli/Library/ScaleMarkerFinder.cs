@@ -193,6 +193,238 @@ public static class ScaleMarkerFinder
         }
     }
 
+    /// <summary>
+    /// Entry 375: the target's own corners where brackets lie near them, from the target's edges and never from a bracket's cut edge. Alan:
+    /// "it is extremely difficult to cut the corner markers perfectly square". The brackets' printed codes give the plane in millimetres; each
+    /// side's paper edge is looked for across a strip 16 mm either side of the line between two brackets' inside corners, along the middle
+    /// of the side where no arm lies, and the corners are where those four edges meet. They are called found only where the four make a
+    /// rectangle in the codes' plane, square to within a degree and its opposite sides equal to within 1.5 mm: the codes and the paper are
+    /// the two ways that agree. Elsewhere the corners start at the brackets' inside corners, not found, for the person to drag.
+    /// </summary>
+    public static (PointD[] Corners, bool Found) CornersNearBrackets(Mat colour, MarkerFinding finding)
+    {
+        ArgumentNullException.ThrowIfNull(colour);
+        ArgumentNullException.ThrowIfNull(finding);
+        var near = finding.NearCorners ?? throw new ArgumentException("no brackets at the corners", nameof(finding));
+        using var painted = colour.Clone();
+        PaintOverBars(painted, finding);
+        using var grey = new Mat();
+        if (painted.Channels() == 1)
+        {
+            painted.CopyTo(grey);
+        }
+        else
+        {
+            Cv2.CvtColor(painted, grey, ColorConversionCodes.BGR2GRAY);
+        }
+
+        var plane = finding.Plane;
+        var mm = near.Select(p => plane.ToInches(p)).Select(q => new PointD(q.X * 25.4, q.Y * 25.4)).ToArray();
+        var middle = new PointD(mm.Average(p => p.X), mm.Average(p => p.Y));
+        var sides = new (PointD P, PointD D)[4];
+        var steps = new (int Sign, double Size, bool Bare)[4];
+        for (int k = 0; k < 4; k++)
+        {
+            if (Edge(grey, plane, mm[k], mm[(k + 1) % 4], middle) is not { } side)
+            {
+                return ([.. near], false);
+            }
+
+            sides[k] = (side.P, side.D);
+            steps[k] = (side.Sign, side.Size, side.Bare);
+        }
+
+        var corners = new PointD[4];
+        for (int k = 0; k < 4; k++)
+        {
+            // Corner k is where the side ending at it meets the side starting from it.
+            if (Meet(sides[(k + 3) % 4], sides[k]) is not { } c)
+            {
+                return ([.. near], false);
+            }
+
+            corners[k] = c;
+        }
+
+        double Length(int k) => Math.Sqrt(Math.Pow(corners[(k + 1) % 4].X - corners[k].X, 2) + Math.Pow(corners[(k + 1) % 4].Y - corners[k].Y, 2));
+        bool square = Enumerable.Range(0, 4).All(k => Math.Abs((sides[(k + 3) % 4].D.X * sides[k].D.X) + (sides[(k + 3) % 4].D.Y * sides[k].D.Y)) < Math.Sin(Math.PI / 180));
+        bool equal = Math.Abs(Length(0) - Length(2)) < 1.5 && Math.Abs(Length(1) - Length(3)) < 1.5;
+        bool close = Enumerable.Range(0, 4).All(k => Math.Sqrt(Math.Pow(corners[k].X - mm[k].X, 2) + Math.Pow(corners[k].Y - mm[k].Y, 2)) < 25);
+        // One paper on one surface steps the same way, by much the same, all round, and darker going out: on a white counter the paper's edge
+        // hardly shows, and a printed frame 10 mm inside it, its white margin beside the white counter, was taken for it in the trial. A target
+        // inked to its edge on a light surface is therefore never sure, and starts at the brackets.
+        bool alike = steps.All(x => x.Sign < 0) && steps.Max(x => x.Size) < 1.5 * steps.Min(x => x.Size) && steps.All(x => x.Bare);
+        if (!(square && equal && close && alike))
+        {
+            return ([.. near], false);
+        }
+
+        return ([.. corners.Select(c => plane.ToImage(new PointD(c.X / 25.4, c.Y / 25.4)))], true);
+    }
+
+    /// <summary>
+    /// The paper's edge along one side, in the codes' millimetres: a strip from <paramref name="a"/> to <paramref name="b"/>, 16 mm either side
+    /// of that line and 8 mm clear of each bracket's arm, straightened at 0.1 mm across and 0.5 mm along; in every 2 mm of its length the
+    /// strongest steps across it; and the line most of those steps agree on, the outermost where a printed border inside the paper agrees as
+    /// well; with the step's sign going outward, its median size, and whether the surface lies just outside it. Null where under 20 mm of side is clear of the arms or no line holds three fifths of the steps.
+    /// </summary>
+    private static (PointD P, PointD D, int Sign, double Size, bool Bare)? Edge(Mat grey, GroupLab.Core.StoreTargets.HomographyPlane plane, PointD a, PointD b, PointD middle)
+    {
+        const double Reach = 16, Across = 0.1, Along = 0.5, Group = 2;
+        double length = Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
+        var u = new PointD((b.X - a.X) / length, (b.Y - a.Y) / length);
+        var n = new PointD(u.Y, -u.X);
+        if ((((a.X + b.X) / 2) - middle.X) * n.X + ((((a.Y + b.Y) / 2) - middle.Y) * n.Y) < 0)
+        {
+            n = new PointD(-n.X, -n.Y);
+        }
+
+        double t0 = ScaleMarkerLayout.ArmLength + 8, t1 = length - ScaleMarkerLayout.ArmLength - 8;
+        if (t1 - t0 < 20)
+        {
+            return null;
+        }
+
+        int cols = (int)((t1 - t0) / Along) + 1, rows = (int)(2 * Reach / Across) + 1;
+        using var mapX = new Mat(rows, cols, MatType.CV_32FC1);
+        using var mapY = new Mat(rows, cols, MatType.CV_32FC1);
+        for (int c = 0; c < cols; c++)
+        {
+            double t = t0 + (c * Along);
+            for (int r = 0; r < rows; r++)
+            {
+                double s = -Reach + (r * Across);
+                var p = plane.ToImage(new PointD((a.X + (t * u.X) + (s * n.X)) / 25.4, (a.Y + (t * u.Y) + (s * n.Y)) / 25.4));
+                mapX.Set(r, c, (float)p.X);
+                mapY.Set(r, c, (float)p.Y);
+            }
+        }
+
+        using var strip = new Mat();
+        Cv2.Remap(grey, strip, mapX, mapY, InterpolationFlags.Linear, BorderTypes.Replicate);
+        using var smooth = new Mat();
+        strip.ConvertTo(smooth, MatType.CV_32FC1);
+        Cv2.GaussianBlur(smooth, smooth, new Size(5, 7), 0);
+
+        // Steps across the strip, each 2 mm of its length averaged, with their sign.
+        int per = (int)(Group / Along), groups = cols / per;
+        var profiles = new double[groups][];
+        double most = 0;
+        for (int g = 0; g < groups; g++)
+        {
+            var profile = new double[rows];
+            for (int r = 1; r < rows - 1; r++)
+            {
+                double sum = 0;
+                for (int c = g * per; c < (g + 1) * per; c++)
+                {
+                    sum += smooth.At<float>(r + 1, c) - smooth.At<float>(r - 1, c);
+                }
+
+                profile[r] = sum / per;
+                most = Math.Max(most, Math.Abs(profile[r]));
+            }
+
+            profiles[g] = profile;
+        }
+
+        if (most < 2)
+        {
+            return null;
+        }
+
+        // Up to three steps a group, each refined to a tenth of a row.
+        var steps = new List<(int G, double T, double S, int Sign, double Size)>();
+        for (int g = 0; g < groups; g++)
+        {
+            var p = profiles[g];
+            var peaks = new List<(double S, int Sign, double Size)>();
+            for (int r = 2; r < rows - 2; r++)
+            {
+                double v = Math.Abs(p[r]), l = Math.Abs(p[r - 1]), h = Math.Abs(p[r + 1]);
+                if (v < 0.25 * most || v < l || v < h)
+                {
+                    continue;
+                }
+
+                double bend = l - (2 * v) + h;
+                double offset = bend < 0 ? Math.Clamp(0.5 * (l - h) / bend, -0.5, 0.5) : 0;
+                peaks.Add((-Reach + ((r + offset) * Across), Math.Sign(p[r]), v));
+            }
+
+            double t = t0 + (((g * per) + ((per - 1) / 2.0)) * Along);
+            steps.AddRange(peaks.OrderByDescending(q => q.Size).Take(3).Select(q => (g, t, q.S, q.Sign, q.Size)));
+        }
+
+        // Lines through two steps of one sign within three degrees of the side; a line holds the groups with a step of its sign within 0.3 mm.
+        var lines = new List<(int Sign, List<(double T, double S, double Size)> Held)>();
+        var tried = new HashSet<(int, int, int)>();
+        for (int i = 0; i < steps.Count; i++)
+        {
+            for (int j = i + 1; j < steps.Count; j++)
+            {
+                var (p, q) = (steps[i], steps[j]);
+                if (p.Sign != q.Sign || Math.Abs(q.T - p.T) < 10)
+                {
+                    continue;
+                }
+
+                double slope = (q.S - p.S) / (q.T - p.T), at = p.S - (slope * p.T);
+                if (Math.Abs(slope) > 0.05 || !tried.Add(((int)Math.Round(at * 3), (int)Math.Round(slope * 2000), p.Sign)))
+                {
+                    continue;
+                }
+
+                var held = steps.Where(x => x.Sign == p.Sign && Math.Abs(x.S - (at + (slope * x.T))) < 0.3).GroupBy(x => x.G)
+                    .Select(x => x.OrderBy(y => Math.Abs(y.S - (at + (slope * y.T)))).First()).Select(x => (x.T, x.S, x.Size)).ToList();
+                if (held.Count >= 0.6 * groups)
+                {
+                    lines.Add((p.Sign, held));
+                }
+            }
+        }
+
+        if (lines.Count == 0)
+        {
+            return null;
+        }
+
+        // Each refitted by least squares on its own steps; the paper's edge is the outermost of those nearly as well held as the best.
+        int best = lines.Max(l => l.Held.Count);
+        var edge = lines.Where(l => l.Held.Count >= 0.8 * best).Select(line =>
+        {
+            var l = line.Held;
+            double mt = l.Average(x => x.T), ms = l.Average(x => x.S);
+            double stt = l.Sum(x => (x.T - mt) * (x.T - mt)), sts = l.Sum(x => (x.T - mt) * (x.S - ms));
+            double slope = stt > 0 ? sts / stt : 0;
+            return (A: ms - (slope * mt), B: slope, Mid: ms + (slope * (((t0 + t1) / 2) - mt)), line.Sign, Size: l.Select(x => x.Size).Order().ElementAt(l.Count / 2));
+        }).OrderByDescending(l => l.Mid).First();
+
+        // Just outside the paper's edge is the surface itself: the band 0.8 to 3 mm outside the line must look like the strip's outer 4 mm, which
+        // lies beyond any gap the trial tried. Outside a printed frame is the paper's white margin, which seldom matches the surface so closely.
+        double outside = 0, beyond = 0;
+        int Row(double at) => Math.Clamp((int)Math.Round((at + Reach) / Across), 0, rows - 1);
+        for (int c = 0; c < cols; c++)
+        {
+            double line = edge.A + (edge.B * (t0 + (c * Along)));
+            for (int r = Row(line + 0.8); r <= Row(line + 3); r++)
+            {
+                outside += smooth.At<float>(r, c) / (Row(line + 3) - Row(line + 0.8) + 1);
+            }
+
+            for (int r = Row(Reach - 4); r < rows; r++)
+            {
+                beyond += smooth.At<float>(r, c) / (rows - Row(Reach - 4));
+            }
+        }
+
+        bool bare = edge.A + (edge.B * t1) < Reach - 7 && edge.A + (edge.B * t0) < Reach - 7 && Math.Abs(outside - beyond) / cols < Math.Max(4, 0.1 * edge.Size * 7);
+
+        // Back to the plane: the line's point at t0, and its direction.
+        double s0 = edge.A + (edge.B * t0), norm = Math.Sqrt(1 + (edge.B * edge.B));
+        return (new PointD(a.X + (t0 * u.X) + (s0 * n.X), a.Y + (t0 * u.Y) + (s0 * n.Y)), new PointD((u.X + (edge.B * n.X)) / norm, (u.Y + (edge.B * n.Y)) / norm), edge.Sign, edge.Size, bare);
+    }
+
     /// <summary>Every marker code in the photo, each once, read at the finest size that found it.</summary>
     public static IReadOnlyList<DetectedMarker> Codes(GrayImage grey)
     {

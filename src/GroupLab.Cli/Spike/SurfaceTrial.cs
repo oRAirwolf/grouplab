@@ -52,6 +52,11 @@ public static partial class SurfaceTrial
             return Labels(flats.Where(f => f.Name.StartsWith("scan", StringComparison.Ordinal)).ToList(), scenes, rng, output);
         }
 
+        if (args.Contains("--brackets"))
+        {
+            return Brackets(flats.Where(f => f.Name.StartsWith("scan", StringComparison.Ordinal)).ToList(), scenes, rng, output);
+        }
+
         if (args.Contains("--markers"))
         {
             return Markers(flats.Where(f => f.Name.StartsWith("scan", StringComparison.Ordinal)).ToList(), scenes, rng, output);
@@ -134,7 +139,7 @@ public static partial class SurfaceTrial
     {
         var printer = new PrinterProfile("trial", 1, 1, PrinterMethod.Scan, new DateOnly(2026, 10, 4), 0.001);
         output.WriteLine("surface          gap mm  brackets: corner off mm, size error percent | bars: corners right, scale error percent");
-        foreach (string surface in new[] { "dark wood", "white counter", "cardboard", "black table" })
+        foreach (string surface in (Environment.GetEnvironmentVariable("GL_SURFACES") ?? "dark wood,white counter,cardboard,black table").Split(','))
         {
             foreach (double gap in new[] { 0.0, 2, 5, 10, 20 })
             {
@@ -155,7 +160,7 @@ public static partial class SurfaceTrial
                         var toWall = new Homography(wallToImage).Inverse();
 
                         var (brackets, _) = ScaleMarkerReading.Read([.. codes.Where(c => c.Id < ScaleMarkerLayout.InchBarFirst)], null, printer, []);
-                        if (brackets?.TargetCorners is { } bc)
+                        if (brackets?.NearCorners is { } bc)
                         {
                             cornerOff.Add(bc.Select((c, i) => Distance(toWall.Apply(c), toWall.Apply(truth[i])) * 25.4).Max());
                             var plane = TargetStraightening.FromMarkers(brackets, bc, W, H, null);
@@ -199,7 +204,7 @@ public static partial class SurfaceTrial
         var printer = new PrinterProfile("trial", 1, 1, PrinterMethod.Scan, new DateOnly(2026, 10, 4), 0.001);
         output.WriteLine("surface          label    count  read   median error  worst error  claimed (median), percent");
         int serial = 1;
-        foreach (string surface in new[] { "dark wood", "white counter", "cardboard", "black table" })
+        foreach (string surface in (Environment.GetEnvironmentVariable("GL_SURFACES") ?? "dark wood,white counter,cardboard,black table").Split(','))
         {
             foreach (var (lw, lh) in new[] { (70, 80), (50, 30) })
             {
@@ -236,6 +241,75 @@ public static partial class SurfaceTrial
         return 0;
     }
 
+    /// <summary>
+    /// Entry 375: the target's size from the brackets' cut corners, as before, and from its own corners found beside them, with the brackets
+    /// touching or 2, 5 and 10 mm away, laid square or roughly (each up to 2 mm off and about 2 degrees turned), on four surfaces.
+    /// </summary>
+    private static int Brackets(List<Flat> flats, int scenes, Random rng, TextWriter output)
+    {
+        var printer = new PrinterProfile("trial", 1, 1, PrinterMethod.Scan, new DateOnly(2026, 10, 5), 0.001);
+        output.WriteLine("surface          gap mm  laid   size error from the cut corners | from the target's own corners (found sure, their worst corner off) | the codes' scale alone; median and worst, percent");
+        foreach (string surface in (Environment.GetEnvironmentVariable("GL_SURFACES") ?? "dark wood,white counter,cardboard,black table").Split(','))
+        {
+            foreach (bool rough in new[] { false, true })
+            {
+                foreach (double gap in new[] { 0.0, 2, 5, 10 })
+                {
+                    var cut = new List<double>();
+                    var own = new List<double>();
+                    var scale = new List<double>();
+                    var miss = new List<double>();
+                    int sure = 0;
+                    for (int n = 0; n < scenes; n++)
+                    {
+                        var flat = flats[rng.Next(flats.Count)];
+                        var (photo, truth) = Scene(flat, surface, rng, false, out var wallToImage, gap, rough: rough);
+                        using (photo)
+                        {
+                            using var greyMat = new Mat();
+                            Cv2.CvtColor(photo, greyMat, ColorConversionCodes.BGR2GRAY);
+                            var codes = ScaleMarkerFinder.Codes(OpenCvSharpBackend.Copy(greyMat));
+                            var (brackets, _) = ScaleMarkerReading.Read([.. codes.Where(c => c.Id < ScaleMarkerLayout.InchBarFirst)], null, printer, []);
+                            var (all, _) = ScaleMarkerReading.Read([.. codes], null, printer, []);
+                            if (brackets?.NearCorners is not { } bc || all?.NearCorners is null)
+                            {
+                                continue;
+                            }
+
+                            double Err(IReadOnlyList<PointD> corners)
+                            {
+                                var plane = TargetStraightening.FromMarkers(brackets, corners, W, H, null);
+                                return 100 * Math.Max(Math.Abs((plane.WidthInches / flat.Width) - 1), Math.Abs((plane.HeightInches / flat.Height) - 1));
+                            }
+
+                            cut.Add(Err(bc));
+                            var (corners, found) = ScaleMarkerFinder.CornersNearBrackets(photo, all);
+                            own.Add(Err(corners));
+                            // The scale alone: the true corners measured on the codes' plane, which no cut or gap can touch.
+                            scale.Add(Err(truth));
+                            if (found)
+                            {
+                                var toTarget = new Homography(wallToImage).Inverse();
+                                miss.Add(corners.Select((c, i) => Distance(toTarget.Apply(c), toTarget.Apply(truth[i])) * 25.4).Max());
+                            }
+                            if (Environment.GetEnvironmentVariable("GL_DEBUG375") is not null)
+                            {
+                                var toWall = new Homography(wallToImage).Inverse();
+                                string Off(IReadOnlyList<PointD> c) => string.Join(" ", c.Select((p, i) => (Distance(toWall.Apply(p), toWall.Apply(truth[i])) * 25.4).ToString("0.0", Inv)));
+                                output.WriteLine($"  cut mm off {Off(bc)} err {cut[^1]:0.00} | own mm off {Off(corners)} err {own[^1]:0.00}");
+                            }
+                            sure += found ? 1 : 0;
+                        }
+                    }
+
+                    output.WriteLine(string.Create(Inv, $"{surface,-16} {gap,6:0}  {(rough ? "rough" : "square"),-6} {Median(cut),8:0.00} {(cut.Count > 0 ? cut.Max() : double.NaN),6:0.00} | {Median(own),6:0.00} {(own.Count > 0 ? own.Max() : double.NaN),6:0.00} ({sure}/{own.Count} sure, corners {Median(miss),4:0.0} {(miss.Count > 0 ? miss.Max() : double.NaN),4:0.0} mm) | scale {Median(scale),5:0.00} {(scale.Count > 0 ? scale.Max() : double.NaN),5:0.00}"));
+                }
+            }
+        }
+
+        return 0;
+    }
+
     private static double Median(List<double> v) => v.Count == 0 ? double.NaN : v.Order().ElementAt(v.Count / 2);
 
     /// <summary>The weakest side of the outline the finder chose, from what it said it tried; NaN where it chose none.</summary>
@@ -250,7 +324,7 @@ public static partial class SurfaceTrial
     /// target's corners and two bars that far off its bottom and left edges (null: no markers).
     /// </summary>
     private static (Mat Photo, PointD[] Truth) Scene(Flat flat, string surface, Random rng, bool outOfFrame, out double[] wallToImage, double? gap = null,
-        (int Width, int Height, int Count, int Serial)? labels = null)
+        (int Width, int Height, int Count, int Serial)? labels = null, bool rough = false)
     {
         double w = flat.Width, h = flat.Height, margin = gap is null ? 1.5 : 5;
         double left = -margin, top = -margin, right = w + margin, bottom = h + margin;
@@ -277,7 +351,9 @@ public static partial class SurfaceTrial
             for (int piece = 1; piece <= 4; piece++)
             {
                 var (picture, mask, origin) = MarkerTrial.Bracket(piece);
-                MarkerTrial.Put(photo, picture, mask, origin, wallToImage, at[piece - 1], PosterTrial.Gauss(rng, 0.5 * Math.PI / 180));
+                // Entry 375: laid roughly, each bracket up to 2 mm off along each edge and about 2 degrees turned, as a hand cuts and lays them.
+                var place = rough ? new PointD(at[piece - 1].X + (((rng.NextDouble() * 4) - 2) / 25.4), at[piece - 1].Y + (((rng.NextDouble() * 4) - 2) / 25.4)) : at[piece - 1];
+                MarkerTrial.Put(photo, picture, mask, origin, wallToImage, place, PosterTrial.Gauss(rng, (rough ? 2 : 0.5) * Math.PI / 180));
                 picture.Dispose();
                 mask.Dispose();
             }

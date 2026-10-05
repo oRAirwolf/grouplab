@@ -219,7 +219,7 @@ public static class TargetStraightening
         var byPlane = new StraightenedTarget(plane, source, w, h, u, finding.Says(u));
 
         // Bars or a card beside brackets or a board: their lengths with the corners' shape may be the better of the two, and the doubt says which.
-        if (finding.Lengths.Count > 0 && finding.TargetCorners is null)
+        if (finding.Lengths.Count > 0 && finding.NearCorners is null)
         {
             double pixels = source == ScaleSource.Card ? ScaleMarkers.ScaleMarkerReading.CardPixels : ScaleMarkers.ScaleMarkerReading.TagPixels;
             var byLengths = FromKnownLengths(corners, finding.Lengths, pixels, width, height, metadata, source,

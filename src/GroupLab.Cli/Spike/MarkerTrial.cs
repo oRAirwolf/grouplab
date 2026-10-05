@@ -91,7 +91,7 @@ public static class MarkerTrial
                         {
                             output.WriteLine(string.Create(Inv, $"  {w:0}x{h:0} #{n} {kind}: {100 * err:0.000} percent, claimed {100 * straight.Uncertainty:0.000}, {finding.Fit.Bodies.Count} bodies, {finding.Fit.RmsPixels:0.00} px, tilt {tilt:0}"));
                         }
-                        if (kind == "brackets" && finding.TargetCorners is { } found)
+                        if (kind == "brackets" && finding.NearCorners is { } found)
                         {
                             var plane = new HomographyPlane(toImage.Inverse());
                             corners.Add(found.Select((c, i) => Distance(plane.ToInches(c), plane.ToInches(truth[i])) * 25.4).Max());

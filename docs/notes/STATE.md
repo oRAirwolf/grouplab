@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-05, after request 73 (the M834 decoded) and entries 374 (partly) and 373; the inbox is empty.
+**Last rewritten:** 2026-10-05 evening, after entry 375 (corner brackets that do not depend on the cut); the inbox is empty.
 
 ---
 
@@ -18,12 +18,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 70% of the
   week at 10:25 UTC. Plan each block to end under 85% (entry 360 section 2). The hook `scripts/usage-guard.js` blocks from 85
   unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
-- **Entries 363, 364 and 365 done** (2026-10-04), for nightly 167: the M834 files (166), aiming marks, issue 19 (closed), the
-  sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
-  scale markers A to D.
-- **Entry 375 tried, not built** (in the inbox): painting brackets out made flat patches the corner finder took for the target;
-  with the right fill the target's own corners came within 0.1 mm at 2 and 5 mm gaps. Next: rectified edge search beside each bracket;
-  the work is `C:\Dev\grouplab-trash\2026-10-05\entry-375-wip.patch`.
+- **Entries 363 to 365 done** (2026-10-04, nightly 167): M834 files, aiming marks, issue 19, sheet look 0.15 s, the phone sender
+  (off until "forms updated"), four reference files, scale markers A to D.
+- **Entry 375 done** (2026-10-05, all but section 2's tiles): the brackets' codes give the scale (0.03 to 0.13 percent at any gap or
+  cut); the corners come from the paper's edges between them, sure in 44 of 177 trial scenes and then within 0.6 mm; never sure on a
+  white counter. The L stays, so printed brackets still read. Stray folders from 02:48 (dotnet temp leftovers) went to the trash.
 - **Request 73 done (2026-10-05)**: the M834 prints over classic Bluetooth's serial port, its page in LZO1X blocks; Android prints
   directly (request 78 asks Alan to try it); the computer's serial port and the iPhone's LE way are next.
 - **Entry 374 partly done**: the C bull fix (shooting order), the update fix, four of section 4; store-bought photos, timed pairing,
@@ -83,7 +82,7 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.169 (2026-10-04, the same commit as 168, whose notes entry was restored on 2026-10-05).
+- **Last nightly:** 0.2.0-nightly.171 (2026-10-05 10:57 UTC); entry 375's commit makes the next one.
 - **The site** follows main by itself (website.yml); live at bbb5a03f on 2026-10-05.
 - Crash reports open: none. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 

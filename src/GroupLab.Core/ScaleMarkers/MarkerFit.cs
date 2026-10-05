@@ -92,10 +92,11 @@ public sealed class MarkerFit
         IPoses model = new FreePoses();
         var (parameters, cost, steps) = Solve(usable, model, [.. x], n);
 
-        // Brackets tucked against a target's corners lie on a rectangle, as nearly as a hand lays them: three or more are held to one, each
-        // inside corner within about half a millimetre and each piece square to it within about half a degree, as extra observations the
-        // photo can outweigh. A hard rectangle took a third of a millimetre astray into a percent of scale; none left the camera's angle
-        // across a poster loose (docs/PHASE1-RESULTS.md, entry 365).
+        // Brackets laid near a target's corners lie on a rectangle, as nearly as a hand lays them: three or more are held to one, each
+        // inside corner within about 3 mm and each piece square to it within about 3 degrees, as extra observations the photo can outweigh.
+        // A hard rectangle took a third of a millimetre astray into a percent of scale; none left the camera's angle across a poster loose
+        // (docs/PHASE1-RESULTS.md, entry 365). Entry 375 loosened it from half a millimetre and half a degree, since the brackets need not be
+        // cut or laid neatly: the brackets alone measured the same, 0.12 percent median and 0.75 worst on the posters.
         var brackets = Enumerable.Range(0, usable.Count).Where(i => usable[i].Kind == MarkerKind.Bracket).ToList();
         SoftRectangle? rectangle = null;
         if (brackets.Count >= 3 && brackets.Select(i => usable[i].Piece).Distinct().Count() == brackets.Count)
@@ -231,7 +232,7 @@ public sealed class MarkerFit
     private sealed class SoftRectangle(int[] brackets, int[] pieces, int at)
     {
         /// <summary>How closely a piece is laid against the corner, millimetres, and square to the target's edges, radians.</summary>
-        public const double Laid = 0.5, Square = 0.5 * Math.PI / 180;
+        public const double Laid = 3, Square = 3 * Math.PI / 180;
 
         public int At { get; } = at;
 

@@ -25,6 +25,30 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-05, entry 375: corner brackets must not depend on how well they are cut
+
+**Status: done 2026-10-05, but section 2's tiles.** Section 2 keeps the L and its printed codes where they were, so brackets already
+printed still read; the page now says to cut roughly by eye and that the cut need not be neat. Separate tiles with a generous margin
+would move the codes and do not fit the nested Letter page; not done, and not needed for the measurement, since nothing measured
+depends on the cut any more.
+
+Alan, 2026-10-05 09:32 UTC, on entry 371's finding that brackets must touch the target's corners: "I think it is extremely difficult
+to cut the corner markers perfectly square and with perfectly perpendicular lines that meet at a perfect 90 degrees in the center. If
+it has to touch, I do not think this is a realistically feasible method for measuring scale." He is right: today the bracket's cut
+inside corner is taken as the target's corner, so a cutting error, or 2 mm of gap, becomes about 2 percent of scale on a 12 in target.
+Small; after the M834 decoding, before the rest of entry 374. Main model.
+
+1. **Nothing measured may depend on a cut edge.** The brackets' printed codes alone give the scale and the plane (they are printed,
+   so they are exact after the printer check); the target's corners come from the corner finder, which may use the plane the codes give
+   to search near each bracket. A bracket may sit touching, overlapping the target's margin, or a few millimetres away, and give the
+   same scale. Measure that on entry 371's simulated scenes: scale and corners with brackets touching, with 2, 5 and 10 mm gaps, and with
+   the cut edge deliberately off by 1 to 2 mm and a few degrees; the scale must not move.
+2. **Make them easy to cut**: four rough tiles with a generous margin and a dashed line to cut along by eye are enough (keep the L shape
+   only if it still helps the finder; say which). The page says plainly that the cut does not need to be neat.
+3. **The words**: change the app, the printed page and the guide from "tuck them against the corners, touching" to "place one near each
+   corner, flat, anywhere close". Release note in plain words.
+4. In for-alan.md, one short line with the before and after numbers.
+
 ## 2026-10-05, entry 374: the range trip of 4 October, and Unholy's feedback
 
 **Status: partly done 2026-10-05.** Done: section 1's C bull fix (shooting order) and every GroupLab sheet photo run and scored; section 2's reading of both forms (they agree); section 3 in full (the update fix, the crash records, the range checklist step); section 4's zoomed drag, the self-hiding note, the selected shot from its bull, and the paper and backing answer; section 5's list; section 6's report. **Not done:** section 1's store-bought photos, scoreboard and corpus; section 2's timed pairing; section 4's two holes in one, undoing a review answer, shot data out and in, and the 2 MOA 3 by 4 sheet. Results: docs/PHASE1-RESULTS.md, entry 374.

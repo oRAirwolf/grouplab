@@ -109,7 +109,7 @@ public sealed class MarkerFinding
         Used = used;
         ScaleOnly = scaleOnly;
         Lengths = lengths;
-        TargetCorners = corners;
+        NearCorners = corners;
         Board = board;
         BoardSaid = boardSaid;
         PrinterChecked = printerChecked;
@@ -138,8 +138,12 @@ public sealed class MarkerFinding
     /// <summary>The known lengths in the photo, for a target whose corners give the angle: a bar's two code centres, a card's sides.</summary>
     public IReadOnlyList<(PointD A, PointD B, double Inches)> Lengths { get; }
 
-    /// <summary>The target's four corners in the photo when all four brackets were found (top left, top right, bottom right, bottom left).</summary>
-    public IReadOnlyList<PointD>? TargetCorners { get; }
+    /// <summary>
+    /// Where the four brackets' inside corners are in the photo, when all four were found (top left, top right, bottom right, bottom left).
+    /// Entry 375: near the target's corners, and where the corner finder looks for them, but never taken as them: Alan, "it is extremely
+    /// difficult to cut the corner markers perfectly square", and a cut or a gap of 2 mm was 2 percent of a 12 inch target's size.
+    /// </summary>
+    public IReadOnlyList<PointD>? NearCorners { get; }
 
     /// <summary>The saved board that was found, and what was said about a board whose stickers no longer agree.</summary>
     public string? Board { get; }
@@ -289,7 +293,7 @@ public static class ScaleMarkerReading
             }
         }
 
-        // All four brackets: their inside corners are the target's.
+        // All four brackets: their inside corners, near the target's own (entry 375: never taken as them).
         IReadOnlyList<PointD>? corners = null;
         var brackets = Enumerable.Range(1, 4).Select(n => fit.Bodies.ToList().FindIndex(b => b.Kind == MarkerKind.Bracket && b.Piece == n)).ToArray();
         if (brackets.All(i => i >= 0))
