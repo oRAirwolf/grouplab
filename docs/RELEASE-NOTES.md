@@ -57,19 +57,18 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - GroupLab can now take a target's scale from markers laid beside it in the photo: corner brackets, scale bars or board stickers printed from Targets, or a bank card, which is blanked out of the picture at once and never kept or sent.
 - GroupLab now recognizes nine store-bought targets, with four added from Alan's photographs: the Birchwood Casey Shoot-N-C 12 in 5-bull sight-in, the Eze-Scorer 12 in sight-in grid, the Rigid crosshair, and the National Target Company ST-4.
 - Settings on the computer now offers Send everything I open, which sends every picture you open, read or not, and an automatic error report can now carry GroupLab's log with anything typed replaced by its length; GroupLab asks before either.
-- A light bank card lying on white paper is now found, by its magnetic stripe, so it can give a target its scale. (Request 76).
-- Add a store-bought target now says when it is not sure of the corners it found, as on a grained wooden floor, instead of presenting a wrong outline as found. (Request 74).
-- Add a store-bought target no longer takes a scale bar lying along the target's edge for part of the target. (Request 74, 76).
+- A light bank card lying on white paper is now found, by its magnetic stripe, so it can give a target its scale.
+- Add a store-bought target now says when it is not sure of the corners it found, as on a grained wooden floor, instead of presenting a wrong outline as found.
+- Add a store-bought target no longer takes a scale bar lying along the target's edge for part of the target.
 - Add a store-bought target now finds the aiming marks of sight-in grids and bullseyes drawn as diamonds, rings and dots, such as the Allen EZ Aim's and the National Target ST-4's, so fewer have to be tapped in by hand.
 - On the phone, Next on the bar above the keyboard now moves to the next box; a tap on it used to close the keyboard instead. (Issue 19).
-- On the analysis, the switches for the group, the whole target, the outlines, the circles and the velocity band now sit in their own row under the plot, so they no longer hide the last lines of the plot's key. (Question 78).
+- On the analysis, the switches for the group, the whole target, the outlines, the circles and the velocity band now sit in their own row under the plot, so they no longer hide the last lines of the plot's key.
 - On the phone, a failure that stops the work, such as a photo that cannot be used, a file that cannot be read or a report that cannot be made, now appears in the middle of the screen with what to do next, instead of a line on the page.
 - Opening a photo of a target that is not a GroupLab sheet is faster: the check for a GroupLab sheet's marks no longer searches the picture a second time, which took up to eight seconds.
 - Add a store-bought target now warns before saving when its scale is worse than about 2 percent, and asks for the two points to be far apart.
 
 **Under the hood**
 
-- The website now shows Targets with Scale markers open, on the Features page and the tour.
 - The phone can now send targets to the project as the computer does, over Wi-Fi unless you allow mobile data; it stays switched off until the app stores' privacy answers are updated, so nothing changes in this build.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.167)
@@ -556,11 +555,11 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - On phones and tablets the Key button above the group plot is now easy to tap with a thumb; the whole strip around it opens the key.
 - When you tap an underlined word for its meaning, the explanation now appears in the same lettering and size as the rest of GroupLab on iPhone, iPad and Android.
 - On iPhone and iPad the bar of places along the bottom now reaches the bottom edge of the screen, behind the home indicator, instead of leaving a pale strip beneath it.
-- The Mac download is signed and approved by Apple from the next nightly, so it opens without the Terminal command. (Request 55).
+- The Mac download is signed and approved by Apple from the next nightly, so it opens without the Terminal command.
 
 **Under the hood**
 
-- A slow answer from Apple no longer stops the Mac download from being signed and approved. (Request 55).
+- A slow answer from Apple no longer stops the Mac download from being signed and approved.
 - The iPhone and iPad test run now checks that Compare draws each load's group with its holes.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
@@ -577,7 +576,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 **Under the hood**
 
-- When Apple refuses to approve a Mac build, the build log now lists Apple's reasons so the problem can be fixed the same day. (Request 55).
+- When Apple refuses to approve a Mac build, the build log now lists Apple's reasons so the problem can be fixed the same day.
 - On iPhone and iPad, ahead of the first test build for Apple devices, Export all my data no longer stops partway when rifles, barrels or loads are saved.
 - On iPhone and iPad a GroupLab data file opened from Files now shows in Settings what importing it would add.
 - On iPhone and iPad the torch on Auto now comes on gently, steps up only while the paper is dim, and dims or goes off on glare.
@@ -746,7 +745,7 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 - GroupLab Dev now updates itself on Android: it looks for a newer nightly, downloads it on Wi-Fi, checks its signature and signing key, and installs it when you leave the app, with Update now and a switch for automatic installs in Settings under About.
 - The list of other people's software GroupLab is built with now names what the phone version uses, including the camera and update libraries.
-- Tap any number to switch its units now works in the full CEP table too: each number there shows its own unit and switches alone. (Question 70).
+- Tap any number to switch its units now works in the full CEP table too: each number there shows its own unit and switches alone.
 
 **Under the hood**
 
@@ -971,7 +970,6 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 **Under the hood**
 
-- "Made for your optic" on the tour, and a Features page.
 - Internal: a one page plan for the hole size test at the range, printed from the same tool as the guides.
 - On Android, what GroupLab records while it works now also goes to the phone's system log, without file names or locations, so a problem on a tester's phone can be diagnosed.
 
@@ -1189,8 +1187,8 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 **What you will notice**
 
-- Settings has a new Sending targets section; sending a target you have analyzed to the project is built but not switched on yet, so for now the section says so and nothing is sent. (Entry 165)
-- The upload page on grouplab.org now asks whether your photographs are for testing only or may also be published, and a testing only target is never published. (Entry 165)
+- Settings has a new Sending targets section; sending a target you have analyzed to the project is built but not switched on yet, so for now the section says so and nothing is sent.
+- The upload page on grouplab.org now asks whether your photographs are for testing only or may also be published, and a testing only target is never published.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1202,8 +1200,8 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 **Under the hood**
 
-- The article on why a photo cannot tell you your bullet's size now says what a .22 hole's smaller size could be down to, and the test that would tell. (Entry 158)
-- GroupLab can now find the printed grid on a commercial gridded target and correct the photograph's perspective and lens from it; it is measured, not yet on a screen. (Entry 158)
+- The article on why a photo cannot tell you your bullet's size now says what a .22 hole's smaller size could be down to, and the test that would tell.
+- GroupLab can now find the printed grid on a commercial gridded target and correct the photograph's perspective and lens from it; it is measured, not yet on a screen.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1215,8 +1213,8 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 **What you will notice**
 
-- A photograph taken more than 40 degrees off square to the sheet is now refused with the angle named, and every photograph keeps how far off square it was and whether it is good, usable or poor. (Entry 157)
-- With the rectangle scale, Find the paper's edges places the four corners on the paper itself when the sheet stands out from what is behind it. (Entry 157)
+- A photograph taken more than 40 degrees off square to the sheet is now refused with the angle named, and every photograph keeps how far off square it was and whether it is good, usable or poor.
+- With the rectangle scale, Find the paper's edges places the four corners on the paper itself when the sheet stands out from what is behind it.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1228,11 +1226,11 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 **What you will notice**
 
-- The Ballistics screen now works out your chance of a hit on a circle, rectangle or IPSC target from your own measured group, first shot and follow-up side by side, with how sure it is and which error is costing you the most hits. (Entry 156)
-- Words like sigma, CEP, MOA and bull are underlined with dots in GroupLab and on the website; point at one, or tab to it, for a plain explanation, and click for the whole glossary entry. (Entry 154)
-- The user guide no longer says GroupLab can read several sheets of one load as one group, which it cannot yet; the guides and project page now match what each build does. (Entry 159)
-- The target library and printing are now one screen, Targets: choose a sheet and everything it takes to print it is beside the list, with no second window. (Entry 155)
-- The cartridge list shows .22 centerfire, and the target library's families are spelled the same American way as everything else. (Entry 159)
+- The Ballistics screen now works out your chance of a hit on a circle, rectangle or IPSC target from your own measured group, first shot and follow-up side by side, with how sure it is and which error is costing you the most hits.
+- Words like sigma, CEP, MOA and bull are underlined with dots in GroupLab and on the website; point at one, or tab to it, for a plain explanation, and click for the whole glossary entry.
+- The user guide no longer says GroupLab can read several sheets of one load as one group, which it cannot yet; the guides and project page now match what each build does.
+- The target library and printing are now one screen, Targets: choose a sheet and everything it takes to print it is beside the list, with no second window.
+- The cartridge list shows .22 centerfire, and the target library's families are spelled the same American way as everything else.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1244,31 +1242,31 @@ This build has no change to the application; it behaves exactly as nightly 128 d
 
 **What you will notice**
 
-- Shot coordinates can be exported as a CSV file for a spreadsheet, and imported from other target software's CSV by choosing which columns hold the shots. (Entry 169)
-- Pinch to zoom now works on a trackpad or touch screen; a touchpad's two finger drag moves the sheet, and Ctrl or Command with a scroll zooms. (Entry 166)
-- The bulls you fired at can be chosen a whole row or column at a time from one bull. (Entry 149, 3)
-- Target photographs can now be sent from grouplab.org/targets, and the website's top bar says Send a target. The printed volunteer pack gives the new address. (Entry 173)
-- Typing a cartridge name in the calibre box now works, so 6.5 Creedmoor gives 0.264 in and GroupLab warns you it is not the .25 calibre; only cartridges two published sources agree on are offered. (Entry 163, 3)
-- You can now record the paper a target was printed on and what was behind it, two optional choices on the marking screen, because how big a bullet hole looks depends on both. (Entry 162, 3.2)
-- On a Mac, Command Z, Shift Command Z and the other shortcuts now use the Command key, and the undo button says what it will undo. (Entry 166)
-- Naming the bulls you fired at and excluding a shot no longer freeze the window for seconds, and the zero correction now says the distance it is for and what it means for your rifle's own zero distance. (Entry 170)
-- A build's notes now say only what changed in the application, in whole sentences, and a build that changed nothing in the application is no longer made. (Entry 168, 2 to 4)
-- Naming the right calibre no longer makes GroupLab call good holes possibly two; it judges one hole from two against the other holes on your sheet, and tells you when they are a different size from what the calibre suggests. (Entry 161, 3)
-- A sheet printed smaller than it should be makes every group read larger, and GroupLab now says so and by how much, instead of wrongly saying the figures were corrected. (Entry 161, 6)
-- The analysis screen shows the six figures you read off a target and the zero correction in inches, MOA and mil with the clicks to dial; everything else is under Advanced, and the plot is high contrast. (Entry 169)
-- Every word in the application and on the website now uses American spelling: center, caliber, analyze, color. (Entry 169)
-- A diagnostics report no longer contains the names of the files you opened, only their type and an anonymous identifier, so a report can be shared without showing what your files are called. (Entry 164, 4)
-- A scanned target now reports real inches: if the sheet was printed smaller or larger than it should be, the scan measures that and corrects every size, and a photograph says its figures are in the sheet's own inches. (Entry 171, 1)
-- The Equipment button in the left rail now shows a cartridge instead of a rifle that was too thin to read at that size. (Entry 167, 1)
-- The calibre, shot distance and rounds fired now sit at the top of the marking panel, marked needed until you answer them or say you do not know. (Entry 163, 4)
-- The pan tool, which is the one you start with, now also selects a mark you click, and C switches to it next to V for select. (Entry 163, 1 and 2)
-- The analysis screen opens with each judgement as one line, and the reasoning behind it is one click away instead of in the way. (Entry 163, 5)
-- GroupLab no longer guesses a cartridge from the size of the holes, which can be wrong by a whole calibre; it tells you what the holes measure and asks what you fired. (Entry 161, 4)
+- Shot coordinates can be exported as a CSV file for a spreadsheet, and imported from other target software's CSV by choosing which columns hold the shots.
+- Pinch to zoom now works on a trackpad or touch screen; a touchpad's two finger drag moves the sheet, and Ctrl or Command with a scroll zooms.
+- The bulls you fired at can be chosen a whole row or column at a time from one bull.
+- Target photographs can now be sent from grouplab.org/targets, and the website's top bar says Send a target. The printed volunteer pack gives the new address.
+- Typing a cartridge name in the calibre box now works, so 6.5 Creedmoor gives 0.264 in and GroupLab warns you it is not the .25 calibre; only cartridges two published sources agree on are offered.
+- You can now record the paper a target was printed on and what was behind it, two optional choices on the marking screen, because how big a bullet hole looks depends on both.
+- On a Mac, Command Z, Shift Command Z and the other shortcuts now use the Command key, and the undo button says what it will undo.
+- Naming the bulls you fired at and excluding a shot no longer freeze the window for seconds, and the zero correction now says the distance it is for and what it means for your rifle's own zero distance.
+- A build's notes now say only what changed in the application, in whole sentences, and a build that changed nothing in the application is no longer made.
+- Naming the right calibre no longer makes GroupLab call good holes possibly two; it judges one hole from two against the other holes on your sheet, and tells you when they are a different size from what the calibre suggests.
+- A sheet printed smaller than it should be makes every group read larger, and GroupLab now says so and by how much, instead of wrongly saying the figures were corrected.
+- The analysis screen shows the six figures you read off a target and the zero correction in inches, MOA and mil with the clicks to dial; everything else is under Advanced, and the plot is high contrast.
+- Every word in the application and on the website now uses American spelling: center, caliber, analyze, color.
+- A diagnostics report no longer contains the names of the files you opened, only their type and an anonymous identifier, so a report can be shared without showing what your files are called.
+- A scanned target now reports real inches: if the sheet was printed smaller or larger than it should be, the scan measures that and corrects every size, and a photograph says its figures are in the sheet's own inches.
+- The Equipment button in the left rail now shows a cartridge instead of a rifle that was too thin to read at that size.
+- The calibre, shot distance and rounds fired now sit at the top of the marking panel, marked needed until you answer them or say you do not know.
+- The pan tool, which is the one you start with, now also selects a mark you click, and C switches to it next to V for select.
+- The analysis screen opens with each judgement as one line, and the reasoning behind it is one click away instead of in the way.
+- GroupLab no longer guesses a cartridge from the size of the holes, which can be wrong by a whole calibre; it tells you what the holes measure and asks what you fired.
 
 **Under the hood**
 
-- GroupLab's hole centres on scans are now measured against each hole's edge, and a change that moves them further off fails its checks; which centre to report is waiting on a hand-marked comparison. (Entry 170, 4)
-- The website's community page now lists the Discord channels and the server's rules, and an article shows a photographed bullet hole whose shadow makes it measure half again the bullet. (Entry 171, 3 and 6)
+- GroupLab's hole centres on scans are now measured against each hole's edge, and a change that moves them further off fails its checks; which centre to report is waiting on a hand-marked comparison.
+- The website's community page now lists the Discord channels and the server's rules, and an article shows a photographed bullet hole whose shadow makes it measure half again the bullet.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1290,13 +1288,13 @@ This build has no change to the application; it behaves exactly as nightly 93 do
 
 **What you will notice**
 
-- A sheet your printer shrank still measures correctly, and GroupLab no longer tells you otherwise on the sheet itself or on the print screen. Printing at actual size still matters, for the reason that is actually true. (Entry 152, 3)
-- The calibre list now offers 0.222 for a rimfire 22, which was missing: the nearest thing it had was the centrefire 0.224, almost one percent too wide. (Entry 153, 4)
-- A target GroupLab did not print can be measured once you set the scale yourself, and the tour now says so on every screen instead of claiming otherwise. (Entry 152, 3 and 4)
+- A sheet your printer shrank still measures correctly, and GroupLab no longer tells you otherwise on the sheet itself or on the print screen. Printing at actual size still matters, for the reason that is actually true.
+- The calibre list now offers 0.222 for a rimfire 22, which was missing: the nearest thing it had was the centrefire 0.224, almost one percent too wide.
+- A target GroupLab did not print can be measured once you set the scale yourself, and the tour now says so on every screen instead of claiming otherwise.
 
 **Under the hood**
 
-- Every research article on the website now ends with what the numbers mean for you, and none of them names the developer. (Entry 153, 1 and 2)
+- Every research article on the website now ends with what the numbers mean for you, and none of them names the developer.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1308,11 +1306,11 @@ This build has no change to the application; it behaves exactly as nightly 93 do
 
 **What you will notice**
 
-- When the holes on a sheet come out in two clear sizes, GroupLab now measures a hole from the smaller ones and flags the larger ones, instead of measuring nothing and flagging nothing. It still asks you for the calibre. (Entry 149, 2)
+- When the holes on a sheet come out in two clear sizes, GroupLab now measures a hole from the smaller ones and flags the larger ones, instead of measuring nothing and flagging nothing. It still asks you for the calibre.
 
 **Under the hood**
 
-- Anything GroupLab needs from you is written down in a file now rather than asked for in passing, so nothing is lost and nothing waits on an answer. (Entry 149, 5)
+- Anything GroupLab needs from you is written down in a file now rather than asked for in passing, so nothing is lost and nothing waits on an answer.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1324,9 +1322,9 @@ This build has no change to the application; it behaves exactly as nightly 93 do
 
 **What you will notice**
 
-- GroupLab now publishes Mac builds, one for Apple silicon and one for Intel. Nobody has run either on a real Mac, the download page says so beside each one, and it gives the Terminal command macOS needs before it will open unsigned software. (Entry 147)
-- A broken or hostile image file that claims to be hundreds of megapixels is now refused with its measured size, instead of being decoded until GroupLab runs out of memory. Real scans are unaffected: the limit is twelve times a 600 dpi letter scan. (Entry 143, 43)
-- When you run detection again on a sheet, the marks you had already moved or reassigned are kept where you put them instead of being thrown away, and the button tells you how many it will keep. (Entry 143, 42)
+- GroupLab now publishes Mac builds, one for Apple silicon and one for Intel. Nobody has run either on a real Mac, the download page says so beside each one, and it gives the Terminal command macOS needs before it will open unsigned software.
+- A broken or hostile image file that claims to be hundreds of megapixels is now refused with its measured size, instead of being decoded until GroupLab runs out of memory. Real scans are unaffected: the limit is twelve times a 600 dpi letter scan.
+- When you run detection again on a sheet, the marks you had already moved or reassigned are kept where you put them instead of being thrown away, and the button tells you how many it will keep.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1338,7 +1336,7 @@ This build has no change to the application; it behaves exactly as nightly 93 do
 
 **What you will notice**
 
-- The screenshots on grouplab.org now show the current version of GroupLab rather than one from several days ago, and the release notes page keeps itself up to date as each nightly build is published. (Entry 144)
+- The screenshots on grouplab.org now show the current version of GroupLab rather than one from several days ago, and the release notes page keeps itself up to date as each nightly build is published.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1398,7 +1396,7 @@ This build has no change to the application; it behaves exactly as nightly 74 do
 
 **What you will notice**
 
-- Telling GroupLab which bulls you aimed at now works from the command line too, with the same words the application takes. (Entry 141, 5.3.4)
+- Telling GroupLab which bulls you aimed at now works from the command line too, with the same words the application takes.
 
 **Under the hood**
 
@@ -1413,7 +1411,7 @@ This build has no change to the application; it behaves exactly as nightly 74 do
 
 **What you will notice**
 
-- Opening a photograph or scan is faster: GroupLab used to read and decode the same file three times before showing it to you, and now reads it once. (Entry 130, 6)
+- Opening a photograph or scan is faster: GroupLab used to read and decode the same file three times before showing it to you, and now reads it once.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1433,12 +1431,12 @@ This build has no change to the application; it behaves exactly as nightly 71 do
 
 **What you will notice**
 
-- You can now open a target by dropping the image on the GroupLab window, or by pasting it with Ctrl+V, including a screenshot or an image copied from a browser. A file that turns out not to be an image now says so instead of ending the session. (Entry 137)
-- You can now say which bull a shot belongs to straight from the shots list, and tick several shots to move them all to one bull in a single step that undoes in one go. Selecting a shot also highlights every review item that is about it. (Entry 141, 5.3)
-- Where you have entered a string of velocities, GroupLab now draws them with the mean and spread marked, gives the SD with the range that many shots really pins it to, and says that an extreme spread can only be compared with another string of the same length. (Entry 141, 5.2.5)
-- The Session records screen now draws one load's sessions over time, each with its uncertainty, and says whether the sessions can really tell that the load is getting better or worse. (Entry 141, 5.2.4)
-- When a photograph has more than one target sheet in it, GroupLab now says how many it can see and which one the figures are about, instead of quietly measuring whichever it found first. (Entry 130, 2c)
-- An image that another program has open for a moment, such as a scan your scanner has only just finished writing, now opens after a short wait instead of being refused. (Entry 141)
+- You can now open a target by dropping the image on the GroupLab window, or by pasting it with Ctrl+V, including a screenshot or an image copied from a browser. A file that turns out not to be an image now says so instead of ending the session.
+- You can now say which bull a shot belongs to straight from the shots list, and tick several shots to move them all to one bull in a single step that undoes in one go. Selecting a shot also highlights every review item that is about it.
+- Where you have entered a string of velocities, GroupLab now draws them with the mean and spread marked, gives the SD with the range that many shots really pins it to, and says that an extreme spread can only be compared with another string of the same length.
+- The Session records screen now draws one load's sessions over time, each with its uncertainty, and says whether the sessions can really tell that the load is getting better or worse.
+- When a photograph has more than one target sheet in it, GroupLab now says how many it can see and which one the figures are about, instead of quietly measuring whichever it found first.
+- An image that another program has open for a moment, such as a scan your scanner has only just finished writing, now opens after a short wait instead of being refused.
 
 **This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
@@ -1449,9 +1447,9 @@ This build has no change to the application; it behaves exactly as nightly 71 do
 
 **What you will notice**
 
-- Where you have recorded the velocities for a group, GroupLab now draws each shot's distance from the centre in the order you fired them, and says whether the group really opened up or whether that is what a group of that size looks like anyway. (Entry 141, 5.2.3)
-- The analysis now draws how far your shots spread across and up and down, on one scale, and says plainly whether the shots can tell the two apart or whether the group is only lopsided the way small groups usually are. (Entry 141, 5.2.2)
-- You can now tell GroupLab which bulls you aimed at, by rows, by the same columns of every row, or as a list, and it reads the sheet that way instead of giving each shot to whichever bull it landed nearest. It says back what you told it. (Entry 141, 5.3.4)
+- Where you have recorded the velocities for a group, GroupLab now draws each shot's distance from the centre in the order you fired them, and says whether the group really opened up or whether that is what a group of that size looks like anyway.
+- The analysis now draws how far your shots spread across and up and down, on one scale, and says plainly whether the shots can tell the two apart or whether the group is only lopsided the way small groups usually are.
+- You can now tell GroupLab which bulls you aimed at, by rows, by the same columns of every row, or as a list, and it reads the sheet that way instead of giving each shot to whichever bull it landed nearest. It says back what you told it.
 - On a sheet with enough holes, GroupLab now works out what one hole looks like from the sheet itself rather than from the calibre you entered, so a photograph no longer reports most of its holes as possibly two shots. Entering the calibre still helps it find small holes.
 - When GroupLab guesses the calibre from the holes, it now offers one of the diameters people actually shoot rather than a raw measurement, with any it cannot tell apart listed beside it, and it picks from a pistol list when your record says pistol. It no longer guesses at all from a photograph, where holes read far wider than they measure.
 
@@ -1470,10 +1468,10 @@ This build has no change to the application; it behaves exactly as nightly 71 do
 
 **What you will notice**
 
-- The ballistics page has an imperial and metric switch, and the numbers in its boxes are converted rather than just relabelled. Compare loads now shows each load's velocity and its spread beside the group. (Entry 131, 8 and 10)
-- New target, on Ctrl+N or from the menu, clears the sheet and starts again, and a sheet with edits you have not saved now asks whether to save or discard them before it goes. (Entry 140, 1.4 and 2)
-- An update published by a newer build can no longer stop older builds from updating themselves, and the update bar now lists every build you skipped, newest first, with what each one changed. (Entry 139)
-- GroupLab no longer flags every hole on a sheet as possibly two shots when the calibre does not fit what you were shooting; it asks once whether the calibre is right. It also no longer tells you that you fired a number of rounds you never entered. (Entry 140, 3)
+- The ballistics page has an imperial and metric switch, and the numbers in its boxes are converted rather than just relabelled. Compare loads now shows each load's velocity and its spread beside the group.
+- New target, on Ctrl+N or from the menu, clears the sheet and starts again, and a sheet with edits you have not saved now asks whether to save or discard them before it goes.
+- An update published by a newer build can no longer stop older builds from updating themselves, and the update bar now lists every build you skipped, newest first, with what each one changed.
+- GroupLab no longer flags every hole on a sheet as possibly two shots when the calibre does not fit what you were shooting; it asks once whether the calibre is right. It also no longer tells you that you fired a number of rounds you never entered.
 
 **Under the hood**
 
@@ -1619,14 +1617,14 @@ This build has no change to the application; it behaves exactly as nightly 29 do
 
 - You can now click a hole to edit it, move it with the arrow keys, call it a flyer without dropping it from the group, set its size by hand and leave a note on it.
 - Every figure on the analysis page now has a ? beside it explaining what it means and what the number of shots does to it.
-- The analysis page can now be switched between inches with MOA and centimetres with mil, and remembers which you chose. Your saved sessions are unchanged either way. (Entry 131, 3.2)
-- The analysis page can now show your group's mean radius per 100 yards on a scale, against rules of thumb quoted on a Hornady podcast, with a plain note on how much weight your shot count can carry. (Entry 131, 6.1)
-- The zero correction is now shown in MOA, mil, inches and centimetres at once, with the number of clicks to turn where your rifle's scope details are recorded. (Entry 131, 3.1)
-- Every figure on the analysis page can now tell you what it means in two or three plain sentences, including what having only a few shots does to it. (Entry 131, 4)
-- Every edit now shows a short line at the bottom right saying what changed, with an Undo button beside it, instead of changing the sheet silently. (Entry 131, 9)
+- The analysis page can now be switched between inches with MOA and centimetres with mil, and remembers which you chose. Your saved sessions are unchanged either way.
+- The analysis page can now show your group's mean radius per 100 yards on a scale, against rules of thumb quoted on a Hornady podcast, with a plain note on how much weight your shot count can carry.
+- The zero correction is now shown in MOA, mil, inches and centimetres at once, with the number of clicks to turn where your rifle's scope details are recorded.
+- Every figure on the analysis page can now tell you what it means in two or three plain sentences, including what having only a few shots does to it.
+- Every edit now shows a short line at the bottom right saying what changed, with an Undo button beside it, instead of changing the sheet silently.
 - A sheet where the whole group landed away from where it was aimed is now measured against the bulls you actually shot at, once you tell GroupLab which those were.
 - Rifles and loads now keep everything you type about them. Sight height, zero distance, muzzle velocity, ballistic coefficient and the rest were being lost when the records were saved.
-- The download is about a third smaller, and the installed application about 128 MB smaller, with no change to what it does. (Entry 132, 2)
+- The download is about a third smaller, and the installed application about 128 MB smaller, with no change to what it does.
 
 **Under the hood**
 

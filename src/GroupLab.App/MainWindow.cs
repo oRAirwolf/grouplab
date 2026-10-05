@@ -4173,7 +4173,12 @@ public sealed partial class MainWindow : Window
         // Entry 97 section 1: the concept's selected-detection panel, label and value rows and the provenance as a chip, teal where the software
         // found it on its own.
         selection.Children.Add(Readout("Shot", ShotLabel(id)));
-        if (session.State.Scale is { } scale)
+        // Entry 374 section 4: where the shot is from its own bull; the place on the sheet only where it has no bull.
+        if (GroupAnalysis.FromItsBull(session.State, shot, units) is { } fromBull)
+        {
+            selection.Children.Add(Readout("From its bull", fromBull));
+        }
+        else if (session.State.Scale is { } scale)
         {
             var at = scale.ToTarget(shot.Image);
             selection.Children.Add(Readout("Position", units.Length(at.X) + ", " + units.Length(at.Y)));

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-04 12:30 UTC, after entries 371 and 372 (corners tuned; M220 scale labels); stopped at 75 percent for the night; the inbox is empty.
+**Last rewritten:** 2026-10-05, after request 73 (the M834 decoded) and entries 374 (partly) and 373; the inbox is empty.
 
 ---
 
@@ -21,13 +21,14 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entries 363, 364 and 365 done** (2026-10-04), for nightly 167: the M834 files (166), aiming marks, issue 19 (closed), the
   sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
   scale markers A to D.
-- **Entries 358 and 359 done but for the radio**: no platform's Bluetooth or USB link until requests 72 and 73.
+- **Request 73 done (2026-10-05)**: the M834 prints over classic Bluetooth's serial port, its page in LZO1X blocks; Android prints
+  directly (request 78 asks Alan to try it); the computer's serial port and the iPhone's LE way are next.
+- **Entry 374 partly done**: the C bull fix (shooting order), the update fix, four of section 4; store-bought photos, timed pairing,
+  two holes in one, review undo, shot data out and in, and the 2 MOA 3 by 4 sheet are next. **Entry 373 done.**
 - **Entries 366 to 370 done**: the range kit, cut down by 370 to an hour (three loads one sheet each, store-bought targets, C and E bulls), in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
-  72, 73 (the M834's recordings), 74, 75, 76.
-
+  72, 74, 75, 76, 77, 78 (GroupLab printing to the M834).
 - **Entry 369 done**: every published nightly goes to the Microsoft Store (store-follow.yml); 166 is in certification.
-
 - **Entry 372 partly done**: labels made, read and measured; its encoder, check label and profile size are next.
 - **Entry 371 done but section 3's wider ideas** (`grouplab surface-trial`): found only where two ways agree; brackets must touch.
 
@@ -52,10 +53,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. The M834: the recording reader waits for request 73's recordings; then the printer's own protocol.
-
-- **When the range results come (entry 370):** RANGE-PLAN-HOLE-SIZE.md's results say this run is one sheet each of three loads: the
-  speed effect at .22 width and a centrefire point, not speed against width without the .300 Blackout subsonic sheet.
+3. Entry 374's rest: the store-bought photos and the timed pairing, then two holes in one, review undo, shot data, the 2 MOA sheet.
 
 ## Blocked, and on what
 
@@ -63,14 +61,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The phones**: not reachable over adb since 2026-09-30 morning.
 - **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **21** (77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **21** (78 the M834 from GroupLab; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 71 switching on entry 357, the store forms; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
+- **84** the README's "Not built yet" sentence (my choice: keep it)
 - **83** identification takes 34 s on a photo with no codes (my choice: full size only when no marker is found)
 - **80** a newer fingerprint library without a new build
 - **67** the printer check page as grid style 4 (with Alan)
@@ -81,8 +80,8 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.166 (2026-10-04): entry 363 section 2, the M834 files.
-- **The site** is live at 6308cf5c, after nightly 153 (a bot's `[screens]` or notes push starts no workflow; publish by hand).
+- **Last nightly:** 0.2.0-nightly.169 (2026-10-04, the same commit as 168, whose notes entry was restored on 2026-10-05).
+- **The site** follows main by itself (website.yml); live at bbb5a03f on 2026-10-05.
 - Crash reports open: none. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
@@ -102,8 +101,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   at the start of a run (entries 335 and 336).
 - **A worker's commits can be stranded in its worktree.** Entries 325 and 327's detection work and the fold of 324, 325 and 327 sat
   unpushed in `.claude/worktrees/push-324` until entry 342 found them; compare a finished worker's subjects with main before removing it.
-- **The Mac packaging can be run by hand**: `gh workflow run package.yml --ref <branch> -f ref=<sha>` proves the signing and
-  notarization on a commit without a nightly, and publishes nothing.
 - **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
   own `camera.layout` log line instead (`scripts/device-capture-check.py`).
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
@@ -115,6 +112,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
 - **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a
   push that should make a nightly must not be one.
-- **Tag36h11 555 to 586 are scale markers' (entry 365)**: the sheets' markers must stay below; the sheet look and the validator know.
+- **The Phomemo app prints a Letter sheet at 94.7 percent** (request 73): only GroupLab's own direct print is true size.
+- **Tag36h11 470 to 549 are scale labels' and 555 to 586 scale markers' (entries 372 and 365)**: the sheets' markers must stay below; the sheet look and the validator know.
 - **A picture with a bank card in it is never sent**, and marking by hand works on a blanked copy (entry 365 section D).
 - **Entry 317's budget is in force:** one worker by default, the ccusage line once a day in for-alan.md.

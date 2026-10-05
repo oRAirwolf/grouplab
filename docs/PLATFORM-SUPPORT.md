@@ -8,7 +8,7 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 - `scripts/platform-support.py` writes it into `README.md` between its two markers, and checks that it is current.
 - `.github/workflows/nightly.yml` appends the one line `scripts/platform-support.py --release` makes to a release whose assets include a macOS build.
 
-**iPhone and iPad, being built** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
+**iPhone and iPad, in a public beta through TestFlight** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
 about 60 percent of phones in the United States and half in the United Kingdom (StatCounter, August 2026). The floor is an iPhone 11 on
 iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
 a Mac; and distribution needs the paid Apple developer program, which Alan is joining. `docs/IOS-PLAN.md` is the plan.
@@ -33,6 +33,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
+| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; not in the App Store yet | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's internal test by invitation | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
@@ -70,7 +71,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ## Apple mobile
 
-An iOS version of GroupLab is being built. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
+GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
 
 ## Other Linux builds
 

@@ -256,9 +256,10 @@ public sealed class Shell : UserControl
 
     /// <summary>
     /// A note along the top that stays until it is closed or acted on, entry 288: "Updated to nightly N" with a way to its notes, or an
-    /// update downloaded and waiting. One at a time; a new one replaces the last.
+    /// update downloaded and waiting. One at a time; a new one replaces the last. Entry 374 section 4: a note that asks nothing of the person,
+    /// such as "Updated to nightly N", closes itself after <paramref name="hideAfter"/>.
     /// </summary>
-    internal void Notice(string words, string? action = null, Action? acted = null)
+    internal void Notice(string words, string? action = null, Action? acted = null, TimeSpan? hideAfter = null)
     {
         var column = new StackPanel { Spacing = 8, Children = { Screens.Line(words) } };
         var buttons = new WrapPanel();
@@ -275,6 +276,16 @@ public sealed class Shell : UserControl
         column.Children.Add(buttons);
         notice.Child = column;
         notice.IsVisible = true;
+        if (hideAfter is { } after)
+        {
+            Avalonia.Threading.DispatcherTimer.RunOnce(() =>
+            {
+                if (notice.Child == column)
+                {
+                    notice.IsVisible = false;
+                }
+            }, after);
+        }
     }
 
     /// <summary>

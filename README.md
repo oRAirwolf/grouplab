@@ -2,12 +2,12 @@
 
 **Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth. Print a GroupLab sheet, and it does all of it by itself.**
 
-Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows, macOS, Linux and Android.
+Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows, macOS, Linux and Android, and on iPhone and iPad in a public beta through TestFlight.
 
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 [![Newest nightly](https://img.shields.io/github/v/release/oRAirwolf/grouplab?include_prereleases&label=nightly)](https://github.com/oRAirwolf/grouplab/releases)
 [![Tests](https://github.com/oRAirwolf/grouplab/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/oRAirwolf/grouplab/actions/workflows/ci.yml)
-![Platforms: Windows, macOS, Linux, Android](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-informational)
+![Platforms: Windows, macOS, Linux, Android, iPhone and iPad](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android%20%7C%20iPhone%20and%20iPad-informational)
 [![Discord](https://img.shields.io/badge/Discord-GroupLab-5865F2)](https://grouplab.org/discord)
 
 <picture>
@@ -90,11 +90,11 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 
 | Platform | Download |
 |---|---|
-| **Windows** | [Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe) · [Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip) · [Microsoft Store](https://apps.microsoft.com/detail/9NWJCXBKZNPZ), an older, steadier build that updates itself |
+| **Windows** | [Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe) · [Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip) · [Microsoft Store](https://apps.microsoft.com/detail/9NWJCXBKZNPZ), which gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself |
 | **macOS** | [Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz) · [Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz) |
 | **iPhone and iPad** | [Public beta on TestFlight](https://testflight.apple.com/join/A3xyT6C6): install TestFlight from the App Store, then open the invitation |
 | **Linux** | [Tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz) |
-| **Android** | [APK](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk) · [Google Play internal test](https://play.google.com/apps/internaltest/4701684356677501640), by invitation |
+| **Android** | [GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk) · [APK](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk) · [Google Play internal test](https://play.google.com/apps/internaltest/4701684356677501640), by invitation |
 <!-- /readme:newest -->
 
 <details>
@@ -107,13 +107,14 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day. |
 | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with Apple silicon (M-series). **Run on one real Mac**, by one tester; the Intel build has not been. |
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
+| **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see "Before you install" below. |
 | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. |
 
 **The Windows and Linux builds here are unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names. **The macOS build is signed with a Developer ID and notarized by Apple.**
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
 - **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
-- **Where it keeps things:** `%APPDATA%\GroupLab`, and nowhere else. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
+- **Where it keeps things:** `%APPDATA%\GroupLab` on Windows and under your home folder on macOS and Linux, and on a phone in the app's own storage, and nowhere else. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
 - **Which build you have:** the Settings screen names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
 - **On a Mac**, move `GroupLab.app` into Applications and open it. The first time, macOS checks it with Apple and opens it.
@@ -193,6 +194,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 190 MB installed | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 220 MB installed | as Windows |
+| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; not in the App Store yet | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's internal test by invitation | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
@@ -230,7 +232,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ### Apple mobile
 
-An iOS version of GroupLab is being built. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
+GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
 
 ### Other Linux builds
 
@@ -266,7 +268,7 @@ That is the whole point of the project. Everything else is the machinery that ma
 
 ## How it works
 
-**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or, under a crosshair, on the phone. The same statistics run. Finding the holes by itself on any target is the goal: on the computer, Find holes (Experimental) now proposes them once the scale is set, for you to check one by one, and GroupLab Dev offers it on the phone. Five Birchwood Casey targets are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent on the fingerprinted sheets, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike.
+**Any target works.** Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or, under a crosshair, on the phone. The same statistics run. Finding the holes by itself on any target is the goal: on the computer, Find holes (Experimental) now proposes them once the scale is set, for you to check one by one, and GroupLab Dev offers it on the phone. GroupLab recognizes <!--count:store-targets-->nine<!--/count--> store-bought targets, from Birchwood Casey and the National Target Company, on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent on the fingerprinted sheets, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike.
 
 **A GroupLab sheet is the fast lane, not a requirement.** On its own sheets everything is automatic: the scale, every hole, and which bull each shot belongs to, and one shot per bull gives large groups. You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyze it correctly.
 
@@ -314,8 +316,8 @@ What exists and is tested:
 - an Android app, in testing, that photographs or opens a sheet and reads it with the same engine, and the same app for iPhone and
   iPad in a public beta through TestFlight
 - <!--count:store-targets-->nine<!--/count--> store-bought targets recognized from a fingerprint, named, their bulls placed and their printed scale offered with a warning
-- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, scale labels from a label printer such as the Phomemo M220, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale
   to check it, and a newer signed list of them reaching every copy with the updates, without a new build (built, not proven)
+- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168 and have not yet been printed on a real one
 - chronograph readings from a file (a spreadsheet CSV, a Garmin Xero export, and, Experimental, a LabRadar report or a BulletSeeker
   export), paired with the shots by a proposal a person accepts (built, not proven)
 - an intake tool that verifies donated photographs, refuses opt-outs, and strips location data without altering a pixel
@@ -492,7 +494,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 
 **One item in `DESIGN.md` section 3 carries no phase on purpose, and it carries two promises.** A deferral means the promise still stands, nobody is working on it, and the reason is written down. It is not a quiet drop, and it is checked: a scope bullet with neither a phase nor a deferral fails a test.
 
-- **Deferred: the full visual designer, and with it the full detector on a bought target.** Every built-in sheet is a grid, so the parametric editor covers the space, and the format already carries arbitrarily placed bulls for the day something needs them. A canvas is a large screen for a case nobody has asked for. Five store-bought targets are already recognized by fingerprint, with their bulls and scale, and Targets, Add a store-bought target makes the fingerprint of another from a camera photo, to send so a later build recognizes it; what stays deferred is the designer's canvas and, with it, automatic hole detection on a bought target, which needs a full definition: when either is asked for, both arrive together. Assisted placement on a target with no definition is the snap, above, and detection on blank paper is Phase 4.
+- **Deferred: the full visual designer, and with it the full detector on a bought target.** Every built-in sheet is a grid, so the parametric editor covers the space, and the format already carries arbitrarily placed bulls for the day something needs them. A canvas is a large screen for a case nobody has asked for. <!--count:store-targets-->nine<!--/count--> store-bought targets are already recognized by fingerprint, with their bulls and scale, and Targets, Add a store-bought target makes the fingerprint of another from a camera photo, to send so a later build recognizes it; what stays deferred is the designer's canvas and, with it, automatic hole detection on a bought target, which needs a full definition: when either is asked for, both arrive together. Assisted placement on a target with no definition is the snap, above, and detection on blank paper is Phase 4.
 
 A state changes in the same commit as the thing it describes, and `ReadmeTests` fails if a phase here and in `DESIGN.md` section 21 ever disagree, if a phase's feature carries no state, or if a scope bullet in section 3 names no phase and no deferral.
 
@@ -510,7 +512,7 @@ it.
 **The developer works on Windows.** Targets are printed, shot, photographed and marked there, so that is where the application meets real
 data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
-**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8, and being built: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines. The App Store needs the GPL section 7 additional permission described under License; building and testing on a device do not.
+**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8, in a public beta through TestFlight: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines. The App Store needs the GPL section 7 additional permission described under License; building and testing on a device do not.
 
 </details>
 
@@ -568,7 +570,7 @@ flowchart TB
         APP["Desktop<br/>Avalonia"]
         CLI["Command line<br/>grouplab"]
         AND["Android<br/>in testing"]
-        IOS["iOS<br/>being built"]
+        IOS["iOS<br/>TestFlight beta"]
     end
 
     subgraph img["Imaging backend"]

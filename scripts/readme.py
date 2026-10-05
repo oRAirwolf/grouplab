@@ -93,7 +93,7 @@ PLATFORMS = [
     ("Windows", [("Installer", "grouplab-setup-win-x64.exe"), ("Zip", "grouplab-win-x64.zip")]),
     ("macOS", [("Apple silicon", "grouplab-macos-arm64.tar.gz"), ("Intel", "grouplab-macos-x64.tar.gz")]),
     ("Linux", [("Tarball", "grouplab-linux-x64.tar.gz")]),
-    ("Android", [("APK", "grouplab-android.apk")]),
+    ("Android", [("GroupLab Dev", "grouplab-android-dev.apk"), ("APK", "grouplab-android.apk")]),
 ]
 PLAY_TEST = "https://play.google.com/apps/internaltest/4701684356677501640"
 # Entries 335 and 337, published with Alan's approval on 2026-10-01: the Microsoft Store listing and the TestFlight Public Beta.
@@ -107,7 +107,7 @@ def newest() -> str:
     for name, files in PLATFORMS:
         links = " · ".join(f"[{label}]({RELEASES}/download/nightly/{asset})" for label, asset in files)
         if name == "Windows":
-            links += f" · [Microsoft Store]({STORE}), an older, steadier build that updates itself"
+            links += f" · [Microsoft Store]({STORE}), which gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself"
         if name == "Android":
             links += f" · [Google Play internal test]({PLAY_TEST}), by invitation"
         rows.append(f"| **{name}** | {links} |")

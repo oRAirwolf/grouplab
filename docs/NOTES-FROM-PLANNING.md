@@ -25,6 +25,220 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-05, entry 374: the range trip of 4 October, and Unholy's feedback
+
+**Status: partly done 2026-10-05.** Done: section 1's C bull fix (shooting order) and every GroupLab sheet photo run and scored; section 2's reading of both forms (they agree); section 3 in full (the update fix, the crash records, the range checklist step); section 4's zoomed drag, the self-hiding note, the selected shot from its bull, and the paper and backing answer; section 5's list; section 6's report. **Not done:** section 1's store-bought photos, scoreboard and corpus; section 2's timed pairing; section 4's two holes in one, undoing a review answer, shot data out and in, and the 2 MOA 3 by 4 sheet. Results: docs/PHASE1-RESULTS.md, entry 374.
+
+Alan, 2026-10-05 06:09 UTC. Everything is in `C:\Dev\grouplab-local\range-2026-10-04\results\` (local, never committed):
+`feedback-unholy-and-alan-2026-10-04.txt` (read it whole; it is the source for sections 3 to 5), `photos\` (15 files) and
+`chronograph\` (three Garmin Xero strings, each exported as both CSV and XLS). The Phomemo M834 also arrived today. Week at 74%:
+**entry 360's 85% stop applies; plan to leave room for the M834 recording (request 73) when Alan sends it, which comes first.**
+Main model; one worker at most.
+
+### 1. The targets, as data (do first)
+What was shot (Alan's notes, in the feedback file):
+- Store-bought, .223 Remington about 3000 fps: NTC 100 yard (5 impacts in the middle; the rest of the marks are ejecta from a bullet
+  hitting steel above it, spreading from the top down and right: a real hard case of false holes), Allen EZ Aim (4), Allen 55124A
+  splash bull (5), Shoot-N-C (6), Eze-Scorer green (5). Rigid crosshair: 4 impacts of .300 Norma Magnum about 2800 fps.
+- GroupLab sheets, each photographed at about 1.5 and 3 ft: **C bull** (15 impacts, .300 Norma Magnum; `300 norma with lines going
+  from bull to impact.png` is Alan's own assignment of hole to bull), **E bull** (25 impacts, .223; too scattered for Alan to assign;
+  its chronograph string caught only 8 shots, ignore it), **load sheet GL-CF25-LTR-D** (25 impacts, 6mm ARC about 2400 fps; `6 arc with
+  lines going from bull to impact.png` is Alan's assignment). `5x5 c bull first photo used in mobile app with issues.jpg` is the photo
+  he used on the phone at the range.
+Run every photo through the current pipeline; score against Alan's counts and his two line drawings (they are ground truth for which
+hole belongs to which bull); add them to the scoreboard and the local corpus; and fix what they show, above all: "the shots were so
+poorly placed on the diamond target that I had to clear all of the shots and then it seems like there was only 1 point of impact"
+(the C bull, on the phone). Say for each target what was found, missed and invented.
+
+### 2. The chronograph files
+These are the Xero's single-session export from the chronograph's own results, not Sessions > Export: the CSV starts with the
+string's name on its own line, then a header with a byte order mark; numbers carry thousands separators in quotes; KE and power factor
+are "--" unless a bullet weight was set (the .300 Norma string has 245 gr). Make GroupLab read both the CSV and the XLS of this kind,
+say whether the two differ in anything that matters, and pair the 6 ARC string (25 shots, times given) and the .300 Norma string (15)
+with their sheets as a real test of the timed pairing.
+
+### 3. The phone's own record of the .300 Norma attempt
+Alan: "I tried to use grouplab on the 300 norma magnum target at the range today so I assume you can pull logs and feedback from it."
+The phone cannot send targets yet (its sender waits on the store forms), so nothing reached the server. Pull the log and the session
+from the phone the usual way when it is connected (GroupLab Dev, adb); if it was the store build, or the phone is not connected, write
+one short request: Settings, Report a problem, save the zip into the results folder. Then read it against section 1's photo.
+
+### 4. Fixes that need no new layout (build these)
+- **Phone: panning a zoomed target drags the whole screen** instead of the picture. The picture must take every drag while zoomed.
+- **The "updated" bar** should hide by itself after a short time (it stays until dismissed now).
+- **A selected shot shows its distance from its own bull** (right and up, in the session's units and MOA), not its position on the
+  sheet.
+- **Two holes in one**: where GroupLab thinks one hole is two shots (or the reverse), the review offers "shot N is 2 shots", "shot N is
+  1 shot", or leave it.
+- **An answered review question can be undone**: answered questions fold up and can be reopened and changed.
+- **Shot data out and in**: export every shot's position relative to its bull (bull id, x and y from the bull's centre, in inches and
+  MOA, with the sheet, the session and the distance), as CSV; and import the same, so shots from many sheets of any kind can be pooled
+  into one analysis later (Unholy's reason: combine sheets without the set-of-three feature).
+- **The setup step's "paper it was printed on" and "what was behind it"**: find out whether they help detection. If they do, label them
+  "can help with detection" instead of "optional"; if they do not, say so in for-alan.md (removing them is a layout decision, section 5).
+- **A new sheet: 2 MOA bulls, 3 by 4, Letter, no load block** (Unholy). 2 MOA at 100 yd unless the generator's distance says otherwise;
+  same codes and rules as the other sheets; offer it in the library and show a preview picture in for-alan.md.
+
+### 5. DESIGN NEEDED (do not build; list them in for-alan.md for planning's concepts)
+- Tabs along the top, like a web browser, to open several targets at once (Unholy).
+- The Groups section: Unholy finds it unhelpful and unclear ("shots per bull", the text box under the dropdown, "its row" and "its
+  column", "bulls you fired at"); remove or redesign.
+- The Shots section as one row per shot: a bull dropdown, a shot number dropdown, and Delete instead of "not a shot" (Unholy).
+- Lines drawn from each bull to the holes assigned to it, and tap a bull to add or remove its shots (Alan, from the range).
+- The detection page's "Selected shot area" dropdown, which Unholy says need not exist; the desktop's "Show in folder" button in the
+  lower right, which he calls worthless.
+- Equipment: barrels belong to a rifle, with extra barrels added to a rifle, instead of a separate Barrels section.
+For each, a short line on what it does today and what depends on it, so the concepts start from facts.
+
+### 6. Report
+In for-alan.md, plainly: the per-target results, the chronograph answer, what the phone's log showed, what was fixed, and the DESIGN
+NEEDED list. Stop by 85% at the latest, leaving room for the M834.
+
+## 2026-10-04, entry 373: consistency audit, 2026-10-04
+
+**Status: done 2026-10-05 but section 7** (the README's "Not built yet" sentence is held by entry 103's test; question 84). Results: docs/PHASE1-RESULTS.md, entry 373.
+
+The scheduled consistency audit (entry 267 section 2b). Read on 2026-10-04 around 15:30 UTC: README.md at 13d882da, the live site
+(home, /download/, /features/, /tour/ and its stops, /shoot-a-target/, /guides/, /releases/, /support/), which serves nightly 167 and
+matches website/_site, website/features.json, tour.json and how-it-works.json, docs/RELEASE-NOTES.md (nightlies 165 to 167), STATE.md,
+for-alan.md, PLATFORM-SUPPORT.md, PHONE-PARITY.md, ANDROID.md, USER-GUIDE.md, TESTING-GUIDE.md, the article what-grouplab-sends, and
+the commits since 2026-09-29. The GitHub issue labelled `consistency` could not be read from this run (no GitHub access), so compare
+it with this list before acting and do nothing twice. Entry 345's fourteen findings were checked and are not repeated. Already right:
+the releases page and the README name nightly 167 and commit 18d6bb7; the home page says the Store follows the nightlies; nothing says
+a lawyer is reviewing anything; "What GroupLab is not" is gone; the credits name Unholy, Jylee and Fenix (Fenix approved in entry 171);
+Android is offered as an APK and a Play test; the article what-grouplab-sends already describes the 4 October changes.
+
+Twelve findings, the public ones first. Fix them in one change, README, site, guides and CLAIMS.md together, as entry 267 asks.
+
+### 1. README: the platforms at the top leave out iPhone and iPad
+
+- **Where:** README.md line 5, "On Windows, macOS, Linux and Android."; line 10, the badge "Platforms: Windows, macOS, Linux, Android".
+- **Should say:** iPhone and iPad as well, in a public beta through TestFlight, in both the sentence and the badge.
+- **Evidence:** the README's own download table (line 95) links the TestFlight beta; the home page says "an iPhone and iPad public beta
+  through TestFlight"; /download/ opens with "Free, for Windows, Mac, iPhone and iPad, Android and Linux".
+
+### 2. README: the Microsoft Store called "an older, steadier build"
+
+- **Where:** README.md line 93, the download table's Windows row; written by scripts/readme.py line 110.
+- **Says:** "[Microsoft Store], an older, steadier build that updates itself".
+- **Should say:** what the site says: the Store copy gets every nightly once Microsoft has certified it, usually a day or so later,
+  and updates itself.
+- **Evidence:** entry 369 (d5546eaf, "the Microsoft Store follows the nightlies, every published nightly submitted automatically");
+  STATE.md "Microsoft follows the nightlies"; home page "a Windows copy in the Microsoft Store that follows the nightlies"; /download/
+  "It gets every nightly too, once Microsoft has certified it". Worth a look at the same time: /download/ still badges the Store card
+  and the Google Play card "Steady" (website/build.py line 885), which sits oddly beside "It gets every nightly too".
+
+### 3. README: the download table leaves out GroupLab Dev, the recommended Android download
+
+- **Where:** README.md line 97, the Android row: only "APK" and "Google Play internal test".
+- **Should say:** GroupLab Dev (`grouplab-android-dev.apk`) as well, first, as /download/ lists it.
+- **Evidence:** README.md "Before you install", the Android bullet: "GroupLab Dev, `grouplab-android-dev.apk`, is the recommended
+  download for testing until GroupLab is on the Play Store"; /download/ lists GroupLab Dev before the plain APK.
+
+### 4. README "Where GroupLab stands": two bullets run into each other, and the M220 labels read as shipped
+
+- **Where:** README.md lines 332 to 334.
+- **Says:** the store-bought bullet now ends "their printed scale offered with a warning", and the scale markers bullet ends "giving a
+  target GroupLab did not print its scale / to check it, and a newer signed list of them reaching every copy with the updates, without
+  a new build (built, not proven)". The second line belongs to the store-bought bullet; the scale markers line was inserted between
+  its two lines (entry 365, then 13d882da kept it).
+- **Should say:** the store-bought bullet whole again ("... offered with a warning to check it, and a newer signed list of them
+  reaching every copy with the updates, without a new build (built, not proven)"), and the scale markers bullet ending at "its scale",
+  with its own state. The "scale labels from a label printer such as the Phomemo M220" part should say it is newer than nightly 167
+  and not yet printed on a real M220 (entry 372 is part done; request 77 is open), or wait for the build that carries it. The
+  Features page's Scale markers entry does not mention the labels, which is right until they ship.
+- **Evidence:** `git --no-optional-locks show 13d882da -- README.md`; RELEASE-NOTES.md nightly 167 has no scale labels; STATE.md
+  "Entry 372 partly done".
+
+### 5. "Five" store-bought targets, where GroupLab now recognizes nine
+
+- **Where and says:**
+  - README.md line 286 (How it works): "Five Birchwood Casey targets are recognized on the computer and the phone".
+  - README.md line 511 (Deferred): "Five store-bought targets are already recognized by fingerprint".
+  - website/tour.json line 961, served on /tour/fingerprint/: "as the five Birchwood Casey targets are now".
+  - docs/CLAIMS.md line 380: "Five Birchwood Casey targets are recognized on the computer and the phone".
+  - docs/PHONE-PARITY.md line 30: "one of five store-bought targets GroupLab knows".
+- **Should say:** nine store-bought targets, from Birchwood Casey and the National Target Company, using the
+  `<!--count:store-targets-->` marker where the file supports it, so the next change keeps them right.
+- **Evidence:** RELEASE-NOTES.md nightly 167, "GroupLab now recognizes nine store-bought targets"; README.md line 332 and
+  USER-GUIDE.md line 67 already say nine.
+
+### 6. iPhone and iPad called "being built", and missing from the minimums table
+
+- **Where and says:**
+  - docs/PLATFORM-SUPPORT.md line 73 (and README.md line 250, generated from it): "An iOS version of GroupLab is being built."
+  - README.md line 529: "iOS is Phase 8, and being built".
+  - website/how-it-works.json line 1143, served on /tour/how-it-works/: "iPhone and iPad / being built".
+- **Should say:** in a public beta through TestFlight, not in the App Store yet.
+- **Also:** the minimums table (PLATFORM-SUPPORT.md, README.md line 208) has no iPhone and iPad row, while its own rule (line 29)
+  says only a platform with no published build is left out. The TestFlight beta is published. Add the row (the iOS version floor and
+  devices from docs/IOS-PLAN.md), or say in the table why it is not there yet.
+- **Evidence:** README.md line 95 and lines 330 and 331 ("the same app for iPhone and iPad in a public beta through TestFlight"); /download/.
+
+### 7. README: a stray "Not built yet" line under "Every screen, larger"
+
+- **Where:** README.md line 53.
+- **Says:** "The [tour] walks through them. Not built yet: cloud provider adapters over three-tier storage."
+- **Should say:** end at "walks through them." The sentence is the Phase 7 gate's wording and has nothing to do with the screens.
+  It arrived in 3b638e25 (entry 334), apparently left from an older "Not built yet" list.
+
+### 8. Send everything I open, and the log in error reports, are missing where users read about Settings
+
+- **Where and says:**
+  - docs/USER-GUIDE.md line 419 (section 11): automatic error reports hold "the names of the last things done, never anything you
+    typed", then "That part is built but not switched on yet."
+  - docs/USER-GUIDE.md line 434 (section 12, Sharing): sending targets is "every target you analyze to the project, ask each time,
+    or never"; nothing about Send everything I open or the log.
+  - The tour's Settings stop (website/tour.json, served on /tour/settings/), its Sharing paragraph: the same three choices only.
+  - website/features.json, `send-targets` sentence: "After an analysis GroupLab can send the target to the project"; Send everything
+    I open sends every picture opened, read or not. `error-reports` sentence: nothing about the log.
+- **Should say:** on the computer, Settings offers Send everything I open, and an automatic error report can carry GroupLab's log from
+  this run and the last, with anything typed replaced by its length, each asked about first; on the phones both stay off for now.
+  Check "That part is built but not switched on yet" against SharingSwitches.cs and the receiver terms, and remove it if automatic
+  reports are on. The article what-grouplab-sends already has the right words and can be the model.
+- **Evidence:** RELEASE-NOTES.md nightly 167; b68cb2fa ("Send everything I open and fuller error reports on for the computer, the
+  phones waiting on the store forms"); for-alan.md "On the computer both are on from nightly 166".
+
+### 9. Label targets: "Desktop only" on the Features page, and phone links on desktop notes
+
+- **Where:** website/features.json `label-targets`, platforms Windows, macOS and Linux, shown on /features/ as "Desktop only, for now".
+- **Should say:** what the phone has: the label targets are in the phone's Targets library and the phone saves or shares any sheet for
+  a label printer's own app; the dot preview is on the computer only. Either list Android and iPhone and iPad with a note, or keep the
+  desktop list and change the note to say what the phone does.
+- **Evidence:** docs/PHONE-PARITY.md line 72 ("the label targets are in the phone's Targets library and the phone shares any sheet for
+  a label printer's own app (entry 363)").
+- **Also:** features.json line 1130, `phone-targets` note "Targets screen", is short enough to catch desktop notes. The README's
+  "What is new" links nightly 165's "The Targets screen can now print for a thermal label printer: the preview shows every dot" and
+  nightly 166's "On the Targets screen, Save for a printer app sits on its own line" to "Print a sheet from the phone" (Android), though
+  PHONE-PARITY.md says the dot preview is on the computer only. Give `phone-targets` a longer phrase and place those notes under
+  `label-targets`. Nightly 165's "Six-bull label targets..." also links to "Pool the sheets of a set" rather than "Label targets".
+
+### 10. Release notes, nightly 167: a website line, and internal reference numbers
+
+- **Where:** docs/RELEASE-NOTES.md line 36, under nightly 167's Under the hood: "The website now shows Targets with Scale markers open,
+  on the Features page and the tour."
+- **Should say:** nothing; remove it. The file's own rule, line 7: "Changes to this website, the guides and the research are not
+  listed here". Line 938 ("'Made for your optic' on the tour, and a Features page.") breaks the same rule in an older build.
+- **Also:** nightly 167's notes carry "(Request 76)", "(Request 74)", "(Request 74, 76)" and "(Question 78)" (lines 24 to 29), and the
+  README's "What is new" and /releases/ repeat them. Requests and questions are internal and mean nothing to a reader; "(Issue 19)" is
+  public and can stay. Strip request, question and entry numbers from the public text, and have the release note tooling do it for
+  later builds (older builds have the same, lines 523, 527, 544, 713, 1156, 1157).
+
+### 11. Where GroupLab keeps your data: only the Windows folder named
+
+- **Where and says:** README.md line 116, "`%APPDATA%\GroupLab`, and nowhere else."; docs/TESTING-GUIDE.md line 45 ("Everything you
+  have made lives in `%APPDATA%\GroupLab`") and line 100 ("GroupLab keeps everything in `%APPDATA%\GroupLab`").
+- **Should say:** the Windows folder, and the macOS and Linux folders (and, in the README, that the phones keep it in the app's own
+  storage), or at least /download/'s wording: "Kept in `%APPDATA%\GroupLab` on Windows, and under your home folder elsewhere."
+- **Evidence:** /download/, "Your data"; the README and testing guide both cover macOS, Linux and the phones elsewhere.
+
+### 12. Internal: STATE.md and for-alan.md behind what has happened
+
+- STATE.md, "Builds and the site": "Last nightly: 0.2.0-nightly.166" and "The site is live at 6308cf5c, after nightly 153". Nightly
+  167 was published at 14:04 UTC (172a7528), and the live site serves nightly 167 on /, /download/ and /releases/.
+- for-alan.md request 16, item 1, still asks "A name, or none" for the macOS tester, answered on 2026-09-24 (Fenix, entry 171
+  section 6, thanked in the README). Only the trackpad half is open; trim item 1.
+
 ## 2026-10-04, entry 372: scale labels printed on the Phomemo M220
 
 **Status: partly done 2026-10-04, stopped at the 78 percent overnight limit's margin.** Done: the label kind and its layouts (every width 20 to 75 mm, 70 x 80 and 50 x 30 first), the reading (rows across only, the across scale), saving and sharing four at 203 dpi with the size remembered, the measured accuracy on simulated scenes, the words and request 77. **Not done, next session:** section 2's own Bluetooth encoder and the LE or classic question, the M220 printer check label, the size in the printer's profile rather than the settings, the phone's own size choice. Results: docs/PHASE1-RESULTS.md, entry 372.

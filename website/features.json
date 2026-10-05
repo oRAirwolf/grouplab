@@ -10,6 +10,10 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "A load sheet shot one bull off in every shot",
+    "GroupLab on Android now looks for updates",
+    "On the phone, panning a zoomed target",
+    "A selected shot now says how far",
     "The scale markers' instructions now say to tuck",
     "On Android, Targets can now print a sheet straight to a Phomemo M834",
     "Targets, Scale markers now makes scale labels",
@@ -839,7 +843,7 @@
       "key": "send-targets",
       "group": "Sharing and privacy",
       "name": "Send a target to the project",
-      "sentence": "After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise.",
+      "sentence": "After an analysis GroupLab can send the target to the project to improve detection, asking first unless you choose otherwise. On the computer, Send everything I open sends every picture you open, read or not; the phones keep it off for now.",
       "shot": "settings",
       "platforms": [
         "Windows",
@@ -856,7 +860,7 @@
       "key": "error-reports",
       "group": "Sharing and privacy",
       "name": "Error reports",
-      "sentence": "When GroupLab hits an error it can send a report so the problem can be fixed, automatically, after asking, or never.",
+      "sentence": "When GroupLab hits an error it can send a report so the problem can be fixed, automatically, after asking, or never; on the computer a report can carry GroupLab's log, anything typed replaced by its length.",
       "shot": "settings",
       "platforms": [
         "Windows",

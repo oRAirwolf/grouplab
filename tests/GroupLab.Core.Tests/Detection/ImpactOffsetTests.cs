@@ -170,6 +170,23 @@ public class ImpactOffsetTests
     }
 
     /// <summary>Nothing to place is not an error, and does not claim a shift.</summary>
+    /// <summary>
+    /// Entry 374 section 1: the C bull sheet of 4 October, one shot of .300 Norma Magnum at each of bulls 1 to 15, all about an inch low and
+    /// right; the 14 holes found in the phone's photo, inches on the page, bull 10's torn off at the edge. Read a row higher they fit as
+    /// well, as fired at bulls 6 to 20; the shooting order decides, as Alan's own drawing of hole to bull does.
+    /// </summary>
+    [Fact]
+    public void ASheetShotOneRowOffIsReadInTheOrderItWasShot()
+    {
+        (double X, double Y)[] holes = [(1.495, 2.674), (4.556, 2.543), (3.066, 3.107), (6.147, 3.178), (7.514, 2.971), (2.082, 4.668), (3.335, 4.696),
+            (4.772, 4.666), (6.238, 4.990), (2.008, 6.189), (3.327, 5.764), (4.567, 6.124), (6.035, 6.281), (8.016, 6.057)];
+        var bulls = Enumerable.Range(0, 25).Select(i => new Offset(254 * (1.260 + (1.496 * (i % 5))), 254 * (2.126 + (1.496 * (i / 5))))).ToList();
+        var found = ImpactOffsets.WholeSheet([.. holes.Select(h => new Offset(254 * h.X, 254 * h.Y))], bulls, [.. Enumerable.Range(0, 25)]);
+        Assert.NotNull(found);
+        Assert.InRange(found.Shift.X / 254, 0.3, 0.7);
+        Assert.InRange(found.Shift.Y / 254, 0.8, 1.1);
+    }
+
     [Fact]
     public void NoShotsGivesNoOffsetAndNoComplaint()
     {

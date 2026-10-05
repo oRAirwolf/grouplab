@@ -325,6 +325,30 @@ public static class GroupAnalysis
         })];
     }
 
+    /// <summary>
+    /// Entry 374 section 4 (Unholy): a selected shot told by where it is from its own bull, right or left and high or low, in the person's
+    /// unit and in MOA at the session's distance, rather than where it is on the sheet. Null where the shot has no bull or there is no scale.
+    /// </summary>
+    public static string? FromItsBull(MarkingState state, MarkedShot shot, UnitSettings units)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(shot);
+        ArgumentNullException.ThrowIfNull(units);
+        if (shot.Bull is null || CompositeOffsets(state, [shot]) is not [var o])
+        {
+            return null;
+        }
+
+        string text = units.Length(Math.Abs(o.X)) + (o.X < 0 ? " left, " : " right, ") + units.Length(Math.Abs(o.Y)) + (o.Y < 0 ? " high" : " low");
+        double? distance = state.ShotDistanceInches;
+        if (UnitSettings.AngleIn(Math.Abs(o.X), distance, AngularUnit.Moa) is { } across && UnitSettings.AngleIn(Math.Abs(o.Y), distance, AngularUnit.Moa) is { } down)
+        {
+            text += string.Create(CultureInfo.InvariantCulture, $" ({across:0.00} and {down:0.00} MOA)");
+        }
+
+        return text;
+    }
+
     /// <summary>Whether the sheet has sighter bulls, which is when "analyse sighters" means anything (NOTES-FROM-PLANNING.md entry 105 section 8).</summary>
     public static bool HasSighters(MarkingState state)
     {

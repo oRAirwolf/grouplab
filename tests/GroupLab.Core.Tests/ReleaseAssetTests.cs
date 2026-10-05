@@ -23,6 +23,8 @@ public partial class ReleaseAssetTests
     [
         "grouplab-setup-win-x64.exe", "grouplab-win-x64.zip", "grouplab-linux-x64.tar.gz",
         "grouplab-macos-arm64.tar.gz", "grouplab-macos-x64.tar.gz", "grouplab-android.apk",
+        // Entry 373 section 3: GroupLab Dev, the recommended Android download until the Play Store, first in the Android row.
+        "grouplab-android-dev.apk",
     ];
 
     [Fact]

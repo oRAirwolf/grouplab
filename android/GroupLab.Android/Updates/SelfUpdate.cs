@@ -137,6 +137,26 @@ internal static class SelfUpdate
         _ = RunAsync(asked: false);
     }
 
+    /// <summary>
+    /// Entry 374 section 3: Android keeps GroupLab's process for days and only brings it back, so a check made at launch alone can be the
+    /// last for two days; the Fold 7 stayed on nightly 159 through a range trip that way. Each return to the screen checks again where the
+    /// last answer is more than an hour old, or the last try found no network.
+    /// </summary>
+    internal static void Resumed()
+    {
+        if (Off is not null)
+        {
+            return;
+        }
+
+        long last = Prefs.GetLong("checkedUtc", 0), failed = Prefs.GetLong("offlineUtc", 0);
+        long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        if (now - last > TimeSpan.FromHours(1).TotalMilliseconds || (failed > last && now - failed > TimeSpan.FromMinutes(2).TotalMilliseconds))
+        {
+            _ = RunAsync(asked: false);
+        }
+    }
+
     /// <summary>When GroupLab leaves the screen: the moment an automatic update may install without closing anything under the person.</summary>
     internal static void Left()
     {
@@ -168,11 +188,12 @@ internal static class SelfUpdate
     /// Checks, downloads and checks the file, then installs where the rules allow. <paramref name="asked"/> is "Update now": it downloads
     /// on any network, since the person chose to, and installs straight away unless something is open.
     /// </summary>
-    internal static async Task RunAsync(bool asked, bool fromWorker = false)
+    /// <returns>False where the update page could not be reached, so the worker asks WorkManager to try again soon.</returns>
+    internal static async Task<bool> RunAsync(bool asked, bool fromWorker = false, bool again = false)
     {
         if (Off is not null || !await One.WaitAsync(0).ConfigureAwait(false))
         {
-            return;
+            return true;
         }
 
         try
@@ -180,7 +201,19 @@ internal static class SelfUpdate
             Say("Looking for a newer build…");
             var offer = await AndroidUpdates.CheckAsync(TheOutsideWorld.Current, Build, Kind, UpdateKeys.PublicKey, CancellationToken.None).ConfigureAwait(false);
             Log("update.check", ("result", offer.Refusal.ToString()), ("offered", offer.Version?.Number), ("worker", fromWorker));
-            if (offer.Refusal != ApkRefusal.Offline)
+            if (offer.Refusal == ApkRefusal.Offline)
+            {
+                // Entry 374 section 3: at a cold start the network is often not yet open to a process Android has only just started (the
+                // Fold 7's log: every launch check found no network, and the one from Settings eight seconds later found nightly 169).
+                Prefs.Edit()!.PutLong("offlineUtc", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())!.Apply();
+                if (!fromWorker && !again)
+                {
+                    _ = Task.Delay(TimeSpan.FromSeconds(30)).ContinueWith(_ => RunAsync(asked, again: true), TaskScheduler.Default);
+                }
+
+                return false;
+            }
+            else
             {
                 var edit = Prefs.Edit()!.PutLong("checkedUtc", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
                 edit!.PutString("newest", offer.Version?.Number ?? Build.Version.Number)!.Apply();
@@ -190,13 +223,15 @@ internal static class SelfUpdate
             {
                 // Entry 288: offline is silent; the settings page says so if somebody looks, and nothing else does.
                 Say(offer.Refusal == ApkRefusal.NotNewer ? "GroupLab is up to date." : offer.Refusal.Words());
-                return;
+                return true;
             }
 
             if (!asked && !Unmetered())
             {
+                // Entry 374 section 3: said on the screen too, not only in Settings, so a phone that is never on Wi-Fi is not left behind.
                 Say($"GroupLab {offer.Version!.Number} is out. It downloads on Wi-Fi, or tap Update now.");
-                return;
+                Notify($"GroupLab {offer.Version.Number} is out. It downloads on Wi-Fi by itself.", "Update now", () => _ = RunAsync(asked: true));
+                return true;
             }
 
             var started = DateTimeOffset.UtcNow;
@@ -206,7 +241,7 @@ internal static class SelfUpdate
             {
                 Warn("update.download", ("result", refusal.ToString()));
                 Say(refusal.Words());
-                return;
+                return true;
             }
 
             var certificateCheck = AndroidUpdates.CheckBeforeInstall(offer.Asset!, path, Certificates(null), Certificates(path));
@@ -214,7 +249,7 @@ internal static class SelfUpdate
             {
                 Warn("update.refused", ("result", certificateCheck.ToString()), ("version", offer.Version!.Number));
                 Say(certificateCheck.Words());
-                return;
+                return true;
             }
 
             Log("update.downloaded", ("version", offer.Version!.Number), ("bytes", offer.Asset!.Bytes), ("seconds", (int)(DateTimeOffset.UtcNow - started).TotalSeconds));
@@ -228,11 +263,13 @@ internal static class SelfUpdate
                 .Apply();
             Say($"GroupLab {offer.Version.Number} is downloaded and checked.");
             TryInstall(asked, fromWorker);
+            return true;
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or Java.Lang.Exception)
         {
             Warn("update.failed", ("type", e.GetType().Name));
             Say("The update could not be finished. GroupLab is unchanged and tries again later.");
+            return true;
         }
         finally
         {
@@ -404,7 +441,7 @@ internal static class SelfUpdate
         Prefs.Edit()!.Remove("installing")!.Remove("installingFrom")!.Remove("installingPublished")!.Remove("installingSilent")!.Remove("tapNeeded")!.Apply();
         string words = AndroidUpdates.UpdatedTo(Build.Version);
         Say(words + ".");
-        Avalonia.Threading.Dispatcher.UIThread.Post(() => Shell.Current?.Notice(words + ".", "What changed", () => OpenNotes(installing)));
+        Avalonia.Threading.Dispatcher.UIThread.Post(() => Shell.Current?.Notice(words + ".", "What changed", () => OpenNotes(installing), TimeSpan.FromSeconds(20)));
     }
 
     /// <summary>Deletes the download and what was remembered about it.</summary>

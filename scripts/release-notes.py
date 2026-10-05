@@ -291,7 +291,8 @@ _spelling.loader.exec_module(AMERICAN)
 
 # The reference a trailer ends with, "(Entry 130, 2b.2)" or "(Entries 126 and 127)". It stays in the commit, where it is useful, and comes
 # off the text a reader sees, entry 187 section 8.2: an entry number means nothing to anybody outside this project.
-REFERENCE = re.compile(r"\s*\((?:[Ee]ntr(?:y|ies))\b[^)]*\)(?=\.?\s*$)")
+# Entry 373 section 10: a request or question number is as internal as an entry number; an issue number is public and stays.
+REFERENCE = re.compile(r"\s*\((?:[Ee]ntr(?:y|ies)|[Rr]equests?|[Qq]uestions?)\b[^)]*\)(?=\.?\s*$)")
 
 
 def reader_text(note):

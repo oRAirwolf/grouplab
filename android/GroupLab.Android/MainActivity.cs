@@ -493,6 +493,9 @@ public class MainActivity : AvaloniaMainActivity
     {
         base.OnResume();
         CameraSession.Active?.Resume();
+#if GROUPLAB_UPDATER
+        Updates.SelfUpdate.Resumed();
+#endif
 
         // Entry 282 section 3: after a return the Retake screen's buttons were blank and the bar's names gone, the icons half drawn. The
         // whole screen is laid out and drawn again, every text with it, and not only the camera taken back.

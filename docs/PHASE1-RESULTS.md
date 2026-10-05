@@ -383,6 +383,58 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 373: the consistency audit of 2026-10-04 (2026-10-05)
+
+All twelve findings fixed in one change; no `consistency` issue was open. README: iPhone and iPad in the platforms sentence and badge;
+the Store row says it gets every nightly once certified (and /download/'s "Steady" badge reads "Updates itself"); GroupLab Dev first in
+the Android row; the store-bought and scale markers bullets put back whole, the M220 labels said to be in nightly 168 and not yet
+printed on a real one; nine store-bought targets (count markers in the README) in the README, the tour, PHONE-PARITY and CLAIMS; iPhone
+and iPad in a public beta through TestFlight in PLATFORM-SUPPORT, the README, the how-it-works page and the plan's diagram, with a row in
+the minimums table (iOS and iPadOS 26, iPhone 11; memory and disk not measured yet); Send
+everything I open and the log in error reports in the user guide, the tour's Settings stop and the Features page; label targets on the
+phone too, `phone-targets` matched by a longer phrase; the release notes' website lines removed and request, question and entry numbers
+taken off the public text, the generator doing the same from now on (an issue number stays); the data folder named for every platform
+in the README and the testing guide; request 16 trimmed to its open half; STATE.md rewritten. **Section 7 not done:** the "Not built
+yet" sentence is what entry 103's `ReadmeTests.WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone` reads to hold the Screens
+paragraph to the plan; removing it fails that test, so it stays and question 84 asks planning which way.
+
+## Entry 374: the range trip of 4 October, and Unholy's feedback (2026-10-05, partly done)
+
+- **The C bull sheet on the phone** (15 shots of .300 Norma Magnum, one at each of bulls 1 to 15, every one about an inch low and right;
+  Alan's drawing is the truth). The phone found the holes (16 marks for 15 shots, calibre still .243 from the 6 ARC session) and gave
+  them **one per bull by nearest bull, so most went to the bull below their own**: the "only 1 point of impact" Alan saw after clearing
+  them. The whole-sheet offset (entry 229) existed for exactly this and stood down, rightly unsure: read one row higher, as fired at bulls
+  6 to 20, the holes fit exactly as well (scatter 0.312 in either way). **Fixed:** among readings that fit as well as the best, the one
+  whose shots sit on the first bulls, the order a sheet is shot in, is taken, one hole in ten allowed outside it
+  (`ImpactOffsets.InShootingOrder`). All three of Alan's photos and the phone's own now give bulls 1 to 15, as his drawing does.
+- **Per photo, current pipeline** (`grouplab analyze`): C bull 18:35 close: 15 marks, 14 real (bull 10's hole, torn at the paper's edge,
+  missed on every photo) and 1 invented, assigned in order; 17:38 in sun and 18:35 wide: 14 of 15, all right. 6 ARC load sheet: wide 25 of 25,
+  **every one on the bull of Alan's drawing**, bull 2's high flyer included; close 24 (bull 6's hole on its ring missed). E bull: close 22
+  of 25 (no truth for assignment, as Alan said); **wide: no code read**, so the sheet was not recognised from 3 ft. The five store-bought
+  targets and the Rigid crosshair were not run (they go through Add a store-bought target, by hand): next session.
+- **The chronograph files**: the existing reader already reads the Xero's results export in both forms. CSV and XLS (old binary Excel)
+  agree in every speed, time, note, the string's name and the bullet weight (245 gr on the .300 Norma string); nothing differs that
+  matters. A test now holds the CSV's shape (name line, two byte order marks, quoted thousands, "--" energies). The timed pairing of the
+  6 ARC and .300 Norma strings with their sheets was not run: next session.
+- **The phone's record (section 3) and why it did not update for two days.** Every automatic check logged `update.check result=Offline`
+  (the error sender failed at the same moment), and a check from Settings eight seconds later found nightly 169 and installed it. A
+  process Android has only just started often has no network yet; the only automatic checks were at a process start (Android then kept
+  the process for days, only resuming it) and a six-hourly worker that runs only on unmetered Wi-Fi. **Fixed:** a check on each return to
+  the screen when the last answer is over an hour old or found no network; a failed launch check tried again after 30 seconds; the
+  worker asks to be retried when it found no network; and on a metered connection "GroupLab N is out" is now said on the screen with
+  Update now, not only in Settings. The paper protocol's Part A now starts with updating GroupLab before a range trip.
+- **The five crash records**: none is a crash. Each is a run that ended without reaching its own exit, which on Android is the normal end
+  (swiped away, reclaimed in the background, or replaced by an update): 07:02:15 is the run nightly 169's install replaced, 06:51:40 a
+  start that wrote nothing before Android ended it, 03:51:26 the update worker's run, and 4 October 09:42 and 12:01 runs ended in the
+  background. No exception and no stage in any; none became an issue. The range afternoon's own log is gone: only five logs are kept and
+  each start makes one.
+- **Fixed in section 4:** the zoomed picture keeps every drag (phone and desktop canvases stop the page's scroll gesture while zoomed);
+  the "Updated to nightly N" note closes itself after 20 seconds; a selected shot shows its distance from its own bull, right or left
+  and high or low, in the person's unit and MOA (desktop; the phone shows no selected position). **Paper and backing do not help
+  detection**: they are only recorded, for separating the hole-to-bullet ratio by paper and backing later (entry 162).
+- **Not done, next session:** the store-bought photos and the Rigid crosshair; adding the photos to the scoreboard and the local corpus;
+  the timed pairing; two holes in one; undoing a review answer; shot data out and in; the 2 MOA 3 by 4 sheet.
+
 ## Request 73: the Phomemo M834's print commands, decoded and proved (2026-10-05)
 
 - **The link.** Alan's bug report's snoop log held two devices: about 20 KB of Bluetooth LE writes were a watch's (its own bytes name it),

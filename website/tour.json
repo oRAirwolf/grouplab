@@ -740,7 +740,7 @@
     "parts": [
      [
       "Sending targets",
-      "Every target automatically, ask each time, or never, and the consent that goes with them."
+      "Every target automatically, ask each time, or never, and the consent that goes with them; on the computer, Send everything I open as well, every picture opened, read or not."
      ],
      [
       "Error reports",
@@ -958,7 +958,7 @@
    "blurb": "A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.",
    "purpose": "GroupLab names a few store-bought targets by themselves and takes their scale from their printed size. Every other one has to be taught, and teaching it means a fingerprint: the features of its printing, its layout, its size and where its bulls are, made from a photograph of a blank one. These steps make it. The photo is read for the target's four corners; one true length sets the scale, from the printed size on the package, a GroupLab sheet laid on the target, or two points a measured distance apart; the target is straightened; you confirm its bulls; and you name it and save the file. The file holds the fingerprint, the name, the size and the bulls, never the photo, and each one sent is checked by hand before it joins the library a later GroupLab recognizes. Markers in the photo, corner brackets, a scale bar or a measured board's stickers, are chosen by themselves when they are found, and a bank card is one more choice, blanked out of the photo at once.",
    "withoutASheet": "This screen is for targets GroupLab did not print. It never reads a GroupLab sheet as the target; a GroupLab sheet in the photo is only a ruler for the scale.",
-   "fits": "Before you shoot a target GroupLab does not know. Once a later build carries its fingerprint, a photo of it shot is named, its bulls placed and its scale set, as the five Birchwood Casey targets are now.",
+   "fits": "Before you shoot a target GroupLab does not know. Once a later build carries its fingerprint, a photo of it shot is named, its bulls placed and its scale set, as nine store-bought targets, from Birchwood Casey and the National Target Company, are now.",
    "parts": [
     [
      "The steps on the left",

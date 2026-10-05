@@ -53,6 +53,34 @@ on a build that still showed photos sideways, so they are stored a quarter turn 
 Send back: the scans and photos into the same folder, and one line on anything that looked wrong.
 
 
+**THE RANGE TRIP OF 4 OCTOBER, WHAT IT SHOWED** (entry 374; not a request):
+- **The C bull on the phone**: you shot one at each of bulls 1 to 15 and every shot landed about an inch low and right, so each hole sat
+  nearer the bull below its own, and GroupLab gave it that one. Read a row higher the holes fit exactly as well, so GroupLab now takes
+  the reading that starts at bull 1, the order a sheet is shot in. All your C bull photos now match your drawing. The 6 ARC sheet's wide
+  photo matched your drawing for all 25. GroupLab missed bull 10's hole (torn at the edge) and, on the E bull from 3 ft, read no code.
+- **Chronograph**: CSV and XLS from the Xero's results are read the same, shot for shot; use either.
+- **Why the phone stayed on 159**: its automatic checks ran only when the app started and in a background job that waits for unmetered
+  Wi-Fi, and the start-up check fired before Android gave the app its network. It now checks again each time you come back to it, retries,
+  and shows "GroupLab N is out, Update now" on screen. Before a range trip: Settings, Update now (now step A0 of the paper protocol).
+- **The five crash records** are not crashes: each is Android ending the app normally (swiped away, reclaimed, or replaced by an update).
+- **Fixed**: panning a zoomed target no longer drags the screen; the "updated" note hides by itself; a selected shot says how far it is
+  from its own bull. **Paper and "what was behind it" do not help detection**: they are recorded only, so hole sizes can later be compared
+  by paper and backing. Whether to keep them on the setup screen is in the list below.
+- **DESIGN NEEDED** (for planning's concepts; nothing built):
+  1. **Tabs to open several targets at once** (Unholy). Today the window holds one target; Sessions switches between them.
+  2. **The Groups section** (Unholy finds it unclear). Today: "Shots per bull" says how many shots each bull took, which decides whether
+     one-to-one matching is forced; "Its row" and "Its column" choose a whole row or column of bulls for a load; "Bulls you fired at" is
+     what lets the whole-sheet offset run on a part-shot sheet (entry 130). Removing it needs those three said some other way.
+  3. **Shots as one row per shot** (bull and shot number dropdowns, Delete for "Not a shot"). Today "Not a shot" keeps the mark and its
+     provenance and can be undone; a Delete would lose that record.
+  4. **Lines from each bull to its holes, and tap a bull to add or remove its shots** (you, at the range). Today the lasso puts chosen
+     shots on a bull (desktop); the phone has no way to give a shot to a bull but moving it.
+  5. **The "Selected shot" area's dropdown** (the reason a shot is left out) and **Show in folder** (opens the saved session's folder):
+     Unholy would remove both.
+  6. **Barrels under their rifle** instead of their own section. Today rifles, barrels and loads are three lists, a barrel chosen per
+     session.
+  7. **Paper and "what was behind it" on the setup screen**: keep (for the hole size studies) or remove.
+
 **THE WEEKLY BUDGET, ENTRIES 360 AND 361** (not a request): Code now runs from a terminal, where the status line keeps the week's
 reading fresh every minute. A check before every action refuses to go on at **85%**, unless a block already under way (above all a
 publish) has marked itself as finishing in the last 45 minutes, and refuses everything at **88%** whatever. Blocks are planned to end
@@ -542,11 +570,9 @@ aimed at; GroupLab measures it with the four-point method and a scale at each bu
 **Opened 2026-09-24. Entry 166. Waiting, half of it. Not urgent.** The first half came back on 2026-09-24, entry 189: the
 tester is Fenix, and he is thanked in the README with Unholy. The trackpad half below is still open.
 
-**What is needed.** Two things from the tester who ran nightly 93 on the M5 Max, passed on by Alan.
+**What is needed.** One thing from Fenix, who ran nightly 93 on the M5 Max (his name was answered on 2026-09-24).
 
-1. **A name, or none.** The project has no list of testers or contributors yet. Would Alan like one, in the README, and
-   if so what name should this tester go by: his own, a handle, or "a macOS tester"? Nothing is invented meanwhile.
-2. **What his trackpad actually sends.** On any build newer than nightly 94: Settings, tick **Detailed logging**; open
+1. **What his trackpad actually sends.** On any build newer than nightly 94: Settings, tick **Detailed logging**; open
    the sample; press Command Z after moving a shot, and Shift Command Z; drag with two fingers on the sheet; pinch; scroll
    with Command held; and a mouse wheel, if he has a mouse. Then **Report a problem** and send the report.
 
@@ -555,7 +581,7 @@ Both are fixed, and neither fix has been checked on a Mac. The second half also 
 trackpad scroll against a wheel on a Mac, which entry 166 asked to measure rather than assume and which nobody here can
 measure without a Mac. The report carries each scroll and pinch as numbers, and no path or picture.
 
-**A good answer.** For 1, a name or "anonymous", or "no list". For 2, "Command Z undid it, the drag moved the sheet,
+**A good answer.** "Command Z undid it, the drag moved the sheet,
 the pinch zoomed", or which of those did not, and the report.
 
 ---

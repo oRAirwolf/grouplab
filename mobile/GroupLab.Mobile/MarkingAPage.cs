@@ -511,16 +511,34 @@ internal sealed class MarkingAPage : UserControl
             Moved?.Invoke();
         }
 
+        /// <summary>
+        /// Entry 374 section 4: Alan at the range, "once it is zoomed in, it tried to drag the entire screen when I was trying to pan on the
+        /// target only". The page's scroll view took the drag as its own scroll gesture. While the picture is larger than it fits, or a hole is
+        /// held, the picture keeps every drag; fitted, a drag on it still scrolls the page as before.
+        /// </summary>
+        private bool KeepsDrags => HeldAt is not null || (zoom > 0 && zoom > 1.02 * Math.Min(Bounds.Width / Shown.Width, Bounds.Height / Shown.Height));
+
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
             last = e.GetPosition(this);
+            if (KeepsDrags)
+            {
+                e.PreventGestureRecognition();
+                e.Pointer.Capture(this);
+            }
+
             e.Handled = true;
         }
 
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
+            if (KeepsDrags)
+            {
+                e.PreventGestureRecognition();
+            }
+
             if (last is { } was && pinch == 1)
             {
                 var now = e.GetPosition(this);
@@ -566,6 +584,10 @@ internal sealed class MarkingAPage : UserControl
         {
             base.OnPointerReleased(e);
             last = null;
+            if (e.Pointer.Captured == this)
+            {
+                e.Pointer.Capture(null);
+            }
         }
 
         public override void Render(DrawingContext context)

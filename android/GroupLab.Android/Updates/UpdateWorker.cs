@@ -13,7 +13,7 @@ public sealed class UpdateWorker(Context context, WorkerParameters parameters) :
 {
     public override Result DoWork()
     {
-        SelfUpdate.RunAsync(asked: false, fromWorker: true).GetAwaiter().GetResult();
-        return Result.InvokeSuccess()!;
+        // Entry 374 section 3: where the update page could not be reached, WorkManager tries again within minutes, not six hours.
+        return SelfUpdate.RunAsync(asked: false, fromWorker: true).GetAwaiter().GetResult() ? Result.InvokeSuccess()! : Result.InvokeRetry()!;
     }
 }

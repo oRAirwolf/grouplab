@@ -5180,6 +5180,50 @@
   "Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right.": {
    "kind": "measured",
    "where": "grouplab surface-trial --markers --scenes 4 (seed 371), 2026-10-04: brackets set 0, 2, 5, 10 and 20 mm off a target on four surfaces; 2 mm gave the size 1.9 to 2.6 percent large, touching 0.01 to 0.06 percent; docs/PHASE1-RESULTS.md, entry 371"
+  },
+  "Microsoft Store Updates itself The Store keeps GroupLab up to date itself and installs it without the \"Windows protected your PC\" warning.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 369: the Microsoft Store follows the nightlies, every published nightly submitted automatically (.github/workflows/store-follow.yml)"
+  },
+  "Everything you have made lives in %APPDATA%\\GroupLab on Windows (under your home folder on macOS and Linux): the settings, your sessions, any sheet you designed and the log.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs AppSettingsStore.Default: Environment.SpecialFolder.ApplicationData, which is %APPDATA% on Windows and a folder under the home folder on macOS and Linux (entry 373 section 11)"
+  },
+  "GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS and Linux: settings, your sessions database, any sheet you design, and the log.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs AppSettingsStore.Default: Environment.SpecialFolder.ApplicationData, which is %APPDATA% on Windows and a folder under the home folder on macOS and Linux (entry 373 section 11)"
+  },
+  "On Windows, macOS, Linux and Android, and on iPhone and iPad in a public beta through TestFlight.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: the TestFlight Public Beta approved and published on 2026-10-01; entry 373 sections 1 and 6"
+  },
+  "- **Where it keeps things:** `%APPDATA%\\GroupLab` on Windows and under your home folder on macOS and Linux, and on a phone in the app's own storage, and nowhere else.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs AppSettingsStore.Default: Environment.SpecialFolder.ApplicationData, which is %APPDATA% on Windows and a folder under the home folder on macOS and Linux (entry 373 section 11)"
+  },
+  "iOS is Phase 8, in a public beta through TestFlight: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: the TestFlight Public Beta approved and published on 2026-10-01; entry 373 sections 1 and 6"
+  },
+  "**iPhone and iPad, in a public beta through TestFlight** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entries 335 to 337: the TestFlight Public Beta approved and published on 2026-10-01; entry 373 sections 1 and 6"
+  },
+  "### If a new build will not start **Nothing of yours is at risk.** Everything you have made lives in `%APPDATA%\\GroupLab` on Windows (under your home folder on macOS and Linux): the settings, your sessions, any sheet you designed and the log.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs AppSettingsStore.Default: Environment.SpecialFolder.ApplicationData, which is %APPDATA% on Windows and a folder under the home folder on macOS and Linux (entry 373 section 11)"
+  },
+  "GroupLab keeps everything in `%APPDATA%\\GroupLab` on Windows, and under your home folder on macOS and Linux: settings, your sessions database, any sheet you design, and the log.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/AppSettings.cs AppSettingsStore.Default: Environment.SpecialFolder.ApplicationData, which is %APPDATA% on Windows and a folder under the home folder on macOS and Linux (entry 373 section 11)"
+  },
+  "**Untested on a real Mac.** | | **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see \"Before you install\" below.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml attaches grouplab-android.apk and grouplab-android-dev.apk to every nightly (ReleaseAssetTests); entry 373 section 3"
+  },
+  "| | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml attaches grouplab-android.apk and grouplab-android-dev.apk to every nightly (ReleaseAssetTests); entry 373 section 3"
   }
  },
  "rules": [

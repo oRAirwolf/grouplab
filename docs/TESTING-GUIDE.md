@@ -42,7 +42,7 @@ The update from `nightly.25` to `nightly.26` was then run end to end on a real m
 
 ### If a new build will not start
 
-**Nothing of yours is at risk.** Everything you have made lives in `%APPDATA%\GroupLab`: the settings, your sessions, any sheet you designed and the log. No installer and no uninstaller touches that folder, so a bad build cannot lose a session.
+**Nothing of yours is at risk.** Everything you have made lives in `%APPDATA%\GroupLab` on Windows (under your home folder on macOS and Linux): the settings, your sessions, any sheet you designed and the log. No installer and no uninstaller touches that folder, so a bad build cannot lose a session.
 
 **Going back is a download, not a repair.** The update replaces the program in place, so there is no previous copy on the machine to return to. The build you were on still exists at its own address: open the [releases list](https://github.com/oRAirwolf/grouplab/releases), find the `v<version>` release you were on, download its installer and run it. It installs over the broken one, and your things are exactly where you left them.
 
@@ -97,4 +97,4 @@ The repository's README is the authority on what works; this is the short versio
 
 The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any report, because a test build changes whenever the code does. **Report a problem** there writes a report package: a zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them. Send it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to support@grouplab.org. Either way, add a line about what you were doing. The support page at <https://grouplab.org/support/> says the same and is easier to find again.
 
-GroupLab keeps everything in `%APPDATA%\GroupLab`: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you want the data gone.
+GroupLab keeps everything in `%APPDATA%\GroupLab` on Windows, and under your home folder on macOS and Linux: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you want the data gone.

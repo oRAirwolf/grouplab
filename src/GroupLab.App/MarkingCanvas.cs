@@ -738,9 +738,27 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         return Distance(ToControl(nearest.Image), position) <= spacing / 2 ? nearest : null;
     }
 
+    /// <summary>
+    /// Whether the picture is zoomed in past fitting the control. Entry 374 section 4: on the phone, a drag to pan a zoomed target moved the
+    /// whole page instead, because the page's scroll view took the touch as its own scroll gesture; while zoomed, the picture keeps every drag.
+    /// </summary>
+    private bool ZoomedIn
+    {
+        get
+        {
+            var (width, height) = ViewRotation.DisplaySize(turns, imageWidth, imageHeight);
+            return bitmap is not null && width > 0 && height > 0 && zoom > 1.02 * Math.Min(Bounds.Width / width, Bounds.Height / height);
+        }
+    }
+
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
+        if (ZoomedIn)
+        {
+            e.PreventGestureRecognition();
+        }
+
         Focus();
         if (bitmap is null || Session is not { } session)
         {
@@ -879,6 +897,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
+        if (ZoomedIn || panFrom is not null)
+        {
+            e.PreventGestureRecognition();
+        }
+
         var position = e.GetPosition(this);
         if (panFrom is { } from)
         {

@@ -882,7 +882,7 @@ def page_download() -> str:
     def steady(title: str, action: str, desc: str, items: list[str]) -> str:
         """The right card: the copy a store keeps up to date, with the store's own badge or link."""
         return f"""<article class="panel card dl-card">
-<div class="card-head"><h3 class="h3">{title}</h3><span class="badge badge-teal mono">Steady</span></div>
+<div class="card-head"><h3 class="h3">{title}</h3><span class="badge badge-teal mono">Updates itself</span></div>
 <div>{action}</div>
 <p>{desc}</p>
 {points(items)}

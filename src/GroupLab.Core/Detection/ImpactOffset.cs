@@ -69,9 +69,51 @@ public static class ImpactOffsets
             return null;
         }
 
-        var solved = Solve("the sheet", holes, bulls, scoring);
+        var solved = Solve("the sheet", holes, bulls, scoring, out var readings);
+        if (solved is { Certain: false } && InShootingOrder(holes, bulls, scoring, readings) is { } ordered)
+        {
+            solved = solved with { Shift = ordered, Certain = true, Why = Words(ordered, holes.Count) };
+        }
+
         return solved is { Certain: true, Moved: true } ? solved : null;
     }
+
+    /// <summary>
+    /// Entry 374 section 1: the C bull sheet of 4 October, fifteen shots of .300 Norma Magnum, one at each of bulls 1 to 15, every one about an
+    /// inch low and right. Read one row higher, as fired at bulls 6 to 20, the holes fit exactly as well, so the solver was rightly unsure
+    /// and the sheet fell back to the nearest bull, which gave most shots to the bull below their own. What tells the two apart is the
+    /// order people shoot a sheet in: from bull 1. Among the readings that fit as well as the best, each putting one shot on each bull, the
+    /// one taken is the only one whose shots sit on the first bulls (as many as there are holes, and a few more for holes not found).
+    /// Null where no reading, or more than one, does.
+    /// </summary>
+    private static Offset? InShootingOrder(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> scoring, IReadOnlyList<(Offset Shift, double Cost)> readings)
+    {
+        double best = readings.Min(r => r.Cost);
+        int reach = holes.Count + 1 + (holes.Count / 5);
+        var targets = scoring.Where(i => i >= 0 && i < bulls.Count).ToList();
+        var fits = new List<Offset>();
+        foreach (var (shift, cost) in readings)
+        {
+            if (cost > (best * 1.1) + (holes.Count * MeaningfulGap) || fits.Any(f => f.Minus(shift).Length <= SameOffset))
+            {
+                continue;
+            }
+
+            // One hole in ten may fall outside the order or share a bull: a mark taken for a hole, or a flyer (the 18:35 photo of the same sheet
+            // has a false hole on bull 25).
+            var given = holes.Select(h => Closest(h.Minus(shift), bulls, targets)).ToList();
+            int outside = given.Count(b => targets.IndexOf(b) >= reach) + (given.Count - given.Distinct().Count());
+            if (outside <= holes.Count / 10)
+            {
+                fits.Add(shift);
+            }
+        }
+
+        return fits.Count == 1 ? fits[0] : null;
+    }
+
+    private static int Closest(Offset point, IReadOnlyList<Offset> bulls, IReadOnlyList<int> among) =>
+        among.MinBy(i => point.Minus(bulls[i]).Length);
 
     /// <summary>What a person is told when every shot was given to the bull it was fired at rather than its nearest.</summary>
     public static string WholeSheetWords(Offset shift, int moved) => string.Create(CultureInfo.InvariantCulture,
@@ -104,8 +146,12 @@ public static class ImpactOffsets
     /// one that has landed slightly low, and the answer does not depend on where the search happened to begin.
     /// </para>
     /// </summary>
-    public static ImpactOffset Solve(string name, IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> bullIndexes)
+    public static ImpactOffset Solve(string name, IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> bullIndexes) =>
+        Solve(name, holes, bulls, bullIndexes, out _);
+
+    private static ImpactOffset Solve(string name, IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> bullIndexes, out List<(Offset Shift, double Cost)> settled)
     {
+        settled = [];
         ArgumentNullException.ThrowIfNull(holes);
         ArgumentNullException.ThrowIfNull(bulls);
         ArgumentNullException.ThrowIfNull(bullIndexes);
@@ -127,7 +173,6 @@ public static class ImpactOffsets
             targets = [.. bulls];
         }
 
-        var settled = new List<(Offset Shift, double Cost)>();
         foreach (var seed in Seeds(holes, targets))
         {
             var shift = Settle(seed, holes, targets);

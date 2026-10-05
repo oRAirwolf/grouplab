@@ -14,6 +14,12 @@ Split into three sittings so the range day stays short. Only part B needs the ra
 
 ## Part A: at home, before you go
 
+### A0. Update GroupLab on the phone and the computer
+
+Before every range trip, on Wi-Fi: open GroupLab on the phone, Settings, **Update now**, and on the computer, Settings, **Check now** beside how often to check for updates.
+Entry 374: the Fold 7 went to the range of 4 October on nightly 159 while 168 was out, because its own checks had found no network,
+and the range is where a missing fix costs a trip.
+
 ### A1. Print the pack
 
 **Print it from the application, not from a command.** The print screen now exists, it lists every built-in sheet, and it drives the printer with scaling disabled rather than asking you to remember. **This is the first time a human has used it**, so it is a test as much as a task. If it fails or confuses you, note what happened and fall back to the command below; that report is worth as much as the paper.

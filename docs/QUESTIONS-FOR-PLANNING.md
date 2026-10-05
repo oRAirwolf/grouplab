@@ -21,6 +21,14 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-05, question 84: the README's "Not built yet" sentence, which entry 373 calls stray and entry 103's test requires
+
+Entry 373 section 7 asks to end the Screens paragraph at "walks through them.", dropping "Not built yet: cloud provider adapters over
+three-tier storage." Entry 103's `ReadmeTests.WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone` reads exactly that sentence to hold
+the paragraph to the plan, and fails without it. **A:** keep it (true today: the adapters are planned and not built). **B:** drop it
+and retire the test. **C:** move the sentence and the test to a place where it reads naturally. My choice: A, it is true and tested.
+Nothing waits on this.
+
 ## 2026-10-04, question 83: identification takes 34 s on a photo with no GroupLab codes
 
 Status: open

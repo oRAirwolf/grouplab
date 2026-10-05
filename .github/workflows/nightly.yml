@@ -193,6 +193,18 @@ jobs:
           SHA: ${{ steps.pick.outputs.sha }}
         run: |
           set -o pipefail
+          # Entry 374, Alan 2026-10-05: "When a scheduled nightly would build the same commit as the previous nightly, skip it: no new
+          # release, no TestFlight or Play upload, no Microsoft Store submission." Nightlies 168 and 169 were both 13d882d, because the
+          # comparison below passes over a tag on this very commit and finds changes against the one before it. A commit that already has
+          # a nightly is not built again.
+          newest=$(git for-each-ref --sort=-creatordate --format='%(objectname) %(*objectname) %(refname:strip=2)'             'refs/tags/v*-nightly.*' | awk '{ c = ($2 ~ /^[0-9a-f]{40}$/ ? $2 : $1); print c, $NF; exit }')
+          if [ -n "$newest" ] && [ "${newest%% *}" = "$SHA" ]; then
+            echo "application-changed=no" >> "$GITHUB_OUTPUT"
+            echo "::notice::${newest##* } was built from this same commit, ${SHA:0:7}. No build produced."
+            echo "### ${newest##* } was built from this same commit. No build produced." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
           # for-each-ref rather than the porcelain listing command, which a test forbids in this file. An annotated tag names its commit in
           # *objectname and a lightweight one in objectname, so both are read.
           previous=$(git for-each-ref --sort=-creatordate --format='%(objectname) %(*objectname) %(refname:strip=2)' \

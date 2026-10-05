@@ -92,4 +92,25 @@ public class ChronographFilesTests
         Assert.Null(refusal);
         Assert.Equal(read.VelocitiesFps, typed);
     }
+
+    /// <summary>
+    /// Entry 374 section 2: the export from the Xero's own results (not Sessions, Export), as Alan's three strings of 4 October came: the
+    /// string's name on its own line, a byte order mark before it and another before the header, speeds with thousands separators in
+    /// quotes, energy and power factor "--" where no bullet weight was set, and the summary lines after the shots. The numbers here are
+    /// made up; the shape is the file's.
+    /// </summary>
+    [Fact]
+    public void AXeroResultsExportWithItsNameLineIsRead()
+    {
+        string bom = "\uFEFF";
+        string text = bom + "my_string" + "\n" + bom + "#,Speed (FPS),Δ Avg (FPS),KE (FT-LBS),Power Factor (kgr⋅ft/s),Time,Clean Bore,Cold Bore,Shot Notes\n"
+            + "1,\"2,788.2\",16.6,--,--,16:40:13,,,\n2,\"2,802.9\",31.2,--,--,16:41:08,,,\n3,\"2,777.5\",5.8,--,--,16:41:35,,,\n\n"
+            + "AVG KINETIC ENERGY,--,,,,,\nDate,\"OCTOBER 04, 2026 17:31\",,,,,\n";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(text));
+        var read = Assert.Single(ChronographFiles.ReadFile(stream, "my_string_2026-10-04_17-31-13.csv", out _));
+        Assert.Equal(ChronographFormat.GarminXero, read.Format);
+        Assert.Equal("my_string", read.Name);
+        Assert.Equal([2788.2, 2802.9, 2777.5], read.VelocitiesFps);
+        Assert.Equal(new TimeSpan(16, 41, 8), read.Shots[1].Time);
+    }
 }

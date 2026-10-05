@@ -1140,7 +1140,7 @@
      {
       "key": "iphone",
       "name": "iPhone and iPad",
-      "sub": "being built",
+      "sub": "public beta on TestFlight",
       "path": "docs/IOS-PLAN.md",
       "summary": [
        "Planned the same way: an Avalonia shell around the same Core, with OpenCV built as a static iOS framework and builds from GitHub's macOS runners to TestFlight."
