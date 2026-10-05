@@ -452,7 +452,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - A mark much bigger than your bullet is now ringed in amber on the result, on the phone as well as the desktop, with a sentence saying how many times your bullet across it is, until you confirm the shot is on the hole or move it.
 - On a target photographed well off square, a sliver of printed ring beside a bull on the far side is no longer counted as an extra shot.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.141)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
