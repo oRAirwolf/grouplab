@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.171
+
+**2026-10-05**, commit `5da68d8`. Nightly.
+
+**What you will notice**
+
+- A load sheet shot one bull off in every shot, as when the rifle is not yet zeroed, now has each shot given to the bull it was fired at, reading the sheet from bull 1 in the order sheets are shot.
+- GroupLab on Android now looks for updates each time you come back to it and tries again when the network was not ready, and says on screen when a newer build is waiting for Wi-Fi, so it no longer stays days behind.
+- On the phone, panning a zoomed target moves the picture instead of the whole screen, and the Updated note closes by itself after a few seconds.
+- A selected shot now says how far it is from its own bull, right or left and high or low, in your unit and in MOA, instead of its place on the sheet.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.171)
+
+---
+
 ## 0.2.0-nightly.170
 
 **2026-10-05**, commit `bbb5a03`. Nightly.
