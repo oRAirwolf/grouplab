@@ -82,8 +82,8 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.171 (2026-10-05 10:57 UTC); entry 375's commit makes the next one.
-- **The site** follows main by itself (website.yml); live at bbb5a03f on 2026-10-05.
+- **Last nightly:** 0.2.0-nightly.172 (2026-10-05 22:50 UTC, entry 375; CI needed reruns through GitHub's Actions incident).
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 3f239527 on 2026-10-05.
 - Crash reports open: none. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
