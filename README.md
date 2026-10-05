@@ -155,6 +155,12 @@ What the newest builds changed that you would notice, from their release notes.
 
 - Nothing you would notice; its changes are under the hood.
 
+**0.2.0-nightly.168**, 2026-10-04
+
+- Targets, Scale markers now makes scale labels for a label printer such as the Phomemo M220, at the label size loaded, each with its own codes; stuck on a target, they give it its scale.
+- The scale markers' instructions now say to tuck the corner brackets against the target's corners, touching, and that a scale bar may touch the target or lie a little apart.
+- Add a store-bought target now calls the corners found only when two ways of looking at the photo agree on them, so a wrong outline is almost never presented as found; when unsure it says so and starts the corners at its best guess.
+
 **0.2.0-nightly.167**, 2026-10-04
 
 - GroupLab can now take a target's scale from markers laid beside it in the photo: corner brackets, scale bars or board stickers printed from Targets, or a bank card, which is blanked out of the picture at once and never kept or sent. [Scale markers beside a target](https://grouplab.org/features/#scale-markers)
@@ -169,11 +175,6 @@ What the newest builds changed that you would notice, from their release notes.
 - On the phone, a failure that stops the work, such as a photo that cannot be used, a file that cannot be read or a report that cannot be made, now appears in the middle of the screen with what to do next, instead of a line on the page.
 - Opening a photo of a target that is not a GroupLab sheet is faster: the check for a GroupLab sheet's marks no longer searches the picture a second time, which took up to eight seconds.
 - Add a store-bought target now warns before saving when its scale is worse than about 2 percent, and asks for the two points to be far apart. [Teach GroupLab a store-bought target](https://grouplab.org/features/#add-store-target)
-
-**0.2.0-nightly.166**, 2026-10-04
-
-- Targets can now save or share any sheet for a thermal label printer's own app, such as the Phomemo M834's: a black and white picture at 300 dpi and a PDF at the page's true size, with a darkness test page. [Label targets for a thermal printer](https://grouplab.org/features/#label-targets)
-- On the Targets screen, Save for a printer app sits on its own line under the print buttons, where it is never cut off. [Print a sheet from the phone](https://grouplab.org/features/#phone-targets)
 
 Every build's notes are in [docs/RELEASE-NOTES.md](docs/RELEASE-NOTES.md) and at <https://grouplab.org/releases/>.
 <!-- /readme:whats-new -->
