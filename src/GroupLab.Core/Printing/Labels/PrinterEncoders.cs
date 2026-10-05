@@ -21,7 +21,7 @@ public interface IPrinterEncoder
 /// <summary>The encoders GroupLab ships, by <see cref="IPrinterEncoder.Id"/>.</summary>
 public static class PrinterEncoders
 {
-    public static IReadOnlyList<IPrinterEncoder> All { get; } = [new TsplEncoder(), new PhomemoEscEncoder(), new ZplEncoder(), new EscPosEncoder()];
+    public static IReadOnlyList<IPrinterEncoder> All { get; } = [new TsplEncoder(), new PhomemoEscEncoder(), new PhomemoLzoEncoder(), new ZplEncoder(), new EscPosEncoder()];
 
     public static IPrinterEncoder For(PrinterProfile profile)
     {
@@ -106,6 +106,97 @@ public sealed class PhomemoEscEncoder : IPrinterEncoder
 
         bytes.AddRange([0x1F, 0xF0, 0x05, 0x00, 0x1F, 0xF0, 0x03, 0x00]);
         return [.. bytes];
+    }
+}
+
+/// <summary>
+/// The Phomemo M834 (request 73's recording, 2026-10-05): the settings the Phomemo app sent before its page, sent here as they were, then
+/// ESC/POS's raster <c>1D 76 30 00 wL wH hL hH</c> whose rows do not follow raw but as LZO1X blocks, each the next 4096 bytes of the page
+/// (the last shorter) with its packed length in three bytes, low first. The app's page was 316 bytes (2528 dots) across, so an image of
+/// any other width is centred on the head, clipped or padded with paper. Which of the settings is darkness, paper or speed is not known
+/// yet, so none of them follows the profile until the darkness test says what they do.
+/// </summary>
+public sealed class PhomemoLzoEncoder : IPrinterEncoder
+{
+    public const int Piece = 4096;
+
+    /// <summary>What the app sent before the raster, in order: status questions (1F 11 n, 1A ...), reset 1B 40, then its settings.</summary>
+    public static readonly byte[] Settings =
+    [
+        0x1F, 0x11, 0x38, 0x1F, 0x11, 0x07, 0x1F, 0x11, 0x09, 0x1F, 0x11, 0x08, 0x1F, 0x11, 0x0E, 0x1F, 0x11, 0x63, 0x1F, 0x11, 0x5E,
+        0x1F, 0x11, 0x56, 0x1F, 0x11, 0x51, 0x1B, 0x4E, 0x1C, 0x02, 0x1A, 0x0A, 0x05, 0x01, 0x00, 0x06, 0x1F, 0x11, 0x12, 0x1F, 0x11, 0x11,
+        0x1F, 0x11, 0x08, 0x1F, 0x11, 0x7B, 0x1F, 0x11, 0x08, 0x1B, 0x40, 0x1F, 0x11, 0x02, 0x04, 0x1F, 0x11, 0x37, 0x64, 0x1F, 0x11, 0x0B,
+        0x1F, 0x11, 0x35, 0x01, 0x1F, 0x11, 0x3C, 0x02,
+    ];
+
+    public string Id => "phomemo-lzo";
+
+    public byte[] Encode(LabelJob job, PrinterProfile profile)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        ArgumentNullException.ThrowIfNull(profile);
+        byte[] rows = OnHead(job.Image, (profile.HeadDots + 7) / 8);
+        int across = (profile.HeadDots + 7) / 8, height = job.Image.Height;
+        var bytes = new List<byte>(Settings);
+        for (int copy = 0; copy < Math.Max(1, job.Copies); copy++)
+        {
+            bytes.AddRange([0x1D, 0x76, 0x30, 0x00, (byte)(across & 0xFF), (byte)(across >> 8), (byte)(height & 0xFF), (byte)(height >> 8)]);
+            for (int at = 0; at < rows.Length; at += Piece)
+            {
+                byte[] packed = Lzo1x.Compress(rows.AsSpan(at, Math.Min(Piece, rows.Length - at)));
+                bytes.AddRange([(byte)(packed.Length & 0xFF), (byte)((packed.Length >> 8) & 0xFF), (byte)(packed.Length >> 16)]);
+                bytes.AddRange(packed);
+            }
+        }
+
+        return [.. bytes];
+    }
+
+    /// <summary>The image's rows centred on a head <paramref name="across"/> bytes wide, a whole number of bytes either side.</summary>
+    internal static byte[] OnHead(DotImage image, int across)
+    {
+        if (image.RowBytes == across)
+        {
+            return image.Bits;
+        }
+
+        var rows = new byte[across * image.Height];
+        int shift = (across - image.RowBytes) / 2;
+        for (int y = 0; y < image.Height; y++)
+        {
+            for (int x = 0; x < across; x++)
+            {
+                int from = x - shift;
+                if (from >= 0 && from < image.RowBytes)
+                {
+                    rows[(y * across) + x] = image.Bits[(y * image.RowBytes) + from];
+                }
+            }
+        }
+
+        return rows;
+    }
+
+    /// <summary>The page back from a stream this encoder wrote, or the app's: the raster's size and its rows unpacked, for the tests and the recording reader.</summary>
+    public static (int Across, int Height, byte[] Rows) Read(ReadOnlySpan<byte> stream)
+    {
+        int at = stream.IndexOf([(byte)0x1D, (byte)0x76, (byte)0x30]);
+        if (at < 0 || at + 8 > stream.Length)
+        {
+            throw new InvalidDataException("no raster in it");
+        }
+
+        int across = stream[at + 4] | (stream[at + 5] << 8), height = stream[at + 6] | (stream[at + 7] << 8);
+        var rows = new List<byte>(across * height);
+        at += 8;
+        while (rows.Count < across * height)
+        {
+            int n = stream[at] | (stream[at + 1] << 8) | (stream[at + 2] << 16);
+            rows.AddRange(Lzo1x.Decompress(stream.Slice(at + 3, n)));
+            at += 3 + n;
+        }
+
+        return (across, height, [.. rows]);
     }
 }
 

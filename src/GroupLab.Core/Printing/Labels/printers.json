@@ -1,6 +1,6 @@
 // NOTES-FROM-PLANNING.md entry 358 section 4: the label printers GroupLab knows, as data. A new printer is an entry here plus, at most,
 // one small encoder in PrinterEncoders.cs. "tested": false means no real one has printed GroupLab's check page yet: "should work".
-// The M220 has no profile on purpose (entry 358 section 5); the M834 waits on request 73's recordings and the 4x6 printer on request 72.
+// The M220 has no profile on purpose (entry 358 section 5); the 4x6 printer waits on request 72. The M834's is from request 73's recording.
 {
   "printers": [
     {
@@ -19,6 +19,21 @@
       "speed": { "min": 1, "max": 6, "default": 3, "higherIsMore": true },
       "tested": false,
       "source": "TSC TSPL/TSPL2 programming manual (SIZE, GAP, DENSITY 0 to 15, SPEED, BITMAP); tspl-cups-driver confirms the Y43BT speaks TSPL at 203 dpi; its Bluetooth services wait on request 72"
+    },
+    {
+      "id": "phomemo-m834",
+      "name": "Phomemo M834, Letter, 300 dpi",
+      "encoder": "phomemo-lzo",
+      "services": [],
+      "nameHints": [ "M834" ],
+      "transports": [ "BluetoothClassic" ],
+      "dotsPerInch": 300,
+      "headDots": 2528,
+      "pageWidthsMm": [ 215.9, 210 ],
+      "chunkBytes": 990,
+      "pacingMs": 0,
+      "tested": false,
+      "source": "Request 73's recording, 2026-10-05: the Phomemo app printed over classic Bluetooth's serial port, its page 316 bytes across in LZO1X blocks of 4096 bytes; the M834 also offers Bluetooth LE (service ff00, write ff02, notify ff03), which the app did not use"
     },
     {
       "id": "zpl-4in-203",

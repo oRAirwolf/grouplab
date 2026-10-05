@@ -146,6 +146,13 @@ def main() -> int:
     check(report["bluetooth"] == "classic", "a classic session is called classic")
     check(any("raster 16 dots across" in c for c in report["commands"]), "the classic job's raster is read")
 
+    # Request 73: the M834's raster comes as LZO1X blocks; the app's first block is 4096 bytes of paper in 44.
+    white = bytes.fromhex("02000000000020000000000000000000000000000000da10000c000000000000000000000000000000110000")
+    check(recording.lzo1x(white) == bytes(4096), "the M834 app's white block unpacks to 4096 bytes of paper")
+    m834 = bytes([0x1B, 0x40, 0x1D, 0x76, 0x30, 0x00]) + struct.pack("<HH", 64, 128) + (len(white).to_bytes(3, "little") + white) * 2
+    commands, rasters = recording.lay_out(m834)
+    check(any("sent as 2 LZO1X blocks" in c for c in commands) and rasters and rasters[0].data == bytes(8192), "an LZO raster is unpacked")
+
     print(f"{len(FAILED)} failed" if FAILED else "all passed")
     return 1 if FAILED else 0
 

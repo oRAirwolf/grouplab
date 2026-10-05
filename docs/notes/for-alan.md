@@ -1,4 +1,4 @@
-**Open: 21.** Most urgent today: **the M834 list just below**. Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 21.** Most urgent today: **78, GroupLab printing to the M834 itself** (the app printed 5.3 percent small). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 
@@ -40,8 +40,8 @@ says, before saving, when a scale is worse than 2 percent, and the two-points ch
 on a build that still showed photos sideways, so they are stored a quarter turn round; that does not affect recognizing them.
 
 **THE M834 TOMORROW** (entry 363; needs nightly 166 or later, on the computer, Android and the iPhone). In order:
-1. **The recording first (request 73 below)**, so I can start on direct printing while you play: the nRF Connect scan, then one page
-   printed from the Phomemo app with the snoop log on, then the bug report. Both files into `C:\Dev\grouplab-local\printers\`.
+1. **The recording**: done 2026-10-05, thank you. It showed the app printed the C sheet 5.3 percent small; request 78 has GroupLab
+   print it instead.
 2. **A target through the Phomemo app.** Computer: Targets, a Letter sheet, Print on **Phomemo M834**, **Save for a printer app…** (a
    picture and a PDF, both named `-thermal-300dpi`). Phone: Targets, a sheet, **Share for a printer app**, then the Phomemo app. In the
    app choose 100%, actual or original size, never fit to page. Good: the corner squares sharp and black, the sheet's ruler line true.
@@ -209,6 +209,17 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
+## 78. GroupLab prints straight to your M834 from the Fold 7, ten minutes, with the next nightly (request 73)
+
+**Why:** your recording showed how the Phomemo app talks to the M834, and it also showed the app printed your C bull sheet **5.3 percent
+small** (94.7 percent) with its last line cut, so targets printed through the app are the wrong size. GroupLab now sends the page itself,
+at true size, the app's way; no real M834 has printed from it yet.
+**Steps,** with the nightly after 2026-10-05 on the Fold 7:
+1. The M834 on, paired with the phone as it was for the Phomemo app (close the Phomemo app first).
+2. GroupLab, Targets, the C bull sheet (Letter), **Print on the Phomemo M834**. Allow nearby devices if asked, then press it again.
+3. Measure the sheet's ruler line with a ruler, and scan the page at 600 dpi into `C:\Dev\grouplab-local\printers\`.
+**A good answer:** "it printed, the ruler line measures N", or what the screen said if it did not.
+
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 
 **Why:** every accuracy figure for the four scale markers comes from computer-made photos with a perfect print; real paper, a real
@@ -256,30 +267,6 @@ way the counter photos came (into `C:\Dev\grouplab-local\commercial-targets\`, a
 lines, which is exactly what could fool it, so one real wooden photo is worth more than any guess.
 
 **A good answer:** one or two photos, all four corners of the target in each. Nothing else needed.
-
-## 73. When the Phomemo M834 arrives: two recordings from your Android phone, about twenty minutes, that day or later (entries 358 and 359)
-
-**Opened 2026-10-03, rewritten 2026-10-04 (entry 359: Bluetooth only).** **Why:** GroupLab will print to the M834 over Bluetooth only,
-never by USB cable and never through Phomemo's driver. Phomemo publishes nothing about how it talks, so GroupLab learns it from one page
-printed by Phomemo's own app while the phone records the Bluetooth traffic. Until then the thermal print mode, the Letter targets in it
-and the printer check on thermal paper are built and tested against recordings only. Nothing is sent anywhere; you copy two files to this
-computer. **Steps:**
-1. **The scan.** Install **nRF Connect for Mobile** (Nordic Semiconductor) from Google Play. Turn the M834 on. Open nRF Connect, tab
-   **Scanner**, press **Scan**. Find the printer in the list (its name may be a code or a serial number rather than "M834"; it is the
-   entry whose signal grows strong when the phone is next to it). Press **Connect** on it. When the list of services appears, press
-   the three dots at the top right, **Save** or **Share** the log, and save it as a file. If it never appears in nRF Connect, say so:
-   that means it uses classic Bluetooth only, and then the phone apps (Android first) are the M834's way to print and an iPhone cannot
-   be, since an iPhone talks only Bluetooth LE to a printer without Apple's accessory programme.
-2. **The recording.** On the phone, Settings, About phone, tap **Build number** seven times to unlock Developer options (skip if done).
-   Settings, Developer options, turn on **Enable Bluetooth HCI snoop log**. Turn Bluetooth off and on again. Open the **Phomemo app**,
-   print **one** page with a little text on it, and nothing else. Back in Developer options, turn the snoop log **off**.
-3. **Getting the recording off the phone**, whichever is easier. Without a cable: Settings, Developer options, **Take bug report**,
-   **Full report**; when the phone says it is ready, share it to yourself (Google Drive, email or Quick Share to this computer) and save
-   it as `C:\Dev\grouplab-local\printers\m834-bugreport.zip`. With the phone's cable instead (USB debugging on, as for GroupLab Dev),
-   in PowerShell: `adb bugreport C:\Dev\grouplab-local\printers\m834-bugreport.zip`. Either way, put the nRF Connect file in the same
-   folder. I read them with `python scripts/printer-recording.py` (entry 363), which says what the app sent and whether the M834 is
-   Bluetooth LE or classic only.
-**A good answer:** "both saved in grouplab-local\printers", or what went differently.
 
 ## 72. For Unholy's 4x6 label printer: steps to pass to him, once you have its model number (entries 358 and 359)
 

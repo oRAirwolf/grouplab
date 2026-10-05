@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "The scale markers' instructions now say to tuck",
+    "On Android, Targets can now print a sheet straight to a Phomemo M834",
     "Targets, Scale markers now makes scale labels",
     "Add a store-bought target now calls the corners found only when two ways",
     "A light bank card lying on white paper is now found",

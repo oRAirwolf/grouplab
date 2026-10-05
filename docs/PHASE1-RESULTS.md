@@ -383,6 +383,32 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 2 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Request 73: the Phomemo M834's print commands, decoded and proved (2026-10-05)
+
+- **The link.** Alan's bug report's snoop log held two devices: about 20 KB of Bluetooth LE writes were a watch's (its own bytes name it),
+  and the Phomemo app sent the page, 136,992 bytes, to the M834 over **classic Bluetooth's serial port** (RFCOMM channel 1), not LE. The
+  M834 also offers LE (nRF Connect: service ff00, write ff02, notify ff03), which the app did not use; that is the way an iPhone would
+  need, and it is not learnt yet. `scripts/printer-recording.py` now takes the link that carried the most and says the other was
+  another device's.
+- **The commands.** Status questions and settings (`1F 11 n`, `1A ...`, `1B 4E 1C 02`, reset `1B 40`, then `1F 11 02 04`,
+  `1F 11 37 64`, `1F 11 0B`, `1F 11 35 01`, `1F 11 3C 02`), then ESC/POS's raster header `1D 76 30 00`, 316 bytes (2528 dots) across
+  by 3294 lines, and then **not raw rows but 255 LZO1X blocks**, each the next 4096 bytes of the page (the last 520), its packed length in
+  three bytes, low first, each ending in LZO's own end mark `11 00 00`. 1,040,904 bytes unpacked, exactly 316 by 3294, nothing left
+  over. Which setting is darkness, speed or paper is not known; GroupLab sends them as the app did.
+- **The proof.** The rebuilt page is the C bull sheet, its identifier readable. Rendered at 300 dpi, the PDF Alan printed lies over
+  it at **94.675 percent** scale (measured from the ink's extent across, best offset found by search): 96.8 percent of the black is
+  shared and 0.84 percent of all dots differ, the rest being edge smoothing and the foot of the page. At 100 percent only 34 percent
+  is shared. **So the Phomemo app printed the Letter sheet 5.3 percent small, and cut its last line in half**: a target printed through
+  the app is the wrong size whatever its scale setting said. That is the measured case for printing directly.
+- **Direct printing, started.** `Lzo1x` (a compressor of literal runs and long matches, and a full decompressor), `PhomemoLzoEncoder`
+  (the app's settings, then the raster in 4 KB LZO blocks, a page of another width centred on the head), and the M834's profile
+  (classic Bluetooth, 300 dpi, 2528 dots, not yet tested). Checked both ways: GroupLab's decompressor reads the app's whole recording
+  to the same page as the independent Python one, Python reads GroupLab's own stream (158 KB for the app's 137 KB) back to the same
+  page, and 300 random round trips agree. On Android: a classic serial link to the paired printer, Bluetooth permission asked the first
+  time Print is pressed, and **Print on the Phomemo M834** on a sheet's page in Targets, marked new and not yet tried.
+- **Not done, next session:** the computer (a paired M834 is a serial port there); the iPhone's LE way; what each setting does
+  (the darkness test through GroupLab); the printer's answers (battery, paper) read back; the article.
+
 ## Entry 372: scale labels for the Phomemo M220
 
 - `ScaleLabels`: rows of two 8 mm tag36h11 codes (1 mm modules, 8 dots at 203 dpi) across the label's width only, 5 mm in from each side;

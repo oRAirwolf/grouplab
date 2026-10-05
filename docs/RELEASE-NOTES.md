@@ -22,6 +22,20 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 
 ---
 
+## 0.2.0-nightly.168
+
+**2026-10-04**, commit `13d882d`. Nightly.
+
+**What you will notice**
+
+- Targets, Scale markers now makes scale labels for a label printer such as the Phomemo M220, at the label size loaded, each with its own codes; stuck on a target, they give it its scale.
+- The scale markers' instructions now say to tuck the corner brackets against the target's corners, touching, and that a scale bar may touch the target or lie a little apart.
+- Add a store-bought target now calls the corners found only when two ways of looking at the photo agree on them, so a wrong outline is almost never presented as found; when unsure it says so and starts the corners at its best guess.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.168)
+
+---
+
 ## 0.2.0-nightly.167
 
 **2026-10-04**, commit `18d6bb7`. Nightly.

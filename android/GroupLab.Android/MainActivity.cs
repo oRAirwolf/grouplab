@@ -55,6 +55,33 @@ public class MainActivity : AvaloniaMainActivity
 
     private const int CameraRequest = 219;
 
+    private const int BluetoothRequest = 373;
+
+    /// <summary>
+    /// Request 73: whether GroupLab may connect to a paired printer, asked the first time Print is pressed and never at start. Before Android 12
+    /// the permission is granted with the application and this is always true.
+    /// </summary>
+    internal static bool BluetoothAllowed()
+    {
+        if (!OperatingSystem.IsAndroidVersionAtLeast(31))
+        {
+            return true;
+        }
+
+        if (Current is not { } activity)
+        {
+            return false;
+        }
+
+        if (AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.BluetoothConnect) == Permission.Granted)
+        {
+            return true;
+        }
+
+        AndroidX.Core.App.ActivityCompat.RequestPermissions(activity, [global::Android.Manifest.Permission.BluetoothConnect], BluetoothRequest);
+        return false;
+    }
+
     /// <summary>Whether the camera may be used; asks the person once where it may not, and says false until they answer.</summary>
     internal static bool CameraAllowed()
     {

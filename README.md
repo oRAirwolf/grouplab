@@ -314,7 +314,8 @@ What exists and is tested:
 - a PDF renderer, a Targets screen that prints at true size, and a designer for your own sheets
 - label targets for a thermal label printer: 4x6, A6 and 100 x 150 mm labels beside Letter and A4, six of the 5x5 Letter sheets' bulls to a
   label in sets of five that pool like the 300 yard tiles, a printer check label, and a thermal print mode that draws every dot as the
-  printer will make it (no label printer has been tested yet)
+  printer will make it, and printing straight to a Phomemo M834 from Android over Bluetooth, spoken to as its own app was recorded
+  doing (no label printer has printed from GroupLab yet)
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
 - the statistics engine, validated key for key against the R package `shotGroups`

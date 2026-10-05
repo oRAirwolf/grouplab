@@ -211,6 +211,8 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Screens.Choice("Share for a printer app, as a picture", () => result.Text = ForPrinterApp(sheet, picture: true)).Id("targets-printer-app-picture"));
         column.Children.Add(Screens.Choice("Share for a printer app, as a PDF", () => result.Text = ForPrinterApp(sheet, picture: false)).Id("targets-printer-app-pdf"));
         column.Children.Add(Screens.Dim(PrinterAppWords));
+        // Request 73: straight to the Phomemo M834 over Bluetooth, at true size, spoken to as the app's own recording showed.
+        column.Children.Add(Screens.Choice(M834Print, () => _ = PrintOnM834(sheet, result)).Id("targets-print-m834"));
         // Entry 258: a set of tiles as one large page with cut lines between them, for a plotter, shared rather than printed on the phone.
         if (GroupLab.Core.Rendering.CutSheet.Refusal(sheet.Definition) is null)
         {
@@ -318,6 +320,47 @@ public sealed class TargetsPage : UserControl
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),
             said);
+    }
+
+    internal const string M834Print = "Print on the Phomemo M834 (Bluetooth, new: not yet tried on a real one)";
+
+    /// <summary>
+    /// Request 73: every page of the sheet drawn for the M834's head at 300 dpi, true size, and sent over the paired serial link. Nothing
+    /// is fitted to the page: the Phomemo app shrank a Letter sheet to 94.7 percent when it printed one.
+    /// </summary>
+    private static async Task PrintOnM834(LibrarySheet sheet, TextBlock result)
+    {
+        var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
+        var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+        result.Text = "Connecting to the M834…";
+        var (link, why) = await Phone.Platform.OpenSerialPrinterAsync("M834", CancellationToken.None);
+        if (link is null)
+        {
+            result.Text = why ?? "The M834 could not be reached.";
+            return;
+        }
+
+        try
+        {
+            await using (link)
+            {
+                foreach (var page in scenes.Pages)
+                {
+                    var dots = GroupLab.Core.Printing.Thermal.ThermalRaster.Render(page, profile.Head);
+                    var job = new GroupLab.Core.Printing.Labels.LabelJob(dots.Image, page.Width / (10.0 * Scene.UnitsPerDmm), page.Height / (10.0 * Scene.UnitsPerDmm));
+                    byte[] bytes = GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(job, profile);
+                    await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, bytes, Task.Delay, CancellationToken.None);
+                }
+            }
+
+            DiagnosticLog.Info("print.m834", ("pages", scenes.Pages.Count));
+            result.Text = scenes.Pages.Count == 1 ? "Sent the page to the M834. Measure its ruler line: it should be true to size."
+                : $"Sent {scenes.Pages.Count} pages to the M834. Measure a ruler line: it should be true to size.";
+        }
+        catch (Exception e) when (e is IOException or OperationCanceledException or InvalidOperationException)
+        {
+            result.Text = "The page did not reach the M834: " + e.Message;
+        }
     }
 
     /// <summary>What sharing for a printer app makes, said under its two choices.</summary>

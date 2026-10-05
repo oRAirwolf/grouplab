@@ -250,6 +250,81 @@ class Raster:
     data: bytes
 
 
+def lzo1x(src: bytes) -> bytes:
+    """One LZO1X block unpacked (request 73: the Phomemo M834 sends its page as these), as the Linux kernel's decompressor reads them."""
+    out, ip, state = bytearray(), 0, 0
+
+    def take(n: int) -> None:
+        nonlocal ip
+        if ip + n > len(src):
+            raise ValueError("the block ends early")
+        out.extend(src[ip:ip + n])
+        ip += n
+
+    def longer(fits: int) -> int:
+        nonlocal ip
+        n = 0
+        while src[ip] == 0:
+            n += 255
+            ip += 1
+        ip += 1
+        return n + fits + src[ip - 1]
+
+    if src and src[0] > 17:
+        t = src[0] - 17
+        ip = 1
+        take(t)
+        state = t if t < 4 else 4
+    while True:
+        t = src[ip]
+        ip += 1
+        if t < 16 and state == 0:
+            take((longer(15) if t == 0 else t) + 3)
+            state = 4
+            continue
+        if t < 16:
+            pos = len(out) - 1 - (t >> 2) - (src[ip] << 2) - (0x800 if state == 4 else 0)
+            ip += 1
+            n, nxt = (3 if state == 4 else 2), t & 3
+        elif t >= 64:
+            pos = len(out) - 1 - ((t >> 2) & 7) - (src[ip] << 3)
+            ip += 1
+            n, nxt = (t >> 5) + 1, t & 3
+        elif t >= 32:
+            n = (longer(31) if t & 31 == 0 else t & 31) + 2
+            d = src[ip] | (src[ip + 1] << 8)
+            ip += 2
+            pos, nxt = len(out) - 1 - (d >> 2), d & 3
+        else:
+            n = (longer(7) if t & 7 == 0 else t & 7) + 2
+            d = src[ip] | (src[ip + 1] << 8)
+            ip += 2
+            pos = len(out) - ((t & 8) << 11) - (d >> 2)
+            if pos == len(out):
+                return bytes(out)
+            pos, nxt = pos - 0x4000, d & 3
+        if pos < 0:
+            raise ValueError("a match reaches before the block")
+        for k in range(n):
+            out.append(out[pos + k])
+        take(nxt)
+        state = nxt
+
+
+def lzo_blocks(stream: bytes, at: int, want: int) -> tuple[bytes, int, int] | None:
+    """The raster as the M834 sends it: blocks of up to 4096 bytes, each LZO1X with its packed length in three bytes, low first. None if not."""
+    rows, blocks = bytearray(), 0
+    try:
+        while len(rows) < want:
+            n = stream[at] | (stream[at + 1] << 8) | (stream[at + 2] << 16)
+            rows += lzo1x(stream[at + 3:at + 3 + n])
+            at += 3 + n
+            blocks += 1
+    except (ValueError, IndexError):
+        return None
+    return (bytes(rows), at, blocks) if len(rows) == want else None
+
+
 def lay_out(stream: bytes) -> tuple[list[str], list[Raster]]:
     """The bytes as commands, as the Phomemo family and plain ESC/POS write them; TSPL as text; anything else shown as bytes."""
     head = stream[:64]
@@ -274,6 +349,14 @@ def lay_out(stream: bytes) -> tuple[list[str], list[Raster]]:
         elif b[:4] == b"\x1d\x76\x30\x00" and len(b) >= 8:
             flush()
             wb, h = struct.unpack_from("<HH", b, 4)
+            packed = lzo_blocks(stream, at + 8, wb * h)
+            if packed:
+                data, end, blocks = packed
+                rasters.append(Raster(wb, h, data))
+                lines.append(f"  1D 76 30 00 raster {wb * 8} dots across ({wb} bytes) by {h} lines, sent as {blocks} LZO1X blocks of "
+                             f"up to 4096 bytes, {end - at - 8} bytes for {wb * h}")
+                at = end
+                continue
             data = stream[at + 8: at + 8 + wb * h]
             full = len(data) == wb * h
             rasters.append(Raster(wb, h, data))
@@ -382,7 +465,12 @@ def analyse(source: Path, nrf: Path | None, page: Path | None, out: Path) -> dic
         report["nrf"] = read_nrf(nrf)
         lines.append(f"nRF Connect named these services and characteristics: {', '.join(report['nrf']['uuids']) or 'none found'}.")
 
-    if s.writes:
+    # Request 73: a phone's log holds every device it talks to (a watch, earbuds), so the printer is the link that carried the most.
+    le_bytes, classic_bytes = sum(len(w.value) for w in s.writes), sum(len(d) for _, _, d, _ in s.rfcomm)
+    if s.writes and s.rfcomm:
+        lines.append(f"Both kinds of Bluetooth carried data: {le_bytes} bytes written over LE, {classic_bytes} over classic; the larger "
+                     "is taken as the printer's, the other as another device's.")
+    if s.writes and le_bytes >= classic_bytes:
         report["bluetooth"] = "LE"
         by_handle: dict[int, list[Write]] = {}
         for w in s.writes:
@@ -404,11 +492,15 @@ def analyse(source: Path, nrf: Path | None, page: Path | None, out: Path) -> dic
         report["answers"] = [{"handle": h, "bytes": v} for h, v in answers[:20]]
         if answers:
             lines.append("The printer answered: " + "; ".join(f"{v} on {h:#06x}" for h, v in answers[:8]) + ("; ..." if len(answers) > 8 else "") + ".")
-    elif s.rfcomm:
+    elif s.rfcomm or s.writes:
         report["bluetooth"] = "classic"
         stream = b"".join(d for _, _, d, _ in s.rfcomm)
-        lines.append("Classic Bluetooth (RFCOMM, the serial port profile) only: an iPhone cannot print to it without Apple's accessory programme, "
-                     "so the phone apps on Android, and the computer where its Bluetooth allows a serial port, are its path.")
+        if report.get("nrf", {}).get("uuids"):
+            lines.append("The app printed over classic Bluetooth (RFCOMM, the serial port profile), although nRF Connect saw the printer offer "
+                         "Bluetooth LE too: Android and the computer can print the app's way; an iPhone would need the LE way to be learnt.")
+        else:
+            lines.append("Classic Bluetooth (RFCOMM, the serial port profile) only: an iPhone cannot print to it without Apple's accessory "
+                         "programme, so the phone apps on Android, and the computer where its Bluetooth allows a serial port, are its path.")
         lines.append(f"The app sent {len(stream)} bytes on RFCOMM channel {s.rfcomm[0][1] >> 1}.")
     else:
         raise SystemExit("No writes to a printer are in this recording: was the snoop log on while the page printed?")

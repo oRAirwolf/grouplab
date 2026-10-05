@@ -3,6 +3,30 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 73. (Answered 2026-10-05: both files saved; decoded, see PHASE1-RESULTS, request 73.) When the Phomemo M834 arrives: two recordings from your Android phone, about twenty minutes, that day or later (entries 358 and 359)
+
+**Opened 2026-10-03, rewritten 2026-10-04 (entry 359: Bluetooth only).** **Why:** GroupLab will print to the M834 over Bluetooth only,
+never by USB cable and never through Phomemo's driver. Phomemo publishes nothing about how it talks, so GroupLab learns it from one page
+printed by Phomemo's own app while the phone records the Bluetooth traffic. Until then the thermal print mode, the Letter targets in it
+and the printer check on thermal paper are built and tested against recordings only. Nothing is sent anywhere; you copy two files to this
+computer. **Steps:**
+1. **The scan.** Install **nRF Connect for Mobile** (Nordic Semiconductor) from Google Play. Turn the M834 on. Open nRF Connect, tab
+   **Scanner**, press **Scan**. Find the printer in the list (its name may be a code or a serial number rather than "M834"; it is the
+   entry whose signal grows strong when the phone is next to it). Press **Connect** on it. When the list of services appears, press
+   the three dots at the top right, **Save** or **Share** the log, and save it as a file. If it never appears in nRF Connect, say so:
+   that means it uses classic Bluetooth only, and then the phone apps (Android first) are the M834's way to print and an iPhone cannot
+   be, since an iPhone talks only Bluetooth LE to a printer without Apple's accessory programme.
+2. **The recording.** On the phone, Settings, About phone, tap **Build number** seven times to unlock Developer options (skip if done).
+   Settings, Developer options, turn on **Enable Bluetooth HCI snoop log**. Turn Bluetooth off and on again. Open the **Phomemo app**,
+   print **one** page with a little text on it, and nothing else. Back in Developer options, turn the snoop log **off**.
+3. **Getting the recording off the phone**, whichever is easier. Without a cable: Settings, Developer options, **Take bug report**,
+   **Full report**; when the phone says it is ready, share it to yourself (Google Drive, email or Quick Share to this computer) and save
+   it as `C:\Dev\grouplab-local\printers\m834-bugreport.zip`. With the phone's cable instead (USB debugging on, as for GroupLab Dev),
+   in PowerShell: `adb bugreport C:\Dev\grouplab-local\printers\m834-bugreport.zip`. Either way, put the nRF Connect file in the same
+   folder. I read them with `python scripts/printer-recording.py` (entry 363), which says what the app sent and whether the M834 is
+   Bluetooth LE or classic only.
+**A good answer:** "both saved in grouplab-local\printers", or what went differently.
+
 ## 66. How often GroupLab goes to the Microsoft Store: your choice, two minutes, whenever suits (entry 337)
 
 **Opened 2026-10-01.** **Why:** the route is built: a run of "store submit" on GitHub sends a chosen build to the Store through

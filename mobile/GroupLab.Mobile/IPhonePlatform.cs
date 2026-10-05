@@ -67,6 +67,14 @@ public interface IPhonePlatform
     /// <summary>Prints a PDF through the system's print dialog; a sentence where it could not, else null.</summary>
     string? PrintPdf(byte[] pdf, string name, PageSize paper);
 
+    /// <summary>
+    /// Request 73: a connection to a printer paired over classic Bluetooth's serial port, the first whose name holds
+    /// <paramref name="nameHint"/>, or why there is none in words for the screen. An iPhone offers no classic Bluetooth to GroupLab, so a
+    /// head without it keeps this default, which says so.
+    /// </summary>
+    Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenSerialPrinterAsync(string nameHint, CancellationToken token) =>
+        Task.FromResult<(GroupLab.Core.Printing.Labels.IPrinterLink?, string?)>((null, "Printing straight to this printer needs classic Bluetooth, which this phone does not offer GroupLab. Use Share for a printer app instead."));
+
     /// <summary>Shares a PDF; a sentence where it could not, else null.</summary>
     string? SharePdf(byte[] pdf, string name);
 
