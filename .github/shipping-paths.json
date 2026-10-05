@@ -52,6 +52,7 @@
     "tools": "the reference encoder the fixtures are dumped from"
   },
   "content": {
+    ".claude": "the project's subagent definitions for Claude Code (Alan, 2026-10-05); nothing in the application reads them",
     ".gitignore": "cannot change what is built",
     "CLAUDE.md": "the rules this session works to, read by nobody at runtime",
     "CONTRIBUTING.md": "documentation",

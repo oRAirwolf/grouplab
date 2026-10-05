@@ -21,6 +21,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entries 363, 364 and 365 done** (2026-10-04), for nightly 167: the M834 files (166), aiming marks, issue 19 (closed), the
   sheet look 8.4 s to 0.15 s, the phone's failures as sheets, the phone sender (off until "forms updated"), four reference files,
   scale markers A to D.
+- **Entry 375 tried, not built** (in the inbox): painting brackets out made flat patches the corner finder took for the target;
+  with the right fill the target's own corners came within 0.1 mm at 2 and 5 mm gaps. Next: rectified edge search beside each bracket;
+  the work is `C:\Dev\grouplab-trash\2026-10-05\entry-375-wip.patch`.
 - **Request 73 done (2026-10-05)**: the M834 prints over classic Bluetooth's serial port, its page in LZO1X blocks; Android prints
   directly (request 78 asks Alan to try it); the computer's serial port and the iPhone's LE way are next.
 - **Entry 374 partly done**: the C bull fix (shooting order), the update fix, four of section 4; store-bought photos, timed pairing,
@@ -115,4 +118,3 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **The Phomemo app prints a Letter sheet at 94.7 percent** (request 73): only GroupLab's own direct print is true size.
 - **Tag36h11 470 to 549 are scale labels' and 555 to 586 scale markers' (entries 372 and 365)**: the sheets' markers must stay below; the sheet look and the validator know.
 - **A picture with a bank card in it is never sent**, and marking by hand works on a blanked copy (entry 365 section D).
-- **Entry 317's budget is in force:** one worker by default, the ccusage line once a day in for-alan.md.

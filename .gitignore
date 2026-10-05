@@ -37,3 +37,7 @@ ios/native/
 docs/notes/usage-now.json
 docs/notes/finishing.flag
 docs/notes/usage-log.md
+
+# The project subagents in .claude/agents are committed; the rest of .claude is this machine's own.
+.claude/worktrees/
+.claude/settings.local.json*

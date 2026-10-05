@@ -254,7 +254,9 @@ Alan: "I would like going forward is for cowork and code to be more efficient wi
 ### The standing budget, entry 317 (replaces entry 296's spending rules)
 
 About 12% of the weekly limit a day and 15% an hour; `npx.cmd ccusage@latest daily` once a day, one line in `for-alan.md`, and one worker
-the next day after a hot one. **One worker by default**, two only for separate areas, three only when Alan asks. Application code, tests,
+the next day after a hot one. **Chores go to `.claude/agents/`**: `chores-haiku` for screenshot walks, file moves and
+log or CI summaries, `docs-sonnet` for consistency audits, release-note wording and documentation passes, and one line a day in
+`docs/notes/usage-log.md` saying which model did what (Alan, 2026-10-05). **One worker by default**, two only for separate areas, three only when Alan asks. Application code, tests,
 detection, statistics, camera and UI stay on the main model; cheaper models only for chores that cannot change the app. A fresh session
 per block of work. `for-alan.md` holds the open requests and the latest summary; answered ones go to `docs/notes/for-alan-archive.md`.
 Screenshots, guide PDFs and the site audit once per nightly. No minute-by-minute watching. Priorities when tight: bugs Alan hit and iOS
