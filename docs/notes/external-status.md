@@ -26,7 +26,7 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:store-submission -->
 
 <!-- status:store-search -->
-## store-search, 2026-10-04 12:22 UTC
+## store-search, 2026-10-06 00:04 UTC
 
-- Store search for GroupLab: not found
+- Store search for GroupLab: found
 <!-- /status:store-search -->
