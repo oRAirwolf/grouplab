@@ -23,6 +23,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Every hole found, and every one yours to change | `every-hole` | on the phone | entry 291 section 2: changed on a page of their own, Fix holes, under a fixed crosshair with zoom and undo; the result's picture takes no touch | on iOS |
 | The bulls you aimed at | `aimed-bulls` | on the phone | entry 259 screen 2, "tap the bulls on the sheet" | on iOS |
 | A sheet shot off by the same amount | `whole-sheet` | on the phone | | on iOS |
+| Which bull each shot belongs to | `bull-lines` | on the phone | entry 376: the lines, a tap lights bull, holes and lines, Bull by bull, the bull picker in Fix holes | on iOS |
 | Works in your scope's unit | `scope-unit` | on the phone | entry 294 section 1: the first run asks mil or MOA with the length beside it, Units at the top of Settings, the rifle form's scope unit and click chips, and every aiming figure in the scope's unit | on iOS |
 | Tap a number to switch units | `unit-tap` | on the phone | entry 273: tiles and figure rows, press and hold for every unit, the note at the bottom | on iOS |
 | Check your printer once, for real inches from photos | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept | on a device |
