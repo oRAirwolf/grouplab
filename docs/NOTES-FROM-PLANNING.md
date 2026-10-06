@@ -25,6 +25,46 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-06, entry 379: "forms updated": the phones' senders switched on, and what the store forms now say
+
+**Status: sections 1 and 2 done 2026-10-06; section 3 (the public page and the guides) waits for nightly 173, the first carrying
+section 1, as the entry says.** The three phone switches in `website/api/limits.json` are on; request 71 closed; the declarations are in
+docs/store/LISTING.md and docs/store/PLAY.md.
+
+Written by the planning session 2026-10-06 01:50 UTC. Alan: "forms updated". Small; do it right after entry 377, before entry 376 Part B,
+inside the same 88% rule.
+
+## 1. Switch on
+
+On Android and iOS, switch on what request 71 and question 81 held back until this word: the log with error reports, "Send everything I
+open", and sending targets (Wi-Fi only unless mobile data is allowed in Settings). Ship in the next nightly; say so in its notes. Then
+close request 71 in for-alan.md.
+
+## 2. What Alan declared (record it in docs/store/LISTING.md and docs/store/PLAY.md, so the next audit can check the app against it)
+
+**Apple, App Store Connect, App Privacy** (first time; it had never been filled in). Privacy Policy URL
+`https://grouplab.org/research/what-grouplab-sends/`. Data collected, all **not linked to the user, not used for tracking**:
+- Identifiers, Device ID (the survey's random installation number): Analytics.
+- Usage Data, Product Interaction: App Functionality, Analytics.
+- Diagnostics, Crash Data: App Functionality. Performance Data: App Functionality, Analytics. Other Diagnostic Data: App Functionality.
+- User Content, Photos or Videos: Analytics.
+
+**Google Play, App content** (also mostly first time):
+- Data safety: collects data, encrypted in transit, no account creation, no login with outside accounts, deletion on request with
+  Delete data URL `https://grouplab.org/support/` (entry 378 section 4 adds the "Delete your data" section that URL needs). Data types,
+  all **Collected, not shared, not ephemeral, users can choose, purpose Analytics only**: Crash logs, Diagnostics, Device or other IDs,
+  App interactions, Photos.
+- Privacy policy: `https://grouplab.org/research/what-grouplab-sends/`.
+- Target audience: 18 and over only; not appealing to children.
+- Store settings: App, category Sports, contact email support@grouplab.org, no phone, website https://grouplab.org/, external marketing
+  on.
+
+## 3. Make the public words agree (entry 267)
+
+The page `grouplab.org/research/what-grouplab-sends/` says "Send everything I open" is on the computer only, not yet on the phone, and
+says nothing about the iPhone app. Update it for both phones once the nightly with section 1 is out, and check it lists every item above
+(the survey's random installation number, the log, sent photos), so it matches what the stores now show. Check the README and guides.
+
 ## 2026-10-06, entry 377: printing to the M834 hangs on "Connecting to the M834..."
 
 **Status: done 2026-10-06, but item 4 (the BLE route), left for the iPhone work because nothing decoded says the M834 takes a page

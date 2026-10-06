@@ -750,6 +750,16 @@ all        23x35    20/20    0.014   0.027   0.072      0.247           20/20
   (`share_paths.xml` names only `shared/`). Now written in `shared/`, as were the data export and the fingerprint file, which would
   have crashed the same way. `Entry363PrinterAppTests` holds the path.
 
+## Entry 379: the phones' senders switched on (2026-10-06)
+
+- `website/api/limits.json`: `sendEverythingOpenPhones`, `fullLogErrorReportsPhones` and `sendTargetsPhones` true, on Alan's "forms
+  updated". The application reads them as built, so Android and the iPhone offer Send everything I open, carry the log with automatic
+  error reports, and send targets (over Wi-Fi unless mobile data is allowed in Settings) from nightly 173. `Entry357Tests`' switches-off
+  case now holds all three off itself.
+- What Apple's App Privacy and Google Play's App content declare is in docs/store/LISTING.md and docs/store/PLAY.md; the delete-data
+  address it names, grouplab.org/support/, needs entry 378 section 4's section.
+- **Waiting:** section 3, the page "What GroupLab sends" and the guides for both phones, once nightly 173 is out.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

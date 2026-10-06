@@ -41,6 +41,9 @@ say", or "every two weeks").
 ## 71. Switching on "send everything I open" and fuller error reports: your yes, and the store privacy forms, about twenty minutes (entry 357)
 
 **Answered 2026-10-04 (entry 363 section 1):** "yes, switch both on". On for the computer from nightly 166; the phones wait for "forms updated", the checklist at the top of for-alan.md.
+**Closed 2026-10-06 (entry 379):** "forms updated". All three switched on for the phones from nightly 173: the log with error reports,
+Send everything I open, and sending targets (Wi-Fi only unless mobile data is allowed in Settings). What the forms now declare is in
+docs/store/LISTING.md (Apple) and docs/store/PLAY.md (Google Play).
 
 **Opened 2026-10-03.** **Why:** both are built and switched off, so no build sends more than before. Switching them on changes two
 things you have promised: today a picture GroupLab could not read is never sent (the app's words, the website's "What GroupLab sends"

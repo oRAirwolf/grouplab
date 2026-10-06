@@ -7,17 +7,6 @@ Working from the terminal, 4 October, at 71% of the week (a live reading, the we
 **This week, by itself** (not a request): backed up on 4 October (1686 MB, backup-2026-10-04); the restore test passed on 4 October; 0 archived submissions copied here; cleanup freed 1 MB; on the server, workers deleted or archived: archive 7; the server's own backup is from 2026-10-03; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->
 
-**THE STORE FORMS, SO THE PHONES CAN SEND MORE** (request 71, answered "switch both on"; entry 363). On the computer both are on
-from nightly 166. The phones keep both off until you write **"forms updated"**. Ten minutes:
-- **Apple, App Store Connect, App Privacy:** keep Crash Data, Performance Data and the Identifier (the survey's random number); **add Other
-  Diagnostic Data** and, under Usage Data, **Product Interaction** (the log). All: not linked to you, not used for tracking, optional.
-- **Google Play, Data safety:** keep App info and performance (crash logs, diagnostics) and Device or other IDs; **add App activity, App
-  interactions**. All: collected, optional, encrypted in transit, not shared.
-- **The phone's sender is built (question 81, nightly 167), and off with the rest:** add **Photos** in both forms too: Apple, Photos or Videos,
-  not linked to you, not used for tracking, optional; Google Play, Photos and videos, Photos, collected, optional, encrypted in transit,
-  not shared. "forms updated" then switches on all three on the phones: the log with error reports, Send everything I open, and sending
-  targets, over Wi-Fi only unless you allow mobile data in Settings.
-
 **CORNERS AND MARKERS, TUNED ON 14 SURFACES** (entry 371, not a request). GroupLab now drew your blank targets onto 14 made-up surfaces (black and grey tables, dark and light wood with seams, white and cream counters, cardboard, OSB, foam board, a shot-up backer, old targets, grass, gravel, carpet) in 112 photos. **Being honest about corners:** it used to call 86 outlines found, 21 of them wrong; now it says found only when two different ways of looking agree, and 38 found had 1 wrong. On your 15 real photos: before, 3 of 14 "found" were wrong (your floor); now 0 of 6, and 5 right ones start as "not sure" for you to check. **Touching or a gap:** brackets must touch the corners (each 2 mm of gap makes a 12 in target read about 2 percent large); bars can touch or lie apart, the scale is the same. The app's words say so. Still to try: the target's printed border, right angles, a live outline on the camera. Pictures: `C:\Dev\grouplab-local\surface-trial-2026-10-04\`.
 
 **SCALE MARKERS, ALL FOUR** (entry 365, not a request; in nightly 167 or the first after it whose notes say so). On Targets, under

@@ -86,3 +86,19 @@ others. The expected rating is 3+ (IARC), everyone.
 
 Windows 10 version 1809 or later, 64-bit (x64). 4 GB of memory, 8 GB recommended. The Store package needs 1809, higher than the downloaded
 version's Windows 10 version 1607, because 1809 is the Store's floor for MSIX packages.
+
+## Apple App Store Connect, App Privacy, as declared (entry 379)
+
+Alan filled this in for the first time and wrote "forms updated" on 2026-10-06. Recorded here so an audit can hold the application to it.
+
+- **Privacy Policy URL:** https://grouplab.org/research/what-grouplab-sends/
+- **Every data type below:** not linked to the user, not used for tracking.
+- **Identifiers, Device ID** (the hardware survey's random installation number): Analytics.
+- **Usage Data, Product Interaction:** App Functionality, Analytics.
+- **Diagnostics, Crash Data:** App Functionality. **Performance Data:** App Functionality, Analytics. **Other Diagnostic Data:** App
+  Functionality.
+- **User Content, Photos or Videos:** Analytics.
+
+What sends each, in the application: the survey (the installation number), error reports with their log (crash data, diagnostic data),
+the survey's benchmark (performance data), and Send everything I open or a target sent (photos). All are the person's choice, and on the
+phones they were switched on by entry 379.

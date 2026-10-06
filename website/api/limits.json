@@ -32,7 +32,10 @@
     "Entry 363 section 1: Alan said yes to both on 2026-10-04. They are on for the computer, where the Microsoft Store needs no form change,",
     "and for the receivers, which take what the computer sends. sendEverythingOpenPhones and fullLogErrorReportsPhones keep both off on",
     "Android and the iPhone until Alan writes \"forms updated\" for Apple's App Privacy and Google Play's Data safety (for-alan.md).",
-    "sendTargetsPhones does the same for the phone's own sender of targets (question 81 A, entry 363 section 3.5)."
+    "sendTargetsPhones does the same for the phone's own sender of targets (question 81 A, entry 363 section 3.5).",
+    "",
+    "Entry 379: Alan wrote \"forms updated\" on 2026-10-06 (App Privacy and Data safety filled in, recorded in docs/store/), so the",
+    "three phone switches are on."
   ],
   "open": true,
   "maxFiles": 10,
@@ -64,7 +67,7 @@
   "crashReceiver": "https://grouplab.org/api/crash-report.php",
   "sendEverythingOpen": true,
   "fullLogErrorReports": true,
-  "sendEverythingOpenPhones": false,
-  "fullLogErrorReportsPhones": false,
-  "sendTargetsPhones": false
+  "sendEverythingOpenPhones": true,
+  "fullLogErrorReportsPhones": true,
+  "sendTargetsPhones": true
 }

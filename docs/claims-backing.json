@@ -5,6 +5,10 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "On the tour · In the user guide · The research behind it Which bull each shot belongs to A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ShotLabels.cs ShotLabel.Name; src/GroupLab.App/MarkingCanvas.cs Lit and LightAt; mobile/GroupLab.Mobile/ResultView.cs SheetPicture; src/GroupLab.Core/Marking/ResultFigures.cs BullKey (entry 376 sections A3, A4 and A6)"
+  },
   "GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Detection/ImpactOffset.cs ImpactOffsets.ReadWholeSheet (shooting order from bull 1, the question when two readings fit); src/GroupLab.Core/Marking/MarkingSession.cs WhichBulls; tests/GroupLab.Core.Tests/Detection/ImpactOffsetTests.cs TheTabletPhotoWithTheHandAddedHoleIsBulls1To15 and tests/GroupLab.Core.Tests/Marking/WhichBullsTests.cs (entry 376 section A2)"

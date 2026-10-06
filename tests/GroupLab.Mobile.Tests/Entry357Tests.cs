@@ -47,6 +47,9 @@ public class Entry357Tests
         {
             Start();
             SharingSwitches.EverythingOverride = false;
+            // Entry 379 switched the phones' target sender on; this holds the switches-off case, so it is off here too.
+            SharingSwitches.TargetsFromPhoneOverride = false;
+            SharingSwitches.FullLogOverride = false;
             store.SaveSending(SendingChoice.Always, ConsentLevel.Testing);
             var words = Words(new SettingsView(store));
             if (ReceiverTerms.Current.AppOpen)
@@ -60,6 +63,8 @@ public class Entry357Tests
         finally
         {
             SharingSwitches.EverythingOverride = null;
+            SharingSwitches.TargetsFromPhoneOverride = null;
+            SharingSwitches.FullLogOverride = null;
             Directory.Delete(folder, recursive: true);
         }
     }
