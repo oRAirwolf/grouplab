@@ -70,6 +70,15 @@
           "kind": "internal"
         }
       ]
+    },
+    "8e207c79ef8cb4de3467a6aaf511c6ca59272d8f": {
+      "why": "Entry 381's note spelled millimeters the British way, and nightly 174 refused it.",
+      "notes": [
+        {
+          "note": "Printing straight to the Phomemo M834 from Android now prints the whole page: GroupLab keeps the connection open until the printer says it has finished, instead of stopping after a few millimeters. (Entry 381)",
+          "kind": "fixed"
+        }
+      ]
     }
   }
 }
