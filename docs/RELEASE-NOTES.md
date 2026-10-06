@@ -450,7 +450,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - On the phone, the camera's level works upright at a target still on its backer as well as flat over a table, says which under the crosshair, and follows the sheet itself once its corner squares are read; Guided takes the picture either way.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.143)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
