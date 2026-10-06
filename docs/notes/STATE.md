@@ -83,8 +83,8 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.172 (2026-10-05 22:50 UTC, entry 375; CI needed reruns through GitHub's Actions incident).
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 3f239527 on 2026-10-05.
+- **Last nightly:** 0.2.0-nightly.173 (2026-10-06 05:14 UTC: entries 376 Part B and 379; CI green on all three systems at 5df65754).
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 617c1df6 on 2026-10-06, dispatched by hand for 173's notes.
 - Crash reports open: none. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
