@@ -335,7 +335,29 @@ public sealed class ResultView : UserControl
             int turns = ViewRotation.Upright(result.State.Scale, bitmap.PixelSize.Width, bitmap.PixelSize.Height, result.State.ViewQuarterTurns);
             picturePane = new SheetPicture(bitmap, turns, () => session.State.Shots.Where(s => s.IsShot).ToList(),
                 definition is null && AimedByHand(result.State) ? shot => AimColour(session.State, shot.Bull) : null,
-                () => ReviewQueue.MarksToCheck(session.State).Select(f => f.ShotId).ToHashSet());
+                () => ReviewQueue.MarksToCheck(session.State).Select(f => f.ShotId).ToHashSet(), () => session.State.Bulls);
+            // Entry 376 section A4: a bull lit on the picture, or from Bull by bull, is said under it with where its shots landed.
+            var litSays = Screens.Dim("");
+            litSays.IsVisible = false;
+            void SayLit(int? bull)
+            {
+                var state = session.State;
+                litSays.IsVisible = bull is not null;
+                if (bull is { } b && state.Bulls.FirstOrDefault(x => x.Index == b) is { } aim)
+                {
+                    var on = state.Shots.Where(s => s.IsShot && s.Bull == b).ToList();
+                    string shotsWords = on.Count == 1 ? "1 shot" : on.Count + " shots";
+                    litSays.Text = $"Bull {aim.Label}: {shotsWords}" + (ResultFigures.BullOffset(state, on, units) is { } landed ? ", " + landed + " of its center." : ".");
+                }
+            }
+
+            picturePane.LitChanged += SayLit;
+            full.BullChosen = bull =>
+            {
+                picturePane.Lit = bull;
+                SayLit(bull);
+                picturePane.BringIntoView();
+            };
             picture.Children.Add(checks);
 
             // Entry 291 section 2.2: the holes are fixed on their own page, and the result measures again when it comes back.
@@ -354,6 +376,7 @@ public sealed class ResultView : UserControl
             }).Id("result-fix-holes"));
             picture.Children.Add(Screens.Dim("Move, add or remove a hole under a crosshair, with zoom and undo."));
             picture.Children.Add(picturePane);
+            picture.Children.Add(litSays);
         }
 
         // Entry 259 screen 6: a sheet of a set from Made for your optic leads to the set, pooled so far, and the sheets still to read.
@@ -507,6 +530,44 @@ public sealed class ResultView : UserControl
                 full.Sheet,
             },
         };
+        AskWhichBulls();
+    }
+
+    /// <summary>Whether the question below has been put for this result already; dismissing it keeps GroupLab's guess.</summary>
+    private bool askedWhichBulls;
+
+    /// <summary>
+    /// Entry 376 section A2: where the holes fit more than one set of bulls equally well and nobody has said which were fired at, the
+    /// question in the middle of the screen (the 2026-10-02 rule for anything needing a decision), GroupLab's guess first; "Choose the bulls
+    /// myself" opens Bulls you fired at. Asked once a result; the × keeps the guess, which is what the figures already show.
+    /// </summary>
+    private void AskWhichBulls()
+    {
+        if (askedWhichBulls || session.WhichBulls() is not { } question || Content is not Control behind)
+        {
+            return;
+        }
+
+        askedWhichBulls = true;
+        void Back()
+        {
+            Content = null;
+            Content = behind;
+        }
+
+        var choices = question.Choices.Select((c, k) => ProblemSheet.Choice(c.Guess ? c.Words + " (GroupLab's guess)" : c.Words, () =>
+        {
+            Back();
+            session.AnswerWhichBulls(c);
+            Changed();
+        }, primary: k == 0).Id("which-bulls-" + k.ToString(CultureInfo.InvariantCulture))).ToList();
+        choices.Add(ProblemSheet.Choice(BullsQuestion.Other, () =>
+        {
+            Back();
+            ShowBulls();
+        }).Id("which-bulls-mine"));
+        Content = null;
+        Content = ProblemSheet.Over(behind, BullsQuestion.Title, Screens.Line(BullsQuestion.Why), choices, Back);
     }
 
     /// <summary>What the shared picture and the report are named by: the sheet, and the sheet's own label where it has one.</summary>
@@ -621,6 +682,7 @@ public sealed class ResultView : UserControl
     {
         sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
         Refresh();
+        AskWhichBulls();
     }
 
     /// <summary>
@@ -819,9 +881,76 @@ public sealed class ResultView : UserControl
     /// marking's view; entry 291 found it turned twice, by itself and again by the box it sat in, which also stood a screen high and empty.
     /// </summary>
     /// <para>Entry 318 section 1: a shot whose mark is flagged for its size and not yet settled has a second ring around it, in amber.</para>
+    /// <para>
+    /// Entry 376 sections A3 and A4: a thin line from each bull's centre to every hole given to it, and a tap on a bull, a hole or a line
+    /// lights all three in the selection colour; a tap on nothing puts them out. Taps only: a drag still scrolls the page.
+    /// </para>
     internal sealed class SheetPicture(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Func<MarkedShot, IBrush?>? colour = null,
-        Func<IReadOnlySet<int>>? flagged = null) : Control
+        Func<IReadOnlySet<int>>? flagged = null, Func<IReadOnlyList<BullAim>>? bulls = null) : Control
     {
+        /// <summary>The bull lit with its holes and lines, or none.</summary>
+        internal int? Lit
+        {
+            get;
+            set
+            {
+                field = value;
+                InvalidateVisual();
+            }
+        }
+
+        /// <summary>Raised when a tap lights a bull or puts it out.</summary>
+        internal event Action<int?>? LitChanged;
+
+        /// <summary>How near a tap has to be to a hole, a bull or a line to count, in screen units: a fingertip.</summary>
+        private const double Reach = 22;
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            Tapped += (_, e) => TapAt(e.GetPosition(this));
+        }
+
+        /// <summary>The bull a tap at this point lights: a hole's, a line's, or the bull's own; null on nothing.</summary>
+        internal int? BullAt(Point at)
+        {
+            var all = shots().Where(s => s.Bull is not null).ToList();
+            var aims = bulls?.Invoke() ?? [];
+            if (all.Where(s => Distance(ToScreen(s.Image), at) <= Reach).MinBy(s => Distance(ToScreen(s.Image), at)) is { } hole)
+            {
+                return hole.Bull;
+            }
+
+            var line = all.Select(s => (Shot: s, Aim: aims.FirstOrDefault(b => b.Index == s.Bull)))
+                .Where(x => x.Aim is not null)
+                .Select(x => (x.Shot, Away: FromSegment(at, ToScreen(x.Aim!.Image), ToScreen(x.Shot.Image))))
+                .Where(x => x.Away <= Reach / 2)
+                .MinBy(x => x.Away);
+            if (line.Shot is not null)
+            {
+                return line.Shot.Bull;
+            }
+
+            return aims.Where(b => Distance(ToScreen(b.Image), at) <= Reach).MinBy(b => Distance(ToScreen(b.Image), at))?.Index;
+        }
+
+        private static double Distance(Point a, Point b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));
+
+        private static double FromSegment(Point p, Point a, Point b)
+        {
+            var ab = b - a;
+            double length = (ab.X * ab.X) + (ab.Y * ab.Y);
+            double t = length == 0 ? 0 : Math.Clamp((((p.X - a.X) * ab.X) + ((p.Y - a.Y) * ab.Y)) / length, 0, 1);
+            return Distance(p, a + (ab * t));
+        }
+
+        /// <summary>For the tests and the tap: lights what is at this point, as a finger's tap does.</summary>
+        internal void TapAt(Point at)
+        {
+            Lit = BullAt(at);
+            LitChanged?.Invoke(Lit);
+        }
+
         /// <summary>The quarter turns the picture is shown by.</summary>
         internal int Turns => ViewRotation.Normalise(turns);
 
@@ -864,9 +993,28 @@ public sealed class ResultView : UserControl
             var leftOut = new Pen(Brushes.OrangeRed, 2, new DashStyle([2, 2], 0));
             var check = new Pen(new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected), 3);
             var marked = Flagged;
-            foreach (var shot in shots())
+            var lit = new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected);
+            var aims = bulls?.Invoke() ?? [];
+            var all = shots();
+            // Entry 376 section A3: the lines first, under the rings, thin and translucent so the holes stay readable; the lit bull's in the
+            // selection colour and thicker.
+            foreach (var shot in all)
             {
-                var ring = colour?.Invoke(shot) is { } brush ? new Pen(brush, 2, shot.Exclusion is null ? null : new DashStyle([2, 2], 0)) : shot.Exclusion is null ? pen : leftOut;
+                if (shot.Bull is { } toward && aims.FirstOrDefault(x => x.Index == toward) is { } aim)
+                {
+                    context.DrawLine(toward == Lit ? new Pen(lit, 3) : new Pen(new SolidColorBrush(Colors.OrangeRed, 0.7), 1.5), ToScreen(aim.Image), ToScreen(shot.Image));
+                }
+            }
+
+            if (Lit is { } shown && aims.FirstOrDefault(x => x.Index == shown) is { } litAim)
+            {
+                context.DrawEllipse(null, new Pen(lit, 3), ToScreen(litAim.Image), 14, 14);
+            }
+
+            foreach (var shot in all)
+            {
+                var ring = shot.Bull is { } own && own == Lit ? new Pen(lit, 3, shot.Exclusion is null ? null : new DashStyle([2, 2], 0))
+                    : colour?.Invoke(shot) is { } brush ? new Pen(brush, 2, shot.Exclusion is null ? null : new DashStyle([2, 2], 0)) : shot.Exclusion is null ? pen : leftOut;
                 context.DrawEllipse(null, ring, ToScreen(shot.Image), 9, 9);
                 if (marked.Contains(shot.Id))
                 {

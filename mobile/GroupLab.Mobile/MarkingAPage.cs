@@ -480,6 +480,9 @@ internal sealed class MarkingAPage : UserControl
         }
 
         /// <summary>The hole under the crosshair, within <paramref name="reach"/> screen units, if any.</summary>
+        /// <summary>Entry 376 section A4: the bull lit with its holes and lines.</summary>
+        public int? Lit { get; set; }
+
         public int? MarkUnderCrosshair(double reach)
         {
             var middle = new Point(Bounds.Width / 2, Bounds.Height / 2);
@@ -611,9 +614,27 @@ internal sealed class MarkingAPage : UserControl
             }
 
             var blue = new Pen(new SolidColorBrush(Color.FromRgb(90, 160, 240)), 2);
+            // Entry 376 sections A3 and A4: a thin line from each bull to every hole given to it, and the lit bull's (the hole under the
+            // crosshair, or the one being moved) in the selection colour with its holes.
+            var lit = new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected);
+            foreach (var shot in session.State.Shots.Where(s => s.IsShot && s.Bull is not null))
+            {
+                if (session.State.Bulls.FirstOrDefault(b => b.Index == shot.Bull) is { } aim)
+                {
+                    var to = shot.Id == Held && HeldAt is { } dragged ? ToScreen(dragged) : ToScreen(shot.Image);
+                    context.DrawLine(shot.Bull == Lit ? new Pen(lit, 3) : new Pen(new SolidColorBrush(Colors.OrangeRed, 0.7), 1.5), ToScreen(aim.Image), to);
+                }
+            }
+
+            var labels = ShotLabels.For(session.State).ToDictionary(l => l.ShotId, l => l.Text);
             foreach (var bull in session.State.Bulls)
             {
                 var at = ToScreen(bull.Image);
+                if (bull.Index == Lit)
+                {
+                    context.DrawEllipse(null, new Pen(lit, 3), at, 16, 16);
+                }
+
                 context.DrawLine(blue, new Point(at.X - 12, at.Y), new Point(at.X + 12, at.Y));
                 context.DrawLine(blue, new Point(at.X, at.Y - 12), new Point(at.X, at.Y + 12));
             }
@@ -639,14 +660,15 @@ internal sealed class MarkingAPage : UserControl
 
                 // Entry 318 section 2: a hole Find holes proposed and is unsure of is ringed in amber, as a mark to check is on the result.
                 bool doubted = ReviewQueue.StillDoubted(session.State, shot);
-                context.DrawEllipse(null, byHand ? added : doubted ? new Pen(amber, 2.5) : found, at, radius, radius);
+                context.DrawEllipse(null, shot.Bull is { } own && own == Lit ? new Pen(lit, 3) : byHand ? added : doubted ? new Pen(amber, 2.5) : found, at, radius, radius);
                 if (byHand)
                 {
                     context.DrawEllipse(Brushes.LimeGreen, null, at, 2.5, 2.5);
                 }
                 else
                 {
-                    var text = new FormattedText(number.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 12, Brushes.OrangeRed);
+                    // Entry 376 section A6: a hole carries its bull's number, never a count.
+                    var text = new FormattedText(labels.GetValueOrDefault(shot.Id) ?? number.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 12, Brushes.OrangeRed);
                     context.DrawText(text, new Point(at.X + radius + 1, at.Y - radius - 9));
                 }
             }

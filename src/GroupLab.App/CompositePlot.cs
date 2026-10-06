@@ -16,7 +16,11 @@ namespace GroupLab.App;
 /// One shot on the composite plot: its offset from its own bull's aim point in inches at the target, the bull it came from, and whether it
 /// is excluded. The bull is what gets a reader from a mark on the plot back to a hole on the sheet (entry 105 section 3).
 /// </summary>
-internal sealed record PlotShot(int Id, string Label, string? Bull, PointD Offset, bool Excluded);
+internal sealed record PlotShot(int Id, string Label, string? Bull, PointD Offset, bool Excluded)
+{
+    /// <summary>Entry 376 section A6: the shot as <see cref="ShotLabels"/> names it, "Bull 7" or "Bull 7, shot 2"; null on a plain group.</summary>
+    public ShotLabel? Named { get; init; }
+}
 
 /// <summary>One disc of the bull's artwork, outermost first, at its diameter in inches, and whether its ink is the paper.</summary>
 internal sealed record PlotDisc(double DiameterInches, Color Colour, bool Paper = false, DiscShape Shape = DiscShape.Circle, int Rotation = 0);
@@ -236,8 +240,9 @@ internal sealed class CompositePlot : Control
         var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
         var shots = state.Shots.Where(s => s.IsShot && !(s.Bull is { } b && sighters.Contains(b))).ToList();
         var offsets = GroupAnalysis.CompositeOffsets(state, shots);
+        var named = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         List<PlotShot> plotted = offsets.Count == shots.Count
-            ? [.. shots.Select((s, i) => new PlotShot(s.Id, shotLabel(s.Id), s.Bull is { } b ? bullLabel(b) : null, offsets[i], s.Exclusion is not null))]
+            ? [.. shots.Select((s, i) => new PlotShot(s.Id, shotLabel(s.Id), s.Bull is { } b ? bullLabel(b) : null, offsets[i], s.Exclusion is not null) { Named = named.GetValueOrDefault(s.Id) })]
             : [];
         Shots = plotted;
         CalibreInches = state.Calibre?.DiameterInches;
@@ -391,13 +396,13 @@ internal sealed class CompositePlot : Control
             string place = $"{Length(Math.Abs(o.X))} {(o.X >= 0 ? "right" : "left")} and {Length(Math.Abs(o.Y))} {(o.Y > 0 ? "low" : "high")} of its bull's aim point";
             string fromCentre = Centre is { } c ? $", {Length(Distance(o, c))} from the group center" : "";
             string bull = shot.Bull is { } b ? $", bull {b}" : "";
-            return $"Shot {shot.Label}{bull}. {Capital(place)}{fromCentre}."
+            return $"{shot.Named?.Name ?? "Shot " + shot.Label}{(shot.Named?.Name is null ? bull : "")}. {Capital(place)}{fromCentre}."
                 + (shot.Excluded ? " Excluded: drawn hollow, and left out of every figure except the side-by-side ones that show it both ways." : "");
         }
 
         if (Shown.Spread && SpreadAt(at) is var (a, b2))
         {
-            return $"Extreme spread, {Length(Distance(a.Offset, b2.Offset))}: the distance between shots {a.Label} and {b2.Label}, the two furthest apart. It is a distance between two shots, not a region the group sits inside.";
+            return $"Extreme spread, {Length(Distance(a.Offset, b2.Offset))}: the distance between {PairWords(a.Id, b2.Id)}, the two furthest apart. It is a distance between two shots, not a region the group sits inside.";
         }
 
         if (Centre is { } centre)
@@ -636,7 +641,7 @@ internal sealed class CompositePlot : Control
 
         if (Shown.Spread && SpreadPair is { } pair)
         {
-            entries.Add(new KeyEntry($"extreme spread, shots {Label(pair.First)} and {Label(pair.Second)}, the red dashed line", (c, p) => Marks.Line(c, new SolidColorBrush(inks.Accent), p + new Vector(-7, 0), p + new Vector(7, 0), SpreadStroke, Marks.Dashed)));
+            entries.Add(new KeyEntry($"extreme spread, {PairWords(pair.First, pair.Second)}, the red dashed line", (c, p) => Marks.Line(c, new SolidColorBrush(inks.Accent), p + new Vector(-7, 0), p + new Vector(7, 0), SpreadStroke, Marks.Dashed)));
         }
 
         foreach (var (radius, percent, dash, look, on, _) in Circles())
@@ -781,6 +786,14 @@ internal sealed class CompositePlot : Control
             : null;
 
     private string Label(int id) => Shots.FirstOrDefault(s => s.Id == id)?.Label ?? id.ToString(CultureInfo.InvariantCulture);
+
+    /// <summary>Entry 376 section A6: the extreme spread's two shots, "bulls 1 and 15" on a sheet, "shots 3 and 7" on a plain group.</summary>
+    private string PairWords(int first, int second)
+    {
+        var a = Shots.FirstOrDefault(s => s.Id == first)?.Named;
+        var b = Shots.FirstOrDefault(s => s.Id == second)?.Named;
+        return a?.Name is not null && b?.Name is not null ? ShotLabels.Pair(a, b) : $"shots {Label(first)} and {Label(second)}";
+    }
 
     private static string Capital(string text) => text.Length == 0 ? text : char.ToUpperInvariant(text[0]) + text[1..];
 

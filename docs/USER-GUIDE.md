@@ -93,6 +93,8 @@ Save to your own sheets keeps a design in the list. There you can rename it, dup
 - For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.
 - Write only in the load block.
 
+GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1. Where the holes fit two sets of bulls equally well, it asks which bulls you fired at, in the middle of the screen, with its own guess first. Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from each bull's center to every hole given to it.
+
 Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you accept the marking: Shots per bull, in the marking screen's side panel, reads the sheet by nearest bull, or as two shots on the bulls you name.
 
 A sheet with one scoring bull takes a group. Every shot on it goes to that bull, however far out, and the review asks nothing about how many there are; say how many you fired, in Rounds fired, and a count that disagrees names the mark most likely to hold two.
@@ -511,9 +513,11 @@ names differ a little between versions):
 picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.
 
 **The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
-number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole, and is for looking
-only. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
-then **Add a hole here**, or **Remove this hole**, with **Undo** for each. Each hole's circle is drawn at your bullet's diameter, so a
+number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole and a line from each bull to its holes. Tap a
+bull, a hole or a line and all three light up, with where that bull's shots landed said under the picture; **Bull by bull** in the
+figures does the same from a list, which is the way to check which bull each shot was given to. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
+then **Add a hole here**, or **Remove this hole**, with **Undo** for each. After adding or moving a hole, GroupLab asks which bull it
+was fired at, its own choice first. Each hole's circle is drawn at your bullet's diameter, so a
 correct circle sits on the edge of its hole; with no caliber set, a line says that setting it makes the circles true size. **Move this
 hole** leaves the circle where it was: drag the circle itself with your finger, the crosshair on its center, while a dashed ghost stays
 where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge; **Put the hole here** drops

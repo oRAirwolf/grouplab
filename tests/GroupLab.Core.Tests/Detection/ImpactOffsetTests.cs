@@ -187,6 +187,81 @@ public class ImpactOffsetTests
         Assert.InRange(found.Shift.Y / 254, 0.8, 1.1);
     }
 
+    /// <summary>The C bull sheet's 25 bulls, page dmm: 1.496 in apart, the first at 1.260, 2.126 in.</summary>
+    private static List<Offset> CBullBulls() =>
+        [.. Enumerable.Range(0, 25).Select(i => new Offset(254 * (1.260 + (1.496 * (i % 5))), 254 * (2.126 + (1.496 * (i / 5)))))];
+
+    /// <summary>The 14 holes detection found on Alan's tablet photo of 5 October, page inches, bulls 1 to 9 and 11 to 15 in that order.</summary>
+    private static readonly (double X, double Y)[] TabletHoles = [(1.494, 2.727), (3.071, 3.111), (4.551, 2.551), (6.137, 3.183), (7.476, 2.992),
+        (2.077, 4.666), (3.329, 4.696), (4.776, 4.659), (6.230, 5.001), (2.005, 6.193), (3.320, 5.768), (4.569, 6.131), (6.021, 6.296), (7.995, 6.057)];
+
+    /// <summary>
+    /// Entry 376 section A1: the same photo with bull 10's hole, torn at the paper's right edge, added by hand wherever a thumb might put it.
+    /// The rule this replaced let one hole in ten fall outside the shooting order, so with fifteen holes the reading a row higher (bulls 6 to
+    /// 20) passed as well, the two tied, and the sheet fell back to nearest bull: bulls 1, 3 and 6 to 20, "Shot 20" first on the Shots page.
+    /// Every place has to come out as bulls 1 to 15, without asking.
+    /// </summary>
+    [Theory]
+    [InlineData(7.70, 4.40)]
+    [InlineData(7.95, 4.60)]
+    [InlineData(8.20, 4.70)]
+    [InlineData(8.40, 4.90)]
+    [InlineData(8.40, 4.30)]
+    public void TheTabletPhotoWithTheHandAddedHoleIsBulls1To15(double x, double y)
+    {
+        var holes = TabletHoles.Take(9).Append((X: x, Y: y)).Concat(TabletHoles.Skip(9)).Select(h => new Offset(254 * h.X, 254 * h.Y)).ToList();
+        var read = ImpactOffsets.ReadWholeSheet(holes, CBullBulls(), [.. Enumerable.Range(0, 25)]);
+
+        Assert.NotNull(read);
+        Assert.False(read.Ask);
+        Assert.Equal(Enumerable.Range(0, 15), read.Taken.Bulls);
+        Assert.InRange(read.Taken.Shift.X / 254, 0.3, 0.7);
+        Assert.InRange(read.Taken.Shift.Y / 254, 0.8, 1.15);
+        Assert.Contains(read.Choices, c => c.Bulls.SequenceEqual(Enumerable.Range(5, 15)));
+    }
+
+    /// <summary>The 14 holes as detection found them read as bulls 1 to 9 and 11 to 15, bull 10 left empty.</summary>
+    [Fact]
+    public void TheTabletPhotoAsDetectedLeavesBull10Empty()
+    {
+        var read = ImpactOffsets.ReadWholeSheet([.. TabletHoles.Select(h => new Offset(254 * h.X, 254 * h.Y))], CBullBulls(), [.. Enumerable.Range(0, 25)]);
+
+        Assert.NotNull(read);
+        Assert.False(read.Ask);
+        Assert.Equal(Enumerable.Range(0, 15).Where(b => b != 9), read.Taken.Bulls);
+    }
+
+    /// <summary>
+    /// Fifteen shots at bulls 11 to 25, landing where they were aimed. Read in shooting order they would be bulls 1 to 15 with the rifle two
+    /// rows low, which is further off than the bulls are apart; the holes fit several sheets equally, so the person is asked, and the guess
+    /// offered first is where they landed.
+    /// </summary>
+    [Fact]
+    public void AShotSheetThatFitsSeveralWaysAsks()
+    {
+        var grid = Grid(5, 5);
+        var read = ImpactOffsets.ReadWholeSheet(Shots(Enumerable.Range(10, 15), grid, new Offset(100, 100)), grid, [.. Enumerable.Range(0, 25)]);
+
+        Assert.NotNull(read);
+        Assert.True(read.Ask);
+        Assert.Equal(Enumerable.Range(10, 15), read.Taken.Bulls);
+        Assert.Contains(read.Choices, c => c.Bulls.SequenceEqual(Enumerable.Range(0, 15)));
+    }
+
+    /// <summary>Ten shots at bulls 1 to 10 where they were aimed: read as aimed without asking, and nothing moved.</summary>
+    [Fact]
+    public void ASheetShotFromBull1WhereAimedIsLeftAlone()
+    {
+        var grid = Grid(5, 5);
+        var holes = Shots(Enumerable.Range(0, 10), grid, Offset.Zero);
+        var read = ImpactOffsets.ReadWholeSheet(holes, grid, [.. Enumerable.Range(0, 25)]);
+
+        Assert.NotNull(read);
+        Assert.False(read.Ask);
+        Assert.Equal(Enumerable.Range(0, 10), read.Taken.Bulls);
+        Assert.Null(ImpactOffsets.WholeSheet(holes, grid, [.. Enumerable.Range(0, 25)]));
+    }
+
     [Fact]
     public void NoShotsGivesNoOffsetAndNoComplaint()
     {

@@ -70,7 +70,7 @@ internal sealed class ShotsPage : UserControl
         string clicks = ResultWords.Clicks(row);
         var decoration = row.LeftOut ? TextDecorations.Strikethrough : null;
         var words = new StackPanel { Spacing = 2 };
-        words.Children.Add(new TextBlock { Text = "Shot " + row.Label, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, TextDecorations = decoration });
+        words.Children.Add(new TextBlock { Text = row.Label, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, TextDecorations = decoration });
         words.Children.Add(new TextBlock { Text = ResultWords.Offset(row, units), TextWrapping = TextWrapping.Wrap, TextDecorations = decoration, Classes = { PhoneStyles.Dim } });
         if (clicks.Length > 0)
         {

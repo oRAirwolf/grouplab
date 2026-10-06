@@ -50,7 +50,7 @@ public class Entry166Tests
         session.MoveShot(id, new PointD(53, 50));
         Dispatcher.UIThread.RunJobs();
         Assert.True(window.UndoButtonState.Enabled);
-        Assert.Equal($"Undo: move shot 6 ({CommandKey.Label("Z")})", window.UndoButtonState.Tip);
+        Assert.Equal($"Undo: move the shot on bull 6 ({CommandKey.Label("Z")})", window.UndoButtonState.Tip);
 
         window.KeyPressQwerty(PhysicalKey.Z, Command);
         Dispatcher.UIThread.RunJobs();

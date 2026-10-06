@@ -35,7 +35,7 @@ public class OneSelectionEverywhereTests
             Assert.Single(window.ShotRowsSelected);
             var marked = window.ReviewRowsAboutTheSelectedShot;
             Assert.NotEmpty(marked);
-            Assert.All(marked, text => Assert.Contains($", shot {window.ShotLabelFor(id)}", text, StringComparison.Ordinal));
+            Assert.All(marked, text => Assert.Contains($", {window.ShotInSentenceFor(id)}", text, StringComparison.Ordinal));
 
             int expected = window.ReviewItems.Count(i => i.ShotId == id);
             Assert.Equal(expected, marked.Count);
@@ -48,7 +48,7 @@ public class OneSelectionEverywhereTests
                 window.RefreshForTests();
                 Settle();
                 Assert.All(window.ReviewRowsAboutTheSelectedShot,
-                    text => Assert.Contains($", shot {window.ShotLabelFor(other.ShotId!.Value)}", text, StringComparison.Ordinal));
+                    text => Assert.Contains($", {window.ShotInSentenceFor(other.ShotId!.Value)}", text, StringComparison.Ordinal));
             }
         }
         finally
@@ -80,7 +80,7 @@ public class OneSelectionEverywhereTests
             int on = Assert.IsType<int>(window.Canvas.Selected);
             Assert.Single(window.ShotRowsSelected);
             Assert.All(window.ReviewRowsAboutTheSelectedShot,
-                text => Assert.Contains($", shot {window.ShotLabelFor(on)}", text, StringComparison.Ordinal));
+                text => Assert.Contains($", {window.ShotInSentenceFor(on)}", text, StringComparison.Ordinal));
             Assert.Equal(window.ReviewItems.Count(i => i.ShotId == on), window.ReviewRowsAboutTheSelectedShot.Count);
         }
         finally

@@ -18,6 +18,15 @@ public readonly record struct Offset(double X, double Y)
         string.Create(CultureInfo.InvariantCulture, $"{X / 254.0:0.00} in right, {-Y / 254.0:0.00} in up");
 }
 
+/// <summary>One whole-sheet reading (entry 376 section A2): the bulls it gives the holes to, in order, the common offset, and its total distance.</summary>
+public sealed record SheetReading(IReadOnlyList<int> Bulls, Offset Shift, double Cost);
+
+/// <summary>
+/// Entry 376 section A2: the reading taken, the readings that fit as well (the taken one first), and whether they are close enough that the
+/// person must be asked which bulls were fired at.
+/// </summary>
+public sealed record WholeSheetReading(SheetReading Taken, IReadOnlyList<SheetReading> Choices, bool Ask);
+
 /// <summary>
 /// One subgroup's point of impact: the translation that best explains where its holes fell, and how sure that is.
 /// </summary>
@@ -56,64 +65,180 @@ public static class ImpactOffsets
 {
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 229 section 4: a sheet with at most one shot to each scoring bull, whose shots all landed off their
-    /// bulls by the same amount, the rifle's zero on the day. Every scoring bull is a candidate, and the offset is used only when the
-    /// solver is certain of it and it is more than a tenth of an inch, so a sheet shot at its own bulls is assigned as before and a
-    /// sheet shot at only some bulls, where the wide solve is not certain (question 46), is left alone. Null where it does not apply.
+    /// bulls by the same amount, the rifle's zero on the day. The reading <see cref="ReadWholeSheet"/> takes, where it moves the shots more
+    /// than a tenth of an inch; null where it does not apply or moves nothing, so a sheet shot at its own bulls is assigned as before.
     /// </summary>
     public static ImpactOffset? WholeSheet(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> scoring)
     {
-        ArgumentNullException.ThrowIfNull(holes);
-        ArgumentNullException.ThrowIfNull(scoring);
-        if (scoring.Count < 2 || holes.Count < 3 || holes.Count > scoring.Count)
+        if (ReadWholeSheet(holes, bulls, scoring) is not { } read)
         {
             return null;
         }
 
-        var solved = Solve("the sheet", holes, bulls, scoring, out var readings);
-        if (solved is { Certain: false } && InShootingOrder(holes, bulls, scoring, readings) is { } ordered)
-        {
-            solved = solved with { Shift = ordered, Certain = true, Why = Words(ordered, holes.Count) };
-        }
-
-        return solved is { Certain: true, Moved: true } ? solved : null;
+        var found = new ImpactOffset("the sheet", read.Taken.Bulls, read.Taken.Shift, true, Words(read.Taken.Shift, holes.Count));
+        return found.Moved ? found : null;
     }
 
     /// <summary>
-    /// Entry 374 section 1: the C bull sheet of 4 October, fifteen shots of .300 Norma Magnum, one at each of bulls 1 to 15, every one about an
-    /// inch low and right. Read one row higher, as fired at bulls 6 to 20, the holes fit exactly as well, so the solver was rightly unsure
-    /// and the sheet fell back to the nearest bull, which gave most shots to the bull below their own. What tells the two apart is the
-    /// order people shoot a sheet in: from bull 1. Among the readings that fit as well as the best, each putting one shot on each bull, the
-    /// one taken is the only one whose shots sit on the first bulls (as many as there are holes, and a few more for holes not found).
-    /// Null where no reading, or more than one, does.
+    /// Entry 376 section A2: which bulls a sheet of one shot per bull was fired at, matched as one problem rather than hole by hole.
+    /// <para>
+    /// Every reading is a whole-sheet matching, one hole to a bull, around one common offset (Hungarian assignment, re-centred on the median
+    /// and repeated). Two kinds are tried. <b>In shooting order</b>: bulls 1 to k, for k from the number of holes to a few more for holes not
+    /// found, the fewest that fit as well as more do; people shoot a sheet from bull 1. <b>Anywhere</b>: every scoring bull a candidate.
+    /// </para>
+    /// <para>
+    /// Holes that fit the bulls as aimed, with no offset, as well as any reading are read that way, so an ordinary sheet is untouched. Otherwise
+    /// the shooting order is taken when it fits as well as any reading and its offset is less than the spacing between bulls; a rifle
+    /// further off than that would have been hitting the next bull. Failing that, a single reading that fits clearly better than every other
+    /// is taken. Otherwise the holes fit more than one answer and <see cref="WholeSheetReading.Ask"/> is set, so the person is asked which
+    /// bulls were fired at; meanwhile the reading with the smallest offset is used.
+    /// </para>
+    /// <para>
+    /// Alan's tablet photo of 5 October (bulls 1 to 15, an inch low and half an inch right) is why: the same holes fit bulls 6 to 20 exactly
+    /// as well, and the rule this replaces let one hole in ten fall outside the order, so once the fifteenth hole was added by hand both
+    /// readings passed and the sheet fell back to nearest bull.
+    /// </para>
+    /// Null where it does not apply: fewer than three holes, fewer than two scoring bulls, or more holes than scoring bulls.
     /// </summary>
-    private static Offset? InShootingOrder(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> scoring, IReadOnlyList<(Offset Shift, double Cost)> readings)
+    public static WholeSheetReading? ReadWholeSheet(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> scoring)
     {
-        double best = readings.Min(r => r.Cost);
-        int reach = holes.Count + 1 + (holes.Count / 5);
-        var targets = scoring.Where(i => i >= 0 && i < bulls.Count).ToList();
-        var fits = new List<Offset>();
-        foreach (var (shift, cost) in readings)
+        ArgumentNullException.ThrowIfNull(holes);
+        ArgumentNullException.ThrowIfNull(bulls);
+        ArgumentNullException.ThrowIfNull(scoring);
+        var order = scoring.Where(i => i >= 0 && i < bulls.Count).Distinct().Order().ToList();
+        int n = holes.Count;
+        if (order.Count < 2 || n < 3 || n > order.Count)
         {
-            if (cost > (best * 1.1) + (holes.Count * MeaningfulGap) || fits.Any(f => f.Minus(shift).Length <= SameOffset))
-            {
-                continue;
-            }
+            return null;
+        }
 
-            // One hole in ten may fall outside the order or share a bull: a mark taken for a hole, or a flyer (the 18:35 photo of the same sheet
-            // has a false hole on bull 25).
-            var given = holes.Select(h => Closest(h.Minus(shift), bulls, targets)).ToList();
-            int outside = given.Count(b => targets.IndexOf(b) >= reach) + (given.Count - given.Distinct().Count());
-            if (outside <= holes.Count / 10)
+        var inOrder = new List<SheetReading>();
+        for (int k = n; k <= Math.Min(order.Count, n + 1 + (n / 5)); k++)
+        {
+            inOrder.Add(Readings(holes, bulls, [.. order.Take(k)])[0]);
+        }
+
+        double fewest = inOrder.Min(r => r.Cost);
+        var ordered = inOrder.First(r => Close(r.Cost, fewest, n));
+
+        var anywhere = Readings(holes, bulls, order);
+        double best = Math.Min(anywhere[0].Cost, ordered.Cost);
+
+        // Holes that fit the bulls as aimed, with no offset at all, as well as any reading does are a sheet shot where it was aimed: read as
+        // such, exactly as before any of this. Scan 4 of 20 September, its holes partly merged, fitted a shooting order 0.8 in off almost as
+        // well, and nothing on that sheet was off its bull.
+        var (asAimed, plain) = Match(holes, [.. order.Select(i => bulls[i])], Offset.Zero);
+        if (Close(plain, best, n))
+        {
+            var aimed = new SheetReading([.. asAimed.Select(m => order[m]).Order()], Offset.Zero, plain);
+            return new WholeSheetReading(aimed, [aimed], false);
+        }
+
+        bool orderFits = Close(ordered.Cost, best, n);
+        var choices = new List<SheetReading>();
+        foreach (var reading in (orderFits ? [ordered] : Enumerable.Empty<SheetReading>()).Concat(anywhere.Where(r => Close(r.Cost, best, n))))
+        {
+            if (!choices.Any(c => c.Shift.Minus(reading.Shift).Length <= SameOffset || c.Bulls.SequenceEqual(reading.Bulls)))
             {
-                fits.Add(shift);
+                choices.Add(reading);
             }
         }
 
-        return fits.Count == 1 ? fits[0] : null;
+        if (orderFits && ordered.Shift.Length < Spacing(bulls, order))
+        {
+            return new WholeSheetReading(ordered, choices, false);
+        }
+
+        if (choices.Count == 1)
+        {
+            return new WholeSheetReading(choices[0], choices, false);
+        }
+
+        var guess = choices.MinBy(r => r.Shift.Length)!;
+        return new WholeSheetReading(guess, [guess, .. choices.Where(c => c != guess).Take(2)], true);
     }
 
-    private static int Closest(Offset point, IReadOnlyList<Offset> bulls, IReadOnlyList<int> among) =>
-        among.MinBy(i => point.Minus(bulls[i]).Length);
+    /// <summary>Whether a reading costing <paramref name="cost"/> fits as well as the best one does, by the rule a rival is judged by in Solve.</summary>
+    private static bool Close(double cost, double best, int holes) => cost * ClearlyBetter <= best || cost - best <= holes * MeaningfulGap;
+
+    /// <summary>The smallest distance between two of these bulls, in page dmm.</summary>
+    private static double Spacing(IReadOnlyList<Offset> bulls, IReadOnlyList<int> among)
+    {
+        double least = double.PositiveInfinity;
+        for (int a = 0; a < among.Count; a++)
+        {
+            for (int b = a + 1; b < among.Count; b++)
+            {
+                least = Math.Min(least, bulls[among[a]].Minus(bulls[among[b]]).Length);
+            }
+        }
+
+        return least;
+    }
+
+    /// <summary>
+    /// Every distinct whole-sheet reading of these holes against these bulls, best first: each a one-to-one matching around one offset.
+    /// The seeds are two holes paired with every bull, since the true offset carries each hole onto some bull, and two in case one is a flyer.
+    /// </summary>
+    private static List<SheetReading> Readings(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> bulls, IReadOnlyList<int> among)
+    {
+        var targets = among.Select(i => bulls[i]).ToList();
+        var seeds = new List<Offset> { Offset.Zero };
+        foreach (int h in new[] { 0, holes.Count / 2 }.Distinct())
+        {
+            seeds.AddRange(targets.Select(t => holes[h].Minus(t)));
+        }
+
+        var found = new List<SheetReading>();
+        foreach (var seed in seeds)
+        {
+            var shift = seed;
+            for (int round = 0; round < Rounds; round++)
+            {
+                var (pairs, _) = Match(holes, targets, shift);
+                var next = new Offset(
+                    Middle([.. holes.Select((h, i) => h.X - targets[pairs[i]].X)]),
+                    Middle([.. holes.Select((h, i) => h.Y - targets[pairs[i]].Y)]));
+                bool settled = next.Minus(shift).Length < 0.01;
+                shift = next;
+                if (settled)
+                {
+                    break;
+                }
+            }
+
+            var (matched, cost) = Match(holes, targets, shift);
+            if (!found.Any(f => f.Shift.Minus(shift).Length <= SameOffset))
+            {
+                found.Add(new SheetReading([.. matched.Select(m => among[m]).Order()], shift, cost));
+            }
+        }
+
+        found.Sort((a, b) => a.Cost.CompareTo(b.Cost));
+        return found;
+    }
+
+    /// <summary>The one-to-one matching of holes, moved back by <paramref name="shift"/>, to bulls, and its total distance.</summary>
+    private static (int[] Matched, double Cost) Match(IReadOnlyList<Offset> holes, IReadOnlyList<Offset> targets, Offset shift)
+    {
+        var cost = new double[holes.Count, targets.Count];
+        for (int h = 0; h < holes.Count; h++)
+        {
+            for (int t = 0; t < targets.Count; t++)
+            {
+                cost[h, t] = holes[h].Minus(shift).Minus(targets[t]).Length;
+            }
+        }
+
+        var matched = ShotAssignment.Hungarian(cost, holes.Count, targets.Count);
+        return (matched, matched.Select((t, h) => cost[h, t]).Sum());
+    }
+
+    /// <summary>Entry 376 section A2: where a reading puts the group, for a choice: "about 1.02 in low and 0.44 in right".</summary>
+    public static string Landed(Offset shift) => shift.Length <= 25
+        ? "landing where aimed"
+        : string.Create(CultureInfo.InvariantCulture,
+            $"about {Math.Abs(shift.Y) / 254:0.00} in {(shift.Y < 0 ? "high" : "low")} and {Math.Abs(shift.X) / 254:0.00} in {(shift.X < 0 ? "left" : "right")}");
 
     /// <summary>What a person is told when every shot was given to the bull it was fired at rather than its nearest.</summary>
     public static string WholeSheetWords(Offset shift, int moved) => string.Create(CultureInfo.InvariantCulture,

@@ -51,7 +51,7 @@ public class DoublesSheetTests
         var contested = ReviewQueue.For(state, false).Where(i => i.Kind == ReviewKind.Contested && !i.Resolved).ToList();
         var pushed = state.Shots.Where(sh => sh.IsShot && state.Assignment!.For(sh.Id) is { } d && d.Bull != d.NearestBull).Select(sh => sh.Id).ToList();
         Assert.True(pushed.Count >= 10, $"{pushed.Count} pushed");
-        Assert.All(pushed, id => Assert.Contains(contested, i => i.ShotId == id && i.Sentence.Contains("already holds shot", StringComparison.Ordinal)));
+        Assert.All(pushed, id => Assert.Contains(contested, i => i.ShotId == id && i.Sentence.Contains("already holds another shot", StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -81,6 +81,6 @@ public class DoublesSheetTests
 
         // Taking the rule away matches one a bull again, and the queue raises the pushed shots once more.
         session.SetAssignmentRule(null);
-        Assert.True(ReviewQueue.For(session.State, false).Count(i => i.Kind == ReviewKind.Contested && !i.Resolved && i.Sentence.Contains("already holds shot", StringComparison.Ordinal)) >= 10);
+        Assert.True(ReviewQueue.For(session.State, false).Count(i => i.Kind == ReviewKind.Contested && !i.Resolved && i.Sentence.Contains("already holds another shot", StringComparison.Ordinal)) >= 10);
     }
 }

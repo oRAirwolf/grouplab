@@ -327,7 +327,7 @@
       "key": "whole-sheet",
       "group": "Reading a target",
       "name": "A sheet shot off by the same amount",
-      "sentence": "When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, each goes to the bull it was fired at.",
+      "sentence": "When every shot on a sheet of one shot per bull landed off by the same amount, as an unzeroed rifle does, the holes are matched to the bulls as one sheet, read in the order it is shot, and each goes to the bull it was fired at; where two sets of bulls fit equally well, GroupLab asks which you fired at.",
       "shot": "analysis",
       "platforms": [
         "Windows",
@@ -337,12 +337,40 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.112",
-      "note": "When every shot on a sheet of one shot per bull landed off by the same amount",
+      "note": [
+        "When every shot on a sheet of one shot per bull landed off by the same amount",
+        "Holes are now matched to the bulls as one sheet"
+      ],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "article": "wrong-bull",
       "mobile": {
         "shot": "fold-result"
+      }
+    },
+    {
+      "key": "bull-lines",
+      "group": "Reading a target",
+      "name": "Which bull each shot belongs to",
+      "sentence": "A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.",
+      "shot": "analysis",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": [
+        "A line now runs from each bull to the holes given to it",
+        "Shots are now named by their bull"
+      ],
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "article": "wrong-bull",
+      "mobile": {
+        "noPicture": "the lit bull on the phone's result is photographed at the next sitting with the phone"
       }
     },
     {

@@ -51,17 +51,17 @@ public sealed record DetectedOversize(double Holes, bool Tentative, PointD? Spli
             ({ } across, { } bullet, _) when bullet > 0 => Checked(shot, across / bullet, "your bullet"),
             (_, _, { } holes) => Checked(shot, holes, "a single hole"),
             _ => string.Create(System.Globalization.CultureInfo.InvariantCulture,
-                $"Shot {shot} was read as one mark about {Holes:0.0} holes' area, a hole joined to the print or paper beside it, and was placed on the part the size of one hole. Check it sits on the hole, and move it if it does not."),
+                $"{shot} was read as one mark about {Holes:0.0} holes' area, a hole joined to the print or paper beside it, and was placed on the part the size of one hole. Check it sits on the hole, and move it if it does not."),
         }
         : Tentative
         ? string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Look at it, and name the caliber if it is not named.{More}")
+            $"{shot} may be two holes: it covers about {Holes:0.0} holes' area, judged from too few marks to be sure. Look at it, and name the caliber if it is not named.{More}")
         : string.Create(System.Globalization.CultureInfo.InvariantCulture,
-            $"Shot {shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.{More}");
+            $"{shot} covers about {Holes:0.0} holes' area: two shots through one hole, or a hole joined to ink, would each read this way. Look at it, and take it as two shots if it is.{More}");
 
     /// <summary>Entry 318 section 1: a mark much bigger than the bullet, said as how many times across, and what to check.</summary>
     private static string Checked(string shot, double times, string against) => string.Create(System.Globalization.CultureInfo.InvariantCulture,
-        $"The mark under shot {shot} is {times:0.0} times {against} across, a hole read together with the print or paper beside it, and the shot was put on the part the size of one hole. Check that the hole is where GroupLab put it, and move it if it is not.");
+        $"The mark under {ShotLabels.InSentence(shot)} is {times:0.0} times {against} across, a hole read together with the print or paper beside it, and the shot was put on the part the size of one hole. Check that the hole is where GroupLab put it, and move it if it is not.");
 
     /// <summary>
     /// Entries 196 section 2.3 and 197: where the area holds about three holes of the named caliber, it may be three shots. Three places

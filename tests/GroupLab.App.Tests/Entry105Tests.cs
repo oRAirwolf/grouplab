@@ -208,7 +208,7 @@ public class Entry105Tests
 
             var first = plot.Shots.First(s => !s.Excluded);
             string shot = plot.Describe(plot.ToScreen(first.Offset))!;
-            Assert.StartsWith($"Shot {first.Label}, bull {first.Bull}.", shot, StringComparison.Ordinal);
+            Assert.StartsWith($"{first.Named?.Name ?? "Shot " + first.Label}.", shot, StringComparison.Ordinal);
             Assert.Contains("from the group center", shot, StringComparison.Ordinal);
 
             var excluded = plot.Shots.Single(s => s.Excluded);

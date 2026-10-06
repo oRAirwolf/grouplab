@@ -44,6 +44,9 @@ internal sealed class FiguresView : UserControl
     /// <summary>What the card's button does in states 3 and 4; the result sets it.</summary>
     public Action<VelocityBlockState>? VelocityAction { get; set; }
 
+    /// <summary>Entry 376 section A4: a Bull by bull row tapped, with its bull's index, to light it on the picture.</summary>
+    public Action<int>? BullChosen { get; set; }
+
     /// <summary>The card "Velocity and the vertical" as last built, for the tests.</summary>
     internal VelocityBlock? Velocity { get; private set; }
 
@@ -314,6 +317,19 @@ internal sealed class FiguresView : UserControl
         if ((figure.Range ?? figure.Beneath) is { } under)
         {
             right.Children.Add(UnitTap.Attach(Screens.Dim(under), figure.Label));
+        }
+
+        if (ResultFigures.BullOf(figure.Key) is { } bull)
+        {
+            // Entry 376 section A4: the whole row lights its bull, its holes and their lines on the picture.
+            var name = new TextBlock { Text = figure.Label, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold };
+            var lit = new FigureRow { Children = { name, right }, Background = Brushes.Transparent, Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand) };
+            lit.Tapped += (_, e) =>
+            {
+                BullChosen?.Invoke(bull);
+                e.Handled = true;
+            };
+            return lit.Id("bull-row-" + bull.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
         var label = Label(figure.Label, figure.Key, figure);

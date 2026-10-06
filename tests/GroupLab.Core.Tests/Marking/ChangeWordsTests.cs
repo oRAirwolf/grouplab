@@ -25,22 +25,22 @@ public class ChangeWordsTests
     {
         var session = OneBull();
         int id = session.AddShot(new PointD(51, 50), 0);
-        Assert.Equal("add shot 6", session.UndoWords);
+        Assert.Equal("add the shot on bull 6", session.UndoWords);
 
         session.MoveShot(id, new PointD(53, 50));
-        Assert.Equal("move shot 6", session.UndoWords);
+        Assert.Equal("move the shot on bull 6", session.UndoWords);
 
         session.Undo();
-        Assert.Equal("move shot 6", session.RedoWords);
-        Assert.Equal("add shot 6", session.UndoWords);
+        Assert.Equal("move the shot on bull 6", session.RedoWords);
+        Assert.Equal("add the shot on bull 6", session.UndoWords);
 
         session.SetNotAShot(id, true);
-        Assert.Equal("mark shot 6 as not a shot", session.UndoWords);
+        Assert.Equal("mark the shot on bull 6 as not a shot", session.UndoWords);
         Assert.Null(session.RedoWords);
 
         session.SetNotAShot(id, false);
         session.DeleteShot(id);
-        Assert.Equal("delete shot 6", session.UndoWords);
+        Assert.Equal("delete the shot on bull 6", session.UndoWords);
     }
 
     [Fact]

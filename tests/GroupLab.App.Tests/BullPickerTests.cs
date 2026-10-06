@@ -31,7 +31,7 @@ public class BullPickerTests
     /// find the wrong one and the test would pass or fail for a reason that has nothing to do with the picker.
     /// </summary>
     private static ComboBox PickerFor(MainWindow window, int id) =>
-        Pickers(window).First(c => Avalonia.Automation.AutomationProperties.GetName(c) == $"Bull for shot {window.ShotLabelFor(id)}");
+        Pickers(window).First(c => Avalonia.Automation.AutomationProperties.GetName(c) == $"Bull for {window.ShotInSentenceFor(id)}");
 
     [AvaloniaFact]
     public void ChoosingABullOnTheRowMovesTheShotToItAndMarksItChosen()

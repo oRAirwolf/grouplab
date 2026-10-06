@@ -29,7 +29,10 @@ public static class ShotOffsets
             return [];
         }
 
-        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text);
+        // Entry 376 section A6: each row named by its bull, "Bull 1" or "Bull 1, shot 2", in bull order, lowest first.
+        var named = ShotLabels.For(state);
+        var labels = named.ToDictionary(l => l.ShotId, l => l.Name);
+        var place = named.Select((l, k) => (l.ShotId, k)).ToDictionary(x => x.ShotId, x => x.k);
         var rifle = state.Rifle;
         double? distance = state.ShotDistanceInches;
         var rows = new List<ShotOffsetRow>();
@@ -41,7 +44,7 @@ public static class ShotOffsets
                 rifle is not null && distance is > 0 && inches != 0 ? Clicks.For(inches, distance.Value, rifle, inches > 0 ? towardNegative : towardPositive) : null;
             rows.Add(new ShotOffsetRow(
                 shots[i].Id,
-                labels.GetValueOrDefault(shots[i].Id) ?? (i + 1).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                labels.GetValueOrDefault(shots[i].Id) ?? "Shot " + (i + 1).ToString(System.Globalization.CultureInfo.InvariantCulture),
                 shots[i].Exclusion is not null,
                 across,
                 up,
@@ -49,6 +52,6 @@ public static class ShotOffsets
                 Dial(up, "up", "down")));
         }
 
-        return rows;
+        return state.Bulls.Count == 0 ? rows : [.. rows.OrderBy(r => place.GetValueOrDefault(r.ShotId, int.MaxValue))];
     }
 }

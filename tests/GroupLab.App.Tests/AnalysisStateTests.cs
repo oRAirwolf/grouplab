@@ -215,7 +215,7 @@ public class AnalysisStateTests
             Assert.Equal(new HashSet<int> { a, b }, picked.ToHashSet());
             window.PickShots(picked);
             Assert.Equal(new HashSet<int> { a, b }, window.PlotSelection.ToHashSet());
-            Assert.Contains(plot.Legend, l => l.StartsWith("extreme spread, shots", StringComparison.Ordinal));
+            Assert.Contains(plot.Legend, l => l.StartsWith("extreme spread, ", StringComparison.Ordinal) && l.Contains(" on bull ", StringComparison.Ordinal));
             window.Close();
         }
         finally

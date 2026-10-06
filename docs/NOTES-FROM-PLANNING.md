@@ -25,6 +25,107 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-06, entry 376: which bull a shot belongs to, and Alan's tablet feedback on nightly 171
+
+**Status: Part A done 2026-10-06. Not done yet: Part B (all twelve items), which follows entry 377 in this run; question 85 asks
+about the Part C and the 88% line Alan's message names and this file does not.** Part A: the matching is one problem
+(`ImpactOffsets.ReadWholeSheet`), read as aimed first, then in shooting order, then asked; lines, lighting, Bull by bull, the phone's
+bull picker and names by bull on both platforms. Details in docs/PHASE1-RESULTS.md.
+
+Written by the planning session 2026-10-06 00:05 UTC. Source: Alan, using nightly 171 on his Samsung tablet (SM-X900), Android,
+with the test photo below. All decisions here are Alan's own; none needs a design concept unless a section says so.
+
+## 0. Files and budget
+
+- The files are in `docs/notes/inbox/entry-376-files/`. **First step:** move that folder to
+  `C:\Dev\grouplab-local\tablet-2026-10-05\` and never commit it. It holds the test photo
+  (`test-photo-5x5-C-bull-bulls-1-to-15.jpg`, Fold 7, 4000x3000, orientation tag 6, every other EXIF tag removed by the planning
+  session), five tablet screenshots, and `GroupLab_diagnostics_2026-10-05_1726.zip` (logs from 2 to 5 October).
+- The week was at 79% at 00:01 UTC. **Part A now, inside the 85% rule. Part B after the reset** (2026-10-08 02:00 UTC), unless
+  Part A ends with room to spare. If Part A cannot finish under 85%, stop at a clean point and record where.
+- Update the README, the site, the guides and the Features page in the same change wherever behaviour changes (entry 267).
+
+## Part A (now, first priority): it must be clear which bull each shot belongs to
+
+Alan: "a major problem with the mobile app is that it is ambiguous as to which bull a shot is associated with. This needs to be
+fixed with priority."
+
+### A1. The test case
+
+Sheet: 5x5 Load Development, C Bull, Letter, GL-JJ9J-5ET1-NHFK-5XW8. **One shot each at bulls 1 to 15, none at 16 to 25 or the
+sighters.** The group sat roughly 1 in low and 0.5 in right of aim, so most holes are nearer the bull one row below the one aimed
+at. The hole for bull 10 touches the right edge of the paper; detection found 14 holes and Alan added that one by hand. The holes
+on the blue backer outside the paper are from other sheets.
+
+What nightly 171 did (screenshots and log, session 8 at 23:17 UTC): the holes were given to the nearest bull, bulls 1, 3 and 6 to
+20, so the Shots page listed "Shot 20" first, the legend said "extreme spread, shots 17 and 1", mean radius 0.402 in, center from aim
+0.604 in. Alan read "Shot 20" as a count of 20 shots. **The same photo analysed at 23:06 UTC (session 7) gave mean radius 0.304 in,
+center from aim 1.082 in**, which is close to the right answer: find out why two runs of one photo disagree.
+
+The planning session matched holes to bulls one to one from the Fix holes screenshot (rough pixel positions, bull pitch assumed):
+bulls 1 to 15 one each gives a consistent offset and a tighter group (mean radius about 0.33 in against about 0.52 in for nearest
+bull on the same rough numbers). Use real numbers, not these.
+
+### A2. Matching holes to bulls as one problem
+
+- Replace nearest-bull matching with a whole-sheet matching: one hole per bull fired at (or the expected shots per bull), choosing
+  the assignment whose per-shot offsets agree best (for example Hungarian assignment around a common offset, iterated).
+- When "Bulls you fired at" is set, it always wins. When it is not, try the likely sets (1 to N in shooting order, which the C bull
+  shooting-order fix already knows about) and pick the most consistent; when two answers are close, ask the user which bulls were
+  fired at, in the center of the screen (the 2026-10-02 rule for warnings), rather than guessing.
+- Add this photo as a regression test: bulls 1 to 15, one hole each, nothing on 16 to 25. Same logic on the desktop.
+
+### A3. A line from each bull to its impact (desktop and phone)
+
+On every picture of the target: the analysis view and Fix holes, desktop and phone. A thin line from the bull's center to each
+hole assigned to it. It was on entry 374's DESIGN NEEDED list; Alan has now decided it, so build it in a style that matches the
+app. The planning session may still show him color and thickness options later; that does not hold up the build.
+
+### A4. Tap a bull, its impact or the line: highlight all three
+
+Alan: tapping the bull, the impact, or the line between them highlights all of them. Also from the "Bull by bull" list: tapping a
+row there highlights that bull, its holes and lines, and shows the shot's offset. (Alan asked what Bull by bull is for; today it only
+lists shots per bull. This turns it into the way to check matching.) Desktop and phone.
+
+### A5. Choosing the bull when adding or moving a hole
+
+After "Add a hole here", the user picks the bull from a list, GroupLab's best guess preselected. Moving a hole offers the same.
+
+### A6. Shot names and order (Shots page, legend, CSV, report)
+
+- Name each shot by its bull: "Bull 1", or "Bull 1, shot 2" when a bull holds more than one. Never a bare number that looks like a
+  count. List in bull order, lowest first.
+- The extreme spread legend names the bulls: "extreme spread, bulls 1 and 15".
+
+## Part B (after the reset): the rest of Alan's list
+
+1. **Back works everywhere.** Android back returns to the previous screen wherever the user is in the app (Shots Needed to Zero,
+   Ballistics, Shots, Report, Settings pages, everything). It never closes the app from an inner screen.
+2. **Full width on the phone app.** Content currently sits in a narrow centered column on the tablet; it should use the whole width
+   of the screen.
+3. **Caliber required every new target (phone).** The caliber box starts empty for each new target and analysis does not start
+   until one is chosen. Recent calibers may appear as one-tap choices, none preselected. Alan has used the wrong caliber many times
+   because it was already filled in.
+4. **Marks to check in bull order**, lowest bull number first.
+5. **Tap anywhere in a value's box to switch units**, not only on the text. Check the desktop too.
+6. **Report shows the PDF inside the app** (Android PdfRenderer or similar), with Share and Save; no export needed first.
+7. **Send diagnostics straight to GroupLab**: a "Send to GroupLab" button through the same route as error reports, with an optional
+   note; sharing as an attachment stays as the second choice. On the phones it stays off until Alan writes "forms updated"
+   (request 71), like the other senders.
+8. **Targets screen on the phone:** Store-bought targets, Scale markers and Thermal label printers move below the targets list.
+9. **Capture screen:** the top buttons are "Capture" and "Result" (not "Camera"). Capture returns to the main capture page, not
+   straight into the camera.
+10. **Main capture page:** the GroupLab logo scales to the full width of the screen, or to the largest size that fits without
+    scrolling, whichever is smaller.
+11. **Zoom and pan everywhere:** the Fix holes fix (gestures move the picture, not the page) applies to everything that can be
+    zoomed or panned, starting with the combined group picture on the result.
+12. **From the logs, look at:** `camera.frame error=ObjectDisposedException` at 23:15:56 UTC, and the five crash records of kind
+    "closed" ("the run ended without reaching its own exit"); say whether they are only the app being swiped away.
+
+## When done
+
+Record in STATE and the commit messages, and write anything Alan must do into for-alan.md for the planning session to relay.
+
 ## 2026-10-05, entry 375: corner brackets must not depend on how well they are cut
 
 **Status: done 2026-10-05, but section 2's tiles.** Section 2 keeps the L and its printed codes where they were, so brackets already

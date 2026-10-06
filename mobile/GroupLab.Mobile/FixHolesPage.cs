@@ -110,6 +110,7 @@ internal sealed class FixHolesPage : UserControl
     private void Show()
     {
         under = viewer.Held is null ? viewer.MarkUnderCrosshair(Reach) : null;
+        viewer.Lit = (viewer.Held ?? under) is { } near ? session.State.Find(near)?.Bull : null;
         // Entry 309 section 3.1: the circles are the bullet's size where the caliber is known; where it is not, a line says what would make them so.
         trueSize.Text = viewer.RingInches is null ? "Set the caliber on the result and each circle is drawn at the bullet's true size." : "";
         trueSize.IsVisible = trueSize.Text.Length > 0;
@@ -117,7 +118,7 @@ internal sealed class FixHolesPage : UserControl
         {
             // Entry 309 section 3.3: the circle is dragged itself, the crosshair on its center, with how far it has gone.
             string gone = viewer.HeldMovedInches is { } inches ? $" Moved {units.Length(inches)}." : "";
-            words.Text = $"Drag hole {Number(held)}'s circle with your finger until it sits on the hole's edge, then put it there.{gone}";
+            words.Text = $"Drag the circle of {ShotName(held)} with your finger until it sits on the hole's edge, then put it there.{gone}";
             main.Content = Label("Put the hole here");
             move.Content = Label("Cancel");
             move.IsEnabled = true;
@@ -126,9 +127,9 @@ internal sealed class FixHolesPage : UserControl
         else
         {
             words.Text = under is { } id
-                ? $"The crosshair is on hole {Number(id)}. Move it or remove it; to add a hole beside it, bring the crosshair a little away."
+                ? $"The crosshair is on {ShotName(id)}; its bull and line are lit. Move it or remove it; to add a hole beside it, bring the crosshair a little away."
                 : "Pinch to zoom and drag the picture to put the crosshair on a hole. Add a hole GroupLab missed, or put the crosshair on a ring to move or remove it.";
-            main.Content = Label(under is null ? $"Add a hole here ({Shots + 1})" : "Add a hole here");
+            main.Content = Label("Add a hole here");
             move.Content = Label("Move this hole");
             move.IsEnabled = under is not null;
             remove.IsEnabled = under is not null;
@@ -141,7 +142,47 @@ internal sealed class FixHolesPage : UserControl
 
     private static TextBlock Label(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center };
 
-    private int Number(int id) => session.State.Shots.Where(s => s.IsShot).Select((s, i) => (s.Id, Number: i + 1)).FirstOrDefault(s => s.Id == id).Number;
+    /// <summary>Entry 376 section A6: a hole by its bull, "the shot on bull 7", never by a count.</summary>
+    private string ShotName(int id) => ShotLabels.For(session.State).FirstOrDefault(l => l.ShotId == id)?.Name is { } name ? ShotLabels.InSentence(name)
+        : "hole " + session.State.Shots.Where(s => s.IsShot).Select((s, i) => (s.Id, Number: i + 1)).FirstOrDefault(s => s.Id == id).Number.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+    /// <summary>
+    /// Entry 376 section A5: after a hole is added or put down, which bull it belongs to, from a list with GroupLab's choice first and
+    /// marked; the bulls nearest the hole follow. Choosing another bull fixes it there; the × or GroupLab's choice leaves it to the matching.
+    /// </summary>
+    private void AskBull(int id)
+    {
+        var state = session.State;
+        if (state.Bulls.Count < 2 || state.Find(id) is not { } shot || Content is not Control behind)
+        {
+            return;
+        }
+
+        var page = state.Scale;
+        double Away(BullAim b) => page is null
+            ? Math.Sqrt(Math.Pow(b.Image.X - shot.Image.X, 2) + Math.Pow(b.Image.Y - shot.Image.Y, 2))
+            : Math.Sqrt(Math.Pow(page.ToTarget(b.Image).X - page.ToTarget(shot.Image).X, 2) + Math.Pow(page.ToTarget(b.Image).Y - page.ToTarget(shot.Image).Y, 2));
+        var guess = state.Bulls.FirstOrDefault(b => b.Index == shot.Bull);
+        var listed = (guess is null ? [] : new[] { guess }).Concat(state.Bulls.Where(b => b != guess).OrderBy(Away).Take(5)).ToList();
+        void Back()
+        {
+            Content = null;
+            Content = behind;
+            Show();
+        }
+
+        var choices = listed.Select(b => ProblemSheet.Choice(b == guess ? $"Bull {b.Label} (GroupLab's choice)" : $"Bull {b.Label}", () =>
+        {
+            if (b != guess)
+            {
+                session.AssignBull(id, b.Index);
+            }
+
+            Back();
+        }, primary: b == guess).Id("fix-bull-" + b.Label)).ToList();
+        Content = null;
+        Content = ProblemSheet.Over(behind, "Which bull was this hole fired at?", Screens.Line("The line on the picture goes to the bull GroupLab chose. Pick another if it is wrong."), choices, Back);
+    }
 
     /// <summary>Adds a hole under the crosshair, or puts down the hole being moved there.</summary>
     internal void Press()
@@ -151,10 +192,16 @@ internal sealed class FixHolesPage : UserControl
             var to = viewer.Centre;
             viewer.Held = null;
             session.MoveShot(held, to);
+            Show();
+            AskBull(held);
+            return;
         }
         else if (under is null)
         {
-            session.AddShot(viewer.Centre);
+            int id = session.AddShot(viewer.Centre);
+            Show();
+            AskBull(id);
+            return;
         }
 
         Show();

@@ -132,7 +132,7 @@ public class SubgroupAndSplitTests
         var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
         // Entry 130 section 2b.2 put a sentence between the count and the ranking, saying where the missing shot is not. Here every bull has
         // something on it, which is the useful thing to know: the shot that is missing is inside a mark rather than on an empty bull.
-        Assert.StartsWith("You fired 6 and 5 are marked. Every bull has a shot on it, so a mark may be two. Most likely to be two, closest to two holes' size first: shot 2 at 1.31 holes, shot 5 at 1.12 holes, shot 3 at 1.02 holes.", item.Sentence, StringComparison.Ordinal);
+        Assert.StartsWith("You fired 6 and 5 are marked. Every bull has a shot on it, so a mark may be two. Most likely to be two, closest to two holes' size first: the shot on bull 2 at 1.31 holes, the shot on bull 5 at 1.12 holes, the shot on bull 3 at 1.02 holes.", item.Sentence, StringComparison.Ordinal);
         Assert.Equal(3, ReviewQueue.CountCandidates);
         var two = item.Choices[0];
         Assert.Equal(ReviewAction.SplitIntoTwo, two.Action);
@@ -151,7 +151,7 @@ public class SubgroupAndSplitTests
         session.SetExpectedShots(4);
 
         var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
-        Assert.Contains("You fired 4 and 5 are marked. Least like a hole, smallest first: shot 2 at 0.41 holes", item.Sentence, StringComparison.Ordinal);
+        Assert.Contains("You fired 4 and 5 are marked. Least like a hole, smallest first: the shot on bull 2 at 0.41 holes", item.Sentence, StringComparison.Ordinal);
         ReviewQueue.Apply(session, item, item.Choices[0]);
         Assert.True(session.State.Shots.Single(s => s.Size?.Holes == 0.41).NotAShot);
         Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
@@ -170,8 +170,8 @@ public class SubgroupAndSplitTests
         session.SetExpectedShots(4);
 
         var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
-        Assert.Contains("You fired 4 and 5 are marked. Least like a hole: those off the bulls or on the sheet's own printing first, then the smallest: shot 3 at 1.02 holes, on or beside marker 18, shot 2 at 0.41 holes", item.Sentence, StringComparison.Ordinal);
-        Assert.Equal("Shot 3 is not a shot", item.Choices[0].Label);
+        Assert.Contains("You fired 4 and 5 are marked. Least like a hole: those off the bulls or on the sheet's own printing first, then the smallest: the shot on bull 3 at 1.02 holes, on or beside marker 18, the shot on bull 2 at 0.41 holes", item.Sentence, StringComparison.Ordinal);
+        Assert.Equal("The shot on bull 3 is not a shot", item.Choices[0].Label);
 
         var (read, _) = MarkingFile.Read(MarkingFile.Write(session.State));
         Assert.Equal("marker 18", read.Shots[2].Size!.Beside);

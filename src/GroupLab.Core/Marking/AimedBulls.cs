@@ -211,6 +211,43 @@ public static class AimedBulls
         return named;
     }
 
+    /// <summary>
+    /// Entry 376 section A2: bulls by their printed labels as a person says them, runs joined: "bulls 1 to 15", "bulls 1 to 9 and 11 to 15",
+    /// "bull 4". Labels that are not numbers are listed as they are.
+    /// </summary>
+    public static string Words(IReadOnlyList<string> labels)
+    {
+        ArgumentNullException.ThrowIfNull(labels);
+        if (labels.Count == 1)
+        {
+            return "bull " + labels[0];
+        }
+
+        var numbers = labels.Select(l => int.TryParse(l, NumberStyles.None, CultureInfo.InvariantCulture, out int n) ? n : (int?)null).ToList();
+        if (numbers.Any(n => n is null))
+        {
+            return "bulls " + string.Join(", ", labels);
+        }
+
+        var sorted = numbers.Select(n => n!.Value).Order().ToList();
+        var runs = new List<string>();
+        for (int i = 0; i < sorted.Count;)
+        {
+            int j = i;
+            while (j + 1 < sorted.Count && sorted[j + 1] == sorted[j] + 1)
+            {
+                j++;
+            }
+
+            runs.Add(j == i ? sorted[i].ToString(CultureInfo.InvariantCulture) : j == i + 1
+                ? string.Create(CultureInfo.InvariantCulture, $"{sorted[i]}, {sorted[j]}")
+                : string.Create(CultureInfo.InvariantCulture, $"{sorted[i]} to {sorted[j]}"));
+            i = j + 1;
+        }
+
+        return "bulls " + (runs.Count == 1 ? runs[0] : string.Join(", ", runs.Take(runs.Count - 1)) + " and " + runs[^1]);
+    }
+
     public static IReadOnlyList<int> Of(AssignmentRule? rule, IEnumerable<BullAim> bulls)
     {
         ArgumentNullException.ThrowIfNull(bulls);

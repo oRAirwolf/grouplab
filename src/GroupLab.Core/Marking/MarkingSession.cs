@@ -122,6 +122,26 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
 public sealed record BullAim(int Index, string Label, PointD Image, bool Scoring = true, PointD? Declared = null);
 
 /// <summary>
+/// Entry 376 section A2: one answer to "Which bulls did you fire at?": the bulls in words ("bulls 1 to 15"), where the group landed on that
+/// reading, the bulls' indexes, and whether it is GroupLab's guess, the one the figures use until the person answers.
+/// </summary>
+public sealed record BullsChoice(string Bulls, string Landed, IReadOnlyList<int> Indexes, bool Guess)
+{
+    /// <summary>The choice as a button says it: "Bulls 1 to 15, the group about 1.02 in low and 0.44 in right".</summary>
+    public string Words => char.ToUpperInvariant(Bulls[0]) + Bulls[1..] + ", the group " + Landed;
+}
+
+/// <summary>Entry 376 section A2: the question, its choices with GroupLab's guess first.</summary>
+public sealed record BullsQuestion(IReadOnlyList<BullsChoice> Choices)
+{
+    public const string Title = "Which bulls did you fire at?";
+
+    public const string Why = "The holes fit more than one set of bulls equally well, so GroupLab cannot tell which bull each shot was fired at. Until you choose, the figures use GroupLab's guess, the first choice.";
+
+    public const string Other = "Choose the bulls myself";
+}
+
+/// <summary>
 /// Which bulls hold which load, NOTES-FROM-PLANNING.md entry 94 section 2: a name for each bull that carries one, kept in the session and
 /// never in the target definition. It is what lets one sheet carry six charge weights and be compared load against load, which is the
 /// analysis Jeff's thirty bulls are for (entry 89 section 3).
@@ -1000,6 +1020,42 @@ public sealed class MarkingSession
 
         var free = state.Shots.Where(s => s.IsShot && !s.BullChosen).ToList();
         return SheetOffset(state, null, state.Bulls.ToList(), [.. free.Select(s => sheet.Mapping.ToPage(s.Image))]);
+    }
+
+    /// <summary>
+    /// Entry 376 section A2: where the holes fit more than one set of bulls equally well and nobody has said which were fired at, the
+    /// question to put to the person in the middle of the screen, with GroupLab's guess first; null where nothing needs asking. The guess
+    /// is what the figures use until it is answered. Answering is <see cref="AnswerWhichBulls"/>, the same rule "Bulls you fired at" sets.
+    /// </summary>
+    public BullsQuestion? WhichBulls()
+    {
+        var state = State;
+        if (state.Rule is not null || state.Scale is not SheetReference sheet || state.Bulls.Count == 0 || state.Bulls.Any(b => b.Declared is null))
+        {
+            return null;
+        }
+
+        var open = state.Bulls.ToList();
+        var free = state.Shots.Where(s => s.IsShot && !s.BullChosen).Select(s => sheet.Mapping.ToPage(s.Image)).ToList();
+        var read = ImpactOffsets.ReadWholeSheet([.. free.Select(p => new Offset(p.X, p.Y))], [.. open.Select(b => new Offset(b.Declared!.Value.X, b.Declared!.Value.Y))],
+            [.. open.Select((b, i) => (b, i)).Where(x => x.b.Scoring).Select(x => x.i)]);
+        if (read is not { Ask: true })
+        {
+            return null;
+        }
+
+        return new BullsQuestion([.. read.Choices.Select(c => new BullsChoice(
+            AimedBulls.Words([.. c.Bulls.Select(i => open[i].Label)]),
+            ImpactOffsets.Landed(c.Shift),
+            [.. c.Bulls.Select(i => open[i].Index)],
+            c == read.Taken))]);
+    }
+
+    /// <summary>Entry 376 section A2: the person's answer, as the rule "Bulls you fired at" makes, one shot each.</summary>
+    public void AnswerWhichBulls(BullsChoice choice)
+    {
+        ArgumentNullException.ThrowIfNull(choice);
+        SetAssignmentRule(AimedBulls.For(State.Bulls, choice.Indexes));
     }
 
     private void Update(int id, Func<MarkedShot, MarkedShot> change)

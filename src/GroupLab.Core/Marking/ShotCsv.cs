@@ -35,7 +35,11 @@ public static class ShotCsv
         ArgumentNullException.ThrowIfNull(state);
         var shots = state.Shots.Where(s => s.IsShot && !GroupAnalysis.OnSighter(state, s)).ToList();
         var offsets = GroupAnalysis.CompositeOffsets(state, shots);
-        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text);
+        // Entry 376 section A6: each shot named by its bull, in bull order, lowest first.
+        var named = ShotLabels.For(state);
+        var labels = named.ToDictionary(l => l.ShotId, l => l.Name);
+        var place = named.Select((l, k) => (l.ShotId, k)).ToDictionary(x => x.ShotId, x => x.k);
+        var order = state.Bulls.Count == 0 ? [.. Enumerable.Range(0, shots.Count)] : Enumerable.Range(0, shots.Count).OrderBy(i => place.GetValueOrDefault(shots[i].Id, int.MaxValue)).ToList();
         double? distance = state.ShotDistanceInches;
         string at = distance is { } d ? string.Create(CultureInfo.InvariantCulture, $" at {d / 36:0.#} yd") : "";
         var text = new StringBuilder();
@@ -43,7 +47,7 @@ public static class ShotCsv
         {
             "shot", "bull", "x right (in)", "y up (in)", $"x right (MOA{at})", $"y up (MOA{at})", $"x right (mil{at})", $"y up (mil{at})", "excluded",
         }.Select(Quote))).Append('\n');
-        for (int i = 0; i < shots.Count && offsets.Count == shots.Count; i++)
+        foreach (int i in offsets.Count == shots.Count ? order : [])
         {
             var shot = shots[i];
             double x = offsets[i].X, y = -offsets[i].Y;
@@ -51,7 +55,7 @@ public static class ShotCsv
             string bull = shot.Bull is { } b && state.Bulls.FirstOrDefault(x => x.Index == b) is { } aim ? aim.Label : "";
             text.Append(string.Join(",", new[]
             {
-                Quote(labels.GetValueOrDefault(shot.Id) ?? (i + 1).ToString(CultureInfo.InvariantCulture)), Quote(bull),
+                Quote(labels.GetValueOrDefault(shot.Id) ?? "Shot " + (i + 1).ToString(CultureInfo.InvariantCulture)), Quote(bull),
                 Signed(x, 4), Signed(y, 4),
                 Angle(x, AngularUnit.Moa), Angle(y, AngularUnit.Moa), Angle(x, AngularUnit.Mrad), Angle(y, AngularUnit.Mrad),
                 shot.Exclusion is null ? "no" : "yes",

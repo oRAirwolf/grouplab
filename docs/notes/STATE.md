@@ -9,17 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-05 evening, after entry 375 (corner brackets that do not depend on the cut); the inbox is empty.
+**Last rewritten:** 2026-10-06 01:20 UTC, after entry 376 Part A (which bull each shot belongs to); entry 377 and Part B next.
 
 ---
 
 ## In flight
 
-- **Running from a terminal (entry 361), 2026-10-04.** The status line writes docs/notes/usage-now.json every minute: 70% of the
-  week at 10:25 UTC. Plan each block to end under 85% (entry 360 section 2). The hook `scripts/usage-guard.js` blocks from 85
-  unless docs/notes/finishing.flag is under 45 minutes old, and from 88 always.
-- **Entries 363 to 365 done** (2026-10-04, nightly 167): M834 files, aiming marks, issue 19, sheet look 0.15 s, the phone sender
-  (off until "forms updated"), four reference files, scale markers A to D.
+- **The usage guard stops at 88% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-06; at 85% again after it
+  with no edit (`scripts/usage-guard.js`). 81% at 01:00 UTC. Question 85: the entry text named neither 88% nor a Part C.
+- **Entry 376 Part A done** (2026-10-06): holes matched to bulls as one sheet (read as aimed first, then in shooting order, then the
+  "Which bulls did you fire at?" question), a line from each bull to its holes, a tap or click lights bull, holes and lines, Bull by bull
+  lights them too, the phone asks which bull after adding or moving a hole, every shot named "Bull 7" or "Bull 7, shot 2".
+  **Part B (twelve items of tablet feedback) is next after entry 377.**
+- **Entry 377 in progress**: GroupLab's direct print to the M834 stays on "Connecting"; log every step, a timeout and Cancel,
+  RFCOMM channel 1; and the darkness test's share crash (FileProvider has no cache path).
 - **Entry 375 done** (2026-10-05, all but section 2's tiles): the brackets' codes give the scale (0.03 to 0.13 percent at any gap or
   cut); the corners come from the paper's edges between them, sure in 44 of 177 trial scenes and then within 0.6 mm; never sure on a
   white counter. The L stays, so printed brackets still read. Stray folders from 02:48 (dotnet temp leftovers) went to the trash.
@@ -30,9 +33,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entries 366 to 370 done**: the range kit, cut down by 370 to an hour (three loads one sheet each, store-bought targets, C and E bulls), in `C:\Dev\grouplab-local\range-2026-10-04\`, its results to come back in `results\`.
 - **Waiting on Alan:** "forms updated" (switches on the phones' log, Send everything I open and sending targets); requests 70,
   72, 74, 75, 76, 77, 78 (GroupLab printing to the M834).
-- **Entry 369 done**: every published nightly goes to the Microsoft Store (store-follow.yml); 166 is in certification.
 - **Entry 372 partly done**: labels made, read and measured; its encoder, check label and profile size are next.
-- **Entry 371 done but section 3's wider ideas** (`grouplab surface-trial`): found only where two ways agree; brackets must touch.
 
 ## The next three
 
@@ -55,7 +56,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. Entry 374's rest: the store-bought photos and the timed pairing, then two holes in one, review undo, shot data, the 2 MOA sheet.
+3. Entry 376 Part B after entry 377; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
 
 ## Blocked, and on what
 

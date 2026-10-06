@@ -78,12 +78,12 @@ public static class ChangeWords
         };
     }
 
-    /// <summary>A shot by the label it wears on the sheet, "shot 6" or "shot B2a", or "a shot" when it wears none.</summary>
-    private static string Shot(MarkingState state, int id) => ShotLabels.For(state).FirstOrDefault(l => l.ShotId == id)?.Text switch
+    /// <summary>A shot by the label it wears on the sheet, "bull 6" or "bull B2, shot 1" (entry 376 section A6), or "a shot" when it wears none.</summary>
+    private static string Shot(MarkingState state, int id) => ShotLabels.For(state).FirstOrDefault(l => l.ShotId == id) is { } label ? label.Text switch
     {
         ShotLabels.NotAShot => "a mark that is not a shot",
         ShotLabels.Unassigned => "an unassigned shot",
-        { Length: > 0 } text => "shot " + text,
+        { Length: > 0 } text => label.Name is { } name ? ShotLabels.InSentence(name) : "shot " + text,
         _ => "a shot",
-    };
+    } : "a shot";
 }

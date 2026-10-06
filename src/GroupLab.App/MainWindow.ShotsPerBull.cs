@@ -81,6 +81,44 @@ public sealed partial class MainWindow
         DiagnosticLog.Info("assignment.rule", ("choice", shotsPerBull.SelectedIndex));
     }
 
+    /// <summary>The choices last asked about, so one ambiguous sheet is asked once and dismissing it keeps GroupLab's guess.</summary>
+    private string? askedWhichBulls;
+
+    /// <summary>
+    /// Entry 376 section A2: where the holes fit more than one set of bulls equally well and nobody has said which were fired at, the question
+    /// in the middle of the window, GroupLab's guess first; "Choose the bulls myself" selects "Only the bulls I aimed at" and puts the cursor in
+    /// its box. Run after every change to the marking, and asked once for each set of choices.
+    /// </summary>
+    internal void AskWhichBulls()
+    {
+        if (session.WhichBulls() is not { } question || problemLayer.IsVisible)
+        {
+            return;
+        }
+
+        string key = string.Join("|", question.Choices.Select(c => c.Bulls));
+        if (key == askedWhichBulls)
+        {
+            return;
+        }
+
+        askedWhichBulls = key;
+        var choices = question.Choices.Select(c => (c.Guess ? c.Words + " (GroupLab's guess)" : c.Words, (Action)(() =>
+        {
+            session.AnswerWhichBulls(c);
+            shotsPerBull.SelectedIndex = 3;
+            doubledBulls.Text = c.Bulls.Replace("bulls ", "", StringComparison.Ordinal).Replace("bull ", "", StringComparison.Ordinal).Replace(" to ", "-", StringComparison.Ordinal).Replace(" and ", ", ", StringComparison.Ordinal);
+            ShowRule();
+            status.Text = AimedBulls.Says(session.State.Rule, session.State.Bulls);
+        }))).ToList();
+        choices.Add((BullsQuestion.Other, () =>
+        {
+            shotsPerBull.SelectedIndex = 3;
+            doubledBulls.Focus();
+        }));
+        ShowProblem(BullsQuestion.Title, BullsQuestion.Why, [.. choices]);
+    }
+
     /// <summary>
     /// The rule the box describes, or null where it describes nothing. Three ways of saying it, because three ways is how people shoot:
     /// a list of bulls, whole rows, or the same columns of every row.

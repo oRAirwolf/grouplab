@@ -102,7 +102,7 @@ public sealed partial class MainWindow
 
             foreach (var shot in state.Shots.Where(s => ReviewQueue.StillFlagged(state, s)))
             {
-                summary.Add(shot.Oversize!.Describe(ShotLabel(shot.Id), state.Calibre?.DiameterInches));
+                summary.Add(shot.Oversize!.Describe(ShotName(shot.Id), state.Calibre?.DiameterInches));
             }
         }
         else
@@ -129,9 +129,9 @@ public sealed partial class MainWindow
 
         var (headings, rows) = ShotTable(state);
         var exclusions = state.Shots.Where(s => s.IsShot && s.Exclusion is not null)
-            .Select(s => $"Shot {ShotLabel(s.Id)}: {s.Exclusion!.Value.Words()}. It is drawn hollow, struck through in the table, and every figure is given with and without it.")
+            .Select(s => $"{ShotName(s.Id)}: {s.Exclusion!.Value.Words()}. It is drawn hollow, struck through in the table, and every figure is given with and without it.")
             .ToList();
-        var unmade = open.Select(i => $"{ReviewTitle(i.Kind)}{(i.ShotId is { } shot ? ", shot " + ShotLabel(shot) : i.Bull is { } b ? ", bull " + BullLabel(b) : "")}: {i.Sentence}").ToList();
+        var unmade = open.Select(i => $"{ReviewTitle(i.Kind)}{(i.ShotId is { } shot ? ", " + ShotNameLower(shot) : i.Bull is { } b ? ", bull " + BullLabel(b) : "")}: {i.Sentence}").ToList();
 
         var registration = new List<string>
         {

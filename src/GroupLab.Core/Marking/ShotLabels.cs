@@ -5,7 +5,14 @@ namespace GroupLab.Core.Marking;
 /// than one shot, a shot with no bull on a sheet of bulls, or a mark that is not a shot. <see cref="Text"/> is null on a marking with no
 /// bulls at all, a plain group, where there is no printed number to name a shot by and the screen identifies it by position instead.
 /// </summary>
-public sealed record ShotLabel(int ShotId, string? Text, bool Abnormal);
+public sealed record ShotLabel(int ShotId, string? Text, bool Abnormal)
+{
+    /// <summary>
+    /// Entry 376 section A6: the shot's name in words, by its bull: "Bull 7", or "Bull 7, shot 2" where the bull holds more than one, so
+    /// no list shows a bare number that reads as a count. "Unassigned shot" and "Not a shot" for the others; null on a plain group.
+    /// </summary>
+    public string? Name { get; init; }
+}
 
 /// <summary>
 /// One numbering system, the bull's, NOTES-FROM-PLANNING.md entry 75. A shot is named by the bull it sits on, the number printed beside that
@@ -45,15 +52,50 @@ public static class ShotLabels
             {
                 var on = ByPosition(shots.Where(s => s.Bull == bull.Index)).ToList();
                 labels.AddRange(on.Select((s, k) => on.Count == 1
-                    ? new ShotLabel(s.Id, bull.Label, false)
-                    : new ShotLabel(s.Id, bull.Label + Letters(k), true)));
+                    ? new ShotLabel(s.Id, bull.Label, false) { Name = "Bull " + bull.Label }
+                    : new ShotLabel(s.Id, bull.Label + Letters(k), true) { Name = string.Create(System.Globalization.CultureInfo.InvariantCulture, $"Bull {bull.Label}, shot {k + 1}") }));
             }
 
-            labels.AddRange(ByPosition(shots.Where(s => s.Bull is not { } b || !known.Contains(b))).Select(s => new ShotLabel(s.Id, Unassigned, true)));
+            labels.AddRange(ByPosition(shots.Where(s => s.Bull is not { } b || !known.Contains(b))).Select(s => new ShotLabel(s.Id, Unassigned, true) { Name = "Unassigned shot" }));
         }
 
-        labels.AddRange(ByPosition(state.Shots.Where(s => !s.IsShot)).Select(s => new ShotLabel(s.Id, NotAShot, true)));
+        labels.AddRange(ByPosition(state.Shots.Where(s => !s.IsShot)).Select(s => new ShotLabel(s.Id, NotAShot, true) { Name = "Not a shot" }));
         return labels;
+    }
+
+    /// <summary>
+    /// Entry 376 section A6: the extreme spread's two shots in words, "bulls 1 and 15" when each is alone on its bull, the shots' names
+    /// otherwise, so the legend never names a shot by a bare number.
+    /// </summary>
+    public static string Pair(ShotLabel? a, ShotLabel? b)
+    {
+        if (a?.Name is null || b?.Name is null)
+        {
+            return string.Create(System.Globalization.CultureInfo.InvariantCulture, $"shots {a?.Text ?? "?"} and {b?.Text ?? "?"}");
+        }
+
+        return !a.Abnormal && !b.Abnormal ? $"bulls {a.Text} and {b.Text}" : $"{InSentence(a.Name)} and {InSentence(b.Name)}";
+    }
+
+    /// <summary>
+    /// A shot's name inside a sentence, so no sentence reads "bull 3 is now on bull 4": "the shot on bull 7", "shot 2 on bull 7", "an
+    /// unassigned shot", "a mark that is not a shot".
+    /// </summary>
+    public static string InSentence(string name)
+    {
+        var two = System.Text.RegularExpressions.Regex.Match(name, "^Bull (.+), shot ([0-9]+)$");
+        return two.Success ? $"shot {two.Groups[2].Value} on bull {two.Groups[1].Value}"
+            : name.StartsWith("Bull ", StringComparison.Ordinal) ? "the shot on bull " + name[5..]
+            : name == "Unassigned shot" ? "an unassigned shot"
+            : name == "Not a shot" ? "a mark that is not a shot"
+            : name.Length > 0 ? char.ToLowerInvariant(name[0]) + name[1..] : name;
+    }
+
+    /// <summary><see cref="InSentence"/> at the start of one: "The shot on bull 7".</summary>
+    public static string Start(string name)
+    {
+        string said = InSentence(name);
+        return said.Length > 0 ? char.ToUpperInvariant(said[0]) + said[1..] : said;
     }
 
     /// <summary>a to z, then aa, ab and on, for the k-th shot on one bull counting from zero.</summary>

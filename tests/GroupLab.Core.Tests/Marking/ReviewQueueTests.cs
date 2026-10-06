@@ -37,7 +37,7 @@ public class ReviewQueueTests
         Assert.Equal([ReviewKind.Contested, ReviewKind.Oversized, ReviewKind.Doubled, ReviewKind.Refused], items.Select(i => i.Kind));
         Assert.Equal(4, ReviewQueue.Open(items));
         var contested = items[0];
-        Assert.Contains("Nearest bull says 1, but bull 1 already holds shot 1", contested.Sentence, StringComparison.Ordinal);
+        Assert.Contains("Nearest bull says 1, but bull 1 already holds another shot", contested.Sentence, StringComparison.Ordinal);
         Assert.Equal([(ReviewAction.AssignBull, (int?)1), (ReviewAction.AssignBull, 0), (ReviewAction.NotAShot, null)], contested.Choices.Select(c => (c.Action, c.Bull)));
         Assert.Contains("Bull 3 has no shot. A 0.12 in candidate", items[3].Sentence, StringComparison.Ordinal);
 

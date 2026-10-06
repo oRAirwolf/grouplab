@@ -654,6 +654,7 @@ public sealed partial class MainWindow : Window
         canvas.Session = session;
         session.Changed += (_, _) => Refresh();
         session.Changed += (_, _) => ShowUndoSteps();
+        session.Changed += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(AskWhichBulls);
         Deactivated += (_, _) => ShowShortcuts(false);
         canvas.SelectionChanged += (_, _) => Refresh();
         canvas.LengthTapped += (_, _) => AskLength();
@@ -1747,6 +1748,14 @@ public sealed partial class MainWindow : Window
     /// than one, or the word unassigned. On a plain group with no bulls there is no printed number, and the shot is named by where it is.
     /// </summary>
     internal string ShotLabelFor(int id) => ShotLabel(id);
+
+    /// <summary>A shot as a sentence names it, "the shot on bull 7" (entry 376 section A6), for the headless tests.</summary>
+    internal string ShotInSentenceFor(int id) => ShotNameLower(id);
+
+    /// <summary>Entry 376 section A6: a shot's name in words, "Bull 7" or "Bull 7, shot 2", or "Shot at ..." on a plain group.</summary>
+    private string ShotName(int id) => ShotLabels.For(session.State).FirstOrDefault(l => l.ShotId == id)?.Name is { } name ? ShotLabels.Start(name) : "Shot " + ShotLabel(id);
+
+    private string ShotNameLower(int id) => ShotLabels.For(session.State).FirstOrDefault(l => l.ShotId == id)?.Name is { } name ? ShotLabels.InSentence(name) : "shot " + ShotLabel(id);
 
     private string ShotLabel(int id)
     {
@@ -2973,7 +2982,7 @@ public sealed partial class MainWindow : Window
             {
                 flagged.Children.Add(new TextBlock
                 {
-                    Text = shot.Oversize!.Describe(ShotLabel(shot.Id), state.Calibre?.DiameterInches),
+                    Text = shot.Oversize!.Describe(ShotName(shot.Id), state.Calibre?.DiameterInches),
                     TextWrapping = TextWrapping.Wrap,
                     FontSize = Tokens.SecondarySize,
                     Classes = { shot.Oversize.Tentative ? AppStyles.Secondary : AppStyles.Alert },
@@ -3063,14 +3072,14 @@ public sealed partial class MainWindow : Window
         if (all.WorstShot is { } calibrated && WorstShot(state) is { } worstId)
         {
             double beyond = calibrated.PValue;
-            string label = ShotLabel(worstId);
+            string label = ShotName(worstId);
             string sits = string.Create(CultureInfo.InvariantCulture,
                 $"It sits at {calibrated.Observed:0.00} of the group's own mean radii from its center. Circular groups of {n}, measured the same way, put their worst at {calibrated.Expected:0.00} on average, and this far out or farther {HowOften(beyond)}, from {calibrated.Resamples} simulated groups.");
             string evidence = string.Create(CultureInfo.InvariantCulture, $"Worst shot against {calibrated.Resamples} simulated circular groups: p = {beyond:0.000}");
             // The hedge stays in view with the verdict: without it "not a flyer" would say more than the test can.
             cards.Add(beyond >= 0.05
-                ? new("flyer", $"Shot {label} is not a flyer.", [evidence, "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10)."], [sits])
-                : new("flyer", $"Shot {label} is further out than a group of {n} usually puts its worst.",
+                ? new("flyer", $"{label} is not a flyer.", [evidence, "So a shot there is not a flyer by that measure alone (STATISTICS.md section 10)."], [sits])
+                : new("flyer", $"{label} is further out than a group of {n} usually puts its worst.",
                     [evidence, "That makes it worth a look, not a flyer by that measure alone: whether it was called or pulled is yours to say, and excluding it shows every figure both ways (STATISTICS.md section 10)."],
                     [sits]));
         }
@@ -3268,7 +3277,7 @@ public sealed partial class MainWindow : Window
                 row.Classes.Add(AppStyles.Warn);
             }
 
-            ToolTip.SetTip(row, $"Shot {shot.Label}{(shot.Bull is { } bull ? ", bull " + bull : "")}{(shot.Excluded ? ", excluded" : "")}");
+            ToolTip.SetTip(row, $"{shot.Named?.Name ?? "Shot " + shot.Label}{(shot.Named is null && shot.Bull is { } bull ? ", bull " + bull : "")}{(shot.Excluded ? ", excluded" : "")}");
             int id = shot.Id;
             row.Click += (_, _) => PickShots([id]);
             offsetTable.Children.Add(row);
@@ -3287,8 +3296,8 @@ public sealed partial class MainWindow : Window
         plotSelection = [.. ids];
         canvas.Selected = ids.Count > 0 ? ids[0] : null;
         status.Text = ids.Count == 2
-            ? $"Shots {ShotLabel(ids[0])} and {ShotLabel(ids[1])}: the extreme spread is the distance between them."
-            : ids.Count == 1 ? $"Shot {ShotLabel(ids[0])}." : status.Text;
+            ? $"{ShotName(ids[0])} and {ShotNameLower(ids[1])}: the extreme spread is the distance between them."
+            : ids.Count == 1 ? $"{ShotName(ids[0])}." : status.Text;
         Refresh();
     }
 
@@ -4003,7 +4012,7 @@ public sealed partial class MainWindow : Window
     private Control Tick(int id)
     {
         var tick = new CheckBox { IsChecked = tickedShots.Contains(id), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space4, 0) };
-        Avalonia.Automation.AutomationProperties.SetName(tick, $"Choose shot {ShotLabel(id)}");
+        Avalonia.Automation.AutomationProperties.SetName(tick, $"Choose {ShotNameLower(id)}");
         ToolTip.SetTip(tick, "Choose this shot, to assign several at once");
         tick.IsCheckedChanged += (_, _) =>
         {
@@ -4093,8 +4102,8 @@ public sealed partial class MainWindow : Window
         var bulls = state.Bulls.OrderBy(b => b.Index).ToList();
         picker.ItemsSource = new[] { NoBull }.Concat(bulls.Select(b => b.Label)).ToList();
         picker.SelectedIndex = shot.Bull is { } on && bulls.FindIndex(b => b.Index == on) is >= 0 and var at ? at + 1 : 0;
-        ToolTip.SetTip(picker, $"Which bull shot {ShotLabel(shot.Id)} belongs to");
-        Avalonia.Automation.AutomationProperties.SetName(picker, $"Bull for shot {ShotLabel(shot.Id)}");
+        ToolTip.SetTip(picker, $"Which bull {ShotNameLower(shot.Id)} belongs to");
+        Avalonia.Automation.AutomationProperties.SetName(picker, $"Bull for {ShotNameLower(shot.Id)}");
 
         int was = picker.SelectedIndex;
         picker.SelectionChanged += (_, _) =>
@@ -4225,8 +4234,8 @@ public sealed partial class MainWindow : Window
             bool excluding = shot.Exclusion is null;
             session.SetExclusion(id, excluding ? ChosenReason : null);
             Did(excluding
-                ? $"Shot {ShotLabel(id)} left out of the figures."
-                : $"Shot {ShotLabel(id)} back in the figures.");
+                ? $"{ShotName(id)} left out of the figures."
+                : $"{ShotName(id)} back in the figures.");
         })));
         selection.Children.Add(Row(
             Button(shot.NotAShot ? "It is a shot" : "Not a shot", () =>
@@ -4238,14 +4247,14 @@ public sealed partial class MainWindow : Window
             Button("Unassign", () =>
             {
                 session.AssignBull(id, null);
-                Did($"Shot {ShotLabel(id)} has no bull.");
+                Did($"{ShotName(id)} has no bull.");
             }),
             Button("Delete", () =>
             {
-                string label = ShotLabel(id);
+                string label = ShotName(id);
                 session.DeleteShot(id);
                 canvas.Selected = null;
-                Did($"Shot {label} deleted.");
+                Did($"{label} deleted.");
             })));
     }
 
@@ -4360,7 +4369,7 @@ public sealed partial class MainWindow : Window
             bool aboutTheSelectedShot = item.ShotId is { } about && about == canvas.Selected;
             row.Children.Add(new TextBlock
             {
-                Text = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", shot " + ShotLabel(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}",
+                Text = $"{n}.  {ReviewTitle(item.Kind)}{(item.ShotId is { } id ? ", " + ShotNameLower(id) : item.Bull is { } b ? ", bull " + BullLabel(b) : "")}",
                 TextWrapping = TextWrapping.Wrap,
                 FontWeight = aboutTheSelectedShot ? FontWeight.Bold : FontWeight.Normal,
             });
@@ -4777,7 +4786,7 @@ public sealed partial class MainWindow : Window
         {
             bullTyped += c;
             status.Text = canvas.Selected is { } selected
-                ? $"Bull {bullTyped}: Enter puts shot {ShotLabel(selected)} on it, Escape clears."
+                ? $"Bull {bullTyped}: Enter puts {ShotNameLower(selected)} on it, Escape clears."
                 : $"Bull {bullTyped}: select a shot, then Enter puts it on that bull.";
             e.Handled = true;
             return;
@@ -4807,7 +4816,7 @@ public sealed partial class MainWindow : Window
                 break;
             case Key.N when canvas.Selected is { } id:
                 session.SetNotAShot(id, true);
-                status.Text = $"Shot {ShotLabel(id)} marked not a shot.";
+                status.Text = $"{ShotName(id)} marked not a shot.";
                 NextReview();
                 break;
             default:
@@ -4833,10 +4842,10 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        string was = ShotLabel(id);
+        string was = ShotName(id);
         session.AssignBull(id, bull.Index);
         DiagnosticLog.Info("review.typed", ("bull", bull.Label));
-        status.Text = $"Shot {was} is now on bull {bull.Label}.";
+        status.Text = $"{was} is now on bull {bull.Label}.";
         NextReview();
     }
 
@@ -5115,15 +5124,21 @@ public sealed partial class MainWindow : Window
     /// Entry 228 section 1.3: on a target with bulls placed by hand, each bull as its own group beside the pooled one above: its shots, where
     /// their center is from its aim point, and their extreme spread, each measured from that bull with its own scale.
     /// </summary>
+    /// <para>
+    /// Entry 376 section A4: on every sheet of bulls, not only one placed by hand, and each row is a button that lights its bull, its holes
+    /// and the lines between them on the picture, so Bull by bull is the way to check which bull each shot was given to.
+    /// </para>
     private void AddBullByBull(MarkingState state)
     {
-        if (!MarkingCanvas.PlacedByHand(state) || state.Bulls.Count < 2)
+        bool byHand = MarkingCanvas.PlacedByHand(state);
+        if (state.Bulls.Count < 2)
         {
             return;
         }
 
         advancedFigures.Children.Add(Ruled("Bull by bull"));
-        foreach (var bull in state.Bulls)
+        advancedFigures.Children.Add(new TextBlock { Text = "Click a bull to light it, its holes and the lines between them on the picture.", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        foreach (var bull in state.Bulls.Where(b => byHand || b.Scoring))
         {
             var shots = state.Shots.Where(s => s.IsShot && s.Exclusion is null && s.Bull == bull.Index).ToList();
             var offsets = GroupAnalysis.CompositeOffsets(state, shots);
@@ -5140,8 +5155,38 @@ public sealed partial class MainWindow : Window
                     + (offsets.Count > 1 ? $", extreme spread {units.Length(spread)}" : "");
             }
 
-            advancedFigures.Children.Add(new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap, Foreground = MarkingCanvas.BullColours[state.Bulls.IndexOf(bull) % MarkingCanvas.BullColours.Length] });
+            var row = new Button
+            {
+                Content = new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap },
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Background = Tokens.Clear,
+                BorderThickness = new Thickness(0),
+                Padding = new Thickness(0, 2),
+            };
+            if (byHand)
+            {
+                row.Foreground = MarkingCanvas.BullColours[state.Bulls.IndexOf(bull) % MarkingCanvas.BullColours.Length];
+            }
+
+            int lit = bull.Index;
+            row.Click += (_, _) => LightBull(lit);
+            Avalonia.Automation.AutomationProperties.SetName(row, line + ". Light it on the picture.");
+            advancedFigures.Children.Add(row);
         }
+    }
+
+    /// <summary>Entry 376 section A4: lights a bull, its holes and their lines on the picture, as a click on any of them does.</summary>
+    internal void LightBull(int bull)
+    {
+        canvas.Selected = null;
+        canvas.LitBull = bull;
+        canvas.InvalidateVisual();
+        status.Text = state(bull);
+
+        string state(int index) => session.State.Bulls.FirstOrDefault(b => b.Index == index) is { } aim
+            ? $"Bull {aim.Label} lit with its holes and the lines to them."
+            : "";
     }
 
     /// <summary>A CEP's details: its 95 percent range, how it is reckoned, and the tail note where the shots cannot reach it (entry 227).</summary>

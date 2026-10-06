@@ -109,7 +109,7 @@ public static class ReviewQueue
         bool OnlySighters(params int?[] involved) =>
             !analyseSighters && involved.Any(b => b is not null) && involved.All(b => b is null || sighterBulls.Contains(b.Value));
         var inv = CultureInfo.InvariantCulture;
-        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text ?? "");
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Name ?? l.Text ?? "");
         var bulls = state.Bulls.ToDictionary(b => b.Index);
         string BullName(int? index) => index is { } i && bulls.TryGetValue(i, out var b) ? b.Label : "none";
         var shots = state.Shots.Where(s => s.IsShot).ToList();
@@ -133,15 +133,15 @@ public static class ReviewQueue
 
             string key = $"contested:{shot.Id}";
             string holder = shots.FirstOrDefault(o => o.Id != shot.Id && o.Bull == detail.NearestBull) is { } other && state.Assignment.For(other.Id) is { } od
-                ? string.Create(inv, $"bull {BullName(detail.NearestBull)} already holds shot {labels[other.Id]} at {od.DistanceInches:0.000} in")
+                ? string.Create(inv, $"bull {BullName(detail.NearestBull)} already holds another shot, at {od.DistanceInches:0.000} in")
                 : string.Create(inv, $"bull {BullName(detail.NearestBull)} holds no other shot");
             string sentence = moved
-                ? string.Create(inv, $"Shot {labels[shot.Id]} was on bull {BullName(detail.DetectedBull)} and an edit moved it to bull {BullName(detail.Bull)}, {detail.DistanceInches:0.000} in away. Its nearest bull is {BullName(detail.NearestBull)}, at {detail.NearestInches:0.000} in.")
+                ? string.Create(inv, $"{ShotLabels.Start(labels[shot.Id])} was on bull {BullName(detail.DetectedBull)} and an edit moved it to bull {BullName(detail.Bull)}, {detail.DistanceInches:0.000} in away. Its nearest bull is {BullName(detail.NearestBull)}, at {detail.NearestInches:0.000} in.")
                 : overridden
                     ? string.Create(inv, $"This hole is {detail.NearestInches:0.000} in from bull {BullName(detail.NearestBull)} and {detail.DistanceInches:0.000} in from bull {BullName(detail.Bull)}. Nearest bull says {BullName(detail.NearestBull)}, but {holder}. One-to-one matching gives it to bull {BullName(detail.Bull)}.")
                     : detail.MarginInches < ContestedMarginInches
-                        ? string.Create(inv, $"Shot {labels[shot.Id]} is {detail.NearestInches:0.000} in from bull {BullName(detail.NearestBull)}, and its next bull is only {detail.MarginInches:0.000} in further. A small registration error would change which bull it reads as.")
-                        : string.Create(inv, $"Shot {labels[shot.Id]} is on bull {BullName(detail.Bull)}, its nearest, at {detail.NearestInches:0.000} in. Its bulls hold more shots than bulls, so no one-to-one matching was forced and each shot there was left on its nearest bull: check it is the one it was fired at.");
+                        ? string.Create(inv, $"{ShotLabels.Start(labels[shot.Id])} is {detail.NearestInches:0.000} in from bull {BullName(detail.NearestBull)}, and its next bull is only {detail.MarginInches:0.000} in further. A small registration error would change which bull it reads as.")
+                        : string.Create(inv, $"{ShotLabels.Start(labels[shot.Id])} is on bull {BullName(detail.Bull)}, its nearest, at {detail.NearestInches:0.000} in. Its bulls hold more shots than bulls, so no one-to-one matching was forced and each shot there was left on its nearest bull: check it is the one it was fired at.");
             var choices = new List<ReviewChoice>();
             if (shot.Bull is { } assigned)
             {
@@ -198,7 +198,7 @@ public static class ReviewQueue
             }
 
             choices.Add(new ReviewChoice("Not a shot", ReviewAction.NotAShot));
-            items.Add(new ReviewItem(key, ReviewKind.Oversized, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id]), choices, Dismissed(key)));
+            items.Add(new ReviewItem(key, ReviewKind.Oversized, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(ShotLabels.Start(labels[shot.Id])), choices, Dismissed(key)));
         }
 
         // Entry 291 section 7 item 4: a shot placed on the hole-sized part of a larger mark is counted where it was placed, and shown so a
@@ -206,7 +206,7 @@ public static class ReviewQueue
         foreach (var shot in shots.Where(s => s.Oversize is { Joined: true } && !OnlySighters(s.Bull)))
         {
             string key = JoinedKey(shot.Id);
-            items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(labels[shot.Id], state.Calibre?.DiameterInches),
+            items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(ShotLabels.Start(labels[shot.Id]), state.Calibre?.DiameterInches),
                 [new ReviewChoice("It is on the hole", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
         }
 
@@ -224,7 +224,7 @@ public static class ReviewQueue
         {
             string key = $"doubled:{group.Key}:{string.Join(',', group.Select(s => s.Id).Order())}";
             items.Add(new ReviewItem(key, ReviewKind.Doubled, group.First().Id, group.Key, group.First().Image,
-                $"Bull {BullName(group.Key)} holds {group.Count()} shots, {string.Join(" and ", group.Select(s => labels[s.Id]))}. The sheet expects one a bull: reassign one, or keep them if more rounds were fired than bulls.",
+                $"Bull {BullName(group.Key)} holds {group.Count()} shots, {string.Join(" and ", group.Select(s => ShotLabels.InSentence(labels[s.Id])))}. The sheet expects one a bull: reassign one, or keep them if more rounds were fired than bulls.",
                 [new ReviewChoice("Keep them", ReviewAction.Keep)], group.All(s => s.BullChosen) || Dismissed(key)));
         }
 
@@ -239,7 +239,7 @@ public static class ReviewQueue
 
             choices.Add(new ReviewChoice("Not a shot", ReviewAction.NotAShot));
             choices.Add(new ReviewChoice("Leave it without a bull", ReviewAction.Keep));
-            items.Add(new ReviewItem(key, ReviewKind.Unassigned, shot.Id, null, shot.Image, $"Shot {labels[shot.Id]} has no bull, so it is left out of the group.", choices, Dismissed(key)));
+            items.Add(new ReviewItem(key, ReviewKind.Unassigned, shot.Id, null, shot.Image, $"{ShotLabels.Start(labels[shot.Id])} has no bull, so it is left out of the group.", choices, Dismissed(key)));
         }
 
         // Refused candidates in scoring bulls that hold no shot: a hole the detector may have missed.
@@ -311,7 +311,7 @@ public static class ReviewQueue
             : (tooFew ? " Most likely to be two, closest to two holes' size first: "
                 : printFirst ? " Least like a hole: those off the bulls or on the sheet's own printing first, then the smallest: "
                 : " Least like a hole, smallest first: ")
-              + string.Join(", ", ranked.Select(s => string.Create(inv, $"shot {labels[s.Id]} at {s.Size!.Holes:0.00} holes{Why(s)}"))) + ".";
+              + string.Join(", ", ranked.Select(s => string.Create(inv, $"{ShotLabels.InSentence(labels[s.Id])} at {s.Size!.Holes:0.00} holes{Why(s)}"))) + ".";
         // NOTES-FROM-PLANNING.md entry 140: "You fired 25" was said to Alan on a sheet where he had typed nothing, because the number came
         // from the sheet's own twenty five bulls. He read it as the last sheet's count following him across, and it is worth seeing why that
         // reading was reasonable: the sentence claimed he had said something he had not. A number the sheet worked out says so, and says what
@@ -326,11 +326,11 @@ public static class ReviewQueue
         var choices = new List<ReviewChoice>();
         if (first is not null && tooFew && first.Size is { SplitA: not null, SplitB: not null })
         {
-            choices.Add(new ReviewChoice($"Shot {labels[first.Id]} is two shots", ReviewAction.SplitIntoTwo, first.Bull));
+            choices.Add(new ReviewChoice($"{ShotLabels.Start(labels[first.Id])} is two shots", ReviewAction.SplitIntoTwo, first.Bull));
         }
         else if (first is not null && !tooFew)
         {
-            choices.Add(new ReviewChoice($"Shot {labels[first.Id]} is not a shot", ReviewAction.NotAShot));
+            choices.Add(new ReviewChoice($"{ShotLabels.Start(labels[first.Id])} is not a shot", ReviewAction.NotAShot));
         }
 
         choices.Add(new ReviewChoice("Leave the count", ReviewAction.Keep));
@@ -453,7 +453,7 @@ public static class ReviewQueue
     public static string Doubt(string shot, HoleProposal proposal)
     {
         ArgumentNullException.ThrowIfNull(proposal);
-        return $"Find holes, which is experimental, proposed shot {shot} and is not sure of it: {proposal.Doubt}. Check that it is a hole.";
+        return $"Find holes, which is experimental, proposed {ShotLabels.InSentence(shot)} and is not sure of it: {proposal.Doubt}. Check that it is a hole.";
     }
 
     /// <summary>
@@ -475,7 +475,7 @@ public static class ReviewQueue
     public static IReadOnlyList<SizeFlag> MarksToCheck(MarkingState state)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text ?? "");
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Name ?? l.Text ?? "");
         return [.. SizeFlags(state), .. state.Shots.Where(s => StillDoubted(state, s)).Select(s => new SizeFlag(s.Id, s.Image,
             Doubt(labels.TryGetValue(s.Id, out var label) ? label : s.Id.ToString(CultureInfo.InvariantCulture), s.Proposal!), true, false))];
     }
@@ -502,9 +502,9 @@ public static class ReviewQueue
     public static IReadOnlyList<SizeFlag> SizeFlags(MarkingState state)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Text ?? "");
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Name ?? l.Text ?? "");
         return [.. state.Shots.Where(s => StillFlagged(state, s)).Select(s => new SizeFlag(s.Id, s.Image,
-            s.Oversize!.Describe(labels.TryGetValue(s.Id, out var label) ? label : s.Id.ToString(CultureInfo.InvariantCulture), state.Calibre?.DiameterInches),
+            s.Oversize!.Describe(labels.TryGetValue(s.Id, out var label) ? ShotLabels.Start(label) : s.Id.ToString(CultureInfo.InvariantCulture), state.Calibre?.DiameterInches),
             s.Oversize.Tentative, s.Oversize.Joined))];
     }
 

@@ -106,6 +106,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Every hole found | the marking screen | a few holes close up with their rings |
 | The bulls you aimed at | the marking screen | the bull picker with rows chosen |
 | A sheet shot off by the same amount | the analysis | the whole-sheet assignment's statement |
+| Which bull each shot belongs to | the analysis | a lit bull with its lines to its holes, and the "Which bulls did you fire at?" question (entry 376) |
 | Any target you already shoot | the marking screen | bulls placed by hand and a scale drawn at one |
 | Open by dropping or pasting | the marking screen | the drop target over the window |
 | Shots in and out as CSV | the analysis | the export and import commands |

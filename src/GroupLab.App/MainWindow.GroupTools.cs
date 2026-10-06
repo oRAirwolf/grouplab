@@ -154,7 +154,7 @@ public sealed partial class MainWindow
                     var row = rows[i];
                     table.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
                     var struck = row.LeftOut ? TextDecorations.Strikethrough : null;
-                    Cell(new TextBlock { Text = "Shot " + row.Label, TextDecorations = struck, VerticalAlignment = VerticalAlignment.Center }, i + 1, 0);
+                    Cell(new TextBlock { Text = row.Label, TextDecorations = struck, VerticalAlignment = VerticalAlignment.Center }, i + 1, 0);
                     Cell(new TextBlock { Text = ResultWords.Offset(row, units), TextDecorations = struck, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }, i + 1, 1);
                     Cell(new TextBlock { Text = ResultWords.Clicks(row), TextDecorations = struck, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }, i + 1, 2);
                     var counted = new CheckBox { IsChecked = !row.LeftOut, Content = "Counted" };

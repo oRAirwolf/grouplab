@@ -21,6 +21,20 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-06, question 85: entry 376 as delivered has no Part C and no 88% line, which Alan's message to the session names
+
+Status: open
+
+Alan's message starting this run: "take entry 376 from the inbox (which bull each shot belongs to, all of the tablet feedback on
+nightly 171, and what is left of entry 374) ... set the usage guard to stop at 88% for this week only as the entry says, then work
+through Parts A, B and C in order until the week reaches 88%." The file `docs/notes/inbox/entry-376.md` (written 2026-10-06 00:05 UTC)
+has Parts A and B only, and section 0 says "Part A now, inside the 85% rule. Part B after the reset". It names neither entry 374's rest
+nor 88%. Perhaps a newer version of the entry was meant. **What I did:** followed Alan's own words, as the later and more direct
+instruction: `scripts/usage-guard.js` stops at 88% until the week resets on 2026-10-08 02:00 UTC and at 85% again after it, with no edit
+needed; Part B follows Part A in this run; I read Part C as "what is left of entry 374" (store-bought photos, timed pairing, two holes in
+one, review undo, shot data out and in, the 2 MOA 3 by 4 sheet). **Asked:** confirm, or send the Part C you meant as its own entry.
+Nothing waits on the answer.
+
 ## 2026-10-05, question 84: the README's "Not built yet" sentence, which entry 373 calls stray and entry 103's test requires
 
 Entry 373 section 7 asks to end the Screens paragraph at "walks through them.", dropping "Not built yet: cloud provider adapters over

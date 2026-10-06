@@ -692,6 +692,42 @@ all        23x35    20/20    0.014   0.027   0.072      0.247           20/20
 - The status line does not run in the VS Code extension, so this session had no fresh reading after 09:55 UTC (60%). Under section 4 it finished the step in hand of entry 358 (sections 1 to 3, unmerged on the worker's branch) and stopped at 11:14 UTC.
 - Not done: the finishing flag and the 88% backstop (refused by the session's safety check; Alan's to decide), and per-block measuring, which needs a live reading.
 
+## Entry 376 Part A: which bull each shot belongs to (2026-10-06)
+
+- **Why the tablet's two runs disagreed.** Both runs detected the same 14 holes (the log shows identical stages); the difference is the
+  hole Alan added by hand at bull 10, at the paper's right edge. The rule entry 374 added let one hole in ten fall outside the shooting
+  order, so with 15 holes the reading a row higher (bulls 6 to 20) passed as well as bulls 1 to 15, the two tied, and the sheet fell back
+  to plain matching: bulls 1, 3 and 6 to 20, "Shot 20" first. Scanned over 399 places a thumb could put that hole (x 7.5 to 8.45 in,
+  y 4.2 to 5.2 in), the old rule found no offset at any of them; session 7 came out right only because its hole sat on the knife edge
+  the other way, at the phone's working resolution.
+- **The matching is now one problem** (`ImpactOffsets.ReadWholeSheet`): every reading is a one-to-one (Hungarian) matching around one
+  common offset, re-centred on the median and repeated, seeded from two holes against every bull. Holes that fit the bulls as aimed, with
+  no offset, as well as any reading are read that way, so an ordinary sheet is untouched (scan 4 of 20 September showed why this has to
+  come first: with its holes partly merged, a shooting order 0.8 in off fitted almost as well). Otherwise the shooting order, bulls 1 to
+  k for the fewest k that fit, is taken when it fits as well as any reading and its offset is under the spacing between bulls; then a
+  single reading that clearly fits best; otherwise GroupLab asks.
+- **The question**, "Which bulls did you fire at?", in the middle of the screen on the desktop and the phone (`MarkingSession.WhichBulls`),
+  GroupLab's guess first (the smallest offset), up to two more readings, and "Choose the bulls myself". An answer is the same rule
+  "Bulls you fired at" sets, which always wins. Asked once per result; dismissing it keeps the guess, which the figures already use.
+- **On the tablet photo**: bulls 1 to 15 at all 399 places, without asking; bulls 1 to 9 and 11 to 15 as detected. Tests:
+  `ImpactOffsetTests.TheTabletPhotoWithTheHandAddedHoleIsBulls1To15` (five places), `TheTabletPhotoAsDetectedLeavesBull10Empty`,
+  `AShotSheetThatFitsSeveralWaysAsks`, `ASheetShotFromBull1WhereAimedIsLeftAlone`; `WhichBullsTests` through the session on a rendered
+  C bull sheet (the hand-added hole, and the question answered); and on the photo itself where it is on this machine (kept in
+  `C:\Dev\grouplab-local\tablet-2026-10-05\`, never committed).
+- **Lines (A3)**: a thin line from each bull's centre to every hole given to it, on the desktop's picture (it was a faint dashed line,
+  now solid), on the phone's result picture and in its Fix holes.
+- **Lighting (A4)**: a click or tap on a bull, a hole or the line between them lights all three in the selection colour; the phone says
+  under the picture where that bull's shots landed. Bull by bull is now on every sheet of bulls on the desktop, each row a button that
+  lights its bull, and on the phone each row says its offset and lights its bull when tapped.
+- **The bull for a hole (A5)**: on the phone, after Add a hole here or Put the hole here, "Which bull was this hole fired at?" with
+  GroupLab's choice first and the five nearest bulls; another choice fixes the hole there. On the desktop a new hole is selected and its
+  bull picker, GroupLab's choice already in it, is in the selection panel, as it was.
+- **Names (A6)**: every shot is "Bull 7", or "Bull 7, shot 2" (`ShotLabel.Name`), and "the shot on bull 7" inside a sentence, on the
+  Shots pages, the CSV (in bull order), the legend ("extreme spread, bulls 1 and 15"), the review queue, the undo list, the desktop's
+  status line and report. The holes in Fix holes carry their bull's number, not a count. The picture's small labels stay the bull's number.
+- Suites: Core 2890 passed and 2 skipped (the inbox test cleared with this fold); App 496 with the eleven tests that held the old names and the plain dashed line updated; Mobile 140 passed.
+- **Worth an article?** Recorded in `docs/RESEARCH.md`: yes, as an update to the wrong-bull article, once the phone pictures exist.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

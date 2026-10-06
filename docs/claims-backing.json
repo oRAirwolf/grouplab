@@ -5,6 +5,14 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/ImpactOffset.cs ImpactOffsets.ReadWholeSheet (shooting order from bull 1, the question when two readings fit); src/GroupLab.Core/Marking/MarkingSession.cs WhichBulls; tests/GroupLab.Core.Tests/Detection/ImpactOffsetTests.cs TheTabletPhotoWithTheHandAddedHoleIsBulls1To15 and tests/GroupLab.Core.Tests/Marking/WhichBullsTests.cs (entry 376 section A2)"
+  },
+  "Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from each bull's center to every hole given to it.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ShotLabels.cs ShotLabel.Name; src/GroupLab.App/MarkingCanvas.cs and mobile/GroupLab.Mobile/ResultView.cs SheetPicture draw the line from each bull to its holes (entry 376 sections A3 and A6)"
+  },
   "On Windows, the Microsoft Store carries an older, steadier build that updates itself ([Get it from Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entries 335 to 337: Apple approved the Public Beta (TestFlight shows builds 134 and 143 to 146 approved in both groups); GroupLab is in the Microsoft Store as 9NWJCXBKZNPZ and Alan installed it; Alan approved publishing both on 2026-10-01; website/build.py STORE and TESTFLIGHT, scripts/readme.py"

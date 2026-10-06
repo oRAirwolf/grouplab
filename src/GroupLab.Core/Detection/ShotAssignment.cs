@@ -219,7 +219,7 @@ public static class ShotAssignment
     /// The minimum-cost assignment of <paramref name="rows"/> rows to distinct columns of a rows by columns cost matrix,
     /// rows no more than columns, by the Hungarian method with potentials, O(rows squared times columns).
     /// </summary>
-    private static int[] Hungarian(double[,] cost, int rows, int columns)
+    internal static int[] Hungarian(double[,] cost, int rows, int columns)
     {
         var u = new double[rows + 1];
         var v = new double[columns + 1];

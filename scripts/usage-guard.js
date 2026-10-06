@@ -6,8 +6,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const LIMIT = 85;
 const BACKSTOP = 88;
+// Alan, 2026-10-06 (entry 376): stop at 88 for this week only. Until the week resets on 2026-10-08 02:00 UTC the line is 88, and the
+// finishing flag buys nothing; from the reset it is 85 again with no edit needed.
+const RAISED_UNTIL = Date.UTC(2026, 9, 8, 2, 0);
+const LIMIT = Date.now() < RAISED_UNTIL ? BACKSTOP : 85;
 const FLAG_MINUTES = 45;
 // Two readings of the same subscription figure: the status line's file, and Claude Code's own cache of the usage it last fetched
 // (cachedUsageUtilization in ~/.claude.json), which is there even where no status line runs, as in the VS Code extension. Either at 85

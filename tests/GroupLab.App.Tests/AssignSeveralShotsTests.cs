@@ -26,7 +26,7 @@ public class AssignSeveralShotsTests
     private static void Tick(MainWindow window, int id, bool ticked)
     {
         var box = window.ShotList.GetLogicalDescendants().OfType<CheckBox>()
-            .First(c => Avalonia.Automation.AutomationProperties.GetName(c) == $"Choose shot {window.ShotLabelFor(id)}");
+            .First(c => Avalonia.Automation.AutomationProperties.GetName(c) == $"Choose {window.ShotInSentenceFor(id)}");
         box.IsChecked = ticked;
         Dispatcher.UIThread.RunJobs();
     }

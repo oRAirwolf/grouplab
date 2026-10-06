@@ -97,11 +97,14 @@ public static class ResultFigures
         var bulls = new List<ResultFigure>();
         foreach (var bull in state.Shots.Where(s => s.IsShot && s.Exclusion is null && s.Bull is not null).GroupBy(s => s.Bull!.Value).OrderBy(g => g.Key))
         {
+            // Entry 376 section A4: each row says where its shot landed from the bull, and its key carries the bull, so tapping the row lights
+            // the bull, its holes and the lines between them: Bull by bull is the way to check the matching.
             string name = state.Bulls.FirstOrDefault(b => b.Index == bull.Key)?.Label ?? (bull.Key + 1).ToString(CultureInfo.InvariantCulture);
-            bulls.Add(new ResultFigure("bull", "Bull " + name, bull.Count() == 1 ? "1 shot" : $"{bull.Count()} shots"));
+            string count = bull.Count() == 1 ? "1 shot" : $"{bull.Count()} shots";
+            bulls.Add(new ResultFigure(BullKey + bull.Key.ToString(CultureInfo.InvariantCulture), "Bull " + name, BullOffset(state, [.. bull], units) is { } landed ? count + ", " + landed : count));
         }
 
-        sections.Add(new ResultSection("bulls", "Bull by bull", false, bulls));
+        sections.Add(new ResultSection("bulls", "Bull by bull", false, bulls, bulls.Count > 0 ? "Tap a bull to light it, its holes and the lines between them on the picture." : null));
 
         var table = new List<ResultFigure>
         {
@@ -157,5 +160,29 @@ public static class ResultFigures
     {
         ArgumentNullException.ThrowIfNull(key);
         return FigureExplanations.For(key.StartsWith("cep", StringComparison.Ordinal) ? "cep" : key == "aspectRatio" ? "aspect" : key)?.Plain;
+    }
+
+    /// <summary>The start of a Bull by bull row's key; the bull's index follows (entry 376 section A4).</summary>
+    public const string BullKey = "bull:";
+
+    /// <summary>The bull a Bull by bull row's key names, or null for any other key.</summary>
+    public static int? BullOf(string key) => key.StartsWith(BullKey, StringComparison.Ordinal) && int.TryParse(key.AsSpan(BullKey.Length), NumberStyles.Integer, CultureInfo.InvariantCulture, out int bull) ? bull : null;
+
+    /// <summary>
+    /// Entry 376 section A4: where a bull's shots landed from it, "0.30 in right and 1.02 in low", the middle of them where it holds more than
+    /// one; null where the marking has no scale to say it in.
+    /// </summary>
+    public static string? BullOffset(MarkingState state, IReadOnlyList<MarkedShot> shots, UnitSettings units)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(units);
+        var offsets = shots.Count == 0 || state.Scale is null ? [] : GroupAnalysis.CompositeOffsets(state, shots);
+        if (offsets.Count == 0)
+        {
+            return null;
+        }
+
+        double across = offsets.Average(o => o.X), down = offsets.Average(o => o.Y);
+        return $"{units.Length(Math.Abs(across))} {(across >= 0 ? "right" : "left")} and {units.Length(Math.Abs(down))} {(down >= 0 ? "low" : "high")}";
     }
 }
