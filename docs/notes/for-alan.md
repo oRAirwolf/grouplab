@@ -241,6 +241,13 @@ at true size, the app's way; no real M834 has printed from it yet.
 for, and the error was lost. Fixed for the next nightly (173 or later): try again with it. It now says what it is doing at each step,
 gives each way of connecting 12 seconds (four ways), has a Cancel, and says in the middle of the screen whatever stops it. If it still
 fails, Settings, Send diagnostics, and say what the screen said.
+**2026-10-06 (entry 381), the steps now:** nightly 173 printed a strip of a few millimetres because GroupLab closed the link 2 seconds
+after handing the page to the phone, long before the printer had taken it. With the next nightly (174 or later):
+1. **One press** of Print on the Phomemo M834, then wait: the screen says "The M834 is printing the page" for up to about a minute and a
+   half (the Phomemo app took 45 seconds for a page), then "The M834 printed the page".
+2. Measure the ruler line on the printed sheet.
+3. If it still stops short, or the screen says the printer never said it had finished: Settings, Send diagnostics, and say what the
+   screen said. The diagnostics now show every block and everything the printer answered.
 
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 

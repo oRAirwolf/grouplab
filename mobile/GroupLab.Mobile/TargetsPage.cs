@@ -339,6 +339,11 @@ public sealed class TargetsPage : UserControl
     /// every step is logged; Cancel ends any step; and whatever stops it is said in the middle of the screen, never a line that waits for
     /// ever. Nothing escapes this method, because nothing awaits it.
     /// </para>
+    /// <para>
+    /// Entry 381: the page is in Android's buffer when it has been written, not in the printer, so the link stays open until the printer
+    /// says it has printed (<see cref="GroupLab.Core.Printing.Labels.PrinterFinish"/>); closing it 2 s after the last write gave a strip of
+    /// a few millimetres.
+    /// </para>
     /// </summary>
     private static async Task PrintOnM834(LibrarySheet sheet, TextBlock result, Button cancel)
     {
@@ -384,6 +389,7 @@ public sealed class TargetsPage : UserControl
             }
 
             step = "sending";
+            bool finished = true;
             await using (link)
             {
                 for (int k = 0; k < jobs.Count; k++)
@@ -391,12 +397,24 @@ public sealed class TargetsPage : UserControl
                     result.Text = jobs.Count == 1 ? "Sending the page to the M834…" : $"Sending page {k + 1} of {jobs.Count} to the M834…";
                     int blocks = await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, jobs[k], Task.Delay, printing.Token);
                     DiagnosticLog.Info("print.m834", ("step", "sent"), ("page", k + 1), ("blocks", blocks), ("bytes", jobs[k].Length), ("ms", clock.ElapsedMilliseconds));
+
+                    // Entry 381: the phone has the page, not the printer; the link stays open until the printer says it has printed.
+                    step = "printing";
+                    result.Text = jobs.Count == 1 ? "The M834 is printing the page… (Cancel stops it)" : $"The M834 is printing page {k + 1} of {jobs.Count}… (Cancel stops it)";
+                    var limit = GroupLab.Core.Printing.Labels.PrinterFinish.Limit(jobs[k].Length);
+                    bool said = await GroupLab.Core.Printing.Labels.PrinterFinish.WaitAsync(link, GroupLab.Core.Printing.Labels.PrinterFinish.M834Printed,
+                        limit, Task.Delay, _ => { }, printing.Token);
+                    finished &= said;
+                    DiagnosticLog.Info("print.m834", ("step", "printed"), ("page", k + 1), ("result", said ? "printer said done" : "no answer, time ran out"), ("limit-s", (int)limit.TotalSeconds), ("ms", clock.ElapsedMilliseconds));
+                    step = "sending";
                 }
             }
 
             DiagnosticLog.Info("print.m834", ("pages", jobs.Count), ("ms", clock.ElapsedMilliseconds));
-            result.Text = jobs.Count == 1 ? "Sent the page to the M834. Measure its ruler line: it should be true to size."
-                : $"Sent {jobs.Count} pages to the M834. Measure a ruler line: it should be true to size.";
+            string measure = jobs.Count == 1 ? "Measure its ruler line: it should be true to size." : "Measure a ruler line: it should be true to size.";
+            result.Text = finished
+                ? (jobs.Count == 1 ? "The M834 printed the page. " : $"The M834 printed {jobs.Count} pages. ") + measure
+                : "The page went to the M834, but the printer never said it had finished. If the print stopped short, send the diagnostics from Settings. " + measure;
         }
         catch (OperationCanceledException)
         {

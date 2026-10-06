@@ -24,9 +24,45 @@ internal sealed class AndroidSerialPrinter : IPrinterLink
     private static readonly TimeSpan BlockTimeout = TimeSpan.FromSeconds(15);
 
     private readonly BluetoothSocket socket;
+    private readonly System.Collections.Concurrent.ConcurrentQueue<byte[]> answers = new();
+    private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
     private int written;
+    private int blocks;
 
-    private AndroidSerialPrinter(BluetoothSocket socket) => this.socket = socket;
+    /// <summary>
+    /// Entry 381: the printer's answers are read from the moment the link opens, each logged as hex with its time, and kept for
+    /// <see cref="TakeAnswers"/>, so the print can wait for the printer to say its page has printed.
+    /// </summary>
+    private AndroidSerialPrinter(BluetoothSocket socket)
+    {
+        this.socket = socket;
+        _ = Task.Factory.StartNew(Listen, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+    }
+
+    private void Listen()
+    {
+        var buffer = new byte[256];
+        try
+        {
+            var input = socket.InputStream!;
+            while (true)
+            {
+                int n = input.Read(buffer, 0, buffer.Length);
+                if (n <= 0)
+                {
+                    break;
+                }
+
+                var answer = buffer[..n];
+                answers.Enqueue(answer);
+                DiagnosticLog.Info("print.serial", ("step", "heard"), ("hex", Convert.ToHexString(answer)), ("ms", clock.ElapsedMilliseconds));
+            }
+        }
+        catch (Exception e) when (e is Java.IO.IOException or IOException or ObjectDisposedException)
+        {
+            // The socket was closed, which is how listening ends.
+        }
+    }
 
     /// <summary>The link, or why there is none, in words for the screen.</summary>
     public static async Task<(IPrinterLink? Link, string? Why)> OpenAsync(string nameHint, CancellationToken token)
@@ -129,16 +165,29 @@ internal sealed class AndroidSerialPrinter : IPrinterLink
 
         await writing.ConfigureAwait(false);
         written += bytes.Length;
+        blocks++;
+        // Entry 381: the time each block was taken, so a log shows whether Android buffered the page or the printer paced it.
+        DiagnosticLog.Info("print.serial", ("step", "wrote"), ("block", blocks), ("bytes", written), ("ms", clock.ElapsedMilliseconds));
     }
 
-    public IReadOnlyList<byte[]> TakeAnswers() => [];
+    public IReadOnlyList<byte[]> TakeAnswers()
+    {
+        var taken = new List<byte[]>();
+        while (answers.TryDequeue(out var answer))
+        {
+            taken.Add(answer);
+        }
+
+        return taken;
+    }
 
     public async ValueTask DisposeAsync()
     {
-        // The printer takes the last of the page from its buffer after the phone has written it; closing at once can cut it off.
-        await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+        // Entry 381: the print waits for the printer to say it has finished before it comes here (PrinterFinish); this short pause is
+        // only so a last answer is read before the socket goes.
+        await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
         socket.Close();
         socket.Dispose();
-        DiagnosticLog.Info("print.serial", ("step", "closed"), ("bytes", written));
+        DiagnosticLog.Info("print.serial", ("step", "closed"), ("bytes", written), ("blocks", blocks), ("ms", clock.ElapsedMilliseconds));
     }
 }

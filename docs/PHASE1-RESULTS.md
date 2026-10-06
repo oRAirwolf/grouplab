@@ -785,6 +785,24 @@ all        23x35    20/20    0.014   0.027   0.072      0.247           20/20
 - **Not done: B7**, Send diagnostics straight to GroupLab: the receiver takes only the kinds survived, closed and read-failure and no
   folders inside a package, so it needs a "diagnostics" kind server-side and a flat package; next run, now that the phones' senders are on.
 
+## Entry 381: the M834 print that stopped after a few millimetres (2026-10-06)
+
+**The cause, from request 73's recording** (`m834-bugreport.zip`, its full HCI log): the printer sets the pace itself. When the link
+opens it asks for credit-based flow control with 666-byte frames and then grants one credit per frame, so the page crosses only as fast
+as the printer takes it: the recorded page, 208 frames (139 KB), took 22.6 s, about 12 ms a frame with four pauses of 3 to 4 s where it
+held back. It answers small status lines between (`1A 04 62` and the like), and its only answer after the page, `1A 0F 0C`, came 22.5 s
+after the last frame; the Phomemo app held the link open until then, 45 s from first block to finished. GroupLab's three prints on
+nightly 173 handed the whole 146,525 bytes to Android in 4 to 8 ms and closed the socket 2.0 s later, so the printer received a strip's
+worth and the rest was thrown away. Pacing by GroupLab is not needed: Android's own stack honours the printer's credits.
+
+**The fix:** the Android link reads the printer from the moment it opens, logs every answer as hex with its time, and logs each block
+written with its time; the print then waits for `1A 0F 0C` (`PrinterFinish.WaitAsync`), or failing it for 30 s plus a second per
+2,500 bytes (89 s for Alan's page), with Cancel ending the wait at once; the screen says "The M834 is printing the page" meanwhile and
+then whether the printer said it had finished. Five tests on a scripted link (`PrinterFinishTests`): waits for the answer, an answer
+split over two reads, the limit, Cancel, and the limit's size. Core printing tests 289 passed; mobile and Android build clean.
+
+**Also:** crash issue 23 (the darkness test share, nightly 172) closed: entry 377's fix shipped in 173 and 173 has no report of it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

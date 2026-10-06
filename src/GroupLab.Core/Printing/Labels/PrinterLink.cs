@@ -124,3 +124,75 @@ public static class PrinterConnect
         return null;
     }
 }
+
+/// <summary>
+/// Entry 381: GroupLab's direct print to the M834 gave a strip of a few millimetres and stopped. Android takes the whole page into its own
+/// buffer in a few milliseconds, and the printer then draws it across the link one frame at a time as it has room (in request 73's
+/// recording it granted one credit per 666-byte frame, and 139 KB took 22.6 s to cross); GroupLab closed the link 2 s after the last write,
+/// which cut the page off. In the recording the Phomemo app kept the link open until the printer's only answer after the page,
+/// <c>1A 0F 0C</c>, 22.5 s after the last frame, which is taken here as "printed". So the link stays open until that answer, or failing
+/// one, for <see cref="Limit"/>; Cancel ends the wait at once.
+/// </summary>
+public static class PrinterFinish
+{
+    /// <summary>What the M834 said when its page had printed, in request 73's recording.</summary>
+    public static readonly byte[] M834Printed = [0x1A, 0x0F, 0x0C];
+
+    /// <summary>How often the answers are looked at while waiting.</summary>
+    public static readonly TimeSpan Poll = TimeSpan.FromMilliseconds(250);
+
+    /// <summary>
+    /// The longest a page of <paramref name="bytes"/> is waited for when the printer never says it has finished: 30 s, and a second for
+    /// each 2,500 bytes (the recording crossed at about 6,100 bytes a second and printed in 45 s all told, so this is twice that and more).
+    /// </summary>
+    public static TimeSpan Limit(int bytes) => TimeSpan.FromSeconds(30 + Math.Max(0, bytes) / 2500.0);
+
+    /// <summary>
+    /// Waits until the printer's answers, read together, contain <paramref name="done"/>: true when they did, false when
+    /// <paramref name="limit"/> ran out first. <paramref name="heard"/> is given every answer as it is taken, to log. Cancelling throws.
+    /// </summary>
+    public static async Task<bool> WaitAsync(IPrinterLink link, byte[] done, TimeSpan limit, Func<TimeSpan, CancellationToken, Task> pause,
+        Action<byte[]> heard, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(link);
+        ArgumentNullException.ThrowIfNull(done);
+        ArgumentNullException.ThrowIfNull(pause);
+        ArgumentNullException.ThrowIfNull(heard);
+        var said = new List<byte>();
+        for (var waited = TimeSpan.Zero; ; waited += Poll)
+        {
+            token.ThrowIfCancellationRequested();
+            foreach (var answer in link.TakeAnswers())
+            {
+                heard(answer);
+                said.AddRange(answer);
+            }
+
+            // An answer can arrive in two reads, so the bytes are searched as one run.
+            if (Contains(said, done))
+            {
+                return true;
+            }
+
+            if (waited >= limit)
+            {
+                return false;
+            }
+
+            await pause(Poll, token).ConfigureAwait(false);
+        }
+    }
+
+    private static bool Contains(List<byte> said, byte[] done)
+    {
+        for (int at = 0; at + done.Length <= said.Count; at++)
+        {
+            if (said.Skip(at).Take(done.Length).SequenceEqual(done))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

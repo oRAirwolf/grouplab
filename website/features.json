@@ -17,6 +17,7 @@
     "The scale markers' instructions now say to tuck",
     "On Android, Targets can now print a sheet straight to a Phomemo M834",
     "On Android, printing straight to the Phomemo M834 no longer waits",
+    "On Android, printing straight to the Phomemo M834 now prints the whole page",
     "On Android and the iPhone, Send everything I open",
     "On Android, the back button now goes back one screen",
     "On a tablet, every page now uses the whole width",

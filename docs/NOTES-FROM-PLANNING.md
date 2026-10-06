@@ -25,6 +25,66 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-06, entry 381: GroupLab's direct print to the M834 prints a few millimetres and stops (request 78)
+
+**Status: actioned 2026-10-06; steps 1 to 4 done, with the nightly and Alan's try still to come.**
+
+Written by the planning session 2026-10-06 06:20 UTC. May be taken before the weekly reset, as the only work, and only while it fits under
+88%: if it will not, stop after step 1, write what was found into STATE, and leave the rest for after the reset.
+
+**What Alan saw (nightly 173, Fold 7, 2026-10-05 23:58 Denver):** Print on the Phomemo M834 now connects and the printer starts, but each
+print gives a strip of only a few millimetres: the sheet's footer line (the GroupLab line with a code at each end), then nothing. Three
+presses gave three such strips, one after the other on the same paper. Alan will send the phone's diagnostics (Settings, Send
+diagnostics) to `C:\Dev\grouplab-local\printers\` and say what the screen said after each press.
+
+**Likely cause, from the code (not yet proved):** `AndroidSerialPrinter` writes the whole page (`PrinterJob`, 990-byte chunks, no pacing)
+as fast as the socket takes it, never reads what the printer says back (`TakeAnswers` returns nothing), and closes the socket 2 s after the
+last write. A mostly white Letter page in LZO blocks is small, so the phone probably finishes writing in well under a second and closes
+the link while the printer has printed only the first few millimetres; or it outruns the printer's buffer and the blocks after the first
+few are lost. Either fits a strip that is the same short length every time. Nothing public describes this printer's LZO protocol, so the
+recording is the only reference.
+
+1. Go back to request 73's recording in `C:\Dev\grouplab-local\printers\`: how the Phomemo app paced its 255 blocks (time between them),
+   whether the printer sent anything back between blocks or at the end (the printer to phone direction on the same channel), and how long
+   the app kept the link open after the last block, against how long the page took to print. Compare with the "print.serial" and
+   "print.m834" lines in Alan's diagnostics (bytes, blocks, and the ms from "sent" to "closed").
+2. Make GroupLab do what the app did: the same pacing or waiting on the printer's answers, read the input stream so answers are seen
+   and logged, and keep the link open until the printer says it has finished (or, failing an answer, for the page's printing time with
+   a margin), not 2 s. Keep Cancel working throughout.
+3. Log enough that the next try answers the question by itself: per block written, the time; every answer from the printer, as hex; the
+   time the link closed.
+4. Tests with a recording link; then the next nightly, and rewrite request 78's steps for Alan (one press, the ruler line measured, the
+   diagnostics sent if it still stops).
+
+## Alan's diagnostics (nightly 173, Fold 7, the three prints), read by the planning session 2026-10-06 06:10 UTC
+
+The file came to the planning chat, not to the printers folder; the lines that matter are copied here. Times are UTC.
+
+```
+05:56:13.162 print.m834   step=encoded page=1 bytes=146525 ms=1004
+05:56:14.708 print.serial step=connect way="serial port, secure" result=connected ms=1529
+05:56:14.716 print.m834   step=sent page=1 blocks=149 bytes=146525 ms=2557
+05:56:16.718 print.serial step=closed bytes=146525
+05:56:43.852 print.serial step=connect way="serial port, secure" result=connected ms=986
+05:56:43.856 print.m834   step=sent page=1 blocks=149 bytes=146525 ms=1834
+05:56:45.854 print.serial step=closed bytes=146525
+05:56:50.793 print.serial step=connect way="serial port, secure" result=connected ms=205
+05:56:50.798 print.m834   step=sent page=1 blocks=149 bytes=146525 ms=1117
+05:56:52.799 print.serial step=closed bytes=146525
+```
+
+So the whole 146,525-byte page was "written" 4 to 8 ms after connecting (into Android's buffer, not to the printer: classic Bluetooth
+cannot move 146 KB in 8 ms), and the socket closed exactly 2.0 s later every time. The 2 s close almost certainly cuts the transfer off
+before the page has even crossed the link, let alone printed. That settles the cause enough to fix: do step 2 (pace or wait on the
+printer, keep the link open until it reports the page finished, or for the page's print time with a margin). Step 1 (the recording's
+timing) is still needed to choose between pacing and waiting on answers. No error was shown: the screen said the page was sent.
+
+Also in the file: two survived crashes on nightly 172 at 00:33 UTC, Java.Lang.IllegalArgumentException "Failed to find configured root
+that contains .../cache/darkness-test-thermal-300dpi.png" on print.printer-app (the darkness test share). Entry 377 says those shares now
+go where Android shares; confirm 173 has no such crash, and say so in STATE.
+
+---
+
 ## 2026-10-06, entry 379: "forms updated": the phones' senders switched on, and what the store forms now say
 
 **Status: sections 1 and 2 done 2026-10-06; section 3 (the public page and the guides) waits for nightly 173, the first carrying

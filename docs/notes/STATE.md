@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-06, after entry 376 Part B; entry 378 waits in the inbox.
+**Last rewritten:** 2026-10-06, after entry 381; entries 378 and 380 wait in the inbox for after the weekly reset.
 
 ---
 
@@ -17,6 +17,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **The usage guard stops at 88% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-06; at 85% again after it
   with no edit (`scripts/usage-guard.js`). 81% at 01:00 UTC. Question 85: the entry text named neither 88% nor a Part C.
+- **Entry 381 done** (2026-10-06): the M834 printed a few millimetres because GroupLab closed the link 2 s after Android took the
+  page; the printer paces the page itself (one RFCOMM credit per 666-byte frame, 22.6 s for the recorded page) and says `1A 0F 0C`
+  when printed (22.5 s after the last frame). Now the print waits for that answer (or 30 s plus 1 s per 2,500 bytes), Cancel works,
+  and every block and answer is logged. For the next nightly; request 78's steps rewritten. Crash issue 23 (172's darkness share)
+  closed: 173 has no such crash.
 - **Entry 376 Part A done** (2026-10-06): holes matched to bulls as one sheet (read as aimed first, then in shooting order, then the
   "Which bulls did you fire at?" question), a line from each bull to its holes, a tap or click lights bull, holes and lines, Bull by bull
   lights them too, the phone asks which bull after adding or moving a hole, every shot named "Bull 7" or "Bull 7, shot 2".
@@ -26,13 +31,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   sends" and the guides follow once 173 is out. Entry 378 waits in the inbox.
 - **Entry 377 done** (2026-10-06): the M834 print hung on a call needing a permission GroupLab lacks, its error lost; now logged
   step by step, four ways of connecting with 12 s each and Cancel; darkness, data and fingerprint shares written where Android shares.
-- **Entry 375 done** (2026-10-05, all but section 2's tiles): the brackets' codes give the scale (0.03 to 0.13 percent at any gap or
-  cut); the corners come from the paper's edges between them, sure in 44 of 177 trial scenes and then within 0.6 mm; never sure on a
-  white counter. The L stays, so printed brackets still read. Stray folders from 02:48 (dotnet temp leftovers) went to the trash.
-- **Request 73 done (2026-10-05)**: the M834 prints over classic Bluetooth's serial port, its page in LZO1X blocks; Android prints
-  directly (request 78 asks Alan to try it); the computer's serial port and the iPhone's LE way are next.
-- **Entry 374 partly done**: the C bull fix (shooting order), the update fix, four of section 4; store-bought photos, timed pairing,
-  two holes in one, review undo, shot data out and in, and the 2 MOA 3 by 4 sheet are next. **Entry 373 done.**
+- **Entry 375 done** (2026-10-05, all but section 2's tiles): brackets' codes give the scale. **Request 73 done**: the M834's protocol.
+- **Entry 374 partly done**: the C bull fix, the update fix, four of section 4; the rest is in the next three. **Entry 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (GroupLab printing to the M834, now nightly 173).
 
 ## The next three
@@ -56,7 +56,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. Entry 378, B7 and 379 section 3; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
+3. Entries 378 and 380 after the reset, B7 and 379 section 3; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
 
 ## Blocked, and on what
 
@@ -85,7 +85,7 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 - **Last nightly:** 0.2.0-nightly.173 (2026-10-06 05:14 UTC: entries 376 Part B and 379; CI green on all three systems at 5df65754).
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 617c1df6 on 2026-10-06, dispatched by hand for 173's notes.
-- Crash reports open: none. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
+- Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
 
