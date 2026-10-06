@@ -465,7 +465,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - GroupLab can now work out how much of a group's up and down spread the load's velocity spread explains at the distance shot, with an honest range, though no screen shows it yet.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.144)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
