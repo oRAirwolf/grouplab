@@ -138,8 +138,12 @@ internal sealed class TestPhone : IPhonePlatform
 
     public bool CameraOpen => false;
 
+    /// <summary>Every file handed to the share sheet, in full, so a test can hold where it was written (entry 377).</summary>
+    public List<string> SharedPaths { get; } = [];
+
     public string? ShareFile(string path, string mimeType, string title)
     {
+        SharedPaths.Add(path);
         Asked.Add(("share", Path.GetFileName(path)));
         return null;
     }

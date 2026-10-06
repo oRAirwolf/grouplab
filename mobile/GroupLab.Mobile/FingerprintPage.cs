@@ -231,7 +231,8 @@ internal sealed class FingerprintPage : UserControl
     /// <summary>Entry 348 section 3: the file saved in the phone's own folder and handed to the share sheet; never the photo.</summary>
     internal void SaveAndShare()
     {
-        string path = Path.Combine(Phone.Platform.CacheFolder, session.FileName);
+        // Entry 377: in the cache's shared folder, the only one Android's file provider lets the share sheet read.
+        string path = Path.Combine(Directory.CreateDirectory(Path.Combine(Phone.Platform.CacheFolder, "shared")).FullName, session.FileName);
         try
         {
             var reference = session.Write(path);

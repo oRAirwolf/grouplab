@@ -16,6 +16,8 @@
     "A selected shot now says how far",
     "The scale markers' instructions now say to tuck",
     "On Android, Targets can now print a sheet straight to a Phomemo M834",
+    "On Android, printing straight to the Phomemo M834 no longer waits",
+    "On Android, sharing a sheet or the darkness test page for a printer app no longer closes GroupLab",
     "Targets, Scale markers now makes scale labels",
     "Add a store-bought target now calls the corners found only when two ways",
     "A light bank card lying on white paper is now found",

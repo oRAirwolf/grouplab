@@ -248,6 +248,10 @@ at true size, the app's way; no real M834 has printed from it yet.
 2. GroupLab, Targets, the C bull sheet (Letter), **Print on the Phomemo M834**. Allow nearby devices if asked, then press it again.
 3. Measure the sheet's ruler line with a ruler, and scan the page at 600 dpi into `C:\Dev\grouplab-local\printers\`.
 **A good answer:** "it printed, the ruler line measures N", or what the screen said if it did not.
+**2026-10-06 (entry 377):** the first try stayed on "Connecting" because a Bluetooth call needed a permission GroupLab does not ask
+for, and the error was lost. Fixed for the next nightly (173 or later): try again with it. It now says what it is doing at each step,
+gives each way of connecting 12 seconds (four ways), has a Cancel, and says in the middle of the screen whatever stops it. If it still
+fails, Settings, Send diagnostics, and say what the screen said.
 
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 

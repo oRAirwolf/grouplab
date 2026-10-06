@@ -33,5 +33,10 @@ public class Entry363PrinterAppTests
         Assert.Equal("", TargetsPage.ForPrinterApp(sheet, picture: false));
         Assert.Equal("", TargetsPage.DarknessForPrinterApp(picture: true));
         Assert.Contains(("share", "darkness-test-thermal-300dpi.png"), phone.Asked);
+
+        // Entry 377: Android's file provider shares only the cache's shared folder, and a picture written beside it crashed the share.
+        string shared = Path.Combine(phone.CacheFolder, "shared") + Path.DirectorySeparatorChar;
+        Assert.All(phone.SharedPaths, p => Assert.StartsWith(shared, p, StringComparison.Ordinal));
+        Assert.Contains(@"<cache-path name=""shared"" path=""shared/"" />", File.ReadAllText(Repo.PathTo("android", "GroupLab.Android", "Resources", "xml", "share_paths.xml")), StringComparison.Ordinal);
     }
 }

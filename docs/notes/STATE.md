@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-06 01:20 UTC, after entry 376 Part A (which bull each shot belongs to); entry 377 and Part B next.
+**Last rewritten:** 2026-10-06, after entry 377 (the M834 stuck on Connecting); entry 376 Part B next.
 
 ---
 
@@ -20,9 +20,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 376 Part A done** (2026-10-06): holes matched to bulls as one sheet (read as aimed first, then in shooting order, then the
   "Which bulls did you fire at?" question), a line from each bull to its holes, a tap or click lights bull, holes and lines, Bull by bull
   lights them too, the phone asks which bull after adding or moving a hole, every shot named "Bull 7" or "Bull 7, shot 2".
-  **Part B (twelve items of tablet feedback) is next after entry 377.**
-- **Entry 377 in progress**: GroupLab's direct print to the M834 stays on "Connecting"; log every step, a timeout and Cancel,
-  RFCOMM channel 1; and the darkness test's share crash (FileProvider has no cache path).
+  **Part B (twelve items of tablet feedback) is next.**
+- **Entry 377 done** (2026-10-06): the M834 print hung on a call needing a permission GroupLab lacks, its error lost; now logged
+  step by step, four ways of connecting with 12 s each and Cancel; darkness, data and fingerprint shares written where Android shares.
 - **Entry 375 done** (2026-10-05, all but section 2's tiles): the brackets' codes give the scale (0.03 to 0.13 percent at any gap or
   cut); the corners come from the paper's edges between them, sure in 44 of 177 trial scenes and then within 0.6 mm; never sure on a
   white counter. The L stays, so printed brackets still read. Stray folders from 02:48 (dotnet temp leftovers) went to the trash.
@@ -56,7 +56,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. Entry 376 Part B after entry 377; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
+3. Entry 376 Part B; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
 
 ## Blocked, and on what
 

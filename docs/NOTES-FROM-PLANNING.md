@@ -25,6 +25,63 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-06, entry 377: printing to the M834 hangs on "Connecting to the M834..."
+
+**Status: done 2026-10-06, but item 4 (the BLE route), left for the iPhone work because nothing decoded says the M834 takes a page
+that way.** The hang was a call needing the scan permission GroupLab does not ask for, its error lost in a print nobody awaited; fixed,
+with every step logged, a 12 s limit on each of four ways of connecting, Cancel, and the darkness share written where Android shares.
+Details in docs/PHASE1-RESULTS.md. Not yet proven on the printer: request 78 asks Alan to try nightly 173.
+
+Written by the planning session 2026-10-06 00:45 UTC. Source: Alan's first try of request 78 (GroupLab printing straight to the M834),
+Fold 7, nightly 172 or later, Phomemo app force-stopped, M834 on and paired. The screen stayed on "Connecting to the M834..." with no end.
+Do this after entry 376's Part A, inside the same 88% rule.
+
+## Why it can hang forever
+
+`android/GroupLab.Android/AndroidSerialPrinter.cs` runs `socket.Connect` inside `Task.Run(socket.Connect, token)`. The token only stops
+the task from starting; Android's `BluetoothSocket.connect()` is blocking and has no timeout of its own, and the only way to end it is
+to close the socket from another thread. So when the printer does not answer the serial port connect (busy with another link, an
+LE-only bond, the SDP lookup stalling), the screen waits forever.
+
+## What to build
+
+1. **A timeout:** close the socket after about 12 seconds (a timer on another thread calling `socket.Close()`), then say in the center
+   of the screen what happened and what to try, never an endless spinner. A Cancel button while connecting.
+2. **Fallbacks, logged one by one:** the secure serial port socket; then `CreateInsecureRfcommSocketToServiceRecord` with the same UUID;
+   then the well-known reflection `createRfcommSocket(1)` (channel 1). Log which bonded device was chosen (name, type CLASSIC/LE/DUAL,
+   bond state), each attempt, how long it took and how it ended. Never log the device address in full.
+3. **Which bonded device:** if more than one bonded name contains "M834", or the chosen one is LE-only, try each that is CLASSIC or
+   DUAL, and say so in the log. If only an LE bond exists, say in words that the phone is paired the wrong way and how to pair it from
+   Android's Bluetooth settings.
+4. Check the BLE route from the earlier notes (service ff00, write ff02, notify ff03, in `C:\Dev\grouplab-local\printers\`) as the
+   last fallback only if the decode says the M834 accepts the page that way; otherwise leave it for the iPhone work.
+5. A unit-level test for the timeout path where it can be faked.
+
+**Update 01:00 UTC:** Alan closed GroupLab, confirmed the Phomemo app force-stopped, the PC shows no M834, the M834 was never paired
+with the iPhone or tablet, re-paired the M834 from Android's Bluetooth settings: still hangs on "Connecting to the M834...", never
+past it. docs/PHASE1-RESULTS.md says the Phomemo app reached the printer on **RFCOMM channel 1**. So try `createRfcommSocket(1)`
+(secure, then `createInsecureRfcommSocket(1)`) early, not last: the SDP lookup that `CreateRfcommSocketToServiceRecord` does is the
+likeliest place it stalls. A generic serial terminal test result and the Fold 7 diagnostics may follow.
+
+**Update 01:05 UTC: the connect itself works; the hang is somewhere else in GroupLab.**
+- Alan's Fold 7 has exactly one paired "M834". The PC has no M834 (its only RFCOMM entry is Windows' own protocol driver).
+- "Serial Bluetooth Terminal" (Kai Morich), Bluetooth Classic tab, tapped M834: Connecting 18:59:16.176, **Connected 18:59:17.473**
+  (1.3 s), the printer sent seven bytes by itself at 18:59:19.516, shown as `^Z;^D^Y^@^@^@` (probably 1A 3B 04 19 00 00 00; unverified),
+  and dropped the link at 18:59:52.963 (about 35 s idle). That app uses the standard serial port UUID, so the connect GroupLab does
+  should work too.
+- The Fold 7 diagnostics (nightly 172, `GroupLab_diagnostics_2026-10-05_1854.zip`, in this entry's files folder) show **no log line at
+  all for the direct print** between 00:45 and 00:54 UTC: only `ui.place place=Targets`. So nothing tells where it stops.
+- **Do first:** log every step of the direct print (page drawn, page encoded and its byte count, device chosen, connect began and ended,
+  each block written, any wait for a reply, closed). Then find the stall: drawing and LZO-encoding a Letter page before the connect, a
+  wait for the printer's reply (TakeAnswers returns nothing on Android), the UI thread, or the connect. The printer's unasked seven bytes
+  on connect may matter if anything reads the input stream. Keep the timeout and Cancel from item 1 for every step, not only the connect.
+- **A second bug in the same log:** "print.printer-app" (sending the darkness test to the Phomemo app) crashed twice at 00:33 UTC with
+  `Java.Lang.IllegalArgumentException: Failed to find configured root that contains
+  /data/data/org.grouplab.app.dev/cache/darkness-test-thermal-300dpi.png` in `TargetsPage.DarknessForPrinterApp`: the FileProvider paths
+  XML has no `cache-path` for that file. Fix and test the share.
+
+The planning session will relay Alan's retry results (re-pair, printer off and on, the computer's Bluetooth) as they come.
+
 ## 2026-10-06, entry 376: which bull a shot belongs to, and Alan's tablet feedback on nightly 171
 
 **Status: Part A done 2026-10-06. Not done yet: Part B (all twelve items), which follows entry 377 in this run; question 85 asks

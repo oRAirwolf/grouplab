@@ -61,3 +61,66 @@ public static class PrinterJob
         return chunks;
     }
 }
+
+/// <summary>
+/// Entry 377: one way of opening a link, such as a socket of one kind: <see cref="Begin"/> blocks until it is open or throws, and
+/// <see cref="Abort"/>, called from another thread, ends a <see cref="Begin"/> still waiting (closing the socket is the only way to end
+/// Android's blocking connect).
+/// </summary>
+public sealed record ConnectAttempt(string Name, Action Begin, Action Abort);
+
+/// <summary>
+/// Entry 377: GroupLab's print to the M834 stayed on "Connecting" for ever, because nothing put a limit on the connect. Each way of
+/// connecting is tried in turn, each given <c>timeout</c>, ended by its abort when the time runs out or the person presses Cancel, and every
+/// one is reported with how long it took and how it ended.
+/// </summary>
+public static class PrinterConnect
+{
+    /// <summary>How long one way of connecting is given: the serial terminal app connected the M834 in 1.3 s.</summary>
+    public static readonly TimeSpan Timeout = TimeSpan.FromSeconds(12);
+
+    /// <summary>
+    /// The name of the first attempt that connected, or null where none did; <paramref name="said"/> hears each attempt's name, its outcome
+    /// ("connected", "timed out", or the exception's type) and its milliseconds. Cancelling aborts the attempt under way and throws.
+    /// </summary>
+    public static async Task<string?> FirstThatConnects(IReadOnlyList<ConnectAttempt> attempts, TimeSpan timeout, Action<string, string, long> said, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(attempts);
+        ArgumentNullException.ThrowIfNull(said);
+        foreach (var attempt in attempts)
+        {
+            token.ThrowIfCancellationRequested();
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            var connecting = Task.Run(attempt.Begin, CancellationToken.None);
+            var limit = Task.Delay(timeout, token);
+            var first = await Task.WhenAny(connecting, limit).ConfigureAwait(false);
+            if (first == connecting && connecting.IsCompletedSuccessfully)
+            {
+                said(attempt.Name, "connected", clock.ElapsedMilliseconds);
+                return attempt.Name;
+            }
+
+            if (first != connecting)
+            {
+                attempt.Abort();
+                try
+                {
+                    await connecting.ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    // The abort is what ended it; the outcome said below is the timeout or the cancel, not this.
+                }
+
+                said(attempt.Name, token.IsCancellationRequested ? "cancelled" : "timed out", clock.ElapsedMilliseconds);
+                token.ThrowIfCancellationRequested();
+                continue;
+            }
+
+            said(attempt.Name, connecting.Exception?.InnerException?.GetType().Name ?? "failed", clock.ElapsedMilliseconds);
+            attempt.Abort();
+        }
+
+        return null;
+    }
+}

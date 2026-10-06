@@ -728,6 +728,28 @@ all        23x35    20/20    0.014   0.027   0.072      0.247           20/20
 - Suites: Core 2890 passed and 2 skipped (the inbox test cleared with this fold); App 496 with the eleven tests that held the old names and the plain dashed line updated; Mobile 140 passed.
 - **Worth an article?** Recorded in `docs/RESEARCH.md`: yes, as an update to the wrong-bull article, once the phone pictures exist.
 
+## Entry 377: the M834 print that stayed on "Connecting", and the darkness test's share (2026-10-06)
+
+- **Why it hung, from the code and the log together.** The Fold 7's log had no line at all for the print. `AndroidSerialPrinter.OpenAsync`
+  called `adapter.CancelDiscovery()` before connecting, which from Android 12 needs the nearby-devices scan permission; GroupLab asks
+  only for connect (the manifest has `BLUETOOTH_CONNECT` and not `BLUETOOTH_SCAN`). The call threw a security exception that no catch
+  named, inside a print started with `_ =` and never awaited, so it was lost and the screen kept "Connecting to the M834..." for ever.
+  The serial terminal app connecting in 1.3 s with the same service fits: the connect itself was never reached. Not proven on the
+  printer until Alan tries nightly 173 (request 78 says so).
+- **Built:** no call needs the scan permission; `PrinterConnect.FirstThatConnects` (Core, tested with fakes that block as Android's
+  connect does: `PrinterConnectTests`, three) gives each way of connecting 12 s, closes the socket to end one that hangs, and stops at
+  Cancel; four ways in order: the serial port's service secure, RFCOMM channel 1 secure and insecure (where the Phomemo app reached the
+  printer), the service insecure. Each paired device whose name holds "M834" is logged by name, type and bond state, never its address;
+  an LE-only bond is said in words with how to pair it again. Each block written has 15 s before the link is called stuck.
+- **The print** draws and encodes every page before connecting (the printer dropped an idle link after about 35 s), logs each step
+  (`print.m834` encoded, connect, sent, cancelled or the error, with milliseconds; `print.serial` for every attempt and the close), has a
+  Cancel button while it runs, and says whatever stops it in the middle of the screen.
+- **Not done:** the BLE route as a last fallback (item 4): nothing decoded says the M834 takes a page that way; it stays for the iPhone
+  work. Reading the seven bytes the printer sends on connect: nothing reads the input stream, so they cannot stall anything; left.
+- **The darkness test's crash**: the picture was written at the top of the cache, which Android's file provider does not share
+  (`share_paths.xml` names only `shared/`). Now written in `shared/`, as were the data export and the fingerprint file, which would
+  have crashed the same way. `Entry363PrinterAppTests` holds the path.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -49,7 +49,8 @@ internal sealed class DataSection
     internal string? Export()
     {
         panel.Children.Clear();
-        string path = Path.Combine(Phone.Platform.CacheFolder, "grouplab-data-" + DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + DataExport.Extension);
+        // Entry 377: in the cache's shared folder, the only one Android's file provider lets the share sheet read.
+        string path = Path.Combine(Directory.CreateDirectory(Path.Combine(Phone.Platform.CacheFolder, "shared")).FullName, "grouplab-data-" + DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + DataExport.Extension);
         try
         {
             using (var stream = File.Create(path))

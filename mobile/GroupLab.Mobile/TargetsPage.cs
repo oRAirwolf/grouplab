@@ -212,7 +212,10 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Screens.Choice("Share for a printer app, as a PDF", () => result.Text = ForPrinterApp(sheet, picture: false)).Id("targets-printer-app-pdf"));
         column.Children.Add(Screens.Dim(PrinterAppWords));
         // Request 73: straight to the Phomemo M834 over Bluetooth, at true size, spoken to as the app's own recording showed.
-        column.Children.Add(Screens.Choice(M834Print, () => _ = PrintOnM834(sheet, result)).Id("targets-print-m834"));
+        var stopM834 = Screens.Choice("Cancel the print", () => m834Printing?.Cancel()).Id("targets-print-m834-cancel");
+        stopM834.IsVisible = false;
+        column.Children.Add(Screens.Choice(M834Print, () => _ = PrintOnM834(sheet, result, stopM834)).Id("targets-print-m834"));
+        column.Children.Add(stopM834);
         // Entry 258: a set of tiles as one large page with cut lines between them, for a plotter, shared rather than printed on the phone.
         if (GroupLab.Core.Rendering.CutSheet.Refusal(sheet.Definition) is null)
         {
@@ -324,42 +327,90 @@ public sealed class TargetsPage : UserControl
 
     internal const string M834Print = "Print on the Phomemo M834 (Bluetooth, new: not yet tried on a real one)";
 
+    /// <summary>The print to the M834 under way, for its Cancel; null when none is.</summary>
+    private static CancellationTokenSource? m834Printing;
+
     /// <summary>
     /// Request 73: every page of the sheet drawn for the M834's head at 300 dpi, true size, and sent over the paired serial link. Nothing
     /// is fitted to the page: the Phomemo app shrank a Letter sheet to 94.7 percent when it printed one.
+    /// <para>
+    /// Entry 377: the pages are drawn and encoded before connecting, since the printer drops a link left idle for about half a minute;
+    /// every step is logged; Cancel ends any step; and whatever stops it is said in the middle of the screen, never a line that waits for
+    /// ever. Nothing escapes this method, because nothing awaits it.
+    /// </para>
     /// </summary>
-    private static async Task PrintOnM834(LibrarySheet sheet, TextBlock result)
+    private static async Task PrintOnM834(LibrarySheet sheet, TextBlock result, Button cancel)
     {
-        var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
-        var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
-        result.Text = "Connecting to the M834…";
-        var (link, why) = await Phone.Platform.OpenSerialPrinterAsync("M834", CancellationToken.None);
-        if (link is null)
+        if (m834Printing is not null)
         {
-            result.Text = why ?? "The M834 could not be reached.";
             return;
         }
 
+        using var printing = new CancellationTokenSource();
+        m834Printing = printing;
+        cancel.IsVisible = true;
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        string step = "drawing";
         try
         {
-            await using (link)
+            var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
+            result.Text = "Drawing the page for the M834…";
+            var jobs = await Task.Run(() =>
             {
+                var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+                var encoded = new List<byte[]>();
                 foreach (var page in scenes.Pages)
                 {
+                    printing.Token.ThrowIfCancellationRequested();
                     var dots = GroupLab.Core.Printing.Thermal.ThermalRaster.Render(page, profile.Head);
                     var job = new GroupLab.Core.Printing.Labels.LabelJob(dots.Image, page.Width / (10.0 * Scene.UnitsPerDmm), page.Height / (10.0 * Scene.UnitsPerDmm));
-                    byte[] bytes = GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(job, profile);
-                    await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, bytes, Task.Delay, CancellationToken.None);
+                    encoded.Add(GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(job, profile));
+                    DiagnosticLog.Info("print.m834", ("step", "encoded"), ("page", encoded.Count), ("bytes", encoded[^1].Length), ("ms", clock.ElapsedMilliseconds));
+                }
+
+                return encoded;
+            }, printing.Token);
+
+            step = "connecting";
+            result.Text = "Connecting to the M834… (up to a minute; Cancel stops it)";
+            DiagnosticLog.Info("print.m834", ("step", "connect"), ("pages", jobs.Count));
+            var (link, why) = await Phone.Platform.OpenSerialPrinterAsync("M834", printing.Token);
+            if (link is null)
+            {
+                DiagnosticLog.Info("print.m834", ("step", "connect"), ("result", "none"), ("ms", clock.ElapsedMilliseconds));
+                ProblemSheet.Stop(result, result, "The M834 could not be reached", why ?? "The M834 could not be reached.");
+                return;
+            }
+
+            step = "sending";
+            await using (link)
+            {
+                for (int k = 0; k < jobs.Count; k++)
+                {
+                    result.Text = jobs.Count == 1 ? "Sending the page to the M834…" : $"Sending page {k + 1} of {jobs.Count} to the M834…";
+                    int blocks = await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, jobs[k], Task.Delay, printing.Token);
+                    DiagnosticLog.Info("print.m834", ("step", "sent"), ("page", k + 1), ("blocks", blocks), ("bytes", jobs[k].Length), ("ms", clock.ElapsedMilliseconds));
                 }
             }
 
-            DiagnosticLog.Info("print.m834", ("pages", scenes.Pages.Count));
-            result.Text = scenes.Pages.Count == 1 ? "Sent the page to the M834. Measure its ruler line: it should be true to size."
-                : $"Sent {scenes.Pages.Count} pages to the M834. Measure a ruler line: it should be true to size.";
+            DiagnosticLog.Info("print.m834", ("pages", jobs.Count), ("ms", clock.ElapsedMilliseconds));
+            result.Text = jobs.Count == 1 ? "Sent the page to the M834. Measure its ruler line: it should be true to size."
+                : $"Sent {jobs.Count} pages to the M834. Measure a ruler line: it should be true to size.";
         }
-        catch (Exception e) when (e is IOException or OperationCanceledException or InvalidOperationException)
+        catch (OperationCanceledException)
         {
-            result.Text = "The page did not reach the M834: " + e.Message;
+            DiagnosticLog.Info("print.m834", ("step", step), ("result", "cancelled"), ("ms", clock.ElapsedMilliseconds));
+            result.Text = "The print was cancelled.";
+        }
+        catch (Exception e)
+        {
+            DiagnosticLog.Info("print.m834", ("step", step), ("error", e.GetType().Name), ("ms", clock.ElapsedMilliseconds));
+            ProblemSheet.Stop(result, result, "The page did not reach the M834", $"While {step}, it stopped: {e.Message}. Turn the printer off and on, then press Print again.");
+        }
+        finally
+        {
+            m834Printing = null;
+            cancel.IsVisible = false;
         }
     }
 
@@ -398,7 +449,11 @@ public sealed class TargetsPage : UserControl
             return Phone.Platform.SharePdf(pdf, name) ?? "";
         }
 
-        string path = Path.Combine(Phone.Platform.CacheFolder, name + ".png");
+        // Entry 377: inside the cache's shared folder, the one the share sheet may read from; the cache's top was refused with
+        // "Failed to find configured root" and the darkness test crashed.
+        string folder = Path.Combine(Phone.Platform.CacheFolder, "shared");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, name + ".png");
         File.WriteAllBytes(path, pngs[0]);
         string? refused = Phone.Platform.ShareFile(path, "image/png", title);
         return refused ?? (pngs.Count > 1 ? $"Page 1 of {pngs.Count} shared; share the PDF for them all." : "");
