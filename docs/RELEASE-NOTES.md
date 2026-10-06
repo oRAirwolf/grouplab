@@ -12,6 +12,33 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.173
+
+**2026-10-06**, commit `5df6575`. Nightly.
+
+**What you will notice**
+
+- On the phone, the report now opens as the page itself inside GroupLab on Android, with Share, Save on the phone and Print.
+- On Android and the iPhone, Send everything I open is now offered in Settings, automatic error reports can carry GroupLab's log, and a finished target can be sent to the project, over Wi-Fi unless you allow mobile data.
+- A line now runs from each bull to the holes given to it, on the computer and the phone, and tapping or clicking a bull, a hole, a line or a row of Bull by bull lights all three.
+- On Android, the back button now goes back one screen, closing an open question first, and no longer leaves GroupLab from an inner screen.
+- On Android, printing straight to the Phomemo M834 no longer waits for ever on Connecting: it tries four ways of connecting for 12 seconds each, has a Cancel button, and says in the middle of the screen what stopped it.
+- On Android, sharing a sheet or the darkness test page for a printer app no longer closes GroupLab, and neither does sharing your data or a store-bought target's reference file.
+- Holes are now matched to the bulls as one sheet, read as aimed first and then in the order a sheet is shot, so a hole you add by hand no longer sends the whole sheet to the wrong bulls; when two sets of bulls fit equally well, GroupLab asks which you fired at.
+- On a tablet, every page now uses the whole width of the screen, and the combined group picture can be dragged once you zoom in.
+- On the phone, the caliber now starts empty for every new target, so it is never left over from the last one, and the four you used most recently are one tap away.
+- Marks to check are now listed in bull order, and a tap anywhere in a figure's box switches its units, not only a tap on the number.
+- On the phone, the GroupLab logo on Capture now fills the screen's width where it fits, the top buttons read Capture and Result, and Targets lists your own targets first.
+- Shots are now named by their bull, Bull 7 or Bull 7, shot 2, in bull order on the Shots page, in the shared table and on the plot's key, and the phone asks which bull a hole you add or move belongs to.
+
+**Under the hood**
+
+- An Android update installing itself is no longer recorded as GroupLab closing unexpectedly, and a camera closing mid-picture is no longer logged as an error.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.173)
+
+---
+
 ## 0.2.0-nightly.172
 
 **2026-10-05**, commit `7dfc369`. Nightly.
