@@ -20,7 +20,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 381 done** (2026-10-06): the M834 printed a few millimetres because GroupLab closed the link 2 s after Android took the
   page; the printer paces the page itself (one RFCOMM credit per 666-byte frame, 22.6 s for the recorded page) and says `1A 0F 0C`
   when printed (22.5 s after the last frame). Now the print waits for that answer (or 30 s plus 1 s per 2,500 bytes), Cancel works,
-  and every block and answer is logged. For the next nightly; request 78's steps rewritten. Crash issue 23 (172's darkness share)
+  and every block and answer is logged. In nightly 174; request 78's steps rewritten. Crash issue 23 (172's darkness share)
   closed: 173 has no such crash.
 - **Entry 376 Part A done** (2026-10-06): holes matched to bulls as one sheet (read as aimed first, then in shooting order, then the
   "Which bulls did you fire at?" question), a line from each bull to its holes, a tap or click lights bull, holes and lines, Bull by bull
@@ -33,7 +33,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   step by step, four ways of connecting with 12 s each and Cancel; darkness, data and fingerprint shares written where Android shares.
 - **Entry 375 done** (2026-10-05, all but section 2's tiles): brackets' codes give the scale. **Request 73 done**: the M834's protocol.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4; the rest is in the next three. **Entry 373 done.**
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (GroupLab printing to the M834, now nightly 173).
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print, now nightly 174).
 
 ## The next three
 
@@ -61,8 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## Blocked, and on what
 
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
-- **The phones**: not reachable over adb since 2026-09-30 morning.
-- **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
+- **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
 Open requests in `docs/notes/for-alan.md`: **21** (78 the M834 from GroupLab; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
@@ -83,8 +82,9 @@ Nine, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.173 (2026-10-06 05:14 UTC: entries 376 Part B and 379; CI green on all three systems at 5df65754).
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 617c1df6 on 2026-10-06, dispatched by hand for 173's notes.
+- **Last nightly:** 0.2.0-nightly.174 (2026-10-06 08:03 UTC: entry 381; CI green on all three systems at ce1a7de5). Its first run was
+  refused for a British spelling in a note (corrected in docs/release-note-corrections.json) after uploading iOS 174, so the rerun's upload was a duplicate.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
