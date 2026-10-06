@@ -75,23 +75,6 @@ public sealed class TargetsPage : UserControl
             Screens.Primary("Make the sheet", Generate),
             Screens.Detach(said)));
 
-        // Entry 348: a store-bought target GroupLab does not know yet, fingerprinted from a photo in five steps.
-        column.Children.Add(Screens.Card(
-            Screens.Heading("Store-bought targets"),
-            Screens.Dim(GroupLab.Core.StoreTargets.FingerprintWords.Offer),
-            Screens.Choice(GroupLab.Core.StoreTargets.FingerprintWords.Title, () => Content = new FingerprintPage(() => Content = List())).Id("targets-add-store")));
-
-        // Entry 365: the scale markers, printed or shared at actual size, and the boards measured.
-        column.Children.Add(ScaleMarkers());
-
-        // Entry 363 section 2a: a thermal label printer through its own app, the darkness test first.
-        var darknessSaid = Screens.Line("");
-        column.Children.Add(Screens.Card(
-            Screens.Heading("Thermal label printers"),
-            Screens.Dim("Each sheet's page offers Share for a printer app. The darkness test page shows what each darkness setting in the printer's app does to fine lines: print it once at each setting and write the setting on it."),
-            Screens.Choice("Share the darkness test page", () => darknessSaid.Text = DarknessForPrinterApp(picture: true)).Id("targets-darkness"),
-            darknessSaid));
-
         column.Children.Add(Screens.Heading("The library"));
         IReadOnlyList<LibrarySheet> sheets;
         try
@@ -120,6 +103,24 @@ public sealed class TargetsPage : UserControl
 
             column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         }
+
+        // Entry 376 item B8: store-bought targets, scale markers and thermal label printers below the list of targets, which comes first.
+        // Entry 348: a store-bought target GroupLab does not know yet, fingerprinted from a photo in five steps.
+        column.Children.Add(Screens.Card(
+            Screens.Heading("Store-bought targets"),
+            Screens.Dim(GroupLab.Core.StoreTargets.FingerprintWords.Offer),
+            Screens.Choice(GroupLab.Core.StoreTargets.FingerprintWords.Title, () => Content = new FingerprintPage(() => Content = List())).Id("targets-add-store")));
+
+        // Entry 365: the scale markers, printed or shared at actual size, and the boards measured.
+        column.Children.Add(ScaleMarkers());
+
+        // Entry 363 section 2a: a thermal label printer through its own app, the darkness test first.
+        var darknessSaid = Screens.Line("");
+        column.Children.Add(Screens.Card(
+            Screens.Heading("Thermal label printers"),
+            Screens.Dim("Each sheet's page offers Share for a printer app. The darkness test page shows what each darkness setting in the printer's app does to fine lines: print it once at each setting and write the setting on it."),
+            Screens.Choice("Share the darkness test page", () => darknessSaid.Text = DarknessForPrinterApp(picture: true)).Id("targets-darkness"),
+            darknessSaid));
 
         return Screens.Page(column);
     }

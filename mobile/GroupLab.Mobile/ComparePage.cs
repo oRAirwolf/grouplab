@@ -27,8 +27,8 @@ internal sealed class ComparePage : UserControl
     /// <summary>Where the figure chips go in the column, with the chart's card after them.</summary>
     private int chipsAt;
 
-    /// <summary>The widest the words run, as on every other page; the plots and the chart take the whole width (entry 312 section 1).</summary>
-    internal const double Reading = 640;
+    /// <summary>The widest the words run: the whole width, as on every other page since entry 376 item B2 (entry 312 section 1 held it to 640).</summary>
+    internal const double Reading = double.PositiveInfinity;
 
     public ComparePage(IReadOnlyList<SessionRecord> records, UnitSettings units, Action back, Action? sessions = null)
     {

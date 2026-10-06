@@ -140,6 +140,10 @@ internal sealed class AndroidPhone : IPhonePlatform
 
     public string? SharePdf(byte[] pdf, string name) => PdfOut.Share(pdf, name);
 
+    public IReadOnlyList<byte[]> PdfPages(byte[] pdf, int width) => PdfOut.Pages(pdf, width);
+
+    public string SavePdf(byte[] pdf, string name) => PdfOut.Save(pdf, name);
+
     /// <summary>
     /// Entry 280 section 2, Share A's "Save to gallery": the picture goes into the phone's own Pictures/GroupLab through MediaStore, which on
     /// Android 10 and later (the least this application runs on) needs no permission for a file the application adds itself. It is written

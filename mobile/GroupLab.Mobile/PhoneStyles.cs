@@ -19,6 +19,12 @@ namespace GroupLab.Mobile;
 internal static class PhoneStyles
 {
     public const string Card = "card";
+
+    /// <summary>Entry 376 item B1: a page's own way back ("Back", "Back to the result"), which Android's back presses.</summary>
+    public const string PageBack = "page-back";
+
+    /// <summary>Entry 376 item B1: a sheet's ×, which Android's back presses before anything under it.</summary>
+    public const string SheetDismiss = "sheet-dismiss";
     public const string Title = "title-large";
     public const string Heading = "heading";
     public const string Dim = "dim";

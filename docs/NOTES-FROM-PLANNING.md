@@ -124,8 +124,8 @@ The planning session will relay Alan's retry results (re-pair, printer off and o
 
 ## 2026-10-06, entry 376: which bull a shot belongs to, and Alan's tablet feedback on nightly 171
 
-**Status: Part A done 2026-10-06. Not done yet: Part B (all twelve items), which follows entry 377 in this run; question 85 asks
-about the Part C and the 88% line Alan's message names and this file does not.** Part A: the matching is one problem
+**Status: Parts A and B done 2026-10-06, but B7 (Send diagnostics straight to GroupLab), which needs a new kind of report on the
+receiver; question 85 asks about the Part C and the 88% line Alan's message names and this file does not.** Part A: the matching is one problem
 (`ImpactOffsets.ReadWholeSheet`), read as aimed first, then in shooting order, then asked; lines, lighting, Bull by bull, the phone's
 bull picker and names by bull on both platforms. Details in docs/PHASE1-RESULTS.md.
 

@@ -450,18 +450,20 @@ plain APK and the Google Play internal test (if you are invited) are signed with
 Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates: it is Google's
 own check, takes a few seconds, and is expected. It uses the same engine as the computer, so the same picture gives the same numbers.
 
-**Capture** is the first screen: the GroupLab mark, one row with the caliber and distance remembered from the last target (**Change**
-types new ones), **Take a picture**, **Choose a photo** and **Print a target** side by side, with **From another app** and **Paste a
-picture** beneath, a **Getting started on your phone** card that opens this section, and grouplab.org and the version at the foot. It
-does not ask every time: only the first time, with no caliber set yet, **Take a picture** or **Choose a photo** asks for it in a sheet
-over the page and then goes straight on; the distance may stay empty if you do not know it. **Take a picture**: the camera fills the screen with the instruction at the top, the
+**Capture** is the first screen: the GroupLab mark, as wide as the screen allows without the page scrolling, one row with the caliber
+and distance (**Change** types new ones; the distance is remembered from the last target, the caliber never is), **Take a picture**, **Choose a photo** and **Print a target** side by side, with **From another app** and **Paste a
+picture** beneath, a **Getting started on your phone** card that opens this section, and grouplab.org and the version at the foot. For
+every new target **Take a picture** or **Choose a photo** asks for the caliber in a sheet over the page, with the calibers you used
+lately as one-tap choices and none chosen for you, so a caliber is never left over from the last target; then it goes straight on. The
+distance may stay empty if you do not know it. **Take a picture**: the camera fills the screen with the instruction at the top, the
 checks beneath it (focus, light, the tags and codes read) and a bar that forecasts the picture's quality. In **Guided** it takes the
 picture by itself once everything holds; in **Manual** you press the shutter when you choose. Fill the frame with the sheet: GroupLab
 says **Move back** only when some of the printing runs out of the picture, **Move closer** when the sheet's codes would be too small to
 read, and **Hold steadier** only when a shake has smeared the picture. The level in the middle is a crosshair with a dot that drifts
 toward the raised side like a bubble; when the phone is flat over a table, or upright and straight on to a sheet on its backer, the whole
-crosshair turns green, and the word under it says which, **Looking down** or **Upright**. **Camera** and **Result**, above the page,
-take you to either in one press, the one showing in the highlight color, and the camera has its own **Result** button. While a picture
+crosshair turns green, and the word under it says which, **Looking down** or **Upright**. **Capture** and **Result**, above the page,
+take you to the start of Capture or to the last result in one press, the one showing in the highlight color, and the camera has its own
+**Result** button. While a picture
 is read, the line under it names the step it is on, and **Cancel** stops it at once, at any step: Capture shows again with the picture
 kept, to **Read it again**, **Choose which sheet it is** or **Forget it**. A reading that has not finished after a minute stops by itself,
 says what it was trying to read, and offers the sheets to choose from; time with the screen locked does not count, and a reading carries
@@ -548,6 +550,7 @@ On a target GroupLab did not print, **Aim points** gives each aim point a chip i
 tap a chip for that aim point's own figures, or **+ Aim point** to set another; the figures above pool them all.
 **Share a picture**, under a result, puts a results box on the picture: drag it anywhere, pinch it or drag its corner to resize it, and
 tap it to choose its lines. Chips turn the mean radius circle (drawn about the group's center) and a label on and off, and set the box's
-style and the crop; then **Save to gallery**, which keeps it in Pictures, GroupLab, or **Share**. **Report**, under a result, makes the
-one-page report, to share or print.
+style and the crop; then **Save to gallery**, which keeps it in Pictures, GroupLab, or **Share**. **Report**, under a result, shows the
+one-page report itself, the PDF's own page, with **Share**, **Save on the phone** (Downloads, GroupLab) and **Print** above it.
+Android's back button goes back one screen wherever you are, and every page uses the whole width of the screen.
 

@@ -335,6 +335,8 @@ New on the phone in the latest builds, as entries 258 and 259 bring it level wit
 - On the phone, the result now opens into every figure the desktop shows, and a tap on a figure's name says what it means.
 - On the phone, Shots Needed to Zero has a page of its own.
 - On the phone, you tap the bulls you fired at on the sheet itself.
+- On Android and the iPhone, Send everything I open is now offered in Settings, automatic error reports can carry GroupLab's log, and a finished target can be sent to the project, over Wi-Fi unless you allow mobile data.
+- On the phone, the report now opens as the page itself inside GroupLab, with Share, Save on the phone and Print.
 - On the phone, Sessions can compare loads.
 - On the phone, Ballistics is a tab of its own: the dope, the trajectory and the chance of a hit with your own group.
 - On the phone, a set of sheets is a checklist: the sheets read so far pooled into one group, and those still to read.

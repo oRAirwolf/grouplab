@@ -749,11 +749,35 @@ public sealed class AppSettingsStore(string path)
     public (string? Calibre, double? DistanceInches) LoadShotSetup() => Read(file =>
         ((string?)file["shotSetup"]?["caliber"], file["shotSetup"]?["distanceInches"]?.GetValueKind() == JsonValueKind.Number ? (double?)file["shotSetup"]!["distanceInches"]!.GetValue<double>() : null));
 
-    public bool SaveShotSetup(string? calibre, double? distanceInches) => Save(file => file["shotSetup"] = new JsonObject
+    public bool SaveShotSetup(string? calibre, double? distanceInches) => Save(file =>
     {
-        ["caliber"] = string.IsNullOrWhiteSpace(calibre) ? null : calibre.Trim(),
-        ["distanceInches"] = distanceInches,
+        file["shotSetup"] = new JsonObject
+        {
+            ["caliber"] = string.IsNullOrWhiteSpace(calibre) ? null : calibre.Trim(),
+            ["distanceInches"] = distanceInches,
+        };
+
+        // Entry 376 item B3: the calibers used most recently, newest first, offered as one-tap choices and never filled in for the person.
+        if (!string.IsNullOrWhiteSpace(calibre))
+        {
+            string used = calibre.Trim();
+            var recent = new JsonArray();
+            foreach (string? earlier in new[] { used }.Concat((file["recentCalibres"] as JsonArray ?? []).Select(n => (string?)n))
+                .Where(c => !string.IsNullOrWhiteSpace(c)).DistinctBy(c => c!.ToUpperInvariant()).Take(RecentCalibres))
+            {
+                recent.Add(earlier);
+            }
+
+            file["recentCalibres"] = recent;
+        }
     });
+
+    /// <summary>How many recent calibers are kept to offer (entry 376 item B3).</summary>
+    public const int RecentCalibres = 4;
+
+    /// <summary>The calibers used most recently, newest first (entry 376 item B3).</summary>
+    public IReadOnlyList<string> LoadRecentCalibres() => Read(file =>
+        (IReadOnlyList<string>)[.. (file["recentCalibres"] as JsonArray ?? []).Select(n => (string?)n).OfType<string>()]) ?? [];
 
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 208: whether the hardware survey may send. Unset until the person answers. Entry 241 section 2.5: a yes

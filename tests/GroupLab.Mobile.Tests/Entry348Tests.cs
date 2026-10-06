@@ -144,7 +144,7 @@ public class Entry348Tests
             phone.Asked.Clear();
             Press(page, "fingerprint-next");
             Assert.Contains(("share", "stand-in-poster.glref"), phone.Asked);
-            string file = Path.Combine(phone.CacheFolder, "stand-in-poster.glref");
+            string file = Path.Combine(phone.CacheFolder, "shared", "stand-in-poster.glref");
             var written = TargetReference.Read(File.ReadAllText(file));
             Assert.Equal("12 by 18 in", written.Target.Size);
             Assert.Equal(found, written.Fingerprint.Bulls.Count);

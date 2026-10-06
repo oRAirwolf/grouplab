@@ -55,7 +55,7 @@ public class Entry312Tests
         Assert.Equal(plots[0].Width, plots[1].Width);
         Assert.Equal(plots[0].TranslatePoint(default, page)!.Value.Y, plots[1].TranslatePoint(default, page)!.Value.Y);
         var chart = page.GetVisualDescendants().OfType<IntervalChart>().Single();
-        Assert.True(chart.Bounds.Width > ComparePage.Reading, $"the chart is {chart.Bounds.Width} across");
+        Assert.True(chart.Bounds.Width > 640, $"the chart is {chart.Bounds.Width} across");
         window.Close();
 
         var phone = new Window { Width = 412, Height = 915 };
@@ -184,6 +184,8 @@ public class Entry312Tests
             var page = new CapturePage();
             window.Content = page;
             Dispatcher.UIThread.RunJobs();
+            // Entry 376 item B3: the caliber is chosen for each target, never carried over, so it is typed here.
+            page.TypedCalibre = ".308";
             bool Asking() => page.GetLogicalDescendants().OfType<TextBlock>().Any(t => t.Text == CapturePage.CameraWords);
             void Take()
             {

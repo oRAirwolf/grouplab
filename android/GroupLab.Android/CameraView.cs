@@ -433,6 +433,10 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
                 still?.ResolutionInfo?.Resolution is { } size ? (size.Width, size.Height) : (0, 0));
 #endif
         }
+        catch (Exception e) when (stopped && e is ObjectDisposedException)
+        {
+            // Entry 376 item B12: a frame still being judged when the camera closed finds its resources gone; that is the close, not a fault.
+        }
         catch (Exception e)
         {
             DiagnosticLog.Info("camera.frame", ("error", e.GetType().Name));

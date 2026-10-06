@@ -112,7 +112,7 @@ public static class PrinterConnect
                     // The abort is what ended it; the outcome said below is the timeout or the cancel, not this.
                 }
 
-                said(attempt.Name, token.IsCancellationRequested ? "cancelled" : "timed out", clock.ElapsedMilliseconds);
+                said(attempt.Name, token.IsCancellationRequested ? "canceled" : "timed out", clock.ElapsedMilliseconds);
                 token.ThrowIfCancellationRequested();
                 continue;
             }

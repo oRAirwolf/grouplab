@@ -79,6 +79,15 @@ public interface IPhonePlatform
     string? SharePdf(byte[] pdf, string name);
 
     /// <summary>
+    /// Entry 376 item B6: each page of a PDF drawn as a PNG <paramref name="width"/> pixels wide, so a report is seen inside GroupLab before
+    /// it is shared; none where the phone cannot draw one, and the page then says so.
+    /// </summary>
+    IReadOnlyList<byte[]> PdfPages(byte[] pdf, int width) => [];
+
+    /// <summary>Entry 376 item B6: saves a PDF on the phone where its files app finds it; a sentence saying where, or why it could not.</summary>
+    string SavePdf(byte[] pdf, string name) => "Saving a PDF is not offered on this phone yet. Use Share and choose Save to Files.";
+
+    /// <summary>
     /// Saves a picture into the device's own gallery, entry 280 section 2 (Share A, "Save to gallery"); a sentence where it could not, else
     /// null. A head that has no gallery yet keeps this default, which says so, so the screens build against every head.
     /// </summary>

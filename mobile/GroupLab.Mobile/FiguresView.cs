@@ -333,6 +333,8 @@ internal sealed class FiguresView : UserControl
         }
 
         var label = Label(figure.Label, figure.Key, figure);
+        // Entry 376 item B5: a tap anywhere on the row's value side switches its units, not only on the number.
+        UnitTap.Widen(right, value, figure.Label);
         return new FigureRow { Children = { label, right } };
     }
 

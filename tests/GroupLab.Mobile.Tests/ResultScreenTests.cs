@@ -180,7 +180,7 @@ public class ResultScreenTests
         var buttons = capture.GetVisualDescendants().OfType<Button>().ToDictionary(Words, b => b);
         Assert.True(buttons["Result"].IsEffectivelyEnabled);
         Assert.Contains(PhoneStyles.Primary, buttons["Result"].Classes);
-        Assert.DoesNotContain(PhoneStyles.Primary, buttons["Camera"].Classes);
+        Assert.DoesNotContain(PhoneStyles.Primary, buttons["Capture"].Classes);
         window.Close();
     }
 

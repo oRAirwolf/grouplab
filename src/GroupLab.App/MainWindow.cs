@@ -5325,6 +5325,10 @@ public sealed partial class MainWindow : Window
         var row = new DockPanel();
         DockPanel.SetDock(name, Dock.Left);
         row.Children.Add(name);
+        // Entry 376 item B5: the value fills the row beside its name, right aligned, on a clear background, so a click anywhere in the value's
+        // part of the row switches its units as a click on the number does; the name keeps its own click, which explains it.
+        figure.HorizontalAlignment = HorizontalAlignment.Stretch;
+        figure.Background = Tokens.Clear;
         row.Children.Add(figure);
         return row;
     }

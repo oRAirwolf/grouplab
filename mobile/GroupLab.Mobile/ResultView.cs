@@ -511,7 +511,8 @@ public sealed class ResultView : UserControl
             }
             else
             {
-                host.MaxWidth = 640;
+                // Entry 376 item B2: the whole width, as every page now is.
+                host.MaxWidth = double.PositiveInfinity;
                 column.Children.Add(numbers);
                 column.Children.Add(picture);
                 column.Children.Add(actions);

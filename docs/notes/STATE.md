@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-06, after entry 377 (the M834 stuck on Connecting); entry 376 Part B next.
+**Last rewritten:** 2026-10-06, after entry 376 Part B; entry 378 waits in the inbox.
 
 ---
 
@@ -20,7 +20,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 376 Part A done** (2026-10-06): holes matched to bulls as one sheet (read as aimed first, then in shooting order, then the
   "Which bulls did you fire at?" question), a line from each bull to its holes, a tap or click lights bull, holes and lines, Bull by bull
   lights them too, the phone asks which bull after adding or moving a hole, every shot named "Bull 7" or "Bull 7, shot 2".
-  **Part B (twelve items of tablet feedback) is next.**
+  **Part B done but B7** (2026-10-06): back everywhere, full width, the caliber chosen every target, the report shown in the app, and
+  the rest; B7 (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 379 done but section 3** (2026-10-06): "forms updated"; the three phone senders on from nightly 173; the page "What GroupLab
   sends" and the guides follow once 173 is out. Entry 378 waits in the inbox.
 - **Entry 377 done** (2026-10-06): the M834 print hung on a call needing a permission GroupLab lacks, its error lost; now logged
@@ -33,7 +34,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 374 partly done**: the C bull fix (shooting order), the update fix, four of section 4; store-bought photos, timed pairing,
   two holes in one, review undo, shot data out and in, and the 2 MOA 3 by 4 sheet are next. **Entry 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (GroupLab printing to the M834, now nightly 173).
-- **Entry 372 partly done**: labels made, read and measured; its encoder, check label and profile size are next.
 
 ## The next three
 
@@ -56,7 +56,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. Entry 376 Part B; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
+3. Entry 378, B7 and 379 section 3; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
 
 ## Blocked, and on what
 

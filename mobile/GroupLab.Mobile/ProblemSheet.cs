@@ -25,7 +25,7 @@ internal static class ProblemSheet
     public static Control Over(Control behind, string title, Control body, IReadOnlyList<Button> choices, Action dismissed)
     {
         ArgumentNullException.ThrowIfNull(choices);
-        var dismiss = new Button { Content = "×", FontSize = 22, MinWidth = 44, MinHeight = 44, Background = Brushes.Transparent, BorderThickness = new Thickness(0), VerticalAlignment = VerticalAlignment.Top };
+        var dismiss = new Button { Content = "×", FontSize = 22, MinWidth = 44, MinHeight = 44, Background = Brushes.Transparent, BorderThickness = new Thickness(0), VerticalAlignment = VerticalAlignment.Top, Classes = { PhoneStyles.SheetDismiss } };
         Avalonia.Automation.AutomationProperties.SetName(dismiss, GroupLab.Core.Registration.OpeningWords.Dismiss);
         dismiss.Click += (_, _) => dismissed();
         var heading = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 10 };

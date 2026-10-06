@@ -311,6 +311,12 @@ internal sealed class CompositePlot : Control
                 // Entry 210 section 2.2: a drag that starts on empty paper pans the view; one that starts on a shot picks it.
                 dragFrom = e.GetPosition(this);
                 e.Pointer.Capture(this);
+                if (KeepsDrags)
+                {
+                    // Entry 376 item B11, the Fix holes fix: zoomed in on a phone, a drag moves the picture, not the page around it.
+                    e.PreventGestureRecognition();
+                    e.Handled = true;
+                }
             }
         };
         PointerReleased += (_, e) =>
@@ -347,6 +353,11 @@ internal sealed class CompositePlot : Control
         // Entry 105 section 3: the tooltip names what is under the pointer, and goes when nothing is.
         PointerMoved += (_, e) =>
         {
+            if (KeepsDrags && dragFrom is not null)
+            {
+                e.PreventGestureRecognition();
+            }
+
             if (dragFrom is { } from)
             {
                 var now = e.GetPosition(this);
@@ -360,6 +371,12 @@ internal sealed class CompositePlot : Control
         };
         PointerExited += (_, _) => ToolTip.SetTip(this, null);
     }
+
+    /// <summary>
+    /// Entry 376 item B11: whether a drag belongs to the picture rather than to the page it scrolls in: once zoomed in, as Fix holes does.
+    /// Fitted, a drag on it still scrolls the page.
+    /// </summary>
+    internal bool KeepsDrags => Zoom > 1.02;
 
     /// <summary>Where an offset in inches lands on the control.</summary>
     public Point ToScreen(PointD inches)

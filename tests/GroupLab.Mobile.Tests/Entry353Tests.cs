@@ -1,3 +1,4 @@
+using Avalonia.LogicalTree;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -36,7 +37,15 @@ public class Entry353Tests
         var window = new Window { Width = 402, Height = 874, Content = shell };
         window.Show();
         Settle();
-        return (shell, window, shell.GetVisualDescendants().OfType<CapturePage>().Single());
+        var capture = shell.GetVisualDescendants().OfType<CapturePage>().Single();
+        // Entry 376 item B3: the caliber is chosen for each target, never carried over, so it is typed into the page's box.
+        if (calibre is not null)
+        {
+            capture.TypedCalibre = calibre;
+            Settle();
+        }
+
+        return (shell, window, capture);
     }
 
     private static T Named<T>(Control within, string id) where T : Control =>

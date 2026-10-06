@@ -108,6 +108,36 @@ public static partial class UnitTap
         return block;
     }
 
+    /// <summary>
+    /// Entry 376 item B5, Alan: a tap anywhere in a value's box switches its units, not only a tap on the text. A tap in
+    /// <paramref name="box"/> that the value itself did not take switches <paramref name="block"/>, as a tap on it would. The box is given a
+    /// clear background where it has none, so its empty space takes the tap.
+    /// </summary>
+    public static T Widen<T>(T box, TextBlock block, string? figure = null)
+        where T : Control
+    {
+        ArgumentNullException.ThrowIfNull(box);
+        ArgumentNullException.ThrowIfNull(block);
+        if (box is Avalonia.Controls.Panel { Background: null } panel)
+        {
+            panel.Background = GroupLab.App.Theme.Tokens.Clear;
+        }
+        else if (box is Border { Background: null } border)
+        {
+            border.Background = GroupLab.App.Theme.Tokens.Clear;
+        }
+
+        box.Tapped += (_, e) =>
+        {
+            if (!e.Handled && KindOf(block.Text) is { } kind && UnitSwitch.SymbolIn(block.Text, kind) is { } from)
+            {
+                Switch(block, figure, kind, UnitSwitch.Next(kind, from));
+                e.Handled = true;
+            }
+        };
+        return box;
+    }
+
     /// <summary>This number shown in <paramref name="to"/>, and the switch told to the host, which remembers it for the figure.</summary>
     public static void Switch(TextBlock block, string? figure, UnitKind kind, string to)
     {

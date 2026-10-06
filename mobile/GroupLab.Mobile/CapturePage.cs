@@ -38,8 +38,12 @@ public sealed class CapturePage : UserControl
     private readonly TextBox distance = Screens.Numeric(new() { MinHeight = Screens.Touch, PlaceholderText = "Distance" }).Id("capture-distance");
     private readonly Control start;
 
+    /// <summary>The Capture page made last, for a scenario, which types the run's caliber into it (entry 376 item B3).</summary>
+    internal static CapturePage? Latest { get; private set; }
+
     public CapturePage()
     {
+        Latest = this;
         // The id is on the box itself, where a script types, not on the panel round it with its clear button.
         calibre.Box.Id("capture-caliber");
         // Entry 258: a picture shared into GroupLab from another application is read as a chosen one; entry 292 section 1.3, several at
@@ -47,7 +51,8 @@ public sealed class CapturePage : UserControl
         SharedPicture = photos =>
         {
             Shell.Current?.Show(Shell.Place.Capture);
-            _ = Opened(photos);
+            // Entry 376 item B3: a picture shared in is read only once its caliber is chosen, like any other.
+            AskFirst(() => _ = Opened(photos));
         };
 #if GROUPLAB_DEV
         TestPicture = file => _ = Picked(file);
@@ -66,8 +71,10 @@ public sealed class CapturePage : UserControl
             cameraWait = null;
         };
         var units = Phone.Settings.LoadUnits();
-        var (typed, inches) = Phone.Settings.LoadShotSetup();
-        calibre.Text = typed ?? "";
+        // Entry 376 item B3, Alan: "I have used the wrong caliber many times because it was already filled in." The caliber starts empty for
+        // every new target; the ones used recently are offered as one-tap choices when it is asked for, none chosen for the person.
+        var (_, inches) = Phone.Settings.LoadShotSetup();
+        calibre.Text = "";
         distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}";
         distance.Text = inches is { } d ? UnitSettings.DistanceFromInches(d, units.Distance).ToString("0.#", CultureInfo.CurrentCulture) : "";
         // Entry 309 section 1: Home A. The caliber and distance as one row, remembered, with Change opening the two fields beneath it.
@@ -125,12 +132,13 @@ public sealed class CapturePage : UserControl
         keptCard.IsVisible = false;
 
         var gettingStarted = Screens.Row("Getting started on your phone", "Print, shoot, photograph, read.", () => Phone.Platform.OpenAddress(GettingStartedAddress));
+        var logo = new GroupLab.App.BrandMark { Lockup = true, Height = LogoLeast, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left, Margin = new Avalonia.Thickness(0, 8, 0, 0) };
         start = Screens.Page(new StackPanel
         {
             Spacing = 12,
             Children =
             {
-                new GroupLab.App.BrandMark { Lockup = true, Height = 36, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left, Margin = new Avalonia.Thickness(0, 8, 0, 0) },
+                logo,
                 Screens.Line("Photograph a target and read your group. On a GroupLab sheet, the scale and every hole are found for you."),
                 keptCard,
                 Screens.Card(setupRow, setupFields),
@@ -147,7 +155,8 @@ public sealed class CapturePage : UserControl
         // The question for a first caliber, in a sheet over the page (entry 309 section 1.2).
         ask = Screens.Card(
             Screens.Heading("Which caliber are you shooting?"),
-            Screens.Dim("GroupLab asks once and remembers it for the next target. The distance may stay empty if you do not know it; both can be changed on the result."),
+            Screens.Dim("GroupLab asks for every new target, so the caliber is never left over from the last one. The distance may stay empty if you do not know it; both can be changed on the result."),
+            recent,
             askFields,
             askSaid,
             Screens.Primary("Continue", Continue).Id("capture-ask-continue"),
@@ -161,6 +170,34 @@ public sealed class CapturePage : UserControl
         ask.Margin = new Avalonia.Thickness(8);
         home = new Grid { Children = { start, ask } };
         Content = home;
+        start.LayoutUpdated += (_, _) => FitLogo(logo, (ScrollViewer)start);
+    }
+
+    /// <summary>The logo's smallest height, the one it always had.</summary>
+    private const double LogoLeast = 36;
+
+    /// <summary>
+    /// Entry 376 item B10: the logo as wide as the screen, or as large as fits without the page scrolling, whichever is smaller, and never
+    /// smaller than it was. Changed only when it would move by more than a pixel, so a layout pass cannot chase itself.
+    /// </summary>
+    internal static double FitLogo(GroupLab.App.BrandMark logo, ScrollViewer page)
+    {
+        var box = logo.Art.ViewBox;
+        double across = (page.Viewport.Width > 0 ? page.Viewport.Width : page.Bounds.Width) - 32;
+        if (across <= 0 || box.Width <= 0 || page.Viewport.Height <= 0)
+        {
+            return logo.Height;
+        }
+
+        double fullWidth = across * box.Height / box.Width;
+        double room = page.Viewport.Height - (page.Extent.Height - logo.Bounds.Height);
+        double wanted = Math.Max(LogoLeast, Math.Min(fullWidth, room));
+        if (Math.Abs(wanted - logo.Height) > 1)
+        {
+            logo.Height = wanted;
+        }
+
+        return logo.Height;
     }
 
     /// <summary>The start with the question sheet over it.</summary>
@@ -182,16 +219,38 @@ public sealed class CapturePage : UserControl
         change.Content = setupFields.IsVisible ? "Done" : "Change";
     }
 
-    /// <summary>Whether a caliber has been set, on this page or remembered from the last target.</summary>
-    private bool HasCalibre()
+    /// <summary>The caliber as typed for this target, for the tests, which type it as a person would.</summary>
+    internal string TypedCalibre
     {
-        if (string.IsNullOrWhiteSpace(calibre.Text) && Phone.Settings.LoadShotSetup().Calibre is { Length: > 0 } remembered)
+        get => calibre.Text ?? "";
+        set
         {
-            calibre.Text = remembered;
+            calibre.Text = value;
+            Summarize();
+        }
+    }
+
+    /// <summary>Whether a caliber has been set for this target, on this page; never filled in from the last one (entry 376 item B3).</summary>
+    private bool HasCalibre() => !string.IsNullOrWhiteSpace(calibre.Text);
+
+    /// <summary>The recent calibers as one-tap choices in the question: a tap fills the box and goes on (entry 376 item B3).</summary>
+    private void OfferRecent()
+    {
+        recent.Children.Clear();
+        foreach (string used in Phone.Settings.LoadRecentCalibres())
+        {
+            recent.Children.Add(Screens.Choice(used, () =>
+            {
+                calibre.Text = used;
+                Continue();
+            }).Id("capture-recent-caliber"));
         }
 
-        return !string.IsNullOrWhiteSpace(calibre.Text);
+        recent.IsVisible = recent.Children.Count > 0;
     }
+
+    /// <summary>The recent calibers' buttons, in the question sheet.</summary>
+    private readonly WrapPanel recent = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, ItemSpacing = 8, LineSpacing = 8 };
 
     /// <summary>Entry 309 section 1.2: straight on where a caliber is set; otherwise the question first, then straight on.</summary>
     internal void AskFirst(Action then)
@@ -203,6 +262,7 @@ public sealed class CapturePage : UserControl
         }
 
         afterAsk = then;
+        OfferRecent();
         Move(askFields);
         ask.IsVisible = true;
         DiagnosticLog.Info("capture.ask", ("calibre", false));
@@ -286,7 +346,9 @@ public sealed class CapturePage : UserControl
             old.Children.Remove(page);
         }
 
-        var camera = Screens.Choice("Camera", Camera).Id("capture-show-camera");
+        // Entry 376 item B9: "Capture", and it goes back to the start of the tab, where the camera, a photo or a scan is chosen, rather
+        // than straight into the camera.
+        var camera = Screens.Choice("Capture", ShowStart).Id("capture-show-camera");
         var result = Screens.Choice("Result", () =>
         {
             if (lastResult is { } shown)
@@ -316,6 +378,9 @@ public sealed class CapturePage : UserControl
     internal void ShowResult(Control result)
     {
         lastResult = result;
+        // Entry 376 item B3: this target has its caliber; the next one is asked again.
+        calibre.Text = "";
+        Summarize();
         Content = WithBar(result, true);
         DiagnosticLog.Info("camera.shutter", ("step", "shown")); // entry 283: the last step, timed by the log's own clock
     }
@@ -406,6 +471,12 @@ public sealed class CapturePage : UserControl
 
     private async Task Picked(string file)
     {
+        // A scenario names its caliber once for the whole run (Scenario's "caliber"); a person is asked for every target (entry 376 item B3).
+        if (!HasCalibre() && Phone.Settings.LoadShotSetup().Calibre is { Length: > 0 } scripted)
+        {
+            calibre.Text = scripted;
+        }
+
         if (Setup() is not { } setup || !File.Exists(file))
         {
             DiagnosticLog.Info("phone.test.picture", ("found", File.Exists(file)));

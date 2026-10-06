@@ -475,9 +475,13 @@ public static class ReviewQueue
     public static IReadOnlyList<SizeFlag> MarksToCheck(MarkingState state)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId, l => l.Name ?? l.Text ?? "");
-        return [.. SizeFlags(state), .. state.Shots.Where(s => StillDoubted(state, s)).Select(s => new SizeFlag(s.Id, s.Image,
-            Doubt(labels.TryGetValue(s.Id, out var label) ? label : s.Id.ToString(CultureInfo.InvariantCulture), s.Proposal!), true, false))];
+        var named = ShotLabels.For(state);
+        var labels = named.ToDictionary(l => l.ShotId, l => l.Name ?? l.Text ?? "");
+        // Entry 376 item B4: in bull order, lowest bull first, the order the shots are named in.
+        var place = named.Select((l, k) => (l.ShotId, k)).ToDictionary(x => x.ShotId, x => x.k);
+        return [.. SizeFlags(state).Concat(state.Shots.Where(s => StillDoubted(state, s)).Select(s => new SizeFlag(s.Id, s.Image,
+            Doubt(labels.TryGetValue(s.Id, out var label) ? label : s.Id.ToString(CultureInfo.InvariantCulture), s.Proposal!), true, false)))
+            .OrderBy(f => place.GetValueOrDefault(f.ShotId, int.MaxValue))];
     }
 
     /// <summary>

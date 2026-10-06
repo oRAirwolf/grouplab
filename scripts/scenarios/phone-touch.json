@@ -16,7 +16,7 @@
     { "do": "sleep", "seconds": 1 },
     { "do": "hold", "tap": "capture-take-picture", "name": "01-take-a-picture-asks-the-caliber" },
     { "do": "expect", "name": "capture-ask-continue", "showing": true },
-    { "do": "setting", "name": "shotSetup", "value": { "caliber": "6.5 Creedmoor" } },
+    { "do": "type", "name": "capture-caliber", "text": "6.5 Creedmoor" },
     { "do": "hold", "tap": "capture-distance", "name": "02-distance-in-the-question" },
     { "do": "expect", "keyboard": true, "seconds": 10 },
     { "do": "screenshot", "name": "02-keyboard-up" },

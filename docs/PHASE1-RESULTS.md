@@ -760,6 +760,31 @@ all        23x35    20/20    0.014   0.027   0.072      0.247           20/20
   address it names, grouplab.org/support/, needs entry 378 section 4's section.
 - **Waiting:** section 3, the page "What GroupLab sends" and the guides for both phones, once nightly 173 is out.
 
+## Entry 376 Part B: Alan's tablet list (2026-10-06)
+
+- **B1 Back:** Android's back presses a sheet's × first, then the page's own Back ("Back", "Back to the result" and the rest, tagged
+  `PhoneStyles.PageBack`), then the tab rule as before (`Shell.WayBack`). `BackEverywhereTests`.
+- **B2 Full width:** every phone page, the result and Compare loads use the whole width (they were held to 640).
+- **B3 Caliber every target:** the box starts empty for each new target and is cleared when a result shows; Take a picture, Choose a
+  photo, Paste and a picture shared in all ask first; the four calibers used most recently are one-tap choices, none chosen
+  (`AppSettingsStore.LoadRecentCalibres`). A scenario names its caliber once and it is typed for each picture.
+- **B4** marks to check in bull order (`ReviewQueue.MarksToCheck`). **B5** a tap anywhere in a figure's box switches its units, on the
+  phone's tiles and rows (`UnitTap.Widen`) and in the desktop's figure rows, where the value now fills its row on a clear background. **B8** the phone's Targets lists the targets first, then
+  store-bought targets, scale markers and thermal label printers. **B9** the top buttons are Capture and Result; Capture returns to the
+  start of Capture. **B10** the logo is as wide as the screen, or as large as fits without scrolling, whichever is smaller.
+- **B6 Report:** the one-page report opens as its own page drawn by Android's PDF renderer, with Share, Save on the phone (Downloads,
+  GroupLab, through MediaStore) and Print. iPhone: the page says it cannot show it there yet and Share works as before.
+- **B11 Zoom and pan:** the combined group picture keeps a drag once zoomed in, as Fix holes does; fitted, a drag still scrolls.
+- **B12 The logs:** of the tablet's five "closed" records, two (5 October 05:14 and 23:05) are GroupLab's own silent update ending the
+  run to replace it, and three Android ending it while it was on screen with no exception; none is a crash. The installer path now ends
+  the run's marker first, so an update is no longer recorded. `camera.frame error=ObjectDisposedException` at 23:15:56 was a frame
+  still being judged when the camera closed, 3.7 s after it opened; caught and harmless, and no longer logged once the camera has stopped.
+- **Also, the red CI on entry 379's commit:** with the phones' senders on, a test that left an earlier "Always" made entry 357's two
+  follow-up questions due, so the first run's screen stood where Capture should be and six phone tests failed in order but not alone;
+  `Scenario.AnswerFirstRun` answers them too. One British spelling in the printer's log words was corrected.
+- **Not done: B7**, Send diagnostics straight to GroupLab: the receiver takes only the kinds survived, closed and read-failure and no
+  folders inside a package, so it needs a "diagnostics" kind server-side and a flat package; next run, now that the phones' senders are on.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

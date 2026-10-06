@@ -142,10 +142,14 @@ internal static class Scenario
         {
             double? distance = root["distanceInches"]?.GetValueKind() == JsonValueKind.Number ? root["distanceInches"]!.GetValue<double>() : null;
             store.SaveShotSetup(root["caliber"]!.GetValue<string>(), distance);
+            scriptedCalibre = root["caliber"]!.GetValue<string>();
         }
 
         return true;
     }
+
+    /// <summary>The caliber the scenario names for its whole run, typed for each picture as a person would (entry 376 item B3).</summary>
+    private static string? scriptedCalibre;
 
     /// <summary>The first run's questions answered where they are still open: nothing sent, and the scope in MOA with inches.</summary>
     internal static void AnswerFirstRun(GroupLab.App.AppSettingsStore store)
@@ -158,6 +162,18 @@ internal static class Scenario
         if (store.LoadErrorChoice() == ErrorReportChoice.Unset)
         {
             store.SaveErrorChoice(ErrorReportChoice.Never);
+        }
+
+        // Entry 357's two follow-up questions, asked of an answer already given, are due now the phones' senders are on (entry 379); a
+        // run that finds an earlier "Always" answers them too, or the first run's screen stands where Capture should be.
+        if (store.ErrorWordingDue())
+        {
+            store.SaveErrorChoice(store.LoadErrorChoice(), fullLogWording: true);
+        }
+
+        if (store.EverythingQuestionDue())
+        {
+            store.SaveEverythingAsked();
         }
 
         if (store.LoadSurveyChoice() == GroupLab.Core.Survey.SurveyChoice.Unset)
@@ -264,6 +280,19 @@ internal static class Scenario
         var done = new JsonArray();
         results["steps"] = done;
         bool ok = true;
+        try
+        {
+            // Entry 376 item B3: the run's caliber, typed for each picture; read here too, for a scenario run inside a test.
+            if ((JsonNode.Parse(json) as JsonObject)?["caliber"] is JsonValue named && named.TryGetValue(out string? given))
+            {
+                scriptedCalibre = given;
+            }
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            // Parse below says what is wrong with it.
+        }
+
         if (Parse(json, out string? why) is not { } scenario)
         {
             results["error"] = why;
@@ -439,6 +468,12 @@ internal static class Scenario
             if (CapturePage.SharedPicture is not { } shared)
             {
                 return (false, "the Capture screen is not there to take it");
+            }
+
+            // Entry 376 item B3: a person types the caliber for every target; a scenario names one for the whole run, typed here for it.
+            if (CapturePage.Latest is { TypedCalibre.Length: 0 } capture && scriptedCalibre is { Length: > 0 } calibre)
+            {
+                capture.TypedCalibre = calibre;
             }
 
             shared([handle]);

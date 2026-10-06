@@ -375,6 +375,9 @@ internal static class SelfUpdate
                 .PutBoolean("installingSilent", Silent)!
                 .Apply();
             Log("update.install.start", ("version", ready.Version), ("silent", Silent), ("sdk", (int)global::Android.OS.Build.VERSION.SdkInt));
+            // Entry 376 item B12: the installer ends this run to replace it, which is GroupLab's own doing, so it is not recorded as a run
+            // that closed without shutting down (two of the tablet's five "closed" records were exactly this).
+            GroupLab.App.Diagnostics.CrashReporter.EndRun(GroupLab.App.Diagnostics.DiagnosticLog.Current);
             var flags = PendingIntentFlags.UpdateCurrent | (OperatingSystem.IsAndroidVersionAtLeast(31) ? PendingIntentFlags.Mutable : 0);
             var pending = PendingIntent.GetBroadcast(Context, id, new Intent(Context, typeof(InstallResultReceiver)), flags)!;
             session.Commit(pending.IntentSender);

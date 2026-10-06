@@ -1,3 +1,4 @@
+using Avalonia.LogicalTree;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -121,6 +122,8 @@ public class Entry313Tests
         var capture = new CapturePage();
         window.Content = capture;
         Dispatcher.UIThread.RunJobs();
+        // Entry 376 item B3: the caliber is chosen for each target, never carried over, so it is typed into the page's box.
+        capture.TypedCalibre = ".308";
         string sample = Repo.PathTo("samples", "gl-cf25-ltr-d-25-shots-600-dpi.png");
         var handle = new PhotoHandle(null, null, null, new FileInfo(sample).Length, ".png", () => Task.FromResult<Stream?>(File.OpenRead(sample)));
         CapturePage.SharedPicture!([handle]);

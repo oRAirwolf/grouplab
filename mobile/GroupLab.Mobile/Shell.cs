@@ -411,6 +411,16 @@ public sealed class Shell : UserControl
     /// </summary>
     internal static Func<bool>? BackOverride { get; set; }
 
+    /// <summary>
+    /// The button Android's back presses on the screen now, entry 376 item B1: a sheet's × where one is open, else the page's own Back,
+    /// the last one showing where pages are nested; null where neither is on screen.
+    /// </summary>
+    internal Button? WayBack()
+    {
+        var shown = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(this).OfType<Button>().Where(b => b.IsEffectivelyVisible && b.IsEffectivelyEnabled).ToList();
+        return shown.LastOrDefault(b => b.Classes.Contains(PhoneStyles.SheetDismiss)) ?? shown.LastOrDefault(b => b.Classes.Contains(PhoneStyles.PageBack));
+    }
+
     /// <summary>Back returns to Capture from anywhere else, and is left to Android on Capture itself.</summary>
     internal bool Back()
     {
@@ -422,6 +432,14 @@ public sealed class Shell : UserControl
         // Entry 260: on the camera, Android's back closes it rather than leaving the application.
         if (Content == frame && Showing == Place.Capture && capture?.CloseCamera() == true)
         {
+            return true;
+        }
+
+        // Entry 376 item B1, Alan: back returns to the previous screen wherever you are, and never closes the application from an inner
+        // screen. A sheet over the page closes first, by its ×; then the page's own way back, the button every inner page has.
+        if (WayBack() is { } way)
+        {
+            way.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
             return true;
         }
 
@@ -485,6 +503,11 @@ internal static class Screens
             button.Classes.Add(PhoneStyles.Primary);
         }
 
+        if (words.StartsWith("Back", StringComparison.Ordinal))
+        {
+            button.Classes.Add(PhoneStyles.PageBack);
+        }
+
         button.Click += (_, _) => chosen();
         return button;
     }
@@ -535,6 +558,8 @@ internal static class Screens
         var grid = new Avalonia.Controls.Primitives.UniformGrid { Columns = 2 };
         foreach (var (label, value, under, headline) in figures)
         {
+            // One line for a figure's number; a figure withheld in words ("not quoted below 5 shots") wraps rather than being cut off.
+            var number = UnitTap.Attach(new TextBlock { Text = value, TextWrapping = value.Any(char.IsDigit) && value.Count(char.IsLetter) <= 4 ? TextWrapping.NoWrap : TextWrapping.Wrap, Classes = { PhoneStyles.TileValue } }, label);
             var tile = new Border
             {
                 Margin = new Thickness(4),
@@ -544,13 +569,14 @@ internal static class Screens
                     Children =
                     {
                         new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } },
-                        // One line for a figure's number; a figure withheld in words ("not quoted below 5 shots") wraps rather than being cut off.
-                        UnitTap.Attach(new TextBlock { Text = value, TextWrapping = value.Any(char.IsDigit) && value.Count(char.IsLetter) <= 4 ? TextWrapping.NoWrap : TextWrapping.Wrap, Classes = { PhoneStyles.TileValue } }, label),
+                        number,
                         UnitTap.Attach(new TextBlock { Text = under, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileLabel } }, label),
                     },
                 },
                 Classes = { PhoneStyles.Tile },
             };
+            // Entry 376 item B5: a tap anywhere in the tile switches its number's units.
+            UnitTap.Widen(tile, number, label);
             if (headline)
             {
                 tile.Classes.Add(PhoneStyles.TileHeadline);
@@ -631,11 +657,13 @@ internal static class Screens
     /// <summary>A page of words: a title and a paragraph, scrolled when it does not fit.</summary>
     public static Control Words(string heading, string words) => Page(new StackPanel { Spacing = 12, Children = { Title(heading), Line(words) } });
 
-    /// <summary>Any page's column: a margin, no wider than reads well on the Fold 7 open or a tablet, and scrolled.</summary>
+    /// <summary>
+    /// Any page's column: a margin, the whole width of the screen, and scrolled. Entry 376 item B2, Alan on the tablet: content sat in a
+    /// narrow column in the middle and should use the whole width; it was held to 640 wide.
+    /// </summary>
     public static Control Page(Control column)
     {
         column.Margin = new Thickness(16);
-        column.MaxWidth = 640;
         column.HorizontalAlignment = HorizontalAlignment.Stretch;
         return new ScrollViewer { Content = column, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
     }

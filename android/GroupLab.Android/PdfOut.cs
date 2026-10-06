@@ -1,3 +1,4 @@
+using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Print;
@@ -34,6 +35,73 @@ internal static class PdfOut
         printer.Print(name, new Adapter(pdf, name), attributes.Build());
         DiagnosticLog.Info("print.dialog", ("paper", paper.ToString()), ("bytes", pdf.Length));
         return null;
+    }
+
+    /// <summary>
+    /// Entry 376 item B6: each page drawn by Android's own PDF renderer, on white, <paramref name="width"/> pixels wide, as PNG; none where it
+    /// cannot (the caller says so).
+    /// </summary>
+    public static IReadOnlyList<byte[]> Pages(byte[] pdf, int width)
+    {
+        string path = Path.Combine(Application.Context.CacheDir!.AbsolutePath, "report-view.pdf");
+        var pages = new List<byte[]>();
+        try
+        {
+            File.WriteAllBytes(path, pdf);
+            using var file = ParcelFileDescriptor.Open(new Java.IO.File(path), ParcelFileMode.ReadOnly)!;
+            using var renderer = new global::Android.Graphics.Pdf.PdfRenderer(file);
+            for (int i = 0; i < renderer.PageCount; i++)
+            {
+                using var page = renderer.OpenPage(i)!;
+                int height = Math.Max(1, (int)Math.Round(width * (double)page.Height / page.Width));
+                using var bitmap = global::Android.Graphics.Bitmap.CreateBitmap(width, height, global::Android.Graphics.Bitmap.Config.Argb8888!)!;
+                bitmap.EraseColor(unchecked((int)0xFFFFFFFF));
+                page.Render(bitmap, null, null, global::Android.Graphics.Pdf.PdfRenderMode.ForDisplay);
+                using var png = new MemoryStream();
+                bitmap.Compress(global::Android.Graphics.Bitmap.CompressFormat.Png!, 100, png);
+                pages.Add(png.ToArray());
+            }
+        }
+        catch (Exception e) when (e is Java.Lang.Exception or IOException)
+        {
+            DiagnosticLog.Info("report.view", ("error", e.GetType().Name));
+            return [];
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+
+        DiagnosticLog.Info("report.view", ("pages", pages.Count));
+        return pages;
+    }
+
+    /// <summary>Entry 376 item B6: the PDF saved in Downloads, in a GroupLab folder, where the files app finds it; a sentence either way.</summary>
+    public static string Save(byte[] pdf, string name)
+    {
+        try
+        {
+            string file = string.Concat(name.Split(Path.GetInvalidFileNameChars())) + ".pdf";
+            var values = new ContentValues();
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.DisplayName, file);
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.MimeType, "application/pdf");
+            values.Put(global::Android.Provider.MediaStore.IMediaColumns.RelativePath, global::Android.OS.Environment.DirectoryDownloads + "/GroupLab");
+            var resolver = Application.Context.ContentResolver!;
+            var uri = resolver.Insert(global::Android.Provider.MediaStore.Downloads.ExternalContentUri!, values)
+                ?? throw new IOException("Downloads would not take a new file");
+            using (var output = resolver.OpenOutputStream(uri) ?? throw new IOException("the new file could not be opened"))
+            {
+                output.Write(pdf, 0, pdf.Length);
+            }
+
+            DiagnosticLog.Info("report.saved", ("bytes", pdf.Length));
+            return $"Saved as {file} in Downloads, in the GroupLab folder.";
+        }
+        catch (Exception e) when (e is Java.Lang.Exception or IOException)
+        {
+            DiagnosticLog.Info("report.saved", ("error", e.GetType().Name));
+            return "The PDF could not be saved: " + e.Message + " Use Share and choose a place to keep it instead.";
+        }
     }
 
     /// <summary>Writes the PDF where the share sheet may read it and opens the sheet. Returns why not, or null.</summary>
