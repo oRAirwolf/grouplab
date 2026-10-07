@@ -5344,6 +5344,10 @@
   "support@grouplab.org On a phone On Android, iPhone and iPad, open Settings, then About: Send to GroupLab sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; Send diagnostics puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/SettingsView.cs settings-send-to-grouplab, src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync, DiagnosticsPackage.Send; entry 386 section 4"
+  },
+  "On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync (paired first, a scan from Android 12), mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, printers.json phomemo-m220; entry 386 after question 90. Not yet printed on a real M220 by this path"
   }
  },
  "rules": [

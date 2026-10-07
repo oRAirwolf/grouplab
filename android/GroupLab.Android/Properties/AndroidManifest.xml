@@ -7,6 +7,8 @@
   <!-- Request 73: printing to a paired label printer over classic Bluetooth, asked the first time Print is pressed. -->
   <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+  <!-- Entry 386: finding a Bluetooth LE label printer such as the M220 that is not paired, Android 12 and later, never for location. -->
+  <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
   <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
   <uses-feature android:name="android.hardware.camera" android:required="false" />
   <!-- Entry 234: the label and whether it can be debugged come from the build, so the development build, org.grouplab.app.dev, is "GroupLab

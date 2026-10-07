@@ -75,6 +75,13 @@ public interface IPhonePlatform
     Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenSerialPrinterAsync(string nameHint, CancellationToken token) =>
         Task.FromResult<(GroupLab.Core.Printing.Labels.IPrinterLink?, string?)>((null, "Printing straight to this printer needs classic Bluetooth, which this phone does not offer GroupLab. Use Share for a printer app instead."));
 
+    /// <summary>
+    /// Entry 386: a label printer over Bluetooth LE, such as the Phomemo M220, found paired or nearby, or why not in words for the screen. Only
+    /// the Android head has it so far; this default says so.
+    /// </summary>
+    Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenLePrinterAsync(GroupLab.Core.Printing.Labels.PrinterProfile profile, CancellationToken token) =>
+        Task.FromResult<(GroupLab.Core.Printing.Labels.IPrinterLink?, string?)>((null, "Printing straight to this label printer is not on this phone yet. Use Share for the printer's app instead."));
+
     /// <summary>Shares a PDF; a sentence where it could not, else null.</summary>
     string? SharePdf(byte[] pdf, string name);
 

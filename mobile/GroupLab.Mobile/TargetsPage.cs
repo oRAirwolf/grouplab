@@ -322,6 +322,7 @@ public sealed class TargetsPage : UserControl
                 said.Text = Phone.Platform.SharePdf(pdf, $"grouplab-scale-labels-{w}x{h}mm-S{serial}") ?? $"Shared four {w} x {h} mm labels, S{serial} to S{serial + 3}.";
                 Phone.Settings.SaveLabelSerial(serial + 4);
             }).Id("targets-markers-labels"),
+            Screens.Choice(M220Print, () => _ = PrintOnM220(said)).Id("targets-markers-labels-m220"),
             boards,
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),
@@ -485,6 +486,64 @@ public sealed class TargetsPage : UserControl
         {
             m834Printing = null;
             cancel.IsVisible = false;
+        }
+    }
+
+    internal const string M220Print = "Print two scale labels on the Phomemo M220 (Bluetooth)";
+
+    /// <summary>
+    /// Entry 386, after question 90: two scale labels of the size loaded, each its own serial, drawn one dot at a time for the M220's 203 dpi
+    /// head at exactly the label's width, and sent over Bluetooth LE (<c>IPhonePlatform.OpenLePrinterAsync</c>) in the Phomemo ESC family's
+    /// commands. The M220 is not known to say when a label has printed, so the link stays open eight seconds after the last write.
+    /// </summary>
+    private static async Task PrintOnM220(TextBlock said)
+    {
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        string step = "drawing";
+        try
+        {
+            var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m220");
+            var (w, h) = Phone.Settings.LoadLabelSize();
+            int serial = Phone.Settings.LoadLabelSerial();
+            int dots = (int)Math.Ceiling(w / 25.4 * profile.DotsPerInch / 8) * 8;
+            var head = new GroupLab.Core.Printing.Thermal.PrintHead(profile.DotsPerInch, dots);
+            var jobs = GroupLab.Core.ScaleMarkers.ScaleLabels.Pages(w, h, serial, 2, "M220")
+                .Select(page => GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(
+                    new GroupLab.Core.Printing.Labels.LabelJob(GroupLab.Core.Printing.Thermal.ThermalRaster.Render(page, head).Image, w, h, Media: "gaps"), profile))
+                .ToList();
+            step = "connecting";
+            said.Text = "Connecting to the M220…";
+            var (link, why) = await Phone.Platform.OpenLePrinterAsync(profile, CancellationToken.None);
+            if (link is null)
+            {
+                DiagnosticLog.Info("print.m220", ("step", "connect"), ("result", "none"), ("ms", clock.ElapsedMilliseconds));
+                said.Text = why ?? "The M220 could not be reached.";
+                return;
+            }
+
+            step = "sending";
+            await using (link)
+            {
+                foreach (var job in jobs)
+                {
+                    said.Text = "Sending the labels to the M220…";
+                    int blocks = await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, job, Task.Delay, CancellationToken.None);
+                    DiagnosticLog.Info("print.m220", ("step", "sent"), ("blocks", blocks), ("bytes", job.Length), ("ms", clock.ElapsedMilliseconds));
+                }
+
+                step = "printing";
+                said.Text = "The M220 is printing…";
+                await Task.Delay(TimeSpan.FromSeconds(8));
+            }
+
+            Phone.Settings.SaveLabelSerial(serial + 2);
+            DiagnosticLog.Info("print.m220", ("labels", jobs.Count), ("size", $"{w}x{h}"), ("ms", clock.ElapsedMilliseconds));
+            said.Text = $"Sent two {w} x {h} mm labels, S{serial} and S{serial + 1}, to the M220.";
+        }
+        catch (Exception e)
+        {
+            DiagnosticLog.Info("print.m220", ("step", step), ("error", e.GetType().Name), ("ms", clock.ElapsedMilliseconds));
+            said.Text = $"The labels did not reach the M220: while {step}, it stopped ({e.Message}). Turn the printer off and on, then try again.";
         }
     }
 

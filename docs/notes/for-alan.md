@@ -1,4 +1,4 @@
-**Open: 21.** Most urgent today: **81, the M834's printer check saved and one more print** (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 22.** Most urgent today: **82, two commands that make Send to GroupLab live, and a first M220 print from the phone** (ten minutes). Then **81, the M834's printer check saved and one more print** (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,18 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 82. Send to GroupLab live, and the M220 printing from the phone, about ten minutes (entry 386, question 90)
+
+**Why:** Send to GroupLab (Settings, About, on the phone) sends your logs and a note straight to the project, but the server's error worker
+has to be reinstalled before it opens an issue for them; this session cannot reach the server. And the phone can now print scale labels
+straight to the M220 over Bluetooth, which no real M220 has done yet.
+**Steps:**
+1. In MobaXterm, the two commands at the top of `docs/notes/panel.md` (an scp, then an ssh with the dry run and the install).
+2. With nightly 177 or later on the Fold 7 or the tablet: the M220 on, with the 70 x 80 roll; GroupLab, Targets, Scale markers,
+   **Print two scale labels on the Phomemo M220**. Allow nearby devices if asked, then press it again.
+**A good answer:** what the install said, and whether two labels came out (or what the screen said). If they came out, measure one with
+a caliper across the two codes of a row: 60.0 mm centre to centre is right.
 
 ## 81. The M834's printer check, saved, and one more print to confirm it, about fifteen minutes (entry 385)
 

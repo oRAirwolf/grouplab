@@ -1021,8 +1021,11 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   marks each way, saved on Targets, Scale markers; **Measure a scanned check label** reads a 600 dpi scan and gives the scale across the
   head and along the feed, measured square to the rows; on rendered labels 100.00 percent across, and a feed made 1.2 percent short read
   as such within 0.2 (`Entry365Tests.ThePrinterCheckLabelMeasuresAcrossAndAlong`). The result is kept as the printer's check with its
-  label size (`PrinterProfile.LabelSize`), and the size is read from there once one exists. **Not done:** the phone's Bluetooth LE link,
-  so direct printing to the M220 from GroupLab is not reachable yet; labels go through the Phomemo app as before.
+  label size (`PrinterProfile.LabelSize`), and the size is read from there once one exists. **The phone's Bluetooth LE link**, built the
+  same evening after question 90 (Alan): `AndroidLePrinter` finds the M220 paired, or from Android 12 by a ten second scan declared never
+  for location, connects, asks for room for 128 byte writes, turns on its answers and writes each chunk with a response; Targets, Scale
+  markers, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded at exactly the label's width. Built for
+  Android and compiled here; not yet printed on a real M220 by this path.
 - **Section 4, Send to GroupLab** (entry 376 B7). On the phone, Settings, About, first: the two newest logs (typed names and notes replaced
   by their length, paths already out) and the newest crash record go to the crash receiver as a package, then a report of the kind
   `diagnostics`, made by hand, with the package's reference and the person's note, to the error receiver; the error worker opens an
@@ -1033,6 +1036,10 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   one centre beside it; and the root mean square distance of the sheets' centres from their mean, named as the movement between sheets.
   Shown when imported rows name their sheet and session (`ShotCsv.SheetsOf`), on the computer's import line and the phone's import page.
   Built as proposed, for planning to confirm. Tests: `PooledSpreadTests`.
+- **Question 90, answered by Alan the same evening**: (a) `phoneMaxNightlies` 90, and the site published again (6c68f164); (b)
+  `scripts/android-screens.sh` in the emulator's run takes the phone's published screenshots at each pictured device's size, light and
+  dark, and commits them with the nightly (`AndroidEmulatorSweepTests.TheEmulatorTakesEveryPublishedPhoneScreenshotUnderItsOwnName`).
+  The error worker's reinstall is a command for Alan (panel.md), because this session has no way onto the server.
 - **The standing rule** (Alan, 2026-10-07): before ending a turn, the inbox is looked in and waiting entries taken, in CLAUDE.md.
 
 ## Decision log

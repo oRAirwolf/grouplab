@@ -111,6 +111,9 @@ internal sealed class AndroidPhone : IPhonePlatform
     public Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenSerialPrinterAsync(string nameHint, CancellationToken token) =>
         AndroidSerialPrinter.OpenAsync(nameHint, token);
 
+    public Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenLePrinterAsync(GroupLab.Core.Printing.Labels.PrinterProfile profile, CancellationToken token) =>
+        AndroidLePrinter.OpenAsync(profile, token);
+
     public bool CameraGranted() => MainActivity.Current is { } activity
         && AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.Camera) == global::Android.Content.PM.Permission.Granted;
 

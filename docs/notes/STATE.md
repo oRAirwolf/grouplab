@@ -20,17 +20,17 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Google Play's internal test now follows the nightlies** (request 80 answered): nightly 176 sent by hand, version code 176 committed
   (run 37674523785); from nightly 177 every one goes by itself. **Request 79 answered**: both APKs registered with the upload key.
 - **Question 87 measured**: no second line for fits with many features is safe (wrong fits reach 590 features); the rule stays.
-- **Entry 386 done, three parts waiting outside the code** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no
-  marker is read once at full size (question 83 (b)); the M220's profile, check label and its measurement, the label size kept with the
-  printer (**the phone's Bluetooth LE link not built**); **Send to GroupLab** built, live once the receiver goes with a site publish and
-  the error worker is reinstalled with `install.py` under sudo; question 34 built as proposed, **for planning to confirm**.
-- **Question 90 answered (Alan)**: the phone pictures' limit raised to 90 so the site publishes; next, the error worker reinstalled,
-  then the phone pictures from the emulator's sweep, then the M220's Bluetooth LE link.
+- **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
+  (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
+  over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live once Alan runs the worker reinstall in panel.md (the receiver
+  is on the site); question 34 built as proposed, **for planning to confirm**.
+- **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
+  pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
 - **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
   request 81 saves the check and asks for a second print before any stretch.
 - **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
 - **Entries 384, 383 (the tester's report, fixed in nightly 176), 378, 376 (B7 built in 386), 374 and 373 done.**
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81 (the M834's check, a second print).
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81, 82 (the M834's check, a second print).
 
 ## The next three
 
@@ -52,15 +52,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
-2. The phone's Bluetooth LE link, so the M220 prints scale labels straight from GroupLab (entry 386 section 3's part not done).
-3. The phone pictures from the emulator's screen sweep (question 90 (b)).
+2. Alan's first print on the M220 from the phone, and his worker reinstall (panel.md).
+3. Check the emulator's first phone pictures against the tour pages' words.
 
 ## Blocked, and on what
 
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **21** (81 the M834's check and a second print; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **22** (82 the worker reinstall and a first M220 print; 81 the M834's check and a second print; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

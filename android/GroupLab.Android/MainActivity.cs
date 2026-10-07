@@ -82,6 +82,26 @@ public class MainActivity : AvaloniaMainActivity
         return false;
     }
 
+    /// <summary>
+    /// The M220's Bluetooth LE link (entry 386): whether GroupLab may scan for a nearby printer, Android 12 and later, declared never to be
+    /// used for location; asks once where it may not, and says false until the person answers.
+    /// </summary>
+    internal static bool BluetoothScanAllowed()
+    {
+        if (!OperatingSystem.IsAndroidVersionAtLeast(31) || Current is not { } activity)
+        {
+            return false;
+        }
+
+        if (AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.BluetoothScan) == Permission.Granted)
+        {
+            return true;
+        }
+
+        AndroidX.Core.App.ActivityCompat.RequestPermissions(activity, [global::Android.Manifest.Permission.BluetoothScan], BluetoothRequest);
+        return false;
+    }
+
     /// <summary>Whether the camera may be used; asks the person once where it may not, and says false until they answer.</summary>
     internal static bool CameraAllowed()
     {

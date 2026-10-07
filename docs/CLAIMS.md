@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1531 |
+| code | 1532 |
 | measured | 2009 |
 | decided | 1299 |
 | unbacked | 0 |
-| **total** | **4839** |
+| **total** | **4840** |
 
-**1197** of them were read one sentence at a time and their backing written against the sentence. The other **3642** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1198** of them were read one sentence at a time and their backing written against the sentence. The other **3642** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3467,6 +3467,7 @@ one that matters.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): **Made for your optic.** Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.
 - *code* (src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)): GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover.
 - *code* (src/GroupLab.Core/ScaleMarkers/ScaleLabelCheck.cs Page and Measure, src/GroupLab.App/MainWindow.ScaleMarkers.cs SaveCheckLabel and MeasureCheckLabel, PrinterProfile.LabelSize; Entry365Tests.ThePrinterCheckLabelMeasuresAcrossAndAlong; entry 386 section 3): **Save the printer check label** gives one label to print at 100 percent and scan at 600 dpi, and **Measure a scanned check label** measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size.
+- *code* (android/GroupLab.Android/AndroidLePrinter.cs OpenAsync (paired first, a scan from Android 12), mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, printers.json phomemo-m220; entry 386 after question 90. Not yet printed on a real M220 by this path): On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.
 - *code* (src/GroupLab.Cli/Library/ScaleMarkerFinder.cs, ScaleMarkerFinder.Find (blanks every copy) and ForMarking; src/GroupLab.App/MainWindow.MarkerScale.cs, HasCard (a picture with a card is never sent); tests/GroupLab.App.Tests/Entry365Tests.cs): A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card.
 - *measured* (grouplab marker-trial --photos 20 (seed 365), run 2026-10-04: 20 computer-made photos each of a 12 by 12 in and a 23 by 35 in target, tilted up to 30 degrees; docs/PHASE1-RESULTS.md, entry 365): On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15.
 - *code* (src/GroupLab.Core/ScaleMarkers/ScaleMarkerReading.cs, ScaleMarkerReading.Read (the printer's Across and Down scale the printed pieces) and UncheckedPrint = 0.015): Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent.
