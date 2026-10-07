@@ -877,7 +877,7 @@ jobs:
     # is never a condition, so a failure there publishes the desktop builds without the Android files.
     if: ${{ !cancelled() && needs.package.result == 'success' && needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       GH_TOKEN: ${{ github.token }}
       SHA: ${{ needs.name-it.outputs.sha }}
@@ -1026,7 +1026,12 @@ jobs:
       - name: Publish this build
         env:
           GH_DEBUG: api
+        # Nightly 177: the API trace written to the step's own log stalled it for thirty minutes after every file was up, so the trace now
+        # goes to a file and is shown only when the release could not be made.
         run: |
+          set -o pipefail
+          trap 'tail -80 gh-debug.log 2> /dev/null || true' ERR
+          exec 2> gh-debug.log
           gh release create "v$VERSION" \
             --title "GroupLab $VERSION" \
             --notes-file notes.md \

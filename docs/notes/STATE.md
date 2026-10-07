@@ -79,8 +79,8 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89, 83 and 90 answer
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.176 (2026-10-07 18:00 UTC: entry 383's marking file fix and the work before it); on Google Play's
-  internal test as version code 176.
+- **Last nightly:** 0.2.0-nightly.177 (2026-10-07 22:35 UTC, 4cbf3f05: entry 386 and the M220 link). **Its publish timed out after the files
+  were up**, so the moving "nightly" release still serves 176 (updaters offer 176) until 178; its notes were written by hand, Play by hand.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 

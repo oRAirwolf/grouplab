@@ -12,6 +12,32 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.177
+
+**2026-10-07**, commit `4cbf3f0`. Nightly.
+
+**What you will notice**
+
+- On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220 over Bluetooth, with no Phomemo app; it has not yet been tried on a real M220.
+- A label printer such as the Phomemo M220 now has its own printer check label: scan it at 600 dpi and GroupLab measures the printer and remembers the label size with it.
+- On the phone, Settings, About now has Send to GroupLab, which sends your logs with a note straight to the project; until the server is updated it may say only the logs went.
+- When you import shots from several sheets at once, GroupLab now gives the group's size with each sheet measured from its own center, beside the size from one center and how far the sheets moved.
+- The plain Android APK from the download page now keeps itself up to date as GroupLab Dev does; if yours is older than this build, install this one by hand once.
+- Opening a photo with no GroupLab codes or markers in it, such as a store-bought target, now takes a few seconds instead of half a minute.
+- Testers who installed GroupLab from Google Play now receive every nightly build there automatically, starting with nightly 176.
+
+**Under the hood**
+
+- A measurement checked whether a shot-up store-bought target could be recognized more readily; it could not be done without naming the wrong target, so recognition stays as it was and asks you instead.
+
+**Known issues**
+
+- Publishing this build stopped after its downloads were up, before the newest-build download moved to it, so GroupLab Dev's updates, the update check and Google Play still offer nightly 176 until the next build; download this one from the link below.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.177)
+
+---
+
 ## 0.2.0-nightly.176
 
 **2026-10-07**, commit `a8d7079`. Nightly.
