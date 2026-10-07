@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07, after entry 380; Alan had entries 382, 378 and 380 taken before the reset.
+**Last rewritten:** 2026-10-07, after entry 383; Alan had entries 382, 378 and 380 taken before the reset.
 
 ---
 
@@ -18,6 +18,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
   answered: Part C meant what is left of entry 374.
+- **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 175**: a marking names its photo by file name only,
+  opens beside it wherever the two are moved, asks for the photo when it is not there. No archived submission can hold a path.
 - **Entry 380 done but section 3** (2026-10-07): the phone's Label size loaded, as on the computer; request 77 for 50 x 30 mm.
 - **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
   request 79 has Alan's Play Console steps, `android-verify.yml` builds the small proof APK from his snippet; a note for testers in
@@ -28,7 +30,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 381 done** (2026-10-06): the M834 print waits for the printer's `1A 0F 0C`, Cancel works, every block and answer logged.
 - **Entry 376 done but B7** (2026-10-06): shots matched to bulls as one sheet, drawn and named by bull; tablets full width; B7
   (diagnostics straight to GroupLab) needs a receiver kind.
-- **Entry 379 done but section 3** (2026-10-06): the page "What GroupLab sends" and the guides follow now that 173 is out.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing, Ask again, Possibly one hole,
   CSV pooling (2026-10-07); the 2 MOA 3 by 4 sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print, nightly 175), 79 (Play developer verification).
@@ -54,7 +55,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. B7 and 379 section 3; then entry 374's rest (the store-bought photos by hand; the 2 MOA sheet on question 86).
+3. B7 and 379 section 3 (the page "What GroupLab sends" and the guides); then entry 374's rest (the store-bought photos by hand; the 2 MOA sheet on question 86).
 
 ## Blocked, and on what
 

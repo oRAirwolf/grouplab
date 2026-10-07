@@ -25,6 +25,42 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 383: marking files keep the photo's full path (a tester's report)
+
+**Status: actioned 2026-10-07; sections 1 to 5 done.**
+
+From the planning session, 2026-10-07. Take after the entries already given in this session's start line.
+
+## What was reported
+
+A tester posted this in the Discord bug-reports forum on nightly 174 (0.2.0-nightly.174, commit ce1a7de). Do not write the tester's
+name or Discord handle anywhere.
+
+1. "Open marking" fails if the photo (JPG) and its marking file (JSON) are moved together into another folder.
+2. The marking file's `"image"` field stores the photo's absolute path, for example
+   `"/Users/<user name>/<folder>/PXL_20260919_223605180_2.jpg"`, which leaks the user name and folder names whenever the file is
+   shared, sent or submitted.
+3. The failure is silent: no message tells the user what happened.
+
+The tester's workaround is the Session format, which does not help files made before Sessions existed.
+
+## What to do
+
+1. **Write only the photo's file name** in `"image"` (MarkingFile.cs writes `state.ImagePath` near line 43). Never write a folder,
+   on any platform (desktop, Android, iOS).
+2. **When opening, look for the photo in this order:** next to the marking file, by file name; then, for an older file that still holds a
+   full path, that path as written; then, only if both fail, ask the user to pick the photo, with a plain message saying it was not found
+   next to the marking file. Never fail silently. After a successful open, the next save writes the file name only.
+3. **Check everything that leaves the device for paths:** the shared and sent packages (TargetSender's `package.json`), the target
+   submission page and its intake worker, the error and log senders, Sessions, and any export. Remove any absolute path or user name
+   before it leaves, and say in STATE whether submissions already archived carry one. If they do, tell the planning session (not Alan
+   directly) how many, so the planning session can decide with Alan; do not change the archive without that.
+4. **Tests:** a marking file and photo moved together to a new folder open with no prompt; an old file with an absolute path that no
+   longer exists opens by file name; a missing photo shows the message and the picker; a saved file contains no folder.
+5. Update the release notes and any guide that describes the marking file, in the same change (entry 267).
+
+When done, add one line to STATE saying the tester's report is fixed and in which nightly, so the planning session can reply to the tester.
+
 ## 2026-10-07, entry 380: the phone chooses the scale label size too, and request 77 follows the 50 x 30 mm roll
 
 **Status: actioned 2026-10-07 (taken before the reset at Alan's word); sections 1 and 2 done; section 3 not done: no photos in m220-labels yet.**

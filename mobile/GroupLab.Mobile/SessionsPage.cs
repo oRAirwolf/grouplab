@@ -216,6 +216,8 @@ public sealed class SessionsPage : UserControl
             return;
         }
 
+        // Entry 383: a marking holds its photo's file name only; the photo itself is where this device's record says.
+        state = state with { ImagePath = record.ImagePath ?? state.ImagePath };
         var definition = record.DefinitionJson is { } json ? GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
         DiagnosticLog.Info("session.open", ("session", id.ToString(CultureInfo.InvariantCulture)));
         Content = new ResultView(new PhoneResult(state, definition, null, id), new ShotSetup(state.Calibre, state.ShotDistanceInches), Phone.Settings.LoadUnits(), () => Content = List());

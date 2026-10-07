@@ -40,7 +40,8 @@ public static class MarkingFile
         var document = new
         {
             format = Format,
-            image = state.ImagePath,
+            // Entry 383: the photo's file name only, never a folder, which names the user and their folders wherever the file is sent.
+            image = ImageName(state.ImagePath),
             imageFrame = new { name = ViewRotation.StoredPixelFrame, description = FrameDescription },
             exifOrientation = state.ExifOrientation,
             displayRotationDegrees = 90 * state.ViewQuarterTurns,
@@ -135,6 +136,70 @@ public static class MarkingFile
     }
 
     /// <summary>Reads a marking file into a state, with notes for anything that could not be carried over. Throws <see cref="MarkingFileException"/> for a file it will not read.</summary>
+    /// <summary>
+    /// Entry 383: the last part of a photo's path, its file name, whichever separator the device that wrote it used, so a Windows path read
+    /// on a Mac, or the reverse, still loses its folders.
+    /// </summary>
+    public static string? ImageName(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return path;
+        }
+
+        int cut = path.LastIndexOfAny(['/', '\\']);
+        return cut < 0 ? path : path[(cut + 1)..];
+    }
+
+    /// <summary>
+    /// Entry 383: a stored marking with its photo's folders taken out, for whatever leaves the device; marking files written before entry
+    /// 383 held the whole path. Anything that is not a marking is given back as it was.
+    /// </summary>
+    public static string WithoutFolders(string markingJson)
+    {
+        ArgumentNullException.ThrowIfNull(markingJson);
+        try
+        {
+            if (JsonNode.Parse(markingJson) is JsonObject file && file["image"] is JsonValue value && value.TryGetValue<string>(out var image))
+            {
+                string? name = ImageName(image);
+                if (name != image)
+                {
+                    file["image"] = name;
+                    return file.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+                }
+            }
+        }
+        catch (JsonException)
+        {
+        }
+
+        return markingJson;
+    }
+
+    /// <summary>
+    /// Entry 383: where a marking's photo is, in this order: beside the marking file, by its file name, so a photo and its marking moved
+    /// together still open; then, for a file written before entry 383, the full path it holds, as written. Null when neither is there, and
+    /// the person is then asked for the photo.
+    /// </summary>
+    public static string? FindImage(string markingPath, string? recorded, Func<string, bool> exists)
+    {
+        ArgumentNullException.ThrowIfNull(markingPath);
+        ArgumentNullException.ThrowIfNull(exists);
+        if (ImageName(recorded) is not { Length: > 0 } name)
+        {
+            return null;
+        }
+
+        string? folder = Path.GetDirectoryName(Path.GetFullPath(markingPath));
+        if (folder is not null && Path.Combine(folder, name) is var beside && exists(beside))
+        {
+            return beside;
+        }
+
+        return recorded != name && exists(recorded!) ? recorded : null;
+    }
+
     public static (MarkingState State, IReadOnlyList<string> Notes) Read(string json)
     {
         JsonNode? root;

@@ -105,8 +105,9 @@ public static class DataExport
                 continue;
             }
 
-            // The original photograph's path is this device's, and says nothing another device can use; its SHA-256 stays.
-            JsonSerializer.Serialize(json, new ExportedSession(session with { ImagePath = null }, store.ChronographStrings(session.Id), store.ShotVelocities(session.Id)), Options);
+            // The original photograph's path is this device's, and says nothing another device can use; its SHA-256 stays. Entry 383: a
+            // marking stored before then still names the photo's folders, which name the user, so they are taken out of it too.
+            JsonSerializer.Serialize(json, new ExportedSession(session with { ImagePath = null, MarkingJson = MarkingFile.WithoutFolders(session.MarkingJson) }, store.ChronographStrings(session.Id), store.ShotVelocities(session.Id)), Options);
             json.Flush();
         }
 
@@ -187,7 +188,8 @@ public static class DataExport
     public static string Identity(SessionRecord s) => $"{s.CreatedUtc}|{s.SheetName}|{s.DefinitionId}|{s.ImageSha256}";
 
     private static bool SameContent(SessionRecord a, SessionRecord b) =>
-        a with { Id = 0, ImagePath = null, ProofImage = null } == b with { Id = 0, ImagePath = null, ProofImage = null }
+        a with { Id = 0, ImagePath = null, ProofImage = null, MarkingJson = MarkingFile.WithoutFolders(a.MarkingJson) }
+            == b with { Id = 0, ImagePath = null, ProofImage = null, MarkingJson = MarkingFile.WithoutFolders(b.MarkingJson) }
         && (a.ProofImage ?? []).AsSpan().SequenceEqual(b.ProofImage ?? []);
 
     /// <summary>What importing <paramref name="file"/> here would do. Nothing is written.</summary>

@@ -1910,15 +1910,55 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        if (state.ImagePath is not { } image || !File.Exists(image))
+        // Entry 383: the photo beside the marking file first, by its name, then the full path an older file holds; failing both, the person
+        // is told plainly and asked for the photo, never left with nothing happening.
+        if (MarkingFile.FindImage(path, state.ImagePath, File.Exists) is not { } image)
         {
-            problem.Text = $"The marking's image, {state.ImagePath ?? "(none recorded)"}, is not there. Put it back at that path to reopen the marking.";
             DiagnosticLog.Warn("file.open", [.. DiagnosticLog.File(path), ("kind", "marking"), ("reason", "its image is missing")]);
+            _ = AskForMarkingImage(path, state, notes);
             return;
         }
 
-        DiagnosticLog.Info("file.open", [.. DiagnosticLog.File(path), ("kind", "marking"), ("shots", state.Shots.Count)]);
+        OpenMarkingWith(path, state, notes, image);
+    }
 
+    /// <summary>Entry 383: what the person is told when a marking's photo is not beside it, and the title of the picker that asks for it.</summary>
+    internal static string PhotoNotFound(string? name) =>
+        $"The photo {MarkingFile.ImageName(name) ?? "this marking was made on"} was not found next to the marking file. Choose the photo to reopen the marking.";
+
+    /// <summary>Entry 383: the photo chosen by hand; the tests replace it, as the picker cannot be driven headless.</summary>
+    internal Func<string, Task<string?>>? PickMarkingImage { get; set; }
+
+    private async Task<string?> PickMarkingImageFromDisk(string title)
+    {
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = title,
+            AllowMultiple = false,
+            FileTypeFilter = [FilePickerFileTypes.ImageAll, FilePickerFileTypes.All],
+        });
+        return files.FirstOrDefault()?.TryGetLocalPath();
+    }
+
+    private async Task AskForMarkingImage(string path, MarkingState state, IReadOnlyList<string> notes)
+    {
+        string said = PhotoNotFound(state.ImagePath);
+        problem.Text = said;
+        status.Text = said;
+        if (await (PickMarkingImage ?? PickMarkingImageFromDisk)(said) is { } chosen && File.Exists(chosen))
+        {
+            problem.Text = "";
+            OpenMarkingWith(path, state, notes, chosen);
+            return;
+        }
+
+        Failed("The photo was not found", said.Replace(" Choose the photo to reopen the marking.", " Put the photo beside the marking file, or choose it when asked, to reopen the marking.", StringComparison.Ordinal));
+    }
+
+    private void OpenMarkingWith(string path, MarkingState state, IReadOnlyList<string> notes, string image)
+    {
+        DiagnosticLog.Info("file.open", [.. DiagnosticLog.File(path), ("kind", "marking"), ("shots", state.Shots.Count)]);
+        state = state with { ImagePath = image };
         OpenImage(image);
         if (metadata?.Orientation != state.ExifOrientation)
         {
@@ -3443,7 +3483,8 @@ public sealed partial class MainWindow : Window
         plotDefinition = record.DefinitionJson is { } json ? GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
         registrationResidual = null;
         detectedState = null;
-        session.Load(state);
+        // Entry 383: a marking holds its photo's file name only; the photo itself is where this computer's record says.
+        session.Load(state with { ImagePath = record.ImagePath ?? state.ImagePath });
         MarkingIsSaved();
         currentSession = id;
         destination = Destination.Analyse;

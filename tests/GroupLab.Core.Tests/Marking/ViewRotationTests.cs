@@ -108,7 +108,7 @@ public class ViewRotationTests
 
         var (state, notes) = MarkingFile.Read(MarkingFile.Write(session.State));
         Assert.Empty(notes);
-        Assert.Equal("C:/targets/group.jpg", state.ImagePath);
+        Assert.Equal("group.jpg", state.ImagePath); // entry 383: the file name only, never a folder
         Assert.Equal(8, state.ExifOrientation);
         Assert.Equal(0, state.ViewQuarterTurns);
         Assert.Equal(session.State.Shots, state.Shots);

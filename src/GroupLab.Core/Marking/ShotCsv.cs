@@ -49,7 +49,7 @@ public static class ShotCsv
             "shot", "bull", "x right (in)", "y up (in)", $"x right (MOA{at})", $"y up (MOA{at})", $"x right (mil{at})", $"y up (mil{at})", "sheet", "session", "distance (yd)", "excluded",
         }.Select(Quote))).Append('\n');
         string sheetName = Quote(sheet ?? state.SheetLabel ?? "");
-        string sessionName = Quote(state.ImagePath is { } image ? Path.GetFileNameWithoutExtension(image) : "");
+        string sessionName = Quote(MarkingFile.ImageName(state.ImagePath) is { } image ? Path.GetFileNameWithoutExtension(image) : "");
         string yards = distance is { } far ? (far / 36).ToString("0.#", CultureInfo.InvariantCulture) : "";
         foreach (int i in offsets.Count == shots.Count ? order : [])
         {

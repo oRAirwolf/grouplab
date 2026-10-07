@@ -883,6 +883,28 @@ about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that 
 - **Still not done:** the store-bought photos and the Rigid crosshair (they go through Add a store-bought target, by hand), the
   scoreboard and corpus.
 
+## Entry 383: marking files kept the photo's full path (a tester's report, 2026-10-07)
+
+**Sections 1 and 2:** `MarkingFile.Write` writes the photo's file name only, on every platform (`MarkingFile.ImageName` cuts at either
+separator, so a Windows path read on a Mac loses its folders too). Opening a marking looks for the photo beside the marking file by
+name, then at the whole path an older file holds, as written (`MarkingFile.FindImage`); failing both, the desktop says "The photo N was
+not found next to the marking file. Choose the photo to reopen the marking." and opens the picker, and if none is chosen says so in the
+middle of the window; never silent. A file opened that way saves with the name only. Sessions keep their photo's path in the device's
+own database, so reopening a session on the computer and the phone takes it from there.
+
+**Section 3, what leaves the device:** the sent target package names its image `target` plus the extension and has never carried a
+marking file; error reports pass messages and stacks through the log's scrubber and the report package refuses markings and paths;
+the session package already renamed its photo `image.<ext>`; Export all my data dropped each session's path and now also takes the
+folders out of each stored marking, which markings saved before this change still hold (`MarkingFile.WithoutFolders`); the shot CSV
+names the session by the photo's name only. **Archived submissions:** the upload page's receiver keeps the browser's file name, which
+browsers send without folders and PHP strips of any, and the application's packages never held a path, so no archived submission can
+carry one; the server's archive itself was not opened (that needs SSH).
+
+**Section 4, tests:** `Entry383Tests` (desktop: the saved file holds the name only; moved together, it opens with nothing asked; an
+old file with a whole path that is gone opens by the name beside it; alone, the message and the picker), `MarkingFilePathTests` (both
+separators, the search order, the stripping), and `ViewRotationTests` now expects the name only. **Section 5:** the user guide says the
+marking names its photo by file name and that the two travel together; the release note follows.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
