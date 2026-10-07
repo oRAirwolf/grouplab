@@ -1,6 +1,9 @@
 # The phone's screenshots
 
-Real screenshots in look B (entry 246), taken over adb by the Claude Code session in two sittings on 2026-09-28, the second on nightly
+From question 90 (Alan, 2026-10-07) on, the pictures of GroupLab's screens are taken on the Android emulator by
+`scripts/android-screens.sh`, sized as each device below, after every nightly the emulator's run follows, and committed when they change;
+`made-from.json` names the nightly. The sample sheet in them is then `samples/gl-cf25-ltr-d-25-shots-600-dpi.png`. Before that they were
+real screenshots in look B (entry 246), taken over adb by the Claude Code session in two sittings on 2026-09-28, the second on nightly
 115. The status bar is cut off, so nothing but GroupLab's own screen is kept. On the tablet, the S Pen's floating button, a system
 overlay, is painted out with the page around it. The launcher's icons come from its app search for "GroupLab", cropped to the two icons.
 

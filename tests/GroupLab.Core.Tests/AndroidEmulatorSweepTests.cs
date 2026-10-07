@@ -68,4 +68,30 @@ public class AndroidEmulatorSweepTests
         Assert.Contains("MAY_FIND_NOTHING = [\"Use this picture|Use it anyway\"]", Text("scripts", "phone-sweep-check.py"), StringComparison.Ordinal);
         Assert.Contains("may_find_nothing = [\"Use this picture|Use it anyway\"]", Text(".github", "workflows", "ios-app.yml"), StringComparison.Ordinal);
     }
+    /// <summary>
+    /// Question 90 (b): the emulator's run takes the phone's published screenshots, and its layouts make exactly the files the site publishes,
+    /// every one but the launcher icons, which show Android's launcher and are not retaken.
+    /// </summary>
+    [Fact]
+    public void TheEmulatorTakesEveryPublishedPhoneScreenshotUnderItsOwnName()
+    {
+        Assert.Contains("scripts/android-screens.sh", Text(".github", "workflows", "android-emulator.yml"), StringComparison.Ordinal);
+        string script = Text("scripts", "android-screens.sh");
+        string layouts = script[(script.IndexOf("<<'LAYOUTS'\n", StringComparison.Ordinal) + 12)..script.IndexOf("\nLAYOUTS\n", StringComparison.Ordinal)];
+        var made = new HashSet<string>(StringComparer.Ordinal);
+        foreach (string line in layouts.Split('\n'))
+        {
+            string[] f = line.Split(' ');
+            foreach (string screen in f[5].Split(','))
+            {
+                foreach (string theme in new[] { "light", "dark" })
+                {
+                    made.Add(f[4] == "-" ? $"{f[0]}-{screen}-{theme}.png" : $"{f[0]}-{screen}-{f[4]}-{theme}.png");
+                }
+            }
+        }
+
+        var published = Directory.EnumerateFiles(Repo.PathTo("docs", "figures", "screens", "phone"), "*.png").Select(Path.GetFileName).Where(n => !n!.StartsWith("icons-", StringComparison.Ordinal)).ToHashSet(StringComparer.Ordinal);
+        Assert.Equal(published.Order(StringComparer.Ordinal), made.Order(StringComparer.Ordinal));
+    }
 }

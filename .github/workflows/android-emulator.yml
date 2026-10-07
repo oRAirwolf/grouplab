@@ -13,8 +13,9 @@ concurrency:
   group: android-emulator-${{ github.ref }}
   cancel-in-progress: true
 
+# Question 90 (b): write, for the phone's screenshots it commits; nothing else here writes.
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   sweep:
@@ -112,6 +113,43 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
           disable-animations: true
           script: bash scripts/android-touch.sh apk/grouplab-dev-x86_64.apk android-touch
+
+      # Question 90 (b): the phone's published screenshots, taken here at each pictured device's size, light and dark, and committed
+      # when they changed, with the nightly they were taken on. A push made with this job's token starts no workflow.
+      - name: The phone's screenshots
+        id: screens
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 60
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-screens.sh apk/grouplab-dev-x86_64.apk android-screens "$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName' | sed 's/.*nightly\.//')"
+
+      - name: Commit the phone's screenshots if they changed
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && github.ref == 'refs/heads/main' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- docs/figures/screens/phone; then
+            echo "The phone's screenshots are unchanged."
+            exit 0
+          fi
+          count=$(git diff --name-only -- docs/figures/screens/phone | wc -l)
+          git add docs/figures/screens/phone
+          git commit -m "[screens] the phone's screenshots, taken on the Android emulator" -m "Question 90 (b): scripts/android-screens.sh, $count files changed. The marker keeps this out of the test suite and the nightly."
+          git pull --rebase origin main
+          git push origin main
 
       - name: Summary
         if: success()
