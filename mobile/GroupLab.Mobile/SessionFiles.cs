@@ -75,7 +75,7 @@ internal static class SessionFiles
 
         Directory.CreateDirectory(Shared);
         string path = Path.Combine(Shared, (definition?.Name ?? "shots") + " " + DateTime.Now.ToString("yyyy-MM-dd HHmm", CultureInfo.InvariantCulture) + ".csv");
-        File.WriteAllText(path, ShotCsv.Write(state));
+        File.WriteAllText(path, ShotCsv.Write(state, definition?.Name));
         if (Phone.Platform.ShareFile(path, "text/csv", "Share the shots as CSV") is { } failed)
         {
             return failed;

@@ -25,7 +25,7 @@ public sealed partial class MainWindow
     /// <summary>Writes the shots as CSV, one row per shot, for spreadsheets and other tools.</summary>
     private async Task WriteCsv(string path)
     {
-        await File.WriteAllTextAsync(path, ShotCsv.Write(session.State));
+        await File.WriteAllTextAsync(path, ShotCsv.Write(session.State, plotDefinition?.Name));
         status.Text = "Exported the shot coordinates to " + path;
         DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "csv"), ("shots", session.State.Shots.Count)]);
     }
@@ -35,27 +35,39 @@ public sealed partial class MainWindow
         DiagnosticLog.Info("dialog.open", ("dialog", "import-csv"));
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Import shot coordinates from a CSV file",
-            AllowMultiple = false,
+            Title = "Import shot coordinates from one or more CSV files",
+            AllowMultiple = true,
             FileTypeFilter = [new FilePickerFileType("CSV") { Patterns = ["*.csv", "*.txt"] }, FilePickerFileTypes.All],
         });
-        if (files.FirstOrDefault()?.TryGetLocalPath() is not { } path)
+        var paths = files.Select(f => f.TryGetLocalPath()).OfType<string>().ToList();
+        if (paths.Count == 0)
         {
             return;
         }
 
-        CsvTable table;
-        try
+        // Entry 374 section 4: several files with the same columns are put together as one group, shots from many sheets in one analysis.
+        var read = new List<(string Name, CsvTable Table)>();
+        foreach (string path in paths)
         {
-            table = ShotCsv.Read(await File.ReadAllTextAsync(path));
+            try
+            {
+                read.Add((Path.GetFileName(path), ShotCsv.Read(await File.ReadAllTextAsync(path))));
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
+            {
+                Failed("The file could not be read", $"{Path.GetFileName(path)} could not be read as CSV: " + e.Message);
+                return;
+            }
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
+
+        var (table, refused) = ShotCsv.Pool(read);
+        if (table is null)
         {
-            Failed("The file could not be read", "That file could not be read as CSV: " + e.Message);
+            Failed("The files could not be put together", refused!);
             return;
         }
 
-        await ShowMapping(table, Path.GetFileName(path));
+        await ShowMapping(table, read.Count == 1 ? read[0].Name : $"{read.Count} files put together");
     }
 
     /// <summary>

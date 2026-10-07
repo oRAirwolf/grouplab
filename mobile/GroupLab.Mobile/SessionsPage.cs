@@ -162,27 +162,39 @@ public sealed class SessionsPage : UserControl
             return;
         }
 
-        var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions { Title = "Import shots from a CSV file", AllowMultiple = false });
+        var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions { Title = "Import shots from one or more CSV files", AllowMultiple = true });
         if (files.Count == 0)
         {
             return;
         }
 
-        CsvTable table;
-        try
+        // Entry 374 section 4: several files with the same columns are put together as one group, as on the computer.
+        var read = new List<(string Name, CsvTable Table)>();
+        foreach (var file in files)
         {
-            await using var from = await files[0].OpenReadAsync();
-            using var reader = new StreamReader(from);
-            table = ShotCsv.Read(await reader.ReadToEndAsync());
+            try
+            {
+                await using var from = await file.OpenReadAsync();
+                using var reader = new StreamReader(from);
+                read.Add((file.Name, ShotCsv.Read(await reader.ReadToEndAsync())));
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
+            {
+                ProblemSheet.Stop(said, said, "That file could not be read", $"{file.Name} could not be read as CSV: " + e.Message);
+                return;
+            }
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException)
+
+        var (table, refused) = ShotCsv.Pool(read);
+        if (table is null)
         {
-            ProblemSheet.Stop(said, said, "That file could not be read", "That file could not be read as CSV: " + e.Message);
+            ProblemSheet.Stop(said, said, "The files could not be put together", refused!);
             return;
         }
 
+        string name = read.Count == 1 ? read[0].Name : $"{read.Count} files put together";
         var units = Phone.Settings.LoadUnits();
-        Content = new CsvImportPage(table, files[0].Name, () => Content = List(),
+        Content = new CsvImportPage(table, name, () => Content = List(),
             result => Content = new ResultView(result, new ShotSetup(null, result.State.ShotDistanceInches), units, () => Content = List()));
     }
 

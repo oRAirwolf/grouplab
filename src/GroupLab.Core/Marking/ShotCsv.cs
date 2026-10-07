@@ -28,9 +28,10 @@ public static class ShotCsv
     /// <summary>
     /// Every shot in the group as a row: its label, its bull, and its offset from its own bull's aim point, right and up positive, in inches,
     /// and in MOA and mil at the distance shot when there is one. The header names the units and the distance, so the file explains itself
-    /// without GroupLab.
+    /// without GroupLab. Entry 374 section 4: each row also names its sheet, its session (the picture it was marked on) and the distance, so
+    /// rows from many sheets can be put together and still say where each came from.
     /// </summary>
-    public static string Write(MarkingState state)
+    public static string Write(MarkingState state, string? sheet = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         var shots = state.Shots.Where(s => s.IsShot && !GroupAnalysis.OnSighter(state, s)).ToList();
@@ -45,8 +46,11 @@ public static class ShotCsv
         var text = new StringBuilder();
         text.Append(string.Join(",", new[]
         {
-            "shot", "bull", "x right (in)", "y up (in)", $"x right (MOA{at})", $"y up (MOA{at})", $"x right (mil{at})", $"y up (mil{at})", "excluded",
+            "shot", "bull", "x right (in)", "y up (in)", $"x right (MOA{at})", $"y up (MOA{at})", $"x right (mil{at})", $"y up (mil{at})", "sheet", "session", "distance (yd)", "excluded",
         }.Select(Quote))).Append('\n');
+        string sheetName = Quote(sheet ?? state.SheetLabel ?? "");
+        string sessionName = Quote(state.ImagePath is { } image ? Path.GetFileNameWithoutExtension(image) : "");
+        string yards = distance is { } far ? (far / 36).ToString("0.#", CultureInfo.InvariantCulture) : "";
         foreach (int i in offsets.Count == shots.Count ? order : [])
         {
             var shot = shots[i];
@@ -58,11 +62,35 @@ public static class ShotCsv
                 Quote(labels.GetValueOrDefault(shot.Id) ?? "Shot " + (i + 1).ToString(CultureInfo.InvariantCulture)), Quote(bull),
                 Signed(x, 4), Signed(y, 4),
                 Angle(x, AngularUnit.Moa), Angle(y, AngularUnit.Moa), Angle(x, AngularUnit.Mrad), Angle(y, AngularUnit.Mrad),
+                sheetName, sessionName, yards,
                 shot.Exclusion is null ? "no" : "yes",
             })).Append('\n');
         }
 
         return text.ToString();
+    }
+
+    /// <summary>
+    /// Entry 374 section 4: several CSV files read as one table, so shots from many sheets of any kind make one group (Unholy: "combine sheets
+    /// without the set-of-three feature"). They must have the same columns, as GroupLab's own exports do; files that differ are refused by
+    /// name rather than put together wrongly.
+    /// </summary>
+    public static (CsvTable? Pooled, string? Refusal) Pool(IReadOnlyList<(string Name, CsvTable Table)> files)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        if (files.Count == 0)
+        {
+            return (null, "No files were chosen.");
+        }
+
+        static string Columns(CsvTable t) => string.Join("\n", t.Headers.Select(h => h.Trim().ToLowerInvariant()));
+        string first = Columns(files[0].Table);
+        if (files.Skip(1).FirstOrDefault(f => Columns(f.Table) != first) is { Name: { } odd })
+        {
+            return (null, $"{odd} has different columns from {files[0].Name}, so the two cannot be put together. Import files with the same columns, such as GroupLab's own exports.");
+        }
+
+        return (new CsvTable(files[0].Table.Headers, [.. files.SelectMany(f => f.Table.Rows)]), null);
     }
 
     /// <summary>

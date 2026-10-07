@@ -875,7 +875,13 @@ about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that 
   (`MarkingSession.MergeShots`), and **Two shots**, which keeps both. Two shots through one hole sit further apart than half its width.
   On the computer in the review queue, on the phone with the marks to check. Test:
   `ReviewQueueTests.TwoMarksCloserThanHalfAHoleAreAskedAboutAndCanBeTakenAsOneShot`.
-- **Still not done:** the store-bought photos and the Rigid crosshair, the scoreboard and corpus; shot data out and in.
+- **Shot data out and in** (section 4): the CSV export (entry 169) already gave each shot's bull and its offset from that bull in inches,
+  MOA and mil, with the distance in the header; each row now also names its sheet, its session (the picture's name) and the distance
+  in yards, before "excluded". Import takes several files at once, on the computer and the phone, and reads files with the same
+  columns as one group (`ShotCsv.Pool`), so shots from many sheets of any kind are pooled in one analysis; files whose columns differ
+  are refused by name. Test: `ShotCsvTests.ShotsFromSeveralSheetsArePutTogetherAndEachRowSaysWhereItCameFrom`.
+- **Still not done:** the store-bought photos and the Rigid crosshair (they go through Add a store-bought target, by hand), the
+  scoreboard and corpus.
 
 ## Decision log
 

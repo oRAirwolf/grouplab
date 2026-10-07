@@ -329,6 +329,8 @@ What exists and is tested:
 - scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168 and have not yet been printed on a real one; the Label size loaded is chosen on the computer and, from nightly 175, on the phone
 - chronograph readings from a file (a spreadsheet CSV, a Garmin Xero export, and, Experimental, a LabRadar report or a BulletSeeker
   export), paired with the shots by a proposal a person accepts (built, not proven)
+- shot coordinates from several CSV files put together as one group, shots from many sheets of any kind in one analysis, each
+  exported row naming its sheet, session and distance
 - an intake tool that verifies donated photographs, refuses opt-outs, and strips location data without altering a pixel
 - a sheet that names its own definition from its printed codes, so no target has to be named by hand
 - an end-to-end `analyze` command, from photograph to report

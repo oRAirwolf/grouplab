@@ -46,4 +46,29 @@ public class ShotCsvTests
         Assert.Equal(offsets.Select(o => o.X).Order(), again.Select(o => Math.Round(o.X, 4)).Order());
         Assert.Contains("x right (MOA at 100 yd)", back.Headers);
     }
+
+    /// <summary>
+    /// Entry 374 section 4: each row says its sheet, its session and the distance, and several of GroupLab's own files put together make one
+    /// group with every shot; files with other columns are refused by name.
+    /// </summary>
+    [Fact]
+    public void ShotsFromSeveralSheetsArePutTogetherAndEachRowSaysWhereItCameFrom()
+    {
+        var first = ShotCsv.Marking([new(-0.2, 0.1), new(0.15, -0.05), new(0.02, 0.24)], 3600) with { ImagePath = "range/first sheet.jpg" };
+        var second = ShotCsv.Marking([new(0.1, 0.1), new(-0.12, 0.06)], 3600) with { ImagePath = "second.jpg" };
+        var a = ShotCsv.Read(ShotCsv.Write(first, "GroupLab 3x3 2 MOA, Letter"));
+        var b = ShotCsv.Read(ShotCsv.Write(second));
+        Assert.Equal(["sheet", "session", "distance (yd)", "excluded"], a.Headers.TakeLast(4));
+        Assert.Equal(["GroupLab 3x3 2 MOA, Letter", "first sheet", "100", "no"], a.Rows[0].TakeLast(4));
+
+        var (pooled, refused) = ShotCsv.Pool([("a.csv", a), ("b.csv", b)]);
+        Assert.Null(refused);
+        Assert.Equal(5, pooled!.Rows.Count);
+        var (offsets, skipped) = ShotCsv.Shots(pooled, 2, 3, CoordinateUnit.Inch, yUpIsPositive: true, null);
+        Assert.Equal((5, 0), (offsets.Count, skipped));
+
+        var (none, why) = ShotCsv.Pool([("a.csv", a), ("other.csv", ShotCsv.Read("x,y\n1,2\n"))]);
+        Assert.Null(none);
+        Assert.StartsWith("other.csv has different columns from a.csv", why, StringComparison.Ordinal);
+    }
 }
