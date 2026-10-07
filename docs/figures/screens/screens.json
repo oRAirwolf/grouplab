@@ -1,7 +1,7 @@
 {
-  "about": "NOTES-FROM-PLANNING.md entry 253 section 5. Each published desktop screen and the source files that draw it; shared is added to every screen. scripts/screens-stamp.py hashes these into current/made-from.json when the pictures are rendered, and the site build fails when a screen's files have changed and a whole nightly has shipped since without a new picture, or when the pictures are more than maxNightlies behind the newest nightly. The phone's pictures can only be retaken with Alan's devices, so they are held to their age alone, phoneMaxNightlies.",
+  "about": "NOTES-FROM-PLANNING.md entry 253 section 5. Each published desktop screen and the source files that draw it; shared is added to every screen. scripts/screens-stamp.py hashes these into current/made-from.json when the pictures are rendered, and the site build fails when a screen's files have changed and a whole nightly has shipped since without a new picture, or when the pictures are more than maxNightlies behind the newest nightly. The phone's pictures can only be retaken with Alan's devices, so they are held to their age alone, phoneMaxNightlies (90 since question 90, Alan, 2026-10-07, until the emulator's sweep takes them).",
   "maxNightlies": 30,
-  "phoneMaxNightlies": 60,
+  "phoneMaxNightlies": 90,
   "shared": [
     "src/GroupLab.App/MainWindow.cs",
     "src/GroupLab.App/Theme/AppStyles.cs",

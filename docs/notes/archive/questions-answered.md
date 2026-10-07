@@ -5,6 +5,21 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-07, question 90: the site cannot publish until the phone's screenshots are retaken
+
+**Status: answered 2026-10-07 (Alan): (a) now, phoneMaxNightlies raised to 90 so the site publishes tonight, then (b), the phone pictures taken from the emulator's screen sweep so they no longer wait on a sitting.**
+
+
+Since nightly 176 every site publish fails its own check (website.yml run for 1d48dd63, 2026-10-07 19:46 UTC): "the phone's screenshots
+are from nightly 115, 61 behind 176; the limit is 60" (`docs/figures/screens/screens.json` phoneMaxNightlies, entry 253 section 5;
+`scripts/screens-stamp.py`). The phone pictures are retaken only at a device sitting (request 50), and the phones have not been reachable
+over adb since 2026-09-30. Until then grouplab.org keeps serving the last good build, without request 80's and 79's wording, entry 386's
+updater words, or the release notes of nightly 176 on. (The desktop half of the same check, pictures older than code that changed, is
+the screenshots workflow's to fix; it was re-run after a GitHub server error stopped its 16:46 run.) **Options:** **(a)** raise
+phoneMaxNightlies (to 90, say) until the sitting; **(b)** take the phone pictures from the emulator's screen sweep
+(`android-emulator.yml`), which shows the same screens but not a real phone's camera or frame; **(c)** leave it, and the site waits for
+the sitting. My choice: (a), with the sitting still the way the pictures are retaken. Nothing is changed until you answer.
+
 ## 2026-10-04, question 83: identification takes 34 s on a photo with no GroupLab codes
 
 **Status: answered 2026-10-07 (planning, entry 386 section 2): yes to (b), measured on the corpus first, keeping (a) if any sheet was lost. Built: 175 pictures, 78 with GroupLab markers (the same path either way) and 97 without; no sheet lost, and the 97 took 334 s against 1960 s the old way, 3 to 11 s each against 15 to 41 (`grouplab identify-trial`).**

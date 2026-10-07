@@ -24,8 +24,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   marker is read once at full size (question 83 (b)); the M220's profile, check label and its measurement, the label size kept with the
   printer (**the phone's Bluetooth LE link not built**); **Send to GroupLab** built, live once the receiver goes with a site publish and
   the error worker is reinstalled with `install.py` under sudo; question 34 built as proposed, **for planning to confirm**.
-- **The site cannot publish (question 90)**: the phone's screenshots are 61 nightlies old against a limit of 60; grouplab.org serves the
-  build of 2026-10-07 17:53 UTC until planning answers or a device sitting retakes them.
+- **Question 90 answered (Alan)**: the phone pictures' limit raised to 90 so the site publishes; next, the error worker reinstalled,
+  then the phone pictures from the emulator's sweep, then the M220's Bluetooth LE link.
 - **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
   request 81 saves the check and asks for a second print before any stretch.
 - **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
@@ -53,7 +53,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. The phone's Bluetooth LE link, so the M220 prints scale labels straight from GroupLab (entry 386 section 3's part not done).
-3. Question 90's answer, then a site publish and the error worker's reinstall, which make Send to GroupLab live.
+3. The phone pictures from the emulator's screen sweep (question 90 (b)).
 
 ## Blocked, and on what
 
@@ -66,9 +66,8 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Nine, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89 and 83 answered 2026-10-07 evening):
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89, 83 and 90 answered 2026-10-07 evening):
 
-- **90** the site cannot publish while the phone's screenshots are 61 nightlies old (my choice: raise the limit to 90)
 - **88** DESIGN NEEDED, chronograph entry on the analysis
 - **80** a newer fingerprint library without a new build
 - **67** the printer check page as grid style 4 (with Alan)

@@ -14,26 +14,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 30 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 31 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 89, 87, 86, 85, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 90, 89, 87, 86, 85, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
-
-## 2026-10-07, question 90: the site cannot publish until the phone's screenshots are retaken
-
-Status: open
-
-Since nightly 176 every site publish fails its own check (website.yml run for 1d48dd63, 2026-10-07 19:46 UTC): "the phone's screenshots
-are from nightly 115, 61 behind 176; the limit is 60" (`docs/figures/screens/screens.json` phoneMaxNightlies, entry 253 section 5;
-`scripts/screens-stamp.py`). The phone pictures are retaken only at a device sitting (request 50), and the phones have not been reachable
-over adb since 2026-09-30. Until then grouplab.org keeps serving the last good build, without request 80's and 79's wording, entry 386's
-updater words, or the release notes of nightly 176 on. (The desktop half of the same check, pictures older than code that changed, is
-the screenshots workflow's to fix; it was re-run after a GitHub server error stopped its 16:46 run.) **Options:** **(a)** raise
-phoneMaxNightlies (to 90, say) until the sitting; **(b)** take the phone pictures from the emulator's screen sweep
-(`android-emulator.yml`), which shows the same screens but not a real phone's camera or frame; **(c)** leave it, and the site waits for
-the sitting. My choice: (a), with the sitting still the way the pictures are retaken. Nothing is changed until you answer.
 
 ## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
 
