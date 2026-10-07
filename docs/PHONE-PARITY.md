@@ -53,7 +53,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Photographs at an angle | `angle` | on the phone | | on iOS |
 | Sessions between phone and computer | `share-session` | on the phone | | on iOS |
 | The phone follows your region | `phone-region` | on the phone | | on iOS |
-| Send a target to the project | `send-targets` | coming | entry 363 section 3.5: built, the computer's package and queue, Wi-Fi only unless mobile data is allowed, a target read and shown sent or asked about as chosen; off in every phone build until the stores' privacy answers are updated (`sendTargetsPhones`) | not yet |
+| Send a target to the project | `send-targets` | on the phone | entry 363 section 3.5: the computer's package and queue, Wi-Fi only unless mobile data is allowed, a target read and shown sent or asked about as chosen, and Send everything I open; switched on from nightly 173 (entry 379, `sendTargetsPhones`) | on iOS |
 | Error reports | `error-reports` | on the phone | | on iOS |
 | The hardware survey | `survey` | on the phone | | on iOS |
 | Words explained where they appear | `explain-words` | on the phone | a figure's name opens its explanation by a tap (entry 259 screen 1), and a secondary line naming a glossary word explains it by a tap (entry 258) | on iOS |
@@ -66,7 +66,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Large format on a home printer | `large-on-letter` | on the phone | | on a device |
 | GroupLab Dev for testers | `dev-build` | on the phone | | left out |
 | The sheet beside the numbers on a big screen | `big-screen` | on the phone | | on a device |
-| Print a sheet from the phone | `phone-targets` | on the phone | | on a device |
+| Print a sheet from the phone | `phone-targets` | on the phone | Android's print dialog or a PDF; on Android also straight to a Phomemo M834 over Bluetooth at true size, with Paper in the M834 for a roll or fanfold (requests 73 and 78, entries 381 and 382) | on a device |
 | Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame; on iPhone and iPad the panel sits above the preview, not over it (entry 313 section 2) | on a device |
 | Every picture checked | `picture-check` | on the phone | | on iOS |
 | The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | on iOS |

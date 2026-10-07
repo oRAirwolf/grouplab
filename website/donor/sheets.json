@@ -1,6 +1,6 @@
 {
   "about": "NOTES-FROM-PLANNING.md entry 264: the donor pack, one sheet of each style, Letter first and A4 beside it where the library has one. Each PDF is the sheet and its one page of instructions, made by `grouplab donor-pack` from the library; DonorPackTests fails when a committed PDF no longer matches what the library makes, and the site's publish runs those tests first. The site build zips the PDFs into the whole pack.",
-  "mostUseful": "The E bull, the C bull and the C3 zeroing grids: GroupLab has no real photographs of any of them yet.",
+  "mostUseful": "The C3 zeroing grids, which GroupLab has no real photographs of yet, and the E and C bulls, which it has seen from one range day only.",
   "sheets": [
     {
       "key": "e-bull",

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07, after entry 384; Alan had entries 382, 378 and 380 taken before the reset.
+**Last rewritten:** 2026-10-07, after entry 379 section 3 and the consistency audit; Alan had entries 382, 378 and 380 taken before the reset.
 
 ---
 
@@ -18,16 +18,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
   answered: Part C meant what is left of entry 374.
+- **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
 - **Entry 384 done** (2026-10-07): the analysis key no longer blanks a strip of the drawing; Add readings shows and outlines the
   Chronograph section; **the Play internal track: the last upload on record is nightly 110**, and the Play copy and plain APK do not
   update themselves until request 80 (play-upload.yml waits for its secret). For nightly 176.
-- **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only,
-  opens beside it wherever the two are moved, asks for the photo when it is not there. No archived submission can hold a path.
+- **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only.
 - **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
   request 79 has Alan's Play Console steps, `android-verify.yml` builds the small proof APK from his snippet; a note for testers in
   Brazil, Indonesia, Singapore and Thailand on the download page, README, testing guide and docs/ANDROID.md.
-- **Entry 376 done but B7** (2026-10-06): shots matched to bulls as one sheet, drawn and named by bull; tablets full width; B7
-  (diagnostics straight to GroupLab) needs a receiver kind.
+- **Entry 376 done but B7** (2026-10-06): B7 (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing, Ask again, Possibly one hole,
   CSV pooling (2026-10-07); the 2 MOA 3 by 4 sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print), 79 (one APK to upload), 80 (Play uploads).
@@ -53,7 +52,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. B7 and 379 section 3 (the page "What GroupLab sends" and the guides); then entry 374's 2 MOA sheet on question 86.
+3. B7 (diagnostics straight to GroupLab); then entry 374's 2 MOA sheet on question 86.
 
 ## Blocked, and on what
 
@@ -84,6 +83,7 @@ Thirteen, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 - **Last nightly:** 0.2.0-nightly.175 (2026-10-07 13:48 UTC, built from 7aeeb5a5: entries 382, 380 and 374's Ask again, Possibly one
   hole and CSV pooling; CI green on all three systems). Entry 383 (3e59e4b5) came after it and is in nightly 176.
+- **Pushes to main failed from 16:53 UTC on 2026-10-07** with GitHub's "Internal Server Error" (this session and the screenshots workflow too).
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 

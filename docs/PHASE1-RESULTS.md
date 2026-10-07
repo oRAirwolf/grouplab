@@ -942,6 +942,30 @@ with `android-verify.yml` from his snippet (package org.grouplab.app.dev, only `
 upload key, checked with apksigner) and put in `C:\Dev\grouplab-local\android-verification\`; request 79 rewritten (Add key takes the
 SHA-256 fingerprint, not the certificate).
 
+## Entry 379 section 3 and the consistency audit of 2026-10-07 (2026-10-07)
+
+**Entry 379 section 3:** the page What GroupLab sends now covers the computer and both phones: its title, the log in automatic error
+reports and Send everything I open on Android and the iPhone since nightly 173, and that a phone sends over Wi-Fi unless mobile data is
+allowed; it already listed the survey's random installation number, the log and sent photographs. The README and the guides agree.
+
+**The consistency audit of 2026-10-07** (ten findings, read before its inbox file was replaced by entry 384, question 89), all fixed:
+1. Features: `send-targets` lists both phones and says so, its 173 note claimed, and a reason for its missing phone picture;
+   `error-reports` says the log goes from the phones too; PHONE-PARITY's row is "on the phone" and "on iOS"; PhoneSending.cs's comment.
+2. The support page has a "Delete your data" section (`/support/#delete-your-data`): what the project can hold, no accounts, how to ask
+   by email with the date and build of what was sent, and Delete my survey reports in Settings; no time limit promised. Settings does
+   not show the installation number, so the page does not ask for it. PLAY.md's "entry 378 section 4" corrected.
+3. The M834 print is in `phone-targets` on the Features page, its four notes claimed there, in PHONE-PARITY and in the user guide's phone
+   section, with Paper in the M834.
+4. The phone's button now reads "Print on the Phomemo M834 (Bluetooth; true size still being checked)"; the README gives the M834 a
+   Status bullet of its own and leaves "(no label printer has printed from GroupLab yet)" on the label bullet.
+5. The tour: Capture says Mark it by hand sets the scale, aim points and holes under the crosshair on a target GroupLab did not print;
+   Marking says only the lasso is on the desktop alone.
+6. Shoot a target: the C3 grids have no real photograph yet, the E and C bulls one range day.
+7. README: "Of the computer downloads, only the Windows installer updates itself."
+8. Both guide PDFs regenerated (`grouplab user-guide`), and `scripts/consistency.py` now reports a guide PDF older than its Markdown.
+9. The `csv` feature says several files import as one group and each row names its sheet, session and distance; its note claimed.
+10. README: the GroupLab Dev row says "see On Android, below".
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

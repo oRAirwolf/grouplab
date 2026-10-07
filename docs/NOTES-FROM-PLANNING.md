@@ -242,8 +242,8 @@ go where Android shares; confirm 173 has no such crash, and say so in STATE.
 
 ## 2026-10-06, entry 379: "forms updated": the phones' senders switched on, and what the store forms now say
 
-**Status: sections 1 and 2 done 2026-10-06; section 3 (the public page and the guides) waits for nightly 173, the first carrying
-section 1, as the entry says.** The three phone switches in `website/api/limits.json` are on; request 71 closed; the declarations are in
+**Status: sections 1 and 2 done 2026-10-06; section 3 done 2026-10-07 (the page What GroupLab sends, the Features page, PHONE-PARITY,
+the guides), in one pass with the consistency audit of 2026-10-07 (question 89).** The three phone switches in `website/api/limits.json` are on; request 71 closed; the declarations are in
 docs/store/LISTING.md and docs/store/PLAY.md.
 
 Written by the planning session 2026-10-06 01:50 UTC. Alan: "forms updated". Small; do it right after entry 377, before entry 376 Part B,

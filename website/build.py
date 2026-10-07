@@ -1360,6 +1360,13 @@ def page_support() -> str:
 <div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then About, and choose <strong>Send diagnostics</strong>: it puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. On the iPhone and iPad beta, <strong>Send Beta Feedback</strong> in TestFlight, or a screenshot shared to it, reaches the project too.</p></div>
 <div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in <code>%APPDATA%\\GroupLab</code>, which no installer or uninstaller touches. To go back, download the build you were on from the releases list and install it over the broken one.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
 </section>
+<section class="wrap section-sm" id="delete-your-data">
+<div class="panel pad stack tight">
+<h2 class="h3">Delete your data</h2>
+<p>GroupLab has no accounts, so nothing is kept against a name or a login. What the project can hold is only what you chose to send: targets you sent (the picture and what GroupLab worked out about it), error reports with their logs, and hardware survey reports, which are counted into totals and deleted, keyed by a random number GroupLab made for your installation.</p>
+<p>To have what you sent deleted, email <a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a> with the date and the build of what was sent (the build line is at the top of Settings), so it can be found. Survey reports need no email: Settings, under Sharing, has <strong>Delete my survey reports</strong>. <a href="/research/what-grouplab-sends/">What GroupLab sends</a> lists everything that can leave your computer or phone.</p>
+</div>
+</section>
 <section class="wrap section-sm last">
 <div class="callout">
 <div class="stack">

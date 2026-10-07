@@ -107,7 +107,7 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day. |
 | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with Apple silicon (M-series). **Run on one real Mac**, by one tester; the Intel build has not been. |
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
-| **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see "Before you install" below. |
+| **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see On Android, below. |
 | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. |
 
 **The Windows and Linux builds here are unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names. **The macOS build is signed with a Developer ID and notarized by Apple.**
@@ -120,7 +120,7 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 - **On a Mac**, move `GroupLab.app` into Applications and open it. The first time, macOS checks it with Apple and opens it.
 - **Questions, or somewhere to say it did not work:** the [GroupLab Discord](https://grouplab.org/discord). For anything private, or anything with a photograph attached, the support address is better.
 - **On Android**, the APK is signed. **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Export all my data. Google Play's internal test is open by invitation, with a closed test to come; **the plain APK and the Play copy do not update themselves for now** (a build reaches Play only when it is uploaded, by hand until request 80 is done), while GroupLab Dev does and installs beside either with no uninstall; remove the Play copy before installing the plain APK, because the two are signed with different keys. Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates; it is Google's own check, takes a few seconds and is expected. **In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google**; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027. [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
-- **Updates are manual everywhere but the Windows installer.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
+- **Of the computer downloads, only the Windows installer updates itself.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the Windows and Linux builds are unsigned, what happens once the application settles, and how to ask for another Linux target.
 
 </details>
@@ -154,23 +154,23 @@ What the newest builds changed that you would notice, from their release notes.
 <!-- readme:whats-new: generated by scripts/readme.py from docs/RELEASE-NOTES.md and website/features.json; do not edit between these markers -->
 **0.2.0-nightly.175**, 2026-10-07
 
-- Shot coordinates from several CSV files can now be imported together as one group, and every exported row names its sheet, its session and the distance.
+- Shot coordinates from several CSV files can now be imported together as one group, and every exported row names its sheet, its session and the distance. [Shots in and out as CSV](https://grouplab.org/features/#csv)
 - Two marks closer than half a hole's width are now raised for you to check, and One shot turns them into a single shot at the middle of the two.
 - On the phone, Scale markers now has the Label size loaded choice, so the scale labels you share match the roll in your printer instead of always being 70 by 80 mm.
-- Printing straight to the Phomemo M834 from Android now feeds the sheet 15.5 mm further on a roll, so all of it clears the tear bar; choose a roll or fanfold sheets once under the print button.
+- Printing straight to the Phomemo M834 from Android now feeds the sheet 15.5 mm further on a roll, so all of it clears the tear bar; choose a roll or fanfold sheets once under the print button. [Print a sheet from the phone](https://grouplab.org/features/#phone-targets)
 - An answered review question can now be asked again: on the computer click it in the review queue, on the phone show the answered marks, then press Ask again or pick another answer.
 
 **0.2.0-nightly.174**, 2026-10-06
 
-- Printing straight to the Phomemo M834 from Android now prints the whole page: GroupLab keeps the connection open until the printer says it has finished, instead of stopping after a few millimeters.
+- Printing straight to the Phomemo M834 from Android now prints the whole page: GroupLab keeps the connection open until the printer says it has finished, instead of stopping after a few millimeters. [Print a sheet from the phone](https://grouplab.org/features/#phone-targets)
 
 **0.2.0-nightly.173**, 2026-10-06
 
 - On the phone, the report now opens as the page itself inside GroupLab on Android, with Share, Save on the phone and Print.
-- On Android and the iPhone, Send everything I open is now offered in Settings, automatic error reports can carry GroupLab's log, and a finished target can be sent to the project, over Wi-Fi unless you allow mobile data.
+- On Android and the iPhone, Send everything I open is now offered in Settings, automatic error reports can carry GroupLab's log, and a finished target can be sent to the project, over Wi-Fi unless you allow mobile data. [Send a target to the project](https://grouplab.org/features/#send-targets)
 - A line now runs from each bull to the holes given to it, on the computer and the phone, and tapping or clicking a bull, a hole, a line or a row of Bull by bull lights all three. [Which bull each shot belongs to](https://grouplab.org/features/#bull-lines)
 - On Android, the back button now goes back one screen, closing an open question first, and no longer leaves GroupLab from an inner screen.
-- On Android, printing straight to the Phomemo M834 no longer waits for ever on Connecting: it tries four ways of connecting for 12 seconds each, has a Cancel button, and says in the middle of the screen what stopped it.
+- On Android, printing straight to the Phomemo M834 no longer waits for ever on Connecting: it tries four ways of connecting for 12 seconds each, has a Cancel button, and says in the middle of the screen what stopped it. [Print a sheet from the phone](https://grouplab.org/features/#phone-targets)
 - On Android, sharing a sheet or the darkness test page for a printer app no longer closes GroupLab, and neither does sharing your data or a store-bought target's reference file.
 - Holes are now matched to the bulls as one sheet, read as aimed first and then in the order a sheet is shot, so a hole you add by hand no longer sends the whole sheet to the wrong bulls; when two sets of bulls fit equally well, GroupLab asks which you fired at. [A sheet shot off by the same amount](https://grouplab.org/features/#whole-sheet)
 - On a tablet, every page now uses the whole width of the screen, and the combined group picture can be dragged once you zoom in.
@@ -319,8 +319,9 @@ What exists and is tested:
 - a PDF renderer, a Targets screen that prints at true size, and a designer for your own sheets
 - label targets for a thermal label printer: 4x6, A6 and 100 x 150 mm labels beside Letter and A4, six of the 5x5 Letter sheets' bulls to a
   label in sets of five that pool like the 300 yard tiles, a printer check label, and a thermal print mode that draws every dot as the
-  printer will make it, and printing straight to a Phomemo M834 from Android over Bluetooth, spoken to as its own app was recorded
-  doing (no label printer has printed from GroupLab yet)
+  printer will make it (no label printer has printed from GroupLab yet)
+- printing straight to a Phomemo M834 from Android over Bluetooth, spoken to as its own app was recorded doing, with Paper in the M834
+  for a roll or fanfold sheets: a real M834 has printed a whole Letter sheet from it, and its true size is still being checked
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
 - the statistics engine, validated key for key against the R package `shotGroups`

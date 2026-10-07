@@ -5268,6 +5268,30 @@
   "The last upload on record is nightly 110 (2026-09-27); a tester was still on nightly 130 on 2026-10-07.": {
    "kind": "decided",
    "where": "Entry 384 section 3 (2026-10-07): docs/notes/for-alan.md request 80, docs/ANDROID.md section 12 (nightly 110's upload, 2026-09-27); the tester's build from planning's entry 384"
+  },
+  "How GroupLab is built 26 What GroupLab sends from your computer or phone Five things leave your computer or phone, all of them only when you ask.": {
+   "kind": "code",
+   "where": "website/api/limits.json sendTargetsPhones, sendEverythingOpenPhones and fullLogErrorReportsPhones true since nightly 173 (entry 379); src/GroupLab.Core/Updates/OutsideWorld.cs and OneWayOutTests"
+  },
+  "grouplab-donor-pack.zip &#183; 9 PDFs Download all Most useful right now: The C3 zeroing grids, which GroupLab has no real photographs of yet, and the E and C bulls, which it has seen from one range day only.": {
+   "kind": "decided",
+   "where": "Entry 368's range kit and the photographs of 4 October in docs/PHASE1-RESULTS.md, entry 374; the consistency audit of 2026-10-07, finding 6"
+  },
+  "**Untested on a real Mac.** | | **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see On Android, below.": {
+   "kind": "code",
+   "where": ".github/workflows/nightly.yml attaches grouplab-android.apk and grouplab-android-dev.apk to every nightly (ReleaseAssetTests); entry 373 section 3"
+  },
+  "- **Of the computer downloads, only the Windows installer updates itself.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/Updates (the installer path) and the download page's own sentence; the consistency audit of 2026-10-07, finding 7"
+  },
+  "Targets prints a sheet through Android's print dialog or shares its PDF, and prints the printer check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without the Phomemo app, with Paper in the M834 for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; Settings, under Printers , checks your printer.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM834 and M834PaperChoice; src/GroupLab.Core/Printing/Labels/PrinterEncoders.cs TearBar (entries 381 and 382)"
+  },
+  "Targets prints a sheet through Android's print dialog or shares its PDF, and prints the printer check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; Settings, under **Printers**, checks your printer.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM834 and M834PaperChoice; src/GroupLab.Core/Printing/Labels/PrinterEncoders.cs TearBar (entries 381 and 382)"
   }
  },
  "rules": [

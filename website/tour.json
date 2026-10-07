@@ -211,7 +211,7 @@
      "Press Fix holes, then pinch and drag until the crosshair is on the hole to change.",
      "Press Done: the figures follow and the change is saved. Leaving any other way asks whether to keep the changes."
     ],
-    "note": "Placing bulls by hand and the lasso, for a target GroupLab did not print, are on the desktop only, for now."
+    "note": "Only the lasso is on the desktop alone. On the phone, a target GroupLab did not print has its aim points and holes placed under a fixed crosshair, and a hole's bull is chosen in Fix holes."
    },
    "moreShots": [
     [
@@ -998,7 +998,7 @@
    "desktopWords": "On the phone only. On a computer, open a scan or a photograph from the marking screen instead.",
    "blurb": "Photograph a GroupLab target with the phone, or choose a photograph, and GroupLab finds the holes and measures the group.",
    "purpose": "The phone's first screen, with the GroupLab mark at the top and grouplab.org and the version at the foot. Hold the phone square over the sheet and the words at the top of the camera say what to change; it takes the picture itself when everything is right. A photograph already on the phone works too.",
-   "withoutASheet": "Placing bulls by hand on a target GroupLab did not print is on the desktop only, for now; the phone is for GroupLab's own sheets.",
+   "withoutASheet": "On a target GroupLab did not print, Mark it by hand sets the scale, the aim points and the holes under a fixed crosshair, and a store-bought target GroupLab knows arrives with its bulls placed.",
    "fits": "Its result is the <a href=\"/tour/analysis/\">analysis</a>, kept in <a href=\"/tour/sessions/\">sessions</a>. The sheets come from <a href=\"/tour/targets/\">Targets</a>.",
    "parts": [
     [

@@ -15,7 +15,7 @@ Alan filled this in, mostly for the first time, and wrote "forms updated" on 202
 application to it.
 
 - **Data safety:** collects data; encrypted in transit; no account creation; no login with outside accounts; deletion on request, with
-  the Delete data URL https://grouplab.org/support/ (entry 378 section 4 adds the "Delete your data" section that address needs).
+  the Delete data URL https://grouplab.org/support/ (its "Delete your data" section, https://grouplab.org/support/#delete-your-data, was added by the consistency audit of 2026-10-07, question 89).
 - **Data types**, every one collected, not shared, not ephemeral, the user can choose, purpose Analytics only: Crash logs, Diagnostics,
   Device or other IDs, App interactions, Photos.
 - **Privacy policy:** https://grouplab.org/research/what-grouplab-sends/
