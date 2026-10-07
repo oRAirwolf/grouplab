@@ -443,6 +443,17 @@ public static class ReviewQueue
         }
     }
 
+    /// <summary>
+    /// Entry 374 section 4: an answered item asked again, so a person can change their answer: its "leave it" forgotten, or, for a contested
+    /// assignment, the bull they chose let go. An answer that removed the item (not a shot, two shots) is undone with Undo instead.
+    /// </summary>
+    public static void Reopen(MarkingSession session, ReviewItem item)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(item);
+        session.Reopen(item.Key, item.Kind == ReviewKind.Contested ? item.ShotId : null);
+    }
+
     /// <summary>The key of the review item a shot placed inside a larger mark raises, entry 291 section 7 item 4.</summary>
     public static string JoinedKey(int shotId) => string.Create(CultureInfo.InvariantCulture, $"joined:{shotId}");
 

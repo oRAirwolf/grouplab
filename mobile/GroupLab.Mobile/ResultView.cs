@@ -742,14 +742,16 @@ public sealed class ResultView : UserControl
         checks.Children.Clear();
         var state = session.State;
         var flags = ReviewQueue.MarksToCheck(state);
-        checks.IsVisible = flags.Count > 0;
-        if (flags.Count == 0)
+        var items = ReviewQueue.For(state).Where(i => i.Kind is ReviewKind.Joined or ReviewKind.Oversized or ReviewKind.Proposed).ToList();
+        var answered = items.Where(i => i.Resolved).ToList();
+        checks.IsVisible = flags.Count > 0 || answered.Count > 0;
+        if (!checks.IsVisible)
         {
             return;
         }
 
-        var open = ReviewQueue.For(state).Where(i => !i.Resolved && i.Kind is ReviewKind.Joined or ReviewKind.Oversized or ReviewKind.Proposed).ToList();
-        var card = new List<Control> { Screens.Heading(flags.Count == 1 ? "1 mark to check" : $"{flags.Count} marks to check") };
+        var open = items.Where(i => !i.Resolved).ToList();
+        var card = new List<Control> { Screens.Heading(flags.Count == 0 ? "No marks left to check" : flags.Count == 1 ? "1 mark to check" : $"{flags.Count} marks to check") };
         foreach (var flag in flags)
         {
             card.Add(Screens.Line(flag.Sentence));
@@ -766,9 +768,41 @@ public sealed class ResultView : UserControl
             }
         }
 
-        card.Add(Screens.Dim("Each is ringed in amber on the picture. Moving the shot in Fix holes settles it too."));
+        if (flags.Count > 0)
+        {
+            card.Add(Screens.Dim("Each is ringed in amber on the picture. Moving the shot in Fix holes settles it too."));
+        }
+
+        // Entry 374 section 4: answered marks fold up under one line, and each can be asked again.
+        if (answered.Count > 0)
+        {
+            var folded = new StackPanel { Spacing = 8, IsVisible = false };
+            foreach (var item in answered)
+            {
+                folded.Children.Add(Screens.Dim(item.Sentence));
+                folded.Children.Add(Screens.Choice(AskAgain, () =>
+                {
+                    ReviewQueue.Reopen(session, item);
+                    Changed();
+                }));
+            }
+
+            string shown = answered.Count == 1 ? "Show the 1 answered mark" : $"Show the {answered.Count} answered marks";
+            Button? toggle = null;
+            toggle = Screens.Choice(shown, () =>
+            {
+                folded.IsVisible = !folded.IsVisible;
+                ((TextBlock)toggle!.Content!).Text = folded.IsVisible ? "Hide the answered marks" : shown;
+            }).Id("result-answered-marks");
+            card.Add(toggle);
+            card.Add(folded);
+        }
+
         checks.Children.Add(Screens.Card([.. card]));
     }
+
+    /// <summary>The button that asks an answered mark again, as on the computer.</summary>
+    internal const string AskAgain = "Ask again";
 
     private async Task AsSheet(WorkingImage working, TargetDefinition sheet, ShotSetup setup, Action again)
     {

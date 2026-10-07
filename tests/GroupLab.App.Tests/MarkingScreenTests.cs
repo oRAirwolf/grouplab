@@ -576,8 +576,22 @@ public class MarkingScreenTests
             Press(window, Key.Enter);
             Assert.True(window.ReviewText.Contains("0 of 2 need review"), string.Join(" | ", window.ReviewText));
 
-            // Entry 103 section 1: Discard edits asks before discarding. Keeping them leaves every edit; confirming puts back what detection found.
+            // Entry 374 section 4: an answered item clicked in the queue shows its card with Ask again, which opens it again as one step.
             Button Named(string content) => window.GetLogicalDescendants().OfType<Button>().Single(x => Equals(x.Content, content));
+            var answered = window.ReviewItems.Single(i => i.Kind == ReviewKind.Contested);
+            Assert.True(answered.Resolved);
+            window.FocusReview(answered);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(answered.Key, window.CurrentReview!.Key);
+            Assert.Contains(MainWindow.AnsweredWords, string.Join(" | ", window.ReviewText), StringComparison.Ordinal);
+            Named(MainWindow.AskAgain).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(session.State.Find(contested)!.BullChosen);
+            session.Undo();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal((0, true), (session.State.Find(contested)!.Bull!.Value, session.State.Find(contested)!.BullChosen));
+
+            // Entry 103 section 1: Discard edits asks before discarding. Keeping them leaves every edit; confirming puts back what detection found.
             Named("Discard edits").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.True(session.State.Find(contested)!.BullChosen);

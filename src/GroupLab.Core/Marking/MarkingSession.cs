@@ -550,6 +550,24 @@ public sealed class MarkingSession
     /// <summary>Records that a person looked at a review item and chose to leave the marking as it is, <see cref="ReviewQueue"/>.</summary>
     public void Dismiss(string reviewKey) => Apply(State with { Dismissed = (State.Dismissed ?? []).Add(reviewKey) });
 
+    /// <summary>
+    /// Entry 374 section 4: asks an answered review question again, as one step that can be undone. A "leave it as it is" is forgotten, and
+    /// a bull the person chose for <paramref name="unchooseShot"/> is let go, so the matching places that shot again.
+    /// </summary>
+    public void Reopen(string reviewKey, int? unchooseShot = null)
+    {
+        var next = State.Dismissed is { } dismissed && dismissed.Contains(reviewKey) ? State with { Dismissed = dismissed.Remove(reviewKey) } : State;
+        if (unchooseShot is { } id && next.Find(id) is { BullChosen: true } shot)
+        {
+            next = Rematch(next with { Shots = next.Shots.Replace(shot, shot with { BullChosen = false }) });
+        }
+
+        if (!ReferenceEquals(next, State))
+        {
+            Apply(next);
+        }
+    }
+
     /// <summary>Marks a detection as not a shot, or restores it.</summary>
     public void SetNotAShot(int id, bool notAShot) => Update(id, s => s with { NotAShot = notAShot, Provenance = Touched(s.Provenance) });
 

@@ -88,6 +88,9 @@ public sealed partial class MainWindow : Window
     // to give it, at the top of the panel, driven from the keyboard.
     private readonly StackPanel review = new() { Spacing = Tokens.Space8 };
     private string? currentReview;
+
+    /// <summary>Entry 374 section 4: the person clicked an answered item in the queue, so its card shows, with Ask again.</summary>
+    private bool lookingBack;
     private string bullTyped = "";
 
     private readonly TextBlock problem = new() { FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert } };
@@ -4305,7 +4308,8 @@ public sealed partial class MainWindow : Window
         review.Children.Clear();
         ReviewItems = ReviewQueue.For(state, analyseSighters);
         int open = ReviewQueue.Open(ReviewItems);
-        var current = ReviewItems.FirstOrDefault(i => i.Key == currentReview && !i.Resolved) ?? ReviewItems.FirstOrDefault(i => !i.Resolved);
+        var current = ReviewItems.FirstOrDefault(i => i.Key == currentReview && (!i.Resolved || lookingBack)) ?? ReviewItems.FirstOrDefault(i => !i.Resolved);
+        lookingBack = lookingBack && current?.Resolved == true;
         currentReview = current?.Key;
 
         // Entry 97 section 5's window rehearsal found this: straight after detection the first item was current and its shot was not
@@ -4336,12 +4340,18 @@ public sealed partial class MainWindow : Window
             // the amber primary button, as the concept draws it. Red stays for what is wrong.
             var card = new StackPanel { Spacing = Tokens.Space8 };
             card.Children.Add(new TextBlock { Text = ReviewTitle(current.Kind), FontWeight = FontWeight.SemiBold, Classes = { AppStyles.Warn } });
-            card.Children.Add(new TextBlock { Text = current.Sentence, TextWrapping = TextWrapping.Wrap });
+            card.Children.Add(new TextBlock { Text = current.Resolved ? AnsweredWords + " " + current.Sentence : current.Sentence, TextWrapping = TextWrapping.Wrap });
             var choices = new WrapPanel();
+            if (current.Resolved)
+            {
+                // Entry 374 section 4: an answered question can be asked again, or answered differently with one of its choices.
+                choices.Children.Add(Button(AskAgain, () => ReopenReview(current)));
+            }
+
             foreach (var choice in current.Choices)
             {
                 var button = Button(choice.Label, () => Choose(current, choice));
-                if (ReferenceEquals(choice, current.Choices[0]))
+                if (!current.Resolved && ReferenceEquals(choice, current.Choices[0]))
                 {
                     button.Classes.Add(AppStyles.Primary);
                 }
@@ -4710,6 +4720,7 @@ public sealed partial class MainWindow : Window
     /// <summary>Carries out a review choice and moves to the next item that still needs one.</summary>
     internal void Choose(ReviewItem item, ReviewChoice choice)
     {
+        lookingBack = false;
         DiagnosticLog.Info("review.choose", ("kind", item.Kind.ToString()), ("action", choice.Action.ToString()));
         var shot = ReviewQueue.Apply(session, item, choice);
         status.Text = $"{ReviewTitle(item.Kind)}: {choice.Label}.";
@@ -4721,14 +4732,32 @@ public sealed partial class MainWindow : Window
     internal void FocusReview(ReviewItem item)
     {
         currentReview = item.Key;
+        lookingBack = item.Resolved;
         canvas.Selected = item.ShotId ?? canvas.Selected;
         canvas.CentreOn(item.Image);
+        Refresh();
+    }
+
+    /// <summary>What an answered item's card starts with, and its button to ask it again (entry 374 section 4).</summary>
+    internal const string AnsweredWords = "Answered.";
+
+    internal const string AskAgain = "Ask again";
+
+    /// <summary>Entry 374 section 4: the answered item asked again, as one step Undo takes back, and made the current item.</summary>
+    internal void ReopenReview(ReviewItem item)
+    {
+        DiagnosticLog.Info("review.reopen", ("kind", item.Kind.ToString()));
+        ReviewQueue.Reopen(session, item);
+        lookingBack = false;
+        currentReview = item.Key;
+        status.Text = $"{ReviewTitle(item.Kind)}: asked again.";
         Refresh();
     }
 
     /// <summary>The next item that still needs a decision after the current one, wrapping round, as Space does.</summary>
     internal void NextReview()
     {
+        lookingBack = false;
         var items = ReviewQueue.For(session.State, analyseSighters);
         var open = items.Where(i => !i.Resolved).ToList();
         if (open.Count == 0)

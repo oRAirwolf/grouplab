@@ -863,8 +863,13 @@ about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that 
 - **The 2 MOA 3 by 4 sheet** (section 4) does not fit on Letter with the 2.00 in bulls, at any spacing the format allows, either way
   round, nor on A4; two layouts that pass are put to planning as question 86 ((a) Letter with 1.50 in bulls 2.00 in apart, (b) tabloid
   with the 2.00 in bulls). Not built until the answer.
-- **Still not done:** the store-bought photos and the Rigid crosshair, the scoreboard and corpus; two holes in one; undoing a review
-  answer; shot data out and in.
+- **An answered review question can be asked again** (section 4): `MarkingSession.Reopen` forgets a "leave it" and lets go of a bull
+  the person chose, so the matching places the shot again, as one step Undo takes back (`ReviewQueue.Reopen`). On the computer an
+  answered item clicked in the queue shows its card, "Answered." and its sentence, with **Ask again** and its choices, which change the
+  answer at once. On the phone, answered marks to check fold up under "Show the N answered marks", each with **Ask again**. An answer
+  that removed its item (not a shot, two shots) is taken back with Undo. Tests: `ReviewQueueTests.AnAnsweredItemCanBeAskedAgainAndChanged`,
+  the desktop's `TheReviewQueueSettlesAContestedShotFromTheKeyboard` and the phone's `AMarkMuchBiggerThanTheBulletIsRinged...`.
+- **Still not done:** the store-bought photos and the Rigid crosshair, the scoreboard and corpus; two holes in one; shot data out and in.
 
 ## Decision log
 

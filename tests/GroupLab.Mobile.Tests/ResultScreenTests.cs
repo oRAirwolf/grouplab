@@ -215,7 +215,16 @@ public class ResultScreenTests
 
         Press(view, "It is on the hole");
         Assert.Empty(view.GetVisualDescendants().OfType<ResultView.SheetPicture>().Single().Flagged);
-        Assert.DoesNotContain(Said(), t => t.Contains("times your bullet across", StringComparison.Ordinal));
+        string[] Shown() => [.. view.GetVisualDescendants().OfType<TextBlock>().Where(t => t.IsEffectivelyVisible).Select(t => t.Text ?? "")];
+        Assert.DoesNotContain(Shown(), t => t.Contains("times your bullet across", StringComparison.Ordinal));
+
+        // Entry 374 section 4: the answered mark is folded up under one line, and Ask again brings it back to check.
+        Assert.Contains("No marks left to check", Shown());
+        Press(view, "Show the 1 answered mark");
+        Assert.Contains(Shown(), t => t.Contains("times your bullet across", StringComparison.Ordinal));
+        Press(view, ResultView.AskAgain);
+        Assert.Equal([flagged], view.GetVisualDescendants().OfType<ResultView.SheetPicture>().Single().Flagged);
+        Assert.Contains("1 mark to check", Said());
         window.Close();
     }
 

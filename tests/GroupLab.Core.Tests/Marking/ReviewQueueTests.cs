@@ -56,6 +56,44 @@ public class ReviewQueueTests
         Assert.All(items.Where(i => i.Kind is ReviewKind.Contested or ReviewKind.Oversized or ReviewKind.Refused), i => Assert.True(i.Resolved));
     }
 
+    /// <summary>Entry 374 section 4: an answered question can be asked again and answered differently, and Undo takes the asking back.</summary>
+    [Fact]
+    public void AnAnsweredItemCanBeAskedAgainAndChanged()
+    {
+        var session = Loaded(
+            (new PointD(110, 100), new AssignedShot(0, 0, 25, 0, 25, 3000, false), null),
+            (new PointD(160, 100), new AssignedShot(1, 1, 229, 0, 152, 229, false), null),
+            (new PointD(260, 105), new AssignedShot(2, 1, 28, 1, 28, 3000, false), new DetectedOversize(1.8, false)));
+        static ReviewItem Of(MarkingState state, ReviewKind kind) => Assert.Single(ReviewQueue.For(state), i => i.Kind == kind);
+
+        // A kept oversized mark, asked again, is open again; Undo takes the asking back.
+        var oversized = Of(session.State, ReviewKind.Oversized);
+        ReviewQueue.Apply(session, oversized, oversized.Choices[0]);
+        Assert.True(Of(session.State, ReviewKind.Oversized).Resolved);
+        ReviewQueue.Reopen(session, Of(session.State, ReviewKind.Oversized));
+        Assert.False(Of(session.State, ReviewKind.Oversized).Resolved);
+        session.Undo();
+        Assert.True(Of(session.State, ReviewKind.Oversized).Resolved);
+
+        // A contested shot put on bull 1 by the person, asked again, is the matching's once more, and can be answered again.
+        var contested = Of(session.State, ReviewKind.Contested);
+        int shot = contested.ShotId!.Value;
+        ReviewQueue.Apply(session, contested, contested.Choices.First(c => c.Bull == 0));
+        Assert.Equal((0, true), (session.State.Find(shot)!.Bull, session.State.Find(shot)!.BullChosen));
+        ReviewQueue.Reopen(session, Of(session.State, ReviewKind.Contested));
+        Assert.False(session.State.Find(shot)!.BullChosen);
+        var again = Of(session.State, ReviewKind.Contested);
+        Assert.False(again.Resolved);
+        ReviewQueue.Apply(session, again, again.Choices.Last(c => c.Action == ReviewAction.AssignBull));
+        Assert.True(session.State.Find(shot)!.BullChosen);
+        Assert.True(Of(session.State, ReviewKind.Contested).Resolved);
+
+        // Asking again what was never answered changes nothing and adds no step to undo.
+        var undoWords = session.UndoWords;
+        ReviewQueue.Reopen(session, Of(session.State, ReviewKind.Doubled) with { Key = "never-answered" });
+        Assert.Equal(undoWords, session.UndoWords);
+    }
+
     [Fact]
     public void AKeptItemIsRememberedAcrossASaveAndUndoTakesItBack()
     {

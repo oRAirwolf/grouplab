@@ -29,8 +29,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 376 done but B7** (2026-10-06): shots matched to bulls as one sheet, drawn and named by bull; tablets full width; B7
   (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 379 done but section 3** (2026-10-06): the page "What GroupLab sends" and the guides follow now that 173 is out.
-- **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing (2026-10-07); the 2 MOA 3 by 4
-  sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
+- **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing and Ask again on an answered review
+  question (2026-10-07); the 2 MOA 3 by 4 sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print, nightly 175), 79 (Play developer verification).
 
 ## The next three
@@ -54,7 +54,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. B7 and 379 section 3; then entry 374's rest (store-bought photos, two holes in one, review undo, shot data; the 2 MOA sheet on question 86).
+3. B7 and 379 section 3; then entry 374's rest (store-bought photos, two holes in one, shot data; the 2 MOA sheet on question 86).
 
 ## Blocked, and on what
 
