@@ -288,13 +288,16 @@ printer and a real card decide whether they hold.
 **A good answer:** the four photos in `C:\Dev\grouplab-local\scale-markers\`, and the four lines GroupLab showed, such as "Scale from
 4 corner brackets in the photo: good to about 0.15 percent."
 
-## 77. Scale labels on your M220, twenty minutes, whenever suits (entry 372)
+## 77. Scale labels on your M220, twenty minutes, whenever suits (entries 372 and 380)
 
-**Why:** the labels are measured on computer-made photos only (a single 70 x 80 mm label typically within about 0.1 percent); your
-printer, your roll and your camera decide whether that holds.
-**Steps,** with nightly 168 or later:
-1. On the computer, Targets, Scale markers: check **Label size loaded** says 70 x 80 mm, then **Save four scale labels for the printer's
-   app**. Print all four from the Phomemo app at 100 percent on the roll you have loaded.
+**Why:** the labels are measured on computer-made photos only; your printer, your roll and your camera decide whether that holds. On the
+50 x 30 mm roll you keep loaded, a label's two codes are 40 mm apart rather than the 70 x 80 label's 60, so its scale is about one and
+a half times as uncertain: about 0.15 percent where the 70 x 80 label typically gave about 0.1 (scaled from that measurement, not
+measured on its own).
+**Steps,** with nightly 173 or later on the computer (or nightly 175 or later on the phone, which now has the same choice):
+1. Targets, Scale markers: set **Label size loaded** to **50 x 30 mm** (it is remembered), then **Save four scale labels for the
+   printer's app** (on the phone, **Share four scale labels for the printer's app**). Print all four PNGs from the Phomemo app at 100
+   percent on the 50 x 30 roll.
 2. Stick two on a blank store-bought target, at opposite corners, flat, where you would not shoot, and one on a GroupLab sheet.
 3. Photograph each, square on, and put the photos in `C:\Dev\grouplab-local\m220-labels\`.
 **A good answer:** the photos in that folder. (The printer check label for the M220 comes in a later build.)

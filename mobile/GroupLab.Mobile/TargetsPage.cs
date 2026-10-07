@@ -312,6 +312,7 @@ public sealed class TargetsPage : UserControl
             }).Id("targets-markers-label"),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.MeasureBoard.TrimEnd('…'), () => _ = Measure()).Id("targets-markers-board"),
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Labels + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelsGive),
+            LabelSizeChoice(),
             Screens.Choice("Share four scale labels for the printer's app", () =>
             {
                 // Entry 372: the size loaded in the printer, as Settings keeps it; each label its own serial.
@@ -325,6 +326,29 @@ public sealed class TargetsPage : UserControl
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
             Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),
             said);
+    }
+
+    /// <summary>
+    /// Entry 380: the label size loaded in the printer, chosen on the phone as on the computer (entry 372) and saved in the same setting, so
+    /// the labels shared are the size on the roll; the phone made 70 by 80 mm labels whatever was loaded.
+    /// </summary>
+    private static Control LabelSizeChoice()
+    {
+        var sizes = GroupLab.Core.ScaleMarkers.ScaleLabels.Sizes;
+        var box = new ComboBox
+        {
+            ItemsSource = sizes.Select(z => $"{z.Width} x {z.Height} mm").ToList(),
+            SelectedIndex = Math.Max(0, Array.IndexOf(sizes, Phone.Settings.LoadLabelSize())),
+            MinHeight = Screens.Touch,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+        }.Id("targets-markers-label-size");
+        Avalonia.Automation.AutomationProperties.SetName(box, GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelSize);
+        box.SelectionChanged += (_, _) =>
+        {
+            var z = sizes[Math.Max(0, box.SelectedIndex)];
+            Phone.Settings.SaveLabelSize(z.Width, z.Height);
+        };
+        return new StackPanel { Spacing = 6, Children = { Screens.Line(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelSize), box } };
     }
 
     /// <summary>What the M834's paper choice says, entry 382.</summary>

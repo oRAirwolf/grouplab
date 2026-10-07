@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07, after entry 378; Alan had entries 382, 378 and 380 taken before the reset.
+**Last rewritten:** 2026-10-07, after entry 380; Alan had entries 382, 378 and 380 taken before the reset.
 
 ---
 
@@ -18,6 +18,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
   answered: Part C meant what is left of entry 374.
+- **Entry 380 done but section 3** (2026-10-07): the phone's Label size loaded, as on the computer; request 77 for 50 x 30 mm.
 - **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
   request 79 has Alan's Play Console steps, `android-verify.yml` builds the small proof APK from his snippet; a note for testers in
   Brazil, Indonesia, Singapore and Thailand on the download page, README, testing guide and docs/ANDROID.md.
@@ -25,11 +26,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   sheet clears the tear bar; fanfold adds nothing; the phone remembers which (Paper in the M834). For nightly 175; request 78 rewritten.
   The settings screenshot went stale with `AppSettings.cs`, so the site build failed at 1e7ac465 until the screenshots run restamps.
 - **Entry 381 done** (2026-10-06): the M834 print waits for the printer's `1A 0F 0C`, Cancel works, every block and answer logged.
-- **Entry 376 Part A done** (2026-10-06): holes matched to bulls as one sheet (read as aimed first, then in shooting order, then the
-  "Which bulls did you fire at?" question), a line from each bull to its holes, a tap or click lights bull, holes and lines, Bull by bull
-  lights them too, the phone asks which bull after adding or moving a hole, every shot named "Bull 7" or "Bull 7, shot 2".
-  **Part B done but B7** (2026-10-06): back everywhere, full width, the caliber chosen every target, the report shown in the app, and
-  the rest; B7 (diagnostics straight to GroupLab) needs a receiver kind.
+- **Entry 376 done but B7** (2026-10-06): shots matched to bulls as one sheet, drawn and named by bull; tablets full width; B7
+  (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 379 done but section 3** (2026-10-06): the page "What GroupLab sends" and the guides follow now that 173 is out.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4; the rest is in the next three. **Entry 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print, nightly 175), 79 (Play developer verification).
@@ -55,7 +53,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. Entry 380, B7 and 379 section 3; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
+3. B7 and 379 section 3; then entry 374's rest (store-bought photos, timed pairing, two holes in one, review undo, shot data, 2 MOA sheet).
 
 ## Blocked, and on what
 

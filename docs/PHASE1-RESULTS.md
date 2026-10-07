@@ -837,6 +837,21 @@ says otherwise), builds an APK with no code, signs it with the upload key as the
 **Section 3:** a note for testers in Brazil, Indonesia, Singapore and Thailand on the download page, in the README, the testing guide
 and docs/ANDROID.md: Android there refuses unregistered APKs since 2026-09-30, so until registration is done, the Play internal test.
 
+## Entry 380: the phone chooses the scale label size (2026-10-07)
+
+**Section 1:** the phone's Targets, Scale markers now has **Label size loaded** above "Share four scale labels for the printer's app",
+the same sizes as the computer (`ScaleLabels.Sizes`), saved in the same setting (`SaveLabelSize`); before, the phone always made 70 by 80
+mm labels. docs/PHONE-PARITY.md's scale markers row says so. Phone build clean, phone suite run before pushing.
+
+**Section 2:** request 77 rewritten for the 50 x 30 mm roll: set the size to 50 x 30 (remembered), print the PNGs from the Phomemo app at
+100 percent. A 50 mm label's two codes are 40 mm apart against the 70 mm label's 60, so its scale is about 1.5 times as uncertain:
+about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that figure and not measured on its own.
+
+**Section 3:** `C:\Dev\grouplab-local\m220-labels\` does not exist yet, so nothing to measure.
+
+**Entry 378, also:** `android-verify.yml` proven with a dry run (package `org.grouplab.app.dev`, a placeholder snippet): the APK held
+`assets/adi-registration.properties` and the manifest only, signed with the same certificate as the nightly APKs; its artifact deleted.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

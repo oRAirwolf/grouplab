@@ -25,6 +25,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 380: the phone chooses the scale label size too, and request 77 follows the 50 x 30 mm roll
+
+**Status: actioned 2026-10-07 (taken before the reset at Alan's word); sections 1 and 2 done; section 3 not done: no photos in m220-labels yet.**
+
+Written by the planning session 2026-10-06 06:05 UTC. **Do not start this before the weekly reset (2026-10-08 02:00 UTC).** Small; take it
+with entry 378.
+
+Alan's 50 x 30 mm rolls for the M220 arrived on 2026-10-05 and he keeps that size loaded (70 x 80 mm only for big targets). He is on
+nightly 173 on the computer and the Fold 7.
+
+1. Phone parity (entry 258): the phone's "Share four scale labels for the printer's app" (TargetsPage.cs) always uses
+   `LoadLabelSize()`, and nothing on the phone can change it, so the phone always makes 70 x 80 mm labels. Add the "Label size loaded"
+   choice on the phone beside it, the same sizes as the computer (`ScaleLabels.Sizes`), saved the same way. Update the parity table.
+2. Request 77 (scale labels on the M220) in for-alan.md still says to check the size reads 70 x 80 mm. Alan was told on 2026-10-05 to set
+   it to 50 x 30 mm on the computer and print from the PNGs through the Phomemo app at 100 percent; rewrite the request to match, and say
+   how a 50 x 30 label's precision compares with the 70 x 80 figure (its two codes are 40 mm apart, not 60).
+3. If Alan's photos are already in `C:\Dev\grouplab-local\m220-labels\` when you start, measure them and report as request 77 asks.
+
 ## 2026-10-07, entry 378: Android developer verification for the APKs sent outside Google Play
 
 **Status: actioned 2026-10-07 (taken before the reset at Alan's word); sections 1 to 3 done; the registration itself waits on Alan (request 79), then the two small APKs from android-verify.yml.**
