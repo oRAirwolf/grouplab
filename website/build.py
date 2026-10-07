@@ -990,13 +990,13 @@ def page_download() -> str:
         "Download GroupLab Dev", honest=False) + steady(
         "Google Play, by invitation",
         btn("Ask on the Discord", DISCORD),
-        f'GroupLab\'s internal test on Google Play is updated only when a build is uploaded to Play, by hand for now, so it can be weeks behind; GroupLab Dev keeps up by itself. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
-        ["Behind the nightlies until each one reaches Play by itself; for now it is uploaded by hand", "One step first: ask on the Discord to be invited",
+        f'GroupLab\'s internal test on Google Play receives every nightly through Google Play, which updates your copy as it does any app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
+        ["Each nightly reaches Play by itself", "One step first: ask on the Discord to be invited",
          "Signed with a different key from the plain APK"]),
-        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play; the plain APK does not update itself, while GroupLab Dev does and installs beside either with no uninstall.",
+        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play, the plain APK keeps itself current as GroupLab Dev does, and GroupLab Dev installs beside either with no uninstall.",
         [fold("The plain APK", other(
             "Android", "grouplab-android.apk",
-            "The same app under GroupLab's own name, signed, with a different key from the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.",
+            "The same app under GroupLab's own name, signed, with a different key from the Google Play copy. It keeps itself on the newest nightly, as GroupLab Dev does. An APK from before nightly 177 has no updater, so install one newer plain APK by hand once; it keeps itself current after that.",
             ["Open the file on the phone; allow your browser to install apps when Android asks",
              "Remove the Google Play copy first, if you have it: the two are signed with different keys",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
@@ -1026,7 +1026,7 @@ def page_download() -> str:
 <h3 class="h3">Updating</h3>
 <p><strong>Of the computer downloads, only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
 <p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
-<p>The Microsoft Store copy is updated by the Store, GroupLab Dev updates itself from every nightly, the Google Play copy is updated by Google Play, and TestFlight installs each new iPhone and iPad beta build.</p>
+<p>The Microsoft Store copy is updated by the Store, GroupLab Dev and the plain Android APK update themselves from every nightly, the Google Play copy is updated by Google Play, and TestFlight installs each new iPhone and iPad beta build.</p>
 <h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>

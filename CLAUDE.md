@@ -111,6 +111,10 @@ Use `STATUS: WAITING, NOT FINISHED` when something is still running or pending. 
 
 Use `STATUS: NEEDS YOU` when the work cannot go on without him. Say what he has to do, step by step, then the exact message to send afterwards, in a code block.
 
+**Before ending any turn, look in the inbox** (entry 386, Alan, 2026-10-07): if entries are waiting and the usage guard allows, take them
+in number order instead of stopping, and end the turn only when the inbox is empty, the guard stops the work, or something truly needs
+Alan.
+
 Directly under the status line comes a short **What Alan needs to do** block: the single next action, or "Nothing." The detailed report follows that.
 
 Never write "I'll hold here", "waiting for", "will continue when" or anything like them anywhere else in a message that ends a turn. If the work is not continuing, the status line is what says so.

@@ -45,13 +45,14 @@
   </PropertyGroup>
 
   <!--
-    NOTES-FROM-PLANNING.md entry 288: the updater lives in its own flavor, -p:GroupLabUpdater=true, on by default for GroupLab Dev's APK and
-    for nothing else yet (the sideloaded org.grouplab.app comes later). Without it the Updates folder, WorkManager and the permission to
-    install packages are not in the build at all, and an AAB, which only ever goes to Google Play, is refused if it would carry them.
+    NOTES-FROM-PLANNING.md entry 288: the updater lives in its own flavor, -p:GroupLabUpdater=true, on by default for every APK: GroupLab
+    Dev's, and since entry 386 the plain org.grouplab.app APK from the download page. Not for the emulator's sweep build. Without it the
+    Updates folder, WorkManager and the permission to install packages are not in the build at all, and an AAB, which only ever goes to
+    Google Play, is refused if it would carry them.
     UpdaterFlavorTests holds this, and the nightly checks the published AAB's manifest.
   -->
   <PropertyGroup>
-    <GroupLabUpdater Condition="'$(GroupLabUpdater)' == '' and '$(GroupLabDev)' == 'true' and '$(AndroidPackageFormat)' != 'aab'">true</GroupLabUpdater>
+    <GroupLabUpdater Condition="'$(GroupLabUpdater)' == '' and '$(AndroidPackageFormat)' != 'aab' and '$(GroupLabEmulator)' != 'true'">true</GroupLabUpdater>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GroupLabUpdater)' == 'true'">
     <DefineConstants>$(DefineConstants);GROUPLAB_UPDATER</DefineConstants>

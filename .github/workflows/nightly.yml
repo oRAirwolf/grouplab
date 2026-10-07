@@ -364,8 +364,11 @@ jobs:
           code="${VERSION##*.}"
           # Once for each: the project's AndroidPackageFormat wins over AndroidPackageFormats, so one publish makes one kind
           # (tried on this machine with a throwaway key, entry 219 item A6).
+          # Entry 386: the plain APK carries the updater (the project turns it on for any APK) and so needs the nightly train, without which
+          # the updater stays off as on a development build; the AAB keeps neither.
           for format in aab apk; do
-            dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-out" \
+            train=""; [ "$format" = apk ] && train="-p:GroupLabTrain=nightly"
+            dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-out" $train \
               -p:AndroidPackageFormat=$format -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION" -p:Version="$VERSION" \
               -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
               -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
@@ -395,11 +398,13 @@ jobs:
             echo "::error::the AAB for Google Play asks to install packages, so it carries the updater (entry 288)"
             exit 1
           fi
-          if ! unzip -p signed/grouplab-android-dev.apk AndroidManifest.xml | tr -d '\0' | grep -aq REQUEST_INSTALL_PACKAGES; then
-            echo "::error::GroupLab Dev's APK has no updater (entry 288)"
-            exit 1
-          fi
-          echo "the AAB has no updater, and GroupLab Dev's APK has one"
+          for apk in grouplab-android-dev.apk grouplab-android.apk; do
+            if ! unzip -p "signed/$apk" AndroidManifest.xml | tr -d '\0' | grep -aq REQUEST_INSTALL_PACKAGES; then
+              echo "::error::$apk has no updater (entries 288 and 386)"
+              exit 1
+            fi
+          done
+          echo "the AAB has no updater, and both APKs have one"
 
       - uses: actions/upload-artifact@v6
         if: steps.key.outputs.present == 'yes'
@@ -989,7 +994,8 @@ jobs:
             --asset windows zip release/grouplab-win-x64.zip "$base/grouplab-win-x64.zip" \
             --asset linux tarball release/grouplab-linux-x64.tar.gz "$base/grouplab-linux-x64.tar.gz" \
             --asset library targets release/grouplab-target-library.json "$base/grouplab-target-library.json" \
-            $( [ -f release/grouplab-android-dev.apk ] && echo --asset android apk-dev release/grouplab-android-dev.apk "$base/grouplab-android-dev.apk" )
+            $( [ -f release/grouplab-android-dev.apk ] && echo --asset android apk-dev release/grouplab-android-dev.apk "$base/grouplab-android-dev.apk" ) \
+            $( [ -f release/grouplab-android.apk ] && echo --asset android apk release/grouplab-android.apk "$base/grouplab-android.apk" )
           # Checked with the key compiled into the build being published, not with the key that signed it: that is the stronger question,
           # because a build that cannot verify its own updates is broken however well the manifest was signed. A commit from before the key
           # was set fails here by design, and the message says NoKey.

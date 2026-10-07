@@ -58,7 +58,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The hardware survey | `survey` | on the phone | | on iOS |
 | Words explained where they appear | `explain-words` | on the phone | a figure's name opens its explanation by a tap (entry 259 screen 1), and a secondary line naming a glossary word explains it by a tap (entry 258) | on iOS |
 | Updates that list what you skipped | `updates` | left out | Google Play updates the phone's application; the desktop's update bar has nothing to do there. The sideloaded GroupLab Dev has its own updater, `android-updates` | left out |
-| GroupLab Dev updates itself | `android-updates` | on the phone | entry 288: the Android updater, in GroupLab Dev's APK only, never in the copy for Google Play | left out |
+| GroupLab updates itself on Android | `android-updates` | on the phone | entries 288 and 386: the Android updater, in GroupLab Dev's APK and the plain APK, never in the copy for Google Play | left out |
 | Builds for the Mac | `mac` | left out | a platform, not something a phone can do | left out |
 | Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist: the saved sheets of the set's design shot the same day | on iOS |
 | The E bull | `e-bull` | on the phone | | on iOS |

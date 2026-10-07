@@ -13,7 +13,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 6417 >>
+<< /Length 6570 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -71,19 +71,20 @@ f
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 3701 Tm (GroupLab for Android is the APK on the download page \(https://grouplab.org/download/\), or the Google Play) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3789 Tm (internal test for those invited. Remove one before installing the other: they are signed with different keys. The) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3877 Tm (Play copy gets every nightly through Google Play and the plain APK does not update itself; GroupLab Dev, also) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3965 Tm (on the download page, keeps itself on the newest build and installs beside either with no uninstall. In Brazil,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4053 Tm (Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4141 Tm (30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4229 Tm (were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4317 Tm (Google Play internal test instead. The rest of the world follows in 2027. On an iPhone or iPad, GroupLab is in a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4405 Tm (public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4493 Tm (\(https://testflight.apple.com/join/A3xyT6C6\) on the device; Send Beta Feedback in TestFlight, or a screenshot) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4581 Tm (shared to it, reaches the project. On the Capture screen, Guided takes the picture by itself when everything is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4669 Tm (right and Manual leaves it to you; either way every picture is checked, with a score and notes on what GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a tap on a number) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (to switch its units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a sheet or the printer) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (check page.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3877 Tm (Play copy gets every nightly through Google Play, and the plain APK keeps itself current as GroupLab Dev does;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3965 Tm (an APK from before nightly 177 has no updater, so install one newer plain APK by hand once; it keeps itself) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4053 Tm (current after that. GroupLab Dev, also on the download page, installs beside either with no uninstall. In Brazil,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4141 Tm (Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4229 Tm (30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4317 Tm (were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4405 Tm (Google Play internal test instead. The rest of the world follows in 2027. On an iPhone or iPad, GroupLab is in a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4493 Tm (public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4581 Tm (\(https://testflight.apple.com/join/A3xyT6C6\) on the device; Send Beta Feedback in TestFlight, or a screenshot) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4669 Tm (shared to it, reaches the project. On the Capture screen, Guided takes the picture by itself when everything is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (right and Manual leaves it to you; either way every picture is checked, with a score and notes on what GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a tap on a number) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (to switch its units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a sheet or the printer) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5021 Tm (check page.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 1 of 4) Tj ET
 Q
 endstream
@@ -1271,15 +1272,15 @@ xref
 0000000185 00000 n 
 0000000282 00000 n 
 0000000408 00000 n 
-0000006877 00000 n 
-0000007003 00000 n 
-0000013206 00000 n 
+0000007030 00000 n 
+0000007156 00000 n 
 0000013359 00000 n 
-0000016844 00000 n 
-0000016972 00000 n 
-0000021553 00000 n 
+0000013512 00000 n 
+0000016997 00000 n 
+0000017125 00000 n 
+0000021706 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-280272
+280425
 %%EOF

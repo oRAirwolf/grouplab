@@ -72,7 +72,7 @@ public static class AndroidUpdates
     /// <summary>The kind of the GroupLab Dev APK, the development build installed beside the copy from Google Play.</summary>
     public const string DevKind = "apk-dev";
 
-    /// <summary>The kind of the sideloaded APK of GroupLab itself, which entry 288 puts later; nothing publishes it yet.</summary>
+    /// <summary>The kind of the plain APK of GroupLab itself from the download page, published in the manifest since entry 386.</summary>
     public const string SideloadKind = "apk";
 
     /// <summary>Google Play's package, as Android names the installer of record of a copy that came from it.</summary>

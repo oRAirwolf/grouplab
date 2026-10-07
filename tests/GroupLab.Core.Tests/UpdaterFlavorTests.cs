@@ -19,7 +19,7 @@ public class UpdaterFlavorTests
     public void TheUpdaterIsOnlyForASideloadedApk()
     {
         string project = Project();
-        Assert.Contains("<GroupLabUpdater Condition=\"'$(GroupLabUpdater)' == '' and '$(GroupLabDev)' == 'true' and '$(AndroidPackageFormat)' != 'aab'\">true</GroupLabUpdater>", project, StringComparison.Ordinal);
+        Assert.Contains("<GroupLabUpdater Condition=\"'$(GroupLabUpdater)' == '' and '$(AndroidPackageFormat)' != 'aab' and '$(GroupLabEmulator)' != 'true'\">true</GroupLabUpdater>", project, StringComparison.Ordinal);
         Assert.Matches(new Regex(@"<ItemGroup Condition=""'\$\(GroupLabUpdater\)' != 'true'"">\s*<Compile Remove=""Updates\\\*\*"" />"), project);
         Assert.Matches(new Regex(@"<ItemGroup Condition=""'\$\(GroupLabUpdater\)' == 'true'"">\s*<PackageReference Include=""Xamarin.AndroidX.Work.Runtime"""), project);
         Assert.Contains("<Target Name=\"NoUpdaterInAnAab\"", project, StringComparison.Ordinal);
@@ -89,5 +89,11 @@ public class UpdaterFlavorTests
         Assert.Contains("--asset android apk-dev release/grouplab-android-dev.apk \"$base/grouplab-android-dev.apk\"", nightly, StringComparison.Ordinal);
         Assert.Contains("-p:GroupLabTrain=nightly", nightly, StringComparison.Ordinal);
         Assert.Equal(GroupLab.Core.Updates.AndroidUpdates.DevKind, "apk-dev");
+
+        // Entry 386: the plain APK too, on the nightly train, and checked to carry the updater.
+        Assert.Contains("--asset android apk release/grouplab-android.apk \"$base/grouplab-android.apk\"", nightly, StringComparison.Ordinal);
+        Assert.Contains("for apk in grouplab-android-dev.apk grouplab-android.apk; do", nightly, StringComparison.Ordinal);
+        Assert.Contains("[ \"$format\" = apk ] && train=\"-p:GroupLabTrain=nightly\"", nightly, StringComparison.Ordinal);
+        Assert.Equal(GroupLab.Core.Updates.AndroidUpdates.SideloadKind, "apk");
     }
 }

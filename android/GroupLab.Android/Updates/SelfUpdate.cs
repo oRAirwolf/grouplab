@@ -33,12 +33,12 @@ internal static class SelfUpdate
 {
     internal const string WorkName = "grouplab-self-update";
 
+    // Entry 386: the plain APK gets GroupLab Dev's updater as it is, automatic by default, so a tester who sideloaded it stays current.
+    private const bool AutomaticByDefault = true;
 #if GROUPLAB_DEV
     internal const string Kind = AndroidUpdates.DevKind;
-    private const bool AutomaticByDefault = true;
 #else
     internal const string Kind = AndroidUpdates.SideloadKind;
-    private const bool AutomaticByDefault = false;
 #endif
 
     private static readonly SemaphoreSlim One = new(1, 1);
