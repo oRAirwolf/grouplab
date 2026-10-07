@@ -377,7 +377,7 @@ public sealed class TargetsPage : UserControl
         return new StackPanel { Spacing = 6, Children = { Screens.Dim(M834PaperWords), roll, fanfold } };
     }
 
-    internal const string M834Print = "Print on the Phomemo M834 (Bluetooth, new: not yet tried on a real one)";
+    internal const string M834Print = "Print on the Phomemo M834 (Bluetooth; true size still being checked)";
 
     /// <summary>The print to the M834 under way, for its Cancel; null when none is.</summary>
     private static CancellationTokenSource? m834Printing;

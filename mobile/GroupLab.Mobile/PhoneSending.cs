@@ -12,8 +12,8 @@ namespace GroupLab.Mobile;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 363 section 3.5, question 81 A: the phone sends targets as the desktop does, the same package and the same
 /// queue (<see cref="TargetSender"/>), under entry 357's rules: a picture GroupLab could not read is not sent, a picture with a bank card in
-/// it is never sent (entry 365), and over Wi-Fi only unless mobile data is allowed in Settings. It is off in every phone build until Alan
-/// has updated the stores' privacy answers (<see cref="SharingSwitches.TargetsFromPhone"/>), and then nothing of it is shown or sent.
+/// it is never sent (entry 365), and over Wi-Fi only unless mobile data is allowed in Settings. Entry 379 switched it on from nightly 173, once the stores' privacy answers
+/// were updated; the switch (<see cref="SharingSwitches.TargetsFromPhone"/>) can still turn it off, and then nothing of it is shown or sent.
 /// </summary>
 internal static class PhoneSending
 {

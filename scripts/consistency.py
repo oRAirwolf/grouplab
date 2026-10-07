@@ -63,6 +63,20 @@ def checks_that_exist() -> list[str]:
     return found
 
 
+def guide_pdfs() -> list[str]:
+    """The consistency audit of 2026-10-07, finding 8: a guide's PDF committed before its Markdown last changed is a PDF behind its guide."""
+    found = []
+    for md in ("USER-GUIDE.md", "TESTING-GUIDE.md"):
+        pdf = md.replace(".md", ".pdf")
+        times = []
+        for name in (md, pdf):
+            done = subprocess.run(["git", "log", "-1", "--format=%ct", "--", f"docs/{name}"], cwd=REPO, capture_output=True, text=True)
+            times.append(int(done.stdout.strip() or 0))
+        if times[0] and times[1] and times[0] > times[1]:
+            found.append(f"docs/{pdf} is older than docs/{md}: run grouplab user-guide and commit the PDFs with the guide")
+    return found
+
+
 def newest() -> str:
     m = re.search(r"^## (\d+\.\d+\.\d+-nightly\.\d+)\s*$", NOTES.read_text(encoding="utf-8"), re.M)
     return m.group(1) if m else ""
@@ -187,7 +201,7 @@ def main() -> int:
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--issue", action="store_true")
     args = parser.parse_args()
-    found = checks_that_exist() + readme_checks() + routes() + retired() + ([] if args.offline else online())
+    found = checks_that_exist() + readme_checks() + routes() + retired() + guide_pdfs() + ([] if args.offline else online())
     for f in found:
         print(f"::warning::{f}" if args.warn else f"- {f}")
     print(f"consistency: {len(found)} finding{'s' if len(found) != 1 else ''}")
