@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.175
+
+**2026-10-07**, commit `7aeeb5a`. Nightly.
+
+**What you will notice**
+
+- Shot coordinates from several CSV files can now be imported together as one group, and every exported row names its sheet, its session and the distance.
+- Two marks closer than half a hole's width are now raised for you to check, and One shot turns them into a single shot at the middle of the two.
+- On the phone, Scale markers now has the Label size loaded choice, so the scale labels you share match the roll in your printer instead of always being 70 by 80 mm.
+- Printing straight to the Phomemo M834 from Android now feeds the sheet 15.5 mm further on a roll, so all of it clears the tear bar; choose a roll or fanfold sheets once under the print button.
+- An answered review question can now be asked again: on the computer click it in the review queue, on the phone show the answered marks, then press Ask again or pick another answer.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.175)
+
+---
+
 ## 0.2.0-nightly.174
 
 **2026-10-06**, commit `ce1a7de`. Nightly.
