@@ -81,8 +81,17 @@ jobs:
       - name: The builder's packages
         run: python -m pip install --quiet markdown Pillow fonttools brotli
 
+      - name: A check holds back only what it is about (entry 387)
+        run: python tests/python/site-holdback-tests.py
+
       - name: Build the site
-        run: python website/build.py
+        # Entry 387: a page a check holds back keeps the copy grouplab.org serves now; every held page is listed in the summary.
+        env:
+          GROUPLAB_LIVE_SITE: https://grouplab.org
+        run: |
+          set -o pipefail
+          python website/build.py | tee build.out
+          grep -E '^(held back|published with a stale part): ' build.out | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY" || true
 
       # Entry 347: grouplab.org keeps a copy of the newest signed store-bought fingerprint library, which the application reads only when
       # GitHub cannot be reached and trusts only by its own signature. A nightly from before the library existed carries none, and that is

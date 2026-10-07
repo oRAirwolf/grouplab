@@ -5348,6 +5348,10 @@
   "On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.": {
    "kind": "code",
    "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync (paired first, a scan from Android 12), mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, printers.json phomemo-m220; entry 386 after question 90. Not yet printed on a real M220 by this path"
+  },
+  "On Android, Print two scale labels on the Phomemo M220 sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync, mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, ScaleLabelCheck and PrinterProfile.LabelSize; entry 386. Not yet printed on a real M220 by this path"
   }
  },
  "rules": [

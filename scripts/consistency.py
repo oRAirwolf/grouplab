@@ -60,6 +60,8 @@ def checks_that_exist() -> list[str]:
         if code != 0:
             tail = [l for l in out.splitlines() if l.strip()][-6:]
             found.append(f"{label} fails: " + " | ".join(tail))
+        # Entry 387 section 2: a page the site held back, or published with a stale part, is one line each, so it is not left unnoticed.
+        found += [l.strip() for l in out.splitlines() if l.startswith(("held back: ", "published with a stale part: "))]
     return found
 
 

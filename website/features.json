@@ -158,7 +158,7 @@
     "The caliber box can now find any of more than six hundred cartridges",
     "Settings, About now has Send diagnostics, which puts GroupLab's logs",
     "On the phone, Settings, About now has Send to GroupLab",
-    "A photo with no GroupLab codes or markers in it, such as a store-bought target, is now looked at in a few seconds",
+    "Opening a photo with no GroupLab codes or markers in it",
     "On iPhone and iPad, GroupLab's own folder now appears in the Files",
     "The line on Capture asking you to allow the camera now goes away once",
     "On Compare, two loads with the same extreme spread now sit at the",
@@ -249,7 +249,7 @@
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"
     },
-    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"noPicture": "the phone's Scale markers card is photographed at the next sitting with the phone"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, scale labels can now be printed straight to the Phomemo M220"], "guide": "1-print-a-sheet"},
+    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"noPicture": "the phone's Scale markers card is photographed at the next sitting with the phone"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220"], "guide": "1-print-a-sheet"},
     {
       "key": "add-store-target",
       "group": "Reading a target",
@@ -708,7 +708,7 @@
       "mobile": {
         "noPicture": "the phone's CSV import is photographed at the next sitting with the phone"
       },
-      "note": ["Shot coordinates can be exported as a CSV file", "Shot coordinates from several CSV files"],
+      "note": ["Shot coordinates can be exported as a CSV file", "Shot coordinates from several CSV files", "When you import shots from several sheets at once"],
       "tour": "analysis",
       "guide": "6-sessions-and-the-report"
     },

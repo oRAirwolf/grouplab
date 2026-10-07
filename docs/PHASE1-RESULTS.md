@@ -1042,6 +1042,20 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   The error worker's reinstall is a command for Alan (panel.md), because this session has no way onto the server.
 - **The standing rule** (Alan, 2026-10-07): before ending a turn, the inbox is looked in and waiting entries taken, in CLAUDE.md.
 
+## Entry 387: a site check holds back only what it is about (2026-10-07)
+
+- **Sections 1 and 3.** `website/build.py` sorts its checks three ways. The whole site's safety and truth (the figures, limits.json, links,
+  tables, PHP, the send page, devices, downloads, How it works, privacy) still stop the publish. The page checks (research articles, figure
+  themes, the tour, features, glossary words on a page, phone parity) name their pages (`pages_of`), and only those are held back: the
+  copy grouplab.org serves now is fetched and kept (`GROUPLAB_LIVE_SITE` in website.yml), or, where it cannot be, the page publishes and
+  is said to be stale. Screenshots that are only old (`screens-stamp.py`, the README's images) publish and are reported. The home page,
+  the release notes and the download page are never held back. A page check that names no page stops the publish, the safe way round.
+- **Section 2.** Every held or stale page is one line, printed by the build, put in website.yml's summary, and picked up by
+  `scripts/consistency.py`, so the weekly `consistency` issue lists it; STATE.md says each gets a line in for-alan.md when it appears.
+- **Section 4.** `tests/python/site-holdback-tests.py`, 10 checks, run before every site build: a stale phone screenshot holds back
+  nothing and everything else goes out new; a research article's fault holds back only that article; a tour fault only the tour; the
+  release notes are never held; a whole-site fault still stops it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07 evening, after entry 386 (Alan's message before it: guard at 98, requests 79 and 80, questions 84, 86, 87, 89).
+**Last rewritten:** 2026-10-07 evening, after entry 387 (before it: entry 386, question 90's answer, and Alan's guard at 98).
 
 ---
 
@@ -24,6 +24,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
   over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live once Alan runs the worker reinstall in panel.md (the receiver
   is on the site); question 34 built as proposed, **for planning to confirm**.
+- **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
 - **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
   pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
 - **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
@@ -111,6 +112,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
 - **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a
   push that should make a nightly must not be one.
+- **A failing site check holds back only its pages** (entry 387): whole-site checks still stop it; held pages keep grouplab.org's copy and
+  are listed in website.yml's summary and the weekly consistency issue; each gets one line in for-alan.md when it appears.
 - **The Phomemo app prints a Letter sheet at 94.7 percent** (request 73): only GroupLab's own direct print is true size.
 - **Tag36h11 470 to 549 are scale labels' and 555 to 586 scale markers' (entries 372 and 365)**: the sheets' markers must stay below; the sheet look and the validator know.
 - **A picture with a bank card in it is never sent**, and marking by hand works on a blanked copy (entry 365 section D).

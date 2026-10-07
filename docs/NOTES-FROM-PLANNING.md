@@ -25,6 +25,23 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 387: a site check holds back only what it is about, never the whole site
+
+**Status: actioned 2026-10-07; every section done.** Whole-site checks still stop the publish; page checks hold back only their pages, keeping grouplab.org's copy; stale screenshots publish and are reported; the home page, release notes and download page are never held back (`settle` in website/build.py, tests/python/site-holdback-tests.py run before every build). Results: docs/PHASE1-RESULTS.md, entry 387.
+
+From the planning session, 2026-10-07. Alan: "So one part of the site doesn't hold up everything." Question 90 showed it: phone
+screenshots one nightly past the limit stopped every page of grouplab.org from publishing, including release notes and download wording
+that had nothing to do with those pictures.
+
+1. Make each website check name the pages or files it is about. When a check fails, publish everything else and keep the last good,
+   already published copy of only the affected pages (or, where a page cannot be held back alone, publish it with the stale part and say
+   so). Never let one failing check hold back the release notes, the download page or anything a release depends on.
+2. Report every held-back page in the weekly `consistency` GitHub issue and in for-alan.md, in one line each, so nothing stays stale
+   unnoticed (entry 267 still holds: the site agrees with the project).
+3. Checks that guard safety or truth for the whole site (a broken build, a missing download, a wrong checksum, a privacy check) still
+   stop the whole publish.
+4. Test it: a stale phone screenshot holds back only its pages and the rest goes out.
+
 ## 2026-10-07, entry 386: more work for the rest of this week and the next
 
 **Status: actioned 2026-10-07; every section done, with three parts waiting on something outside the code.** Section 1: the plain APK carries GroupLab Dev's updater from nightly 177. Section 2: question 83 (b), the corpus measured first and no sheet lost (175 pictures, no sheet lost, 1960 s to 334 s on the 97 with no marker). Section 3: the M220's profile, the encoder's 1200-row blocks, the printer check label and its measurement, the label size kept with the printer, and (after question 90, Alan) the phone's Bluetooth LE link with Print two scale labels on the Phomemo M220, not yet tried on a real M220. Section 4: Send to GroupLab, built and tested; **live once the receiver and the error worker are on the server**: the receiver goes with the next site publish, which question 90 blocks, and the worker with `install.py` under sudo. Section 5: question 34 built as proposed (each sheet from its own centre the headline, one centre for all and the movement beside it), **for planning to confirm**. The standing rule is in CLAUDE.md. Results: docs/PHASE1-RESULTS.md, entry 386.

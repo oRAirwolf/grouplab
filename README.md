@@ -322,7 +322,7 @@ What exists and is tested:
   iPad in a public beta through TestFlight
 - <!--count:store-targets-->nine<!--/count--> store-bought targets recognized from a fingerprint, named, their bulls placed and their printed scale offered with a warning
   to check it, and a newer signed list of them reaching every copy with the updates, without a new build (built, not proven)
-- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168 and have not yet been printed on a real one; the Label size loaded is chosen on the computer and, from nightly 175, on the phone
+- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168 and have not yet been printed on a real one; the Label size loaded is chosen on the computer and, from nightly 175, on the phone; a printer check label measures the label printer and keeps the size with it, and on Android two labels print straight to the M220 over Bluetooth (entry 386), not yet tried on a real one
 - chronograph readings from a file (a spreadsheet CSV, a Garmin Xero export, and, Experimental, a LabRadar report or a BulletSeeker
   export), paired with the shots by a proposal a person accepts (built, not proven)
 - shot coordinates from several CSV files put together as one group, shots from many sheets of any kind in one analysis, each

@@ -3474,25 +3474,86 @@ def main() -> None:
                 for m in ip.findall(re.sub(r'\s(?:d|points|viewBox)="[^"]*"', "", text)):
                     problems.append(f"{f.relative_to(OUT)}: looks like an IP address: {m}")
 
-    problems += figure_problems + research_problems() + tour_problems() + figure_theme_problems() + limit_problems() + feature_problems()
+    # Entry 387: a check about the whole site's safety or truth stops the publish; a check about some pages holds back only those pages
+    # (their last published copy is kept where it can be fetched); a picture that is only old publishes and is reported.
+    problems += figure_problems + limit_problems()
     problems += link_problems()
     problems += raw_table_problems()
     problems += php_problems()
     problems += send_problems()
-    problems += term_problems()
-    problems += _screens_stamp.problems()
-    problems += _readme_images.problems()
-    problems += parity_problems()
     problems += device_problems()
     problems += download_problems()
     problems += _how_it_works.problems(published_articles(), lambda rel: (REPO / rel).exists())
-    if problems:
-        print("\n".join(problems))
+    paged = research_problems() + figure_theme_problems() + tour_problems() + feature_problems() + term_problems() + parity_problems()
+    stale = _screens_stamp.problems() + _readme_images.problems()
+    stop, report = settle(problems, paged, stale, OUT, os.environ.get("GROUPLAB_LIVE_SITE"))
+    for line in report:
+        print(line)
+    if stop:
         sys.exit("build: checks failed")
 
     total = sum(f.stat().st_size for f in OUT.rglob("*") if f.is_file())
     count = sum(1 for f in OUT.rglob("*") if f.is_file())
     print(f"build: ok, {count} files, {total / 1024 / 1024:.1f} MB in {OUT}")
+
+
+# Entry 387 (Alan: "So one part of the site doesn't hold up everything"). The home page, the release notes and the download page are never
+# held back: they publish with the stale part, and the report says so.
+NEVER_HELD = {"releases/index.html", "download/index.html", "index.html"}
+
+
+def pages_of(message: str, out: Path) -> list[str]:
+    """The built pages a check's message is about, from where it says it is, or [] where it does not say: such a message stops the publish."""
+    where = message.split(":", 1)[0].strip()
+    if where in ("website/features.json", "docs/PHONE-PARITY.md") or where.startswith("features"):
+        return ["features/index.html"]
+    if where == "website/tour.json" or where.startswith("tour"):
+        return sorted(p.relative_to(out).as_posix() for p in (out / "tour").rglob("index.html")) or ["tour/index.html"]
+    m = re.match(r"^research/([a-z0-9-]+)", where)
+    if m:
+        return [f"research/{m.group(1)}/index.html"]
+    if where.endswith(".html"):
+        return [where]
+    return []
+
+
+def last_published(page: str, live: str | None) -> bytes | None:
+    """The page as grouplab.org serves it now, or None where there is no live site to ask or it does not answer."""
+    if not live:
+        return None
+    import urllib.request
+    address = live.rstrip("/") + "/" + (page[: -len("index.html")] if page.endswith("index.html") else page)
+    try:
+        with urllib.request.urlopen(address, timeout=20) as answer:
+            return answer.read() if answer.status == 200 else None
+    except OSError:
+        return None
+
+
+def settle(whole: list[str], paged: list[str], stale: list[str], out: Path, live: str | None, fetch=last_published) -> tuple[bool, list[str]]:
+    """Entry 387: whether the publish stops, and the lines to print: every whole-site failure, and one line for every page held back or
+    published with a stale part. A message from a page check that names no page counts as about the whole site, the safe way round."""
+    report = list(whole)
+    stops = bool(whole)
+    held: dict[str, list[str]] = {}
+    for message in paged:
+        pages = pages_of(message, out)
+        if not pages:
+            report.append(message)
+            stops = True
+            continue
+        for page in pages:
+            held.setdefault(page, []).append(message)
+    for page, why in sorted(held.items()):
+        copy = None if page in NEVER_HELD else fetch(page, live)
+        if copy is not None:
+            (out / page).write_bytes(copy)
+            report.append(f"held back: {page}, the last published copy kept: {why[0]}")
+        else:
+            report.append(f"published with a stale part: {page}: {why[0]}")
+    for message in stale:
+        report.append(f"published with a stale part: the screenshots: {message}")
+    return stops, report
 
 
 if __name__ == "__main__":
