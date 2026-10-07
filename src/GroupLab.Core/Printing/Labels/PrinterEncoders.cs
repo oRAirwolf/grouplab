@@ -5,7 +5,32 @@ using GroupLab.Core.Printing.Thermal;
 namespace GroupLab.Core.Printing.Labels;
 
 /// <summary>What one print asks of the printer beyond the dots: darkness, speed, media, the label's size and how many.</summary>
-public sealed record LabelJob(DotImage Image, double WidthMm, double HeightMm, int? Density = null, int? Speed = null, string? Media = null, int Copies = 1);
+/// <param name="FeedAfterMm">Paper fed after the page, as white rows, so its end clears the tear bar (entry 382); 0 feeds nothing.</param>
+public sealed record LabelJob(DotImage Image, double WidthMm, double HeightMm, int? Density = null, int? Speed = null, string? Media = null, int Copies = 1, double FeedAfterMm = 0);
+
+/// <summary>How the paper comes into the printer: a continuous roll, or fanfold sheets with a perforation between them.</summary>
+public enum PaperForm
+{
+    Roll,
+    Fanfold,
+}
+
+/// <summary>
+/// Entry 382: GroupLab's true-size Letter page on the M834 ended with its last 15 mm behind the tear bar, where the Phomemo app's page,
+/// printed at 94.7 percent and top aligned, left about 15 mm of white and came all the way out. Alan measured 0.61 in (15.5 mm) from the
+/// end of the print head to the tear bar on 2026-10-07. On a roll GroupLab now feeds that much paper after the page, as white rows,
+/// which the printer prints like any other (no feed command of its is known). On fanfold a true-size 11 inch page already ends on the
+/// perforation, so nothing is fed until a print on fanfold shows whether the printer finds the fold by itself.
+/// </summary>
+public static class TearBar
+{
+    public const double M834Mm = 15.5;
+
+    public static double FeedAfterMm(PaperForm paper) => paper == PaperForm.Roll ? M834Mm : 0;
+
+    /// <summary>The white rows <paramref name="mm"/> of paper is on a head of <paramref name="dotsPerInch"/>.</summary>
+    public static int Rows(double mm, double dotsPerInch) => mm <= 0 ? 0 : (int)Math.Ceiling(mm / 25.4 * dotsPerInch);
+}
 
 /// <summary>
 /// One printer language, NOTES-FROM-PLANNING.md entry 358 section 4: turns a page of dots and its settings into the bytes the printer takes.
@@ -114,7 +139,8 @@ public sealed class PhomemoEscEncoder : IPrinterEncoder
 /// ESC/POS's raster <c>1D 76 30 00 wL wH hL hH</c> whose rows do not follow raw but as LZO1X blocks, each the next 4096 bytes of the page
 /// (the last shorter) with its packed length in three bytes, low first. The app's page was 316 bytes (2528 dots) across, so an image of
 /// any other width is centred on the head, clipped or padded with paper. Which of the settings is darkness, paper or speed is not known
-/// yet, so none of them follows the profile until the darkness test says what they do.
+/// yet, so none of them follows the profile until the darkness test says what they do. Paper to feed after the page is sent as white
+/// rows at its end (entry 382).
 /// </summary>
 public sealed class PhomemoLzoEncoder : IPrinterEncoder
 {
@@ -135,8 +161,14 @@ public sealed class PhomemoLzoEncoder : IPrinterEncoder
     {
         ArgumentNullException.ThrowIfNull(job);
         ArgumentNullException.ThrowIfNull(profile);
-        byte[] rows = OnHead(job.Image, (profile.HeadDots + 7) / 8);
-        int across = (profile.HeadDots + 7) / 8, height = job.Image.Height;
+        int across = (profile.HeadDots + 7) / 8, feed = TearBar.Rows(job.FeedAfterMm, profile.DotsPerInch), height = job.Image.Height + feed;
+        byte[] rows = OnHead(job.Image, across);
+        if (feed > 0)
+        {
+            // Entry 382: the paper after the page, white rows the printer feeds out like the rest of the page.
+            Array.Resize(ref rows, across * height);
+        }
+
         var bytes = new List<byte>(Settings);
         for (int copy = 0; copy < Math.Max(1, job.Copies); copy++)
         {

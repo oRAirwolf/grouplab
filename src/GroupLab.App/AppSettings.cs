@@ -310,6 +310,16 @@ public sealed class AppSettingsStore(string path)
 
     public bool SaveLabelSize(int width, int height) => Save(file => file["labelSize"] = new JsonArray(width, height));
 
+    /// <summary>
+    /// Entry 382: whether the M834 has a roll or fanfold paper in it, chosen once on the print screen and remembered; a roll until changed,
+    /// since that is what Alan prints on.
+    /// </summary>
+    public GroupLab.Core.Printing.Labels.PaperForm LoadM834Paper() =>
+        Read(file => (string?)file["m834Paper"] == "fanfold" ? GroupLab.Core.Printing.Labels.PaperForm.Fanfold : (GroupLab.Core.Printing.Labels.PaperForm?)null) ?? GroupLab.Core.Printing.Labels.PaperForm.Roll;
+
+    public bool SaveM834Paper(GroupLab.Core.Printing.Labels.PaperForm paper) =>
+        Save(file => file["m834Paper"] = paper == GroupLab.Core.Printing.Labels.PaperForm.Fanfold ? "fanfold" : "roll");
+
     public int LoadLabelSerial() => Read(file => (int?)file["labelSerial"]) ?? 1;
 
     public bool SaveLabelSerial(int next) => Save(file => file["labelSerial"] = next);

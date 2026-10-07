@@ -61,4 +61,27 @@ public sealed class M834Tests
         rows = PhomemoLzoEncoder.Read(PrinterEncoders.For(profile).Encode(new LabelJob(page, 215.9, 279.4), profile)).Rows;
         Assert.Equal(0xFF, rows[(50 * across) + 49]);
     }
+
+    /// <summary>
+    /// Entry 382 section 1: GroupLab's Letter page is 3300 rows at 300 dpi, true size, against the 3294 the app sent with its page shrunk
+    /// to 94.7 percent and about 15 mm of white left at the bottom. On a roll 15.5 mm of white follows (184 rows), on fanfold nothing.
+    /// </summary>
+    [Fact]
+    public void OnARollTheSheetIsFedPastTheTearBarAndOnFanfoldItIsNot()
+    {
+        var profile = PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
+        var scene = GroupLab.Core.Rendering.SceneBuilder.Build(GroupLab.Core.Gltd.Json.GltdJsonReader.ReadFile(Support.Repo.PathTo("targets", "GL-CF25-LTR.gltd.json")).Definition!).Pages[0];
+        var page = ThermalRaster.Render(scene, profile.Head).Image;
+        Assert.Equal(3300, page.Height);
+        Assert.Equal(184, TearBar.Rows(TearBar.FeedAfterMm(PaperForm.Roll), profile.DotsPerInch));
+        Assert.Equal(0, TearBar.FeedAfterMm(PaperForm.Fanfold));
+
+        var fanfold = PhomemoLzoEncoder.Read(PrinterEncoders.For(profile).Encode(new LabelJob(page, 215.9, 279.4, FeedAfterMm: TearBar.FeedAfterMm(PaperForm.Fanfold)), profile));
+        var roll = PhomemoLzoEncoder.Read(PrinterEncoders.For(profile).Encode(new LabelJob(page, 215.9, 279.4, FeedAfterMm: TearBar.FeedAfterMm(PaperForm.Roll)), profile));
+        Assert.Equal(3300, fanfold.Height);
+        Assert.Equal(3484, roll.Height);
+        Assert.Equal(fanfold.Rows, roll.Rows[..fanfold.Rows.Length]);
+        Assert.All(roll.Rows[fanfold.Rows.Length..], b => Assert.Equal(0, b));
+        Assert.True(page.BlackDots() > 0);
+    }
 }

@@ -803,6 +803,23 @@ split over two reads, the limit, Cancel, and the limit's size. Core printing tes
 
 **Also:** crash issue 23 (the darkness test share, nightly 172) closed: entry 377's fix shipped in 173 and 173 has no report of it.
 
+## Entry 382: the M834 sheet that stayed behind the tear bar (2026-10-07)
+
+**Section 1:** GroupLab's Letter page on the M834 is 3300 rows at 300 dpi, true size; the Phomemo app sent 3294, with its page shrunk to
+94.7 percent and top aligned, so its last 15 mm or so were white and cleared the tear bar. GroupLab's content runs to the page's bottom
+edge, which stayed behind the bar. Alan measured 0.61 in (15.5 mm) from the end of the print head to the tear bar on 2026-10-07.
+
+**Section 2:** the recording has no feed command after the page, and no M834 feed command is known, so rather than try `1B 64 n` blind
+the feed is white rows at the end of the raster, which the printer is known to print and feed: on a roll 15.5 mm, 184 rows, after every
+page (`TearBar`, `LabelJob.FeedAfterMm`); on fanfold nothing, since a true-size 11 in page ends on the perforation. Whether the printer
+finds the fold by itself is asked of Alan in request 78. The phone's print screen has "Paper in the M834", a roll or fanfold sheets,
+chosen once, remembered (`LoadM834Paper`), the chosen one shown; a roll until changed. The desktop has no direct M834 print, so there
+is nothing to match there.
+
+**Section 3:** the paper and the rows fed are logged at the start of every print; the printer's answers were already logged (entry 381).
+Request 78's steps rewritten. Test: `M834Tests.OnARollTheSheetIsFedPastTheTearBarAndOnFanfoldItIsNot` (3300 rows, 3484 on a roll, the
+added rows white, the page's rows unchanged).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

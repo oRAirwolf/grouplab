@@ -249,6 +249,12 @@ after handing the page to the phone, long before the printer had taken it. With 
 3. If it still stops short, or the screen says the printer never said it had finished: Settings, Send diagnostics, and say what the
    screen said. The diagnostics now show every block and everything the printer answered.
 
+**2026-10-07 (entry 382), the steps now:** the whole page printed on 174 but its end stayed behind the tear bar. With the next nightly
+(175 or later), on a roll GroupLab feeds the sheet 15.5 mm further (your 0.61 in) after printing, so it should come all the way out.
+1. Targets, the C bull sheet, under the print button: **Paper in the M834** says **A continuous roll**. Print once. A good answer: the
+   whole sheet comes out past the tear bar, and the ruler line's length.
+2. When you next have fanfold loaded: choose **Fanfold sheets** and print once. GroupLab feeds nothing extra there, since an 11 in page
+   ends on the fold. A good answer: whether the sheet stopped with its perforation at the tear bar, short of it, or past it.
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 
 **Why:** every accuracy figure for the four scale markers comes from computer-made photos with a perfect print; real paper, a real

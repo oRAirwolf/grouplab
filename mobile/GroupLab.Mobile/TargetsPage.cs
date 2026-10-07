@@ -217,6 +217,7 @@ public sealed class TargetsPage : UserControl
         stopM834.IsVisible = false;
         column.Children.Add(Screens.Choice(M834Print, () => _ = PrintOnM834(sheet, result, stopM834)).Id("targets-print-m834"));
         column.Children.Add(stopM834);
+        column.Children.Add(M834PaperChoice());
         // Entry 258: a set of tiles as one large page with cut lines between them, for a plotter, shared rather than printed on the phone.
         if (GroupLab.Core.Rendering.CutSheet.Refusal(sheet.Definition) is null)
         {
@@ -326,6 +327,32 @@ public sealed class TargetsPage : UserControl
             said);
     }
 
+    /// <summary>What the M834's paper choice says, entry 382.</summary>
+    internal const string M834PaperWords = "Paper in the M834. On a roll GroupLab feeds the sheet 15.5 mm further after printing, so all of it clears the tear bar. On fanfold it feeds nothing, since the page ends on the fold.";
+
+    /// <summary>Entry 382: roll or fanfold, chosen once and remembered, the chosen one shown.</summary>
+    private static Control M834PaperChoice()
+    {
+        var now = Phone.Settings.LoadM834Paper();
+        var roll = Screens.Radio("m834Paper", "A continuous roll", now == GroupLab.Core.Printing.Labels.PaperForm.Roll).Id("targets-m834-roll");
+        var fanfold = Screens.Radio("m834Paper", "Fanfold sheets", now == GroupLab.Core.Printing.Labels.PaperForm.Fanfold).Id("targets-m834-fanfold");
+        roll.IsCheckedChanged += (_, _) =>
+        {
+            if (roll.IsChecked == true)
+            {
+                Phone.Settings.SaveM834Paper(GroupLab.Core.Printing.Labels.PaperForm.Roll);
+            }
+        };
+        fanfold.IsCheckedChanged += (_, _) =>
+        {
+            if (fanfold.IsChecked == true)
+            {
+                Phone.Settings.SaveM834Paper(GroupLab.Core.Printing.Labels.PaperForm.Fanfold);
+            }
+        };
+        return new StackPanel { Spacing = 6, Children = { Screens.Dim(M834PaperWords), roll, fanfold } };
+    }
+
     internal const string M834Print = "Print on the Phomemo M834 (Bluetooth, new: not yet tried on a real one)";
 
     /// <summary>The print to the M834 under way, for its Cancel; null when none is.</summary>
@@ -360,6 +387,10 @@ public sealed class TargetsPage : UserControl
         try
         {
             var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
+            var paper = Phone.Settings.LoadM834Paper();
+            double feed = GroupLab.Core.Printing.Labels.TearBar.FeedAfterMm(paper);
+            DiagnosticLog.Info("print.m834", ("step", "paper"), ("paper", paper == GroupLab.Core.Printing.Labels.PaperForm.Roll ? "roll" : "fanfold"),
+                ("feed-rows", GroupLab.Core.Printing.Labels.TearBar.Rows(feed, profile.DotsPerInch)));
             result.Text = "Drawing the page for the M834…";
             var jobs = await Task.Run(() =>
             {
@@ -369,7 +400,7 @@ public sealed class TargetsPage : UserControl
                 {
                     printing.Token.ThrowIfCancellationRequested();
                     var dots = GroupLab.Core.Printing.Thermal.ThermalRaster.Render(page, profile.Head);
-                    var job = new GroupLab.Core.Printing.Labels.LabelJob(dots.Image, page.Width / (10.0 * Scene.UnitsPerDmm), page.Height / (10.0 * Scene.UnitsPerDmm));
+                    var job = new GroupLab.Core.Printing.Labels.LabelJob(dots.Image, page.Width / (10.0 * Scene.UnitsPerDmm), page.Height / (10.0 * Scene.UnitsPerDmm), FeedAfterMm: feed);
                     encoded.Add(GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(job, profile));
                     DiagnosticLog.Info("print.m834", ("step", "encoded"), ("page", encoded.Count), ("bytes", encoded[^1].Length), ("ms", clock.ElapsedMilliseconds));
                 }

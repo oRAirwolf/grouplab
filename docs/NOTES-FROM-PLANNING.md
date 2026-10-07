@@ -25,6 +25,45 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 382: the M834 sheet does not feed all the way out after GroupLab prints it (request 78 follow-up)
+
+**Status: actioned 2026-10-07 (taken before the reset at Alan's word); sections 1 to 3 done, with Alan's try on a roll and on fanfold still to come.**
+
+Written by the planning session 2026-10-06 09:30 UTC. **After the weekly reset (2026-10-08 02:00 UTC)**, with entries 378 and 380.
+
+**What Alan saw (nightly 174, Fold 7, 2026-10-06 ~03:00 Denver):** the whole sheet printed (entry 381's fix works), but the end of the
+sheet stays in the printer; he expected the Phomemo app to send something after the page that feeds it out.
+
+**What the recording says (planning session, from `C:\Dev\grouplab-local\printers\m834-bugreport.zip`, sent direction, RFCOMM DLCI 2):**
+the app sent **nothing after the page**. Its last 255th LZO block ends the stream; the last frames are the page's own white rows. Its
+order was: at connect (t = 0 to 2 s) the status questions `1F 11 38, 07, 09, 08, 0E, 63, 5E, 56, 51`, `1B 4E 1C 02`,
+`1A 0A 05 01 00 06`, `1F 11 12, 11, 08`; then, 24 minutes later at the print, `1F 11 7B`, `1F 11 08`, `1B 40`, `1F 11 02 04`,
+`1F 11 37 64`, `1F 11 0B`, `1F 11 35 01`, `1F 11 3C 02`, the raster (316 x 3294), and the printer's `1A 0F 0C` 22.5 s after the last
+frame. (The printer's `1A 08` answer is its serial number in ASCII: never write it into a file or a log.)
+
+So the feed is not a trailing command. The likeliest difference is the page itself: the app printed the sheet at 94.7 percent, top
+aligned, leaving about 15 mm of white at the bottom of its 3294 lines, so its printed part cleared the tear bar; GroupLab's true-size
+page has content to the bottom edge, which stays behind the tear bar. Alan is being asked whether his paper is fanfold with
+perforations or a roll, and whether the app's printout also stopped with its bottom inside the printer.
+
+1. Check GroupLab's encoded height for the C bull Letter page against the app's 3294 lines.
+2. After the printer's `1A 0F 0C`, feed the sheet clear of the tear bar. Try ESC/POS feed `1B 64 n` (or `1B 4A n`) in a separate
+   short write, measured in the next try; if the M834 ignores it, append white rows to the raster instead. Do not overshoot a fanfold
+   perforation: if Alan's paper is fanfold, the feed must stop at the next page's top (ask the printer: `1F 11 xx` answers may give paper
+   type; otherwise a profile setting "feed after the page, mm").
+3. Log the feed bytes and the printer's answers; release note; rewrite request 78's steps.
+
+## Alan's answers (2026-10-06 03:09 Denver)
+
+- He prints on a **continuous roll** now, and also has **fanfold** paper, so both must work.
+- From the Phomemo app the sheet **came all the way out** by itself. That fits the 15 mm of white the app's 94.7 percent page left at the
+  bottom, not a hidden command.
+
+So: on a roll, feed the sheet clear of the tear bar after `1A 0F 0C` (measure the head-to-tear-bar distance from the next try's
+photo or ask Alan for a ruler reading). On fanfold, a true-size 11 in page should already end on the perforation; find out whether the
+printer senses the fold (does it stop or skip on its own?) before adding any feed there. Let Alan choose roll or fanfold once in the
+print screen, remembered, the same way the label size is (entry 372), and say on the screen which one is set.
+
 ## 2026-10-06, entry 381: GroupLab's direct print to the M834 prints a few millimetres and stops (request 78)
 
 **Status: actioned 2026-10-06; steps 1 to 4 done, with the nightly and Alan's try still to come.**
