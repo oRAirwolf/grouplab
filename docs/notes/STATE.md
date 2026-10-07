@@ -18,7 +18,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
   answered: Part C meant what is left of entry 374.
-- **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 175**: a marking names its photo by file name only,
+- **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only,
   opens beside it wherever the two are moved, asks for the photo when it is not there. No archived submission can hold a path.
 - **Entry 380 done but section 3** (2026-10-07): the phone's Label size loaded, as on the computer; request 77 for 50 x 30 mm.
 - **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
@@ -82,8 +82,8 @@ Ten, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.174 (2026-10-06 08:03 UTC: entry 381; CI green on all three systems at ce1a7de5). Its first run was
-  refused for a British spelling in a note (corrected in docs/release-note-corrections.json) after uploading iOS 174, so the rerun's upload was a duplicate.
+- **Last nightly:** 0.2.0-nightly.175 (2026-10-07 13:48 UTC, built from 7aeeb5a5: entries 382, 380 and 374's Ask again, Possibly one
+  hole and CSV pooling; CI green on all three systems). Entry 383 (3e59e4b5) came after it and is in nightly 176.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
