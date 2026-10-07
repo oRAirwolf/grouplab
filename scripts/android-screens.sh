@@ -47,7 +47,8 @@ PY
 failed=0
 taken=0
 # device, size, density, rotation (0 upright, 1 sideways), the file name's middle, and which screens that layout publishes.
-while read -r device size density rotation middle screens; do
+# The layouts come in on descriptor 3: adb shell reads standard input, and on the first run it swallowed every layout after the first.
+while read -r device size density rotation middle screens <&3; do
   adb shell wm size "$size"
   adb shell wm density "$density"
   adb shell settings put system user_rotation "$rotation"
@@ -79,7 +80,7 @@ while read -r device size density rotation middle screens; do
     done
     adb shell am force-stop "$PKG"
   done
-done <<'LAYOUTS'
+done 3<<'LAYOUTS'
 fold 1080x2520 420 0 - firstrun,capture,result,settings,targets
 fold 1080x2520 420 1 landscape result,sessions
 tab 2960x1848 340 0 landscape result,capture,sessions,targets,settings
