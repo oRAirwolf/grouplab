@@ -6,12 +6,12 @@
 const fs = require("fs");
 const path = require("path");
 
-// Alan, 2026-10-07: stop at 95 for this week only, raised from the 88 he set on 2026-10-06 (entry 376). Until the week resets on
-// 2026-10-08 02:00 UTC the line is 95, and the finishing flag buys nothing; from the reset it is 85 again, with 88 the last line for
-// a finishing block, and no edit needed.
+// Alan, 2026-10-07: stop at 98 for this week only, raised from 95 earlier the same day and from the 88 he set on 2026-10-06 (entry
+// 376). Until the week resets on 2026-10-08 02:00 UTC the line is 98, and the finishing flag buys nothing; from the reset it is 85
+// again, with 88 the last line for a finishing block, and no edit needed.
 const RAISED_UNTIL = Date.UTC(2026, 9, 8, 2, 0);
 const RAISED = Date.now() < RAISED_UNTIL;
-const BACKSTOP = RAISED ? 95 : 88;
+const BACKSTOP = RAISED ? 98 : 88;
 const LIMIT = RAISED ? BACKSTOP : 85;
 const FLAG_MINUTES = 45;
 // Two readings of the same subscription figure: the status line's file, and Claude Code's own cache of the usage it last fetched
@@ -45,11 +45,11 @@ function finishing() {
 const highest = Math.max(-Infinity, ...readings());
 
 if (highest >= BACKSTOP) {
-  process.stderr.write("Weekly budget reached (88%), the last line. Alan said to stop. Stop now.\n");
+  process.stderr.write(`Weekly budget reached (${BACKSTOP}%), the last line. Alan said to stop. Stop now.\n`);
   process.exit(2);
 }
 if (highest >= LIMIT && !finishing()) {
-  process.stderr.write("Weekly budget reached (85%). Alan said to stop. Stop now.\n");
+  process.stderr.write(`Weekly budget reached (${LIMIT}%). Alan said to stop. Stop now.\n`);
   process.exit(2);
 }
 process.exit(0);

@@ -984,6 +984,25 @@ own). **Section 2:** no stretch yet; request 81 asks for the same four numbers f
 the direct print follows if the 0.8 repeats. **Section 3:** request 78 closed and archived, its note saying to measure on the check page,
 which has the lines. **Section 4:** the user guide's phone section says to flatten a thermal sheet before scanning.
 
+## Alan's message of the evening, 2026-10-07: the guard at 98, requests 79 and 80, questions 84, 86, 87 and 89
+
+- **The usage guard** (`scripts/usage-guard.js`) stops at 98 until the week resets on 2026-10-08 02:00 UTC and goes back to 85, with 88
+  the last line for a finishing block, by itself; its stop message now names the line in force. Checked with a reading of 97 (passes) and
+  98 (blocks).
+- **Request 80 answered:** `PLAY_SERVICE_ACCOUNT_JSON` set (2026-10-07 19:21 UTC); Play's internal test showed nightly 110. The nightly
+  176 upload of 18:35 UTC had skipped for want of the key, so `play-upload.yml` was run once by hand for 0.2.0-nightly.176 (run
+  37674523785): bundle uploaded as version code 176, native symbols uploaded, the internal track committed. The README, the download
+  page, the testing guide and docs/ANDROID.md section 12 now say the Play copy gets every nightly.
+- **Request 79 answered:** Alan uploaded GroupLab Dev's verification APK; both package names are registered with the upload key. The
+  four public places that said the APKs were not registered now say they were on 7 October.
+- **Question 86:** the 2 MOA 3 by 4 sheet dropped; entry 374 is done. **Question 89:** no number of its own. **Question 84:** A, the
+  sentence stays.
+- **Question 87, the fingerprint trial again** (`grouplab fingerprint-trial shipped`, new: the application's own recognizer and the
+  nine shipped fingerprints over the trial's pictures from seed 332 and the range photographs): wrong products reach 590 features (the 8 in
+  Shoot-N-C crosshair on the 6 in and 8 in bulls, layout 0.55 to 0.65), and every second line that would reach the refused NTC and Rigid
+  photographs names the wrong product for 1 to 64 of the 200 pictures once their own product is absent (16 to 23 at the 0.55 NTC needs).
+  **The rule stays**; details in `docs/notes/fingerprint-trial.md`. The 190 MB of made pictures were deleted after.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -993,14 +993,14 @@ def page_download() -> str:
         f'GroupLab\'s internal test on Google Play is updated only when a build is uploaded to Play, by hand for now, so it can be weeks behind; GroupLab Dev keeps up by itself. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
         ["Behind the nightlies until each one reaches Play by itself; for now it is uploaded by hand", "One step first: ask on the Discord to be invited",
          "Signed with a different key from the plain APK"]),
-        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy and the plain APK do not update themselves for now: GroupLab Dev does, and installs beside either with no uninstall.",
+        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play; the plain APK does not update itself, while GroupLab Dev does and installs beside either with no uninstall.",
         [fold("The plain APK", other(
             "Android", "grouplab-android.apk",
             "The same app under GroupLab's own name, signed, with a different key from the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.",
             ["Open the file on the phone; allow your browser to install apps when Android asks",
              "Remove the Google Play copy first, if you have it: the two are signed with different keys",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
-         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027.</p>"),
+         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027.</p>"),
          fold("When Android says Google Play Protect is scanning the app", """<p>Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>""")],
         keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other. GroupLab Dev is different: it installs beside either.</p>')
 

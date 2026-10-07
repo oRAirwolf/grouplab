@@ -137,6 +137,35 @@ On this desktop's processor (AMD Ryzen 7 9800X3D), features at 3000 pixels, medi
 is slower by a factor this trial did not measure. At about 100 ms a fingerprint on the desktop, a library much past five needs the index
 before it goes near a phone.
 
+## A second line for fits carried by many features (question 87, 2026-10-07)
+
+On the range photographs of 4 October the right product was found but refused: NTC's 100 yard target with 370 features agreeing and a
+layout agreement of 0.576, the Rigid crosshair with 730 at 0.760. Alan asked for the trial again, to measure whether a fit carried by
+many features could be claimed below 0.85. `grouplab fingerprint-trial shipped` runs the application's own recognizer and the nine
+shipped fingerprints over the trial's pictures made again from seed 332 (200 of the five products, 12 of the GroupLab sheet, 30 walls,
+28 real photographs and scans of GroupLab sheets) and the range photographs (the three products named, both Allen targets and two
+GroupLab sheets as pictures of none). The second line claims the best fit when it has at least F features, a layout of at least L, and
+no other product within 0.1 of it.
+
+**Wrong products reach 590 features.** The 8 in Shoot-N-C crosshair fitted the 6 in and 8 in Shoot-N-C bulls with 570 to 590 features at
+a layout of 0.55 to 0.65: the same black disc, chartreuse halo and type. On pictures of none of the products no fit passed 148 features.
+
+| F | L | named right (phone, scan, range) | wrong product | on pictures of none | with its own product absent |
+|---|---|---|---|---|---|
+| as now | 0.85 | 120, 42, 1 | 0 | 0 of 74 | 0 of 200 |
+| 300 | 0.55 | 128, 45, 3 | 0 | 0 | 23 |
+| 400 | 0.55 | 128, 45, 2 | 0 | 0 | 16 |
+| 300 | 0.75 | 122, 42, 2 | 0 | 0 | 3 |
+| 400 | 0.75 | 122, 42, 2 | 0 | 0 | 1 |
+| 150 | 0.50 | 132, 45, 3 | 2 | 0 | 64 |
+
+The last column is the one that matters: a product GroupLab has no fingerprint for, photographed, and named as another product with that
+product's scale. **No second line is safe.** Reaching NTC's photo needs a line near 0.55, which names the wrong product for 16 to 23 of
+the 200 pictures once their own product is gone. The Rigid crosshair alone could be reached at 400 features and 0.75 for two more phone
+views, at the cost of one wrong name in 200. **The rule stays as it is**: a used target whose layout has been pulled down is asked about
+by hand, and the person chooses it from the list, which is the safe outcome. A lower line would need something that tells the Shoot-N-C
+family's artworks apart other than the colour layout, and nothing measured here does.
+
 ## Print consistency: what is still unknown
 
 The scale from a fingerprint is only as good as the press. Request 64 asks Alan for a second sheet of each of the five, scanned at 600 dpi
@@ -157,6 +186,7 @@ Worth one when the second sheets have been measured and a few real photographs o
 grouplab fingerprint-trial build C:\Dev\grouplab-local\commercial-targets <scratch folder>
 grouplab fingerprint-trial make C:\Dev\grouplab-local\commercial-targets <scratch folder> --sheet samples\gl-cf25-ltr-d-25-shots-600-dpi.png --real <folder>...
 grouplab fingerprint-trial match <scratch folder> --method orb --side 3000
+grouplab fingerprint-trial shipped <scratch folder> [--known <picture> <product id or none>]...
 ```
 
 The pictures are made from seed 332 and take about 190 MB; they and the fingerprints were deleted after the run.

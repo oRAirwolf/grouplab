@@ -14,22 +14,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 25 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 29 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 85, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 89, 87, 86, 85, 84, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
-
-## 2026-10-07, question 89: two different entries 384, the second written over the first in the inbox
-
-Status: open
-
-`docs/notes/inbox/entry-384.md` held the scheduled consistency audit (written about 15:55 UTC, ten findings) when this run started; at
-about 16:18 UTC it was replaced by the entry on the analysis legend, Add readings and the Play testers, under the same number. The
-second is folded as entry 384. The audit's ten findings were read before the file changed and are done in the pass with entry 379
-section 3, recorded as "the consistency audit of 2026-10-07". **Asked:** give the audit a number of its own if it should have one in
-the log; nothing waits on it.
 
 ## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
 
@@ -39,37 +29,6 @@ Alan could not find where to import his chronograph data after Add readings took
 view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
 to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
 concept; the phone already opens a page of its own for it. Nothing waits on it.
-
-## 2026-10-07, question 87: store-bought targets refused on a used sheet although the right product matched (entry 374 section 1)
-
-Status: open
-
-On the range photographs of 4 October, NTC's 100 yard target matched its own fingerprint with 370 features and the Rigid crosshair with
-730, but their colour layouts scored 0.576 and 0.760 against the 0.85 the fingerprint trial set (docs/notes/fingerprint-trial.md:
-no wrong product above 0.81). Shot holes, pasters and ejecta pull a used target's layout down. The trial did not record how many features
-its wrong matches had, so a lower line for a fit carried by many features (say 300 or more, with no other product near) cannot be judged
-from what is written. **Asked:** whether to re-run the trial (`grouplab fingerprint-trial`, about 190 MB of made pictures, deleted after)
-to measure such a rule; until then a used target is asked about by hand, which is the safe outcome. Nothing waits on it.
-
-## 2026-10-07, question 86: Unholy's 2 MOA sheet, 3 by 4 on Letter, does not fit with 2.00 in bulls (entry 374 section 4)
-
-Status: open
-
-Entry 374 asks for 2 MOA bulls, 3 by 4, Letter, no load block, with the same codes and rules as the other sheets. The sheet designer
-refuses every version with the 2.00 in bull of the 2 MOA sheets: three across and four down needs 1.72 in more height than Letter at
-their 2.50 in spacing, and still about half an inch at the closest the format allows (2.08 in, the ring plus 2 mm); four across and three
-down leaves the lattice with no markers and the bulls over the edge; A4 is 0.13 in short even at 2.20 in. Two that pass the designer's
-checks: **(a)** Letter, 3 by 4, **1.50 in bulls** (1.43 MOA at 100 yd) 2.00 in apart; **(b)** **tabloid** (11 by 17 in), 3 by 4, the
-2.00 in bulls at the 2 MOA sheets' 63.4 mm spacing. A 2 MOA bull at 100 yd is 2.09 in, larger still. **Asked:** (a), (b), both, or
-something else. Nothing else waits on it; the sheet is not built until the answer comes.
-
-## 2026-10-05, question 84: the README's "Not built yet" sentence, which entry 373 calls stray and entry 103's test requires
-
-Entry 373 section 7 asks to end the Screens paragraph at "walks through them.", dropping "Not built yet: cloud provider adapters over
-three-tier storage." Entry 103's `ReadmeTests.WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone` reads exactly that sentence to hold
-the paragraph to the plan, and fails without it. **A:** keep it (true today: the adapters are planned and not built). **B:** drop it
-and retire the test. **C:** move the sentence and the test to a place where it reads naturally. My choice: A, it is true and tested.
-Nothing waits on this.
 
 ## 2026-10-04, question 83: identification takes 34 s on a photo with no GroupLab codes
 

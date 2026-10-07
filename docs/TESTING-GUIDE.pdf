@@ -13,7 +13,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 6572 >>
+<< /Length 6417 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -70,26 +70,20 @@ BT /F1 99 Tf 1 0 0 -1 381 3571 Tm (On the phone) Tj ET
 f
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 3701 Tm (GroupLab for Android is the APK on the download page \(https://grouplab.org/download/\), or the Google Play) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3789 Tm (internal test for those invited. Remove one before installing the other: they are signed with different keys. Neither) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3877 Tm (updates itself for now; GroupLab Dev, also on the download page, does, and installs beside either with no) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3965 Tm (uninstall. In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4053 Tm (Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4141 Tm (and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4229 Tm (The rest of the world follows in 2027. On an iPhone or iPad, GroupLab is in a public beta through Apple's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4317 Tm (TestFlight: install TestFlight from the App Store, then open the invitation) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4405 Tm (\(https://testflight.apple.com/join/A3xyT6C6\) on the device; Send Beta Feedback in TestFlight, or a screenshot) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4493 Tm (shared to it, reaches the project. On the Capture screen, Guided takes the picture by itself when everything is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4581 Tm (right and Manual leaves it to you; either way every picture is checked, with a score and notes on what GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4669 Tm (corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a tap on a number) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (to switch its units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a sheet or the printer) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (check page.) Tj ET
-0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 5052 Tm (It keeps itself up to date) Tj ET
-0.745098 0.745098 0.745098 rg
-381 5082 3556 3 re
-f
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 5182 Tm (The installer's copy updates itself. It looks for a newer nightly when it starts, and a bar appears under the header) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3789 Tm (internal test for those invited. Remove one before installing the other: they are signed with different keys. The) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3877 Tm (Play copy gets every nightly through Google Play and the plain APK does not update itself; GroupLab Dev, also) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3965 Tm (on the download page, keeps itself on the newest build and installs beside either with no uninstall. In Brazil,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4053 Tm (Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4141 Tm (30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4229 Tm (were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4317 Tm (Google Play internal test instead. The rest of the world follows in 2027. On an iPhone or iPad, GroupLab is in a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4405 Tm (public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4493 Tm (\(https://testflight.apple.com/join/A3xyT6C6\) on the device; Send Beta Feedback in TestFlight, or a screenshot) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4581 Tm (shared to it, reaches the project. On the Capture screen, Guided takes the picture by itself when everything is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4669 Tm (right and Manual leaves it to you; either way every picture is checked, with a score and notes on what GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a tap on a number) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (to switch its units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a sheet or the printer) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (check page.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 1 of 4) Tj ET
 Q
 endstream
@@ -98,71 +92,71 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 6018 >>
+<< /Length 6151 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (naming the version, with Update now, Later and Skip this version. Update now downloads it, checks it against the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (comes back on the screen you were on. No installer window and no administrator prompt appear at any point.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (You can change how often it looks, or turn it off, in the settings.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 839 Tm (The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 927 Tm (installed wherever you put them. They tell you a newer build exists and point you at the download.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 1116 Tm (One reinstall by hand, once) Tj ET
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 1242 Tm (v0.2.0-nightly.25 is the first build that can update itself. If you are on anything earlier, the update will not work and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1330 Tm (it is not your machine's fault: the signature those builds check was written differently on the machine that made) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1418 Tm (them, so they reject a perfectly good update. Download the installer from the nightly release once, run it over the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1506 Tm (top, and self-updating works from then on. Nothing of yours is touched.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1629 Tm (The update from nightly.25 to nightly.26 was then run end to end on a real machine, with real clicks: 97 MB) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1717 Tm (downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1805 Tm (on the screen it was on.) Tj ET
-0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 1994 Tm (If a new build will not start) Tj ET
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2120 Tm (Nothing of yours is at risk. Everything you have made lives in %APPDATA%\\GroupLab on Windows \(under your) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2208 Tm (home folder on macOS and Linux\): the settings, your sessions, any sheet you designed and the log. No installer) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2296 Tm (and no uninstaller touches that folder, so a bad build cannot lose a session.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2419 Tm (Going back is a download, not a repair. The update replaces the program in place, so there is no previous copy) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2507 Tm (on the machine to return to. The build you were on still exists at its own address: open the releases list) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2595 Tm (\(https://github.com/oRAirwolf/grouplab/releases\), find the v<version> release you were on, download its installer) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2683 Tm (and run it. It installs over the broken one, and your things are exactly where you left them.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2806 Tm (If that happens, say so in a report. It is the kind of thing that should be rare enough to be worth hearing about) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2894 Tm (every time. The support page at <https://grouplab.org/support/> says how, and support@grouplab.org reaches) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2982 Tm (Alan directly.) Tj ET
-0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 3189 Tm (The first minute, with no rifle) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 536 Tm (It keeps itself up to date) Tj ET
 0.745098 0.745098 0.745098 rg
-381 3219 3556 3 re
+381 566 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3319 Tm (Both packages bring a samples folder.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 3442 Tm (1.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 3442 Tm (Open GroupLab. In the header's menu, top right, choose Open image.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 3544 Tm (2.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 3544 Tm (Open samples/sample-25-shots.png. It is a GroupLab sheet with 25 shots, generated by GroupLab itself, so) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 3632 Tm (it is nobody's target.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 3734 Tm (3.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 3734 Tm (GroupLab reads the sheet's printed codes, registers the page from the corner markers, finds the holes and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 3822 Tm (puts each on its bull. Watch the status line.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 409 3924 Tm (4.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 508 3924 Tm (Settle anything the review queue raises in the side panel, then press Accept and analyze.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4026 Tm (Tell it the caliber if you know it. It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4114 Tm (one small-caliber test scan naming it is the difference between nineteen holes found and twenty-four, and on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4202 Tm (another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4290 Tm (paper is a good deal smaller than the bullet that made it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4413 Tm (Then click a hole. A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4501 Tm (hand, leave a note, or mark it a sighter, a flyer or not a shot. A flyer is called out and stays in the group; leaving a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4589 Tm (shot out of the figures is a separate, deliberate choice that needs a reason. Everything you do shows a message) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4677 Tm (with Undo on it, and Ctrl+Z, or Command Z on a Mac, works everywhere.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 666 Tm (The installer's copy updates itself. It looks for a newer nightly when it starts, and a bar appears under the header) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 754 Tm (naming the version, with Update now, Later and Skip this version. Update now downloads it, checks it against the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 842 Tm (build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 930 Tm (comes back on the screen you were on. No installer window and no administrator prompt appear at any point.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1018 Tm (You can change how often it looks, or turn it off, in the settings.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1141 Tm (The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1229 Tm (installed wherever you put them. They tell you a newer build exists and point you at the download.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 4884 Tm (Reading what it shows you) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 1418 Tm (One reinstall by hand, once) Tj ET
+0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 1544 Tm (v0.2.0-nightly.25 is the first build that can update itself. If you are on anything earlier, the update will not work and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1632 Tm (it is not your machine's fault: the signature those builds check was written differently on the machine that made) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1720 Tm (them, so they reject a perfectly good update. Download the installer from the nightly release once, run it over the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1808 Tm (top, and self-updating works from then on. Nothing of yours is touched.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1931 Tm (The update from nightly.25 to nightly.26 was then run end to end on a real machine, with real clicks: 97 MB) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2019 Tm (downloaded and checked in under 15 seconds, no installer window, no administrator prompt, and GroupLab back) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2107 Tm (on the screen it was on.) Tj ET
+0.078431 0.078431 0.078431 rg
+BT /F1 81 Tf 1 0 0 -1 381 2296 Tm (If a new build will not start) Tj ET
+0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 2422 Tm (Nothing of yours is at risk. Everything you have made lives in %APPDATA%\\GroupLab on Windows \(under your) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2510 Tm (home folder on macOS and Linux\): the settings, your sessions, any sheet you designed and the log. No installer) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2598 Tm (and no uninstaller touches that folder, so a bad build cannot lose a session.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2721 Tm (Going back is a download, not a repair. The update replaces the program in place, so there is no previous copy) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2809 Tm (on the machine to return to. The build you were on still exists at its own address: open the releases list) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2897 Tm (\(https://github.com/oRAirwolf/grouplab/releases\), find the v<version> release you were on, download its installer) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2985 Tm (and run it. It installs over the broken one, and your things are exactly where you left them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3108 Tm (If that happens, say so in a report. It is the kind of thing that should be rare enough to be worth hearing about) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3196 Tm (every time. The support page at <https://grouplab.org/support/> says how, and support@grouplab.org reaches) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3284 Tm (Alan directly.) Tj ET
+0.078431 0.078431 0.078431 rg
+BT /F1 99 Tf 1 0 0 -1 381 3491 Tm (The first minute, with no rifle) Tj ET
 0.745098 0.745098 0.745098 rg
-381 4914 3556 3 re
+381 3521 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 3621 Tm (Both packages bring a samples folder.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 3744 Tm (1.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3744 Tm (Open GroupLab. In the header's menu, top right, choose Open image.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 3846 Tm (2.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3846 Tm (Open samples/sample-25-shots.png. It is a GroupLab sheet with 25 shots, generated by GroupLab itself, so) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 3934 Tm (it is nobody's target.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 4036 Tm (3.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 4036 Tm (GroupLab reads the sheet's printed codes, registers the page from the corner markers, finds the holes and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 4124 Tm (puts each on its bull. Watch the status line.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 409 4226 Tm (4.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 508 4226 Tm (Settle anything the review queue raises in the side panel, then press Accept and analyze.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4328 Tm (Tell it the caliber if you know it. It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4416 Tm (one small-caliber test scan naming it is the difference between nineteen holes found and twenty-four, and on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4504 Tm (another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4592 Tm (paper is a good deal smaller than the bullet that made it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4715 Tm (Then click a hole. A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4803 Tm (hand, leave a note, or mark it a sighter, a flyer or not a shot. A flyer is called out and stays in the group; leaving a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4891 Tm (shot out of the figures is a separate, deliberate choice that needs a reason. Everything you do shows a message) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4979 Tm (with Undo on it, and Ctrl+Z, or Command Z on a Mac, works everywhere.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 2 of 4) Tj ET
 Q
 endstream
@@ -171,52 +165,53 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 12 0 R >> >> /Contents 9 0 R >>
 endobj
 9 0 obj
-<< /Length 3650 >>
+<< /Length 3433 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-q 3556 0 0 -2286 381 2695 cm /Im0 Do Q
-0.27451 0.27451 0.27451 rg
-BT /F1 56 Tf 1 0 0 -1 381 2751 Tm (The analysis) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2878 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2878 Tm (The plot draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2966 Tm (and CEP 90 circles.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3068 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3068 Tm (Every figure carries its interval: the range the true value is likely to lie in. That interval is the point of the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3156 Tm (software. A five-shot group's mean radius could easily be half or double what it measures.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3258 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3258 Tm (The zero correction says what to dial, in your scope's clicks, and refuses when the group's center is too close) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3346 Tm (to the aim to tell from chance, saying how many shots would settle it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3448 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3448 Tm (The two cards judge the group's shape and its worst shot, each naming the test it used and what that test) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3536 Tm (could have detected.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3638 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3638 Tm (Every "why" opens the reasoning behind a figure, and there is now a ? beside every single figure giving two) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3726 Tm (or three plain sentences, including what the number of shots does to it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3828 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3828 Tm (The zero correction is given in MOA, mils, inches and centimeters at once, with your scope's own unit leading) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3916 Tm (and the clicks spelled out where the rifle records a click value. The clicks are never guessed.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4018 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4018 Tm (Holes between bulls and off the grid are kept, counted and offered to you rather than dropped. Where) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4106 Tm (GroupLab is unsure which bull a hole belongs to, it says so, and every figure built on that assignment carries) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4194 Tm (the doubt until you settle it.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 4380 Tm (Printing a sheet and shooting it) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 536 Tm (Reading what it shows you) Tj ET
 0.745098 0.745098 0.745098 rg
-381 4410 3556 3 re
+381 566 3556 3 re
+f
+q 3556 0 0 -2286 381 2909 cm /Im0 Do Q
+0.27451 0.27451 0.27451 rg
+BT /F1 56 Tf 1 0 0 -1 381 2965 Tm (The analysis) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3092 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3092 Tm (The plot draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3180 Tm (and CEP 90 circles.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3282 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3282 Tm (Every figure carries its interval: the range the true value is likely to lie in. That interval is the point of the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3370 Tm (software. A five-shot group's mean radius could easily be half or double what it measures.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3472 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3472 Tm (The zero correction says what to dial, in your scope's clicks, and refuses when the group's center is too close) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3560 Tm (to the aim to tell from chance, saying how many shots would settle it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3662 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3662 Tm (The two cards judge the group's shape and its worst shot, each naming the test it used and what that test) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3750 Tm (could have detected.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3852 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3852 Tm (Every "why" opens the reasoning behind a figure, and there is now a ? beside every single figure giving two) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3940 Tm (or three plain sentences, including what the number of shots does to it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4042 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4042 Tm (The zero correction is given in MOA, mils, inches and centimeters at once, with your scope's own unit leading) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4130 Tm (and the clicks spelled out where the rifle records a click value. The clicks are never guessed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4232 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4232 Tm (Holes between bulls and off the grid are kept, counted and offered to you rather than dropped. Where) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4320 Tm (GroupLab is unsure which bull a hole belongs to, it says so, and every figure built on that assignment carries) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4408 Tm (the doubt until you settle it.) Tj ET
+0.078431 0.078431 0.078431 rg
+BT /F1 99 Tf 1 0 0 -1 381 4594 Tm (Printing a sheet and shooting it) Tj ET
+0.745098 0.745098 0.745098 rg
+381 4624 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4510 Tm (The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->forty-seven<!--/count-->) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4598 Tm (built-in sheets, printed at actual size.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4721 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4721 Tm (Print with Open to print, and choose Actual size or 100 percent, never Fit to page.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4823 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4823 Tm (Measure bull 1 to bull 5 before you shoot: on the Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4911 Tm (printer scaled the sheet.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 5013 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 5013 Tm (Mount it flat, fire one shot per bull in order, and write only in the load block.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 5115 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 5115 Tm (Photograph it from about 2.5 ft on your phone's main camera with the whole sheet in frame, or scan it flat at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4724 Tm (The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->forty-seven<!--/count-->) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4812 Tm (built-in sheets, printed at actual size.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4935 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4935 Tm (Print with Open to print, and choose Actual size or 100 percent, never Fit to page.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 5037 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5037 Tm (Measure bull 1 to bull 5 before you shoot: on the Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5125 Tm (printer scaled the sheet.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 3 of 4) Tj ET
 Q
 endstream
@@ -225,55 +220,59 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 4165 >>
+<< /Length 4528 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 494 452 Tm (600 dpi. Do not crop it, and do not send it through a messaging app.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 452 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 452 Tm (Mount it flat, fire one shot per bull in order, and write only in the load block.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 554 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 554 Tm (Print a volunteer pack, beside the chosen sheet, gives the sheet and a page of these instructions together.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 554 Tm (Photograph it from about 2.5 ft on your phone's main camera with the whole sheet in frame, or scan it flat at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 642 Tm (600 dpi. Do not crop it, and do not send it through a messaging app.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 744 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 744 Tm (Print a volunteer pack, beside the chosen sheet, gives the sheet and a page of these instructions together.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 740 Tm (What is not done yet) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 930 Tm (What is not done yet) Tj ET
 0.745098 0.745098 0.745098 rg
-381 770 3556 3 re
+381 960 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 870 Tm (The repository's README is the authority on what works; this is the short version.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 993 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 993 Tm (Printing from inside GroupLab lost every marker and code on one printer, which made those sheets) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1081 Tm (unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1169 Tm (version has been checked on paper yet, so use Open to print.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1271 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1271 Tm (Hole detection on plain paper, with no sheet definition, is not built.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1373 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1373 Tm (Chronograph readings from a file \(a spreadsheet CSV, a Garmin Xero export, and, still experimental, a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1461 Tm (LabRadar report or a BulletSeeker export\) are reconciled with the shots by a proposed pairing you accept;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1549 Tm (that pairing has not yet been checked against a sheet shot with its string recorded in order.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1651 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1651 Tm (Two of the project's own gates have no material yet: no 25-shot editor timing and no blank-paper photograph.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1739 Tm (The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1827 Tm (could not read about half of them. So GroupLab is careful software that has not yet been proved against a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1915 Tm (large body of real targets.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2017 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2017 Tm (Linux and macOS are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2105 Tm (Mac build has been run on one Mac; the platform statement on the download page says exactly what has) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2193 Tm (been checked.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1060 Tm (The repository's README is the authority on what works; this is the short version.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1183 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1183 Tm (Printing from inside GroupLab lost every marker and code on one printer, which made those sheets) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1271 Tm (unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1359 Tm (version has been checked on paper yet, so use Open to print.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1461 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1461 Tm (Hole detection on plain paper, with no sheet definition, is not built.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1563 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1563 Tm (Chronograph readings from a file \(a spreadsheet CSV, a Garmin Xero export, and, still experimental, a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1651 Tm (LabRadar report or a BulletSeeker export\) are reconciled with the shots by a proposed pairing you accept;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1739 Tm (that pairing has not yet been checked against a sheet shot with its string recorded in order.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1841 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1841 Tm (Two of the project's own gates have no material yet: no 25-shot editor timing and no blank-paper photograph.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1929 Tm (The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2017 Tm (could not read about half of them. So GroupLab is careful software that has not yet been proved against a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2105 Tm (large body of real targets.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2207 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2207 Tm (Linux and macOS are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2295 Tm (Mac build has been run on one Mac; the platform statement on the download page says exactly what has) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2383 Tm (been checked.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 2379 Tm (Telling somebody when it is wrong) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 2569 Tm (Telling somebody when it is wrong) Tj ET
 0.745098 0.745098 0.745098 rg
-381 2409 3556 3 re
+381 2599 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2509 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2597 Tm (report, because a test build changes whenever the code does. Report a problem there writes a report package: a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2685 Tm (zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2773 Tm (Send it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2861 Tm (support@grouplab.org. Either way, add a line about what you were doing. The support page at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2949 Tm (<https://grouplab.org/support/> says the same and is easier to find again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3072 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3160 Tm (and Linux: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3248 Tm (the folder you unzipped, and delete that folder when you want the data gone.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2699 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2787 Tm (report, because a test build changes whenever the code does. Report a problem there writes a report package: a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2875 Tm (zip with the log and what GroupLab was doing, carrying no location data and no images unless you add them.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2963 Tm (Send it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3051 Tm (support@grouplab.org. Either way, add a line about what you were doing. The support page at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3139 Tm (<https://grouplab.org/support/> says the same and is easier to find again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3262 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3350 Tm (and Linux: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3438 Tm (the folder you unzipped, and delete that folder when you want the data gone.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 4 of 4) Tj ET
 Q
 endstream
@@ -1272,15 +1271,15 @@ xref
 0000000185 00000 n 
 0000000282 00000 n 
 0000000408 00000 n 
-0000007032 00000 n 
-0000007158 00000 n 
-0000013228 00000 n 
-0000013381 00000 n 
-0000017083 00000 n 
-0000017211 00000 n 
-0000021429 00000 n 
+0000006877 00000 n 
+0000007003 00000 n 
+0000013206 00000 n 
+0000013359 00000 n 
+0000016844 00000 n 
+0000016972 00000 n 
+0000021553 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-280148
+280272
 %%EOF

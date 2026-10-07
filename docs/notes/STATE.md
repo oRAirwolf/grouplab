@@ -9,28 +9,26 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07, after entry 385; Alan had entries 382, 378 and 380 taken before the reset.
+**Last rewritten:** 2026-10-07 evening, after Alan's message (guard at 98, requests 79 and 80, questions 84, 86, 87, 89); entry 386 next.
 
 ---
 
 ## In flight
 
-- **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
-  88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
-  answered: Part C meant what is left of entry 374.
+- **The usage guard stops at 98% until the week resets (2026-10-08 02:00 UTC)**, Alan, 2026-10-07 evening; at 85% again after it,
+  88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 89% at 19:25 UTC on 2026-10-07.
+- **Google Play's internal test now follows the nightlies** (request 80 answered): nightly 176 sent by hand, version code 176 committed
+  (run 37674523785); from nightly 177 every one goes by itself. **Request 79 answered**: both APKs registered with the upload key.
+- **Question 87 measured**: no second line for fits with many features is safe (wrong fits reach 590 features); the rule stays.
 - **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
   request 81 saves the check and asks for a second print before any stretch.
 - **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
-- **Entry 384 done** (2026-10-07): the analysis key's strip, Add readings, Play testers; **the Play internal track's last upload on
-  record is nightly 110**, and the Play copy and plain APK do not update themselves until request 80.
+- **Entry 384 done** (2026-10-07): the analysis key's strip, Add readings, Play testers.
 - **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only.
-- **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
-  request 79 has Alan's Play Console steps, `android-verify.yml` builds the small proof APK from his snippet; a note for testers in
-  Brazil, Indonesia, Singapore and Thailand on the download page, README, testing guide and docs/ANDROID.md.
+- **Entry 378 done** (2026-10-07): both APKs outside Play signed with the upload key and registered (request 79).
 - **Entry 376 done but B7** (2026-10-06): B7 (diagnostics straight to GroupLab) needs a receiver kind.
-- **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing, Ask again, Possibly one hole,
-  CSV pooling (2026-10-07); the 2 MOA 3 by 4 sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 79 (one APK to upload), 80 (Play uploads), 81 (the M834's check, a second print).
+- **Entry 374 done** (2026-10-07): the 2 MOA 3 by 4 sheet dropped on question 86. **Entry 373 done.**
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81 (the M834's check, a second print).
 
 ## The next three
 
@@ -53,25 +51,22 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. B7 (diagnostics straight to GroupLab); then entry 374's 2 MOA sheet on question 86.
+3. Entry 386 (in the inbox); then B7 (diagnostics straight to GroupLab).
 
 ## Blocked, and on what
 
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (81 the M834's check and a second print; 80 Play uploads; 79 one verification APK to upload; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **21** (81 the M834's check and a second print; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Thirteen, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Nine, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87 and 89 answered 2026-10-07 evening):
 
-- **89** two entries 384 (the audit overwritten); **88** DESIGN NEEDED, chronograph entry on the analysis
-- **87** store-bought targets refused on a used sheet though the right product matched (re-run the trial?)
-- **86** Unholy's 2 MOA 3 by 4 sheet does not fit Letter (choices: 1.50 in bulls on Letter, or tabloid)
-- **84** the README's "Not built yet" sentence (my choice: keep it)
+- **88** DESIGN NEEDED, chronograph entry on the analysis
 - **83** identification takes 34 s on a photo with no codes (my choice: full size only when no marker is found)
 - **80** a newer fingerprint library without a new build
 - **67** the printer check page as grid style 4 (with Alan)
@@ -82,8 +77,8 @@ Thirteen, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.175 (2026-10-07 13:48 UTC, built from 7aeeb5a5: entries 382, 380 and 374's Ask again, Possibly one
-  hole and CSV pooling; CI green on all three systems). Entry 383 (3e59e4b5) came after it and is in nightly 176.
+- **Last nightly:** 0.2.0-nightly.176 (2026-10-07 18:00 UTC: entry 383's marking file fix and the work before it); on Google Play's
+  internal test as version code 176.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
@@ -94,7 +89,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 386.
 
 ## Things that would surprise somebody who was not here yesterday
 

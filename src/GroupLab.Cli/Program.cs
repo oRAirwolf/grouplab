@@ -544,7 +544,7 @@ static int Usage()
         grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
         grouplab capture-check <image>... [--library <directory>] [--sweep]
         grouplab st4 <st4-2026-09-20.json> [--frames <folder>]
-        grouplab fingerprint-trial build <blanks> <out> | make <blanks> <out> [--seed <n>] [--real <folder>]... | match <out> --method orb|akaze
+        grouplab fingerprint-trial build <blanks> <out> | make <blanks> <out> [--seed <n>] [--real <folder>]... | match <out> --method orb|akaze | shipped <out> [--known <picture> <product id>]...
         grouplab store-fingerprints build <blanks> <out> | recognize <picture>...
         grouplab target-reference make <photo> ... | check <file.glref> <photo> | add <file.glref> | library <out.gllib> --key <file>
         grouplab user-guide [<docs directory>]

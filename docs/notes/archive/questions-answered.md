@@ -5,6 +5,52 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-07, question 89: two different entries 384, the second written over the first in the inbox
+
+**Status: answered 2026-10-07 (Alan, from planning, in the message starting the evening run): no separate number; it stays recorded as the consistency audit of 2026-10-07.** Nothing waits on it.
+
+
+`docs/notes/inbox/entry-384.md` held the scheduled consistency audit (written about 15:55 UTC, ten findings) when this run started; at
+about 16:18 UTC it was replaced by the entry on the analysis legend, Add readings and the Play testers, under the same number. The
+second is folded as entry 384. The audit's ten findings were read before the file changed and are done in the pass with entry 379
+section 3, recorded as "the consistency audit of 2026-10-07". **Asked:** give the audit a number of its own if it should have one in
+the log; nothing waits on it.
+
+## 2026-10-07, question 87: store-bought targets refused on a used sheet although the right product matched (entry 374 section 1)
+
+**Status: answered 2026-10-07 (Alan, from planning, in the message starting the evening run): yes, re-run the fingerprint trial to measure a lower line for fits carried by many features.** Measured the same day (`grouplab fingerprint-trial shipped`): wrong products reach 590 features, and every second line that reaches the refused photographs names the wrong product for 1 to 64 of 200 pictures whose own product is absent, so the rule stays; `docs/notes/fingerprint-trial.md`.
+
+
+On the range photographs of 4 October, NTC's 100 yard target matched its own fingerprint with 370 features and the Rigid crosshair with
+730, but their colour layouts scored 0.576 and 0.760 against the 0.85 the fingerprint trial set (docs/notes/fingerprint-trial.md:
+no wrong product above 0.81). Shot holes, pasters and ejecta pull a used target's layout down. The trial did not record how many features
+its wrong matches had, so a lower line for a fit carried by many features (say 300 or more, with no other product near) cannot be judged
+from what is written. **Asked:** whether to re-run the trial (`grouplab fingerprint-trial`, about 190 MB of made pictures, deleted after)
+to measure such a rule; until then a used target is asked about by hand, which is the safe outcome. Nothing waits on it.
+
+## 2026-10-07, question 86: Unholy's 2 MOA sheet, 3 by 4 on Letter, does not fit with 2.00 in bulls (entry 374 section 4)
+
+**Status: answered 2026-10-07 (Alan, from planning, in the message starting the evening run): drop the 3 by 4 sheet. Twelve 2 MOA bulls do not fit on Letter, and the 3x3 sheets cover it.** That part of entry 374 is closed, not built.
+
+
+Entry 374 asks for 2 MOA bulls, 3 by 4, Letter, no load block, with the same codes and rules as the other sheets. The sheet designer
+refuses every version with the 2.00 in bull of the 2 MOA sheets: three across and four down needs 1.72 in more height than Letter at
+their 2.50 in spacing, and still about half an inch at the closest the format allows (2.08 in, the ring plus 2 mm); four across and three
+down leaves the lattice with no markers and the bulls over the edge; A4 is 0.13 in short even at 2.20 in. Two that pass the designer's
+checks: **(a)** Letter, 3 by 4, **1.50 in bulls** (1.43 MOA at 100 yd) 2.00 in apart; **(b)** **tabloid** (11 by 17 in), 3 by 4, the
+2.00 in bulls at the 2 MOA sheets' 63.4 mm spacing. A 2 MOA bull at 100 yd is 2.09 in, larger still. **Asked:** (a), (b), both, or
+something else. Nothing else waits on it; the sheet is not built until the answer comes.
+
+## 2026-10-05, question 84: the README's "Not built yet" sentence, which entry 373 calls stray and entry 103's test requires
+
+**Status: answered 2026-10-07 (Alan, from planning, in the message starting the evening run): A, keep the sentence.** Nothing changes; the README and `ReadmeTests` stay as they are.
+
+Entry 373 section 7 asks to end the Screens paragraph at "walks through them.", dropping "Not built yet: cloud provider adapters over
+three-tier storage." Entry 103's `ReadmeTests.WhatTheConceptScreensCallUnbuiltIsPlannedAndNotDone` reads exactly that sentence to hold
+the paragraph to the plan, and fails without it. **A:** keep it (true today: the adapters are planned and not built). **B:** drop it
+and retire the test. **C:** move the sentence and the test to a place where it reads naturally. My choice: A, it is true and tested.
+Nothing waits on this.
+
 ## 2026-10-06, question 85: entry 376 as delivered has no Part C and no 88% line, which Alan's message to the session names
 
 **Status: answered 2026-10-07 (Alan, in the message starting that run): Part C meant what is left of entry 374.** Nothing waits on it.

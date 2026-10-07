@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **81, the M834's printer check saved and one more print** (fifteen minutes). Then **80**, Google Play updating your testers by itself (fifteen minutes). Then **79**, Android developer verification in Play Console (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 21.** Most urgent today: **81, the M834's printer check saved and one more print** (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -239,41 +239,6 @@ print says whether the 0.8 percent repeats; if it does, GroupLab will stretch it
 2. Print **GroupLab Printer Check, Letter** on the M834 once more (Paper in the M834: A continuous roll), and measure the same four
    numbers: the caliper across and down on the dashed lines, and the ruler across the bottom and down the side.
 **A good answer:** the four numbers from the second print. Thermal roll paper curls: flatten the sheet under a book before measuring.
-
-## 80. Google Play: let each nightly reach your Play testers by itself, about fifteen minutes, soon (entry 384)
-
-**Why:** a tester who installed GroupLab from Google Play (or the plain APK) is still on nightly 130. Only GroupLab Dev updates itself;
-the Play copy changes only when a build is uploaded, and the last upload written down is nightly 110 (27 September). With these
-steps each nightly goes to the internal test by itself, and Play updates your testers' copies as it does any app.
-**Steps:**
-1. In Play Console: **Release**, **Testing**, **Internal testing**. Write down the version the newest release shows (for example
-   0.2.0-nightly.130), so the record says which build your testers have now.
-2. In Google Cloud (console.cloud.google.com), signed in with the account that owns the Play developer account: pick or create a
-   project (name it grouplab-play), then **APIs and services**, **Library**, find **Google Play Android Developer API**, **Enable**.
-3. **IAM and admin**, **Service accounts**, **Create service account**: name it grouplab-play-upload, give it no roles, **Done**. Open
-   it, **Keys**, **Add key**, **Create new key**, **JSON**. A file downloads. Never send it to anyone or put it in the repository.
-4. Back in Play Console: **Users and permissions**, **Invite new users**. The email is the service account's address (it ends in
-   iam.gserviceaccount.com). Under **App permissions**, **Add app**, choose GroupLab, and tick only **Release apps to testing
-   tracks** and **View app information**. No account permissions. **Invite user**.
-5. On GitHub: the grouplab repository, **Settings**, **Secrets and variables**, **Actions**, **New repository secret**. Name:
-   PLAY_SERVICE_ACCOUNT_JSON. Value: the whole of the downloaded file. **Add secret**. Then delete the downloaded file.
-**A good answer:** "done", and the version from step 1. I then send the newest nightly to internal testing once by hand and check
-it arrives; after that every nightly goes by itself, and a nightly is never held up by it.
-
-## 79. Android developer verification: one APK left to upload, about two minutes (entry 378)
-
-**Why:** the banner in Play Console. Since 30 September, certified phones in Brazil, Indonesia, Singapore and Thailand refuse an app from
-outside Google Play unless its package name and signing key are registered; the rest of the world follows in 2027. Your Play app is
-registered with Play's own key, but both APKs GroupLab publishes (the plain APK, `org.grouplab.app`, and GroupLab Dev,
-`org.grouplab.app.dev`) are signed with your upload key, whose certificate's SHA-256 begins `98:B3:6D:56` and ends `1F:E3:FC`.
-**2026-10-07, where it stands:** org.grouplab.app is verified with the upload key, no APK needed (Alan). Add key asks for the key's
-SHA-256 fingerprint, not a certificate file: it is
-`98:B3:6D:56:EF:6F:3D:62:CE:63:C8:06:6C:0B:0C:64:B4:72:14:1E:09:0A:F9:F4:93:A4:1B:D5:C5:1F:E3:FC`.
-**What is left, for org.grouplab.app.dev:**
-1. In Play Console, Android developer verification, the registration of **org.grouplab.app.dev** with that fingerprint, where Google
-   asks for the APK: upload `C:\Dev\grouplab-local\android-verification\grouplab-verification-org.grouplab.app.dev.apk`. It has no
-   code, only your snippet in `assets/adi-registration.properties`, signed with the upload key. The real app is never uploaded there.
-**A good answer:** what the screen said after the upload, such as verified.
 
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 

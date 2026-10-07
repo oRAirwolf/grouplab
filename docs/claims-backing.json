@@ -5292,6 +5292,22 @@
   "Targets prints a sheet through Android's print dialog or shares its PDF, and prints the printer check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; Settings, under **Printers**, checks your printer.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM834 and M834PaperChoice; src/GroupLab.Core/Printing/Labels/PrinterEncoders.cs TearBar (entries 381 and 382)"
+  },
+  "**In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google**; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead.": {
+   "kind": "decided",
+   "where": "Alan, 2026-10-07: org.grouplab.app verified with the upload key, and GroupLab Dev's verification APK uploaded for org.grouplab.app.dev (docs/notes/for-alan-archive.md request 79; entry 378)"
+  },
+  "The secret is a Google Cloud service account with release rights on this app only, invited in the Play Console, its JSON key added by Alan on 2026-10-07 (request 80).": {
+   "kind": "decided",
+   "where": "Alan, 2026-10-07: PLAY_SERVICE_ACCOUNT_JSON added (secret dated 2026-10-07 19:21 UTC); request 80 in docs/notes/for-alan-archive.md; .github/workflows/play-upload.yml"
+  },
+  "Internal testing showed nightly 110 until then; nightly 176 was sent once by hand and Play took it as version code 176, and every nightly after it goes by itself.": {
+   "kind": "measured",
+   "where": "play-upload.yml run 37674523785 (2026-10-07): bundle uploaded as version code 176 and committed to the internal track; nightly 110 shown before it, Alan in request 80"
+  },
+  "In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead.": {
+   "kind": "decided",
+   "where": "Alan, 2026-10-07: org.grouplab.app verified with the upload key, and GroupLab Dev's verification APK uploaded for org.grouplab.app.dev (docs/notes/for-alan-archive.md request 79; entry 378)"
   }
  },
  "rules": [

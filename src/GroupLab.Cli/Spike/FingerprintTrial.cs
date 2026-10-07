@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using GroupLab.Core.StoreTargets;
 using OpenCvSharp;
 
 namespace GroupLab.Cli.Spike;
@@ -15,7 +16,8 @@ namespace GroupLab.Cli.Spike;
 /// scans are another maker's printing (request 58), so the blanks, the pictures made from them and the fingerprints stay on this computer.
 /// Three steps, run in order: <c>build</c> makes a fingerprint of each blank with each feature method, <c>make</c> writes the test pictures
 /// (phone views, flatbed scans, synthetic holes, halos and pasters, blank walls) with the true transform of each, and <c>match</c> runs
-/// recognition and registration over them and over the real negatives, and prints sizes, rates, errors, times and memory.
+/// recognition and registration over them and over the real negatives, and prints sizes, rates, errors, times and memory. A fourth,
+/// <c>shipped</c>, runs the application's own recognizer and fingerprints over the same pictures, for question 87.
 /// </summary>
 public static class FingerprintTrial
 {
@@ -52,6 +54,7 @@ public static class FingerprintTrial
                 ["build", var blanks, var outFolder] => Build(blanks, outFolder, output),
                 ["make", var blanks, var outFolder, .. var rest] => Make(blanks, outFolder, rest, output),
                 ["match", var outFolder, .. var rest] => Match(outFolder, rest, output),
+                ["shipped", var outFolder, .. var rest] => Shipped(outFolder, rest, output),
                 _ => Fail(error),
             };
         }
@@ -1207,6 +1210,86 @@ public static class FingerprintTrial
         foreach (var fp in fps)
         {
             fp.Descriptors.Dispose();
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Question 87 (Alan, 2026-10-07: re-run the trial): <c>shipped &lt;out&gt; [--known &lt;picture&gt; &lt;product id&gt;]...</c>. Every
+    /// picture in the manifest, and each real photograph named with its product, through <see cref="StoreTargetRecognizer"/> and the shipped
+    /// library, as the application runs it. It prints how many features the wrong products' fits ever reached, and what a second line would
+    /// do: a fit carried by at least F features claimed at a colour layout agreement of L or more, below the 0.85 the trial set, when no
+    /// other product is within the margin. "Absent" is each product picture again with its own product's candidate taken out.
+    /// </summary>
+    private static int Shipped(string outFolder, IReadOnlyList<string> rest, TextWriter output)
+    {
+        var pictures = JsonNode.Parse(File.ReadAllText(Path.Combine(outFolder, "manifest.json")))!.AsArray()
+            .Select(n => (Id: (string)n!["id"]!, Kind: (string)n["kind"]!, File: (string)n["file"]!, Truth: (string?)n["product"])).ToList();
+        for (int i = 0; i + 2 < rest.Count; i++)
+        {
+            if (rest[i] == "--known")
+            {
+                // "none" names a real photograph of a product the library does not have.
+                pictures.Add(rest[i + 2] == "none" ? ($"real-{pictures.Count}", "real", rest[i + 1], null) : ($"range-{pictures.Count}", "range", rest[i + 1], rest[i + 2]));
+            }
+        }
+
+        var backend = new GroupLab.Cli.Imaging.OpenCvFingerprintBackend();
+        var seen = new List<(string Id, string Kind, string? Truth, IReadOnlyList<StoreTargetCandidate> Candidates, string? Named)>();
+        var csv = new List<string> { "id,kind,truth,candidate,inliers,layout,named" };
+        foreach (var (id, kind, file, truth) in pictures)
+        {
+            string path = Path.IsPathRooted(file) ? file : Path.Combine(outFolder, file);
+            if (StoreTargetRecognizer.Recognize(path, backend) is not { } r)
+            {
+                continue;
+            }
+
+            seen.Add((id, kind, truth, r.Candidates, r.Named?.Target.Id));
+            csv.AddRange(r.Candidates.Select(c => string.Join(',', id, kind, truth ?? "", c.Target.Id, c.Inliers, F(c.Layout), r.Named?.Target.Id ?? "")));
+        }
+
+        File.WriteAllLines(Path.Combine(outFolder, "candidates-shipped.csv"), csv);
+        output.WriteLine($"{StoreTargetLibrary.All.Count} shipped fingerprints, {seen.Count} pictures");
+        bool Wrong(StoreTargetCandidate c, string? truth) => c.Target.Id != truth && c.ToImage is not null;
+        foreach (var group in seen.GroupBy(s => s.Truth is null ? "picture of none" : "wrong product on a product picture"))
+        {
+            var top = group.SelectMany(s => s.Candidates.Where(c => Wrong(c, s.Truth)).Select(c => (s.Id, c))).OrderByDescending(x => x.c.Inliers).Take(5);
+            output.WriteLine($"most features on a {group.Key}: " + string.Join("; ", top.Select(x => string.Create(Inv, $"{x.Id} {x.c.Target.Id} {x.c.Inliers} at {x.c.Layout:0.000}"))));
+        }
+
+        string? Claim(IReadOnlyList<StoreTargetCandidate> all, int least, double line)
+        {
+            if (StoreTargetRecognizer.Decide(all).Named is { } named)
+            {
+                return named.Target.Id;
+            }
+
+            var able = all.Where(c => c.Inliers >= StoreTargetRecognizer.LeastInliers && c.ToImage is not null).OrderByDescending(c => c.Layout).ToList();
+            return able.Count > 0 && able[0].Inliers >= least && able[0].Layout >= line
+                && able.Skip(1).All(c => able[0].Layout - c.Layout >= StoreTargetRecognizer.Margin) ? able[0].Target.Id : null;
+        }
+
+        output.WriteLine("features  layout | named right (phone / scan / range) | wrong product | claims on pictures of none | claims with own product absent");
+        foreach (int least in new[] { int.MaxValue, 150, 200, 250, 300, 400 })
+        {
+            foreach (double line in least == int.MaxValue ? new[] { 0.85 } : new[] { 0.5, 0.55, 0.6, 0.7, 0.75 })
+            {
+                int Right(string k) => seen.Count(s => s.Kind == k && s.Truth is not null && Claim(s.Candidates, least, line) == s.Truth);
+                int wrong = seen.Count(s => s.Truth is not null && Claim(s.Candidates, least, line) is { } c && c != s.Truth);
+                int none = seen.Count(s => s.Truth is null && Claim(s.Candidates, least, line) is not null);
+                int absent = seen.Count(s => s.Truth is not null && Claim([.. s.Candidates.Where(c => c.Target.Id != s.Truth)], least, line) is not null);
+                output.WriteLine(string.Create(Inv,
+                    $"{(least == int.MaxValue ? "as now" : least.ToString(Inv)),8}  {line,6:0.00} | {Right("phone"),3} / {Right("scan"),2} / {Right("range")} of {seen.Count(s => s.Kind == "phone")} / {seen.Count(s => s.Kind == "scan")} / {seen.Count(s => s.Kind == "range")} | {wrong,3} | {none,3} of {seen.Count(s => s.Truth is null)} | {absent,3}"));
+            }
+        }
+
+        foreach (var s in seen.Where(s => s.Kind == "range"))
+        {
+            var own = s.Candidates.First(c => c.Target.Id == s.Truth);
+            var next = s.Candidates.Where(c => c.Target.Id != s.Truth && c.Inliers >= StoreTargetRecognizer.LeastInliers && c.ToImage is not null).OrderByDescending(c => c.Layout).FirstOrDefault();
+            output.WriteLine(string.Create(Inv, $"  {s.Id} {s.Truth}: {own.Inliers} features at {own.Layout:0.000}, named now {s.Named ?? "none"}; next product {(next is null ? "none able" : $"{next.Target.Id} {next.Inliers} at {next.Layout:0.000}")}"));
         }
 
         return 0;

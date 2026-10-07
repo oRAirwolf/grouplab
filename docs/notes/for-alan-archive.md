@@ -3,6 +3,41 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 80. (Answered 2026-10-07: PLAY_SERVICE_ACCOUNT_JSON is set and Play's internal test showed nightly 110 before it; nightly 176 was then sent once by hand, run 37674523785, and Play took it as version code 176 on the internal track. Every nightly now goes by itself.) Google Play: let each nightly reach your Play testers by itself, about fifteen minutes, soon (entry 384)
+
+**Why:** a tester who installed GroupLab from Google Play (or the plain APK) is still on nightly 130. Only GroupLab Dev updates itself;
+the Play copy changes only when a build is uploaded, and the last upload written down is nightly 110 (27 September). With these
+steps each nightly goes to the internal test by itself, and Play updates your testers' copies as it does any app.
+**Steps:**
+1. In Play Console: **Release**, **Testing**, **Internal testing**. Write down the version the newest release shows (for example
+   0.2.0-nightly.130), so the record says which build your testers have now.
+2. In Google Cloud (console.cloud.google.com), signed in with the account that owns the Play developer account: pick or create a
+   project (name it grouplab-play), then **APIs and services**, **Library**, find **Google Play Android Developer API**, **Enable**.
+3. **IAM and admin**, **Service accounts**, **Create service account**: name it grouplab-play-upload, give it no roles, **Done**. Open
+   it, **Keys**, **Add key**, **Create new key**, **JSON**. A file downloads. Never send it to anyone or put it in the repository.
+4. Back in Play Console: **Users and permissions**, **Invite new users**. The email is the service account's address (it ends in
+   iam.gserviceaccount.com). Under **App permissions**, **Add app**, choose GroupLab, and tick only **Release apps to testing
+   tracks** and **View app information**. No account permissions. **Invite user**.
+5. On GitHub: the grouplab repository, **Settings**, **Secrets and variables**, **Actions**, **New repository secret**. Name:
+   PLAY_SERVICE_ACCOUNT_JSON. Value: the whole of the downloaded file. **Add secret**. Then delete the downloaded file.
+**A good answer:** "done", and the version from step 1. I then send the newest nightly to internal testing once by hand and check
+it arrives; after that every nightly goes by itself, and a nightly is never held up by it.
+
+## 79. (Answered 2026-10-07: Alan uploaded GroupLab Dev's verification APK for org.grouplab.app.dev; both package names are registered with the upload key.) Android developer verification: one APK left to upload, about two minutes (entry 378)
+
+**Why:** the banner in Play Console. Since 30 September, certified phones in Brazil, Indonesia, Singapore and Thailand refuse an app from
+outside Google Play unless its package name and signing key are registered; the rest of the world follows in 2027. Your Play app is
+registered with Play's own key, but both APKs GroupLab publishes (the plain APK, `org.grouplab.app`, and GroupLab Dev,
+`org.grouplab.app.dev`) are signed with your upload key, whose certificate's SHA-256 begins `98:B3:6D:56` and ends `1F:E3:FC`.
+**2026-10-07, where it stands:** org.grouplab.app is verified with the upload key, no APK needed (Alan). Add key asks for the key's
+SHA-256 fingerprint, not a certificate file: it is
+`98:B3:6D:56:EF:6F:3D:62:CE:63:C8:06:6C:0B:0C:64:B4:72:14:1E:09:0A:F9:F4:93:A4:1B:D5:C5:1F:E3:FC`.
+**What is left, for org.grouplab.app.dev:**
+1. In Play Console, Android developer verification, the registration of **org.grouplab.app.dev** with that fingerprint, where Google
+   asks for the APK: upload `C:\Dev\grouplab-local\android-verification\grouplab-verification-org.grouplab.app.dev.apk`. It has no
+   code, only your snippet in `assets/adi-registration.properties`, signed with the upload key. The real app is never uploaded there.
+**A good answer:** what the screen said after the upload, such as verified.
+
 ## 78. (Answered 2026-10-07, entry 385: both sheets printed whole on nightly 175 and cleared the tear bar; across +0.31, along the feed -0.80 percent; request 81 follows. Measure on the printer check page, which has the lines; the C bull sheet has no ruler line.) GroupLab prints straight to your M834 from the Fold 7 (request 73)
 
 **Why:** your recording showed how the Phomemo app talks to the M834, and it also showed the app printed your C bull sheet **5.3 percent
