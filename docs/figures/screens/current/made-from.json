@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 172,
+  "afterNightly": 174,
   "screens": {
     "analysis": "32bedea0a6e85e767fea71b92c9739f438956fc1614a202a7cae752f80f135e8",
     "analysis-open": "f1c7d3cc5b29420224d5e24bbc714c56ede3e32715dc695dd7553ed3fd9c2348",
@@ -20,7 +20,7 @@
     "scale-markers": "572a6582fa3c2fa69f3d563e0efab282caa2e56b8718b8472eedadb51b5dac0b",
     "scope-unit": "18c2537f802e0df4de6607d5187c932245f5e749b7dab0947a66a186206490a2",
     "sessions": "29cd936f814ca5376962813d7b3eeba1cbf8ff85011ed08d2e54530d5df6744a",
-    "settings": "ffd93e5d2bfa8e81002000bf2a5b769c7a9821df6b0a9d82803b569af2f67e08",
+    "settings": "05dceffa38a20ee1ca47d9d08b159e52acec31192bf5da0f0acb2ee207d0b248",
     "sheet-c-bull": "077174fa123bd8a54863b4aa184856a617838a0806ce11736b7552fe0bcd24f0",
     "sheet-e-bull": "8020d97c397b9305aba1880c2a27a42c8da9085da5ed7ff0d8b8ec7bbdaea77c",
     "sheet-large-set": "8bd00d753ba23e9bcd4d1446a1a10f08d9960033ed3fbdc5ffb76afb5a3a2c5c",
