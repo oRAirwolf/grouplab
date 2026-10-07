@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.176
+
+**2026-10-07**, commit `a8d7079`. Nightly.
+
+**What you will notice**
+
+- The analysis drawing now runs under its key instead of stopping in a blank strip beside it, and Add readings takes you straight to the chronograph import, outlined, with what to do.
+- A saved marking now names its photo by file name only, never your folders, and a marking and photo moved together to another folder reopen; if the photo is missing, GroupLab says so and asks for it.
+- On Android the button for printing straight to the Phomemo M834 now says its true size is still being checked, rather than that it has never been tried.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.176)
+
+---
+
 ## 0.2.0-nightly.175
 
 **2026-10-07**, commit `7aeeb5a`. Nightly.
