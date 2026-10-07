@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Marking;
@@ -49,9 +50,44 @@ public sealed partial class MainWindow
     private bool chronoChoosingShot;
     private string chronoSaid = "";
 
-    private void BuildChronograph(StackPanel column)
+    /// <summary>Entry 384 section 2: what to do here, said first, for a person sent from the analysis's Add readings.</summary>
+    internal const string ChronographWhatToDo = "Import a file from your chronograph (CSV, TXT or Excel), or paste the velocities, then Accept the mapping.";
+
+    /// <summary>The Chronograph section as one box, so Add readings can bring it into view and mark it (entry 384 section 2).</summary>
+    private readonly Border chronoSection = new() { BorderThickness = new Thickness(2), CornerRadius = new CornerRadius(4), Padding = new Thickness(6) };
+
+    private DispatcherTimer? chronoMarkTimer;
+
+    /// <summary>Entry 384 section 2: Ballistics opened from Add readings: the Chronograph section scrolled into view and outlined for a few seconds.</summary>
+    internal void ShowChronographSection()
     {
+        Go(Destination.Ballistics);
+        chronoSection.BorderBrush = new SolidColorBrush(Tokens.For(ActualThemeVariant).MarkAmber);
+        Dispatcher.UIThread.Post(() =>
+        {
+            chronoSection.BringIntoView();
+            chronoReadings.Focus();
+        }, DispatcherPriority.Loaded);
+        chronoMarkTimer?.Stop();
+        chronoMarkTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(4) };
+        chronoMarkTimer.Tick += (_, _) =>
+        {
+            chronoMarkTimer?.Stop();
+            chronoSection.BorderBrush = null;
+        };
+        chronoMarkTimer.Start();
+    }
+
+    /// <summary>Whether the Chronograph section is outlined, for the tests.</summary>
+    internal bool ChronographMarked => chronoSection.BorderBrush is ISolidColorBrush { Color.A: > 0 };
+
+    private void BuildChronograph(StackPanel outer)
+    {
+        var column = new StackPanel { Spacing = outer.Spacing };
+        chronoSection.Child = column;
+        outer.Children.Add(chronoSection);
         column.Children.Add(Heading("Chronograph"));
+        column.Children.Add(new TextBlock { Text = ChronographWhatToDo, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold });
         column.Children.Add(Line("A string of velocities for the session open in the analysis, pasted or typed. They are reconciled with the shots, never assumed to line up with them."));
         column.Children.Add(Row(FieldLabel("From"), chronoSource, FieldLabel("Date"), chronoDate));
         column.Children.Add(chronoReadings);

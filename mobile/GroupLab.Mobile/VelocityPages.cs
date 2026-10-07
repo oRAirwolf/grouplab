@@ -33,7 +33,7 @@ internal static class VelocityPages
             return Screens.Page(column);
         }
 
-        column.Children.Add(Screens.Line("The velocities of this group, in the order they were fired, separated by commas or spaces."));
+        column.Children.Add(Screens.Line("Import a file from your chronograph (CSV, TXT or Excel), or type the velocities of this group in the order they were fired, separated by commas or spaces."));
         var box = new TextBox { AcceptsReturn = true, MinHeight = 96, TextWrapping = Avalonia.Media.TextWrapping.Wrap, PlaceholderText = "2705, 2711, 2698 ..." }.Id("chrono-readings");
         Screens.Numeric(box);
         var said = Screens.Line("");

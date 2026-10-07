@@ -1473,8 +1473,7 @@ public sealed partial class MainWindow : Window
         switch (state)
         {
             case VelocityBlockState.NoReadings:
-                Go(Destination.Ballistics);
-                chronoReadings.Focus();
+                ShowChronographSection();
                 break;
             case VelocityBlockState.NoDistance:
                 SetAnalysing(false);

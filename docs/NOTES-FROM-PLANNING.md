@@ -25,6 +25,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 384: the analysis legend hides the drawing, "Add readings" leaves Alan lost, and Play testers stuck on old builds
+
+**Status: actioned 2026-10-07; sections 1 to 3 done, 3a waiting on Alan's request 80; chronograph entry on the analysis is question 88. A consistency audit had the same number in the inbox first (question 89).**
+
+From the planning session, 2026-10-07, from Alan's screenshot and questions on nightly 175 (desktop, Windows, a 25-bull sheet,
+gl-cf25-ltr-d-25-shots-600-dpi.png, Whole target with every CEP circle on).
+
+## 1. The legend on the analysis drawing blacks out a full-height strip
+
+The legend box sits at the top right of the drawing, but the drawing is cut off at the legend's left edge for the whole height of the
+canvas, not just behind the legend. Every circle and line stops at a vertical edge level with the legend's left side, and everything to
+the right of it, below the legend, is plain black. Expected: the legend covers only its own box (or sits outside the drawing), and the
+drawing fills the rest of the canvas. Check the desktop and the phone, light and dark, a narrow and a wide window. Add a screenshot test
+that would have caught it.
+
+## 2. "Add readings" on the analysis takes Alan to Ballistics with no idea what to do
+
+On the analysis, the velocity block's "Add readings" (VelocityAction, NoReadings) goes to Ballistics and focuses `chronoReadings`, but
+the Chronograph section is in the middle column, out of view, and nothing on screen says where it is or what to do. Alan could not find
+how to import his chronograph data. At least: bring the Chronograph section into view, mark it briefly, and show one line at its top
+saying what to do ("Import a file from your chronograph (CSV, TXT or Excel), or paste the velocities, then Accept the mapping."). If a
+better place for chronograph entry is a layout question (for example, right on the analysis), post it as DESIGN NEEDED and do the
+minimal fix now. Check the phone's path the same way. Update the guides in the same change (entry 267).
+
+## 3. Google Play testers stay on whatever Alan last uploaded by hand
+
+A tester who installed GroupLab (org.grouplab.app, not GroupLab Dev) is still on nightly 130. ANDROID.md section 12 says the automatic
+Play upload is "planned and not started", and only GroupLab Dev updates itself, so both the Play internal test copy and the plain APK
+stay on the build they were installed with. Do not write the tester's name anywhere.
+
+a. Write Alan's request with the exact Play Console and Google Cloud steps for the service account (release rights on this app only),
+   its JSON key as a repository secret that Alan adds himself, and the nightly step, skipped while the secret is absent, that uploads
+   each nightly's AAB and symbols to internal testing. Keep the steps short and give them to the planning session too.
+b. Until then, say plainly on the download page, the README and the testing guide that the plain APK and the Play copy do not update
+   themselves, and that GroupLab Dev does (it installs beside the other, no uninstall needed).
+c. In STATE, say which nightly is on the Play internal track now.
+
 ## 2026-10-07, entry 383: marking files keep the photo's full path (a tester's report)
 
 **Status: actioned 2026-10-07; sections 1 to 5 done.**

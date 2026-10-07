@@ -917,6 +917,31 @@ old file with a whole path that is gone opens by the name beside it; alone, the 
 separators, the search order, the stripping), and `ViewRotationTests` now expects the name only. **Section 5:** the user guide says the
 marking names its photo by file name and that the two travel together; the release note follows.
 
+## Entry 384: the analysis key's blank strip, Add readings, and Play testers on old builds (2026-10-07)
+
+**Section 1:** with the key beside the analysis drawing (or below it), the drawing was clipped to the area clear of the key for the
+whole height, so everything right of the key's left edge was blank paper, black in dark mode. The group is still fitted to that area,
+so the key never covers it, but the drawing now runs over the whole canvas and the key covers only its own box (`CompositePlot.Render`);
+the aim and center lines and the velocity band reach the canvas's edge. The phone draws the same control. `Entry384Tests` renders the
+plot light and dark at 1000 by 420, 1500 by 700 and 700 by 420 (key below) and fails on the old clip in all four.
+
+**Section 2:** Add readings opens Ballistics with the Chronograph section scrolled into view, outlined in amber for four seconds, and a
+first line saying what to do: "Import a file from your chronograph (CSV, TXT or Excel), or paste the velocities, then Accept the
+mapping." The phone's own Chronograph readings page says the same. Chronograph entry on the analysis itself is question 88 (DESIGN
+NEEDED). The user guide says where Add readings goes. `Entry323Tests` checks the outline and the line.
+
+**Section 3:** (a) request 80 has Alan's steps (Play Console, Google Cloud service account with release rights on this app only, its
+JSON key as the secret `PLAY_SERVICE_ACCOUNT_JSON` that he adds); `.github/workflows/play-upload.yml` and `scripts/play-upload.py` send
+each published nightly's AAB and native symbols to internal testing, skipped while the secret is absent; a dry run on nightly 175's
+bundle passed. (b) the download page, README and testing guide now say the plain APK and the Play copy do not update themselves for now,
+and GroupLab Dev does and installs beside either. (c) the internal track: the last upload on record is nightly 110; request 80's first
+step asks Alan which version Play Console shows.
+
+**Request 79 (Alan, 2026-10-07):** org.grouplab.app verified with the upload key, no APK needed; GroupLab Dev's verification APK built
+with `android-verify.yml` from his snippet (package org.grouplab.app.dev, only `assets/adi-registration.properties`, signed with the
+upload key, checked with apksigner) and put in `C:\Dev\grouplab-local\android-verification\`; request 79 rewritten (Add key takes the
+SHA-256 fingerprint, not the certificate).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

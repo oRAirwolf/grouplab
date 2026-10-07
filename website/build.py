@@ -990,10 +990,10 @@ def page_download() -> str:
         "Download GroupLab Dev", honest=False) + steady(
         "Google Play, by invitation",
         btn("Ask on the Discord", DISCORD),
-        f'GroupLab\'s internal test on Google Play updates itself like any Play app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
-        ["Updates come from Google Play, like any Play app", "One step first: ask on the Discord to be invited",
+        f'GroupLab\'s internal test on Google Play is updated only when a build is uploaded to Play, by hand for now, so it can be weeks behind; GroupLab Dev keeps up by itself. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
+        ["Behind the nightlies until each one reaches Play by itself; for now it is uploaded by hand", "One step first: ask on the Discord to be invited",
          "Signed with a different key from the plain APK"]),
-        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. Take Google Play if you would rather Play looked after updates.",
+        "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy and the plain APK do not update themselves for now: GroupLab Dev does, and installs beside either with no uninstall.",
         [fold("The plain APK", other(
             "Android", "grouplab-android.apk",
             "The same app under GroupLab's own name, signed, with a different key from the Google Play copy. It does not update itself: download each new build yourself, or use GroupLab Dev.",

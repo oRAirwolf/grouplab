@@ -245,7 +245,9 @@ readings were paired in. Its why lists the readings' own spread, the solver's he
 range errs wide, never narrow. It also says which conditions were used and where they came from, or that the standard day was assumed.
 **Velocity band**, beside the plot's other toggles, draws the band velocity alone would make about the group center in amber, with the
 measured spread as dotted lines; it starts on and is remembered. On the phone the same is a card above All figures, with Velocity band
-under the plot; its Add readings opens a box to paste the readings into.
+under the plot; its Add readings opens a page to import your chronograph's file or type the readings. On the computer, **Add readings**
+opens Ballistics with the **Chronograph** section in view and outlined for a moment: import a file from your chronograph (CSV, TXT
+or Excel), or paste the velocities, then **Accept the mapping**.
 
 **Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
 

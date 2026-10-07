@@ -1,0 +1,68 @@
+name: play upload
+
+# NOTES-FROM-PLANNING.md entry 384 section 3: each nightly's Android App Bundle and its native symbols go to Google Play's internal
+# testing track, so testers who installed GroupLab from Play are kept up to date. It runs after a nightly has published, or by hand for
+# a given version, and does nothing while the repository secret PLAY_SERVICE_ACCOUNT_JSON is absent (request 80: a Google Cloud service
+# account with release rights on this app only, its JSON key added by Alan). It never holds up or fails a nightly.
+on:
+  workflow_run:
+    workflows: [nightly]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version to send, such as 0.2.0-nightly.176; the newest numbered nightly when empty'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: play-upload
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+      WANTED: ${{ inputs.version }}
+    steps:
+      - name: Skipped without the service account
+        id: key
+        run: |
+          if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "### No PLAY_SERVICE_ACCOUNT_JSON yet (request 80), so nothing is sent to Google Play" >> "$GITHUB_STEP_SUMMARY"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.key.outputs.present == 'true'
+
+      - name: The nightly's bundle and symbols
+        if: steps.key.outputs.present == 'true'
+        id: files
+        run: |
+          set -eu
+          version="${WANTED:-$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName' | sed 's/^v//')}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          mkdir -p play
+          gh release download "v$version" -R "$GITHUB_REPOSITORY" -p "grouplab-$version-android-*.aab" -p "grouplab-$version-android-native-symbols-*.zip" -D play
+          ls -l play
+
+      - name: Send to the internal testing track
+        if: steps.key.outputs.present == 'true'
+        env:
+          VERSION: ${{ steps.files.outputs.version }}
+        run: |
+          set -eu
+          pip install --quiet google-auth requests
+          aab=$(ls play/*.aab | head -1)
+          symbols=$(ls play/*native-symbols*.zip 2>/dev/null | head -1 || true)
+          python3 scripts/play-upload.py --aab "$aab" ${symbols:+--symbols "$symbols"} --version "$VERSION" | tee -a "$GITHUB_STEP_SUMMARY"

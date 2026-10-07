@@ -5260,6 +5260,14 @@
   "Google proves the key with a small APK carrying its snippet in the assets folder: the workflow `android-verify.yml` builds it, with no code, and signs it with the upload key (request 79).": {
    "kind": "code",
    "where": ".github/workflows/android-verify.yml; entry 378"
+  },
+  "Request 80 has Alan's steps: a Google Cloud service account with release rights on this app only, invited in the Play Console, its JSON key added by Alan as that secret.": {
+   "kind": "decided",
+   "where": "Entry 384 section 3 (2026-10-07): docs/notes/for-alan.md request 80, docs/ANDROID.md section 12 (nightly 110's upload, 2026-09-27); the tester's build from planning's entry 384"
+  },
+  "The last upload on record is nightly 110 (2026-09-27); a tester was still on nightly 130 on 2026-10-07.": {
+   "kind": "decided",
+   "where": "Entry 384 section 3 (2026-10-07): docs/notes/for-alan.md request 80, docs/ANDROID.md section 12 (nightly 110's upload, 2026-09-27); the tester's build from planning's entry 384"
   }
  },
  "rules": [

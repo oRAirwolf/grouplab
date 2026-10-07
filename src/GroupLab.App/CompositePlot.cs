@@ -460,9 +460,13 @@ internal sealed class CompositePlot : Control
         inks = Tokens.Plot(ActualThemeVariant);
         var accent = new SolidColorBrush(inks.Accent);
         context.FillRectangle(new SolidColorBrush(inks.Paper), new Rect(Bounds.Size));
-        var area = DataRect;
+        var (area, _, keyInStrip) = KeyLayout();
         var (scale, origin) = Frame(area);
-        using (context.PushClip(area))
+        // Entry 384 section 1: the group is fitted to the area clear of the key, so the key never covers it, but the drawing runs over the
+        // whole canvas; clipped to the fitted area, everything right of the key's edge was blank for the full height. The key covers only
+        // its own box, drawn last. A key folded into the strip above keeps the plot below the strip.
+        var drawn = ShowKey && !keyInStrip ? new Rect(Bounds.Size) : area;
+        using (context.PushClip(drawn))
         {
             // Entry 204 section 2, back to front: the rings, the shots, the CEP circles, the extreme spread, the centre lines, the selection.
             // The bull at true relative scale, centred on the aim point: each ring's edge a wide pale band, background to everything else.
@@ -486,7 +490,7 @@ internal sealed class CompositePlot : Control
             // way of the group center with dashed edges, and dotted lines one measured vertical SD each way, each labelled at the right.
             if (BandShown && VelocityBand is { } band && Centre is { } bandCentre)
             {
-                DrawBand(context, ToScreen(bandCentre).Y, band.PredictedSdInches * scale, band.MeasuredSdInches * scale, area);
+                DrawBand(context, ToScreen(bandCentre).Y, band.PredictedSdInches * scale, band.MeasuredSdInches * scale, drawn);
             }
 
             // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre. A picked shot waits
@@ -522,10 +526,10 @@ internal sealed class CompositePlot : Control
 
             // Entry 204 sections 1.6 and 1.7: the aim point and the group centre as lines across the whole plot, blue and green, so each
             // can be followed to the edge and read against the other without a small cross to find.
-            FullLines(context, new SolidColorBrush(inks.Aim), origin, area);
+            FullLines(context, new SolidColorBrush(inks.Aim), origin, drawn);
             if (Centre is { } groupCentre)
             {
-                FullLines(context, new SolidColorBrush(inks.Group), ToScreen(groupCentre), area);
+                FullLines(context, new SolidColorBrush(inks.Group), ToScreen(groupCentre), drawn);
             }
 
             foreach (var shot in Shots.Where(s => Selected.Contains(s.Id)))

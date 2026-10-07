@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07, after entry 383; Alan had entries 382, 378 and 380 taken before the reset.
+**Last rewritten:** 2026-10-07, after entry 384; Alan had entries 382, 378 and 380 taken before the reset.
 
 ---
 
@@ -18,20 +18,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
   answered: Part C meant what is left of entry 374.
+- **Entry 384 done** (2026-10-07): the analysis key no longer blanks a strip of the drawing; Add readings shows and outlines the
+  Chronograph section; **the Play internal track: the last upload on record is nightly 110**, and the Play copy and plain APK do not
+  update themselves until request 80 (play-upload.yml waits for its secret). For nightly 176.
 - **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only,
   opens beside it wherever the two are moved, asks for the photo when it is not there. No archived submission can hold a path.
-- **Entry 380 done but section 3** (2026-10-07): the phone's Label size loaded, as on the computer; request 77 for 50 x 30 mm.
 - **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
   request 79 has Alan's Play Console steps, `android-verify.yml` builds the small proof APK from his snippet; a note for testers in
   Brazil, Indonesia, Singapore and Thailand on the download page, README, testing guide and docs/ANDROID.md.
-- **Entry 382 done** (2026-10-07): on a roll the M834 print adds 15.5 mm of white after the page (Alan's head to tear bar) so the
-  sheet clears the tear bar; fanfold adds nothing; the phone remembers which (Paper in the M834). For nightly 175; request 78 rewritten.
-  The settings screenshot went stale with `AppSettings.cs`, so the site build failed at 1e7ac465 until the screenshots run restamps.
 - **Entry 376 done but B7** (2026-10-06): shots matched to bulls as one sheet, drawn and named by bull; tablets full width; B7
   (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing, Ask again, Possibly one hole,
   CSV pooling (2026-10-07); the 2 MOA 3 by 4 sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print, nightly 175), 79 (Play developer verification).
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print), 79 (one APK to upload), 80 (Play uploads).
 
 ## The next three
 
@@ -61,14 +60,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **22** (79 Android developer verification; 78 the M834 from GroupLab; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (80 Play uploads; 79 one verification APK to upload; 78 the M834 from GroupLab; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Thirteen, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
+- **89** two entries 384 (the audit overwritten); **88** DESIGN NEEDED, chronograph entry on the analysis
 - **87** store-bought targets refused on a used sheet though the right product matched (re-run the trial?)
 - **86** Unholy's 2 MOA 3 by 4 sheet does not fit Letter (choices: 1.50 in bulls on Letter, or tabloid)
 - **84** the README's "Not built yet" sentence (my choice: keep it)

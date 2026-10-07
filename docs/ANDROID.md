@@ -383,10 +383,13 @@ first.
    Microsoft's symbol server, so Play will go on noting those. Until uploads are automated the zip is uploaded by hand beside the AAB,
    under the release's **App bundle explorer**, **Downloads**, **Native debug symbols**.
 
-**Automatic upload, planned and not started.** The same shape as the Microsoft Store (request 38): a Google Cloud service account with
-release rights on this app only, invited in the Play Console; its JSON key as a repository secret that Alan adds himself; and a step
-in the nightly, skipped while the secret is absent, that uploads each nightly's AAB and its symbols to internal testing through the
-Play Developer API. Alan's request with the exact steps is written after the Store work of request 38 is done.
+**Automatic upload, built and waiting for its key (entry 384).** `.github/workflows/play-upload.yml` runs after every nightly that
+published, and by hand for a given version: it downloads that nightly's AAB and native symbols from its numbered release and sends them
+to internal testing through the Play Developer API (`scripts/play-upload.py`: an edit, the bundle, the symbols as native code, the
+internal track at status completed, the commit). It does nothing while the repository secret `PLAY_SERVICE_ACCOUNT_JSON` is absent, and
+never holds up a nightly. Request 80 has Alan's steps: a Google Cloud service account with release rights on this app only, invited in
+the Play Console, its JSON key added by Alan as that secret. **Until then the Play copy and the plain APK do not update themselves**;
+only GroupLab Dev does. The last upload on record is nightly 110 (2026-09-27); a tester was still on nightly 130 on 2026-10-07.
 
 **Android developer verification (entry 378).** In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027. Both APKs are signed with the upload key (certificate SHA-256 `98b36d56ef6f3d62ce63c8066c0b0c64b472141e090af9f493a41bd5c51fe3fc`, read from nightly 174's two APKs), which is not Play's app signing key, so Play Console needs that key added for `org.grouplab.app` and `org.grouplab.app.dev` registered as a new package name with it. Google proves the key with a small APK carrying its snippet in the assets folder: the workflow `android-verify.yml` builds it, with no code, and signs it with the upload key (request 79).
 

@@ -21,6 +21,25 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-07, question 89: two different entries 384, the second written over the first in the inbox
+
+Status: open
+
+`docs/notes/inbox/entry-384.md` held the scheduled consistency audit (written about 15:55 UTC, ten findings) when this run started; at
+about 16:18 UTC it was replaced by the entry on the analysis legend, Add readings and the Play testers, under the same number. The
+second is folded as entry 384. The audit's ten findings were read before the file changed and are done in the pass with entry 379
+section 3, recorded as "the consistency audit of 2026-10-07". **Asked:** give the audit a number of its own if it should have one in
+the log; nothing waits on it.
+
+## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
+
+Status: open
+
+Alan could not find where to import his chronograph data after Add readings took him to Ballistics, whose Chronograph section was out of
+view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
+to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
+concept; the phone already opens a page of its own for it. Nothing waits on it.
+
 ## 2026-10-07, question 87: store-bought targets refused on a used sheet although the right product matched (entry 374 section 1)
 
 Status: open

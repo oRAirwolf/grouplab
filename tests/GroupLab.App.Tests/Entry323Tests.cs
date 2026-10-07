@@ -53,6 +53,9 @@ public class Entry323Tests
             window.VelocityAction(VelocityBlockState.NoReadings);
             Settle();
             Assert.True(window.ShowingBallistics);
+            // Entry 384 section 2: the Chronograph section is marked, and its first line says what to do.
+            Assert.True(window.ChronographMarked);
+            Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(), t => t.Text == MainWindow.ChronographWhatToDo);
 
             // Readings kept on the session, each beside its shot: a result, the band on the plot, and its switch on by default.
             int shots = window.Session.State.Shots.Count(s => s.IsShot);
