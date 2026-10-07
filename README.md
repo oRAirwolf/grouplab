@@ -437,7 +437,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Done.** The zero correction: the group center's offset from the point of aim with its uncertainty, and, where the offset is smaller than the shots can resolve, the number of shots that would settle it instead of a correction.
 
 **Phase 3. Editor.**
-- **Built, not proven.** The review queue: contested assignments, possible merges, doubled bulls, shots with no bull and refused candidates, each with the choices that settle it.
+- **Built, not proven.** The review queue: contested assignments, possible merges, two marks closer than half a hole (taken as one shot or kept as two), doubled bulls, shots with no bull and refused candidates, each with the choices that settle it, and any answer asked again.
 - **Built, not proven.** Keyboard operation: the next item, its first choice, a bull typed to reassign, not a shot, and a flagged mark taken as the two shots it is, with no item needing the mouse.
 - **Built, not proven.** Shots per bull for a sheet that breaks one a bull on purpose: every shot to its nearest bull, or two on the bulls named, matched that way. Without it, one-to-one matching pushes each second shot onto an empty neighbor and the review queue raises every one, which a synthetic doubles sheet tests both ways.
 - **Built, not proven.** `grouplab compare-photos`: photographs of a sheet against its flat scan, the scan's corrected marking or its own detection as the truth, saying which. For each photograph it gives the registration model, the bull-center error, holes found, missed and false, and the hole-position error, read against 0.005 in and 0.15 in without deciding either gate.

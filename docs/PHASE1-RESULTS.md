@@ -869,7 +869,13 @@ about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that 
   answer at once. On the phone, answered marks to check fold up under "Show the N answered marks", each with **Ask again**. An answer
   that removed its item (not a shot, two shots) is taken back with Undo. Tests: `ReviewQueueTests.AnAnsweredItemCanBeAskedAgainAndChanged`,
   the desktop's `TheReviewQueueSettlesAContestedShotFromTheKeyboard` and the phone's `AMarkMuchBiggerThanTheBulletIsRinged...`.
-- **Still not done:** the store-bought photos and the Rigid crosshair, the scoreboard and corpus; two holes in one; shot data out and in.
+- **Two holes in one** (section 4): "shot N is 2 shots" already existed as Possibly two holes (One shot, Two shots, Not a shot). The
+  other way round is new: two counted marks closer than half a hole's width (the caliber's, or the sheet's own hole size) raise
+  **Possibly one hole**, with **One shot**, which keeps the first at the middle of the two and removes the second as one undoable step
+  (`MarkingSession.MergeShots`), and **Two shots**, which keeps both. Two shots through one hole sit further apart than half its width.
+  On the computer in the review queue, on the phone with the marks to check. Test:
+  `ReviewQueueTests.TwoMarksCloserThanHalfAHoleAreAskedAboutAndCanBeTakenAsOneShot`.
+- **Still not done:** the store-bought photos and the Rigid crosshair, the scoreboard and corpus; shot data out and in.
 
 ## Decision log
 

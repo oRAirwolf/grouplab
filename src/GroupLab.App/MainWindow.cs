@@ -4401,6 +4401,7 @@ public sealed partial class MainWindow : Window
         ReviewKind.Contested => "Contested assignment",
         ReviewKind.Oversized => "Possibly two holes",
         ReviewKind.Joined => "Hole read with what is beside it",
+        ReviewKind.OneHole => "Possibly one hole",
         ReviewKind.Proposed => "Proposed hole to check",
         ReviewKind.Doubled => "Two shots on one bull",
         ReviewKind.Unassigned => "No bull",

@@ -94,6 +94,38 @@ public class ReviewQueueTests
         Assert.Equal(undoWords, session.UndoWords);
     }
 
+    /// <summary>
+    /// Entry 374 section 4, two holes in one the other way round: two marks closer than half a hole's width are raised as probably one hole,
+    /// and One shot leaves one at the middle of the two, as one step Undo takes back; marks a hole's width apart are not raised.
+    /// </summary>
+    [Fact]
+    public void TwoMarksCloserThanHalfAHoleAreAskedAboutAndCanBeTakenAsOneShot()
+    {
+        var session = Loaded(
+            (new PointD(110, 100), new AssignedShot(0, 0, 10, 0, 10, 3000, false), null),
+            (new PointD(118, 100), new AssignedShot(1, 0, 18, 0, 18, 3000, false), null),
+            (new PointD(250, 100), new AssignedShot(2, 1, 0, 1, 0, 3000, false), null),
+            (new PointD(400, 100), new AssignedShot(3, 2, 0, 2, 0, 3000, false), null),
+            (new PointD(425, 100), new AssignedShot(4, 2, 25, 2, 25, 3000, false), null));
+        session.SetCalibre(Calibre.Of(0.243));
+        var item = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.OneHole);
+        Assert.Contains("0.080 in apart, less than half a hole's width", item.Sentence, StringComparison.Ordinal);
+        Assert.Equal([ReviewAction.MergeIntoOne, ReviewAction.Keep], item.Choices.Select(c => c.Action));
+        int before = session.State.Shots.Count(s => s.IsShot);
+
+        int kept = ReviewQueue.Apply(session, item, item.Choices[0])!.Value;
+        Assert.Equal(before - 1, session.State.Shots.Count(s => s.IsShot));
+        Assert.Equal(new PointD(114, 100), session.State.Find(kept)!.Image);
+        Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.OneHole);
+
+        session.Undo();
+        Assert.Equal(before, session.State.Shots.Count(s => s.IsShot));
+        var again = Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.OneHole);
+        ReviewQueue.Apply(session, again, again.Choices[1]);
+        Assert.True(Assert.Single(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.OneHole).Resolved);
+        Assert.Equal(before, session.State.Shots.Count(s => s.IsShot));
+    }
+
     [Fact]
     public void AKeptItemIsRememberedAcrossASaveAndUndoTakesItBack()
     {

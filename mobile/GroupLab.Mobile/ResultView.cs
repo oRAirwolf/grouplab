@@ -742,16 +742,19 @@ public sealed class ResultView : UserControl
         checks.Children.Clear();
         var state = session.State;
         var flags = ReviewQueue.MarksToCheck(state);
-        var items = ReviewQueue.For(state).Where(i => i.Kind is ReviewKind.Joined or ReviewKind.Oversized or ReviewKind.Proposed).ToList();
+        var items = ReviewQueue.For(state).Where(i => i.Kind is ReviewKind.Joined or ReviewKind.Oversized or ReviewKind.Proposed or ReviewKind.OneHole).ToList();
+        // Entry 374 section 4: two marks that are probably one hole, said with the marks to check.
+        var oneHole = items.Where(i => i.Kind == ReviewKind.OneHole && !i.Resolved).ToList();
         var answered = items.Where(i => i.Resolved).ToList();
-        checks.IsVisible = flags.Count > 0 || answered.Count > 0;
+        checks.IsVisible = flags.Count > 0 || oneHole.Count > 0 || answered.Count > 0;
         if (!checks.IsVisible)
         {
             return;
         }
 
         var open = items.Where(i => !i.Resolved).ToList();
-        var card = new List<Control> { Screens.Heading(flags.Count == 0 ? "No marks left to check" : flags.Count == 1 ? "1 mark to check" : $"{flags.Count} marks to check") };
+        int toCheck = flags.Count + oneHole.Count;
+        var card = new List<Control> { Screens.Heading(toCheck == 0 ? "No marks left to check" : toCheck == 1 ? "1 mark to check" : $"{toCheck} marks to check") };
         foreach (var flag in flags)
         {
             card.Add(Screens.Line(flag.Sentence));
@@ -765,6 +768,19 @@ public sealed class ResultView : UserControl
                         Changed();
                     }));
                 }
+            }
+        }
+
+        foreach (var item in oneHole)
+        {
+            card.Add(Screens.Line(item.Sentence));
+            foreach (var choice in item.Choices)
+            {
+                card.Add(Screens.Choice(choice.Label, () =>
+                {
+                    ReviewQueue.Apply(session, item, choice);
+                    Changed();
+                }));
             }
         }
 

@@ -529,6 +529,28 @@ public sealed class MarkingSession
         return state with { Shots = shots };
     }
 
+    /// <summary>
+    /// Entry 374 section 4: two marks taken as one shot, as one step Undo takes back. The first is kept, moved to the middle of the two, and
+    /// becomes the person's; the second goes.
+    /// </summary>
+    public void MergeShots(int keep, int drop)
+    {
+        if (keep != drop && State.Find(keep) is { } kept && State.Find(drop) is { } dropped)
+        {
+            var middle = new PointD((kept.Image.X + dropped.Image.X) / 2, (kept.Image.Y + dropped.Image.Y) / 2);
+            var moved = kept with
+            {
+                Image = middle,
+                MeasuredDiameterInches = null,
+                Oversize = null,
+                Size = null,
+                Bull = kept.Bull == NearestBull(State, kept.Image) ? NearestBull(State, middle) : kept.Bull,
+                Provenance = Touched(kept.Provenance),
+            };
+            Apply(Rematch(State with { Shots = State.Shots.Replace(kept, moved).Remove(dropped) }));
+        }
+    }
+
     public void DeleteShot(int id)
     {
         if (State.Find(id) is { } shot)

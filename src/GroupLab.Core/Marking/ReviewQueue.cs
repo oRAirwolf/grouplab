@@ -18,6 +18,9 @@ public enum ReviewKind
     /// </summary>
     Joined,
 
+    /// <summary>Two marks closer than half a hole's width, probably one hole marked twice (NOTES-FROM-PLANNING.md entry 374 section 4).</summary>
+    OneHole,
+
     /// <summary>
     /// A hole Find holes proposed on a target GroupLab did not print and was not sure of (NOTES-FROM-PLANNING.md entry 318 section 2).
     /// </summary>
@@ -69,6 +72,9 @@ public enum ReviewAction
 
     /// <summary>Take one oversized mark as two shots, one at each half of it (NOTES-FROM-PLANNING.md entry 94 section 4).</summary>
     SplitIntoTwo,
+
+    /// <summary>Take two marks as one shot, at the middle of the two (NOTES-FROM-PLANNING.md entry 374 section 4).</summary>
+    MergeIntoOne,
 }
 
 /// <summary>
@@ -208,6 +214,31 @@ public static class ReviewQueue
             string key = JoinedKey(shot.Id);
             items.Add(new ReviewItem(key, ReviewKind.Joined, shot.Id, shot.Bull, shot.Image, shot.Oversize!.Describe(ShotLabels.Start(labels[shot.Id]), state.Calibre?.DiameterInches),
                 [new ReviewChoice("It is on the hole", ReviewAction.Keep), new ReviewChoice("Not a shot", ReviewAction.NotAShot)], Dismissed(key)));
+        }
+
+        // Entry 374 section 4, two holes in one, the other way round: two marks closer than half a hole's width are almost surely one hole
+        // marked twice; two shots through one hole sit further apart than that. Only where the hole's width is known.
+        if (state.Scale is { } plane && (state.Calibre?.DiameterInches ?? state.Detection?.HoleSizeInches) is > 0 and var hole)
+        {
+            var counted = shots.Where(s => !OnlySighters(s.Bull)).ToList();
+            for (int i = 0; i < counted.Count; i++)
+            {
+                for (int j = i + 1; j < counted.Count; j++)
+                {
+                    var (a, b) = (counted[i], counted[j]);
+                    double apart = Distance(plane.ToTarget(a.Image), plane.ToTarget(b.Image));
+                    if (apart >= hole * OneHoleShare)
+                    {
+                        continue;
+                    }
+
+                    string key = OneHoleKey(a.Id, b.Id);
+                    string sentence = string.Create(CultureInfo.InvariantCulture,
+                        $"{ShotLabels.Start(labels[b.Id])} and {ShotLabels.InSentence(labels[a.Id])} are {apart:0.000} in apart, less than half a hole's width, so they are probably one hole marked twice.");
+                    items.Add(new ReviewItem(key, ReviewKind.OneHole, b.Id, b.Bull, new PointD((a.Image.X + b.Image.X) / 2, (a.Image.Y + b.Image.Y) / 2), sentence,
+                        [new ReviewChoice("One shot", ReviewAction.MergeIntoOne), new ReviewChoice("Two shots", ReviewAction.Keep)], Dismissed(key)));
+                }
+            }
         }
 
         // Entry 318 section 2: a hole Find holes proposed and was not sure of, until the person says it is a hole, moves it or takes it away.
@@ -437,6 +468,9 @@ public static class ReviewQueue
             case ReviewAction.SplitIntoTwo when item.ShotId is { } id && session.State.Find(id)?.Size is { SplitA: { } a, SplitB: { } b }:
                 session.SplitShot(id, a, b);
                 return id;
+            case ReviewAction.MergeIntoOne when OneHolePair(item.Key) is var (keep, drop):
+                session.MergeShots(keep, drop);
+                return keep;
             default:
                 session.Dismiss(item.Key);
                 return item.ShotId;
@@ -452,6 +486,19 @@ public static class ReviewQueue
         ArgumentNullException.ThrowIfNull(session);
         ArgumentNullException.ThrowIfNull(item);
         session.Reopen(item.Key, item.Kind == ReviewKind.Contested ? item.ShotId : null);
+    }
+
+    /// <summary>Two marks closer than this share of a hole's width are raised as probably one hole (entry 374 section 4).</summary>
+    public const double OneHoleShare = 0.5;
+
+    /// <summary>The key of the item two marks that are probably one hole raise, entry 374 section 4: the first shot's id, then the second's.</summary>
+    public static string OneHoleKey(int first, int second) => string.Create(CultureInfo.InvariantCulture, $"onehole:{first}:{second}");
+
+    private static (int Keep, int Drop)? OneHolePair(string key)
+    {
+        var parts = key.Split(':');
+        return parts.Length == 3 && parts[0] == "onehole" && int.TryParse(parts[1], CultureInfo.InvariantCulture, out int keep)
+            && int.TryParse(parts[2], CultureInfo.InvariantCulture, out int drop) ? (keep, drop) : null;
     }
 
     /// <summary>The key of the review item a shot placed inside a larger mark raises, entry 291 section 7 item 4.</summary>

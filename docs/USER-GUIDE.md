@@ -165,6 +165,7 @@ named, and every photograph you open keeps how far off square it was and how goo
 The pill in the header counts the marks that need you. The review queue in the side panel lists each one with the choices that settle it. The items are:
 - **Contested assignment:** a hole that could belong to either of two bulls, or one that the matching gave to a bull other than its nearest.
 - **Possibly two holes:** a mark about the size of two holes.
+- **Possibly one hole:** two marks closer than half a hole's width, probably one hole marked twice. **One shot** leaves one mark at the middle of the two; **Two shots** keeps both.
 - **Hole read with what is beside it:** a mark at least twice as wide as a hole, usually a hole joined to the printed rings in a photograph taken off square. GroupLab places the shot on the part the size of one hole; check it sits on the hole, or move it.
 - **Two shots on one bull.**
 - **No bull.**
