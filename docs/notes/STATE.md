@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07, after entry 379 section 3 and the consistency audit; Alan had entries 382, 378 and 380 taken before the reset.
+**Last rewritten:** 2026-10-07, after entry 385; Alan had entries 382, 378 and 380 taken before the reset.
 
 ---
 
@@ -18,10 +18,11 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The usage guard stops at 95% until the week resets (2026-10-08 02:00 UTC)**, as Alan asked on 2026-10-07; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 84% at 12:00 UTC on 2026-10-07. Question 85
   answered: Part C meant what is left of entry 374.
+- **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
+  request 81 saves the check and asks for a second print before any stretch.
 - **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
-- **Entry 384 done** (2026-10-07): the analysis key no longer blanks a strip of the drawing; Add readings shows and outlines the
-  Chronograph section; **the Play internal track: the last upload on record is nightly 110**, and the Play copy and plain APK do not
-  update themselves until request 80 (play-upload.yml waits for its secret). For nightly 176.
+- **Entry 384 done** (2026-10-07): the analysis key's strip, Add readings, Play testers; **the Play internal track's last upload on
+  record is nightly 110**, and the Play copy and plain APK do not update themselves until request 80.
 - **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only.
 - **Entry 378 done but the registration** (2026-10-07): both APKs outside Play are signed with the upload key (SHA-256 98b36d56...);
   request 79 has Alan's Play Console steps, `android-verify.yml` builds the small proof APK from his snippet; a note for testers in
@@ -29,7 +30,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 376 done but B7** (2026-10-06): B7 (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing, Ask again, Possibly one hole,
   CSV pooling (2026-10-07); the 2 MOA 3 by 4 sheet does not fit Letter, question 86; the rest is in the next three. **Entry 373 done.**
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 78 (the M834 print), 79 (one APK to upload), 80 (Play uploads).
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 79 (one APK to upload), 80 (Play uploads), 81 (the M834's check, a second print).
 
 ## The next three
 
@@ -59,7 +60,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (80 Play uploads; 79 one verification APK to upload; 78 the M834 from GroupLab; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (81 the M834's check and a second print; 80 Play uploads; 79 one verification APK to upload; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -83,7 +84,6 @@ Thirteen, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
 - **Last nightly:** 0.2.0-nightly.175 (2026-10-07 13:48 UTC, built from 7aeeb5a5: entries 382, 380 and 374's Ask again, Possibly one
   hole and CSV pooling; CI green on all three systems). Entry 383 (3e59e4b5) came after it and is in nightly 176.
-- **Pushes to main failed from 16:53 UTC on 2026-10-07** with GitHub's "Internal Server Error" (this session and the screenshots workflow too).
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 

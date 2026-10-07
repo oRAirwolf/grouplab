@@ -539,7 +539,8 @@ loads, one figure at a time: each load's name on a line of its own, and its rang
 so it says so and points you to mean radius. In **All figures**, a value too long to sit beside its name goes on the line under it. Ballistics is a
 tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
 PDF, and prints the printer check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without
-the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
+the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; thermal roll paper
+curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
 **A target GroupLab did not print** is marked by hand: choose **Mark it by hand** when GroupLab asks which target it is. The

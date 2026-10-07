@@ -25,6 +25,45 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 385: request 78 answered, the M834's first true-size prints measured
+
+**Status: actioned 2026-10-07; sections 1 to 4 done, section 1 as Alan's request 81 (a printer check lives on each device) and section 2 waiting on its second print.**
+
+From the planning session, 2026-10-07. Alan printed from the Fold 7 on nightly 175, Paper in the M834 set to A continuous roll: first the
+C bull sheet (GroupLab 5x5 Load Development, C Bull, Letter), then GroupLab Printer Check, Letter (GL-SCALE-LTR-1). Both printed
+completely ("The M834 printed the page") and came out past the tear bar.
+
+## Alan's measurements
+
+- Each sheet, end to end of the paper: 293 mm (Alan wrote "29.3mm"; read as 29.3 cm, since Letter is 279.4 mm). That agrees with a page
+  0.8 percent short (277.2 mm) plus entry 382's 15.5 mm feed (292.7 mm): entry 382 works.
+- Printer check, caliper across (the dashed line at the top): 5.924 in = 150.47 mm, against 150.00 mm: +0.31 percent.
+- Printer check, caliper down (the dashed line at the right): 5.8585 in = 148.81 mm, against 150.00 mm: -0.80 percent.
+- Ruler across the bottom: 190.0 mm with a clear ruler, against 190.0 mm: 0.0 percent (a ruler reads to about 0.5 mm, 0.26 percent).
+- Ruler down the side: 24.8 cm = 248 mm, against 250.0 mm: -0.80 percent.
+
+So the M834 prints true across the paper (within about 0.3 percent) and 0.8 percent short along the feed, found by caliper and ruler
+alike. The across caliper (+0.31) and ruler (0.0) differ by about the ruler's resolution; trust the caliper.
+
+## The scans
+
+Alan scanned both sheets. Thermal roll paper curls into a roll about 1.5 in across, which made scanning hard: the planning session's
+copies show a slight skew and the lines bow near the edges, so treat the hand measurements above as the reference, not the scans.
+The scans should be in `C:\Dev\grouplab-local\printers\` (ask the planning session if they are not). Read them anyway as a cross-check
+and say how far they agree. On the C bull scan the scanner cut off the text at the bottom of the page (Alan, 2026-10-07); that is the scanner,
+not the print: the bottom codes and the S1 to S3 sighter row are on it.
+
+## What to do
+
+1. Record these as the M834's printer check (the printer check's caliper path takes across and down), so photos of sheets printed on it
+   measure in real inches, with across and along the feed scaled separately.
+2. Decide whether direct M834 printing should pre-stretch the page along the feed by 1/0.992 (about +0.81 percent). Do it only once a
+   second print shows the 0.8 percent repeats; write a short request for Alan to print the check page once more and measure the same
+   four numbers.
+3. Close request 78, and fix its steps to name the printer check page for measuring (the C bull sheet has no ruler line).
+4. Add a line to the M834 guide: thermal roll paper curls, so flatten a sheet (rolled the other way, or under a heavy book) before
+   scanning; at the range a clip or tape is enough.
+
 ## 2026-10-07, entry 384: the analysis legend hides the drawing, "Add readings" leaves Alan lost, and Play testers stuck on old builds
 
 **Status: actioned 2026-10-07; sections 1 to 3 done, 3a waiting on Alan's request 80; chronograph entry on the analysis is question 88. A consistency audit had the same number in the inbox first (question 89).**

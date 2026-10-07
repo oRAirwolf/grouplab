@@ -966,6 +966,24 @@ allowed; it already listed the survey's random installation number, the log and 
 9. The `csv` feature says several files import as one group and each row names its sheet, session and distance; its note claimed.
 10. README: the GroupLab Dev row says "see On Android, below".
 
+## Entry 385: request 78 answered, the M834's first true-size prints measured (2026-10-07)
+
+Alan printed the C bull sheet and the Letter printer check from the Fold 7 on nightly 175, on a roll: both whole, both past the tear
+bar, each 293 mm end to end (a page 0.8 percent short, 277.2 mm, plus entry 382's 15.5 mm feed, 292.7 mm: the feed works). On the check
+page, caliper across 150.47 mm of 150.00 (**+0.31 percent**), caliper down 148.81 mm (**-0.80 percent**), ruler across 190.0 of 190.0, ruler
+down 248 of 250 (-0.80 percent). So the M834 prints true across the paper and 0.8 percent short along the feed.
+
+**The scans as a cross-check** (`grouplab measure`, `C:\Dev\grouplab-local\printers\`, local only): "thermal test10072026.png" is the C bull
+sheet and "thermal test 210072026.png" the check page; both read **99.98 percent across and 99.5 percent down** at the page center. They
+agree on the direction (true across, short along the feed) and differ from the caliper by 0.3 points across and 0.3 down; the paper's
+curl bowed the scans, so the caliper is the reference, as planning said.
+
+**Section 1:** a printer check lives in each device's own settings, so it cannot be written from here; request 81 gives Alan the caliper
+path with his numbers (Phomemo M834, across 150.47, down 148.81, which GroupLab turns into 100.3 by 99.2 percent, each direction on its
+own). **Section 2:** no stretch yet; request 81 asks for the same four numbers from a second print, and +0.81 percent along the feed for
+the direct print follows if the 0.8 repeats. **Section 3:** request 78 closed and archived, its note saying to measure on the check page,
+which has the lines. **Section 4:** the user guide's phone section says to flatten a thermal sheet before scanning.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

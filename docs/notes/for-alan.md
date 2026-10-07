@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **78, GroupLab printing to the M834 itself** (now feeding the sheet past the tear bar). Then **80**, Google Play updating your testers by itself (fifteen minutes). Then **79**, Android developer verification in Play Console (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 23.** Most urgent today: **81, the M834's printer check saved and one more print** (fifteen minutes). Then **80**, Google Play updating your testers by itself (fifteen minutes). Then **79**, Android developer verification in Play Console (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -227,6 +227,19 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
+## 81. The M834's printer check, saved, and one more print to confirm it, about fifteen minutes (entry 385)
+
+**Why:** your two prints on nightly 175 printed whole and cleared the tear bar, and your measurements show the M834 prints true across
+the paper (+0.31 percent) and 0.8 percent short along the feed (-0.80 percent by caliper and by ruler). Saved as the M834's printer
+check, every photo of a GroupLab sheet printed on it measures in real inches, across and along the feed scaled separately. A second
+print says whether the 0.8 percent repeats; if it does, GroupLab will stretch its own M834 prints along the feed to make them true.
+**Steps,** on the Fold 7 (and on the computer too, if you photograph or open sheets there):
+1. Settings, under **Printers**, check a printer: name it **Phomemo M834**, choose **Digital caliper**, and enter your numbers from
+   today's check page in millimeters: **across 150.47**, **down 148.81**. GroupLab shows about 100.3 by 99.2 percent.
+2. Print **GroupLab Printer Check, Letter** on the M834 once more (Paper in the M834: A continuous roll), and measure the same four
+   numbers: the caliper across and down on the dashed lines, and the ruler across the bottom and down the side.
+**A good answer:** the four numbers from the second print. Thermal roll paper curls: flatten the sheet under a book before measuring.
+
 ## 80. Google Play: let each nightly reach your Play testers by itself, about fifteen minutes, soon (entry 384)
 
 **Why:** a tester who installed GroupLab from Google Play (or the plain APK) is still on nightly 130. Only GroupLab Dev updates itself;
@@ -262,34 +275,6 @@ SHA-256 fingerprint, not a certificate file: it is
    code, only your snippet in `assets/adi-registration.properties`, signed with the upload key. The real app is never uploaded there.
 **A good answer:** what the screen said after the upload, such as verified.
 
-## 78. GroupLab prints straight to your M834 from the Fold 7, ten minutes, with the next nightly (request 73)
-
-**Why:** your recording showed how the Phomemo app talks to the M834, and it also showed the app printed your C bull sheet **5.3 percent
-small** (94.7 percent) with its last line cut, so targets printed through the app are the wrong size. GroupLab now sends the page itself,
-at true size, the app's way; no real M834 has printed from it yet.
-**Steps,** with the nightly after 2026-10-05 on the Fold 7:
-1. The M834 on, paired with the phone as it was for the Phomemo app (close the Phomemo app first).
-2. GroupLab, Targets, the C bull sheet (Letter), **Print on the Phomemo M834**. Allow nearby devices if asked, then press it again.
-3. Measure the sheet's ruler line with a ruler, and scan the page at 600 dpi into `C:\Dev\grouplab-local\printers\`.
-**A good answer:** "it printed, the ruler line measures N", or what the screen said if it did not.
-**2026-10-06 (entry 377):** the first try stayed on "Connecting" because a Bluetooth call needed a permission GroupLab does not ask
-for, and the error was lost. Fixed for the next nightly (173 or later): try again with it. It now says what it is doing at each step,
-gives each way of connecting 12 seconds (four ways), has a Cancel, and says in the middle of the screen whatever stops it. If it still
-fails, Settings, Send diagnostics, and say what the screen said.
-**2026-10-06 (entry 381), the steps now:** nightly 173 printed a strip of a few millimetres because GroupLab closed the link 2 seconds
-after handing the page to the phone, long before the printer had taken it. With the next nightly (174 or later):
-1. **One press** of Print on the Phomemo M834, then wait: the screen says "The M834 is printing the page" for up to about a minute and a
-   half (the Phomemo app took 45 seconds for a page), then "The M834 printed the page".
-2. Measure the ruler line on the printed sheet.
-3. If it still stops short, or the screen says the printer never said it had finished: Settings, Send diagnostics, and say what the
-   screen said. The diagnostics now show every block and everything the printer answered.
-
-**2026-10-07 (entry 382), the steps now:** the whole page printed on 174 but its end stayed behind the tear bar. With the next nightly
-(175 or later), on a roll GroupLab feeds the sheet 15.5 mm further (your 0.61 in) after printing, so it should come all the way out.
-1. Targets, the C bull sheet, under the print button: **Paper in the M834** says **A continuous roll**. Print once. A good answer: the
-   whole sheet comes out past the tear bar, and the ruler line's length.
-2. When you next have fanfold loaded: choose **Fanfold sheets** and print once. GroupLab feeds nothing extra there, since an 11 in page
-   ends on the fold. A good answer: whether the sheet stopped with its perforation at the tear bar, short of it, or past it.
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 
 **Why:** every accuracy figure for the four scale markers comes from computer-made photos with a perfect print; real paper, a real

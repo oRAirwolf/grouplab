@@ -1165,7 +1165,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 43 0 R >>
 endobj
 43 0 obj
-<< /Length 7301 >>
+<< /Length 7495 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -1197,27 +1197,28 @@ BT /F1 71 Tf 1 0 0 -1 381 2546 Tm (too long to sit beside its name goes on the l
 BT /F1 71 Tf 1 0 0 -1 381 2634 Tm (the chance of a hit. Targets prints a sheet through Android's print dialog or shares its PDF, and prints the printer) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2722 Tm (check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2810 Tm (Phomemo app, with Paper in the M834 for a roll \(fed 15.5 mm further so the sheet clears the tear bar\) or fanfold) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2898 Tm (sheets; Settings, under Printers, checks your printer. On a large screen, such as the Tab S8 Ultra or the Fold 7) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2986 Tm (opened, the result shows the sheet beside the numbers.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3109 Tm (A target GroupLab did not print is marked by hand: choose Mark it by hand when GroupLab asks which target it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3197 Tm (is. The picture moves under a crosshair that stays in the middle: set the two ends of a length you know and type) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3285 Tm (it, set the aim point, then Add hole here on each hole, with Undo. A mark under the crosshair can be removed;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3373 Tm (once the scale is known the crosshair's ring is your bullet's size. In GroupLab Dev, the development build, Find) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3461 Tm (holes \(Experimental\) at the holes proposes them, as on the computer: each is a found hole to keep or remove) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3549 Tm (there and to move in Fix holes, and one it is not sure of is ringed in amber and asked about on the result. Fudd) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3637 Tm (buster mode, under a result of twenty shots or more, is the same page as on the computer. Shots, under a result,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3725 Tm (lists every shot with its offset across and up from the aim point and, with your rifle's click value, the clicks to bring) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3813 Tm (it onto the aim; its Counted switch leaves a shot out of every figure, struck through in the list and dashed on the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3901 Tm (picture, and still on the record. Zero from this group says where the group sits, the clicks, whether that is worth) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3989 Tm (dialing at this many shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4077 Tm (includes it at every range. On a target GroupLab did not print, Aim points gives each aim point a chip in its own) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4165 Tm (color, its holes ringed in the same color: tap a chip for that aim point's own figures, or + Aim point to set another;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4253 Tm (the figures above pool them all. Share a picture, under a result, puts a results box on the picture: drag it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4341 Tm (anywhere, pinch it or drag its corner to resize it, and tap it to choose its lines. Chips turn the mean radius circle) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4429 Tm (\(drawn about the group's center\) and a label on and off, and set the box's style and the crop; then Save to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4517 Tm (gallery, which keeps it in Pictures, GroupLab, or Share. Report, under a result, shows the one-page report itself,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4605 Tm (the PDF's own page, with Share, Save on the phone \(Downloads, GroupLab\) and Print above it. Android's back) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4693 Tm (button goes back one screen wherever you are, and every page uses the whole width of the screen.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2898 Tm (sheets; thermal roll paper curls, so flatten a sheet \(rolled the other way, or under a heavy book\) before scanning) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2986 Tm (it; at the range a clip or tape is enough; Settings, under Printers, checks your printer. On a large screen, such as) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3074 Tm (the Tab S8 Ultra or the Fold 7 opened, the result shows the sheet beside the numbers.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3197 Tm (A target GroupLab did not print is marked by hand: choose Mark it by hand when GroupLab asks which target it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3285 Tm (is. The picture moves under a crosshair that stays in the middle: set the two ends of a length you know and type) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3373 Tm (it, set the aim point, then Add hole here on each hole, with Undo. A mark under the crosshair can be removed;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3461 Tm (once the scale is known the crosshair's ring is your bullet's size. In GroupLab Dev, the development build, Find) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3549 Tm (holes \(Experimental\) at the holes proposes them, as on the computer: each is a found hole to keep or remove) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3637 Tm (there and to move in Fix holes, and one it is not sure of is ringed in amber and asked about on the result. Fudd) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3725 Tm (buster mode, under a result of twenty shots or more, is the same page as on the computer. Shots, under a result,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3813 Tm (lists every shot with its offset across and up from the aim point and, with your rifle's click value, the clicks to bring) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3901 Tm (it onto the aim; its Counted switch leaves a shot out of every figure, struck through in the list and dashed on the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3989 Tm (picture, and still on the record. Zero from this group says where the group sits, the clicks, whether that is worth) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4077 Tm (dialing at this many shots, and opens Shots Needed to Zero, or hands the offset to Ballistics, whose dope then) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4165 Tm (includes it at every range. On a target GroupLab did not print, Aim points gives each aim point a chip in its own) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4253 Tm (color, its holes ringed in the same color: tap a chip for that aim point's own figures, or + Aim point to set another;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4341 Tm (the figures above pool them all. Share a picture, under a result, puts a results box on the picture: drag it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4429 Tm (anywhere, pinch it or drag its corner to resize it, and tap it to choose its lines. Chips turn the mean radius circle) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4517 Tm (\(drawn about the group's center\) and a label on and off, and set the box's style and the crop; then Save to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4605 Tm (gallery, which keeps it in Pictures, GroupLab, or Share. Report, under a result, shows the one-page report itself,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4693 Tm (the PDF's own page, with Share, Save on the phone \(Downloads, GroupLab\) and Print above it. Android's back) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4781 Tm (button goes back one screen wherever you are, and every page uses the whole width of the screen.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 20 of 20) Tj ET
 Q
 endstream
@@ -7016,15 +7017,15 @@ xref
 0000102954 00000 n 
 0000110756 00000 n 
 0000110884 00000 n 
-0000118238 00000 n 
-0000388834 00000 n 
-0000602562 00000 n 
-0000869962 00000 n 
-0000975039 00000 n 
-0001091058 00000 n 
-0001284172 00000 n 
+0000118432 00000 n 
+0000389028 00000 n 
+0000602756 00000 n 
+0000870156 00000 n 
+0000975233 00000 n 
+0001091252 00000 n 
+0001284366 00000 n 
 trailer
 << /Size 51 /Root 1 0 R >>
 startxref
-1390369
+1390563
 %%EOF
