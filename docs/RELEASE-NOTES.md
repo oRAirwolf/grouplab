@@ -460,7 +460,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - Velocity and the vertical now works out velocity's share in the air temperature, altitude and shot angle entered on the Ballistics screen for the session's rifle and load, and says when it assumed a standard day instead.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.146)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
