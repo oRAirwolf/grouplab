@@ -21,6 +21,17 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-07, question 87: store-bought targets refused on a used sheet although the right product matched (entry 374 section 1)
+
+Status: open
+
+On the range photographs of 4 October, NTC's 100 yard target matched its own fingerprint with 370 features and the Rigid crosshair with
+730, but their colour layouts scored 0.576 and 0.760 against the 0.85 the fingerprint trial set (docs/notes/fingerprint-trial.md:
+no wrong product above 0.81). Shot holes, pasters and ejecta pull a used target's layout down. The trial did not record how many features
+its wrong matches had, so a lower line for a fit carried by many features (say 300 or more, with no other product near) cannot be judged
+from what is written. **Asked:** whether to re-run the trial (`grouplab fingerprint-trial`, about 190 MB of made pictures, deleted after)
+to measure such a rule; until then a used target is asked about by hand, which is the safe outcome. Nothing waits on it.
+
 ## 2026-10-07, question 86: Unholy's 2 MOA sheet, 3 by 4 on Letter, does not fit with 2.00 in bulls (entry 374 section 4)
 
 Status: open

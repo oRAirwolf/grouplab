@@ -27,7 +27,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 382 done** (2026-10-07): on a roll the M834 print adds 15.5 mm of white after the page (Alan's head to tear bar) so the
   sheet clears the tear bar; fanfold adds nothing; the phone remembers which (Paper in the M834). For nightly 175; request 78 rewritten.
   The settings screenshot went stale with `AppSettings.cs`, so the site build failed at 1e7ac465 until the screenshots run restamps.
-- **Entry 381 done** (2026-10-06): the M834 print waits for the printer's `1A 0F 0C`, Cancel works, every block and answer logged.
 - **Entry 376 done but B7** (2026-10-06): shots matched to bulls as one sheet, drawn and named by bull; tablets full width; B7
   (diagnostics straight to GroupLab) needs a receiver kind.
 - **Entry 374 partly done**: the C bull fix, the update fix, four of section 4, the timed pairing, Ask again, Possibly one hole,
@@ -55,7 +54,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
 2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. B7 and 379 section 3 (the page "What GroupLab sends" and the guides); then entry 374's rest (the store-bought photos by hand; the 2 MOA sheet on question 86).
+3. B7 and 379 section 3 (the page "What GroupLab sends" and the guides); then entry 374's 2 MOA sheet on question 86.
 
 ## Blocked, and on what
 
@@ -68,8 +67,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Ten, all in `docs/QUESTIONS-FOR-PLANNING.md`:
+Eleven, all in `docs/QUESTIONS-FOR-PLANNING.md`:
 
+- **87** store-bought targets refused on a used sheet though the right product matched (re-run the trial?)
 - **86** Unholy's 2 MOA 3 by 4 sheet does not fit Letter (choices: 1.50 in bulls on Letter, or tabloid)
 - **84** the README's "Not built yet" sentence (my choice: keep it)
 - **83** identification takes 34 s on a photo with no codes (my choice: full size only when no marker is found)

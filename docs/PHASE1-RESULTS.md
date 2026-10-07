@@ -880,8 +880,20 @@ about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that 
   in yards, before "excluded". Import takes several files at once, on the computer and the phone, and reads files with the same
   columns as one group (`ShotCsv.Pool`), so shots from many sheets of any kind are pooled in one analysis; files whose columns differ
   are refused by name. Test: `ShotCsvTests.ShotsFromSeveralSheetsArePutTogetherAndEachRowSaysWhereItCameFrom`.
-- **Still not done:** the store-bought photos and the Rigid crosshair (they go through Add a store-bought target, by hand), the
-  scoreboard and corpus.
+- **The range photographs in the local corpus and the scoreboard** (section 1, 2026-10-07): ten folders under
+  `C:\Dev\grouplab-local\corpus\range-2026-10-04\`, never committed, truth Alan's count of shots fired. GroupLab's own sheets, with
+  `grouplab scoreboard --corpus`: **137 of 145 holes found, no false mark**: C bull close 15 of 15, far 14, the phone's photo 14 (bull
+  10's torn hole missed on all three); E bull close 22 of 25 and, new since 2026-10-05, **far 22 of 25** (its codes now read from 3 ft);
+  load sheet close and far 25 of 25.
+- **The store-bought targets** (section 1): recognition, then Find holes with the calibre shot. **Recognized: the Eze-Scorer only**
+  (layout 0.870, 693 features), Find holes 40 marks for 5 shots. **The right product but refused:** NTC 100 yard (370 features,
+  layout 0.576, the ejecta from the steel above spatter its printing) and the Rigid crosshair (730 features, layout 0.760); both under
+  the 0.85 the fingerprint trial set, which no wrong product reached. With their fits anyway, Find holes gave 74 marks for 5 and 24 for
+  4. **Not recognized at all:** the Shoot-N-C (no product had any features agreeing) and both Allen targets, which are not in the
+  library. On the three with a fit, 138 marks for 14 shots: Find holes (Experimental) invents far more than it finds on a shot-up
+  commercial target, NTC's ejecta above all, as Alan warned. Question 87 asks whether to measure a lower line for fits carried by many
+  features. Hole positions are not known, so which marks are the real ones is not scored.
+- **Still not done:** nothing in section 1; section 4's 2 MOA sheet waits on question 86.
 
 ## Entry 383: marking files kept the photo's full path (a tester's report, 2026-10-07)
 
