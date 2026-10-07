@@ -388,6 +388,8 @@ release rights on this app only, invited in the Play Console; its JSON key as a 
 in the nightly, skipped while the secret is absent, that uploads each nightly's AAB and its symbols to internal testing through the
 Play Developer API. Alan's request with the exact steps is written after the Store work of request 38 is done.
 
+**Android developer verification (entry 378).** In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027. Both APKs are signed with the upload key (certificate SHA-256 `98b36d56ef6f3d62ce63c8066c0b0c64b472141e090af9f493a41bd5c51fe3fc`, read from nightly 174's two APKs), which is not Play's app signing key, so Play Console needs that key added for `org.grouplab.app` and `org.grouplab.app.dev` registered as a new package name with it. Google proves the key with a small APK carrying its snippet in the assets folder: the workflow `android-verify.yml` builds it, with no code, and signs it with the upload key (request 79).
+
 ## 13. The development build, and when the Play copy is needed (entry 234)
 
 **GroupLab Dev** is the same application built with `-p:GroupLabDev=true`: its own id, `org.grouplab.app.dev`, so it installs beside the

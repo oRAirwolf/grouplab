@@ -1,4 +1,4 @@
-**Open: 21.** Most urgent today: **78, GroupLab printing to the M834 itself** (the app printed 5.3 percent small). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 22.** Most urgent today: **78, GroupLab printing to the M834 itself** (now feeding the sheet past the tear bar). Then **79**, Android developer verification in Play Console (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 4 October, at 71% of the week (a live reading, the week resets on 8 October, 02:00 UTC): entries 363, 364 and 365 are done, for nightly 167; the inbox is empty.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,25 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 79. Android developer verification for the two APKs, about fifteen minutes, soon (entry 378)
+
+**Why:** the banner in Play Console. Since 30 September, certified phones in Brazil, Indonesia, Singapore and Thailand refuse an app from
+outside Google Play unless its package name and signing key are registered; the rest of the world follows in 2027. Your Play app is
+registered with Play's own key, but both APKs GroupLab publishes (the plain APK, `org.grouplab.app`, and GroupLab Dev,
+`org.grouplab.app.dev`) are signed with your upload key, whose certificate's SHA-256 begins `98:B3:6D:56` and ends `1F:E3:FC`.
+**Steps,** in Play Console, Android developer verification (the banner's link):
+1. For **org.grouplab.app**: **Add key**, choose to give the public certificate, and pick
+   `C:\Dev\grouplab-local\android-verification\grouplab-upload-certificate.pem` (the public half only; the key itself never leaves
+   GitHub's secrets). Then **Get Started**. Google shows a snippet: copy it whole into a new file
+   `C:\Dev\grouplab-local\android-verification\snippet-org.grouplab.app.txt`. If Google's sample project names the file the snippet
+   goes in (inside `assets`), write that name on the file's last line, after the snippet, starting `FILE: `.
+2. Register **org.grouplab.app.dev** as a new package name with the same certificate, and do the same with its snippet, into
+   `snippet-org.grouplab.app.dev.txt` in the same folder.
+3. Tell the planning session it is done. I then build each small APK (no code, only the snippet, signed with the upload key) with the
+   workflow made for it, and put them in that folder as `grouplab-verification-<package>.apk`; you upload each in the same screen.
+   The real app is never uploaded there.
+**A good answer:** the two snippet files in that folder, or what the screen said if it asked for something else.
 
 ## 78. GroupLab prints straight to your M834 from the Fold 7, ten minutes, with the next nightly (request 73)
 

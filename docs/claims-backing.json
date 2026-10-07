@@ -5236,6 +5236,30 @@
   "| | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory.": {
    "kind": "code",
    "where": ".github/workflows/nightly.yml attaches grouplab-android.apk and grouplab-android-dev.apk to every nightly (ReleaseAssetTests); entry 373 section 3"
+  },
+  "The rest of the world follows in 2027.": {
+   "kind": "decided",
+   "where": "Google's rule, support.google.com/googleplay/android-developer/answer/16984799 and the Android Developers Blog of 2026-03; entry 378"
+  },
+  "In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead.": {
+   "kind": "decided",
+   "where": "Google's rule, support.google.com/googleplay/android-developer/answer/16984799 and the Android Developers Blog of 2026-03; entry 378"
+  },
+  "**In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google**; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead.": {
+   "kind": "decided",
+   "where": "Google's rule, support.google.com/googleplay/android-developer/answer/16984799 and the Android Developers Blog of 2026-03; entry 378"
+  },
+  "**Android developer verification (entry 378).** In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead.": {
+   "kind": "decided",
+   "where": "Google's rule, support.google.com/googleplay/android-developer/answer/16984799 and the Android Developers Blog of 2026-03; entry 378"
+  },
+  "Both APKs are signed with the upload key (certificate SHA-256 `98b36d56ef6f3d62ce63c8066c0b0c64b472141e090af9f493a41bd5c51fe3fc`, read from nightly 174's two APKs), which is not Play's app signing key, so Play Console needs that key added for `org.grouplab.app` and `org.grouplab.app.dev` registered as a new package name with it.": {
+   "kind": "measured",
+   "where": "apksigner verify --print-certs on nightly 174's grouplab-android and grouplab-android-dev APKs, 2026-10-07; entry 378"
+  },
+  "Google proves the key with a small APK carrying its snippet in the assets folder: the workflow `android-verify.yml` builds it, with no code, and signs it with the upload key (request 79).": {
+   "kind": "code",
+   "where": ".github/workflows/android-verify.yml; entry 378"
   }
  },
  "rules": [

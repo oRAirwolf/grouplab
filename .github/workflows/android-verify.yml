@@ -1,0 +1,68 @@
+name: android developer verification
+
+# NOTES-FROM-PLANNING.md entry 378: the small APK Google's Android developer verification asks for, to prove GroupLab holds the key that
+# signs an APK sent outside Google Play. Play Console shows a snippet; Alan starts this run with it, and the run builds an APK with no code,
+# the package name chosen and the snippet in its assets folder, signs it with the upload key exactly as the nightly signs
+# grouplab-android.apk and grouplab-android-dev.apk, and keeps it as the run's artifact for Alan to upload in the same Play Console screen.
+# It is never a release asset and never installed. The snippet is not a secret: it goes into an APK uploaded to Google.
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: The package name being registered
+        type: choice
+        options: [org.grouplab.app.dev, org.grouplab.app]
+      snippet:
+        description: The snippet Play Console shows, pasted whole
+        required: true
+      file:
+        description: The file name Google's sample project gives the snippet, inside assets
+        default: adi-registration.properties
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE: ${{ inputs.package }}
+      SNIPPET: ${{ inputs.snippet }}
+      FILE: ${{ inputs.file }}
+      KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+      STORE_PASS: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
+      KEY_PASS: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+    steps:
+      - name: Build the APK with the snippet and sign it with the upload key
+        run: |
+          set -eu
+          case "$PACKAGE" in org.grouplab.app|org.grouplab.app.dev) ;; *) echo "::error::not one of GroupLab's packages"; exit 1 ;; esac
+          printf '%s' "$FILE" | grep -Eq '^[A-Za-z0-9._-]+$' || { echo "::error::the file name has characters a file name should not"; exit 1; }
+          if [ -z "$KEYSTORE" ] || [ -z "$STORE_PASS" ] || [ -z "$KEY_PASS" ]; then echo "::error::the upload key is not in the secrets"; exit 1; fi
+          sdk="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          bt=$(ls -d "$sdk"/build-tools/* | sort -V | tail -1)
+          platform=$(ls -d "$sdk"/platforms/android-* | sort -V | tail -1)
+          mkdir -p work/assets
+          printf '%s' "$SNIPPET" > "work/assets/$FILE"
+          cat > work/AndroidManifest.xml <<EOF
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="$PACKAGE" android:versionCode="1" android:versionName="1">
+            <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="35"/>
+            <application android:hasCode="false" android:label="GroupLab verification"/>
+          </manifest>
+          EOF
+          "$bt/aapt2" link -o work/unsigned.apk --manifest work/AndroidManifest.xml -I "$platform/android.jar" -A work/assets
+          "$bt/zipalign" -f 4 work/unsigned.apk work/aligned.apk
+          keystore="$RUNNER_TEMP/upload.jks"
+          echo "$KEYSTORE" | base64 -d > "$keystore"
+          trap 'rm -f "$keystore"' EXIT
+          mkdir -p out
+          "$bt/apksigner" sign --ks "$keystore" --ks-key-alias grouplab-upload --ks-pass env:STORE_PASS --key-pass env:KEY_PASS \
+            --out "out/grouplab-verification-$PACKAGE.apk" work/aligned.apk
+          # The public certificate's fingerprint only, to match against Play Console's: the same as the nightly APKs' (entry 378).
+          "$bt/apksigner" verify --print-certs "out/grouplab-verification-$PACKAGE.apk" | grep 'SHA-256' | tee -a "$GITHUB_STEP_SUMMARY"
+          unzip -l "out/grouplab-verification-$PACKAGE.apk" | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v6
+        with:
+          name: grouplab-verification-${{ inputs.package }}
+          path: out/*.apk
+          retention-days: 14

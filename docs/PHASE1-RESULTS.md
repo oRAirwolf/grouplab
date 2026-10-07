@@ -820,6 +820,23 @@ is nothing to match there.
 Request 78's steps rewritten. Test: `M834Tests.OnARollTheSheetIsFedPastTheTearBarAndOnFanfoldItIsNot` (3300 rows, 3484 on a roll, the
 added rows white, the page's rows unchanged).
 
+## Entry 378: Android developer verification for the APKs sent outside Google Play (2026-10-07)
+
+**Section 1:** GroupLab publishes two APKs outside Play with every nightly, on GitHub and grouplab.org: `grouplab-android.apk`
+(`org.grouplab.app`) and `grouplab-android-dev.apk` (`org.grouplab.app.dev`). Both are signed with the upload key (alias
+`grouplab-upload`, kept in GitHub's secrets); `apksigner verify --print-certs` on nightly 174's two gives the same certificate, SHA-256
+`98b36d56ef6f3d62ce63c8066c0b0c64b472141e090af9f493a41bd5c51fe3fc`. Play re-signs what it installs with its own app signing key
+(docs/ANDROID.md section 12), so Play holds `org.grouplab.app` with that key only: the upload certificate has to be added for it, and
+`org.grouplab.app.dev` registered as a new package with it. The spike's `org.grouplab.app.spike` is never published. No private key was
+read or printed; the public certificate is in `C:\Dev\grouplab-local\android-verification\` for Alan to pick in Play Console.
+
+**Section 2:** request 79 has the Play Console steps. Google's help page names only "the asset folder" for the snippet, so the new
+`android-verify.yml` (run by hand) takes the package, the snippet and the file name (`adi-registration.properties` unless Google's sample
+says otherwise), builds an APK with no code, signs it with the upload key as the nightly does, and keeps it as the run's artifact.
+
+**Section 3:** a note for testers in Brazil, Indonesia, Singapore and Thailand on the download page, in the README, the testing guide
+and docs/ANDROID.md: Android there refuses unregistered APKs since 2026-09-30, so until registration is done, the Play internal test.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

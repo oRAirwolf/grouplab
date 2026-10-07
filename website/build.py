@@ -1000,6 +1000,7 @@ def page_download() -> str:
             ["Open the file on the phone; allow your browser to install apps when Android asks",
              "Remove the Google Play copy first, if you have it: the two are signed with different keys",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
+         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK are not registered yet, so there, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027.</p>"),
          fold("When Android says Google Play Protect is scanning the app", """<p>Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>""")],
         keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other. GroupLab Dev is different: it installs beside either.</p>')
 

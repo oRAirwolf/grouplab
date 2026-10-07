@@ -25,6 +25,31 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 378: Android developer verification for the APKs sent outside Google Play
+
+**Status: actioned 2026-10-07 (taken before the reset at Alan's word); sections 1 to 3 done; the registration itself waits on Alan (request 79), then the two small APKs from android-verify.yml.**
+
+Written by the planning session 2026-10-06 01:20 UTC. **Do not start this before the weekly reset (2026-10-08 02:00 UTC)**, and only after
+entries 376 and 377.
+
+Play Console shows Alan a banner: his Play apps are all registered for Android developer verification (org.grouplab.app), but any package
+name or signing key used to send Android apps outside Google Play must be registered too. Google's rule: from 2026-09-30, certified Android
+devices in Brazil, Indonesia, Singapore and Thailand stop installing unregistered apps from outside Play (users there need adb or an
+"advanced flow"); the rest of the world follows in 2027. GroupLab sends APKs outside Play: GroupLab Dev (`org.grouplab.app.dev`) on GitHub
+and grouplab.org, and possibly an `org.grouplab.app` APK signed with a key other than Play's app signing key.
+
+1. List every package name and signing certificate (SHA-256) GroupLab publishes outside Play, and which of them Play already holds.
+   Never print or copy a private key.
+2. Write the steps for Alan into for-alan.md: in Play Console, Android developer verification, register `org.grouplab.app.dev` as a new
+   package name and add any extra key for `org.grouplab.app` ("Add key", pick the public certificate, "Get Started"). Google then shows a
+   snippet: Alan pastes it into a file Code names, Code builds a small APK with the snippet in its assets folder, signed with that key,
+   and Alan uploads it in the same screen (the real app is not uploaded).
+3. Update the download page, README and the Android guide if anything changes for testers (for example a note for testers in those four
+   countries until registration is done).
+
+Sources: support.google.com/googleplay/android-developer/answer/16984799 and the Android Developers Blog post of 2026-03 on developer
+verification rolling out to all developers.
+
 ## 2026-10-07, entry 382: the M834 sheet does not feed all the way out after GroupLab prints it (request 78 follow-up)
 
 **Status: actioned 2026-10-07 (taken before the reset at Alan's word); sections 1 to 3 done, with Alan's try on a roll and on fanfold still to come.**
