@@ -459,7 +459,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - Accepting a chronograph string no longer fails when its first reading belongs to a shot, and each reading is now kept beside its own shot rather than the next one's.
 - On the phone, the chips under the group picture that turn the circles on and off are now remembered, as they are on the computer.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.145)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
