@@ -14,26 +14,24 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 24 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 25 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 85, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
 
-## 2026-10-06, question 85: entry 376 as delivered has no Part C and no 88% line, which Alan's message to the session names
+## 2026-10-07, question 86: Unholy's 2 MOA sheet, 3 by 4 on Letter, does not fit with 2.00 in bulls (entry 374 section 4)
 
 Status: open
 
-Alan's message starting this run: "take entry 376 from the inbox (which bull each shot belongs to, all of the tablet feedback on
-nightly 171, and what is left of entry 374) ... set the usage guard to stop at 88% for this week only as the entry says, then work
-through Parts A, B and C in order until the week reaches 88%." The file `docs/notes/inbox/entry-376.md` (written 2026-10-06 00:05 UTC)
-has Parts A and B only, and section 0 says "Part A now, inside the 85% rule. Part B after the reset". It names neither entry 374's rest
-nor 88%. Perhaps a newer version of the entry was meant. **What I did:** followed Alan's own words, as the later and more direct
-instruction: `scripts/usage-guard.js` stops at 88% until the week resets on 2026-10-08 02:00 UTC and at 85% again after it, with no edit
-needed; Part B follows Part A in this run; I read Part C as "what is left of entry 374" (store-bought photos, timed pairing, two holes in
-one, review undo, shot data out and in, the 2 MOA 3 by 4 sheet). **Asked:** confirm, or send the Part C you meant as its own entry.
-Nothing waits on the answer.
+Entry 374 asks for 2 MOA bulls, 3 by 4, Letter, no load block, with the same codes and rules as the other sheets. The sheet designer
+refuses every version with the 2.00 in bull of the 2 MOA sheets: three across and four down needs 1.72 in more height than Letter at
+their 2.50 in spacing, and still about half an inch at the closest the format allows (2.08 in, the ring plus 2 mm); four across and three
+down leaves the lattice with no markers and the bulls over the edge; A4 is 0.13 in short even at 2.20 in. Two that pass the designer's
+checks: **(a)** Letter, 3 by 4, **1.50 in bulls** (1.43 MOA at 100 yd) 2.00 in apart; **(b)** **tabloid** (11 by 17 in), 3 by 4, the
+2.00 in bulls at the 2 MOA sheets' 63.4 mm spacing. A 2 MOA bull at 100 yd is 2.09 in, larger still. **Asked:** (a), (b), both, or
+something else. Nothing else waits on it; the sheet is not built until the answer comes.
 
 ## 2026-10-05, question 84: the README's "Not built yet" sentence, which entry 373 calls stray and entry 103's test requires
 

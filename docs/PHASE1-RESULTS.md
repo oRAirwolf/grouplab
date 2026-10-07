@@ -852,6 +852,20 @@ about 0.15 percent where the 70 x 80 label typically gave 0.1, scaled from that 
 **Entry 378, also:** `android-verify.yml` proven with a dry run (package `org.grouplab.app.dev`, a placeholder snippet): the APK held
 `assets/adi-registration.properties` and the manifest only, signed with the same certificate as the nightly APKs; its artifact deleted.
 
+## Entry 374, what was left of it (2026-10-07)
+
+- **The timed pairing** (section 2), run on the range strings with `ChronographReconciliation.Propose`, the shots in firing order: the
+  6 ARC string, 25 readings all timed, is one run with no pause of five minutes, and pairs reading for shot with nothing proposed apart;
+  the .300 Norma string, 15 readings all timed, is three runs of 5 (its pauses between strings of five), and with 15 shots marked it too
+  pairs one for one with nothing proposed apart. Right for both: neither string has a reading of another group or a missing shot, so
+  the proposal has nothing to say and says nothing. The XLS forms go through the workbook reader, which entry 374 already showed agrees
+  with the CSV.
+- **The 2 MOA 3 by 4 sheet** (section 4) does not fit on Letter with the 2.00 in bulls, at any spacing the format allows, either way
+  round, nor on A4; two layouts that pass are put to planning as question 86 ((a) Letter with 1.50 in bulls 2.00 in apart, (b) tabloid
+  with the 2.00 in bulls). Not built until the answer.
+- **Still not done:** the store-bought photos and the Rigid crosshair, the scoreboard and corpus; two holes in one; undoing a review
+  answer; shot data out and in.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

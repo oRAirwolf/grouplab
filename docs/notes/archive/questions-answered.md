@@ -5,6 +5,20 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-06, question 85: entry 376 as delivered has no Part C and no 88% line, which Alan's message to the session names
+
+**Status: answered 2026-10-07 (Alan, in the message starting that run): Part C meant what is left of entry 374.** Nothing waits on it.
+
+Alan's message starting this run: "take entry 376 from the inbox (which bull each shot belongs to, all of the tablet feedback on
+nightly 171, and what is left of entry 374) ... set the usage guard to stop at 88% for this week only as the entry says, then work
+through Parts A, B and C in order until the week reaches 88%." The file `docs/notes/inbox/entry-376.md` (written 2026-10-06 00:05 UTC)
+has Parts A and B only, and section 0 says "Part A now, inside the 85% rule. Part B after the reset". It names neither entry 374's rest
+nor 88%. Perhaps a newer version of the entry was meant. **What I did:** followed Alan's own words, as the later and more direct
+instruction: `scripts/usage-guard.js` stops at 88% until the week resets on 2026-10-08 02:00 UTC and at 85% again after it, with no edit
+needed; Part B follows Part A in this run; I read Part C as "what is left of entry 374" (store-bought photos, timed pairing, two holes in
+one, review undo, shot data out and in, the 2 MOA 3 by 4 sheet). **Asked:** confirm, or send the Part C you meant as its own entry.
+Nothing waits on the answer.
+
 ## 2026-10-01, question 78: on the analysis at 1400x900, the plot's toggles cover the last lines of its key
 
 **Status: answered 2026-10-04, A (Alan): the toggles in a strip of their own under the plot; built the same day.** Nothing waits on it. Seen in the screenshot walk while building entry 323, and already true in today's published
