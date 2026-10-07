@@ -171,6 +171,35 @@ public static class ShotCsv
         return (offsets, skipped);
     }
 
+    /// <summary>
+    /// Question 34 (entry 386 section 5): the sheet of each row <see cref="Shots"/> keeps, in the same order, from GroupLab's own export's
+    /// "sheet" and "session" columns, so pooled files can be measured each from its own centre. Null where the table has no sheet column.
+    /// </summary>
+    public static IReadOnlyList<string>? SheetsOf(CsvTable table, int xColumn, int yColumn)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+        int Column(string name)
+        {
+            for (int i = 0; i < table.Headers.Count; i++)
+            {
+                if (table.Headers[i].Trim().Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+        int sheet = Column("sheet"), session = Column("session");
+        if (sheet < 0)
+        {
+            return null;
+        }
+
+        return [.. table.Rows.Where(r => Number(r, xColumn) is not null && Number(r, yColumn) is not null)
+            .Select(r => (sheet < r.Count ? r[sheet] : "") + "|" + (session >= 0 && session < r.Count ? r[session] : ""))];
+    }
+
     /// <summary>The image scale an imported marking is built on: a thousand pixels to the inch, around an aim point well inside the image.</summary>
     public const double PixelsPerInch = 1000;
 

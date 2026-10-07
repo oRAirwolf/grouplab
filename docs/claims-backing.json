@@ -5328,6 +5328,22 @@
   "**The plain APK updates itself since entry 386** (nightly 177 on): it carries GroupLab Dev's updater, automatic by default, listed in the signed manifest as `android apk`; an older plain APK has no updater, so its first update is one newer APK installed by hand.": {
    "kind": "code",
    "where": "android/GroupLab.Android/GroupLab.Android.csproj GroupLabUpdater on for every APK, .github/workflows/nightly.yml android apk asset and the updater check, android/GroupLab.Android/Updates/SelfUpdate.cs; UpdaterFlavorTests; entry 386 section 1 (2026-10-07)"
+  },
+  "**Save the printer check label** gives one label to print at 100 percent and scan at 600 dpi, and **Measure a scanned check label** measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/ScaleMarkers/ScaleLabelCheck.cs Page and Measure, src/GroupLab.App/MainWindow.ScaleMarkers.cs SaveCheckLabel and MeasureCheckLabel, PrinterProfile.LabelSize; Entry365Tests.ThePrinterCheckLabelMeasuresAcrossAndAlong; entry 386 section 3"
+  },
+  "**Diagnostics on the phone** (entry 311 section 3; entry 386 section 4 added **Send to GroupLab**, the logs and a note sent by the error reports' route, first, while the phones' senders are on).": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/SettingsView.cs settings-send-to-grouplab, src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync, website/api/error-report.php kind diagnostics, website/server/grouplab-error-worker.py; entry 386 section 4"
+  },
+  "Save the printer check label gives one label to print at 100 percent and scan at 600 dpi, and Measure a scanned check label measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/ScaleMarkers/ScaleLabelCheck.cs Page and Measure, src/GroupLab.App/MainWindow.ScaleMarkers.cs; Entry365Tests.ThePrinterCheckLabelMeasuresAcrossAndAlong; entry 386 section 3"
+  },
+  "support@grouplab.org On a phone On Android, iPhone and iPad, open Settings, then About: Send to GroupLab sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; Send diagnostics puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/SettingsView.cs settings-send-to-grouplab, src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync, DiagnosticsPackage.Send; entry 386 section 4"
   }
  },
  "rules": [

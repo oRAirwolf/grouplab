@@ -160,7 +160,9 @@ public sealed partial class MainWindow
             ClearSheet(ShotCsv.Marking(offsets, distanceInches, fromGroupCentre));
             DiagnosticLog.Info("file.import", ("kind", "csv"), ("shots", offsets.Count), ("skipped", skipped));
             Analyse();
-            status.Text = string.Create(CultureInfo.InvariantCulture, $"Imported {offsets.Count} shots") + (skipped > 0 ? string.Create(CultureInfo.InvariantCulture, $", leaving out {skipped} rows without two numbers") : "") + ". There is no image, so the figures are the whole of it" + (fromGroupCentre ? "; measured from the group's center, they say nothing about where it landed from the aim." : ".");
+            status.Text = string.Create(CultureInfo.InvariantCulture, $"Imported {offsets.Count} shots") + (skipped > 0 ? string.Create(CultureInfo.InvariantCulture, $", leaving out {skipped} rows without two numbers") : "") + ". There is no image, so the figures are the whole of it" + (fromGroupCentre ? "; measured from the group's center, they say nothing about where it landed from the aim." : ".")
+                // Question 34 (entry 386 section 5): rows from several sheets, measured each from its own center first.
+                + (Core.Statistics.PooledSpread.OfTable(table, across, upDown, offsets) is { } pooled ? " " + pooled.Words() : "");
         });
         return null;
     }

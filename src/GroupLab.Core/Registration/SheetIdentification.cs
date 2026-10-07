@@ -62,7 +62,8 @@ public static partial class SheetIdentification
     /// less (NOTES-FROM-PLANNING.md entry 313 section 1.4): on its pictures doubling the whole picture never named a sheet, took 11 to 12.5
     /// seconds on the desktop and tripled the memory the reading held, and the codes cut out and enlarged read what it could.
     /// </param>
-    public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace, CancellationToken cancellation = default, int longestSide = MaximumWorkingSide)
+    /// <param name="wholeOnlyWithoutMarkers">Entry 386 section 2: where no GroupLab marker is found, read the whole picture at full size only. False only to measure the old way.</param>
+    public static SheetIdentity Identify(GrayImage image, IReadOnlyList<TargetDefinition> candidates, IImagingBackend backend, TraceRecorder trace, CancellationToken cancellation = default, int longestSide = MaximumWorkingSide, bool wholeOnlyWithoutMarkers = true)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
@@ -115,7 +116,16 @@ public static partial class SheetIdentification
             }
         }
 
-        foreach (double scale in Scales)
+        // Entry 386 section 2, question 83 (b): a picture in which no GroupLab marker is found at all, such as a store-bought target, is read
+        // once, whole, at full size, without the other sizes, the corners or the cut-outs. Alan's Rigid crosshair photo took 33.9 s through
+        // every one of them. The corpus lost no sheet this way (docs/PHASE1-RESULTS.md, entry 386).
+        bool noMarker = wholeOnlyWithoutMarkers && views.Count == 0 && Capture.LiveSheet.PhotographMarkers(image, backend).Count == 0;
+        if (noMarker)
+        {
+            stage.Detail("no GroupLab marker found, so the picture is read whole at full size only");
+        }
+
+        foreach (double scale in noMarker ? [1.0] : Scales)
         {
             cancellation.ThrowIfCancellationRequested();
             if (Math.Max(image.Width, image.Height) * scale > longestSide)
@@ -125,7 +135,7 @@ public static partial class SheetIdentification
             }
 
             long began = System.Diagnostics.Stopwatch.GetTimestamp();
-            var payloads = backend.ReadCodes(image, scale);
+            var payloads = noMarker ? backend.ReadCutOut(image, scale) : backend.ReadCodes(image, scale);
             long took = (long)System.Diagnostics.Stopwatch.GetElapsedTime(began).TotalMilliseconds;
             read += payloads.Count;
             var frames = payloads.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
@@ -180,6 +190,11 @@ public static partial class SheetIdentification
             stage.Metric("codes decoded", frames.Count, "count");
             stage.Done(StageStatus.Ok, string.Create(inv, $"{ids[0]}{(match.Tiling is null ? "" : $", tile {tiles[0]}")}, from {frames.Count} codes at {scale:0.##} times full resolution{FromCodesWords(named.FromItsCodes)}"));
             return new SheetIdentity(match, ids[0], tiles[0], read, null, scale) { FromItsCodes = named.FromItsCodes };
+        }
+
+        if (noMarker)
+        {
+            return Failed(stage, null, read, read == 0 ? "no GroupLab marker was found and no code could be read" : "no GroupLab marker was found and no code held a valid GroupLab frame");
         }
 
         // Entry 282 section 5: the codes cut out where the sheet's markers put them, and read enlarged. On the Fold 7's pictures a module

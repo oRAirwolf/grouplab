@@ -35,6 +35,27 @@ public class Entry365Tests
         Assert.Equal(expected, ScaleMarkerFinder.Codes(grey).Select(m => m.Id));
     }
 
+    /// <summary>
+    /// Entry 386 section 3: the printer check label, scanned at 600 dpi, measures the scale across the head and along the feed; a feed that
+    /// ran 1.2 percent short is measured so, and the scale across is untouched.
+    /// </summary>
+    [Theory]
+    [InlineData(70, 80, 1.0)]
+    [InlineData(70, 80, 0.988)]
+    [InlineData(50, 30, 0.988)]
+    public void ThePrinterCheckLabelMeasuresAcrossAndAlong(int width, int height, double feed)
+    {
+        var grey = SceneRasterizer.Rasterize(ScaleLabelCheck.Page(width, height, 3, "M220"), 600);
+        using var mat = Mat.FromPixelData(grey.Height, grey.Width, MatType.CV_8UC1, grey.Pixels);
+        using var fed = new Mat();
+        Cv2.Resize(mat, fed, new Size(grey.Width, (int)Math.Round(grey.Height * feed)), 0, 0, InterpolationFlags.Area);
+        var check = ScaleLabelCheck.Measure(ScaleMarkerFinder.Codes(OpenCvSharpBackend.Copy(fed)), 600, width, height);
+        Assert.NotNull(check);
+        Assert.Equal(4, check.Codes);
+        Assert.InRange(check.Across, 0.998, 1.002);
+        Assert.InRange(check.Along!.Value, feed - 0.002, feed + 0.002);
+    }
+
     [Fact]
     public void ACardIsFoundByItsRoundedCornersAndBlankedInEveryCopy()
     {

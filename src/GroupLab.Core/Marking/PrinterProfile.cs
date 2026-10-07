@@ -60,6 +60,16 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     /// </summary>
     public string? Paper { get; init; }
 
+    /// <summary>
+    /// Entry 386 section 3 (entry 372: "one label size per printer, remembered"): the label size loaded in a label printer such as the M220,
+    /// millimetres, kept with its check, so every scale label is laid out for it and the size is asked for only when the person changes it.
+    /// Null for any other printer.
+    /// </summary>
+    public (int Width, int Height)? LabelSize { get; init; }
+
+    /// <summary>The words a label printer's check is kept under for a label size: "70 x 80 mm labels".</summary>
+    public static string LabelPaper(int width, int height) => string.Create(CultureInfo.InvariantCulture, $"{width} x {height} mm labels");
+
     /// <summary>The paper a check on a page of this size belongs to: a label size's words, or null for every other page.</summary>
     public static string? PaperOf(PageSize size) => size switch
     {
@@ -235,6 +245,11 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
             json["paper"] = paper;
         }
 
+        if (LabelSize is { } label)
+        {
+            json["labelSize"] = new JsonArray(label.Width, label.Height);
+        }
+
         return json;
     }
 
@@ -254,7 +269,8 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
 
             // Entry 291 section 5.2: a profile saved before a printer could be marked changed reads as never changed.
             DateOnly? changed = DateOnly.TryParseExact((string?)o["changedOn"], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var c) ? c : null;
-            return new PrinterProfile(Named(name), across, down, method, on, uncertainty) { ChangedOn = changed, Paper = (string?)o["paper"] };
+            (int, int)? label = o["labelSize"] is JsonArray l && l.Count == 2 && (int?)l[0] is > 0 and var w && (int?)l[1] is > 0 and var h ? (w, h) : null;
+            return new PrinterProfile(Named(name), across, down, method, on, uncertainty) { ChangedOn = changed, Paper = (string?)o["paper"], LabelSize = label };
         }
         catch (Exception ex) when (ex is InvalidOperationException or FormatException)
         {

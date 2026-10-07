@@ -330,8 +330,8 @@ What exists and is tested:
 - an intake tool that verifies donated photographs, refuses opt-outs, and strips location data without altering a pixel
 - a sheet that names its own definition from its printed codes, so no target has to be named by hand
 - an end-to-end `analyze` command, from photograph to report
-- diagnostic logging, crash records and a report package, with no location data in any of them; on the phone, Send diagnostics in
-  Settings, About shares it, on iPhone and iPad GroupLab's own folder appears in the Files app, and Show diagnostics on the camera
+- diagnostic logging, crash records and a report package, with no location data in any of them; on the phone, Send to GroupLab in
+  Settings, About sends it with a note, Send diagnostics shares it, on iPhone and iPad GroupLab's own folder appears in the Files app, and Show diagnostics on the camera
   puts the frame rate, what the guidance waits for and the reading's stage on screen
 - a caliber box that finds any of more than six hundred cartridges by name as you type, even written loosely, with a setting for
   whether it lists calibers, cartridges or both

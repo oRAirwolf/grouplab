@@ -69,8 +69,6 @@ public static class ScaleLabels
     public static IReadOnlyList<Scene> Pages(int width, int height, int serial, int count, string printer)
     {
         var pages = new List<Scene>();
-        const double U = 20;
-        var black = new Rgb(0, 0, 0);
         for (int n = 0; n < count; n++)
         {
             var items = new List<SceneItem>();
@@ -80,41 +78,50 @@ public static class ScaleLabels
             for (int r = 0; r < rows; r++)
             {
                 double y = top + 1 + (Code / 2.0) + (r * rowPitch);
-                foreach (var (id, x) in new[] { (pairs[r].Left, (double)Inset), (pairs[r].Right, (double)(width - Inset)) })
-                {
-                    var inked = ScaleMarkerLayout.Inked(id);
-                    long module = (long)(Code * U / ScaleMarkerLayout.Modules), left = (long)Math.Round((x - (Code / 2.0)) * U), topU = (long)Math.Round((y - (Code / 2.0)) * U);
-                    for (int row = 0; row < ScaleMarkerLayout.Modules; row++)
-                    {
-                        for (int col = 0; col < ScaleMarkerLayout.Modules;)
-                        {
-                            if (!inked[row, col])
-                            {
-                                col++;
-                                continue;
-                            }
-
-                            int first = col;
-                            while (col < ScaleMarkerLayout.Modules && inked[row, col])
-                            {
-                                col++;
-                            }
-
-                            items.Add(new RectFill(SceneLayer.Markers, black, left + (first * module), topU + (row * module), (col - first) * module, module)
-                            {
-                                Module = new ModuleCell(module, ScaleMarkerLayout.Modules, first, row),
-                            });
-                        }
-                    }
-                }
+                DrawCode(items, pairs[r].Left, Inset, y);
+                DrawCode(items, pairs[r].Right, width - Inset, y);
             }
 
             double size = Math.Min(2.4, (width - 2) / 22.0);
             string line = string.Create(CultureInfo.InvariantCulture, $"GroupLab scale label S{serial + n} · {printer}");
-            items.Add(new TextRun(SceneLayer.Labels, black, (long)Math.Round(width / 2.0 * U), (long)Math.Round((height - 1.5) * U), (long)Math.Round(size * U), line, TextAnchor.Centre));
+            items.Add(new TextRun(SceneLayer.Labels, Black, (long)Math.Round(width / 2.0 * U), (long)Math.Round((height - 1.5) * U), (long)Math.Round(size * U), line, TextAnchor.Centre));
             pages.Add(new Scene((long)Math.Round(width * U), (long)Math.Round(height * U), 0, items));
         }
 
         return pages;
+    }
+
+    /// <summary>Scene units to the millimetre.</summary>
+    internal const double U = 20;
+
+    internal static readonly Rgb Black = new(0, 0, 0);
+
+    /// <summary>One code, <see cref="Code"/> millimetres square, its centre at (<paramref name="x"/>, <paramref name="y"/>) millimetres.</summary>
+    internal static void DrawCode(List<SceneItem> items, int id, double x, double y)
+    {
+        var inked = ScaleMarkerLayout.Inked(id);
+        long module = (long)(Code * U / ScaleMarkerLayout.Modules), left = (long)Math.Round((x - (Code / 2.0)) * U), top = (long)Math.Round((y - (Code / 2.0)) * U);
+        for (int row = 0; row < ScaleMarkerLayout.Modules; row++)
+        {
+            for (int col = 0; col < ScaleMarkerLayout.Modules;)
+            {
+                if (!inked[row, col])
+                {
+                    col++;
+                    continue;
+                }
+
+                int first = col;
+                while (col < ScaleMarkerLayout.Modules && inked[row, col])
+                {
+                    col++;
+                }
+
+                items.Add(new RectFill(SceneLayer.Markers, Black, left + (first * module), top + (row * module), (col - first) * module, module)
+                {
+                    Module = new ModuleCell(module, ScaleMarkerLayout.Modules, first, row),
+                });
+            }
+        }
     }
 }

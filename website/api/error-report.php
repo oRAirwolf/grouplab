@@ -173,12 +173,16 @@ function clean(array $in): array
         return [null, 'the report is not one this receiver reads'];
     }
     $kind = $in['kind'] ?? null;
-    if ($kind !== 'survived' && $kind !== 'closed' && !(FULL_LOG_REPORTS && $kind === 'read-failure')) {
+    // Entry 386 section 4 (entry 376 B7): "diagnostics", a person's Send to GroupLab, carries no error; it is taken only made by hand.
+    if ($kind !== 'survived' && $kind !== 'closed' && !(FULL_LOG_REPORTS && ($kind === 'read-failure' || $kind === 'diagnostics'))) {
         return [null, 'the report does not say whether GroupLab survived the error or closed'];
     }
     $made = $in['made'] ?? null;
     if ($made !== 'automatic' && $made !== 'by hand') {
         return [null, 'the report does not say how it was made'];
+    }
+    if ($kind === 'diagnostics' && $made !== 'by hand') {
+        return [null, 'diagnostics are sent only by the person'];
     }
     $id = $in['report_id'] ?? null;
     if (!is_string($id) || preg_match('/^[0-9a-f]{32}$/', $id) !== 1) {

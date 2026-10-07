@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07 evening, after Alan's message (guard at 98, requests 79 and 80, questions 84, 86, 87, 89); entry 386 next.
+**Last rewritten:** 2026-10-07 evening, after entry 386 (Alan's message before it: guard at 98, requests 79 and 80, questions 84, 86, 87, 89).
 
 ---
 
@@ -20,14 +20,16 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Google Play's internal test now follows the nightlies** (request 80 answered): nightly 176 sent by hand, version code 176 committed
   (run 37674523785); from nightly 177 every one goes by itself. **Request 79 answered**: both APKs registered with the upload key.
 - **Question 87 measured**: no second line for fits with many features is safe (wrong fits reach 590 features); the rule stays.
+- **Entry 386 done, three parts waiting outside the code** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no
+  marker is read once at full size (question 83 (b)); the M220's profile, check label and its measurement, the label size kept with the
+  printer (**the phone's Bluetooth LE link not built**); **Send to GroupLab** built, live once the receiver goes with a site publish and
+  the error worker is reinstalled with `install.py` under sudo; question 34 built as proposed, **for planning to confirm**.
+- **The site cannot publish (question 90)**: the phone's screenshots are 61 nightlies old against a limit of 60; grouplab.org serves the
+  build of 2026-10-07 17:53 UTC until planning answers or a device sitting retakes them.
 - **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
   request 81 saves the check and asks for a second print before any stretch.
 - **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
-- **Entry 384 done** (2026-10-07): the analysis key's strip, Add readings, Play testers.
-- **Entry 383 done** (2026-10-07): **the tester's report is fixed, in nightly 176**: a marking names its photo by file name only.
-- **Entry 378 done** (2026-10-07): both APKs outside Play signed with the upload key and registered (request 79).
-- **Entry 376 done but B7** (2026-10-06): B7 (diagnostics straight to GroupLab) needs a receiver kind.
-- **Entry 374 done** (2026-10-07): the 2 MOA 3 by 4 sheet dropped on question 86. **Entry 373 done.**
+- **Entries 384, 383 (the tester's report, fixed in nightly 176), 378, 376 (B7 built in 386), 374 and 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81 (the M834's check, a second print).
 
 ## The next three
@@ -50,8 +52,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
 1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
-2. Question 83: identification's 34 s on a photo with no codes; measure option (b) on the corpus when planning answers.
-3. Entry 386 (in the inbox); then B7 (diagnostics straight to GroupLab).
+2. The phone's Bluetooth LE link, so the M220 prints scale labels straight from GroupLab (entry 386 section 3's part not done).
+3. Question 90's answer, then a site publish and the error worker's reinstall, which make Send to GroupLab live.
 
 ## Blocked, and on what
 
@@ -64,16 +66,16 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Nine, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87 and 89 answered 2026-10-07 evening):
+Nine, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89 and 83 answered 2026-10-07 evening):
 
+- **90** the site cannot publish while the phone's screenshots are 61 nightlies old (my choice: raise the limit to 90)
 - **88** DESIGN NEEDED, chronograph entry on the analysis
-- **83** identification takes 34 s on a photo with no codes (my choice: full size only when no marker is found)
 - **80** a newer fingerprint library without a new build
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
 - **43** entry 137 names an image safety the desktop does not have; **36** a light installer, measured
-- **34** pooling two sheets of one load needs a rule for a pooled group's center
+- **34** a pooled group's center: built as proposed in entry 386 (each sheet from its own center first), for planning to confirm
 
 ## Builds and the site
 
@@ -89,7 +91,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 386.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

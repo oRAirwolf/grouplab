@@ -14,10 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 29 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 30 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 89, 87, 86, 85, 84, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 89, 87, 86, 85, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
 
@@ -43,20 +43,6 @@ Alan could not find where to import his chronograph data after Add readings took
 view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
 to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
 concept; the phone already opens a page of its own for it. Nothing waits on it.
-
-## 2026-10-04, question 83: identification takes 34 s on a photo with no GroupLab codes
-
-Status: open
-
-Entry 363 section 3.3 asked for the "looks like a GroupLab sheet" check to be fast without losing a case. It now reuses where
-identification's full-size reading located the codes (same picture, same two detectors), 8.4 s to 0.15 s, the same answer on every photo
-tried. Measuring it showed what comes before it: `SheetIdentification.Identify` took **33.9 s** on Alan's Rigid crosshair photo (4000 by
-3000, no codes), reading at 1, 2, 0.5 and 0.25 times and then the corner thirds and quarters, against about 1 s on a photo of a sheet.
-**Options:** (a) leave it; (b) when the marker passes find no GroupLab marker, read at full size only, skipping 2, 0.5, 0.25 and the
-corners, which loses any sheet whose codes read only at another size and whose markers do not decode at all (none known); (c) run the
-sizes in parallel. **My choice: (b), measured on the corpus first.** Nothing waits on it.
-
----
 
 ## 2026-10-01, question 80: how a newer fingerprint library reaches people without a new build
 
@@ -269,7 +255,7 @@ Revisit the light installer if the download is still thought too large after 1 a
 
 ## 2026-09-22, question 34: pooling two sheets of one load needs a rule for what a pooled group's centre means
 
-**Status: open**
+**Status: open, built as proposed for you to confirm (entry 386 section 5, 2026-10-07):** option C with B as the headline, `PooledSpread`, shown when imported rows name their sheets. Say if A or B alone should replace it.
 
 ### 1. What was asked for
 

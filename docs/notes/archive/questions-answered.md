@@ -5,6 +5,21 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-04, question 83: identification takes 34 s on a photo with no GroupLab codes
+
+**Status: answered 2026-10-07 (planning, entry 386 section 2): yes to (b), measured on the corpus first, keeping (a) if any sheet was lost. Built: 175 pictures, 78 with GroupLab markers (the same path either way) and 97 without; no sheet lost, and the 97 took 334 s against 1960 s the old way, 3 to 11 s each against 15 to 41 (`grouplab identify-trial`).**
+
+
+Entry 363 section 3.3 asked for the "looks like a GroupLab sheet" check to be fast without losing a case. It now reuses where
+identification's full-size reading located the codes (same picture, same two detectors), 8.4 s to 0.15 s, the same answer on every photo
+tried. Measuring it showed what comes before it: `SheetIdentification.Identify` took **33.9 s** on Alan's Rigid crosshair photo (4000 by
+3000, no codes), reading at 1, 2, 0.5 and 0.25 times and then the corner thirds and quarters, against about 1 s on a photo of a sheet.
+**Options:** (a) leave it; (b) when the marker passes find no GroupLab marker, read at full size only, skipping 2, 0.5, 0.25 and the
+corners, which loses any sheet whose codes read only at another size and whose markers do not decode at all (none known); (c) run the
+sizes in parallel. **My choice: (b), measured on the corpus first.** Nothing waits on it.
+
+---
+
 ## 2026-10-07, question 89: two different entries 384, the second written over the first in the inbox
 
 **Status: answered 2026-10-07 (Alan, from planning, in the message starting the evening run): no separate number; it stays recorded as the consistency audit of 2026-10-07.** Nothing waits on it.

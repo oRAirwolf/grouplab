@@ -96,10 +96,15 @@ public sealed class TsplEncoder : IPrinterEncoder
 /// <summary>
 /// The Phomemo ESC family as the M110, M120 and M220 speak it (phomemo-tools' filter, and entry 358 section 5's direct print): speed
 /// <c>1B 4E 0D n</c>, density <c>1B 4E 04 n</c>, media <c>1F 11 m</c>, the raster <c>1D 76 30 00 wL wH hL hH</c> with a set bit black, most
-/// significant bit first, then <c>1F F0 05 00</c> and <c>1F F0 03 00</c>. A raster block holds at most 65535 rows.
+/// significant bit first, then <c>1F F0 05 00</c> and <c>1F F0 03 00</c>. Entry 386 section 3: as phomemo-tools sends the M110 family
+/// (GPL-3.0, credited, its description followed and none of its code taken), a raster block holds at most <see cref="MostRows"/> rows, and a
+/// taller label goes as several blocks one after another.
 /// </summary>
 public sealed class PhomemoEscEncoder : IPrinterEncoder
 {
+    /// <summary>The most rows in one raster command, as phomemo-tools sends the M110, M120 and M220.</summary>
+    public const int MostRows = 1200;
+
     public string Id => "phomemo-esc";
 
     public byte[] Encode(LabelJob job, PrinterProfile profile)
@@ -125,8 +130,12 @@ public sealed class PhomemoEscEncoder : IPrinterEncoder
 
         for (int copy = 0; copy < Math.Max(1, job.Copies); copy++)
         {
-            bytes.AddRange([0x1D, 0x76, 0x30, 0x00, (byte)(image.RowBytes & 0xFF), (byte)(image.RowBytes >> 8), (byte)(image.Height & 0xFF), (byte)(image.Height >> 8)]);
-            bytes.AddRange(image.Bits);
+            for (int first = 0; first < image.Height; first += MostRows)
+            {
+                int rows = Math.Min(MostRows, image.Height - first);
+                bytes.AddRange([0x1D, 0x76, 0x30, 0x00, (byte)(image.RowBytes & 0xFF), (byte)(image.RowBytes >> 8), (byte)(rows & 0xFF), (byte)(rows >> 8)]);
+                bytes.AddRange(image.Bits.Skip(first * image.RowBytes).Take(rows * image.RowBytes));
+            }
         }
 
         bytes.AddRange([0x1F, 0xF0, 0x05, 0x00, 0x1F, 0xF0, 0x03, 0x00]);

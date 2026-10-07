@@ -85,7 +85,8 @@ iPad can prove it (the camera, the torch, the level, printing to a real printer,
 iOS Simulator. `docs/IOS-PLAN.md` has the plan, and `ios/GroupLab.iOS/SelfTest.cs` and `ios/selftest.py` say what the simulator's self-test
 actually checks. The site build holds this column to those four words.
 
-**Diagnostics on the phone** (entry 311 section 3). Settings, About, **Send diagnostics**, on Android and iOS alike: the newest logs, the
+**Diagnostics on the phone** (entry 311 section 3; entry 386 section 4 added **Send to GroupLab**, the logs and a note sent by the error
+reports' route, first, while the phones' senders are on). Settings, About, **Send diagnostics**, on Android and iOS alike: the newest logs, the
 crash records and the kept pictures in one zip through the share sheet. On iPhone and iPad, GroupLab's Documents folder shows in the
 Files app, with the log and, when **Keep every picture taken** is on (off until turned on there, on until turned off in GroupLab Dev), a
 sitting's pictures; `scripts/ipad-logs.py` streams GroupLab's own log from an iPad on a USB cable and copies that folder, touching

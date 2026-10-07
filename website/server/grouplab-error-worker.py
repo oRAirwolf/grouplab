@@ -107,6 +107,10 @@ def frames(stack: str) -> list[str]:
 def signature(report: dict) -> tuple[str, str]:
     """A short hash of what went wrong, and a title a person can read: the exception's type and GroupLab's own top frames."""
     exceptions = report.get("exceptions") or []
+    if report.get("kind") == "diagnostics":
+        # Entry 386 section 4: a person's Send to GroupLab, an issue of its own each time, titled by the start of their note.
+        note = " ".join((report.get("description") or "").split())[:60]
+        return "diag-" + report.get("report_id", "")[:12], "Diagnostics sent: " + quiet(note or "no note")
     if report.get("kind") == "read-failure":
         # Entry 357 section 2: a picture GroupLab could not read, one issue for each reason it gave.
         reason = (exceptions[0].get("message", "") if exceptions else "") or "no reason recorded"
@@ -131,6 +135,7 @@ WHAT_HAPPENED = {
     "survived": "GroupLab hit this error and kept running",
     "closed": "GroupLab closed",
     "read-failure": "GroupLab could not read a picture the person sends everything from",
+    "diagnostics": "the person sent their diagnostics with Send to GroupLab",
 }
 
 

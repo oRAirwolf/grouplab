@@ -103,7 +103,7 @@ public class SheetIdentificationTests
         byte[] damaged = Frame("GL-CF25-LTR.gltd.json");
         damaged[^1] ^= 0x01;
         var trace = new TraceRecorder();
-        var identity = SheetIdentification.Identify(blank, Library, new Codes(damaged), trace);
+        var identity = SheetIdentification.Identify(blank, Library, new Codes(damaged), trace, wholeOnlyWithoutMarkers: false);
 
         Assert.Null(identity.Definition);
         Assert.Equal("no code on the sheet held a valid GroupLab frame", identity.Failure);
@@ -112,8 +112,28 @@ public class SheetIdentificationTests
         // Every resolution, then entry 282's codes cut out where the markers put them, which on a picture with no markers is nothing.
         Assert.Equal(SheetIdentification.Scales.Count + 1, stage.Details.Count);
 
-        var none = SheetIdentification.Identify(blank, Library, new Codes(), new TraceRecorder());
+        var none = SheetIdentification.Identify(blank, Library, new Codes(), new TraceRecorder(), wholeOnlyWithoutMarkers: false);
         Assert.Equal("no code on the sheet could be read", none.Failure);
+    }
+
+    /// <summary>
+    /// Entry 386 section 2, question 83 (b): with no GroupLab marker in the picture, it is read once, whole, at full size, and a code found
+    /// there still names the sheet.
+    /// </summary>
+    [Fact]
+    public void APictureWithNoMarkerIsReadOnceWholeAndItsCodeStillNamesTheSheet()
+    {
+        var blank = new GrayImage(8, 8, new byte[64]);
+        var trace = new TraceRecorder();
+        var none = SheetIdentification.Identify(blank, Library, new Codes(), trace);
+        Assert.Equal("no GroupLab marker was found and no code could be read", none.Failure);
+        var stage = Assert.Single(trace.Records);
+        Assert.Equal(2, stage.Details.Count);
+        Assert.Contains("read whole at full size only", stage.Details[0], StringComparison.Ordinal);
+        Assert.StartsWith("at 1 times full resolution", stage.Details[1], StringComparison.Ordinal);
+
+        var named = SheetIdentification.Identify(blank, Library, new Codes(Frame("GL-CF25-LTR.gltd.json")), new TraceRecorder());
+        Assert.NotNull(named.Definition);
     }
 
     /// <summary>A backend whose only ability is to return the given code payloads at every resolution; it sees no markers.</summary>

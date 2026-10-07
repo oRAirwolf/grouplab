@@ -1003,6 +1003,38 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   photographs names the wrong product for 1 to 64 of the 200 pictures once their own product is absent (16 to 23 at the 0.55 NTC needs).
   **The rule stays**; details in `docs/notes/fingerprint-trial.md`. The 190 MB of made pictures were deleted after.
 
+## Entry 386: the plain APK updates itself, identification without markers, the M220's check, Send to GroupLab, pooled sheets (2026-10-07)
+
+- **Section 1, the plain APK updates itself.** `GroupLabUpdater` is on for every APK and off for every AAB and the emulator's sweep build
+  (`GroupLab.Android.csproj`); the nightly builds the plain APK on the nightly train, checks both APKs carry the updater, and lists it in
+  the signed manifest as `android apk`; `SelfUpdate` is automatic by default on both. An APK from before nightly 177 has no updater, so its
+  first update is one newer APK by hand, which the download page, README, both guides and docs/ANDROID.md say. Test:
+  `UpdaterFlavorTests`. Not yet seen on a phone: the first nightly with it is 177.
+- **Section 2, question 83 (b).** `SheetIdentification.Identify` reads a picture with no GroupLab marker once, whole, at full size, without
+  the other sizes, the corners or the cut-outs. Measured first with `grouplab identify-trial` over the local corpus (samples, the corpus,
+  the range photographs, camera-0929, the scale test, the tablet, printer and M834 scans, the store-bought targets and the surface trial):
+  175 pictures, 78 with GroupLab markers (the same path either way) and 97 without; **no sheet lost**, and the 97 took 334 s against 1960 s the old way, 3 to 11 s each against 15 to 41. Tests: `SheetIdentificationTests.APictureWithNoMarkerIsReadOnceWholeAndItsCodeStillNamesTheSheet`, and the old path kept
+  for the test that tries every resolution.
+- **Section 3, entry 372's remainder.** The M220 is in `printers.json` (Phomemo ESC, Bluetooth LE service ff00, write ff02, notify ff01 and
+  ff03, 203 dpi, label widths 20 to 75 mm, untested by this profile); the ESC encoder sends a label taller than 1200 rows in blocks of
+  1200, as phomemo-tools does. **The printer check label** (`ScaleLabelCheck`): two rows of codes at the label's top and bottom, millimetre
+  marks each way, saved on Targets, Scale markers; **Measure a scanned check label** reads a 600 dpi scan and gives the scale across the
+  head and along the feed, measured square to the rows; on rendered labels 100.00 percent across, and a feed made 1.2 percent short read
+  as such within 0.2 (`Entry365Tests.ThePrinterCheckLabelMeasuresAcrossAndAlong`). The result is kept as the printer's check with its
+  label size (`PrinterProfile.LabelSize`), and the size is read from there once one exists. **Not done:** the phone's Bluetooth LE link,
+  so direct printing to the M220 from GroupLab is not reachable yet; labels go through the Phomemo app as before.
+- **Section 4, Send to GroupLab** (entry 376 B7). On the phone, Settings, About, first: the two newest logs (typed names and notes replaced
+  by their length, paths already out) and the newest crash record go to the crash receiver as a package, then a report of the kind
+  `diagnostics`, made by hand, with the package's reference and the person's note, to the error receiver; the error worker opens an
+  issue of its own for each, titled by the note (`ErrorReports.SendDiagnosticsAsync`, `error-report.php`, `grouplab-error-worker.py`).
+  Share diagnostics stays as the second choice. Tests: the receiver's three new checks (CI), the worker's three (26 of 26 here). **Live
+  once deployed:** the receiver with the next site publish (question 90), the worker with `install.py` under sudo.
+- **Section 5, question 34.** `PooledSpread`: each sheet measured from its own centre, the radii pooled, is the headline; every shot from
+  one centre beside it; and the root mean square distance of the sheets' centres from their mean, named as the movement between sheets.
+  Shown when imported rows name their sheet and session (`ShotCsv.SheetsOf`), on the computer's import line and the phone's import page.
+  Built as proposed, for planning to confirm. Tests: `PooledSpreadTests`.
+- **The standing rule** (Alan, 2026-10-07): before ending a turn, the inbox is looked in and waiting entries taken, in CLAUDE.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

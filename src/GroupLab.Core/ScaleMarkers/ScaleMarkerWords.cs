@@ -43,6 +43,11 @@ public static class ScaleMarkerWords
 
     public const string SaveLabels = "Save four scale labels for the printer's app…";
 
+    /// <summary>Entry 386 section 3: the label printer's own check, a label of the size loaded, scanned at 600 dpi.</summary>
+    public const string SaveCheckLabel = "Save the printer check label…", MeasureCheckLabel = "Measure a scanned check label…";
+
+    public const string CheckLabelSteps = "To check the label printer: print the check label at 100 percent, scan it at 600 dpi, and measure the scan here. Across the label should be exact; along the paper's feed it may not be, and GroupLab reads scale labels across only.";
+
     /// <summary>The print buttons.</summary>
     public const string PrintBrackets = "Print corner brackets", PrintBars = "Print scale bars", PrintStickers = "Print board stickers", MeasureBoard = "Measure a board…";
 

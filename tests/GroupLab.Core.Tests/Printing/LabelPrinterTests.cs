@@ -81,6 +81,26 @@ public class LabelPrinterTests
         Assert.Equal(expected, bytes);
     }
 
+    /// <summary>Entry 386 section 3: a label taller than 1200 rows goes as blocks of at most 1200, every row once and in order.</summary>
+    [Fact]
+    public void ThePhomemoFamilySendsATallLabelInBlocksOf1200Rows()
+    {
+        var tall = new DotImage(16, 2500);
+        var bytes = new PhomemoEscEncoder().Encode(new LabelJob(tall, 2, 300), PrinterProfiles.All.Single(p => p.Id == "phomemo-m220"));
+        var heights = new List<int>();
+        for (int i = 0; i + 8 <= bytes.Length; i++)
+        {
+            if (bytes[i] == 0x1D && bytes[i + 1] == 0x76 && bytes[i + 2] == 0x30 && bytes[i + 3] == 0x00)
+            {
+                heights.Add(bytes[i + 6] | (bytes[i + 7] << 8));
+                i += 7 + (2 * (bytes[i + 6] | (bytes[i + 7] << 8)));
+            }
+        }
+
+        Assert.Equal([1200, 1200, 100], heights);
+        Assert.Equal("phomemo-esc", PrinterProfiles.All.Single(p => p.Id == "phomemo-m220").Encoder);
+    }
+
     [Fact]
     public void ZplWritesOneGraphicFieldWithBlackAsASetBit()
     {

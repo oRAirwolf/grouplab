@@ -306,9 +306,23 @@ public sealed class AppSettingsStore(string path)
     /// Entry 372: the scale label size loaded in the label printer, remembered so it is never asked for again (Alan: "it is a pain to swap
     /// labels on the printer"), 70 by 80 mm until changed; and the next label's serial, so every label has its own codes.
     /// </summary>
-    public (int Width, int Height) LoadLabelSize() => Read(file => file["labelSize"] is JsonArray a && a.Count == 2 ? ((int)a[0]!, (int)a[1]!) : ((int, int)?)null) ?? (70, 80);
+    /// <para>
+    /// Entry 386 section 3: once a label printer's check is saved, the size lives in that printer's profile (<see cref="PrinterProfile.LabelSize"/>),
+    /// the newest such profile; the settings' own value is only for a printer not checked yet.
+    /// </para>
+    public (int Width, int Height) LoadLabelSize() => LoadPrinters().LastOrDefault(p => p.LabelSize is not null)?.LabelSize
+        ?? Read(file => file["labelSize"] is JsonArray a && a.Count == 2 ? ((int)a[0]!, (int)a[1]!) : ((int, int)?)null) ?? (70, 80);
 
-    public bool SaveLabelSize(int width, int height) => Save(file => file["labelSize"] = new JsonArray(width, height));
+    /// <summary>The size changed: kept in the label printer's profile where there is one, and in the settings either way.</summary>
+    public bool SaveLabelSize(int width, int height) => Save(file =>
+    {
+        file["labelSize"] = new JsonArray(width, height);
+        if (file["printers"] is JsonArray all && all.Select(PrinterProfile.FromJson).LastOrDefault(p => p?.LabelSize is not null) is { } label)
+        {
+            var kept = all.Select(PrinterProfile.FromJson).OfType<PrinterProfile>().Select(p => p.Name == label.Name ? p with { LabelSize = (width, height) } : p);
+            file["printers"] = new JsonArray([.. kept.Select(p => (JsonNode)p.ToJson())]);
+        }
+    });
 
     /// <summary>
     /// Entry 382: whether the M834 has a roll or fanfold paper in it, chosen once on the print screen and remembered; a roll until changed,

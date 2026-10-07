@@ -86,6 +86,12 @@ internal sealed class CsvImportPage : UserControl
             {
                 column.Children.Add(Screens.Dim($"{skipped.ToString(CultureInfo.CurrentCulture)} rows without two numbers, such as a total line, are left out."));
             }
+
+            // Question 34 (entry 386 section 5): rows from several sheets, measured each from its own center first.
+            if (guess.Across.Value is { } xs && guess.UpDown.Value is { } ys && GroupLab.Core.Statistics.PooledSpread.OfTable(table, xs, ys, offsets) is { } pooled)
+            {
+                column.Children.Add(Screens.Line(pooled.Words()));
+            }
         }
         else
         {

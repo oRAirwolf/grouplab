@@ -207,6 +207,18 @@ def main() -> int:
         run()
         check("a token expiring within two weeks is said in the status", status().get("token", "").startswith("expires "), str(status()))
 
+        # Entry 386 section 4: Send to GroupLab, an issue of its own each time, titled by the note, which is quieted and headed as the user's.
+        before = len(hub.issues)
+        for words in ("The camera froze @alan", "The camera froze @alan"):
+            d = report(made="by hand", description=words)
+            d.update({"kind": "diagnostics", "exceptions": [], "package": "2026-10-07_0000abcd"})
+            drop(d)
+        run()
+        diag = [i for i in hub.issues.values() if i.get("title", "").startswith("Diagnostics sent: ")]
+        check("each Send to GroupLab opens an issue of its own", len(hub.issues) == before + 2 and len(diag) == 2, (root / "worker.log").read_text(encoding="utf-8")[-600:])
+        check("titled by the note, which notifies nobody", all("@alan" not in i["title"] and "The camera froze" in i["title"] for i in diag))
+        check("with the package and the person's words headed as theirs", all("2026-10-07_0000abcd" in i["body"] and "Written by the user" in i["body"] for i in diag))
+
         (incoming / "zz_broken.json").write_text("{not json", encoding="utf-8")
         run()
         check("a file that is not a report is set aside, not sent", (root / "refused" / "zz_broken.json").is_file())

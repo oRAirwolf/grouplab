@@ -392,6 +392,23 @@ public sealed class SettingsView : UserControl
 #endif
         }
 
+        // Entry 386 section 4 (entry 376 B7): the diagnostics straight to GroupLab, first, through the error reports' own route and rules, with
+        // an optional note; sharing the file stays as the second choice. Only while the phones' senders are on.
+        if (SharingSwitches.FullLogOpen)
+        {
+            var note = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "What happened (optional)", AcceptsReturn = true, TextWrapping = Avalonia.Media.TextWrapping.Wrap, MaxLength = ErrorReports.MostNote }.Id("settings-diagnostics-note");
+            var straightSaid = Screens.Dim("The two newest logs and any crash record, with your note, sent to GroupLab's maker. No picture, no file names and nothing about where you are; names you typed are left out.");
+            async Task Straight()
+            {
+                straightSaid.Text = "Sending…";
+                straightSaid.Text = await ErrorReports.SendDiagnosticsAsync(GroupLab.Core.Updates.TheOutsideWorld.Current, ReceiverTerms.Current.CrashReceiver, ReceiverTerms.Current.ErrorReceiver, note.Text, CancellationToken.None);
+            }
+
+            ((StackPanel)about.Child!).Children.Add(note);
+            ((StackPanel)about.Child!).Children.Add(Screens.Choice("Send to GroupLab", () => _ = Straight()).Id("settings-send-to-grouplab"));
+            ((StackPanel)about.Child!).Children.Add(straightSaid);
+        }
+
         // Entry 311 section 3 item 1: the logs, the crash records and the kept pictures in one file, through the share sheet.
         var sendSaid = Screens.Dim("The newest logs, any crash records and the kept pictures, in one file you send where you choose.");
         ((StackPanel)about.Child!).Children.Add(Screens.Choice("Send diagnostics", () => sendSaid.Text = DiagnosticsPackage.Send(DateTime.Now)).Id("settings-send-diagnostics"));

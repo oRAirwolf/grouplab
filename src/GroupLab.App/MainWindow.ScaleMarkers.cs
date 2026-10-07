@@ -3,7 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using GroupLab.App.Diagnostics;
+using GroupLab.Cli.Imaging;
 using GroupLab.Cli.Library;
+using GroupLab.Core.Marking;
 using GroupLab.Core.Printing.Thermal;
 using GroupLab.Core.ScaleMarkers;
 using GroupLab.Core.Updates;
@@ -62,6 +64,8 @@ public partial class MainWindow
             settingsStore.SaveLabelSize(z.Width, z.Height);
         };
         body.Children.Add(Row(new TextBlock { Text = ScaleMarkerWords.LabelSize, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center }, size, Button(ScaleMarkerWords.SaveLabels, SaveScaleLabels)));
+        body.Children.Add(Line(ScaleMarkerWords.CheckLabelSteps));
+        body.Children.Add(Row(Button(ScaleMarkerWords.SaveCheckLabel, SaveCheckLabel), Button(ScaleMarkerWords.MeasureCheckLabel, MeasureCheckLabel)));
         body.Children.Add(boardList);
         body.Children.Add(markerSaid);
         FillBoards();
@@ -143,6 +147,73 @@ public partial class MainWindow
         settingsStore.SaveLabelSerial(serial + 4);
         DiagnosticLog.Info("markers.labels", ("size", $"{w}x{h}"));
         markerSaid.Text = $"Saved four {w} x {h} mm scale labels, S{serial} to S{serial + 3}, in {into}. In the printer's app, print at 100 percent.";
+    }
+
+    /// <summary>Entry 386 section 3: the label printer's check label, of the size loaded, as a 203 dpi picture and a PDF for the printer's app.</summary>
+    private async Task SaveCheckLabel()
+    {
+        var folder = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions { Title = "Choose where to save the printer check label", AllowMultiple = false });
+        if (folder.Count == 0 || folder[0].TryGetLocalPath() is not { } into)
+        {
+            return;
+        }
+
+        var (w, h) = settingsStore.LoadLabelSize();
+        var (pngs, pdf) = PrinterAppFiles.Make([ScaleLabelCheck.Page(w, h, 0, "M220")], 203);
+        string stem = Path.Combine(into, $"grouplab-printer-check-label-{w}x{h}mm-203dpi");
+        try
+        {
+            File.WriteAllBytes(stem + ".png", pngs[0]);
+            File.WriteAllBytes(stem + ".pdf", pdf);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            markerSaid.Text = "The check label could not be saved: " + e.Message;
+            return;
+        }
+
+        DiagnosticLog.Info("markers.checklabel", ("size", $"{w}x{h}"));
+        markerSaid.Text = $"Saved the {w} x {h} mm printer check label in {into}. Print it at 100 percent, scan it at 600 dpi, then measure the scan.";
+    }
+
+    /// <summary>
+    /// Entry 386 section 3: a 600 dpi scan of the check label measured, and kept as the label printer's check with the size loaded, so the size
+    /// lives with the printer from then on.
+    /// </summary>
+    private async Task MeasureCheckLabel()
+    {
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions { Title = "Choose the scan of the check label", AllowMultiple = false });
+        if (files.Count == 0 || files[0].TryGetLocalPath() is not { } path)
+        {
+            return;
+        }
+
+        var (w, h) = settingsStore.LoadLabelSize();
+        var measured = await Task.Run(() =>
+        {
+            var (grey, metadata) = ImageLoader.Load(path);
+            return (Dpi: metadata.DpiX, Check: metadata.DpiX is { } dpi ? ScaleLabelCheck.Measure(ScaleMarkerFinder.Codes(grey), dpi, w, h) : null);
+        });
+        if (measured.Dpi is null)
+        {
+            markerSaid.Text = "The scan does not say its resolution, so it cannot measure the label. Scan it again at 600 dpi and save it as PNG or TIFF.";
+            return;
+        }
+
+        if (measured.Check is not { } check)
+        {
+            markerSaid.Text = $"No row of the {w} x {h} mm check label was read in that scan. Check the label size loaded, and that the whole label is on the glass.";
+            return;
+        }
+
+        var kept = new PrinterProfile($"M220, {PrinterProfile.LabelPaper(w, h)}", check.Across, check.Along ?? check.Across, PrinterMethod.Scan, Today(), 0.001)
+        {
+            Paper = PrinterProfile.LabelPaper(w, h),
+            LabelSize = (w, h),
+        };
+        settingsStore.SavePrinter(kept);
+        DiagnosticLog.Info("markers.checklabel.measured", ("across", check.Across), ("along", check.Along ?? double.NaN));
+        markerSaid.Text = check.Words(w, h) + " Kept with the printer, with its label size.";
     }
 
     /// <summary>The stickers of set A on a 4 by 6 label, as a label printer's own app takes them: a 300 dpi picture and a PDF.</summary>

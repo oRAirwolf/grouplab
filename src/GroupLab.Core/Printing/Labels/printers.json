@@ -1,6 +1,7 @@
 // NOTES-FROM-PLANNING.md entry 358 section 4: the label printers GroupLab knows, as data. A new printer is an entry here plus, at most,
 // one small encoder in PrinterEncoders.cs. "tested": false means no real one has printed GroupLab's check page yet: "should work".
-// The M220 has no profile on purpose (entry 358 section 5); the 4x6 printer waits on request 72. The M834's is from request 73's recording.
+// The M220's profile is entry 386 section 3's, for entry 372's scale labels (entry 358 section 5 had ruled one out before Alan chose the
+// labels); the 4x6 printer waits on request 72. The M834's is from request 73's recording.
 {
   "printers": [
     {
@@ -19,6 +20,24 @@
       "speed": { "min": 1, "max": 6, "default": 3, "higherIsMore": true },
       "tested": false,
       "source": "TSC TSPL/TSPL2 programming manual (SIZE, GAP, DENSITY 0 to 15, SPEED, BITMAP); tspl-cups-driver confirms the Y43BT speaks TSPL at 203 dpi; its Bluetooth services wait on request 72"
+    },
+    {
+      "id": "phomemo-m220",
+      "name": "Phomemo M220 label printer, 203 dpi",
+      "encoder": "phomemo-esc",
+      "services": [ "0000ff00-0000-1000-8000-00805f9b34fb" ],
+      "nameHints": [ "Q155", "M220" ],
+      "transports": [ "BluetoothLe" ],
+      "write": "0000ff02-0000-1000-8000-00805f9b34fb",
+      "notify": [ "0000ff01-0000-1000-8000-00805f9b34fb", "0000ff03-0000-1000-8000-00805f9b34fb" ],
+      "dotsPerInch": 203.2,
+      "headDots": 600,
+      "pageWidthsMm": [ 20, 25, 30, 40, 50, 60, 70, 75 ],
+      "chunkBytes": 128,
+      "pacingMs": 20,
+      "media": { "gaps": 10, "continuous": 11, "marks": 38 },
+      "tested": false,
+      "source": "Entry 358 section 5: the one direct print over Bluetooth LE (service ff00, write ff02, notify ff01 and ff03, 128 byte writes every 20 ms) printed 60.00 mm both ways; the commands from phomemo-tools' M110/M120/M220 filter (GPL-3.0); the label widths entry 372 lists, 20 to 75 mm"
     },
     {
       "id": "phomemo-m834",

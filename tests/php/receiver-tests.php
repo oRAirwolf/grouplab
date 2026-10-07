@@ -473,6 +473,17 @@ $r = error_request($root, $fullLog, $linked);
 $kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $linked['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
 check('once it does, a read failure is kept with its package reference and picture code',
     ($kept['kind'] ?? '') === 'read-failure' && ($kept['package'] ?? '') === '2026-10-03_0000aaab' && ($kept['picture_code'] ?? '') === str_repeat('c', 32), $r['raw']);
+// Entry 386 section 4: a person's Send to GroupLab, kind diagnostics, kept made by hand with its note and package; refused made automatically
+// and while the log does not go with reports.
+$diag = error_report(['kind' => 'diagnostics', 'made' => 'by hand', 'exceptions' => [], 'description' => 'the camera froze', 'package' => '2026-10-07_0000abcd']);
+$r = error_request($root, $fullLog, $diag);
+$kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $diag['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
+check('diagnostics sent by the person are kept with their note and package',
+    ($kept['kind'] ?? '') === 'diagnostics' && ($kept['description'] ?? '') === 'the camera froze' && ($kept['package'] ?? '') === '2026-10-07_0000abcd', $r['raw']);
+$r = error_request($root, $fullLog, error_report(['kind' => 'diagnostics', 'made' => 'automatic', 'exceptions' => []]));
+check('diagnostics made automatically are refused', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
+$r = error_request($root, $errorOff, error_report(['kind' => 'diagnostics', 'made' => 'by hand', 'exceptions' => []]));
+check('and diagnostics are refused while the log does not go with reports', ($r['json']['code'] ?? '') === 'bad_report', $r['raw']);
 $odd = error_report(['package' => '../../etc/passwd']);
 $r = error_request($root, $fullLog, $odd);
 $kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $odd['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);

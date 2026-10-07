@@ -70,6 +70,7 @@ return args switch
     ["store-fingerprints", .. var rest] => GroupLab.Cli.Library.StoreFingerprintBuilder.Run(rest, Console.Out, Console.Error),
     ["target-reference", .. var rest] => GroupLab.Cli.TargetReferenceVerb.Run(rest, Console.Out, Console.Error),
     ["poster-trial", .. var rest] => GroupLab.Cli.Spike.PosterTrial.Run(rest, Console.Out, Console.Error),
+    ["identify-trial", .. var rest] => GroupLab.Cli.Spike.IdentifyTrial.Run(rest, Console.Out, Console.Error),
     ["marker-trial", .. var rest] => GroupLab.Cli.Spike.MarkerTrial.Run(rest, Console.Out, Console.Error),
     ["surface-trial", .. var rest] => GroupLab.Cli.Spike.SurfaceTrial.Run(rest, Console.Out, Console.Error),
     ["outline-trial", .. var rest] => GroupLab.Cli.Spike.OutlineTrial.Run(rest, Console.Out, Console.Error),
@@ -544,6 +545,7 @@ static int Usage()
         grouplab compare-photos <scan> <photograph>... [--truth <corrected scan marking>] [--library <directory>]... [--calibre <diameter>]
         grouplab capture-check <image>... [--library <directory>] [--sweep]
         grouplab st4 <st4-2026-09-20.json> [--frames <folder>]
+        grouplab identify-trial <folder>...
         grouplab fingerprint-trial build <blanks> <out> | make <blanks> <out> [--seed <n>] [--real <folder>]... | match <out> --method orb|akaze | shipped <out> [--known <picture> <product id>]...
         grouplab store-fingerprints build <blanks> <out> | recognize <picture>...
         grouplab target-reference make <photo> ... | check <file.glref> <photo> | add <file.glref> | library <out.gllib> --key <file>

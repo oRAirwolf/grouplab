@@ -293,6 +293,107 @@ internal static class ErrorReports
         }
     }
 
+    /// <summary>Entry 386 section 4: the kind of report Send to GroupLab makes, the person's diagnostics with an optional note.</summary>
+    public const string Diagnostics = "diagnostics";
+
+    /// <summary>The longest note Send to GroupLab takes, in characters, under the receiver's own limit for a description.</summary>
+    public const int MostNote = 2000;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 376 B7, built in entry 386 section 4: the person's diagnostics sent straight to GroupLab, through the same
+    /// two receivers as an error report, with the same rules. The newest two logs (paths already taken out as they were written, and every
+    /// typed name or note replaced by its length) and the newest crash record go to the crash receiver as a package; then a report of the
+    /// kind <see cref="Diagnostics"/>, made by hand, carrying the package's reference and the note, goes to the error receiver, which opens
+    /// an issue of its own for it. Nothing about where a picture was taken, no picture and no path is in either. Returns the sentence for the
+    /// screen.
+    /// </summary>
+    public static async Task<string> SendDiagnosticsAsync(IOutsideWorld outside, string packageAddress, string reportAddress, string? note, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(outside);
+        var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, null);
+        string? crash = CrashReporter.PendingCrashes(DiagnosticLog.Current.Directory).LastOrDefault();
+        string? typed = string.IsNullOrWhiteSpace(note) ? null : DiagnosticLog.Scrub(note.Trim());
+        if (typed is { Length: > MostNote })
+        {
+            typed = typed[..MostNote];
+        }
+
+        string zip = Path.Combine(Path.GetTempPath(), $"grouplab-diagnostics-{Guid.NewGuid():N}.zip");
+        try
+        {
+            var made = ReportPackage.Build(zip, crash, runLog, previousLog, ReportPackage.EnvironmentText(null), typed, null, withoutTypedText: true);
+            if (made.TooLargeToSend)
+            {
+                DiagnosticLog.Info("diagnostics.send", ("sent", false), ("reason", "over the cap"));
+                return "The diagnostics are too large to send this way. Use Share diagnostics instead.";
+            }
+
+            var answer = await outside.PostReportPackageAsync(packageAddress, File.ReadAllBytes(zip), AppInfo.Version, token).ConfigureAwait(true);
+            string? reference = null;
+            try
+            {
+                reference = answer is null ? null : (string?)JsonNode.Parse(answer.Body)?["reference"];
+            }
+            catch (JsonException)
+            {
+            }
+
+            if (reference is not { Length: > 0 })
+            {
+                DiagnosticLog.Info("diagnostics.send", ("sent", false), ("status", answer?.Status ?? 0));
+                return "The diagnostics could not be sent just now. Try again later, or use Share diagnostics.";
+            }
+
+            var report = new JsonObject
+            {
+                ["schema"] = Schema,
+                ["report_id"] = Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(16)),
+                ["kind"] = Diagnostics,
+                ["made"] = "by hand",
+                ["count"] = 1,
+                ["app"] = new JsonObject { ["version"] = AppInfo.Version, ["commit"] = AppInfo.Commit, ["channel"] = AppInfo.Channel },
+                ["environment"] = new JsonObject { ["os"] = AppInfo.OperatingSystemName, ["framework"] = AppInfo.Framework, ["renderer"] = AppInfo.Renderer },
+                ["exceptions"] = new JsonArray(),
+                ["last_actions"] = new JsonArray([.. LastActions(runLog).Select(a => (JsonNode?)a)]),
+                ["package"] = reference,
+            };
+            if (typed is not null)
+            {
+                report["description"] = typed;
+            }
+
+            var sent = await outside.PostErrorReportAsync(reportAddress, report.ToJsonString(), token).ConfigureAwait(true);
+            bool ok = false;
+            try
+            {
+                ok = sent is not null && JsonNode.Parse(sent.Body)?["ok"]?.GetValueKind() == JsonValueKind.True;
+            }
+            catch (JsonException)
+            {
+            }
+
+            DiagnosticLog.Info("diagnostics.send", ("sent", ok), ("reference", reference), ("note", typed is not null));
+            return ok
+                ? $"Sent to GroupLab, reference {reference}. Thank you; quote the reference if you write about it."
+                : $"The logs went (reference {reference}), but the note did not. Try again later, or use Share diagnostics.";
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "diagnostics.send", ex);
+            return "The diagnostics could not be put together on this device; the log says why.";
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(zip);
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
     /// <summary>The names of the last events in a log, what the person did last, and none of the values that follow each name.</summary>
     public static IReadOnlyList<string> LastActions(string? log, int most = 20)
     {

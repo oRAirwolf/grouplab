@@ -25,6 +25,31 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 386: more work for the rest of this week and the next
+
+**Status: actioned 2026-10-07; every section done, with three parts waiting on something outside the code.** Section 1: the plain APK carries GroupLab Dev's updater from nightly 177. Section 2: question 83 (b), the corpus measured first and no sheet lost (175 pictures, no sheet lost, 1960 s to 334 s on the 97 with no marker). Section 3: the M220's profile, the encoder's 1200-row blocks, the printer check label and its measurement, the label size kept with the printer; **not done: the phone's Bluetooth LE link**, so labels still go through the Phomemo app (the phone has only the M834's classic link). Section 4: Send to GroupLab, built and tested; **live once the receiver and the error worker are on the server**: the receiver goes with the next site publish, which question 90 blocks, and the worker with `install.py` under sudo. Section 5: question 34 built as proposed (each sheet from its own centre the headline, one centre for all and the movement beside it), **for planning to confirm**. The standing rule is in CLAUDE.md. Results: docs/PHASE1-RESULTS.md, entry 386.
+
+From the planning session, 2026-10-07, with Alan's answers. Take after the line Alan gave at about 13:27 Denver (the 98% guard, requests
+79 and 80, questions 84, 86, 87 and 89, the rest of entry 374), in this order, within the guard:
+
+1. **The plain APK updates itself (Alan: yes).** The plain APK from the download page (org.grouplab.app, signed with the upload key) gets
+   GroupLab Dev's updater, so a tester who sideloaded it stays current (one tester is still on nightly 130). Only that APK: never the
+   Play AAB, which must update only through Play (Play's policy). The first update from an old plain APK will need the tester to install
+   one newer APK by hand; say so. Update the download page, README, testing guide and docs/ANDROID.md in the same change (entry 267).
+2. **Question 83: yes to (b)**, read at full size only when the marker passes find no GroupLab marker, measured on the corpus first; keep
+   (a) if the corpus loses any sheet.
+3. **Entry 372** (M220 scale labels): the encoder, the check label and the profile size.
+4. **Entry 376 B7** (diagnostics straight to GroupLab): send them to the existing crash-report intake on the server (the error worker,
+   the private crash-reports repository), with the same privacy rules as crash reports: no location, no names, no paths.
+5. **Question 34** (what the centre of a group pooled from several sheets means): now that shot data pools across sheets, propose the
+   rule, build it, and note it in STATE for planning to confirm.
+
+## A standing rule (Alan, 2026-10-07)
+
+Alan wants waiting work taken without a prompt from him. Add to CLAUDE.md's "How every turn ends": before ending any turn, look in the
+inbox; if entries are waiting and the usage guard allows, take them in number order instead of stopping, and only end the turn when the
+inbox is empty, the guard stops the work, or something truly needs Alan.
+
 ## 2026-10-07, entry 385: request 78 answered, the M834's first true-size prints measured
 
 **Status: actioned 2026-10-07; sections 1 to 4 done, section 1 as Alan's request 81 (a printer check lives on each device) and section 2 waiting on its second print.**
