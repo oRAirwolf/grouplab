@@ -83,7 +83,7 @@
    ],
    "mobile": {
     "shot": "fold-firstrun",
-    "caption": "Before you start, on the phone, nightly 115.",
+    "caption": "Before you start, on a phone-sized screen.",
     "parts": [
      [
       "Send your targets",
@@ -183,7 +183,7 @@
    ],
    "mobile": {
     "shot": "fold-result-landscape",
-    "caption": "The phone shows the sheet upright under the figures, and Fix holes opens the holes on a page of their own.",
+    "caption": "Held sideways, the phone puts Fix holes and the sheet on the left and the figures on the right; Fix holes opens the holes on a page of their own.",
     "parts": [
      [
       "The rings",
@@ -326,14 +326,14 @@
    ],
    "mobile": {
     "shot": "fold-result",
-    "caption": "A result on a Galaxy Z Fold 7's cover screen, from a scan of 25 shots, nightly 115.",
+    "caption": "A result on a phone-sized screen, from a sheet of 25 shots.",
     "parts": [
      [
       "Mean radius",
       "The lead figure, in amber: the average distance of the shots from the group's center."
      ],
      [
-      "Extreme spread, Shots, Center from aim",
+      "Extreme spread, CEP 50, Center from aim",
       "The other figures, each on its own tile."
      ],
      [
@@ -452,7 +452,7 @@
    ],
    "mobile": {
     "shot": "fold-sessions-landscape",
-    "caption": "Sessions on the Fold's cover screen held sideways, nightly 115.",
+    "caption": "Sessions on a phone-sized screen held sideways, with the one session just analyzed.",
     "parts": [
      [
       "Open a session file",
@@ -736,7 +736,7 @@
    ],
    "mobile": {
     "shot": "fold-settings",
-    "caption": "Settings on the phone, nightly 115.",
+    "caption": "Settings on a phone-sized screen.",
     "parts": [
      [
       "Sending targets",
@@ -853,7 +853,7 @@
    ],
    "mobile": {
     "shot": "fold-targets",
-    "caption": "GroupLab on a Galaxy Z Fold 7's cover screen, nightly 115.",
+    "caption": "Targets on a phone-sized screen, Letter chosen by the phone's region.",
     "parts": [
      [
       "Made for your optic",
@@ -927,7 +927,7 @@
    ],
    "mobile": {
     "shot": "fold-targets",
-    "caption": "Made for your optic sits at the top of the phone's Targets screen, nightly 115.",
+    "caption": "Made for your optic sits at the top of the phone's Targets screen.",
     "parts": [
      [
       "Distance and lowest magnification",
@@ -1025,7 +1025,7 @@
    ],
    "mobile": {
     "shot": "fold-capture",
-    "caption": "Capture on a Galaxy Z Fold 7's cover screen, nightly 115."
+    "caption": "Capture on a phone-sized screen, before any picture."
    }
   }
  }

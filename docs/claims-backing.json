@@ -3141,6 +3141,14 @@
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
   },
+  "A result on a phone-sized screen, from a sheet of 25 shots.": {
+   "kind": "decided",
+   "where": "docs/figures/screens/phone/fold-result-light.png, looked at 2026-10-07 (question 90 b): the tiles read Mean radius, Extreme spread, CEP 50 and Center from aim, from the 25-shot sample sheet"
+  },
+  "Extreme spread, CEP 50, Center from aim.": {
+   "kind": "decided",
+   "where": "docs/figures/screens/phone/fold-result-light.png, looked at 2026-10-07 (question 90 b): the tiles read Mean radius, Extreme spread, CEP 50 and Center from aim, from the 25-shot sample sheet"
+  },
   "On the phone since nightly 119: every figure the desktop shows, each with a tap on its name to say what it means and what your number of shots can tell.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119"
