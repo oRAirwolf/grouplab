@@ -15,8 +15,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- **The usage guard stops at 100% until the week resets (2026-10-08 02:00 UTC)**, Alan, 2026-10-07 evening; at 85% again after it,
-  88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 92% at 01:02 UTC on 2026-10-08.
+- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 1% at 02:17 UTC.
 - **Play's internal test follows the nightlies** (request 80); requests 79 and 80 closed; question 87 measured, the rule stays.
 - **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
@@ -24,10 +23,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   worker at 18:59 Denver; question 34 built as proposed, **for planning to confirm**.
 - **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): **the phone's sheet is merged** (35e687bb; no phone picture yet). **The desktop
-  tabs** are being built by a helper in its own worktree (`.claude/worktrees/agent-ae8bd84d...`), and **the proof checklist's tests** by
-  another (`agent-a48c7289...`); each merges only when its suites pass. If either is unfinished, its worktree holds the work.
-- **Send to GroupLab checked end to end** (2026-10-08 01:10 UTC, issue 24, closed); it showed the package receiver never answered with the
-  reference the app reads, fixed in 68277eb5, live with the site.
+  tabs** are being built by a helper in its own worktree (`.claude/worktrees/agent-ae8bd84d...`), merged only when its suites pass.
+  **The proof checklist**: rows 6, 8, 13, 15, 21 and 23 proven by tests (44cb7941); the rest need hardware (docs/PROOF-CHECKLIST.md).
+- **Send to GroupLab checked end to end** (issue 24, closed); the receiver's missing reference fixed in 68277eb5.
 - **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
   pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
 - **Entries 385 and 379 section 3 done** (the M834 true across, 0.8 percent short along; the consistency audit's ten findings).
@@ -68,7 +66,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89, 83 and 90 answered 2026-10-07 evening):
+Ten, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89, 83 and 90 answered 2026-10-07 evening):
+
+- **92** naming one bull's shots moves the shots below it; **91** the report's zero sentence is not the screen's
 
 - **88** DESIGN NEEDED, chronograph entry on the analysis
 - **80** a newer fingerprint library without a new build
