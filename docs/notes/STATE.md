@@ -53,8 +53,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; entries 389 and 390 are on main, in the next nightly.
-2. Request 84: whether the pause after each M220 label ends the shift.
+1. Whatever the inbox brings next; entries 389 and 390 are on main, in nightly 180 and on grouplab.org.
+2. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift.
 3. Request 83 once 81 is done: the M834 from the computer, measured like request 81.
 
 ## Blocked, and on what
@@ -79,8 +79,8 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (80, answered in entry 347, archiv
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.179 (2026-10-08 11:43 UTC, built after 0600f1fe: entry 388 and error report 25); published whole.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
+- **Last nightly:** 0.2.0-nightly.180 (2026-10-08 20:51 UTC, built after 592d2cea: entries 389 and 390); published whole.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 180's notes on 2026-10-08 (run 37842759665).
 - Crash reports open: none (issue 25, the hand tool's click near nothing, fixed in fb86c62f and closed 2026-10-08; in nightly 179). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
