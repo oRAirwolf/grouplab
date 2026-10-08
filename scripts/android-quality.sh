@@ -22,7 +22,9 @@ adb shell svc power stayon true || true
 adb shell input keyevent 82 || true
 adb shell settings put global hide_error_dialogs 1 || true
 adb shell settings put system accelerometer_rotation 0 || true
-adb install -r -g "$APK" > "$OUT/install.log" 2>&1 || { cat "$OUT/install.log"; echo "::error::GroupLab Dev did not install"; exit 1; }
+# A clean install, so nothing an earlier step on this emulator left behind changes what is measured here (entry 388).
+adb uninstall "$PKG" > /dev/null 2>&1 || true
+adb install -g "$APK" > "$OUT/install.log" 2>&1 || { cat "$OUT/install.log"; echo "::error::GroupLab Dev did not install"; exit 1; }
 COMPONENT=$(adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER "$PKG" | tr -d '\r' | tail -1)
 
 put() {
@@ -61,6 +63,7 @@ while read -r name size density font themes <&3; do
       sleep 3
     done
     echo "$name $theme: ${status:-none} after $(( $(date +%s) - start )) s"
+    [ "$status" = "done" ] || adb logcat -d > "$OUT/logcat-$(date +%s).txt" 2>&1 || true
     [ "$status" = "done" ] || failed=1
     mkdir -p "$OUT/$name-$theme"
     adb exec-out "run-as $PKG find files/scenario/results -type f 2>/dev/null" | tr -d '\r' | while read -r file; do

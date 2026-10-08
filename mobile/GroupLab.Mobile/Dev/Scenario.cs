@@ -364,7 +364,7 @@ internal static class Scenario
             case "picture":
                 return await Picture(step.Text("file"));
             case "pick":
-                return Pick(step.Text("file"));
+                return await Pick(step.Text("file"), TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 180), 1, 1800)));
             case "read":
                 // The picture read as a chosen one, and then the result, or the question a smaller copy asks, waited for.
                 var (given, which) = await Picture(step.Text("file"));
@@ -445,21 +445,23 @@ internal static class Scenario
 
     /// <summary>A picture in the scenario folder, or in the files folder itself, read as a photograph chosen on the Capture screen.</summary>
     /// <summary>
-    /// Entry 388 section 1: the photo the next picker on any screen returns, instead of opening the platform's own, so a scenario reaches
-    /// screens that start from a chosen photo (Add a store-bought target) on the emulator, where no person is there to choose one.
+    /// Entry 388 section 1: a photo handed to the screen showing that asks for one, as if the person had chosen it, so a scenario reaches
+    /// the steps after it on the emulator, where nobody is there to choose: Add a store-bought target, whose photo's own work is waited for.
     /// </summary>
-    internal static PhotoHandle? NextPick { get; set; }
-
-    private static (bool, string) Pick(string? file)
+    private static async Task<(bool, string)> Pick(string? file, TimeSpan most)
     {
         if (file is not { Length: > 0 } || Name(file, "") != file || Path.Combine(Folder, file) is not { } path || !File.Exists(path))
         {
             return (false, "pick needs a \"file\" in the scenario folder");
         }
 
-        NextPick = new PhotoHandle(null, null, null, new FileInfo(path).Length, Path.GetExtension(path).ToLowerInvariant(),
-            () => Task.FromResult<Stream?>(File.OpenRead(path)));
-        return (true, file);
+        var work = await OnUi(() => Showing().OfType<FingerprintPage>().FirstOrDefault()?.UsePhoto(path));
+        if (work is null)
+        {
+            return (false, "no screen showing asks for a photo");
+        }
+
+        return await Task.WhenAny(work, Task.Delay(most)) == work ? (true, file) : (false, $"the photo's work did not finish in {most.TotalSeconds:0} s");
     }
 
     private static async Task<(bool, string)> Picture(string? file)

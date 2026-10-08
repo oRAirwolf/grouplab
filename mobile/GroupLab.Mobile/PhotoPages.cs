@@ -17,13 +17,7 @@ internal static class PhotoPages
         IReadOnlyList<PhotoHandle> handles;
         try
         {
-#if GROUPLAB_DEV
-            // Entry 388 section 1: a scenario's staged photo, where one is waiting, stands in for the person choosing.
-            handles = GroupLab.Mobile.Dev.Scenario.NextPick is { } staged ? [staged] : await Phone.Platform.PickPhotos(source, TopLevel.GetTopLevel(host));
-            GroupLab.Mobile.Dev.Scenario.NextPick = null;
-#else
             handles = await Phone.Platform.PickPhotos(source, TopLevel.GetTopLevel(host));
-#endif
         }
         catch (Exception e) when (e is InvalidOperationException or IOException or NotSupportedException)
         {

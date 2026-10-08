@@ -23,14 +23,16 @@ adb shell input keyevent 82 || true
 adb shell settings put global hide_error_dialogs 1 || true
 adb shell wm size reset || true
 adb shell wm density reset || true
-adb install -r -g "$APK" > "$OUT/install.log" 2>&1 || { cat "$OUT/install.log"; echo "::error::GroupLab Dev did not install"; exit 1; }
+# A clean install, so nothing an earlier step on this emulator left behind changes what is measured here (entry 388).
+adb uninstall "$PKG" > /dev/null 2>&1 || true
+adb install -g "$APK" > "$OUT/install.log" 2>&1 || { cat "$OUT/install.log"; echo "::error::GroupLab Dev did not install"; exit 1; }
 COMPONENT=$(adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER "$PKG" | tr -d '\r' | tail -1)
 
 : > "$OUT/startup.txt"
 for i in 0 1 2 3 4 5; do
   adb shell am force-stop "$PKG"
   sleep 2
-  adb shell am start -W -n "$COMPONENT" | tr -d '\r' | grep '^TotalTime' | sed 's/TotalTime: //' >> "$OUT/startup.txt"
+  adb shell am start -W -n "$COMPONENT" | tr -d '\r' | tee -a "$OUT/start-output.txt" | grep '^TotalTime' | sed 's/TotalTime: //' >> "$OUT/startup.txt"
   sleep 4
 done
 adb shell am force-stop "$PKG"
@@ -53,6 +55,7 @@ for run in 1 2; do
     sleep 5
   done
   echo "run $run: ${status:-none} after $(( $(date +%s) - start )) s"
+  [ "$status" = "done" ] || adb logcat -d > "$OUT/logcat-$(date +%s).txt" 2>&1 || true
   [ "$status" = "done" ] || failed=1
   mkdir -p "$OUT/run-$run"
   for file in results.json perf.txt; do

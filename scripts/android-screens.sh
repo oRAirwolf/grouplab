@@ -59,7 +59,8 @@ while read -r device size density rotation middle screens <&3; do
     adb shell run-as "$PKG" sh -c "'rm -rf files/scenario/results files/scenario/$NAME.ran; mkdir -p files/scenario'"
     put /tmp/screens-sample.png sample.png
     put "$HERE/scripts/scenarios/$NAME" "$NAME"
-    adb shell am start -W -n "$COMPONENT" --es "$EXTRA" "$NAME" > /dev/null
+    adb logcat -c || true
+    adb shell am start -W -n "$COMPONENT" --es "$EXTRA" "$NAME" > "$OUT/start-$device-$middle-$theme.txt" 2>&1
     start=$(date +%s)
     status=""
     while [ $(( $(date +%s) - start )) -lt 900 ]; do
@@ -68,6 +69,11 @@ while read -r device size density rotation middle screens <&3; do
       sleep 3
     done
     echo "$device $middle $theme: ${status:-none} after $(( $(date +%s) - start )) s"
+    # Entry 388: a pass that ends without its walk keeps Android's log and the launch's own answer, so the cause can be read.
+    if [ "$status" != "done" ]; then
+      adb logcat -d > "$OUT/logcat-$device-$middle-$theme.txt" 2>&1 || true
+      adb shell pidof "$PKG" > "$OUT/pid-$device-$middle-$theme.txt" 2>&1 || true
+    fi
     for screen in ${screens//,/ }; do
       if [ "$middle" = "-" ]; then to="$PHONE/$device-$screen-$theme.png"; else to="$PHONE/$device-$screen-$middle-$theme.png"; fi
       if adb exec-out "run-as $PKG cat files/scenario/results/$screen.png" > "$OUT/$device-$screen-$middle-$theme.png" 2> /dev/null \
