@@ -183,7 +183,7 @@
    ],
    "mobile": {
     "shot": "fold-result-landscape",
-    "caption": "The phone's result starts with the figures, as here; the sheet with its rings and Fix holes, which opens the holes on a page of their own, come further down the page, and the tablet's picture shows them.",
+    "caption": "Held sideways, the phone puts Fix holes and the sheet on the left and the figures on the right; Fix holes opens the holes on a page of their own.",
     "parts": [
      [
       "The rings",
@@ -452,7 +452,7 @@
    ],
    "mobile": {
     "shot": "fold-sessions-landscape",
-    "caption": "Sessions on a phone-sized screen, with the one session just analyzed.",
+    "caption": "Sessions on a phone-sized screen held sideways, with the one session just analyzed.",
     "parts": [
      [
       "Open a session file",
