@@ -46,7 +46,8 @@ PY
 
 failed=0
 taken=0
-# device, size, density, rotation (0 upright, 1 sideways), the file name's middle, and which screens that layout publishes.
+# device, size, density, rotation, the file name's middle, and which screens that layout publishes. Sideways is the size turned round:
+# the emulator's rotation setting left GroupLab upright (the first full run, 2026-10-07), while a wider screen lays it out sideways.
 # The layouts come in on descriptor 3: adb shell reads standard input, and on the first run it swallowed every layout after the first.
 while read -r device size density rotation middle screens <&3; do
   adb shell wm size "$size"
@@ -82,9 +83,9 @@ while read -r device size density rotation middle screens <&3; do
   done
 done 3<<'LAYOUTS'
 fold 1080x2520 420 0 - firstrun,capture,result,settings,targets
-fold 1080x2520 420 1 landscape result,sessions
+fold 2520x1080 420 0 landscape result,sessions
 tab 2960x1848 340 0 landscape result,capture,sessions,targets,settings
-tab 2960x1848 340 1 portrait result
+tab 1848x2960 340 0 portrait result
 LAYOUTS
 
 adb shell wm size reset || true
