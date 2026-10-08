@@ -213,10 +213,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             .Where(x => x.Bull is not null)
             .Select(x => (x.Shot, x.Bull, Away: FromSegment(position, ToControl(x.Bull!.Image), ToControl(x.Shot.Image))))
             .Where(x => x.Away <= PointingTolerance)
-            .MinBy(x => x.Away);
-        if (onLine.Shot is not null)
+            .Select(x => ((MarkedShot Shot, BullAim Bull, double Away)?)(x.Shot, x.Bull!, x.Away))
+            .MinBy(x => x!.Value.Away);
+        // Issue 25: MinBy over value tuples throws on an empty sequence, so a click with no line near it crashed; as nullable it is null.
+        if (onLine is { } near)
         {
-            return (onLine.Shot.Id, onLine.Bull!.Index);
+            return (near.Shot.Id, near.Bull.Index);
         }
 
         return state.Bulls.Where(b => Distance(ToControl(b.Image), position) <= 2 * HitRadius).MinBy(b => Distance(ToControl(b.Image), position)) is { } bull ? (null, bull.Index) : null;
