@@ -19,7 +19,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 388 done** (2026-10-08): the four phone pictures (Scale markers, the store-bought target's second step, pairing rows, Open
   targets) taken on the emulator and on the Features page; the quality sweep at 411, 750 and 360 units, light and dark, found one fault (the
   Shots switch, 32 units tall, now 48); question 43 built; Phase 9's baseline and gate (`docs/performance-baseline.json`), nothing changed
-  for speed. **Error report 25** (a click near nothing with the hand tool) fixed; the issue closes when its nightly ships.
+  for speed. **Error report 25** (a click near nothing with the hand tool) fixed and closed; it ships in nightly 179.
 - **Play's internal test follows the nightlies** (request 80); requests 79 and 80 closed; question 87 measured, the rule stays.
 - **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
@@ -51,7 +51,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Push entry 388 to main (held while its last emulator run retook the store-bought target's picture), then confirm the site.
+1. Whatever the inbox brings next; entry 388 is on main, in nightly 179 and on grouplab.org.
 2. Alan's first print on the M220 from the phone, and his worker reinstall (panel.md).
 3. Run the quality sweep again after the next nightly (`android-emulator.yml` with `quality`), and the emulator baseline with `baseline`.
 
@@ -77,10 +77,9 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (34 and 43 answered and archived in
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.178 (2026-10-08 05:01 UTC, e4d7f71f: concept A on both, questions 91 and 92, the proof tests);
-  published whole, and **the first to reach Play's internal test by itself** (version code 178). 177's publish had timed out; fixed.
+- **Last nightly:** 0.2.0-nightly.179 (2026-10-08 11:43 UTC, built after 0600f1fe: entry 388 and error report 25); published whole.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
-- Crash reports open: 25 (the hand tool's click near nothing, nightly 176), fixed in entry 388's push and closed when its nightly ships. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
+- Crash reports open: none (issue 25, the hand tool's click near nothing, fixed in fb86c62f and closed 2026-10-08; in nightly 179). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
 
