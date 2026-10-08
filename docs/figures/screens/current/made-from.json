@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 178,
+  "afterNightly": 179,
   "screens": {
     "analysis": "0f9cc503713f14daadeddff1f2b1d2d7573f200ee210328ed8a861e1011c7625",
     "analysis-open": "cf68e1e64d43a8a67aa2768eea762d543471d1aa9b23405bd0468c445362c26b",
@@ -12,8 +12,8 @@
     "firstrun": "fedcc81c22fc0c725251ab4daac54f6283dd557ebeb61a04e77797c133838437",
     "marking": "8eceb15c25d185ed84903667793ded9f24e8f07a22e16c42073ee4b6a6d5deba",
     "marking-other": "74de44663479634cf4789a09620510a1a580d9ae58df7eff7fcbeb8e9526d135",
-    "optic": "a10d4f6ee0a00b34fefe49460d94c2658bfc3f11d80472681ab6025df4e21fd3",
-    "optic-4x": "a10d4f6ee0a00b34fefe49460d94c2658bfc3f11d80472681ab6025df4e21fd3",
+    "optic": "b3384f571d5d8d1190aff594ba0569ec82f06c8e8b6188826e34b81b4b5d6287",
+    "optic-4x": "b3384f571d5d8d1190aff594ba0569ec82f06c8e8b6188826e34b81b4b5d6287",
     "pairing": "5be670281b7aa98dc8eda044900a8fba4c1c4579825bff6dcf61494b8ddbd0e3",
     "problem-dialog": "e17103a67c2fd37d9b8a9d28824cd11456be49ce11a3b5a1f7a7f2380e367dd0",
     "problem-dismissed": "41f79d02537ce3c7021440396cd43fd2cb36107d12082475b3fd40d94295ecde",
@@ -42,8 +42,8 @@
     "sheet-zero-moa-100y": "34ca4735d378b0a2eb2fe352906df58543f6be933e5880a59d7dd65e96213e86",
     "shots-to-zero": "e2ec3c61b944c382ce9b60e13f2c39011e5da73a42234210fa9caac034a02041",
     "store-target": "0fa209063a6a8b71afeec39197dc71f0b8f098181419e7eabf157fb160b41d1a",
-    "targets": "822e99c8857c47a5f0fa6f30e5a73d665ca66c08941b24e47aa50f6cf6d7f56d",
-    "targets-zero": "e673dd7cf8d22703a4badfe7122d96a17db8b6b97bd53347faa31308f1254aea",
+    "targets": "f63ea4470dd3c99a5322b09afff57a626d314cd89e9d568fd19e502b8843a524",
+    "targets-zero": "59c762fd255892cddc0ce0d084dd7785b99afd462b0b960b28db3f7b0510921f",
     "velocity": "7aa7cc4f2c775e6b40df764cb0e9a67094e9968379079b4ce0fb3ade49022701",
     "which-target": "f8557b9d5baf34529b1215837e6c3ec8a22d212a7b4f57112fa4b7466570ba26"
   }
