@@ -536,6 +536,14 @@ the changes back to the result, which measures again; leaving any other way asks
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result. Several files with the same columns can be chosen at once and are read as one group.
 
+**Several targets open at once.** Every target you read on Capture or open from Sessions stays open until you close it, each as you left
+it, marks not yet saved included. The target's name at the top of its result, or above the step while you mark it by hand, opens **Open
+targets**: a row for each, with a small picture of it, whether it is at **Analysis** or **Marking, not saved**, and a close button. Tap a
+row to switch to it; **Open another target** goes to the start of Capture with the others kept. A result is saved in Sessions as you go,
+so closing it loses nothing; marking by hand is saved only when it is finished, so closing a target with marks not saved asks first.
+Opening a session that is already open switches to it. Up to eight are kept open; past that the oldest that would lose nothing is closed,
+and it stays in Sessions.
+
 **Sessions, Ballistics and Targets.** Sessions keeps every result, each named by its load, date and time; tick two or more to compare
 loads, one figure at a time: each load's name on a line of its own, and its range and value beneath. Extreme spread has no range there,
 so it says so and points you to mean radius. In **All figures**, a value too long to sit beside its name goes on the line under it. Ballistics is a

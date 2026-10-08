@@ -134,6 +134,9 @@ phone's five steps wait for the next sitting with the phone.
 the walk makes, a row per reading, a six minute pause between two groups, and the fourth reading's choices open under its row. The phone's
 rows and sheet wait for the next sitting with the phone.
 
+**Several targets open at once on the phone** (concept A, Alan 2026-10-07) is on the phone only, so it has no desktop picture; its Open
+targets sheet waits for the next sitting with the phone.
+
 ## Not published
 
 `docs/figures/screens/*.png` (2026-09-14), `before/` and `after/` (entry 247's comparison for Alan) are the record of their day. No

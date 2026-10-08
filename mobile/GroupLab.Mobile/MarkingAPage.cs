@@ -96,6 +96,7 @@ internal sealed class MarkingAPage : UserControl
             session.SetShotDistance(setup.DistanceInches);
         }
 
+        opened = session.State;
         viewer = new Viewer(new Bitmap(imagePath), session, ends) { Height = 420 };
         viewer.Moved += Show;
         length.PlaceholderText = $"The length between the two ends, in {UnitSettings.Symbol(units.Linear)}";
@@ -111,6 +112,9 @@ internal sealed class MarkingAPage : UserControl
         var buttons = new StackPanel { Spacing = 8, Children = { main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, findHoles, template, storeWarning, checkScale } };
         Grid.SetColumn(next, 1);
         var column = new StackPanel { Spacing = 10, Margin = new Thickness(16, 12, 16, 12) };
+        // Several targets open at once (Alan, 2026-10-07): the target's name above the step, the way to the others open; hidden where this
+        // marking is not one of them.
+        column.Children.Add(OpenTargetsSheet.Switcher(big: false).Id("marking-open-targets"));
         column.Children.Add(title);
         column.Children.Add(intro);
         column.Children.Add(words);
@@ -290,6 +294,19 @@ internal sealed class MarkingAPage : UserControl
 
     /// <summary>The marking as it stands, for a test.</summary>
     internal MarkingState State => session.State;
+
+    /// <summary>
+    /// Whether anything has been marked on this page that is not saved: an end of the scale, an aim point or a hole. Marking by hand is
+    /// saved only when it is finished, so closing its target loses these (several targets open at once, Alan 2026-10-07).
+    /// </summary>
+    internal bool Unsaved => ends.Count > 0 || !ReferenceEquals(session.State.Bulls, opened.Bulls) || !ReferenceEquals(session.State.Shots, opened.Shots)
+        || !Equals(session.State.Scale, opened.Scale);
+
+    /// <summary>The marking as the page opened it, what closing its target goes back to.</summary>
+    private readonly MarkingState opened;
+
+    /// <summary>The picture being marked.</summary>
+    internal string ImagePath => imagePath;
 
     /// <summary>
     /// Proposes the holes away from the screen's thread and places them as found holes, as one step Undo takes back. Nothing is kept until

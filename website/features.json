@@ -1340,6 +1340,22 @@
       "mobile": {
         "noPicture": "the phone's Report page is photographed at the next sitting with the phone"
       }
+    },
+    {
+      "key": "open-targets-phone",
+      "group": "Photos and the phone",
+      "name": "Several targets open at once on the phone",
+      "sentence": "Every target read or opened on the phone stays open as it was left, marks not yet saved included; the target's name at the top of its screen lists them, each with a small picture and whether it is at Analysis or Marking, not saved, to switch to one or close it, and closing one with marks not saved asks first.",
+      "platforms": [
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": "On the phone, several targets can now be open at once",
+      "guide": "13-on-the-phone",
+      "mobile": {
+        "noPicture": "the phone's Open targets sheet is photographed at the next sitting with the phone"
+      }
     }
   ]
 }
