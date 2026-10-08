@@ -218,8 +218,26 @@ public class Entry204Tests
             // the rows (or columns) about it, one is nearer the expected ink than any other ink the plot draws with.
             Color[] palette = [inks.Paper, inks.Ink, inks.Ring, inks.Accent, inks.Group, inks.Aim, inks.Bull];
             static double Apart(Color a, Color b) => Math.Abs(a.R - b.R) + Math.Abs(a.G - b.G) + Math.Abs(a.B - b.B);
+            // Concept A's tab row changed the canvas's height, and on Linux and macOS the centre line then fell where no row was more than
+            // about three quarters ink (CI on 30865b40 read #409b79 for #007a4d). So a row also reads as the ink when it is that ink laid over
+            // the paper: the best mix of the two lies within a few levels of it, and at least a third of it is ink.
+            bool Mixed(Color c, Color ink)
+            {
+                var paper = inks.Paper;
+                double num = 0, den = 0;
+                foreach (var (have, a, b) in new[] { (c.R, ink.R, paper.R), (c.G, ink.G, paper.G), (c.B, ink.B, paper.B) })
+                {
+                    num += (have - b) * (a - b);
+                    den += (a - b) * (a - b);
+                }
+
+                double t = den == 0 ? 0 : Math.Clamp(num / den, 0, 1);
+                double off = Math.Abs(c.R - ((t * ink.R) + ((1 - t) * paper.R))) + Math.Abs(c.G - ((t * ink.G) + ((1 - t) * paper.G))) + Math.Abs(c.B - ((t * ink.B) + ((1 - t) * paper.B)));
+                return t >= 1 / 3.0 && off <= 24;
+            }
+
             bool Reads(Point p, Color expected, bool rows) => Enumerable.Range(-2, 5).Select(d => At(rows ? new Point(p.X, p.Y + d) : new Point(p.X + d, p.Y)))
-                .Any(c => palette.MinBy(k => Apart(c, k)) == expected);
+                .Any(c => palette.MinBy(k => Apart(c, k)) == expected || Mixed(c, expected));
             var aim = plot.ToScreen(new PointD(0, 0));
             var centre = plot.ToScreen(plot.Centre!.Value);
             Assert.True(Reads(new Point(2, aim.Y), inks.Aim, rows: true), $"the aim row at the left edge is {At(new Point(2, aim.Y))}, not {inks.Aim}");
