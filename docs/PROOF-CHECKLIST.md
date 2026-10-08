@@ -9,6 +9,11 @@ unchanged.
 
 **Entry 363 (Alan's answer to question 79, 2026-10-04):** rows 7, 22 and 26 are now Done in the README, and Phase 0's row says its scan half is met and its photograph half (row 1) is not. Row 6 stays Built, not proven until its MANOVA and ratio-interval fixtures exist.
 
+**2026-10-08, the rows whose proof needs no hardware:** each was given a test against real behaviour, on Alan's own scans and exports where
+they exist and on rendered sheets where they do not. Rows 6, 8, 13, 15, 21 and 23 are now proven against their gates by the tests their rows
+name; row 16 is not, because the test found its report saying a line the screen does not (below). Every other row still needs the material
+in the checklist at the end, a change to detection, or a gate planning has not written.
+
 ## The 31
 
 Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gate nobody has written yet.
@@ -20,24 +25,24 @@ Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gat
 | 3 | Render-and-difference hole detection | Phase 1 gate: at least 99 percent of holes found, no false positives, matched at 0.15 in | **Not met.** `grouplab scoreboard --corpus` over the seven corpus photographs: 197 of 198 holes found (99.5 percent), 2 false marks, worst center error 0.055 in. The four 2026-09-29 pictures alone: 100 of 100, none false. |
 | 4 | A mark much bigger than your bullet goes to you | Proposed: every mark holding two holes is ringed, and no clean hole is | **Not met as proposed.** `grouplab analyze` on the seven corpus photographs: no two true holes closer than one bullet anywhere in the corpus, so the first half cannot be tested; 7 marks were ringed on clean single holes (1, 3 and 3 in three of the 2026-09-29 pictures, at 1.4 to 3.1 holes' area). |
 | 5 | The statistics engine against `shotGroups` | Phase 2 gate, STATISTICS.md 15.5 points 1 to 6 | **Points 1 and 3 to 6 met; point 2 not** (as recorded: only on `shotGroups`' own series split of shot 242). The fixture, distribution, coverage and specification tests passed today. |
-| 6 | Significance testing | STATISTICS.md 15.5 for the `compareGroups` keys; no gate for the MANOVA row or the ratio interval | **Met for the `compareGroups` keys** (their tests passed today). The MANOVA row and the ratio interval have no gate. |
+| 6 | Significance testing | STATISTICS.md 15.5 for the `compareGroups` keys; for the MANOVA row and the ratio interval, proposed: known-truth fixtures, as 15.2 describes for what `shotGroups` cannot provide | **Met for the `compareGroups` keys** (their tests passed 2026-10-01). **Proven 2026-10-08 for the MANOVA row and the ratio interval** by `SignificanceKnownTruthTests`: `TwoGroupManovaIsHotellingsTwoSampleTest` (the two-group MANOVA equals Hotelling's T² written out independently), `TheManovaRejectsAlikeCentresAsOftenAsItsLevelSays` (2, 3 and 4 groups with one centre: p below 0.05 in 4.9 to 5.3 percent of 20,000 sheets) and `TheDispersionRatioIntervalCoversTheTrueRatioAsLabelled` (95.0 percent at equal sizes; 94.6 percent exactly at 5 shots against 25, where the c4 correction only nearly cancels, as STATISTICS.md 8.1 says). |
 | 7 | Hit probability inside a radius | STATISTICS.md 15.3 tolerance and 15.5 point 5 | **Met** (its tests passed today). |
-| 8 | Subgroups within one sheet | Proposed: each subgroup's figures equal its shots analyzed as a session of their own | Not measurable: no real ladder sheet exists. |
+| 8 | Subgroups within one sheet | Proposed: each subgroup's figures equal its shots analyzed as a session of their own | **Proven 2026-10-08** by `LadderSubgroupTests.EachRowOfALadderSheetReadsAsASheetOfItsOwn`: the dominus-k scan read as a five-load ladder, a row each, one shot excluded; every figure of every row equals that row alone analyzed as a session told which bulls were aimed at. Not told, four of the first row's five shots go to the row below. No real ladder sheet yet. |
 | 9 | The review queue | Phase 3 gate: a full 25-shot target with several misassignments corrected in under two minutes | Not measurable without a person: the wrong-bull scan exists; the gate is Alan's two minutes, timed by `grouplab timing`. |
 | 10 | Keyboard operation | Phase 3 gate, done with the keyboard alone | Not measurable without a person: the same sitting as 9. |
 | 11 | Shots per bull for doubles | Proposed: a real doubles sheet is matched without the queue raising every second shot | Not measurable: no doubles sheet exists. |
 | 12 | `grouplab compare-photos` | Proposed: it reads gates 1 and 2 on real pictures | **It works on real pictures:** the five rows of item 1, with holes 24 or 25 of 25 found, none false, worst hole 0.090 in. It reads the gates; it does not meet them. |
-| 13 | The rounds fired as a check | Proposed: a sheet with a known count and one hole holding two shots is flagged | Not measurable: no such sheet. |
+| 13 | The rounds fired as a check | Proposed: a sheet with a known count and one hole holding two shots is flagged | **Proven 2026-10-08 on a rendered sheet** by `RoundsFiredOnARenderedSheetTests.TwoShotsThroughOneHoleAreFlaggedWhenTheRoundsFiredAreEntered`: GL-CF25-LTR at 300 dpi, two .308 holes two thirds of a bullet apart on one bull, read by the real detector; with 26 rounds entered the count item is raised and names the ragged hole, which also has its own item. It is named second, behind a single hole with a torn rim read at 1.48 holes, and the detector found no halves in it, so neither item offers the second shot as a key press. Not yet on paper. |
 | 14 | Printing from inside GroupLab on Windows | A sheet from the fixed print path checked on paper | Not measurable: nothing has been printed from the fixed path. |
-| 15 | Session records | Proposed: a session saved, reopened, exported and imported gives the same figures | **Met as proposed on generated sessions** (session store and export tests passed today); never on one of Alan's own. |
-| 16 | The session report PDF | Proposed: every line equals what the analysis screen shows | **Met as proposed on generated sessions** (report tests passed today). |
+| 15 | Session records | Proposed: a session saved, reopened, exported and imported gives the same figures | **Proven 2026-10-08 on one of Alan's own** by `RealSessionProofTests.AlansOwnSessionKeepsItsFiguresThroughSaveReopenExportAndImport`: the dominus-k session saved by Accept and analyse, reopened after another sheet, exported with Export all my data and imported in a second window shows the same figures, cards and zero, line for line. |
+| 16 | The session report PDF | Proposed: every line equals what the analysis screen shows | **Met as proposed on generated sessions** (report tests passed 2026-10-01). **Not met on one of Alan's own (2026-10-08):** on the dominus-k session every figure and card line is on the screen, but the report's zero verdict puts the clicks, the offset and what rounding leaves in one sentence, "Dial 1 click down (... leaving 0.04 NATO mil), for a zero at 100 yd.", which is not a line the screen shows: the screen says "Dial 1 click down, at 0.1 NATO mil a click." and gives the residual and the distance on lines of their own. Not fixed: which wording is right is a decision. |
 | 17 | The target library | No gate | Its tests passed today (built-in library, and the library screen's layout). |
 | 18 | Support link | One browser launch once a page exists | Not measurable: there is no support page address. |
 | 19 | Volunteer print pack | Proposed: printed at size within 0.5 percent and used once | Not measurable: no pack has been printed. |
 | 20 | Chronograph strings by hand | Phase 5: readings reconciled against marked shots | Not measurable: no sheet has been shot with its string recorded in order. |
-| 21 | Garmin Xero import | Every one of Alan's exports reads | Measured by the main session (entry 334), not here. |
+| 21 | Garmin Xero import | Every one of Alan's exports reads | **Proven 2026-10-08** by `ChronographWorkbookTests.EveryOneOfAlansExportsReadsWhereTheyAreHere`, run on this computer over all 387 of Alan's files (294 .xlsx, 89 .xls, 2 .xlsm, 2 .csv): every one reads and every Garmin Xero string has shots. It runs only where his folder is, never on CI. |
 | 22 | Ballistic solver validated | Phase 5's first half, BALLISTICS-VALIDATION.md's tolerances, written before the comparison | **Met** (as recorded; the independent comparison tests passed today). |
-| 23 | Load against load on screen | Proposed: the screen's verdicts equal the comparison on two real sessions | **Measured.** The two 6 ARC suppressor scans (dominus-k, magnus-m), 25 shots each, through the comparison the Compare screen calls: sigma 0.347 and 0.341 in, "These two loads group alike as far as these shots can tell, and put their groups in different places" (dispersion p = 0.907, centers p = 0.049), and about 434 shots each to tell a 10 percent difference. The Compare screen showing that report word for word is tested on generated sessions (passed today); the two real sessions were not opened on the screen. |
+| 23 | Load against load on screen | Proposed: the screen's verdicts equal the comparison on two real sessions | **Measured.** The two 6 ARC suppressor scans (dominus-k, magnus-m), 25 shots each, through the comparison the Compare screen calls: sigma 0.347 and 0.341 in, "These two loads group alike as far as these shots can tell, and put their groups in different places" (dispersion p = 0.907, centers p = 0.049), and about 434 shots each to tell a 10 percent difference. **Proven 2026-10-08 on the screen** by `RealSessionProofTests.AlansTwoSuppressorSessionsCompareOnScreenAsTheComparisonSays`: the two sessions chosen in Session records and compared; the screen's groups, tests, verdicts, powers and headline equal the comparison of the two markings worked out without the screen, and say it (sigma 0.347 and 0.341 in, dispersion p = 0.906, centers p = 0.049). |
 | 24 | Velocity regression | Proposed: one real string paired with its shots | Not measurable: no paired string. |
 | 25 | Hit probability at another distance | Proposed: the prediction against a group measured at the second distance | Not measurable: no load shot at two distances. |
 | 26 | The camera capture path | Phase 6 gate: camera capture and lens distortion fitted on the device | **Measured.** The four Fold 7 captures of 2026-09-29, as the phone itself marked them: lens distortion fitted on the phone in every one; 97 of 100 holes found, 4 false marks, median hole error 0.012 to 0.014 in, worst 0.086 in, against the scan of the same sheet. No iPhone or iPad capture yet. |
@@ -57,7 +62,12 @@ Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gat
 5. **Phase 0, its first half:** a 600 dpi scan of a printed sheet, worst bull 0.00275 in on the dominus-k scan today. The second half,
    the off-axis photograph, is not met (item 1).
 
-Not met against a written gate: 1, 2, 3, and point 2 of 5. Met only against a proposed gate: 15 and 16.
+6. **Significance testing (6), the MANOVA row and the ratio interval** (2026-10-08): their known-truth tests pass; whether they are the
+   fixtures entry 363 asked for is planning's to say.
+7. **Garmin Xero import (21)** (2026-10-08): every one of Alan's 387 exports reads, the gate in its own words.
+
+Not met against a written gate: 1, 2, 3, and point 2 of 5. Met against a proposed gate: 8, 13 (on a rendered sheet), 15 and 23, by the
+tests their rows name; 16 only on generated sessions.
 
 ## The checklist: material still needed, one list for one sitting
 
@@ -66,7 +76,7 @@ done is in brackets. Nothing in it can be settled without Alan: every line needs
 
 1. **A sheet shot in a known order with its Garmin Xero string recorded**, the order written down: proves 20 and 24, and checks the
    pairing the Xero's own timing now proposes (entry 342) against the truth. (Range, then the scanner.)
-2. **A sheet with two shots through one hole** somewhere on it, the count written down: proves 4 and 13. (Range.)
+2. **A sheet with two shots through one hole** somewhere on it, the count written down: proves 4, and 13 on paper. (Range.)
 3. **The dominus-k sheet** (or any shot GroupLab sheet), taped flat and photographed square, at about 20 degrees and at about 35 degrees;
    its scan already exists: proves 1 and 12. (Home.)
 4. **Two minutes with the wrong-bull scan**: correct its misassignments with the keyboard alone, detailed logging on: proves 9 and 10.
@@ -87,5 +97,6 @@ done is in brackets. Nothing in it can be settled without Alan: every line needs
 
 Every sheet from the range is also scanned at 600 dpi, which is what lets each one be measured against its own photographs. Item 3
 needs a change to detection rather than more material (197 of 198 holes, 2 false marks), item 31 waits on planning writing Phase 9's
-gate, and items 5, 6, 7, 15, 16, 17, 21, 22 and 23 need nothing more from Alan (question 79 asks
-planning about the written gates found met).
+gate, and items 5, 6, 7, 8, 15, 16, 17, 21, 22 and 23 need nothing more from Alan (question 79 asks planning about the written gates
+found met): 16 needs its report's zero verdict to be the screen's, 17 has no gate, and point 2 of 5 cannot be met on `shotGroups`' own
+series.
