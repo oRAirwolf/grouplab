@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 176,
+  "afterNightly": 177,
   "screens": {
     "analysis": "e2e7a66362a9de380e45185e8b29ec0f9b96532f6c531666c279825cd06b4ab9",
     "analysis-open": "9a83299abaa1df89e565e6968ed5c06386af771a8a47b4277bdd736dc755b5fd",
@@ -8,16 +8,16 @@
     "ballistics-hit": "c676cd9a9b2aac29dcf3304454c348f63ebeb496c2e2ec2668ee8f59bfda2aab",
     "compare": "eed26c7103559d16d6fc32626014aebbc58efa5451f01ba877f3ad66232667de",
     "equipment": "c507d18a548d707db0df421b250fe150710db456438068c951321956b12aeb3c",
-    "fingerprint": "46bccaed7c4f46b370a95a1c0abbbb03434deccae19653b496b7bd43a90d200f",
+    "fingerprint": "24f9209768e8c34b455c3dc16db1f0a89afe2708f507e5493ced5da718305814",
     "firstrun": "73af6bfdf94c571037d56e7259642488a4d0ba697f299f3c36ad8162dd0fd6f7",
     "marking": "3f58a229bbcd2494e5eb18c68d6e156d101312380b6c6f8ee62dfbe03b90a8bf",
-    "marking-other": "971b11c5e7fd0612c0789710038bee639f2f41fa1f2085b75de3fa83bf1c0159",
+    "marking-other": "bfa0c16bdcd81fcadf9c2f2c696e4a3d5654386669c567c8eb9de7db2f51c4ef",
     "optic": "6f91b1e2b69a6054798e59a29c83cbca383399b64dbb6a839ed46538aead1871",
     "optic-4x": "6f91b1e2b69a6054798e59a29c83cbca383399b64dbb6a839ed46538aead1871",
-    "pairing": "063252507617418114e89f1273b4f9b41ad0a6b958fc9720af44025d6ba22a7c",
-    "problem-dialog": "47746c9ff0bc04822081879d0d9d67c235fd4e23b44290b1ecd7c69128efe9ac",
-    "problem-dismissed": "3c3a99266ad23948d640e6863b59035f7700468234b8b76bda39d771e851fed9",
-    "scale-markers": "031e10e8711f29399eeecd18dd09f2178d3e8c39a9b3faf9883c038c6caf76f1",
+    "pairing": "67835a25a184430ea380db0f00309a66461fbbff8e860041ca04425d3a9a94b3",
+    "problem-dialog": "83772d386e9912c33fe0925f52fe9028aece98dce15c1739a21145d3c736f378",
+    "problem-dismissed": "a2bec90005d32c2226979aba2d9dbaf974dbd291d11eee52bb049525da978ccc",
+    "scale-markers": "26badafe4ced57585bf73fd825a5208edf7d3c14cc5540ed4a75b1f0f29d077c",
     "scope-unit": "fe08ad04dcb5c50e725a2b889b8f6b9fa7385af3d69921a8fefe520345918f42",
     "sessions": "2db8366766d202af9415af278f0de0d64262432776d9bad9d4d544e8f3c0f279",
     "settings": "d02ad681b80a0f78b14285a374ecb95957ded0245f9544870231ca1cb253633d",
@@ -41,10 +41,10 @@
     "sheet-zero-moa-100m": "0a2bc77b05a85cda272cf053622219f7355303188c4e47595da70be7b4fc9a88",
     "sheet-zero-moa-100y": "af18c764330f758652eb5b73668eb04f286f23793d6ebffa14a1ed07114f9c5d",
     "shots-to-zero": "6726c409600285eb108e57ab626d1b5c890bc4c0f83f87db51a991d999bd2a43",
-    "store-target": "9504130589a589dec2da0596700534baabce84a1b42d08fca4e3f0666474bfc4",
+    "store-target": "ce89365e4dd40658a5c917fc756e75a00bd881f72e368c25ea3afe67b87fd344",
     "targets": "90f48e0f17e30548172b03351f873cc35c8bea40792b61ac9b1cbab2079bf699",
     "targets-zero": "d4e464f6495fd687d86049e007e936f8f0cc60e44b013744027b02670bb0fdb1",
     "velocity": "5c1d4dab833b74170866d2ac452e555e619bb88bdd055592dcbe30a218a1146f",
-    "which-target": "59f1055b521e7931934621ed0943d0eb37fc07f7bdd20614a30f676308719b25"
+    "which-target": "818c67b58ba834af30b85f411d6b8682d0f5f98bd688339e4daf13f74a7a5ef8"
   }
 }
