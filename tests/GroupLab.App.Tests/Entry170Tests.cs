@@ -164,8 +164,9 @@ public class Entry170Tests
 
     /// <summary>
     /// Sections 2.4 and 3.4: naming every one of 25 bulls, and excluding a shot, each finish inside a budget. The reference machine does
-    /// either in under 100 ms of interface-thread work, recorded in docs/PERFORMANCE.md; the test allows 400 ms so a slow shared CI runner
-    /// does not fail it, which is still twelve times under the 2.5 and 5 seconds it took before, so a return of either freeze fails it.
+    /// either in under 100 ms of interface-thread work, recorded in docs/PERFORMANCE.md; the test allows 1000 ms so a slow shared CI runner
+    /// does not fail it (macOS took 457 ms against the old 400 in run 37830239736, with no change near this code), which is still two and a
+    /// half and five times under the 2.5 and 5 seconds it took before, so a return of either freeze fails it.
     /// </summary>
     [AvaloniaFact]
     public void NamingEveryBullAndExcludingAShotDoNotFreezeTheWindow()
@@ -190,8 +191,8 @@ public class Entry170Tests
             long naming = Timed(() => window.SetAimedAtChosenBulls(true));
             var shot = window.Session.State.Shots.First(s => s.IsShot);
             long excluding = Timed(() => window.Session.SetExclusion(shot.Id, ExclusionReason.CalledFlyer));
-            Assert.True(naming < 400, $"naming every bull took {naming} ms");
-            Assert.True(excluding < 400, $"excluding a shot took {excluding} ms");
+            Assert.True(naming < 1000, $"naming every bull took {naming} ms");
+            Assert.True(excluding < 1000, $"excluding a shot took {excluding} ms");
         }
         finally
         {
