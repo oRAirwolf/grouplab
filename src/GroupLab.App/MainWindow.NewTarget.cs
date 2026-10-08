@@ -121,7 +121,7 @@ public sealed partial class MainWindow
         {
             var was = session.State;
             ClearSheet(MarkingState.Empty);
-            status.Text = "New target. Open a photograph or scan when you are ready.";
+            status.Text = NewTargetStatus;
             DiagnosticLog.Info("target.new");
             Refresh();
             toaster.Show(new Confirmation("New target: the sheet is cleared.", was.ImagePath is null && was.Shots.Count == 0 ? null : () =>

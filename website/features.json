@@ -478,6 +478,22 @@
       "guide": "3-photograph-or-scan-it"
     },
     {
+      "key": "target-tabs",
+      "group": "Reading a target",
+      "name": "Several targets open at once",
+      "sentence": "Each target opens in its own tab across the top of the window, named, with Analysis or Marking and a dot that says whether it is saved; each keeps its own marks, zoom and undo, Ctrl+Tab moves between them, and closing one with unsaved marks asks first.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "next",
+      "note": "each in its own tab across the top of the window",
+      "tour": "marking",
+      "guide": "4-mark-it-and-settle-the-review-queue"
+    },
+    {
       "key": "six-figures",
       "group": "The numbers",
       "name": "The figures you read off a target",

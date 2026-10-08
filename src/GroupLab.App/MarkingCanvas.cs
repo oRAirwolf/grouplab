@@ -368,6 +368,62 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         FitToView();
     }
 
+    /// <summary>The view's zoom, screen pixels per image pixel, and its offset, for the headless tests of the target tabs.</summary>
+    internal (double Zoom, Vector Offset) View => (zoom, offset);
+
+    /// <summary>
+    /// Several targets open at once (planning, 2026-10-07): the picture and the view of the target leaving the screen, handed to its tab and
+    /// taken off the canvas without being disposed, because the tab still owns it. The canvas is left empty.
+    /// </summary>
+    internal CanvasView TakeView()
+    {
+        var view = new CanvasView(bitmap, value, imageWidth, imageHeight, zoom, offset, Artwork, MissingMarkers);
+        bitmap = null;
+        value = null;
+        imageWidth = imageHeight = 0;
+        zoom = 1;
+        offset = default;
+        ForgetGesture();
+        Artwork = null;
+        MissingMarkers = [];
+        InvalidateVisual();
+        return view;
+    }
+
+    /// <summary>Shows a target's parked picture at the zoom and the place it was left, its session already set.</summary>
+    internal void ShowView(CanvasView view)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+        if (!ReferenceEquals(bitmap, view.Picture))
+        {
+            bitmap?.Dispose();
+        }
+
+        bitmap = view.Picture;
+        value = view.Value;
+        imageWidth = view.Width;
+        imageHeight = view.Height;
+        turns = Session?.State.ViewQuarterTurns ?? 0;
+        zoom = view.Zoom;
+        offset = view.Offset;
+        ForgetGesture();
+        Artwork = view.Artwork;
+        MissingMarkers = view.MissingMarkers;
+        InvalidateVisual();
+    }
+
+    private void ForgetGesture()
+    {
+        pending.Clear();
+        awaiting.Clear();
+        hover = null;
+        placing = null;
+        handle = null;
+        panFrom = null;
+        dragging = null;
+        Selected = null;
+    }
+
     public void FitToView()
     {
         Fit();
@@ -1191,3 +1247,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
     private static double Distance(Point a, Point b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));
 }
+
+/// <summary>
+/// A target's picture and view while its tab is not showing: the picture, the pixels the marks are measured on, their size, the zoom and the
+/// place the view was left, and the sheet's expected artwork and missing markers.
+/// </summary>
+internal sealed record CanvasView(Bitmap? Picture, GrayImage? Value, double Width, double Height, double Zoom, Vector Offset, GrayImage? Artwork, IReadOnlyList<PointD> MissingMarkers);

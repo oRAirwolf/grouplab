@@ -58,6 +58,13 @@ public sealed partial class MainWindow
     /// </summary>
     private void SavingOnClose(WindowClosingEventArgs e)
     {
+        // Several targets open at once: the other tabs with unsaved marks are asked about first, one at a time.
+        if (!closingAnswered && AskAboutOtherTabsOnClose())
+        {
+            e.Cancel = true;
+            return;
+        }
+
         if (closingAnswered || !HasUnsavedWork || sessions is null)
         {
             return;
