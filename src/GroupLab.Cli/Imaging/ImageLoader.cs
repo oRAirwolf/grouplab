@@ -53,16 +53,20 @@ public static class ImageLoader
     public const long MostPixels = 400L * 1000 * 1000;
 
     /// <summary>
-    /// Refuses a decoded image larger than <see cref="MostPixels"/>, saying the measured size and the limit.
+    /// Refuses an image larger than <see cref="MostPixels"/>, saying the measured size and the limit.
     /// <para>
-    /// The check is after the decode because that is where the size is known: OpenCV reads the header and allocates in one call, and there
-    /// is no way through it to ask first. So this does not prevent the allocation; it stops everything downstream from working on a file
-    /// nothing here should be working on, and says why in a sentence a person can act on.
+    /// Question 43 (entry 388 section 3, Alan approves): the size is judged from the file's own header before anything is decoded, so a few
+    /// bytes claiming an enormous image are refused before OpenCV allocates it. A file whose header could not be read is judged again after
+    /// the decode, from the decoded size, which is where the check used to be.
     /// </para>
     /// </summary>
-    private static void NotTooLarge(Mat mat, string path)
+    private static void NotTooLarge(long width, long height, string path)
     {
-        long pixels = (long)mat.Width * mat.Height;
+        long pixels = width * height;
+        if (pixels <= 0)
+        {
+            return;
+        }
 
         // Entry 240 section 1.5: below the fixed cap, what this machine's memory holds, so a computer short of memory says so rather than
         // running out part way through. On anything with 12 GB or more it is the cap.
@@ -70,15 +74,43 @@ public static class ImageLoader
         double most = memory > 0 ? GroupLab.Core.Imaging.MemoryBudget.DesktopMostMegapixels(memory / (1024.0 * 1024), MostPixels / 1e6) : MostPixels / 1e6;
         if (pixels > most * 1e6 && most * 1e6 < MostPixels)
         {
-            throw new InvalidDataException(FormattableString.Invariant(
-                $"{path} is {mat.Width} by {mat.Height}, which is {pixels / 1_000_000} megapixels. This computer's memory holds images up to about {most:0} megapixels for GroupLab to read whole; a scan at a lower resolution will read."));
+            throw TooLarge(FormattableString.Invariant(
+                $"{path} is {width} by {height}, which is {pixels / 1_000_000} megapixels. This computer's memory holds images up to about {most:0} megapixels for GroupLab to read whole; a scan at a lower resolution will read."));
         }
 
         if (pixels > MostPixels)
         {
-            throw new InvalidDataException(FormattableString.Invariant(
-                $"{path} is {mat.Width} by {mat.Height}, which is {pixels / 1_000_000} megapixels. GroupLab reads up to {MostPixels / 1_000_000} megapixels, which is far larger than any scan or photograph of a target. A file this big is either broken or built to exhaust memory."));
+            throw TooLarge(FormattableString.Invariant(
+                $"{path} is {width} by {height}, which is {pixels / 1_000_000} megapixels. GroupLab reads up to {MostPixels / 1_000_000} megapixels, which is far larger than any scan or photograph of a target. A file this big is either broken or built to exhaust memory."));
         }
+    }
+
+    private const string TooLargeKey = "GroupLab.TooLarge";
+
+    private static InvalidDataException TooLarge(string message)
+    {
+        var refused = new InvalidDataException(message);
+        refused.Data[TooLargeKey] = true;
+        return refused;
+    }
+
+    /// <summary>Whether an exception is a refusal for size, whose message names the size measured and the limit, for the person to read.</summary>
+    public static bool IsTooLarge(Exception e) => e is InvalidDataException && e.Data.Contains(TooLargeKey);
+
+    private static void NotTooLarge(Mat mat, string path) => NotTooLarge(mat.Width, mat.Height, path);
+
+    /// <summary>The header's size judged before the decode, where the header gave one.</summary>
+    private static void NotTooLarge(ImageMetadata metadata, string path) => NotTooLarge(metadata.Width ?? 0, metadata.Height ?? 0, path);
+
+    /// <summary>
+    /// The file's bytes, refused before any decode where its header claims more than GroupLab reads (question 43), for the places that
+    /// decode a person's file themselves rather than through <see cref="Load(string)"/>: the store-bought target's photo and scale markers.
+    /// </summary>
+    public static byte[] Checked(string path)
+    {
+        byte[] bytes = Bytes(path);
+        NotTooLarge(ImageMetadataReader.Read(bytes), path);
+        return bytes;
     }
 
     public static (GrayImage Image, ImageMetadata Metadata) Load(string path) => Load(path, null);
@@ -115,6 +147,7 @@ public static class ImageLoader
             (true, 2) => ImreadModes.ReducedColor2,
             _ => ImreadModes.Color,
         };
+        NotTooLarge(metadata, path);
         var mat = Cv2.ImDecode(bytes, mode | ImreadModes.IgnoreOrientation);
         if (mat.Empty())
         {
@@ -207,6 +240,7 @@ public static class ImageLoader
     {
         byte[] bytes = Bytes(path);
         var metadata = ImageMetadataReader.Read(bytes);
+        NotTooLarge(metadata, path);
         var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
         if (colour.Empty())
         {
@@ -255,6 +289,7 @@ public static class ImageLoader
     {
         byte[] bytes = Bytes(path);
         var metadata = ImageMetadataReader.Read(bytes);
+        NotTooLarge(metadata, path);
         using var mat = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
         if (mat.Empty())
         {
@@ -290,3 +325,4 @@ public static class ImageLoader
         }
     }
 }
+

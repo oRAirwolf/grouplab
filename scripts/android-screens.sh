@@ -82,7 +82,7 @@ while read -r device size density rotation middle screens <&3; do
     adb shell am force-stop "$PKG"
   done
 done 3<<'LAYOUTS'
-fold 1080x2520 420 0 - firstrun,capture,result,settings,targets
+fold 1080x2520 420 0 - firstrun,capture,result,settings,targets,scale-markers,fingerprint,pairing,open-targets
 fold 2520x1080 420 0 landscape result,sessions
 tab 2960x1848 340 0 landscape result,capture,sessions,targets,settings
 tab 1848x2960 340 0 portrait result

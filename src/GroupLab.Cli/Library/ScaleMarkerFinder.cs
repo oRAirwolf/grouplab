@@ -755,7 +755,7 @@ public static class ScaleMarkerFinder
     /// <summary>A photo's file with the card's outline blanked, as a lossless PNG, for the copy GroupLab keeps, shows and sends instead.</summary>
     public static byte[] BlankedFile(string path, IReadOnlyList<PointD> outline, int orientation)
     {
-        using var raw = Cv2.ImDecode(File.ReadAllBytes(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
+        using var raw = Cv2.ImDecode(GroupLab.Cli.Imaging.ImageLoader.Checked(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
         using var upright = UprightMat.Apply(raw, orientation);
         Cv2.FillPoly(upright, [outline.Select(p => new Point((int)Math.Round(p.X * upright.Width), (int)Math.Round(p.Y * upright.Height))).ToArray()], new Scalar(128, 128, 128));
         Cv2.ImEncode(".png", upright, out byte[] png);

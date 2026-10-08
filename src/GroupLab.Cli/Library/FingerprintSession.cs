@@ -126,7 +126,7 @@ public sealed class FingerprintSession : IDisposable
         {
             var (g, m) = ImageLoader.Load(path, mostMegapixels);
             var (v, _) = ImageLoader.LoadMaxChannel(path, mostMegapixels);
-            using var full = Cv2.ImDecode(File.ReadAllBytes(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
+            using var full = Cv2.ImDecode(GroupLab.Cli.Imaging.ImageLoader.Checked(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
             if (full.Empty())
             {
                 return "That file is not a picture GroupLab can read.";

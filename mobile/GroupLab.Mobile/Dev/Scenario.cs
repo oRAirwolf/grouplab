@@ -363,6 +363,8 @@ internal static class Scenario
                 return await OnUi(() => (Shell.Current?.Back() == true, Shell.Current?.Showing.ToString() ?? ""));
             case "picture":
                 return await Picture(step.Text("file"));
+            case "pick":
+                return Pick(step.Text("file"));
             case "read":
                 // The picture read as a chosen one, and then the result, or the question a smaller copy asks, waited for.
                 var (given, which) = await Picture(step.Text("file"));
@@ -442,6 +444,24 @@ internal static class Scenario
     }
 
     /// <summary>A picture in the scenario folder, or in the files folder itself, read as a photograph chosen on the Capture screen.</summary>
+    /// <summary>
+    /// Entry 388 section 1: the photo the next picker on any screen returns, instead of opening the platform's own, so a scenario reaches
+    /// screens that start from a chosen photo (Add a store-bought target) on the emulator, where no person is there to choose one.
+    /// </summary>
+    internal static PhotoHandle? NextPick { get; set; }
+
+    private static (bool, string) Pick(string? file)
+    {
+        if (file is not { Length: > 0 } || Name(file, "") != file || Path.Combine(Folder, file) is not { } path || !File.Exists(path))
+        {
+            return (false, "pick needs a \"file\" in the scenario folder");
+        }
+
+        NextPick = new PhotoHandle(null, null, null, new FileInfo(path).Length, Path.GetExtension(path).ToLowerInvariant(),
+            () => Task.FromResult<Stream?>(File.OpenRead(path)));
+        return (true, file);
+    }
+
     private static async Task<(bool, string)> Picture(string? file)
     {
         if (file is not { Length: > 0 } || Name(file, "") != file)
@@ -642,6 +662,15 @@ internal static class Scenario
                 return (false, "no control named " + name);
             }
 
+            // Entry 388 section 1: "to": "top" puts the control at the top of what scrolls, so a picture of one card starts at its heading.
+            if (to == "top" && control.FindAncestorOfType<ScrollViewer>() is { Content: Visual content } holder
+                && control.TranslatePoint(default, content) is { } at)
+            {
+                double end = Math.Max(0, holder.Extent.Height - holder.Viewport.Height);
+                holder.Offset = new Vector(holder.Offset.X, Math.Clamp(at.Y, 0, end));
+                return (true, name);
+            }
+
             control.BringIntoView();
             return (true, name);
         }
@@ -771,7 +800,97 @@ internal static class Scenario
             bitmap.Save(stream, PngBitmapEncoderOptions.Default);
         }
 
+        // Entry 388 section 2: every screenshot carries its layout's faults beside it, so a sweep at any size and theme is a quality sweep.
+        File.WriteAllText(Path.Combine(Results, name + ".quality.json"), Quality(top, name).ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
         return (true, Path.GetFileName(file));
+    }
+
+    /// <summary>The smallest a control a finger presses may be, either way, in device-independent pixels (entry 388 section 2).</summary>
+    internal const double SmallestTouch = 44;
+
+    /// <summary>
+    /// Entry 388 section 2, the quality sweep: what is wrong with the layout showing, as the screen's own controls measure it. Four faults:
+    /// a control a finger presses under <see cref="SmallestTouch"/> either way ("small"); words cut short, by trimming or by a box too
+    /// narrow or too short for them ("cut"); anything reaching past the side of the window, where nothing scrolls sideways ("off"); and two
+    /// pieces of text drawn over each other ("overlap"). scripts/phone-quality.py gathers them across sizes and themes.
+    /// </summary>
+    internal static JsonObject Quality(TopLevel top, string name)
+    {
+        var findings = new JsonArray();
+        double wide = top.Bounds.Width, high = top.Bounds.Height;
+        Rect Box(Visual v) => v.TransformToVisual(top) is { } to ? new Rect(v.Bounds.Size).TransformToAABB(to) : default;
+        bool SideScrolls(Visual v) => v.GetVisualAncestors().OfType<ScrollViewer>().Any(s => s.Extent.Width > s.Viewport.Width + 1);
+        void Add(string kind, Control c, Rect box, string? detail = null) => findings.Add(new JsonObject
+        {
+            ["kind"] = kind,
+            ["type"] = c.GetType().Name,
+            ["id"] = AutomationProperties.GetAutomationId(c),
+            ["text"] = Words(c) is { } w ? (w.Length > 80 ? w[..80] : w) : null,
+            ["x"] = Math.Round(box.X),
+            ["y"] = Math.Round(box.Y),
+            ["width"] = Math.Round(box.Width, 1),
+            ["height"] = Math.Round(box.Height, 1),
+            ["detail"] = detail,
+        });
+
+        var showing = Showing().OfType<Control>().Where(c => c.Bounds.Width > 0 && c.Bounds.Height > 0).ToList();
+        var texts = new List<(TextBlock Text, Rect Box)>();
+        foreach (var c in showing)
+        {
+            var box = Box(c);
+            bool inView = box.Bottom > 0 && box.Y < high;
+            if (c is Button or Avalonia.Controls.Primitives.ToggleButton or TextBox or ComboBox or Slider
+                && c.IsEffectivelyEnabled && inView && (box.Width < SmallestTouch - 0.5 || box.Height < SmallestTouch - 0.5)
+                && c.GetVisualAncestors().OfType<Button>().FirstOrDefault() is null)
+            {
+                Add("small", c, box);
+            }
+
+            if (c is TextBlock { Text.Length: > 0 } text)
+            {
+                var layout = text.TextLayout;
+                bool trimmed = layout.TextLines.Any(l => l.HasCollapsed);
+                bool narrow = layout.WidthIncludingTrailingWhitespace > text.Bounds.Width + 1 && text.TextWrapping == Avalonia.Media.TextWrapping.NoWrap;
+                bool short_ = layout.Height > text.Bounds.Height + 1;
+                if (inView && (trimmed || narrow || short_))
+                {
+                    Add("cut", c, box, trimmed ? "trimmed" : narrow ? "wider than its box" : "taller than its box");
+                }
+
+                if (inView)
+                {
+                    texts.Add((text, box));
+                }
+            }
+
+            if ((c is TextBlock or Button or TextBox or Image) && (box.X < -1 || box.Right > wide + 1) && !SideScrolls(c))
+            {
+                Add("off", c, box, box.X < -1 ? "past the left side" : "past the right side");
+            }
+        }
+
+        for (int i = 0; i < texts.Count; i++)
+        {
+            for (int j = i + 1; j < texts.Count; j++)
+            {
+                var (a, boxA) = texts[i];
+                var (b, boxB) = texts[j];
+                var both = boxA.Intersect(boxB);
+                if (both.Width > 2 && both.Height > 2 && !a.IsVisualAncestorOf(b) && !b.IsVisualAncestorOf(a))
+                {
+                    Add("overlap", a, boxA, "over " + (b.Text is { Length: > 40 } t ? t[..40] : b.Text));
+                }
+            }
+        }
+
+        return new JsonObject
+        {
+            ["screen"] = name,
+            ["width"] = Math.Round(wide),
+            ["height"] = Math.Round(high),
+            ["dark"] = top.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark,
+            ["findings"] = findings,
+        };
     }
 
     /// <summary>

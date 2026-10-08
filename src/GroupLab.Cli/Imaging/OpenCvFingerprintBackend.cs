@@ -24,7 +24,7 @@ public sealed class OpenCvFingerprintBackend : IFingerprintBackend
         }
 
         // Pixels only, decoded without the picture's orientation tag or any other metadata, as every reading of a picture is.
-        using var full = Cv2.ImDecode(File.ReadAllBytes(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
+        using var full = Cv2.ImDecode(ImageLoader.Checked(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
         return full.Empty() ? null : Describe(full);
     }
 

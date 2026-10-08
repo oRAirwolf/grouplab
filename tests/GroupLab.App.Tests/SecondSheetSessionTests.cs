@@ -29,7 +29,8 @@ public class SecondSheetSessionTests
             // A second sheet, opened the way Open, drop and paste open one.
             string second = Path.Combine(Path.GetDirectoryName(path)!, "second.png");
             File.Copy(path, second);
-            Assert.True(window.OpenImageSafely(second));
+            _ = window.OpenImageSafely(second);
+            Assert.True(window.Opened());
             Assert.Null(window.CurrentSession);
             window.ApplyDetection(result);
             window.Session.SetCalibre(Calibre.Of(0.308));

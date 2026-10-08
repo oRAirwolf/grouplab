@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
+using GroupLab.Cli.Imaging;
 using GroupLab.Core.Updates;
 
 namespace GroupLab.App;
@@ -103,9 +104,9 @@ public sealed partial class MainWindow
         }
 
         string first = paths[0];
-        Leaving(() =>
+        Leaving(async () =>
         {
-            if (OpenImageSafely(first) && paths.Count > 1)
+            if (await OpenImageSafely(first).ConfigureAwait(true) && paths.Count > 1)
             {
                 status.Text += string.Create(CultureInfo.InvariantCulture,
                     $" {paths.Count - 1} other {(paths.Count == 2 ? "file was" : "files were")} dropped with it and not opened.");
@@ -146,9 +147,9 @@ public sealed partial class MainWindow
             return;
         }
 
-        Leaving(() =>
+        Leaving(async () =>
         {
-            if (OpenImageSafely(into))
+            if (await OpenImageSafely(into).ConfigureAwait(true))
             {
                 // Entry 137 section 2: pasted data carries no file name and no metadata, and the one place that costs something is the scale
                 // on a blank sheet, which otherwise comes from the scan's own resolution.
@@ -157,17 +158,58 @@ public sealed partial class MainWindow
         });
     }
 
+    /// <summary>Question 43 (entry 388 section 3): how long opening a picture may take before GroupLab stops waiting for it.</summary>
+    internal static TimeSpan OpenTimeLimit { get; set; } = TimeSpan.FromSeconds(60);
+
+    /// <summary>The open under way, which the headless tests wait on; true where it opened.</summary>
+    internal Task<bool> Opening { get; private set; } = Task.FromResult(true);
+
+    /// <summary>Counts the opens begun, so a slow one finishing after a later one has started is put down rather than shown.</summary>
+    private int opensBegun;
+
     /// <summary>
     /// Opens an image and says plainly where it cannot, rather than letting a decode failure reach the crash reporter. All three routes in,
     /// Open, drop and paste, come through here, so a file refused one way is refused the same way by the others.
+    /// <para>
+    /// Question 43, approved by Alan in entry 388 section 3: the file is decoded on a background thread, so a large scan no longer stops
+    /// the window answering, and GroupLab stops waiting after <see cref="OpenTimeLimit"/>. OpenCV cannot be stopped part way, so a decode
+    /// past the limit is left to finish on its own and what it made is put down. A file larger than GroupLab reads is refused before it is
+    /// decoded, with the size its header gives and the limit.
+    /// </para>
     /// </summary>
     /// <returns>Whether it opened.</returns>
-    internal bool OpenImageSafely(string path)
+    internal Task<bool> OpenImageSafely(string path) => Opening = OpenOffThread(path, ++opensBegun);
+
+    private async Task<bool> OpenOffThread(string path, int number)
     {
+        string name = Path.GetFileName(path);
+        status.Text = "Opening " + name + "...";
+        var decode = Task.Run(() => ImageLoader.LoadForEditor(path));
         try
         {
-            OpenImage(path);
+            var loaded = await decode.WaitAsync(OpenTimeLimit).ConfigureAwait(true);
+            if (number != opensBegun)
+            {
+                loaded.Colour.Dispose();
+                return false;
+            }
+
+            OpenImageLoaded(path, loaded);
             return true;
+        }
+        catch (TimeoutException)
+        {
+            _ = decode.ContinueWith(t => t.Result.Colour.Dispose(), CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
+            DiagnosticLog.Info("image.slow", [.. DiagnosticLog.File(path), ("seconds", OpenTimeLimit.TotalSeconds)]);
+            Failed("The picture took too long to open", string.Create(CultureInfo.InvariantCulture,
+                $"GroupLab stopped waiting for {name} after {OpenTimeLimit.TotalSeconds:0} seconds. The file may be very large or damaged; a copy saved at a lower resolution will open."));
+            return false;
+        }
+        catch (Exception ex) when (ImageLoader.IsTooLarge(ex))
+        {
+            DiagnosticLog.Info("image.refused", [.. DiagnosticLog.File(path), ("reason", "too-large")]);
+            Failed("The picture is too large to open", ex.Message.Replace(path, name, StringComparison.Ordinal));
+            return false;
         }
         catch (Exception ex) when (ex is InvalidDataException or IOException or UnauthorizedAccessException or OpenCvSharp.OpenCVException)
         {

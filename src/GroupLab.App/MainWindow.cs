@@ -1786,11 +1786,14 @@ public sealed partial class MainWindow : Window
     /// turns as the image's orientation tag asks (NOTES-FROM-PLANNING.md entry 24 section 4), which moves no pixel and no position;
     /// Rotate left and Rotate right turn it further on any image, tagged or not (entry 26).
     /// </summary>
-    public void OpenImage(string path)
+    public void OpenImage(string path) => OpenImageLoaded(path, ImageLoader.LoadForEditor(path));
+
+    /// <summary>The image <see cref="ImageLoader.LoadForEditor"/> decoded, shown; question 43 decodes it off this thread first.</summary>
+    private void OpenImageLoaded(string path, (GrayImage Grey, GrayImage MaxChannel, OpenCvSharp.Mat Colour, ImageMetadata Metadata) loaded)
     {
         // Entry 130 section 6 item 1: one read and one decode. This used to read the file three times and decode it three times, which on
         // a 600 dpi letter scan is three passes over 34 megapixels where the command line makes one.
-        var (image, max, colour, meta) = ImageLoader.LoadForEditor(path);
+        var (image, max, colour, meta) = loaded;
         using var colourImage = colour;
 
         // Entry 357 section 1: the picture open until now is left, and under "Send everything I open" it goes in the state it was left in.
@@ -2135,7 +2138,7 @@ public sealed partial class MainWindow : Window
         if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
             // Entry 140 section 1.4: the sheet that is about to be thrown away asks first, where it holds edits nobody has saved.
-            Leaving(() => OpenImageSafely(path));
+            Leaving(() => _ = OpenImageSafely(path));
         }
     }
 

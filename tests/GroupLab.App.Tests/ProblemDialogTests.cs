@@ -228,7 +228,7 @@ public class ProblemDialogTests
         try
         {
             window.OpenDropped([path]);
-            Dispatcher.UIThread.RunJobs();
+            window.Opened();
             Assert.True(window.ProblemOpen);
             Assert.Equal("The picture could not be opened", window.ProblemTitle);
             Assert.Contains("could not be opened as an image", window.StatusText, StringComparison.Ordinal);

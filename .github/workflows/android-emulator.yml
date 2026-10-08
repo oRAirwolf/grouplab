@@ -8,6 +8,11 @@ name: android emulator
 
 on:
   workflow_dispatch:
+    inputs:
+      quality:
+        description: "Entry 388 section 2: also run the quality sweep at three phone widths, light and dark (about 40 minutes more)"
+        type: boolean
+        default: false
 
 concurrency:
   group: android-emulator-${{ github.ref }}
@@ -136,17 +141,40 @@ jobs:
           disable-animations: true
           script: bash scripts/android-screens.sh apk/grouplab-dev-x86_64.apk android-screens "$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName' | sed 's/.*nightly\.//')"
 
+      # Entry 388 section 2: the quality sweep, only when asked for; its report is the step summary and the artifact, never a failure.
+      - name: The quality sweep
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && inputs.quality }}
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 90
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-quality.sh apk/grouplab-dev-x86_64.apk android-quality
+
+      - name: The quality sweep's report
+        if: ${{ !cancelled() && inputs.quality }}
+        run: test -f android-quality/report.md && cat android-quality/report.md >> "$GITHUB_STEP_SUMMARY" || echo "The quality sweep wrote no report." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Commit the phone's screenshots if they changed
         if: ${{ !cancelled() && steps.build.outcome == 'success' && github.ref == 'refs/heads/main' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- docs/figures/screens/phone; then
+          # Staged first, so a screen pictured for the first time is a change too: git diff alone does not see a new file.
+          git add docs/figures/screens/phone
+          if git diff --cached --quiet -- docs/figures/screens/phone; then
             echo "The phone's screenshots are unchanged."
             exit 0
           fi
-          count=$(git diff --name-only -- docs/figures/screens/phone | wc -l)
-          git add docs/figures/screens/phone
+          count=$(git diff --cached --name-only -- docs/figures/screens/phone | wc -l)
           git commit -m "[screens] the phone's screenshots, taken on the Android emulator" -m "Question 90 (b): scripts/android-screens.sh, $count files changed. The marker keeps this out of the test suite and the nightly."
           git pull --rebase origin main
           git push origin main
@@ -164,6 +192,8 @@ jobs:
           path: |
             android-sweep
             android-touch
+            android-screens
+            android-quality
             build.log
           retention-days: 14
           if-no-files-found: warn
