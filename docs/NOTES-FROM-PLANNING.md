@@ -25,6 +25,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-08, entry 389: the M834 from the computer, the sweep on nightly 179, and no wait left running
+
+**Status: actioned 2026-10-08; every section done.** The computer prints to the M834 over a paired Bluetooth serial port on Windows, sending the phone's bytes (shared in `M834Print`, proven with a fake port), built and not yet tried on a real M834 from a computer (request 83, for later); macOS and Linux say it is not available yet. The sweep on nightly 179 found no faults and the Shots switch is 48 units at every size; the emulator baseline recorded again. No wait was still running; CLAUDE.md's Waiting section now says every wait has a time limit and every background task is stopped before the report. STATE: question 80 off the open list, entry 380 section 3 waiting on request 77's photos.
+
+
+From the planning session with Alan, 2026-10-08 11:30 Denver. Alan asked what Code can work on while he does request 82 (the first M220
+print from the phone) and request 81 (the M834's printer check and a second print). Within 85% of the week; chores and screenshot walks on
+chores-haiku, wording checks on docs-sonnet (CLAUDE.md). One commit per section is fine.
+
+**Alan is using the M834 and the M220 from his phone during this entry. Nothing in this entry sends anything to a real printer.**
+
+1. **Printing to the Phomemo M834 from the computer, over Bluetooth** (PHASE1-RESULTS "Not done, next session: the computer (a paired M834
+   is a serial port there)"; Alan's standing rule: the M834 over Bluetooth only, never USB).
+   1. On Windows a paired M834 is a classic Bluetooth serial port (a COM port). Build the computer's route to it from the same page encoder
+      the phone uses (the LZO1X blocks, the printer's own pacing, the `1A 0F 0C` printed answer, the roll or fanfold choice and the 15.5 mm
+      roll feed), so the bytes sent are the phone's bytes. Find the M834 among the COM ports by its Bluetooth name, and say in plain words
+      when it is not paired, not on, or busy (for example while a phone is connected to it).
+   2. It goes through `IOutsideWorld`. Tests use a fake port and prove the bytes match the phone route's for the same page; no test opens a
+      real port.
+   3. The saved printer check (request 81's caliper numbers) applies to these prints the same as on the phone.
+   4. Windows first. On macOS and Linux the choice says it is not available on this computer yet, rather than being hidden or failing.
+   5. Put it where the computer already chooses how to print; if that needs a layout decision, build the least that works, post DESIGN
+      NEEDED in for-alan.md, and carry on.
+   6. Write one request into for-alan.md for later, not now: pair the M834 with the computer in Windows Settings (Bluetooth and devices,
+      Add device), then print GroupLab Printer Check, Letter from the computer once and measure it the same way as request 81. Write the
+      steps out in full.
+   7. The release note says it is built and not yet tried on a real M834 from a computer.
+2. **The quality sweep and the emulator baseline again, on nightly 179** (STATE next step 3): `android-emulator.yml` with `quality` and
+   `baseline`. Confirm the Shots switch is now 48 units tall and nothing new is cut off. Fix what is not a layout decision; post DESIGN
+   NEEDED for what is.
+3. **No wait is left running after an entry ends.** Alan found a background shell from entry 388 still running after 6 hours this
+   morning: a `grep ... "build and test"` loop over a task output file that never printed those words, which stopped Claude Code from
+   exiting to apply an update. Stop it if it is somehow still there. Add to CLAUDE.md's Waiting section: every wait has a time limit, and
+   before an entry's report every background task the entry started is stopped, so `/tasks` shows nothing running.
+4. **STATE**: question 80 (a newer fingerprint library without a new build) is answered (entry 347) and should leave the open questions
+   list; entry 380 section 3 waits on request 77's photos, which STATE should say.
+
 ## 2026-10-07, entry 388: work that needs nobody, for the start of the new week
 
 **Status: actioned 2026-10-08; every section done.** The four phone pictures taken on the emulator and on the Features page; the quality

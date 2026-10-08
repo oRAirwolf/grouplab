@@ -14,10 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 35 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 36 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 
@@ -29,14 +29,6 @@ Alan could not find where to import his chronograph data after Add readings took
 view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
 to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
 concept; the phone already opens a page of its own for it. Nothing waits on it.
-
-## 2026-10-01, question 80: how a newer fingerprint library reaches people without a new build
-
-**Status: answered 2026-10-02 (entry 347): with the updates, signed, listed in the manifest, mirrored on grouplab.org.** Nothing waits on it but entry 344 section 3's last step. The signed library file and its reader exist and are tested;
-three things are not mine to decide. Where it is published (a file on grouplab.org beside the update manifests, or an asset on the
-moving release); whether CI signs it with the update key on every change to the built-in list, or only Code by hand when Alan's
-submission is added; and how often the application looks (with the update check, about every six hours on the phone and at start on
-the computer, is what I would do). I would choose grouplab.org, signed in CI, on the update check.
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 

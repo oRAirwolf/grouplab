@@ -81,6 +81,14 @@ public interface IOutsideWorld
         Task.FromResult<GroupLab.Core.Printing.Labels.IPrinterLink?>(null);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 389 section 1: a printer paired with this computer over classic Bluetooth, through the serial port
+    /// Windows made for it, the first whose name holds <paramref name="nameHint"/>, or why there is none in words for the screen.
+    /// <paramref name="log"/> hears each step, never the device's address. Only Windows has it so far; this default says so.
+    /// </summary>
+    Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenSerialPrinterAsync(string nameHint, Action<string> log, CancellationToken token) =>
+        Task.FromResult<(GroupLab.Core.Printing.Labels.IPrinterLink?, string?)>((null, GroupLab.Core.Printing.Labels.SerialPrinterWords.NotHere(nameHint)));
+
+    /// <summary>
     /// Downloads a file, reporting the share done as it goes. It returns the bytes written, so a caller can tell a short download from a
     /// whole one, and throws nothing on a refusal: it returns null.
     /// </summary>
@@ -138,6 +146,11 @@ public sealed class TheOutsideWorld : IOutsideWorld
     public void OpenFile(string path) => Start(path);
 
     public void OpenFolder(string path) => Start(path);
+
+    public Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenSerialPrinterAsync(string nameHint, Action<string> log, CancellationToken token) =>
+        OperatingSystem.IsWindows()
+            ? GroupLab.Core.Printing.Labels.WindowsSerialPrinter.OpenAsync(nameHint, log, token)
+            : Task.FromResult<(GroupLab.Core.Printing.Labels.IPrinterLink?, string?)>((null, GroupLab.Core.Printing.Labels.SerialPrinterWords.NotHere(nameHint)));
 
     public async Task<string?> GetTextAsync(string address, CancellationToken token)
     {
@@ -385,6 +398,9 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     /// <summary>What the clipboard holds, as a test has set it. Nothing by default, which is what an empty clipboard is.</summary>
     public ClipboardContents Clipboard { get; set; } = ClipboardContents.Nothing;
 
+    /// <summary>Entry 389: the link a test hands a print to a paired printer, by its name hint, or why there is none. No printer by default.</summary>
+    public Func<string, (GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)>? SerialPrinter { get; set; }
+
     /// <summary>
     /// Forgets everything: what was asked for, the answers it was given, and the installer it was told to start. The recorder is in place
     /// for the whole test run, so a test that cares what was asked for during it clears this first rather than counting from an offset.
@@ -405,6 +421,7 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
         SurveyAnswer = null;
         Surveys.Clear();
         Clipboard = ClipboardContents.Nothing;
+        SerialPrinter = null;
     }
 
     public void OpenAddress(string address) => _asked.Add(("address", address));
@@ -412,6 +429,12 @@ public sealed class RecordedOutsideWorld : IOutsideWorld
     public void OpenFile(string path) => _asked.Add(("file", path));
 
     public void OpenFolder(string path) => _asked.Add(("folder", path));
+
+    public Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenSerialPrinterAsync(string nameHint, Action<string> log, CancellationToken token)
+    {
+        _asked.Add(("serial printer", nameHint));
+        return Task.FromResult(SerialPrinter?.Invoke(nameHint) ?? (null, GroupLab.Core.Printing.Labels.SerialPrinterWords.NotPaired(nameHint)));
+    }
 
     public Task<ClipboardContents> ReadClipboardAsync(CancellationToken token)
     {

@@ -5,6 +5,14 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-01, question 80: how a newer fingerprint library reaches people without a new build
+
+**Status: answered 2026-10-02 (entry 347): with the updates, signed, listed in the manifest, mirrored on grouplab.org.** Nothing waits on it but entry 344 section 3's last step. The signed library file and its reader exist and are tested;
+three things are not mine to decide. Where it is published (a file on grouplab.org beside the update manifests, or an asset on the
+moving release); whether CI signs it with the update key on every change to the built-in list, or only Code by hand when Alan's
+submission is added; and how often the application looks (with the update check, about every six hours on the phone and at start on
+the computer, is what I would do). I would choose grouplab.org, signed in CI, on the update check.
+
 ## 2026-09-22, question 34: pooling two sheets of one load needs a rule for what a pooled group's centre means
 
 **Status: answered 2026-10-08 (entry 388 section 5, Alan through planning): option C with B as the headline, as built in entry 386 section 5 (`PooledSpread`).** Earlier: open, built as proposed for planning to confirm (entry 386 section 5, 2026-10-07).

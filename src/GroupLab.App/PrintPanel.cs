@@ -16,6 +16,7 @@ using GroupLab.Core.Gltd.Binary;
 using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Printing;
+using GroupLab.Core.Printing.Labels;
 using GroupLab.Core.Printing.Thermal;
 using GroupLab.Core.Rendering;
 using Orientation = Avalonia.Layout.Orientation;
@@ -189,12 +190,13 @@ public sealed class PrintPanel : UserControl
             colourRow.IsVisible = Head is null;
             thermalNote.IsVisible = Head is not null;
             darknessRow.IsVisible = Head is not null;
+            ShowM834();
             ShowPreview();
         };
         details.Children.Add(new StackPanel
         {
             Spacing = Tokens.Space4,
-            Children = { Row(new TextBlock { Text = "Print on", VerticalAlignment = VerticalAlignment.Center }, printOn), thermalNote, darknessRow },
+            Children = { Row(new TextBlock { Text = "Print on", VerticalAlignment = VerticalAlignment.Center }, printOn), thermalNote, darknessRow, M834Row() },
         });
 
         var colourLabel = new TextBlock { Text = "Bulls in", VerticalAlignment = VerticalAlignment.Center };
@@ -252,7 +254,8 @@ public sealed class PrintPanel : UserControl
         ("A 4 inch thermal printer, 300 dpi", new PrintHead(300, 1248)),
         ("An 8.5 inch thermal printer, 203 dpi (Letter and A4)", new PrintHead(203.2, 1728)),
         ("An 8.5 inch thermal printer, 300 dpi (Letter and A4)", new PrintHead(300, 2560)),
-        ("Phomemo M834, 300 dpi (Letter and A4), not yet tested", new PrintHead(300, 2560)),
+        // Entry 389: the M834's own head, 2528 dots across as its profile and the phone draw it, so the preview is the page it prints.
+        ("Phomemo M834, 300 dpi (Letter and A4), not yet tested", M834Print.Profile.Head),
     ];
 
     private readonly ComboBox printOn = new() { MinWidth = 260, [Avalonia.Automation.AutomationProperties.NameProperty] = "Print on" };
@@ -1073,6 +1076,158 @@ public sealed class PrintPanel : UserControl
 
         open.Classes.Add(AppStyles.Primary);
         return new StackPanel { Spacing = Tokens.Space8, Children = { Row(open, save, Button("Print…", PrintHere)), Row(app) } };
+    }
+
+    /// <summary>Entry 389 section 1: the button that prints straight to the M834 over Bluetooth, shown when the M834 is chosen above.</summary>
+    internal const string M834PrintWords = "Print on the Phomemo M834 (Bluetooth; not yet tried from a computer)";
+
+    /// <summary>What the M834's paper choice says, as on the phone (entry 382).</summary>
+    internal const string M834PaperWords = "Paper in the M834. On a roll GroupLab feeds the sheet 15.5 mm further after printing, so all of it clears the tear bar. On fanfold it feeds nothing, since the page ends on the fold.";
+
+    /// <summary>What a computer says about the M834 before it is paired.</summary>
+    internal const string M834PairWords = "The M834 must be paired with this computer first, in Windows Settings, Bluetooth and devices, Add device. Close the Phomemo app on your phone, or turn the phone's Bluetooth off, while the computer prints: the printer takes one connection at a time.";
+
+    private readonly StackPanel m834Row = new() { Spacing = Tokens.Space4, IsVisible = false };
+    private readonly RadioButton m834Roll = new() { Content = "A continuous roll", GroupName = "m834Paper" };
+    private readonly RadioButton m834Fanfold = new() { Content = "Fanfold sheets", GroupName = "m834Paper" };
+    private readonly Button m834Cancel = new() { Content = "Cancel", IsVisible = false };
+    private CancellationTokenSource? m834Printing;
+    private bool showingM834;
+
+    /// <summary>Whether the M834 is the printer chosen under "Print on".</summary>
+    internal bool M834Chosen => printOn.SelectedIndex > 0 && ThermalChoices[printOn.SelectedIndex - 1].Words.StartsWith("Phomemo M834", StringComparison.Ordinal);
+
+    /// <summary>The pages the last direct print to the M834 sent, for the tests.</summary>
+    internal IReadOnlyList<byte[]>? M834Sent { get; private set; }
+
+    /// <summary>
+    /// Entry 389 section 1: roll or fanfold, remembered as on the phone; the print button, with Cancel beside it while a print is under way;
+    /// and, on a computer other than Windows, the line that says it is not available here yet rather than hiding it.
+    /// </summary>
+    private StackPanel M834Row()
+    {
+        m834Roll.IsCheckedChanged += (_, _) => SaveM834Paper(m834Roll, PaperForm.Roll);
+        m834Fanfold.IsCheckedChanged += (_, _) => SaveM834Paper(m834Fanfold, PaperForm.Fanfold);
+        m834Cancel.Click += (_, _) => m834Printing?.Cancel();
+        var print = Button(M834PrintWords, PrintOnM834);
+        m834Row.Children.Add(Secondary(M834PaperWords));
+        m834Row.Children.Add(Row(m834Roll, m834Fanfold));
+        m834Row.Children.Add(Secondary(OperatingSystem.IsWindows() ? M834PairWords : SerialPrinterWords.NotHere(M834Print.NameHint)));
+        m834Row.Children.Add(Row(print, m834Cancel));
+        return m834Row;
+    }
+
+    private static TextBlock Secondary(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+
+    private void ShowM834()
+    {
+        m834Row.IsVisible = M834Chosen;
+        showingM834 = true;
+        var paper = Settings?.LoadM834Paper() ?? PaperForm.Roll;
+        m834Roll.IsChecked = paper == PaperForm.Roll;
+        m834Fanfold.IsChecked = paper == PaperForm.Fanfold;
+        showingM834 = false;
+    }
+
+    private void SaveM834Paper(RadioButton button, PaperForm paper)
+    {
+        if (!showingM834 && button.IsChecked == true)
+        {
+            Settings?.SaveM834Paper(paper);
+            DiagnosticLog.Info("print.m834", ("step", "paper"), ("paper", paper == PaperForm.Roll ? "roll" : "fanfold"));
+        }
+    }
+
+    /// <summary>
+    /// Entry 389 section 1: every page of the sheet, as the panel would print it, encoded exactly as the phone encodes it
+    /// (<see cref="M834Print"/>), sent down the M834's Bluetooth serial port through <see cref="IOutsideWorld"/>, and held open until the
+    /// printer says it has printed. Whatever stops it is said in the status line and in the middle of the window, never a line that waits for
+    /// ever; Cancel ends any step.
+    /// </summary>
+    internal async Task PrintOnM834()
+    {
+        if (m834Printing is not null || Render() is not { } result)
+        {
+            return;
+        }
+
+        using var printing = new CancellationTokenSource();
+        m834Printing = printing;
+        m834Cancel.IsVisible = true;
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        string step = "drawing";
+        bool ended = false;
+        try
+        {
+            var paper = Settings?.LoadM834Paper() ?? PaperForm.Roll;
+            SetStatus("Drawing the page for the M834…", StatusKind.Information);
+            var jobs = await Task.Run(() =>
+            {
+                var encoded = new List<byte[]>();
+                foreach (var page in result.Pages)
+                {
+                    printing.Token.ThrowIfCancellationRequested();
+                    encoded.Add(M834Print.Encode(page, paper));
+                }
+
+                return encoded;
+            }, printing.Token);
+            DiagnosticLog.Info("print.m834", ("step", "encoded"), ("pages", jobs.Count), ("bytes", jobs.Sum(j => j.Length)), ("paper", paper == PaperForm.Roll ? "roll" : "fanfold"), ("ms", clock.ElapsedMilliseconds));
+
+            step = "connecting";
+            SetStatus("Connecting to the M834… (up to a minute; Cancel stops it)", StatusKind.Information);
+            var (link, why) = await TheOutsideWorld.Current.OpenSerialPrinterAsync(M834Print.NameHint, said => DiagnosticLog.Info("print.serial", ("step", said)), printing.Token);
+            if (link is null)
+            {
+                DiagnosticLog.Info("print.m834", ("step", "connect"), ("result", "none"), ("ms", clock.ElapsedMilliseconds));
+                Fail("The M834 could not be reached", why ?? "The M834 could not be reached.");
+                return;
+            }
+
+            step = "sending";
+            bool finished;
+            await using (link)
+            {
+                finished = await M834Print.SendAsync(link, jobs, at =>
+                {
+                    step = at.Stage is M834Stage.Printing ? "printing" : "sending";
+                    // Posted from wherever the send has got to; one that arrives after the end does not cover the result.
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        if (!ended)
+                        {
+                            SetStatus(M834Print.Saying(at), StatusKind.Information);
+                        }
+                    });
+                    if (at.Stage is M834Stage.Printed)
+                    {
+                        DiagnosticLog.Info("print.m834", ("step", "printed"), ("page", at.Page), ("blocks", at.Blocks), ("bytes", at.Bytes), ("result", at.Said ? "printer said done" : "no answer, time ran out"), ("ms", clock.ElapsedMilliseconds));
+                    }
+                }, Task.Delay, printing.Token);
+            }
+
+            ended = true;
+            M834Sent = jobs;
+            DiagnosticLog.Info("print.m834", ("pages", jobs.Count), ("finished", finished), ("ms", clock.ElapsedMilliseconds));
+            SetStatus(M834Print.Done(jobs.Count, finished, "use Report a problem in Settings, under Diagnostics"), finished ? StatusKind.Success : StatusKind.Alert);
+        }
+        catch (OperationCanceledException)
+        {
+            ended = true;
+            DiagnosticLog.Info("print.m834", ("step", step), ("result", "canceled"), ("ms", clock.ElapsedMilliseconds));
+            SetStatus("The print was canceled.", StatusKind.Information);
+        }
+        catch (Exception e) when (e is IOException or InvalidOperationException or UnauthorizedAccessException)
+        {
+            ended = true;
+            DiagnosticLog.Info("print.m834", ("step", step), ("error", e.GetType().Name), ("ms", clock.ElapsedMilliseconds));
+            Fail("The page did not reach the M834", $"While {step}, it stopped: {e.Message}. Turn the printer off and on, then press Print again.");
+        }
+        finally
+        {
+            m834Printing = null;
+            m834Cancel.IsVisible = false;
+        }
     }
 
     /// <summary>What Save for a printer app makes, said where it is offered and after it has saved.</summary>

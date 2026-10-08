@@ -9,13 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-08 morning, after entry 388 and error report 25 (before them: entry 387).
+**Last rewritten:** 2026-10-08 afternoon, after entry 389 (before it: entry 388 and error report 25).
 
 ---
 
 ## In flight
 
-- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 5% on 2026-10-08 09:17 UTC.
+- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 7% on 2026-10-08 18:25 UTC.
+- **Entry 389 done** (2026-10-08): **the computer prints to the M834** over its paired Bluetooth serial port on Windows (Targets, Print
+  on, Phomemo M834), the phone's own bytes (`M834Print`, shared); built, not yet tried on a real M834 from a computer (request 83, for
+  later); macOS and Linux say it is not available yet. The sweep on nightly 179: no faults, the Shots switch 48 everywhere; the emulator
+  baseline recorded again. CLAUDE.md: every wait has a time limit, background tasks stopped before a report.
 - **Entry 388 done** (2026-10-08): the four phone pictures (Scale markers, the store-bought target's second step, pairing rows, Open
   targets) taken on the emulator and on the Features page; the quality sweep at 411, 750 and 360 units, light and dark, found one fault (the
   Shots switch, 32 units tall, now 48); question 43 built; Phase 9's baseline and gate (`docs/performance-baseline.json`), nothing changed
@@ -25,12 +29,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
   over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live: the receiver is on the site and Alan reinstalled the
   worker at 18:59 Denver; question 34 built as proposed and confirmed in entry 388.
-- **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
-  pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81, 82 (the M834's check, a second print).
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81, 82 (the M834's check, a second print); 83 is for later (the M834 from the computer).
 
 ## The next three
 
@@ -51,25 +52,25 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; entry 388 is on main, in nightly 179 and on grouplab.org.
+1. Entry 390: the second M220 label of a job printed shifted and wrapped (request 82 step 2); entry 389 is on main, in the next nightly.
 2. Alan's first print on the M220 from the phone, and his worker reinstall (panel.md).
-3. Run the quality sweep again after the next nightly (`android-emulator.yml` with `quality`), and the emulator baseline with `baseline`.
+3. Request 83 once 81 and 82 are done: the M834 from the computer, measured like request 81.
 
 ## Blocked, and on what
 
+- **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **22** (82 the worker reinstall and a first M220 print; 81 the M834's check and a second print; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (83 the M834 from the computer, for later; 82 the worker reinstall and a first M220 print; 81 the M834's check and a second print; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (34 and 43 answered and archived in entry 388):
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (80, answered in entry 347, archived in entry 389):
 
 - **88** DESIGN NEEDED, chronograph entry on the analysis
-- **80** a newer fingerprint library without a new build
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
@@ -88,7 +89,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 390.
 
 ## Things that would surprise somebody who was not here yesterday
 

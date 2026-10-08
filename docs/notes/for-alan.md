@@ -1,4 +1,4 @@
-**Open: 22.** Most urgent today: **82, a first M220 print from the phone** (five minutes; the worker is reinstalled). Then **81, the M834's printer check saved and one more print** (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 23.** Most urgent today: **82, a first M220 print from the phone** (five minutes; the worker is reinstalled). Then **81, the M834's printer check saved and one more print** (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,25 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 83. For later, not now: the M834 printing from the computer, about twenty minutes (entry 389)
+
+**Why:** the computer can now print a sheet straight to the M834 over Bluetooth, sending exactly the bytes the phone sends, but no real
+M834 has printed from a computer yet. Leave this until requests 82 and 81 are done: the printer takes one connection at a time, and this
+uses it from the computer instead of the phone.
+**Steps,** on the Windows computer, with nightly 180 or later installed:
+1. Close the Phomemo app and GroupLab on the phone, or turn the phone's Bluetooth off, so the phone lets go of the M834.
+2. Turn the M834 on, with the roll in it.
+3. In Windows, open **Settings**, then **Bluetooth and devices**, then **Add device**, then **Bluetooth**. Choose **M834** when it
+   appears (its name may start with M834). If Windows asks for a PIN, try 0000. Wait until it says **Connected** or **Paired**.
+4. In GroupLab on the computer: **Targets**, choose **GroupLab Printer Check, Letter**, and under **Print on** choose
+   **Phomemo M834, 300 dpi (Letter and A4)**.
+5. Under it, choose **A continuous roll**, then press **Print on the Phomemo M834 (Bluetooth; not yet tried from a computer)**.
+   The line under the buttons says what it is doing; Cancel stops it.
+6. When it has printed, flatten the sheet under a book and measure it the same way as request 81: the caliper across and down on the
+   dashed lines, and the ruler across the bottom and down the side.
+**A good answer:** the four numbers, and what the line under the buttons said at the end. If it did not print, the words it showed and,
+if you can, Settings, Diagnostics, **Report a problem**, so the log comes with it.
 
 ## 82. Send to GroupLab live, and the M220 printing from the phone, about ten minutes (entry 386, question 90)
 

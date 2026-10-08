@@ -5360,6 +5360,34 @@
   "On Android, Print two scale labels on the Phomemo M220 sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.": {
    "kind": "code",
    "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync, mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, ScaleLabelCheck and PrinterProfile.LabelSize; entry 386. Not yet printed on a real M220 by this path"
+  },
+  "For a label printer GroupLab does not print to itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs SaveForAppDialog and AppWords, mobile/GroupLab.Mobile/TargetsPage.cs ForPrinterApp; entry 363 section 2a, reworded in entry 389 now that GroupLab prints to the M834 and M220 itself"
+  },
+  "On Windows, with **Phomemo M834** chosen under **Print on** and the printer paired in Windows Settings (Bluetooth and devices, Add device), **Print on the Phomemo M834** sends the sheet straight to it over Bluetooth, the same page the phone sends, with **A continuous roll** or **Fanfold sheets** chosen as on the phone; it has not yet been tried on a real M834 from a computer.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs M834Row and PrintOnM834, src/GroupLab.Core/Printing/Labels/M834Print.cs, WindowsSerialPrinter.cs; tests Entry389M834Tests and M834ComputerTests prove the bytes are the phone route's; entry 389 section 1. Not yet printed on a real M834 from a computer (request 83)"
+  },
+  "Close the Phomemo app on the phone while the computer prints, since the printer takes one connection at a time.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Printing/Labels/WindowsSerialPrinter.cs SerialPrinterWords.NoAnswer; entry 389 section 1"
+  },
+  "On macOS and Linux the choice says it is not available there yet.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs M834Row (SerialPrinterWords.NotHere off Windows), src/GroupLab.Core/Updates/OutsideWorld.cs OpenSerialPrinterAsync; entry 389 section 1.4"
+  },
+  "For a label printer GroupLab does not print to itself, Save for a printer app… on the computer, or Share for a printer app on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs SaveForAppDialog and AppWords, mobile/GroupLab.Mobile/TargetsPage.cs ForPrinterApp; entry 363 section 2a, reworded in entry 389 now that GroupLab prints to the M834 and M220 itself"
+  },
+  "On Windows, with Phomemo M834 chosen under Print on and the printer paired in Windows Settings (Bluetooth and devices, Add device), Print on the Phomemo M834 sends the sheet straight to it over Bluetooth, the same page the phone sends, with A continuous roll or Fanfold sheets chosen as on the phone; it has not yet been tried on a real M834 from a computer.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs M834Row and PrintOnM834, src/GroupLab.Core/Printing/Labels/M834Print.cs, WindowsSerialPrinter.cs; tests Entry389M834Tests and M834ComputerTests prove the bytes are the phone route's; entry 389 section 1. Not yet printed on a real M834 from a computer (request 83)"
+  },
+  "On Windows the computer also prints a sheet straight to a Phomemo M834 paired over Bluetooth, sending the same page the phone sends; that is built and not yet tried on a real M834 from a computer, and on macOS and Linux the choice says it is not available there yet.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/PrintPanel.cs M834Row and PrintOnM834, src/GroupLab.Core/Printing/Labels/M834Print.cs and WindowsSerialPrinter.cs; Entry389M834Tests proves the bytes are the phone route's; entry 389 section 1. Not yet printed on a real M834 from a computer (request 83)"
   }
  },
  "rules": [

@@ -411,7 +411,7 @@ public sealed class TargetsPage : UserControl
         string step = "drawing";
         try
         {
-            var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
+            var profile = GroupLab.Core.Printing.Labels.M834Print.Profile;
             var paper = Phone.Settings.LoadM834Paper();
             double feed = GroupLab.Core.Printing.Labels.TearBar.FeedAfterMm(paper);
             DiagnosticLog.Info("print.m834", ("step", "paper"), ("paper", paper == GroupLab.Core.Printing.Labels.PaperForm.Roll ? "roll" : "fanfold"),
@@ -424,9 +424,8 @@ public sealed class TargetsPage : UserControl
                 foreach (var page in scenes.Pages)
                 {
                     printing.Token.ThrowIfCancellationRequested();
-                    var dots = GroupLab.Core.Printing.Thermal.ThermalRaster.Render(page, profile.Head);
-                    var job = new GroupLab.Core.Printing.Labels.LabelJob(dots.Image, page.Width / (10.0 * Scene.UnitsPerDmm), page.Height / (10.0 * Scene.UnitsPerDmm), FeedAfterMm: feed);
-                    encoded.Add(GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(job, profile));
+                    // Entry 389: the same encoding the computer uses, so both send the same bytes for the same page.
+                    encoded.Add(GroupLab.Core.Printing.Labels.M834Print.Encode(page, paper));
                     DiagnosticLog.Info("print.m834", ("step", "encoded"), ("page", encoded.Count), ("bytes", encoded[^1].Length), ("ms", clock.ElapsedMilliseconds));
                 }
 
@@ -436,7 +435,7 @@ public sealed class TargetsPage : UserControl
             step = "connecting";
             result.Text = "Connecting to the M834… (up to a minute; Cancel stops it)";
             DiagnosticLog.Info("print.m834", ("step", "connect"), ("pages", jobs.Count));
-            var (link, why) = await Phone.Platform.OpenSerialPrinterAsync("M834", printing.Token);
+            var (link, why) = await Phone.Platform.OpenSerialPrinterAsync(GroupLab.Core.Printing.Labels.M834Print.NameHint, printing.Token);
             if (link is null)
             {
                 DiagnosticLog.Info("print.m834", ("step", "connect"), ("result", "none"), ("ms", clock.ElapsedMilliseconds));
@@ -445,40 +444,44 @@ public sealed class TargetsPage : UserControl
             }
 
             step = "sending";
-            bool finished = true;
+            bool finished;
             await using (link)
             {
-                for (int k = 0; k < jobs.Count; k++)
+                finished = await GroupLab.Core.Printing.Labels.M834Print.SendAsync(link, jobs, at =>
                 {
-                    result.Text = jobs.Count == 1 ? "Sending the page to the M834…" : $"Sending page {k + 1} of {jobs.Count} to the M834…";
-                    int blocks = await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, jobs[k], Task.Delay, printing.Token);
-                    DiagnosticLog.Info("print.m834", ("step", "sent"), ("page", k + 1), ("blocks", blocks), ("bytes", jobs[k].Length), ("ms", clock.ElapsedMilliseconds));
-
-                    // Entry 381: the phone has the page, not the printer; the link stays open until the printer says it has printed.
-                    step = "printing";
-                    result.Text = jobs.Count == 1 ? "The M834 is printing the page… (Cancel stops it)" : $"The M834 is printing page {k + 1} of {jobs.Count}… (Cancel stops it)";
-                    var limit = GroupLab.Core.Printing.Labels.PrinterFinish.Limit(jobs[k].Length);
-                    bool said = await GroupLab.Core.Printing.Labels.PrinterFinish.WaitAsync(link, GroupLab.Core.Printing.Labels.PrinterFinish.M834Printed,
-                        limit, Task.Delay, _ => { }, printing.Token);
-                    finished &= said;
-                    DiagnosticLog.Info("print.m834", ("step", "printed"), ("page", k + 1), ("result", said ? "printer said done" : "no answer, time ran out"), ("limit-s", (int)limit.TotalSeconds), ("ms", clock.ElapsedMilliseconds));
-                    step = "sending";
-                }
+                    step = at.Stage is GroupLab.Core.Printing.Labels.M834Stage.Printing ? "printing" : "sending";
+                    // Heard off the screen's thread; one that arrives after the end does not cover the result.
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        if (m834Printing == printing)
+                        {
+                            result.Text = GroupLab.Core.Printing.Labels.M834Print.Saying(at);
+                        }
+                    });
+                    if (at.Stage is GroupLab.Core.Printing.Labels.M834Stage.Sent)
+                    {
+                        DiagnosticLog.Info("print.m834", ("step", "sent"), ("page", at.Page), ("blocks", at.Blocks), ("bytes", at.Bytes), ("ms", clock.ElapsedMilliseconds));
+                    }
+                    else if (at.Stage is GroupLab.Core.Printing.Labels.M834Stage.Printed)
+                    {
+                        DiagnosticLog.Info("print.m834", ("step", "printed"), ("page", at.Page), ("result", at.Said ? "printer said done" : "no answer, time ran out"), ("limit-s", at.LimitSeconds), ("ms", clock.ElapsedMilliseconds));
+                    }
+                }, Task.Delay, printing.Token);
             }
 
             DiagnosticLog.Info("print.m834", ("pages", jobs.Count), ("ms", clock.ElapsedMilliseconds));
-            string measure = jobs.Count == 1 ? "Measure its ruler line: it should be true to size." : "Measure a ruler line: it should be true to size.";
-            result.Text = finished
-                ? (jobs.Count == 1 ? "The M834 printed the page. " : $"The M834 printed {jobs.Count} pages. ") + measure
-                : "The page went to the M834, but the printer never said it had finished. If the print stopped short, send the diagnostics from Settings. " + measure;
+            m834Printing = null;
+            result.Text = GroupLab.Core.Printing.Labels.M834Print.Done(jobs.Count, finished, "send the diagnostics from Settings");
         }
         catch (OperationCanceledException)
         {
+            m834Printing = null;
             DiagnosticLog.Info("print.m834", ("step", step), ("result", "cancelled"), ("ms", clock.ElapsedMilliseconds));
             result.Text = "The print was cancelled.";
         }
         catch (Exception e)
         {
+            m834Printing = null;
             DiagnosticLog.Info("print.m834", ("step", step), ("error", e.GetType().Name), ("ms", clock.ElapsedMilliseconds));
             ProblemSheet.Stop(result, result, "The page did not reach the M834", $"While {step}, it stopped: {e.Message}. Turn the printer off and on, then press Print again.");
         }

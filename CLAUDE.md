@@ -97,6 +97,13 @@ So: start the wait, then **work on the next queued item**. Check the wait betwee
 
 **A turn ends only when** every queue is empty, or something needs Alan and nothing else can proceed without it. Even then, everything that does not need him is finished first.
 
+**No wait is left running after an entry ends** (entry 389 section 3). A background loop from entry 388 was still running six hours
+later, watching a task's output for words it never printed, and it stopped Claude Code from exiting to apply an update. So:
+
+1. **Every wait has a time limit**: a loop that watches for something stops after a fixed time whether it saw it or not (a `timeout`
+   around it, or a counted loop), and says which.
+2. **Before an entry's report, every background task the entry started is stopped**, so `/tasks` shows nothing running.
+
 ## How every turn ends
 
 The first line of the last message of a turn is one of exactly these three, alone on its line, before anything else.

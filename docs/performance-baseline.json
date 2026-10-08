@@ -42,5 +42,24 @@
       "load": 415.0,
       "prepare": 1421.5
     }
+  },
+  "emulator, nightly 179": {
+    "measured": "2026-10-08",
+    "run": "android-emulator.yml run 37817278203, main at a57093f1 (nightly 179's code); entry 389 section 2, the same emulator, a record and never a gate",
+    "start-up to a usable window": 1318.0,
+    "read a 600 dpi scan, from the picture to its result": 8924.5,
+    "switch between three open targets": 105.5,
+    "stages of a reading": {
+      "P0.bulls": 575.0,
+      "S0.identify": 1362.0,
+      "S1.scale": 0.0,
+      "S2.fiducials": 460.0,
+      "S3.register": 2.5,
+      "S4.verify": 0.0,
+      "S5-S8.holes": 4193.5,
+      "S9.assign": 79.5,
+      "load": 301.5,
+      "prepare": 1006.0
+    }
   }
 }

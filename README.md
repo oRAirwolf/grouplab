@@ -320,7 +320,8 @@ What exists and is tested:
   label in sets of five that pool like the 300 yard tiles, a printer check label, and a thermal print mode that draws every dot as the
   printer will make it (no label printer has printed from GroupLab yet)
 - printing straight to a Phomemo M834 from Android over Bluetooth, spoken to as its own app was recorded doing, with Paper in the M834
-  for a roll or fanfold sheets: a real M834 has printed a whole Letter sheet from it, and its true size is still being checked
+  for a roll or fanfold sheets: a real M834 has printed a whole Letter sheet from it, and its true size is still being checked; Windows
+  sends the same page down the M834's Bluetooth serial port, built and not yet tried on a real M834 from a computer
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
 - the statistics engine, validated key for key against the R package `shotGroups`

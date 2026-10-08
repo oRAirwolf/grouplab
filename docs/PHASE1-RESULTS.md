@@ -1091,6 +1091,32 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - **Section 5, question 34 confirmed** (option C with B as the headline) and archived with question 43.
 - **Section 6.** STATE's line on the desktop tabs corrected: merged at 21:02 on 2026-10-07 (86a8d207).
 
+## Entry 389: the M834 from the computer, the sweep on nightly 179, and no wait left running (2026-10-08)
+
+- **Section 1, the M834 from the computer.** On Windows a paired M834 is a Bluetooth serial port, so the computer now writes the phone's
+  bytes into it. The page encoding, the sending in the profile's chunks and the wait for the printer's `1A 0F 0C` moved into
+  `M834Print` (Core), which the phone's print and the computer's both call, so the two cannot drift. `BluetoothPorts` finds the outgoing
+  COM port by the device's Bluetooth name from what Windows keeps about paired devices (read only, the address never logged);
+  `WindowsSerialPrinter` opens it within `PrinterConnect.Timeout`, writes with a 15 s limit a block and reads answers without waiting.
+  Not paired, no answer (off, or a phone holding it) and busy (another program has the port) each have their own words
+  (`SerialPrinterWords`). It goes through `IOutsideWorld.OpenSerialPrinterAsync`, whose default, and macOS and Linux, says it is not
+  available on this computer yet; the Targets screen shows the choice there with that line rather than hiding it. With **Phomemo M834**
+  chosen under Print on, the panel shows Paper in the M834 (roll or fanfold, the same saved setting as the phone), a line on pairing, the
+  button and Cancel; the M834's head there is now its profile's 2528 dots (was 2560), the page the phone draws. A saved printer check is
+  not applied to the dots on either: it corrects photographs, chosen in Settings, until request 81's second print says whether the 0.8
+  percent along the feed repeats. `Entry389M834Tests` sends the printer check sheet through a fake port and finds exactly the phone route's
+  bytes; `M834ComputerTests` holds the port finding, the words, the encoding against the phone's old code and the send. No layout decision
+  was needed. Request 83 (for later) has the pairing and the measuring steps. Not yet tried on a real M834 from a computer.
+- **Section 2, the sweep and the baseline on nightly 179** (android-emulator.yml run 37817278203, main at a57093f1): **no faults at any
+  size or theme**, 11 screens at each of seven sizes and themes; the Shots switch is 48 units tall at 411, 750 and 360 units, light and
+  dark, and at the largest text. The emulator baseline again, recorded beside the first in `docs/performance-baseline.json`: start-up
+  1318 ms (2031 the first time), a 600 dpi reading 8.9 s (14.4 s), a switch 105.5 ms (162). Nothing changed for speed between the two, so
+  the difference is GitHub's runner; it stays a record, never a gate.
+- **Section 3, no wait left running.** Nothing from entry 388 was still running here. CLAUDE.md's Waiting section now says every wait has
+  a time limit and every background task an entry started is stopped before its report.
+- **Section 4, STATE.** Question 80 (answered in entry 347) moved to the answered archive and off STATE's open list; STATE says entry 380
+  section 3 waits on request 77's photos.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
