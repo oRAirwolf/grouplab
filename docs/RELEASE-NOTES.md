@@ -12,6 +12,25 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.178
+
+**2026-10-08**, commit `e4d7f71`. Nightly.
+
+**What you will notice**
+
+- You can now have several targets open at once, each in its own tab across the top of the window, with its name, whether it is marking or analysis, and a dot that turns amber when it is not saved; Ctrl+Tab moves between them, and closing one with unsaved marks asks first.
+- On the phone, several targets can now be open at once: tap the target's name at the top of its screen to see them with a small picture of each, switch to one or close one, and closing one with marks not saved asks first. (Concept A, several targets open at once).
+- Naming one bull as holding two shots no longer moves the shots in the bulls below it on to the wrong bulls.
+- The session report now gives the zero correction in the words the screen uses: the clicks and their size, the distance, and what rounding leaves, in one sentence.
+
+**Under the hood**
+
+- A scope set in NATO mil is now named in NATO mil where the zero correction says what a click is, instead of being called MOA. (Proof checklist, 2026-10-08).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.178)
+
+---
+
 ## 0.2.0-nightly.177
 
 **2026-10-07**, commit `4cbf3f0`. Nightly.
