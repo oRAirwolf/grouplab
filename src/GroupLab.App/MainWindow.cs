@@ -48,7 +48,11 @@ public sealed partial class MainWindow : Window
 {
     private static readonly FontFamily Mono = Tokens.Mono;
 
-    private readonly MarkingSession session = new();
+    /// <summary>
+    /// The marking showing. Each target open in a tab keeps its own session, its marks and their undo history, and switching tabs puts the
+    /// tab's session here (planning, 2026-10-07, MainWindow.Tabs.cs).
+    /// </summary>
+    private MarkingSession session = new();
     private readonly MarkingCanvas canvas = new();
 
     /// <summary>
@@ -655,9 +659,7 @@ public sealed partial class MainWindow : Window
         Width = 1400;
         Height = 900;
         canvas.Session = session;
-        session.Changed += (_, _) => Refresh();
-        session.Changed += (_, _) => ShowUndoSteps();
-        session.Changed += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(AskWhichBulls);
+        session.Changed += OnSessionChanged;
         Deactivated += (_, _) => ShowShortcuts(false);
         canvas.SelectionChanged += (_, _) => Refresh();
         canvas.LengthTapped += (_, _) => AskLength();
@@ -685,6 +687,7 @@ public sealed partial class MainWindow : Window
         Closed += (_, _) =>
         {
             LeavePicture(closing: true);
+            LeaveOtherPicturesOnClose();
             CrashReporter.Recorded -= OnCrashRecorded;
             CrashReporter.Recorded -= ErrorRecorded;
             errorSendSoon?.Stop();
@@ -876,8 +879,8 @@ public sealed partial class MainWindow : Window
         setup.Children.Add(paperChoice);
         setup.Children.Add(FieldLabel("What was behind it, optional"));
         setup.Children.Add(backingChoice);
-        paperChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
-        backingChoice.SelectionChanged += (_, _) => session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
+        paperChoice.SelectionChanged += (_, _) => ChooseMaterial();
+        backingChoice.SelectionChanged += (_, _) => ChooseMaterial();
 
         panel.Children.Add(Ruled("Group"));
         // Entry 105 section 8: sighters are found and matched and then set aside, unless a person asks for them to be analysed.
@@ -1181,6 +1184,10 @@ public sealed partial class MainWindow : Window
         DockPanel.SetDock(problemLine, Dock.Top);
         DockPanel.SetDock(statusBar, Dock.Bottom);
         DockPanel.SetDock(workBar, Dock.Bottom);
+        // Planning, 2026-10-07: the targets open at once, as tabs across the top, above the header of the one showing.
+        var tabStrip = BuildTargetTabs();
+        DockPanel.SetDock(tabStrip, Dock.Top);
+        dock.Children.Add(tabStrip);
         dock.Children.Add(header);
         dock.Children.Add(updateLine);
         dock.Children.Add(problemLine);
@@ -2796,6 +2803,7 @@ public sealed partial class MainWindow : Window
     {
         canvas.InvalidateVisual();
         SavingAfterChange();
+        UpdateCurrentTab();
         var state = session.State;
         var report = GroupAnalysis.Analyse(state);
         if (report.AllShots?.Shots is { } shotCount)

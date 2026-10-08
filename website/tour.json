@@ -111,6 +111,10 @@
    "withoutASheet": "The same screen, and the work is yours. You set the scale, by tapping a known length or the corners of a known rectangle, which removes the photograph's angle, and you place each shot. On a target with several bulls, the bulls tool places each bull's aim point: shots go to their nearest bull and are drawn in its color, the lasso moves several at once to another, and a length drawn near a bull can be that bull's own scale, so an angled photograph is measured right at every bull; the bulls can be kept as a template for the next sheet of the same target. That was Unholy's suggestion (also TNA). There is no automatic detection, and the review queue stays empty, because it exists to question what the detector decided and nothing decided anything.",
    "parts": [
     [
+     "The tabs across the top",
+     "Each target open has its own tab: its name, Analysis or Marking, and a dot that turns amber while it has marks that are not saved. The + tab opens another target, Ctrl+Tab moves between them, and each keeps its own marks and zoom. Closing a tab with unsaved marks asks first."
+    ],
+    [
      "Setup, at the top of the panel",
      "Caliber, shot distance and rounds fired come first, each saying in a line what it unlocks. One that matters and is still empty is outlined and says needed, until you answer it or say not known. Rifle, barrel and load, the paper and what was behind it sit under them."
     ],

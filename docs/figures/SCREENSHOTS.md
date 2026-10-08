@@ -121,6 +121,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Several aim points on one target | the analysis | aim points placed by hand, each in its color with its figures |
 | A picture to share | the analysis, with Share a picture | the Share a picture window with its results box |
 | The one-page report | the analysis | the one-page report itself |
+| Several targets open at once | the marking screen | the tab row with two targets, one of them not saved |
 
 **Store-bought targets recognized** (entries 340 and 341) has its own picture, `store-target`: a bullseye the walk draws itself, standing
 in for the Shoot-N-C since no maker's artwork is published, recognized with its bull placed and the scale warning, and the window that asks

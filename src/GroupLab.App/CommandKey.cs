@@ -34,6 +34,14 @@ internal static class CommandKey
     /// <summary>Redo is Command Y everywhere, and Shift Command Z as well, which is what a Mac user presses.</summary>
     public static bool IsRedo(KeyEventArgs e) => Held(e.KeyModifiers) && (e.Key == Key.Y || (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Shift)));
 
+    /// <summary>
+    /// Switching target tabs (planning, 2026-10-07): Control Tab, and Control Shift Tab backwards, on every platform, the browser's keys. It is
+    /// the one shortcut that is not the command key, because Command Tab on a Mac is the system's own switch between applications and never
+    /// reaches GroupLab, and a Mac's browsers use Control Tab for their tabs too. Null where the key is not a tab switch, true for backwards.
+    /// </summary>
+    public static bool? TabSwitch(KeyEventArgs e) =>
+        e.Key == Key.Tab && (e.KeyModifiers & KeyModifiers.Control) != 0 ? (e.KeyModifiers & KeyModifiers.Shift) != 0 : null;
+
     /// <summary>Undo is Command Z without Shift, so Shift Command Z is never read as undo.</summary>
     public static bool IsUndo(KeyEventArgs e) => Held(e.KeyModifiers) && e.Key == Key.Z && !e.KeyModifiers.HasFlag(KeyModifiers.Shift);
 }

@@ -46,6 +46,12 @@ public static class Icons
 
     public const string More = "M3.5,8 A1.5,1.5 0 1 1 3.49,8 Z M9.5,8 A1.5,1.5 0 1 1 9.49,8 Z M15.5,8 A1.5,1.5 0 1 1 15.49,8 Z";
 
+    /// <summary>The "+" tab that opens another target, planning 2026-10-07.</summary>
+    public const string Add = "M7,1 H9 V7 H15 V9 H9 V15 H7 V9 H1 V7 H7 Z";
+
+    /// <summary>A target tab's close button, planning 2026-10-07.</summary>
+    public const string Close = "M2.4,1 L8,6.6 L13.6,1 L15,2.4 L9.4,8 L15,13.6 L13.6,15 L8,9.4 L2.4,15 L1,13.6 L6.6,8 L1,2.4 Z";
+
     public const string Print = "M4,1 H12 V5 H4 Z M1,6 H15 V12 H12 V10 H4 V12 H1 Z M5,11 H11 V15 H5 Z";
 
     public const string Library = "M1,1 H7 V7 H1 Z M9,1 H15 V7 H9 Z M1,9 H7 V15 H1 Z M9,9 H15 V15 H9 Z";
