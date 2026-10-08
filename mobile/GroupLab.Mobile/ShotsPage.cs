@@ -77,7 +77,7 @@ internal sealed class ShotsPage : UserControl
             words.Children.Add(new TextBlock { Text = clicks, TextWrapping = TextWrapping.Wrap, TextDecorations = decoration, Classes = { PhoneStyles.Dim } });
         }
 
-        var counted = new ToggleSwitch { IsChecked = !row.LeftOut, OnContent = "Counted", OffContent = "Left out", VerticalAlignment = VerticalAlignment.Center };
+        var counted = new ToggleSwitch { IsChecked = !row.LeftOut, OnContent = "Counted", OffContent = "Left out", VerticalAlignment = VerticalAlignment.Center, MinHeight = Screens.Touch };
         counted.IsCheckedChanged += (_, _) =>
         {
             session.SetExclusion(row.ShotId, counted.IsChecked == true ? null : ExclusionReason.ByShooter);

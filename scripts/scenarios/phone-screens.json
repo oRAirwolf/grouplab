@@ -19,6 +19,7 @@
     { "do": "scroll", "to": "top" },
     { "do": "press", "name": "targets-add-store" },
     { "do": "pick", "file": "stand-in-poster.jpg", "seconds": 300 },
+    { "do": "sleep", "seconds": 2 },
     { "do": "press", "name": "fingerprint-next" },
     { "do": "wait", "text": "How big is this target?", "seconds": 60 },
     { "do": "type", "name": "fingerprint-width", "text": "12" },

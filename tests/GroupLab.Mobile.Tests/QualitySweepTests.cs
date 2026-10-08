@@ -93,4 +93,32 @@ public class QualitySweepTests
             window.Close();
         }
     }
+
+    /// <summary>
+    /// The sweep's screens at the small phone's width, as the emulator's quality sweep runs them: nothing under a finger's size, nothing cut
+    /// short, nothing past the side and no text over text. The first emulator sweep found the Shots page's switch 32 units tall, fixed here.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task TheSweepsScreensAtASmallPhonesWidthHaveNoFaults()
+    {
+        var (window, _) = Open(360);
+        window.Height = 640;
+        Directory.CreateDirectory(Scenario.Folder);
+        File.Copy(Repo.PathTo("samples", "gl-cf25-ltr-d-25-shots-600-dpi.png"), Path.Combine(Scenario.Folder, "sample.png"), overwrite: true);
+        try
+        {
+            await Scenario.Run(File.ReadAllText(Repo.PathTo("scripts", "scenarios", "phone-sweep.json")));
+            var faults = Directory.EnumerateFiles(Scenario.Results, "*.quality.json")
+                .SelectMany(f => System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(f))!["findings"]!.AsArray()
+                    .Select(x => $"{Path.GetFileName(f)}: {x!["kind"]} {x["type"]} {x["id"] ?? x["text"]} {x["width"]} x {x["height"]} {x["detail"]}"))
+                .ToList();
+            Assert.True(Directory.EnumerateFiles(Scenario.Results, "*.quality.json").Count() >= 11, "fewer quality files than the sweep takes screenshots");
+            Assert.True(faults.Count == 0, string.Join(Environment.NewLine, faults));
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.DeleteFile(Path.Combine(Scenario.Folder, "sample.png"));
+        }
+    }
 }

@@ -461,7 +461,16 @@ internal static class Scenario
             return (false, "no screen showing asks for a photo");
         }
 
-        return await Task.WhenAny(work, Task.Delay(most)) == work ? (true, file) : (false, $"the photo's work did not finish in {most.TotalSeconds:0} s");
+        if (await Task.WhenAny(work, Task.Delay(most)) != work)
+        {
+            return (false, $"the photo's work did not finish in {most.TotalSeconds:0} s");
+        }
+
+        // The work ends by posting its result to the screen; a call queued after it runs once the screen has it. The emulator's run
+        // 37755482923 pressed Next before then, and the page said to take or choose a photo first.
+        await OnUi(() => true);
+        await OnUi(() => true);
+        return (true, file);
     }
 
     private static async Task<(bool, string)> Picture(string? file)
@@ -812,7 +821,7 @@ internal static class Scenario
 
     /// <summary>
     /// Entry 388 section 2, the quality sweep: what is wrong with the layout showing, as the screen's own controls measure it. Four faults:
-    /// a control a finger presses under <see cref="SmallestTouch"/> either way ("small"); words cut short, by trimming or by a box too
+    /// a control a finger presses under <see cref="SmallestTouch"/> either way ("small", leaving out a scroll bar's arrows); words cut short, by trimming or by a box too
     /// narrow or too short for them ("cut"); anything reaching past the side of the window, where nothing scrolls sideways ("off"); and two
     /// pieces of text drawn over each other ("overlap"). scripts/phone-quality.py gathers them across sizes and themes.
     /// </summary>
@@ -821,6 +830,13 @@ internal static class Scenario
         var findings = new JsonArray();
         double wide = top.Bounds.Width, high = top.Bounds.Height;
         Rect Box(Visual v) => v.TransformToVisual(top) is { } to ? new Rect(v.Bounds.Size).TransformToAABB(to) : default;
+
+        // What can be seen of a control: its box cut by every ancestor that clips, so text scrolled under the tab bar, outside its scroll
+        // viewer's view, is not text over text. The first emulator sweep (37755482923) reported thirty of those.
+        Rect Seen(Visual v) => v.GetVisualAncestors().Where(a => a.ClipToBounds).Aggregate(Box(v), (box, a) => box.Intersect(Box(a)));
+
+        // Drawn at all: a switch keeps its On and Off words both in the tree and hides one by its opacity.
+        bool Drawn(Visual v) => v.Opacity * v.GetVisualAncestors().Aggregate(1.0, (o, a) => o * a.Opacity) > 0.01;
         bool SideScrolls(Visual v) => v.GetVisualAncestors().OfType<ScrollViewer>().Any(s => s.Extent.Width > s.Viewport.Width + 1);
         void Add(string kind, Control c, Rect box, string? detail = null) => findings.Add(new JsonObject
         {
@@ -843,7 +859,8 @@ internal static class Scenario
             bool inView = box.Bottom > 0 && box.Y < high;
             if (c is Button or Avalonia.Controls.Primitives.ToggleButton or TextBox or ComboBox or Slider
                 && c.IsEffectivelyEnabled && inView && (box.Width < SmallestTouch - 0.5 || box.Height < SmallestTouch - 0.5)
-                && c.GetVisualAncestors().OfType<Button>().FirstOrDefault() is null)
+                && c.GetVisualAncestors().OfType<Button>().FirstOrDefault() is null
+                && c.GetVisualAncestors().OfType<Avalonia.Controls.Primitives.ScrollBar>().FirstOrDefault() is null)
             {
                 Add("small", c, box);
             }
@@ -859,9 +876,9 @@ internal static class Scenario
                     Add("cut", c, box, trimmed ? "trimmed" : narrow ? "wider than its box" : "taller than its box");
                 }
 
-                if (inView)
+                if (inView && Drawn(text) && Seen(text) is { Width: > 0, Height: > 0 } seen)
                 {
-                    texts.Add((text, box));
+                    texts.Add((text, seen));
                 }
             }
 

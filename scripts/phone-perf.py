@@ -53,7 +53,7 @@ def figures(root: str) -> dict:
                 reading = 0.0
             elif reading is not None and do in ("wait", "press") and not str(step.get("detail", "")).startswith("open-targets"):
                 reading += ms if ok else 0
-                if do == "wait" and ok and str(step.get("detail", "")).startswith("ResultView"):
+                if do == "wait" and ok and re.match(r"(ResultView|\d+ open) after", str(step.get("detail", ""))):
                     reads.append(reading)
                     reading = None
             if do == "press" and ok and str(step.get("detail", "")).startswith("open-targets-row-"):
