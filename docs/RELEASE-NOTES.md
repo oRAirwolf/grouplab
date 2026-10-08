@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.180
+
+**2026-10-08**, commit `592d2ce`. Nightly.
+
+**What you will notice**
+
+- On Windows, Targets can now print a sheet straight to a Phomemo M834 paired over Bluetooth, sending the same page the phone sends; it is built and not yet tried on a real M834 from a computer, and on macOS and Linux the choice says it is not available there yet.
+- The second of two M220 scale labels printed from the phone could come out shifted to the left with its left codes cut off; GroupLab now lets each label finish before sending the next.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.180)
+
+---
+
 ## 0.2.0-nightly.179
 
 **2026-10-08**, commit `0600f1f`. Nightly.
