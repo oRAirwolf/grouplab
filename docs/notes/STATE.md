@@ -17,19 +17,20 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **The usage guard stops at 100% until the week resets (2026-10-08 02:00 UTC)**, Alan, 2026-10-07 evening; at 85% again after it,
   88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 92% at 01:02 UTC on 2026-10-08.
-- **Google Play's internal test now follows the nightlies** (request 80 answered): nightly 176 sent by hand, version code 176 committed
-  (run 37674523785); from nightly 177 every one goes by itself. **Request 79 answered**: both APKs registered with the upload key.
-- **Question 87 measured**: no second line for fits with many features is safe (wrong fits reach 590 features); the rule stays.
+- **Play's internal test follows the nightlies** (request 80); requests 79 and 80 closed; question 87 measured, the rule stays.
 - **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
   over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live: the receiver is on the site and Alan reinstalled the
   worker at 18:59 Denver; question 34 built as proposed, **for planning to confirm**.
 - **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
+- **Concept A, several targets open at once** (Alan, 2026-10-07): **the phone's sheet is merged** (35e687bb; no phone picture yet). **The desktop
+  tabs** are being built by a helper in its own worktree (`.claude/worktrees/agent-ae8bd84d...`), and **the proof checklist's tests** by
+  another (`agent-a48c7289...`); each merges only when its suites pass. If either is unfinished, its worktree holds the work.
+- **Send to GroupLab checked end to end** (2026-10-08 01:10 UTC, issue 24, closed); it showed the package receiver never answered with the
+  reference the app reads, fixed in 68277eb5, live with the site.
 - **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
   pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
-- **Entry 385 done** (2026-10-07): the M834 prints true across, 0.8 percent short along the feed (caliper); request 78 closed,
-  request 81 saves the check and asks for a second print before any stretch.
-- **Entry 379 section 3 done, and the consistency audit of 2026-10-07 fixed, all ten findings** (2026-10-07; question 89).
+- **Entries 385 and 379 section 3 done** (the M834 true across, 0.8 percent short along; the consistency audit's ten findings).
 - **Entries 384, 383 (the tester's report, fixed in nightly 176), 378, 376 (B7 built in 386), 374 and 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81, 82 (the M834's check, a second print).
 
