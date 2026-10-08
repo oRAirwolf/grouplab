@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.179
+
+**2026-10-08**, commit `0600f1f`. Nightly.
+
+**What you will notice**
+
+- On the phone, the Counted and Left out switch on the Shots page is now as tall as a fingertip, so it is easier to tap.
+- A file claiming to be larger than 400 megapixels is refused before it is read, with its size and the limit in the message.
+- Clicking an empty part of the marking screen with the hand tool no longer reports an error. (Error report 25).
+- GroupLab's speed now has a measured starting point on the computer and the phone, so later changes can be held to it.
+- The phone's screenshots and speed measurements on the Android emulator now reach every screen they picture.
+- Opening a very large picture no longer stops the window answering while it loads, and GroupLab stops waiting after a minute and says why.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.179)
+
+---
+
 ## 0.2.0-nightly.178
 
 **2026-10-08**, commit `e4d7f71`. Nightly.
