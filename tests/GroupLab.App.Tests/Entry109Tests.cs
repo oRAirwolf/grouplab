@@ -34,7 +34,7 @@ public class Entry109Tests
     /// Alan's two 6 ARC scans of 2026-09-26, from the test-data release that GROUPLAB_TEST_DATA names, or null without it. Only the release,
     /// whose files carry their consent records and hashes: PublishedRendersTests refuses anything that publishes reading from elsewhere.
     /// </summary>
-    private static (string Dominus, string Magnus)? SuppressorScans()
+    internal static (string Dominus, string Magnus)? SuppressorScans()
     {
         string? folder = Environment.GetEnvironmentVariable("GROUPLAB_TEST_DATA");
         string dominus = Path.Combine(folder ?? "", "load-sheet-6arc-dominus-k-2026-09-26.png");
@@ -43,7 +43,7 @@ public class Entry109Tests
     }
 
     /// <summary>One scan opened, detected, analyzed and saved as a session under <paramref name="load"/>; the session's id.</summary>
-    private static long AnalyzeScan(MainWindow window, string scan, string load)
+    internal static long AnalyzeScan(MainWindow window, string scan, string load)
     {
         var definition = GltdJsonReader.ReadFile(Path.Combine(Repository(), "targets", "GL-CF25-LTR-D.gltd.json")).Definition!;
         var (grey, metadata) = ImageLoader.Load(scan);

@@ -51,8 +51,11 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
 
     public string? Notes { get; init; }
 
-    /// <summary>How the click reads to a person: "0.25 MOA a click", "0.1 mil a click".</summary>
-    public string DescribeClick() => string.Create(CultureInfo.InvariantCulture, $"{ClickValue:0.###} {(ClickUnit == AngularUnit.Mrad ? "mil" : ClickUnit == AngularUnit.Smoa ? "SMOA" : "MOA")} a click");
+    /// <summary>
+    /// How the click reads to a person: "0.25 MOA a click", "0.1 mil a click", in the unit's own symbol. A NATO mil scope was called MOA here
+    /// while the residual beside it said NATO mil (found 2026-10-08 on Alan's 6 ARC session, docs/PROOF-CHECKLIST.md row 16).
+    /// </summary>
+    public string DescribeClick() => string.Create(CultureInfo.InvariantCulture, $"{ClickValue:0.###} {UnitSettings.Symbol(ClickUnit)} a click");
 }
 
 /// <summary>
