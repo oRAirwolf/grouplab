@@ -475,7 +475,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - On a store-bought target, Find holes no longer marks the printed black diamonds or some of the white ring numbers as holes.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.148)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
@@ -488,7 +488,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - On the phone, the keyboard no longer covers what you are typing: the page moves up, a bar on the keyboard says Next or Done, and tapping outside a box closes the keyboard.
 - After a picture, the note about a curled sheet no longer shows the same number twice; it now appears only when the curl costs the score, and says in plain words that the sheet looks slightly curled.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.147)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
