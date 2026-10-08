@@ -482,7 +482,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - Garmin Xero exports in metric units are now read in meters per second, where before their speeds were taken as feet per second.
 - GroupLab Dev for Android now checks for updates only when the battery and the storage are not low, as well as on Wi-Fi; Update now in Settings still works any time.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.150)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
