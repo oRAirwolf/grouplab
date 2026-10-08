@@ -78,8 +78,8 @@ Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (91 and 92 answered and built 202
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.177 (2026-10-07 22:35 UTC, 4cbf3f05: entry 386 and the M220 link). **Its publish timed out after the files
-  were up**, so the moving "nightly" release still serves 176 (updaters offer 176) until 178; its notes were written by hand, Play by hand.
+- **Last nightly:** 0.2.0-nightly.178 (2026-10-08 05:01 UTC, e4d7f71f: concept A on both, questions 91 and 92, the proof tests);
+  published whole, and **the first to reach Play's internal test by itself** (version code 178). 177's publish had timed out; fixed.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
 - Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
