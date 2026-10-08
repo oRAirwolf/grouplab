@@ -244,6 +244,9 @@ if (!extension_loaded('zip')) {
     $r = crash_request($root, $crashSource, $goodZip);
     check('a good crash report is accepted', ($r['json']['ok'] ?? false) === true, $r['raw']);
     check('and is stored outside the web root', count(glob($root . '/private/crash-reports/*.zip') ?: []) === 1);
+    $stored = basename((glob($root . '/private/crash-reports/*.zip') ?: [''])[0], '.zip');
+    check('and its reference is the stored name the error receiver accepts, which the application reads',
+        ($r['json']['reference'] ?? '') === $stored && preg_match('/^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$/', $stored) === 1, $r['raw']);
 
     $r = crash_request($root, $crashSource, make_zip($root, ['crash-20260923-081500-1234.json', 'IMG_1580.jpg']));
     check('a report carrying a photograph is refused', ($r['json']['code'] ?? '') === 'bad_package', $r['raw']);
