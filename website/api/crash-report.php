@@ -326,4 +326,6 @@ try {
     error_log('[grouplab] crash index insert failed for ' . $id . ': ' . $e->getMessage());
 }
 
-respond(200, ['ok' => true, 'id' => $id]);
+// Entry 386 section 4, found checking Send to GroupLab end to end on 2026-10-08: the application reads "reference", the stored package's
+// name as the error receiver accepts it (date_id), and this answered only "id", so no report's log package was ever linked to its issue.
+respond(200, ['ok' => true, 'id' => $id, 'reference' => substr($name, 0, -4)]);
