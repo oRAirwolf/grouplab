@@ -482,7 +482,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 
 - A trial of recognizing store-bought targets from a small stored fingerprint was measured from the command line; nothing on screen changes.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.149)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
