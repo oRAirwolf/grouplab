@@ -15,15 +15,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
-- **The usage guard stops at 98% until the week resets (2026-10-08 02:00 UTC)**, Alan, 2026-10-07 evening; at 85% again after it,
-  88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 89% at 19:25 UTC on 2026-10-07.
+- **The usage guard stops at 100% until the week resets (2026-10-08 02:00 UTC)**, Alan, 2026-10-07 evening; at 85% again after it,
+  88% the last line for a finishing block, with no edit (`scripts/usage-guard.js`). 92% at 01:02 UTC on 2026-10-08.
 - **Google Play's internal test now follows the nightlies** (request 80 answered): nightly 176 sent by hand, version code 176 committed
   (run 37674523785); from nightly 177 every one goes by itself. **Request 79 answered**: both APKs registered with the upload key.
 - **Question 87 measured**: no second line for fits with many features is safe (wrong fits reach 590 features); the rule stays.
 - **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
-  over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live once Alan runs the worker reinstall in panel.md (the receiver
-  is on the site); question 34 built as proposed, **for planning to confirm**.
+  over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live: the receiver is on the site and Alan reinstalled the
+  worker at 18:59 Denver; question 34 built as proposed, **for planning to confirm**.
 - **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
 - **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
   pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
