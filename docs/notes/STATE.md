@@ -98,8 +98,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   shot was refused, and every other pairing was one reading off. Fixed in entry 323 on both platforms.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
-- **A worker's commits can be stranded in its worktree.** Entries 325 and 327's detection work and the fold of 324, 325 and 327 sat
-  unpushed in `.claude/worktrees/push-324` until entry 342 found them; compare a finished worker's subjects with main before removing it.
+- **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
+  A finished worker's subjects are compared with main before its worktree goes to the trash.
 - **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
   own `camera.layout` log line instead (`scripts/device-capture-check.py`).
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.

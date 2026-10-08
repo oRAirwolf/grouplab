@@ -266,6 +266,13 @@ per block of work. `for-alan.md` holds the open requests and the latest summary;
 Screenshots, guide PDFs and the site audit once per nightly. No minute-by-minute watching. Priorities when tight: bugs Alan hit and iOS
 parity, then approved features, then polish.
 
+**Two standing rules, Alan, 2026-10-08:**
+
+1. **Helpers in parallel only when Alan asks**, and they stop when the week resets unless he says otherwise. Without his word, work goes
+   one piece at a time.
+2. **Chores and screenshot walks always go to `chores-haiku`; wording and consistency checks always to `docs-sonnet`; never the main
+   model.** The main model does application code, tests, detection, statistics, the camera and the UI.
+
 ### The commands ordinary work needs
 
 Entry 160 section 6: Alan has been approving every command including ordinary git ones, which turns a one hour run into several hours of his attention and costs a round trip each time. This is the set that covers ordinary work in this repository, and nothing in it writes outside the repository, reaches the network destructively, or touches the server:
