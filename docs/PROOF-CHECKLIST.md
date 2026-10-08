@@ -11,7 +11,7 @@ unchanged.
 
 **2026-10-08, the rows whose proof needs no hardware:** each was given a test against real behaviour, on Alan's own scans and exports where
 they exist and on rendered sheets where they do not. Rows 6, 8, 13, 15, 21 and 23 are now proven against their gates by the tests their rows
-name; row 16 is not, because the test found its report saying a line the screen does not (below). Every other row still needs the material
+name; row 16 too, once question 91 decided the report's zero sentence (below). Every other row still needs the material
 in the checklist at the end, a change to detection, or a gate planning has not written.
 
 ## The 31
@@ -35,7 +35,7 @@ Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gat
 | 13 | The rounds fired as a check | Proposed: a sheet with a known count and one hole holding two shots is flagged | **Proven 2026-10-08 on a rendered sheet** by `RoundsFiredOnARenderedSheetTests.TwoShotsThroughOneHoleAreFlaggedWhenTheRoundsFiredAreEntered`: GL-CF25-LTR at 300 dpi, two .308 holes two thirds of a bullet apart on one bull, read by the real detector; with 26 rounds entered the count item is raised and names the ragged hole, which also has its own item. It is named second, behind a single hole with a torn rim read at 1.48 holes, and the detector found no halves in it, so neither item offers the second shot as a key press. Not yet on paper. |
 | 14 | Printing from inside GroupLab on Windows | A sheet from the fixed print path checked on paper | Not measurable: nothing has been printed from the fixed path. |
 | 15 | Session records | Proposed: a session saved, reopened, exported and imported gives the same figures | **Proven 2026-10-08 on one of Alan's own** by `RealSessionProofTests.AlansOwnSessionKeepsItsFiguresThroughSaveReopenExportAndImport`: the dominus-k session saved by Accept and analyse, reopened after another sheet, exported with Export all my data and imported in a second window shows the same figures, cards and zero, line for line. |
-| 16 | The session report PDF | Proposed: every line equals what the analysis screen shows | **Met as proposed on generated sessions** (report tests passed 2026-10-01). **Not met on one of Alan's own (2026-10-08):** on the dominus-k session every figure and card line is on the screen, but the report's zero verdict puts the clicks, the offset and what rounding leaves in one sentence, "Dial 1 click down (... leaving 0.04 NATO mil), for a zero at 100 yd.", which is not a line the screen shows: the screen says "Dial 1 click down, at 0.1 NATO mil a click." and gives the residual and the distance on lines of their own. Not fixed: which wording is right is a decision. |
+| 16 | The session report PDF | Proposed: every line equals what the analysis screen shows | **Met as proposed on generated sessions** (report tests passed 2026-10-01). **Met on Alan's own too, by question 91's rule (2026-10-08):** the one line the dominus-k test found was the zero verdict; planning chose the screen's wording, its lines joined into one sentence in the report, and `Entry170Tests.TheReportsZeroSentenceIsTheScreensLinesJoined` holds it. |
 | 17 | The target library | No gate | Its tests passed today (built-in library, and the library screen's layout). |
 | 18 | Support link | One browser launch once a page exists | Not measurable: there is no support page address. |
 | 19 | Volunteer print pack | Proposed: printed at size within 0.5 percent and used once | Not measurable: no pack has been printed. |

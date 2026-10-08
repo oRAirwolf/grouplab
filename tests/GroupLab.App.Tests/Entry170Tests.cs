@@ -68,6 +68,29 @@ public class Entry170Tests
         }
     }
 
+    /// <summary>
+    /// Question 91 (planning, 2026-10-08): the report's zero verdict is the screen's wording, its lines joined into one sentence: the screen's
+    /// "Dial ..., at ... a click.", then its "For a zero at ..." line, then what rounding to whole clicks leaves, from its reasons.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheReportsZeroSentenceIsTheScreensLinesJoined()
+    {
+        var window = Offset(new Rifle("Friend's rifle", 0.1, AngularUnit.Mrad));
+        try
+        {
+            var zero = window.ZeroText.ToList();
+            string screen = zero.Single(t => t.StartsWith("Dial ", StringComparison.Ordinal));
+            Assert.Contains("For a zero at 25.4 yd.", zero);
+            string report = window.BuildReport().Zero.Verdict;
+            Assert.StartsWith(screen.TrimEnd('.') + ", for a zero at 25.4 yd, rounding to whole clicks leaving ", report, StringComparison.Ordinal);
+            Assert.EndsWith(" mil.", report, StringComparison.Ordinal);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     /// <summary>A rifle zeroed at the distance shot, or with no zero distance, gets no second line: there is nothing to carry.</summary>
     [AvaloniaFact]
     public void NoSecondLineWhereThereIsNothingToCarry()

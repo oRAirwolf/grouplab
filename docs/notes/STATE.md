@@ -24,7 +24,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): **the phone's sheet is merged** (35e687bb; no phone picture yet). **The desktop
   tabs** are being built by a helper in its own worktree (`.claude/worktrees/agent-ae8bd84d...`), merged only when its suites pass.
-  **The proof checklist**: rows 6, 8, 13, 15, 21 and 23 proven by tests (44cb7941); the rest need hardware (docs/PROOF-CHECKLIST.md).
+  **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests; the rest need hardware (docs/PROOF-CHECKLIST.md).
 - **Send to GroupLab checked end to end** (issue 24, closed); the receiver's missing reference fixed in 68277eb5.
 - **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
   pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
@@ -66,9 +66,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Ten, all in `docs/QUESTIONS-FOR-PLANNING.md` (84, 86, 87, 89, 83 and 90 answered 2026-10-07 evening):
-
-- **92** naming one bull's shots moves the shots below it; **91** the report's zero sentence is not the screen's
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (91 and 92 answered and built 2026-10-08):
 
 - **88** DESIGN NEEDED, chronograph entry on the analysis
 - **80** a newer fingerprint library without a new build

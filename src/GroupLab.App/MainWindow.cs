@@ -6360,7 +6360,14 @@ public sealed partial class MainWindow : Window
         {
             // Entry 170 section 1.1: the correction is for the distance shot, and the verdict says which, because a shooter reads it as the
             // correction for his usual zero otherwise.
-            verdict = "Dial " + string.Join(" and ", dial) + (distance is { } at ? $", for a zero at {units.DistanceText(at)}" : "") + ".";
+            // Question 91 (planning, 2026-10-08): the screen's wording, its lines joined into one sentence: the clicks and the click they are
+            // counted in, the distance, and what rounding to whole clicks leaves; or the figures to dial by where there are no clicks.
+            var axes = new[] { zero.Windage, zero.Elevation }.Where(a => a.Distinguishable).ToList();
+            string at = distance is { } d ? $", for a zero at {units.DistanceText(d)}" : "";
+            verdict = axes.All(a => a.Clicks is not null) && state.Rifle is { } rifle
+                ? $"Dial {string.Join(" and ", axes.Select(a => a.Clicks!.Describe()))}, at {rifle.DescribeClick()}{at}, rounding to whole clicks leaving "
+                    + string.Join(" and ", axes.Select(a => string.Create(CultureInfo.InvariantCulture, $"{Math.Abs(a.Clicks!.ResidualAngle):0.00} {UnitSettings.Symbol(a.Clicks.Unit)}"))) + "."
+                : $"Dial {string.Join(" and ", axes.Select(a => a.Dial))} by the figures above{at}.";
         }
         else
         {

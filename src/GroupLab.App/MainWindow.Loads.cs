@@ -185,7 +185,7 @@ public sealed partial class MainWindow
             return;
         }
 
-        SetAimedAt(new AssignmentRule(false, bulls.ToImmutableDictionary(b => b, _ => 1)));
+        SetAimedAt(new AssignmentRule(false, bulls.ToImmutableDictionary(b => b, _ => 1)) { Aimed = [.. bulls] });
     }
 
     /// <summary>Sets or clears the rule, and says what it did.</summary>

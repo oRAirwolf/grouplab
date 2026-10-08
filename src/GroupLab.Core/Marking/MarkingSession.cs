@@ -177,6 +177,13 @@ public sealed record AssignmentRule(bool NearestOnly, ImmutableDictionary<int, i
 
     /// <summary>The shots a bull is expected to hold under this rule: its named number, or one.</summary>
     public int For(int bull) => PerBull.TryGetValue(bull, out int shots) ? shots : 1;
+
+    /// <summary>
+    /// Question 92 (planning, 2026-10-08): the bulls aimed at, given separately from how many shots each holds, or null for every scoring bull.
+    /// "Two on this bull" says only how many; before this, its one named bull was taken as the only bull aimed at, and a full sheet's shots
+    /// below it moved up a bull. A rule made from choosing the bulls aimed at says so here.
+    /// </summary>
+    public ImmutableHashSet<int>? Aimed { get; init; }
 }
 
 /// <summary>
@@ -1031,7 +1038,8 @@ public sealed class MarkingSession
         {
             // Every scoring bull, not only the ones aimed at: AimedBulls.For lists them all and gives nought shots to the rest. Measured
             // both ways in question 46, the shift is identical and only the confidence changes, so this stays as it is deliberately.
-            if (rule.PerBull.ContainsKey(open[i].Index))
+            // Question 92: the bulls aimed at come from the rule's own list where it has one, never from which bulls it names a count for.
+            if (rule.Aimed is { } aimedBulls ? aimedBulls.Contains(open[i].Index) : open[i].Scoring)
             {
                 aimed.Add(i);
             }

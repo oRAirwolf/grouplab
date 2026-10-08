@@ -14,32 +14,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 31 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 33 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 90, 89, 87, 86, 85, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
+> 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57.
 
 ---
-
-## 2026-10-08, question 92: naming one bull "two on the bulls named" moves the shots below it
-
-Status: open
-
-Found proving the checklist (2026-10-08, branch of the proof helper). On a full 25-bull sheet, giving one bull two shots moves the three
-shots below it in its column up one bull, before any second shot is placed: `MarkingSession.SheetOffset` takes the rule's keys as the
-bulls aimed at. Making it take every bull broke `SheetOffsetAssignmentTests.ToldWhichBullsWereAimedAtEveryShotFindsItsOwn`, which relies
-on the keys meaning the aimed bulls, as `MainWindow.Loads` uses them. **Asked:** should "two on this bull" leave the other bulls' aiming
-as it was (the keys say only how many, and every bull stays aimed), or does naming bulls mean only those were shot? My choice: the first,
-with the aimed bulls passed separately. Nothing waits on it.
-
-## 2026-10-08, question 91: the report's zero sentence is not the screen's
-
-Status: open
-
-Found proving checklist row 16 on Alan's dominus-k session: the report says "Dial 1 click down (0.211 in  0.20 MOA, leaving 0.04 NATO
-mil), for a zero at 100 yd." while the screen says "Dial 1 click down, at 0.1 ... a click." with the residual and the distance on lines
-of their own (`MainWindow.cs` near 6228 for the screen, 6355 for the report). **Asked:** which wording both should use. My choice: the
-screen's, its lines joined into one sentence in the report. Row 16 stays unproven until it is chosen.
 
 ## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
 

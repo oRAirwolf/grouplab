@@ -81,7 +81,7 @@ public static class MarkingFile
             backing = state.Backing,
             // Entry 113 section 4: how the sheet's shots are read against its bulls, when it is not one a bull.
             assignmentRule = state.Rule is { } rule
-                ? new { nearestBull = rule.NearestOnly, perBull = rule.PerBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, shots = p.Value }) }
+                ? new { nearestBull = rule.NearestOnly, perBull = rule.PerBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, shots = p.Value }), aimed = rule.Aimed?.Order().ToArray() }
                 : null,
             subgroups = state.Subgroups is { } map && !map.ByBull.IsEmpty
                 ? map.ByBull.OrderBy(p => p.Key).Select(p => new { bull = p.Key, name = p.Value })
@@ -337,6 +337,13 @@ public static class MarkingFile
                 : null,
             Rule: file["assignmentRule"] is JsonObject rule
                 ? new AssignmentRule((bool?)rule["nearestBull"] ?? false, (rule["perBull"] as JsonArray ?? []).ToImmutableDictionary(p => (int)p!["bull"]!, p => (int)p!["shots"]!))
+                {
+                    // Question 92: the bulls aimed at, kept apart from the counts. A file from before it has none: there a rule of one shot on
+                    // each bull it names was the bulls chosen as aimed at (Loads), so they stay the aimed ones; any other reads as every bull.
+                    Aimed = rule["aimed"] is JsonArray aimed ? [.. aimed.Select(b => (int)b!)]
+                        : rule["perBull"] is JsonArray counts && counts.Count > 0 && counts.All(p => (int)p!["shots"]! == 1) ? [.. counts.Select(p => (int)p!["bull"]!)]
+                        : null,
+                }
                 : null);
         return (state, notes);
     }

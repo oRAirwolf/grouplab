@@ -73,7 +73,7 @@ public class SheetOffsetAssignmentTests
     }
 
     /// <summary>The rule that says which bulls were aimed at, one shot each.</summary>
-    private static AssignmentRule AimedAt(IEnumerable<int> bulls) => new(false, bulls.ToImmutableDictionary(b => b, _ => 1));
+    private static AssignmentRule AimedAt(IEnumerable<int> bulls) => new(false, bulls.ToImmutableDictionary(b => b, _ => 1)) { Aimed = [.. bulls] };
 
     /// <summary>
     /// Told nothing, some shots land on bulls nobody aimed at. This is the baseline the fix is measured against rather than asserted over.
@@ -116,6 +116,40 @@ public class SheetOffsetAssignmentTests
 
         // Nothing stored moved. The shift is a frame the matching runs in, not an edit to the marking.
         Assert.All(shots, sh => Assert.Equal(before[sh.Id], sh.Image));
+    }
+
+    /// <summary>
+    /// Question 92 (planning, 2026-10-08): "two on this bull" says only how many. On a full sheet, one shot in every bull, naming one bull as
+    /// holding two moved the three shots below it in its column up a bull, because its one named bull was taken as the only bull aimed at.
+    /// Every bull stays aimed, so nothing moves; and a rule's aimed bulls survive the marking file.
+    /// </summary>
+    [Fact]
+    public void NamingOneBullForTwoShotsMovesNoOtherShot()
+    {
+        var definition = BuiltIns.Load("GL-CF25-LTR.gltd.json");
+        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], 300);
+        var random = new Random(4242);
+        var scoring = definition.Bulls.Select((b, i) => (Bull: b, Index: i)).Where(b => b.Bull.Scoring).ToList();
+        var holes = scoring
+            .Select(b => SyntheticSheet.SampleHole(random, b.Bull.X + random.Next(-40, 41), b.Bull.Y + random.Next(-40, 41), onInk: false, HoleBacking.ScannerLid, 0.871))
+            .ToList();
+
+        double s = 254 / 300.0;
+        var image = SyntheticSheet.Compose(render, 300, new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1])), render.Width, render.Height, holes, [], random);
+        var result = AutomaticMarking.Run(image, image, new ImageMetadata("PNG", image.Width, image.Height, 300, 300, null, null, null, null, null), definition, new OpenCvSharpBackend());
+        Assert.Null(result.Failure);
+
+        var session = new MarkingSession();
+        session.LoadDetections(result.Scale!, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection);
+        var before = session.State.Shots.Where(sh => sh.IsShot).ToDictionary(sh => sh.Id, sh => sh.Bull);
+
+        // As Shots per bull, "two on the bulls named", makes it.
+        session.SetAssignmentRule(new AssignmentRule(false, ImmutableDictionary<int, int>.Empty.Add(scoring[2].Index, 2)));
+        Assert.All(session.State.Shots.Where(sh => sh.IsShot), sh => Assert.Equal(before[sh.Id], sh.Bull));
+
+        var aimed = new AssignmentRule(false, ImmutableDictionary<int, int>.Empty.Add(scoring[0].Index, 1).Add(scoring[1].Index, 1)) { Aimed = [scoring[0].Index, scoring[1].Index] };
+        var back = MarkingFile.Read(MarkingFile.Write(MarkingState.Empty with { Rule = aimed })).State.Rule!;
+        Assert.Equal(aimed.Aimed!.Order(), back.Aimed!.Order());
     }
 
     /// <summary>
