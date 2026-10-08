@@ -31,7 +31,7 @@ public class DropAndPasteTests
     {
         Assert.True(window.HasUnsavedWork, "the fixture sheet had nothing unsaved, so nothing would ask before replacing it");
         window.AnswerDiscard();
-        window.Opened();
+        window.OpenFinished();
     }
 
     [AvaloniaFact]
@@ -87,7 +87,7 @@ public class DropAndPasteTests
         try
         {
             window.OpenDropped([]);
-            window.Opened();
+            window.OpenFinished();
 
             Assert.Contains("JPEG and PNG images", window.StatusText, StringComparison.Ordinal);
         }
@@ -178,7 +178,7 @@ public class DropAndPasteTests
             Outside.Clipboard = ClipboardContents.Nothing;
 
             await window.PasteImage();
-            window.Opened();
+            window.OpenFinished();
 
             Assert.Equal(was, window.Session.State.ImagePath);
             Assert.Contains("There is no image on the clipboard", window.StatusText, StringComparison.Ordinal);

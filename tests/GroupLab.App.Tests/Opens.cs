@@ -11,7 +11,7 @@ namespace GroupLab.App.Tests;
 internal static class Opens
 {
     /// <summary>Whether the open under way opened, once it has finished.</summary>
-    public static bool Opened(this MainWindow window)
+    public static bool OpenFinished(this MainWindow window)
     {
         var clock = Stopwatch.StartNew();
         while (!window.Opening.IsCompleted && clock.Elapsed < TimeSpan.FromSeconds(120))

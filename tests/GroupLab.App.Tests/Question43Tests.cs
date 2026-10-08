@@ -91,7 +91,7 @@ public class Question43Tests
                 window.AnswerDiscard();
             }
 
-            Assert.False(window.Opened());
+            Assert.False(window.OpenFinished());
             Assert.Equal(was, window.Session.State.ImagePath);
             Assert.Equal("The picture is too large to open", window.ProblemTitle);
             Assert.Contains("claims-enormous.png is 50000 by 50000, which is 2500 megapixels", window.StatusText, StringComparison.Ordinal);
@@ -121,7 +121,7 @@ public class Question43Tests
                 window.AnswerDiscard();
             }
 
-            Assert.False(window.Opened());
+            Assert.False(window.OpenFinished());
             Assert.Equal(was, window.Session.State.ImagePath);
             Assert.Equal("The picture took too long to open", window.ProblemTitle);
             Assert.Contains("GroupLab stopped waiting for second.png after 0 seconds", window.StatusText, StringComparison.Ordinal);
@@ -134,7 +134,7 @@ public class Question43Tests
                 window.AnswerDiscard();
             }
 
-            Assert.True(window.Opened());
+            Assert.True(window.OpenFinished());
             Assert.Equal(second, window.Session.State.ImagePath);
         }
         finally

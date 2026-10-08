@@ -30,7 +30,7 @@ public class SecondSheetSessionTests
             string second = Path.Combine(Path.GetDirectoryName(path)!, "second.png");
             File.Copy(path, second);
             _ = window.OpenImageSafely(second);
-            Assert.True(window.Opened());
+            Assert.True(window.OpenFinished());
             Assert.Null(window.CurrentSession);
             window.ApplyDetection(result);
             window.Session.SetCalibre(Calibre.Of(0.308));
