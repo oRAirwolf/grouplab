@@ -13,6 +13,10 @@ on:
         description: "Entry 388 section 2: also run the quality sweep at three phone widths, light and dark (about 40 minutes more)"
         type: boolean
         default: false
+      baseline:
+        description: "Entry 388 section 4: also measure Phase 9's baseline on the emulator (start-up, the 600 dpi scan, switching targets)"
+        type: boolean
+        default: false
 
 concurrency:
   group: android-emulator-${{ github.ref }}
@@ -163,6 +167,24 @@ jobs:
         if: ${{ !cancelled() && inputs.quality }}
         run: test -f android-quality/report.md && cat android-quality/report.md >> "$GITHUB_STEP_SUMMARY" || echo "The quality sweep wrote no report." >> "$GITHUB_STEP_SUMMARY"
 
+      # Entry 388 section 4: Phase 9's baseline on the emulator, only when asked for; a record of the emulator, never a gate.
+      - name: The baseline on the emulator
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && inputs.baseline }}
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 90
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-perf.sh apk/grouplab-dev-x86_64.apk android-perf
+
       - name: Commit the phone's screenshots if they changed
         if: ${{ !cancelled() && steps.build.outcome == 'success' && github.ref == 'refs/heads/main' }}
         run: |
@@ -194,6 +216,7 @@ jobs:
             android-touch
             android-screens
             android-quality
+            android-perf
             build.log
           retention-days: 14
           if-no-files-found: warn
