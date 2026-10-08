@@ -58,6 +58,7 @@ while read -r device size density rotation middle screens <&3; do
     adb shell am force-stop "$PKG"
     adb shell run-as "$PKG" sh -c "'rm -rf files/scenario/results files/scenario/$NAME.ran; mkdir -p files/scenario'"
     put /tmp/screens-sample.png sample.png
+    put "$HERE/scripts/scenarios/stand-in-poster.jpg" stand-in-poster.jpg
     put "$HERE/scripts/scenarios/$NAME" "$NAME"
     adb logcat -c || true
     adb shell am start -W -n "$COMPONENT" --es "$EXTRA" "$NAME" > "$OUT/start-$device-$middle-$theme.txt" 2>&1
