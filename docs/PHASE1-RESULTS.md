@@ -1117,6 +1117,22 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - **Section 4, STATE.** Question 80 (answered in entry 347) moved to the answered archive and off STATE's open list; STATE says entry 380
   section 3 waits on request 77's photos.
 
+## Entry 390: the second M220 label of a job printed shifted (2026-10-08)
+
+- **Section 1, label S1.** The planning session's reading of Alan's scan closes request 82 step 2 for S1: its codes 59.99 and 59.96 mm
+  apart across (60.0 designed), rows 10.39 mm apart (10.5 designed, about 1 percent short along the feed, which the layout does not
+  trust), codes about 7.8 mm. Request 82 answered and archived.
+- **Section 2, label S2.** GroupLab's bytes for the labels of one job are the same but for their codes and serial: the same 11 bytes of
+  commands and raster header, the same 8 at the end, the ink beginning at the same byte of every row (`M220LabelsTests`). So the shift
+  arose between the phone and the paper. The phone's writes over Bluetooth LE are acknowledged one by one, and the only thing that set the
+  second label apart was that its first block went out straight after the first label's end commands, with no pause, while the printer was
+  still finishing and feeding the first. A whole-label shift of about 60 dots, wrapped round, with no shear, is what losing about 8 bytes at
+  the start of the rows gives. **Fix:** `PrinterJob.SendLabelsAsync` leaves the printer `LabelSettle`, eight seconds (what the last label
+  already had), after every label before the next; the phone says which label is printing. A fake printer that loses the first rows
+  arriving while it feeds reproduces the shift back to back (8 bytes, 64 dots) and lines up three labels with the pause. **The cause is
+  inferred from the scan and the bytes, not observed on the M220**; request 84 prints two labels again to confirm it.
+- **Section 3.** Request 77 is unchanged.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

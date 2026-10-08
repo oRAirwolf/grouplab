@@ -527,16 +527,15 @@ public sealed class TargetsPage : UserControl
             step = "sending";
             await using (link)
             {
-                foreach (var job in jobs)
-                {
-                    said.Text = "Sending the labels to the M220…";
-                    int blocks = await GroupLab.Core.Printing.Labels.PrinterJob.SendAsync(link, profile, job, Task.Delay, CancellationToken.None);
-                    DiagnosticLog.Info("print.m220", ("step", "sent"), ("blocks", blocks), ("bytes", job.Length), ("ms", clock.ElapsedMilliseconds));
-                }
-
-                step = "printing";
-                said.Text = "The M220 is printing…";
-                await Task.Delay(TimeSpan.FromSeconds(8));
+                said.Text = "Sending the labels to the M220…";
+                // Entry 390: each label is left to print and feed before the next is sent; the second of two came out shifted without it.
+                await GroupLab.Core.Printing.Labels.PrinterJob.SendLabelsAsync(link, profile, jobs, Task.Delay, (label, blocks) =>
+                    DiagnosticLog.Info("print.m220", ("step", "sent"), ("label", label), ("blocks", blocks), ("bytes", jobs[label - 1].Length), ("ms", clock.ElapsedMilliseconds)),
+                    label => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        step = "printing";
+                        said.Text = $"The M220 is printing label {label} of {jobs.Count}…";
+                    }), CancellationToken.None);
             }
 
             Phone.Settings.SaveLabelSerial(serial + 2);

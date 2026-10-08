@@ -60,6 +60,39 @@ public static class PrinterJob
 
         return chunks;
     }
+
+    /// <summary>
+    /// Entry 390: how long a label printer is left after each label before anything more is sent, the eight seconds the M220's last label was
+    /// already given. Alan's first two labels from the phone (2026-10-08) came out with the first right and the second shifted about 60 dots
+    /// to the left, wrapped round to the right: GroupLab's bytes for the two were the same, and the second label's first block had gone out
+    /// straight after the first label's end, while the printer was still finishing and feeding it, so some of it was lost.
+    /// </summary>
+    public static readonly TimeSpan LabelSettle = TimeSpan.FromSeconds(8);
+
+    /// <summary>
+    /// Entry 390: several labels, each sent as <see cref="SendAsync"/> sends one and each followed by <see cref="LabelSettle"/>, so no label
+    /// starts while the one before it is still printing. <paramref name="sent"/> hears each label's number and blocks as it goes out, and
+    /// <paramref name="settling"/> each label's number as its pause begins. Returns the blocks sent in all.
+    /// </summary>
+    public static async Task<int> SendLabelsAsync(IPrinterLink link, PrinterProfile profile, IReadOnlyList<byte[]> labels, Func<TimeSpan, CancellationToken, Task> pause,
+        Action<int, int> sent, Action<int> settling, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(labels);
+        ArgumentNullException.ThrowIfNull(pause);
+        ArgumentNullException.ThrowIfNull(sent);
+        ArgumentNullException.ThrowIfNull(settling);
+        int all = 0;
+        for (int k = 0; k < labels.Count; k++)
+        {
+            int blocks = await SendAsync(link, profile, labels[k], pause, token).ConfigureAwait(false);
+            all += blocks;
+            sent(k + 1, blocks);
+            settling(k + 1);
+            await pause(LabelSettle, token).ConfigureAwait(false);
+        }
+
+        return all;
+    }
 }
 
 /// <summary>

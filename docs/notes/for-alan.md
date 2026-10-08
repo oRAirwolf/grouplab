@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **82, a first M220 print from the phone** (five minutes; the worker is reinstalled). Then **81, the M834's printer check saved and one more print** (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 23.** Most urgent today: **81, the M834's printer check saved and one more print** (fifteen minutes). Then **84**, two M220 labels again once the nightly has the fix (ten minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -246,18 +246,21 @@ uses it from the computer instead of the phone.
 **A good answer:** the four numbers, and what the line under the buttons said at the end. If it did not print, the words it showed and,
 if you can, Settings, Diagnostics, **Report a problem**, so the log comes with it.
 
-## 82. Send to GroupLab live, and the M220 printing from the phone, about ten minutes (entry 386, question 90)
+## 84. Two scale labels from the phone again, to confirm the fix, about ten minutes, once the nightly says it is in (entry 390)
 
-**Why:** Send to GroupLab (Settings, About, on the phone) sends your logs and a note straight to the project, but the server's error worker
-has to be reinstalled before it opens an issue for them; this session cannot reach the server. And the phone can now print scale labels
-straight to the M220 over Bluetooth, which no real M220 has done yet.
-**Steps:**
-1. In MobaXterm, the two commands at the top of `docs/notes/panel.md` (an scp, then an ssh with the dry run and the install).
-2. With nightly 177 or later on the Fold 7 or the tablet: the M220 on, with the 70 x 80 roll; GroupLab, Targets, Scale markers,
-   **Print two scale labels on the Phomemo M220**. Allow nearby devices if asked, then press it again.
-**2026-10-07 18:59 Denver, step 1 done (Alan):** `install.py --errors` replaced the worker (the old one kept as `.20261007-185910.bak`), the units and the nginx include were already current, the timer is enabled. Step 2 is still open.
-**A good answer:** what the install said, and whether two labels came out (or what the screen said). If they came out, measure one with
-a caliper across the two codes of a row: 60.0 mm centre to centre is right.
+**Why:** of the two labels the phone printed on the M220 on 8 October, the first was right (its codes 59.99 and 59.96 mm apart across,
+60.0 designed) and the second came out shifted about 7.5 mm left, with its left codes cut and wrapped round to the right edge. GroupLab
+sent the same bytes for both, so the printer lost part of the second, which went out straight after the first finished. GroupLab now
+leaves the printer eight seconds after each label before sending the next. This print says whether that was the cause.
+**Steps,** on the Fold 7 or the tablet, with the first nightly whose notes say "the second of two M220 scale labels" installed:
+1. The M220 on, with the 70 x 80 mm roll loaded. Close the Phomemo app.
+2. GroupLab, **Targets**, **Scale markers**, check the label size says **70 x 80 mm**, then press **Print two scale labels on the Phomemo
+   M220**. The screen says "printing label 1 of 2", then "label 2 of 2"; it takes about twenty seconds.
+3. Tear the two labels off and lay them flat on the flatbed side by side, as square to the glass as you can.
+4. Scan them at **600 dpi**, colour or greyscale, and save the scan as
+   `C:\Dev\grouplab-local\m220-2026-10-08\two-labels-again-600dpi.png`.
+**A good answer:** the scan saved there, and one line saying whether both labels look the same, with all four square codes whole on
+each.
 
 ## 81. The M834's printer check, saved, and one more print to confirm it, about fifteen minutes (entry 385)
 

@@ -3,6 +3,19 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 82. (Answered 2026-10-08: the worker reinstalled on 2026-10-07; two labels printed from the phone on 2026-10-08, label S1 right, its codes 59.99 and 59.96 mm apart across, S2 shifted, fixed in entry 390, request 84 to confirm) Send to GroupLab live, and the M220 printing from the phone, about ten minutes (entry 386, question 90)
+
+**Why:** Send to GroupLab (Settings, About, on the phone) sends your logs and a note straight to the project, but the server's error worker
+has to be reinstalled before it opens an issue for them; this session cannot reach the server. And the phone can now print scale labels
+straight to the M220 over Bluetooth, which no real M220 has done yet.
+**Steps:**
+1. In MobaXterm, the two commands at the top of `docs/notes/panel.md` (an scp, then an ssh with the dry run and the install).
+2. With nightly 177 or later on the Fold 7 or the tablet: the M220 on, with the 70 x 80 roll; GroupLab, Targets, Scale markers,
+   **Print two scale labels on the Phomemo M220**. Allow nearby devices if asked, then press it again.
+**2026-10-07 18:59 Denver, step 1 done (Alan):** `install.py --errors` replaced the worker (the old one kept as `.20261007-185910.bak`), the units and the nginx include were already current, the timer is enabled. Step 2 is still open.
+**A good answer:** what the install said, and whether two labels came out (or what the screen said). If they came out, measure one with
+a caliper across the two codes of a row: 60.0 mm centre to centre is right.
+
 ## 80. (Answered 2026-10-07: PLAY_SERVICE_ACCOUNT_JSON is set and Play's internal test showed nightly 110 before it; nightly 176 was then sent once by hand, run 37674523785, and Play took it as version code 176 on the internal track. Every nightly now goes by itself.) Google Play: let each nightly reach your Play testers by itself, about fifteen minutes, soon (entry 384)
 
 **Why:** a tester who installed GroupLab from Google Play (or the plain APK) is still on nightly 130. Only GroupLab Dev updates itself;

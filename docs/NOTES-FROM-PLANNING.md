@@ -25,6 +25,48 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-08, entry 390: the first M220 print from the phone (request 82 step 2): label S1 right, label S2 printed shifted and wrapped
+
+**Status: actioned 2026-10-08; every section done.** GroupLab's bytes for the two labels were the same but for their codes and serial, so the shift arose at the printer: the second label's first block went out straight after the first label's end. Each label is now followed by eight seconds before the next (`PrinterJob.SendLabelsAsync`); a fake printer that loses rows arriving while it feeds shifts the second label back to back and lines up all three with the pause. The cause is inferred, not seen on the M220; request 84 confirms it. Request 82 answered and archived; request 77 unchanged.
+
+
+From the planning session with Alan, 2026-10-08 11:50 Denver. Take after entry 389. Application code, so the main model.
+
+Alan pressed **Print two scale labels on the Phomemo M220** on the phone with the 70 by 80 mm roll loaded. Two labels came out. He
+scanned them together at 600 dpi on the flatbed (not quite square to the glass): `C:\Dev\grouplab-local\m220-2026-10-08\two-labels-600dpi.png`
+(his own scan, consent as entry 171; not for the repository). The planning session read it with OpenCV's tag36h11 detector:
+
+| Code | Centre in the scan, mm (x, y) | Side, mm |
+|---|---|---|
+| 534, S1 row 1 left | 84.41, 64.88 | 7.73 |
+| 535, S1 row 1 right | 144.19, 59.89 | 7.77 |
+| 536, S1 row 2 left | 85.26, 75.24 | 7.87 |
+| 537, S1 row 2 right | 145.01, 70.26 | 7.85 |
+| 539, S2 row 1 right | 144.28, 146.37 | 7.81 |
+| 531, S2 row 2 right | 145.12, 156.75 | 7.87 |
+
+1. **Label S1 is right.** Row 1's two centres are 59.99 mm apart and row 2's 59.96 mm (designed 60.0, the label's width less 10). Across
+   the printhead the M220 prints true. The codes come out about 7.8 mm, not 8 (the centres are unaffected). Rows are 10.39 mm apart
+   against 10.5 designed, about 1% short along the feed, which the layout already does not trust. Close request 82 step 2 for S1 with these
+   numbers; no caliper is needed.
+2. **Label S2 printed shifted and wrapped round, and this is the fault to find.** Its right codes (539, 531) were read, but they sit about
+   7.5 mm left of where they belong on the label, and so does the line of text. Its left codes (538 and 530 by the serial) were not read:
+   each is split, about 1.9 mm left on the label's left edge (dark strips 1.9 by 7.9 mm at x 86.8 and 87.7) and about 6.4 mm wrapped
+   round to its right edge (dark blocks 6.4 to 6.5 mm wide at x 150.0 and 150.9). The two pieces add up to one code's width. The shift is
+   the same on every line (no shear from top to bottom), so every raster line of the second label was rotated by the same amount, about
+   60 dots (7 to 8 bytes at 8 dots a millimetre), with what fell off the left coming back on the right. The first label of the same job was
+   not affected.
+   1. Find why the second label of a job is sent rotated: a stale byte offset or buffer position carried over from the first label, a
+      header or line command for the second page built from the wrong origin, or the image of the second label being made at an offset
+      and wrapped. Compare the bytes sent for S1 and S2 in a test with the fake printer; the fix makes the second label's bytes equal the
+      first label's apart from the codes and the serial.
+   2. A test prints three labels in one job through the fake printer and checks every label's raster lines start at the same column.
+   3. The release note says what a person saw: the second of two M220 scale labels could come out shifted with its left codes cut, now
+      fixed.
+   4. Write one request into for-alan.md for when the fix is in a nightly: print two labels again and scan them the same way, with
+      the steps written out in full.
+3. Request 77 (the four M220 labels on the 50 by 30 mm roll through Phomemo's own app) is unaffected and stays as it is.
+
 ## 2026-10-08, entry 389: the M834 from the computer, the sweep on nightly 179, and no wait left running
 
 **Status: actioned 2026-10-08; every section done.** The computer prints to the M834 over a paired Bluetooth serial port on Windows, sending the phone's bytes (shared in `M834Print`, proven with a fake port), built and not yet tried on a real M834 from a computer (request 83, for later); macOS and Linux say it is not available yet. The sweep on nightly 179 found no faults and the Shots switch is 48 units at every size; the emulator baseline recorded again. No wait was still running; CLAUDE.md's Waiting section now says every wait has a time limit and every background task is stopped before the report. STATE: question 80 off the open list, entry 380 section 3 waiting on request 77's photos.
