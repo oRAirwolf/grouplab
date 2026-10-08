@@ -55,6 +55,14 @@ nightly that carries the C3 grids and Shots Needed to Zero (entry 253 section 3)
 
 | Phone picture | Where it is used |
 |---|---|
+| `fold-fingerprint-dark.png` | /features/ |
+| `fold-fingerprint-light.png` | /features/ |
+| `fold-open-targets-dark.png` | /features/ |
+| `fold-open-targets-light.png` | /features/ |
+| `fold-pairing-dark.png` | /features/ |
+| `fold-pairing-light.png` | /features/ |
+| `fold-scale-markers-dark.png` | /features/ |
+| `fold-scale-markers-light.png` | /features/ |
 | `fold-capture-dark.png` | /features/, /tour/, /tour/capture/ |
 | `fold-capture-light.png` | /features/, /tour/capture/ |
 | `fold-firstrun-dark.png` | /tour/, /tour/firstrun/ |
@@ -129,14 +137,14 @@ the 6 inch or the 8 inch laid over it.
 
 **Teach GroupLab a store-bought target** (entry 348) has its own picture, `fingerprint`: Add a store-bought target at its second step, How
 big is this target?, with a 12 by 18 in poster the walk draws and photographs itself, its corners found and its printed size typed. The
-phone's five steps wait for the next sitting with the phone.
+phone's second step is `fold-fingerprint`, taken on the emulator (entry 388).
 
 **Pair readings with shots, a row per reading** (entry 351) has its own picture, `pairing`: Ballistics, Chronograph, with a timed string
 the walk makes, a row per reading, a six minute pause between two groups, and the fourth reading's choices open under its row. The phone's
-rows and sheet wait for the next sitting with the phone.
+rows are `fold-pairing`, taken on the emulator (entry 388).
 
 **Several targets open at once on the phone** (concept A, Alan 2026-10-07) is on the phone only, so it has no desktop picture; its Open
-targets sheet waits for the next sitting with the phone.
+targets sheet is `fold-open-targets`, taken on the emulator (entry 388).
 
 ## Not published
 

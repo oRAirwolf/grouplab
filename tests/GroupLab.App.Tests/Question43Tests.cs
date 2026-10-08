@@ -60,7 +60,7 @@ public class Question43Tests
     [Fact]
     public void AHeaderClaimingTooManyPixelsIsRefusedBeforeItIsDecoded()
     {
-        string folder = GroupLab.Tests.Support.Temp.Folder("q43");
+        string folder = Directory.CreateDirectory(GroupLab.Tests.Support.Temp.Folder("q43")).FullName;
         try
         {
             string path = Claims(folder);

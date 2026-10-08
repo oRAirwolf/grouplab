@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json.Nodes;
 using GroupLab.Cli.Bench;
 
 namespace GroupLab.Cli;
@@ -14,7 +15,7 @@ namespace GroupLab.Cli;
 /// </summary>
 public static class BenchVerb
 {
-    public const string Usage = "grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>]";
+    public const string Usage = "grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>] [--gate <baseline.json>] [--baseline <baseline.json>]";
 
     public static int Run(string[] args, TextWriter output, TextWriter error)
     {
@@ -22,7 +23,7 @@ public static class BenchVerb
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
         int runs = BenchRunner.DefaultRuns;
-        string? into = null, record = null, root = null, commit = null;
+        string? into = null, record = null, root = null, commit = null, gate = null, baselineInto = null;
         var areas = new List<string>();
         for (int i = 0; i < args.Length; i++)
         {
@@ -47,6 +48,14 @@ public static class BenchVerb
                 // The committed record is one document with prose around it, so the table goes into it in place rather than over it.
                 case "--record" when i + 1 < args.Length:
                     record = args[++i];
+                    break;
+                // Entry 388 section 4: the baseline gate, held to the figures docs/performance-baseline.json names.
+                case "--gate" when i + 1 < args.Length:
+                    gate = args[++i];
+                    break;
+                // The same file written: the gated figures of this run become the baseline, which only planning moves.
+                case "--baseline" when i + 1 < args.Length:
+                    baselineInto = args[++i];
                     break;
                 default:
                     error.WriteLine($"bench: unknown option {args[i]}");
@@ -88,6 +97,42 @@ public static class BenchVerb
                 BenchReport.Replace(record, "## The record", markdown);
                 output.WriteLine($"Put the record into {record}.");
             }
+        }
+
+        if (baselineInto is not null)
+        {
+            var file = JsonNode.Parse(File.ReadAllText(baselineInto))!.AsObject();
+            file["measured"] = DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            file["machine"] = machine.Name;
+            file["commit"] = machine.Commit;
+            file["bench"] = BenchGate.Figures(measured, BenchGate.Gated);
+            File.WriteAllText(baselineInto, file.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping }) + "\n");
+            output.WriteLine($"Wrote the baseline's bench figures into {baselineInto}.");
+        }
+
+        if (gate is not null)
+        {
+            JsonObject baseline;
+            try
+            {
+                baseline = JsonNode.Parse(File.ReadAllText(gate))!.AsObject();
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException or InvalidOperationException)
+            {
+                error.WriteLine($"bench: the baseline {gate} could not be read ({ex.GetType().Name})");
+                return 2;
+            }
+
+            var (lines, passed) = BenchGate.Check(measured, baseline);
+            output.WriteLine();
+            output.WriteLine($"The baseline gate, against {baseline["measured"]} on {baseline["machine"]}: a figure fails when it is more than a quarter and {BenchGate.FloorMs:0} ms slower.");
+            foreach (string line in lines)
+            {
+                output.WriteLine(line);
+            }
+
+            output.WriteLine(passed ? "The gate passed." : "The gate FAILED.");
+            return passed ? 0 : 1;
         }
 
         return 0;

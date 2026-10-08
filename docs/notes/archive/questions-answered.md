@@ -5,6 +5,65 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-22, question 34: pooling two sheets of one load needs a rule for what a pooled group's centre means
+
+**Status: answered 2026-10-08 (entry 388 section 5, Alan through planning): option C with B as the headline, as built in entry 386 section 5 (`PooledSpread`).** Earlier: open, built as proposed for planning to confirm (entry 386 section 5, 2026-10-07).
+
+### 1. What was asked for
+
+Entry 130 section 4.2: "Pool two sheets of one load (scans 1 and 3, 40 shots): let a person combine sessions of the same load into one group for analysis and comparison, keeping each shot's sheet and bull. If this turns out large, build the core and record the rest as a question."
+
+It turned out large, and the reason is not the plumbing.
+
+### 2. The part that is plumbing, and is fine
+
+Keeping each shot's sheet and bull, gathering shots from two sessions, and computing dispersion over the combined set is straightforward. Mean radius, sigma and the shape tests all work on a set of radii from a centre, and forty shots is simply a better estimate than twenty. That part can be built without asking anybody.
+
+### 3. The part that is a decision
+
+**A pooled group has no single centre, and which centre is used changes what the figures mean.**
+
+Two sheets of one load, shot at different times, have two points of impact. They usually differ, because the rifle was picked up and put down, the ammunition warmed, the wind changed, or the shooter's position moved. So there are three defensible things "the pooled group's centre" could be, and they measure different quantities:
+
+- **A. One centre for all forty shots.** The dispersion then includes the movement between the two sessions. This measures what the rifle and shooter together will do over a day, which is what somebody zeroing for a match wants.
+- **B. Each sheet centred on itself, then the radii pooled.** The dispersion is the within-session dispersion only, and the movement between sessions is thrown away. This measures the ammunition and the rifle, which is what somebody comparing two loads wants.
+- **C. Both, reported side by side**, with the difference between them named as the session-to-session movement.
+
+These are not the same number and the gap between them is the interesting part: if A is much larger than B, the rifle is not holding its zero between sessions, and that is a finding in itself.
+
+### 4. Why I am not choosing
+
+`docs/STATISTICS.md` is explicit that a figure has to say what it is an estimate of. B pooled into one mean radius reads exactly like a twenty shot group's mean radius but is not an estimate of the same thing, and nothing on the screen would distinguish them. A is honest but answers a question a load comparison is not asking. Choosing quietly would put a number in front of somebody that means something other than what they think it means, which is the failure mode entry 120 section 2 was about.
+
+### 5. What I would choose, and why
+
+**C, with B as the headline.** A person pooling two sheets of one load is almost always comparing loads, so the within-session dispersion is the figure they want, and it is the one that stays comparable with every other group in the record book. The session-to-session movement is then reported beside it as its own quantity, in inches, rather than being hidden inside a larger mean radius.
+
+It costs one extra line on the screen and answers both questions instead of silently answering one.
+
+### 6. What is built meanwhile
+
+Nothing of the pooling, deliberately. The core of it is inseparable from the choice above: the first thing the code has to do is pick a centre. Building it with a centre chosen by me and changing it later would mean any pooled figure recorded in between is not comparable with the ones after, and the record book keeps figures.
+
+## 2026-09-22, question 43: entry 137 names an image safety the desktop does not have
+
+**Status: answered 2026-10-08 (entry 388 section 3, Alan approves both): the 400 megapixel cap is judged from the file's header before any decode, on every route that decodes a person's file, and the desktop decodes Open, drop and paste on a background thread with a 60 second limit (`ImageLoader.Checked`, `MainWindow.OpenImageSafely`, `Question43Tests`).** Earlier: open, and nothing was blocked by it. Entry 137 section 4:
+
+> **What is accepted**: the same types and size limits as Open. Anything else is refused with the same plain message Open gives. **The same image safety applies (pixel cap, decode with a time limit) as for any file.**
+
+**There is no pixel cap and no decode time limit on the desktop's Open path.** `ImageLoader.Load` calls `Cv2.ImDecode` and throws where it cannot decode, and nothing measures the result. The caps that exist are in `GroupLab.Core.Publication.Intake`, which is the submission path on the server and is reached by nothing the desktop does.
+
+**What I built:** exactly the safety Open has, which is what the section's first two sentences ask for. All three routes in now share one guarded call and one refusal sentence, which is an improvement on what was there, since a file that would not decode previously went out through the crash reporter.
+
+**What I did not build, and why not.** A pixel cap is a number somebody has to choose, and the wrong one refuses work people legitimately do: a 1200 dpi flatbed scan of a letter sheet is about 130 megapixels, and Alan's own range scans are large. A decode time limit needs a way to stop OpenCV part way, which it does not offer, so it would mean decoding on a background thread and abandoning it, which changes the shape of opening an image rather than adding a check to it.
+
+**What I would do if you want them:**
+
+1. A cap high enough to be about denial of service rather than taste, for example 400 megapixels, with a message saying the number and what was measured.
+2. The decode moved to a background thread with a timeout, which is worth doing anyway because a large scan makes the window stop responding today.
+
+Both belong to opening an image in general rather than to drop and paste, so they are their own item whenever you want them.
+
 ## 2026-10-08, question 92: naming one bull "two on the bulls named" moves the shots below it
 
 **Status: answered 2026-10-08 (planning): the first: "two on this bull" says only how many, every bull stays aimed, with the aimed bulls passed separately.** Built: `AssignmentRule.Aimed`, kept in the marking file; `SheetOffsetAssignmentTests.NamingOneBullForTwoShotsMovesNoOtherShot`.

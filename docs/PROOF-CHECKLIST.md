@@ -50,7 +50,7 @@ Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gat
 | 28 | The Targets screen on the phone | Proposed: a sheet printed from the phone measures true size | Not measurable: nothing printed from a phone. |
 | 29 | Signed APK, development build, Play internal test | No gate | Not measurable here: needs both installed on one phone (request 50). |
 | 30 | Marking by hand on the phone | Proposed: within the click noise of request 9 | Not measurable: no hand marking on a phone of a shot store-bought target, and request 9's noise is not measured. |
-| 31 | `grouplab bench` | Phase 9 gate, not written | Not measurable until planning writes the gate from docs/PERFORMANCE.md. |
+| 31 | `grouplab bench` | Phase 9's baseline gate (entry 388 section 4): no figure more than a quarter and 20 ms slower than `docs/performance-baseline.json` | **Met** on 2026-10-08: the gate passes on the code that set the baseline (docs/PERFORMANCE.md). |
 
 ## For planning: written gates found met
 
@@ -96,7 +96,7 @@ done is in brackets. Nothing in it can be settled without Alan: every line needs
 16. **The support page's address**, when there is one: proves 18.
 
 Every sheet from the range is also scanned at 600 dpi, which is what lets each one be measured against its own photographs. Item 3
-needs a change to detection rather than more material (197 of 198 holes, 2 false marks), item 31 waits on planning writing Phase 9's
-gate, and items 5, 6, 7, 8, 15, 16, 17, 21, 22 and 23 need nothing more from Alan (question 79 asks planning about the written gates
+needs a change to detection rather than more material (197 of 198 holes, 2 false marks), item 31's gate is written and met (entry 388),
+and items 5, 6, 7, 8, 15, 16, 17, 21, 22 and 23 need nothing more from Alan (question 79 asks planning about the written gates
 found met): 16 needs its report's zero verdict to be the screen's, 17 has no gate, and point 2 of 5 cannot be met on `shotGroups`' own
 series.

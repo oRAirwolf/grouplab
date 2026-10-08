@@ -1056,6 +1056,41 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   nothing and everything else goes out new; a research article's fault holds back only that article; a tour fault only the tour; the
   release notes are never held; a whole-site fault still stops it.
 
+## Entry 388: work that needs nobody, at the start of the new week (2026-10-08)
+
+- **Error report 25, before the entry** (a bug Alan hit, nightly 176): a click with the hand tool near nothing threw "Sequence contains no
+  elements" from the search for the nearest line, a `MinBy` over value tuples. Now nullable; `CrashReport25Tests` reproduces it on the old
+  code. The issue closes with the commit and the nightly it ships in.
+- **Section 1, the phone pictures on the emulator.** `scripts/scenarios/phone-screens.json` now also takes Targets' Scale markers card,
+  the second step of Add a store-bought target (with `scripts/scenarios/stand-in-poster.jpg`, drawn by `StandInPoster`), the pairing rows
+  for typed readings, and the Open targets sheet with two targets open; `docs/figures/screens/phone/fold-*-{light,dark}.png` and the
+  Features page carry them. A `pick` step hands a photo to the screen asking for one. The first run (37735635656) found three faults of
+  the walk, fixed with the walk now run headless first (`PhoneScreensScenarioTests`): Next pressed before the photo reached the screen; a
+  new picture replaces the target showing, so the second is opened with Open another target; and a wait that found the first result left
+  the second reading running at the force-stop, **after which no later start of GroupLab Dev on that emulator ran anything**, in that
+  step or the next ones. With the walk ending cleanly every pass worked (37755482923, 34 pictures), and the fourth run (37762745721) pictured the store-bought target's second step once the poster was put on the device too. Whether a person whose phone kills
+  GroupLab in the middle of a reading meets the same thing is not established: the logs of that run were not kept, and the scripts now keep
+  them. The workflow's commit step now stages first, since `git diff` never saw a picture taken for the first time.
+- **Section 2, the quality sweep.** Every scenario screenshot writes `<screen>.quality.json` (`Scenario.Quality`): controls under 44 units,
+  words cut short, anything past the side, text over text. `scripts/android-quality.sh` runs the sweep at the Fold 7's cover screen (411
+  units), its inner screen (750) and a small phone (360), light and dark, and the cover screen at the largest text; `scripts/phone-quality.py`
+  gathers the report. One real fault: **the Counted and Left out switch on the Shots page was 32 units tall at every width**, now 48.
+  The other 39 lines were the check's own (a scroll bar's arrows, the switch's hidden word, text clipped under the tab bar) and it no
+  longer counts them. Nothing needed a layout decision, so no DESIGN NEEDED. `QualitySweepTests` holds the sweep's screens at 360 units.
+- **Section 3, question 43 (answered, archived).** The 400 megapixel cap is judged from the file's header before anything is decoded, on
+  `ImageLoader`'s loads and on the store-bought target's and scale markers' own decodes (`ImageLoader.Checked`); the desktop shows the size
+  and the limit. Open, drop and paste decode on a background thread and stop waiting after 60 seconds, saying so; a slow open finishing
+  after a newer one is put down. The phone already read on a background thread and shares the cap. `Question43Tests`.
+- **Section 4, Phase 9's baseline.** Nothing changed for speed. `docs/performance-baseline.json`: on TACIT-BLUE, start-up to a usable
+  window 1081 ms, opening a 600 dpi scan as Open does 965 ms, switching between three open targets 7 ms, identification 210 ms, hole
+  detection on the 600 dpi scan 1769 ms, one sheet from file to figures 530 ms, ten sheets 4150 ms. The gate (`BenchGate`: more than a
+  quarter and 20 ms slower fails) is `grouplab bench --gate`, `GROUPLAB_PERF_GATE=1` on `Phase9BaselineTests`, and
+  `scripts/startup-time.ps1 -Gate`; all three passed on the code that set it. On GitHub's emulator (`scripts/android-perf.sh`, a record,
+  never a gate): start-up 2031 ms, a 600 dpi reading 14.4 s (7.1 s of it hole detection, 2.6 s identification), a switch 162 ms. Proof
+  checklist item 31 is met.
+- **Section 5, question 34 confirmed** (option C with B as the headline) and archived with question 43.
+- **Section 6.** STATE's line on the desktop tabs corrected: merged at 21:02 on 2026-10-07 (86a8d207).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

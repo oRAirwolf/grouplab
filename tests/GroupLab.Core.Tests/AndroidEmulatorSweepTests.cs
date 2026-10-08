@@ -69,6 +69,27 @@ public class AndroidEmulatorSweepTests
         Assert.Contains("may_find_nothing = [\"Use this picture|Use it anyway\"]", Text(".github", "workflows", "ios-app.yml"), StringComparison.Ordinal);
     }
     /// <summary>
+    /// Entry 388 sections 2 and 4: the quality sweep's report and the emulator's baseline are each made by a script with a self-test, and
+    /// the workflow runs them only when asked for.
+    /// </summary>
+    [Fact]
+    public void TheQualitySweepAndTheBaselineScriptsPassTheirSelfTests()
+    {
+        foreach (string script in new[] { "scripts/phone-quality.py --self-test", "scripts/phone-perf.py --self-test" })
+        {
+            if (IpadLogsTests.Python(script) is { } run)
+            {
+                Assert.True(run.Exit == 0, run.Said);
+            }
+        }
+
+        string workflow = Text(".github", "workflows", "android-emulator.yml");
+        Assert.Contains("inputs.quality", workflow, StringComparison.Ordinal);
+        Assert.Contains("inputs.baseline", workflow, StringComparison.Ordinal);
+        Assert.Contains("git diff --cached --quiet -- docs/figures/screens/phone", workflow, StringComparison.Ordinal);
+    }
+
+    /// <summary>
     /// Question 90 (b): the emulator's run takes the phone's published screenshots, and its layouts make exactly the files the site publishes,
     /// every one but the launcher icons, which show Android's launcher and are not retaken.
     /// </summary>

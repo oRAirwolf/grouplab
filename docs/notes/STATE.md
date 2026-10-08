@@ -9,27 +9,27 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-07 evening, after entry 387 (before it: entry 386, question 90's answer, and Alan's guard at 98).
+**Last rewritten:** 2026-10-08 morning, after entry 388 and error report 25 (before them: entry 387).
 
 ---
 
 ## In flight
 
-- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 1% at 02:17 UTC.
+- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 5% on 2026-10-08 09:17 UTC.
+- **Entry 388 done** (2026-10-08): the four phone pictures (Scale markers, the store-bought target's second step, pairing rows, Open
+  targets) taken on the emulator and on the Features page; the quality sweep at 411, 750 and 360 units, light and dark, found one fault (the
+  Shots switch, 32 units tall, now 48); question 43 built; Phase 9's baseline and gate (`docs/performance-baseline.json`), nothing changed
+  for speed. **Error report 25** (a click near nothing with the hand tool) fixed; the issue closes when its nightly ships.
 - **Play's internal test follows the nightlies** (request 80); requests 79 and 80 closed; question 87 measured, the rule stays.
 - **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
   (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
   over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live: the receiver is on the site and Alan reinstalled the
-  worker at 18:59 Denver; question 34 built as proposed, **for planning to confirm**.
+  worker at 18:59 Denver; question 34 built as proposed and confirmed in entry 388.
 - **Entry 387 done** (2026-10-07): a failing site check holds back only its pages.
-- **Concept A, several targets open at once** (Alan, 2026-10-07): **the phone's sheet is merged** (35e687bb; no phone picture yet). **The desktop
-  tabs** are being built by a helper in its own worktree (`.claude/worktrees/agent-ae8bd84d...`), merged only when its suites pass.
-  **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests; the rest need hardware (docs/PROOF-CHECKLIST.md).
-- **Send to GroupLab checked end to end** (issue 24, closed); the receiver's missing reference fixed in 68277eb5.
+- **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
+  tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
 - **Question 90 answered (Alan)**: the phone pictures' limit is 90 and the site publishes again; the emulator's run now takes the phone
   pictures after each nightly and commits them (`scripts/android-screens.sh`); its first run is 37689905340.
-- **Entries 385 and 379 section 3 done** (the M834 true across, 0.8 percent short along; the consistency audit's ten findings).
-- **Entries 384, 383 (the tester's report, fixed in nightly 176), 378, 376 (B7 built in 386), 374 and 373 done.**
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81, 82 (the M834's check, a second print).
 
 ## The next three
@@ -45,15 +45,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
-- **Performance** (Phase 9): the baseline gate and any optimization; waits for planning to say the application has settled.
+- **Performance** (Phase 9): the baseline and its gate are in (entry 388); an optimization waits for planning to name one.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. The phone pictures of Scale markers, the fingerprint and pairing screens, at the next sitting with a phone.
+1. Push entry 388 to main (held while its last emulator run retook the store-bought target's picture), then confirm the site.
 2. Alan's first print on the M220 from the phone, and his worker reinstall (panel.md).
-3. Check the emulator's first phone pictures against the tour pages' words.
+3. Run the quality sweep again after the next nightly (`android-emulator.yml` with `quality`), and the emulator baseline with `baseline`.
 
 ## Blocked, and on what
 
@@ -66,22 +66,21 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (91 and 92 answered and built 2026-10-08):
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (34 and 43 answered and archived in entry 388):
 
 - **88** DESIGN NEEDED, chronograph entry on the analysis
 - **80** a newer fingerprint library without a new build
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **44, the part still open** the bent-sheet model throws at a point outside the page
-- **43** entry 137 names an image safety the desktop does not have; **36** a light installer, measured
-- **34** a pooled group's center: built as proposed in entry 386 (each sheet from its own center first), for planning to confirm
+- **36** a light installer, measured
 
 ## Builds and the site
 
 - **Last nightly:** 0.2.0-nightly.178 (2026-10-08 05:01 UTC, e4d7f71f: concept A on both, questions 91 and 92, the proof tests);
   published whole, and **the first to reach Play's internal test by itself** (version code 178). 177's publish had timed out; fixed.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 174's notes on 2026-10-06.
-- Crash reports open: none (issue 23, nightly 172's darkness share, closed 2026-10-06). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
+- Crash reports open: 25 (the hand tool's click near nothing, nightly 176), fixed in entry 388's push and closed when its nightly ships. Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
 
 ## The inbox
 
@@ -94,6 +93,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **The emulator's walks run headless first** (`PhoneScreensScenarioTests`, `PhoneSweepScenarioTests`): run 37735635656 left a reading
+  running at a force-stop and no later start of GroupLab Dev on that emulator ran anything. Not established whether a phone does the same.
 - **The chronograph store counts readings from 1**, and accepting a pairing used to store them from 0: the first reading paired with a
   shot was refused, and every other pairing was one reading off. Fixed in entry 323 on both platforms.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it

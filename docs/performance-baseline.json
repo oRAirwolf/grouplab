@@ -1,0 +1,46 @@
+{
+  "about": "NOTES-FROM-PLANNING.md entry 388 section 4: Phase 9's baseline, the waits a person has, in milliseconds (medians). bench is held by grouplab bench --gate docs/performance-baseline.json; window by GROUPLAB_PERF_GATE=1 dotnet test tests/GroupLab.App.Tests --filter Phase9BaselineTests; start-up by pwsh scripts/startup-time.ps1 -Gate. A figure fails when it is more than a quarter and 20 ms slower (BenchGate). Measured on the machine named, Release, nothing else working; emulator is a record of GitHub's emulator, never a gate.",
+  "measured": "2026-10-08",
+  "machine": "TACIT-BLUE",
+  "commit": "ca0075c7",
+  "bench": {
+    "images / load a 600 dpi Letter scan": 633.6,
+    "images / load a phone photograph": 47,
+    "measurement / identify the sheet from its codes": 209.5,
+    "measurement / the generated sheet, stage by stage": 461.8,
+    "measurement / the generated sheet, stage by stage: S5-S8.holes": 333,
+    "measurement / a 600 dpi scan, stage by stage": 2604.2,
+    "measurement / a 600 dpi scan, stage by stage: S5-S8.holes": 1769,
+    "measurement / find holes on a target GroupLab did not print": 295.7,
+    "statistics / the whole analysis of a marking": 1.2,
+    "end to end / one sheet from file to figures": 529.6,
+    "end to end / a batch of ten sheets": 4149.8
+  },
+  "start-up": {
+    "start-up to a usable window": 1080.8
+  },
+  "window": {
+    "a new window ready to use": 147,
+    "open a 600 dpi scan": 964.7,
+    "switch between three open targets": 7.3
+  },
+  "emulator": {
+    "measured": "2026-10-08",
+    "run": "android-emulator.yml run 37755482923, commit 785e3b14 on the branch entry-388; x86_64 emulator, API 34, software drawing",
+    "start-up to a usable window": 2031.0,
+    "read a 600 dpi scan, from the picture to its result": 14354.5,
+    "switch between three open targets": 162.0,
+    "stages of a reading": {
+      "P0.bulls": 1031.0,
+      "S0.identify": 2615.0,
+      "S1.scale": 0.0,
+      "S2.fiducials": 764.0,
+      "S3.register": 4.5,
+      "S4.verify": 0.0,
+      "S5-S8.holes": 7085.5,
+      "S9.assign": 66.0,
+      "load": 415.0,
+      "prepare": 1421.5
+    }
+  }
+}

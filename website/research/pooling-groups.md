@@ -11,7 +11,7 @@ no_figure: "The two ways of pooling are two arithmetics over the same shots, and
 found: Pooling is not arithmetic, it is a choice. Center all the shots together and you measure the rifle over a day; center each sheet on itself and you measure the ammunition. The two numbers differ, and the difference is itself the useful finding.
 sure: The statistics are exact. Which of the two a shooter wants is a judgment, and GroupLab does not yet make it for them, on purpose.
 sources:
-  - "The three options and why one was not chosen quietly: `docs/QUESTIONS-FOR-PLANNING.md`, question 34."
+  - "The three options and why one was not chosen quietly: `docs/notes/archive/questions-answered.md`, question 34, confirmed by the developer on 2026-10-08."
   - "What was asked for: `docs/NOTES-FROM-PLANNING.md`, entry 130 section 4.2."
 ---
 

@@ -25,6 +25,31 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-07, entry 388: work that needs nobody, for the start of the new week
+
+**Status: actioned 2026-10-08; every section done.** The four phone pictures taken on the emulator and on the Features page; the quality
+sweep at three widths, light and dark, its one fault (the Shots switch, 32 units tall) fixed; question 43 built and archived; Phase 9's
+baseline measured on the desktop and the emulator with its gate, nothing changed for speed; question 34 confirmed and archived; STATE
+corrected. Error report 25 was fixed first.
+
+From the planning session with Alan, 2026-10-07 23:50 Denver. Alan asked what can be worked on without him. In this order, within 85%
+of the week; chores and screenshot walks on chores-haiku, wording checks on docs-sonnet (CLAUDE.md):
+
+1. **The phone pictures still waiting on a sitting, taken on the emulator instead**: Scale markers, the fingerprint and pairing
+   screens, and concept A's open-targets sheet (no phone picture yet). Use the emulator run (`scripts/android-screens.sh`); the
+   sitting remains only for what needs a real camera or Bluetooth.
+2. **A quality sweep of every phone screen on the emulator** (entry 315's automation, NOTES-FROM-PLANNING line about "a quality sweep of
+   every screen on both phones"): text cut off or overlapping, controls under 44 px, anything off screen at the Fold 7's outer and
+   inner widths and a small phone's, dark and light. Fix what is not a layout decision; post DESIGN NEEDED for what is.
+3. **Question 43, Alan approves both**: a pixel cap on opening any image, high enough to be about denial of service (400 megapixels),
+   with a message giving the number and what was measured; and the decode on a background thread with a time limit, so a large scan
+   no longer freezes the window. Same on the phone if it lacks them.
+4. **Phase 9, the performance baseline only**: measure and record (startup, opening a 600 dpi scan, identification, detection, analysis,
+   tab switching with several targets open, on the computer and the emulator), add the baseline gate, change nothing for speed yet.
+   Planning says the application has settled enough to measure.
+5. **Question 34 confirmed**: option C with B as the headline, as built. Close it.
+6. STATE's In flight still says the desktop tabs are being built by a helper; they were merged at 21:02 (86a8d207). Fix the line.
+
 ## 2026-10-07, entry 387: a site check holds back only what it is about, never the whole site
 
 **Status: actioned 2026-10-07; every section done.** Whole-site checks still stop the publish; page checks hold back only their pages, keeping grouplab.org's copy; stale screenshots publish and are reported; the home page, release notes and download page are never held back (`settle` in website/build.py, tests/python/site-holdback-tests.py run before every build). Results: docs/PHASE1-RESULTS.md, entry 387.

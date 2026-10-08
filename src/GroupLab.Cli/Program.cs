@@ -552,7 +552,7 @@ static int Usage()
         grouplab user-guide [<docs directory>]
         grouplab glossary [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
-        grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>]
+        grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>] [--gate <baseline.json>] [--baseline <baseline.json>]
         grouplab update-key
         grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json>
                                  [--asset <platform> <kind> <file> <url>]...

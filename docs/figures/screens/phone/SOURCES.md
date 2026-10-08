@@ -20,6 +20,10 @@ the lower figures are partly out of view.
 | `fold-result-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | The result of the sample sheet: the figures and the plot |
 | `fold-settings-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Settings, Units |
 | `fold-targets-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Targets, Made for your optic, Letter chosen by the phone's region; no sample |
+| `fold-scale-markers-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Targets, the Scale markers card from its heading: brackets, bars, stickers and labels (entry 388) |
+| `fold-fingerprint-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Add a store-bought target at its second step, How big is this target?, with a 12 by 18 in poster GroupLab draws (`scripts/scenarios/stand-in-poster.jpg`) and its size typed (entry 388) |
+| `fold-pairing-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Readings and shots: 25 typed readings, a row per reading, each proposed with the shot fired in its place (entry 388) |
+| `fold-open-targets-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | The Open targets sheet over a result, with two targets open and Open another target (entry 388) |
 | `fold-result-landscape-light.png`, `-dark` | Galaxy Z Fold 7, cover screen, held sideways | The result held sideways: Fix holes and the start of the sheet on the left, the figures on the right |
 | `fold-sessions-landscape-light.png`, `-dark` | Galaxy Z Fold 7, cover screen, held sideways | Sessions, held sideways, with the one session just analyzed |
 | `tab-result-landscape-light.png`, `-dark` | Galaxy Tab S8 Ultra, landscape | The result, the sheet beside its numbers, with Fix holes |

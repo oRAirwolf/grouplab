@@ -252,7 +252,7 @@
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"
     },
-    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"noPicture": "the phone's Scale markers card is photographed at the next sitting with the phone"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220"], "guide": "1-print-a-sheet"},
+    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"shot": "fold-scale-markers"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220"], "guide": "1-print-a-sheet"},
     {
       "key": "add-store-target",
       "group": "Reading a target",
@@ -267,7 +267,7 @@
         "iPhone and iPad"
       ],
       "mobile": {
-        "noPicture": "the phone's five steps are photographed at the next sitting with the phone"
+        "shot": "fold-fingerprint"
       },
       "since": "next",
       "note": ["Add a store-bought target, on the Targets screen of the computer and the phone", "Photos in Add a store-bought target now show the right way up", "Add a store-bought target now finds the corners", "While placing the corners you can zoom in", "Add a store-bought target no longer takes the edge of the counter", "Add a store-bought target now finds the aiming marks", "Add a store-bought target now warns before saving"],
@@ -574,7 +574,7 @@
         "iPhone and iPad"
       ],
       "mobile": {
-        "noPicture": "the phone's rows and sheet are photographed at the next sitting with the phone"
+        "shot": "fold-pairing"
       },
       "since": "next",
       "note": "Changing what a chronograph reading goes with is now a row per reading",
@@ -1373,7 +1373,7 @@
       "note": "On the phone, several targets can now be open at once",
       "guide": "13-on-the-phone",
       "mobile": {
-        "noPicture": "the phone's Open targets sheet is photographed at the next sitting with the phone"
+        "shot": "fold-open-targets"
       }
     }
   ]

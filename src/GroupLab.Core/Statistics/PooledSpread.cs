@@ -4,7 +4,7 @@ using GroupLab.Core.Imaging;
 namespace GroupLab.Core.Statistics;
 
 /// <summary>
-/// Question 34, proposed and built in entry 386 section 5 for planning to confirm: what the centre of a group pooled from several sheets means.
+/// Question 34, built in entry 386 section 5 and confirmed in entry 388 section 5 (option C with B as the headline): what the centre of a group pooled from several sheets means.
 /// The headline is <see cref="WithinMeanRadius"/>, each sheet measured from its own centre and the radii pooled (option B: the load and the
 /// rifle, comparable with any one sheet's mean radius); beside it <see cref="AllMeanRadius"/>, every shot from one centre (option A: what the
 /// rifle and shooter did across the sheets), and <see cref="Movement"/>, how far the sheets' own centres sat from where they sit on average,
