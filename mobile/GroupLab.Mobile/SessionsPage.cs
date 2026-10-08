@@ -19,6 +19,29 @@ public sealed class SessionsPage : UserControl
         Content = List();
     }
 
+    /// <summary>
+    /// A result opened here is one of the open targets (several targets open at once, Alan 2026-10-07), shown on this place again when it
+    /// is switched to.
+    /// </summary>
+    private ResultView Opened(ResultView view)
+    {
+        Shell.Current?.OpenTarget(view, Shell.Place.Sessions);
+        return view;
+    }
+
+    /// <summary>An open target switched to, shown here as it was left.</summary>
+    internal void ShowOpen(ResultView view) => Content = Screens.Detach(view);
+
+    /// <summary>
+    /// Back to the list of sessions from a result opened here. An open target may be showing on a Sessions page made since it was opened,
+    /// after a switch, so the list goes on the page showing it.
+    /// </summary>
+    private void ToList()
+    {
+        var page = TopLevel.GetTopLevel(this) is null && Shell.Current?.PageContent is SessionsPage showing ? showing : this;
+        page.Content = page.List();
+    }
+
     private Control List()
     {
         var column = new StackPanel { Spacing = 8 };
@@ -151,7 +174,7 @@ public sealed class SessionsPage : UserControl
             return;
         }
 
-        Content = new ResultView(result, new ShotSetup(result.State.Calibre, result.State.ShotDistanceInches), units, () => Content = List());
+        Content = Opened(new ResultView(result, new ShotSetup(result.State.Calibre, result.State.ShotDistanceInches), units, ToList));
     }
 
     /// <summary>Entry 278 section 2: shots from any program's CSV, through GroupLab's guesses at what each column is.</summary>
@@ -195,11 +218,18 @@ public sealed class SessionsPage : UserControl
         string name = read.Count == 1 ? read[0].Name : $"{read.Count} files put together";
         var units = Phone.Settings.LoadUnits();
         Content = new CsvImportPage(table, name, () => Content = List(),
-            result => Content = new ResultView(result, new ShotSetup(null, result.State.ShotDistanceInches), units, () => Content = List()));
+            result => Content = Opened(new ResultView(result, new ShotSetup(null, result.State.ShotDistanceInches), units, ToList)));
     }
 
     private void Open(long id)
     {
+        // A session already open is switched to, as it was left, rather than opened twice, where two copies would save over each other.
+        if (Shell.Current is { } shell && ReferenceEquals(shell.PageContent, this) && shell.Targets.Find(id) is { } open)
+        {
+            shell.SwitchTo(open);
+            return;
+        }
+
         if (PhoneAnalysis.Store().Get(id) is not { } record)
         {
             return;
@@ -220,6 +250,6 @@ public sealed class SessionsPage : UserControl
         state = state with { ImagePath = record.ImagePath ?? state.ImagePath };
         var definition = record.DefinitionJson is { } json ? GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
         DiagnosticLog.Info("session.open", ("session", id.ToString(CultureInfo.InvariantCulture)));
-        Content = new ResultView(new PhoneResult(state, definition, null, id), new ShotSetup(state.Calibre, state.ShotDistanceInches), Phone.Settings.LoadUnits(), () => Content = List());
+        Content = Opened(new ResultView(new PhoneResult(state, definition, null, id), new ShotSetup(state.Calibre, state.ShotDistanceInches), Phone.Settings.LoadUnits(), ToList));
     }
 }

@@ -190,6 +190,8 @@ public sealed class Shell : UserControl
     {
         capture?.CloseCamera();
         capture = null;
+        Targets.Clear();
+        WorkInProgress.HiddenUnsaved = 0;
         BackOverride = null;
         Begin();
     }
@@ -216,6 +218,97 @@ public sealed class Shell : UserControl
 
         before?.UpdateLayout();
     }
+
+    /// <summary>
+    /// Concept A, several targets open at once (Alan, 2026-10-07): every target opened on Capture or from Sessions, each keeping its own
+    /// screen and its unsaved marks until it is closed. The name at the top of a target's screen opens the list (<see cref="OpenTargetsSheet"/>).
+    /// </summary>
+    internal OpenTargets<ResultView> Targets { get; } = new();
+
+    /// <summary>A target opened in <paramref name="home"/>, the place it is shown in when it is switched to.</summary>
+    internal void OpenTarget(ResultView view, Place home)
+    {
+        bool known = Targets.Contains(view);
+        view.Home = home;
+        foreach (var closed in Targets.Opened(view))
+        {
+            capture?.Closed(closed);
+            Toast(OpenTargetWords.MadeRoom(closed));
+        }
+
+        if (!known)
+        {
+            // A target's marks change only while it is on screen, so they are counted again each time it leaves the screen.
+            view.DetachedFromVisualTree += (_, _) => Recount();
+        }
+
+        Recount();
+        DiagnosticLog.Info("targets.open", ("open", Targets.Count), ("place", home.ToString()));
+    }
+
+    /// <summary>An open target shown, in the place it was opened in, as it was left.</summary>
+    internal void SwitchTo(ResultView view)
+    {
+        if (!Targets.SwitchTo(view))
+        {
+            return;
+        }
+
+        Show(view.Home);
+        switch (page.Content)
+        {
+            case CapturePage onCapture:
+                onCapture.ShowOpen(view);
+                break;
+            case SessionsPage onSessions:
+                onSessions.ShowOpen(view);
+                break;
+        }
+
+        Recount();
+        DiagnosticLog.Info("targets.switch", ("open", Targets.Count));
+    }
+
+    /// <summary>
+    /// A target closed, after asking where it had marks not saved. Where it was the one on screen, the next open one is shown, or the start
+    /// of its place where none is left.
+    /// </summary>
+    internal void CloseTarget(ResultView view)
+    {
+        bool showing = ReferenceEquals(Targets.Current, view);
+        bool unsaved = OpenTargetWords.AsksBeforeClosing(view);
+        var next = Targets.Close(view);
+        capture?.Closed(view);
+        Recount();
+        DiagnosticLog.Info("targets.close", ("open", Targets.Count), ("unsaved", unsaved));
+        if (!showing)
+        {
+            return;
+        }
+
+        if (next is not null)
+        {
+            SwitchTo(next);
+        }
+        else if (view.Home == Place.Capture)
+        {
+            AnotherTarget();
+        }
+        else
+        {
+            Show(view.Home);
+        }
+    }
+
+    /// <summary>The start of Capture, for another target, with those open kept.</summary>
+    internal void AnotherTarget()
+    {
+        Show(Place.Capture);
+        capture?.ShowStart();
+    }
+
+    /// <summary>The open targets with marks not saved, for the updater, which never installs over them (entry 288).</summary>
+    private void Recount() => WorkInProgress.HiddenUnsaved = Targets.Unsaved;
 
     /// <summary>Entry 259 screen 5: Ballistics with a result's group carried in, for its hit chance.</summary>
     internal void ShowBallistics(GroupLab.Core.Marking.MarkingState state, bool zeroOffset = false, string? open = null)

@@ -372,11 +372,35 @@ public sealed class CapturePage : UserControl
     }
 
     /// <summary>The start of the tab, with the two buttons above it once there is a result to go back to.</summary>
-    private void ShowStart() => Content = lastResult is null ? home : WithBar(home, false);
+    internal void ShowStart() => Content = lastResult is null ? home : WithBar(home, false);
+
+    /// <summary>
+    /// An open target switched to (several targets open at once, Alan 2026-10-07): shown as it was left, and now the one the Result button
+    /// returns to. The caliber typed for the next target stays.
+    /// </summary>
+    internal void ShowOpen(ResultView view)
+    {
+        lastResult = view;
+        Content = WithBar(Screens.Detach(view), true);
+    }
+
+    /// <summary>A target closed: the Result button no longer returns to it.</summary>
+    internal void Closed(Control view)
+    {
+        if (ReferenceEquals(lastResult, view))
+        {
+            lastResult = null;
+        }
+    }
 
     /// <summary>A result shown, and kept as the one the Result button returns to.</summary>
     internal void ShowResult(Control result)
     {
+        if (result is ResultView view)
+        {
+            Shell.Current?.OpenTarget(view, Shell.Place.Capture);
+        }
+
         lastResult = result;
         // Entry 376 item B3: this target has its caliber; the next one is asked again.
         calibre.Text = "";
@@ -807,6 +831,7 @@ public sealed class CapturePage : UserControl
         Control WithResult(ResultView view)
         {
             DiagnosticLog.Info("camera.shutter", ("step", "shown"));
+            Shell.Current?.OpenTarget(view, Shell.Place.Capture);
             lastResult = view;
             return WithBar(view, true);
         }

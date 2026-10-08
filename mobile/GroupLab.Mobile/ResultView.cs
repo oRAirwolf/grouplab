@@ -21,8 +21,84 @@ namespace GroupLab.Mobile;
 /// holes, where nothing moves by accident. Every change is saved at once. Where the sheet could not be read, the reason and what to do
 /// next, never a blank screen.
 /// </summary>
-public sealed class ResultView : UserControl
+public sealed class ResultView : UserControl, IOpenTarget
 {
+    /// <summary>Whether the sheet could not be read, so the result is the reason and the choices, not figures.</summary>
+    private readonly bool failed;
+
+    /// <summary>The place this target was opened in and is shown in again when switched to (several targets open at once).</summary>
+    internal Shell.Place Home { get; set; } = Shell.Place.Capture;
+
+    /// <summary>The result made inside this one where it was marked by hand from here, which is now what this target shows.</summary>
+    private ResultView Innermost => Content is ResultView inner ? inner.Innermost : this;
+
+    /// <summary>The page this target shows now, through any result made inside it.</summary>
+    private object? Page => Content is ResultView inner ? inner.Page : Content;
+
+    /// <summary>The target's name at the top of its screen: the sheet, with its label where it has one, or how it is being marked.</summary>
+    internal string TargetName
+    {
+        get
+        {
+            var shown = Innermost;
+            return shown.definition is null && shown.failed && Page is not MarkingAPage ? "Picture not read" : shown.Title();
+        }
+    }
+
+    /// <summary>Whether a marking is open on it that is kept only when finished: marking by hand, or holes being fixed and not yet kept.</summary>
+    internal bool Marking => Page is MarkingAPage or FixHolesPage { Changed: true };
+
+    /// <summary>Whether that marking holds marks that closing the target would lose.</summary>
+    internal bool UnsavedMarks => Page switch
+    {
+        MarkingAPage marking => marking.Unsaved,
+        FixHolesPage holes => holes.Changed,
+        _ => false,
+    };
+
+    /// <summary>The shots it has now, on the marking where one is open.</summary>
+    internal int Shots => (Page switch
+    {
+        MarkingAPage marking => marking.State,
+        FixHolesPage holes => holes.State,
+        _ => Innermost.session.State,
+    }).Shots.Count(s => s.IsShot);
+
+    /// <summary>The session it is saved as.</summary>
+    internal long? SessionId => Innermost.sessionId ?? sessionId;
+
+    /// <summary>The quarter turns its picture is shown at.</summary>
+    internal int PictureTurns => Page is MarkingAPage ? 0 : Innermost.picturePane?.Turns ?? Innermost.session.State.ViewQuarterTurns;
+
+    private (string Path, Avalonia.Media.Imaging.Bitmap? Bitmap)? thumbnail;
+
+    /// <summary>The target's picture, small, for the list of open targets; decoded once.</summary>
+    internal Avalonia.Media.Imaging.Bitmap? Thumbnail()
+    {
+        string? path = Page is MarkingAPage marking ? marking.ImagePath : Innermost.session.State.ImagePath;
+        if (path is null)
+        {
+            return null;
+        }
+
+        if (thumbnail is not { } kept || kept.Path != path)
+        {
+            thumbnail = (path, OpenTargetsSheet.Decode(path));
+        }
+
+        return thumbnail.Value.Bitmap;
+    }
+
+    string IOpenTarget.TargetName => TargetName;
+
+    bool IOpenTarget.Marking => Marking;
+
+    bool IOpenTarget.UnsavedMarks => UnsavedMarks;
+
+    int IOpenTarget.Shots => Shots;
+
+    long? IOpenTarget.SessionId => SessionId;
+
     private readonly MarkingSession session;
     private readonly TargetDefinition? definition;
     private UnitSettings units;
@@ -219,8 +295,10 @@ public sealed class ResultView : UserControl
         // Entry 323 section 3: the plot's chips as they were left, the velocity band's among them.
         plot.Shown = Phone.Settings.LoadPlotMarks();
         full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition, SessionId = result.SessionId, VelocityAction = VelocityAction };
+        failed = result.Failure is not null;
         var column = new StackPanel { Spacing = 12 };
-        column.Children.Add(Screens.Title(result.Definition?.Name ?? "The sheet"));
+        // Several targets open at once (Alan, 2026-10-07): the target's name is the way to the others open, and to close one.
+        column.Children.Add(OpenTargetsSheet.Switcher(big: true).Id("result-open-targets"));
 
         // Entry 363 section 3.5: a target read and shown goes, or is asked about, as the person chose; off until the stores' answers allow it.
         if (result.Failure is null && PhoneSending.After(result.State, session.State) is { } sending)

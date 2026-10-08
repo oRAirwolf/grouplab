@@ -56,6 +56,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Send a target to the project | `send-targets` | on the phone | entry 363 section 3.5: the computer's package and queue, Wi-Fi only unless mobile data is allowed, a target read and shown sent or asked about as chosen, and Send everything I open; switched on from nightly 173 (entry 379, `sendTargetsPhones`) | on iOS |
 | Error reports | `error-reports` | on the phone | | on iOS |
 | The hardware survey | `survey` | on the phone | | on iOS |
+| Several targets open at once on the phone | `open-targets-phone` | on the phone | concept A (Alan, 2026-10-07), the phone's half: the target's name at the top of its result or marking opens Open targets, a row each with its picture, Analysis or Marking, not saved, and a close button that asks first over marks not saved; photographed at the next sitting | on iOS |
 | Words explained where they appear | `explain-words` | on the phone | a figure's name opens its explanation by a tap (entry 259 screen 1), and a secondary line naming a glossary word explains it by a tap (entry 258) | on iOS |
 | Updates that list what you skipped | `updates` | left out | Google Play updates the phone's application; the desktop's update bar has nothing to do there. The sideloaded GroupLab Dev has its own updater, `android-updates` | left out |
 | GroupLab updates itself on Android | `android-updates` | on the phone | entries 288 and 386: the Android updater, in GroupLab Dev's APK and the plain APK, never in the copy for Google Play | left out |

@@ -19,7 +19,19 @@ internal static class WorkInProgress
 
     internal static bool Analysing => Volatile.Read(ref analysing) > 0;
 
-    internal static bool Unsaved => Volatile.Read(ref unsaved) > 0;
+    internal static bool Unsaved => Volatile.Read(ref unsaved) > 0 || Volatile.Read(ref hiddenUnsaved) > 0;
+
+    private static int hiddenUnsaved;
+
+    /// <summary>
+    /// Open targets with marks not saved (several targets open at once, Alan 2026-10-07): a marking switched away from is off screen, so
+    /// <see cref="HoldWhileShown"/> no longer counts it, and its marks would still go with an install.
+    /// </summary>
+    internal static int HiddenUnsaved
+    {
+        get => Volatile.Read(ref hiddenUnsaved);
+        set => Volatile.Write(ref hiddenUnsaved, value);
+    }
 
     /// <summary>Counts an analysis while it runs.</summary>
     internal static IDisposable Analysis()

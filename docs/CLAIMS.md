@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1541 |
+| code | 1540 |
 | measured | 2007 |
 | decided | 1296 |
 | unbacked | 0 |
-| **total** | **4844** |
+| **total** | **4843** |
 
-**1194** of them were read one sentence at a time and their backing written against the sentence. The other **3650** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1194** of them were read one sentence at a time and their backing written against the sentence. The other **3649** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3755,8 +3755,8 @@ one that matters.
 ### site:features/index.html
 
 - *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
+- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.173 Which bull each shot belongs to A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.167 Scale markers beside a target Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.165 Label targets for a thermal printer Six bulls of the Letter sheets&#x27; size on a 4x6, A6 or 100 by 150 mm label, in sets of five that pool into one group, with a printer check label, printed one dot at a time in black only with every code and marker on whole dots.
 - *measured* (PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6): Windows · macOS · Linux · Android · iPhone and iPad.
 - *code* (src/GroupLab.Core/Marking/ShotLabels.cs ShotLabel.Name; src/GroupLab.App/MarkingCanvas.cs Lit and LightAt; mobile/GroupLab.Mobile/ResultView.cs SheetPicture; src/GroupLab.Core/Marking/ResultFigures.cs BullKey (entry 376 sections A3, A4 and A6)): On the tour · In the user guide · The research behind it Which bull each shot belongs to A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)): Windows · macOS · Linux · Android.
@@ -3932,7 +3932,6 @@ one that matters.
 
 ### site:index.html
 
-- *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes): New in GroupLab New in nightly.173 Which bull each shot belongs to A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): Two loads that differ by 20 percent on five-shot groups cannot be told apart.
 - *decided* (what GroupLab is for, DESIGN.md section 1): GroupLab measures far more carefully, and then tells you what the number is worth.
 - *measured* (docs/STATISTICS.md section 9.1, the true size range for small groups): From five shots, the true spread lies between 0.68 and 1.92 &#215; what was measured, a factor of 2.8 &lt; 5 Refuses to quote a group size at all, and says why.

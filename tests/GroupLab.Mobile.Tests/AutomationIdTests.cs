@@ -19,11 +19,12 @@ public partial class AutomationIdTests
         ("CapturePage.cs", ["capture-take-picture", "capture-choose-photo", "capture-print-target", "capture-change", "capture-caliber", "capture-distance",
             "capture-ask-continue", "capture-ask-cancel", "capture-show-camera", "capture-show-result"]),
         ("ResultView.cs", ["result-fix-holes", "result-ballistics", "result-shots", "result-zero", "result-share-picture", "result-report",
-            "result-share-session", "result-share-csv", "result-another-target", "result-as-likely-sheet", "result-mark-by-hand"]),
+            "result-share-session", "result-share-csv", "result-another-target", "result-as-likely-sheet", "result-mark-by-hand", "result-open-targets"]),
+        ("OpenTargetsSheet.cs", ["open-targets-another", "open-targets-close-confirm", "open-targets-keep"]),
         ("FixHolesPage.cs", ["fix-main", "fix-move", "fix-remove", "fix-undo", "fix-done", "fix-keep", "fix-throw-away", "fix-go-on", "fix-back"]),
         ("SessionsPage.cs", ["sessions-open-file", "sessions-import-csv", "sessions-compare-loads", "sessions-back"]),
         ("PhotoPages.cs", ["photo-read-anyway", "photo-choose-another"]),
-        ("MarkingAPage.cs", ["marking-find-holes"]),
+        ("MarkingAPage.cs", ["marking-find-holes", "marking-open-targets"]),
         ("SettingsView.cs", ["settings-send-diagnostics", "settings-add-printer", "settings-printer-correction", "settings-keep-pictures", "settings-dev-bridge"]),
     ];
 
