@@ -1214,6 +1214,22 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   a far page point and far image points everywhere (it fails without the fix), and the whole reading of the photograph where it is.
   Question 44 archived.
 
+## Entry 393: ready research articles published (2026-10-09)
+
+- **Sections 1 and 3, published:** mean-radius-or-extreme-spread, how-many-shots, cep-explained, velocity-sd-small-samples,
+  when-to-adjust-zero, moa-mils-inches, printer-true-size, scanner-traps, photographing-targets, printed-numbers-are-not-holes,
+  range-test-log and can-you-see-the-bull, listed in `website/research/PUBLISHED.md` with 2026-10-09 and entry 393.
+- **can-you-see-the-bull, the same checks as entry 392:** its three figure scripts rerun byte-identical, PDFs included; Cohen's kappa
+  (0.44, 0.52 weighted, 81 cells, 53 equal, 75 within one), the four groups and the C against E test (sigma ratio 2.18, p = 0.159)
+  recomputed from its data; the bull geometry checked against `GL-CF25-LTR-D` and `GL-CF25-LTR-C`. Its 45 sentences backed one by one, and
+  the eight index sentences the newly published articles brought. Changed: a friend was named in the text, in `scores-2026-09-26.csv`'s
+  scorer column (81 rows) and in `figures/scopes.py`, and is now "the friend"; pronouns for the developer rephrased; the card "taken to
+  the range on 2026-09-23" was shot on 2026-09-26; "question 61" and "we propose" reworded; its "see the article" summary written.
+- **Section 2:** aim-points-by-optic-class stays a draft (request 86). Nothing published has an unbacked sentence: `claims.py --check`
+  4911 claims, 0 unbacked.
+- **Section 4, not done:** the CLAUDE.md paragraph. The auto-mode permission check refused the edit as an inbox file changing Code's own
+  standing instructions; Code did not route round it. Request 87 holds the paragraph for Alan to add or approve.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

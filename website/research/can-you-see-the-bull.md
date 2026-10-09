@@ -6,8 +6,8 @@ number: 8
 written: 2026-09-22
 data_date: "2026-09-20 observations; the test shot 2026-09-26"
 samples: "Four optics, nine aim point designs, two observers, 207 scores; three shots at each of four designs"
-state: ready
-found: "see the article"
+state: published
+found: "at 10x nobody could center on GroupLab's original bull through any of three high power scopes, while the designs whose center subtends about 3.4 arcminutes or more, a black diamond, a black square with a white center and a 2 inch bull, could. Below 6x only the 2 inch bull could be centered. A feature a shooter must see needs roughly 3 to 4 arcminutes at the lowest magnification the sheet is for."
 sure: "the geometry is exact. The scores are two people on one afternoon, so they show where the line falls, not a precise threshold. They agree with the 3 to 4 arcminute rule at every magnification tested."
 data:
   - data/apparent-size.csv
@@ -60,7 +60,7 @@ So the design rule is not "make it small". It is **make every feature you need t
 
 ## A working rule to test
 
-We propose that every feature a shooter must see should look at least 3 to 4 arcminutes wide at the lowest magnification the sheet is meant for, to leave margin for mirage and ordinary glass.
+The proposal: every feature a shooter must see should look at least 3 to 4 arcminutes wide at the lowest magnification the sheet is meant for, to leave margin for mirage and ordinary glass.
 
 ![Smallest feature for 4 arcminutes](/research/can-you-see-the-bull/figures/feature-size-needed.png)
 
@@ -73,7 +73,7 @@ We propose that every feature a shooter must see should look at least 3 to 4 arc
 
 ## Nine candidates
 
-The developer took this card to the range on 2026-09-23. Every design except I fits GroupLab's current 1.5 inch bull spacing, so a winner could replace the bull without losing bulls per sheet.
+The card was made for a test planned for 2026-09-23 and shot on 2026-09-26. Every design except I fits GroupLab's current 1.5 inch bull spacing, so a winner could replace the bull without losing bulls per sheet.
 
 ![The aim point test card](/research/can-you-see-the-bull/figures/test-card.png)
 
@@ -98,13 +98,13 @@ Four optics at 100 yards, each scored 0 (cannot see the center), 1 (can see it b
 - Vortex Strike Eagle 5-25x56 at 10x, 18x and 25x
 - Primary Arms PLxC 1-8x24 FFP at 4x, 6x and 8x
 
-25x on all three high power scopes is the like-for-like comparison of glass. The test was shot on 2026-09-26, at 100 yards, by the developer and his friend Justin, who scored every scope but the Strike Eagle.
+25x on all three high power scopes is the like-for-like comparison of glass. The test was shot on 2026-09-26, at 100 yards, by the developer and a friend, who scored every scope but the Strike Eagle.
 
-**The PLxC rows on the sheet were wrong, and the sheet is fixed.** The printed sheet asked for the PLxC at 4x, 8x and 8x again, the last a 50 yard row whose different distance was printed like every other cell. Both shooters tested 4x, 6x and 8x at 100 yards and wrote 6x over the second row. Justin's older sheet had the friend's scope rows printed 10x, 18x and "max", copied from the high power scopes, and he wrote the PLxC's 4, 6 and 8 over them. The sheet is now built from a table of each scope's real range: it refuses a magnification the scope does not have or one asked for twice, and a change of distance gets its own bold heading.
+**The PLxC rows on the sheet were wrong, and the sheet is fixed.** The printed sheet asked for the PLxC at 4x, 8x and 8x again, the last a 50 yard row whose different distance was printed like every other cell. Both shooters tested 4x, 6x and 8x at 100 yards and wrote 6x over the second row. The friend's older sheet had its spare scope rows printed 10x, 18x and "max", copied from the high power scopes, and the PLxC's 4, 6 and 8 were written over them. The sheet is now built from a table of each scope's real range: it refuses a magnification the scope does not have or one asked for twice, and a change of distance gets its own bold heading.
 
 ## Results
 
-Every score, the developer's first and Justin's second where both scored. 0 cannot see the center, 1 can see it but cannot center on it, 2 can center confidently.
+Every score, the developer's first and the friend's second where both scored. 0 cannot see the center, 1 can see it but cannot center on it, 2 can center confidently.
 
 | Scope | Mag | A | B | C | D | E | F | G | H | I |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -123,11 +123,11 @@ Every score, the developer's first and Justin's second where both scored. 0 cann
 | PLxC | 6x | 0 / 0 | 0 / 1 | 1 / 1 | 0 / 0 | 1 / 1 | 0 / 2 | 1 / 0 | 1 / 0 | 2 / 2 |
 | PLxC | 8x | 0 / 0 | 0 / 0 | 1 / 0 | 1 / 0 | 1 / 0 | 1 / 1 | 1 / 0 | 2 / 0 | 2 / 0 |
 
-Three of the developer's Strike Eagle cells were written unclearly, A at 10x and 18x like an 8 and D at 18x like a 0 with a tail; he confirmed all three are 0. The planning session transcribed both sheets separately from full resolution scans, and the two transcriptions agree in every cell. At 8x the PLxC's image was blurry at 100 yards, and the designs were noticeably harder to see than at 6x, which is where Justin's 8x row comes from.
+Three of the developer's Strike Eagle cells were written unclearly, A at 10x and 18x like an 8 and D at 18x like a 0 with a tail; the developer confirmed all three are 0. The planning session transcribed both sheets separately from full resolution scans, and the two transcriptions agree in every cell. At 8x the PLxC's image was blurry at 100 yards, and the designs were noticeably harder to see than at 6x, which is where the friend's 8x row comes from.
 
-**The two observers agree only moderately.** In the 81 cells both scored, they gave the same score in 53 and scores within one of each other in 75; Cohen's kappa is 0.44, 0.52 with the near misses given half credit. They part most at 10x: A through the DNT, 0 for the developer and 2 for Justin, and I through the Razor HD, the other way round. Two people on one afternoon is a first look, and the totals should be read with that in mind.
+**The two observers agree only moderately.** In the 81 cells both scored, they gave the same score in 53 and scores within one of each other in 75; Cohen's kappa is 0.44, 0.52 with the near misses given half credit. They part most at 10x: A through the DNT, 0 for the developer and 2 for the friend, and I through the Razor HD, the other way round. Two people on one afternoon is a first look, and the totals should be read with that in mind.
 
-**The current bull cannot be centered at 10x.** A scored 0 for the developer through all three high power scopes at 10x, and 0 for Justin through the Razor HD. At 25x and above almost everything is centered through good glass, so the magnification a shooter zeros and tests at, not the best glass, decides the design.
+**The current bull cannot be centered at 10x.** A scored 0 for the developer through all three high power scopes at 10x, and 0 for the friend through the Razor HD. At 25x and above almost everything is centered through good glass, so the magnification a shooter zeros and tests at, not the best glass, decides the design.
 
 **The working rule held.** The center of each design, and what it subtends through the scope at 100 yards:
 
@@ -143,11 +143,11 @@ Three of the developer's Strike Eagle cells were written unclearly, A at 10x and
 | H | 0.40 in between the tips | 1.5 | 2.3 | 3.1 | 3.8 |
 | I | 0.60 in white center | 2.3 | 3.4 | 4.6 | 5.7 |
 
-At 10x the designs whose center is 3.4 arcminutes or more, C, E and I, are the ones centered through the high power scopes: E by both observers through every one, C with one exception (Justin through the DNT) and I with two. At 4x nothing but the 2 inch bull scores at all, and its white center is the only feature near 3 arcminutes. A feature needs roughly 3 to 4 arcminutes at the lowest magnification a sheet is for, which is about 1 inch at 100 yards through 4x.
+At 10x the designs whose center is 3.4 arcminutes or more, C, E and I, are the ones centered through the high power scopes: E by both observers through every one, C with one exception (the friend through the DNT) and I with two. At 4x nothing but the 2 inch bull scores at all, and its white center is the only feature near 3 arcminutes. A feature needs roughly 3 to 4 arcminutes at the lowest magnification a sheet is for, which is about 1 inch at 100 yards through 4x.
 
 **A crosshair covers a small center, whatever the glass.** Through the Razor HD, whose reticle has a fine center crosshair, the centers of D and G were very hard to see: the crosshair sat exactly where the design's center was. The DNT has only a small center dot and did not cover them. So a design whose center is a small feature, a thin cross or an open gap, fails under a crosshair reticle, and G's idea, a gap for the reticle to sit in, works only when the reticle is smaller than the gap.
 
-**What the shooters chose.** The developer: C or E, the edge to C; his notes say "C, F, I good". Justin: F his favorite, and he did not like I.
+**What the shooters chose.** The developer: C or E, the edge to C, with "C, F, I good" in the notes. The friend: F the favorite, and I not liked.
 
 **Three shots at four designs.** The developer fired three shots at each of A, C, E and I with one rifle and load. Every group landed up and left of its aim point by about the same amount, which is the rifle's zero on the day rather than the design. Measured center to center from the scan:
 
@@ -162,7 +162,7 @@ C's spread comes from one shot in its white center and two a long way up and lef
 
 ## What happens next
 
-The winning design becomes a new ring set in the GroupLab library, tested on real sheets before it replaces anything. This test narrows it: **E or C** for sheets shot at 10x and above, E centered by both observers through every high power scope at 10x and C by all but one; **not D or G**, whose centers a crosshair covers; and **I**, or a design with a center of about an inch, for anything shot below 6x. The choice is the planning session's and the developer's (question 61). A follow-up test covers 1x red dots and prisms, low power variables and medium power variables at distances suited to each (see "Aim points for 1x to high power optics").
+The winning design becomes a new ring set in the GroupLab library, tested on real sheets before it replaces anything. This test narrows it: **E or C** for sheets shot at 10x and above, E centered by both observers through every high power scope at 10x and C by all but one; **not D or G**, whose centers a crosshair covers; and **I**, or a design with a center of about an inch, for anything shot below 6x. The choice is the developer's. A follow-up test covers 1x red dots and prisms, low power variables and medium power variables at distances suited to each (see "Aim points for 1x to high power optics").
 
 **Both are now in the library** (entry 243), beside the usual bull and not in its place, until they have been shot on real sheets. E is drawn as discs. C is drawn as tested, a black diamond 1.25 in point to point with a 0.36 in white diamond center, with one change: **the library's C has a small black dot in its center, and the card's C had none.** The dot is 0.10 in on the 0.36 in center, E's proportion. It is not the aim: the aim is still the white diamond and its points. It is there for high power, where a shooter who can see it has something finer to split, and for GroupLab, which finds a bull's center from the edges of what is printed and has one more edge to use. Every C diamond stands on a point, so its points lie on the vertical and horizontal lines through the aim and a crosshair lines up with the shape even where neither the dot nor the center can be made out. "Made for your optic" can make either shape, sized by the same rule.
 

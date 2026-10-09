@@ -25,6 +25,22 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-08, entry 393: ready research articles may be published without asking (Alan)
+
+**Status: actioned 2026-10-09; sections 1 to 3 done, section 4 not done.** Twelve articles published: the eleven of entry 392 and can-you-see-the-bull, each with every checkable sentence backed and its figures rerun byte-identical; can-you-see-the-bull also lost its friend's name (article, data and a script) and its placeholder summary. aim-points-by-optic-class stays a draft. **Section 4 not done:** the permission check refused to let an inbox entry change CLAUDE.md, Code's own standing instructions; request 87 gives Alan the paragraph to add or approve.
+
+From the planning session, 2026-10-08 23:50 Denver. Alan, asked whether Code may publish a research article once it is ready or whether he
+wants to see the list first: "publish".
+
+1. This replaces entry 392 section 1.5. When an article meets everything in entry 392 section 1 (claims backed, figures regenerated,
+   simulations rerunnable, no pseudoscience, the developer not named in the text, the existing byline), Code moves it from `ready` to
+   `published` and lists it in `website/research/PUBLISHED.md` with the date and "entry 393", in the same commit. The site then publishes
+   it as usual; confirm it is live per CLAUDE.md.
+2. An article that is only partly honest stays `draft`; publishing never goes ahead on an article with an unbacked sentence.
+3. This applies to `can-you-see-the-bull`, already `ready`, as well, after the same checks.
+4. Record the standing rule in CLAUDE.md under "Is it worth an article?": ready articles are published by Code without asking (Alan,
+   2026-10-08), and the report for the entry names each one published.
+
 ## 2026-10-08, entry 392: overnight work that needs nobody: twelve research drafts, Phase 9's first speed-up, question 44
 
 **Status: actioned 2026-10-09; every section done.** Section 1: eleven drafts brought to `ready` (every number checked against its data and the code, 245 sentences backed one by one, figures rerun byte-identical, a wording pass on docs-sonnet); aim-points-by-optic-class stays `draft`, waiting on the red dot, prism and medium power classes (request 86). printer-true-size carries the M834 and M220 numbers, and found entry 391's feed mean to be 99.28 percent, not 99.30. Section 2: hole finding on a 600 dpi scan 1769 to 693 ms (S5-S8.holes), the whole scan 2604 to 1671 ms, every result identical. Section 3: question 44 fixed and archived; it was the cylinder's table lookup, not the fold arrays.

@@ -2,8 +2,8 @@
 
 NOTES-FROM-PLANNING.md entries 226 section 3 and 229 section 5.3. The rows used to be typed by hand. The developer's sheet of 2026-09-26 listed the
 PLxC 1-8x at 4x, 8x and 8x again, the second 8x a 50 yd row whose distance change was printed like every other cell and so looked like a
-repeat; he and Justin tested 4x, 6x and 8x. Justin's older sheet, the card's own page 2, had the friend's scope rows printed 10x, 18x and
-"max", copied from the high power scopes, and he wrote the PLxC's 4, 6 and 8 over them. So the rows are built from this table, and building
+repeat; both shooters tested 4x, 6x and 8x. The friend's older sheet, the card's own page 2, had the friend's scope rows printed 10x, 18x and
+"max", copied from the high power scopes, and the PLxC's 4, 6 and 8 were written over them. So the rows are built from this table, and building
 them fails on a magnification the scope does not have or one asked for twice at the same distance. A change of distance gets its own bold
 heading row.
 """

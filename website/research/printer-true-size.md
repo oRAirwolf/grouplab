@@ -6,7 +6,7 @@ number: 22
 written: 2026-09-22
 data_date: "GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08"
 samples: "Test sheets printed at 100 and 96.2 percent, scanned at 300 and 600 dpi; one thermal printer's check page printed twice and read eight ways; one thermal label read from a scan"
-state: ready
+state: published
 found: "a printer set to 'Actual size' can be very accurate: the developer's inkjet measured 1.0001 across and 1.0006 down, within 0.06 percent. The danger is the print dialog: 'Fit to page' prints a letter sheet at about 94 percent. A printer can also be true one way and not the other: one thermal printer printed true across its head and 99.28 percent along its paper feed, the mean of five readings over two prints. A scan measures the print scale and GroupLab corrects for it; a photograph cannot, so GroupLab uses the scale measured once for that printer."
 sure: "the scan detection is from GroupLab's own acceptance tests. The thermal figures are one printer, one roll and two prints, read with a caliper, a ruler and a scan that disagree with each other by up to 0.3 percent. One printer is not every printer; that is why the check exists."
 data:

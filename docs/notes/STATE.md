@@ -9,13 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09 early, after entry 392 (before it: entry 391).
+**Last rewritten:** 2026-10-09 early, after entry 393 (before it: entry 392).
 
 ---
 
 ## In flight
 
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
+- **Entry 393 done but section 4** (2026-10-09): twelve research articles published (PUBLISHED.md); the CLAUDE.md rule waits on
+  Alan (request 87), since the permission check will not let an inbox entry change Code's standing instructions.
 - **Entry 392 done** (2026-10-09): **eleven research drafts `ready`** (numbers checked against data and code, 245 sentences backed,
   figures rerun byte-identical); aim-points-by-optic-class stays draft for request 86. **A 600 dpi scan's hole finding 1769 to 693 ms**
   (`BinaryMorphology.Close`, OpenCV's close to the byte); **question 44 fixed** (the cylinder's table index wrapped) and archived.
@@ -23,8 +25,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 391 done** (2026-10-08): **the M834's pages are drawn 0.70 percent longer along the feed** (it feeds 99.30 percent, the mean of
   five readings over request 81's two prints), phone and computer alike (`M834Print.Head`); across GroupLab draws 150.02 mm and both prints
   were rendered the same, so print 1's 100.31 percent was the caliper. Request 81 closed; request 85 measures once more after the nightly.
-- **Entry 390 done** (2026-10-08): of the phone's first two M220 labels the second came out shifted; GroupLab's bytes were the same, so
-  each label is now left eight seconds before the next is sent (inferred cause; request 84 prints two again). Request 82 answered.
 - **Entry 389 done** (2026-10-08): **the computer prints to the M834** over its paired Bluetooth serial port on Windows (Targets, Print
   on, Phomemo M834), the phone's own bytes (`M834Print`, shared); built, not yet tried on a real M834 from a computer (request 83, for
   later); macOS and Linux say it is not available yet. The sweep on nightly 179: no faults, the Shots switch 48 everywhere; the emulator
@@ -52,7 +52,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 393: publish the ready research articles (and can-you-see-the-bull) after the same checks.
+1. Whatever the inbox brings next; entries 392 and 393 are on main, the speed-up ships in the next nightly.
 2. Request 85 with nightly 181: whether the stretch makes the M834 true along the feed, and the saved check replaced.
 3. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift; then 83, the M834 from the computer.
 
@@ -62,7 +62,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24** (86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **25** (87 the CLAUDE.md publishing line, one minute; 86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -88,7 +88,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 393.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

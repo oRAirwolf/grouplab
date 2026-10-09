@@ -6,7 +6,7 @@ number: 33
 written: 2026-10-02
 data_date: "2026-09-30"
 samples: "five store-bought targets scanned blank at 600 dpi by the developer, synthetic holes drawn into them, the any-target scoreboard's drawn targets, and fifteen scans of shot commercial targets with their holes checked"
-state: ready
+state: published
 found: "on a clean scoring bullseye, the finder took six printed marks for holes: two white 7s, two dark 6s and two letters of the maker's logo. Measuring how even a mark's strokes are, and whether a dark mark closes around a small counter as a 6 does, removed four of the six and lost no real hole. Evenness alone would have thrown away 44 real holes on scans of shot targets."
 sure: "five blank targets, one with numbers, and synthetic holes drawn into them; fifteen real shot targets as the check. The thresholds have room of a few hundredths on each side, and no target with a rounded or a thin font has been measured."
 sources:

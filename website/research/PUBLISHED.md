@@ -30,3 +30,15 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - what-grouplab-sends  2026-09-23  batches 1 to 3
 - wind-or-rifle  2026-09-23  batches 1 to 3
 - wrong-bull  2026-09-23  batches 1 to 3
+- mean-radius-or-extreme-spread  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- how-many-shots  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- cep-explained  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- velocity-sd-small-samples  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- when-to-adjust-zero  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- moa-mils-inches  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- printer-true-size  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- scanner-traps  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- photographing-targets  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- printed-numbers-are-not-holes  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- range-test-log  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- can-you-see-the-bull  2026-10-09  entry 393, which lets Code publish an article once it is ready

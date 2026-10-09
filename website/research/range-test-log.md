@@ -6,7 +6,7 @@ number: 30
 written: 2026-09-22
 data_date: "Running log; latest entry 2026-10-04"
 samples: "See each entry"
-state: ready
+state: published
 no_figure: "This is a log of what was shot and where it was written up. The figures belong to the articles each entry points to, and are drawn there from the same data."
 found: "four range days and a print test, each with what it was meant to find out and where the answer is written up. On the latest, GroupLab found 137 of 145 holes in photographs of its own sheets taken at the range, with no false mark, and proposed 138 marks for 14 shots on store-bought targets it could fit."
 sure: "each entry is what was recorded at the time; the counts are GroupLab's own scoring against the shooter's count of shots fired. Where a result was later corrected, the entry says so."
