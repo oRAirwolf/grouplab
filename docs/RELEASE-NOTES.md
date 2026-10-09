@@ -481,7 +481,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - The Targets screen now fits a window 1060 wide, where its zoom buttons ran past the edge.
 - The phone reads a GroupLab sheet's codes in about half the time it took, so a photograph is measured sooner.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.153)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
