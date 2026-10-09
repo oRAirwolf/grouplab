@@ -1,0 +1,11 @@
+[Unit]
+# Entry 395 section 3: the constant search, on the 1st of each month, after that day's nightly check.
+Description=The learning loop's constant search, monthly
+
+[Timer]
+OnCalendar=*-*-01 16:00:00 UTC
+Persistent=true
+Unit=grouplab-learn-tune.service
+
+[Install]
+WantedBy=timers.target

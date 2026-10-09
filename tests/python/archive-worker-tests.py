@@ -201,6 +201,20 @@ def main() -> int:
         check("the zip holds the folder's files at its root, as the PC pull makes it", sorted(names) == ["meta.json", "photo.png"], str(names))
         check("the token is never sent to the storage a download is redirected to", not gh.token_at_storage)
 
+        # Entry 395: where the learning worker is installed, a submission waits until it is scored, and no longer than six hours.
+        learning = private / "learning" / "scored"
+        learning.mkdir(parents=True)
+        unscored = submission(ready, "2026-10-04_dddddddd")
+        result = run(env)
+        check("with the learning worker installed, an unscored submission waits in ready", unscored.is_dir(), result.stdout + result.stderr)
+        (learning / unscored.name).write_text("scored" + chr(10))
+        result = run(env)
+        check("once it is scored it is archived", not unscored.exists(), result.stdout + result.stderr)
+        stale = submission(ready, "2026-10-04_eeeeeeee", age=7 * 3600)
+        result = run(env)
+        check("an unscored submission older than six hours is archived anyway", not stale.exists(), result.stdout + result.stderr)
+        shutil.rmtree(private / "learning")
+
         # A submission the PC already put in the archive: proven by downloading it back, not uploaded again.
         pc = submission(ready, "2026-10-03_cccccccc", level="publishable")
         buf = io.BytesIO()

@@ -1,0 +1,46 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entries 394 to 396: once a month, the detection constants searched against the synthetic board and the corrected
+# submissions, which waits until there are 50 of them; a result that passes becomes a pull request that Code reads and merges.
+Description=The learning loop's monthly constant search
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/DETECTION-LEARNING-STUDY.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-learn-worker.py tune
+User=airwolf
+Group=airwolf
+LoadCredential=archive-token:/etc/grouplab/archive-token
+LoadCredential=learning-token:/etc/grouplab/learning-token
+
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/learning
+ReadWritePaths=/home/airwolf/grouplab-learning
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# No MemoryDenyWriteExecute: .NET compiles as it runs, which needs pages it can write and then run.
+
+# Study section 6: one processor at most, and a memory cap, which is not optional on a server with no swap.
+CPUQuota=50%
+MemoryMax=1536M
+Nice=15
+IOWeight=20
+TimeoutStartSec=25200
+TasksMax=64

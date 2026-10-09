@@ -473,6 +473,8 @@ with tempfile.TemporaryDirectory() as tmp:
 
             // Entry 222: the archive token's folder, made only past the installer's `if not dry_run:` so systemd can start the worker.
             "ARCHIVE_TOKEN.parent.mkdir(parents=True, exist_ok=True)",
+            // Entry 395: the learning token's folder, made only past the installer's dry run, as the archive token's is.
+            "LEARNING_TOKEN.parent.mkdir(parents=True, exist_ok=True)",
         ];
 
         return allowed.Contains(line, StringComparer.Ordinal);

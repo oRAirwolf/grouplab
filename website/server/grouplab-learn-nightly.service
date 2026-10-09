@@ -1,0 +1,47 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entries 394 and 395: after the nightly, the newest command line is fetched and its signature checked, every
+# corrected submission is read again from the private archive into this service's own temporary folder, held to its baseline beside the
+# synthetic board, and the numbers are written to the archive repository; a worse line files one issue. Nothing but numbers is kept.
+Description=The learning loop's nightly check
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/DETECTION-LEARNING-STUDY.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-learn-worker.py nightly
+User=airwolf
+Group=airwolf
+LoadCredential=archive-token:/etc/grouplab/archive-token
+LoadCredential=learning-token:/etc/grouplab/learning-token
+
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/learning
+ReadWritePaths=/home/airwolf/grouplab-learning
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# No MemoryDenyWriteExecute: .NET compiles as it runs, which needs pages it can write and then run.
+
+# Study section 6: one processor at most, and a memory cap, which is not optional on a server with no swap.
+CPUQuota=50%
+MemoryMax=1536M
+Nice=15
+IOWeight=20
+TimeoutStartSec=14400
+TasksMax=64

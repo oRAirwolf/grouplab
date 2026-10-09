@@ -1,0 +1,43 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entries 394 and 395: each submission the intake worker left in ready is read by the learning loop's command line
+# and scored against the person's own corrections before the archive worker takes it. No network at all, as the intake worker has none:
+# it decodes strangers' pictures. Numbers only are kept, in private/learning.
+Description=Score GroupLab submissions for the learning loop
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/DETECTION-LEARNING-STUDY.md
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-learn-worker.py score
+User=airwolf
+Group=airwolf
+PrivateNetwork=yes
+
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/learning
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX
+# No MemoryDenyWriteExecute: .NET compiles as it runs, which needs pages it can write and then run.
+
+# Study section 6: one processor at most, and a memory cap, which is not optional on a server with no swap.
+CPUQuota=50%
+MemoryMax=1536M
+Nice=15
+IOWeight=20
+TimeoutStartSec=1800
+TasksMax=64

@@ -47,6 +47,11 @@ NAME = re.compile(r"^(\d{4})-(\d{2})-\d{2}_[0-9a-f]{8}$")
 MOST_A_RUN = 20
 MOST_ATTEMPTS = 5
 SETTLE_SECONDS = 120
+# Entry 395 section 2: where the learning worker is installed, a submission is archived once it has been scored, so the score is taken
+# while the picture is here and the server keeps it no longer than before; after LEARNING_WAIT it is archived whatever, so a broken
+# learning worker can never hold the archive up. Where it is not installed, nothing waits.
+LEARNED = PRIVATE / "learning" / "scored"
+LEARNING_WAIT = 6 * 3600
 
 
 class Unreachable(Exception):
@@ -248,10 +253,15 @@ def reachable(token: str) -> None:
     status(token="ok" if code == 200 else f"cannot see the archive ({code})", waiting=0, archive="reachable" if code == 200 else "not found")
 
 
+def learned(folder: Path, now: float) -> bool:
+    """Whether the learning worker is done with a submission, or is not installed, or has had it long enough."""
+    return not LEARNED.is_dir() or (LEARNED / folder.name).exists() or now - folder.stat().st_mtime > LEARNING_WAIT
+
+
 def main() -> int:
     now = time.time()
-    waiting = sorted(p for p in READY.iterdir() if p.is_dir() and NAME.match(p.name) and now - p.stat().st_mtime > SETTLE_SECONDS) \
-        if READY.is_dir() else []
+    waiting = sorted(p for p in READY.iterdir() if p.is_dir() and NAME.match(p.name) and now - p.stat().st_mtime > SETTLE_SECONDS
+                     and learned(p, now)) if READY.is_dir() else []
     try:
         token = TOKEN_FILE.read_text(encoding="utf-8").strip()
     except OSError:

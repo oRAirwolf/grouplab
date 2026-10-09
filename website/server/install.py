@@ -16,6 +16,7 @@ domain. It writes no address into any file.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shutil
@@ -183,6 +184,26 @@ def worker_missing() -> list[str]:
 # Every file this run wrote, or in a dry run would write, so the closing lines can say only what is still to do.
 # NOTES-FROM-PLANNING.md entry 171 section 6: the reminder used to say "set the secret and reload nginx" every time.
 CHANGED: set[Path] = set()
+
+# NOTES-FROM-PLANNING.md entries 394, 395 and 397: the learning worker, its three units and timers, its token script, the archive worker
+# that waits for a submission's score, the folders it keeps numbers and its command line in, and the system libraries OpenCvSharp's arm64
+# library needs (cli-arm64.yml found them; 81 packages with what they pull in, libraries only, no service among them).
+LEARNING_FILES = [
+    ("grouplab-learn-worker.py", Path("/usr/local/sbin/grouplab-learn-worker.py"), 0o755),
+    ("grouplab-set-learning-token", Path("/usr/local/sbin/grouplab-set-learning-token"), 0o750),
+    ("grouplab-archive-worker.py", Path("/usr/local/sbin/grouplab-archive-worker.py"), 0o755),
+    ("grouplab-learn-score.service", Path("/etc/systemd/system/grouplab-learn-score.service"), 0o644),
+    ("grouplab-learn-score.timer", Path("/etc/systemd/system/grouplab-learn-score.timer"), 0o644),
+    ("grouplab-learn-nightly.service", Path("/etc/systemd/system/grouplab-learn-nightly.service"), 0o644),
+    ("grouplab-learn-nightly.timer", Path("/etc/systemd/system/grouplab-learn-nightly.timer"), 0o644),
+    ("grouplab-learn-tune.service", Path("/etc/systemd/system/grouplab-learn-tune.service"), 0o644),
+    ("grouplab-learn-tune.timer", Path("/etc/systemd/system/grouplab-learn-tune.timer"), 0o644),
+]
+LEARNING_TOKEN = Path("/etc/grouplab/learning-token")
+LEARNING_PACKAGES = ["libtesseract5", "libgtk-3-0t64", "libavcodec60", "libavformat60", "libswscale7", "libgdk-pixbuf-2.0-0"]
+LEARNING_HOME = Path("/home/airwolf/grouplab-learning")
+LEARNING_TIMERS = ["grouplab-learn-score.timer", "grouplab-learn-nightly.timer", "grouplab-learn-tune.timer"]
+CHANGE_BACKUPS = Path("/home/ubuntu/grouplab-server/backups")
 
 # Where grouplab-set-turnstile-secret keeps the secret. Only its presence is checked here; it is never opened.
 TURNSTILE_SECRET = Path("/home/airwolf/web/grouplab.org/private/turnstile-secret.txt")
@@ -542,6 +563,131 @@ def survey(dry_run: bool) -> int:
     return 0
 
 
+def backup_covers(folder: Path, paths: list[Path]) -> list[str]:
+    """What entry 397's backup at this folder fails to cover for a change touching these paths, the packages and the units."""
+    manifest = folder / "manifest.json"
+    if not folder.is_relative_to(CHANGE_BACKUPS) or not manifest.is_file():
+        return [f"{folder} is not a backup made by grouplab-change-backup.py under {CHANGE_BACKUPS}"]
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    listed = {f["path"] for f in data.get("files", [])}
+    gaps = [f"{p} is not in it" for p in paths if str(p) not in listed]
+    if not data.get("packages"):
+        gaps.append("it has no package list (--packages)")
+    if not data.get("units"):
+        gaps.append("it has no unit list (--units)")
+    return gaps
+
+
+def learning(dry_run: bool, backup: Path | None) -> int:
+    """The learning worker, entries 394 and 395, installed only over entry 397's backup of everything it touches.
+
+    The backup is made first with grouplab-change-backup.py --label learning-worker --packages --units and a --file for each path this
+    installs, the token file included; this refuses to go on without it. It installs the packages, the folders, the files and an empty
+    learning token (systemd will not start a unit whose credential is missing), reloads systemd and starts the three timers. It touches
+    no nginx, restarts no service of any other site, and writes no address anywhere.
+    """
+    if not SITE.is_dir():
+        say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+    touched = [target for _, target, _ in LEARNING_FILES] + [LEARNING_TOKEN]
+    if backup is None:
+        say("Entry 397: a backup of everything this changes comes first. Make it, then pass it with --backup:")
+        say("  sudo python3 grouplab-change-backup.py --label learning-worker --packages --units " + " ".join(f"--file {p}" for p in touched))
+        return 2
+    gaps = backup_covers(backup, touched)
+    if gaps:
+        say("The backup does not cover this change, so nothing was changed: " + "; ".join(gaps))
+        return 2
+    say(f"the backup is {backup}")
+
+    say("the system libraries the arm64 command line's OpenCV needs")
+    if run(["apt-get", "install", "-y", "--no-install-recommends", *LEARNING_PACKAGES], dry_run) != 0:
+        return 1
+
+    say("the folders: numbers in private/learning, the command line in grouplab-learning")
+    make_folders([(SITE / "private" / "learning", 0o750, "airwolf"), (SITE / "private" / "learning" / "scored", 0o750, "airwolf"),
+                  (LEARNING_HOME, 0o750, "airwolf"), (LEARNING_HOME / "cli", 0o750, "airwolf")], dry_run)
+
+    say("the worker, its token script, the archive worker that waits for a score, and the systemd units")
+    for item in LEARNING_FILES:
+        if not put(*item, dry_run):
+            return 2
+
+    if not LEARNING_TOKEN.exists():
+        say(f"  {'would create' if dry_run else 'creating'} an empty {LEARNING_TOKEN} until the token is set (mode 600, root)")
+        if not dry_run:
+            LEARNING_TOKEN.parent.mkdir(parents=True, exist_ok=True)
+            os.close(os.open(LEARNING_TOKEN, os.O_WRONLY | os.O_CREAT, 0o600))
+            os.chown(LEARNING_TOKEN, 0, 0)
+
+    say("systemd")
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    for timer in LEARNING_TIMERS:
+        if run(["systemctl", "enable", "--now", timer], dry_run) != 0:
+            return 1
+    say("")
+    say("The command line arrives with the first nightly run; start it now with: sudo systemctl start grouplab-learn-nightly.service")
+    say("The undo: sudo python3 install.py --learning-undo --backup " + str(backup) + " [--dry-run]")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
+def learning_undo(dry_run: bool, backup: Path | None) -> int:
+    """Entry 397 section 3: puts the server back as the backup found it. The timers stopped and disabled, every file the backup recorded
+    as absent removed and every one it holds put back with its mode and owner, the packages installed since removed (exactly those, not an
+    autoremove), the learning folders removed, systemd reloaded. Nothing of any other site is restarted or touched."""
+    if backup is None or not (backup / "manifest.json").is_file() or not backup.is_relative_to(CHANGE_BACKUPS):
+        say("Name the backup the learning worker was installed over: --backup <folder>")
+        return 2
+    data = json.loads((backup / "manifest.json").read_text(encoding="utf-8"))
+
+    say("the timers")
+    for timer in LEARNING_TIMERS:
+        run(["systemctl", "disable", "--now", timer], dry_run)
+
+    say("the files")
+    for entry in data.get("files", []):
+        target = Path(entry["path"])
+        if entry.get("absent"):
+            if target.exists():
+                say(f"  {'would remove' if dry_run else 'removing'} {target}")
+                if not dry_run:
+                    target.unlink()
+        else:
+            copy = backup / "files" / entry["path"].lstrip("/")
+            say(f"  {'would put back' if dry_run else 'putting back'} {target} ({entry['mode']} {entry['owner']}:{entry['group']})")
+            if not dry_run:
+                shutil.copy2(copy, target)
+                target.chmod(int(entry["mode"], 8))
+                shutil.chown(target, entry["owner"], entry["group"])
+
+    say("the packages installed since the backup")
+    before = {line.split()[0] for line in (backup / "packages.txt").read_text(encoding="utf-8").splitlines()
+              if line.strip() and line.split()[-1] == "install"}
+    now = subprocess.run(["dpkg", "--get-selections"], capture_output=True, text=True).stdout
+    added = sorted(line.split()[0] for line in now.splitlines() if line.strip() and line.split()[-1] == "install" and line.split()[0] not in before)
+    if added:
+        say(f"  {len(added)}: " + " ".join(added))
+        if run(["apt-get", "purge", "-y", *added], dry_run) != 0:
+            return 1
+    else:
+        say("  none")
+
+    say("the learning folders")
+    for folder in (SITE / "private" / "learning", LEARNING_HOME):
+        if folder.exists():
+            say(f"  {'would remove' if dry_run else 'removing'} {folder}")
+            if not dry_run:
+                shutil.rmtree(folder)
+
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    say("Check: systemctl list-timers --all | grep grouplab-learn shows nothing, and both sites answer as before.")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Install the grouplab.org site sync.")
     parser.add_argument("--dry-run", action="store_true", help="say what would happen and change nothing")
@@ -551,6 +697,9 @@ def main() -> int:
                         help="install the error report worker instead of the site sync (entry 194)")
     parser.add_argument("--archive", action="store_true",
                         help="install the submissions archive worker instead of the site sync (entry 222)")
+    parser.add_argument("--learning", action="store_true", help="install the learning worker over entry 397's backup (entries 394 and 395)")
+    parser.add_argument("--learning-undo", action="store_true", help="put the server back as the learning worker's backup found it (entry 397)")
+    parser.add_argument("--backup", type=Path, help="the backup grouplab-change-backup.py made for this change")
     parser.add_argument("--survey", action="store_true",
                         help="install the hardware survey worker instead of the site sync (entries 207 and 208)")
     args = parser.parse_args()
@@ -575,6 +724,12 @@ def main() -> int:
 
     if args.archive:
         return archive(args.dry_run)
+
+    if args.learning:
+        return learning(args.dry_run, args.backup)
+
+    if args.learning_undo:
+        return learning_undo(args.dry_run, args.backup)
 
     say("folders")
     make_folders(FOLDERS, args.dry_run)

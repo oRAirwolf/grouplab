@@ -302,6 +302,42 @@ jobs:
     # Entry 306: the Developer ID and the App Store Connect key, for signing and notarizing the Mac build when they are set.
     secrets: inherit
 
+  # NOTES-FROM-PLANNING.md entry 395 section 1: the grouplab command line for the web server, which is Ubuntu 24.04 on arm64, with the
+  # sheet library and the synthetic scoreboard's baseline it reads. Built on GitHub's arm64 runner (free for a public repository), signed
+  # by the publish job with the update key, and fetched by the server's learning worker, which checks the signature before it runs it.
+  # Never required: a failure here publishes the nightly without it, and the server keeps the command line it has.
+  cli-arm64:
+    name: command line, linux-arm64
+    needs: name-it
+    if: needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.name-it.outputs.sha }}
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish and pack
+        run: |
+          set -o pipefail
+          dotnet publish src/GroupLab.Cli -c Release -r linux-arm64 --self-contained -o pack/grouplab -v q -nologo
+          mkdir -p pack/docs/scoreboard
+          cp -r targets pack/targets
+          cp docs/scoreboard/synthetic-baseline.json pack/docs/scoreboard/
+          echo "${{ needs.name-it.outputs.version }} ${{ needs.name-it.outputs.sha }}" > pack/VERSION
+          tar -czf grouplab-cli-linux-arm64.tar.gz -C pack .
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: cli-arm64-package
+          path: grouplab-cli-linux-arm64.tar.gz
+          retention-days: 7
+
   # NOTES-FROM-PLANNING.md entry 219 item A6: the Android application, signed with Alan's upload key, as an APK to install by hand and
   # an AAB for Google Play's internal testing track. Until the key is in the repository's secrets it builds nothing and says so, and it
   # can never hold back the desktop builds: a failure here leaves the nightly without its Android files and publishes the rest.
@@ -872,7 +908,7 @@ jobs:
 
   publish:
     name: publish the nightly
-    needs: [name-it, package, android]
+    needs: [name-it, package, android, cli-arm64]
     # Entry 150 section 2.2: every build, test, package and release job depends on the gate. Entry 219 item A6: the Android job's result
     # is never a condition, so a failure there publishes the desktop builds without the Android files.
     if: ${{ !cancelled() && needs.package.result == 'success' && needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes' }}
@@ -1001,6 +1037,15 @@ jobs:
           # was set fails here by design, and the message says NoKey.
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest.json
           dotnet run --project src/GroupLab.Cli --configuration Release --no-build -- update-check release/update-manifest-2.json
+          # Entry 395 section 4: the server's command line, signed like the site parcel, where its job made one. Never required.
+          if [ -f release/grouplab-cli-linux-arm64.tar.gz ]; then
+            printf '%s' "$GROUPLAB_UPDATE_SIGNING_KEY" | base64 -d > cli-private.der
+            openssl pkcs8 -inform DER -nocrypt -in cli-private.der -out cli-private.pem
+            openssl dgst -sha256 -sign cli-private.pem -out release/grouplab-cli-linux-arm64.tar.gz.sig release/grouplab-cli-linux-arm64.tar.gz
+            rm -f cli-private.der cli-private.pem
+          else
+            echo "::warning::no linux-arm64 command line this time; the server keeps the one it has"
+          fi
 
       # Entry 168 section 5, amending entry 147 section 3.2: a release carrying a macOS asset carries ONE line, generated from
       # docs/PLATFORM-SUPPORT.md's lead sentences, with the address of the download page where the whole statement is always
@@ -1037,7 +1082,7 @@ jobs:
             --notes-file notes.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-target-library.json release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab release/grouplab-*-android-native-symbols-*.zip 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-target-library.json $(ls release/grouplab-cli-linux-arm64.tar.gz* 2>/dev/null || true) release/grouplab-*-win-x64-*.exe release/grouplab-*-win-x64-*.zip release/grouplab-*-linux-x64-*.tar.gz $(ls release/grouplab-*-macos-*-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-*-android-*.apk release/grouplab-*-android-*.aab release/grouplab-*-android-native-symbols-*.zip 2>/dev/null || true)
 
       # The rolling release the README links to. The tag moves to the tested commit and the old assets go with the old release, so a fixed
       # address never serves a stale file.
@@ -1055,7 +1100,7 @@ jobs:
             --notes-file rolling.md \
             --prerelease \
             --target "$SHA" \
-            release/update-manifest.json release/update-manifest-2.json release/grouplab-target-library.json release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab release/grouplab-android-dev.apk 2>/dev/null || true)
+            release/update-manifest.json release/update-manifest-2.json release/grouplab-target-library.json $(ls release/grouplab-cli-linux-arm64.tar.gz* 2>/dev/null || true) release/grouplab-setup-win-x64.exe release/grouplab-win-x64.zip release/grouplab-linux-x64.tar.gz $(ls release/grouplab-macos-*.tar.gz 2>/dev/null || true) $(ls release/grouplab-android.apk release/grouplab-android.aab release/grouplab-android-dev.apk 2>/dev/null || true)
 
       # 2026-10-01: nightly 148's run printed the moving release's address and left it a draft, so every download button on the site and in
       # the README answered 404 until it was published by hand. Publish it if it is still a draft, then prove a download answers.

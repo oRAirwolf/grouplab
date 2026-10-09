@@ -1,0 +1,11 @@
+[Unit]
+# Entry 395 section 3: after the 12:00 UTC nightly has published, at night in Denver.
+Description=The learning loop's nightly check, daily at 13:45 UTC
+
+[Timer]
+OnCalendar=*-*-* 13:45:00 UTC
+Persistent=true
+Unit=grouplab-learn-nightly.service
+
+[Install]
+WantedBy=timers.target

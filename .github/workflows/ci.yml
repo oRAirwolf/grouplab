@@ -211,6 +211,11 @@ jobs:
         if: runner.os == 'Linux'
         run: python3 tests/python/change-backup-tests.py
 
+      # Entries 394 and 395: the server's learning worker, with a stand-in command line and release.
+      - name: The learning worker, with a stand-in command line
+        if: runner.os == 'Linux'
+        run: python3 tests/python/learn-worker-tests.py
+
       - name: The printer recording reader, on recordings made here (entry 363)
         run: python3 tests/python/printer-recording-tests.py
 

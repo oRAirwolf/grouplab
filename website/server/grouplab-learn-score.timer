@@ -1,0 +1,11 @@
+[Unit]
+# Entry 395 section 2: every three minutes, so a submission is scored well inside the archive worker's ten.
+Description=Score GroupLab submissions for the learning loop, every three minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=3min
+Unit=grouplab-learn-score.service
+
+[Install]
+WantedBy=timers.target
