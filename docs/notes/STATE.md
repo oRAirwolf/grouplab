@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09 morning, after entry 397 (before it: entry 396).
+**Last rewritten:** 2026-10-09, entry 395 built and waiting on request 91 (before it: entry 397).
 
 ---
 
@@ -19,8 +19,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 397 done; the server waits on request 91** (2026-10-09): every server change is backed up first (RESTORE.md rule 5,
   `grouplab-change-backup.py`), and none starts until Alan confirms today's Oracle backup and restores one (no restore was ever tested).
 - **Entry 396 done** (2026-10-09): request 89 answered (b), the merge rule in the study's section 10; in CLAUDE.md at Alan's word.
-- **Entry 395 in part** (2026-10-09): the learning loop moves to the server, but ssh was refused by the permission check, so the
-  worker waits on Alan; `cli-arm64.yml` proves the arm64 command line (OpenCvSharp's own arm64 package, Ubuntu 24.04 libraries).
+- **Entry 395, built, installing waits on request 91** (2026-10-09): `grouplab-learn-worker.py`, three capped units, `install.py
+  --learning` and `--learning-undo`; nightly 183 carries the signed arm64 command line. Question 93: packages rather than an OpenCV build.
 - **Entry 394 done** (2026-10-09): **the learning loop**, `grouplab learn` and `scripts/learning/`, runs in the private archive's
   Actions with no Claude: every submission scored, every corrected one re-read nightly, tuning waiting for 50. Deployed to the archive
   once a nightly carries the verb; its issue and pull request wait on request 88; Code merges a passing tuning pull request (entry 396). Summary: archive `learning/summary.md`.
@@ -78,7 +78,7 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (44 answered and archived in entry
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.182 (2026-10-09 07:56 UTC, built after e79a0dfd: entries 392 and 393, the faster scan reading); published whole.
+- **Last nightly:** 0.2.0-nightly.183 (2026-10-09 10:57 UTC, built after 36254cfe: entries 394 to 397 and the learning worker); published whole, the arm64 command line with it.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 182's notes on 2026-10-09 (run 37902385537). Twelve research articles went live with e79a0dfd.
 - Crash reports open: none. Issue 26 (nightly 180, Android: closing the last target from the Open targets sheet after going back to Capture) fixed 2026-10-08, in nightly 181; issue 25 fixed and closed 2026-10-08.
 
