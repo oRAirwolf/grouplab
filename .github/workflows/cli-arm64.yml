@@ -38,6 +38,6 @@ jobs:
 
       - name: Read a sample sheet end to end
         run: |
-          "$RUNNER_TEMP/cli/grouplab" sample "$RUNNER_TEMP/sample.png" --seed 395
+          "$RUNNER_TEMP/cli/grouplab" sample "$RUNNER_TEMP/sample.png" --target targets/GL-CF25-LTR.gltd.json --seed 395
           /usr/bin/time -v "$RUNNER_TEMP/cli/grouplab" analyze "$RUNNER_TEMP/sample.png" --library targets 2> "$RUNNER_TEMP/time.txt" | tail -20
           grep -E "Elapsed|Maximum resident" "$RUNNER_TEMP/time.txt"
