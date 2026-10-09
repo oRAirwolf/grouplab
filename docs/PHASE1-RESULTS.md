@@ -1299,6 +1299,16 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   (entry 230 closed "apart from the proof"). Request 91 asks Alan to note today's backup and restore it to a throwaway volume. Until
   then nothing on the server changes; entry 395 builds what it can without it.
 
+## Entry 398: the server's backup restores; five days of backups (2026-10-09)
+
+- **Request 91 answered:** Alan restored the 2026-10-09 09:02 UTC boot volume backup to a throwaway volume, which came up Available at
+  47 GB and was terminated. `docs/RESTORE.md` records it as the first restore test of the whole server, with how it is done; the console's
+  action is "Restore boot volume", now the wording there and in the archived request. Request 91 archived.
+- **Retention:** one backup a day kept 4 days, within Always Free's five, set by Alan in the console; the older backups expire on their
+  own by 2026-10-22. RESTORE.md says a server mistake must be noticed within about four days to be undone from the whole-server backup,
+  while Code's own dated copies of changed files stay until removed.
+- **Question 93 answered, the packages,** and archived. Entry 395's server half goes ahead under entry 397's rule 5.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

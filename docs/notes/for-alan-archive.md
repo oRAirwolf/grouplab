@@ -3,6 +3,24 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 91. Before Code changes the server: check today's server backup and prove one restores, about twenty minutes (entry 397)
+
+**Answered 2026-10-09 (entry 398):** newest backup 2026-10-09 09:02:44 UTC, incremental, Available; restored as `restore-test`, which came up Available at 47 GB and was terminated. Recorded in docs/RESTORE.md. The console names the action "Restore boot volume"; the steps below say so for the next time.
+
+**Why:** you asked that anything Code changes on the web server is backed up first (entry 397). Code makes its own copy of every file it
+touches, but the rule also asks that the whole-server backup in Oracle Cloud is less than a day old and has been shown to restore. Code
+cannot see the Oracle console, and no restore of those backups has ever been tried. So the learning worker (entry 395) is built and
+waiting, and nothing on the server changes until this is done.
+**Steps,** in the Oracle Cloud console, region US West (San Jose):
+1. **Storage**, **Block Storage**, **Boot Volume Backups**. Note the newest backup's date and time and its state; it should be from today,
+   about 09:00 UTC, and **Available**.
+2. The restore test: on that backup, **Restore boot volume** (the console's name for it). Any name, such as `restore-test`, the same compartment and availability
+   domain, default size. Wait until the new volume says **Available** (a few minutes). Note its size.
+3. Delete the test volume: **Block Storage**, **Boot Volumes**, `restore-test`, **Terminate**. Do not touch the server's own boot volume,
+   and do not use Replace boot volume. Nothing on the server changes in any of this.
+**A good answer:** "Newest backup <date and time>, Available; restore test passed, the volume came up Available at <size>, and is deleted."
+Code then records the test in docs/RESTORE.md and goes on with the server.
+
 ## 90. One line in CLAUDE.md for merging the tuning job's pull requests, one minute, whenever suits (entry 396)
 
 **Answered 2026-10-09:** Alan, in the session: "Also add the entry 396 tuning merge rule to CLAUDE.md." Done.

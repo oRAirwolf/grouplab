@@ -14,30 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 36 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 37 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
-
----
-
-## 2026-10-09, question 93: the server's OpenCV, six packages rather than a build (entry 395 section 1)
-
-**Status: open; the work goes on with the packages, and the other choice is a day's work if you prefer it.**
-
-Entry 395 section 1 says to build OpenCV's native library for linux-arm64 once in CI. That turned out not to be needed:
-`OpenCvSharp4.runtime.linux-arm64` 4.13.0.20260627, from the same publisher and at the same version GroupLab uses, carries an aarch64
-`libOpenCvSharpExtern.so`. `cli-arm64.yml` published the command line with it on GitHub's arm64 runner and read a sample sheet end to end
-(3.1 s, 428 MB). The cost is on the server: the library links against Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5, which the server
-lacks, so `install.py --learning` installs six packages, 81 with what they pull in (simulated with `apt-get -s`): libraries only, no
-service among them, all put back exactly by `--learning-undo`.
-
-- **The packages** (what is built): nothing to maintain, and every OpenCvSharp release follows by changing one version number.
-- **A slim build in CI**: OpenCV and OpenCvSharpExtern compiled for aarch64 with no GUI, video or OCR, so nothing is installed on the
-  server; about a day of work, and a build to keep in step with every OpenCV release.
-
-I would keep the packages, since they are libraries on a server whose whole disk is backed up, and the undo is exact. Say if the server
-should carry nothing beyond GroupLab's own files, and the slim build replaces them.
+> 93, 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 

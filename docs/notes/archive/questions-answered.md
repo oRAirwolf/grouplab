@@ -5,6 +5,26 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-09, question 93: the server's OpenCV, six packages rather than a build (entry 395 section 1)
+
+**Status: answered 2026-10-09 (entry 398 section 4, Alan in the line that started the run: "Question 93: packages."): the packages, installed by `install.py --learning` and put back by `--learning-undo`; no slim build.**
+
+Entry 395 section 1 says to build OpenCV's native library for linux-arm64 once in CI. That turned out not to be needed:
+`OpenCvSharp4.runtime.linux-arm64` 4.13.0.20260627, from the same publisher and at the same version GroupLab uses, carries an aarch64
+`libOpenCvSharpExtern.so`. `cli-arm64.yml` published the command line with it on GitHub's arm64 runner and read a sample sheet end to end
+(3.1 s, 428 MB). The cost is on the server: the library links against Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5, which the server
+lacks, so `install.py --learning` installs six packages, 81 with what they pull in (simulated with `apt-get -s`): libraries only, no
+service among them, all put back exactly by `--learning-undo`.
+
+- **The packages** (what is built): nothing to maintain, and every OpenCvSharp release follows by changing one version number.
+- **A slim build in CI**: OpenCV and OpenCvSharpExtern compiled for aarch64 with no GUI, video or OCR, so nothing is installed on the
+  server; about a day of work, and a build to keep in step with every OpenCV release.
+
+I would keep the packages, since they are libraries on a server whose whole disk is backed up, and the undo is exact. Say if the server
+should carry nothing beyond GroupLab's own files, and the slim build replaces them.
+
+---
+
 ## 2026-09-24, question 44, the part still open: the bent-sheet model throws outside the page
 
 **Status: answered 2026-10-09 (entry 392 section 3): fixed by clamping the lookup, which was the cylinder's table and not the fold arrays.** A Newton step of `ToPage` for a pixel off this sheet (the photograph holds several) ran far off the page; `SurfaceMapping.ToImage` converted the table position with `(int)Math.Floor(u)`, which saturates at `int.MaxValue`, so `i + 1` wrapped negative and passed the bounds test. The range is now tested in double before the conversion, and a point beyond the table is computed exactly. `compare-photos --model surface` on the photograph completes: bull median 0.0050 in against the homography's 0.0110, 18 of the scan's 19 holes matched. `SurfaceCrashTests` holds a far point everywhere and the photograph where it is. Originally: nothing a person can reach is affected. Entry 171 section 4 closed the rest of question 44, which is in the answered archive.

@@ -25,6 +25,33 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-09, entry 398: request 91 answered: today's server backup is there and a restore of it passed
+
+**Status: actioned 2026-10-09; every section done.** The restore test is recorded in `docs/RESTORE.md` with the new schedule (one backup a day kept 4 days) and what four days means for the standing rules; request 91 is archived as answered and its steps, and RESTORE.md's, say "Restore boot volume"; question 93 is answered (the packages) and archived; entry 395's server half goes on under entry 397.
+
+
+From the planning session, 2026-10-09 05:15 Denver. Alan did request 91 in the Oracle console (US West, San Jose), with screenshots:
+
+1. **Newest backup:** "Auto-backup for instance-20260324-2036 (Boot Volume) via policy: grouplab-daily on 2026-10-09 09:00:00",
+   created 2026-10-09 09:02:44 UTC, incremental, 2 GB of a 47 GB volume, **Available**, expiring 2026-10-22 (13 days' retention). Thirteen
+   backups in all, every one Available, the full ones on 2026-09-27 and 2026-10-04.
+2. **Restore test passed:** Restore boot volume from that backup as `restore-test`, same availability domain, default size, no backup
+   policy: it came up **Available at 47 GB** (created 11:12:01 UTC), and was then terminated; the console shows it **Terminated**. The
+   server's own boot volume stayed Available throughout and was not touched.
+3. Record the test in `docs/RESTORE.md` (date, backup used, result, how it was done, that the restored volume was deleted), close
+   request 91, and carry on with entry 395's server half under entry 397. Note for next time: in the console the action is named
+   "Restore boot volume", not "Create Boot Volume"; fix the wording wherever request 91's steps are kept for reuse.
+4. **Question 93** (the server's OpenCV): Alan's answer comes with the paste line that starts this run; act on it and archive the question.
+5. Seen in passing, nothing to do: only the five oldest backups carry Oracle's "Always free" label. Alan is deciding whether to keep 13
+   days of backups or cut to 5; nothing changes until he says.
+6. **Backup retention, Alan, 2026-10-09 05:14 Denver: "Cut to 5 days to stay free."** Oracle's Always Free tier covers five volume
+   backups. Alan is changing the `grouplab-daily` policy in the console himself (Code cannot see it): one daily backup kept 4 days, so at
+   most five exist even in the minutes when a new one lands before the oldest expires, and the weekly full schedule removed if there is
+   one. The backups already taken keep their 13 day expiry and are left to expire by themselves by 2026-10-22, not deleted. Update
+   `docs/RESTORE.md` (how often, how long kept, where) and anything else that says 13 days, and note what it means for CLAUDE.md's rule 2:
+   a server mistake has to be noticed within about four days to be undone from the whole-server backup; Code's own dated copies of each
+   changed file are unaffected.
+
 ## 2026-10-09, entry 397: a backup of everything changed on the web server, before it is changed (Alan)
 
 **Status: actioned 2026-10-09; the rule and its tools are in place, and section 1 stops the server changes until request 91.** Sections 2 to 5 are `docs/RESTORE.md`'s standing rule 5 and `website/server/grouplab-change-backup.py`, which copies what a change will touch (files with mode and owner, absent files listed for the undo, the package and unit lists, crontabs) into `/home/ubuntu/grouplab-server/backups/<date>-<label>/`. **Section 1:** Code cannot see the Oracle console, and no restore test of the boot volume backups has ever been recorded, so entry 395's server changes wait on request 91. Section 6 applies to entry 395's report.

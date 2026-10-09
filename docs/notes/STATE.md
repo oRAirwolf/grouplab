@@ -9,18 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09, entry 395 built and waiting on request 91 (before it: entry 397).
+**Last rewritten:** 2026-10-09, entry 398 (before it: entry 395 built, waiting on request 91, now answered).
 
 ---
 
 ## In flight
 
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
-- **Entry 397 done; the server waits on request 91** (2026-10-09): every server change is backed up first (RESTORE.md rule 5,
-  `grouplab-change-backup.py`), and none starts until Alan confirms today's Oracle backup and restores one (no restore was ever tested).
+- **Entry 398 done** (2026-10-09): the whole server's backup restored once (request 91, recorded in RESTORE.md); backups now one a day
+  kept 4 days, so a server mistake must be noticed within four days; question 93 answered, the packages.
+- **Entry 397 done** (2026-10-09): every server change is backed up first (RESTORE.md rule 5, `grouplab-change-backup.py`).
 - **Entry 396 done** (2026-10-09): request 89 answered (b), the merge rule in the study's section 10; in CLAUDE.md at Alan's word.
-- **Entry 395, built, installing waits on request 91** (2026-10-09): `grouplab-learn-worker.py`, three capped units, `install.py
-  --learning` and `--learning-undo`; nightly 183 carries the signed arm64 command line. Question 93: packages rather than an OpenCV build.
+- **Entry 395, built, being installed on the server** (2026-10-09): `grouplab-learn-worker.py`, three capped units, `install.py
+  --learning` and `--learning-undo`; nightly 183 carries the signed arm64 command line. Question 93 answered: packages rather than an OpenCV build.
 - **Entry 394 done** (2026-10-09): **the learning loop**, `grouplab learn` and `scripts/learning/`, runs in the private archive's
   Actions with no Claude: every submission scored, every corrected one re-read nightly, tuning waiting for 50. Deployed to the archive
   once a nightly carries the verb; its issue and pull request wait on request 88; Code merges a passing tuning pull request (entry 396). Summary: archive `learning/summary.md`.
@@ -63,7 +64,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **26** (91 the Oracle backup check and a restore test, which the server work waits on; 88 a token for the learning job; 86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **25** (88 a token for the learning job; 86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

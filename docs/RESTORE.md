@@ -29,23 +29,32 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
 | The server's GroupLab files: scripts, units, the nginx include, `.user.ini` | the repository (`website/server/`), and `install.py`'s dated copies | every change | the repository; `/home/ubuntu/grouplab-server/`, `/home/airwolf/backups/grouplab.org/config/` | `sudo python3 install.py --intake`, `--errors`, `--survey` |
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
-| **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: incremental daily at 09:00 UTC kept 2 days, full on Sundays at 12:00 UTC kept 13 days (entry 235); and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
+| **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: one a day at 09:00 UTC, kept 4 days, so never more than the five Always Free covers (entry 398); restore tested 2026-10-09; and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
 
-**The gaps, today:** none. **The first Full backup exists** (entry 235): "Auto-backup for instance-20260324-2036 (Boot Volume) via policy:
-grouplab-daily on 2026-09-27 09:00:00", type **Full**, Available, 10 of 47 GB, created 2026-09-27 09:04:31 UTC, expiring 2026-09-29
-09:04:27 UTC. It expires after two days, not two weeks, because the daily and weekly schedules both fired at 09:00 UTC on Sunday and Oracle
-made one backup, typed Full, with the daily schedule's retention; Oracle's documentation does not say what happens when two schedules
-coincide. So on Alan's change of the same day the weekly schedule runs at **12:00 UTC on Sundays, kept 13 days**, and the daily stays
-Incremental at 09:00 UTC, kept 2 days: at most two Full and two or three Incremental backups at once, within the five Always Free allows.
-The first Full of the new schedule is due on Sunday 2026-10-04 at 12:00 UTC, expiring about 2026-10-17; request 46 asks Alan to look for
-it. From Tuesday 2026-09-29 until then the server has incremental backups only, and a restore rests on their chain, as below.
+**The gaps, today:** none. **The schedule** (entry 398 section 6, Alan, 2026-10-09: "Cut to 5 days to stay free."): one backup a
+day at 09:00 UTC, kept 4 days, with no weekly full schedule, so at most five exist even in the minutes when a new one lands before the
+oldest expires; Oracle's Always Free tier covers five volume backups. Alan changes the policy in the console; Code cannot see it.
+**Why the old expiry did not match the old setting** (Alan, 2026-10-09): the daily schedule was set to keep its backups 2 days, but
+Oracle kept them 13 days, so thirteen backups existed on 2026-10-09 rather than the two or three expected. On 2026-10-09 Alan set the
+daily schedule to 4 days and removed the weekly schedule. The backups taken before the change keep their 13 day expiry and expire by
+themselves by 2026-10-22; none is deleted by hand. Whether the new 4 days holds is seen in the console after 2026-10-13: a backup older
+than four days still listed there means Oracle is again keeping them longer than set. Oracle keeps
+the chain of incremental backups whole by itself, so the newest one restores the whole volume as it was then.
 
-Before it, the first Oracle boot volume backup (entry 230): "Auto-backup ... via policy: grouplab-daily", state
-Available, type **Incremental**, 10 GB of the 47 GB volume, source Scheduled, created 2026-09-26 09:01:42 UTC, expiring 2026-09-28
-09:01:39 UTC. **Until a Full backup exists, a restore rests on the chain of incremental backups**, which Oracle keeps and manages by itself:
-choosing the newest backup in the console restores the whole volume as it was then, and nothing about the chain is Code's or Alan's to
-manage. The first weekly Full is due on Sunday 2026-09-27 at 09:00 UTC (request 39 asks Alan to look for it). The nightly backup reaches
-`grouplab-backups` since entry 224, and the restore test passed against it.
+**What four days means for the standing rules.** A mistake on the server has to be noticed within about four days to be undone from the
+whole-server backup; after that every backup carries it. Code's own dated copy of each file it changes (rule 5 below) is not affected:
+those stay in `/home/ubuntu/grouplab-server/backups/` until removed by hand, so a change Code made can be undone however late it is found.
+
+**Restore tests of the whole server** (newest first):
+
+- **2026-10-09, passed** (request 91, entry 398, done by Alan in the console): the backup "Auto-backup for instance-20260324-2036 (Boot
+  Volume) via policy: grouplab-daily on 2026-10-09 09:00:00", created 2026-10-09 09:02:44 UTC, incremental, 2 GB of the 47 GB volume,
+  Available, was restored with **Restore boot volume** as `restore-test`, same availability domain, default size, no backup policy. It
+  came up **Available at 47 GB** (created 11:12:01 UTC) and was then terminated; the console shows it Terminated. The server's own boot
+  volume stayed Available and was not touched. Thirteen backups existed, every one Available.
+
+Before it: the first Oracle boot volume backup was 2026-09-26 (entry 230), the first Full 2026-09-27 (entry 235); no restore of either
+was tried.
 
 **Sudo on the server** (entry 230 section 1.3): with an off-machine copy of the whole server, Code's sudo is no longer limited to
 GroupLab's own files. Everything else holds: nothing of pissinhot.com is touched apart from the approved `/targets` redirect, `nginx -t`
@@ -83,8 +92,8 @@ server is limited to GroupLab's own files and its installer.
       server's address or the key's path.
    5. After each change both sites are checked, and `nginx -t` passes if nginx was touched at all.
 
-**Changes made under rule 5** (newest first): none yet. The Oracle boot volume backups have never had a recorded restore test, so the
-first change waits on request 91.
+**Changes made under rule 5** (newest first): none yet. The restore test passed on 2026-10-09 (above), so the first change may go ahead
+once the newest backup is less than a day old.
 
 - **Planned: the learning worker** (entry 395). Changes: six packages and what they pull in, `/usr/local/sbin/grouplab-learn-worker.py`
   and `grouplab-set-learning-token`, the archive worker replaced by the one that waits for a score, six units in `/etc/systemd/system/`,
@@ -112,7 +121,7 @@ manifest lists every file with its SHA-256, so a copy can be checked before it i
 **The whole server** (entries 224 and 225), pissinhot.com included. In the Oracle Cloud console, region US West (San Jose), compartment
 spetsnaz (root):
 
-1. **Storage**, **Block Storage**, **Boot Volume Backups**: choose the newest backup from before the problem, then **Create Boot Volume**
+1. **Storage**, **Block Storage**, **Boot Volume Backups**: choose the newest backup from before the problem, then **Restore boot volume**
    from it, in the same availability domain as the instance.
 2. **Compute**, **Instances**, the server, its **Storage** tab, **Replace boot volume**, and choose the volume made in step 1. The console
    stops the instance, swaps the volume and starts it again; the old volume is kept, detached, until it is deleted by hand.
@@ -127,4 +136,5 @@ HestiaCP, and MySQL recovers on start as it would after a power cut.
 
 **Proof, for the whole server:** the weekly check in the automation report reads the server's own HestiaCP backup file and its date, but it
 cannot see the Oracle console. The Oracle backups are checked by Alan in the console, under Boot Volume Backups, whenever he wants to; the
-weekly line says so rather than claiming it.
+weekly line says so rather than claiming it. A restore test is the same as step 1 above to a volume named `restore-test`, waiting
+for it to say Available, then **Terminate** on it under Boot Volumes, never Replace boot volume; the last one is listed above.
