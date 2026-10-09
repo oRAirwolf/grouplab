@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.182
+
+**2026-10-09**, commit `e79a0df`. Nightly.
+
+**What you will notice**
+
+- Reading a 600 dpi scan is faster: finding the holes now takes well under half the time it did, about 0.7 seconds instead of 1.8 on the test computer, and finds exactly the same holes.
+
+**Under the hood**
+
+- A seldom used way of reading a bent sheet, offered only by a test command, no longer stops partway on a photograph that holds more than one target.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.182)
+
+---
+
 ## 0.2.0-nightly.181
 
 **2026-10-09**, commit `fdefb50`. Nightly.
