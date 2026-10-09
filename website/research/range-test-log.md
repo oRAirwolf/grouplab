@@ -4,12 +4,12 @@ description: "Every range and bench test behind GroupLab in one place: what was 
 group: Range tests
 number: 30
 written: 2026-09-22
-data_date: "Running log; latest entry 2026-09-26"
+data_date: "Running log; latest entry 2026-10-04"
 samples: "See each entry"
-state: draft
-no_figure: "This is a log of what happened on a range day, and the figures the sheets produced are given in it. The developer's standing consent of 2026-09-24 now allows those range sheets to be shown, and no figure has been drawn from them yet."
-found: "see the article"
-sure: "see the article"
+state: ready
+no_figure: "This is a log of what was shot and where it was written up. The figures belong to the articles each entry points to, and are drawn there from the same data."
+found: "four range days and a print test, each with what it was meant to find out and where the answer is written up. On the latest, GroupLab found 137 of 145 holes in photographs of its own sheets taken at the range, with no false mark, and proposed 138 marks for 14 shots on store-bought targets it could fit."
+sure: "each entry is what was recorded at the time; the counts are GroupLab's own scoring against the shooter's count of shots fired. Where a result was later corrected, the entry says so."
 data:
   - data/range-day-2026-09-20.csv
 ---
@@ -59,9 +59,9 @@ data:
 
 ## Range day and aim point test, 2026-09-26
 
-**Questions:** does swapping suppressors move the point of impact, which aim point designs can two shooters center on through four scopes, and how does a real 25 shot sheet fare when every shot lands nearer the wrong bull?
+**Questions:** does swapping suppressors move the point of impact, which aim point designs can two shooters center on through four scopes, and how does a real 25-shot sheet fare when every shot lands nearer the wrong bull?
 
-**What was done:** three 25 bull sheets at 100 yards on an OSB backer, and the aim point card scored by the developer and his friend Justin.
+**What was done:** three 25-bull sheets at 100 yards on an OSB backer, and the aim point card scored by the developer and a friend.
 
 | Sheet | Cartridge | Load as written | Shots | What it tests |
 |---|---|---|---|---|
@@ -80,6 +80,21 @@ The 6.5 load is not the one of sheets 1 and 3: those were written with a 7.5 BR 
 - Three sheets printed from one PDF carry one design identifier; the developer told them apart by writing K, M and C in the serial box.
 
 **Written up in:** "Did the suppressor move the point of impact?", "Can you see the bull?", "Aim points for 1x to high power optics".
+
+## Range day, 2026-10-04
+
+**Questions:** how well does GroupLab read photographs of its sheets taken at the range, from close and from a little farther away; how does it do on store-bought targets it did not print; and does the chronograph's own export of each string open as it comes off the device?
+
+**What was done:** three GroupLab sheets, each photographed at about 1.5 and 3 feet: a C bull sheet (15 shots, .300 Norma Magnum, about 2800 fps), an E bull sheet (25 shots, .223 Remington) and a load sheet, GL-CF25-LTR-D (25 shots, 6 ARC, about 2400 fps). Six store-bought targets: five with .223 Remington at about 3000 fps and one with four shots of .300 Norma Magnum. Three chronograph strings, exported from the chronograph's own results.
+
+**What we learned:**
+
+- On GroupLab's own sheets, 137 of 145 holes were found in the photographs, with no false mark: the C bull 15 of 15 close and 14 from farther away, the E bull 22 of 25 at both distances, the load sheet 25 of 25 at both. One torn hole on the C bull was missed in every photograph of it.
+- Of the store-bought targets, one was recognized by its printing; two more were the right product but scored under the line GroupLab requires before it trusts a match, and were refused; one of them had its printing spattered by fragments from a bullet striking steel above it. Two are not in GroupLab's library.
+- On the three store-bought targets GroupLab could fit, Find holes (Experimental) proposed 138 marks for 14 shots, most of them on the target spattered by fragments. It invents far more than it finds on a shot-up commercial target, which is why it stays Experimental.
+- The chronograph's export of a single string, with its own header and number format, now opens in GroupLab.
+
+**Written up in:** not yet as an article; the scores are recorded in the project's results log, entry 374.
 
 ## Aim point test, planned for 2026-09-23
 

@@ -5388,6 +5388,966 @@
   "On Windows the computer also prints a sheet straight to a Phomemo M834 paired over Bluetooth, sending the same page the phone sends; that is built and not yet tried on a real M834 from a computer, and on macOS and Linux the choice says it is not available there yet.": {
    "kind": "code",
    "where": "src/GroupLab.App/PrintPanel.cs M834Row and PrintOnM834, src/GroupLab.Core/Printing/Labels/M834Print.cs and WindowsSerialPrinter.cs; Entry389M834Tests proves the bytes are the phone route's; entry 389 section 1. Not yet printed on a real M834 from a computer (request 83)"
+  },
+  "Written 2026-09-22; the data is from simulation with seed 2026.": {
+   "kind": "measured",
+   "where": "the article's front matter; website/research/mean-radius-or-extreme-spread/figures/make_figures.py, numpy default_rng(2026), rerun byte-identical 2026-10-09 (entry 392)"
+  },
+  "At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 5, shotGroups 0.8.4 efficiency(): 188 against 101 shots for a 20 percent wide 95 percent interval from 25-shot groups"
+  },
+  "At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence, because it only ever looks at the two worst shots and throws away everything the other twenty-three told you.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 5, shotGroups 0.8.4 efficiency(): 188 against 101 shots for a 20 percent wide 95 percent interval from 25-shot groups"
+  },
+  "https://cran.r-project.org/package=shotGroups docs/STATISTICS.md sections 3 and 5, where the 86 percent figure is worked out.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 5, shotGroups 0.8.4 efficiency(): 188 against 101 shots for a 20 percent wide 95 percent interval from 25-shot groups"
+  },
+  "In a 25-shot group it uses two and ignores 23.": {
+   "kind": "decided",
+   "where": "arithmetic: extreme spread is the distance between two shots, so 25 minus 2 are unused"
+  },
+  "Extreme spread runs from 2.07 to 4.45, a factor of more than two.": {
+   "kind": "measured",
+   "where": "website/research/mean-radius-or-extreme-spread/data/ten-groups.csv, extreme_spread_sigma 2.072 to 4.453, from make_figures.py seed 2026"
+  },
+  "With only five shots, extreme spread is not throwing away much, and the two figures wander by about the same amount from group to group: roughly 26 to 27 percent either way.": {
+   "kind": "measured",
+   "where": "website/research/mean-radius-or-extreme-spread/data/by-shot-count.csv, es_cv and mr_cv at 5 shots (0.270, 0.260) and 25 shots (0.139, 0.106), 20000 simulated groups each, seed 2026"
+  },
+  "By 25 shots, mean radius wanders by about 11 percent and extreme spread by about 14 percent.": {
+   "kind": "measured",
+   "where": "website/research/mean-radius-or-extreme-spread/data/by-shot-count.csv, es_cv and mr_cv at 5 shots (0.270, 0.260) and 25 shots (0.139, 0.106), 20000 simulated groups each, seed 2026"
+  },
+  "So the same rifle shows a bigger extreme spread at 20 shots than at 5, even though nothing about the rifle changed.": {
+   "kind": "measured",
+   "where": "website/research/mean-radius-or-extreme-spread/data/by-shot-count.csv, mean_es_sigma 3.067 at 5 shots and 4.441 at 20, seed 2026"
+  },
+  "In the simulation, the average extreme spread goes from about 3.1 sigma at five shots to 4.4 sigma at twenty.": {
+   "kind": "measured",
+   "where": "website/research/mean-radius-or-extreme-spread/data/by-shot-count.csv, mean_es_sigma 3.067 at 5 shots and 4.441 at 20, seed 2026"
+  },
+  "GroupLab shows it with its own interval, drawn as the line between the two shots, so you can see how few shots it rests on.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs, extreme spread drawn as the line between its two shots; src/GroupLab.Core/Marking/GroupAnalysis.cs ExtremeSpread reported with RangeStatistics.MeanInterval"
+  },
+  "On the analysis page you can see your mean radius per 100 yards against rules of thumb quoted on a Hornady podcast: around 0.3 inch per 100 yards is \"pretty good\", under about 0.2 is solid, and around 0.175 over 20 to 30 shots is \"really, really good\".": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/MeanRadiusScale.cs Marks (0.300, 0.200, 0.175) and Attribution, shown on the analysis page (src/GroupLab.App/MainWindow.cs)"
+  },
+  "Written 2026-09-22; the data is from Closed-form statistics and simulation, seed 2026.": {
+   "kind": "measured",
+   "where": "the article's front matter; website/research/how-many-shots/figures/make_figures.py, scipy chi-square and F distributions, numpy default_rng(2026), rerun byte-identical 2026-10-09 (entry 392)"
+  },
+  "What we found from one five-shot group, your rifle&#x27;s true dispersion could be anywhere from about 0.68 to 1.92 times what you measured.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/interval-by-shots.csv, sqrt(df / chi2) with df = 2(n - 1) at 2.5 and 97.5 percent, docs/STATISTICS.md section 3.3"
+  },
+  "At 25 shots that narrows to 0.83 to 1.25.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/interval-by-shots.csv, sqrt(df / chi2) with df = 2(n - 1) at 2.5 and 97.5 percent, docs/STATISTICS.md section 3.3"
+  },
+  "Shots True value is between Ratio of top to bottom 3 0.60 and 2.87 times your measurement 4.8 5 0.68 and 1.92 2.8 10 0.76 and 1.48 1.9 25 0.83 and 1.25 1.5 50 0.88 and 1.16 1.3 100 0.91 and 1.11 1.2 The five-shot row is the one to remember.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/interval-by-shots.csv, sqrt(df / chi2) with df = 2(n - 1) at 2.5 and 97.5 percent, docs/STATISTICS.md section 3.3"
+  },
+  "The true dispersion behind a five-shot group sits somewhere between about 0.68 and 1.92 times what you measured.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/interval-by-shots.csv, sqrt(df / chi2) with df = 2(n - 1) at 2.5 and 97.5 percent, docs/STATISTICS.md section 3.3"
+  },
+  "To show that one load groups 20 percent tighter than another takes about 81 shots of each; to show a 9 percent difference takes 434.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868"
+  },
+  "A genuine 9 percent improvement, which is a lot in a good rifle, takes 434 rounds of each load, 868 in all.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868"
+  },
+  "A load that groups 20 percent tighter than another needs about 81 shots of each to be told apart with confidence.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868"
+  },
+  "A 9 percent difference needs 434.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868"
+  },
+  "What to do instead of shooting 81 rounds: accept a wider conclusion.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868"
+  },
+  "Five shots is a rough sketch Statisticians have a precise way to say how well a group pins down the rifle's real dispersion: a confidence interval, which is a range worked out so that, 95 times out of 100, it contains the true value.": {
+   "kind": "decided",
+   "where": "the definition of a 95 percent confidence interval (NIST/SEMATECH e-Handbook, section 1.3.5.8)"
+  },
+  "What that looks like on paper Here is the same simulated rifle measured forty times: twenty times with five-shot groups and twenty times with 25-shot groups.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/repeat-measurements.csv, 20 groups of 5 (0.667 to 1.744) and 20 of 25 (0.837 to 1.130), seed 2026"
+  },
+  "The five-shot results run from 0.67 to 1.74.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/repeat-measurements.csv, 20 groups of 5 (0.667 to 1.744) and 20 of 25 (0.837 to 1.130), seed 2026"
+  },
+  "The 25-shot results run from 0.84 to 1.13.": {
+   "kind": "measured",
+   "where": "website/research/how-many-shots/data/repeat-measurements.csv, 20 groups of 5 (0.667 to 1.744) and 20 of 25 (0.837 to 1.130), seed 2026"
+  },
+  "GroupLab can combine groups of the same load across sheets and sessions.": {
+   "kind": "code",
+   "where": "pooled groups across sheets and sessions: src/GroupLab.Core/Statistics/LoadComparison.cs and the research article pooling-groups"
+  },
+  "Eight sessions of 25 shots is 200 shots: a usable sample.": {
+   "kind": "decided",
+   "where": "arithmetic, 8 x 25 = 200; docs/STATISTICS.md section 9.1 on how well sigma is known from n shots"
+  },
+  "Eight separate 25-shot groups looked at one by one is not.": {
+   "kind": "decided",
+   "where": "arithmetic, 8 x 25 = 200; docs/STATISTICS.md section 9.1 on how well sigma is known from n shots"
+  },
+  "At a 5 percent risk each, one will look \"significant\" by chance about half the time.": {
+   "kind": "measured",
+   "where": "1 - 0.95^15 = 0.54 for fifteen independent comparisons; GroupLab applies Holm's adjustment, src/GroupLab.Core/Statistics/LoadComparison.cs"
+  },
+  "Sources GroupLab statistics reference, section 9 (docs/STATISTICS.md), which also checks the approximation against an exact search.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 9"
+  },
+  "https://www.itl.nist.gov/div898/handbook/eda/section3/eda359.htm Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "the site footer; the licence is LICENSE, GPL-3.0"
+  },
+  "CEP 50 and 90 explained | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.": {
+   "kind": "decided",
+   "where": "the article's title and the site's navigation, website/build.py"
+  },
+  "Written 2026-09-22; the data is from Simulation, seed 2026.": {
+   "kind": "measured",
+   "where": "the article's front matter; website/research/cep-explained/figures/make_figures.py, numpy default_rng(2026), N = 400000 shots per shape, rerun byte-identical 2026-10-09 (entry 392)"
+  },
+  "How sure we are exact for the model; the stretched-group figures are from 400,000 simulated shots per shape.": {
+   "kind": "measured",
+   "where": "the article's front matter; website/research/cep-explained/figures/make_figures.py, numpy default_rng(2026), N = 400000 shots per shape, rerun byte-identical 2026-10-09 (entry 392)"
+  },
+  "What we found for a round group, CEP 50, mean radius and CEP 90 are fixed multiples of the same underlying spread: 1.18, 1.25 and 2.15 sigma.": {
+   "kind": "measured",
+   "where": "closed form under the circular normal: CEP 50 = sqrt(2 ln 2) = 1.1774, mean radius = sqrt(pi/2) = 1.2533, CEP 90 = sqrt(2 ln 10) = 2.1460; docs/STATISTICS.md section 3.4"
+  },
+  "For a round group they are the same number in three costumes: 1.18, 1.25 and 2.15 times the same spread.": {
+   "kind": "measured",
+   "where": "closed form under the circular normal: CEP 50 = sqrt(2 ln 2) = 1.1774, mean radius = sqrt(pi/2) = 1.2533, CEP 90 = sqrt(2 ln 10) = 2.1460; docs/STATISTICS.md section 3.4"
+  },
+  "When a group stretches to twice as wide as it is tall, the round-group CEP 50 circle holds about 54 percent of shots instead of 50, and the CEP 90 circle about 89 percent instead of 90.": {
+   "kind": "measured",
+   "where": "website/research/cep-explained/data/coverage-by-shape.csv: at width to height 2, 54.35 percent inside the CEP 50 circle and 89.11 inside CEP 90; seed 2026"
+  },
+  "This chart keeps the total spread the same and stretches the group: Long axis to short axis Shots inside the CEP 50 circle Inside the CEP 90 circle 1 (round) 50 percent 90 percent 1.5 52 90 2 54 89 3 57 88 4 59 88 For moderate stretching the round formula holds up surprisingly well.": {
+   "kind": "measured",
+   "where": "website/research/cep-explained/data/coverage-by-shape.csv: at width to height 2, 54.35 percent inside the CEP 50 circle and 89.11 inside CEP 90; seed 2026"
+  },
+  "By a ratio of 2 it is off by a few percentage points, which is less than the sampling uncertainty of most groups.": {
+   "kind": "measured",
+   "where": "website/research/cep-explained/data/coverage-by-shape.csv: at width to height 2, 54.35 percent inside the CEP 50 circle and 89.11 inside CEP 90; seed 2026"
+  },
+  "Stretch the group to twice as wide as it is tall and the CEP 50 circle holds 54 percent rather than 50.": {
+   "kind": "measured",
+   "where": "website/research/cep-explained/data/coverage-by-shape.csv: at width to height 2, 54.35 percent inside the CEP 50 circle and 89.11 inside CEP 90; seed 2026"
+  },
+  "CEP 50 is the radius of the circle, centered on the group, that holds half your shots.": {
+   "kind": "decided",
+   "where": "the definition of CEP 50 and CEP 90 as the radii holding half and nine tenths of the shots, docs/STATISTICS.md sections 3.4 and 4; 0.6 in radius is a 1.2 in circle"
+  },
+  "CEP 90 holds nine shots in ten.": {
+   "kind": "decided",
+   "where": "the definition of CEP 50 and CEP 90 as the radii holding half and nine tenths of the shots, docs/STATISTICS.md sections 3.4 and 4; 0.6 in radius is a 1.2 in circle"
+  },
+  "If your CEP 90 at 100 yards is 0.6 inch, you can expect nine shots in ten inside a 1.2 inch circle around your group center, as long as nothing changes.": {
+   "kind": "decided",
+   "where": "the definition of CEP 50 and CEP 90 as the radii holding half and nine tenths of the shots, docs/STATISTICS.md sections 3.4 and 4; 0.6 in radius is a 1.2 in circle"
+  },
+  "That is what \"about half\" and \"about nine in ten\" look like with real-world luck in a 30-shot sample.": {
+   "kind": "decided",
+   "where": "the definition of CEP 50 and CEP 90 as the radii holding half and nine tenths of the shots, docs/STATISTICS.md sections 3.4 and 4; 0.6 in radius is a 1.2 in circle"
+  },
+  "In the example above, 17 of the 30 shots fall inside the CEP 50 circle and 27 inside the CEP 90 circle.": {
+   "kind": "measured",
+   "where": "website/research/cep-explained/figures/make_figures.py figure 1, 30 shots at seed 2026 against the true circles: 17 inside CEP 50 and 27 inside CEP 90, printed by the script"
+  },
+  "On one reference 20-shot group they disagree by about 15 percent.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 4, shotGroups' reference values on DF300BLK (20 shots): 1.458 to 1.672, about 15 percent"
+  },
+  "CEP 99 from a few shots GroupLab can draw CEP 99 as well, and a circle for any percent you type under Advanced.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs, \"A circle for any percent\" under Advanced (entry 227 section 3); src/GroupLab.Core/Marking/GroupAnalysis.cs, the fewer-than-one-outside sentence and about 100 / (100 - percent) shots"
+  },
+  "When fewer than one shot would be expected outside the circle, GroupLab says so beside the number, and says about how many shots would put one there: 100 for CEP 99, 1000 for 99.9.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs, \"A circle for any percent\" under Advanced (entry 227 section 3); src/GroupLab.Core/Marking/GroupAnalysis.cs, the fewer-than-one-outside sentence and about 100 / (100 - percent) shots"
+  },
+  "They come from the same sigma as the others: CEP 99 is 3.03 sigma, against 2.45 for CEP 95.": {
+   "kind": "measured",
+   "where": "closed form: sqrt(2 ln 100) = 3.035 and sqrt(2 ln 20) = 2.448, docs/STATISTICS.md section 3.4"
+  },
+  "A circle that should hold 99 shots in 100 cannot be checked with 10.": {
+   "kind": "decided",
+   "where": "arithmetic: n x 0.01 shots expected outside a 99 percent circle; the model's tail, docs/STATISTICS.md section 3.4"
+  },
+  "With n shots, about n times one percent of them are expected outside CEP 99: a tenth of a shot from 10, a quarter of one from 25.": {
+   "kind": "decided",
+   "where": "arithmetic: n x 0.01 shots expected outside a 99 percent circle; the model's tail, docs/STATISTICS.md section 3.4"
+  },
+  "CEP 99 from a small group is the model's guess about the shots you have not fired.": {
+   "kind": "decided",
+   "where": "arithmetic: n x 0.01 shots expected outside a 99 percent circle; the model's tail, docs/STATISTICS.md section 3.4"
+  },
+  "CEP 99 is a fair way to ask \"how big a target will this rifle almost never miss\", provided you read it as the model's answer and give it the shots to be tested: a few sessions pooled, not one group of five.": {
+   "kind": "decided",
+   "where": "arithmetic: n x 0.01 shots expected outside a 99 percent circle; the model's tail, docs/STATISTICS.md section 3.4"
+  },
+  "GroupLab shows CEP 99 with the same 95 percent range as the others, taken from sigma: from 10 shots that range runs from 0.76 to 1.48 times the value, from 25 shots from 0.83 to 1.25, from 100 shots from 0.91 to 1.11.": {
+   "kind": "measured",
+   "where": "the sigma interval of docs/STATISTICS.md section 3.3 rescaled by a constant; the ratios are research/how-many-shots data/interval-by-shots.csv at 10, 25 and 100 shots"
+  },
+  "What GroupLab shows CEP 50, 90 and 95 as circles on the group plot, centered on the group center, dotted, solid and dashed, each with its own switch beside the plot, next to the mean radius.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs: CEP 50 dotted, CEP 90 solid, CEP 95 dashed, each on its own toggle beside the plot"
+  },
+  "A verdict on whether the group is round at all: not a warning at some aspect ratio, but a circularity test, which says \"Round, as far as 24 shots can tell\" when the shots cannot separate the two axes and \"Not round\" when they can.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs, \"Round, as far as {n} shots can tell.\" and \"Not round.\", the circularity test of docs/STATISTICS.md section 7"
+  },
+  "Sources GroupLab statistics reference, sections 3.4 and 4 (docs/STATISTICS.md).": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md sections 3.4 and 4"
+  },
+  "https://en.wikipedia.org/wiki/Rayleigh_distribution Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "the site footer; the licence is LICENSE, GPL-3.0"
+  },
+  "Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.": {
+   "kind": "decided",
+   "where": "the article's title and the site's navigation, website/build.py"
+  },
+  "What we found if you chronograph five shots and measure an SD of 10 ft/s, the true SD of that ammunition is, with 95 percent confidence, somewhere between 6.0 and 28.7 ft/s.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)"
+  },
+  "With 20 shots the same reading narrows to 7.6 to 14.6.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)"
+  },
+  "The interval, string by string Suppose your chronograph says SD 10 ft/s.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)"
+  },
+  "Shots in the string True SD is between (95 percent) 3 5.2 and 62.8 ft/s 5 6.0 and 28.7 10 6.9 and 18.3 20 7.6 and 14.6 30 8.0 and 13.4 50 8.4 and 12.5 The interval is lopsided: it stretches much further above your reading than below it.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)"
+  },
+  "Measure 10 ft/s over five shots and the true value is somewhere between 6.0 and 28.7 with 95 percent confidence.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)"
+  },
+  "Twenty shots is where the number starts to mean something , narrowing the same reading to 7.6 to 14.6.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)"
+  },
+  "The same ammunition, measured sixty times Here one simulated batch of ammunition with a true SD of exactly 10 ft/s is chronographed thirty times in strings of five, and thirty times in strings of twenty.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/repeat-strings.csv, 30 strings of 5 (2.10 to 19.41 ft/s) and 30 of 20 (6.34 to 13.24), true SD 10, seed 2026"
+  },
+  "The five-shot strings read anywhere from 2.1 to 19.4 ft/s.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/repeat-strings.csv, 30 strings of 5 (2.10 to 19.41 ft/s) and 30 of 20 (6.34 to 13.24), true SD 10, seed 2026"
+  },
+  "Somebody who shot the 2.1 string would believe they had world-class ammunition; somebody who shot the 19.4 string would start over.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/repeat-strings.csv, 30 strings of 5 (2.10 to 19.41 ft/s) and 30 of 20 (6.34 to 13.24), true SD 10, seed 2026"
+  },
+  "The twenty-shot strings stay between 6.3 and 13.2.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/repeat-strings.csv, 30 strings of 5 (2.10 to 19.41 ft/s) and 30 of 20 (6.34 to 13.24), true SD 10, seed 2026"
+  },
+  "Shots in the string Average ES as a multiple of the true SD 3 1.7 5 2.3 10 3.1 20 3.7 30 4.1 So an ES of 25 ft/s over five shots and an ES of 40 ft/s over twenty shots can describe the same ammunition.": {
+   "kind": "measured",
+   "where": "website/research/velocity-sd-small-samples/data/es-over-sd.csv, 200,000 simulated strings per row, seed 2026: 2.33 at 5 shots and 3.74 at 20, so 25 and 40 ft/s are about 10.7 SD in both"
+  },
+  "If you are shooting a 25-shot GroupLab sheet anyway, record every shot's velocity.": {
+   "kind": "decided",
+   "where": "advice; a 25-shot sheet is GL-CF25-LTR, targets/"
+  },
+  "Two loads with five-shot SDs of 8 and 12 ft/s are not shown to be different: identical ammunition gives a gap that size almost half the time.": {
+   "kind": "measured",
+   "where": "F = (12/8)^2 = 2.25 on 4 and 4 degrees of freedom, two-sided p = 0.45; on 29 and 29, p = 0.033 (entry 392, scipy.stats.f)"
+  },
+  "GroupLab can compare the vertical spread you measured with what your velocity spread predicts, which tells you whether velocity is really the limit or whether the rifle, the rest or the shooter is.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/VelocityVertical.cs and src/GroupLab.Core/Marking/VelocityBlock.cs, predicted against measured vertical, docs/STATISTICS.md section 12.2"
+  },
+  "https://en.wikipedia.org/wiki/Range_(statistics) GroupLab statistics reference, section 12 on velocity and vertical dispersion (docs/STATISTICS.md).": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md section 12"
+  },
+  "After a full correction based on three shots, your new zero misses the true one by about 0.72 sigma on average, whatever the old error was.": {
+   "kind": "measured",
+   "where": "closed form, mean of a Rayleigh with sigma / sqrt(n): sqrt(pi/2) / sqrt(n) = 0.72, 0.56 and 0.40 at 3, 5 and 10 shots; website/research/when-to-adjust-zero/data/error-after-adjusting.csv from 200,000 simulated sessions, seed 2026; 0.25 x 1.2533 = 0.31 and 0.25 x 0.72 = 0.18"
+  },
+  "A rifle that starts perfectly zeroed and is &#x27;corrected&#x27; after every three-shot group settles at an average error of 0.72 sigma.": {
+   "kind": "measured",
+   "where": "closed form, mean of a Rayleigh with sigma / sqrt(n): sqrt(pi/2) / sqrt(n) = 0.72, 0.56 and 0.40 at 3, 5 and 10 shots; website/research/when-to-adjust-zero/data/error-after-adjusting.csv from 200,000 simulated sessions, seed 2026; 0.25 x 1.2533 = 0.31 and 0.25 x 0.72 = 0.18"
+  },
+  "Averaged over direction: Shots in the zeroing group Average error of the measured center 3 0.72 sigma 5 0.56 sigma 10 0.40 sigma If your rifle's 100-yard sigma is 0.25 inch (a mean radius of about 0.31 inch), a three-shot zero is off by about 0.18 inch on average after you adjust, and sometimes by double that.": {
+   "kind": "measured",
+   "where": "closed form, mean of a Rayleigh with sigma / sqrt(n): sqrt(pi/2) / sqrt(n) = 0.72, 0.56 and 0.40 at 3, 5 and 10 shots; website/research/when-to-adjust-zero/data/error-after-adjusting.csv from 200,000 simulated sessions, seed 2026; 0.25 x 1.2533 = 0.31 and 0.25 x 0.72 = 0.18"
+  },
+  "Over many rounds of this, the average error settles at the three-shot figure, about 0.72 sigma, where it would have been zero if nobody had touched the turrets.": {
+   "kind": "measured",
+   "where": "closed form, mean of a Rayleigh with sigma / sqrt(n): sqrt(pi/2) / sqrt(n) = 0.72, 0.56 and 0.40 at 3, 5 and 10 shots; website/research/when-to-adjust-zero/data/error-after-adjusting.csv from 200,000 simulated sessions, seed 2026; 0.25 x 1.2533 = 0.31 and 0.25 x 0.72 = 0.18"
+  },
+  "The center of a three-shot group is itself uncertain by about 0.72 sigma, so a full correction based on it leaves you that far out on average, whatever you started from.": {
+   "kind": "measured",
+   "where": "closed form, mean of a Rayleigh with sigma / sqrt(n): sqrt(pi/2) / sqrt(n) = 0.72, 0.56 and 0.40 at 3, 5 and 10 shots; website/research/when-to-adjust-zero/data/error-after-adjusting.csv from 200,000 simulated sessions, seed 2026; 0.25 x 1.2533 = 0.31 and 0.25 x 0.72 = 0.18"
+  },
+  "How sure we are exact for round groups; the chasing figure is from 200,000 simulated sessions.": {
+   "kind": "measured",
+   "where": "the article's front matter; website/research/when-to-adjust-zero/figures/make_figures.py, M = 200000, numpy default_rng(2026), rerun byte-identical 2026-10-09 (entry 392)"
+  },
+  "The blue area is the 95 percent region for the true center, the level every zero figure GroupLab shows is quoted at.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ZeroCorrection.cs Level = 0.95"
+  },
+  "It gives the group center's distance from the aim across and up or down, and says to dial an axis, in clicks when it knows the rifle's scope, only when that axis's offset is larger than its 95 percent uncertainty.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ZeroCorrection.cs, an axis is dialled only where its interval excludes zero (ZeroAxis.Distinguishable, Clicks); the zero block in src/GroupLab.App/MainWindow.cs (ZeroFor)"
+  },
+  "A 0.1 mil click is 0.36 inch at 100 yards and a 1/4 MOA click is 0.26 inch.": {
+   "kind": "measured",
+   "where": "0.1 mrad x 3600 in = 0.36 in; 0.25 x 1.047 in = 0.26 in, src/GroupLab.Core/Statistics/Angular.cs"
+  },
+  "https://cran.r-project.org/package=shotGroups Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "the site footer; the licence is LICENSE, GPL-3.0"
+  },
+  "Written 2026-09-22; the data is from Worked example, one simulated group, seed 2026.": {
+   "kind": "measured",
+   "where": "the article's front matter; website/research/moa-mils-inches/figures/make_figures.py, numpy default_rng(2026), rerun byte-identical 2026-10-09 (entry 392)"
+  },
+  "The one number people most often get wrong: a true minute of angle is 1.047 inches at 100 yards, not 1 inch.": {
+   "kind": "measured",
+   "where": "definition: 3600 in x tan(1/60 degree) = 1.0472 in at 100 yd, 4.7 percent over an inch; src/GroupLab.Core/Statistics/Angular.cs Constant(Moa); website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "The difference is 4.7 percent, enough to matter when you compare groups or count clicks at distance.": {
+   "kind": "measured",
+   "where": "definition: 3600 in x tan(1/60 degree) = 1.0472 in at 100 yd, 4.7 percent over an inch; src/GroupLab.Core/Statistics/Angular.cs Constant(Moa); website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "1 MOA at 100 yards is 1.047 inches.": {
+   "kind": "measured",
+   "where": "definition: 3600 in x tan(1/60 degree) = 1.0472 in at 100 yd, 4.7 percent over an inch; src/GroupLab.Core/Statistics/Angular.cs Constant(Moa); website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "Calling it an inch is close at 100 yards and adds up at distance: at 1,000 yards, 10 MOA is 104.7 inches, not 100.": {
+   "kind": "measured",
+   "where": "definition: 3600 in x tan(1/60 degree) = 1.0472 in at 100 yd, 4.7 percent over an inch; src/GroupLab.Core/Statistics/Angular.cs Constant(Moa); website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "What this means A minute of angle is 1.047 inches at 100 yards, not 1 inch.": {
+   "kind": "measured",
+   "where": "definition: 3600 in x tan(1/60 degree) = 1.0472 in at 100 yd, 4.7 percent over an inch; src/GroupLab.Core/Statistics/Angular.cs Constant(Moa); website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "The round number is a convenience that costs 4.7 percent, and 4.7 percent is enough to change which of two loads looks tighter and enough to matter when you count clicks at distance.": {
+   "kind": "measured",
+   "where": "definition: 3600 in x tan(1/60 degree) = 1.0472 in at 100 yd, 4.7 percent over an inch; src/GroupLab.Core/Statistics/Angular.cs Constant(Moa); website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "A 1 MOA group at 100 yards and a 1 MOA group at 500 yards are equally good shooting, even though the second is five times larger on paper.": {
+   "kind": "decided",
+   "where": "definition of an angular unit: size on paper is angle times distance"
+  },
+  "Without one, a half-inch group could be 0.5 MOA at 100 yards or 0.1 MOA at 500.": {
+   "kind": "decided",
+   "where": "definition of an angular unit: size on paper is angle times distance"
+  },
+  "Mean radius reads 0.246 inch, 0.626 cm, 0.235 MOA or 0.068 mil.": {
+   "kind": "measured",
+   "where": "website/research/moa-mils-inches/data/example-group.csv: mean distance from the center 0.2464 in, 0.626 cm, / 1.0472 = 0.235 MOA, / 3.6 = 0.068 mil, at 100 yd"
+  },
+  "The units Unit What it is Size at 100 yards Size at 100 meters MOA (minute of angle) 1/60 of a degree 1.047 in 2.91 cm IPHY (inches per hundred yards, \"shooter's MOA\") exactly 1 inch at 100 yards 1.000 in 2.78 cm Mil (milliradian, also MRAD) 1/1000 of a radian 3.600 in 10.0 cm A few points that trip people up: MOA is not an inch.": {
+   "kind": "measured",
+   "where": "definitions: MOA 1/60 degree, IPHY 1 in per 100 yd, mil 1/1000 radian; at 100 m these are 2.909 cm, 2.778 cm and 10.0 cm; website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "One mil is 10 centimeters at 100 meters, 1 meter at 1,000 meters.": {
+   "kind": "measured",
+   "where": "definitions: MOA 1/60 degree, IPHY 1 in per 100 yd, mil 1/1000 radian; at 100 m these are 2.909 cm, 2.778 cm and 10.0 cm; website/research/moa-mils-inches/data/unit-sizes.csv"
+  },
+  "There is also a military \"mil\" used for artillery (6,400 to the circle), which is slightly different.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Statistics/Angular.cs, NATO mil, 6400 to the circle"
+  },
+  "Converting a group at 300 yards to MOA, working out a correction in clicks, or comparing your figures with somebody else's.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Statistics/Angular.cs: the true minute, angle = k atan(x / 2d), docs/STATISTICS.md sections 12.5 and 13"
+  },
+  "Use the real number; GroupLab does.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Statistics/Angular.cs: the true minute, angle = k atan(x / 2d), docs/STATISTICS.md sections 12.5 and 13"
+  },
+  "Sources GroupLab statistics reference, sections 12.5 and 13 (docs/STATISTICS.md), and src/GroupLab.Core/Statistics/Angular.cs.": {
+   "kind": "measured",
+   "where": "docs/STATISTICS.md sections 12.5 and 13 and src/GroupLab.Core/Statistics/Angular.cs"
+  },
+  "https://en.wikipedia.org/wiki/Milliradian Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "the site footer; the licence is LICENSE, GPL-3.0"
+  },
+  "Written 2026-09-22; the data is from GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08.": {
+   "kind": "measured",
+   "where": "the article's front matter; docs/PHASE0-RESULTS.md measurement 5; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv"
+  },
+  "What we found a printer set to &#x27;Actual size&#x27; can be very accurate: the developer&#x27;s inkjet measured 1.0001 across and 1.0006 down, within 0.06 percent.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5: the Phase 0 printer at Actual size, x 1.0001 and y 1.0006; the sheets were inkjet-printed (section 4.1); website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "The printer's own error at 100 percent (1.0001 across, 1.0006 down) cancels out in that comparison.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5: the Phase 0 printer at Actual size, x 1.0001 and y 1.0006; the sheets were inkjet-printed (section 4.1); website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "An inkjet set to \"Actual size\" was accurate to 0.06 percent here.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5: the Phase 0 printer at Actual size, x 1.0001 and y 1.0006; the sheets were inkjet-printed (section 4.1); website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "The danger is the print dialog: &#x27;Fit to page&#x27; prints a letter sheet at about 94 percent.": {
+   "kind": "measured",
+   "where": "arithmetic for a quarter inch margin: min(8.0 / 8.5, 10.5 / 11) = 0.941; src/GroupLab.Core/Marking/PaperEdgeCheck.cs, Fit to page shrinks by 3 to 6 percent"
+  },
+  "With a quarter inch on each side, a letter page shrinks to about 94 percent.": {
+   "kind": "measured",
+   "where": "arithmetic for a quarter inch margin: min(8.0 / 8.5, 10.5 / 11) = 0.941; src/GroupLab.Core/Marking/PaperEdgeCheck.cs, Fit to page shrinks by 3 to 6 percent"
+  },
+  "A printer can also be true one way and not the other: one thermal printer printed true across its head and 99.28 percent along its paper feed, the mean of five readings over two prints.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28"
+  },
+  "Readings Printed at Across the head caliper on print 1, caliper and scan on print 2 99.79 to 100.30 percent, mean 100.03 Along the feed caliper and ruler on both prints, scan on print 2 99.19 to 99.49 percent, mean 99.28 Across, the scan read exactly what GroupLab drew, and the two caliper readings fell either side of it.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28"
+  },
+  "So the head is true and the feed pulls the paper about 0.7 percent too fast, which is enough to make every vertical figure on a photographed sheet about 0.7 percent large if nothing corrected it.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28"
+  },
+  "A thermal printer that was true across its head printed 0.7 percent short along its feed, every time.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28"
+  },
+  "The thermal figures are one printer, one roll and two prints, read with a caliper, a ruler and a scan that disagree with each other by up to 0.3 percent.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv section 3: scan against caliper 0.21 percent across and 0.15 down; print 1's caliper 100.30 against the scan's 100.00 across"
+  },
+  "On the same sheet the scan read 0.21 percent larger than the caliper across and 0.15 percent larger down.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv section 3: scan against caliper 0.21 percent across and 0.15 down; print 1's caliper 100.30 against the scan's 100.00 across"
+  },
+  "If the sheet comes out of the printer 4 percent small, the markers are 4 percent closer together than GroupLab expects, and anything measured against them is off by the same proportion unless the print scale is known.": {
+   "kind": "decided",
+   "where": "arithmetic: a print at scale s puts the markers s apart, so distances read 1/s; website/research/printer-true-size/data/error-by-scale.csv; 2 x 0.94 = 1.88 and 2 x 0.98 = 1.96"
+  },
+  "You cannot see a 5 percent change by eye.": {
+   "kind": "decided",
+   "where": "arithmetic: a print at scale s puts the markers s apart, so distances read 1/s; website/research/printer-true-size/data/error-by-scale.csv; 2 x 0.94 = 1.88 and 2 x 0.98 = 1.96"
+  },
+  "Over 2 inches, 94 percent shows as about 1.88 inches, an eighth of an inch short, which is easy to see on a ruler.": {
+   "kind": "decided",
+   "where": "arithmetic: a print at scale s puts the markers s apart, so distances read 1/s; website/research/printer-true-size/data/error-by-scale.csv; 2 x 0.94 = 1.88 and 2 x 0.98 = 1.96"
+  },
+  "98 percent is about 1.96, harder but visible on a good steel rule.": {
+   "kind": "decided",
+   "where": "arithmetic: a print at scale s puts the markers s apart, so distances read 1/s; website/research/printer-true-size/data/error-by-scale.csv; 2 x 0.94 = 1.88 and 2 x 0.98 = 1.96"
+  },
+  "A printer's own phone app can do the same: given a letter page, the app for the thermal printer described below shrank it to 94.7 percent.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 382 section 1: the printer's app sent the Letter page shrunk to 94.7 percent"
+  },
+  "At 600 dpi, 600 pixels is one inch, whatever is on the glass.": {
+   "kind": "decided",
+   "where": "the definition of a scan's resolution; GroupLab's print scale from a believed scan, src/GroupLab.Core/Marking/ScaleReference.cs Correction"
+  },
+  "So when GroupLab reads a scanned sheet it can compare the markers' real spacing with the spacing they were designed to have, and work out the print scale.": {
+   "kind": "decided",
+   "where": "the definition of a scan's resolution; GroupLab's print scale from a believed scan, src/GroupLab.Core/Marking/ScaleReference.cs Correction"
+  },
+  "In GroupLab's acceptance tests, a sheet deliberately printed at 96.2 percent was measured at 0.96200 from a 600 dpi scan and 0.96201 from a 300 dpi scan.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5: 0.96200 at 600 dpi and 0.96201 at 300 dpi against a pass criterion of 0.001"
+  },
+  "The test required agreement within 0.001; it agreed within 0.00001.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5: 0.96200 at 600 dpi and 0.96201 at 300 dpi against a pass criterion of 0.001"
+  },
+  "GroupLab then corrects for it: on a scan every distance is multiplied by the measured scale, so a group on a sheet printed at 96 percent reads its true size.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/AutomaticMarking.cs printScale applied to every distance; src/GroupLab.Core/Marking/DetectionAdvice.cs ScaleWorthSaying = 0.0025"
+  },
+  "When the scale differs from 100 percent by more than a quarter of a percent, the results panel names it and says the sizes are corrected.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/AutomaticMarking.cs printScale applied to every distance; src/GroupLab.Core/Marking/DetectionAdvice.cs ScaleWorthSaying = 0.0025"
+  },
+  "So GroupLab measures it once per printer with its check page, and multiplies every later photograph of that printer's sheets by the result, across the sheet and down it separately.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs, Across and Down applied to photographs (entries 271 to 273); SheetReference.CorrectedBy in ScaleReference.cs"
+  },
+  "What GroupLab can measure sets out where the scale comes from in every case, and what a mis-scaled print does to every figure.": {
+   "kind": "decided",
+   "where": "the page /what-can-be-measured/, from docs/WHAT-CAN-BE-MEASURED.md"
+  },
+  "What GroupLab can measure sets out which errors are recovered and which are not.": {
+   "kind": "decided",
+   "where": "the page /what-can-be-measured/, from docs/WHAT-CAN-BE-MEASURED.md"
+  },
+  "Its page was printed twice, a day apart, and the same two lengths were read on each print: the distance between the crosshairs, which GroupLab drew 150.02 mm apart, and the side ruler, drawn 250.02 mm long.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Printing/Labels/M834Print.cs and the check page: 1772 dots across (150.02 mm) and 2953 rows along the feed (250.02 mm), unstretched; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv"
+  },
+  "GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true; the next check print will say whether that worked.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Printing/Labels/M834Print.cs MeasuredFeed = 0.9930, FeedStretch = 1 / MeasuredFeed; request 85 in docs/notes/for-alan.md prints the check again"
+  },
+  "On print 2 the top and side crosshair lines meet at 90.22 degrees, not 90: the paper drifted about 1 mm sideways over 250 mm of feed.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv section 5: the crosshair lines meet at 90.22 degrees on print 2's scan"
+  },
+  "A smaller thermal label printer, a Phomemo M220, printed two codes GroupLab placed 60.0 mm apart at 59.99 and 59.96 mm, read from a scan of one label: true across its head to 0.07 percent.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 390 section 1: codes 59.99 and 59.96 mm for 60.0, rows 10.39 mm for 10.5, read from a scan of label S1"
+  },
+  "Along its feed, two rows 10.5 mm apart came out 10.39 mm apart, about 1 percent short, the same direction as the larger printer.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 390 section 1: codes 59.99 and 59.96 mm for 60.0, rows 10.39 mm for 10.5, read from a scan of label S1"
+  },
+  "A thirty-second check Print the sheet with the scale set to 100 percent or Actual size .": {
+   "kind": "decided",
+   "where": "instruction"
+  },
+  "GroupLab's check page has crosshairs and two long ruled lines for this; the aim point test card has a 2 inch bar.": {
+   "kind": "code",
+   "where": "the printer check page, src/GroupLab.Core/Marking/PrinterProfile.cs (crosshairs, ruled lines); the aim point card's 2 in check bar, website/research/can-you-see-the-bull/figures/card.py"
+  },
+  "Sources GroupLab Phase 0 results, measurement 5, print-scale detection (docs/PHASE0-RESULTS.md) and the print protocol (docs/PHASE0-PRINT-PROTOCOL.md).": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "GroupLab detection advice, the print-scale message and its 0.25 percent threshold (src/GroupLab.Core/Marking/DetectionAdvice.cs), and the printer check (src/GroupLab.Core/Marking/PrinterProfile.cs).": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "The thermal printer's two check prints and the label scan, docs/PHASE1-RESULTS.md, entries 382, 390 and 391.": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "What we found on the developer&#x27;s range day, 600 dpi scans let GroupLab place each sheet to within 0.0023 to 0.0026 inch, about twice as tight as phone photos, and gave hole sizes that agreed from sheet to sheet.": {
+   "kind": "measured",
+   "where": "question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: marker fit RMS 0.0023 to 0.0026 in on the 600 dpi scans and 0.0042 to 0.0060 in on the photos; scan hole ratios 0.92 to 0.95, website/research/photographing-targets/data/hole-ratio-by-image.csv"
+  },
+  "That removes most of what can go wrong with a photo: no perspective, no shadow from low sun (see the article on photographing targets), no curl, and an absolute scale, because 600 pixels is exactly one inch at 600 dpi.": {
+   "kind": "decided",
+   "where": "the definition of a flatbed scan's resolution; how GroupLab uses it, src/GroupLab.Core/Marking/ScaleReference.cs Correction and src/GroupLab.Core/Marking/StatedResolutionScale.cs"
+  },
+  "GroupLab measures its own sheets by their markers, and believes a stated resolution only when it puts the sheet within 15 percent of its designed size, so a label far from the truth costs you the print-scale check rather than your group sizes.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ScaleReference.cs LowestBelievable = 0.85 and HighestBelievable = 1.15; StatedResolutionScale.cs refuses 72 and 96 dpi defaults"
+  },
+  "What to do: scan at the scanner's real optical resolution: 300 dpi is enough for positions, 600 dpi is better for hole sizes and is what GroupLab's reference scans use.": {
+   "kind": "decided",
+   "where": "the definition of a flatbed scan's resolution; how GroupLab uses it, src/GroupLab.Core/Marking/ScaleReference.cs Correction and src/GroupLab.Core/Marking/StatedResolutionScale.cs"
+  },
+  "A good scan in one line Grayscale or color, 600 dpi optical, PNG, no automatic corrections, full bed, lid closed, all markers visible in the preview.": {
+   "kind": "decided",
+   "where": "the definition of a flatbed scan's resolution; how GroupLab uses it, src/GroupLab.Core/Marking/ScaleReference.cs Correction and src/GroupLab.Core/Marking/StatedResolutionScale.cs"
+  },
+  "Trap 1: the scanner bed is smaller than the paper Many flatbeds cannot capture a whole letter or A4 page.": {
+   "kind": "measured",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 120 section 4: scan 2 at 4958 by 6458 pixels at 600 dpi; website/research/scanner-traps/data/scan-facts.csv"
+  },
+  "The developer's scanner produced images of 4958 by 6458 pixels at 600 dpi: 8.26 by 10.76 inches, from an 8.5 by 11 inch sheet.": {
+   "kind": "measured",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 120 section 4: scan 2 at 4958 by 6458 pixels at 600 dpi; website/research/scanner-traps/data/scan-facts.csv"
+  },
+  "Trap 2: black-and-white document mode Scanners made for paperwork often default to a black-and-white \"document\" or \"text\" mode.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "That destroys exactly what GroupLab reads: the gray edge of a hole, the gray ring of bullet wipe around it, and the difference between a hole and a pencil line.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "Trap 3: heavy compression Saving a scan as a low-quality JPEG makes blocks and halos around every edge (right-hand panel), and holes are nothing but edges.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "What to do: save as PNG or TIFF if you can.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "Trap 4: a resolution the scanner did not really scan at Some scanner software offers \"interpolated\" resolutions far beyond the sensor's real one, and some images carry a DPI label that is simply wrong (screenshots and edited files often say 72 or 96 dpi whatever their real scale).": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "Trap 5: automatic \"enhancement\" Auto-contrast, sharpening, descreening, dust removal and \"auto color\" all change edges and grays in ways that vary from sheet to sheet.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "What to do: turn off every automatic correction you can find, and turn off auto-crop in favor of the full bed.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "Trap 6: light through the paper Holes are holes because light (or the lid's white backing) shows through them.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "What this means Scan rather than photograph if you can.": {
+   "kind": "decided",
+   "where": "general to flatbed scanners and image formats (sources: Image scanner); what the residual reads, docs/DETECTION-PIPELINE.md"
+  },
+  "Sources GroupLab notes on the developer's second range day, entry 120, section 4 (docs/NOTES-FROM-PLANNING.md).": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "GroupLab measurements for question 38 (docs/QUESTIONS-FOR-PLANNING.md).": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "GroupLab Phase 0 results, print-scale detection (docs/PHASE0-RESULTS.md).": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "https://en.wikipedia.org/wiki/Image_scanner Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "the site footer; the licence is LICENSE, GPL-3.0"
+  },
+  "What we found on the developer&#x27;s range day, GroupLab placed every photographed sheet to within 0.004 to 0.006 inch using its printed markers, so shot positions from photos are sound.": {
+   "kind": "measured",
+   "where": "question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: marker fit RMS 0.0042 to 0.0060 in on the photos and 0.0023 to 0.0026 in on the scans"
+  },
+  "On the range-day scans the error was 0.0023 to 0.0026 inch; on the photos, 0.0042 to 0.0060 inch.": {
+   "kind": "measured",
+   "where": "question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: marker fit RMS 0.0042 to 0.0060 in on the photos and 0.0023 to 0.0026 in on the scans"
+  },
+  "Hole size is another matter: the same holes measured anywhere from 0.90 to 1.45 times the bullet diameter in photos, against a steady 0.92 to 0.95 in scans.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "The blue squares are 600 dpi scans; the orange dots are phone photos of the same sheets.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "Sheet Bullet Scan Photos .22 LR 0.222 in 0.77 1.08, 1.09 6 ARC 0.243 in 0.92 1.26, 1.33, 1.36 6.5 Creedmoor, 25-shot sheet 0.264 in 0.95 0.90 6.5 Creedmoor, 15-shot sheet 0.264 in 0.94 1.45, 1.41, 1.45 The scans of the three centerfire sheets agree within a few percent.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "The photos range from 10 percent smaller than the bullet to 45 percent bigger.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "Two photos of the 15-shot sheet taken at quite different resolutions (about 280 and 180 pixels per inch on the paper) gave 1.45 and 1.45.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "Two photos of different sheets at the same 180 pixels per inch gave 0.90 and 1.45.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "The worst reading, 1.45, came from the squarest, cleanest photo in the set, with all 34 markers found and the lowest fit error.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "The two 6.5 Creedmoor sheets were the same rifle, the same load and the same day.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "Their scans agree (0.95 and 0.94).": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "Their photos do not (0.90 and 1.45).": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "The 15-shot sheet was photographed later in the afternoon, with the sun lower.": {
+   "kind": "measured",
+   "where": "website/research/photographing-targets/data/hole-ratio-by-image.csv, question 38's measurements of the 2026-09-20 range sheets (docs/notes/archive, questions, 2026-09-22) and commit b5ea04c1: median hole size over bullet diameter by image, pixels only, no metadata read"
+  },
+  "The data hole-ratio-by-image.csv Two separate questions When GroupLab reads a photo it answers two different questions: Where is each shot?": {
+   "kind": "decided",
+   "where": "the article's data link and section heading"
+  },
+  "What GroupLab does about it Because of this finding, GroupLab no longer judges hole size in a photo against a fixed factor.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/RenderDifferenceHoleDetector.cs SizeReference, the sheet's own marks first (entry 141 section 4, commit e6c68a3b)"
+  },
+  "There are three ways, and on three of the developer's phone photos of 2026-09-26 they were measured against the answer the markers give, on the same sheets.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md, the per-bull, four-corner and one-length scales measured on three photographs of 2026-09-26 against the markers"
+  },
+  "On three photographs of 2026-09-26 a shadow's edge hid a shot and made paper read as a hole, until GroupLab learned to follow it.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md entry 233: the shadow's edge and the counter in three photographs, 28, 27 and 24 marks before the change; held by PhotoAgainstScanTests"
+  },
+  "Before this work the same photographs read 28, 27 and 24 marks: the counter showing inside the sheet's edge made the paper beside it read darker than it was, and so did the edge of the shadow, which also hid a real shot on all three sheets.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md entry 233: the shadow's edge and the counter in three photographs, 28, 27 and 24 marks before the change; held by PhotoAgainstScanTests"
+  },
+  "For hole sizes, for caliber, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference.": {
+   "kind": "decided",
+   "where": "advice from the finding above"
+  },
+  "A phone photo against a flatbed scan, same sheets On 2026-09-26 the developer photographed three load sheets that had also been scanned at 600 dpi: on a kitchen counter, with the Galaxy Z Fold 7's own camera at its default settings, a hand's shadow across the bottom third, the paper gray under the kitchen light, the corners taped, two of them turned a quarter in the frame.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md entry 233: the table of shots found, median and worst distance from the scan, the tape tears, the 0.86 against 0.21 in mean radius, and the suppressor shift of 0.284 in at p = 0.051 and 0.050; held by PhotoAgainstScanTests"
+  },
+  "Sheet Shots on the scan Found in the photo Median distance from the scan Worst 6 ARC, Dominus K 25 25 0.015 in 0.036 in 6 ARC, Magnus S 25 25, and one tape tear 0.021 in 0.040 in 6.5 Creedmoor 23 22, and one tape tear 0.027 in 0.057 in The positions are as good as the scans'.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md entry 233: the table of shots found, median and worst distance from the scan, the tape tears, the 0.86 against 0.21 in mean radius, and the suppressor shift of 0.284 in at p = 0.051 and 0.050; held by PhotoAgainstScanTests"
+  },
+  "The shot not found on the 6.5 sheet touches a printed marker, where GroupLab does not look for holes, and the photograph put its center just inside the marker's zone where the scan put it just outside.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md entry 233: the table of shots found, median and worst distance from the scan, the tape tears, the 0.86 against 0.21 in mean radius, and the suppressor shift of 0.284 in at p = 0.051 and 0.050; held by PhotoAgainstScanTests"
+  },
+  "The two tape tears matter more than the distances: on the 6.5 sheet the tear took the place of a real shot in the matching, and the mean radius read 0.86 in where the scan reads 0.21 in.": {
+   "kind": "measured",
+   "where": "grouplab analyze photo-6.5-magnus-c-2026-09-26.jpg against GL-CF25-LTR-D, 2026-10-09 (entry 392): 23 marks, mean radius 0.859 in with the tear matched; the scan's 0.213 in, docs/notes/archive/results-226-250.md entry 233"
+  },
+  "The two 6 ARC sheets gave a shift of 0.284 in between the suppressors from the photographs and 0.284 in from the scans, with the same test giving p = 0.051 and 0.050.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/results-226-250.md entry 233: the table of shots found, median and worst distance from the scan, the tape tears, the 0.86 against 0.21 in mean radius, and the suppressor shift of 0.284 in at p = 0.051 and 0.050; held by PhotoAgainstScanTests"
+  },
+  "Sources GroupLab measurements of the developer's range sheets, 2026-09-20: question 38 in docs/QUESTIONS-FOR-PLANNING.md and the commit 'Question 38 answered by measuring'.": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "Written 2026-10-02; the data is from 2026-09-30.": {
+   "kind": "measured",
+   "where": "the article's front matter; docs/DETECTION-LEARNING-STUDY.md, store-bought blanks and entry 352"
+  },
+  "What we found on a clean scoring bullseye, the finder took six printed marks for holes: two white 7s, two dark 6s and two letters of the maker&#x27;s logo.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02): the clean Eze-Scorer, 6 marks before and 2 after, the logo's letters left; commit 2273ba75 for what the blanks gave first"
+  },
+  "Measuring how even a mark&#x27;s strokes are, and whether a dark mark closes around a small counter as a 6 does, removed four of the six and lost no real hole.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02): the clean Eze-Scorer, 6 marks before and 2 after, the logo's letters left; commit 2273ba75 for what the blanks gave first"
+  },
+  "The fifth, a scoring bullseye with bold numbers on its rings, gave six: two white 7s in the black ring, two dark 6s on the white paper, and two letters of the maker's logo.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02): the clean Eze-Scorer, 6 marks before and 2 after, the logo's letters left; commit 2273ba75 for what the blanks gave first"
+  },
+  "Both white 7s are now refused, and nothing else on any scoreboard changed.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02): the clean Eze-Scorer, 6 marks before and 2 after, the logo's letters left; commit 2273ba75 for what the blanks gave first"
+  },
+  "Evenness alone would have thrown away 44 real holes on scans of shot targets.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02) and src/GroupLab.Core/Detection/PrintedShape.cs: even strokes alone refused 44 real holes on the fifteen commercial scans, whose dark holes measured up to 0.84"
+  },
+  "The trap in the obvious answer Applied to dark marks as well, the same measure refused 44 real holes on fifteen scans of shot commercial targets.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02) and src/GroupLab.Core/Detection/PrintedShape.cs: even strokes alone refused 44 real holes on the fifteen commercial scans, whose dark holes measured up to 0.84"
+  },
+  "Those holes show as a crescent of dark rim, open on one side, and a crescent is drawn with one pen width too: its evenness reached 0.84.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02) and src/GroupLab.Core/Detection/PrintedShape.cs: even strokes alone refused 44 real holes on the fifteen commercial scans, whose dark holes measured up to 0.84"
+  },
+  "A bold 6 printed between two rings is about the size of a bullet hole, about as dark, and sits exactly where shots land.": {
+   "kind": "decided",
+   "where": "the shape argument of src/GroupLab.Core/Detection/PrintedShape.cs and docs/DETECTION-LEARNING-STUDY.md entry 352; no maker's artwork is kept"
+  },
+  "Walk down the middle of a 6 and the distance to its edge is nearly the same everywhere.": {
+   "kind": "decided",
+   "where": "the shape argument of src/GroupLab.Core/Detection/PrintedShape.cs and docs/DETECTION-LEARNING-STUDY.md entry 352; no maker's artwork is kept"
+  },
+  "What a 6 has and a crescent never has is a small closed counter: the light hole inside the loop.": {
+   "kind": "decided",
+   "where": "the shape argument of src/GroupLab.Core/Detection/PrintedShape.cs and docs/DETECTION-LEARNING-STUDY.md entry 352; no maker's artwork is kept"
+  },
+  "GroupLab does not keep a picture of the target to compare against: it judges each mark by its own shape.": {
+   "kind": "decided",
+   "where": "the shape argument of src/GroupLab.Core/Detection/PrintedShape.cs and docs/DETECTION-LEARNING-STUDY.md entry 352; no maker's artwork is kept"
+  },
+  "The developer scanned five store-bought targets blank, at 600 dpi, before shooting them.": {
+   "kind": "measured",
+   "where": "commit 2273ba75 (entry 331 section 1): five blanks of request 58 scanned at 600 dpi"
+  },
+  "So the bold 7s, whose strokes are wide, passed as holes, and the dark 6s were never asked.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/PrintedShape.cs before entry 352: a dark mark was never judged by its strokes (commit 2273ba75)"
+  },
+  "Printed numbers and letters measured 0.63 to 0.92.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/PrintedShape.cs, printed glyphs 0.63 to 0.92 and synthetic holes at most 0.60, LightEven = 0.62"
+  },
+  "The synthetic holes on GroupLab's scoreboards measured at most 0.60.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/PrintedShape.cs, printed glyphs 0.63 to 0.92 and synthetic holes at most 0.60, LightEven = 0.62"
+  },
+  "On the printed 6s the counter was 5 to 7 percent of the filled mark.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/PrintedShape.cs SmallCounter (0.04, 0.15), a printed 6 measured 0.05 to 0.07, and DarkEven = 0.75"
+  },
+  "So a dark mark is refused as print only when its strokes are even and it closes around a small counter, as a 6, 8, 9 or 0 does.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Detection/PrintedShape.cs SmallCounter (0.04, 0.15), a printed 6 measured 0.05 to 0.07, and DarkEven = 0.75"
+  },
+  "Holes drawn into the five blanks at three calibers, on paper, on the ink, on ring lines and on the colored centers: false marks on the numbered target fell from 32 to 6, and every count of holes found stayed exactly as it was.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02): synthetic false marks 32 to 6 with every found count identical; the fifteen scans 341 of 355 found and 352 proposals, before and after"
+  },
+  "Every line of the any-target scoreboard, and the fifteen shot scans (341 of 355 holes found, 352 marks), are unchanged.": {
+   "kind": "measured",
+   "where": "commit 9421ee13 (entry 352 item 2, measured 2026-10-02): synthetic false marks 32 to 6 with every found count identical; the fifteen scans 341 of 355 found and 352 proposals, before and after"
+  },
+  "What did not work Straight edges looked promising, since a 7 or an E is mostly straight lines.": {
+   "kind": "decided",
+   "where": "the article's account of an idea tried in entry 352 item 2 and not adopted (commit d44047ca)"
+  },
+  "Sources The measurements and the before and after: docs/DETECTION-LEARNING-STUDY.md , \\\"Store-bought blanks\\\" and \\\"Entry 352, 2026-10-02: the Eze-Scorer's numbers\\\".": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "Why the earlier test left dark marks alone: docs/NOTES-FROM-PLANNING.md , entry 331 section 1.": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
+  },
+  "Written 2026-09-22; the data is from Running log; latest entry 2026-10-04.": {
+   "kind": "measured",
+   "where": "the article's front matter; each entry's source below"
+  },
+  "On the latest, GroupLab found 137 of 145 holes in photographs of its own sheets taken at the range, with no false mark, and proposed 138 marks for 14 shots on store-bought targets it could fit.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "Range day, 2026-10-04 Questions: how well does GroupLab read photographs of its sheets taken at the range, from close and from a little farther away; how does it do on store-bought targets it did not print; and does the chronograph's own export of each string open as it comes off the device?": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "What was done: three GroupLab sheets, each photographed at about 1.5 and 3 feet: a C bull sheet (15 shots, .300 Norma Magnum, about 2800 fps), an E bull sheet (25 shots, .223 Remington) and a load sheet, GL-CF25-LTR-D (25 shots, 6 ARC, about 2400 fps).": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "Six store-bought targets: five with .223 Remington at about 3000 fps and one with four shots of .300 Norma Magnum.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "What we learned: On GroupLab's own sheets, 137 of 145 holes were found in the photographs, with no false mark: the C bull 15 of 15 close and 14 from farther away, the E bull 22 of 25 at both distances, the load sheet 25 of 25 at both.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "On the three store-bought targets GroupLab could fit, Find holes (Experimental) proposed 138 marks for 14 shots, most of them on the target spattered by fragments.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "Written up in: not yet as an article; the scores are recorded in the project's results log, entry 374.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (local corpus range-2026-10-04 scored with grouplab scoreboard --corpus: 137 of 145, no false mark; store-bought: 138 marks for 14 shots on three fits) and docs/NOTES-FROM-PLANNING.md entry 374 section 1 for what was shot"
+  },
+  "The data range-day-2026-09-20.csv Print tests, September 2026 Question: does a GroupLab sheet print at its true size, and can GroupLab detect when it does not?": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5; website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "What was done: test sheets printed at 100 percent and deliberately at 96.2 percent, scanned at 300 and 600 dpi.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5; website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "What we learned: the developer's printer at \"Actual size\" measured 1.0001 horizontally and 1.0006 vertically.": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5; website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "GroupLab measured the reduced sheet at 0.96200 (600 dpi) and 0.96201 (300 dpi).": {
+   "kind": "measured",
+   "where": "docs/PHASE0-RESULTS.md measurement 5; website/research/printer-true-size/data/phase0-print-scale.csv"
+  },
+  "What was done: nine shots on a 25-bull letter sheet, scanned flat.": {
+   "kind": "measured",
+   "where": "the Phase 0 range sheet, docs/PHASE0-RESULTS.md"
+  },
+  "What we learned: this first real sheet started the work on how GroupLab reads holes in real paper, rather than in simulated targets.": {
+   "kind": "measured",
+   "where": "the Phase 0 range sheet, docs/PHASE0-RESULTS.md"
+  },
+  "Range day, 2026-09-20 Question: how does GroupLab do across calibers, with shots that land between bulls, with a blank zero sheet, and with phone photos against scans of the same sheets?": {
+   "kind": "measured",
+   "where": "docs/notes/archive/notes-2026-09.md entry 120 (the 2026-09-20 range day: six sheets, 59 photographs) and website/research/range-test-log/data/range-day-2026-09-20.csv; the primer result in research/primer-comparison"
+  },
+  "What was done: five 25-bull load development sheets (GL-CF25-LTR-D), one blank zero sheet and one commercial target, all at 100 yards.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/notes-2026-09.md entry 120 (the 2026-09-20 range day: six sheets, 59 photographs) and website/research/range-test-log/data/range-day-2026-09-20.csv; the primer result in research/primer-comparison"
+  },
+  "Every sheet was scanned at 600 dpi and photographed with a phone in several bursts through the afternoon, 59 photos in all.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/notes-2026-09.md entry 120 (the 2026-09-20 range day: six sheets, 59 photographs) and website/research/range-test-log/data/range-day-2026-09-20.csv; the primer result in research/primer-comparison"
+  },
+  "A second phone photographed the 6mm Creedmoor sheet.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/notes-2026-09.md entry 120 (the 2026-09-20 range day: six sheets, 59 photographs) and website/research/range-test-log/data/range-day-2026-09-20.csv; the primer result in research/primer-comparison"
+  },
+  "Assigning each hole to its nearest bull gives confident but wrong groups when shots land between bulls (sheets 4 and 5).": {
+   "kind": "measured",
+   "where": "docs/notes/archive/notes-2026-09.md entry 120 (the 2026-09-20 range day: six sheets, 59 photographs) and website/research/range-test-log/data/range-day-2026-09-20.csv; the primer result in research/primer-comparison"
+  },
+  "Switching primers on sheet 6 moved the point of impact clearly, while the difference in spread could not be shown from five shots each.": {
+   "kind": "measured",
+   "where": "docs/notes/archive/notes-2026-09.md entry 120 (the 2026-09-20 range day: six sheets, 59 photographs) and website/research/range-test-log/data/range-day-2026-09-20.csv; the primer result in research/primer-comparison"
+  },
+  "Range day and aim point test, 2026-09-26 Questions: does swapping suppressors move the point of impact, which aim point designs can two shooters center on through four scopes, and how does a real 25-shot sheet fare when every shot lands nearer the wrong bull?": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "What was done: three 25-bull sheets at 100 yards on an OSB backer, and the aim point card scored by the developer and a friend.": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "What we learned: With the Magnus S the 6 ARC shots centered 0.28 in lower than with the Dominus K, p = 0.049, and the spread did not change.": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "At 10x the current bull could not be centered through any of the three high power scopes.": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "Designs whose center subtends about 3.4 arcminutes or more could.": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "Through the PLxC at 4x only the 2 inch bull could.": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "On sheet 9 GroupLab found 23 of 25 holes and gave 5 of them to the bull above their own.": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "Written up in: \"Did the suppressor move the point of impact?\", \"Can you see the bull?\", \"Aim points for 1x to high power optics\".": {
+   "kind": "measured",
+   "where": "research/suppressor-shift (Hotelling p = 0.049, 0.28 in), research/can-you-see-the-bull and its data, and docs/notes/archive/results-226-250.md for sheet 9 (23 of 25 found, 5 given to the bull above)"
+  },
+  "Aim point test, planned for 2026-09-23 Question: which aim point designs can shooters see and center on at 100 yards, across scopes of different magnification and glass?": {
+   "kind": "measured",
+   "where": "research/can-you-see-the-bull and its data: the card's nine designs and the four scopes"
+  },
+  "What was done: a card of nine designs at 100 yards, scored through a Vortex Razor HD Gen III 6-36x56, a DNT TheOne 7-35x56, a Vortex Strike Eagle 5-25x56 and a Primary Arms PLxC 1-8x24, plus a friend's scope, by two observers.": {
+   "kind": "measured",
+   "where": "research/can-you-see-the-bull and its data: the card's nine designs and the four scopes"
+  },
+  "What we learned: it was shot on 2026-09-26 instead; the results are in the section above.": {
+   "kind": "measured",
+   "where": "research/can-you-see-the-bull and its data: the card's nine designs and the four scopes"
+  },
+  "Written up in: \"Can you see the bull?\", \"Aim points for 1x to high power optics\".": {
+   "kind": "measured",
+   "where": "research/can-you-see-the-bull and its data: the card's nine designs and the four scopes"
+  },
+  "Data data/range-day-2026-09-20.csv : the six range-day sheets, cartridges, loads as written, shots and notes.": {
+   "kind": "decided",
+   "where": "the data files named, in this repository"
+  },
+  "The 2026-09-26 sheets: suppressor-shift/data/offsets-2026-09-26.csv , and the aim point scores and groups in can-you-see-the-bull/data/ .": {
+   "kind": "decided",
+   "where": "the data files named, in this repository"
   }
  },
  "rules": [

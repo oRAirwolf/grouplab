@@ -6,7 +6,7 @@ number: 14
 written: 2026-09-22
 data_date: "Closed-form statistics and simulation, seed 2026"
 samples: "Exact chi-square intervals; 60 simulated strings; 200,000 simulated strings per row of the ES table"
-state: draft
+state: ready
 found: "if you chronograph five shots and measure an SD of 10 ft/s, the true SD of that ammunition is, with 95 percent confidence, somewhere between 6.0 and 28.7 ft/s. With 20 shots the same reading narrows to 7.6 to 14.6. Single-digit SD claims from five-shot strings are mostly luck."
 sure: "exact for normally distributed velocities, which is a good description of well-made ammunition. A string with a genuine outlier (a bad primer, a light charge) is worse than this, not better."
 data:
@@ -67,7 +67,7 @@ So an ES of 25 ft/s over five shots and an ES of 40 ft/s over twenty shots can d
 ## What to do with this
 
 - **Chronograph more rounds.** Ten is much better than five; twenty is better again. If you are shooting a 25-shot GroupLab sheet anyway, record every shot's velocity.
-- **Compare SDs with their intervals.** Two loads with five-shot SDs of 8 and 12 ft/s are not shown to be different. With twenty shots each, they might be.
+- **Compare SDs with their intervals.** Two loads with five-shot SDs of 8 and 12 ft/s are not shown to be different: identical ammunition gives a gap that size almost half the time. With thirty shots each, the same two readings would be.
 - **Look at the paper too.** Velocity SD is one input to vertical spread at distance. GroupLab can compare the vertical spread you measured with what your velocity spread predicts, which tells you whether velocity is really the limit or whether the rifle, the rest or the shooter is.
 - **Do not chase a number the sample cannot support.** Nothing in this article says small SDs do not matter. It says a five-shot string cannot tell you whether you have one.
 

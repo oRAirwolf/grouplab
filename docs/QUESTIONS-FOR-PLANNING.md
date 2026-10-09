@@ -85,14 +85,6 @@ estimates with no reference, which is how the weighted centroid was chosen in th
 
 ---
 
-## 2026-09-24, question 44, the part still open: the bent-sheet model throws outside the page
-
-**Status: open, and nothing a person can reach is affected.** Entry 171 section 4 closed the rest of question 44, which is in the answered archive.
-
-`compare-photos --model surface` throws on `20260920_153336.jpg`: `SurfaceMapping.ToPage` is a Newton iteration from a homography's guess, nothing bounds where it steps, and a point far outside the sheet reaches fold arrays built to span the page and no further. Only `ExpectedImage.Render` asks for such a point, and only through that command. `SurfaceCrashTests` records it. The open part is whether to bound the iteration or clamp the fold lookup, and it waits until the surface model is offered anywhere a person can reach.
-
----
-
 ## Answered, and moved
 
 These 52 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a

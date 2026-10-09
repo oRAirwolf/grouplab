@@ -1,12 +1,12 @@
 ---
 title: "How to photograph a target so it measures well"
-description: "GroupLab places a photographed sheet to within a few thousandths of an inch, but light can still fool it about hole size. What we learned from 176 holes on real range photos, and a short checklist for taking a photo that measures like a scan."
+description: "GroupLab places a photographed sheet to within a few thousandths of an inch, but light can still fool it about hole size. What 176 holes on real range photos showed, and a short checklist for taking a photo that measures like a scan."
 group: Guides
 number: 21
 written: 2026-09-22
 data_date: "2026-09-20"
 samples: "176 holes in nine phone photos of four sheets, compared with 600 dpi scans of the same sheets"
-state: draft
+state: ready
 found: "on the developer's range day, GroupLab placed every photographed sheet to within 0.004 to 0.006 inch using its printed markers, so shot positions from photos are sound. Hole size is another matter: the same holes measured anywhere from 0.90 to 1.45 times the bullet diameter in photos, against a steady 0.92 to 0.95 in scans. The cause was not the camera's resolution or angle. It was the light: low sun puts shadow into and beside each hole, and the camera cannot tell shadow from hole."
 sure: "nine photos of four sheets on one afternoon is enough to show the effect clearly and not enough to put a precise number on it. The advice below follows from it; the numbers will firm up as more photos come in."
 data:
@@ -70,29 +70,29 @@ A commercial target has no printed markers, so the scale has to come from someth
 
 **Four corners remove the angle exactly and still read small here**, the same way on all three photographs. The corners of the paper are at the edge of the phone's picture, where its lens bends straight lines most, and a four-corner fit cannot model that bend; the markers can, and do. A scale drawn at each bull only has to be right near that bull, where the bend is small.
 
-**These three photographs were nearly straight down.** At a real angle a single length for the whole sheet gets much worse, which is the reason to draw a scale at each bull; photographs at 40 to 60 degrees (request 18) will say how much.
+**These three photographs were nearly straight down.** At a real angle a single length for the whole sheet gets worse, because the far side of the sheet is smaller in the picture than the near side, which is the reason to draw a scale at each bull. How much worse was not measured here.
 
-**So, on a target GroupLab did not print:** draw a scale at each bull, two lengths at right angles, from a ring's width or a grid square; or tap four corners when you have them. GroupLab says when the scales disagree, which means the photograph was taken at an angle, and carries that uncertainty into the group size.
+**So, on a target GroupLab did not print:** draw a scale at each bull, two lengths at right angles, from a ring's width or a grid square; or tap four corners when you have them. GroupLab says when the scales disagree, which means the photograph was taken at an angle, and says so beside any figure that spans more than one bull.
 
 ## A checklist for a good photo
 
 1. **Even, soft light.** Open shade, an overcast sky or indoor light from above. Avoid low sun across the paper, and avoid flash, which leaves a hot spot.
-   **Shade the whole sheet or none of it.** The shadow of your hand or the phone across part of the sheet is the one thing on a kitchen
-   counter that still costs a hole: on three photographs of 2026-09-26 a shadow's edge hid a shot and made paper read as a hole, until
-   GroupLab learned to follow it, and a hard shadow is still worth avoiding.
-1. **Hold it down outside the printed area.** Weights or tape on the very corners. A torn tape tab over the paper can read as a hole,
+   **Shade the whole sheet or none of it.** The shadow of your hand or the phone across part of the sheet is the one thing that still costs a hole on a kitchen
+   counter. On three photographs of 2026-09-26 a shadow's edge hid a shot and made paper read as a hole, until GroupLab learned to follow it. A hard shadow
+   is still worth avoiding.
+2. **Hold it down outside the printed area.** Weights or tape on the very corners. A torn tape tab over the paper can read as a hole,
    and on one of those photographs one did.
-2. **Square on.** GroupLab corrects for angle, but a straight-on photo keeps every hole round and every marker sharp.
-3. **Fill the frame with the sheet, all markers included.** Every corner marker and both codes in the picture, with a little margin. Do not crop them off.
-4. **Flat paper.** Take it off the backer if it is curled, or hold it flat. Waves in the paper move holes.
-5. **Hold still and focus on the paper.** Tap to focus on the middle of the sheet. A blurred edge blurs every hole.
-6. **Use the main camera, not digital zoom.** Step closer instead of zooming.
-7. **One sheet per photo.** Several sheets in one frame make identification harder and give each sheet fewer pixels.
-8. **If it matters, scan it.** For hole sizes, for caliber, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference. See the scanner article for the traps.
+3. **Square on.** GroupLab corrects for angle, but a straight-on photo keeps every hole round and every marker sharp.
+4. **Fill the frame with the sheet, all markers included.** Every corner marker and both codes in the picture, with a little margin. Do not crop them off.
+5. **Flat paper.** Take it off the backer if it is curled, or hold it flat. Waves in the paper move holes.
+6. **Hold still and focus on the paper.** Tap to focus on the middle of the sheet. A blurred edge blurs every hole.
+7. **Use the main camera, not digital zoom.** Step closer instead of zooming.
+8. **One sheet per photo.** Several sheets in one frame make identification harder and give each sheet fewer pixels.
+9. **If it matters, scan it.** For hole sizes, for caliber, or for a sheet you will compare against others, a flatbed scan at 600 dpi is the reference. See the scanner article for the traps.
 
 ## A phone photo against a flatbed scan, same sheets
 
-On 2026-09-26 the developer photographed three load sheets he had also scanned at 600 dpi: on a kitchen counter, with the Galaxy Z Fold 7's
+On 2026-09-26 the developer photographed three load sheets that had also been scanned at 600 dpi: on a kitchen counter, with the Galaxy Z Fold 7's
 own camera at its default settings, a hand's shadow across the bottom third, the paper gray under the kitchen light, the corners taped,
 two of them turned a quarter in the frame. Each photograph was read by GroupLab and paired with the scan shot by shot.
 

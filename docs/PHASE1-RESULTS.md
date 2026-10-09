@@ -1167,6 +1167,53 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - **Section 5, the shear.** The top and right caliper lines on print 2's scan meet at 90.22 degrees: the paper tracked about 1 mm sideways
   over 250 mm of feed. A scanner cannot add shear. Noted; nothing corrected unless a later print repeats it.
 
+## Entry 392: twelve research drafts, the first speed-up, question 44 (2026-10-09)
+
+- **Section 1, the drafts.** Each article's numbers were checked against its data files and the code it describes, its figure scripts
+  rerun in a scratch Python with numpy 2.5.3, scipy 1.18.1 and matplotlib 3.11.2 (every one byte-identical to the committed data and
+  figures; the machine's own Python has none of the three, so the site build uses the committed figures), and every checkable sentence
+  backed in `docs/claims-backing.json` one by one: 245 sentences over eleven articles, `claims.py --check` 4893 claims, 0 unbacked.
+  docs-sonnet did a wording pass after the checks; a count of every number before and after showed it changed none. **Eleven `ready`:**
+  mean-radius-or-extreme-spread, how-many-shots, cep-explained, velocity-sd-small-samples, when-to-adjust-zero, moa-mils-inches,
+  printer-true-size, scanner-traps, photographing-targets, printed-numbers-are-not-holes, range-test-log. **One `draft`:**
+  aim-points-by-optic-class, whose red dot, prism and medium power classes are not shot; request 86 asks for them, for later.
+- **What the checks corrected:** the shotGroups author is Daniel, not David (five articles); a GroupLab sheet has up to 42 bulls, not 25;
+  a 9 percent difference in dispersion needs 434 shots of each, and "more than many barrels fire in their lives" had nothing behind it;
+  CEP 90 is 1.7 times mean radius, not "a little under twice"; the CEP circles are dotted, solid and dashed for 50, 90 and 95, each on its
+  own switch; two velocity SDs of 8 and 12 are not told apart by twenty shots each (p = 0.085) but are by thirty (p = 0.033); the zero
+  article described a picture with an arrow that entry 169 removed, and now describes the per-axis block; the first run asks inches or
+  millimeters; a scan's stated resolution is believed only within 15 percent of the sheet's size; request 18's angled photographs are
+  answered, so the photo article no longer waits on them; a friend was named in range-test-log and is not now. printed-numbers-are-not-holes
+  had two numbers with no record behind them (straight runs, 0.69; enclosed share, 2 percent): they are gone, the rest backed by commit
+  9421ee13, and it has a figure of drawn shapes. photographing-targets' 0.86 in was measured again: `grouplab analyze` gives 0.859 in.
+- **printer-true-size with real data:** a section on the M834 (true across, 99.28 percent along the feed, the instruments 0.2 percent
+  apart, the 90.22 degree shear) and the M220 label (59.99 and 59.96 mm for 60.0 across; 10.39 for 10.5 along the feed), with
+  `data/thermal-check-prints.csv` and a figure. **Entry 391's mean was not 99.30:** the five readings against what GroupLab drew average
+  99.28 percent (instruments weighted equally, 99.32). `M834Print.MeasuredFeed` stays 0.9930: the 0.02 is a tenth of the readings' spread,
+  and request 85 measures the stretched print.
+- **Section 2, the speed-up.** Profiled with temporary timings in `RenderDifferenceHoleDetector.Detect` (removed): of the 2253 ms the
+  hole stage took on the bench's 600 dpi scan that night, the close of the binary mask by a disc 67 px across took about 1700 ms, the open
+  about 100, alignment 220, everything else under 120 each. OpenCV takes the maximum over every point of the disc at every pixel.
+  `BinaryMorphology.Close` does the same close from each row's distance to the nearest set (or unset) pixel and the element's own row
+  half widths, read from `Cv2.GetStructuringElement`, so the result is the same by construction: 17 ms. `OpenCvSharpBackend.Morphology`
+  uses it for a close of a 0 and 1 image and OpenCV for everything else. **Identical results:** `BinaryMorphologyTests` compares it with
+  OpenCV pixel by pixel at ten radii from 1 to 50, edges included; a temporary check ran both on every close the local corpus, the
+  corpus counts and 30 real scans and photographs make, 133 closes, 0 pixels different; and a temporary switch back to OpenCV gave
+  identical output for `scoreboard --corpus` on all four local corpus folders, `scoreboard --synthetic`, `corpus counts` and `analyze` on
+  the 30 images (timings aside). **Measured** with `grouplab bench --runs 5` on TACIT-BLUE while another program held about 80 percent of
+  the CPU, so the before and after were also run back to back: the scan's hole stage 1769 ms in the baseline to 693, the whole scan 2604
+  to 1671, the generated sheet's hole stage 333 to 294; end to end, one sheet 879 to about 720 ms and ten sheets 6196 to about 5180, back
+  to back. The gate passed, and the four stage-by-stage measurement figures were moved in `docs/performance-baseline.json`; the others keep
+  their tighter 2026-10-08 values. **Tried and not needed:** nothing else; the open (100 ms), the alignment (220) and the rasterising (110)
+  are what is left, and halving was passed without them.
+- **Section 3, question 44.** A Debug build put the throw in `SurfaceMapping.ToImage`'s table, not `FoldedSheet`'s folds: the photograph
+  holds several sheets, `ToPage`'s Newton steps for pixels on the others run far off the page, `(int)Math.Floor(u)` saturates at
+  `int.MaxValue` and `i + 1` wrapped negative past the bounds test. The range is now tested in double first, the smaller of the two
+  changes the entry named; the iteration is unchanged, since the sheet's mask removes those pixels. `compare-photos --model surface` on
+  `20260920_153336.jpg` completes: bull median 0.0050 in against the homography's 0.0110, 18 of the scan's 19 holes. `SurfaceCrashTests`:
+  a far page point and far image points everywhere (it fails without the fix), and the whole reading of the photograph where it is.
+  Question 44 archived.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -1,12 +1,12 @@
 ---
-title: "Scanner traps: cropping, DPI and colour"
+title: "Scanner traps: cropping, DPI and color"
 description: "A flatbed scan is the most accurate way to get a target into GroupLab, but a few default settings can quietly spoil it. Cropped edges, black-and-white document mode, heavy compression and made-up resolutions, and how to avoid each."
 group: Guides
 number: 23
 written: 2026-09-22
 data_date: "2026-09-20"
 samples: "Six 600 dpi scans from one range day, plus GroupLab's print tests"
-state: draft
+state: ready
 found: "on the developer's range day, 600 dpi scans let GroupLab place each sheet to within 0.0023 to 0.0026 inch, about twice as tight as phone photos, and gave hole sizes that agreed from sheet to sheet. The same scanner also cropped a quarter inch off two edges of a letter sheet without saying so. Scans are the reference, provided a few settings are right."
 sure: "the numbers come from one scanner and six sheets. The traps below are general to flatbed scanners; how your own scanner names its settings will differ."
 data:
@@ -30,7 +30,7 @@ Many flatbeds cannot capture a whole letter or A4 page. The developer's scanner 
 
 GroupLab sheets keep their markers and codes inside a margin, so a quarter inch lost at the edges does not matter for them. It does matter for:
 
-- **A blank sheet** measured by its paper edges: if an edge is missing, the scale cannot come from the paper, and GroupLab asks for it instead of guessing.
+- **A sheet without GroupLab's markers**, if you meant to set its scale from a printed ruler or a known distance near the edge. The scan's stated resolution, which GroupLab offers as the scale for such a sheet, is not affected by cropping.
 - **Any shot near the edge** of a sheet, which may simply not be in the image.
 
 **What to do:** place the sheet against the scanner's corner guide, check the preview shows every marker and both codes, and if your scanner has a "legal" or "full bed" option, use it.
@@ -53,13 +53,13 @@ Saving a scan as a low-quality JPEG makes blocks and halos around every edge (ri
 
 ## Trap 4: a resolution the scanner did not really scan at
 
-Some scanner software offers "interpolated" resolutions far beyond the sensor's real one, and some images carry a DPI label that is simply wrong (screenshots and edited files often say 72 or 96 dpi whatever their real scale). GroupLab uses the markers to measure the sheet, so a wrong label does not change your group sizes, but a scan interpolated from a low real resolution holds no more detail than the low one.
+Some scanner software offers "interpolated" resolutions far beyond the sensor's real one, and some images carry a DPI label that is simply wrong (screenshots and edited files often say 72 or 96 dpi whatever their real scale). GroupLab measures its own sheets by their markers, and believes a stated resolution only when it puts the sheet within 15 percent of its designed size, so a label far from the truth costs you the print-scale check rather than your group sizes. A scan interpolated from a low real resolution is another matter: it holds no more detail than the low one.
 
 **What to do:** scan at the scanner's real optical resolution: 300 dpi is enough for positions, 600 dpi is better for hole sizes and is what GroupLab's reference scans use. Do not resize or re-save the image in another program before opening it in GroupLab.
 
 ## Trap 5: automatic "enhancement"
 
-Auto-contrast, sharpening, descreening, dust removal and "auto colour" all change edges and grays in ways that vary from sheet to sheet. Some also auto-crop to what they think is the page, which can clip markers.
+Auto-contrast, sharpening, descreening, dust removal and "auto color" all change edges and grays in ways that vary from sheet to sheet. Some also auto-crop to what they think is the page, which can clip markers.
 
 **What to do:** turn off every automatic correction you can find, and turn off auto-crop in favor of the full bed.
 

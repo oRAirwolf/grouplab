@@ -39,3 +39,40 @@ ax.set_xlabel("Print scale, percent"); ax.set_ylabel("Every measurement off by, 
 ax.set_title("If nobody corrected it: how print scale feeds into your numbers")
 ax.grid(axis="x", visible=False)
 s.save(fig, os.path.join(here, "error-by-scale.png"))
+
+# Figure 3: one thermal printer, true across and short along the feed (entry 391, two check prints, October 2026).
+# Every reading is a length GroupLab drew against what was measured on the paper: 150.02 mm between the check page's crosshairs,
+# 250.02 mm along its side ruler. Print 1 is nightly 175's page, print 2 nightly 180's; both were drawn the same.
+READINGS = [
+    # (print, instrument, direction, drawn mm, measured mm)
+    (1, "caliper", "across", 150.02, 150.47),
+    (2, "caliper", "across", 150.02, 149.71),
+    (2, "scan", "across", 150.02, 150.02),
+    (1, "caliper", "along the feed", 150.02, 148.81),
+    (1, "ruler", "along the feed", 250.02, 248.0),
+    (2, "caliper", "along the feed", 150.02, 149.03),
+    (2, "ruler", "along the feed", 250.02, 248.0),
+    (2, "scan", "along the feed", 150.02, 149.25),
+]
+with open(os.path.join(here, "..", "data", "thermal-check-prints.csv"), "w", newline="") as f:
+    w = csv.writer(f); w.writerow(["print", "instrument", "direction", "drawn_mm", "measured_mm", "printed_percent"])
+    for p, inst, d, drawn, got in READINGS: w.writerow([p, inst, d, drawn, got, round(got / drawn * 100, 2)])
+fig, ax = plt.subplots(figsize=(8, 3.6))
+marks = {"caliper": "o", "ruler": "s", "scan": "D"}
+for row, d in enumerate(["across", "along the feed"]):
+    vals = [(inst, got / drawn * 100) for p, inst, dd, drawn, got in READINGS if dd == d]
+    for k, (inst, v) in enumerate(vals):
+        ax.plot(v, row + (k - (len(vals) - 1) / 2) * 0.08, marks[inst], color=s.BLUE if d == "across" else s.ORANGE, ms=8,
+                markeredgecolor=s.SURFACE)
+    mean = np.mean([v for _, v in vals])
+    ax.plot([mean, mean], [row - 0.3, row + 0.3], color=s.INK2, lw=1.4)
+    ax.text(mean, row + 0.36, f"mean {mean:.2f}%", ha="center", color=s.INK2, fontsize=9.5)
+ax.axvline(100, color=s.MUTED, lw=1, ls="--")
+ax.set_yticks([0, 1]); ax.set_yticklabels(["Across", "Along the feed"])
+ax.set_ylim(-0.6, 1.6); ax.set_xlim(98.8, 100.8)
+ax.set_xlabel("Printed size, percent of what GroupLab drew")
+ax.set_title("One thermal printer, two check prints: true across, short along the feed")
+from matplotlib.lines import Line2D
+ax.legend(handles=[Line2D([], [], marker=m, ls="", color=s.INK2, ms=7, label=k) for k, m in marks.items()], loc="lower right", fontsize=9)
+ax.grid(axis="y", visible=False)
+s.save(fig, os.path.join(here, "thermal-two-ways.png"))

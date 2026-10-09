@@ -25,6 +25,40 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-08, entry 392: overnight work that needs nobody: twelve research drafts, Phase 9's first speed-up, question 44
+
+**Status: actioned 2026-10-09; every section done.** Section 1: eleven drafts brought to `ready` (every number checked against its data and the code, 245 sentences backed one by one, figures rerun byte-identical, a wording pass on docs-sonnet); aim-points-by-optic-class stays `draft`, waiting on the red dot, prism and medium power classes (request 86). printer-true-size carries the M834 and M220 numbers, and found entry 391's feed mean to be 99.28 percent, not 99.30. Section 2: hole finding on a 600 dpi scan 1769 to 693 ms (S5-S8.holes), the whole scan 2604 to 1671 ms, every result identical. Section 3: question 44 fixed and archived; it was the cylinder's table lookup, not the fold arrays.
+
+From the planning session with Alan, 2026-10-08 23:55 Denver. Alan asked what else Code can work on; he is going to bed, so this runs
+unattended. In this order, within the 85% guard (9% used at 05:45 UTC). One worker (CLAUDE.md, 2026-10-08): no helpers in parallel.
+Wording passes on docs-sonnet, screenshot and figure chores on chores-haiku; statistics, measurement and application code on the main model.
+
+1. **The twelve research drafts, brought to `ready`** (Alan, 2026-09-22: all the proposed articles written, with graphics and examples;
+   2026-09-28: help shooters think in mean radius and confidence rather than extreme spread and small samples). Drafts today:
+   mean-radius-or-extreme-spread, how-many-shots, cep-explained, velocity-sd-small-samples, when-to-adjust-zero, moa-mils-inches,
+   printer-true-size, scanner-traps, photographing-targets, printed-numbers-are-not-holes, aim-points-by-optic-class, range-test-log.
+   1. Take the first four first: they are the positioning Alan asked for.
+   2. **printer-true-size** now has real data: the M834's two check prints (entry 391: 99.30 percent along the feed, true across, the
+      caliper and scan 0.2 percent apart on one sheet, the 0.2 degree shear) and the M220 label (entry 390: 59.99 and 59.96 mm for 60.0).
+      Use them, measured numbers only, no brand claims beyond what was measured.
+   3. Every checkable sentence gets its backing in `docs/claims-backing.json` (entry 159); figures regenerated only for the article that
+      changed; simulations seeded and rerunnable; no pseudoscience (CLAUDE.md and DESIGN.md). In the text the developer is "the developer"
+      or "the author"; keep the existing byline format as it is.
+   4. An article that cannot be finished honestly (for example aim-points-by-optic-class if the optic data is missing) stays `draft`, with
+      one line in the report saying what it waits on, and a request in for-alan.md if only Alan can supply it.
+   5. **Do not publish.** `ready` only; nothing added to `website/research/PUBLISHED.md`. Planning will put the ready list to Alan.
+   6. Record each "Worth an article?" decision in `docs/RESEARCH.md` as usual.
+2. **Phase 9's first optimization, named by planning** (STATE: "an optimization waits for planning to name one"): hole finding on a
+   600 dpi scan, `S5-S8.holes`, 1769 ms of the 2604 ms a 600 dpi scan takes (performance-baseline.json, TACIT-BLUE). Aim to halve it.
+   **Results must not change**: every hole centre and every figure on the corpus identical to the baseline commit (or within a stated
+   numerical tolerance far below 0.001 in, with the reason), proven by the existing regression tests and a before and after comparison
+   over the whole corpus. Measure with the bench gate before and after, update the baseline only if it is faster, and record what was
+   tried, including what did not help. If halving needs a change in what is detected, stop at the faster part that changes nothing and
+   raise a question instead. Release note: plain words on how much faster reading a scan is.
+3. **Question 44, the part still open**: bound the bent-sheet model's Newton step (or clamp the fold lookup), whichever is the smaller
+   honest change, so `compare-photos --model surface` on `20260920_153336.jpg` no longer throws; `SurfaceCrashTests` turns into a test
+   that it returns a clear refusal or a bounded answer. Archive the question.
+
 ## 2026-10-08, entry 391: the M834's second check print (request 81): the feed is short, the first print's "across" was not
 
 **Status: actioned 2026-10-08; every section done.** The M834's pages are now drawn 0.70 percent longer along the feed (99.30 percent, the mean of five readings over the two prints against the lengths GroupLab draws), on the phone and the computer alike; across, GroupLab draws the crosshairs 1772 dots apart, 150.02 mm, the same on both prints, so print 1's 100.31 percent was the caliper. Request 81 closed; request 85 prints and measures once more after the next nightly and replaces the saved check.

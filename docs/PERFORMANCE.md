@@ -29,10 +29,10 @@ Moving the baseline is planning's decision, with `--baseline`, `GROUPLAB_PERF_BA
 | images / load a 600 dpi Letter scan | 634 |
 | images / load a phone photograph | 47 |
 | measurement / identify the sheet from its codes | 210 |
-| measurement / the generated sheet, stage by stage | 462 |
-| measurement / the generated sheet, stage by stage: S5-S8.holes | 333 |
-| measurement / a 600 dpi scan, stage by stage | 2,604 |
-| measurement / a 600 dpi scan, stage by stage: S5-S8.holes | 1,769 |
+| measurement / the generated sheet, stage by stage | 437 (462 before entry 392) |
+| measurement / the generated sheet, stage by stage: S5-S8.holes | 294 (333 before entry 392) |
+| measurement / a 600 dpi scan, stage by stage | 1,671 (2,604 before entry 392) |
+| measurement / a 600 dpi scan, stage by stage: S5-S8.holes | 693 (1,769 before entry 392) |
 | measurement / find holes on a target GroupLab did not print | 296 |
 | statistics / the whole analysis of a marking | 1.2 |
 | end to end / one sheet from file to figures | 530 |
@@ -47,6 +47,15 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Per platform**, because the answer differs: this desktop today, and a mid-range Android phone when Phase 6 exists. A phone is several times slower, and an analysis that is merely slow here is unusable there.
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
+
+## Entry 392 section 2: the first optimization, hole finding on a 600 dpi scan
+
+Planning named it: the hole stage, 1769 ms of the 2604 a 600 dpi scan took. The close of the binary mask by a disc 67 px across was about
+1700 ms of it, because OpenCV takes the maximum over every point of the disc at every pixel. `BinaryMorphology.Close` gives the same close
+from each row's distance to the nearest set or unset pixel and the element's own row half widths, read from OpenCV, in 17 ms; every
+result is identical, pixel for pixel on 133 real closes and in every corpus output (docs/PHASE1-RESULTS.md, entry 392). The hole stage is
+now 693 ms and the scan 1671. What is left in it: the alignment, about 220 ms, the open, about 100, the rasterising, about 110. The four
+figures above moved; the rest keep their 2026-10-08 values, because the machine ran under another program's load that night.
 
 ## The method
 

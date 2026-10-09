@@ -384,9 +384,11 @@ public sealed class SurfaceMapping : IPageMapping
         double along = (dx * _rulingCos) + (dy * _rulingSin), across = (-dx * _rulingSin) + (dy * _rulingCos);
         double x, z;
         double u = (across - _tableStart) / TableStep;
-        int i = (int)Math.Floor(u);
-        if (i >= 0 && i + 1 < _x.Length)
+        // Entry 392 section 3, question 44: the table's range is decided before the conversion. A Newton step of ToPage that runs far off
+        // the page gave a u past int.MaxValue, the conversion saturated there, i + 1 wrapped negative, and the old test let it index the table.
+        if (u >= 0 && u < _x.Length - 1)
         {
+            int i = (int)Math.Floor(u);
             double s = u - i, s2 = s * s, s3 = s2 * s;
             double h00 = (2 * s3) - (3 * s2) + 1, h10 = s3 - (2 * s2) + s, h01 = (-2 * s3) + (3 * s2), h11 = s3 - s2;
             x = (h00 * _x[i]) + (h10 * TableStep * _slopeX[i]) + (h01 * _x[i + 1]) + (h11 * TableStep * _slopeX[i + 1]);

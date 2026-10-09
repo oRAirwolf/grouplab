@@ -1,0 +1,9 @@
+print,instrument,direction,drawn_mm,measured_mm,printed_percent
+1,caliper,across,150.02,150.47,100.3
+2,caliper,across,150.02,149.71,99.79
+2,scan,across,150.02,150.02,100.0
+1,caliper,along the feed,150.02,148.81,99.19
+1,ruler,along the feed,250.02,248.0,99.19
+2,caliper,along the feed,150.02,149.03,99.34
+2,ruler,along the feed,250.02,248.0,99.19
+2,scan,along the feed,150.02,149.25,99.49

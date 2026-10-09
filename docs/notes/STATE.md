@@ -9,13 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-08 evening, after entry 391 (before it: entry 390).
+**Last rewritten:** 2026-10-09 early, after entry 392 (before it: entry 391).
 
 ---
 
 ## In flight
 
-- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 7% on 2026-10-08 18:25 UTC.
+- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
+- **Entry 392 done** (2026-10-09): **eleven research drafts `ready`** (numbers checked against data and code, 245 sentences backed,
+  figures rerun byte-identical); aim-points-by-optic-class stays draft for request 86. **A 600 dpi scan's hole finding 1769 to 693 ms**
+  (`BinaryMorphology.Close`, OpenCV's close to the byte); **question 44 fixed** (the cylinder's table index wrapped) and archived.
+  Entry 391's feed mean is 99.28 percent, not 99.30; `MeasuredFeed` kept, request 85 decides.
 - **Entry 391 done** (2026-10-08): **the M834's pages are drawn 0.70 percent longer along the feed** (it feeds 99.30 percent, the mean of
   five readings over request 81's two prints), phone and computer alike (`M834Print.Head`); across GroupLab draws 150.02 mm and both prints
   were rendered the same, so print 1's 100.31 percent was the caliper. Request 81 closed; request 85 measures once more after the nightly.
@@ -25,13 +29,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   on, Phomemo M834), the phone's own bytes (`M834Print`, shared); built, not yet tried on a real M834 from a computer (request 83, for
   later); macOS and Linux say it is not available yet. The sweep on nightly 179: no faults, the Shots switch 48 everywhere; the emulator
   baseline recorded again. CLAUDE.md: every wait has a time limit, background tasks stopped before a report.
-- **Entry 388 done** (2026-10-08): the four phone pictures (Scale markers, the store-bought target's second step, pairing rows, Open
-  targets) taken on the emulator and on the Features page; the quality sweep at 411, 750 and 360 units, light and dark, found one fault (the
-  Shots switch, 32 units tall, now 48); question 43 built; Phase 9's baseline and gate (`docs/performance-baseline.json`), nothing changed
-  for speed. **Error report 25** (a click near nothing with the hand tool) fixed and closed; it ships in nightly 179.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 is for later.
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 and 86 are for later.
 
 ## The next three
 
@@ -46,13 +46,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
-- **Performance** (Phase 9): the baseline and its gate are in (entry 388); an optimization waits for planning to name one.
+- **Performance** (Phase 9): the first optimization done (entry 392, hole finding on a scan); the next waits for planning to name one.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; entry 391 and error report 26 are on main and in nightly 181.
+1. Entry 393: publish the ready research articles (and can-you-see-the-bull) after the same checks.
 2. Request 85 with nightly 181: whether the stretch makes the M834 true along the feed, and the saved check replaced.
 3. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift; then 83, the M834 from the computer.
 
@@ -62,18 +62,17 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **24** (86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (80, answered in entry 347, archived in entry 389):
+Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (44 answered and archived in entry 392):
 
 - **88** DESIGN NEEDED, chronograph entry on the analysis
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
-- **44, the part still open** the bent-sheet model throws at a point outside the page
 - **36** a light installer, measured
 
 ## Builds and the site
@@ -89,7 +88,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 393.
 
 ## Things that would surprise somebody who was not here yesterday
 

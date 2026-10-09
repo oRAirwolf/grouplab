@@ -302,8 +302,20 @@ public sealed class OpenCvSharpBackend : IImagingBackend
     public GrayImage Morphology(GrayImage image, MorphologyOperation operation, int radius)
     {
         ArgumentNullException.ThrowIfNull(image);
-        using var source = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
         using var kernel = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size((2 * radius) + 1, (2 * radius) + 1));
+
+        // Entry 392 section 2: a close of a 0 and 1 image is done in managed code from this same element's rows, which gives OpenCV's
+        // answer to the byte in a fraction of the time; anything else, and an element of another shape, goes to OpenCV as before.
+        if (operation == MorphologyOperation.Close && BinaryMorphology.IsBinary(image.Pixels))
+        {
+            kernel.GetArray(out byte[] element);
+            if (BinaryMorphology.HalfWidths(element, kernel.Cols, kernel.Rows) is { } halfWidths)
+            {
+                return new GrayImage(image.Width, image.Height, BinaryMorphology.Close(image.Pixels, image.Width, image.Height, halfWidths));
+            }
+        }
+
+        using var source = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
         using var result = new Mat();
         Cv2.MorphologyEx(source, result, operation == MorphologyOperation.Open ? MorphTypes.Open : MorphTypes.Close, kernel);
         return Copy(result);

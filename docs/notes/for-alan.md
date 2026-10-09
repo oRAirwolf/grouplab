@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,18 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
+
+**Why:** the article "Aim points for 1x to high power optics" cannot be finished until the classes not yet shot are in. The high power
+scopes and the PLxC were scored on 26 September; the red dots (ROMEO 5, the two MRS), the SLx prism and the medium power scopes (Venom
+3-15x, NX8 2.5-20x) were not. The article stays a draft until then; nothing else waits on it.
+**Steps,** whenever you are at the range with those optics and the aim point card from 26 September:
+1. The red dots and the prism at 25 and 50 yards, the medium power scopes at 100 yards, at the magnifications on the card.
+2. Score each design the same way as before: 0 cannot see the center, 1 can see but not center confidently, 2 center confidently.
+   A second observer if one is with you.
+3. A photo of the score sheet into `C:\Dev\grouplab-local\aim-points-2026\`.
+**A good answer:** the score sheet, with the optic, the magnification and the distance on every row.
 
 ## 85. One more M834 check print, with nightly 181, about fifteen minutes (entry 391)
 

@@ -6,14 +6,14 @@ number: 4
 written: 2026-09-22
 data_date: simulation with seed 2026
 samples: 20000 simulated groups at each of 8 shot counts
-state: draft
+state: ready
 found: At five shots, extreme spread and mean radius are about equally noisy. As the shot count grows, mean radius settles down and extreme spread does not, because extreme spread only ever looks at the two worst shots. At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence.
 sure: The figures come from simulation of a well-behaved rifle (round groups, no flyers) and from the published Monte Carlo tables in the shotGroups package. Real groups with flyers make extreme spread look worse, not better.
 data:
   - data/ten-groups.csv
   - data/by-shot-count.csv
 sources:
-  - "David Wollschlaeger, shotGroups: an R package for analysing shooting groups, including the efficiency tables used above. <https://cran.r-project.org/package=shotGroups>"
+  - "Daniel Wollschlaeger, shotGroups: an R package for analysing shooting groups, including the efficiency tables used above. <https://cran.r-project.org/package=shotGroups>"
   - "`docs/STATISTICS.md` sections 3 and 5, where the 86 percent figure is worked out."
   - "The Rayleigh distribution, the model behind mean radius for round groups. <https://en.wikipedia.org/wiki/Rayleigh_distribution>"
   - "The mean radius scale marks, as quoted on a Hornady podcast and used in `src/GroupLab.Core/Marking/MeanRadiusScale.cs`."
@@ -52,7 +52,7 @@ The gap opens as the shot count rises. By 25 shots, mean radius wanders by about
 | From 5-shot groups | 140 shots | 124 shots |
 | From 25-shot groups | 188 shots | 101 shots |
 
-GroupLab sheets put one shot on each of up to 25 bulls, so a full sheet is exactly the case where mean radius earns its keep.
+A GroupLab sheet puts one shot on each bull, 25 of them on the standard sheet and more on the larger ones, so a full sheet is exactly the case where mean radius earns its keep.
 
 ## Extreme spread grows just because you shot more
 
@@ -62,7 +62,7 @@ There is a second problem. Extreme spread is the largest of many distances, and 
 
 In the simulation, the average extreme spread goes from about 3.1 sigma at five shots to 4.4 sigma at twenty. Mean radius barely moves. This is why a "half-MOA rifle" by five-shot extreme spread is rarely half-MOA over twenty shots, and why extreme spreads from groups of different sizes cannot be compared at all.
 
-(The small rise in mean radius at low shot counts is because the center of a small group is itself estimated from those same few shots. GroupLab's headline figure corrects for this; the chart shows the raw measurement.)
+(The small rise in mean radius at low shot counts comes from the center of a small group also being estimated from those same few shots. GroupLab's headline figure corrects for this; the chart shows the raw measurement.)
 
 ## What GroupLab shows
 
@@ -76,8 +76,8 @@ A single five-shot extreme spread tells you less than it seems to, and comparing
 
 ## What this means
 
-**Use mean radius if you are comparing anything.** At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence, because it only ever looks at the two worst shots and throws away everything the other twenty three told you.
+**Use mean radius if you are comparing anything.** At 25 shots per group, extreme spread needs about 86 percent more ammunition to reach the same confidence, because it only ever looks at the two worst shots and throws away everything the other twenty-three told you.
 
-**Extreme spread is not wrong, it is expensive.** It is also what almost everybody else quotes, so keep reporting it if you want to compare with other people. Just do not make decisions on it.
+**Extreme spread is not wrong; it is expensive.** It is also what almost everybody else quotes, so keep reporting it if you want to compare with other people. Just do not make decisions on it.
 
-**And the gap gets worse, not better, as you shoot more.** Mean radius settles down with shot count; extreme spread does not, because a larger sample gives the two worst shots more chances to be extreme.
+**And the gap gets worse, not better, as you shoot more.** Mean radius settles down as the shot count grows; extreme spread does not, because a larger sample gives the two worst shots more chances to be extreme.

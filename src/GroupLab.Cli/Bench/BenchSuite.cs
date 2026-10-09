@@ -202,7 +202,7 @@ public static class BenchSuite
 
                     return string.Create(CultureInfo.InvariantCulture, $"{result.Detections.Count} holes, {result.MissingMarkers.Count} markers not found");
                 },
-                ["AutomaticMarking"]);
+                ["AutomaticMarking", "BinaryMorphology"]);
         }
     }
 

@@ -5,6 +5,14 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-24, question 44, the part still open: the bent-sheet model throws outside the page
+
+**Status: answered 2026-10-09 (entry 392 section 3): fixed by clamping the lookup, which was the cylinder's table and not the fold arrays.** A Newton step of `ToPage` for a pixel off this sheet (the photograph holds several) ran far off the page; `SurfaceMapping.ToImage` converted the table position with `(int)Math.Floor(u)`, which saturates at `int.MaxValue`, so `i + 1` wrapped negative and passed the bounds test. The range is now tested in double before the conversion, and a point beyond the table is computed exactly. `compare-photos --model surface` on the photograph completes: bull median 0.0050 in against the homography's 0.0110, 18 of the scan's 19 holes matched. `SurfaceCrashTests` holds a far point everywhere and the photograph where it is. Originally: nothing a person can reach is affected. Entry 171 section 4 closed the rest of question 44, which is in the answered archive.
+
+`compare-photos --model surface` throws on `20260920_153336.jpg`: `SurfaceMapping.ToPage` is a Newton iteration from a homography's guess, nothing bounds where it steps, and a point far outside the sheet reaches fold arrays built to span the page and no further. Only `ExpectedImage.Render` asks for such a point, and only through that command. `SurfaceCrashTests` records it. The open part is whether to bound the iteration or clamp the fold lookup, and it waits until the surface model is offered anywhere a person can reach.
+
+---
+
 ## 2026-10-01, question 80: how a newer fingerprint library reaches people without a new build
 
 **Status: answered 2026-10-02 (entry 347): with the updates, signed, listed in the manifest, mirrored on grouplab.org.** Nothing waits on it but entry 344 section 3's last step. The signed library file and its reader exist and are tested;
