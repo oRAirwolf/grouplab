@@ -31,7 +31,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   for speed. **Error report 25** (a click near nothing with the hand tool) fixed and closed; it ships in nightly 179.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print after the next nightly); 83 is for later.
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 is for later.
 
 ## The next three
 
@@ -52,8 +52,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; entry 391 is on main and goes out in the next nightly.
-2. Request 85 after that nightly: whether the stretch makes the M834 true along the feed, and the saved check replaced.
+1. Whatever the inbox brings next; entry 391 and error report 26 are on main and in nightly 181.
+2. Request 85 with nightly 181: whether the stretch makes the M834 true along the feed, and the saved check replaced.
 3. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift; then 83, the M834 from the computer.
 
 ## Blocked, and on what
@@ -62,7 +62,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (85 an M834 check print after the next nightly; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -78,9 +78,9 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (80, answered in entry 347, archiv
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.180 (2026-10-08 20:51 UTC, built after 592d2cea: entries 389 and 390); published whole.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 180's notes on 2026-10-08 (run 37842759665).
-- Crash reports open: none. Issue 26 (nightly 180, Android: closing the last target from the Open targets sheet after going back to Capture) fixed 2026-10-08, ships in the next nightly; issue 25 fixed and closed 2026-10-08.
+- **Last nightly:** 0.2.0-nightly.181 (2026-10-09 05:40 UTC, built after fdefb500: entry 391 and error report 26); published whole.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 181's notes on 2026-10-09 (run 37889758444).
+- Crash reports open: none. Issue 26 (nightly 180, Android: closing the last target from the Open targets sheet after going back to Capture) fixed 2026-10-08, in nightly 181; issue 25 fixed and closed 2026-10-08.
 
 ## The inbox
 
