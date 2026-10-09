@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| The M834's feed over two prints (entry 391) | not written | Already covered by article 22, Does your printer print at true size?: one printer, a feed 0.7 percent short and a head true across, which article 22 can carry as an example once request 85 shows the stretch works. |
 | Phase 9's baseline, desktop and emulator (entry 388 section 4) | not written | A record to measure later changes against, with nothing changed and nothing found that another shooter or developer would act on; docs/PERFORMANCE.md holds it. |
 | The phone's quality sweep at three widths (entry 388 section 2) | not written | A check of GroupLab's own screens; what it finds is fixed or put to planning, and the method is a test, not a finding. |
 | A second line for store-bought fits carried by many features, question 87 (`grouplab fingerprint-trial shipped`, docs/notes/fingerprint-trial.md) | **no** | Already covered by the fingerprint trial's own article when it is written (entry 332's row above): that features alone name the wrong store-bought target is its main finding, and this run adds one number to it, wrong fits of 590 features among the Shoot-N-C artworks, which belongs there as a sentence. |

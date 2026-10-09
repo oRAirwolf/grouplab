@@ -9,13 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-08 afternoon, after entry 390 (before it: entry 389).
+**Last rewritten:** 2026-10-08 evening, after entry 391 (before it: entry 390).
 
 ---
 
 ## In flight
 
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 7% on 2026-10-08 18:25 UTC.
+- **Entry 391 done** (2026-10-08): **the M834's pages are drawn 0.70 percent longer along the feed** (it feeds 99.30 percent, the mean of
+  five readings over request 81's two prints), phone and computer alike (`M834Print.Head`); across GroupLab draws 150.02 mm and both prints
+  were rendered the same, so print 1's 100.31 percent was the caliper. Request 81 closed; request 85 measures once more after the nightly.
 - **Entry 390 done** (2026-10-08): of the phone's first two M220 labels the second came out shifted; GroupLab's bytes were the same, so
   each label is now left eight seconds before the next is sent (inferred cause; request 84 prints two again). Request 82 answered.
 - **Entry 389 done** (2026-10-08): **the computer prints to the M834** over its paired Bluetooth serial port on Windows (Targets, Print
@@ -26,13 +29,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   targets) taken on the emulator and on the Features page; the quality sweep at 411, 750 and 360 units, light and dark, found one fault (the
   Shots switch, 32 units tall, now 48); question 43 built; Phase 9's baseline and gate (`docs/performance-baseline.json`), nothing changed
   for speed. **Error report 25** (a click near nothing with the hand tool) fixed and closed; it ships in nightly 179.
-- **Entry 386 done** (2026-10-07): the plain APK updates itself from nightly 177; a photo with no marker is read once at full size
-  (question 83 (b)); the M220's profile, check label, label size with the printer, and **Print two scale labels on the Phomemo M220**
-  over Bluetooth LE (not yet tried on a real M220); **Send to GroupLab** live: the receiver is on the site and Alan reinstalled the
-  worker at 18:59 Denver; question 34 built as proposed and confirmed in entry 388.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 81 (the M834's check, a second print), 84 (two M220 labels again, after the next nightly); 83 is for later.
+- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print after the next nightly); 83 is for later.
 
 ## The next three
 
@@ -53,9 +52,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; entries 389 and 390 are on main, in nightly 180 and on grouplab.org.
-2. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift.
-3. Request 83 once 81 is done: the M834 from the computer, measured like request 81.
+1. Whatever the inbox brings next; entry 391 is on main and goes out in the next nightly.
+2. Request 85 after that nightly: whether the stretch makes the M834 true along the feed, and the saved check replaced.
+3. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift; then 83, the M834 from the computer.
 
 ## Blocked, and on what
 
@@ -63,7 +62,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (84 two M220 labels again; 83 the M834 from the computer, for later; 81 the M834's check and a second print; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (85 an M834 check print after the next nightly; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -81,7 +80,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (80, answered in entry 347, archiv
 
 - **Last nightly:** 0.2.0-nightly.180 (2026-10-08 20:51 UTC, built after 592d2cea: entries 389 and 390); published whole.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 180's notes on 2026-10-08 (run 37842759665).
-- Crash reports open: none (issue 25, the hand tool's click near nothing, fixed in fb86c62f and closed 2026-10-08; in nightly 179). Issue 19 (the keyboard bar's Next) closed: fixed in ee435491, proven by the simulator's real taps.
+- Crash reports open: **26** (new 2026-10-08, nightly 180 on Android: closing a target from the Open targets sheet hit an error and GroupLab carried on; being fixed next). Issue 25 fixed and closed 2026-10-08; issue 19 closed.
 
 ## The inbox
 

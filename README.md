@@ -159,7 +159,7 @@ What the newest builds changed that you would notice, from their release notes.
 
 **0.2.0-nightly.179**, 2026-10-08
 
-- On the phone, the Counted and Left out switch on the Shots page is now as tall as a fingertip, so it is easier to tap.
+- On the phone, the Counted and Left out switch on the Shots page is now as tall as a fingertip, so it is easier to tap. [Every shot, and which count](https://grouplab.org/features/#shots-table)
 - A file claiming to be larger than 400 megapixels is refused before it is read, with its size and the limit in the message.
 - Clicking an empty part of the marking screen with the hand tool no longer reports an error. (Error report 25).
 - GroupLab's speed now has a measured starting point on the computer and the phone, so later changes can be held to it.

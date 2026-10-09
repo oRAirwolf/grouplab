@@ -25,6 +25,42 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-08, entry 391: the M834's second check print (request 81): the feed is short, the first print's "across" was not
+
+**Status: actioned 2026-10-08; every section done.** The M834's pages are now drawn 0.70 percent longer along the feed (99.30 percent, the mean of five readings over the two prints against the lengths GroupLab draws), on the phone and the computer alike; across, GroupLab draws the crosshairs 1772 dots apart, 150.02 mm, the same on both prints, so print 1's 100.31 percent was the caliper. Request 81 closed; request 85 prints and measures once more after the next nightly and replaces the saved check.
+
+From the planning session with Alan, 2026-10-08 21:20 Denver. Application code, so the main model.
+
+Alan saved the M834's printer check on the Fold 7 from the first print (Digital caliper, across 150.47, down 148.81, so about 100.3% by
+99.2%), then printed GroupLab Printer Check, Letter on the M834 roll again (the phone, nightly 179 or 180), flattened it, scanned it at
+600 dpi (`C:\Dev\grouplab-local\m834-2026-10-08\check-print-2-600dpi.png`, his own scan, not for the repository) and measured the same
+sheet by hand. The planning session measured the scan (line profiles through each crosshair's arms, sub-pixel centroids):
+
+| | Drawn | Print 1, caliper | Print 2, caliper | Print 2, scan |
+|---|---|---|---|---|
+| Caliper across, crosshair centres, top | 150.00 | 150.47 (100.31%) | 149.71 (99.81%) | 150.02 (100.01%) |
+| Caliper down, crosshair centres, right side | 150.00 | 148.81 (99.21%) | 149.03 (99.35%) | 149.25 (99.50%) |
+| Ruler across the bottom, tick to tick | 190.0 | | 190 | 189.86 (99.93%) |
+| Ruler down the left side, tick to tick | 250.0 | | 248 (99.2%) | off the scan (273 mm tall) |
+
+Also seen on the scan: the top and right caliper lines meet at 90.22 degrees, not 90, so the printed page is sheared by about 0.2 degrees
+(about 1 mm over 250 mm along the feed), the paper tracking slightly sideways through the printer. A scanner cannot add shear.
+
+1. **Down (along the feed) is short, every time:** 99.2, 99.35, 99.5 and 99.2% by four ways over two prints. Request 81 said GroupLab would
+   stretch its M834 prints along the feed if it repeated; it has. Choose the factor from these (about 99.35%, so stretch by about 0.65%),
+   say in PHASE1-RESULTS how it was chosen, and apply it to M834 pages only, on the phone and the new computer route alike.
+2. **Across (along the printhead) cannot change from print to print**: the head's dot pitch is fixed, so the across scale is whatever
+   GroupLab's rendering puts on it. Work out from the bytes GroupLab sends for this page what the across distance between the crosshairs is
+   in dots, and so in millimetres at the M834's dot pitch, and say whether the two prints were rendered the same (different builds, roll or
+   fanfold, margins, any rounding of the page width to the head). If the rendering says 100.0%, print 1's 100.31% was a measurement
+   difference, and the scan's 100.01% on print 2 agrees with the rendering.
+3. **The caliper and the scan disagree by about 0.2% on the same sheet** (scan larger both ways). Either the by-eye crosshair centring or
+   the scanner's own scale; the data cannot separate them. Record it; nothing to fix.
+4. **The saved printer check on the phone** (100.3% by 99.2%) is for photos of sheets this printer made before the stretch. Decide what it
+   should be once 1 and 2 are done, and whether sheets printed after the stretch need a separate check or none; put any step for Alan into
+   for-alan.md written out in full (one more print and measure, after the nightly with the stretch). Close request 81 with these numbers.
+5. Note the 0.2 degree shear in PHASE1-RESULTS; nothing to correct unless it repeats on a later print.
+
 ## 2026-10-08, entry 390: the first M220 print from the phone (request 82 step 2): label S1 right, label S2 printed shifted and wrapped
 
 **Status: actioned 2026-10-08; every section done.** GroupLab's bytes for the two labels were the same but for their codes and serial, so the shift arose at the printer: the second label's first block went out straight after the first label's end. Each label is now followed by eight seconds before the next (`PrinterJob.SendLabelsAsync`); a fake printer that loses rows arriving while it feeds shifts the second label back to back and lines up all three with the pause. The cause is inferred, not seen on the M220; request 84 confirms it. Request 82 answered and archived; request 77 unchanged.

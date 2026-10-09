@@ -52,35 +52,38 @@ public static class SceneRasterizer
     }
 
     /// <param name="level">An ink's level, 0 to 255; by its luminance where not given.</param>
-    public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null, bool words = false, Func<Gltd.Binary.Rgb, double>? level = null)
+    /// <param name="stretchY">Rows per row down the page, for a printer that feeds short (entry 391); 1 everywhere else.</param>
+    public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null, bool words = false, Func<Gltd.Binary.Rgb, double>? level = null,
+        double stretchY = 1.0)
     {
         ArgumentNullException.ThrowIfNull(page);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dpi);
         double pixelsPerUnit = dpi / 508.0;
-        var r = region ?? new PixelRegion(0, 0, (int)Math.Round(page.Width * pixelsPerUnit), (int)Math.Round(page.Height * pixelsPerUnit));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(stretchY);
+        var r = region ?? new PixelRegion(0, 0, (int)Math.Round(page.Width * pixelsPerUnit), (int)Math.Round(page.Height * pixelsPerUnit * stretchY));
         var pixels = new byte[(long)r.Width * r.Height];
         Array.Fill(pixels, (byte)255);
 
         // The content-stream transform of PdfWriter: half-dmm to device pixels, scaled about the page centre.
-        double k = scale * pixelsPerUnit;
+        double k = scale * pixelsPerUnit, ky = k * stretchY;
         double originX = ((1 - scale) * page.Width * pixelsPerUnit / 2) - r.Left;
-        double originY = ((1 - scale) * page.Height * pixelsPerUnit / 2) - r.Top;
-        var canvas = new Canvas(pixels, r.Width, r.Height);
+        double originY = ((1 - scale) * page.Height * pixelsPerUnit * stretchY / 2) - r.Top;
+        var canvas = new Canvas(pixels, r.Width, r.Height, stretchY);
         foreach (var item in page.Items)
         {
             double luminance = (level ?? Luminance)(item.Colour);
             switch (item)
             {
                 case RectFill rect:
-                    canvas.FillRect(originX + (rect.X * k), originY + (rect.Y * k), originX + ((rect.X + rect.Width) * k), originY + ((rect.Y + rect.Height) * k), luminance);
+                    canvas.FillRect(originX + (rect.X * k), originY + (rect.Y * ky), originX + ((rect.X + rect.Width) * k), originY + ((rect.Y + rect.Height) * ky), luminance);
                     break;
                 case DiscBand band:
                     // A DiscBand radius in half-dmm is the disc's diameter in dmm, so it scales like any other length.
-                    canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * k), band.Outer with { Radius = band.OuterRadius * k },
+                    canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * ky), band.Outer with { Radius = band.OuterRadius * k },
                         band.Inner with { Radius = band.InnerRadius * k }, luminance);
                     break;
                 case TextRun text when words:
-                    canvas.FillContours([.. SheetGlyphs.Contours(text).Select(c => c.Select(p => (originX + (p.X * k), originY + (p.Y * k))).ToArray())], luminance);
+                    canvas.FillContours([.. SheetGlyphs.Contours(text).Select(c => c.Select(p => (originX + (p.X * k), originY + (p.Y * ky))).ToArray())], luminance);
                     break;
             }
         }
@@ -88,7 +91,8 @@ public static class SceneRasterizer
         return new GrayImage(r.Width, r.Height, pixels);
     }
 
-    private readonly record struct Canvas(byte[] Pixels, int Width, int Height)
+    /// <param name="StretchY">Rows per row down the page: a band is decided in the unstretched frame, so a circle prints as one, stretched.</param>
+    private readonly record struct Canvas(byte[] Pixels, int Width, int Height, double StretchY = 1.0)
     {
         /// <summary>Exact area coverage of an axis-aligned rectangle.</summary>
         public void FillRect(double x0, double y0, double x1, double y1, double luminance)
@@ -112,11 +116,12 @@ public static class SceneRasterizer
         /// </summary>
         public void FillBand(double cx, double cy, Outline outer, Outline inner, double luminance)
         {
-            double reach = outer.Radius + 1;
-            int v0 = Math.Max(0, (int)Math.Floor(cy - reach)), v1 = Math.Min(Height, (int)Math.Ceiling(cy + reach));
+            double reach = outer.Radius + 1, rows = reach * StretchY;
+            int v0 = Math.Max(0, (int)Math.Floor(cy - rows)), v1 = Math.Min(Height, (int)Math.Ceiling(cy + rows));
             for (int v = v0; v < v1; v++)
             {
-                double dy = v + 0.5 - cy;
+                // Entry 391: down the page in the unstretched frame, so a pixel there is no more than 0.71 of one from its corners.
+                double dy = (v + 0.5 - cy) / StretchY;
                 if (Math.Abs(dy) >= reach)
                 {
                     continue;
@@ -128,16 +133,16 @@ public static class SceneRasterizer
                 {
                     double dx = u + 0.5 - cx;
                     double d = Math.Sqrt((dx * dx) + (dy * dy));
-                    Blend((v * Width) + u, Coverage(u, v, cx, cy, dx, dy, d, outer) - Coverage(u, v, cx, cy, dx, dy, d, inner), luminance);
+                    Blend((v * Width) + u, Coverage(u, v, cx, cy, dx, dy, d, outer, StretchY) - Coverage(u, v, cx, cy, dx, dy, d, inner, StretchY), luminance);
                 }
             }
         }
 
-        private static double Coverage(int u, int v, double cx, double cy, double dx, double dy, double d, Outline outline)
+        private static double Coverage(int u, int v, double cx, double cy, double dx, double dy, double d, Outline outline, double stretchY)
         {
             if (!outline.IsCircle)
             {
-                return SquareCoverage(u, v, cx, cy, dx, dy, outline);
+                return SquareCoverage(u, v, cx, cy, dx, dy, outline, stretchY);
             }
 
             double radius = outline.Radius;
@@ -156,7 +161,7 @@ public static class SceneRasterizer
             double r2 = radius * radius;
             for (int j = 0; j < Subsamples; j++)
             {
-                double sy = v + ((j + 0.5) / Subsamples) - cy;
+                double sy = (v + ((j + 0.5) / Subsamples) - cy) / stretchY;
                 for (int i = 0; i < Subsamples; i++)
                 {
                     double sx = u + ((i + 0.5) / Subsamples) - cx;
@@ -170,7 +175,7 @@ public static class SceneRasterizer
             return inside / (double)(Subsamples * Subsamples);
         }
 
-        private static double SquareCoverage(int u, int v, double cx, double cy, double dx, double dy, Outline square)
+        private static double SquareCoverage(int u, int v, double cx, double cy, double dx, double dy, Outline square, double stretchY)
         {
             if (square.Radius <= 0)
             {
@@ -191,7 +196,7 @@ public static class SceneRasterizer
             int inside = 0;
             for (int j = 0; j < Subsamples; j++)
             {
-                double sy = v + ((j + 0.5) / Subsamples) - cy;
+                double sy = (v + ((j + 0.5) / Subsamples) - cy) / stretchY;
                 for (int i = 0; i < Subsamples; i++)
                 {
                     double sx = u + ((i + 0.5) / Subsamples) - cx;

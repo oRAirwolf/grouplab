@@ -53,7 +53,7 @@ public sealed class M834ComputerTests
     {
         var page = Assert.Single(SceneBuilder.Build(BuiltIns.Load("GL-SCALE-LTR-1.gltd.json"), new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote)).Pages);
         var profile = PrinterProfiles.All.Single(p => p.Id == "phomemo-m834");
-        var dots = ThermalRaster.Render(page, profile.Head);
+        var dots = ThermalRaster.Render(page, M834Print.Head);
         var job = new LabelJob(dots.Image, page.Width / (10.0 * Scene.UnitsPerDmm), page.Height / (10.0 * Scene.UnitsPerDmm), FeedAfterMm: TearBar.FeedAfterMm(paper));
         Assert.Equal(PrinterEncoders.For(profile).Encode(job, profile), M834Print.Encode(page, paper));
     }

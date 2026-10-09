@@ -3,6 +3,19 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 81. (Answered 2026-10-08: saved on the Fold 7 at 150.47 across by 148.81 down; the second print measured 149.71 by 149.03 with the caliper, 190 and 248 with the ruler, and 150.02 by 149.25 on its 600 dpi scan. The M834 feeds 99.30 percent of true, so GroupLab now draws its M834 pages 0.70 percent longer along the feed, entry 391; request 85 confirms it) The M834's printer check, saved, and one more print to confirm it, about fifteen minutes (entry 385)
+
+**Why:** your two prints on nightly 175 printed whole and cleared the tear bar, and your measurements show the M834 prints true across
+the paper (+0.31 percent) and 0.8 percent short along the feed (-0.80 percent by caliper and by ruler). Saved as the M834's printer
+check, every photo of a GroupLab sheet printed on it measures in real inches, across and along the feed scaled separately. A second
+print says whether the 0.8 percent repeats; if it does, GroupLab will stretch its own M834 prints along the feed to make them true.
+**Steps,** on the Fold 7 (and on the computer too, if you photograph or open sheets there):
+1. Settings, under **Printers**, check a printer: name it **Phomemo M834**, choose **Digital caliper**, and enter your numbers from
+   today's check page in millimeters: **across 150.47**, **down 148.81**. GroupLab shows about 100.3 by 99.2 percent.
+2. Print **GroupLab Printer Check, Letter** on the M834 once more (Paper in the M834: A continuous roll), and measure the same four
+   numbers: the caliper across and down on the dashed lines, and the ruler across the bottom and down the side.
+**A good answer:** the four numbers from the second print. Thermal roll paper curls: flatten the sheet under a book before measuring.
+
 ## 82. (Answered 2026-10-08: the worker reinstalled on 2026-10-07; two labels printed from the phone on 2026-10-08, label S1 right, its codes 59.99 and 59.96 mm apart across, S2 shifted, fixed in entry 390, request 84 to confirm) Send to GroupLab live, and the M220 printing from the phone, about ten minutes (entry 386, question 90)
 
 **Why:** Send to GroupLab (Settings, About, on the phone) sends your logs and a note straight to the project, but the server's error worker

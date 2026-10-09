@@ -1133,6 +1133,40 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   inferred from the scan and the bytes, not observed on the M220**; request 84 prints two labels again to confirm it.
 - **Section 3.** Request 77 is unchanged.
 
+## Entry 391: the M834 feeds short, so its pages are drawn longer along the feed (2026-10-08)
+
+- **Section 2 first, the across in dots.** On the M834's 300 dpi head the Letter check page is 2550 dots wide; the 2528-dot head loses 11
+  each side, a whole number of bytes, so nothing is shifted (`PhomemoLzoEncoder.OnHead` copies the rows as they are). The top crosshairs'
+  vertical arms are 1772 dots apart, 150.02 mm (100.01 percent of 150.00, the nearest whole dots), and the bottom ruler's end ticks 2244
+  dots, 189.99 mm. Along the feed, unstretched, the crosshairs were 1772 rows apart (150.02 mm), the side ruler 2953 rows (250.02 mm), the
+  page 3300 rows. **Both prints were rendered the same:** nothing that draws or encodes an M834 page changed between nightly 175 (print 1)
+  and 180 (`ThermalRaster`, `SceneRasterizer`, `GridStyle4`, the LZO encoder and the M834's profile are unchanged; nightly 176's encoder
+  change is the M110 family's), both were on the roll, and the roll only adds 15.5 mm of white after the page. So print 1's 100.31 percent
+  across was the caliper, and print 2's scan, 100.01 percent, agrees with the rendering to the hundredth.
+- **Section 1, the stretch.** Five readings of the feed over the two prints, against what GroupLab drew (150.02 and 250.02 mm): print 1,
+  caliper 148.81 (99.19 percent) and ruler 248 (99.19, from entry 385); print 2, caliper 149.03 (99.34), ruler 248 (99.19) and scan 149.25
+  (99.49). The mean is 99.30 percent; the instruments weighted equally (calipers 99.27, rulers 99.19, scan 99.49) give 99.32, and the
+  planning session's four against the drawn 150.00 gave about 99.35. **Chosen: 99.30 percent, a stretch of 1 / 0.9930 = 1.0070,** the plain
+  mean of everything measured; every reading is within 0.2 percent of it, which is the rulers' resolution and the caliper's own spread
+  between prints. `M834Print.MeasuredFeed` holds it and `M834Print.Head` is the profile's head with `PrintHead.FeedStretch`;
+  `M834Print.Encode`, which the phone's and the computer's direct prints both call, draws on it, so nothing else changes: other printers,
+  the preview and the PDF for the Phomemo app are drawn as before. `ThermalRaster` places rows along the feed at `RowsPerUnit`, a code's
+  module its own whole number of rows (still 5 by 5 at 0.4 mm), a line's width rounded once; `SceneRasterizer`'s `stretchY` decides a
+  bull's band in the unstretched frame, so a circle prints as a circle. The check page now: crosshairs 1784 rows apart (151.04 mm drawn,
+  149.99 at 99.30 percent), side ruler 2973 rows (251.71 drawn, 249.95), page 3323 rows (`M834FeedTests`).
+- **Section 3.** On print 2 the scan reads larger than the caliper both ways, by 0.21 percent across (150.02 against 149.71) and 0.15 down
+  (149.25 against 149.03). Across, the scan agrees with the rendering and the caliper does not, which points at by-eye centring; but print
+  1's caliper read 0.30 percent high across, so the caliper's error is a spread, not a bias, and two prints cannot separate it from the
+  scanner's own scale along its carriage. Recorded; nothing to fix.
+- **Section 4, the saved check.** One check per printer, kept: the one saved on the Fold 7 (100.3 by 99.2 percent) fits sheets printed
+  before the stretch along the feed (they print 99.2 to 99.3 percent) and is 0.3 percent high across, where the true figure is 100.0. After
+  the stretch the M834 should print about 100 by 100 percent, and the saved check would then shrink photos of new sheets by 0.7 percent along
+  the feed. So no separate check for new sheets: request 85 prints the check page once more after the nightly with the stretch, measures
+  the same four numbers, and replaces the saved check with them; Alan does not shoot on M834 sheets printed before it. Request 81 closed
+  with these numbers; request 83 (the M834 from the computer) now follows 85.
+- **Section 5, the shear.** The top and right caliper lines on print 2's scan meet at 90.22 degrees: the paper tracked about 1 mm sideways
+  over 250 mm of feed. A scanner cannot add shear. Noted; nothing corrected unless a later print repeats it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
@@ -1430,3 +1464,4 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 120 section 10: the preview sits in the grid row, over inside the scroll viewer.** Inside one it measured its own natural size and left the window two thirds empty; the scroll viewer is now used only when zoomed, where panning is the point of it.
 - **Entry 121: the version raised to 0.2.0, over renaming what is already published.** v0.1.0 is history and stays where it is; the train moves above it instead.
 - **Entry 122: one interface for everything outside the process, over telling the benchmark not to click that button.** An exclusion list would have fixed this button and left the next one to be found by somebody's browser opening.
+- **Entry 391: the M834's feed taken as 99.30 percent, the mean of all five readings against the lengths drawn, over planning's 99.35 or the scan's 99.49 alone.** The scan is the most precise single reading and agreed with the rendering across, but its scale along the carriage is unproven, and the plain mean keeps every reading within the instruments' own 0.2 percent.

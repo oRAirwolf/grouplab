@@ -10,6 +10,11 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Clicking an empty part of the marking screen with the hand tool no longer report",
+    "GroupLab's speed now has a measured starting point",
+    "The phone's screenshots and speed measurements on the Android emulator",
+    "Opening a very large picture no longer stops the window answering",
+    "A file claiming to be larger than 400 megapixels",
     "A load sheet shot one bull off in every shot",
     "GroupLab on Android now looks for updates",
     "On the phone, panning a zoomed target",
@@ -1136,7 +1141,7 @@
       "sheets": [["x6-4x6", "A six-bull label on 4x6, as it prints"], ["x6-4x6-thermal", "The same label as a 203 dpi thermal printer makes it, one dot to a pixel"]],
       "platforms": ["Windows", "macOS", "Linux"],
       "since": "next",
-      "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns", "for a thermal label printer's own app", "On Windows, Targets can now print a sheet straight to a Phomemo M834"],
+      "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns", "for a thermal label printer's own app", "On Windows, Targets can now print a sheet straight to a Phomemo M834", "Pages printed straight to the Phomemo M834"],
       "tour": "targets",
       "guide": "1-print-a-sheet"
     },
@@ -1196,14 +1201,14 @@
       "key": "phone-targets",
       "group": "Sheets and printing",
       "name": "Print a sheet from the phone",
-      "sentence": "The phone has a Targets screen: the whole library and Made for your optic, printed through Android's own print dialog or shared as a PDF. On Android it also prints a sheet straight to a Phomemo M834 over Bluetooth at true size, without the Phomemo app, with Paper in the M834 for a roll or fanfold sheets; a real M834 has printed a whole Letter sheet from it, and its true size and the roll feed are still being checked.",
+      "sentence": "The phone has a Targets screen: the whole library and Made for your optic, printed through Android's own print dialog or shared as a PDF. On Android it also prints a sheet straight to a Phomemo M834 over Bluetooth without the Phomemo app, with Paper in the M834 for a roll or fanfold sheets; a real M834 has printed whole Letter sheets from it, true across and 0.7 percent short along the paper over two prints, so GroupLab now draws its M834 pages that much longer along the paper, and whether that makes them true is still being checked.",
       "shot": null,
       "platforms": [
         "Android"
       ],
       "since": "next",
       "guide": "13-on-the-phone",
-      "note": ["Targets screen", "On Android, Targets can now print a sheet straight to a Phomemo M834", "On Android, printing straight to the Phomemo M834 no longer waits", "Printing straight to the Phomemo M834 from Android now prints the whole page", "Printing straight to the Phomemo M834 from Android now feeds"],
+      "note": ["Targets screen", "On Android, Targets can now print a sheet straight to a Phomemo M834", "On Android, printing straight to the Phomemo M834 no longer waits", "Printing straight to the Phomemo M834 from Android now prints the whole page", "Printing straight to the Phomemo M834 from Android now feeds", "Pages printed straight to the Phomemo M834"],
       "mobile": {
         "shot": "fold-targets"
       }
@@ -1271,7 +1276,7 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": "Shots and clicks",
+      "note": ["Shots and clicks", "On the phone, the Counted and Left out switch"],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "mobile": {

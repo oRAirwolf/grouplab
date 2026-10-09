@@ -17,10 +17,17 @@ public enum HeadAlignment
 /// A thermal printer's head, NOTES-FROM-PLANNING.md entry 358 section 2: its dots per inch (203.2 for 8 dots a millimetre, 300 or 304.8 for the
 /// two kinds sold as "300 dpi"), how many dots it has across, and where the paper sits on it.
 /// </summary>
-public sealed record PrintHead(double DotsPerInch, int Dots, HeadAlignment Alignment = HeadAlignment.Centre)
+/// <param name="FeedStretch">
+/// Entry 391: rows printed along the feed for each row the page asks for, 1 where the printer feeds true. The head's dots across are fixed,
+/// so only the feed can come out short or long, and a printer measured short along it is drawn that much longer.
+/// </param>
+public sealed record PrintHead(double DotsPerInch, int Dots, HeadAlignment Alignment = HeadAlignment.Centre, double FeedStretch = 1.0)
 {
     /// <summary>Dots per half-dmm, the scene's unit.</summary>
     public double DotsPerUnit => DotsPerInch / PrintFit.UnitsPerInch;
+
+    /// <summary>Rows per half-dmm along the feed.</summary>
+    public double RowsPerUnit => DotsPerUnit * FeedStretch;
 
     /// <summary>The head's width in millimetres.</summary>
     public double WidthMm => Dots * 25.4 / DotsPerInch;
@@ -53,8 +60,8 @@ public static class ThermalRaster
     {
         ArgumentNullException.ThrowIfNull(page);
         ArgumentNullException.ThrowIfNull(head);
-        double s = head.DotsPerUnit;
-        int pageDots = (int)Math.Round(page.Width * s), heightDots = (int)Math.Round(page.Height * s);
+        double s = head.DotsPerUnit, sy = head.RowsPerUnit;
+        int pageDots = (int)Math.Round(page.Width * s), heightDots = (int)Math.Round(page.Height * sy);
         int width = Math.Min(pageDots, head.Dots);
         int cutLeft = pageDots <= head.Dots ? 0 : head.Alignment == HeadAlignment.Centre ? (pageDots - head.Dots) / 2 : 0;
         var image = new DotImage(width, heightDots);
@@ -65,7 +72,7 @@ public static class ThermalRaster
             switch (item)
             {
                 case RectFill rect:
-                    var (x0, y0, x1, y1) = Dots(rect, s);
+                    var (x0, y0, x1, y1) = Dots(rect, s, sy);
                     image.Fill(x0 - cutLeft, y0, x1 - cutLeft, y1);
                     break;
                 case DiscBand or TextRun:
@@ -78,7 +85,7 @@ public static class ThermalRaster
         {
             // Every ink is black here, so the grey render's darkness is coverage, and a dot is black where at least half of it is covered.
             var grey = SceneRasterizer.Rasterize(page with { Items = smooth }, head.DotsPerInch, region: new PixelRegion(cutLeft, 0, width, heightDots),
-                words: true, level: _ => 0);
+                words: true, level: _ => 0, stretchY: head.FeedStretch);
             for (int y = 0; y < heightDots; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -98,22 +105,28 @@ public static class ThermalRaster
     /// A rectangle in dots, from (x0, y0) up to (x1, y1). A module run is placed on its symbol's own grid of whole dots: the module is the
     /// nearest whole number of dots, at least one, and the symbol is centred where the definition centres it.
     /// </summary>
-    public static (long X0, long Y0, long X1, long Y1) Dots(RectFill rect, double dotsPerUnit)
+    public static (long X0, long Y0, long X1, long Y1) Dots(RectFill rect, double dotsPerUnit) => Dots(rect, dotsPerUnit, dotsPerUnit);
+
+    /// <summary>
+    /// The same, with <paramref name="rowsPerUnit"/> along the feed (entry 391): a module is its own whole number of dots each way, so a
+    /// stretched symbol's centre is still where the definition puts it.
+    /// </summary>
+    public static (long X0, long Y0, long X1, long Y1) Dots(RectFill rect, double dotsPerUnit, double rowsPerUnit)
     {
         ArgumentNullException.ThrowIfNull(rect);
         if (rect.Module is { } m)
         {
-            long k = ModuleDots(m.Size, dotsPerUnit);
+            long k = ModuleDots(m.Size, dotsPerUnit), ky = ModuleDots(m.Size, rowsPerUnit);
             double symbol = m.Size * (double)m.Modules;
             double left = rect.X - (m.Column * (double)m.Size), top = rect.Y - (m.Row * (double)m.Size);
             long originX = (long)Math.Round(((left + (symbol / 2)) * dotsPerUnit) - (m.Modules * k / 2.0), MidpointRounding.AwayFromZero);
-            long originY = (long)Math.Round(((top + (symbol / 2)) * dotsPerUnit) - (m.Modules * k / 2.0), MidpointRounding.AwayFromZero);
+            long originY = (long)Math.Round(((top + (symbol / 2)) * rowsPerUnit) - (m.Modules * ky / 2.0), MidpointRounding.AwayFromZero);
             long columns = rect.Width / m.Size, rows = rect.Height / m.Size;
-            return (originX + (m.Column * k), originY + (m.Row * k), originX + ((m.Column + columns) * k), originY + ((m.Row + rows) * k));
+            return (originX + (m.Column * k), originY + (m.Row * ky), originX + ((m.Column + columns) * k), originY + ((m.Row + rows) * ky));
         }
 
         var (left0, width) = Span(rect.X, rect.Width, dotsPerUnit);
-        var (top0, height) = Span(rect.Y, rect.Height, dotsPerUnit);
+        var (top0, height) = Span(rect.Y, rect.Height, rowsPerUnit);
         return (left0, top0, left0 + width, top0 + height);
     }
 
