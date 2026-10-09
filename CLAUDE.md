@@ -237,6 +237,12 @@ pseudoscience, the developer not named, the existing byline) moves from `ready` 
 `website/research/PUBLISHED.md` with the date and the entry, in the same commit. An article that is only partly honest stays `draft`;
 nothing with an unbacked sentence is published. The entry's report names each article published.
 
+**Code merges the learning loop's tuning pull requests** (entry 396, Alan's answer (b) to request 89, added at his word on 2026-10-09).
+Read only the pull request's before and after table and the checks' results, never a picture, and merge it when every test and gate
+passes and the table is better on the held-out share and worse on nothing. Anything odd (a setting at the edge of its search range, a
+large jump, a line that improved for no reason the table explains) is not merged: say why in the pull request and in the report, and it
+waits for the planning session. The merge commit carries a plain Release-note naming what got better, in a shooter's words. Main model.
+
 ## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160
 
 Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.

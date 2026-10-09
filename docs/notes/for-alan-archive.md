@@ -3,6 +3,16 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 90. One line in CLAUDE.md for merging the tuning job's pull requests, one minute, whenever suits (entry 396)
+
+**Answered 2026-10-09:** Alan, in the session: "Also add the entry 396 tuning merge rule to CLAUDE.md." Done.
+
+**Why:** your choice for request 89 was (b): Code reads a tuning pull request's table and merges it. That is a standing rule for Code, months
+before the first such pull request, so it belongs in CLAUDE.md, which only you add to (as with request 87).
+**Steps:** type into the Claude Code session yourself: `Add the entry 396 tuning merge rule to CLAUDE.md.`
+**A good answer:** that line typed; or "leave it out", and the rule stays in docs/DETECTION-LEARNING-STUDY.md section 10, where Code
+reads it when a pull request appears.
+
 ## 89. When the tuning job proposes better detection settings, who merges them? One answer, whenever suits (entry 394)
 
 **Answered 2026-10-09 (entry 396): (b)**, Code reads the pull request's table and merges it; the rule is in docs/DETECTION-LEARNING-STUDY.md section 10.
