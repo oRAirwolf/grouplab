@@ -67,6 +67,7 @@ MOST_ATTEMPTS = 3
 # RealScoreboard.CorrectedForTuning, held equal to it by tests/python/learn-worker-tests.py.
 CORRECTED_FOR_TUNING = 50
 SCORE_TIMEOUT = 900
+SYNTHETIC_TIMEOUT = 3600
 
 
 class Unreachable(Exception):
@@ -346,6 +347,25 @@ def report(drops: str, build: str) -> None:
     log(f"the regression report was {'filed' if status == 201 else f'not filed ({status})'}")
 
 
+def rescore(cli: Path, names: list[str], fetch_one) -> tuple[dict[str, dict], list[str]]:
+    """Each submission read in a process of its own and deleted before the next is fetched (entry 395 section 6, measured on the server:
+    one 600 dpi scan peaks at 1.1 GB, so ten in one process passed the 1.5 GB cap and the whole run was stopped). One that cannot be read,
+    for memory or anything else, is skipped and named, and the rest go on."""
+    rows, failed = {}, []
+    for name in names:
+        folder = None
+        try:
+            folder = fetch_one(name)
+            for row in score(cli, [folder]):
+                rows[row["Submission"]] = row
+        except (ValueError, OSError, IndexError, zipfile.BadZipFile, subprocess.TimeoutExpired):
+            failed.append(name)
+        finally:
+            if folder is not None:
+                shutil.rmtree(folder, ignore_errors=True)
+    return rows, failed
+
+
 def command_nightly() -> int:
     STATE.mkdir(parents=True, exist_ok=True)
     cli = update_cli()
@@ -362,17 +382,19 @@ def command_nightly() -> int:
     # Every corrected submission read again by tonight's build, and any the score run never saw (archived before this worker existed).
     wanted = sorted((set(where) - set(rows)) | {n for n in corrected(rows) if n in where})
     with tempfile.TemporaryDirectory(prefix="nightly-") as work:
-        for start in range(0, len(wanted), 10):
-            batch = wanted[start:start + 10]
-            folders = unpack(batch, where, token, Path(work))
-            for row in score(cli, folders):
-                rows[row["Submission"]] = row
-            for folder in folders:
-                shutil.rmtree(folder, ignore_errors=True)
+        found, failed = rescore(cli, wanted, lambda name: unpack([name], where, token, Path(work))[0])
+    rows.update(found)
+    if failed:
+        log(f"{len(failed)} not read tonight, tried again tomorrow: " + ", ".join(failed))
     write_rows(rows_path, rows)
-    synthetic = grouplab(cli, ["scoreboard", "--synthetic", "--baseline", "docs/scoreboard/synthetic-baseline.json"], timeout=3600)
-    drops_synthetic = [line[5:] for line in synthetic.stderr.splitlines() if line.startswith("DROP ")]
-    verdict = "every condition within its margin." if synthetic.returncode == 0 else f"{len(drops_synthetic)} condition(s) fell: " + "; ".join(drops_synthetic)
+    try:
+        synthetic = grouplab(cli, ["scoreboard", "--synthetic", "--baseline", "docs/scoreboard/synthetic-baseline.json"], timeout=SYNTHETIC_TIMEOUT)
+        drops_synthetic = [line[5:] for line in synthetic.stderr.splitlines() if line.startswith("DROP ")]
+        verdict = "every condition within its margin." if synthetic.returncode == 0 else f"{len(drops_synthetic)} condition(s) fell: " + "; ".join(drops_synthetic)
+    except subprocess.TimeoutExpired:
+        # The real submissions' check still runs and is written; only the synthetic line says it is missing tonight.
+        verdict = f"not read tonight: the synthetic board did not finish in {SYNTHETIC_TIMEOUT // 60} minutes."
+        log(verdict)
     with tempfile.TemporaryDirectory(prefix="check-") as work:
         (Path(work) / "synthetic.txt").write_text(verdict, encoding="utf-8")
         checked = grouplab(cli, ["learn", "check", "--rows", str(rows_path), "--baseline", str(STATE / "baseline.jsonl"), "--write-baseline",

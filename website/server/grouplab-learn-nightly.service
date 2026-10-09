@@ -41,6 +41,8 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 # Study section 6: one processor at most, and a memory cap, which is not optional on a server with no swap.
 CPUQuota=50%
 MemoryMax=1536M
+# A command line killed for memory fails only the submission it was reading; the worker goes on (entry 395 section 6).
+OOMPolicy=continue
 Nice=15
 IOWeight=20
 TimeoutStartSec=14400

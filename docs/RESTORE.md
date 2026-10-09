@@ -27,7 +27,7 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `grouplab` releases (the builds) | rebuilt from the tagged commit by the nightly workflow | on demand | GitHub Actions | run the workflow at the tag |
 | `grouplab-testdata` | its own git history, and the bundle of it in the nightly backup | nightly | `grouplab-backups` | as the repository |
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
-| The server's GroupLab files: scripts, units, the nginx include, `.user.ini` | the repository (`website/server/`), and `install.py`'s dated copies | every change | the repository; `/home/ubuntu/grouplab-server/`, `/home/airwolf/backups/grouplab.org/config/` | `sudo python3 install.py --intake`, `--errors`, `--survey` |
+| The server's GroupLab files: scripts, units, the nginx include, `.user.ini` | the repository (`website/server/`), and `install.py`'s dated copies | every change | the repository; `/home/ubuntu/grouplab-server/`, `/home/airwolf/backups/grouplab.org/config/` | `sudo python3 install.py --intake`, `--errors`, `--survey`, `--learning --backup <a fresh change backup>` |
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
 | **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: one a day at 09:00 UTC, kept 4 days, so never more than the five Always Free covers (entry 398); restore tested 2026-10-09; and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
 
@@ -92,15 +92,30 @@ server is limited to GroupLab's own files and its installer.
       server's address or the key's path.
    5. After each change both sites are checked, and `nginx -t` passes if nginx was touched at all.
 
-**Changes made under rule 5** (newest first): none yet. The restore test passed on 2026-10-09 (above), so the first change may go ahead
-once the newest backup is less than a day old.
+**Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
+09:02 UTC that day when these were made.
 
-- **Planned: the learning worker** (entry 395). Changes: six packages and what they pull in, `/usr/local/sbin/grouplab-learn-worker.py`
-  and `grouplab-set-learning-token`, the archive worker replaced by the one that waits for a score, six units in `/etc/systemd/system/`,
-  `/etc/grouplab/learning-token`, the folders `private/learning` and `/home/airwolf/grouplab-learning`. Backup:
-  `grouplab-change-backup.py --label learning-worker --packages --units` with a `--file` for each of those paths. Undo:
-  `install.py --learning-undo --backup <that folder>`, run first with `--dry-run`. Check: no `grouplab-learn` timer listed, the archive
-  worker's SHA-256 is the backup's, `dpkg --get-selections` matches the backup's `packages.txt`, and both sites answer.
+- **2026-10-09 11:47 UTC, the synthetic board's time limit** (entry 395). Changed: `/usr/local/sbin/grouplab-learn-worker.py` only (a
+  synthetic board past its hour no longer stops the night's run). Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-10-09T114707Z-learning-worker-synthetic/`, 117,551 bytes. Undo and check: as below.
+- **2026-10-09 11:33 UTC, the learning worker's memory fix** (entry 395 section 6). Changed: `/usr/local/sbin/grouplab-learn-worker.py`
+  (the nightly reads each submission in a process of its own and skips one it cannot read) and the three `grouplab-learn-*.service`
+  units (`OOMPolicy=continue`, so a command line killed for memory fails only its own submission). Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-10-09T113248Z-learning-worker-oom/`, 116,322 bytes, the same ten paths, packages and units.
+  Undo: `sudo python3 install.py --learning-undo --backup <that folder>` puts back the worker as first installed; the undo of the whole
+  worker is the entry below. Check: the worker's SHA-256 is the backup's, and both sites answer.
+- **2026-10-09 11:22 UTC, the learning worker** (entry 395). Changed: six packages and 75 they pulled in (libraries only, no service),
+  `/usr/local/sbin/grouplab-learn-worker.py` and `grouplab-set-learning-token` (new), `/usr/local/sbin/grouplab-archive-worker.py`
+  (replaced by the one that waits for a score, at most six hours; the installer also kept the old one beside it), six units in
+  `/etc/systemd/system/` (new) and three timers enabled, an empty `/etc/grouplab/learning-token` (new), the folders
+  `/home/airwolf/web/grouplab.org/private/learning` and `/home/airwolf/grouplab-learning` (new). Before it, the staging folder was copied
+  whole to `/home/ubuntu/grouplab-server-before-learning-20261009.tgz`. Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-10-09T112228Z-learning-worker/`, 78,544 bytes (the archive worker with its mode and owner,
+  the other nine paths recorded as absent, `packages.txt`, `manual.txt`, `unit-files.txt`, `timers.txt`). Undo:
+  `sudo python3 install.py --learning-undo --backup <that folder>`; its dry run listed the three timers, nine files to remove, the archive
+  worker to put back, the 81 packages to purge and the two folders (`docs/notes/panel.md`, 2026-10-09). Check: no `grouplab-learn` timer
+  in `systemctl list-timers --all`, the archive worker's SHA-256 is the backup's, `dpkg --get-selections` matches `packages.txt`, and
+  both sites answer. Both answered 200 after the install.
 
 ## Restoring
 
@@ -129,7 +144,7 @@ spetsnaz (root):
    anything on pissinhot.com changed since. Submissions archived before the backup are safe in the archive and on this computer.
 4. **What to check after:** both sites answer (`curl -sS -o /dev/null -w '%{http_code}' https://grouplab.org/` and the same for
    pissinhot.com, `200` each); `systemctl list-timers 'grouplab-*' --no-pager` lists the site sync and the intake, error, survey and archive
-   workers with next runs; and `sudo cat /home/airwolf/web/grouplab.org/private/archive-worker/status.json` says `"token": "ok"`.
+   workers and the learning loop's score, nightly and tune with next runs; and `sudo cat /home/airwolf/web/grouplab.org/private/archive-worker/status.json` says `"token": "ok"`.
 
 **These backups are crash consistent**: the volume as it was at one instant, like pulling the power. That is fine for the web sites and
 HestiaCP, and MySQL recovers on start as it would after a power cut.

@@ -156,5 +156,21 @@ with tempfile.TemporaryDirectory(prefix="learn-worker-") as work:
     check("the one before is kept to fall back to", (clis / "previous").resolve() == before)
     server.shutdown()
 
+    # The nightly reads each submission in a process of its own, and one that fails (as one too big for the memory cap does) is skipped.
+    fetched = root / "fetched"
+
+    def fetch_one(name: str) -> Path:
+        folder = fetched / name
+        folder.mkdir(parents=True)
+        if name.endswith("broken"):
+            (folder / "broken").write_text("")
+        return folder
+
+    found, failed_names = worker.rescore(now, ["2026-10-01_aaaaaaaa", "2026-10-02_broken", "2026-10-03_cccccccc"], fetch_one)
+    check("the nightly reads the others when one submission cannot be read", sorted(found) == ["2026-10-01_aaaaaaaa", "2026-10-03_cccccccc"],
+          json.dumps(found))
+    check("and names the one it could not read, for tomorrow", failed_names == ["2026-10-02_broken"], str(failed_names))
+    check("each fetched submission is deleted once read", not any(fetched.iterdir()))
+
 print(f"learn worker tests: {passed} passed, {len(failed)} failed")
 sys.exit(1 if failed else 0)

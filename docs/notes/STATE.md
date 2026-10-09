@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09, entry 398 (before it: entry 395 built, waiting on request 91, now answered).
+**Last rewritten:** 2026-10-09, entry 395 finished on the server (before it: entry 398).
 
 ---
 
@@ -19,21 +19,19 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 398 done** (2026-10-09): the whole server's backup restored once (request 91, recorded in RESTORE.md); backups now one a day
   kept 4 days, so a server mistake must be noticed within four days; question 93 answered, the packages.
 - **Entry 397 done** (2026-10-09): every server change is backed up first (RESTORE.md rule 5, `grouplab-change-backup.py`).
-- **Entry 396 done** (2026-10-09): request 89 answered (b), the merge rule in the study's section 10; in CLAUDE.md at Alan's word.
-- **Entry 395, built, being installed on the server** (2026-10-09): `grouplab-learn-worker.py`, three capped units, `install.py
-  --learning` and `--learning-undo`; nightly 183 carries the signed arm64 command line. Question 93 answered: packages rather than an OpenCV build.
-- **Entry 394 done** (2026-10-09): **the learning loop**, `grouplab learn` and `scripts/learning/`, runs in the private archive's
-  Actions with no Claude: every submission scored, every corrected one re-read nightly, tuning waiting for 50. Deployed to the archive
-  once a nightly carries the verb; its issue and pull request wait on request 88; Code merges a passing tuning pull request (entry 396). Summary: archive `learning/summary.md`.
-- **Entry 393 done** (2026-10-09): twelve research articles published (PUBLISHED.md); section 4's CLAUDE.md rule added at Alan's
-  own word the same day (request 87 answered).
+- **Entry 396 done** (2026-10-09): request 89 answered (b), the merge rule in the study's section 10 and in CLAUDE.md.
+- **Entry 395 done; the learning loop runs on the web server** (2026-10-09): score every three minutes, the nightly check at
+  13:45 UTC (first run: 42 read, 9 corrected, nothing worse, 13 min 20 s, peak 1.1 GB, both sites fine), tune monthly; each change
+  backed up under RESTORE.md rule 5 (three backups, undo dry-run recorded). Request 88, the token for its reports, is ready for Alan.
+- **Entry 394 done** (2026-10-09): `grouplab learn`, the learning loop's verb; Code merges a passing tuning pull request (entry 396).
+- **Entry 393 done** (2026-10-09): twelve research articles published (PUBLISHED.md).
 - **Entry 392 done** (2026-10-09): **eleven research drafts `ready`** (numbers checked against data and code, 245 sentences backed,
   figures rerun byte-identical); aim-points-by-optic-class stays draft for request 86. **A 600 dpi scan's hole finding 1769 to 693 ms**
   (`BinaryMorphology.Close`, OpenCV's close to the byte); **question 44 fixed** (the cylinder's table index wrapped) and archived.
   Entry 391's feed mean is 99.28 percent, not 99.30; `MeasuredFeed` kept, request 85 decides.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 and 86 are for later.
+- **Waiting on Alan:** request 88 (the learning token, five minutes), requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 and 86 are for later.
 
 ## The next three
 
@@ -54,7 +52,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; entries 392 and 393 are on main, the speed-up ships in the next nightly.
+1. Whatever the inbox brings next; the learning loop's first unattended nightly is 13:45 UTC on 2026-10-09.
 2. Request 85 with nightly 181: whether the stretch makes the M834 true along the feed, and the saved check replaced.
 3. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift; then 83, the M834 from the computer.
 
@@ -94,6 +92,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **The server's intake worker is older than the repository's** (seen 2026-10-09): entry 357's change, built switched off, was
+  never installed there. Nothing depends on it; installing it is its own change under RESTORE.md rule 5.
 - **The emulator's walks run headless first** (`PhoneScreensScenarioTests`, `PhoneSweepScenarioTests`): run 37735635656 left a reading
   running at a force-stop and no later start of GroupLab Dev on that emulator ran anything. Not established whether a phone does the same.
 - **The chronograph store counts readings from 1**, and accepting a pairing used to store them from 0: the first reading paired with a

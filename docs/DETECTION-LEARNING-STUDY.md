@@ -566,8 +566,18 @@ command line is the nightly's linux-arm64 build: OpenCvSharp's own arm64 runtime
 which needs Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5 on the server (six packages, 81 with what they pull in, libraries only). It is
 installed only when its signature verifies against the update key the site sync already trusts and it reads a sample sheet, and the one
 before is kept to fall back to. The archive repository's Actions workflow (`scripts/learning/learn.yml`, entry 394) was never switched on
-and stays as the fallback. Nothing is installed until entry 397's backup of everything it touches exists and request 91 has confirmed the
-whole-server backup.
+and stays as the fallback. **Installed on 2026-10-09** (entry 395, over entry 397's backup, after request 91's restore test passed).
+
+**Measured on the server, 2026-10-09** (entry 395 section 6), each under the units' own caps (half a processor, 1.5 GB, Nice 15): one
+600 dpi Letter scan read end to end in 39 s with a peak of 1.1 GB; one phone photograph (the Fold 7's, 3 MB) in 21 s with a peak of 351
+MB. **The first nightly check was stopped by its memory cap**: it read ten submissions in one process, and one 600 dpi scan alone is most
+of the 1.5 GB. Now the nightly reads each submission in a process of its own and skips one it cannot read, and every learning unit has
+`OOMPolicy=continue`, so a command line killed for memory fails only its own submission. **The nightly check on today's archive**, 42
+submissions (9 corrected, 29 uploads from the page, 4 store-bought), took 13 minutes 20 seconds in all: about 7 minutes to fetch and read the
+42, the rest the synthetic board (about 6 minutes, with the check and the upload), with a peak of 1.1 GB. The arm64 build read the 9 corrected ones exactly as this
+computer did, 225 of 225 holes and no false marks. Both sites answered 200 in under 0.2 s throughout. A scan at 1200 dpi has four times the
+pixels of a 600 dpi one and is not expected to fit under the cap (none has been tried); such a submission is skipped, named in the log and
+tried again the next night, and the cap stays, because there is no swap.
 
 **What a row is** (`RealRow`, `grouplab learn score`). The truth is the person's own marks at the end, from the package GroupLab sends:
 every mark they kept, moved or added, a shot left out of the group for a reason included (it is still a hole), and none they called not

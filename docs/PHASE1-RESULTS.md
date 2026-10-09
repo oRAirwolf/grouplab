@@ -1278,6 +1278,16 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   four packages if it is Ubuntu 24.04 arm64, and nothing has to be built.
 - **Section 5:** request 88 now has the token typed on the server with `sudo grouplab-set-learning-token`, once the worker is installed.
   The archive repository's workflow was never switched on, so it is already the disabled fallback.
+- **Finished 2026-10-09, on the server** (Alan allowed ssh and sudo for this entry): Ubuntu 24.04.5 on aarch64, two processors, 11.9 GB,
+  no swap. Installed over entry 397's backup `2026-10-09T112228Z-learning-worker` (78,544 bytes): the six packages (81 with what they
+  pull in), the worker, its token script, the archive worker that waits for a score, six units and three timers. The undo's dry run listed
+  exactly that. The first nightly fetched nightly 183's command line, checked its signature and its sample sheet, then passed its 1.5 GB
+  cap reading ten submissions in one process (one 600 dpi scan alone peaks at 1.1 GB; a phone photo 351 MB; 39 s and 21 s at half a
+  processor). The fix, `rescore` in the worker and `OOMPolicy=continue` on the three units, held by a new case in
+  `tests/python/learn-worker-tests.py` (13 of 13 on the server's Linux), was installed over a second backup
+  `2026-10-09T113248Z-learning-worker-oom` (116,322 bytes). The rerun read all 42 archived submissions, the 9 corrected ones 225 of 225
+  holes and no false marks as on this computer, and took 13 minutes 20 seconds with the synthetic board; both sites answered 200 throughout.
+  A synthetic board past its hour no longer stops the run. Request 88 is ready for Alan.
 
 ## Entry 396: who merges a tuning pull request (2026-10-09)
 

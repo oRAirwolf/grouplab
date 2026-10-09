@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1605 |
-| measured | 1962 |
-| decided | 1380 |
+| code | 1606 |
+| measured | 1968 |
+| decided | 1389 |
 | unbacked | 0 |
-| **total** | **4947** |
+| **total** | **4963** |
 
-**1509** of them were read one sentence at a time and their backing written against the sentence. The other **3438** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1516** of them were read one sentence at a time and their backing written against the sentence. The other **3447** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -850,7 +850,14 @@ one that matters.
 - *code* (website/server/grouplab-learn-nightly.timer (13:45 UTC) and grouplab-learn-tune.timer (the 1st), grouplab-learn-worker.py command_nightly and command_tune): **Tune** runs on the 1st of each month.
 - *measured* (src/GroupLab.Cli/GroupLab.Cli.csproj (OpenCvSharp4.runtime.linux-arm64 4.13.0.20260627); the library's DT_NEEDED and cli-arm64.yml run 37913509509; apt-get -s on the server, 81 packages; grouplab-learn-worker.py update_cli and works): The command line is the nightly's linux-arm64 build: OpenCvSharp's own arm64 runtime at the version GroupLab uses, so no OpenCV is built, which needs Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5 on the server (six packages, 81 with what they pull in, libraries only).
 - *decided* (entries 394 and 395: scripts/learning/learn.yml was never copied to the archive repository's workflows): The archive repository's Actions workflow (`scripts/learning/learn.yml`, entry 394) was never switched on and stays as the fallback.
-- *decided* (NOTES-FROM-PLANNING.md entry 397 and request 91; website/server/install.py learning refuses without the backup): Nothing is installed until entry 397's backup of everything it touches exists and request 91 has confirmed the whole-server backup.
+- *decided* (docs/RESTORE.md, changes made under rule 5, 2026-10-09 (entries 395, 397 and 398)): **Installed on 2026-10-09** (entry 395, over entry 397's backup, after request 91's restore test passed).
+- *measured* (the server's own readings, 2026-10-09 (entry 395 section 6): systemd-run under the learning units' caps with the cgroup's memory.peak, the nightly unit's start and exit times and its memory peak, grouplab-learn-worker.log and rows.jsonl on the server, and curl against both sites during the run): **Measured on the server, 2026-10-09** (entry 395 section 6), each under the units' own caps (half a processor, 1.5 GB, Nice 15): one 600 dpi Letter scan read end to end in 39 s with a peak of 1.1 GB; one phone photograph (the Fold 7's, 3 MB) in 21 s with a peak of 351 MB.
+- *measured* (the server's own readings, 2026-10-09 (entry 395 section 6): systemd-run under the learning units' caps with the cgroup's memory.peak, the nightly unit's start and exit times and its memory peak, grouplab-learn-worker.log and rows.jsonl on the server, and curl against both sites during the run): **The first nightly check was stopped by its memory cap**: it read ten submissions in one process, and one 600 dpi scan alone is most of the 1.5 GB.
+- *code* (website/server/grouplab-learn-worker.py rescore and command_nightly, the OOMPolicy line in website/server/grouplab-learn-*.service, held by tests/python/learn-worker-tests.py (entry 395)): Now the nightly reads each submission in a process of its own and skips one it cannot read, and every learning unit has `OOMPolicy=continue`, so a command line killed for memory fails only its own submission.
+- *measured* (the server's own readings, 2026-10-09 (entry 395 section 6): systemd-run under the learning units' caps with the cgroup's memory.peak, the nightly unit's start and exit times and its memory peak, grouplab-learn-worker.log and rows.jsonl on the server, and curl against both sites during the run): **The nightly check on today's archive**, 42 submissions (9 corrected, 29 uploads from the page, 4 store-bought), took 13 minutes 20 seconds in all: about 7 minutes to fetch and read the 42, the rest the synthetic board (about 6 minutes, with the check and the upload), with a peak of 1.1 GB.
+- *measured* (the server's own readings, 2026-10-09 (entry 395 section 6): systemd-run under the learning units' caps with the cgroup's memory.peak, the nightly unit's start and exit times and its memory peak, grouplab-learn-worker.log and rows.jsonl on the server, and curl against both sites during the run): The arm64 build read the 9 corrected ones exactly as this computer did, 225 of 225 holes and no false marks.
+- *measured* (the server's own readings, 2026-10-09 (entry 395 section 6): systemd-run under the learning units' caps with the cgroup's memory.peak, the nightly unit's start and exit times and its memory peak, grouplab-learn-worker.log and rows.jsonl on the server, and curl against both sites during the run): Both sites answered 200 in under 0.2 s throughout.
+- *measured* (the 600 dpi scan's 1.1 GB peak measured on the server, 2026-10-09, and a 1200 dpi page's four times the pixels; the skip is website/server/grouplab-learn-worker.py rescore (entry 395)): A scan at 1200 dpi has four times the pixels of a 600 dpi one and is not expected to fit under the cap (none has been tried); such a submission is skipped, named in the log and tried again the next night, and the cap stays, because there is no swap.
 - *code* (src/GroupLab.Core/Evaluation/RealScoreboard.cs Score and Drops, with Scoreboard.FoundWithinInches = 0.1 and ScoreboardMargin's defaults; held by LearningLoopTests): The build's marks are matched to it within 0.1 in, as on the synthetic board.
 - *code* (src/GroupLab.Core/Evaluation/RealScoreboard.cs Score and Drops, with Scoreboard.FoundWithinInches = 0.1 and ScoreboardMargin's defaults; held by LearningLoopTests): The synthetic board's margins: more than one hole lost, more than one false mark gained, the median centre error grown by more than 0.005 in or the worst by more than 0.03 in, or a row that registered no longer registering.
 - *measured* (grouplab learn score over C:\Dev\grouplab-submissions, 2026-10-09 (entry 394): 38 rows, 29 uploads from the page, 9 corrected, 225 of 225 found, 0 false marks): **First reading, 2026-10-09, on this computer's copy of the archive** (38 submissions): 29 were uploads from the page, nothing to score; the 9 sent from GroupLab with corrections were found 225 of 225 holes, no false marks, centre error 0 (each person kept GroupLab's own marks, and the build reads the same pictures the same way).
@@ -2583,15 +2590,24 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Nothing is force pushed to `main`, ever.** 3.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Deletions on this computer go through the trash first**: `C:\Dev\grouplab-trash\ \`, emptied after 14 days and never before a nightly backup has succeeded since.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Every change on the server is backed up before it is made** (entry 397, Alan, 2026-10-09: "make a backup of anything it changes on the web server").
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Changes made under rule 5** (newest first): none yet.
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The restore test passed on 2026-10-09 (above), so the first change may go ahead once the newest backup is less than a day old.
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): - **Planned: the learning worker** (entry 395).
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Check: no `grouplab-learn` timer listed, the archive worker's SHA-256 is the backup's, `dpkg --get-selections` matches the backup's `packages.txt`, and both sites answer.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Changes made under rule 5** (newest first).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from 09:02 UTC that day when these were made.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): - **2026-10-09 11:47 UTC, the synthetic board's time limit** (entry 395).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Backup: `/home/ubuntu/grouplab-server/backups/2026-10-09T114707Z-learning-worker-synthetic/`, 117,551 bytes.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): - **2026-10-09 11:33 UTC, the learning worker's memory fix** (entry 395 section 6).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Changed: `/usr/local/sbin/grouplab-learn-worker.py` (the nightly reads each submission in a process of its own and skips one it cannot read) and the three `grouplab-learn-*.service` units (`OOMPolicy=continue`, so a command line killed for memory fails only its own submission).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Backup: `/home/ubuntu/grouplab-server/backups/2026-10-09T113248Z-learning-worker-oom/`, 116,322 bytes, the same ten paths, packages and units.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Check: the worker's SHA-256 is the backup's, and both sites answer.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): - **2026-10-09 11:22 UTC, the learning worker** (entry 395).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Before it, the staging folder was copied whole to `/home/ubuntu/grouplab-server-before-learning-20261009.tgz`.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Backup: `/home/ubuntu/grouplab-server/backups/2026-10-09T112228Z-learning-worker/`, 78,544 bytes (the archive worker with its mode and owner, the other nine paths recorded as absent, `packages.txt`, `manual.txt`, `unit-files.txt`, `timers.txt`).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Undo: `sudo python3 install.py --learning-undo --backup `; its dry run listed the three timers, nine files to remove, the archive worker to put back, the 81 packages to purge and the two folders (`docs/notes/panel.md`, 2026-10-09).
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Check: no `grouplab-learn` timer in `systemctl list-timers --all`, the archive worker's SHA-256 is the backup's, `dpkg --get-selections` matches `packages.txt`, and both sites answer.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): Both answered 200 after the install.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The manifest lists every file with its SHA-256, so a copy can be checked before it is trusted.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **The whole server** (entries 224 and 225), pissinhot.com included.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): In the Oracle Cloud console, region US West (San Jose), compartment spetsnaz (root): 1.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Compute**, **Instances**, the server, its **Storage** tab, **Replace boot volume**, and choose the volume made in step 1.
-- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **What to check after:** both sites answer (`curl -sS -o /dev/null -w '%{http_code}' https://grouplab.org/` and the same for pissinhot.com, `200` each); `systemctl list-timers 'grouplab-*' --no-pager` lists the site sync and the intake, error, survey and archive workers with next runs; and `sudo cat /home/airwolf/web/grouplab.org/private/archive-worker/status.json` says `"token": "ok"`.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Proof, for the whole server:** the weekly check in the automation report reads the server's own HestiaCP backup file and its date, but it cannot see the Oracle console.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): A restore test is the same as step 1 above to a volume named `restore-test`, waiting for it to say Available, then **Terminate** on it under Boot Volumes, never Replace boot volume; the last one is listed above.
 
