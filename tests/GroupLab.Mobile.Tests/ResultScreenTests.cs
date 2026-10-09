@@ -185,6 +185,30 @@ public class ResultScreenTests
     }
 
     /// <summary>
+    /// Error report 26 (nightly 180, Android): with a result open, Capture shows the start inside the bar; closing that last target then
+    /// showed the start alone while it was still in the bar's panel, and Avalonia refused it. Now the start is shown, with no bar.
+    /// </summary>
+    [AvaloniaFact]
+    public void ClosingTheLastTargetAfterCaptureShowsTheStartAlone()
+    {
+        var window = Started();
+        var capture = new CapturePage();
+        window.Content = capture;
+        var result = new TextBlock { Text = "a result" };
+        capture.ShowResult(result);
+        Dispatcher.UIThread.RunJobs();
+        Press(capture, "Capture");
+        Assert.Contains(capture.GetVisualDescendants().OfType<Button>(), b => Words(b) == "Result");
+
+        capture.Closed(result);
+        capture.ShowStart();
+        Dispatcher.UIThread.RunJobs();
+        Assert.DoesNotContain(capture.GetVisualDescendants().OfType<Button>(), b => Words(b) == "Result");
+        Assert.IsNotType<DockPanel>(capture.Content);
+        window.Close();
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 318 section 1: a shot placed inside a mark much bigger than the bullet is on the phone's result, ringed on
     /// the picture and said in a sentence with the queue's own choices, and it goes when the person says the shot is on the hole.
     /// </summary>

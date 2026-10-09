@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, closing the last open target from the Open targets sheet",
     "Clicking an empty part of the marking screen with the hand tool no longer report",
     "GroupLab's speed now has a measured starting point",
     "The phone's screenshots and speed measurements on the Android emulator",

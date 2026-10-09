@@ -80,7 +80,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (80, answered in entry 347, archiv
 
 - **Last nightly:** 0.2.0-nightly.180 (2026-10-08 20:51 UTC, built after 592d2cea: entries 389 and 390); published whole.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 180's notes on 2026-10-08 (run 37842759665).
-- Crash reports open: **26** (new 2026-10-08, nightly 180 on Android: closing a target from the Open targets sheet hit an error and GroupLab carried on; being fixed next). Issue 25 fixed and closed 2026-10-08; issue 19 closed.
+- Crash reports open: none. Issue 26 (nightly 180, Android: closing the last target from the Open targets sheet after going back to Capture) fixed 2026-10-08, ships in the next nightly; issue 25 fixed and closed 2026-10-08.
 
 ## The inbox
 

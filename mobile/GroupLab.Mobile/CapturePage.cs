@@ -372,7 +372,23 @@ public sealed class CapturePage : UserControl
     }
 
     /// <summary>The start of the tab, with the two buttons above it once there is a result to go back to.</summary>
-    internal void ShowStart() => Content = lastResult is null ? home : WithBar(home, false);
+    internal void ShowStart()
+    {
+        if (lastResult is not null)
+        {
+            Content = WithBar(home, false);
+            return;
+        }
+
+        // Error report 26: the start can still be inside the bar's panel from while a result was open, as it is when the last open target
+        // is closed from the sheet, and a control shown alone must first leave the panel it was in.
+        if (home.Parent is Panel old)
+        {
+            old.Children.Remove(home);
+        }
+
+        Content = home;
+    }
 
     /// <summary>
     /// An open target switched to (several targets open at once, Alan 2026-10-07): shown as it was left, and now the one the Result button
