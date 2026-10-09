@@ -111,7 +111,7 @@ public class LearningLoopTests
     public void TheDriversWaitingNumberIsTheCodes()
     {
         string script = File.ReadAllText(Repo.PathTo("scripts", "learning", "learn.py"));
-        var match = Regex.Match(script, @"^CORRECTED_FOR_TUNING = (\d+)$", RegexOptions.Multiline);
+        var match = Regex.Match(script, @"^CORRECTED_FOR_TUNING = (\d+)\r?$", RegexOptions.Multiline);
 
         Assert.True(match.Success, "learn.py names CORRECTED_FOR_TUNING");
         Assert.Equal(RealScoreboard.CorrectedForTuning, int.Parse(match.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture));
