@@ -1229,6 +1229,8 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   4911 claims, 0 unbacked.
 - **Section 4, not done:** the CLAUDE.md paragraph. The auto-mode permission check refused the edit as an inbox file changing Code's own
   standing instructions; Code did not route round it. Request 87 holds the paragraph for Alan to add or approve.
+- **Section 4, done later the same day:** Alan typed "Add the entry 393 publishing rule to CLAUDE.md." into the session; the paragraph
+  is in CLAUDE.md under "Is it worth an article?", and request 87 is answered and archived.
 
 ## Entry 394: the learning loop, built to run with no Claude (2026-10-09)
 

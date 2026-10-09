@@ -231,6 +231,12 @@ After any research, measurement or investigation, decide whether it is worth an 
 If yes, write it; a negative result is no reason to skip it. The two reasons expected most often for not writing are "the data cannot
 separate the effect from the confounds" and "already covered by article N".
 
+**Ready articles are published by Code without asking** (entry 393, Alan, 2026-10-08: "publish"; added at Alan's word on 2026-10-09).
+An article that meets entry 392 section 1 (every checkable sentence backed, figures regenerated, simulations rerunnable, no
+pseudoscience, the developer not named, the existing byline) moves from `ready` to `published` and is listed in
+`website/research/PUBLISHED.md` with the date and the entry, in the same commit. An article that is only partly honest stays `draft`;
+nothing with an unbacked sentence is published. The entry's report names each article published.
+
 ## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160
 
 Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.

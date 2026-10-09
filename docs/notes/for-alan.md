@@ -1,4 +1,4 @@
-**Open: 27.** Most urgent today: **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 26.** Most urgent today: **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -253,21 +253,6 @@ scores every target and writes its summary; it just cannot file the report or th
 2. In PowerShell on this computer (not inside the server), run the line below and paste the token when it asks:
    `gh secret set LEARNING_TOKEN -R oRAirwolf/grouplab-submissions-archive`
 **A good answer:** it prints that the secret was set. Nothing else to do; the next nightly run files its reports.
-
-## 87. One line in CLAUDE.md for publishing research articles: yours to add or to approve, one minute (entry 393)
-
-**Why:** entry 393 section 4 asks Code to write the "publish ready articles without asking" rule into CLAUDE.md. The permission check
-on this computer refused it, because the request came from an inbox file and CLAUDE.md is Code's own standing instructions. That is a
-sensible guard, so Code did not go round it. Everything else in entry 393 is done: twelve articles are published.
-**Steps,** either one:
-1. Add this paragraph yourself to CLAUDE.md, under "Is it worth an article?", after its first paragraph:
-   "**Ready articles are published by Code without asking** (entry 393, Alan, 2026-10-08: "publish"). An article that meets entry 392
-   section 1 (every checkable sentence backed, figures regenerated, simulations rerunnable, no pseudoscience, the developer not named,
-   the existing byline) moves from `ready` to `published` and is listed in `website/research/PUBLISHED.md` with the date and the entry,
-   in the same commit. An article that is only partly honest stays `draft`; nothing with an unbacked sentence is published. The entry's
-   report names each article published."
-2. Or type into the Claude Code session yourself: `Add the entry 393 publishing rule to CLAUDE.md.`
-**A good answer:** either done; or "leave it out", and Code keeps following entry 393 without the line.
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 

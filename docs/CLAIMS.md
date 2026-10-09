@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1602 |
 | measured | 1960 |
-| decided | 1368 |
+| decided | 1370 |
 | unbacked | 0 |
-| **total** | **4930** |
+| **total** | **4932** |
 
-**1504** of them were read one sentence at a time and their backing written against the sentence. The other **3426** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1504** of them were read one sentence at a time and their backing written against the sentence. The other **3428** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -70,6 +70,8 @@ one that matters.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Entry 145 section 4 adds four more: no file path, no commit hash, no class or method name, nothing in code style.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **A note promises what a person can actually reach.** Nightly 27 told people GroupLab "now works out where your group actually landed before deciding which bull each shot belongs to".
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): NOTES-FROM-PLANNING.md entry 158 After any research, measurement or investigation, decide whether it is worth an article and record the decision either way, in `docs/RESEARCH.md` under "Worth an article?".
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Ready articles are published by Code without asking** (entry 393, Alan, 2026-10-08: "publish"; added at Alan's word on 2026-10-09).
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): An article that meets entry 392 section 1 (every checkable sentence backed, figures regenerated, simulations rerunnable, no pseudoscience, the developer not named, the existing byline) moves from `ready` to `published` and is listed in `website/research/PUBLISHED.md` with the date and the entry, in the same commit.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160 Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **`docs/notes/STATE.md` is read first, by both sessions.** Under 120 lines, rewritten rather than appended at the end of every run, and a test holds it to that.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): A test that reads only the live file is a test that quietly stops checking anything, and that has already happened here by a different route: the entry headings drifted from `##` to `#` at entry 119 and the two tests that read them had been skipping the thirty four newest entries with nothing going red.

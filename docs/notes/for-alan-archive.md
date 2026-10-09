@@ -3,6 +3,23 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 87. One line in CLAUDE.md for publishing research articles: yours to add or to approve, one minute (entry 393)
+
+**Answered 2026-10-09:** Alan typed "Add the entry 393 publishing rule to CLAUDE.md."; the paragraph is in CLAUDE.md under "Is it worth an article?".
+
+**Why:** entry 393 section 4 asks Code to write the "publish ready articles without asking" rule into CLAUDE.md. The permission check
+on this computer refused it, because the request came from an inbox file and CLAUDE.md is Code's own standing instructions. That is a
+sensible guard, so Code did not go round it. Everything else in entry 393 is done: twelve articles are published.
+**Steps,** either one:
+1. Add this paragraph yourself to CLAUDE.md, under "Is it worth an article?", after its first paragraph:
+   "**Ready articles are published by Code without asking** (entry 393, Alan, 2026-10-08: "publish"). An article that meets entry 392
+   section 1 (every checkable sentence backed, figures regenerated, simulations rerunnable, no pseudoscience, the developer not named,
+   the existing byline) moves from `ready` to `published` and is listed in `website/research/PUBLISHED.md` with the date and the entry,
+   in the same commit. An article that is only partly honest stays `draft`; nothing with an unbacked sentence is published. The entry's
+   report names each article published."
+2. Or type into the Claude Code session yourself: `Add the entry 393 publishing rule to CLAUDE.md.`
+**A good answer:** either done; or "leave it out", and Code keeps following entry 393 without the line.
+
 ## 81. (Answered 2026-10-08: saved on the Fold 7 at 150.47 across by 148.81 down; the second print measured 149.71 by 149.03 with the caliper, 190 and 248 with the ruler, and 150.02 by 149.25 on its 600 dpi scan. The M834 feeds 99.30 percent of true, so GroupLab now draws its M834 pages 0.70 percent longer along the feed, entry 391; request 85 confirms it) The M834's printer check, saved, and one more print to confirm it, about fifteen minutes (entry 385)
 
 **Why:** your two prints on nightly 175 printed whole and cleared the tear bar, and your measurements show the M834 prints true across

@@ -68,7 +68,7 @@ thousand tokens each time), or (c) wait for Alan. Planning will put it to him.
 
 ## 2026-10-08, entry 393: ready research articles may be published without asking (Alan)
 
-**Status: actioned 2026-10-09; sections 1 to 3 done, section 4 not done.** Twelve articles published: the eleven of entry 392 and can-you-see-the-bull, each with every checkable sentence backed and its figures rerun byte-identical; can-you-see-the-bull also lost its friend's name (article, data and a script) and its placeholder summary. aim-points-by-optic-class stays a draft. **Section 4 not done:** the permission check refused to let an inbox entry change CLAUDE.md, Code's own standing instructions; request 87 gives Alan the paragraph to add or approve.
+**Status: actioned 2026-10-09; every section done, section 4 at Alan's own word later the same day (request 87).** Twelve articles published: the eleven of entry 392 and can-you-see-the-bull, each with every checkable sentence backed and its figures rerun byte-identical; can-you-see-the-bull also lost its friend's name (article, data and a script) and its placeholder summary. aim-points-by-optic-class stays a draft. **Section 4 not done:** the permission check refused to let an inbox entry change CLAUDE.md, Code's own standing instructions; request 87 gives Alan the paragraph to add or approve.
 
 From the planning session, 2026-10-08 23:50 Denver. Alan, asked whether Code may publish a research article once it is ready or whether he
 wants to see the list first: "publish".
