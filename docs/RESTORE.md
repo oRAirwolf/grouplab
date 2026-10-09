@@ -86,6 +86,13 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first): none yet. The Oracle boot volume backups have never had a recorded restore test, so the
 first change waits on request 91.
 
+- **Planned: the learning worker** (entry 395). Changes: six packages and what they pull in, `/usr/local/sbin/grouplab-learn-worker.py`
+  and `grouplab-set-learning-token`, the archive worker replaced by the one that waits for a score, six units in `/etc/systemd/system/`,
+  `/etc/grouplab/learning-token`, the folders `private/learning` and `/home/airwolf/grouplab-learning`. Backup:
+  `grouplab-change-backup.py --label learning-worker --packages --units` with a `--file` for each of those paths. Undo:
+  `install.py --learning-undo --backup <that folder>`, run first with `--dry-run`. Check: no `grouplab-learn` timer listed, the archive
+  worker's SHA-256 is the backup's, `dpkg --get-selections` matches the backup's `packages.txt`, and both sites answer.
+
 ## Restoring
 
 **The repository.** From GitHub: `git clone https://github.com/oRAirwolf/grouplab`. If GitHub's copy is the damaged one, from the newest

@@ -555,13 +555,19 @@ one beside the far column's last marker on the 1 degree picture. So the bend is 
 Sections 5 and 6's next two steps, with no person and no Claude in any of them. Alan, 2026-10-09: "automatically scan target submissions
 and use the data to refine the detection model without having to spend tokens for claude to analyze the holes and targets".
 
-**Where it runs.** The private `grouplab-submissions-archive` repository's GitHub Actions on x64, `.github/workflows/learn.yml`, whose
-source is `scripts/learning/learn.yml` here; the driver is `scripts/learning/learn.py`, read from a checkout of GroupLab at the newest
-nightly's tag, so every target is read exactly as that nightly reads it. Nothing on the server changed, so no linux-arm64 OpenCV build is
-needed. Four times a day it reads any submission the archive gained since the last run (the archive adds a submission to the month's
-release as an asset, which starts no workflow, so new ones are found by comparing each month's manifest with the scoreboard; a new month's
-release starts a run too). At 13:30 UTC, after the 12:00 nightly, it reads every corrected submission again, runs the synthetic board
-beside them, holds each line to its baseline and writes `learning/summary.md`. On the 1st of each month it runs the constant search.
+**Where it runs** (entry 395, Alan: "I would rather use my webserver because it is free"). On the web server, which is Ubuntu 24.04 on
+arm64 with two processors and 11.9 GB: `website/server/grouplab-learn-worker.py` and three capped units (CPUQuota 50%, MemoryMax 1536M,
+Nice 15, IOWeight 20; there is no swap, so the memory cap is not optional). **Score**, every three minutes and with no network at all,
+reads each submission the intake worker left in `ready` before the archive worker takes it; the archive worker waits for its score, six
+hours at most, so the server keeps no picture longer than before. **Nightly**, at 13:45 UTC after the nightly, installs the newest
+command line, reads every corrected submission again from the private archive into the service's own temporary folder, holds them to
+their baseline beside the synthetic board, and writes `learning/` in the archive repository. **Tune** runs on the 1st of each month. The
+command line is the nightly's linux-arm64 build: OpenCvSharp's own arm64 runtime at the version GroupLab uses, so no OpenCV is built,
+which needs Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5 on the server (six packages, 81 with what they pull in, libraries only). It is
+installed only when its signature verifies against the update key the site sync already trusts and it reads a sample sheet, and the one
+before is kept to fall back to. The archive repository's Actions workflow (`scripts/learning/learn.yml`, entry 394) was never switched on
+and stays as the fallback. Nothing is installed until entry 397's backup of everything it touches exists and request 91 has confirmed the
+whole-server backup.
 
 **What a row is** (`RealRow`, `grouplab learn score`). The truth is the person's own marks at the end, from the package GroupLab sends:
 every mark they kept, moved or added, a shot left out of the group for a reason included (it is still a hole), and none they called not
@@ -593,7 +599,7 @@ submissions, and at three in ten held out, 50 in all. A result that passes becom
 and after table and nothing else. Nothing a person's device does
 changes by itself.
 
-**Actions minutes, estimated 2026-10-09.** A private repository's runner has two processors; reading one corrected 600 dpi scan took
+**Actions minutes, estimated 2026-10-09, for the fallback only.** A private repository's runner has two processors; reading one corrected 600 dpi scan took
 about 7 s on this computer, so about 15 s there, and building the command line about 3 minutes. A run that finds nothing new stops
 before building, about a minute. **At today's rate** (42 submissions in the archive over 25 days, 9 of those on this computer scored): four short runs a day, about 120
 minutes a month; the nightly run, about 8 minutes (build, the synthetic board, 9 re-reads), about 240; runs that found something new,

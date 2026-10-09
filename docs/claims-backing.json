@@ -6624,6 +6624,38 @@
   "**Who merges a tuning pull request** (entry 396, Alan's answer (b) to request 89, 2026-10-09).": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 396, Alan's answer (b) to request 89, 2026-10-09"
+  },
+  "**Where it runs** (entry 395, Alan: \"I would rather use my webserver because it is free\").": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 395, Alan's words as the planning session gave them"
+  },
+  "On the web server, which is Ubuntu 24.04 on arm64 with two processors and 11.9 GB: `website/server/grouplab-learn-worker.py` and three capped units (CPUQuota 50%, MemoryMax 1536M, Nice 15, IOWeight 20; there is no swap, so the memory cap is not optional).": {
+   "kind": "measured",
+   "where": "read on the server 2026-10-09 (entry 395, read-only): uname -m aarch64, Ubuntu 24.04.5 LTS, nproc 2, 11925 MB; the caps in website/server/grouplab-learn-score.service"
+  },
+  "**Nightly**, at 13:45 UTC after the nightly, installs the newest command line, reads every corrected submission again from the private archive into the service's own temporary folder, holds them to their baseline beside the synthetic board, and writes `learning/` in the archive repository.": {
+   "kind": "code",
+   "where": "website/server/grouplab-learn-nightly.timer (13:45 UTC) and grouplab-learn-tune.timer (the 1st), grouplab-learn-worker.py command_nightly and command_tune"
+  },
+  "**Tune** runs on the 1st of each month.": {
+   "kind": "code",
+   "where": "website/server/grouplab-learn-nightly.timer (13:45 UTC) and grouplab-learn-tune.timer (the 1st), grouplab-learn-worker.py command_nightly and command_tune"
+  },
+  "The command line is the nightly's linux-arm64 build: OpenCvSharp's own arm64 runtime at the version GroupLab uses, so no OpenCV is built, which needs Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5 on the server (six packages, 81 with what they pull in, libraries only).": {
+   "kind": "measured",
+   "where": "src/GroupLab.Cli/GroupLab.Cli.csproj (OpenCvSharp4.runtime.linux-arm64 4.13.0.20260627); the library's DT_NEEDED and cli-arm64.yml run 37913509509; apt-get -s on the server, 81 packages; grouplab-learn-worker.py update_cli and works"
+  },
+  "The archive repository's Actions workflow (`scripts/learning/learn.yml`, entry 394) was never switched on and stays as the fallback.": {
+   "kind": "decided",
+   "where": "entries 394 and 395: scripts/learning/learn.yml was never copied to the archive repository's workflows"
+  },
+  "Nothing is installed until entry 397's backup of everything it touches exists and request 91 has confirmed the whole-server backup.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 397 and request 91; website/server/install.py learning refuses without the backup"
+  },
+  "**Actions minutes, estimated 2026-10-09, for the fallback only.** A private repository's runner has two processors; reading one corrected 600 dpi scan took about 7 s on this computer, so about 15 s there, and building the command line about 3 minutes.": {
+   "kind": "measured",
+   "where": "an estimate of 2026-10-09 (entry 394): 6.5 s a corrected scan here, GitHub's two-processor runners for private repositories and its 2,000 and 3,000 minute allowances, the archive's manifests"
   }
  },
  "rules": [
