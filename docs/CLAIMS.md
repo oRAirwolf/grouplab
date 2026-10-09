@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1601 |
 | measured | 1960 |
-| decided | 1371 |
+| decided | 1375 |
 | unbacked | 0 |
-| **total** | **4932** |
+| **total** | **4936** |
 
-**1504** of them were read one sentence at a time and their backing written against the sentence. The other **3428** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1504** of them were read one sentence at a time and their backing written against the sentence. The other **3432** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -72,6 +72,7 @@ one that matters.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): NOTES-FROM-PLANNING.md entry 158 After any research, measurement or investigation, decide whether it is worth an article and record the decision either way, in `docs/RESEARCH.md` under "Worth an article?".
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Ready articles are published by Code without asking** (entry 393, Alan, 2026-10-08: "publish"; added at Alan's word on 2026-10-09).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): An article that meets entry 392 section 1 (every checkable sentence backed, figures regenerated, simulations rerunnable, no pseudoscience, the developer not named, the existing byline) moves from `ready` to `published` and is listed in `website/research/PUBLISHED.md` with the date and the entry, in the same commit.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **Code merges the learning loop's tuning pull requests** (entry 396, Alan's answer (b) to request 89, added at his word on 2026-10-09).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160 Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): **`docs/notes/STATE.md` is read first, by both sessions.** Under 120 lines, rewritten rather than appended at the end of every run, and a test holds it to that.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): A test that reads only the live file is a test that quietly stops checking anything, and that has already happened here by a different route: the entry headings drifted from `##` to `#` at entry 119 and the two tests that read them had been skipping the thirty four newest entries with nothing going red.
@@ -2575,6 +2576,9 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Sudo on the server** (entry 230 section 1.3): with an off-machine copy of the whole server, Code's sudo is no longer limited to GroupLab's own files.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Nothing is force pushed to `main`, ever.** 3.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Deletions on this computer go through the trash first**: `C:\Dev\grouplab-trash\ \`, emptied after 14 days and never before a nightly backup has succeeded since.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Every change on the server is backed up before it is made** (entry 397, Alan, 2026-10-09: "make a backup of anything it changes on the web server").
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **Changes made under rule 5** (newest first): none yet.
+- *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The Oracle boot volume backups have never had a recorded restore test, so the first change waits on request 91.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): The manifest lists every file with its SHA-256, so a copy can be checked before it is trusted.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): **The whole server** (entries 224 and 225), pissinhot.com included.
 - *decided* (NOTES-FROM-PLANNING.md entry 222 sections 3, 4 and 6): In the Oracle Cloud console, region US West (San Jose), compartment spetsnaz (root): 1.

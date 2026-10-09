@@ -1272,6 +1272,10 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   `GroupLab.Cli.csproj` takes it for `-r linux-arm64` only (nothing else changes), and `.github/workflows/cli-arm64.yml`, started by
   hand, publishes the command line on GitHub's arm64 runner, free for a public repository (generally available since August 2025),
   lists what the library lacks, installs it, and reads a sample sheet with its time and peak memory.
+- **The arm64 trial ran** (cli-arm64.yml run 37913509509, 2026-10-09): Ubuntu 24.04.5 aarch64; before installing, the library lacked
+  only Tesseract 5 and FFmpeg 6 (`libtesseract5`, `libavcodec60`, `libavformat60`, `libswscale7`); after, nothing. The arm64 command line
+  drew a 300 dpi sample sheet and read it end to end, 38 of 38 markers and 25 shots, in 3.1 s with a 428 MB peak. So the server needs those
+  four packages if it is Ubuntu 24.04 arm64, and nothing has to be built.
 - **Section 5:** request 88 now has the token typed on the server with `sudo grouplab-set-learning-token`, once the worker is installed.
   The archive repository's workflow was never switched on, so it is already the disabled fallback.
 
@@ -1280,8 +1284,20 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - Request 89 answered (b), archived. The rule (Code reads only the table and the checks, merges when every gate passes and the table is
   better on the held-out share and worse on nothing, and leaves anything odd for planning, saying why) is in
   docs/DETECTION-LEARNING-STUDY.md section 10 and in the body of the pull request `scripts/learning/learn.py` opens. It is a standing rule
-  for Code, so request 90 asks Alan to add it to CLAUDE.md, as with request 87. No pull request exists yet: tuning waits for 50 corrected
+  for Code, so request 90 asked Alan to add it to CLAUDE.md; he asked for it in the session the same day, and it is there. No pull request exists yet: tuning waits for 50 corrected
   submissions.
+
+## Entry 397: a backup of everything changed on the server, before it is changed (2026-10-09)
+
+- **The rule** is `docs/RESTORE.md`'s standing rule 5, with a list of the changes made under it (none yet).
+- **The tool,** `website/server/grouplab-change-backup.py`: run with sudo on the server before a change, it copies each file the change
+  will edit, replace or create with its mode, owner and SHA-256 (one that does not exist yet is recorded as absent, so the undo deletes
+  it), `dpkg --get-selections` and `apt-mark showmanual` with `--packages`, `systemctl list-unit-files` and `list-timers --all` with
+  `--units`, and crontabs, into `/home/ubuntu/grouplab-server/backups/<UTC time>-<label>/` with a manifest and its size; it refuses a
+  path under `conf/web/` for the backup and has a `--dry-run`. `tests/python/change-backup-tests.py` holds its dry run, in CI on Linux.
+- **Section 1 stops the server work:** the Oracle boot volume backups are seen only in the console, and their restore was never tested
+  (entry 230 closed "apart from the proof"). Request 91 asks Alan to note today's backup and restore it to a throwaway volume. Until
+  then nothing on the server changes; entry 395 builds what it can without it.
 
 ## Decision log
 

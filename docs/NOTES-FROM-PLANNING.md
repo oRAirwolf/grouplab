@@ -25,6 +25,34 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-09, entry 397: a backup of everything changed on the web server, before it is changed (Alan)
+
+**Status: actioned 2026-10-09; the rule and its tools are in place, and section 1 stops the server changes until request 91.** Sections 2 to 5 are `docs/RESTORE.md`'s standing rule 5 and `website/server/grouplab-change-backup.py`, which copies what a change will touch (files with mode and owner, absent files listed for the undo, the package and unit lists, crontabs) into `/home/ubuntu/grouplab-server/backups/<date>-<label>/`. **Section 1:** Code cannot see the Oracle console, and no restore test of the boot volume backups has ever been recorded, so entry 395's server changes wait on request 91. Section 6 applies to entry 395's report.
+
+From the planning session, 2026-10-09 04:00 Denver. Alan, before allowing ssh and sudo for entry 395: "Can you tell code that it needs to
+make a backup of anything it changes on the web server?" This restates CLAUDE.md's first rule for the server work of entry 395 and every
+later server change, and makes it checkable. Take it before any server change in entry 395.
+
+1. **Before the first change of a session:** confirm the whole-server backup (Oracle boot volume policy `grouplab-daily`) has a copy
+   less than a day old; if it is older, or its last restore test is not recorded as passed, stop the server changes and say so in a
+   request rather than going on.
+2. **Before each change, a copy of exactly what will change**, dated, outside the HestiaCP `conf/web/` folders (in
+   `/home/ubuntu/grouplab-server/backups/<date>/` or `/home/airwolf/backups/grouplab.org/config/`):
+   - every file that will be edited or replaced (systemd units, configuration, scripts, the worker's own files), copied with its
+     permissions and owner;
+   - before any package install or removal, the installed package list (`dpkg --get-selections`) and `apt-mark showmanual`, so the
+     packages can be put back exactly;
+   - before enabling or changing a service or timer, `systemctl list-unit-files` and `systemctl list-timers --all` as they were;
+   - any crontab, user or group that will change, as it was.
+3. **An undo script for each change**, beside the backup, that puts back the files, removes what was added (the four packages, the
+   worker's unit and timer, its folders) and restarts nothing belonging to pissinhot.com. Run it once against a dry run (`--dry-run`,
+   listing what it would do) and record the output in `panel.md`.
+4. **`docs/RESTORE.md`** gets one entry per change: what changed, where its backup is, the undo script's path, and how to check the
+   undo worked. Never the server's address or the key's path in any of it.
+5. After each change, both sites are checked (grouplab.org and pissinhot.com answer as before), and `nginx -t` passes if nginx was
+   touched at all.
+6. The report for entry 395 lists each backup taken, with its folder and size, and confirms the undo dry runs.
+
 ## 2026-10-09, entry 396: request 89 answered (b): Code reads a tuning pull request's table and merges it
 
 **Status: actioned 2026-10-09; every section done.** Request 89 answered (b) and archived; the rule is in docs/DETECTION-LEARNING-STUDY.md section 10 and in the pull request `learn.py` opens; it belongs in CLAUDE.md, so request 90 asks Alan to add it.

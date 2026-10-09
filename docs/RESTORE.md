@@ -69,6 +69,23 @@ server is limited to GroupLab's own files and its installer.
 4. **Proof, not assumption**: a weekly restore test downloads the newest backup, checks every file against its manifest, and restores the
    bundle into a clone to compare with GitHub. The weekly line in `docs/notes/for-alan.md` says whether it passed.
 
+5. **Every change on the server is backed up before it is made** (entry 397, Alan, 2026-10-09: "make a backup of anything it changes on
+   the web server").
+   1. Before the first change of a session, the newest Oracle boot volume backup (policy `grouplab-daily`) is less than a day old and its
+      last restore test is recorded as passed, here. If not, the server changes stop and a request in `docs/notes/for-alan.md` says so.
+   2. Before each change, `website/server/grouplab-change-backup.py` (run with sudo on the server) copies exactly what it will touch into
+      `/home/ubuntu/grouplab-server/backups/<date>-<label>/`, never under HestiaCP's `conf/web/`: every file edited, replaced or created
+      (with mode and owner; one that does not exist yet is listed as absent), `dpkg --get-selections` and `apt-mark showmanual` before a
+      package changes, `systemctl list-unit-files` and `list-timers --all` before a unit changes, and any crontab that will change.
+   3. Each change has an undo beside its backup that puts the files back, removes what it added and restarts nothing of pissinhot.com.
+      It is run once with `--dry-run` and the output goes in `docs/notes/panel.md`.
+   4. One entry below per change: what changed, where its backup is, the undo's path, and how to check the undo worked. Never the
+      server's address or the key's path.
+   5. After each change both sites are checked, and `nginx -t` passes if nginx was touched at all.
+
+**Changes made under rule 5** (newest first): none yet. The Oracle boot volume backups have never had a recorded restore test, so the
+first change waits on request 91.
+
 ## Restoring
 
 **The repository.** From GitHub: `git clone https://github.com/oRAirwolf/grouplab`. If GitHub's copy is the damaged one, from the newest

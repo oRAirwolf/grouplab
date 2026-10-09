@@ -206,6 +206,11 @@ jobs:
       - name: The archive worker, against a stand-in GitHub
         run: python3 tests/python/archive-worker-tests.py
 
+      # Entry 397: the backup taken on the server before any change there.
+      - name: Server change backup tests
+        if: runner.os == 'Linux'
+        run: python3 tests/python/change-backup-tests.py
+
       - name: The printer recording reader, on recordings made here (entry 363)
         run: python3 tests/python/printer-recording-tests.py
 
