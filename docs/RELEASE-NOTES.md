@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.181
+
+**2026-10-09**, commit `fdefb50`. Nightly.
+
+**What you will notice**
+
+- On the phone, closing the last open target from the Open targets sheet after going back to Capture no longer reports an error; the start of Capture shows as it should. (Error report 26).
+- Pages printed straight to the Phomemo M834 from the phone or the computer are now drawn 0.7 percent longer along the paper, because two test prints showed the M834 feeds that much short, so a sheet should come out true to size both ways.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.181)
+
+---
+
 ## 0.2.0-nightly.180
 
 **2026-10-08**, commit `592d2ce`. Nightly.
