@@ -203,7 +203,7 @@ def tuning_text(result: dict) -> str:
 
 
 def pull_request(result: dict) -> None:
-    """A branch with the new constants and nothing else, and a pull request with the table. How it is merged waits on request 89."""
+    """A branch with the new constants and nothing else, and a pull request with the table, which Code reads and merges (entry 396)."""
     token = os.environ.get("LEARNING_TOKEN")
     if not token:
         print("LEARNING_TOKEN is not set (request 88), so the pull request was not opened; learning/tuning.md has the result")
@@ -231,7 +231,7 @@ def pull_request(result: dict) -> None:
         f"Held out: {held['submissions']} submissions. Publishable ones: found {held['publicFound']}; false marks {held['publicFalseMarks']}. "
         f"Testing-only ones checked as well: {held['testingOnlyCount']}, whose numbers stay private.", "",
         result["table"],
-        "How this is merged is request 89's answer; until then it waits."])
+        "Code reads this table and the checks and merges it when every gate passes and nothing here is odd (entry 396); otherwise it says why here and it waits."])
     run(["gh", "pr", "create", "-R", GROUPLAB_REPO, "--head", branch, "--base", "main", "--title", f"Detection constants from the learning loop, {env('BUILD')}",
          "--body", body], token=token)
 

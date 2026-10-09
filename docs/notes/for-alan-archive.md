@@ -3,6 +3,20 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 89. When the tuning job proposes better detection settings, who merges them? One answer, whenever suits (entry 394)
+
+**Answered 2026-10-09 (entry 396): (b)**, Code reads the pull request's table and merges it; the rule is in docs/DETECTION-LEARNING-STUDY.md section 10.
+
+**Why:** GroupLab now has a job that, once enough corrected targets have come in, searches its detection settings against every target
+people have sent and corrected, and against the made-up test pictures. When it finds settings that are better on targets it held back
+for checking and worse on nothing, it opens a pull request with only the new numbers and a before and after table. Every test and the
+usual checks run on it. Nothing ships without one of these:
+- **(a)** merged automatically when every test passes, and in the next nightly;
+- **(b)** Code reads its short table and merges it, a few thousand tokens each time;
+- **(c)** it waits for you.
+**A good answer:** a, b or c. Until then any pull request it opens simply waits. It will not open one before about 50 corrected targets
+have come in, which at today's rate is months away.
+
 ## 87. One line in CLAUDE.md for publishing research articles: yours to add or to approve, one minute (entry 393)
 
 **Answered 2026-10-09:** Alan typed "Add the entry 393 publishing rule to CLAUDE.md."; the paragraph is in CLAUDE.md under "Is it worth an article?".

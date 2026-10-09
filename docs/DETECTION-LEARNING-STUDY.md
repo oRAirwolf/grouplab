@@ -590,7 +590,7 @@ worse on none, and when G3 holds around it: recall above 90 percent with any of 
 corrected submissions** (`RealScoreboard.CorrectedForTuning`): the study expects tuning to win about two holes in a hundred, a sign test on
 the same holes needs six such holes all one way for p < 0.05, so 300 held-out holes; at about 20 shots a sheet that is 15 held-out
 submissions, and at three in ten held out, 50 in all. A result that passes becomes a pull request with the new constants and the before
-and after table and nothing else; how it is merged is request 89's answer, and until then it waits. Nothing a person's device does
+and after table and nothing else. Nothing a person's device does
 changes by itself.
 
 **Actions minutes, estimated 2026-10-09.** A private repository's runner has two processors; reading one corrected 600 dpi scan took
@@ -602,6 +602,13 @@ builds and reads, about 600 minutes; the nightly re-reads grow with the correcte
 month and more each month after; the search, once it runs, about 180. **About 1,600 minutes in the first month, growing.** GitHub's
 allowance for private repositories is 2,000 minutes a month on Free and 3,000 on Pro, so at ten times today's rate the nightly re-read has
 to be capped, the newest and a rotating share, before the corrected count passes about 150.
+
+**Who merges a tuning pull request** (entry 396, Alan's answer (b) to request 89, 2026-10-09). Code reads only its before and after table
+and the checks' results, never a picture, and merges it when every test and gate passes and the table is better on the held-out share and
+worse on nothing. Anything odd, a setting at the edge of its search range, a large jump, or a line that improved for no reason the table
+explains, is not merged: Code says why in the pull request and in its report, and the pull request waits for the planning session. The
+merge commit carries a plain release note naming what got better, in a shooter's words. Reading one costs a few thousand tokens and stays
+on the main model, since it changes the application.
 
 **Not built:** the learned model (option c), and scoring store-bought targets, which needs the any-target finder's truth from the
 corrections in the same way and is the next step.

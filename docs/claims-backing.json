@@ -6620,6 +6620,10 @@
   "**About 1,600 minutes in the first month, growing.** GitHub's allowance for private repositories is 2,000 minutes a month on Free and 3,000 on Pro, so at ten times today's rate the nightly re-read has to be capped, the newest and a rotating share, before the corrected count passes about 150.": {
    "kind": "measured",
    "where": "an estimate of 2026-10-09 (entry 394): 6.5 s a corrected scan here (65 s for 38 submissions, 9 read), GitHub's two-processor runners for private repositories and its 2,000 and 3,000 minute allowances (GitHub's billing documentation), the archive's manifests (42 submissions, 2026-09-14 to 2026-10-08)"
+  },
+  "**Who merges a tuning pull request** (entry 396, Alan's answer (b) to request 89, 2026-10-09).": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 396, Alan's answer (b) to request 89, 2026-10-09"
   }
  },
  "rules": [

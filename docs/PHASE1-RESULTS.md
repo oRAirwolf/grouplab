@@ -1275,6 +1275,14 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - **Section 5:** request 88 now has the token typed on the server with `sudo grouplab-set-learning-token`, once the worker is installed.
   The archive repository's workflow was never switched on, so it is already the disabled fallback.
 
+## Entry 396: who merges a tuning pull request (2026-10-09)
+
+- Request 89 answered (b), archived. The rule (Code reads only the table and the checks, merges when every gate passes and the table is
+  better on the held-out share and worse on nothing, and leaves anything odd for planning, saying why) is in
+  docs/DETECTION-LEARNING-STUDY.md section 10 and in the body of the pull request `scripts/learning/learn.py` opens. It is a standing rule
+  for Code, so request 90 asks Alan to add it to CLAUDE.md, as with request 87. No pull request exists yet: tuning waits for 50 corrected
+  submissions.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -25,6 +25,22 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-09, entry 396: request 89 answered (b): Code reads a tuning pull request's table and merges it
+
+**Status: actioned 2026-10-09; every section done.** Request 89 answered (b) and archived; the rule is in docs/DETECTION-LEARNING-STUDY.md section 10 and in the pull request `learn.py` opens; it belongs in CLAUDE.md, so request 90 asks Alan to add it.
+
+From the planning session, 2026-10-09 03:25 Denver. Alan, asked who merges the tuning job's pull request of better detection settings
+(request 89: (a) automatically, (b) Code reads its short table and merges it, (c) it waits for Alan): "b".
+
+1. When the tuning job opens a pull request, Code reads only its before and after table and the checks' results, never the pictures,
+   and merges it when every test and gate passes and the table is better on the held-out share and worse on nothing. Anything odd (a
+   setting at the edge of its search range, a large jump, a line that improved for no reason the table explains) is not merged: Code says
+   why in the pull request and in its report, and the pull request waits for planning.
+2. The merge commit carries a plain Release-note naming what got better, in a shooter's words.
+3. Close request 89 as answered (b), 2026-10-09. Record the rule in DETECTION-LEARNING-STUDY.md beside the loop; if it belongs in
+   CLAUDE.md, put the line into for-alan.md for Alan to add, as with request 87.
+4. Spend: a few thousand tokens per pull request; reading it is a chore only if it cannot change the app, so it stays on the main model.
+
 ## 2026-10-09, entry 395: the learning loop moves to the web server (Alan: it is free)
 
 **Status: actioned 2026-10-09 in part; sections 2, 3, 4 and 6 not done, waiting on access to the server.** The permission check on this computer refused even a read-only ssh command, so nothing about the server could be learned or changed. Done: section 1's first half (OpenCvSharp publishes an arm64 Linux runtime at the version GroupLab uses, so OpenCV need not be built; the command line's project takes it for a linux-arm64 publish only, and `cli-arm64.yml` builds and runs it on GitHub's free arm64 runner); section 5 (request 88 rewritten for the server). The archive repository's workflow was never switched on, so it stays off as the fallback. Not done: the nightly asset waits on knowing the server's system (the arm64 library needs Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5), and the worker, the nightly run on the server, the self-update and the measurements wait on ssh.

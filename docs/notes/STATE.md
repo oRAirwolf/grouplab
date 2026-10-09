@@ -9,28 +9,25 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09 morning, after entry 395 in part (before it: entry 394).
+**Last rewritten:** 2026-10-09 morning, after entry 396 (before it: entry 395 in part).
 
 ---
 
 ## In flight
 
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
+- **Entry 396 done** (2026-10-09): request 89 answered (b), the merge rule in the study's section 10; request 90 offers it for CLAUDE.md.
 - **Entry 395 in part** (2026-10-09): the learning loop moves to the server, but ssh was refused by the permission check, so the
   worker waits on Alan; `cli-arm64.yml` proves the arm64 command line (OpenCvSharp's own arm64 package, Ubuntu 24.04 libraries).
 - **Entry 394 done** (2026-10-09): **the learning loop**, `grouplab learn` and `scripts/learning/`, runs in the private archive's
   Actions with no Claude: every submission scored, every corrected one re-read nightly, tuning waiting for 50. Deployed to the archive
-  once a nightly carries the verb; its issue and pull request wait on request 88, the merge rule on 89. Summary: archive `learning/summary.md`.
+  once a nightly carries the verb; its issue and pull request wait on request 88; Code merges a passing tuning pull request (entry 396). Summary: archive `learning/summary.md`.
 - **Entry 393 done** (2026-10-09): twelve research articles published (PUBLISHED.md); section 4's CLAUDE.md rule added at Alan's
   own word the same day (request 87 answered).
 - **Entry 392 done** (2026-10-09): **eleven research drafts `ready`** (numbers checked against data and code, 245 sentences backed,
   figures rerun byte-identical); aim-points-by-optic-class stays draft for request 86. **A 600 dpi scan's hole finding 1769 to 693 ms**
   (`BinaryMorphology.Close`, OpenCV's close to the byte); **question 44 fixed** (the cylinder's table index wrapped) and archived.
   Entry 391's feed mean is 99.28 percent, not 99.30; `MeasuredFeed` kept, request 85 decides.
-- **Entry 389 done** (2026-10-08): **the computer prints to the M834** over its paired Bluetooth serial port on Windows (Targets, Print
-  on, Phomemo M834), the phone's own bytes (`M834Print`, shared); built, not yet tried on a real M834 from a computer (request 83, for
-  later); macOS and Linux say it is not available yet. The sweep on nightly 179: no faults, the Shots switch 48 everywhere; the emulator
-  baseline recorded again. CLAUDE.md: every wait has a time limit, background tasks stopped before a report.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
 - **Waiting on Alan:** requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 and 86 are for later.
@@ -64,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **26** (89 who merges a tuning pull request; 88 a token for the learning job; 86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **26** (90 a CLAUDE.md line for merging tuning pull requests; 88 a token for the learning job; 86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

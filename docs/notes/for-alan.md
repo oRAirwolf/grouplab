@@ -227,17 +227,13 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
-## 89. When the tuning job proposes better detection settings, who merges them? One answer, whenever suits (entry 394)
+## 90. One line in CLAUDE.md for merging the tuning job's pull requests, one minute, whenever suits (entry 396)
 
-**Why:** GroupLab now has a job that, once enough corrected targets have come in, searches its detection settings against every target
-people have sent and corrected, and against the made-up test pictures. When it finds settings that are better on targets it held back
-for checking and worse on nothing, it opens a pull request with only the new numbers and a before and after table. Every test and the
-usual checks run on it. Nothing ships without one of these:
-- **(a)** merged automatically when every test passes, and in the next nightly;
-- **(b)** Code reads its short table and merges it, a few thousand tokens each time;
-- **(c)** it waits for you.
-**A good answer:** a, b or c. Until then any pull request it opens simply waits. It will not open one before about 50 corrected targets
-have come in, which at today's rate is months away.
+**Why:** your choice for request 89 was (b): Code reads a tuning pull request's table and merges it. That is a standing rule for Code, months
+before the first such pull request, so it belongs in CLAUDE.md, which only you add to (as with request 87).
+**Steps:** type into the Claude Code session yourself: `Add the entry 396 tuning merge rule to CLAUDE.md.`
+**A good answer:** that line typed; or "leave it out", and the rule stays in docs/DETECTION-LEARNING-STUDY.md section 10, where Code
+reads it when a pull request appears.
 
 ## 88. One token for the learning job, typed on the server, about five minutes, after Code says the learning worker is installed (entries 394 and 395)
 

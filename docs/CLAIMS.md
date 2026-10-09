@@ -18,9 +18,9 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1602 |
+| code | 1601 |
 | measured | 1960 |
-| decided | 1370 |
+| decided | 1371 |
 | unbacked | 0 |
 | **total** | **4932** |
 
@@ -851,11 +851,11 @@ one that matters.
 - *code* (src/GroupLab.Cli/LearnVerb.cs Tune: the six Knobs, factors 0.85 and 1.15, the held-out judgement, StableRecall 0.9 and StabilityStep 0.3 (G3, docs/DETECTION-PIPELINE.md)): It searches six classical thresholds (the opening and closing radii, the residual threshold, the solidity floor, the aspect ceiling and the paper block) by 15 percent either way, keeping a move that finds more holes for fewer false marks on the synthetic board and the corrected submissions not held out, and drops no synthetic line past its margin.
 - *code* (src/GroupLab.Cli/LearnVerb.cs Tune: the six Knobs, factors 0.85 and 1.15, the held-out judgement, StableRecall 0.9 and StabilityStep 0.3 (G3, docs/DETECTION-PIPELINE.md)): Its result passes only when, on the held-out submissions it never saw (three in ten, fixed by name), it is better in total and worse on none, and when G3 holds around it: recall above 90 percent with any of the six 30 percent off.
 - *measured* (src/GroupLab.Core/Evaluation/RealScoreboard.cs CorrectedForTuning and its derivation: 0.5^6 x 2 = 0.031, 6 / 0.02 = 300 holes, 300 / 20 = 15, 15 / 0.3 = 50; held by LearningLoopTests): **It waits until there are 50 corrected submissions** (`RealScoreboard.CorrectedForTuning`): the study expects tuning to win about two holes in a hundred, a sign test on the same holes needs six such holes all one way for p < 0.05, so 300 held-out holes; at about 20 shots a sheet that is 15 held-out submissions, and at three in ten held out, 50 in all.
-- *code* (scripts/learning/learn.py pull_request; request 89 in docs/notes/for-alan.md): A result that passes becomes a pull request with the new constants and the before and after table and nothing else; how it is merged is request 89's answer, and until then it waits.
 - *measured* (an estimate of 2026-10-09 (entry 394): 6.5 s a corrected scan here (65 s for 38 submissions, 9 read), GitHub's two-processor runners for private repositories and its 2,000 and 3,000 minute allowances (GitHub's billing documentation), the archive's manifests (42 submissions, 2026-09-14 to 2026-10-08)): **Actions minutes, estimated 2026-10-09.** A private repository's runner has two processors; reading one corrected 600 dpi scan took about 7 s on this computer, so about 15 s there, and building the command line about 3 minutes.
 - *measured* (an estimate of 2026-10-09 (entry 394): 6.5 s a corrected scan here (65 s for 38 submissions, 9 read), GitHub's two-processor runners for private repositories and its 2,000 and 3,000 minute allowances (GitHub's billing documentation), the archive's manifests (42 submissions, 2026-09-14 to 2026-10-08)): **At today's rate** (42 submissions in the archive over 25 days, 9 of those on this computer scored): four short runs a day, about 120 minutes a month; the nightly run, about 8 minutes (build, the synthetic board, 9 re-reads), about 240; runs that found something new, about 180; the monthly search, a few minutes while it waits.
 - *measured* (an estimate of 2026-10-09 (entry 394): 6.5 s a corrected scan here (65 s for 38 submissions, 9 read), GitHub's two-processor runners for private repositories and its 2,000 and 3,000 minute allowances (GitHub's billing documentation), the archive's manifests (42 submissions, 2026-09-14 to 2026-10-08)): **About 550 minutes a month.** **At ten times the rate:** every short run builds and reads, about 600 minutes; the nightly re-reads grow with the corrected count, about 200 more a month, so about 800 in the first month and more each month after; the search, once it runs, about 180.
 - *measured* (an estimate of 2026-10-09 (entry 394): 6.5 s a corrected scan here (65 s for 38 submissions, 9 read), GitHub's two-processor runners for private repositories and its 2,000 and 3,000 minute allowances (GitHub's billing documentation), the archive's manifests (42 submissions, 2026-09-14 to 2026-10-08)): **About 1,600 minutes in the first month, growing.** GitHub's allowance for private repositories is 2,000 minutes a month on Free and 3,000 on Pro, so at ten times today's rate the nightly re-read has to be capped, the newest and a rotating share, before the corrected count passes about 150.
+- *decided* (NOTES-FROM-PLANNING.md entry 396, Alan's answer (b) to request 89, 2026-10-09): **Who merges a tuning pull request** (entry 396, Alan's answer (b) to request 89, 2026-10-09).
 
 ### docs/DETECTION-PIPELINE.md
 
