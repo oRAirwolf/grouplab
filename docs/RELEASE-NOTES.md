@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.183
+
+**2026-10-09**, commit `36254cf`. Nightly.
+
+**Under the hood**
+
+- Nothing in the application changes; the project can now build its command line for an arm64 Linux server, to read sent targets there.
+- Behind the scenes, every target sent from GroupLab with your corrections is now read again by each new build and compared with what you kept, moved, added and removed, so a build that reads real targets worse is caught; only numbers are kept.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.183)
+
+---
+
 ## 0.2.0-nightly.182
 
 **2026-10-09**, commit `e79a0df`. Nightly.
