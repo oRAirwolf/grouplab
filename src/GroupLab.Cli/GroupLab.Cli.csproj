@@ -18,7 +18,10 @@
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <PackageReference Include="OpenCvSharp4.official.runtime.linux-x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="OpenCvSharp4.official.runtime.linux-x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Linux')) And '$(RuntimeIdentifier)' != 'linux-arm64'" />
+    <!-- Entry 395 section 1: the command line for an arm64 Linux server, published with -r linux-arm64 only. The package's library links
+         against Ubuntu 24.04's own GTK 3, FFmpeg 6 and Tesseract 5 (cli-arm64.yml lists what a machine lacks); nothing else uses it. -->
+    <PackageReference Include="OpenCvSharp4.runtime.linux-arm64" Version="4.13.0.20260627" Condition="'$(RuntimeIdentifier)' == 'linux-arm64'" />
     <PackageReference Include="OpenCvSharp4.runtime.osx.x64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
     <PackageReference Include="OpenCvSharp4.runtime.osx.arm64" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
   </ItemGroup>

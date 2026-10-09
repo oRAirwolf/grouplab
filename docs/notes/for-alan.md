@@ -239,20 +239,22 @@ usual checks run on it. Nothing ships without one of these:
 **A good answer:** a, b or c. Until then any pull request it opens simply waits. It will not open one before about 50 corrected targets
 have come in, which at today's rate is months away.
 
-## 88. One token so the learning job can file its reports, about five minutes, whenever suits (entry 394)
+## 88. One token for the learning job, typed on the server, about five minutes, after Code says the learning worker is installed (entries 394 and 395)
 
-**Why:** the job that re-reads every sent target runs in the private archive repository on GitHub, so nothing on the server changes.
-It can read and write that repository by itself, but to open a regression report in the private error-report repository, and later a
-pull request with better settings in GroupLab's own repository, it needs a token that reaches those two. Until it has one, it still
+**Why:** the job that re-reads every sent target now runs on your web server (entry 395), because that is free. To open a regression
+report in the private error-report repository, and later a pull request with better detection settings, it needs a token that reaches
+those two repositories. It goes on the server only, typed by you, never into a file in any repository. Until it has one the job still
 scores every target and writes its summary; it just cannot file the report or the pull request.
+**Wait for** Code's note in the panel that the learning worker and its `grouplab-set-learning-token` command are installed.
 **Steps:**
 1. On github.com: your picture, **Settings**, **Developer settings**, **Personal access tokens**, **Fine-grained tokens**, **Generate new
-   token**. Name it `grouplab-learning`, expiry one year. **Repository access: Only select repositories**, choose
-   `grouplab-crash-reports` and `grouplab`. **Permissions:** Issues **Read and write**, Contents **Read and write**, Pull requests
-   **Read and write** (Metadata read-only is added by itself). **Generate**, and copy the token.
-2. In PowerShell on this computer (not inside the server), run the line below and paste the token when it asks:
-   `gh secret set LEARNING_TOKEN -R oRAirwolf/grouplab-submissions-archive`
-**A good answer:** it prints that the secret was set. Nothing else to do; the next nightly run files its reports.
+   token**. Name it `grouplab-learning`, expiry one year. **Repository access: Only select repositories**: `grouplab-crash-reports`,
+   `grouplab` and `grouplab-submissions-archive`. **Permissions:** Issues **Read and write**, Contents **Read and write**, Pull requests
+   **Read and write**. **Generate**, and copy the token.
+2. In MobaXterm, in your usual session on the server (the bash shell you land in), run:
+   `sudo grouplab-set-learning-token`
+   and paste the token when it asks. Nothing shows as you paste; press Enter.
+**A good answer:** it prints `learning token set` and the next nightly check files its reports. Nothing else to do.
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 

@@ -9,13 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09 morning, after entry 394 (before it: entry 393).
+**Last rewritten:** 2026-10-09 morning, after entry 395 in part (before it: entry 394).
 
 ---
 
 ## In flight
 
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
+- **Entry 395 in part** (2026-10-09): the learning loop moves to the server, but ssh was refused by the permission check, so the
+  worker waits on Alan; `cli-arm64.yml` proves the arm64 command line (OpenCvSharp's own arm64 package, Ubuntu 24.04 libraries).
 - **Entry 394 done** (2026-10-09): **the learning loop**, `grouplab learn` and `scripts/learning/`, runs in the private archive's
   Actions with no Claude: every submission scored, every corrected one re-read nightly, tuning waiting for 50. Deployed to the archive
   once a nightly carries the verb; its issue and pull request wait on request 88, the merge rule on 89. Summary: archive `learning/summary.md`.

@@ -25,6 +25,36 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-09, entry 395: the learning loop moves to the web server (Alan: it is free)
+
+**Status: actioned 2026-10-09 in part; sections 2, 3, 4 and 6 not done, waiting on access to the server.** The permission check on this computer refused even a read-only ssh command, so nothing about the server could be learned or changed. Done: section 1's first half (OpenCvSharp publishes an arm64 Linux runtime at the version GroupLab uses, so OpenCV need not be built; the command line's project takes it for a linux-arm64 publish only, and `cli-arm64.yml` builds and runs it on GitHub's free arm64 runner); section 5 (request 88 rewritten for the server). The archive repository's workflow was never switched on, so it stays off as the fallback. Not done: the nightly asset waits on knowing the server's system (the arm64 library needs Ubuntu 24.04's GTK 3, FFmpeg 6 and Tesseract 5), and the worker, the nightly run on the server, the self-update and the measurements wait on ssh.
+
+From the planning session with Alan, 2026-10-09 03:10 Denver. Told that entry 394's Actions route costs nothing at today's rate (about
+550 of the 2,000 free private minutes a month, a $0 spending limit, so it would stop rather than bill) but would pass the allowance as
+submissions grow, Alan: "If so, I would rather use my webserver because it is free." So the server is the home of the learning loop; the
+Actions workflow stays in the archive repository, disabled, as the fallback. Main model; CLAUDE.md's backup and sudo rules apply to every
+server step (what will change and how to undo it written down first, `docs/RESTORE.md` updated, nothing of pissinhot.com touched, the key
+never read, the address never written).
+
+1. **linux-arm64 for the command line** (DETECTION-LEARNING-STUDY.md section 6, "Arm64"): build OpenCV's native library for linux-arm64
+   once in the public `grouplab` repository's CI on GitHub's arm64 runners (confirm they cost nothing for a public repository before
+   relying on it), publish it as an asset, and make the nightly produce a linux-arm64 `grouplab` command line the server can fetch and
+   verify the way the updater verifies builds. If the server turns out not to be arm64, say so and use the x64 build instead.
+2. **One more worker on the server**, between intake and archive as section 6 describes, under systemd with the caps it names
+   (CPUQuota 50%, MemoryMax about 1.5 GB, Nice, IO weight; there is no swap, so the memory cap is not optional). It scores each submission
+   with `grouplab learn score` before the archive worker files and deletes it, so the server never keeps a picture longer than today.
+3. **The nightly check and the tuning run on the server at night**, niced and capped, each with a time limit. Pictures they need are
+   fetched from the private archive into a temporary folder for the run and deleted when it ends (Alan's 2026-09-25 retention rule:
+   nothing left on the server longer than needed). Results, numbers only, go to the archive repository as today (`learning/summary.md`).
+4. **The worker fetches the newest nightly's command line by itself** after each nightly, checks its signature, and keeps the previous one
+   to fall back to, so no person updates it.
+5. **Request 88 (the token)** changes: the token goes on the server, typed by Alan, never into a file in a repository. Rewrite request 88
+   with the exact steps for the server (MobaXterm, which shell, the command, what a good result looks like), and put the command in the
+   panel per CLAUDE.md. Until then the loop scores and summarises without filing issues or pull requests, as now.
+6. Measure on the server: seconds and peak memory to score one 600 dpi scan and one phone photo, and how long the nightly check takes on
+   today's submissions; record it, and confirm both sites stayed responsive while it ran.
+7. Update DETECTION-LEARNING-STUDY.md, RESTORE.md and any site or README sentence that says where the loop runs.
+
 ## 2026-10-09, entry 394: the learning loop, step 2 of DETECTION-LEARNING-STUDY.md, built so it runs with no Claude at all
 
 **Status: actioned 2026-10-09; every section done, the issue and the pull request wait on request 88's token, and how a tuning pull request is merged on request 89.** `grouplab learn score`, `check` and `tune` (`LearnVerb`, `RealScoreboard`), driven by `scripts/learning/learn.py` from the archive repository's Actions (`scripts/learning/learn.yml`, copied there once a nightly carries the verb); 9 corrected submissions scored here, 225 of 225 holes; tuning waits for 50 corrected submissions; about 550 Actions minutes a month at today's rate, about 1,600 in the first month at ten times it.

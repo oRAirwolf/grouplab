@@ -1260,6 +1260,21 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - **Tests:** `LearningLoopTests` (7): the person's truth, the margins, the baseline moving only for the better, the held-out share, a
   summary of totals only, tuning waiting below 50, and the driver's copy of 50 held to the code's.
 
+## Entry 395: the learning loop to the web server, in part (2026-10-09)
+
+- **Blocked:** the auto-mode permission check refused `ssh ... "uname -m; nproc; free -m"`, a read-only command announced in the panel,
+  as remote execution. Without the server, sections 2 (the worker), 3 (the nightly check and tuning there), 4 (its self-update), 6 (the
+  measurements) and the nightly half of section 1 cannot be done or even sized. Alan's answer to that is the next step.
+- **Section 1, what could be done:** OpenCvSharp's own `OpenCvSharp4.runtime.linux-arm64` 4.13.0.20260627, the version GroupLab uses,
+  carries an aarch64 `libOpenCvSharpExtern.so` (38 MB), so no OpenCV build is needed. Its dynamic section names Ubuntu 24.04's libraries:
+  `libtesseract.so.5`, GTK 3, FFmpeg 6 (`libavcodec.so.60`), `libjpeg.so.8`, `libwebp.so.7`, `libtiff.so.6`. So it runs as is only on an
+  Ubuntu 24.04 arm64 server with those packages, which is the first thing to read there; otherwise a slim library is built in CI.
+  `GroupLab.Cli.csproj` takes it for `-r linux-arm64` only (nothing else changes), and `.github/workflows/cli-arm64.yml`, started by
+  hand, publishes the command line on GitHub's arm64 runner, free for a public repository (generally available since August 2025),
+  lists what the library lacks, installs it, and reads a sample sheet with its time and peak memory.
+- **Section 5:** request 88 now has the token typed on the server with `sudo grouplab-set-learning-token`, once the worker is installed.
+  The archive repository's workflow was never switched on, so it is already the disabled fallback.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

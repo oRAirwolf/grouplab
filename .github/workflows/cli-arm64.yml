@@ -1,0 +1,43 @@
+# NOTES-FROM-PLANNING.md entry 395 section 1: can the grouplab command line run on an arm64 Linux server? It is published for linux-arm64
+# with OpenCvSharp's own arm64 runtime package, on GitHub's arm64 runner (free for a public repository), the system libraries its OpenCV
+# library needs are listed with ldd, and a sample sheet GroupLab draws itself is read end to end. Started by hand; nothing is published.
+name: cli arm64
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  arm64:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish the command line for linux-arm64
+        run: dotnet publish src/GroupLab.Cli -c Release -r linux-arm64 --self-contained -o "$RUNNER_TEMP/cli" -v q -nologo
+
+      - name: What its OpenCV library needs, and what this machine lacks
+        run: |
+          uname -m
+          . /etc/os-release && echo "$PRETTY_NAME"
+          ldd "$RUNNER_TEMP/cli/libOpenCvSharpExtern.so" | tee "$RUNNER_TEMP/ldd.txt"
+          echo "missing:"; grep "not found" "$RUNNER_TEMP/ldd.txt" || echo "none"
+
+      - name: Install what is missing, by package
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libtesseract5 libgtk-3-0t64 libavcodec60 libavformat60 libswscale7 libwebp7 libwebpmux3 libwebpdemux2 libtiff6 libjpeg8
+          echo "still missing:"; ldd "$RUNNER_TEMP/cli/libOpenCvSharpExtern.so" | grep "not found" || echo "none"
+
+      - name: Read a sample sheet end to end
+        run: |
+          "$RUNNER_TEMP/cli/grouplab" sample "$RUNNER_TEMP/sample.png" --seed 395
+          /usr/bin/time -v "$RUNNER_TEMP/cli/grouplab" analyze "$RUNNER_TEMP/sample.png" --library targets 2> "$RUNNER_TEMP/time.txt" | tail -20
+          grep -E "Elapsed|Maximum resident" "$RUNNER_TEMP/time.txt"
