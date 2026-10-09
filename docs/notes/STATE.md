@@ -77,8 +77,8 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (44 answered and archived in entry
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.181 (2026-10-09 05:40 UTC, built after fdefb500: entry 391 and error report 26); published whole.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 181's notes on 2026-10-09 (run 37889758444).
+- **Last nightly:** 0.2.0-nightly.182 (2026-10-09 07:56 UTC, built after e79a0dfd: entries 392 and 393, the faster scan reading); published whole.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 182's notes on 2026-10-09 (run 37902385537). Twelve research articles went live with e79a0dfd.
 - Crash reports open: none. Issue 26 (nightly 180, Android: closing the last target from the Open targets sheet after going back to Capture) fixed 2026-10-08, in nightly 181; issue 25 fixed and closed 2026-10-08.
 
 ## The inbox
