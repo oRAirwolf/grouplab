@@ -1230,6 +1230,34 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
 - **Section 4, not done:** the CLAUDE.md paragraph. The auto-mode permission check refused the edit as an inbox file changing Code's own
   standing instructions; Code did not route round it. Request 87 holds the paragraph for Alan to add or approve.
 
+## Entry 394: the learning loop, built to run with no Claude (2026-10-09)
+
+- **Section 1, every submission scored.** `grouplab learn score` (`src/GroupLab.Cli/LearnVerb.cs`) reads a submission folder as the
+  archive holds it, takes the person's final marks from the package's `corrected` part as the truth (kept, moved and added marks, a shot
+  left out for a reason included, none called not a shot), reads the rebuilt picture with the current build, and matches within 0.1 in:
+  one `RealRow` (`src/GroupLab.Core/Evaluation/RealScoreboard.cs`) of numbers and labels, keyed by the archive's folder name. An upload
+  from the page and a store-bought target each get a row saying they are not scored. On this computer's copy, 38 submissions: 29 from
+  the page, 9 corrected, 225 of 225 holes found, no false marks, centre error 0 (every person kept GroupLab's marks).
+- **Section 2, where:** the archive repository's Actions, `scripts/learning/learn.yml` there as `.github/workflows/learn.yml`, reading
+  with a checkout of the newest nightly's tag; nothing on the server changes and no arm64 build is needed. Adding a submission to a
+  month's release starts no workflow, so four short runs a day compare the manifests with the scoreboard and stop before building when
+  nothing is new. **Minutes:** about 550 a month at today's rate, about 1,600 in the first month at ten times it and growing, against
+  2,000 (Free) or 3,000 (Pro); the nightly re-read needs a cap before about 150 corrected submissions (study section 10).
+- **Section 3, every night:** `learn.py nightly` reads every corrected submission again, runs the synthetic board beside it, and
+  `grouplab learn check` holds each row to its baseline with the synthetic margins, writes `learning/summary.md` (totals, no submission)
+  and, for a worse line, opens or adds to one issue in `grouplab-crash-reports`, which needs request 88's token.
+- **Section 4, tuning, built and waiting:** `grouplab learn tune` searches six thresholds against the synthetic board and the corrected
+  submissions not held out; it passes only better on the held-out three in ten, worse on none, with G3 holding around it, and then
+  `learn.py` opens a pull request with the constants and the table (testing-only targets as a count only). **It waits for 50 corrected
+  submissions** (`RealScoreboard.CorrectedForTuning`; the sign-test derivation is in its comment and the study). `AutomaticMarking.Run`
+  and `Scoreboard.RunSynthetic` take optional detection settings for it; without them nothing changes.
+- **Sections 5 and 6:** request 89 asks Alan how a tuning pull request is merged; no learned model, and nothing a device does changes by
+  itself. **Section 7:** the study's section 10, "What GroupLab sends" (a target is read again by every build, numbers only),
+  `docs/RESTORE.md` and `scripts/backup.py` (the archive repository's files in the nightly backup). The README and the site do not
+  describe how detection improves, so they did not change.
+- **Tests:** `LearningLoopTests` (7): the person's truth, the margins, the baseline moving only for the better, the held-out share, a
+  summary of totals only, tuning waiting below 50, and the driver's copy of 50 held to the code's.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

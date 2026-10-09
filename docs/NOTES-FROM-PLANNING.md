@@ -25,6 +25,47 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-09, entry 394: the learning loop, step 2 of DETECTION-LEARNING-STUDY.md, built so it runs with no Claude at all
+
+**Status: actioned 2026-10-09; every section done, the issue and the pull request wait on request 88's token, and how a tuning pull request is merged on request 89.** `grouplab learn score`, `check` and `tune` (`LearnVerb`, `RealScoreboard`), driven by `scripts/learning/learn.py` from the archive repository's Actions (`scripts/learning/learn.yml`, copied there once a nightly carries the verb); 9 corrected submissions scored here, 225 of 225 holes; tuning waits for 50 corrected submissions; about 550 Actions minutes a month at today's rate, about 1,600 in the first month at ten times it.
+
+From the planning session with Alan, 2026-10-09 02:15 Denver. Alan: "At what point will you start building the application that will live
+on the web server and automatically scan target submissions and use the data to refine the detection model without having to spend
+tokens for claude to analyze the holes and targets?" The study (entry 261) recommended this as the step after the scoreboard; the
+scoreboard is built (entry 291 section 7), and entry 355 confirmed the comparison with people's corrections is planned, not built. Now.
+Application and pipeline code, main model. Before anything that changes the server, CLAUDE.md's backup rules apply.
+
+**What it must do, with no Claude in the loop:**
+
+1. **For every submission, automatically** (the hook of the study's section 6): when a submission is archived, re-read it with the
+   command line exactly as the current nightly would, compare GroupLab's own marks with what the person kept, moved, added and removed,
+   and append one row of numbers and labels to a scoreboard of real targets (found, missed, false marks, centre error, registration,
+   target kind, calibre, capture kind, conditions the capture judged). Numbers only: never the photograph, never GPS or location, never a
+   name or a file path. Testing-only consent keeps its rows out of anything public.
+2. **Where it runs, first choice:** the private `grouplab-submissions-archive` repository's GitHub Actions on x64, triggered by each new
+   archive release, so nothing on the server changes and no linux-arm64 OpenCV build is needed. Count the private Actions minutes this
+   costs a month at today's rate and at ten times it, and say so. The server, capped as section 6 says, only if Actions cannot do it; the
+   linux-arm64 build only if the server is chosen.
+3. **Every nightly re-reads the whole real scoreboard** (every archived, consented submission with corrections) beside the synthetic one,
+   and a line worse than its baseline by the scoreboard's margins opens or updates one issue in the private error-report repository,
+   naming the condition and both numbers, with no picture attached. A summary file of a few lines is written each night that the planning
+   session and Code can read for almost nothing.
+4. **Automatic tuning (the study's option b), built now and switched on by data, not by a person:** a job that searches the classical
+   detection constants against the synthetic and real scoreboards together, with G3's stability rule and a held-out share of the real
+   submissions, so it cannot fit itself to the few targets it has. It does nothing until the real scoreboard holds enough corrected
+   submissions for the held-out check to mean something; work out that number from the data and write it down with the reason. When it
+   finds constants that are better on the held-out share and worse on nothing, it opens a pull request with the new constants, the
+   before and after table and nothing else. No person and no Claude has to analyse a hole or a target at any step.
+5. **How a tuning pull request reaches people** is Alan's decision (a request for him, below). Until he answers, the pull request waits.
+6. **No learned model** (the study's option c) and no change to what a person's own device does: the loop changes constants through the
+   usual path (tests, the nightly), never the shipped application by itself.
+7. Update DETECTION-LEARNING-STUDY.md section 9 onward with what is built, the "What GroupLab sends" article if a word in it changes,
+   RESTORE.md for anything new that can be changed or deleted, and the README and site where they describe how detection improves.
+
+**For Alan, written into for-alan.md once, in plain words:** when the tuning job opens a pull request that passes every test and gate,
+should it (a) be merged automatically and ship in the next nightly, (b) wait for Code to read its short table and merge it (a few
+thousand tokens each time), or (c) wait for Alan. Planning will put it to him.
+
 ## 2026-10-08, entry 393: ready research articles may be published without asking (Alan)
 
 **Status: actioned 2026-10-09; sections 1 to 3 done, section 4 not done.** Twelve articles published: the eleven of entry 392 and can-you-see-the-bull, each with every checkable sentence backed and its figures rerun byte-identical; can-you-see-the-bull also lost its friend's name (article, data and a script) and its placeholder summary. aim-points-by-optic-class stays a draft. **Section 4 not done:** the permission check refused to let an inbox entry change CLAUDE.md, Code's own standing instructions; request 87 gives Alan the paragraph to add or approve.

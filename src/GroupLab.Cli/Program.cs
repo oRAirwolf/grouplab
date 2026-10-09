@@ -85,6 +85,7 @@ return args switch
     ["glossary"] => GroupLab.Cli.GlossaryVerb.Run("docs", Console.Out, Console.Error),
     ["glossary", var docs] => GroupLab.Cli.GlossaryVerb.Run(docs, Console.Out, Console.Error),
     ["scoreboard", .. var rest] => GroupLab.Cli.ScoreboardVerb.Run(rest, Console.Out, Console.Error),
+    ["learn", .. var rest] => GroupLab.Cli.LearnVerb.Run(rest, Console.Out, Console.Error),
     ["scale-test-pages", var outDir] => GroupLab.Cli.ScaleTestVerb.Run(outDir, false, Console.Out, Console.Error),
     ["scale-test-pages", var outDir, "--preview"] => GroupLab.Cli.ScaleTestVerb.Run(outDir, true, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
@@ -552,6 +553,7 @@ static int Usage()
         grouplab user-guide [<docs directory>]
         grouplab glossary [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
+        grouplab learn score <submission folder>... | check --rows <rows.jsonl> --baseline <baseline.jsonl> | tune <folder>
         grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>] [--gate <baseline.json>] [--baseline <baseline.json>]
         grouplab update-key
         grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json>

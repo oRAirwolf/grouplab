@@ -1,4 +1,4 @@
-**Open: 25.** Most urgent today: **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 27.** Most urgent today: **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,33 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 89. When the tuning job proposes better detection settings, who merges them? One answer, whenever suits (entry 394)
+
+**Why:** GroupLab now has a job that, once enough corrected targets have come in, searches its detection settings against every target
+people have sent and corrected, and against the made-up test pictures. When it finds settings that are better on targets it held back
+for checking and worse on nothing, it opens a pull request with only the new numbers and a before and after table. Every test and the
+usual checks run on it. Nothing ships without one of these:
+- **(a)** merged automatically when every test passes, and in the next nightly;
+- **(b)** Code reads its short table and merges it, a few thousand tokens each time;
+- **(c)** it waits for you.
+**A good answer:** a, b or c. Until then any pull request it opens simply waits. It will not open one before about 50 corrected targets
+have come in, which at today's rate is months away.
+
+## 88. One token so the learning job can file its reports, about five minutes, whenever suits (entry 394)
+
+**Why:** the job that re-reads every sent target runs in the private archive repository on GitHub, so nothing on the server changes.
+It can read and write that repository by itself, but to open a regression report in the private error-report repository, and later a
+pull request with better settings in GroupLab's own repository, it needs a token that reaches those two. Until it has one, it still
+scores every target and writes its summary; it just cannot file the report or the pull request.
+**Steps:**
+1. On github.com: your picture, **Settings**, **Developer settings**, **Personal access tokens**, **Fine-grained tokens**, **Generate new
+   token**. Name it `grouplab-learning`, expiry one year. **Repository access: Only select repositories**, choose
+   `grouplab-crash-reports` and `grouplab`. **Permissions:** Issues **Read and write**, Contents **Read and write**, Pull requests
+   **Read and write** (Metadata read-only is added by itself). **Generate**, and copy the token.
+2. In PowerShell on this computer (not inside the server), run the line below and paste the token when it asks:
+   `gh secret set LEARNING_TOKEN -R oRAirwolf/grouplab-submissions-archive`
+**A good answer:** it prints that the secret was set. Nothing else to do; the next nightly run files its reports.
 
 ## 87. One line in CLAUDE.md for publishing research articles: yours to add or to approve, one minute (entry 393)
 

@@ -87,6 +87,10 @@ can wait has a limit.
 - **Once kept by the project**, a target is on the developer's machine and in the private archive, which is never made public. It is
   published only if you chose "may be published", and only after it has been looked at. The archive keeps to a budget, and the oldest
   submissions in it may be deleted to stay inside it, never while one is still used by a test or an article.
+- **Read again by every build** (entry 394). A target sent from GroupLab with your corrections is read again by each new nightly, in the
+  private archive's own automatic job, and compared with what you kept, moved, added and removed. Only numbers are kept: how many holes
+  were found, missed or invented, and how far off they were. Never the picture, its location or anything that names you, and the numbers
+  of a target sent for testing only never appear in anything public.
 - **An error report** becomes an issue in the project's private repository on GitHub, and the copy on the server is deleted the moment
   the issue is opened or updated. One that cannot be sent is deleted after thirty days.
 - **On your own machine**, a target you agreed to send and could not is tried again for seven days, then deleted, as above.

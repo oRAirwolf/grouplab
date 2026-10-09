@@ -1,0 +1,106 @@
+# NOTES-FROM-PLANNING.md entry 394: the learning loop, in the private archive repository so a testing-only target never reaches a public
+# log or artifact, and so nothing on the server changes. The source is oRAirwolf/grouplab scripts/learning/learn.yml, copied here as
+# .github/workflows/learn.yml; change it there and copy it again (docs/RESTORE.md says how).
+#
+# Four times a day it reads any submission the archive gained; after the 12:00 UTC nightly it reads every corrected submission again with
+# that nightly's code, holds them to their baseline beside the synthetic board, and writes learning/summary.md; on the 1st of each month it runs the
+# constant search, which waits until there are enough corrected submissions. No artifact is uploaded and no picture is printed.
+name: learn
+
+on:
+  release:
+    types: [published, created]
+  schedule:
+    - cron: "15 */6 * * *"
+    - cron: "30 13 * * *"
+    - cron: "0 15 1 * *"
+  workflow_dispatch:
+    inputs:
+      what:
+        description: "score, nightly or tune"
+        default: nightly
+
+permissions:
+  contents: write
+
+concurrency:
+  group: learn
+  cancel-in-progress: false
+
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: archive
+
+      - name: What this run does
+        id: what
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          ASKED: ${{ github.event.inputs.what }}
+        run: |
+          case "$EVENT:$SCHEDULE" in
+            schedule:"30 13 * * *") what=nightly ;;
+            schedule:"0 15 1 * *") what=tune ;;
+            workflow_dispatch:*) what="${ASKED:-nightly}" ;;
+            *) what=score ;;
+          esac
+          echo "what=$what" >> "$GITHUB_OUTPUT"
+          echo "This run: $what"
+
+      - name: The newest nightly
+        id: nightly
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release list -R oRAirwolf/grouplab --exclude-drafts --limit 40 --json tagName --jq '[.[] | select(.tagName | startswith("v0"))][0].tagName')
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Reading with $tag"
+
+      - uses: actions/checkout@v5
+        with:
+          repository: oRAirwolf/grouplab
+          ref: ${{ steps.nightly.outputs.tag }}
+          path: grouplab
+
+      - name: Anything new
+        id: pending
+        if: steps.what.outputs.what == 'score'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARCHIVE: ${{ github.workspace }}/archive
+          GROUPLAB: ${{ github.workspace }}/grouplab
+        run: echo "count=$(python3 grouplab/scripts/learning/learn.py pending)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-dotnet@v5
+        if: steps.what.outputs.what != 'score' || steps.pending.outputs.count != '0'
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build the command line at that nightly
+        if: steps.what.outputs.what != 'score' || steps.pending.outputs.count != '0'
+        run: dotnet build grouplab/src/GroupLab.Cli -c Release -o "$RUNNER_TEMP/cli" -v q -nologo
+
+      - name: Learn
+        if: steps.what.outputs.what != 'score' || steps.pending.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LEARNING_TOKEN: ${{ secrets.LEARNING_TOKEN }}
+          ARCHIVE: ${{ github.workspace }}/archive
+          GROUPLAB: ${{ github.workspace }}/grouplab
+          CLI: ${{ runner.temp }}/cli/grouplab.dll
+          BUILD: ${{ steps.nightly.outputs.tag }}
+        run: python3 grouplab/scripts/learning/learn.py "${{ steps.what.outputs.what }}"
+
+      - name: Keep the scoreboard
+        if: steps.what.outputs.what != 'score' || steps.pending.outputs.count != '0'
+        working-directory: archive
+        run: |
+          git add learning
+          if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
+          git -c user.name=grouplab-learning -c user.email=grouplab-learning@users.noreply.github.com commit -q -m "learning: ${{ steps.what.outputs.what }} with ${{ steps.nightly.outputs.tag }}"
+          git push -q

@@ -124,7 +124,7 @@ public static class AutomaticMarking
     /// The printer profile chosen, NOTES-FROM-PLANNING.md entry 271: a photograph's figures are multiplied by its scale and say so in one
     /// line; a scan that measured its own scale ignores it. Null keeps a photograph in the sheet's own inches.
     /// </param>
-    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false, Measurement.MeasureOptions? options = null, PrinterProfile? printer = null)
+    public static AutomaticResult Run(GrayImage grey, GrayImage value, ImageMetadata metadata, TargetDefinition definition, IImagingBackend backend, Trace.TraceRecorder? trace = null, CancellationToken cancellation = default, Calibre? calibre = null, bool artefacts = false, Measurement.MeasureOptions? options = null, PrinterProfile? printer = null, Detection.RenderDifferenceOptions? detectionOptions = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
         cancellation.ThrowIfCancellationRequested();
@@ -187,11 +187,11 @@ public static class AutomaticMarking
 
                 // The detector works in the sheet's own inches, so a real bullet is converted into them: on a sheet printed at 96.2 percent
                 // a 0.308 in hole spans 0.320 of the sheet's inches. Entry 171 section 1.
-                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, new RenderDifferenceOptions(CalibreInches: calibre?.DiameterInches * HoleToCalibre / printScale, KeepResidual: trace.KeepArtefacts,
+                holes = RenderDifferenceHoleDetector.Detect(value, definition, fiducials.TileIndex, mapping, dpi, backend, (detectionOptions ?? new RenderDifferenceOptions()) with { CalibreInches = calibre?.DiameterInches * HoleToCalibre / printScale, KeepResidual = trace.KeepArtefacts,
                     // Entry 354 section 1.2: a photograph's margin is where its curled or torn edge and the board behind show. A picture whose
                     // stated resolution would make the sheet print at a size no printer makes, as a phone photograph rebuilt at 300 dpi does,
                     // is a photograph too; only a scan GroupLab believes holds its paper flat.
-                    RefuseMargin: SheetReference.Correction(measurement.Scale) is null));
+                    RefuseMargin = SheetReference.Correction(measurement.Scale) is null });
             }
             catch (InvalidOperationException ex)
             {

@@ -221,6 +221,15 @@ def build(work: Path, steps: list[str]) -> list[Path]:
         files.append(shots)
         steps.append("crash reports' files")
 
+    # Entry 394: the learning loop's files live in the archive repository's tree (its workflow and learning/: the real scoreboard, its
+    # baseline, the summary and the tuning record), which the archive's releases do not hold. Its git tree, not its release zips.
+    learned = work / "submissions-archive-files.tar.gz"
+    tarball = subprocess.run(["gh", "api", f"repos/{ARCHIVE}/tarball"], capture_output=True)
+    if tarball.returncode == 0 and tarball.stdout:
+        learned.write_bytes(tarball.stdout)
+        files.append(learned)
+        steps.append("the archive repository's files")
+
     for f in files:
         if f.stat().st_size > MOST_ASSET:
             raise RuntimeError(f"{f.name} is {f.stat().st_size >> 20} MB, over the 1.9 GB a release asset may be; split it before the next run")

@@ -312,7 +312,8 @@ public static partial class Scoreboard
     /// Every condition on every seed, read as a photograph (no stated resolution) by <see cref="AutomaticMarking.Run"/>. A condition whose
     /// degradation cannot be made here, JPEG without an encoder, is left out, and the baseline comparison then names it as missing.
     /// </summary>
-    public static IReadOnlyList<PictureScore> RunSynthetic(TargetDefinition definition, IImagingBackend backend, IReadOnlyList<int> seeds, JpegRoundTrip? jpeg, IEnumerable<string>? only = null)
+    public static IReadOnlyList<PictureScore> RunSynthetic(TargetDefinition definition, IImagingBackend backend, IReadOnlyList<int> seeds, JpegRoundTrip? jpeg, IEnumerable<string>? only = null,
+        RenderDifferenceOptions? detection = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
         ArgumentNullException.ThrowIfNull(backend);
@@ -340,7 +341,7 @@ public static partial class Scoreboard
                         continue;
                     }
 
-                    scores.Add(Score(ColourLine(colour, condition.Name), seed, condition, definition, backend, seenGrey, seenValue, colourHoles, colourTruth, grey.Width, grey.Height));
+                    scores.Add(Score(ColourLine(colour, condition.Name), seed, condition, definition, backend, seenGrey, seenValue, colourHoles, colourTruth, grey.Width, grey.Height, detection));
                 }
             }
 
@@ -353,7 +354,7 @@ public static partial class Scoreboard
                     continue;
                 }
 
-                scores.Add(Score(condition.Name, seed, condition, definition, backend, image, image, holes, truth, flat.Width, flat.Height));
+                scores.Add(Score(condition.Name, seed, condition, definition, backend, image, image, holes, truth, flat.Width, flat.Height, detection));
             }
         }
 
@@ -365,11 +366,11 @@ public static partial class Scoreboard
     /// undisturbed picture's size. Under a view, the marks and the registration are taken back to the undisturbed picture and scored there.
     /// </summary>
     private static PictureScore Score(string line, int seed, SyntheticCondition condition, TargetDefinition definition, IImagingBackend backend, GrayImage grey, GrayImage value,
-        IReadOnlyList<PointD> holes, IPageMapping truth, int width, int height)
+        IReadOnlyList<PointD> holes, IPageMapping truth, int width, int height, RenderDifferenceOptions? detection = null)
     {
         var metadata = new ImageMetadata("JPEG", grey.Width, grey.Height, null, null, null, null, null, null, null);
         var clock = Stopwatch.StartNew();
-        var result = AutomaticMarking.Run(grey, value, metadata, definition, backend);
+        var result = AutomaticMarking.Run(grey, value, metadata, definition, backend, detectionOptions: detection);
         clock.Stop();
         var back = condition.View?.Invoke(width, height).Transform.Inverse();
         PointD Back(PointD p) => back is null ? p : back.Apply(p);

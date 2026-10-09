@@ -549,3 +549,59 @@ to 0.0264 in on that bottom-row hole, and a false mark appeared on the border of
 past them had moved 0.008 in. Holding the correction at its edge value past the markers instead of fading it kept that false mark and added
 one beside the far column's last marker on the 1 degree picture. So the bend is for a lift the lens fit misses by 0.04 in or more, and below that the 1 and
 2 degree pictures read as they did.
+
+## 10. The learning loop, built (entry 394)
+
+Sections 5 and 6's next two steps, with no person and no Claude in any of them. Alan, 2026-10-09: "automatically scan target submissions
+and use the data to refine the detection model without having to spend tokens for claude to analyze the holes and targets".
+
+**Where it runs.** The private `grouplab-submissions-archive` repository's GitHub Actions on x64, `.github/workflows/learn.yml`, whose
+source is `scripts/learning/learn.yml` here; the driver is `scripts/learning/learn.py`, read from a checkout of GroupLab at the newest
+nightly's tag, so every target is read exactly as that nightly reads it. Nothing on the server changed, so no linux-arm64 OpenCV build is
+needed. Four times a day it reads any submission the archive gained since the last run (the archive adds a submission to the month's
+release as an asset, which starts no workflow, so new ones are found by comparing each month's manifest with the scoreboard; a new month's
+release starts a run too). At 13:30 UTC, after the 12:00 nightly, it reads every corrected submission again, runs the synthetic board
+beside them, holds each line to its baseline and writes `learning/summary.md`. On the 1st of each month it runs the constant search.
+
+**What a row is** (`RealRow`, `grouplab learn score`). The truth is the person's own marks at the end, from the package GroupLab sends:
+every mark they kept, moved or added, a shot left out of the group for a reason included (it is still a hole), and none they called not
+a shot. The build's marks are matched to it within 0.1 in, as on the synthetic board. A row holds the target and capture kind, the calibre,
+the capture's angle and quality score, the holes, marks, found, missed and false marks, the median and worst centre error, the
+registration's residual, and how many marks the person kept, moved, added, removed and called not a shot. Numbers and labels only: never
+the picture (it is unpacked into the runner's temporary folder and gone with it), never a location, never a name or a file path; the key is
+the archive's own folder name, a day and the receiver's random id. A testing-only target's row is marked not public and stays out of
+anything public, including a tuning pull request. An upload from the page has no corrections and a store-bought target is not scored yet;
+each still gets its row, saying so.
+
+**The check** (`grouplab learn check`). The synthetic board's margins: more than one hole lost, more than one false mark gained, the
+median centre error grown by more than 0.005 in or the worst by more than 0.03 in, or a row that registered no longer registering. A
+worse line opens, or adds to, one issue in the private error-report repository naming the line and both numbers, with no picture. The
+baseline takes a new row as it is, moves for the better, and never for the worse, so a regression stays visible until it is fixed.
+
+**First reading, 2026-10-09, on this computer's copy of the archive** (38 submissions): 29 were uploads from the page, nothing to score;
+the 9 sent from GroupLab with corrections were found 225 of 225 holes, no false marks, centre error 0 (each person kept GroupLab's own
+marks, and the build reads the same pictures the same way).
+
+**Automatic tuning** (`grouplab learn tune`), the study's option (b). It searches six classical thresholds (the opening and closing radii,
+the residual threshold, the solidity floor, the aspect ceiling and the paper block) by 15 percent either way, keeping a move that finds
+more holes for fewer false marks on the synthetic board and the corrected submissions not held out, and drops no synthetic line past its
+margin. Its result passes only when, on the held-out submissions it never saw (three in ten, fixed by name), it is better in total and
+worse on none, and when G3 holds around it: recall above 90 percent with any of the six 30 percent off. **It waits until there are 50
+corrected submissions** (`RealScoreboard.CorrectedForTuning`): the study expects tuning to win about two holes in a hundred, a sign test on
+the same holes needs six such holes all one way for p < 0.05, so 300 held-out holes; at about 20 shots a sheet that is 15 held-out
+submissions, and at three in ten held out, 50 in all. A result that passes becomes a pull request with the new constants and the before
+and after table and nothing else; how it is merged is request 89's answer, and until then it waits. Nothing a person's device does
+changes by itself.
+
+**Actions minutes, estimated 2026-10-09.** A private repository's runner has two processors; reading one corrected 600 dpi scan took
+about 7 s on this computer, so about 15 s there, and building the command line about 3 minutes. A run that finds nothing new stops
+before building, about a minute. **At today's rate** (42 submissions in the archive over 25 days, 9 of those on this computer scored): four short runs a day, about 120
+minutes a month; the nightly run, about 8 minutes (build, the synthetic board, 9 re-reads), about 240; runs that found something new,
+about 180; the monthly search, a few minutes while it waits. **About 550 minutes a month.** **At ten times the rate:** every short run
+builds and reads, about 600 minutes; the nightly re-reads grow with the corrected count, about 200 more a month, so about 800 in the first
+month and more each month after; the search, once it runs, about 180. **About 1,600 minutes in the first month, growing.** GitHub's
+allowance for private repositories is 2,000 minutes a month on Free and 3,000 on Pro, so at ten times today's rate the nightly re-read has
+to be capped, the newest and a rotating share, before the corrected count passes about 150.
+
+**Not built:** the learned model (option c), and scoring store-bought targets, which needs the any-target finder's truth from the
+corrections in the same way and is the next step.
