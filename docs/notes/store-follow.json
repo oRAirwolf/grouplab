@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/store-follow.py, entry 369: the nightly last sent to the Microsoft Store, and whether sending has stopped.",
-  "submitted": "0.2.0-nightly.182",
+  "submitted": "0.2.0-nightly.183",
   "submittedOn": "2026-10-09",
   "stopped": false,
   "reason": null,

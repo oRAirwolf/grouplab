@@ -19,10 +19,10 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:store -->
 
 <!-- status:store-submission -->
-## store-submission, 2026-10-09 11:02 UTC
+## store-submission, 2026-10-09 23:00 UTC
 
-- The Store submission of grouplab-win-x64.msix, 93234201 bytes
-- Submission 1152921505702084325: Certification.
+- The Store submission of grouplab-win-x64.msix, 93250106 bytes
+- Submission 1152921505702088837: Certification.
 <!-- /status:store-submission -->
 
 <!-- status:store-search -->
