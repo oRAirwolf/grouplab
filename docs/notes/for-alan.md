@@ -1,4 +1,4 @@
-**Open: 25.** Most urgent today: **88**, the learning job's token, typed on the server (five minutes; the worker is installed). Then **84**, two M220 labels again with nightly 180, which has the fix (ten minutes). Then **85**, one more M834 check print with nightly 181, which has the stretch (fifteen minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 23.** Most urgent today: **92**, two lines on the server to check the learning token (one minute). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -227,22 +227,20 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
-## 88. One token for the learning job, typed on the server, about five minutes, whenever suits (entries 394 and 395)
+## 92. Two lines on the server: does the learning token reach the error reports? About one minute, whenever suits (request 88)
 
-**Why:** the job that re-reads every sent target now runs on your web server (entry 395), because that is free. To open a regression
-report in the private error-report repository, and later a pull request with better detection settings, it needs a token that reaches
-those two repositories. It goes on the server only, typed by you, never into a file in any repository. Until it has one the job still
-scores every target and writes its summary; it just cannot file the report or the pull request.
-**Ready now:** the learning worker and its `grouplab-set-learning-token` command were installed on 2026-10-09.
-**Steps:**
-1. On github.com: your picture, **Settings**, **Developer settings**, **Personal access tokens**, **Fine-grained tokens**, **Generate new
-   token**. Name it `grouplab-learning`, expiry one year. **Repository access: Only select repositories**: `grouplab-crash-reports`,
-   `grouplab` and `grouplab-submissions-archive`. **Permissions:** Issues **Read and write**, Contents **Read and write**, Pull requests
-   **Read and write**. **Generate**, and copy the token.
-2. In MobaXterm, in your usual session on the server (the bash shell you land in), run:
-   `sudo grouplab-set-learning-token`
-   and paste the token when it asks. Nothing shows as you paste; press Enter.
-**A good answer:** it prints `learning token set` and the next nightly check files its reports. Nothing else to do.
+**Why:** the token you set for request 88 is used only on a night the check finds a line worse, to file its report, and once a month
+for a tuning pull request. A night with nothing worse never touches it, so a wrong or expired token would go unnoticed until the night
+it matters. Code's own check on the server was not allowed this time, so here it is for you to run. Neither line prints the token.
+**Steps,** in MobaXterm, in your usual bash session on the server, paste these two lines one at a time:
+
+    sudo bash -c 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $(cat /etc/grouplab/learning-token)" "https://api.github.com/repos/oRAirwolf/grouplab-crash-reports/issues?per_page=1"'
+
+    sudo bash -c 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $(cat /etc/grouplab/learning-token)" "https://api.github.com/repos/oRAirwolf/grouplab/pulls?per_page=1"'
+
+**A good answer:** each prints `200`. A `401` means the token is wrong or expired: make a new one as in request 88 and run
+`sudo grouplab-set-learning-token` again. A `404` means the token does not reach that repository: add it under **Repository access**
+on github.com.
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 
@@ -256,59 +254,29 @@ scopes and the PLxC were scored on 26 September; the red dots (ROMEO 5, the two 
 3. A photo of the score sheet into `C:\Dev\grouplab-local\aim-points-2026\`.
 **A good answer:** the score sheet, with the optic, the magnification and the distance on every row.
 
-## 85. One more M834 check print, with nightly 181, about fifteen minutes (entry 391)
+## 83. The M834 printing from the computer, about twenty minutes, whenever suits (entry 389; ready since request 85, 2026-10-10)
 
-**Why:** your two check prints showed the M834 prints short along the paper every time, 99.2 to 99.5 percent by five ways of
-measuring, and true across it: the page GroupLab sends puts the crosshairs 150.02 mm apart across, and your scan measured 150.02. So
-GroupLab now draws every page it sends straight to the M834 0.7 percent longer along the paper, on the phone and the computer alike.
-This print says whether that makes it true, and gives the M834's printer check its new numbers: the one saved now (100.3 by 99.2
-percent) is right only for sheets printed before the stretch.
-**Steps,** on the Fold 7, with nightly 181 or later installed (its notes say pages printed straight to the Phomemo M834 are drawn longer):
-1. Close the Phomemo app. In GroupLab, **Targets**, choose **GroupLab Printer Check, Letter**, check Paper in the M834 says **A
-   continuous roll**, then press **Print on the Phomemo M834**.
-2. Flatten the sheet under a book, then measure the same four numbers as before: the caliper across and down on the dashed lines, and
-   the ruler across the bottom and down the side. If you can, scan it at 600 dpi as
-   `C:\Dev\grouplab-local\m834-2026-10-08\check-print-3-600dpi.png`.
-3. Settings, under **Printers**, open the **Phomemo M834** check and replace its two numbers with this print's caliper across and down
-   (Digital caliper). Do the same on the computer if you saved one there.
-4. Do not shoot on a sheet the M834 printed before this nightly: it is 0.7 percent short along the paper, and the new check will not
-   correct it.
-**A good answer:** the four numbers (down should now read about 150.0 and 250, across about 150.0 and 190), and the scan if you made one.
-
-## 83. For later, not now: the M834 printing from the computer, about twenty minutes (entry 389)
-
-**Why:** the computer can now print a sheet straight to the M834 over Bluetooth, sending exactly the bytes the phone sends, but no real
-M834 has printed from a computer yet. Leave this until request 85 is done: the printer takes one connection at a time, and this
-uses it from the computer instead of the phone.
+**Why:** the computer can print a sheet straight to the M834 over Bluetooth, sending exactly the bytes the phone sends, but no real
+M834 has printed from a computer yet. Request 85 showed the phone's prints now come out true both ways (150.0 by 150.0 mm), so this
+print says whether the computer's do too. The printer takes one connection at a time, so the phone has to let go of it first.
 **Steps,** on the Windows computer, with nightly 181 or later installed:
-1. Close the Phomemo app and GroupLab on the phone, or turn the phone's Bluetooth off, so the phone lets go of the M834.
-2. Turn the M834 on, with the roll in it.
-3. In Windows, open **Settings**, then **Bluetooth and devices**, then **Add device**, then **Bluetooth**. Choose **M834** when it
+1. If you have not done it yet: on the Fold 7, Settings, under **Printers**, open the **Phomemo M834** check and set it to **150.0**
+   across and **150.0** down (Digital caliper), the numbers from request 85's print; do the same on the computer if you saved one there.
+   The old numbers (100.3 by 99.2 percent) belong to sheets printed before nightly 181.
+2. Close the Phomemo app and GroupLab on the phone, or turn the phone's Bluetooth off, so the phone lets go of the M834.
+3. Turn the M834 on, with the roll in it.
+4. In Windows, open **Settings**, then **Bluetooth and devices**, then **Add device**, then **Bluetooth**. Choose **M834** when it
    appears (its name may start with M834). If Windows asks for a PIN, try 0000. Wait until it says **Connected** or **Paired**.
-4. In GroupLab on the computer: **Targets**, choose **GroupLab Printer Check, Letter**, and under **Print on** choose
+5. In GroupLab on the computer: **Targets**, choose **GroupLab Printer Check, Letter**, and under **Print on** choose
    **Phomemo M834, 300 dpi (Letter and A4)**.
-5. Under it, choose **A continuous roll**, then press **Print on the Phomemo M834 (Bluetooth; not yet tried from a computer)**.
+6. Under it, choose **A continuous roll**, then press **Print on the Phomemo M834 (Bluetooth; not yet tried from a computer)**.
    The line under the buttons says what it is doing; Cancel stops it.
-6. When it has printed, flatten the sheet under a book and measure it the same way as request 85: the caliper across and down on the
-   dashed lines, and the ruler across the bottom and down the side.
-**A good answer:** the four numbers, and what the line under the buttons said at the end. If it did not print, the words it showed and,
-if you can, Settings, Diagnostics, **Report a problem**, so the log comes with it.
-
-## 84. Two scale labels from the phone again, to confirm the fix, about ten minutes, once the nightly says it is in (entry 390)
-
-**Why:** of the two labels the phone printed on the M220 on 8 October, the first was right (its codes 59.99 and 59.96 mm apart across,
-60.0 designed) and the second came out shifted about 7.5 mm left, with its left codes cut and wrapped round to the right edge. GroupLab
-sent the same bytes for both, so the printer lost part of the second, which went out straight after the first finished. GroupLab now
-leaves the printer eight seconds after each label before sending the next. This print says whether that was the cause.
-**Steps,** on the Fold 7 or the tablet, with the first nightly whose notes say "the second of two M220 scale labels" installed:
-1. The M220 on, with the 70 x 80 mm roll loaded. Close the Phomemo app.
-2. GroupLab, **Targets**, **Scale markers**, check the label size says **70 x 80 mm**, then press **Print two scale labels on the Phomemo
-   M220**. The screen says "printing label 1 of 2", then "label 2 of 2"; it takes about twenty seconds.
-3. Tear the two labels off and lay them flat on the flatbed side by side, as square to the glass as you can.
-4. Scan them at **600 dpi**, colour or greyscale, and save the scan as
-   `C:\Dev\grouplab-local\m220-2026-10-08\two-labels-again-600dpi.png`.
-**A good answer:** the scan saved there, and one line saying whether both labels look the same, with all four square codes whole on
-each.
+7. When it has printed, flatten the sheet under a book and measure it the same way as request 85: the caliper across and down on the
+   dashed lines, and the ruler across the bottom and down the side. If you can, scan it at 600 dpi as
+   `C:\Dev\grouplab-local\m834-2026-10-10\computer-print-600dpi.png`.
+**A good answer:** the four numbers (about 150.0, 150.0, 190 and 250, as the phone's print was), what the line under the buttons said
+at the end, and the scan if you made one. If it did not print, the words it showed and, if you can, Settings, Diagnostics, **Report a
+problem**, so the log comes with it.
 
 ## 76. Scale markers on real paper, about half an hour, whenever suits (entry 365)
 

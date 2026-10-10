@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1606 |
-| measured | 1968 |
+| code | 1607 |
+| measured | 1970 |
 | decided | 1389 |
 | unbacked | 0 |
-| **total** | **4963** |
+| **total** | **4966** |
 
-**1516** of them were read one sentence at a time and their backing written against the sentence. The other **3447** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1519** of them were read one sentence at a time and their backing written against the sentence. The other **3447** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -4707,7 +4707,7 @@ one that matters.
 
 ### site:research/printer-true-size/index.html
 
-- *measured* (the article's front matter; docs/PHASE0-RESULTS.md measurement 5; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv): Written 2026-09-22; the data is from GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08.
+- *measured* (the article's front matter; docs/PHASE0-RESULTS.md measurement 5; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv; docs/PHASE1-RESULTS.md, requests 84 and 85 answered (2026-10-10), C:/Dev/grouplab-local/m834-2026-10-08/check-print-3-600dpi.png): Written 2026-09-22; the data is from GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08, and a third after the correction, scanned 2026-10-10.
 - *measured* (docs/PHASE0-RESULTS.md measurement 5: the Phase 0 printer at Actual size, x 1.0001 and y 1.0006; the sheets were inkjet-printed (section 4.1); website/research/printer-true-size/data/phase0-print-scale.csv): What we found a printer set to &#x27;Actual size&#x27; can be very accurate: the developer&#x27;s inkjet measured 1.0001 across and 1.0006 down, within 0.06 percent.
 - *measured* (arithmetic for a quarter inch margin: min(8.0 / 8.5, 10.5 / 11) = 0.941; src/GroupLab.Core/Marking/PaperEdgeCheck.cs, Fit to page shrinks by 3 to 6 percent): The danger is the print dialog: &#x27;Fit to page&#x27; prints a letter sheet at about 94 percent.
 - *measured* (docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28): A printer can also be true one way and not the other: one thermal printer printed true across its head and 99.28 percent along its paper feed, the mean of five readings over two prints.
@@ -4728,11 +4728,14 @@ one that matters.
 - *code* (src/GroupLab.Core/Printing/Labels/M834Print.cs and the check page: 1772 dots across (150.02 mm) and 2953 rows along the feed (250.02 mm), unstretched; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv): Its page was printed twice, a day apart, and the same two lengths were read on each print: the distance between the crosshairs, which GroupLab drew 150.02 mm apart, and the side ruler, drawn 250.02 mm long.
 - *measured* (docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28): Readings Printed at Across the head caliper on print 1, caliper and scan on print 2 99.79 to 100.30 percent, mean 100.03 Along the feed caliper and ruler on both prints, scan on print 2 99.19 to 99.49 percent, mean 99.28 Across, the scan read exactly what GroupLab drew, and the two caliper readings fell either side of it.
 - *measured* (docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv: across 99.79, 100.30 and 100.00 percent, mean 100.03; along the feed 99.19, 99.19, 99.34, 99.19 and 99.49 percent, mean 99.28): So the head is true and the feed pulls the paper about 0.7 percent too fast, which is enough to make every vertical figure on a photographed sheet about 0.7 percent large if nothing corrected it.
-- *code* (src/GroupLab.Core/Printing/Labels/M834Print.cs MeasuredFeed = 0.9930, FeedStretch = 1 / MeasuredFeed; request 85 in docs/notes/for-alan.md prints the check again): GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true; the next check print will say whether that worked.
+- *code* (src/GroupLab.Core/Printing/Labels/M834Print.cs MeasuredFeed = 0.9930, FeedStretch = 1 / MeasuredFeed): GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true.
+- *measured* (docs/PHASE1-RESULTS.md, requests 84 and 85 answered (2026-10-10): Alan's caliper and rulers, and the scan's crosshair centres and ruler end ticks fitted at 600 dpi): A third check print, made after that change, came out true both ways: 150.0 mm across and down by caliper, 190 and 250 mm on the rulers, and 149.98 mm across and 150.07 mm down on its 600 dpi scan.
 - *measured* (docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv section 3: scan against caliper 0.21 percent across and 0.15 down; print 1's caliper 100.30 against the scan's 100.00 across): On the same sheet the scan read 0.21 percent larger than the caliper across and 0.15 percent larger down.
 - *measured* (docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv section 5: the crosshair lines meet at 90.22 degrees on print 2's scan): On print 2 the top and side crosshair lines meet at 90.22 degrees, not 90: the paper drifted about 1 mm sideways over 250 mm of feed.
 - *measured* (docs/PHASE1-RESULTS.md entry 390 section 1: codes 59.99 and 59.96 mm for 60.0, rows 10.39 mm for 10.5, read from a scan of label S1): A smaller thermal label printer, a Phomemo M220, printed two codes GroupLab placed 60.0 mm apart at 59.99 and 59.96 mm, read from a scan of one label: true across its head to 0.07 percent.
 - *measured* (docs/PHASE1-RESULTS.md entry 390 section 1: codes 59.99 and 59.96 mm for 60.0, rows 10.39 mm for 10.5, read from a scan of label S1): Along its feed, two rows 10.5 mm apart came out 10.39 mm apart, about 1 percent short, the same direction as the larger printer.
+- *measured* (docs/PHASE1-RESULTS.md, requests 84 and 85 answered (2026-10-10): labels S3 and S4 in C:/Dev/grouplab-local/m220-2026-10-08/two-labels-again-600dpi.png, rows 10.35, 10.37, 10.45 and 10.38 mm apart): Two more labels repeated it, 10.35 to 10.45 mm on both sides of each, so it is the printer's feed and not one label.
+- *code* (src/GroupLab.Core/ScaleMarkers/ScaleLabelCheck.cs: scale labels are read across only, the feed figure kept as measured and never used to correct a label's reading): Nothing needs correcting, because GroupLab reads these labels across only.
 - *decided* (instruction): A thirty-second check Print the sheet with the scale set to 100 percent or Actual size .
 - *code* (the printer check page, src/GroupLab.Core/Marking/PrinterProfile.cs (crosshairs, ruled lines); the aim point card's 2 in check bar, website/research/can-you-see-the-bull/figures/card.py): GroupLab's check page has crosshairs and two long ruled lines for this; the aim point test card has a 2 inch bar.
 - *decided* (arithmetic: a print at scale s puts the markers s apart, so distances read 1/s; website/research/printer-true-size/data/error-by-scale.csv; 2 x 0.94 = 1.88 and 2 x 0.98 = 1.96): Over 2 inches, 94 percent shows as about 1.88 inches, an eighth of an inch short, which is easy to see on a ruler.
@@ -4742,7 +4745,7 @@ one that matters.
 - *decided* (the page /what-can-be-measured/, from docs/WHAT-CAN-BE-MEASURED.md): What GroupLab can measure sets out which errors are recovered and which are not.
 - *measured* (the sources named, in this repository): Sources GroupLab Phase 0 results, measurement 5, print-scale detection (docs/PHASE0-RESULTS.md) and the print protocol (docs/PHASE0-PRINT-PROTOCOL.md).
 - *measured* (the sources named, in this repository): GroupLab detection advice, the print-scale message and its 0.25 percent threshold (src/GroupLab.Core/Marking/DetectionAdvice.cs), and the printer check (src/GroupLab.Core/Marking/PrinterProfile.cs).
-- *measured* (the sources named, in this repository): The thermal printer's two check prints and the label scan, docs/PHASE1-RESULTS.md, entries 382, 390 and 391.
+- *measured* (the sources named, in this repository): The thermal printer's three check prints and the label scans, docs/PHASE1-RESULTS.md, entries 382, 390 and 391, and requests 84 and 85 (2026-10-10).
 
 ### site:research/range-test-log/index.html
 

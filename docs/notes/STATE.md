@@ -9,29 +9,27 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-09, entry 395 finished on the server (before it: entry 398).
+**Last rewritten:** 2026-10-10, requests 84, 85 and 88 answered from Alan's message (before it: entry 395).
 
 ---
 
 ## In flight
 
+- **Requests 84, 85 and 88 answered** (2026-10-10, no inbox entry): the M220's pause after each label confirmed on two labels, both
+  printed about 0.56 mm left of the label's centre with every code whole (question 94); the M834's third print true both ways to 0.05
+  percent, `MeasuredFeed` stays 99.30; the learning token is set but used only when a line reads worse (request 92, question 95).
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
-- **Entry 398 done** (2026-10-09): the whole server's backup restored once (request 91, recorded in RESTORE.md); backups now one a day
-  kept 4 days, so a server mistake must be noticed within four days; question 93 answered, the packages.
-- **Entry 397 done** (2026-10-09): every server change is backed up first (RESTORE.md rule 5, `grouplab-change-backup.py`).
-- **Entry 396 done** (2026-10-09): request 89 answered (b), the merge rule in the study's section 10 and in CLAUDE.md.
-- **Entry 395 done; the learning loop runs on the web server** (2026-10-09): score every three minutes, the nightly check at
-  13:45 UTC (first run: 42 read, 9 corrected, nothing worse, 13 min 20 s, peak 1.1 GB, both sites fine), tune monthly; each change
-  backed up under RESTORE.md rule 5 (three backups, undo dry-run recorded). Request 88, the token for its reports, is ready for Alan.
-- **Entry 394 done** (2026-10-09): `grouplab learn`, the learning loop's verb; Code merges a passing tuning pull request (entry 396).
-- **Entry 393 done** (2026-10-09): twelve research articles published (PUBLISHED.md).
+- **Entries 393 to 398 done** (2026-10-09): twelve research articles published; `grouplab learn`, and the learning loop on the web
+  server (score every three minutes, nightly check 13:45 UTC, first run 42 read, 9 corrected, nothing worse; tune monthly; Code
+  merges a passing tuning pull request); every server change backed up first (RESTORE.md rule 5); the whole server's backup
+  restored once, backups kept 4 days, so a server mistake must be noticed within four days.
 - **Entry 392 done** (2026-10-09): **eleven research drafts `ready`** (numbers checked against data and code, 245 sentences backed,
   figures rerun byte-identical); aim-points-by-optic-class stays draft for request 86. **A 600 dpi scan's hole finding 1769 to 693 ms**
   (`BinaryMorphology.Close`, OpenCV's close to the byte); **question 44 fixed** (the cylinder's table index wrapped) and archived.
-  Entry 391's feed mean is 99.28 percent, not 99.30; `MeasuredFeed` kept, request 85 decides.
+  Entry 391's feed mean is 99.28 percent, not 99.30; `MeasuredFeed` kept, and request 85's print kept it.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** request 88 (the learning token, five minutes), requests 70, 72, 74, 75, 76, 77, 84 (two M220 labels again), 85 (an M834 check print with nightly 181); 83 and 86 are for later.
+- **Waiting on Alan:** requests 92 (the learning token, one minute), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -52,9 +50,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; the learning loop's first unattended nightly is 13:45 UTC on 2026-10-09.
-2. Request 85 with nightly 181: whether the stretch makes the M834 true along the feed, and the saved check replaced.
-3. Request 84 (nightly 180 has the fix): whether the pause after each M220 label ends the shift; then 83, the M834 from the computer.
+1. Whatever the inbox brings next; questions 94 (the M220's offset) and 95 (the learning token checked nightly) wait on planning.
+2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
+3. Request 92: the learning token's two-line check on the server.
 
 ## Blocked, and on what
 
@@ -62,14 +60,16 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **25** (88 a token for the learning job; 86 aim points through the other optics, for later; 85 an M834 check print with nightly 181; 84 two M220 labels again; 83 the M834 from the computer, for later; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (92 two lines checking the learning token; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (44 answered and archived in entry 392):
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (44 answered and archived in entry 392):
 
+- **95** whether the learning loop's nightly checks its own token
+- **94** the M220 prints about 0.56 mm left of the label's centre; move it?
 - **88** DESIGN NEEDED, chronograph entry on the analysis
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9

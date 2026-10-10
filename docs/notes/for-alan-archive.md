@@ -3,6 +3,64 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 88. One token for the learning job, typed on the server, about five minutes, whenever suits (entries 394 and 395)
+
+**Answered 2026-10-10:** Alan set the token on the server. The nightly check uses it only to file its report when a line reads worse, and the monthly tuning only for a pull request, so a quiet night does not prove it works; Code's own read-only check over SSH was refused by the session's permission check this run, so request 92 gives Alan the same check as two lines.
+
+**Why:** the job that re-reads every sent target now runs on your web server (entry 395), because that is free. To open a regression
+report in the private error-report repository, and later a pull request with better detection settings, it needs a token that reaches
+those two repositories. It goes on the server only, typed by you, never into a file in any repository. Until it has one the job still
+scores every target and writes its summary; it just cannot file the report or the pull request.
+**Ready now:** the learning worker and its `grouplab-set-learning-token` command were installed on 2026-10-09.
+**Steps:**
+1. On github.com: your picture, **Settings**, **Developer settings**, **Personal access tokens**, **Fine-grained tokens**, **Generate new
+   token**. Name it `grouplab-learning`, expiry one year. **Repository access: Only select repositories**: `grouplab-crash-reports`,
+   `grouplab` and `grouplab-submissions-archive`. **Permissions:** Issues **Read and write**, Contents **Read and write**, Pull requests
+   **Read and write**. **Generate**, and copy the token.
+2. In MobaXterm, in your usual session on the server (the bash shell you land in), run:
+   `sudo grouplab-set-learning-token`
+   and paste the token when it asks. Nothing shows as you paste; press Enter.
+**A good answer:** it prints `learning token set` and the next nightly check files its reports. Nothing else to do.
+
+## 85. One more M834 check print, with nightly 181, about fifteen minutes (entry 391)
+
+**Answered 2026-10-10:** print 3, with the stretch: caliper 150.0 across and 150.0 down, rulers 190 and 250; its 600 dpi scan 149.98 across and 150.07 down on the crosshairs, 189.93 and 249.93 on the rulers. True both ways to 0.05 percent, so the M834's check is now 150.0 by 150.0 (100.0 by 100.0 percent), and the measured feed stays 99.30 percent. Request 83 is unblocked.
+
+**Why:** your two check prints showed the M834 prints short along the paper every time, 99.2 to 99.5 percent by five ways of
+measuring, and true across it: the page GroupLab sends puts the crosshairs 150.02 mm apart across, and your scan measured 150.02. So
+GroupLab now draws every page it sends straight to the M834 0.7 percent longer along the paper, on the phone and the computer alike.
+This print says whether that makes it true, and gives the M834's printer check its new numbers: the one saved now (100.3 by 99.2
+percent) is right only for sheets printed before the stretch.
+**Steps,** on the Fold 7, with nightly 181 or later installed (its notes say pages printed straight to the Phomemo M834 are drawn longer):
+1. Close the Phomemo app. In GroupLab, **Targets**, choose **GroupLab Printer Check, Letter**, check Paper in the M834 says **A
+   continuous roll**, then press **Print on the Phomemo M834**.
+2. Flatten the sheet under a book, then measure the same four numbers as before: the caliper across and down on the dashed lines, and
+   the ruler across the bottom and down the side. If you can, scan it at 600 dpi as
+   `C:\Dev\grouplab-local\m834-2026-10-08\check-print-3-600dpi.png`.
+3. Settings, under **Printers**, open the **Phomemo M834** check and replace its two numbers with this print's caliper across and down
+   (Digital caliper). Do the same on the computer if you saved one there.
+4. Do not shoot on a sheet the M834 printed before this nightly: it is 0.7 percent short along the paper, and the new check will not
+   correct it.
+**A good answer:** the four numbers (down should now read about 150.0 and 250, across about 150.0 and 190), and the scan if you made one.
+
+## 84. Two scale labels from the phone again, to confirm the fix, about ten minutes, once the nightly says it is in (entry 390)
+
+**Answered 2026-10-10:** both labels (S3 and S4) came out the same, all four codes whole: codes 59.96 to 59.98 mm apart across (60.0 designed), rows 10.35 to 10.45 (10.5). The pause after each label fixed the shift. Both sit left of centre, as S1 did: the codes' ink is 0.30 to 0.72 mm from the label's left edge and 1.48 to 1.74 mm from its right, the print about 0.4 to 0.7 mm left of centre; question 94 asks whether to move it.
+
+**Why:** of the two labels the phone printed on the M220 on 8 October, the first was right (its codes 59.99 and 59.96 mm apart across,
+60.0 designed) and the second came out shifted about 7.5 mm left, with its left codes cut and wrapped round to the right edge. GroupLab
+sent the same bytes for both, so the printer lost part of the second, which went out straight after the first finished. GroupLab now
+leaves the printer eight seconds after each label before sending the next. This print says whether that was the cause.
+**Steps,** on the Fold 7 or the tablet, with the first nightly whose notes say "the second of two M220 scale labels" installed:
+1. The M220 on, with the 70 x 80 mm roll loaded. Close the Phomemo app.
+2. GroupLab, **Targets**, **Scale markers**, check the label size says **70 x 80 mm**, then press **Print two scale labels on the Phomemo
+   M220**. The screen says "printing label 1 of 2", then "label 2 of 2"; it takes about twenty seconds.
+3. Tear the two labels off and lay them flat on the flatbed side by side, as square to the glass as you can.
+4. Scan them at **600 dpi**, colour or greyscale, and save the scan as
+   `C:\Dev\grouplab-local\m220-2026-10-08\two-labels-again-600dpi.png`.
+**A good answer:** the scan saved there, and one line saying whether both labels look the same, with all four square codes whole on
+each.
+
 ## 91. Before Code changes the server: check today's server backup and prove one restores, about twenty minutes (entry 397)
 
 **Answered 2026-10-09 (entry 398):** newest backup 2026-10-09 09:02:44 UTC, incremental, Available; restored as `restore-test`, which came up Available at 47 GB and was terminated. Recorded in docs/RESTORE.md. The console names the action "Restore boot volume"; the steps below say so for the next time.

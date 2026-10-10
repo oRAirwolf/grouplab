@@ -5797,10 +5797,6 @@
    "kind": "decided",
    "where": "the site footer; the licence is LICENSE, GPL-3.0"
   },
-  "Written 2026-09-22; the data is from GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08.": {
-   "kind": "measured",
-   "where": "the article's front matter; docs/PHASE0-RESULTS.md measurement 5; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv"
-  },
   "What we found a printer set to &#x27;Actual size&#x27; can be very accurate: the developer&#x27;s inkjet measured 1.0001 across and 1.0006 down, within 0.06 percent.": {
    "kind": "measured",
    "where": "docs/PHASE0-RESULTS.md measurement 5: the Phase 0 printer at Actual size, x 1.0001 and y 1.0006; the sheets were inkjet-printed (section 4.1); website/research/printer-true-size/data/phase0-print-scale.csv"
@@ -5904,10 +5900,6 @@
   "Its page was printed twice, a day apart, and the same two lengths were read on each print: the distance between the crosshairs, which GroupLab drew 150.02 mm apart, and the side ruler, drawn 250.02 mm long.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Printing/Labels/M834Print.cs and the check page: 1772 dots across (150.02 mm) and 2953 rows along the feed (250.02 mm), unstretched; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv"
-  },
-  "GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true; the next check print will say whether that worked.": {
-   "kind": "code",
-   "where": "src/GroupLab.Core/Printing/Labels/M834Print.cs MeasuredFeed = 0.9930, FeedStretch = 1 / MeasuredFeed; request 85 in docs/notes/for-alan.md prints the check again"
   },
   "On print 2 the top and side crosshair lines meet at 90.22 degrees, not 90: the paper drifted about 1 mm sideways over 250 mm of feed.": {
    "kind": "measured",
@@ -6688,6 +6680,30 @@
   "A scan at 1200 dpi has four times the pixels of a 600 dpi one and is not expected to fit under the cap (none has been tried); such a submission is skipped, named in the log and tried again the next night, and the cap stays, because there is no swap.": {
    "kind": "measured",
    "where": "the 600 dpi scan's 1.1 GB peak measured on the server, 2026-10-09, and a 1200 dpi page's four times the pixels; the skip is website/server/grouplab-learn-worker.py rescore (entry 395)"
+  },
+  "Written 2026-09-22; the data is from GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08, and a third after the correction, scanned 2026-10-10.": {
+   "kind": "measured",
+   "where": "the article's front matter; docs/PHASE0-RESULTS.md measurement 5; docs/PHASE1-RESULTS.md, entry 391 (2026-10-08), and docs/NOTES-FROM-PLANNING.md entry 391's table; website/research/printer-true-size/data/thermal-check-prints.csv; docs/PHASE1-RESULTS.md, requests 84 and 85 answered (2026-10-10), C:/Dev/grouplab-local/m834-2026-10-08/check-print-3-600dpi.png"
+  },
+  "GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Printing/Labels/M834Print.cs MeasuredFeed = 0.9930, FeedStretch = 1 / MeasuredFeed"
+  },
+  "A third check print, made after that change, came out true both ways: 150.0 mm across and down by caliper, 190 and 250 mm on the rulers, and 149.98 mm across and 150.07 mm down on its 600 dpi scan.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, requests 84 and 85 answered (2026-10-10): Alan's caliper and rulers, and the scan's crosshair centres and ruler end ticks fitted at 600 dpi"
+  },
+  "Two more labels repeated it, 10.35 to 10.45 mm on both sides of each, so it is the printer's feed and not one label.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md, requests 84 and 85 answered (2026-10-10): labels S3 and S4 in C:/Dev/grouplab-local/m220-2026-10-08/two-labels-again-600dpi.png, rows 10.35, 10.37, 10.45 and 10.38 mm apart"
+  },
+  "Nothing needs correcting, because GroupLab reads these labels across only.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/ScaleMarkers/ScaleLabelCheck.cs: scale labels are read across only, the feed figure kept as measured and never used to correct a label's reading"
+  },
+  "The thermal printer's three check prints and the label scans, docs/PHASE1-RESULTS.md, entries 382, 390 and 391, and requests 84 and 85 (2026-10-10).": {
+   "kind": "measured",
+   "where": "the sources named, in this repository"
   }
  },
  "rules": [

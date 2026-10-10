@@ -4,8 +4,8 @@ description: "One wrong setting in the print dialog shrinks a target by about 6 
 group: Guides
 number: 22
 written: 2026-09-22
-data_date: "GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08"
-samples: "Test sheets printed at 100 and 96.2 percent, scanned at 300 and 600 dpi; one thermal printer's check page printed twice and read eight ways; one thermal label read from a scan"
+data_date: "GroupLab Phase 0 print tests, September 2026; two thermal printer check prints, 2026-10-07 and 2026-10-08, and a third after the correction, scanned 2026-10-10"
+samples: "Test sheets printed at 100 and 96.2 percent, scanned at 300 and 600 dpi; one thermal printer's check page printed three times and read with a caliper, a ruler and a scan; three thermal labels read from two scans"
 state: published
 found: "a printer set to 'Actual size' can be very accurate: the developer's inkjet measured 1.0001 across and 1.0006 down, within 0.06 percent. The danger is the print dialog: 'Fit to page' prints a letter sheet at about 94 percent. A printer can also be true one way and not the other: one thermal printer printed true across its head and 99.28 percent along its paper feed, the mean of five readings over two prints. A scan measures the print scale and GroupLab corrects for it; a photograph cannot, so GroupLab uses the scale measured once for that printer."
 sure: "the scan detection is from GroupLab's own acceptance tests. The thermal figures are one printer, one roll and two prints, read with a caliper, a ruler and a scan that disagree with each other by up to 0.3 percent. One printer is not every printer; that is why the check exists."
@@ -16,7 +16,7 @@ data:
 sources:
   - "GroupLab Phase 0 results, measurement 5, print-scale detection (docs/PHASE0-RESULTS.md) and the print protocol (docs/PHASE0-PRINT-PROTOCOL.md)."
   - "GroupLab detection advice, the print-scale message and its 0.25 percent threshold (src/GroupLab.Core/Marking/DetectionAdvice.cs), and the printer check (src/GroupLab.Core/Marking/PrinterProfile.cs)."
-  - "The thermal printer's two check prints and the label scan, docs/PHASE1-RESULTS.md, entries 382, 390 and 391."
+  - "The thermal printer's three check prints and the label scans, docs/PHASE1-RESULTS.md, entries 382, 390 and 391, and requests 84 and 85 (2026-10-10)."
 ---
 
 ## Why print size matters
@@ -72,7 +72,7 @@ One thermal printer, a Phomemo M834 printing GroupLab's letter check page from a
 | Across the head | caliper on print 1, caliper and scan on print 2 | 99.79 to 100.30 percent, mean 100.03 |
 | Along the feed | caliper and ruler on both prints, scan on print 2 | 99.19 to 99.49 percent, mean 99.28 |
 
-Across, the scan read exactly what GroupLab drew, and the two caliper readings fell either side of it. Along the feed, every one of five readings was short. So the head is true and the feed pulls the paper about 0.7 percent too fast, which is enough to make every vertical figure on a photographed sheet about 0.7 percent large if nothing corrected it. GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true; the next check print will say whether that worked.
+Across, the scan read exactly what GroupLab drew, and the two caliper readings fell either side of it. Along the feed, every one of five readings was short. So the head is true and the feed pulls the paper about 0.7 percent too fast, which is enough to make every vertical figure on a photographed sheet about 0.7 percent large if nothing corrected it. GroupLab now draws this printer's pages 0.70 percent longer along the feed, so that they print true. A third check print, made after that change, came out true both ways: 150.0 mm across and down by caliper, 190 and 250 mm on the rulers, and 149.98 mm across and 150.07 mm down on its 600 dpi scan.
 
 Three smaller things the same prints showed, all worth knowing before you trust a single reading:
 
@@ -80,7 +80,7 @@ Three smaller things the same prints showed, all worth knowing before you trust 
 - **One caliper reading is not a measurement.** Print 1's caliper said 100.30 percent across; print 2's said 99.79, from a page drawn identically. Two prints are what showed that the spread was the caliper's.
 - **The paper can track sideways.** On print 2 the top and side crosshair lines meet at 90.22 degrees, not 90: the paper drifted about 1 mm sideways over 250 mm of feed. A scanner cannot add that. It is small, and it is recorded rather than corrected until a later print repeats it.
 
-A smaller thermal label printer, a Phomemo M220, printed two codes GroupLab placed 60.0 mm apart at 59.99 and 59.96 mm, read from a scan of one label: true across its head to 0.07 percent. Along its feed, two rows 10.5 mm apart came out 10.39 mm apart, about 1 percent short, the same direction as the larger printer. That is one label, so it is recorded rather than acted on; more labels will say whether it repeats.
+A smaller thermal label printer, a Phomemo M220, printed two codes GroupLab placed 60.0 mm apart at 59.99 and 59.96 mm, read from a scan of one label: true across its head to 0.07 percent. Along its feed, two rows 10.5 mm apart came out 10.39 mm apart, about 1 percent short, the same direction as the larger printer. Two more labels repeated it, 10.35 to 10.45 mm on both sides of each, so it is the printer's feed and not one label. Nothing needs correcting, because GroupLab reads these labels across only.
 
 ## A thirty-second check
 

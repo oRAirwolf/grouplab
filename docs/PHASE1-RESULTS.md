@@ -1319,6 +1319,43 @@ which has the lines. **Section 4:** the user guide's phone section says to flatt
   while Code's own dated copies of changed files stay until removed.
 - **Question 93 answered, the packages,** and archived. Entry 395's server half goes ahead under entry 397's rule 5.
 
+## Requests 84, 85 and 88 answered (2026-10-10)
+
+Alan's message of 2026-10-10, not an inbox entry: the two scans measured, the requests closed, request 83 written now that it is free.
+
+- **Request 84, the M220 labels again.** `two-labels-again-600dpi.png` holds labels S3 and S4, the same, all four codes whole on each.
+  Measured at 600 dpi from the codes' corners, each label turned square by its own 3.4 degree tilt on the glass: codes 59.98 and 59.96 mm
+  apart across on S3, 59.96 and 59.97 on S4 (60.0 designed); rows 10.35 and 10.37 mm apart on S3, 10.45 and 10.38 on S4 (10.5 designed,
+  about 1 percent short along the feed, as S1 was); codes 7.69 to 7.79 mm (8.0 designed, the ink's edge). Entry 390's eight seconds
+  after each label is confirmed on one job of two: S2's shift did not recur.
+- **Left of centre: yes, on every good label.** Against the label's own die-cut edges (the label face reads brighter than the liner, and
+  its right edge leaves a line inside the liner's), the codes' ink is 0.47 mm from the left edge on S3, 0.30 on S4 and 0.72 on S1 (the 8
+  October scan), and 1.61, 1.74 and 1.48 mm from the right. The layout puts each code's outer edge 1.0 mm in (`ScaleLabels.Inset` 5,
+  `Code` 8), so the print sits 0.57, 0.72 and 0.38 mm left of the label's centre, a mean of 0.56 mm, about 4.5 of the M220's 8 dots a
+  millimetre; the labels read 69.93 to 70.06 mm wide. GroupLab sends the M220 its 70 mm image at its own width (`PhomemoEscEncoder`, 560
+  dots for a 600-dot head) and does not choose where on the head it lands, so the offset is the printer's placement or the roll's guide,
+  and the 0.34 mm spread between labels is the roll wandering. Nothing is cut: the worst, S4, keeps 0.30 mm beside its codes, and the
+  scale comes from the codes' spacing, not from where they sit. Question 94 asks whether to move it.
+- **Request 85, the M834's third check print, after the stretch.** Alan's caliper 150.0 across and 150.0 down, rulers 190 and 250. Its 600
+  dpi scan (each crosshair's centre where straight lines fitted to its arms outside the circle cross; each ruler end the same way): 149.98
+  mm across (drawn 150.02), 150.07 mm down (drawn 151.04, designed 150.00), bottom ruler 189.93 (drawn 189.99), side ruler 249.93 (drawn
+  251.71, designed 250.0). The bottom ruler's right end runs off the scan's bottom edge; its upper half was fitted. **The stretch works:**
+  the M834 now prints true both ways to 0.05 percent by every instrument. Along the feed against what was drawn: caliper 99.31, ruler
+  99.32, scan 99.36 and 99.29 percent; with entry 391's five readings the nine average 99.30, so **`M834Print.MeasuredFeed` stays 0.9930**,
+  the question entry 392 left to this print. The M834's check is now 150.0 by 150.0 (100.0 by 100.0 percent), which request 85 step 3
+  asked Alan to save; request 83's first step repeats it in case. The top and right caliper lines meet 0.15 degrees off square (print 2:
+  0.22), the paper tracking about 0.65 mm sideways over 250 mm; recorded, as before.
+- **Request 88, the learning token.** Alan set it on the server. The nightly check uses it only when a line reads worse (`report` in
+  `grouplab-learn-worker.py`) and the monthly tuning only for a pull request; the summary goes to the archive with the archive token. So
+  the next nightly check, 13:45 UTC, proves nothing about the token on a quiet night, and with no nightly build since 183 its summary is
+  unchanged and it writes nothing (the archive's last `learning:` commit is 2026-10-09 11:46 UTC). Code's read-only check over SSH,
+  printing status codes only, was refused by the session's permission check; request 92 gives Alan the same check as two lines, and
+  question 95 asks whether the nightly should check the token itself.
+- **The research article** "Does your printer print at true size?" now says the third print came out true and that the M220's short feed
+  repeated on two more labels, each sentence backed in `docs/claims-backing.json`. Its figure is unchanged: it shows the two prints
+  before the stretch.
+- Requests 84, 85 and 88 closed and moved to `for-alan-archive.md`; request 83 rewritten; request 92 added. Open: 23.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

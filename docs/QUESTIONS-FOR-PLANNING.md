@@ -21,6 +21,43 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-10, question 95: should the learning loop's nightly check its own token every night?
+
+Status: open
+
+**What happens now.** The learning token (request 88, set by Alan on 2026-10-10) is read only by `report` in
+`website/server/grouplab-learn-worker.py`, on a night a line of the real scoreboard reads worse, and by the monthly tuning when it opens a
+pull request. A wrong or expired token (it was made to last one year) is therefore found on the night a regression needs reporting, which
+is the night it matters. Request 92 asks Alan to check it by hand once.
+
+**Options.**
+- (a) Leave it: request 92 now, and again whenever the token is renewed. Costs nothing on the server.
+- (b) The nightly asks GitHub once for the error-report repository's issue list with the token, every night, and writes "the learning
+  token reaches the error reports: yes" or the status code into its log and into `learning/summary.md` in the archive, which the planning
+  session reads. About ten lines and a test, installed on the server under RESTORE.md rule 5.
+
+**What I would choose:** (b), as its own entry, because a reporting path that is never exercised is not known to work.
+
+## 2026-10-10, question 94: the M220 prints about 0.56 mm left of the label's centre; move it?
+
+Status: open
+
+**Measured** (PHASE1-RESULTS.md, "Requests 84, 85 and 88 answered"): on three good labels, S1, S3 and S4, the codes' ink is 0.30 to 0.72
+mm from the label's left edge and 1.48 to 1.74 mm from its right, where the layout puts 1.0 mm each side (`ScaleLabels.cs`, `Inset = 5`,
+`Code = 8`): a mean of 0.56 mm left, about 4.5 dots, varying 0.34 mm label to label. GroupLab sends the 70 mm image at its own width
+(560 dots, `PhomemoEscEncoder`) and does not choose where on the 600-dot head it lands.
+
+**Options.**
+- (a) Leave it. Nothing is cut, and the scale comes from the codes' spacing across (59.96 to 59.98 mm), not from where they sit. Cost:
+  a label that wanders a further 0.3 mm left would clip its left codes' ink.
+- (b) Send the M220's labels 4 dots (0.5 mm) further right: a white margin at the start of every row. Cost: the image becomes 564 dots,
+  so the rows are re-packed by bits; how the M220 places an image wider than 560 dots is not known, so one more print is needed to see
+  it land, and other label widths would each need their own figure.
+- (c) Move both columns of codes inward on every label. Cost: the codes' spacing would no longer be 60 mm, which every reader of these
+  labels knows (`ScaleLabelCheck`, the layouts by width); a change to the label's definition.
+
+**What I would choose:** (a), recorded, and (b) only if a label comes out with a code cut.
+
 ## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
 
 Status: open
