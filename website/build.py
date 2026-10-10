@@ -817,7 +817,18 @@ DOWNLOAD_JS = """(function () {
   // screen with no fine pointer at all is taken for Android, while a Linux laptop with a touch screen and a mouse or trackpad stays Linux.
   var touchOnly = navigator.maxTouchPoints > 0 && !!window.matchMedia && window.matchMedia("(pointer: coarse)").matches
     && !window.matchMedia("(any-pointer: fine)").matches;
-  var touchLinux = touchOnly && /Linux|X11/.test(ua) && !/Android|CrOS/.test(ua);
+  // Entry 403: a tablet with a pen or a keyboard's trackpad has a fine pointer, so the touch test missed Alan's Galaxy tablet in Firefox.
+  // Two things a desktop-site request leaves alone are read first: the browser's own platform (Chromium's userAgentData), and an ARM
+  // processor named by navigator.platform or Firefox's oscpu while the user agent says x86_64, which is a browser pretending. A Linux
+  // computer on ARM says ARM in both and stays Linux.
+  var cpu = (navigator.platform || "") + " " + (navigator.oscpu || "");
+  var plainLinux = /Linux|X11/.test(ua) && !/Android|CrOS/.test(ua);
+  var saysAndroid = !!(navigator.userAgentData && navigator.userAgentData.platform === "Android");
+  var armAsX86 = /arm|aarch64/i.test(cpu) && /x86_64|amd64/i.test(ua);
+  var touchLinux = plainLinux && (saysAndroid || armAsX86 || touchOnly);
+  var rule = /[?&]device=/.test(location.search) ? "the address names the device"
+    : plainLinux && saysAndroid ? "the browser's own platform says Android" : plainLinux && armAsX86 ? "an ARM processor under an x86_64 user agent"
+    : touchLinux ? "a touch screen with no fine pointer" : touchMac ? "a touch screen on a Mac user agent" : "the user agent";
   var guess = /iPhone|iPod|iPad/.test(ua) || touchMac ? "iphone" : /Android/.test(ua) || touchLinux ? "android" : /Windows/.test(ua) ? "windows"
     : /Macintosh|Mac OS X/.test(ua) ? "mac" : /Linux|X11|CrOS/.test(ua) ? "linux" : "windows";
   var phone = /iPhone|iPod/.test(ua) || (/Android/.test(ua) && /Mobile/.test(ua));
@@ -853,6 +864,23 @@ DOWNLOAD_JS = """(function () {
     });
     mark();
     follow();
+    // Entry 403: ?why shows, under the device buttons, what the guess rested on. It is on this screen only: nothing is sent or kept.
+    if (/[?&]why(?:[=&]|$)/.test(location.search)) {
+      var first = document.querySelector("[data-pick]");
+      if (first && first.parentElement) {
+        var media = function (q) { return window.matchMedia ? String(window.matchMedia(q).matches) : "unknown"; };
+        var why = document.createElement("pre");
+        why.className = "small dim";
+        why.style.whiteSpace = "pre-wrap";
+        why.style.overflowWrap = "anywhere";
+        why.textContent = ["user agent: " + ua, "platform: " + (navigator.platform || "none"), "oscpu: " + (navigator.oscpu || "none"),
+          "userAgentData platform: " + (navigator.userAgentData ? navigator.userAgentData.platform : "none"),
+          "maxTouchPoints: " + navigator.maxTouchPoints, "pointer coarse: " + media("(pointer: coarse)"),
+          "any pointer fine: " + media("(any-pointer: fine)"), "hover: " + media("(hover: hover)"),
+          "guess: " + guess + ", from " + rule].join("\\n");
+        first.parentElement.insertAdjacentElement("afterend", why);
+      }
+    }
   });
   window.addEventListener("hashchange", follow);
 })();"""
@@ -2347,21 +2375,31 @@ def download_problems() -> list:
 # Entry 349: what the download page and the Desktop or Mobile switch guess for each kind of device, run in Node with the browser's parts
 # stubbed. The user agents are the published forms of each browser, not ones captured from anybody.
 DEVICE_CASES = [
-    ("Firefox on an Android tablet asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 5, True, False, "android", "Looks like this device", "mobile"),
-    ("Chrome on an Android tablet asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 5, True, False, "android", "Looks like this device", "mobile"),
-    ("Safari on an iPad asking for the desktop site", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15", 5, True, False, "iphone", "Looks like this device", "mobile"),
-    ("a Linux laptop with a touch screen and a trackpad", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 10, False, True, "linux", "This computer", "desktop"),
-    ("Linux on a desktop", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 0, False, True, "linux", "This computer", "desktop"),
-    ("Chrome on a Galaxy Z Fold 7", "Mozilla/5.0 (Linux; Android 16; SM-F966U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36", 5, True, False, "android", "This phone", "mobile"),
-    ("Firefox on an Android phone", "Mozilla/5.0 (Android 16; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0", 5, True, False, "android", "This phone", "mobile"),
-    ("Windows on a laptop with a touch screen", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36", 10, False, True, "windows", "This computer", "desktop"),
+    ("Firefox on an Android tablet asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 5, True, False, {}, "android", "Looks like this device", "mobile"),
+    ("Chrome on an Android tablet asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 5, True, False, {}, "android", "Looks like this device", "mobile"),
+    ("Safari on an iPad asking for the desktop site", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15", 5, True, False, {}, "iphone", "Looks like this device", "mobile"),
+    ("a Linux laptop with a touch screen and a trackpad", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 10, False, True, {}, "linux", "This computer", "desktop"),
+    ("Linux on a desktop", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 0, False, True, {}, "linux", "This computer", "desktop"),
+    ("Chrome on a Galaxy Z Fold 7", "Mozilla/5.0 (Linux; Android 16; SM-F966U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36", 5, True, False, {}, "android", "This phone", "mobile"),
+    ("Firefox on an Android phone", "Mozilla/5.0 (Android 16; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0", 5, True, False, {}, "android", "This phone", "mobile"),
+    ("Windows on a laptop with a touch screen", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36", 10, False, True, {}, "windows", "This computer", "desktop"),
+    # Entry 403: a pen or a trackpad gives the tablet a fine pointer, so the touch test alone said Linux; what the browser says of its
+    # processor and platform is read first. A Linux computer on ARM, a Raspberry Pi, and ChromeOS stay what they are.
+    ("Firefox on a Galaxy tablet with an S Pen asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 10, True, True, {"platform": "Linux aarch64", "oscpu": "Linux aarch64"}, "android", "Looks like this device", "mobile"),
+    ("Chrome on a tablet with a pen asking for the desktop site", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 10, True, True, {"platform": "Linux armv8l", "userAgentData": {"platform": "Android", "mobile": False}}, "android", "Looks like this device", "mobile"),
+    ("Chrome asking for the desktop site where only its own platform says Android", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 10, False, True, {"platform": "Linux x86_64", "userAgentData": {"platform": "Android", "mobile": False}}, "android", "Looks like this device", "mobile"),
+    ("a tablet with a keyboard cover and trackpad, Firefox, desktop site", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 10, False, True, {"platform": "Linux armv81", "oscpu": "Linux armv81"}, "android", "Looks like this device", "mobile"),
+    ("a Raspberry Pi", "Mozilla/5.0 (X11; Linux aarch64; rv:131.0) Gecko/20100101 Firefox/131.0", 0, False, True, {"platform": "Linux aarch64", "oscpu": "Linux aarch64"}, "linux", "This computer", "desktop"),
+    ("a Linux laptop with a touch screen and a trackpad, saying its processor", "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0", 10, False, True, {"platform": "Linux x86_64", "oscpu": "Linux x86_64"}, "linux", "This computer", "desktop"),
+    ("a Chromebook", "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 10, False, True, {"platform": "Linux x86_64", "userAgentData": {"platform": "Chrome OS", "mobile": False}}, "linux", "This computer", "desktop"),
+    ("a Chromebook on ARM", "Mozilla/5.0 (X11; CrOS aarch64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36", 10, False, True, {"platform": "Linux aarch64", "userAgentData": {"platform": "Chrome OS", "mobile": False}}, "linux", "This computer", "desktop"),
 ]
 
 DEVICE_HARNESS = r"""
 const cases = JSON.parse(process.argv[1]), scripts = JSON.parse(process.argv[2]), out = [];
-for (const [name, ua, touch, coarse, fine] of cases) {
+for (const [name, ua, touch, coarse, fine, extra] of cases) {
   const attrs = {}, ready = [], label = { textContent: "" };
-  Object.defineProperty(globalThis, "navigator", { value: { userAgent: ua, maxTouchPoints: touch }, configurable: true, writable: true });
+  Object.defineProperty(globalThis, "navigator", { value: Object.assign({ userAgent: ua, maxTouchPoints: touch }, extra), configurable: true, writable: true });
   global.window = { matchMedia: q => ({ matches: q === "(pointer: coarse)" ? coarse : q === "(any-pointer: fine)" ? fine : false }), addEventListener() {} };
   global.location = { search: "", hash: "" };
   global.history = { replaceState() {} };
@@ -2387,13 +2425,13 @@ def device_problems() -> list:
     if node is None:
         print("device guess: Node is not here, so the download page's guesses were not run")
         return []
-    cases = [list(c[:5]) for c in DEVICE_CASES]
+    cases = [list(c[:6]) for c in DEVICE_CASES]
     run = subprocess.run([node, "-e", DEVICE_HARNESS, json.dumps(cases), json.dumps([DOWNLOAD_JS, JS])], capture_output=True, text=True, timeout=60)
     if run.returncode != 0:
         return [f"device guess: the scripts did not run in Node: {run.stderr.strip()[:300]}"]
     found = []
     for (name, device, words, platform), case in zip(json.loads(run.stdout), DEVICE_CASES):
-        want = case[5:]
+        want = case[6:]
         if (device, words, platform) != want:
             found.append(f"device guess: {name} gets {device!r}, {words!r} and {platform!r}, not {want[0]!r}, {want[1]!r} and {want[2]!r}")
     return found
@@ -3134,8 +3172,12 @@ JS = r"""/* GroupLab theme: follows the system unless the visitor has chosen, an
   // pointer is handheld either way.
   var touchOnly = navigator.maxTouchPoints > 0 && !!window.matchMedia && window.matchMedia("(pointer: coarse)").matches
     && !window.matchMedia("(any-pointer: fine)").matches;
+  // Entry 403: as the download page reads it, the browser's own platform or an ARM processor under an x86_64 user agent says Android
+  // too, where a pen or a trackpad gives the tablet a fine pointer.
+  var cpu = (navigator.platform || "") + " " + (navigator.oscpu || "");
+  var disguised = !!(navigator.userAgentData && navigator.userAgentData.platform === "Android") || (/arm|aarch64/i.test(cpu) && /x86_64|amd64/i.test(ua));
   var handheld = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua))
-    || (touchOnly && /Linux|X11/.test(ua) && !/CrOS/.test(ua));
+    || ((touchOnly || disguised) && /Linux|X11/.test(ua) && !/CrOS/.test(ua));
   root.setAttribute("data-platform", forced ? forced[1] : (saved === "mobile" || saved === "desktop") ? saved : (handheld ? "mobile" : "desktop"));
   function mark() {
     var now = root.getAttribute("data-platform");

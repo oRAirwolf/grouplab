@@ -25,6 +25,37 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-10, entry 403: the download page still says Linux on Alan's Samsung tablet in Firefox
+
+**Status: actioned 2026-10-10; sections 1 to 4 done; section 5, the site live check, after the push. Firefox's desktop-site values are not documented, so request 96's readout confirms it.**
+
+From the planning session with Alan, 2026-10-10 02:17 Denver. Alan: "I tried going to the downloads page on my samsung galaxy tablet in
+firefox and it is still showing linux as the OS instead of android. Not a huge deal, but if there is a way to fix this, it would be good."
+Take it after entry 402 and before entry 404's server step. Needs nobody. Main model for the detection, a site change otherwise.
+
+**What is live** (`DOWNLOAD_JS` in website/build.py, entry 349): a "X11; Linux" browser is taken for Android only when the touch screen is
+the only pointer, `(pointer: coarse)` and not `(any-pointer: fine)`. **The likely reason it fails here, not yet confirmed:** Alan's
+Samsung tablets (Tab S8 Ultra) have an S Pen digitizer, and a stylus is reported as a fine pointer (and as hover), so `touchOnly` is false
+even with the pen in its holder. A keyboard cover with a trackpad would do the same. Firefox for Android and Chrome on large tablets both
+ask for the desktop site by default, so this will be common, not Alan's alone.
+
+1. **Use signals a desktop-site request does not hide, before the pointer test:**
+   1. `navigator.userAgentData` where it exists (Chromium): `platform === "Android"`, or `getHighEntropyValues(["platform"])`, means Android
+      whatever the user agent says.
+   2. `navigator.platform` (and Firefox's `navigator.oscpu`) naming an ARM processor (`arm`, `aarch64`, `armv8l`) while the user agent says
+      `x86_64`: the browser is pretending, and that is Android. A Linux computer on ARM says ARM in both and stays Linux.
+   3. Keep entry 349's touch-only test as the last fallback, and keep "Looks like this device" for any guess resting on these signals.
+   Check each against the browsers' own documentation or source before relying on it; record in PHASE1-RESULTS.md which ones are
+   documented and which are observed.
+2. **A readout to confirm it:** `?why` on the download page shows, under the device buttons, the user agent, platform, oscpu,
+   userAgentData platform, maxTouchPoints, the pointer and hover media results, and which rule chose the guess. Shown only on screen,
+   never sent or logged anywhere.
+3. Tests in the site's own suite for each user agent and signal combination (Firefox and Chrome desktop mode on an ARM tablet, a tablet
+   with a stylus, a Linux laptop with a touch screen and a trackpad, a Raspberry Pi, ChromeOS), so entry 349's cases still pass.
+4. Write a request in for-alan.md: open `https://grouplab.org/download/?why` (use the page's real address) in Firefox on the tablet and
+   say which button it picks, with what the readout shows. The page can be confirmed only on his tablet.
+5. The site publishes itself on push; confirm the commit is live in the `grouplab-site-build` meta tag, as CLAUDE.md says.
+
 ## 2026-10-10, entry 402: overnight, part 3 of 4: the four research articles already marked \
 
 **Status: worth**

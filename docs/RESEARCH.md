@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| What an Android tablet's browser says when it asks for the desktop site (entry 403) | not written | One page's guess fixed; what the browsers report is in PHASE1-RESULTS.md and the published documentation it cites, and a shooter only needs the right download button. |
 | Fix holes going blank after a hole was added, error report 27 (entry 401) | not written | A fault in one screen, found and fixed; nothing in it changes what a shooter does beyond installing the fix, which the release note says. |
 | The phone's reading of a photograph made about a third faster (entry 400) | not written | Reading independent pieces at once is ordinary engineering, and nothing in it changes what a shooter does; docs/PERFORMANCE.md holds the measurement. |
 | Where a photograph's bull-centre error comes from, and photographs that lost their camera tags (entry 399, `grouplab photo-parts`) | **written**, as part of the article on how far off square a photograph can be (entry 401 item 3) | It changes what a shooter does: a photograph sent through an app that drops its camera details was read with no lens correction, and the error that is left comes from the paper's own relief magnified by a wide lens, so flattening the sheet matters more than squaring up to it; whether the main lens from farther away helps as the geometry says is for request 94's photographs to show. |

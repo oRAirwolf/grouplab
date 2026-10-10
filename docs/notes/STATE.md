@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-10, entry 402 (before it: entries 399 to 401).
+**Last rewritten:** 2026-10-10, entry 403 (before it: entries 399 to 402).
 
 ---
 
 ## In flight
 
-- **The overnight queue** (Alan, 2026-10-10): 399 to 402 done; 403 (the download page on Alan's tablet) and 404 (the intake worker
-  onto the server, last, waiting for Alan's approval) to come. Entry 402 published articles 34 to 37 (M834, scale markers, off square, bend).
+- **The overnight queue** (Alan, 2026-10-10): 399 to 403 done; 404 (the intake worker onto the server) last, needing Alan. Entry 402
+  published articles 34 to 37; entry 403 reads an ARM processor under an x86_64 user agent as Android, with `/download/?why` (request 96).
 - **Entry 401 done**: Fix holes' "Which bull was this hole fired at?" had no bull buttons and closing it left the page blank (phones only);
   fixed and tested; issue 27 closes with the nightly that ships it; request 95 for Alan to confirm.
 - **Entry 400 done**: the phone's reading of a photograph about a third sooner (codes read at once, the bend's fits at once, markers
@@ -31,7 +31,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   every server change backed up first (RESTORE.md rule 5); server backups kept 4 days, so a mistake must be noticed within four.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 95 (the Fix holes fix on the phone), 93 (the token check onto the server, three minutes), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 95 (the Fix holes fix on the phone), 96 (the download page on his tablet), 93 (the token check onto the server, three minutes), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -52,7 +52,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entries 403 and 404 in order; close issue 27 with the nightly that ships entry 401; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
+1. Entry 404; close issue 27 with the nightly that ships entry 401; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. After request 93, the next nightly's `learning/summary.md` should end with the token line; read it once.
 
@@ -62,7 +62,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **25** (95 the Fix holes fix on the phone; 93 one paste putting the token check on the server; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **26** (95 the Fix holes fix on the phone; 96 the download page on the tablet; 93 one paste putting the token check on the server; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

@@ -1550,6 +1550,27 @@ introduced as four pictures that has six, and four sentences of article 37 rewor
 beside a table of hole results. No figures: each says why in `no_figure`. Claims: four article rules and eight index sentences in
 `docs/claims-backing.json`; 5109 claims, all backed.
 
+## Entry 403: the download page on an Android tablet asking for the desktop site (2026-10-10)
+
+1. **Two signals read before the touch test**, in `DOWNLOAD_JS` and the Desktop or Mobile switch in `website/build.py`: the browser's own
+   platform (`navigator.userAgentData.platform` is "Android"), and an ARM processor named by `navigator.platform` or `navigator.oscpu`
+   while the user agent says x86_64. Entry 349's touch-only test stays as the last fallback, and any guess resting on these says "Looks
+   like this device". **Documented:** Firefox for Android has reported its processor as "Linux armv81" in the user agent,
+   `navigator.platform` and `navigator.oscpu` since version 123, and Firefox on Linux as "Linux x86_64" (Mozilla's release notes for
+   Firefox 123 for Android, and bug 1861847), so a Linux computer on ARM in Firefox says x86_64 throughout and stays Linux; the
+   user-agent hint's platform values are Android, Chrome OS, Linux and the rest (MDN, Sec-CH-UA-Platform). **Documented against us:**
+   Chrome's desktop mode on large tablets reports the platform as "Linux" (Chrome's own announcement), so the first signal will not
+   catch Chrome in that mode. **Not documented, to be observed:** what Firefox for Android reports in `navigator.platform` and `oscpu`
+   when it asks for the desktop site; whether its user agent's x86_64 is matched by them is what request 96's readout will show.
+2. **`?why` on `/download/`** shows under the device buttons the user agent, platform, oscpu, the user-agent hint's platform,
+   maxTouchPoints, the pointer and hover results and which rule chose the guess, as plain text on the screen only; nothing is sent or
+   kept. Checked in Node against the built script with a stubbed page.
+3. **Tests:** `DEVICE_CASES` gains a field for what else the browser says of itself and eight cases: Firefox on a tablet with a pen
+   (ARM platform, fine pointer), Chrome on a tablet with a pen, Chrome where only its own platform says Android, a tablet with a
+   keyboard's trackpad, a Raspberry Pi, a Linux laptop with a touch screen and a trackpad, a Chromebook and an ARM Chromebook. All
+   sixteen cases pass in the site build, entry 349's eight among them.
+4. Request 96 asks Alan to open `https://grouplab.org/download/?why` in Firefox on the tablet.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

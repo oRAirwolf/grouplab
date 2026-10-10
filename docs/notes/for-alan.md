@@ -1,4 +1,4 @@
-**Open: 25.** Most urgent today: **95**, two minutes on the phone to check the Fix holes fix, once the next nightly is installed. Then **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 26.** Most urgent today: **95**, two minutes on the phone to check the Fix holes fix, once the next nightly is installed. Then **96**, one page on your Samsung tablet (a minute). Then **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,18 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 96. One page on your Samsung tablet, about a minute, whenever suits (entry 403)
+
+**Why:** the download page now reads two more things about the device before guessing, so your Galaxy tablet in Firefox should get
+Android rather than Linux. Firefox's own documentation does not say what it reports when it asks for the desktop site, so only your
+tablet can confirm it, and the page can now show what it saw.
+
+**Steps:** on the tablet, in Firefox, open `https://grouplab.org/download/?why`. Under the device buttons there is a short list of lines
+ending in "guess: ...". Note which device button is picked, and take a screenshot of the list (or copy the lines).
+
+**A good answer:** "Android, Looks like this device", with the screenshot or the lines. If it still says Linux, the lines say why, and
+that is what is needed. They hold only what the browser says about itself, nothing personal.
 
 ## 95. Check the Fix holes fix on the phone, about two minutes, once the next nightly is installed (entry 401, error report 27)
 
