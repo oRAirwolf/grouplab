@@ -72,6 +72,7 @@ return args switch
     ["poster-trial", .. var rest] => GroupLab.Cli.Spike.PosterTrial.Run(rest, Console.Out, Console.Error),
     ["identify-trial", .. var rest] => GroupLab.Cli.Spike.IdentifyTrial.Run(rest, Console.Out, Console.Error),
     ["marker-trial", .. var rest] => GroupLab.Cli.Spike.MarkerTrial.Run(rest, Console.Out, Console.Error),
+    ["photo-parts", .. var rest] => GroupLab.Cli.Spike.PhotoParts.Run(rest, Console.Out, Console.Error),
     ["surface-trial", .. var rest] => GroupLab.Cli.Spike.SurfaceTrial.Run(rest, Console.Out, Console.Error),
     ["outline-trial", .. var rest] => GroupLab.Cli.Spike.OutlineTrial.Run(rest, Console.Out, Console.Error),
     ["sample", .. var rest] => GroupLab.Cli.SampleVerb.Run(rest, Console.Out, Console.Error),

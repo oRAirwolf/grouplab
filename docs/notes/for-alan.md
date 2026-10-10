@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,23 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 94. Three scans and three photographs, about fifteen minutes, whenever suits (entry 399)
+
+**Why:** entry 399 measured where a photograph's error comes from. What is left on a sheet held flat is the paper's own small waves,
+magnified by the phone's ultrawide lens at close range, and every picture so far was taken that way. Nothing yet says how a current
+GroupLab sheet does when it is mounted as at the range, because none of those sheets was ever scanned afterwards. Both need pictures only
+you can take; nothing else in the entry waits for them.
+
+**Steps:**
+
+1. If you still have the three sheets you shot on 4 October (the C bull, the E bull and the 6 ARC load sheet), scan each flat on the
+   flatbed at 600 dpi, as PNG, and put them in `C:\Dev\grouplab-local\entry-399\`. Your photographs of them at the range are already here.
+2. If you still have the 6 ARC sheet shot with the Dominus K on 26 September, tape it flat on a table and take three photographs with the
+   phone's main lens (1x, not the ultrawide), from about 18 inches: square on, then about 20 degrees off, then about 35 degrees off. Put
+   them in the same folder as they come off the phone.
+
+**A good answer:** the files in that folder, and a line saying which sheet each scan is. If a sheet is gone, say so and skip it.
 
 ## 93. One paste on the server: the nightly checks the learning token itself, about three minutes, whenever suits (question 95)
 

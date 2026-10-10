@@ -9,29 +9,29 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-10, request 92 closed and questions 94 and 95 answered from Alan's message (before it: requests 84, 85, 88).
+**Last rewritten:** 2026-10-10, entry 399 (before it: request 92 and questions 94 and 95).
 
 ---
 
 ## In flight
 
-- **Question 95 (b) built, not yet on the server** (2026-10-10): every nightly checks the learning token against GitHub and writes the
-  answer into its log and `learning/summary.md` (`token_check`, tested). Code's copy to the server was refused by the permission check,
-  so request 93 is Alan's one paste: backup first, install, check once. RESTORE.md lists it as waiting.
-- **Request 92 closed** (both token checks printed 200); **question 94 answered (a)**, the M220's placement stays unless a code is cut.
-- **Requests 84, 85 and 88 answered** (2026-10-10): the M220's pause holds; the M834's third print true both ways, `MeasuredFeed` 99.30.
+- **Entries 399 to 403, "queue all four" overnight** (Alan, 2026-10-10): 399 done; 400 (the phone's reading of a photograph, a
+  third faster), 401 (four research articles), 402 (the download page on Alan's tablet) and 403 (the intake worker onto the server,
+  last, waiting for Alan's approval) to come, in that order.
+- **Entry 399 done**: a photograph that lost its camera tags was read as a scan, with no lens fit, which is where the checklist's 0.0155
+  to 0.0216 in came from; now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in on those four, and the
+  7 false rings of row 4 gone. What is left is paper relief through the ultrawide (`grouplab photo-parts`). Request 94 for material.
+- **Question 95 (b) built, not yet on the server** (2026-10-10): the nightly checks the learning token (`token_check`); Code's copy to
+  the server was refused by the permission check, so request 93 is Alan's one paste. RESTORE.md lists it as waiting.
+- **Requests 84, 85, 88 and 92 closed, question 94 answered (a)** (2026-10-10): the M220's placement stays; `MeasuredFeed` 99.30.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
-- **Entries 393 to 398 done** (2026-10-09): twelve research articles published; `grouplab learn`, and the learning loop on the web
-  server (score every three minutes, nightly check 13:45 UTC, first run 42 read, 9 corrected, nothing worse; tune monthly; Code
-  merges a passing tuning pull request); every server change backed up first (RESTORE.md rule 5); the whole server's backup
-  restored once, backups kept 4 days, so a server mistake must be noticed within four days.
-- **Entry 392 done** (2026-10-09): **eleven research drafts `ready`** (numbers checked against data and code, 245 sentences backed,
-  figures rerun byte-identical); aim-points-by-optic-class stays draft for request 86. **A 600 dpi scan's hole finding 1769 to 693 ms**
-  (`BinaryMorphology.Close`, OpenCV's close to the byte); **question 44 fixed** (the cylinder's table index wrapped) and archived.
-  Entry 391's feed mean is 99.28 percent, not 99.30; `MeasuredFeed` kept, and request 85's print kept it.
+- **Entries 393 to 398 done** (2026-10-09): twelve articles published; the learning loop on the web server (nightly 13:45 UTC);
+  every server change backed up first (RESTORE.md rule 5); server backups kept 4 days, so a mistake must be noticed within four.
+- **Entry 392 done** (2026-10-09): eleven drafts `ready`, aim-points-by-optic-class draft for request 86; a 600 dpi scan's holes
+  1769 to 693 ms; question 44 fixed.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 93 (the token check onto the server, three minutes), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 93 (the token check onto the server, three minutes), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -52,7 +52,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings next; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
+1. Entries 400 to 403 in order; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. After request 93, the next nightly's `learning/summary.md` should end with the token line; read it once.
 
@@ -62,7 +62,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (93 one paste putting the token check on the server; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **24** (93 one paste putting the token check on the server; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

@@ -380,6 +380,45 @@ public static class SheetMeasurer
     /// </summary>
     public const double BentBelow = 0.5;
 
+    /// <summary>
+    /// Entry 399 section 2: a photograph that has lost its camera tags (sent through a messaging app, or copied by a tool that drops them) was
+    /// taken for a scan and read by a plain homography, with no lens fit. A scan's codes fit a flat page to 0.0027 in rms at worst (every scan
+    /// in <c>scans/phase0</c> and the 2026-09-26 load sheets, 300 and 600 dpi); the Phase 0 photographs, tagged, fit it to 0.0030 to 0.087 in.
+    /// So an image with no focal length, stating no scanning resolution, whose codes fit a flat page worse than this, is read as a
+    /// photograph. Chosen on those two sets; reported on the 2026-09 photographs, which were not used to choose it (PHASE1-RESULTS.md).
+    /// </summary>
+    public const double UntaggedPhotographRmsDmm = 0.762;
+
+    /// <summary>The lowest resolution a scan states. 72 and 96 dpi are what photograph tools write, never a scanner's setting for a target.</summary>
+    public const double ScanningDpi = 150;
+
+    /// <summary>
+    /// The codes' corner residual under a flat page, in dmm, when an image with no camera tags reads as a photograph by it; null otherwise.
+    /// The homography is the photograph pass's, whose wide threshold drops misreads and keeps a lens's curve.
+    /// </summary>
+    private static double? UntaggedPhotograph(ImageMetadata metadata, IReadOnlyList<MarkerMatch> matches, IImagingBackend backend)
+    {
+        if (matches.Count < 4 || metadata.DpiX is >= ScanningDpi)
+        {
+            return null;
+        }
+
+        var image = matches.SelectMany(m => m.ImageCorners).ToList();
+        var page = matches.SelectMany(m => m.PageCorners).ToList();
+        HomographyFit flat;
+        try
+        {
+            flat = backend.FindHomography(image, page, PhotographRansacThreshold);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+
+        double rms = Rms(new HomographyMapping(flat.Transform), image, page, [.. flat.Inliers]);
+        return rms > UntaggedPhotographRmsDmm ? rms : null;
+    }
+
     public static RegistrationFit? Register(GrayImage image, ImageMetadata metadata, FiducialResult fiducials, MeasureOptions options, IImagingBackend backend, TraceRecorder trace, IReadOnlyCollection<int>? markerSubset = null, TargetDefinition? definition = null)
     {
         ArgumentNullException.ThrowIfNull(image);
@@ -393,6 +432,12 @@ public static class SheetMeasurer
         var matches = markerSubset is null ? fiducials.Matches : fiducials.Matches.Where(m => markerSubset.Contains(m.Id)).ToList();
         var model = options.Model != RegistrationModel.Auto ? options.Model
             : metadata.IsCamera ? RegistrationModel.Radial : RegistrationModel.Homography;
+        double? untagged = options.Model == RegistrationModel.Auto && !metadata.IsCamera ? UntaggedPhotograph(metadata, matches, backend) : null;
+        if (untagged is not null)
+        {
+            model = RegistrationModel.Radial;
+        }
+
         string modelName = model switch
         {
             RegistrationModel.Radial => "homography with radial distortion",
@@ -402,6 +447,7 @@ public static class SheetMeasurer
         stage.Decide("model", modelName,
             options.Model != RegistrationModel.Auto ? "the command line names it"
             : metadata.IsCamera ? "a camera image, whose lens distorts radially (DESIGN.md section 11)"
+            : untagged is { } flat ? string.Create(inv, $"no camera tags, but the codes fit a flat page only to {flat / 254:0.0000} in rms, as a photograph's lens leaves them (entry 399)")
             : "a flatbed scan (DETECTION-PIPELINE.md stage S3)",
             model == RegistrationModel.Homography ? "homography with radial distortion" : "homography");
         if (matches.Count < 4)

@@ -1373,6 +1373,125 @@ Alan's answers, in the message that started the run, with no inbox entry.
   93 gives Alan one paste: a backup of the installed worker under RESTORE.md rule 5, the new worker fetched from main and refused unless
   its SHA-256 is `cdf083f7...`, installed, and the check run once in a transient unit. RESTORE.md lists it as waiting, with its undo.
 
+## Entry 399: accuracy on photographs (2026-10-10)
+
+### Section 1: where a photograph's bull-centre error comes from, measured before anything changed
+
+Tool: `grouplab photo-parts` (`src/GroupLab.Cli/Spike/PhotoParts.cs`, new, reads only). Each photograph is registered from its own codes
+four ways (plain homography; homography with the two-term radial lens; the lens with entry 324's bend laid over it where accepted; the
+Phase 1 cylinder) and its bulls located through each. The final model's error is then split: the codes' share by refitting 30 times
+with every kept corner moved at random by the fit's own corner residual (fixed seed; an upper bound, since the residual holds the model's
+misfit too); the registration's share as the part of the 25 error vectors a quadratic in page position explains; and the bull-to-bull
+scatter that leaves. Truth: the 600 dpi scan of the same sheet for the photographs of a scanned sheet, the printed positions for the
+mounted Phase 0 frames. Material: the four Fold 7 pictures of the 2026-09-29 sitting (`corpus/sitting-2026-09-29`), the 2026-09-26
+pictures of dominus-k and magnus-m against their scans, and the seven mounted frames (`scans/phase0`, sheet 3 hanging from a pin).
+
+**1. Row 1's numbers were measured with no lens fit at all.** GroupLab decides a picture is a photograph by its focal length tag
+(`ImageMetadata.IsCamera`). The corpus copies were stripped of every tag before they were kept, so each was read as a flat scan, by a
+plain homography. `compare-photos` reproduces the checklist's 0.0155, 0.0176, 0.0216 and 0.0186 in exactly that way; with the lens fit
+(`--model radial`) the same four read 0.0124, 0.0117, 0.0077 and 0.0143 in, and the dominus-k picture 0.0070 to 0.0057 in. The phone keeps
+its capture's tags (`PhoneAnalysis.Prepare`), and so does the upload page's intake (it keeps the camera facts GroupLab measures with), so
+the phone and the learning loop already get the lens fit; a photograph that lost its tags on the way (sent through a messaging app, a
+screenshot, the corpus) does not. The phone's own PNG copies of the sitting (`camera-0929/pictures`) say the same: homography 0.0084 to
+0.0516 in, lens fit 0.0070 to 0.0087 in.
+
+**2. With the lens fit, the worst bulls carry a smooth error the codes cannot see.**
+
+| photograph | worst, lens fit (+ bend) | codes' share, rms / at worst | smooth field, rms / at worst | scatter, rms / at worst | corner residual |
+|---|---|---|---|---|---|
+| picture-1 | 0.0124 | 0.0025 / 0.0055 | 0.0035 / 0.0104 | 0.0026 / 0.0026 | 0.0029 |
+| picture-2 | 0.0117 | 0.0027 / 0.0048 | 0.0030 / 0.0054 | 0.0037 / 0.0066 | 0.0029 |
+| picture-3 | 0.0077 (bend) | 0.0029 / 0.0029 | 0.0022 / 0.0038 | 0.0029 / 0.0039 | 0.0004 |
+| picture-4 | 0.0143 (bend) | 0.0010 / 0.0011 | 0.0035 / 0.0090 | 0.0034 / 0.0055 | 0.0005 |
+| dominus-k 09-26 | 0.0057 | 0.0006 / 0.0008 | 0.0018 / 0.0021 | 0.0019 / 0.0048 | 0.0022 |
+| magnus-m 09-26 | 0.0102 | 0.0011 / 0.0013 | 0.0025 / 0.0051 | 0.0026 / 0.0052 | 0.0023 |
+
+Inches. The codes fit to 0.0022 to 0.0029 in, yet the smooth field at the worst bull is up to 0.0104 in, so the field is not in the
+registration at the codes: it lies between them. 75 to 90 percent of the squared error lies along the image's radius at each bull, but
+its sign changes from bull to bull and from picture to picture (mean radial error by distance from the image centre: +0.5, +1.0, -3.1,
+-4.7 thousandths at the outer band of the four Fold 7 pictures). A lens profile the two terms miss would be the same function of that
+distance in every picture from one camera; it is not. **What is left is the paper's own relief between the codes, seen through a wide
+lens**: the sitting used the Fold 7's 13 mm equivalent ultrawide, where a ray to the outer bulls is about 40 degrees off the lens axis, so
+0.1 mm of paper height moves a bull about 0.003 in.
+
+**3. Where the worst bulls sit.** Always on the outside of the 5 by 5 grid (bulls 25, 5, 1, 5, 6, and 5 on magnus-m), 1.06 in from the
+nearest code, the outer bulls' distance. Not consistently on the far side: by local scale they rank 24, 15, 17, 1 and 4 of 25 (1 is the
+farthest), and the rank correlation of error with distance from the camera is +0.01 to +0.54.
+
+**4. The mounted frames (row 2).** With the lens and the bend the median bull is 0.0018 to 0.0046 in on all seven, but the worst is 0.051
+to 0.117 in, every time an outer bull on the lower edge (the sighter S1 on five, bulls 21 and 5 on two), with a radial error of +12 to
++32 thousandths outward in the outer band: the sheet hangs from one pin and curls toward the camera at the bottom, beyond where the
+bend, fitted across the codes and faded past them, reaches. The cylinder reads them at 0.018 to 0.058 in. Code noise is 0.001 to 0.023
+in rms there, small beside the curl except on main2 and ultrawide3, which read only 26 and 32 of 34 codes.
+
+**Which part carries the worst bulls:** the shape of the paper (the bent-sheet part), between the codes on a sheet held flat and beyond
+them on a hanging one. The lens fit decides the result when it does not run (untagged photographs); when it runs it is not the limit.
+The codes' corners are second, at most about 0.003 in; the bull locator's scatter about 0.003 in.
+
+### Section 2: photographs at an angle
+
+**Kept: a photograph with no camera tags is read through the lens.** `SheetMeasurer.UntaggedPhotograph`: an image with no focal length,
+stating no scanning resolution (none, or below 150 dpi, since 72 and 96 are what photo tools write), whose codes fit a flat page worse than
+0.003 in rms (`UntaggedPhotographRmsDmm`), is registered as a photograph, with the lens fit and the bend after it. **Chosen on** the
+Phase 0 set: every scan in `scans/phase0` and the three 2026-09-26 load sheets fit a flat page to 0.0014 to 0.0027 in and gain nothing
+from the lens (ratio 1.0); the tagged Phase 0 photographs fit it to 0.0030 to 0.087 in. **Reported on** the 2026-09 photographs, which
+did not choose it (`grouplab compare-photos`, worst bull before and after, inches):
+
+| photograph | before | after |
+|---|---|---|
+| sitting picture-1 to picture-4 | 0.0155, 0.0176, 0.0216, 0.0186 | 0.0124, 0.0117, 0.0077, 0.0143 |
+| dominus-k and magnus-m, 2026-09-26 | 0.0070, 0.0133 | 0.0057, 0.0102 |
+| the phone's PNG copies, 065419, 181253, 181549, 182144 | 0.0084, 0.0238, 0.0351, 0.0516 | 0.0070, 0.0087, 0.0078, 0.0080 |
+
+No photograph got worse at its worst bull. The fifth PNG (223707) fits a flat page to 0.0020 in and is left as it was. Two holes the PNGs
+missed are found, and their false marks go from two to one (181253 gains one). Holes are 0.0107 to 0.0180 in at the median after, against 0.0125 to 0.0225 before.
+`scoreboard --corpus`: only the three untagged 2026-09-26 pictures change; found holes the same (72 of 73), hole median better on
+magnus-c (0.0258 to 0.0228) and magnus-m (0.0207 to 0.0175), and one false mark moved from magnus-c to dominus-k, 1.3 in below the codes
+where that sheet was taped down. Phone captures and the upload page's submissions keep their camera tags, so they read as before.
+
+**Tried, not kept: anchoring on the printed bulls.** Section 1 names the paper's relief between the codes. The bulls are printed at
+known positions exactly where the codes cannot see it, so a correction pulling each located bull to its printed position (Gaussian
+weighted, zero at the codes) was tried and judged on holes against the scan, never on bulls, which would be circular
+(`photo-parts --holes`). It changed the hole median by -0.0006 to +0.0009 in and the worst by -0.0040 to +0.0018 in: nothing. A
+photograph's holes sit 0.0107 to 0.0180 in from the scan's at the median, against 0.0018 to 0.0034 in for its bulls, so the holes' own
+centres (question 51, the shadow) dominate, not the paper's shape. Measured from their own bull, the offset a shooter reads, the holes
+are no better (median 0.0122 to 0.0194 in).
+
+### Section 3: the bent sheet (row 2)
+
+Measured on the same seven frames (table in section 1, item 4; `photo-parts --mounted`). Most of the worst error is the sighter S1, an
+inch below the last row of codes, where the bend fades to nothing on purpose (entry 324: carried on past the last row it raised a false
+mark) and where no current GroupLab sheet puts a bull: every current definition keeps every bull inside its codes. Inside the codes the
+lens and bend leave 0.0051 to 0.0122 in on four frames and 0.063 to 0.116 in on the three where the curl left 2 to 8 codes unread. The
+cylinder, question 44's bounded step kept, reads those three at 0.034 to 0.055 in, but three of the four others worse (0.0060, 0.0224 and
+0.0578 in against 0.0051, 0.0122 and 0.0093), and five of the six flat photographs far worse (0.044 to 0.097 in). A rule choosing it, say by unread codes, would be set on seven frames of one sheet, and
+flat photographs miss a code or two as well (two of the PNGs read 31 and 32 of 34), so the model was not changed. Too few frames to
+split; nothing here is offered as a result beyond the measurement.
+
+### Section 4: holes ringed as two shots, and false marks
+
+The 7 rings on clean single holes (row 4) are gone, by section 2's change and nothing else: all seven were on the right-hand column of the
+9 and 15 degree pictures (bulls 15, 20 and 25, 1.4 to 3.1 holes' area), where the plain homography misplaced the printed artwork and left
+its edges in the difference. With the lens fit the four pictures ring nothing. Every rendered double is still found: the Core suite,
+`RoundsFiredOnARenderedSheetTests` among it, passed. The false marks over the nine corpus photographs with a hole truth are 6 before and 6
+after (5 on the crinkled .22 LR diamond sheet, and the one that moved); no change to the detector was made for them.
+
+### Section 5: the rules
+
+Settings chosen on the Phase 0 frames and scans, reported on the 2026-09 photographs (5.1). Scans cannot change: an image stating 150 dpi
+or more never enters the new test, and every scan in the corpus states one; the Core suite passed (2960) and its one failure is the
+local inbox line (5.2). The one photograph a change made worse in any way (dominus-k's moved false mark) is recorded above; the worst
+case improved everywhere (5.3). **The learning loop**: submissions keep their camera tags, so the real scoreboard reads them as before;
+the synthetic board, whose pictures carry no tags, stayed within every margin of its baseline (`scoreboard --synthetic --baseline`,
+exit 0), so the next nightly check should read the same (5.4). The bench gate passed, no stage slower (5.5).
+
+### Section 6 and 7
+
+The gates are not met with the material here: request 94 asks for scans of the three 4 October sheets (a current sheet mounted at the
+range, photographed and scanned, for row 2) and three main-lens photographs of the dominus-k sheet at 0, 20 and 35 degrees (row 1). Rows
+1 to 4 of `docs/PROOF-CHECKLIST.md` carry the new numbers; RESEARCH.md records the article decision (written, as part of entry 401's
+article on how far off square a photograph can be).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

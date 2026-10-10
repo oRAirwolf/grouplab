@@ -25,6 +25,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-10, entry 399: overnight, part 1 of 4: accuracy on photographs (registration at an angle, the bent sheet, holes ringed as doubles)
+
+**Status: actioned 2026-10-10; every section done. Section 2 kept one change (a photograph without camera tags is read through the lens); section 3 changed no model, because seven frames of one sheet cannot choose one honestly; rows 1 to 4 are still not met, and request 94 asks for the material that would settle rows 1 and 2.**
+
+From the planning session with Alan, 2026-10-10 02:00 Denver. Alan asked what large work Code can do overnight and said "queue all
+four" to entries 399 to 401 and 403 (entry 402, a small fix to the download page, was added after). He is going to bed, so this runs unattended. Take them in number order, one at a time, each its own commit
+and report. Within the 85% guard and the standing budget (CLAUDE.md, entry 317): if the day's pace is reached, finish the entry in hand,
+report, and stop. One worker (CLAUDE.md, 2026-10-08): no helpers in parallel. This entry is main model work throughout.
+
+Why this one first: most shooters will photograph a target rather than scan it, and photographs are where GroupLab is furthest from its
+own written gates (docs/PROOF-CHECKLIST.md rows 1 to 4). Nothing here needs Alan; the material is already on this computer.
+
+1. **Find where the error comes from before changing anything.** For each photograph already measured against a scan of the same sheet
+   (the four Fold 7 captures of 2026-09-29 and the 2026-09-26 picture against the dominus-k 600 dpi scan; the seven corpus photographs;
+   the mounted-photograph frames of the Phase 1 gate), split each bull's center error into its parts: the code positions, the lens fit,
+   the registration, and the bent-sheet model. Say which part carries the worst bulls (row 1: 0.0155 to 0.0216 in, gate 0.005 in) and
+   whether the worst bulls sit at the far edge, near the codes, or at random. Write it in PHASE1-RESULTS.md before section 2 starts.
+2. **Photographs at an angle (row 1).** Improve the part section 1 names. Measure with `grouplab compare-photos` before and after.
+3. **The bent sheet (row 2: 0 of 7 frames meet the mounted-photograph gate).** The checklist says the model needs a change before more
+   material helps. Make the change section 1 points to, keeping question 44's bounded step, and measure on the same 7 frames.
+4. **Holes ringed as two shots (row 4: 7 clean single holes ringed at 1.4 to 3.1 holes' area) and the 2 false marks of row 3.** Reduce
+   both without losing a real double: `RoundsFiredOnARenderedSheetTests` and any rendered doubles must still be found.
+5. **Rules for every change in sections 2 to 4:**
+   1. **No tuning to the answer.** Choose settings on part of the photographs and report the result on the rest (say which is which),
+      so a gain is not just fitting these pictures. If there are too few to split, say so and treat the result as provisional.
+   2. **Scans must not change:** every hole center and figure on the scan corpus identical to before (or within a stated tolerance far
+      below 0.001 in, with the reason), by the regression tests and a before and after comparison.
+   3. A change that helps one photograph and hurts another is not kept unless the worst case improves; record what was tried, including
+      what did not help.
+   4. The learning loop's scoreboard on the server must not read worse once this ships; if a change alters what it scores, say so in
+      the report so the next nightly check is read with that in mind.
+   5. Bench gate before and after; no stage more than the gate allows slower.
+6. **If a gate cannot be met with the material here**, stop at the honest improvement, say in PROOF-CHECKLIST.md what material would
+   settle it, and write a request in for-alan.md only if a new photograph from Alan is the only way forward (with the exact shot to take).
+7. Update PROOF-CHECKLIST.md rows 1 to 4 with the new numbers, add a "Worth an article?" decision in RESEARCH.md, and a plain
+   Release-note in a shooter's words (for example how much closer GroupLab now gets on a photo taken at an angle).
+
 ## 2026-10-09, entry 398: request 91 answered: today's server backup is there and a restore of it passed
 
 **Status: actioned 2026-10-09; every section done.** The restore test is recorded in `docs/RESTORE.md` with the new schedule (one backup a day kept 4 days) and what four days means for the standing rules; request 91 is archived as answered and its steps, and RESTORE.md's, say "Restore boot volume"; question 93 is answered (the packages) and archived; entry 395's server half goes on under entry 397.
