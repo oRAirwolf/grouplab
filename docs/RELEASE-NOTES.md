@@ -480,7 +480,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - On the iPhone, the bar with Done no longer stays floating over the screen after the keyboard closes, Done always closes the keyboard, and a tap outside a box closes it.
 - Correction: a Garmin Xero file with several strings holds the strings you selected when exporting, not a whole month; earlier notes called it a monthly export.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.154)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
