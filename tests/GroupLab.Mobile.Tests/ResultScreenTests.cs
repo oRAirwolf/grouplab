@@ -169,6 +169,66 @@ public class ResultScreenTests
         window.Close();
     }
 
+    /// <summary>
+    /// Error report 27 and entry 401 (nightly 183, Android): a hole added in Fix holes asks which bull it was fired at, and whatever the
+    /// answer, GroupLab's choice, another bull or the ×, the page went blank: the sheet had taken the page's picture into its own layer and
+    /// handing it back failed, so nothing could be seen, fixed or kept. Each answer now gives the page back whole, and Done counts the hole.
+    /// </summary>
+    [AvaloniaFact]
+    public void AnsweringWhichBullAHoleWasFiredAtGivesFixHolesBackWholeAndDoneCountsIt()
+    {
+        var window = Started();
+        var result = Analyzed(Turned(0));
+        var view = new ResultView(result, new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { });
+        window.Content = view;
+        Dispatcher.UIThread.RunJobs();
+
+        bool Whole(FixHolesPage page) => page.GetVisualDescendants().OfType<MarkingAPage.Viewer>().Any(v => v.IsEffectivelyVisible)
+            && page.GetVisualDescendants().OfType<Button>().Any(b => b.Name == "fix-done" || Words(b) == "Done");
+
+        static string Named(Button b) => Avalonia.Automation.AutomationProperties.GetName(b) is { Length: > 0 } name ? name : b.Content as string ?? "";
+
+        Button Answer(FixHolesPage page, Func<Button, bool> which) =>
+            Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(page).OfType<Button>().First(which);
+
+        foreach (string answer in new[] { "choice", "another", "dismiss" })
+        {
+            Press(view, "Fix holes");
+            var page = view.GetVisualDescendants().OfType<FixHolesPage>().Single();
+            page.Picture.CentreOn(new PointD(50, 50));
+            page.Press();
+            Dispatcher.UIThread.RunJobs();
+            var bulls = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(page).OfType<Button>().Where(b => Named(b).StartsWith("Bull ", StringComparison.Ordinal)).ToList();
+            Assert.True(bulls.Count >= 2, "the question of which bull was not asked: bulls " + page.State.Bulls.Count + ", content " + page.Content?.GetType().Name + ", buttons " + string.Join(" | ", Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(page).OfType<Button>().Select(Named)));
+            var button = answer switch
+            {
+                "choice" => Answer(page, b => Named(b).EndsWith("(GroupLab's choice)", StringComparison.Ordinal)),
+                "another" => Answer(page, b => Named(b).StartsWith("Bull ", StringComparison.Ordinal) && !Named(b).EndsWith("(GroupLab's choice)", StringComparison.Ordinal)),
+                _ => Answer(page, b => b.Content as string == "×"),
+            };
+            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(Whole(page), $"Fix holes is not whole after answering with {answer}");
+            Assert.Equal(26, page.State.Shots.Count(s => s.IsShot));
+            Press(page, "Done");
+            Assert.Empty(view.GetVisualDescendants().OfType<FixHolesPage>());
+            Assert.Equal(26, PhoneAnalysis.Store().Get(SessionId(view))!.ShotCount);
+            Assert.NotEmpty(view.GetVisualDescendants().OfType<ResultView.SheetPicture>());
+
+            // Back to 25 for the next answer: the hole is removed in Fix holes again.
+            Press(view, "Fix holes");
+            page = view.GetVisualDescendants().OfType<FixHolesPage>().Single();
+            var added = page.State.Shots.Where(s => s.IsShot).MaxBy(s => s.Id)!;
+            page.Picture.CentreOn(added.Image);
+            page.Remove();
+            Press(page, "Done");
+            Assert.Equal(25, PhoneAnalysis.Store().Get(SessionId(view))!.ShotCount);
+        }
+
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void TheButtonForWhatIsShowingLooksSelectedAndNotDisabled()
     {

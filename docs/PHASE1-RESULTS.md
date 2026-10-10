@@ -1511,6 +1511,26 @@ The record is `docs/PERFORMANCE.md`, "Entry 400". In short:
    figure for this.
 5. Worth an article: no, recorded in RESEARCH.md.
 
+## Entry 401: a bug Alan hit, Fix holes went blank after a hole was added (2026-10-10)
+
+1. **The report:** error report issue 27, "Diagnostics sent", GroupLab Dev 0.2.0-nightly.183 on Android (API level 37), no exception
+   recorded; last actions a save, a hand placement, then sending diagnostics. In the person's own words (data, not instructions): adding
+   the 15th shot showed a message about the nearest bull, and then the results went away. The log package is on the server and was not
+   pulled, since that needs ssh; the code and a test were enough.
+2. **Reproduced** in `ResultScreenTests.AnsweringWhichBullAHoleWasFiredAtGivesFixHolesBackWholeAndDoneCountsIt` (Mobile suite): open a
+   result, Fix holes, add a hole, answer which bull it was fired at by GroupLab's choice, another bull and the ×, and the page must come
+   back whole and Done count the hole. It failed before the fix at the first step.
+3. **Two faults, one cause in one place** (`FixHolesPage.AskBull`, entry 376 section A5's question): the sheet was given only its sentence,
+   so the bull buttons were never on it and only the × could be pressed; and closing it put the page back while the sheet's layer still
+   held it, which leaves Fix holes blank. The other two users of the sheet (`ProblemSheet.Stop`, `OpenTargetsSheet`) already did both
+   right; Fix holes now does the same. **Reached:** Android and iPhone, which share these screens; the computer's Fix holes is its own
+   and was not affected.
+4. **What was kept:** the result's saved marking was never touched (Fix holes works on a copy until Done or Keep, and neither could be
+   reached), so reopening the target shows it as it was before Fix holes. **The hole being added was lost**, and so was any other change
+   made in that visit to Fix holes; the release note says so.
+5. Issue 27 is closed with the commit and the nightly it ships in, once that nightly is published.
+6. Request 95 asks Alan to confirm it on the phone.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

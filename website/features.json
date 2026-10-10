@@ -184,7 +184,8 @@
     "In Guided mode the camera now takes the picture about a second after",
     "Find holes (Experimental)",
     "the camera's level works upright",
-    "result now comes up about a third sooner"
+    "result now comes up about a third sooner",
+    "adding a hole in Fix holes now shows the bulls to choose from"
   ],
   "features": [
     {

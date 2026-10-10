@@ -164,9 +164,15 @@ internal sealed class FixHolesPage : UserControl
             : Math.Sqrt(Math.Pow(page.ToTarget(b.Image).X - page.ToTarget(shot.Image).X, 2) + Math.Pow(page.ToTarget(b.Image).Y - page.ToTarget(shot.Image).Y, 2));
         var guess = state.Bulls.FirstOrDefault(b => b.Index == shot.Bull);
         var listed = (guess is null ? [] : new[] { guess }).Concat(state.Bulls.Where(b => b != guess).OrderBy(Away).Take(5)).ToList();
+        // Error report 27 (entry 401): the sheet holds the page in its own layer, so the page is taken out of it before it is shown again;
+        // putting it back while the layer still held it left Fix holes blank, with nothing to see, fix or keep.
         void Back()
         {
-            Content = null;
+            if (Content is Panel layer)
+            {
+                layer.Children.Remove(behind);
+            }
+
             Content = behind;
             Show();
         }
@@ -180,8 +186,16 @@ internal sealed class FixHolesPage : UserControl
 
             Back();
         }, primary: b == guess).Id("fix-bull-" + b.Label)).ToList();
+
+        // The sheet shows what it is given under its title, so the bulls are given with the sentence; without them only the × was there.
+        var body = new StackPanel { Spacing = 11, Children = { Screens.Line("The line on the picture goes to the bull GroupLab chose. Pick another if it is wrong.") } };
+        foreach (var choice in choices)
+        {
+            body.Children.Add(choice);
+        }
+
         Content = null;
-        Content = ProblemSheet.Over(behind, "Which bull was this hole fired at?", Screens.Line("The line on the picture goes to the bull GroupLab chose. Pick another if it is wrong."), choices, Back);
+        Content = ProblemSheet.Over(behind, "Which bull was this hole fired at?", body, choices, Back);
     }
 
     /// <summary>Adds a hole under the crosshair, or puts down the hole being moved there.</summary>
