@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.184
+
+**2026-10-10**, commit `df55224`. Nightly.
+
+**What you will notice**
+
+- On the phone, adding a hole in Fix holes now shows the bulls to choose from when it asks which bull the hole was fired at, and answering no longer leaves the page blank; before this, the hole you were adding was lost, though your earlier marking was kept.
+- A photo of a GroupLab target that has lost its camera details, for example after passing through a messaging app, is now measured with its lens corrected, so its bulls read closer to where they are and clean holes at the far side are no longer ringed as possible doubles.
+- On the phone, a photographed GroupLab target's result comes up about a tenth sooner after the picture is taken, measured by running the phone's own reading on a computer.
+
+**Under the hood**
+
+- Nothing changes beyond what the corrected note for entry 400 says; this puts back the earlier way of reading a sheet's codes while a test that stopped on one platform is looked into.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.184)
+
+---
+
 ## 0.2.0-nightly.183
 
 **2026-10-09**, commit `36254cf`. Nightly.
