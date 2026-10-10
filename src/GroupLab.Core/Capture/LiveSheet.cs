@@ -107,7 +107,12 @@ public static class LiveSheet
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
         ArgumentNullException.ThrowIfNull(backend);
-        var found = PhotographMarkers(image, backend);
+        return SheetsByMarkers(PhotographMarkers(image, backend), candidates);
+    }
+
+    /// <summary>Entry 400: the same, from markers already found in the picture, so a caller that needs them too finds them once.</summary>
+    private static IReadOnlyList<TargetDefinition> SheetsByMarkers(IReadOnlyList<DetectedMarker> found, IReadOnlyList<TargetDefinition> candidates)
+    {
         if (found.Count < LeastMarkers)
         {
             return [];
@@ -210,13 +215,13 @@ public static class LiveSheet
         ArgumentNullException.ThrowIfNull(candidates);
         ArgumentNullException.ThrowIfNull(backend);
         var places = new List<(Homography, PointD, int, int)>();
-        var sameLayout = SheetsByMarkers(image, candidates, backend);
+        var found = PhotographMarkers(image, backend);
+        var sameLayout = SheetsByMarkers(found, candidates);
         if (sameLayout.Count == 0)
         {
             return places;
         }
 
-        var found = PhotographMarkers(image, backend);
         var done = new List<(PointD Centre, double Side)>();
         foreach (var candidate in sameLayout)
         {
@@ -348,13 +353,13 @@ public static class LiveSheet
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(candidates);
         ArgumentNullException.ThrowIfNull(backend);
-        var fitting = SheetsByMarkers(image, candidates, backend);
+        var found = PhotographMarkers(image, backend);
+        var fitting = SheetsByMarkers(found, candidates);
         if (fitting.Count == 0)
         {
             return null;
         }
 
-        var found = PhotographMarkers(image, backend);
         const double dpi = 100;
         var scored = new List<(TargetDefinition Definition, double Correlation)>();
         foreach (var candidate in fitting)

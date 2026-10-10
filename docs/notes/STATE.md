@@ -9,18 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-10, entry 399 (before it: request 92 and questions 94 and 95).
+**Last rewritten:** 2026-10-10, entry 400 (before it: entry 399).
 
 ---
 
 ## In flight
 
-- **Entries 399 to 403, "queue all four" overnight** (Alan, 2026-10-10): 399 done; 400 (the phone's reading of a photograph, a
-  third faster), 401 (four research articles), 402 (the download page on Alan's tablet) and 403 (the intake worker onto the server,
-  last, waiting for Alan's approval) to come, in that order.
-- **Entry 399 done**: a photograph that lost its camera tags was read as a scan, with no lens fit, which is where the checklist's 0.0155
-  to 0.0216 in came from; now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in on those four, and the
-  7 false rings of row 4 gone. What is left is paper relief through the ultrawide (`grouplab photo-parts`). Request 94 for material.
+- **Entries 399 to 403, "queue all four" overnight** (Alan, 2026-10-10): 399 and 400 done; 401 (four research articles), 402 (the
+  download page on Alan's tablet) and 403 (the intake worker onto the server, last, waiting for Alan's approval) to come, in order.
+- **Entry 400 done**: the phone's reading of a photograph about a third sooner (codes read at once, the bend's fits at once, markers
+  found once), every result unchanged; the bench gates it as "a phone photograph, stage by stage", 683 ms.
+- **Entry 399 done**: an untagged photograph is now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in, was
+  0.0155 to 0.0216; row 4's 7 false rings gone; what is left is paper relief (`grouplab photo-parts`). Request 94 for material.
 - **Question 95 (b) built, not yet on the server** (2026-10-10): the nightly checks the learning token (`token_check`); Code's copy to
   the server was refused by the permission check, so request 93 is Alan's one paste. RESTORE.md lists it as waiting.
 - **Requests 84, 85, 88 and 92 closed, question 94 answered (a)** (2026-10-10): the M220's placement stays; `MeasuredFeed` 99.30.
@@ -46,13 +46,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
-- **Performance** (Phase 9): the first optimization done (entry 392, hole finding on a scan); the next waits for planning to name one.
+- **Performance** (Phase 9): hole finding on a scan (entry 392) and the phone's reading of a photograph (entry 400); the next waits for planning.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entries 400 to 403 in order; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
+1. Entries 401 to 403 in order; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. After request 93, the next nightly's `learning/summary.md` should end with the token line; read it once.
 

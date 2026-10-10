@@ -253,15 +253,32 @@ public sealed class BentSheetMapping : IPageMapping
     /// <summary>Each marker's corners predicted by a correction fitted without that marker: the root mean square over all, and each marker's own.</summary>
     private static (double Rms, Dictionary<int, double> PerMarker) LeaveOneOut(PointD[] q, PointD[] t, List<int> use, double smoothing)
     {
+        // Entry 400: each marker's fit without it is its own, so they are fitted at once, then summed in the markers' order as before, so the
+        // same additions in the same order give the same result to the last bit. On a bent photograph this was most of registering it.
+        var markers = use.GroupBy(i => i / 4).ToList();
+        var owns = new double[markers.Count];
+        try
+        {
+            Parallel.For(0, markers.Count, m =>
+            {
+                var marker = markers[m];
+                var rest = use.Where(i => i / 4 != marker.Key).ToList();
+                var without = MarkerMesh.Spline.Fit([.. rest.Select(i => q[i])], [.. rest.Select(i => t[i])], smoothing);
+                owns[m] = marker.Sum(i => Squared(Minus(t[i], without.Exactly(q[i]))));
+            });
+        }
+        catch (AggregateException e) when (e.InnerExceptions.Count > 0)
+        {
+            // What one fit throws is thrown as itself, as the loop this replaces threw it; Fit catches it.
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerExceptions[0]).Throw();
+        }
+
         double sum = 0;
         var perMarker = new Dictionary<int, double>();
-        foreach (var marker in use.GroupBy(i => i / 4))
+        for (int m = 0; m < markers.Count; m++)
         {
-            var rest = use.Where(i => i / 4 != marker.Key).ToList();
-            var without = MarkerMesh.Spline.Fit([.. rest.Select(i => q[i])], [.. rest.Select(i => t[i])], smoothing);
-            double own = marker.Sum(i => Squared(Minus(t[i], without.Exactly(q[i]))));
-            sum += own;
-            perMarker[marker.Key] = Math.Sqrt(own / marker.Count());
+            sum += owns[m];
+            perMarker[markers[m].Key] = Math.Sqrt(owns[m] / markers[m].Count());
         }
 
         return (Math.Sqrt(sum / use.Count), perMarker);

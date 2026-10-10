@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Gltd.Model;
@@ -61,6 +62,30 @@ public static class PhotoParts
                 {
                     output.WriteLine(FormattableString.Invariant(
                         $"  at {h.X:0},{h.Y:0}: size {h.SizeHoles:0.00} holes, area {h.AreaInches:0.0000} hull {h.HullAreaInches:0.0000} sq in, diameter {h.DiameterInches:0.000}, solidity {h.Solidity:0.00}, closure {h.Closure:0.00}, elongation {h.Elongation:0.00}, aspect {h.Aspect:0.00}, ink {h.InkFraction:0.00}, oversized {h.Oversized}{(h.OversizeTentative ? " (tentative)" : "")}, merge {h.PossibleMerge}, joined {h.JoinedHoles:0.00}, on ink {h.OnInk}"));
+                }
+            }
+
+            return 0;
+        }
+
+        if (args is ["--identify-timing", .. var timed])
+        {
+            var library = GroupLab.Core.Registration.SheetIdentification.Candidates(["targets"]);
+            foreach (string photo in timed)
+            {
+                var (image, _) = ImageLoader.Load(photo);
+                for (int round = 0; round < 3; round++)
+                {
+                    var clock = Stopwatch.StartNew();
+                    var views = GroupLab.Core.Capture.LiveSheet.CodeViews(image, library, backend);
+                    long viewsMs = clock.ElapsedMilliseconds;
+                    var reads = views.Select(v =>
+                    {
+                        var c = Stopwatch.StartNew();
+                        int n = backend.ReadCutOut(v.Image, 1.0).Count;
+                        return FormattableString.Invariant($"{c.ElapsedMilliseconds}{(n > 0 ? "*" : "")}");
+                    }).ToList();
+                    output.WriteLine(FormattableString.Invariant($"{Path.GetFileName(Path.GetDirectoryName(photo))}/{Path.GetFileName(photo)} {image.Width}x{image.Height}: views {viewsMs} ms ({views.Count}), reads {string.Join(" ", reads)} ms, total {clock.ElapsedMilliseconds}"));
                 }
             }
 

@@ -1492,6 +1492,25 @@ range, photographed and scanned, for row 2) and three main-lens photographs of t
 1 to 4 of `docs/PROOF-CHECKLIST.md` carry the new numbers; RESEARCH.md records the article decision (written, as part of entry 401's
 article on how far off square a photograph can be).
 
+## Entry 400: the phone's reading of a camera photograph, about a third sooner (2026-10-10)
+
+The record is `docs/PERFORMANCE.md`, "Entry 400". In short:
+
+1. **Measured** with `PhoneAnalysis.Run` headless on this desktop (Release, quiet), on the 600 dpi sample and the nine Fold 7 pictures,
+   after entry 399's change sent the untagged pictures through the lens fit. The slowest stage was reading the codes (190 to 420 ms; 7.6
+   s on the picture whose codes read only enlarged); entry 399 had added registration's bend fits, 95 to 230 ms on the bent pictures.
+2. **Made faster** without changing any decision's order: the code cut-outs read at once and taken in order; the enlarged cut-outs the
+   same; the markers found once where finding the code places looked twice; the bend's leave-one-out fits at once, summed in order. An
+   ordinary Fold 7 picture 893 to 613 ms on average (31 percent), the hard one 8016 to 4562 ms, the nine together 38 percent less. Not
+   done: reading the whole picture at its several sizes at once, which would multiply the memory a phone holds (entry 313 measured
+   doubling the picture alone tripling it).
+3. **Nothing changed** in any result: `compare-photos` on ten photographs, `scoreboard --corpus`, `scoreboard --synthetic` and `identify
+   sweep`, line for line, time columns aside. The Core and Mobile suites passed.
+4. **The bench** has the phone photograph's reading as its own figure, 683 ms, gated; identifying a sheet from its codes moved from 209.5
+   to 109.6 ms in the baseline; nothing else moved. The emulator reads the 600 dpi scan, not a photograph, so there is no emulator
+   figure for this.
+5. Worth an article: no, recorded in RESEARCH.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -204,6 +204,34 @@ public static class BenchSuite
                 },
                 ["AutomaticMarking", "BinaryMorphology"]);
         }
+
+        // Entry 400: the reading a phone does after the picture is taken, which Phase 9 named as the wait to shorten: the sheet's codes first,
+        // then the whole analysis, each stage its own figure, so a stage that slows is named.
+        if (m.Photograph is { } photograph)
+        {
+            yield return new BenchCase("measurement", "a phone photograph, stage by stage", "A phone's photograph of a sheet read as the phone reads it once the picture is taken: its codes, then the whole analysis, every stage filed as its own figure.",
+                sink =>
+                {
+                    var (grey, value, metadata) = BenchMaterial.Load(photograph);
+                    var backend = new OpenCvSharpBackend();
+                    var trace = new TraceRecorder();
+                    var library = SheetIdentification.Candidates([Path.Combine(m.Root, "targets"), Path.Combine(m.Root, "targets", "frozen", "phase0")]);
+                    var identity = SheetIdentification.Identify(grey, library, backend, trace);
+                    if (identity.Definition is not { } definition)
+                    {
+                        return "not identified: " + identity.Failure;
+                    }
+
+                    var result = AutomaticMarking.Run(grey, value, metadata, definition, backend, trace, CancellationToken.None, null, artefacts: false);
+                    foreach (var record in trace.Records)
+                    {
+                        sink.Part(record.Stage, record.DurationMs);
+                    }
+
+                    return string.Create(CultureInfo.InvariantCulture, $"{definition.Name}, {result.Detections.Count} holes, {result.MissingMarkers.Count} markers not found");
+                },
+                ["SheetIdentification", "AutomaticMarking", "LiveSheet", "BentSheetMapping"]);
+        }
     }
 
     private static IEnumerable<BenchCase> Marking(BenchMaterial m)

@@ -48,6 +48,38 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 400: the phone's reading of a photograph, about a third sooner
+
+Planning named it: the phone's whole reading of a camera photograph, from the picture to its result (`PhoneAnalysis.Run`). Measured headless
+on this desktop, Release, nothing else running, as entry 342 did: the 600 dpi sample and the nine Fold 7 pictures of the 2026-09-28 and 29
+sittings, each stage as the analysis logs it, medians of three rounds before and five after. Entry 399 had just sent these untagged
+pictures through the lens fit, which added a new cost on the bent ones: registering them, 95 to 230 ms, nearly all of it the bend's fits
+with each marker left out in turn.
+
+**The slowest stage was reading the codes**, 190 to 420 ms a picture: about 90 to find where each code should be and cut it out square on,
+then about 300 to read the ten cut-outs one after another, 20 to 60 ms each, six of them at places where another sheet sharing the layout
+would put a code. On the one picture whose codes read only enlarged, 7.6 of its 8.0 s.
+
+**What changed, and why no figure can move.** Each code's cut-out is read by detectors of its own, so the ten are read at once and then
+taken in their order exactly as before; the cut-outs enlarged on a hard picture likewise. Finding the code places looked for the markers
+twice in the same picture and now looks once. The bend's fits with each marker left out are each their own, so they run at once and are
+summed in the markers' order, which gives the same result to the last bit.
+
+| picture | before (entry 399's code) | after |
+|---|---|---|
+| the 600 dpi sample | 765 ms | 661 ms |
+| eight ordinary Fold 7 pictures | 689 to 1056 ms, mean 893 | 508 to 684 ms, mean 613 |
+| the one whose codes read only enlarged | 8016 ms | 4562 ms |
+
+Over the nine Fold 7 pictures the reading takes 38 percent less in all, and 31 percent less for an ordinary one. Reading the codes is now
+85 to 144 ms on an ordinary picture. **Nothing moved:** `compare-photos` on ten photographs, `scoreboard --corpus`, `scoreboard
+--synthetic` and `identify sweep` are the same line for line before and after but for their time columns.
+
+**On the bench:** a new figure, "a phone photograph, stage by stage" (the Phase 0 phone photograph, its codes then the whole analysis),
+683 ms; "identify the sheet from its codes" moved from 209.5 to 109.6 ms. The emulator's record reads the 600 dpi scan, not a camera
+photograph, so it has no before and after for this. What is left on a photograph: finding the holes, 132 to 282 ms; the phone's decoding
+and shrinking of the picture, 46 to 126 ms; reading the codes; finding the markers again for the measurement, about 45 ms.
+
 ## Entry 392 section 2: the first optimization, hole finding on a 600 dpi scan
 
 Planning named it: the hole stage, 1769 ms of the 2604 a 600 dpi scan took. The close of the binary mask by a disc 67 px across was about

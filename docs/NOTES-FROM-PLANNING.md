@@ -25,6 +25,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-10, entry 400: overnight, part 2 of 4: Phase 9's second speed-up, the phone's reading of a camera photograph
+
+**Status: actioned 2026-10-10; every section done. An ordinary Fold 7 picture reads 31 percent sooner and the nine together 38 percent, every result unchanged; the emulator reads only the 600 dpi scan, so section 4's emulator record has nothing to compare.**
+
+From the planning session with Alan, 2026-10-10 02:00 Denver, part of "queue all four" (entries 399 to 401 and 403). Take it after entry 399 is
+committed and reported. Main model.
+
+STATE says Phase 9's next optimization waits for planning to name one. **Planning names: the phone's whole reading of a camera
+photograph, from the picture to its result** (`PhoneAnalysis.Run`; PERFORMANCE.md: 2.5 s median for a Fold 7 photograph headless on
+this desktop, and the emulator's stages in performance-baseline.json show identify, prepare and hole finding as the large ones).
+
+1. Measure it stage by stage on the Fold 7 photographs from the 2026-09-29 sitting (and the entry 342 set), on this desktop, Release,
+   nothing else running. Name the slowest stage after entry 399's changes, since they may have moved it.
+2. Make that stage faster. Aim for a third off the whole reading; record what was tried, including what did not help.
+3. **Results must not change**, the same rule as entry 392 section 2: every hole center and figure identical to before on the photographs
+   and the scan corpus (or within a stated tolerance far below 0.001 in, with the reason). If going faster would change what is detected,
+   stop at the faster part that changes nothing and raise a question instead.
+4. Add the phone photograph's reading to the bench and the baseline if it is not already a gated figure; update the baseline only where
+   faster. If the emulator workflow runs it, record the emulator's before and after too (a record, never a gate).
+5. Release note in plain words: how much sooner the phone shows a result after the picture is taken.
+
 ## 2026-10-10, entry 399: overnight, part 1 of 4: accuracy on photographs (registration at an angle, the bent sheet, holes ringed as doubles)
 
 **Status: actioned 2026-10-10; every section done. Section 2 kept one change (a photograph without camera tags is read through the lens); section 3 changed no model, because seven frames of one sheet cannot choose one honestly; rows 1 to 4 are still not met, and request 94 asks for the material that would settle rows 1 and 2.**

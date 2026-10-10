@@ -64,6 +64,8 @@ public static class BenchGate
         "measurement / a 600 dpi scan, stage by stage",
         "measurement / the generated sheet, stage by stage: S5-S8.holes",
         "measurement / a 600 dpi scan, stage by stage: S5-S8.holes",
+        "measurement / a phone photograph, stage by stage",
+        "measurement / a phone photograph, stage by stage: S0.identify",
         "measurement / find holes on a target GroupLab did not print",
         "statistics / the whole analysis of a marking",
         "end to end / one sheet from file to figures",
