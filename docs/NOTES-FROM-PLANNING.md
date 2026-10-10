@@ -25,6 +25,22 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-10, entry 404: overnight, the last part: bring the server's intake worker up to the repository's
+
+**Status: actioned 2026-10-10 as far as Code can: section 1 done; sections 2 and 3 are request 97, two pastes for Alan, because this session's connection to the server is refused by its permission check, which entry 404 says not to work around.**
+
+From the planning session with Alan, 2026-10-10 02:00 Denver, part of "queue all four" (entries 399, 400, 402 and this one; entries 401 and 403 were added after and need nobody, so they go first). Take it last.
+
+STATE: the server's intake worker is older than the repository's; entry 357's change, built switched off, was never installed there.
+
+1. Prepare everything first: the diff between the installed worker and the repository's, what will change on the server, and the undo,
+   written down under RESTORE.md rule 5 (CLAUDE.md rule 4) before anything runs.
+2. Install it the usual way: `grouplab-change-backup.py` first, `install.py` with `--dry-run` and then without, the switched-off change
+   left switched off, `nginx -t` before any reload, both sites checked after, the commands and what they printed in panel.md.
+3. **ssh and sudo stop for Alan's approval, and he is asleep.** If the command waits for approval, leave it waiting as the last thing of
+   the night: entries 399 to 403 must already be committed, pushed and reported before this one reaches the server. Do not look for a way
+   around the approval.
+
 ## 2026-10-10, entry 403: the download page still says Linux on Alan's Samsung tablet in Firefox
 
 **Status: actioned 2026-10-10; sections 1 to 4 done; section 5, the site live check, after the push. Firefox's desktop-site values are not documented, so request 96's readout confirms it.**

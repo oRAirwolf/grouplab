@@ -1,4 +1,4 @@
-**Open: 26.** Most urgent today: **95**, two minutes on the phone to check the Fix holes fix, once the next nightly is installed. Then **96**, one page on your Samsung tablet (a minute). Then **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 27.** Most urgent today: **95**, two minutes on the phone to check the Fix holes fix, once the next nightly is installed. Then **96**, one page on your Samsung tablet (a minute). Then **97**, two pastes on the server for the upload intake worker (ten minutes). Then **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,37 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 97. Two pastes on the server: bring the upload intake worker up to date, about ten minutes, whenever suits (entry 404)
+
+**Why:** the server's upload intake worker is older than the repository's. The only difference in the worker is one log line (it says
+which state a "Send everything I open" picture was sent in), but planning asked for it to be installed the usual way, backed up first
+(RESTORE.md rule 5). Code's own connection to the server is refused by its permission check, so here it is for you, in two steps: the
+first changes nothing on the server except a new folder and the backup; the second installs.
+
+**First,** in the Oracle Cloud console, the newest `grouplab-daily` boot volume backup should be from today. If it is not, stop and say so.
+
+**Step 1,** in MobaXterm, in your usual bash session on the server, paste this whole block at once:
+
+    mkdir -p /home/ubuntu/grouplab-server-404 && cd /home/ubuntu/grouplab-server-404 && for f in install.py grouplab-change-backup.py grouplab-intake-worker.py grouplab-set-turnstile-secret grouplab-intake-worker.service grouplab-intake-worker.timer user.ini nginx.ssl.conf_grouplab; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/c95280d0/website/server/$f" || break; done; printf '%s\n' '604238d41e07436b8435735e49e62cd770a2ea85f354e159abf264bfd6202c54  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' '013a72a4d38f1553ffd4dee9ba35e3adfa1cfcdd3ee6571bb6070bbb88a49330  grouplab-intake-worker.py' 'dd44d9f0f9b7f754985413a4a8fe9be30d5df179b241b9e21a35d961ab8d3675  grouplab-set-turnstile-secret' '32cbd478d2ddc36c95c0181f7b92997b183dbe31763d82b141bdbc1a52b94a13  grouplab-intake-worker.service' 'a91a4923ceca4a466d7e8b4313f0e06bac2192e49f643fca5575db34801000ae  grouplab-intake-worker.timer' '6f74a8a1477444fbe745ddbceb411106a6b7d57bb66452fde23babc1ca44c28c  user.ini' 'eb45d237287cd190a752fb2419ba45e38ce03f74c2fdf968a5442d96ce41a04e  nginx.ssl.conf_grouplab' | sha256sum -c - && sudo python3 grouplab-change-backup.py --label intake-worker --units --file /usr/local/sbin/grouplab-intake-worker.py --file /usr/local/sbin/grouplab-set-turnstile-secret --file /etc/systemd/system/grouplab-intake-worker.service --file /etc/systemd/system/grouplab-intake-worker.timer --file /home/airwolf/web/grouplab.org/public_html/.user.ini --file /home/airwolf/conf/web/grouplab.org/nginx.ssl.conf_grouplab && sudo python3 install.py --intake --dry-run
+
+**A good result of step 1:** eight lines ending `OK`, a line `done: /home/ubuntu/grouplab-server/backups/2026-...-intake-worker, ...
+bytes`, then the dry run's list, where each file says either "is already what it should be" or "would replace". Nothing on the server
+has changed yet. If any line says `FAILED`, stop and say so.
+
+**Step 2,** only if step 1 ended well. Paste:
+
+    cd /home/ubuntu/grouplab-server-404 && sudo python3 install.py --intake
+
+If its last lines say "The nginx include was already current", you are done. If instead they list nginx commands, run them one at a
+time exactly as printed: `sudo nginx -t` first, and **only if it says the test is successful**, the reload and the two `curl` lines,
+each of which should print `200`.
+
+**Send back:** the `done:` line from step 1 (it goes in RESTORE.md) and the last ten lines of step 2.
+
+**To undo it,** with the `done:` folder in place of `<backup>`: each file it listed is under `<backup>/files/` at its own path; `sudo cp
+-a` each back over the installed one, then `sudo systemctl daemon-reload`, and if the nginx include was put back, `sudo nginx -t` and
+then `sudo systemctl reload nginx`.
 
 ## 96. One page on your Samsung tablet, about a minute, whenever suits (entry 403)
 

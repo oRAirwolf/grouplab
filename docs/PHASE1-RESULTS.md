@@ -1571,6 +1571,19 @@ beside a table of hole results. No figures: each says why in `no_figure`. Claims
    sixteen cases pass in the site build, entry 349's eight among them.
 4. Request 96 asks Alan to open `https://grouplab.org/download/?why` in Firefox on the tablet.
 
+## Entry 404: the server's intake worker brought up to the repository's, prepared for Alan (2026-10-10)
+
+1. **The difference.** The server's worker is taken to be the one of e7ef5040 (entries 215 to 218, 2026-09-25), since entry 357's change
+   was never installed; the repository's differs from it by one log line (`grouplab-intake-worker.py`, the "sent <state>" a picture
+   under "Send everything I open" carries). The installed file was not read, so the dry run is what says which files differ. What
+   changes and the undo are in RESTORE.md's waiting entry, written before anything runs.
+2. **Not run by Code.** This session's connection to the server is refused by its permission check (it refused a copy for request 93
+   the same day), and entry 404 section 3 says not to look for a way around it. Request 97 gives Alan two pastes: the first fetches the
+   eight files at commit c95280d0 into a new folder, refuses them unless every SHA-256 matches (checked here against what GitHub serves),
+   backs up the six installed paths with `grouplab-change-backup.py` and runs `install.py --intake --dry-run`; the second installs, with
+   `nginx -t` before any reload and both sites checked after, only if `install.py` says the include changed. panel.md carries both.
+3. Entries 399 to 403 were committed before this; the push and the site check are below in the reports.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
