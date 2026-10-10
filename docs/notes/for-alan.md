@@ -276,7 +276,7 @@ that is what is needed. They hold only what the browser says about itself, nothi
 bull buttons on it, and closing it left the page blank, so the hole you added was lost (your earlier marking was kept). A test now covers
 it, but only your phone can show it working there.
 
-**Steps:** install the first nightly after 0.2.0-nightly.183 in GroupLab Dev. Open any target with holes, tap Fix holes, put the
+**Steps:** install 0.2.0-nightly.184 (or later) in GroupLab Dev. Open any target with holes, tap Fix holes, put the
 crosshair on a spot with no hole and add one. The question should list bulls, with GroupLab's choice first. Pick one, then tap Done.
 
 **A good answer:** the bulls are listed, Fix holes comes back with the picture after you pick, and the result shows one more shot. If

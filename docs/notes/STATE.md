@@ -18,7 +18,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The overnight queue** (Alan, 2026-10-10): 399 to 404 done; 404's install is request 97, two pastes for Alan, prepared. Entry 402
   published articles 34 to 37; entry 403 reads an ARM processor under an x86_64 user agent as Android, with `/download/?why` (request 96).
 - **Entry 401 done**: Fix holes' "Which bull was this hole fired at?" had no bull buttons and closing it left the page blank (phones only);
-  fixed and tested; issue 27 closes with the nightly that ships it; request 95 for Alan to confirm.
+  fixed, tested, shipped in nightly 184 and issue 27 closed; request 95 for Alan to confirm.
 - **Entry 400 done, in part**: about a tenth sooner (bend fits at once, markers found once); reading codes at once taken back after the
   Mobile suite hung on macOS, and CI now names a test running fifteen minutes. If macOS passes, it goes back behind a test.
 - **Entry 399 done**: an untagged photograph is now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in, was
@@ -77,9 +77,9 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (94 and 95 answered and archived 2
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.183 (2026-10-09 10:57 UTC, built after 36254cfe: entries 394 to 397 and the learning worker); published whole, the arm64 command line with it.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 182's notes on 2026-10-09 (run 37902385537). Twelve research articles went live with e79a0dfd.
-- Crash reports open: issue 27 (nightly 183, Android: Fix holes blank after a hole was added), fixed in entry 401, closed when its nightly publishes. Issues 25 and 26 fixed and closed 2026-10-08.
+- **Last nightly:** 0.2.0-nightly.184 (2026-10-10 12:43 UTC, built from df552245: entries 399 to 403 and the macOS fix); published whole.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 184's notes on 2026-10-10. Twelve research articles went live with e79a0dfd.
+- Crash reports open: none. Issue 27 (nightly 183, Android: Fix holes blank after a hole was added) fixed in entry 401, closed with nightly 184.
 
 ## The inbox
 
