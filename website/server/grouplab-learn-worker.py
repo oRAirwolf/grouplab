@@ -23,7 +23,8 @@ the site sync already trusts (/etc/grouplab-site-sync/update-signing.pub) and it
 
 **The tokens.** The archive token (the archive worker's, Contents read and write on the archive repository) reads the archive and writes
 learning/ there. The learning token (request 88: issues on the error-report repository, a pull request on GroupLab's) is needed only to
-file a report or open a pull request; until Alan sets it with grouplab-set-learning-token, those are skipped and the log says so. Both come
+file a report or open a pull request; until Alan sets it with grouplab-set-learning-token, those are skipped and the log says so. Every
+nightly checks that it still reaches both, and says so in the log and in summary.md (question 95). The two tokens come
 from systemd's credentials, never from a file in a repository, an argument or a log.
 """
 
@@ -347,6 +348,23 @@ def report(drops: str, build: str) -> None:
     log(f"the regression report was {'filed' if status == 201 else f'not filed ({status})'}")
 
 
+def token_check() -> str:
+    """Question 95, answer (b), Alan, 2026-10-10: the learning token is used only on a night a line reads worse and once a month for a
+    tuning pull request, so a wrong or expired one would be found on the night it matters. Every nightly asks GitHub with it for one issue
+    and one pull request and says what came back, in the log and in summary.md. Never the token itself."""
+    token = credential("learning-token")
+    if not token:
+        return "- The learning token is not set (request 88)."
+    answers = []
+    for what, path in (("the error reports", f"/repos/{REPORTS_REPO}/issues?per_page=1"), ("GroupLab's pull requests", f"/repos/{GROUPLAB_REPO}/pulls?per_page=1")):
+        try:
+            status = call("GET", f"{API}{path}", token)[0]
+            answers.append(f"{what}: {'yes' if status == 200 else f'no ({status})'}")
+        except Unreachable as e:
+            answers.append(f"{what}: GitHub did not answer ({e})")
+    return "- The learning token reaches " + "; ".join(answers) + "."
+
+
 def rescore(cli: Path, names: list[str], fetch_one) -> tuple[dict[str, dict], list[str]]:
     """Each submission read in a process of its own and deleted before the next is fetched (entry 395 section 6, measured on the server:
     one 600 dpi scan peaks at 1.1 GB, so ten in one process passed the 1.5 GB cap and the whole run was stopped). One that cannot be read,
@@ -368,6 +386,8 @@ def rescore(cli: Path, names: list[str], fetch_one) -> tuple[dict[str, dict], li
 
 def command_nightly() -> int:
     STATE.mkdir(parents=True, exist_ok=True)
+    reach = token_check()
+    log(reach[2:])
     cli = update_cli()
     if cli is None:
         log("no command line could be installed, so nothing was read tonight")
@@ -404,6 +424,9 @@ def command_nightly() -> int:
     if checked.returncode not in (0, 1):
         log(f"grouplab learn check answered {checked.returncode}")
         return 1
+    if (STATE / "summary.md").exists():
+        with (STATE / "summary.md").open("a", encoding="utf-8", newline="\n") as f:
+            f.write(reach + "\n")
     for name in ("rows.jsonl", "baseline.jsonl", "summary.md"):
         if (STATE / name).exists():
             put_learning(name, (STATE / name).read_text(encoding="utf-8"), token)

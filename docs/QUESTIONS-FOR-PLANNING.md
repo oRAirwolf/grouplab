@@ -14,29 +14,21 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 38 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 39 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 94, 93, 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 95, 94, 93, 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 
-## 2026-10-10, question 95: should the learning loop's nightly check its own token every night?
+## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
 
 Status: open
 
-**What happens now.** The learning token (request 88, set by Alan on 2026-10-10) is read only by `report` in
-`website/server/grouplab-learn-worker.py`, on a night a line of the real scoreboard reads worse, and by the monthly tuning when it opens a
-pull request. A wrong or expired token (it was made to last one year) is therefore found on the night a regression needs reporting, which
-is the night it matters. Request 92 asks Alan to check it by hand once.
-
-**Options.**
-- (a) Leave it: request 92 now, and again whenever the token is renewed. Costs nothing on the server.
-- (b) The nightly asks GitHub once for the error-report repository's issue list with the token, every night, and writes "the learning
-  token reaches the error reports: yes" or the status code into its log and into `learning/summary.md` in the archive, which the planning
-  session reads. About ten lines and a test, installed on the server under RESTORE.md rule 5.
-
-**What I would choose:** (b), as its own entry, because a reporting path that is never exercised is not known to work.
+Alan could not find where to import his chronograph data after Add readings took him to Ballistics, whose Chronograph section was out of
+view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
+to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
+concept; the phone already opens a page of its own for it. Nothing waits on it.
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 

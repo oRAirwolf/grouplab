@@ -1,4 +1,4 @@
-**Open: 22.** Most urgent today: **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 23.** Most urgent today: **93**, one paste on the server so the nightly checks the learning token itself (three minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,6 +226,29 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 93. One paste on the server: the nightly checks the learning token itself, about three minutes, whenever suits (question 95)
+
+**Why:** you chose (b) for question 95: every nightly check now asks GitHub with the learning token for one error report and one pull
+request, and writes "the learning token reaches the error reports: yes; GroupLab's pull requests: yes" (or GitHub's answer) into its log
+and into `learning/summary.md`. The change is one file on the server, the learning worker. Code's own copy to the server was refused by
+the session's permission check, so here it is for you. The block backs up the old worker first (RESTORE.md rule 5), fetches the new one
+from GitHub, refuses it unless its fingerprint is the one below, installs it, and then runs the new check once. It never prints the token.
+
+**First,** in the Oracle Cloud console, the newest `grouplab-daily` boot volume backup should be from today. If it is not, stop and say so.
+
+**Then,** in MobaXterm, in your usual bash session on the server, paste this whole block at once:
+
+    cd /home/ubuntu/grouplab-server && curl -fsSL -o learn-worker.new https://raw.githubusercontent.com/oRAirwolf/grouplab/main/website/server/grouplab-learn-worker.py && echo "cdf083f708aea46743f92df0de1c292280b15d3f8369d2cb39a983b73d9db0cf  learn-worker.new" | sha256sum -c - && mv learn-worker.new grouplab-learn-worker.py && B=$(sudo python3 grouplab-change-backup.py --label learning-token-check --file /usr/local/sbin/grouplab-learn-worker.py | sed -n 's/^done: \(.*\), [0-9]* bytes$/\1/p') && echo "backup: $B" && test -f "$B/files/usr/local/sbin/grouplab-learn-worker.py" && sudo install -m 755 -o root -g root grouplab-learn-worker.py /usr/local/sbin/grouplab-learn-worker.py && sudo systemd-run --quiet --pipe --wait -p LoadCredential=learning-token:/etc/grouplab/learning-token python3 -c 'import importlib.util as u; s = u.spec_from_file_location("w", "/usr/local/sbin/grouplab-learn-worker.py"); m = u.module_from_spec(s); s.loader.exec_module(m); print(m.token_check())'
+
+**A good answer:** it prints `learn-worker.new: OK`, then `backup: /home/ubuntu/grouplab-server/backups/2026-10-10T...-learning-token-check`,
+then `- The learning token reaches the error reports: yes; GroupLab's pull requests: yes.` Paste the backup line back to the planning
+session so it goes in RESTORE.md. If the fingerprint line says `FAILED`, nothing was installed: say so. If the last line says `no (401)`,
+the token is wrong or expired (make a new one as in request 88, then `sudo grouplab-set-learning-token`).
+
+**To undo it,** if ever needed, with the backup line's folder in place of `<backup>`:
+
+    sudo install -m 755 -o root -g root <backup>/files/usr/local/sbin/grouplab-learn-worker.py /usr/local/sbin/grouplab-learn-worker.py
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 

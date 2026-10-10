@@ -5,6 +5,25 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-10, question 95: should the learning loop's nightly check its own token every night?
+
+**Status: answered 2026-10-10 (Alan, in the message that started the run: "answer (b), the nightly checks the learning token every night and writes the result into its log and learning/summary.md, installed on the server under RESTORE.md rule 5 with a backup first"): built the same day, `token_check` in the worker, asking for one issue and one pull request; installing it on the server is request 93, because Code's copy to the server was refused by the session's permission check.**
+
+**What happens now.** The learning token (request 88, set by Alan on 2026-10-10) is read only by `report` in
+`website/server/grouplab-learn-worker.py`, on a night a line of the real scoreboard reads worse, and by the monthly tuning when it opens a
+pull request. A wrong or expired token (it was made to last one year) is therefore found on the night a regression needs reporting, which
+is the night it matters. Request 92 asks Alan to check it by hand once.
+
+**Options.**
+- (a) Leave it: request 92 now, and again whenever the token is renewed. Costs nothing on the server.
+- (b) The nightly asks GitHub once for the error-report repository's issue list with the token, every night, and writes "the learning
+  token reaches the error reports: yes" or the status code into its log and into `learning/summary.md` in the archive, which the planning
+  session reads. About ten lines and a test, installed on the server under RESTORE.md rule 5.
+
+**What I would choose:** (b), as its own entry, because a reporting path that is never exercised is not known to work.
+
+---
+
 ## 2026-10-10, question 94: the M220 prints about 0.56 mm left of the label's centre; move it?
 
 **Status: answered 2026-10-10 (Alan, in the message that started the run: "answer (a), leave the M220 placement as it is and move it only if a label ever comes out with a code cut"): (a), the placement stays.**
@@ -24,15 +43,6 @@ mm from the label's left edge and 1.48 to 1.74 mm from its right, where the layo
   labels knows (`ScaleLabelCheck`, the layouts by width); a change to the label's definition.
 
 **What I would choose:** (a), recorded, and (b) only if a label comes out with a code cut.
-
-## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
-
-Status: open
-
-Alan could not find where to import his chronograph data after Add readings took him to Ballistics, whose Chronograph section was out of
-view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
-to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
-concept; the phone already opens a page of its own for it. Nothing waits on it.
 
 ---
 

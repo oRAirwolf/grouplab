@@ -45,6 +45,53 @@ check("the worker waits for the same number of corrected submissions as the code
       re.search(r"CorrectedForTuning = (\d+);", code).group(1) == re.search(r"^CORRECTED_FOR_TUNING = (\d+)", worker_text, re.M).group(1))
 check("the worker has no Windows line endings, which would stop it starting", b"\r" not in WORKER.read_bytes())
 
+
+# Question 95: the nightly asks GitHub with the learning token for one issue and one pull request, and says what came back, never the token.
+class FakeGitHub(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200 if self.headers.get("Authorization") == "Bearer good-token" else 401)
+        self.end_headers()
+        self.wfile.write(b"[]")
+
+    def log_message(self, *args):
+        pass
+
+
+def load_worker(name: str):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(name, WORKER)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+with tempfile.TemporaryDirectory(prefix="learn-token-") as work:
+    fake = HTTPServer(("127.0.0.1", 0), FakeGitHub)
+    threading.Thread(target=fake.serve_forever, daemon=True).start()
+    probe = load_worker("worker_token")
+    probe.API = f"http://127.0.0.1:{fake.server_address[1]}"
+    saved = os.environ.get("CREDENTIALS_DIRECTORY")
+    os.environ["CREDENTIALS_DIRECTORY"] = work
+    try:
+        said = probe.token_check()
+        check("with no learning token the nightly says it is not set", "not set" in said, said)
+        (Path(work) / "learning-token").write_text("good-token\n")
+        said = probe.token_check()
+        check("a token that works is reported as reaching both", said == "- The learning token reaches the error reports: yes; GroupLab's pull requests: yes.", said)
+        (Path(work) / "learning-token").write_text("expired-token")
+        said = probe.token_check()
+        check("a token GitHub refuses is reported with GitHub's answer", said.count("no (401)") == 2, said)
+        check("and the token itself is never in what is said", "expired-token" not in said)
+        fake.shutdown()
+        fake.server_close()
+        said = probe.token_check()
+        check("GitHub not answering is said, and does not stop the nightly", said.count("did not answer") == 2, said)
+    finally:
+        if saved is None:
+            os.environ.pop("CREDENTIALS_DIRECTORY", None)
+        else:
+            os.environ["CREDENTIALS_DIRECTORY"] = saved
+
 if sys.platform != "linux":
     print(f"learn worker tests: {passed} passed, {len(failed)} failed; the rest run on Linux, as the server does")
     sys.exit(1 if failed else 0)

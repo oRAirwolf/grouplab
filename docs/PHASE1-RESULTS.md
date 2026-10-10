@@ -1356,6 +1356,23 @@ Alan's message of 2026-10-10, not an inbox entry: the two scans measured, the re
   before the stretch.
 - Requests 84, 85 and 88 closed and moved to `for-alan-archive.md`; request 83 rewritten; request 92 added. Open: 23.
 
+## Request 92 closed, questions 94 and 95 answered (2026-10-10)
+
+Alan's answers, in the message that started the run, with no inbox entry.
+
+- **Request 92:** both token checks on the server printed `200`: the learning token reaches the error reports and GroupLab's pull
+  requests. Closed and moved to `for-alan-archive.md`.
+- **Question 94, answer (a):** the M220's placement stays; it moves only if a label ever comes out with a code cut. Archived. Question 88
+  went to the archive with it by mistake in 035f0d8e and is back in the live file, still open.
+- **Question 95, answer (b):** `token_check` in `website/server/grouplab-learn-worker.py`. Every nightly, before anything else, asks
+  GitHub with the learning token for one issue in the error-report repository and one pull request on GroupLab's, logs the sentence, and
+  appends it to `summary.md` after `grouplab learn check` writes it, so the archive's `learning/summary.md` carries it. A refusal is
+  written with GitHub's status code; no answer is written and does not stop the run; the token never appears. Five new checks in
+  `tests/python/learn-worker-tests.py` against a stand-in GitHub, run on every platform: 7 passed locally.
+- **The server install is not done.** Code's copy of the worker to the server was refused by the session's permission check, so request
+  93 gives Alan one paste: a backup of the installed worker under RESTORE.md rule 5, the new worker fetched from main and refused unless
+  its SHA-256 is `cdf083f7...`, installed, and the check run once in a transient unit. RESTORE.md lists it as waiting, with its undo.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
