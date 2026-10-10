@@ -3,6 +3,23 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 92. Two lines on the server: does the learning token reach the error reports? About one minute, whenever suits (request 88)
+
+**Answered 2026-10-10:** Alan ran both lines on the server and each printed `200`: the learning token reaches the error reports and GroupLab's pull requests. From question 95 (b), the nightly checks this itself every night.
+
+**Why:** the token you set for request 88 is used only on a night the check finds a line worse, to file its report, and once a month
+for a tuning pull request. A night with nothing worse never touches it, so a wrong or expired token would go unnoticed until the night
+it matters. Code's own check on the server was not allowed this time, so here it is for you to run. Neither line prints the token.
+**Steps,** in MobaXterm, in your usual bash session on the server, paste these two lines one at a time:
+
+    sudo bash -c 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $(cat /etc/grouplab/learning-token)" "https://api.github.com/repos/oRAirwolf/grouplab-crash-reports/issues?per_page=1"'
+
+    sudo bash -c 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $(cat /etc/grouplab/learning-token)" "https://api.github.com/repos/oRAirwolf/grouplab/pulls?per_page=1"'
+
+**A good answer:** each prints `200`. A `401` means the token is wrong or expired: make a new one as in request 88 and run
+`sudo grouplab-set-learning-token` again. A `404` means the token does not reach that repository: add it under **Repository access**
+on github.com.
+
 ## 88. One token for the learning job, typed on the server, about five minutes, whenever suits (entries 394 and 395)
 
 **Answered 2026-10-10:** Alan set the token on the server. The nightly check uses it only to file its report when a line reads worse, and the monthly tuning only for a pull request, so a quiet night does not prove it works; Code's own read-only check over SSH was refused by the session's permission check this run, so request 92 gives Alan the same check as two lines.

@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **92**, two lines on the server to check the learning token (one minute). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 22.** Most urgent today: **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -226,21 +226,6 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
-
-## 92. Two lines on the server: does the learning token reach the error reports? About one minute, whenever suits (request 88)
-
-**Why:** the token you set for request 88 is used only on a night the check finds a line worse, to file its report, and once a month
-for a tuning pull request. A night with nothing worse never touches it, so a wrong or expired token would go unnoticed until the night
-it matters. Code's own check on the server was not allowed this time, so here it is for you to run. Neither line prints the token.
-**Steps,** in MobaXterm, in your usual bash session on the server, paste these two lines one at a time:
-
-    sudo bash -c 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $(cat /etc/grouplab/learning-token)" "https://api.github.com/repos/oRAirwolf/grouplab-crash-reports/issues?per_page=1"'
-
-    sudo bash -c 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $(cat /etc/grouplab/learning-token)" "https://api.github.com/repos/oRAirwolf/grouplab/pulls?per_page=1"'
-
-**A good answer:** each prints `200`. A `401` means the token is wrong or expired: make a new one as in request 88 and run
-`sudo grouplab-set-learning-token` again. A `404` means the token does not reach that repository: add it under **Repository access**
-on github.com.
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 

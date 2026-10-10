@@ -14,10 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 37 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 38 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 93, 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 94, 93, 92, 91, 90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 
@@ -37,35 +37,6 @@ is the night it matters. Request 92 asks Alan to check it by hand once.
   session reads. About ten lines and a test, installed on the server under RESTORE.md rule 5.
 
 **What I would choose:** (b), as its own entry, because a reporting path that is never exercised is not known to work.
-
-## 2026-10-10, question 94: the M220 prints about 0.56 mm left of the label's centre; move it?
-
-Status: open
-
-**Measured** (PHASE1-RESULTS.md, "Requests 84, 85 and 88 answered"): on three good labels, S1, S3 and S4, the codes' ink is 0.30 to 0.72
-mm from the label's left edge and 1.48 to 1.74 mm from its right, where the layout puts 1.0 mm each side (`ScaleLabels.cs`, `Inset = 5`,
-`Code = 8`): a mean of 0.56 mm left, about 4.5 dots, varying 0.34 mm label to label. GroupLab sends the 70 mm image at its own width
-(560 dots, `PhomemoEscEncoder`) and does not choose where on the 600-dot head it lands.
-
-**Options.**
-- (a) Leave it. Nothing is cut, and the scale comes from the codes' spacing across (59.96 to 59.98 mm), not from where they sit. Cost:
-  a label that wanders a further 0.3 mm left would clip its left codes' ink.
-- (b) Send the M220's labels 4 dots (0.5 mm) further right: a white margin at the start of every row. Cost: the image becomes 564 dots,
-  so the rows are re-packed by bits; how the M220 places an image wider than 560 dots is not known, so one more print is needed to see
-  it land, and other label widths would each need their own figure.
-- (c) Move both columns of codes inward on every label. Cost: the codes' spacing would no longer be 60 mm, which every reader of these
-  labels knows (`ScaleLabelCheck`, the layouts by width); a change to the label's definition.
-
-**What I would choose:** (a), recorded, and (b) only if a label comes out with a code cut.
-
-## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
-
-Status: open
-
-Alan could not find where to import his chronograph data after Add readings took him to Ballistics, whose Chronograph section was out of
-view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
-to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
-concept; the phone already opens a page of its own for it. Nothing waits on it.
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
