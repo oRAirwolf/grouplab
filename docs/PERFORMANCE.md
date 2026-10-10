@@ -80,6 +80,15 @@ Over the nine Fold 7 pictures the reading takes 38 percent less in all, and 31 p
 photograph, so it has no before and after for this. What is left on a photograph: finding the holes, 132 to 282 ms; the phone's decoding
 and shrinking of the picture, 46 to 126 ms; reading the codes; finding the markers again for the measurement, about 45 ms.
 
+**Taken back the same day, in part.** The build of entry 401 ran every suite clean on Windows and Linux, but on macOS the Mobile suite,
+six minutes until then, ran for an hour until the job's limit ended it, with no test named. Reading the codes at once is the change that
+puts OpenCV's QR detectors on several threads together, which nothing else in GroupLab does, so the codes are read one at a time again
+while the cause is found; the bend's fits at once (plain arithmetic, like the bull locator's since entry 352) and the markers found once
+stay. Measured again, five rounds: an ordinary Fold 7 picture 796 ms on average (was 893 before entry 400, 613 with the codes read at
+once), the hard picture 7965 ms; the bench's "a phone photograph, stage by stage" 950 ms and "identify the sheet from its codes" 170.8
+ms. CI now names a test that runs fifteen minutes (`--blame-hang-timeout`). If the next macOS run passes, the reading at once goes back
+behind a test that runs it on every platform; if it hangs again, the test it names says what did it.
+
 ## Entry 392 section 2: the first optimization, hole finding on a 600 dpi scan
 
 Planning named it: the hole stage, 1769 ms of the 2604 a 600 dpi scan took. The close of the binary mask by a disc 67 px across was about

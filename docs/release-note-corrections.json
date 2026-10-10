@@ -79,6 +79,15 @@
           "kind": "fixed"
         }
       ]
+    },
+    "4893d78216f5eb1d998879fbd27ab5ccfc773d80": {
+      "why": "Entry 400's commit promised a third sooner; the same day its codes read at once were taken back after the Mobile suite hung on macOS, leaving about a tenth.",
+      "notes": [
+        {
+          "note": "On the phone, a photographed GroupLab target's result comes up about a tenth sooner after the picture is taken, measured by running the phone's own reading on a computer. (Entry 400)",
+          "kind": "changed"
+        }
+      ]
     }
   }
 }

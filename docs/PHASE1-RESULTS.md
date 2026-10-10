@@ -1510,6 +1510,12 @@ The record is `docs/PERFORMANCE.md`, "Entry 400". In short:
    to 109.6 ms in the baseline; nothing else moved. The emulator reads the 600 dpi scan, not a photograph, so there is no emulator
    figure for this.
 5. Worth an article: no, recorded in RESEARCH.md.
+6. **Taken back in part the same day.** Entry 401's CI run passed every suite on Windows and Linux, but on macOS the Mobile suite (six
+   minutes until then) ran an hour until the job's limit ended it, naming no test. The codes are read one at a time again, since reading
+   them at once is the only place OpenCV's QR detectors run on several threads together; the other two changes stay. An ordinary picture
+   now reads in 796 ms on average, 11 percent sooner than before the entry, not a third; the hard one as before. The baseline's three
+   figures were measured again, and CI now names any test that runs fifteen minutes. **Section 2's third is not met** until the cause is
+   known.
 
 ## Entry 401: a bug Alan hit, Fix holes went blank after a hole was added (2026-10-10)
 

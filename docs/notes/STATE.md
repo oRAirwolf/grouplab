@@ -19,8 +19,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   published articles 34 to 37; entry 403 reads an ARM processor under an x86_64 user agent as Android, with `/download/?why` (request 96).
 - **Entry 401 done**: Fix holes' "Which bull was this hole fired at?" had no bull buttons and closing it left the page blank (phones only);
   fixed and tested; issue 27 closes with the nightly that ships it; request 95 for Alan to confirm.
-- **Entry 400 done**: the phone's reading of a photograph about a third sooner (codes read at once, the bend's fits at once, markers
-  found once), every result unchanged; the bench gates it as "a phone photograph, stage by stage", 683 ms.
+- **Entry 400 done, in part**: about a tenth sooner (bend fits at once, markers found once); reading codes at once taken back after the
+  Mobile suite hung on macOS, and CI now names a test running fifteen minutes. If macOS passes, it goes back behind a test.
 - **Entry 399 done**: an untagged photograph is now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in, was
   0.0155 to 0.0216; row 4's 7 false rings gone; what is left is paper relief (`grouplab photo-parts`). Request 94 for material.
 - **Question 95 (b) built, not yet on the server** (2026-10-10): the nightly checks the learning token (`token_check`); Code's copy to

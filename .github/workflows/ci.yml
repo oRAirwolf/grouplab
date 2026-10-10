@@ -99,8 +99,10 @@ jobs:
           status=0
           runner_temp="$RUNNER_TEMP/grouplab-dotnet-test"
           mkdir -p "$runner_temp"
+          # Entry 400: the Mobile suite hung on macOS for an hour on 2026-10-10 and the job's limit ended it with no test named. A test that
+          # runs fifteen minutes is now stopped and named, without a dump, so a hang says where it is.
           for project in tests/GroupLab.Core.Tests tests/GroupLab.App.Tests tests/GroupLab.Mobile.Tests; do
-            TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build 2>&1 | tee -a test-output.txt || status=1
+            TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build --blame-hang-timeout 15m --blame-hang-dump-type none 2>&1 | tee -a test-output.txt || status=1
           done
           rm -rf "$runner_temp"
           exit $status
