@@ -51,7 +51,7 @@ GroupLab wrote its own LZO1X compressor and a decompressor to check it. Its deco
 
 ## The printer sets the pace, and says when it is done
 
-The first direct print gave a strip of a few millimetres and stopped. The cause was in the recording. Android takes a whole page into its own buffer in a few milliseconds, but the printer then draws it across the link one frame at a time, as it has room: it granted one credit per 666-byte frame, and 139 KB took 22.6 seconds to cross. GroupLab had closed the link 2 seconds after its last write, which cut the page off.
+The first direct print gave a strip of a few millimeters and stopped. The cause was in the recording. Android takes a whole page into its own buffer in a few milliseconds, but the printer then draws it across the link one frame at a time, as it has room: it granted one credit per 666-byte frame, and 139 KB took 22.6 seconds to cross. GroupLab had closed the link 2 seconds after its last write, which cut the page off.
 
 In the recording the Phomemo app kept the link open until the printer's only answer after the page, three bytes, 22.5 seconds after the last frame. GroupLab takes that answer as "printed" and holds the link until it comes, or until a time limit passes, or until the person presses Cancel.
 

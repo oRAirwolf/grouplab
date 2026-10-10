@@ -28,7 +28,7 @@ GroupLab reads the angle from how the sheet's codes are placed in the picture, t
 
 ## What real photographs showed
 
-**The range photographs.** Of 59 photographs taken at the range, 31 registered, at 3 to 35 degrees off square. Twelve were fully framed and could be measured against their scans. Their bull centres' median error ran from 0.0024 to 0.0076 in square on, and from 0.0088 to 0.0138 in at 27 to 32 degrees. The holes' error did not change over the same range. So at those angles the holes were not the part that moved.
+**The range photographs.** Of 59 photographs taken at the range, 31 registered, at 3 to 35 degrees off square. Twelve were fully framed and could be measured against their scans. Their bull centers' median error ran from 0.0024 to 0.0076 in square on, and from 0.0088 to 0.0138 in at 27 to 32 degrees. The holes' error did not change over the same range. So at those angles the holes were not the part that moved.
 
 **The angle sweep.** On 2026-09-27 the developer photographed one scanned sheet nineteen times, from straight down to 66 degrees off square, and every shot was matched against where the 600 dpi scan puts it. The full account is in [Curled, angled and wrinkled paper](/research/curled-angled-paper/). In short:
 
@@ -73,7 +73,7 @@ The worst bulls were always on the outside of the grid, 1.06 in from the nearest
 ## What this means
 
 - **Hold the phone within about 35 degrees of square.** Past 37 GroupLab refuses the picture; nothing past 36.2 degrees, against a scan, read as well as a square one.
-- **Square is better still.** The range photographs' bull centres had a larger error at 27 to 32 degrees than square on. The holes' error did not change.
+- **Square is better still.** The range photographs' bull centers had a larger error at 27 to 32 degrees than square on. The holes' error did not change.
 - **A picture that lost its camera tags is no longer a loss.** GroupLab now reads one through the lens when its codes do not fit a flat page, so nothing needs doing.
 - **Do not expect a flat-looking sheet to be flat.** What remains on a photograph held flat is the paper's relief, not the camera's resolution.
 

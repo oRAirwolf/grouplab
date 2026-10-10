@@ -61,7 +61,7 @@ GroupLab also gives each result a claim of how good it is. The brackets on the 1
 The trial changed the design in several places:
 
 - Holding the four brackets to an exact rectangle turned 0.3 mm of placement into 1.2 percent of scale. The rectangle is now held softly.
-- Fitting codes by their corners was better than by their centres: 0.04 percent for brackets, against 0.13.
+- Fitting codes by their corners was better than by their centers: 0.04 percent for brackets, against 0.13.
 - Codes 22 mm across on 28 mm arms did worse than codes 16 mm across on 22 mm arms, because the white border was too thin.
 - The scale bars' codes went from 10 mm to 12 mm for the inch bar and 16 mm for the metric one, which took the poster bars from 4 of 20 found to 16 of 20.
 - The card finder at first took a bracket's corner and a silhouette for a card, until it was made to refuse shapes near codes and shapes that are not filled or nearly a parallelogram.

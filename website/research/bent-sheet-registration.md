@@ -34,12 +34,12 @@ The lens fit stays what it was, fitted to the corners it kept. A correction goes
 A bend is not noise and not a misread, and the correction is only taken where it can be told apart. It is taken only if all of these hold:
 
 - The lens fit left out a marker at least 0.04 in from where it put it.
-- The correction fitted without that marker puts it near where it was read, within half the marker's own distance from the lens fit, or within the fit's own threshold if that is larger. A lifted margin's neighbours are lifted with it, so they predict it. A misread's or a noisy corner's neighbours are flat and do not.
+- The correction fitted without that marker puts it near where it was read, within half the marker's own distance from the lens fit, or within the fit's own threshold if that is larger. A lifted margin's neighbors are lifted with it, so they predict it. A misread's or a noisy corner's neighbors are flat and do not.
 - The corners the lens fit kept fit no worse than they did.
 - The correction stays within 0.2 in over the markers.
 - More corners are kept than the lens fit kept.
 
-A flat sheet's lens fit keeps every corner, or leaves a few out by a whisker, and the correction is never fitted. At least 12 markers (48 corners) must remain after misreads are set aside. On the 1 and 2 degree pictures the far columns were 6 to 10 dmm off (a dmm is a tenth of a millimetre), which is 0.024 to 0.039 in and under the 0.04 in bar, and there the correction moved the holes by less than the hole finder's own spread, one hard hole's error up as often as down. The 9 and 15 degree pictures' far columns were 17 to 30 dmm off, 0.067 to 0.118 in.
+A flat sheet's lens fit keeps every corner, or leaves a few out by a whisker, and the correction is never fitted. At least 12 markers (48 corners) must remain after misreads are set aside. On the 1 and 2 degree pictures the far columns were 6 to 10 dmm off (a dmm is a tenth of a millimeter), which is 0.024 to 0.039 in and under the 0.04 in bar, and there the correction moved the holes by less than the hole finder's own spread, one hard hole's error up as often as down. The 9 and 15 degree pictures' far columns were 17 to 30 dmm off, 0.067 to 0.118 in.
 
 ## What it did
 
@@ -74,10 +74,10 @@ GroupLab's cylinder model, which bends the whole sheet about one axis, reads tho
 - **No second sitting yet.** When the correction was built, the plan was to wait for a second sitting with a lifted sheet before writing it up. There has not been one, so this is the first two pictures' account and no more.
 - **The bound was set from two pictures.** The largest correction taken, 0.2 in, is more than half again the far column's lift on the 15 degree picture; a more strongly lifted margin would be refused, not corrected.
 - **What a different sheet does.** A different paper, mounting or camera may bend in ways this correction does not predict. When it cannot predict them it is left out and the lens fit stands, as before.
-- **A hole's own error is larger than the bend.** The holes' own centres sit 0.0107 to 0.0180 in from the scan's at the median on photographs, against 0.0018 to 0.0034 in for the bulls, so the holes' own centres, not the shape of the paper, dominate a hole's error.
+- **A hole's own error is larger than the bend.** The holes' own centers sit 0.0107 to 0.0180 in from the scan's at the median on photographs, against 0.0018 to 0.0034 in for the bulls, so the holes' own centers, not the shape of the paper, dominate a hole's error.
 
 ## What this means
 
-**For a developer:** a model that rightly refuses part of the data can still leave a systematic error behind. Leaving the markers out was correct; mapping the holes beside them with a model that had never seen that part of the sheet was not. A correction that predicts a left-out marker from its neighbours, and is refused where it cannot, fixes the first without the second going wrong. Measure first whether the error is the paper's or the lens's: here richer lens models barely moved the far column's misses.
+**For a developer:** a model that rightly refuses part of the data can still leave a systematic error behind. Leaving the markers out was correct; mapping the holes beside them with a model that had never seen that part of the sheet was not. A correction that predicts a left-out marker from its neighbors, and is refused where it cannot, fixes the first without the second going wrong. Measure first whether the error is the paper's or the lens's: here richer lens models barely moved the far column's misses.
 
 **For a shooter:** on a sheet lying flat the correction is never needed. A sheet hanging from one pin curled at its bottom edge in all seven frames, beyond what the correction reaches.
