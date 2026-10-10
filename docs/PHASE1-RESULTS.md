@@ -1531,6 +1531,25 @@ The record is `docs/PERFORMANCE.md`, "Entry 400". In short:
 5. Issue 27 is closed with the commit and the nightly it ships in, once that nightly is published.
 6. Request 95 asks Alan to confirm it on the phone.
 
+## Entry 402: four research articles written and published (2026-10-10)
+
+Drafted by docs-sonnet from the logs, every number then checked here against its source, and published under entry 393's rule:
+
+| article | number | rests on |
+|---|---|---|
+| `/research/phomemo-m834-print-commands/` | 34 | request 73's recording, entries 389 and 391, request 85's third print; printing from a computer said to be built and untried |
+| `/research/scale-markers-beside-a-target/` | 35 | entries 365 and 375, computer-made photographs only, said first and plainly; the real-paper test described as not yet done |
+| `/research/how-far-off-square/` | 36 | entry 157's range photographs, the published angle sweep of nineteen photographs, `OffAxisLimit` (37 degrees), entry 399 |
+| `/research/bent-sheet-registration/` | 37 | entry 324 section 1 and `BentSheetMapping`, entry 399 sections 1, 3 and 4; two pictures took the correction, said so |
+
+The drafting found four places where the brief and the sources differed, and the sources were followed: the refusal is at 37 degrees
+(`OffAxisLimit.Degrees`), not 40; a sheet has been measured against a scan up to 66 degrees (the published angle sweep), not only to 35;
+request 94 asks for main-lens photographs, not for a narrower lens as such; entry 391's five feed readings average 99.28, the code uses
+99.30 and the article says about 99.3. Edits after drafting: internal request and entry numbers taken out of the bodies, a table
+introduced as four pictures that has six, and four sentences of article 37 reworded so it does not say "nothing here is about holes"
+beside a table of hole results. No figures: each says why in `no_figure`. Claims: four article rules and eight index sentences in
+`docs/claims-backing.json`; 5109 claims, all backed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

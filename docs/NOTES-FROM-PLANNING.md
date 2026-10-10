@@ -25,6 +25,33 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-10, entry 402: overnight, part 3 of 4: the four research articles already marked \
+
+**Status: worth**
+
+From the planning session with Alan, 2026-10-10 02:00 Denver, part of "queue all four" (entries 399, 400, 402 and 404; entries 401 and 403 were added after). Take it after entry 401 is
+committed and reported. Wording passes on docs-sonnet and figure chores on chores-haiku, as CLAUDE.md says; measurement and statistics
+on the main model.
+
+RESEARCH.md's "Worth an article?" table has four marked worth writing and not yet written. Write all four:
+
+1. **The Phomemo M834's print commands** (request 73, entries 389 to 391): the Phomemo app prints a Letter sheet at 94.7 percent; the
+   raster (LZO1X in 4 KB blocks over the serial port, the printer pacing the page and answering when printed); the feed 0.7 to 0.8
+   percent short and GroupLab's 0.7 percent stretch; request 85's third print true both ways (150 by 150 mm on the caliper lines, 190 and
+   250 mm on the rulers). Printing from a computer is built but untried (request 83): say so, and claim nothing about it.
+2. **Scale markers beside a target** (entry 365, `grouplab marker-trial`, entry 375's corner brackets): how accurate each of the four
+   kinds was, measured numbers only.
+3. **How far off square a photograph can be** (entry 157): what the holes and the bull centers did as the angle grew, and what a shooter
+   should do with that. Include entry 399's new numbers if they change the answer.
+4. **A bent-sheet registration for a lifted far margin** (entry 324 section 1, and entry 399 section 3 if it changed the model): written
+   for a developer.
+
+For each: entry 392 section 1's rules hold (every checkable sentence backed in claims-backing.json, figures regenerated only for the
+article that changed, simulations seeded and rerunnable, no pseudoscience, the developer called "the developer" or "the author", the
+existing byline). **An article that meets them is published** under the standing rule (CLAUDE.md, entry 393), listed in
+`website/research/PUBLISHED.md` with the date and this entry; one that cannot be finished honestly stays `draft` with one line saying
+what it waits on. Name each article published in the report, and confirm the site went live with it.
+
 ## 2026-10-10, entry 401: a bug Alan hit: after Fix holes and adding an impact, the results go blank (error report sent)
 
 **Status: actioned 2026-10-10; sections 1 to 4 and 6 done. Section 5, closing issue 27 with its nightly, waits for that nightly to publish; the log package was not pulled, since that needs ssh.**

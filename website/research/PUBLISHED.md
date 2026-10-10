@@ -42,3 +42,7 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - printed-numbers-are-not-holes  2026-10-09  entry 393, which lets Code publish an article once it is ready
 - range-test-log  2026-10-09  entry 393, which lets Code publish an article once it is ready
 - can-you-see-the-bull  2026-10-09  entry 393, which lets Code publish an article once it is ready
+- phomemo-m834-print-commands  2026-10-10  entry 402, under entry 393's standing rule
+- scale-markers-beside-a-target  2026-10-10  entry 402, under entry 393's standing rule
+- how-far-off-square  2026-10-10  entry 402, under entry 393's standing rule
+- bent-sheet-registration  2026-10-10  entry 402, under entry 393's standing rule

@@ -6704,6 +6704,38 @@
   "The thermal printer's three check prints and the label scans, docs/PHASE1-RESULTS.md, entries 382, 390 and 391, and requests 84 and 85 (2026-10-10).": {
    "kind": "measured",
    "where": "the sources named, in this repository"
+  },
+  "GroupLab corrects for a photograph taken at an angle, and refuses one past 37 degrees.": {
+   "kind": "measured",
+   "where": "the description of /research/how-far-off-square/; the article's own evidence: 3 sources, data from 2026-09-20, 2026-09-27, 2026-09-29 and 2026-10-10; every number checked against docs/notes/archive/results-151-175.md entry 157, the published curled-angled-paper article, src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
+  },
+  "How GroupLab recorded what the app sends to the M834, rebuilt it, found that the printer feeds about 0.7 percent short, and stretched its pages to match.": {
+   "kind": "measured",
+   "where": "the description of /research/phomemo-m834-print-commands/; the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)"
+  },
+  "When one margin lifts toward the camera it cannot follow, and the holes beside it read up to 0.08 inch out.": {
+   "kind": "measured",
+   "where": "the description of /research/bent-sheet-registration/; the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
+  },
+  "How GroupLab lays a smooth correction over the lens fit, when it takes it, what it fixed on two pictures, and the three places it cannot reach.": {
+   "kind": "measured",
+   "where": "the description of /research/bent-sheet-registration/; the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
+  },
+  "Reading targets 35 Scale markers beside a target you did not print A store-bought target has no printed codes for GroupLab to measure against.": {
+   "kind": "measured",
+   "where": "the description of /research/scale-markers-beside-a-target/; the article's own evidence: 3 sources, data from computer-made photographs of 2026-10-04 and 2026-10-05 (grouplab marker-trial --photos 20, seed 365; grouplab surface-trial --brackets); every number checked against docs/PHASE1-RESULTS.md, entries 365 and 375 (entry 402)"
+  },
+  "Reading targets 36 How far off square can a photograph be?": {
+   "kind": "measured",
+   "where": "the description of /research/how-far-off-square/; the article's own evidence: 3 sources, data from 2026-09-20, 2026-09-27, 2026-09-29 and 2026-10-10; every number checked against docs/notes/archive/results-151-175.md entry 157, the published curled-angled-paper article, src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
+  },
+  "How GroupLab is built 34 What a thermal printer is sent: the Phomemo M834, decoded The Phomemo app printed a Letter sheet 5.3 percent small and cut its last line in half.": {
+   "kind": "measured",
+   "where": "the description of /research/phomemo-m834-print-commands/; the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)"
+  },
+  "How GroupLab is built 37 Registering a sheet whose far margin has lifted A lens fit assumes the paper is flat.": {
+   "kind": "measured",
+   "where": "the description of /research/bent-sheet-registration/; the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
   }
  },
  "rules": [
@@ -6937,6 +6969,26 @@
    "surface": "^site:research/wrong\\-bull/",
    "kind": "measured",
    "where": "the article's own evidence: 2 sources, data from 2026-09-20"
+  },
+  {
+   "surface": "^site:research/phomemo\\-m834\\-print\\-commands/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)"
+  },
+  {
+   "surface": "^site:research/scale\\-markers\\-beside\\-a\\-target/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from computer-made photographs of 2026-10-04 and 2026-10-05 (grouplab marker-trial --photos 20, seed 365; grouplab surface-trial --brackets); every number checked against docs/PHASE1-RESULTS.md, entries 365 and 375 (entry 402)"
+  },
+  {
+   "surface": "^site:research/how\\-far\\-off\\-square/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from 2026-09-20, 2026-09-27, 2026-09-29 and 2026-10-10; every number checked against docs/notes/archive/results-151-175.md entry 157, the published curled-angled-paper article, src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
+  },
+  {
+   "surface": "^site:research/bent\\-sheet\\-registration/",
+   "kind": "measured",
+   "where": "the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
   },
   {
    "surface": "^docs/RESTORE\\.md$",
