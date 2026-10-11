@@ -35,6 +35,9 @@ public class Entry115Tests
             // The field offers the records' loads and nothing else.
             var field = window.GetLogicalDescendants().OfType<ComboBox>().First(c => c.ItemsSource is IEnumerable<string> items && items.Contains("41.5 gr"));
             Assert.Equal(["No load", "41.5 gr", "42.1 gr"], field.ItemsSource!.Cast<string>());
+
+            // Entry 407 section 2.2: picking bulls is the fourth of "Loads on this sheet".
+            window.ChooseLoadLayout(LoadLayout.PickBulls);
             Assert.Contains(window.BullLoadText, t => t.StartsWith("No bulls chosen.", StringComparison.Ordinal));
 
             // Clicking a bull chooses it, and shift takes a row of them.

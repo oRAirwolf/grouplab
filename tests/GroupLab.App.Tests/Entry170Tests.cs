@@ -138,7 +138,8 @@ public class Entry170Tests
 
     /// <summary>
     /// Entry 149 section 3, question 37's A, which entry 171 put with this entry's section 2: a shooter who used a whole row or column
-    /// chooses it from one bull rather than clicking each, and the choice adds to what is already chosen.
+    /// says so without clicking each bull. Entry 407 section 2.2 made "Its row" and "Its column" into "One a row" and "One a column", a list
+    /// of the rows or columns each with its load.
     /// </summary>
     [AvaloniaFact]
     public void ARowOrAColumnIsChosenFromOneBull()
@@ -146,15 +147,18 @@ public class Entry170Tests
         var (window, _, _) = Entry109Tests.Sheet();
         try
         {
-            var first = window.Session.State.Bulls.Where(b => b.Scoring).OrderBy(b => b.Declared!.Value.Y).ThenBy(b => b.Declared!.Value.X).First();
-            window.ClickedBull(first.Index);
-            window.ChooseLine(row: true);
-            Assert.Equal(5, window.ChosenBulls.Count);
-            window.ChooseLine(row: false);
-            Assert.Equal(9, window.ChosenBulls.Count);
-            window.SetAimedAtChosenBulls(false);
+            // Entry 407 section 2.2: "One a row" and "One a column" list the rows and columns, each with its load.
+            var rows = SheetReading.Rows(window.Session.State.Bulls);
+            var columns = SheetReading.Columns(window.Session.State.Bulls);
+            window.ChooseLoadLayout(LoadLayout.OneARow);
+            window.SetLoadOn(rows[0], "Load A");
             Settle();
-            Assert.Equal(9, window.Session.State.Rule!.PerBull.Count);
+            Assert.Equal(5, window.Session.State.Bulls.Count(b => window.Session.State.Subgroups?.For(b.Index) == "Load A"));
+            Assert.Contains("row 1 as Load A", window.ReadBackText, StringComparison.Ordinal);
+            window.ChooseLoadLayout(LoadLayout.OneAColumn);
+            window.SetLoadOn(columns[0], "Load B");
+            Settle();
+            Assert.Equal(columns[0].Count, window.Session.State.Bulls.Count(b => window.Session.State.Subgroups?.For(b.Index) == "Load B"));
         }
         finally
         {
@@ -188,7 +192,7 @@ public class Entry170Tests
                 return watch.ElapsedMilliseconds;
             }
 
-            long naming = Timed(() => window.SetAimedAtChosenBulls(true));
+            long naming = Timed(() => window.SayFiredAt(window.Session.State.Bulls.Where(b => b.Scoring).Select(b => b.Index)));
             var shot = window.Session.State.Shots.First(s => s.IsShot);
             long excluding = Timed(() => window.Session.SetExclusion(shot.Id, ExclusionReason.CalledFlyer));
             Assert.True(naming < 1000, $"naming every bull took {naming} ms");

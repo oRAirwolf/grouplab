@@ -214,8 +214,9 @@ public class Entry113Tests
     }
 
     /// <summary>
-    /// Entry 113 section 4: the editor's way to say a sheet is not one shot a bull. Two on the bulls named reads bull labels and ranges, a name
-    /// that is no bull is refused, nearest bull is a rule of its own, and the default takes the rule away.
+    /// Entry 113 section 4: the editor's way to say a sheet is not one shot a bull. Entry 407 section 2 says it as "How did you shoot this
+    /// sheet?": "Some bulls took two or more" takes the bulls tapped on the sheet, a bull tapped again takes one, "Every hole to its nearest
+    /// bull" is a rule of its own, and "One shot on each bull I used" takes the rule away.
     /// </summary>
     [AvaloniaFact]
     public void TheEditorSaysHowManyShotsEachBullHolds()
@@ -223,20 +224,28 @@ public class Entry113Tests
         var (window, path, _) = Entry109Tests.Sheet();
         try
         {
-            window.SetShotsPerBull(2, "1-10");
+            window.ChooseShotPattern(ShotPattern.SomeTookMore);
+            var first = window.Session.State.Bulls.Where(b => b.Scoring).Take(11).ToList();
+            foreach (var bull in first)
+            {
+                window.TapBullForGroups(bull.Index);
+            }
+
             var rule = window.Session.State.Rule!;
             Assert.False(rule.NearestOnly);
-            Assert.Equal(10, rule.PerBull.Count);
+            Assert.Equal(11, rule.PerBull.Count);
             Assert.All(rule.PerBull.Values, v => Assert.Equal(2, v));
+            Assert.Equal(ShotPattern.SomeTookMore, window.PatternShown);
 
-            window.SetShotsPerBull(2, "1-10, 99");
+            window.TapBullForGroups(first[^1].Index);
             Assert.Equal(10, window.Session.State.Rule!.PerBull.Count);
-            Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(), t => t.Text == "Name the bulls holding two shots by their numbers, such as 1-10 or 1, 3, 5.");
+            Assert.Contains("10 of them with two shots", window.ReadBackText, StringComparison.Ordinal);
 
-            window.SetShotsPerBull(1, "");
+            window.ChooseShotPattern(ShotPattern.Nearest);
             Assert.True(window.Session.State.Rule!.NearestOnly);
-            window.SetShotsPerBull(0, "");
+            window.ChooseShotPattern(ShotPattern.OnePerBull);
             Assert.Null(window.Session.State.Rule);
+            Assert.Equal(ShotPattern.OnePerBull, window.PatternShown);
             window.Close();
         }
         finally

@@ -474,10 +474,11 @@ public sealed class ResultView : UserControl, IOpenTarget
         // Entry 259 screen 5: the hit chance with this group carried in.
         actions.Children.Add(Screens.Row("Ballistics", "The dope, and the chance of a hit with this group", () => Shell.Current?.ShowBallistics(session.State)).Id("result-ballistics"));
 
-        // Entry 259 screen 2: which bulls were fired at, so each shot is measured from its own.
+        // Entry 259 screen 2: which bulls were fired at, so each shot is measured from its own. Entry 407 section 2: how the sheet was shot and
+        // the loads on it, with what GroupLab will make of it read back.
         if (session.State.Bulls.Count(b => b.Scoring) > 1)
         {
-            actions.Children.Add(Screens.Row("Bulls you fired at", AimedBulls.Says(session.State.Rule, session.State.Bulls), ShowBulls));
+            actions.Children.Add(Screens.Row("How you shot this sheet", SheetReading.ReadBack(session.State), ShowBulls).Id("result-how-shot"));
         }
 
         // Entry 280 section 2, Shots A: every shot's offset and clicks, and which count.
@@ -626,7 +627,7 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// <summary>
     /// Entry 376 section A2: where the holes fit more than one set of bulls equally well and nobody has said which were fired at, the
     /// question in the middle of the screen (the 2026-10-02 rule for anything needing a decision), GroupLab's guess first; "Choose the bulls
-    /// myself" opens Bulls you fired at. Asked once a result; the × keeps the guess, which is what the figures already show.
+    /// myself" opens How you shot this sheet. Asked once a result; the × keeps the guess, which is what the figures already show.
     /// </summary>
     private void AskWhichBulls()
     {
@@ -672,7 +673,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         Content = new SetPage(definition!, date, units, again, () => Content = result);
     }
 
-    /// <summary>Entry 259 screen 2: the bulls fired at, chosen on the sheet's own layout, and back to the result.</summary>
+    /// <summary>Entry 259 screen 2 and entry 407 section 2: how the sheet was shot and its loads, on the sheet's own layout, and back.</summary>
     private void ShowBulls()
     {
         var result = Content;

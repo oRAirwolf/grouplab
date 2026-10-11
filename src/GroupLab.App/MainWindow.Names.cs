@@ -58,7 +58,6 @@ public sealed partial class MainWindow
             (hitWidth, "Target width"),
             (hitHeight, "Target height"),
             (hitPreset, "Conditions"),
-            (shotsPerBull, "Shots per bull"),
             (bullLoad, "Load on the chosen bulls"),
         })
         {

@@ -32,7 +32,7 @@ public class Entry187Tests
         {
             window.Session.SetExpectedShots(10);
             Settle();
-            string hint = "This sheet has 25 bulls and 10 shots. If you fired at only some of the bulls, choose them and press These ones.";
+            string hint = "This sheet has 25 bulls and 10 shots. If you fired at only some of the bulls, check the bulls unused and tap any GroupLab has wrong.";
             Assert.Contains(hint, window.AimedAtText);
             Assert.DoesNotContain(window.AimedAtText, t => t.Contains("would move", StringComparison.OrdinalIgnoreCase));
             Assert.DoesNotContain(window.StillNeeded(), n => n.Contains("bull", StringComparison.OrdinalIgnoreCase));
@@ -66,7 +66,7 @@ public class Entry187Tests
             window.Session.SetExpectedShots(10);
             Settle();
             Assert.Contains(window.AimedAtText, t => t.StartsWith("This sheet has 25 bulls", StringComparison.Ordinal));
-            window.SetAimedAtChosenBulls(true);
+            window.SayFiredAt(window.Session.State.Bulls.Where(b => b.Scoring).Select(b => b.Index));
             Settle();
             window.Session.SetAssignmentRule(null);
             Settle();

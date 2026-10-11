@@ -12,8 +12,9 @@ namespace GroupLab.App.Tests;
 /// NOTES-FROM-PLANNING.md entry 141 section 5.3.4 and question 37, on the screen: telling GroupLab which bulls you aimed at.
 /// <para>
 /// <b>A rule nobody can reach is a rule that does not exist.</b> <c>AimedBulls</c> builds the rule and the matching honours it, and until
-/// there is a control it is code nobody can use. So this drives the control rather than the helper: it types what a person would type and
-/// checks the marking now reads the way they said.
+/// there is a control it is code nobody can use. So this drives the control rather than the helper. Entry 407 section 2 replaced the typed
+/// box with bulls tapped on the sheet ("Tap the bulls you fired at"), so it taps what a person would tap and checks the marking now reads the
+/// way they said.
 /// </para>
 /// </summary>
 public class AimedBullsControlTests
@@ -44,27 +45,32 @@ public class AimedBullsControlTests
         Dispatcher.UIThread.RunJobs();
     }
 
-    private static TextBox Box(MainWindow window) =>
-        window.GetLogicalDescendants().OfType<TextBox>().First(t => (t.PlaceholderText ?? "").Contains("rows", StringComparison.Ordinal));
+    /// <summary>Taps the bulls a person would, the way they say it: "rows 1-3", "columns 2-5", "1-10", or every bull.</summary>
+    private static void Tap(MainWindow window, string said)
+    {
+        var bulls = window.Session.State.Bulls;
+        var rule = AimedBulls.Parse(said, bulls)!;
+        window.TapBulls(MainWindow.BullTaps.FiredAt);
+        foreach (int bull in AimedBulls.Of(rule, bulls))
+        {
+            window.TapBullForGroups(bull);
+        }
 
-    private static ComboBox Choice(MainWindow window) =>
-        window.GetLogicalDescendants().OfType<ComboBox>().First(c => c.ItemsSource is IEnumerable<string> items && items.Contains("Only the bulls I aimed at"));
+        Dispatcher.UIThread.RunJobs();
+    }
 
     [AvaloniaTheory]
     [InlineData("rows 1-3", 15)]
     [InlineData("columns 2-5", 20)]
     [InlineData("1-10", 10)]
     [InlineData("", 25)]
-    public void WhatIsTypedBecomesTheBullsAimedAt(string typed, int expected)
+    public void WhatIsTappedBecomesTheBullsAimedAt(string said, int expected)
     {
         var window = NewWindow();
         window.Show();
         Sheet(window);
 
-        Choice(window).SelectedIndex = 3;
-        Box(window).Text = typed;
-        window.ApplyShotsPerBull();
-        Dispatcher.UIThread.RunJobs();
+        Tap(window, said);
 
         var rule = window.Session.State.Rule;
         Assert.NotNull(rule);
@@ -84,10 +90,7 @@ public class AimedBullsControlTests
         window.Show();
         Sheet(window);
 
-        Choice(window).SelectedIndex = 3;
-        Box(window).Text = "columns 2-5";
-        window.ApplyShotsPerBull();
-        Dispatcher.UIThread.RunJobs();
+        Tap(window, "columns 2-5");
 
         var rule = window.Session.State.Rule!;
         foreach (var row in AimedBulls.Rows(window.Session.State.Bulls))
@@ -110,31 +113,32 @@ public class AimedBullsControlTests
         window.Show();
         Sheet(window);
 
-        Choice(window).SelectedIndex = 3;
-        Box(window).Text = "rows 1-3";
-        window.ApplyShotsPerBull();
-        Dispatcher.UIThread.RunJobs();
+        Tap(window, "rows 1-3");
 
-        var said = window.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
-        Assert.Contains(said, t => t == "15 shots at 15 bulls, one shot each, and 10 bulls nobody aimed at.");
+        Assert.Equal("You said which bulls you fired at: 10 bulls unused. Tap a bull to change it.", window.UnusedText);
+        Assert.StartsWith("GroupLab will read it as: 15 bulls fired at, one shot each", window.ReadBackText, StringComparison.Ordinal);
         window.Close();
     }
 
-    /// <summary>Nonsense is refused with what to type, rather than quietly leaving the old rule in place.</summary>
+    /// <summary>
+    /// A bull tapped twice is back where it was, rather than quietly left in: what used to be "nonsense is refused" when the bulls were typed.
+    /// The tapping ends when its button is pressed again, and a click on a bull then chooses it for its holes instead (entry 407 section 1).
+    /// </summary>
     [AvaloniaFact]
-    public void SomethingThatNamesNoBullIsRefusedWithWhatToType()
+    public void ABullTappedTwiceIsTakenOutAgain()
     {
         var window = NewWindow();
         window.Show();
         Sheet(window);
 
-        Choice(window).SelectedIndex = 3;
-        Box(window).Text = "rows banana";
-        window.ApplyShotsPerBull();
-        Dispatcher.UIThread.RunJobs();
-
-        Assert.Null(window.Session.State.Rule);
-        Assert.Contains("rows 1-3", window.ProblemText, StringComparison.Ordinal);
+        Tap(window, "1-10");
+        var bull = window.Session.State.Bulls[3].Index;
+        window.TapBullForGroups(bull);
+        Assert.Equal(9, AimedBulls.Of(window.Session.State.Rule, window.Session.State.Bulls).Count);
+        window.TapBullForGroups(bull);
+        Assert.Equal(10, AimedBulls.Of(window.Session.State.Rule, window.Session.State.Bulls).Count);
+        window.TapBulls(MainWindow.BullTaps.None);
+        Assert.Null(window.Canvas.BullTapTaker);
         window.Close();
     }
 }

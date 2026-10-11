@@ -360,6 +360,40 @@ public class ResultScreenTests
         window.Close();
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 2 on the phone: "How you shot this sheet" opens the same two parts as the desktop's. The bulls
+    /// fired at are GroupLab's until a bull is tapped, "Some bulls took two or more" turns a tap into a bull that took two, a load set on a row
+    /// lands on that row's bulls, and the read-back says all of it.
+    /// </summary>
+    [AvaloniaFact]
+    public void HowYouShotThisSheetTakesTheAnswerTheBullsTappedAndTheLoads()
+    {
+        var window = Started();
+        var result = Analyzed(Turned(0));
+        var view = new ResultView(result, new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { });
+        window.Content = view;
+        Dispatcher.UIThread.RunJobs();
+        var row = view.GetVisualDescendants().OfType<Button>().First(b => Words(b).StartsWith("How you shot this sheet", StringComparison.Ordinal));
+        row.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Dispatcher.UIThread.RunJobs();
+        var page = view.GetVisualDescendants().OfType<BullsPage>().Single();
+
+        Assert.Equal(ShotPattern.OnePerBull, page.Pattern);
+        Assert.StartsWith("Bulls left blank are found by themselves", page.UnusedText, StringComparison.Ordinal);
+
+        var first = result.State.Bulls.First(b => b.Scoring).Index;
+        page.Choose(ShotPattern.SomeTookMore);
+        page.Tap(first);
+        Assert.Contains(first, SheetReading.Doubled(view.GetVisualDescendants().OfType<BullsPage>().Single().Session.State.Rule));
+        Assert.Contains("1 of them with two shots", page.ReadBackText, StringComparison.Ordinal);
+
+        var rows = SheetReading.Rows(result.State.Bulls);
+        page.Lay(LoadLayout.OneARow);
+        page.SetLoad(rows[0], "Load A");
+        Assert.Contains("row 1 as Load A", page.ReadBackText, StringComparison.Ordinal);
+        window.Close();
+    }
+
     private static void Press(Control within, string words)
     {
         var button = within.GetVisualDescendants().OfType<Button>().First(b => Words(b) == words);

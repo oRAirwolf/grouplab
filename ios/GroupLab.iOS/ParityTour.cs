@@ -36,7 +36,7 @@ internal static class ParityTour
 
         // From the result: each row opens its own page, which is photographed and closed again.
         checks.Add(await Page(result, "every-hole", "Fix holes", () => Has<FixHolesPage>()));
-        checks.Add(await Page(result, "aimed-bulls", "Bulls you fired at", () => Has<BullsPage>()));
+        checks.Add(await Page(result, "aimed-bulls", "How you shot this sheet", () => Has<BullsPage>()));
         checks.Add(await Page(result, "shots-table", "Shots", () => Has<ShotsPage>()));
         checks.Add(await Page(result, "zero-from", "Zero from this group", () => Has<ZeroFromPage>()));
         checks.Add(await Page(result, "shots-to-zero", "Zero from this group", () => Has<ShotsToZeroPage>(), then: "Open in Shots Needed to Zero"));

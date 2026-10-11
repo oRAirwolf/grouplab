@@ -220,6 +220,31 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         InvalidateVisual();
     }
 
+    /// <summary>
+    /// Entry 407 section 2: while the Groups panel is taking taps on bulls ("tap the bulls that took two", "Wrong? Tap them"), a click anywhere
+    /// in a bull's share of the sheet goes to it, with the bull's index, instead of choosing the bull or a hole. Null otherwise.
+    /// </summary>
+    public Action<int>? BullTapTaker { get; set; }
+
+    /// <summary>Entry 407 section 2.2: words drawn beside the sheet's rows or columns, the load each carries, at image points.</summary>
+    public IReadOnlyList<(PointD At, string Text)> SideLabels { get; set; } = [];
+
+    private bool ClickForBullTaps(MarkingSession session, Point position)
+    {
+        if (BullTapTaker is not { } take)
+        {
+            return false;
+        }
+
+        if (BullAt(session.State, position) is { } bull)
+        {
+            take(bull.Index);
+            InvalidateVisual();
+        }
+
+        return true;
+    }
+
     /// <summary>A click while a bull is chosen: on a hole gives or takes it, on the chosen bull ends, on another bull chooses that one.</summary>
     private bool ClickWhilePicking(MarkingSession session, Point position)
     {
@@ -698,6 +723,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             Marks.Label(context, bull.Label, chosen ? Marks.Selected : Marks.Faint, c + new Vector(8, 6));
         }
 
+        foreach (var (at, text) in SideLabels)
+        {
+            Marks.Label(context, text, Marks.Teal, ToControl(at));
+        }
+
         // The scale: the reference in use, one complete and waiting for its size, and one being made, each a teal line with a filled circle at
         // every end, and the one being made drawn out to the pointer (entry 39 section 3, entry 42 section 5).
         var committed = ScalePoints(state.Scale);
@@ -1057,7 +1087,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
                 break;
 
-            case MarkingTool.Select when ClickWhilePicking(session, point.Position):
+            case MarkingTool.Select when ClickForBullTaps(session, point.Position) || ClickWhilePicking(session, point.Position):
                 break;
 
             case MarkingTool.Select:
@@ -1214,7 +1244,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
         if (panPressedAt is { } pressed && Session is { } s && Distance(pressed, e.GetPosition(this)) <= ClickSlop)
         {
-            if (!ClickWhilePicking(s, pressed))
+            if (!ClickForBullTaps(s, pressed) && !ClickWhilePicking(s, pressed))
             {
                 // Entry 376 section A4: a click on a hole, on the line to its bull, or on the bull lights all three. Entry 407 section 1.3: a
                 // click on a bull itself, away from its holes and lines, chooses it to give holes to.
