@@ -291,7 +291,7 @@
     ],
     [
      "Velocity and the vertical",
-     "How much of the group's up-and-down spread comes from velocity alone, from the session's chronograph readings and the load's BC at the distance shot: the share in amber with its range, a meter from none to all of it, and the measured vertical spread beside what velocity alone would make. Where each reading was paired with its shot, a chart of height against velocity says whether the shots follow the solver. Without readings it says what they add and offers Import a file, Type them in (speeds in the order fired, then Match to shots) and a place to drop a Garmin Xero, LabRadar or CSV file; without the distance or the BC it says which is missing, with a button to it; where the range reaches all of the spread it says the data cannot tell."
+     "How much of the group's up-and-down spread comes from velocity alone, from the session's chronograph readings and the load's BC at the distance shot: the share in amber with its range, a meter from none to all of it, and the measured vertical spread beside what velocity alone would make. Where each reading was paired with its shot, a chart of height against velocity says whether the shots follow the solver. Without readings it says what they add and offers Import a file, Type them in (speeds in the order fired, then Match to shots) and a place to drop a chronograph's file; without the distance or the BC it says which is missing, with a button to it; where the range reaches all of the spread it says the data cannot tell."
     ],
     [
      "Advanced, closed until you open it",
@@ -353,7 +353,7 @@
     [
      "readings-here",
      "Velocity and the vertical with no readings yet: Import a file, Type them in, a place to drop a file, and speeds typed in its box",
-     "With no chronograph readings, Velocity and the vertical says what they add and takes them right here: Import a file, Type them in, or drop a Garmin Xero, LabRadar or CSV file on it. Typed speeds are counted against the shots, and Match to shots pairs them as Ballistics would and keeps them."
+     "With no chronograph readings, Velocity and the vertical says what they add and takes them right here: Import a file, Type them in, or drop your chronograph's file on it. Typed speeds are counted against the shots, and Match to shots pairs them as Ballistics would and keeps them."
     ]
    ],
    "mobile": {
