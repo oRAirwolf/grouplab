@@ -3,6 +3,20 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 95. Check the Fix holes fix on the phone, about two minutes, once the next nightly is installed (entry 401, error report 27)
+
+**Answered 2026-10-11 (entry 408):** Alan, 01:20 Denver: "It looks like request 95 is resolved." On nightly 184 or later, adding a hole in Fix holes asks which bull, and Fix holes comes back with the picture instead of going blank.
+
+**Why:** the blank screen you hit after adding a hole in Fix holes is fixed: the question "Which bull was this hole fired at?" had no
+bull buttons on it, and closing it left the page blank, so the hole you added was lost (your earlier marking was kept). A test now covers
+it, but only your phone can show it working there.
+
+**Steps:** install 0.2.0-nightly.184 (or later) in GroupLab Dev. Open any target with holes, tap Fix holes, put the
+crosshair on a spot with no hole and add one. The question should list bulls, with GroupLab's choice first. Pick one, then tap Done.
+
+**A good answer:** the bulls are listed, Fix holes comes back with the picture after you pick, and the result shows one more shot. If
+anything goes blank again, send diagnostics as before and say so.
+
 ## 96. One page on your Samsung tablet, about a minute, whenever suits (entry 403)
 
 **Answered 2026-10-11:** Alan opened the page with `?why` in both browsers on the tablet, and both picked Android, Looks like this device. Firefox and Chrome each send an x86_64 Linux user agent while the browser's own platform says `Linux armv81`, and the page's guess was "android, from an ARM processor under an x86_64 user agent" in both: entry 403's fix is confirmed on real hardware in both browsers (entry 406 section 2).

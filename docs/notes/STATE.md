@@ -9,29 +9,26 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-11, entry 406 (before it: entries 399 to 405).
+**Last rewritten:** 2026-10-11, entries 407 and 408 (before them: entries 399 to 406).
 
 ---
 
 ## In flight
 
+- **Entry 407 done** (Alan's canvas picks 1A, 2B, 3A, 4A, 5B, 6A, 7A; question 88 answered 7A): lines to bulls with unsure ones
+  marked and tap a bull to give it holes; the Groups section as "How did you shoot this sheet?" and "Loads on this sheet"; the Shots list
+  as short rows with one open; no reason asked to leave a shot out, the session's folder in the ··· menu; barrels under their rifle
+  (schema version 3, the database copied first); paper and backing in a closed fold; chronograph readings on the analysis. Desktop and
+  phone. The screenshots workflow re-renders every picture after the push; the site is published by hand after it (it commits with its
+  own token, which starts no site build).
+- **Entry 408 done**: request 95 confirmed by Alan on the phone; entry 401's fix holds on real hardware.
+- **Entries 399 to 405 done** (2026-10-10 and 11); their details are in PHASE1-RESULTS.md.
 - **Entry 406 done but 1.3**: request 93 installed by Alan (token reaches both), request 96 confirmed on his tablet; a test now
   refuses a paste reading a backup folder without sudo. Left: read 2026-10-11's learning `summary.md` for the token line.
-- **Entry 405 done**: the consistency audit's ten findings fixed; the emulator job now remakes the README mosaic itself.
-- **The overnight queue** (Alan, 2026-10-10): 399 to 404 done; 404's install is request 97; 402 published articles 34
-  to 37; 403 reads ARM under x86_64 as Android, confirmed by Alan.
-- **Entry 401 done**: Fix holes on phones lost its bull buttons and went blank; fixed in nightly 184, issue 27 closed; request 95.
-- **Entry 400 done, in part**: about a tenth sooner (bend fits at once, markers found once); reading codes at once taken back after the
-  Mobile suite hung on macOS, and CI now names a test running fifteen minutes. If macOS passes, it goes back behind a test.
-- **Entry 399 done**: an untagged photograph is now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in, was
-  0.0155 to 0.0216; row 4's 7 false rings gone; what is left is paper relief (`grouplab photo-parts`). Request 94 for material.
-- **Requests 84, 85, 88 and 92 closed, question 94 answered (a)** (2026-10-10): the M220's placement stays; `MeasuredFeed` 99.30.
+- **Entry 400, in part**: reading codes at once was taken back after the Mobile suite hung on macOS; it returns behind a test.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
-- **Entries 393 to 398 done** (2026-10-09): twelve articles published; the learning loop on the web server (nightly 13:45 UTC);
-  every server change backed up first (RESTORE.md rule 5); server backups kept 4 days, so a mistake must be noticed within four.
-- **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
-  tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 95 (the Fix holes fix on the phone), 97 (the intake worker), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
+- **Waiting on Alan:** requests 97 (the intake worker), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -63,15 +60,14 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **25** (95 the Fix holes fix on the phone; 97 the intake worker; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **24** (97 the intake worker; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (94 and 95 answered and archived 2026-10-10):
+Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (88 answered 7A and archived 2026-10-11):
 
-- **88** DESIGN NEEDED, chronograph entry on the analysis
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
@@ -92,6 +88,10 @@ they differ.
 Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
+
+- **The database is schema version 3** (entry 407 section 5): the first open of a new build copies `grouplab.db` to
+  `grouplab.pre-v2.db` beside it, then puts every barrel under a rifle once. Alan's desktop copy: its one barrel goes under "Barrels not
+  yet on a rifle". The Equipment screen's extra fields had never reached the database before this.
 
 - **The server's intake worker is older than the repository's** by one log line; request 97 installs it, backed up first.
 - **The emulator's walks run headless first** (`PhoneScreensScenarioTests`, `PhoneSweepScenarioTests`): run 37735635656 left a reading

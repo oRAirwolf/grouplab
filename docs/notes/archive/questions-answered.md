@@ -5,6 +5,15 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
+
+**Status: answered 2026-10-11 (entry 407 section 7, Alan's pick 7A from the open screen decisions canvas): the readings are entered on the analysis itself, under Velocity and the vertical, with Import a file, Type them in and a drop area; built in entry 407.** Earlier: open.
+
+Alan could not find where to import his chronograph data after Add readings took him to Ballistics, whose Chronograph section was out of
+view. The minimal fix is built: Add readings brings the section into view, outlines it for four seconds, and its first line says what
+to do. Whether readings should instead be entered right on the analysis, under Velocity and the vertical, is a layout question for a
+concept; the phone already opens a page of its own for it. Nothing waits on it.
+
 ## 2026-10-10, question 95: should the learning loop's nightly check its own token every night?
 
 **Status: answered 2026-10-10 (Alan, in the message that started the run: "answer (b), the nightly checks the learning token every night and writes the result into its log and learning/summary.md, installed on the server under RESTORE.md rule 5 with a backup first"): built the same day, `token_check` in the worker, asking for one issue and one pull request; installing it on the server is request 93, because Code's copy to the server was refused by the session's permission check.**

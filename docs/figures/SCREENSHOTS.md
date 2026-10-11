@@ -32,7 +32,11 @@ Store listing uses 1920x1080.
 | `ballistics` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /guides/user-guide/, /tour/, /tour/ballistics/, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `ballistics-hit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet |
 | `compare` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/compare/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
-| `equipment` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/equipment/ | no sheet at all |
+| `equipment` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/equipment/ | no sheet at all: a rifle's page with its two barrels, the one on now chosen (entry 407 section 5) |
+| `bull-lines` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet: bull 1 chosen and given bull 2's hole, zoomed in, the panel's block with its banner (entry 407 section 1) |
+| `groups` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet: How did you shoot this sheet? with two bulls that took two, and Loads on this sheet (entry 407 section 2) |
+| `shots-open` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet: the Shots list with one shot open (entry 407 section 3) |
+| `readings-here` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet: Velocity and the vertical with no readings, speeds typed in its box (entry 407 section 7) |
 | `scale-markers` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | built-in library sheet |
 | `fingerprint` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/fingerprint/ | Entry109Tests stand-in poster, drawn by GroupLab, at the second step of Add a store-bought target (entry 348) |
 | `firstrun` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /tour/, /tour/firstrun/ | no sheet at all |
@@ -103,7 +107,8 @@ sheet or view is not finished until the Features page has its own picture of it.
 **Their own picture now:** the E bull (`sheet-e-bull`), the C bull with its dot (`sheet-c-bull`), the zeroing grids (the four C3
 sheets, MOA and mil at 100 yd and 100 m, credited to Alan with Jylee and Unholy), large format on a home printer (`sheet-large-set`,
 the four Letter sheets), the six-bull label on 4x6 as it prints and as a thermal printer's dots (`sheet-x6-4x6`, `sheet-x6-4x6-thermal`), Shots Needed to Zero (credited to Jylee), Velocity and the vertical (the block and the band, entry 323), Ballistics and hit chances (the Hit probability view), Made for
-your optic, the Targets screen, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
+your optic, the Targets screen, which bull each shot belongs to (`bull-lines`), how you shot the sheet (`groups`), the Shots list
+(`shots-open`), chronograph readings on the analysis (`readings-here`), barrels under their rifle (`equipment`), all entry 407, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
 read off a target, and the three sharing choices (Settings, where they are made).
 
 **Gaps: still a general screen**, each to get a crop of the view it names:
@@ -114,7 +119,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Every hole found | the marking screen | a few holes close up with their rings |
 | The bulls you aimed at | the marking screen | the bull picker with rows chosen |
 | A sheet shot off by the same amount | the analysis | the whole-sheet assignment's statement |
-| Which bull each shot belongs to | the analysis | a lit bull with its lines to its holes, and the "Which bulls did you fire at?" question (entry 376) |
+| Paper and backing, kept for the next sheet | the marking screen | the For the hole size studies fold open (entry 407 section 6) |
 | Any target you already shoot | the marking screen | bulls placed by hand and a scale drawn at one |
 | Open by dropping or pasting | the marking screen | the drop target over the window |
 | Shots in and out as CSV | the analysis | the export and import commands |

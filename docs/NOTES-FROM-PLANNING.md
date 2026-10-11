@@ -25,6 +25,133 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-11, entry 408: request 95 confirmed on the phone
+
+**Status: actioned 2026-10-11, in entry 407's commit; sections 1 and 2 done.**
+
+From the planning session, 2026-10-11 07:22 UTC. Small; take it after entry 407, or fold it into 407's commit if that is simpler.
+
+Alan, 2026-10-11 01:20 Denver: "It looks like request 95 is resolved." He checked the Fix holes fix (entry 401) on the phone with
+nightly 184 or later: adding a hole asks which bull, and Fix holes comes back with the picture instead of going blank.
+
+1. Close request 95 in `for-alan.md` with the date and that sentence, and move it to the archive as usual.
+2. Note in STATE.md that entry 401's fix is confirmed on real hardware.
+
+No Release-note needed: nothing that ships changes.
+
+## 2026-10-11, entry 407: Alan's picks from the open screen decisions canvas
+
+**Status: actioned 2026-10-11; sections 1 to 8 done, one commit a section. Kept that the entry allowed to go: the lasso (section 1.6, it puts many shots on a bull in one gesture), and the explicit tap for the bulls fired at, as the correction of the ones GroupLab finds (section 2.1). The phone has no barrel screens (section 5.6). Details in PHASE1-RESULTS.md, "Entry 407".**
+
+From the planning session, 2026-10-11 07:20 UTC. Alan, 2026-10-11 01:15 Denver, picking from the canvas "Open screen decisions"
+(claude.ai/artifact/KhPTW4kSQ7FUiGdxYPNFJD, made from for-alan.md's DESIGN NEEDED list and question 88): **1A, 2B, 3A, 4A, 5B, 6A, 7A.**
+This settles the seven DESIGN NEEDED items from entry 374 section 5 that were still open, and question 88. Mark each one decided in
+for-alan.md and question 88 answered (7A) in QUESTIONS-FOR-PLANNING.md.
+
+Read the whole entry first. Build in the order below, one section at a time. Section 1 (the canvas's question 4) comes first because it is Alan's own top
+complaint from the phone (2026-10-05). **Phone parity applies** (entry 258): every section changes the desktop and the phone together
+wherever the phone has the screen, and says in the report where it does not and why. Sample numbers on the canvas are samples, not
+specifications. Where a picture and this text disagree, this text wins; where something here contradicts the code, raise a question and
+build the rest.
+
+Every section that changes a screen: README, site, guides, tour words and the Features page pictures in the same change (entries 146 and
+256 and 267), a Release-note trailer in a shooter's words, and the tests that hold the old behavior updated rather than deleted.
+
+## 1. (Do this first) Which bull each shot belongs to: concept 4A
+
+1. **Lines always on**: on the analysis picture and in Fix holes, desktop and phone, a thin line from each bull's center to every hole
+   assigned to it. A switch "Lines to bulls" (on by default, remembered) hides them.
+2. **Unsure holes stand out**: a line that is long for the sheet, crosses into a neighbor bull's outer ring, or belongs to a hole the
+   matcher was not sure of, is drawn dashed in orange, with a small "?" beside the hole. Say in PHASE1-RESULTS what "long" and "not
+   sure" mean in the code (use the matcher's own confidence where it has one; do not invent a new score).
+3. **Tap a bull to choose it**: the chosen bull gets a blue ring and its lines turn blue; other bulls dim. A banner says "Bull C3
+   chosen. Tap a hole to give it to C3, or tap one of its holes to take it away." Tapping a hole toggles it in or out of that bull.
+   Done, Esc (desktop), the back button (Android) or tapping the chosen bull again ends it.
+4. Under the picture on the phone: "C3 has 2 shots", the count of unsure holes, and two buttons, **Add a hole** and **Next unsure
+   hole** (steps through the orange ones). Desktop shows the same in the side panel.
+5. A hole taken away from a bull with no other home goes back to "nearest bull" assignment and is re-matched; say how in the report.
+6. This replaces the desktop lasso as the main way to put shots on a bull only if nothing depends on the lasso; otherwise keep the lasso
+   too and say so. The existing "Which bull was this hole fired at?" question on Add a hole stays as built.
+7. Colors: blue and orange must differ in lightness too (canvas used #2f7fe0 and #c46a00 on the paper); check contrast on the white
+   sheet and in the dark theme.
+
+## 2. The Groups section: concept 1A
+
+Replace the Groups section ("Shots per bull" dropdown and its text box, "Its row", "Its column", "Load on the chosen bulls", "Bulls you
+fired at") with two plain parts in the setup panel:
+
+1. **"How did you shoot this sheet?"**, three choices as large radio cards with one line each:
+   - "One shot on each bull I used" (default): today's one-to-one matching. GroupLab asks about any bull that seems to hold two.
+   - "Some bulls took two or more": then tap those bulls on the sheet (today's "Two on the bulls named", without typing numbers).
+   - "Every hole to its nearest bull, however many": today's nearest rule; nothing is asked.
+   Under them: "Bulls left blank are found by themselves: N bulls unused. Wrong? Tap them." This is what feeds the whole-sheet offset
+   solver's "bulls you fired at" (entry 130 section 3.1); it must keep working on a part-shot sheet, and the user can still correct the
+   set by tapping bulls. **If finding unused bulls by themselves is not reliable enough today, say so in the report and keep an explicit
+   "tap the bulls you fired at" step instead**; the offset fix must never silently lose its input.
+2. **"Loads on this sheet"**: four buttons, "One load", "One a row", "One a column", "I will pick bulls". One a row or One a column shows
+   a short grid of row (or column) to load dropdowns; the sheet shows the load name beside each row or column. "I will pick bulls" is
+   today's shift-click selection.
+3. A read-back line under both: "GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Loads A to E." This
+   replaces `ruleSays`.
+4. "Only the bulls I aimed at" (today's fourth rule): fold it into choice one plus the tap-to-correct unused bulls, if the code allows;
+   otherwise keep it as a fourth card and say why.
+5. Phone: the same two parts on the phone's setup, cards full width.
+
+## 3. The Shots list: concept 2B
+
+1. The list stays short rows: shot, bull, across, up/down, radius. A shot left out shows its numbers struck through and "left out".
+2. Clicking a row, or a shot on the sheet, opens it in place (one open at a time) with: **Bull** dropdown (nearest first, marked
+   "nearest"), **Fired** dropdown (place in the firing order), **Counted** check box, where it came from ("Found by GroupLab" or "Added
+   by you"), and **Delete, not a hole**.
+3. Delete replaces the "Not a shot" button in the row, but keeps what Not a shot keeps: the mark, its provenance and Undo. Nothing is
+   lost from the session record.
+4. The current Exclude and Restore buttons become the Counted box. Tick boxes for choosing several shots stay if they are still used
+   (entry 141 section 5.3.3).
+5. Phone: the same, the open row as a card under the shot.
+
+## 4. The Selected shot reason and Show in folder: concept 3A
+
+1. Remove the reason dropdown from the Selected shot area. Turning Counted off asks no reason. Sessions that already carry a reason keep
+   it and still show it, read only. Reports and exports keep printing a stored reason.
+2. Remove "Show in folder" from the bottom bar. Add "Open the session's folder" to the ··· menu at the top right (beside Report, Export,
+   Send this target). The bottom bar keeps "Saved ... · safe to close".
+
+## 5. Barrels: concept 5B
+
+1. Equipment gets two tabs, **Rifles** and **Loads**; the Barrels tab goes.
+2. A rifle's page has two parts: **The rifle** (name, cartridge, scope, click value, sight height, zeroed at, chassis or stock, notes)
+   and **Barrels on this rifle**, a table: on now (one radio for the rifle), name, length, twist, direction, rounds through it, Edit, and
+   an **Add a barrel** button. Barrel length, twist and twist direction move off the rifle form onto the barrel.
+3. Setup: one list, rifle and barrel together, written "Test rifle with its 26 in Bartlein (on now)", the barrel on now first; other
+   barrels of the same rifle listed under it.
+4. Rounds are counted onto the barrel that was on when the sheet was shot.
+5. **Migration**: every existing barrel needs a rifle. A barrel used in sessions with exactly one rifle goes under that rifle; any other
+   barrel goes under a rifle named "Barrels not yet on a rifle", which the user can move. A rifle's own barrel length and twist become
+   its first barrel if it has none. Back up the database first (docs/RESTORE.md), migrate, and test that every old session still names
+   the same rifle and barrel. The export and import file (entry 307) carries the new shape and still reads the old one.
+6. Phone: the same on the phone's equipment screens if it has them.
+
+## 6. Paper and backing: concept 6A
+
+Keep "Paper it was printed on" and "What was behind it", moved to the bottom of setup inside a fold **"For the hole size studies"**,
+closed by default, with: "Recorded only: it does not change detection. It lets hole sizes be compared later by paper and backing." Add
+"Remember these for my next sheet", on by default. Phone the same.
+
+## 7. Chronograph readings on the analysis: concept 7A (answers question 88)
+
+1. On the analysis, in the figures under **Velocity and the vertical**, when a sheet has no readings: one line saying what readings add,
+   then **Import a file** (primary) and **Type them in**, and a drop area: "or drop a Garmin Xero, LabRadar or CSV file here" (name only
+   the formats GroupLab really reads).
+2. Type them in opens a box under the buttons: speeds in the order fired, separated by spaces or new lines, a count ("12 of 23
+   entered"), and **Match to shots**, which uses the same pairing as Ballistics' chronograph section.
+3. When readings exist, the block shows what it shows today. Ballistics' chronograph section stays; "Add readings" now lands here.
+4. Phone: it already opens its own page; make its entry point sit in the same place on the result screen.
+
+## 8. Report
+
+The five line report as usual, plus: which section's tour page and Features picture changed, anything kept that this entry said to
+remove (and why), and the migration's before and after counts for section 5.
+
 ## 2026-10-11, entry 406: requests 93 and 96 answered, and the server paste's silent stop
 
 **Status: actioned 2026-10-11; sections 1.1, 1.2, 2 and 3 done. Section 1.3, reading the next learning nightly's token line, waits for that nightly at 13:45 UTC on 2026-10-11. Section 2.2 had nothing to add to: no test holds the download page's guess to sample user agents.**

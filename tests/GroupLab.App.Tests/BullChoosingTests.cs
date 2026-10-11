@@ -45,7 +45,7 @@ public class BullChoosingTests
             Click(window, canvas.ToControl(hole.Image));
             Assert.Equal(first.Index, window.Session.State.Find(hole.Id)!.Bull);
             Assert.True(window.Session.State.Find(hole.Id)!.BullChosen);
-            Assert.Contains(window.BullLinesText, t => t.StartsWith(first.Label + " has", StringComparison.Ordinal));
+            Assert.Contains(window.BullLinesText, t => t.Contains(first.Label + " has ", StringComparison.Ordinal));
 
             // A second click on the same hole takes it away again, and Escape ends the choosing.
             Click(window, canvas.ToControl(hole.Image));

@@ -146,7 +146,7 @@ public static class BullLines
 
         if (doubt.HasFlag(LineDoubt.CrossesNeighbour))
         {
-            parts.Add("its line crosses into a neighbouring bull");
+            parts.Add("its line crosses into a neighboring bull");
         }
 
         return string.Join(", and ", parts);
@@ -184,7 +184,10 @@ public static class BullChoosing
 {
     /// <summary>The banner while a bull is chosen.</summary>
     public static string Banner(string bull) =>
-        $"Bull {bull} chosen. Tap a hole to give it to {bull}, or tap one of its holes to take it away.";
+        $"Bull {bull} chosen. Tap a hole to give it to {Named(bull)}, or tap one of its holes to take it away.";
+
+    /// <summary>A bull as a sentence names it: "C3" says what it is, and "1" alone does not, so it is "bull 1".</summary>
+    private static string Named(string bull) => bull.Length > 0 && bull.All(char.IsDigit) ? "bull " + bull : bull;
 
     /// <summary>"C3 has 2 shots", the holes that are shots on the bull now.</summary>
     public static string Holds(MarkingState state, int bull)
@@ -192,11 +195,13 @@ public static class BullChoosing
         ArgumentNullException.ThrowIfNull(state);
         string label = state.Bulls.FirstOrDefault(b => b.Index == bull)?.Label ?? bull.ToString(CultureInfo.InvariantCulture);
         int count = state.Shots.Count(s => s.IsShot && s.Bull == bull);
+        string named = Named(label);
+        named = char.ToUpperInvariant(named[0]) + named[1..];
         return count switch
         {
-            0 => $"{label} has no shots",
-            1 => $"{label} has 1 shot",
-            _ => string.Create(CultureInfo.InvariantCulture, $"{label} has {count} shots"),
+            0 => $"{named} has no shots",
+            1 => $"{named} has 1 shot",
+            _ => string.Create(CultureInfo.InvariantCulture, $"{named} has {count} shots"),
         };
     }
 

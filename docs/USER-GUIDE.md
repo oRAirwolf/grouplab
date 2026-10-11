@@ -93,9 +93,9 @@ Save to your own sheets keeps a design in the list. There you can rename it, dup
 - For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.
 - Write only in the load block.
 
-GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1. Where the holes fit two sets of bulls equally well, it asks which bulls you fired at, in the middle of the screen, with its own guess first. Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from each bull's center to every hole given to it.
+GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1. Where the holes fit two sets of bulls equally well, it asks which bulls you fired at, in the middle of the screen, with its own guess first. Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from every hole to the bull it was given, on the analysis and in Fix holes. **Lines to bulls** in the side panel's block, Which bull each shot belongs to, switches them off, and the choice is remembered. A line worth a second look is dashed in orange with a **?** beside the hole: GroupLab was not sure, or the line is long for the sheet, or it crosses into a neighboring bull. **Next unsure hole** goes to the next one. To move holes, click a bull to choose it (a blue ring, its lines blue, the others dimmed), then click a hole to give it to that bull, or click one of its holes to take it away; the block says, for example, "C3 has 2 shots". **Done**, Escape or clicking the bull again ends it.
 
-Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you accept the marking: Shots per bull, in the marking screen's side panel, reads the sheet by nearest bull, or as two shots on the bulls you name.
+Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you accept the marking, in the side panel's Groups section, under **How did you shoot this sheet?**: **One shot on each bull I used**, **Some bulls took two or more** (then tap those bulls), or **Every hole to its nearest bull, however many**. Bulls left blank are found by themselves, and a line says how many ("N bulls unused. Wrong? Tap them.") with buttons to tap the bulls that took two or the bulls you fired at. Under them, **Loads on this sheet** sets **One load**, **One a row**, **One a column** or **I will pick bulls** (shift-click the bulls, then choose a load), and the sheet shows each row's or column's load beside it. A line reads it back, for example "GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Load A to Load E."
 
 A sheet with one scoring bull takes a group. Every shot on it goes to that bull, however far out, and the review asks nothing about how many there are; say how many you fired, in Rounds fired, and a count that disagrees names the mark most likely to hold two.
 
@@ -202,8 +202,9 @@ To move around the sheet, a mouse wheel zooms about the pointer, and a touchpad'
 In the side panel you also set:
 - the caliber, as the bullet's diameter;
 - the shot distance;
-- the rifle, barrel and load, from your records;
-- the rounds fired, as a check on the count.
+- the rifle and barrel, in one list with the barrel that is on now first, and the load, from your records;
+- the rounds fired, as a check on the count;
+- at the bottom, in a closed fold, **For the hole size studies**: the paper and the backing. They are recorded only and change no detection, so hole sizes can be compared later by paper and backing. **Remember these for my next sheet** is on unless you turn it off.
 
 When the marks are right, Accept and analyze. Anything still open stays open: the analysis names it, and the sheet crumb goes back to it.
 
@@ -225,8 +226,10 @@ included. A figure's name still explains it when you tap it; only the number swi
 **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:
 - **Sighter**, which sets it aside from the group, as a shot on a sighter bull already is;
 - **Flyer**, which calls it out on the sheet and in the list and **changes no figure**;
-- **Leave out of the figures**, which does change them, and needs a reason: every figure, the report and the saved session then leave the shot out, it stays on the sheet drawn hollow, and each figure's detail gives the figure again with every shot;
-- **Not a shot**, for a staple, a tear or a pen mark.
+- **Leave out of the figures**, which does change them and asks no reason (a reason stored earlier is shown, read only, and still printed in reports): every figure, the report and the saved session then leave the shot out, it stays on the sheet drawn hollow, and each figure's detail gives the figure again with every shot;
+- **Delete, not a hole**, for a staple, a tear or a pen mark. The mark stays at the end of the Shots list with **It is a hole**, and Undo works. **Remove the mark** deletes it fully.
+
+In the Shots list each shot is a short row (across, up and down, distance from its own bull). Click a row, or the shot on the sheet, to open it in place: the bull (nearest first), its place in the firing order, **Counted**, and where it came from (Found by GroupLab, moved by you, or added by you). The firing order is what **In the order fired** uses when there is no chronograph string.
 
 Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are two different decisions, and GroupLab will not quietly make the second one for you because you made the first.
 
@@ -250,8 +253,7 @@ readings were paired in. Its why lists the readings' own spread, the solver's he
 range errs wide, never narrow. It also says which conditions were used and where they came from, or that the standard day was assumed.
 **Velocity band**, beside the plot's other toggles, draws the band velocity alone would make about the group center in amber, with the
 measured spread as dotted lines; it starts on and is remembered. On the phone the same is a card above All figures, with Velocity band
-under the plot; its Add readings opens a page to import your chronograph's file or type the readings. On the computer, **Add readings**
-opens Ballistics with the **Chronograph** section in view and outlined for a moment: import a file from your chronograph (CSV, TXT
+under the plot; with no readings its **Import a file** and **Type them in** open a page to import your chronograph's file or type the readings. On the computer, with no readings the block says what readings add and offers **Import a file**, **Type them in** and a place to drop a Garmin Xero, LabRadar or CSV file. Type them in opens a box for the speeds in the order fired ("12 of 23 entered"), and **Match to shots** pairs them as Ballistics proposes. Ballistics' **Chronograph** section is still there: import a file from your chronograph (CSV, TXT
 or Excel), or paste the velocities, then **Accept the mapping**.
 
 **Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
@@ -291,7 +293,7 @@ It says what to dial when the group's center is far enough from the aim to be to
 
 ## 6. Sessions and the report
 
-Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. **After that, and after any change, it saves itself**: the status bar says when ("Saved 12 seconds ago in grouplab.db"), that it is safe to close, and **Show in folder** opens the folder that holds every session. In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes. Session records, in the rail, lists them newest first:
+Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. **After that, and after any change, it saves itself**: the status bar says when ("Saved 12 seconds ago in grouplab.db"), that it is safe to close, and the ··· menu at the top right has **Open the session's folder**. In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes. Session records, in the rail, lists them newest first:
 - filter them by rifle and by load;
 - open one back to its analysis, which needs no image;
 - delete one, after GroupLab asks.
@@ -300,7 +302,7 @@ Accept and analyze saves the sheet as a session: the marking with every edit, it
 
 The analysis's **Report** button saves the session as a PDF, the full report or one page. **Full report:**
 - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
-- **Page 2:** the shot table, the exclusions with their reasons, any decisions left unmade, the registration and every "why".
+- **Page 2:** the shot table, the exclusions (with their reasons where one is stored), any decisions left unmade, the registration and every "why".
 
 Every line on it is one the screen shows.
 
@@ -348,7 +350,7 @@ four, **Not this group**, **A shot of this group** (then the shots to choose fro
 Changing one mark never changes another without saying so: choosing a shot another reading has swaps the two and says so, and taking a
 reading off its shot says that shot now has no reading. Press **Accept the mapping** on the computer, or **Keep this pairing** on the
 phone; **Leave unpaired** keeps the readings with no shot beside any of them. The readings' own spread becomes the load's velocity SD,
-and Velocity and the vertical uses them. On the phone the same is under Velocity and the vertical's **Add readings**.
+and Velocity and the vertical uses them. On the phone the same is under Velocity and the vertical's **Import a file** and **Type them in**.
 
 ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)
 
@@ -527,8 +529,7 @@ names differ a little between versions):
 picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.
 
 **The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
-number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole and a line from each bull to its holes. Tap a
-bull, a hole or a line and all three light up, with where that bull's shots landed said under the picture; **Bull by bull** in the
+number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole and a line from each hole to its bull; **Lines to bulls** turns them off. Unsure lines are dashed in orange with a **?**. In Fix holes, **Next unsure hole** goes to the next one, tapping a bull chooses it, and tapping holes gives them to it or takes them away; **Done with bull C3** ends it. **Bull by bull** in the
 figures does the same from a list, which is the way to check which bull each shot was given to. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
 then **Add a hole here**, or **Remove this hole**, with **Undo** for each. After adding or moving a hole, GroupLab asks which bull it
 was fired at, its own choice first. Each hole's circle is drawn at your bullet's diameter, so a
@@ -537,7 +538,7 @@ hole** leaves the circle where it was: drag the circle itself with your finger, 
 where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge; **Put the hole here** drops
 it and **Cancel** puts it back. On the computer, every hole's circle is the caliber's size too once one is set, with the size GroupLab
 measured dashed beside it, and a hole dragged with the select tool leaves the same dashed ghost. **Done** takes
-the changes back to the result, which measures again; leaving any other way asks whether to keep them. From the result: the bulls you fired at, Shots Needed to Zero, Ballistics with the group carried in, sharing
+the changes back to the result, which measures again; leaving any other way asks whether to keep them. From the result: How you shot this sheet (the same two parts as the computer's Groups section, loads included), Shots Needed to Zero, Ballistics with the group carried in, sharing
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result. Several files with the same columns can be chosen at once and are read as one group.
 

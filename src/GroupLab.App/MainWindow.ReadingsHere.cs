@@ -191,4 +191,19 @@ public sealed partial class MainWindow
     }
 
     internal string ReadingsCountText => readingsCount.Text ?? "";
+
+    /// <summary>For the screenshot walk: the box closed and emptied again.</summary>
+    internal void CloseReadingsHere()
+    {
+        readingsOpen = false;
+        readingsHere.Text = "";
+        ShowVelocity(session.State);
+    }
+
+    /// <summary>For the screenshot walk: the speeds typed into a box that is open, as Type them in opens it.</summary>
+    internal void OpenReadingsHere(string text)
+    {
+        TypeReadingsHere(text);
+        ShowVelocity(session.State);
+    }
 }

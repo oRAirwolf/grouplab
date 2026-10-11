@@ -1754,6 +1754,14 @@ public sealed partial class MainWindow : Window
     /// <summary>The list of shots, for the headless tests.</summary>
     internal StackPanel ShotList => shotList;
 
+    /// <summary>For the screenshot walk: the open row of the Shots list scrolled into view.</summary>
+    internal void BringShotsIntoView()
+    {
+        shotList.Children.OfType<Border>().FirstOrDefault()?.BringIntoView();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        shotList.Children.OfType<Grid>().FirstOrDefault()?.BringIntoView();
+    }
+
     /// <summary>The disclosure holding the reference figures, for the headless tests.</summary>
     internal Expander MoreFigures => moreFiguresPanel;
 

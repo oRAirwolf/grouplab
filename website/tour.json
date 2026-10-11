@@ -116,7 +116,7 @@
     ],
     [
      "Setup, at the top of the panel",
-     "Caliber, shot distance and rounds fired come first, each saying in a line what it unlocks. One that matters and is still empty is outlined and says needed, until you answer it or say not known. Rifle, barrel and load, the paper and what was behind it sit under them."
+     "Caliber, shot distance and rounds fired come first, each saying in a line what it unlocks. One that matters and is still empty is outlined and says needed, until you answer it or say not known. Rifle and barrel are one list, with the barrel on now first, then the load. The paper and the backing wait at the bottom in a closed fold, For the hole size studies, which records them only, changes no detection and is remembered for the next sheet."
     ],
     [
      "The count at the top",
@@ -127,20 +127,28 @@
      "One question at a time, in order, each saying what GroupLab thinks and why. The buttons are the answers. Here it has found 24 marks on a sheet that takes 25, nobody has said how many rounds were fired, and it has put its best candidate first with the evidence for it."
     ],
     [
+     "Which bull each shot belongs to",
+     "A thin line runs from every hole to its bull, and Lines to bulls switches them off. A line worth a second look is dashed in orange with a question mark beside the hole, and Next unsure hole goes to the next one. Click a bull to choose it: it gets a blue ring, its lines turn blue, the others fade, and clicking holes gives them to it or takes them away until you press Done or Escape."
+    ],
+    [
+     "How did you shoot this sheet?",
+     "Three cards: one shot on each bull I used, some bulls took two or more (then tap those bulls), or every hole to its nearest bull. Bulls left blank are found by themselves, with buttons to tap the ones that took two or the ones you fired at. Loads on this sheet sets one load, one a row, one a column, or the bulls you pick, and a line reads back what GroupLab will make of it."
+    ],
+    [
      "The numbered list underneath",
      "Every question still to answer, the current one marked NOW and the next marked NEXT."
     ],
     [
      "The keyboard line",
-     "C pans and V selects, side by side under the left hand. Space moves to the next item, Enter takes the first choice, a bull's number reassigns the selected shot, N marks it not a shot. Faster than the mouse once a sheet has a dozen questions."
+     "C pans and V selects, side by side under the left hand. Space moves to the next item, Enter takes the first choice, a bull's number reassigns the selected shot, N marks it not a hole. Faster than the mouse once a sheet has a dozen questions."
     ],
     [
      "Selected shot",
      "Everything known about the one you have picked: where it is, how wide the hole is, how many holes' worth of ink it contains, and how far it is from anything else. The three chips say whether it was detected, corrected by you, or added by hand."
     ],
     [
-     "Called flyer and Exclude",
-     "Marking a shot you called as a flyer, or leaving it out of the measurement. GroupLab keeps it on the sheet and says so in the analysis rather than deleting it."
+     "Called flyer and Counted",
+     "Marking a shot you called as a flyer, or turning Counted off to leave it out of the measurement, which asks no reason. GroupLab keeps it on the sheet and says so in the analysis rather than deleting it; a reason stored earlier is shown, read only. Delete, not a hole takes a staple or a tear away, and Remove the mark deletes it fully."
     ],
     [
      "Scale",
@@ -242,6 +250,16 @@
      "which-target",
      "Which target is this? asked calmly over a picture GroupLab did not print, with Mark it by hand first",
      "A picture with no GroupLab marks is not an error: GroupLab asks which target it is, with Mark it by hand first, then It is a store-bought target and It is a GroupLab sheet. No warning and no amber."
+    ],
+    [
+     "groups",
+     "The Groups section: How did you shoot this sheet? with three answers, the bulls left blank, and Loads on this sheet",
+     "How did you shoot this sheet? has three answers: one shot on each bull used, some bulls took two or more, or every hole to its nearest bull. Here two bulls took two, tapped on the sheet. Under the answers, the bulls left blank, which GroupLab finds and you correct by tapping; then Loads on this sheet, one load, one a row, one a column or bulls you pick; and a line reading back what GroupLab will make of it."
+    ],
+    [
+     "shots-open",
+     "The Shots list, one shot open with its bull, its place in the firing order, Counted and Delete, not a hole",
+     "The Shots list is a short row for each shot: across, up or down, and how far from its own bull. Clicking a row, or the shot on the sheet, opens it: its bull with the nearest first, when it was fired, Counted, where it came from, and Delete, not a hole, which keeps the mark and can be undone."
     ]
    ]
   },
@@ -273,7 +291,7 @@
     ],
     [
      "Velocity and the vertical",
-     "How much of the group's up-and-down spread comes from velocity alone, from the session's chronograph readings and the load's BC at the distance shot: the share in amber with its range, a meter from none to all of it, and the measured vertical spread beside what velocity alone would make. Where each reading was paired with its shot, a chart of height against velocity says whether the shots follow the solver. Without readings, the distance or the BC it says which is missing, with a button to it; where the range reaches all of the spread it says the data cannot tell."
+     "How much of the group's up-and-down spread comes from velocity alone, from the session's chronograph readings and the load's BC at the distance shot: the share in amber with its range, a meter from none to all of it, and the measured vertical spread beside what velocity alone would make. Where each reading was paired with its shot, a chart of height against velocity says whether the shots follow the solver. Without readings it says what they add and offers Import a file, Type them in (speeds in the order fired, then Match to shots) and a place to drop a Garmin Xero, LabRadar or CSV file; without the distance or the BC it says which is missing, with a button to it; where the range reaches all of the spread it says the data cannot tell."
     ],
     [
      "Advanced, closed until you open it",
@@ -289,7 +307,7 @@
     ],
     [
      "Shots, from their own bull",
-     "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold. Shots and clicks beneath it lists each shot with its clicks and a Counted tick, and Share a picture puts a results box and the mean radius circle on the photograph."
+     "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold. Shots and clicks beneath it lists each shot as a short row; open one to change its bull, say its place in the firing order, turn Counted off or choose Delete, not a hole. Share a picture puts a results box and the mean radius circle on the photograph."
     ],
     [
      "Own window, Show work, Report and Export",
@@ -326,6 +344,16 @@
      "velocity",
      "Velocity and the vertical under the group's figures, with the velocity band on the plot and a chart of height against velocity",
      "With a group's chronograph readings, Velocity and the vertical: about how much of the vertical comes from velocity alone, the two spreads side by side, and each shot's height against the reading paired with it, beside the solver's slope. The amber band on the plot is what velocity alone would make."
+    ],
+    [
+     "bull-lines",
+     "A bull chosen on the sheet, ringed and its lines blue, the other bulls dimmed, with the panel saying what a click does",
+     "Every hole has a thin line to the bull it was given; one worth a second look is dashed in orange with a question mark. Clicking a bull chooses it: its ring and lines turn blue and the others dim. Clicking a hole then gives it to that bull, as here with its neighbor's hole, or takes one of its holes away. The panel says which bull is chosen, how many shots it has, and how many holes are unsure."
+    ],
+    [
+     "readings-here",
+     "Velocity and the vertical with no readings yet: Import a file, Type them in, a place to drop a file, and speeds typed in its box",
+     "With no chronograph readings, Velocity and the vertical says what they add and takes them right here: Import a file, Type them in, or drop a Garmin Xero, LabRadar or CSV file on it. Typed speeds are counted against the shots, and Match to shots pairs them as Ballistics would and keeps them."
     ]
    ],
    "mobile": {
@@ -346,7 +374,7 @@
      ],
      [
       "Velocity and the vertical",
-      "A card above All figures, the same as the desktop's block: how much of the vertical comes from velocity alone, from the session's readings. Add readings opens a box to paste them in, and Velocity band under the plot turns its band on and off."
+      "A card above All figures, the same as the desktop's block: how much of the vertical comes from velocity alone, from the session's readings. Import a file and Type them in open the readings page, and Velocity band under the plot turns its band on and off."
      ],
      [
       "Share this session, Another target",
@@ -546,8 +574,8 @@
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [
-     "Rifles, Barrels, Loads",
-     "Three lists behind three buttons. A session names one of each."
+     "Rifles and Loads",
+     "Two tabs. A session names a rifle with its barrel, and a load."
     ],
     [
      "The list on the left",
@@ -555,7 +583,11 @@
     ],
     [
      "The form on the right",
-     "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; twist, scope and click value matter for the ballistics page."
+     "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; scope and click value matter for the ballistics page."
+    ],
+    [
+     "Barrels on this rifle",
+     "A table under the rifle: the barrel that is on now (a radio button), its name, length, twist, direction and rounds, Edit, and Add a barrel. The rifle takes its length and twist from the barrel on now. Barrels from earlier versions were moved under their rifles; any it could not place wait under a rifle named Barrels not yet on a rifle."
     ],
     [
      "Notes",
@@ -569,6 +601,7 @@
    "steps": [
     "Add a rifle with just its name if that is all you have.",
     "Fill in sight height and the distance it is zeroed at when you want zero corrections.",
+    "Add a barrel to the rifle and mark the one that is on now.",
     "Add the load, with muzzle velocity and ballistic coefficient if you want a dope table.",
     "Press Save. The record is then offered on every new session."
    ],

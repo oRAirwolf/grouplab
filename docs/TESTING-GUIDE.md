@@ -59,7 +59,7 @@ Both packages bring a `samples` folder.
 
 **Tell it the caliber if you know it.** It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On one small-caliber test scan naming it is the difference between nineteen holes found and twenty-four, and on another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in paper is a good deal smaller than the bullet that made it.
 
-**Then click a hole.** A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by hand, leave a note, or mark it a sighter, a flyer or not a shot. A flyer is called out and stays in the group; leaving a shot out of the figures is a separate, deliberate choice that needs a reason. Everything you do shows a message with **Undo** on it, and Ctrl+Z, or Command Z on a Mac, works everywhere.
+**Then click a hole.** A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by hand, leave a note, or mark it a sighter, a flyer or not a hole. A flyer is called out and stays in the group; leaving a shot out of the figures is a separate, deliberate choice, and it asks no reason. Every hole has a thin line to its bull; a dashed orange one with a ? is worth a look, and clicking a bull then holes moves them to it. Everything you do shows a message with **Undo** on it, and Ctrl+Z, or Command Z on a Mac, works everywhere.
 
 ## Reading what it shows you
 

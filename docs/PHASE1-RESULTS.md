@@ -1626,6 +1626,71 @@ beside a table of hole results. No figures: each says why in `no_figure`. Claims
    now fails on any command in `for-alan.md`, its archive or RESTORE.md that reads or copies from a backup folder without sudo, and
    CLAUDE.md carries the rule that no step in a chained paste fails without printing something.
 
+## Entry 407: Alan's picks from the open screen decisions canvas, built (2026-10-11)
+
+Alan picked 1A, 2B, 3A, 4A, 5B, 6A and 7A; the seven DESIGN NEEDED items in `for-alan.md` are marked decided and question 88 is
+answered (7A) and archived. One commit a section, then this one.
+
+1. **Which bull each shot belongs to (4A).** `BullLines` (Core) draws every line on both platforms. **What unsure means in the code:**
+   "not sure" is the matcher's own `ShotAssignmentDetail.Ambiguous`, set when the hole was given a bull other than its nearest or its
+   two nearest bulls are within `ReviewQueue.ContestedMarginInches` (0.15 in) of each other, the same flag the review queue raises as
+   contested; no new score. "Long" is more than twice the sheet's median line and more than a quarter of the spacing from its bull to that
+   bull's nearest neighbour, so a whole group an inch low lights nothing. "Crosses into a neighbour" is the line passing within 0.45 of a
+   neighbour's spacing of its center: a bull's rings fill at most half the distance to the next bull, and the marking does not carry the
+   ring geometry. A hole whose bull a person chose, or whose contested item was dismissed, is never drawn unsure. Distances are on the
+   target where a scale is set. **Taking a hole away** (`MarkingSession.TakeFromBull`): the person's choice is dropped, the hole goes back
+   to its nearest bull and the sheet is matched again under its rule, as any unchosen shot is; where that puts it straight back on the bull
+   it was taken from, it goes to its next nearest bull instead and is held there, since taking it away has to take it away. One undo step.
+   **Colors:** the canvas's #2f7fe0 and #c46a00 have the same lightness (relative luminance 0.21 and 0.22), so the chosen blue is #1f4fa8
+   (0.09): 6.8 to 1 on the paper, orange 3.4 to 1, and 2.0 to 1 between them; the paper is the same in both themes (`ThemeTests`). The
+   phone's lines were orange-red and the lit bull amber, which an orange unsure line could not stand out from, so plain lines are grey and
+   the lit or chosen bull blue there too. **The lasso is kept**: putting many shots on a bull at once is one gesture with it and one click
+   a hole without it. The "Which bull was this hole fired at?" question on Add a hole is unchanged.
+2. **The Groups section (1A).** `SheetReading` says it; the rules underneath (`AssignmentRule`, `SubgroupMap`) are unchanged, so saved
+   sessions read the same. **Finding unused bulls by themselves:** with nothing said, the bulls fired at are the whole-sheet reading's
+   (entry 229), and where the holes fit more than one set equally the "Which bulls did you fire at?" question is still asked (entry 376 A2);
+   that reading already existed and is what the figures used, so the explicit step is kept as the correction, "Tap the bulls you fired at",
+   which makes the set the person's own, exactly the rule "Bulls you fired at" made. The offset fix never loses its input. "Only the bulls I
+   aimed at" folded into answer one with that tap, as the code allows. "Some bulls took two or more" takes two on each bull tapped; three or
+   more is not offered by a tap (the old typed box did not offer it either). Phone: the result row is "How you shot this sheet".
+3. **The Shots list (2B).** `ShotList` (Core) gives the rows and the open row's parts. The Fired list is new data: `MarkedShot.Fired`, kept
+   in the marking file, two shots never holding one place, and used by "In the order fired" when no chronograph string says the order.
+   "Delete, not a hole" is `SetNotAShot`, so the mark, its provenance and Undo are kept and the mark stays at the end of the list. The
+   tick boxes stay (they put several shots on a bull at once). A shot on the phone's Shots page opens from its row; the phone's result
+   picture is for looking only, so a shot there does not open a row.
+4. **Selected shot and Show in folder (3A).** The reason list is gone; Counted off stores "left out by the shooter", which no screen
+   prints as a reason, and a reason already stored is shown read only and still printed by reports and exports. The Selected shot area's
+   "Not a shot" became "Delete, not a hole" and its full delete "Remove the mark", so two buttons are never both called Delete. "Open the
+   session's folder" is in the ··· menu.
+5. **Barrels (5B).** Schema version 3 (`SessionStore.Upgrades`, `docs/SESSION-SCHEMA.md`). **Found on the way:** the Equipment screen's
+   fields from entry 131 section 7 were never in the database (a barrel's length, twist, direction, install date and notes, a rifle's
+   cartridge, scope, stock and notes, a load's bullet, brass, powder, charge, primer, lengths and notes), so they were dropped at every
+   save since entry 112 moved the records into it; version 3 keeps them. Before any upgrade GroupLab copies the database beside itself
+   (`grouplab.pre-v2.db`, SQLite's `VACUUM INTO`), recorded in RESTORE.md with how to put it back. `BarrelMigration` then runs once:
+   **the migration on Alan's desktop database, run on a copy** (deleted after): rifles 1 to 2, barrels 1 to 1, barrels naming no rifle
+   1 to 0; the one barrel names no rifle and no session names it, so it goes under "Barrels not yet on a rifle", which Alan moves by
+   choosing its rifle; 21 sessions, none naming a barrel, all name the same rifle and barrel as before. On a test database of version 2
+   (`AVersionTwoDatabaseIsCopiedThenEveryBarrelGoesUnderARifle`): rifles 2 to 3, barrels 2 to 3, unplaced 2 to 0, one placed by its
+   sessions, one under the new rifle, one made from a rifle's own twist, every session unchanged. The rifle keeps the length and twist
+   fields, copied from the barrel on now, because the ballistic solver reads them there. The entry 307 export carries the barrel on each
+   rifle (an added field, so version 1 still, and older builds still read it); an older file's barrels are placed on import. The phone
+   has no barrel screens. Kept though the entry's list for a rifle's page did not name them: rifle or pistol, manufacturer and scope
+   unit, because the form needs the scope unit for the click and the other two are a person's data.
+6. **Paper and backing (6A).** The fold is closed at first and not remembered open; "Remember these for my next sheet" is remembered.
+   The phone could not record paper and backing before; it can now, in the same fold under the caliber and distance.
+7. **Chronograph readings on the analysis (7A).** Import a file, Type them in, and a drop area naming Garmin Xero, LabRadar and CSV (the
+   formats `ChronographFiles` reads; BulletSeeker is Experimental and not named). Match to shots proposes the pairing with
+   `ChronographMarks`, Ballistics' own, and keeps it; a reading's pairing is changed in Ballistics as before. A workbook of several
+   strings still goes to Ballistics to choose one. Phone: Import a file and Type them in on the velocity card, in the same place as the
+   desktop's block, both opening its readings page.
+8. **Pictures.** The walk draws four new views for the Features page (`bull-lines`, `groups`, `shots-open`, `readings-here`) and the
+   `equipment` picture now shows a rifle's page with its barrels.
+
+## Entry 408: request 95 confirmed on the phone (2026-10-11)
+
+Alan checked entry 401's Fix holes fix on nightly 184 or later: adding a hole asks which bull, and Fix holes comes back with the
+picture. Request 95 is closed and archived; the fix is confirmed on real hardware.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

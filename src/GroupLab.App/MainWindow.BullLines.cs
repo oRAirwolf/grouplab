@@ -92,6 +92,14 @@ public sealed partial class MainWindow
         Refresh();
     }
 
+    /// <summary>For the screenshot walk: the block scrolled into view.</summary>
+    internal void BringBullLinesIntoView()
+    {
+        bullDone?.BringIntoView();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        linesToBulls.BringIntoView();
+    }
+
     /// <summary>For the headless tests: the block's words, the banner first.</summary>
     internal IReadOnlyList<string> BullLinesText => [.. new[] { bullBanner.Text, bullHolds.Text, unsureCount.Text }.Where(t => !string.IsNullOrEmpty(t)).Select(t => t!)];
 

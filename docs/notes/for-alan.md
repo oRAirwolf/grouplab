@@ -1,4 +1,4 @@
-**Open: 25.** Most urgent today: **95**, two minutes on the phone to check the Fix holes fix, once the next nightly is installed. Then **97**, two pastes on the server for the upload intake worker (ten minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **97**, two pastes on the server for the upload intake worker (ten minutes). Then **94**, three scans and three photographs for the photo accuracy work (fifteen minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -56,20 +56,22 @@ Send back: the scans and photos into the same folder, and one line on anything t
 - **Fixed**: panning a zoomed target no longer drags the screen; the "updated" note hides by itself; a selected shot says how far it is
   from its own bull. **Paper and "what was behind it" do not help detection**: they are recorded only, so hole sizes can later be compared
   by paper and backing. Whether to keep them on the setup screen is in the list below.
-- **DESIGN NEEDED** (for planning's concepts; nothing built):
+- **DESIGN NEEDED**: all decided 2026-10-11 from the open screen decisions canvas (1A, 2B, 3A, 4A, 5B, 6A, 7A) and built in entry
+  407; item 1 was built in entries 386 to 388. The canvas's numbers differ from these: canvas 1 is item 2 here, 2 is 3, 3 is 5, 4 is 4,
+  5 is 6, 6 is 7, and 7 is question 88.
   1. **Tabs to open several targets at once** (Unholy). Today the window holds one target; Sessions switches between them.
-  2. **The Groups section** (Unholy finds it unclear). Today: "Shots per bull" says how many shots each bull took, which decides whether
+  2. **Decided 2026-10-11, 1A, built in entry 407 section 2.** **The Groups section** (Unholy finds it unclear). Today: "Shots per bull" says how many shots each bull took, which decides whether
      one-to-one matching is forced; "Its row" and "Its column" choose a whole row or column of bulls for a load; "Bulls you fired at" is
      what lets the whole-sheet offset run on a part-shot sheet (entry 130). Removing it needs those three said some other way.
-  3. **Shots as one row per shot** (bull and shot number dropdowns, Delete for "Not a shot"). Today "Not a shot" keeps the mark and its
+  3. **Decided 2026-10-11, 2B, built in entry 407 section 3.** **Shots as one row per shot** (bull and shot number dropdowns, Delete for "Not a shot"). Today "Not a shot" keeps the mark and its
      provenance and can be undone; a Delete would lose that record.
-  4. **Lines from each bull to its holes, and tap a bull to add or remove its shots** (you, at the range). Today the lasso puts chosen
+  4. **Decided 2026-10-11, 4A, built in entry 407 section 1.** **Lines from each bull to its holes, and tap a bull to add or remove its shots** (you, at the range). Today the lasso puts chosen
      shots on a bull (desktop); the phone has no way to give a shot to a bull but moving it.
-  5. **The "Selected shot" area's dropdown** (the reason a shot is left out) and **Show in folder** (opens the saved session's folder):
+  5. **Decided 2026-10-11, 3A, built in entry 407 section 4.** **The "Selected shot" area's dropdown** (the reason a shot is left out) and **Show in folder** (opens the saved session's folder):
      Unholy would remove both.
-  6. **Barrels under their rifle** instead of their own section. Today rifles, barrels and loads are three lists, a barrel chosen per
+  6. **Decided 2026-10-11, 5B, built in entry 407 section 5.** **Barrels under their rifle** instead of their own section. Today rifles, barrels and loads are three lists, a barrel chosen per
      session.
-  7. **Paper and "what was behind it" on the setup screen**: keep (for the hole size studies) or remove.
+  7. **Decided 2026-10-11, 6A, built in entry 407 section 6.** **Paper and "what was behind it" on the setup screen**: keep (for the hole size studies) or remove.
 
 **THE WEEKLY BUDGET, ENTRIES 360 AND 361** (not a request): Code now runs from a terminal, where the status line keeps the week's
 reading fresh every minute. A check before every action refuses to go on at **85%**, unless a block already under way (above all a
@@ -210,7 +212,7 @@ that could print the same number twice were fixed the same way.
 **WHERE TO LOOK** (entry 323, not a request): **Velocity and the vertical** is built as you chose, Desktop B and Phone B. On the
 desktop it is the block under the group's figures; add a group's chronograph readings on Ballistics, Chronograph, and it shows how much of
 the vertical is velocity, with the amber band on the group picture and its Velocity band switch beside CEP and Extreme spread. On the
-phone it is the card above All figures, with Add readings and a Velocity band chip under the plot. It is in the next nightly; the phone
+phone it is the card above All figures, with Import a file and Type them in (Add readings before entry 407) and a Velocity band chip under the plot. It is in the next nightly; the phone
 check rides along with request 50's sitting.
 
 PUBLIC BETA AND THE STORE (entries 335 to 337, not a request): Apple approved the Public Beta, and both TestFlight groups now get each
@@ -257,18 +259,6 @@ each of which should print `200`.
 **To undo it,** with the `done:` folder in place of `<backup>`: each file it listed is under `<backup>/files/` at its own path; `sudo cp
 -a` each back over the installed one, then `sudo systemctl daemon-reload`, and if the nginx include was put back, `sudo nginx -t` and
 then `sudo systemctl reload nginx`.
-
-## 95. Check the Fix holes fix on the phone, about two minutes, once the next nightly is installed (entry 401, error report 27)
-
-**Why:** the blank screen you hit after adding a hole in Fix holes is fixed: the question "Which bull was this hole fired at?" had no
-bull buttons on it, and closing it left the page blank, so the hole you added was lost (your earlier marking was kept). A test now covers
-it, but only your phone can show it working there.
-
-**Steps:** install 0.2.0-nightly.184 (or later) in GroupLab Dev. Open any target with holes, tap Fix holes, put the
-crosshair on a spot with no hole and add one. The question should list bulls, with GroupLab's choice first. Pick one, then tap Done.
-
-**A good answer:** the bulls are listed, Fix holes comes back with the picture after you pick, and the result shows one more shot. If
-anything goes blank again, send diagnostics as before and say so.
 
 ## 94. Three scans and three photographs, about fifteen minutes, whenever suits (entry 399)
 

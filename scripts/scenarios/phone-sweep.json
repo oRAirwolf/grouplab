@@ -47,7 +47,7 @@
     { "do": "screenshot", "name": "10-shots" },
     { "do": "tree", "name": "10-shots" },
     { "do": "press", "name": "Back to the result" },
-    { "do": "press", "name": "Add readings" },
+    { "do": "press", "name": "Type them in" },
     { "do": "sleep", "seconds": 1 },
     { "do": "screenshot", "name": "11-chronograph" },
     { "do": "tree", "name": "11-chronograph" },

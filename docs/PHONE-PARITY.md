@@ -23,7 +23,10 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Every hole found, and every one yours to change | `every-hole` | on the phone | entry 291 section 2: changed on a page of their own, Fix holes, under a fixed crosshair with zoom and undo; the result's picture takes no touch | on iOS |
 | The bulls you aimed at | `aimed-bulls` | on the phone | entry 259 screen 2, "tap the bulls on the sheet" | on iOS |
 | A sheet shot off by the same amount | `whole-sheet` | on the phone | | on iOS |
-| Which bull each shot belongs to | `bull-lines` | on the phone | entry 376: the lines, a tap lights bull, holes and lines, Bull by bull, the bull picker in Fix holes | on iOS |
+| Which bull each shot belongs to | `bull-lines` | on the phone | entry 407 section 1: a line from every hole to its bull, unsure ones dashed in orange with a ?, Lines to bulls on the result, Next unsure hole and tap a bull then holes in Fix holes, Bull by bull | on iOS |
+| How you shot the sheet, in plain words | `groups-plain` | on the phone | entry 407 section 2: the result row How you shot this sheet opens the same two parts, loads included | on iOS |
+| Barrels under their rifle | `barrels-under-rifles` | left out | the phone has no barrel screens; the rifle and barrel are chosen on the computer | left out |
+| Paper and backing, kept for the next sheet | `paper-backing` | on the phone | entry 407 section 6: the same closed fold under the caliber and distance on the camera page | on iOS |
 | Works in your scope's unit | `scope-unit` | on the phone | entry 294 section 1: the first run asks mil or MOA with the length beside it, Units at the top of Settings, the rifle form's scope unit and click chips, and every aiming figure in the scope's unit | on iOS |
 | Tap a number to switch units | `unit-tap` | on the phone | entry 273: tiles and figure rows, press and hold for every unit, the note at the bottom | on iOS |
 | Check your printer once, for real inches from photos | `printer-scale` | on the phone | entry 271: the ruler card and a scan's offer on the result, the sentence on Capture; the printer is chosen by the last one kept | on a device |
@@ -37,6 +40,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The figures you read off a target | `six-figures` | on the phone | | on iOS |
 | Shots Needed to Zero | `shots-to-zero` | on the phone | entry 259 screen 3, its own page | on iOS |
 | Velocity and the vertical | `velocity` | on the phone | entry 323 section 3, Phone B: a card above All figures, the band's chip under the plot, readings pasted on a page of their own | on iOS |
+| Chronograph readings where the figures are | `readings-on-analysis` | on the phone | entry 407 section 7: the velocity card offers Import a file and Type them in in the same place, both opening its readings page; no drop area on a phone | on iOS |
 | Pair readings with shots, a row per reading | `chrono-pairing` | on the phone | entry 351, Pairing A: a row per reading with one mark to tap, a sheet from the bottom with the computer's four choices, a swap said, Keep this pairing and Leave unpaired; photographed at the next sitting | on iOS |
 | CEP circles, any percent | `cep` | on the phone | entry 259 screen 1, full figures | on iOS |
 | Every figure explained | `why` | on the phone | entry 259 screen 1, the explanation sheet | on iOS |

@@ -56,8 +56,17 @@ public sealed class ProvenanceTests : IDisposable
         var text = window.GetLogicalDescendants().OfType<TextBlock>().ToList();
         Assert.Contains(text, t => t.Text == "3 shots: 1 detected, 1 corrected, 1 placed by hand.");
         Assert.DoesNotContain(text, t => t.Text?.StartsWith("Placed:", StringComparison.Ordinal) == true);
-        var words = text.Where(t => t.Classes.Contains(AppStyles.Faint)).Select(t => t.Text).ToList();
-        Assert.Equal(["corrected", "detected", "by hand"], words);
+        // Entry 407 section 3: a row says where its shot came from when it is opened, one row at a time.
+        var said = new List<string>();
+        foreach (int id in window.ShotList.Children.OfType<Grid>().SelectMany(g => g.Children.OfType<Button>()).Where(b => b.Tag is int).Select(b => (int)b.Tag!).ToList())
+        {
+            window.Canvas.Selected = id;
+            window.RefreshForTests();
+            Dispatcher.UIThread.RunJobs();
+            said.Add(window.ShotList.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").First(t => t.StartsWith("Found by", StringComparison.Ordinal) || t.StartsWith("Added by", StringComparison.Ordinal)));
+        }
+
+        Assert.Equal(["Found by GroupLab, moved by you", "Found by GroupLab", "Added by you"], said);
         window.Close();
     }
 }

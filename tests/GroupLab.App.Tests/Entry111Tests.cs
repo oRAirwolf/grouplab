@@ -26,6 +26,9 @@ public partial class Entry111Tests
             .Where(t => t.IsEnum && t.Namespace?.StartsWith("GroupLab", StringComparison.Ordinal) == true)
             .SelectMany(Enum.GetNames)
             .Where(n => Compound().IsMatch(n))
+            // A product's own name, spelled as its maker spells it, is not an enum name leaking: entry 407 section 7 names the LabRadar on
+            // the analysis's drop area, which is also what ChronographFormat calls its report.
+            .Where(n => n != "LabRadar")
             .Distinct(),
     ];
 
@@ -108,8 +111,9 @@ public partial class Entry111Tests
             window.ShowCompare(false);
             window.BackToEditor();
             Dispatcher.UIThread.RunJobs();
-            Assert.Contains(Words(window), t => t.Contains("excluded as called flyer", StringComparison.Ordinal));
-            Assert.Contains(window.GetLogicalDescendants().OfType<ComboBox>().SelectMany(c => c.ItemsSource?.OfType<string>() ?? []), t => t == "Called flyer");
+            // Entry 407 section 4: a stored reason is shown in words, read only, and no list offers reasons any more.
+            Assert.Contains(Words(window), t => t == "Left out as called flyer.");
+            Assert.DoesNotContain(window.GetLogicalDescendants().OfType<ComboBox>().SelectMany(c => c.ItemsSource?.OfType<string>() ?? []), t => t == "Called flyer");
             window.Close();
         }
         finally

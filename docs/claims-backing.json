@@ -6743,6 +6743,58 @@
   "How GroupLab is built 37 Registering a sheet whose far margin has lifted A lens fit assumes the paper is flat.": {
    "kind": "measured",
    "where": "the description of /research/bent-sheet-registration/; the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
+  },
+  "Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from every hole to the bull it was given, on th": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/BullLines.cs BullLines, LineDoubt; the Lines to bulls switch and the chosen-bull mode in src/GroupLab.App; entry 407 section 1"
+  },
+  "To move holes, click a bull to choose it (a blue ring, its lines blue, the others dimmed), then click a hole to give it to that bull, or click one of its holes ": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/BullLines.cs BullLines, LineDoubt; the Lines to bulls switch and the chosen-bull mode in src/GroupLab.App; entry 407 section 1"
+  },
+  "A line reads it back, for example \"GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Load A to Load E.\" A sheet with one scoring bull t": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SheetReading.cs SheetReading (the read-back line and the three ways of shooting a sheet); entry 407 section 2"
+  },
+  "Type them in opens a box for the speeds in the order fired (\"12 of 23 entered\"), and **Match to shots** pairs them as Ballistics proposes.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.ReadingsHere.cs (Type them in, Match to shots); entry 407 section 7"
+  },
+  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the \u00b7\u00b7\u00b7 m": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs (the \u00b7\u00b7\u00b7 menu has Open the session's folder); entry 407 section 4"
+  },
+  "- **Page 2:** the shot table, the exclusions (with their reasons where one is stored), any decisions left unmade, the registration and every \"why\".": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
+  },
+  "Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from every hole to the bull it was given, on the analysis and in Fix holes.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/BullLines.cs BullLines, LineDoubt; the Lines to bulls switch and the chosen-bull mode in src/GroupLab.App; entry 407 section 1"
+  },
+  "To move holes, click a bull to choose it (a blue ring, its lines blue, the others dimmed), then click a hole to give it to that bull, or click one of its holes to take it away; the block says, for example, \"C3 has 2 shots\".": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/BullLines.cs BullLines, LineDoubt; the Lines to bulls switch and the chosen-bull mode in src/GroupLab.App; entry 407 section 1"
+  },
+  "A line reads it back, for example \"GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Load A to Load E.\" A sheet with one scoring bull takes a group.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SheetReading.cs SheetReading (the read-back line and the three ways of shooting a sheet); entry 407 section 2"
+  },
+  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the \u00b7\u00b7\u00b7 menu at the top right has **Open the session's folder**.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs (the ... menu has Open the session's folder); entry 407 section 4"
+  },
+  "Type them in opens a box for the speeds in the order fired (\"12 of 23 entered\"), and Match to shots pairs them as Ballistics proposes.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
+  },
+  "After that, and after any change, it saves itself : the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the \u00b7\u00b7\u00b7 menu at the top right has Open the session's folder .": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Saving.cs (the ... menu has Open the session's folder); entry 407 section 4"
+  },
+  "Page 2: the shot table, the exclusions (with their reasons where one is stored), any decisions left unmade, the registration and every \"why\".": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
   }
  },
  "rules": [

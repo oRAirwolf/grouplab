@@ -39,7 +39,7 @@ public class BullLinesTests
         Assert.True(line.Doubt.HasFlag(LineDoubt.Long));
         Assert.True(line.Doubt.HasFlag(LineDoubt.CrossesNeighbour));
         Assert.Equal([far.Id], BullLines.Unsure(session.State));
-        Assert.Contains("crosses into a neighbouring bull", BullLines.Words(line.Doubt), StringComparison.Ordinal);
+        Assert.Contains("crosses into a neighboring bull", BullLines.Words(line.Doubt), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -104,6 +104,15 @@ public class BullLinesTests
         Assert.True(after.BullChosen, "taking it away put it straight back");
         session.Undo();
         Assert.Equal(2, session.State.Find(hole.Id)!.Bull);
+    }
+
+    [Fact]
+    public void ANumberedBullIsNamedAsABull()
+    {
+        Assert.Equal("Bull 7 chosen. Tap a hole to give it to bull 7, or tap one of its holes to take it away.", BullChoosing.Banner("7"));
+        var session = new MarkingSession();
+        session.LoadDetections(new LengthReference(new PointD(0, 0), new PointD(100, 0), 1), [new BullAim(1, "7", new PointD(100, 100))], [(new PointD(101, 100), (int?)1)], "a test sheet");
+        Assert.Equal("Bull 7 has 1 shot", BullChoosing.Holds(session.State, 1));
     }
 
     [Fact]

@@ -321,11 +321,15 @@ public class Entry109Tests
                     // Entry 294 section 2: its scope is in mil, a tenth a click, so the zero, the dope and Shots Needed to Zero are pictured
                     // in mil while Settings says MOA; Compare and Settings stay in MOA, so each unit is shown.
                     var rifle = new Rifle("Test rifle", 0.1, GroupLab.Core.Statistics.AngularUnit.Mrad) { SightHeightInches = 1.75, ZeroDistanceYards = 100 };
+                    // Entry 407 section 5: the rifle with two barrels, one of them on now, so Equipment shows a rifle's page with its barrels.
                     window.Book = RecordBook.Empty.With(rifle).With(new Load("Test load", null)
                     {
                         MuzzleVelocityFps = 2710, MuzzleVelocitySdFps = 10, BallisticCoefficient = 0.326, DragModel = GroupLab.Core.Ballistics.DragModel.G7,
                         BcReference = GroupLab.Core.Ballistics.ReferenceAtmosphere.Icao, BulletWeightGrains = 140,
-                    });
+                    }).With(new Barrel("Bartlein", "Test rifle", 412) { LengthInches = 26, TwistInches = 8, TwistDirection = 1 })
+                        .With(new Barrel("Factory", "Test rifle", 1180) { LengthInches = 24, TwistInches = 8, TwistDirection = 1 })
+                        .PutOn("Test rifle", "Bartlein");
+                    rifle = window.Book.FindRifle("Test rifle")!;
                     window.Session.SetEquipment(rifle, null, "Test load");
 
                     // Entry 243 section 1.3, answering question 60: the published Compare loads picture is Alan's own two suppressor sheets,
@@ -349,6 +353,41 @@ public class Entry109Tests
                         window.BackToEditor();
                         window.Canvas.FitToView();
                         Save(window, $"marking-{name}-{size}");
+
+                        // Entry 407 sections 1 to 3, each view's own picture for the Features page (entry 256): a bull chosen with its lines
+                        // and the panel's block; the Groups section with two bulls that took two; a shot open in the Shots list.
+                        // Bull 1 chosen and given bull 2's hole, so its blue line reaches across, zoomed in on the two; undone after.
+                        var scoringBulls = window.Session.State.Bulls.Where(b => b.Scoring).ToList();
+                        var lent = window.Session.State.Shots.First(s => s.IsShot && s.Bull == scoringBulls[1].Index);
+                        window.Canvas.Pick(scoringBulls[0].Index);
+                        BullChoosing.Tap(window.Session, scoringBulls[0].Index, lent.Id);
+                        window.Canvas.ZoomBy(2.5);
+                        window.Canvas.CentreOn(new PointD((scoringBulls[0].Image.X + scoringBulls[1].Image.X) / 2, scoringBulls[0].Image.Y));
+                        Dispatcher.UIThread.RunJobs();
+                        window.BringBullLinesIntoView();
+                        Save(window, $"bull-lines-{name}-{size}");
+                        window.Session.Undo();
+                        window.Canvas.Pick(null);
+                        window.Canvas.FitToView();
+                        window.ChooseShotPattern(ShotPattern.SomeTookMore);
+                        foreach (var two in window.Session.State.Bulls.Where(b => b.Scoring).Skip(2).Take(2).ToList())
+                        {
+                            window.TapBullForGroups(two.Index);
+                        }
+
+                        Dispatcher.UIThread.RunJobs();
+                        window.BringGroupsIntoView();
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"groups-{name}-{size}");
+                        window.ChooseShotPattern(ShotPattern.OnePerBull);
+                        window.Canvas.Selected = window.Session.State.Shots.First(s => s.IsShot).Id;
+                        window.RefreshForTests();
+                        Dispatcher.UIThread.RunJobs();
+                        window.BringShotsIntoView();
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"shots-open-{name}-{size}");
+                        window.Canvas.Selected = null;
+                        window.RefreshForTests();
 
                         // Entry 274, answering question 66: a target GroupLab did not print, marked by hand as a person would: a plain sample
                         // drawn here, with no markers or codes, its scale set from a ring's known width, its bulls and shots placed by hand.
@@ -490,6 +529,12 @@ public class Entry109Tests
                         Save(window, $"analysis-open-{name}-{size}");
                         window.SetEveryWhy(null);
 
+                        // Entry 407 section 7: no readings yet, and the speeds typed on the analysis itself.
+                        window.OpenReadingsHere("2705 2711 2698 2716 2702");
+                        window.BringVelocityIntoView();
+                        Save(window, $"readings-here-{name}-{size}");
+                        window.CloseReadingsHere();
+
                         // Entry 253 section 2: Shots Needed to Zero open, worked out from the test rifle's tenth-mil clicks.
                         window.AdvancedPanel.IsExpanded = true;
                         window.FullFiguresPanel.IsExpanded = true;
@@ -586,8 +631,9 @@ public class Entry109Tests
                         window.ShowBallisticView(MainWindow.BallisticView.Trajectory);
                         window.ShowBallistics(false);
 
-                        // Entry 131 section 7: the Equipment screen, with a rifle and a load on it so the lists are not empty.
-                        window.ShowEquipment(GroupLab.Core.Marking.EquipmentKind.Rifle);
+                        // Entry 131 section 7: the Equipment screen, with a rifle and a load on it so the lists are not empty. Entry 407 section
+                        // 5: the rifle's own page, with its barrels and the one on now.
+                        window.EditRifle("Test rifle");
                         Save(window, $"equipment-{name}-{size}");
                         window.BackToEditor();
 

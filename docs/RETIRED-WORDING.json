@@ -175,6 +175,37 @@
         "docs/RELEASE-NOTES.md",
         "README.md"
       ]
+    },
+    {
+      "phrase": "Shots per bull",
+      "why": "entry 407: the Groups section now asks How did you shoot this sheet? and no longer has a Shots per bull dropdown",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/CLAIMS.md",
+        "docs/OVERNIGHT-2026-09-22.md",
+        "docs/PERFORMANCE.md",
+        "docs/PROOF-CHECKLIST.md"
+      ]
+    },
+    {
+      "phrase": "Show in folder",
+      "why": "entry 407: the bottom bar no longer has it; the \u00b7\u00b7\u00b7 menu has Open the session's folder",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md",
+        "docs/release-note-corrections.json"
+      ]
+    },
+    {
+      "phrase": "Add readings",
+      "why": "entry 407: with no readings the analysis offers Import a file and Type them in",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md"
+      ]
     }
   ],
   "settled": []

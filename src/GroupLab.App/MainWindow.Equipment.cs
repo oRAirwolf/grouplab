@@ -542,6 +542,14 @@ public sealed partial class MainWindow
         ShowEquipmentScreen();
     }
 
+    /// <summary>Opens a rifle's page, with its barrels, for the headless tests and the screenshot walk.</summary>
+    internal void EditRifle(string rifle)
+    {
+        ShowEquipment(EquipmentKind.Rifle);
+        equipmentEditing = rifle;
+        ShowEquipmentScreen();
+    }
+
     /// <summary>Whether the Equipment screen is the one showing.</summary>
     internal bool ShowingEquipment => destination == Destination.Equipment;
 

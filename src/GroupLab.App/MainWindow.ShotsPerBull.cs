@@ -190,6 +190,15 @@ public sealed partial class MainWindow
         ruleSays.IsVisible = ruleSays.Text.Length > 0;
     }
 
+    /// <summary>For the screenshot walk: the Groups section scrolled into view.</summary>
+    internal void BringGroupsIntoView()
+    {
+        // From below and then up to the heading, so the section's top sits at the top of the panel rather than at its foot.
+        ruleSays.BringIntoView();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        patternCards.FirstOrDefault().Card?.BringIntoView();
+    }
+
     /// <summary>For the headless tests: the answer showing, and the read-back.</summary>
     internal ShotPattern PatternShown => patternCards.FirstOrDefault(c => c.Card.IsChecked == true).Pattern;
 

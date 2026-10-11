@@ -189,6 +189,67 @@
   ],
   "features": [
     {
+      "key": "groups-plain",
+      "group": "Reading a target",
+      "name": "How you shot the sheet, in plain words",
+      "sentence": "Groups asks How did you shoot this sheet? with three cards: one shot on each bull, some bulls took two or more, or every hole to its nearest bull. Bulls you left blank are found by themselves, you tap the ones that took two or the ones you fired at, and Loads on this sheet sets one load, one a row, one a column or your own pick. A line reads it back before you accept.",
+      "shot": "groups",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": "The Groups section now asks how you shot the sheet in plain words",
+      "tour": "marking",
+      "guide": "4-mark-it-and-settle-the-review-queue",
+      "mobile": {
+        "noPicture": "the phone's How you shot this sheet row is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "barrels-under-rifles",
+      "group": "Sheets and printing",
+      "name": "Barrels under their rifle",
+      "sentence": "Equipment has two tabs, Rifles and Loads. Each rifle lists its barrels with the one on now, and takes its length and twist from it. Setup names rifle and barrel together, and a barrel's length and twist, a rifle's cartridge and scope and a load's powder, charge and primer are kept when you close GroupLab.",
+      "shot": "equipment",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "next",
+      "note": [
+        "Barrels now sit under their rifle",
+        "A barrel's length and twist, a rifle's cartridge and scope"
+      ],
+      "tour": "equipment",
+      "guide": "4-mark-it-and-settle-the-review-queue"
+    },
+    {
+      "key": "paper-backing",
+      "group": "Reading a target",
+      "name": "Paper and backing, kept for the next sheet",
+      "sentence": "For the hole size studies is a closed section at the bottom of the setup. It records the paper and the backing only, changes no detection, and is remembered for your next sheet unless you turn that off. The phone records them too.",
+      "shot": "marking",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": "Paper and backing now sit in a closed",
+      "tour": "marking",
+      "guide": "4-mark-it-and-settle-the-review-queue",
+      "mobile": {
+        "noPicture": "the phone's fold under the caliber and distance is photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Any target you already shoot",
@@ -378,8 +439,8 @@
       "key": "bull-lines",
       "group": "Reading a target",
       "name": "Which bull each shot belongs to",
-      "sentence": "A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.",
-      "shot": "analysis",
+      "sentence": "A thin line runs from each hole to the bull it was given, on the analysis and in Fix holes, and Lines to bulls switches them off. A line worth a second look is dashed in orange with a question mark, and Next unsure hole goes to it. Click or tap a bull to choose it, then click or tap holes to give them to it or take them away; each shot is named by its bull: Bull 7, or Bull 7, shot 2.",
+      "shot": "bull-lines",
       "platforms": [
         "Windows",
         "macOS",
@@ -390,7 +451,8 @@
       "since": "next",
       "note": [
         "A line now runs from each bull to the holes given to it",
-        "Shots are now named by their bull"
+        "Shots are now named by their bull",
+        "Every hole now has a line to the bull it was given"
       ],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
@@ -567,6 +629,27 @@
       "guide": "5-read-the-analysis",
       "mobile": {
         "noPicture": "the phone's card is photographed at the next sitting with the phone"
+      }
+    },
+    {
+      "key": "readings-on-analysis",
+      "group": "The numbers",
+      "name": "Chronograph readings where the figures are",
+      "sentence": "With no readings yet, Velocity and the vertical offers Import a file, Type them in and a place to drop a Garmin Xero, LabRadar or CSV file. Typed speeds are counted against the shots as you go, and Match to shots pairs them as Ballistics would and keeps them, so the block fills in without leaving the analysis.",
+      "shot": "readings-here",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": "With no chronograph readings, the analysis now lets you import a file",
+      "tour": "analysis",
+      "guide": "5-read-the-analysis",
+      "mobile": {
+        "noPicture": "the phone's card with its two buttons is photographed at the next sitting with the phone"
       }
     },
     {
@@ -1273,8 +1356,8 @@
       "key": "shots-table",
       "group": "The numbers",
       "name": "Every shot, and which count",
-      "sentence": "Every shot's offset across and up from its aim point, the clicks that would bring it onto the aim at your scope's click value, and a Counted switch that leaves a shot out of every figure while it stays on the record, struck through.",
-      "shot": "analysis",
+      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone.",
+      "shot": "shots-open",
       "platforms": [
         "Windows",
         "macOS",
@@ -1283,7 +1366,9 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": ["Shots and clicks", "On the phone, the Counted and Left out switch"],
+      "note": ["Shots and clicks", "On the phone, the Counted and Left out switch",
+        "The Shots list is now short rows",
+        "Leaving a shot out no longer asks why"],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "mobile": {
