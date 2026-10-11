@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| The corpus's six false marks, entry 410 section 1 (`grouplab scoreboard --corpus`, local) | **not yet** | It would change what a shooter does (a crinkled sheet's creases throw shadows along the print that read like holes, so flatten it or light it evenly) and what another developer builds (shading, not misregistration, is what is left), but the one test that removed the shadows also removed a real hole on scan 4, so there is no result yet to stand on; one crinkled sheet is one case. |
 | What an Android tablet's browser says when it asks for the desktop site (entry 403) | not written | One page's guess fixed; what the browsers report is in PHASE1-RESULTS.md and the published documentation it cites, and a shooter only needs the right download button. |
 | Fix holes going blank after a hole was added, error report 27 (entry 401) | not written | A fault in one screen, found and fixed; nothing in it changes what a shooter does beyond installing the fix, which the release note says. |
 | The phone's reading of a photograph made about a third faster (entry 400) | not written | Reading independent pieces at once is ordinary engineering, and nothing in it changes what a shooter does; docs/PERFORMANCE.md holds the measurement. |

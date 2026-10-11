@@ -273,6 +273,29 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-376-400.md`](notes/archive/results-376-400.md), entries 376 to 400, 27 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 410 section 1: the six false marks, investigated, nothing kept (2026-10-11)
+
+1. **Before, per picture** (`grouplab scoreboard --corpus`, the nine GroupLab-sheet pictures with a hole truth): diamond-22lr 25 of 25,
+   **5 false**; load-sheet-22lr 24 of 25, 0; dominus-k 25 of 25, **1 false**; magnus-c-6.5 22 of 23, 0; magnus-m 25 of 25, 0; the four
+   2026-09-29 pictures 25 of 25 each, 0. In all 221 of 223 and 6 false, as PROOF-CHECKLIST row 3 says.
+2. **What the five on diamond-22lr are** (the show-your-work patches, the photograph's pixels only): four are along the edges of the
+   diamonds' own printing, the white square's upper left rim and a crescent beside the printed center dot, and one is a black diamond's
+   tip against the paper. **Not misregistration:** re-aligning each mark's 0.6 in neighbourhood by phase correlation found shifts under
+   one pixel. **Shading:** where the crinkled sheet is creased, the square and the dot throw a shadow along one side, and the shadow is the
+   residual. The dominus-k mark (1.3 in below the codes where that sheet was taped) was not looked at further.
+3. **Tried: a faint mark hugging a printed edge is shading.** On diamond-22lr the four shading marks have a mean residual of 60 to 68
+   (of 255) with 0.90 to 1.00 of their pixels within 0.04 in of a printed edge; its 25 real holes are 92 to 159, and none hugs an edge
+   past 0.62. Refusing marks under 0.32 of the range and over 0.85 on an edge took diamond-22lr from 5 false marks to 1 and changed
+   nothing on the other eight pictures, the 2026-10-04 range pictures or the 28 rendered conditions (`scoreboard --synthetic`, before and
+   after from one build). **It lost a real hole:** scan 4 of 2026-09-20 (Alan's, 600 dpi, `RangeScanCountsTests`), bull 11, a .22 hole
+   through the ring line, which on a scan shows the light lid, so it reads faint (78) and hugs the ring's edge (0.88). Developed on
+   diamond-22lr; it held on the 2026-09-29 pictures and the rendered set and failed on the scans. Tightening the two numbers until that
+   hole survives would be fitting the material, so the change is not kept and the detector is as it was.
+4. **What would separate them,** for a later attempt with more material: a shadow's residual has one sign and fades away from the edge
+   that casts it, toward the light; a hole's is a step all round its rim and, on a scan, the lid's own grey. A test on the direction of
+   the fade would need creased sheets photographed under known light, which the corpus has one of.
+5. PROOF-CHECKLIST rows 1, 3 and 12 are unchanged: the gate is not met. No Release-note: nothing a shooter sees changed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
