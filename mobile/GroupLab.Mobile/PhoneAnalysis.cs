@@ -30,7 +30,9 @@ internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definit
 internal sealed record StoreTargetSeen(GroupLab.Core.StoreTargets.StoreTargetRecognition Recognition, int Width, int Height);
 
 /// <summary>What the person said about the shooting: the caliber, which changes what GroupLab finds, and the distance.</summary>
-internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches);
+/// <param name="Paper">Entry 407 section 6: the paper it was printed on, recorded only, or null.</param>
+/// <param name="Backing">Entry 407 section 6: what was behind it, recorded only, or null.</param>
+internal sealed record ShotSetup(Calibre? Calibre, double? DistanceInches, string? Paper = null, string? Backing = null);
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 219 item A4: a photograph, from the camera or picked, analyzed the way the desktop analyzes one, at the
@@ -242,6 +244,7 @@ internal static class PhoneAnalysis
         session.Open(working.Path, working.Metadata.Orientation);
         session.SetCalibre(setup.Calibre);
         session.SetShotDistance(setup.DistanceInches);
+        session.SetMaterial(setup.Paper, setup.Backing);
 
         var identity = chosen is null ? SheetIdentification.Identify(grey, Library(), backend, trace, token, LongestReadSide) : null;
         var definition = chosen ?? identity!.Definition;

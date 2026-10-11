@@ -778,6 +778,22 @@ public sealed class AppSettingsStore(string path)
     /// NOTES-FROM-PLANNING.md entry 219 item A4: the caliber as the person typed it and the distance in inches, from the last target the
     /// phone analyzed, offered again for the next, since most sessions shoot one rifle at one distance.
     /// </summary>
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 6: whether the paper and backing carry to the next sheet (on unless turned off), and the last
+    /// ones chosen. Desktop and phone alike.
+    /// </summary>
+    public (bool Remember, string? Paper, string? Backing) LoadMaterial() => Read<(bool, string?, string?)?>(file => (
+        (bool?)file["materialRemember"] ?? true,
+        TargetMaterial.Paper((string?)file["materialPaper"]),
+        TargetMaterial.Backing((string?)file["materialBacking"]))) ?? (true, null, null);
+
+    public bool SaveMaterial(bool remember, string? paper, string? backing) => Save(file =>
+    {
+        file["materialRemember"] = remember;
+        file["materialPaper"] = paper;
+        file["materialBacking"] = backing;
+    });
+
     public (string? Calibre, double? DistanceInches) LoadShotSetup() => Read(file =>
         ((string?)file["shotSetup"]?["caliber"], file["shotSetup"]?["distanceInches"]?.GetValueKind() == JsonValueKind.Number ? (double?)file["shotSetup"]!["distanceInches"]!.GetValue<double>() : null));
 

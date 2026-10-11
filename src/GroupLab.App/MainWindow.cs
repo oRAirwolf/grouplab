@@ -874,10 +874,10 @@ public sealed partial class MainWindow : Window
 
         // Entry 140 section 1.3: what the last sheet was shot with, offered rather than applied, with what it would copy written beside it.
         setup.Children.Add(sameSetup);
-        setup.Children.Add(FieldLabel("Paper it was printed on, optional"));
-        setup.Children.Add(paperChoice);
-        setup.Children.Add(FieldLabel("What was behind it, optional"));
-        setup.Children.Add(backingChoice);
+
+        // Entry 407 section 6 (concept 6A, Alan's pick): paper and backing kept, at the bottom of the setup in a fold closed at first, saying
+        // they are recorded only, and carried to the next sheet unless "Remember these" is turned off.
+        setup.Children.Add(MaterialFold());
         paperChoice.SelectionChanged += (_, _) => ChooseMaterial();
         backingChoice.SelectionChanged += (_, _) => ChooseMaterial();
 
@@ -1836,8 +1836,16 @@ public sealed partial class MainWindow : Window
         shotDistance.Text = "";
         distanceNotKnown = false;
         roundsNotKnown = false;
-        paperChoice.SelectedIndex = -1;
-        backingChoice.SelectedIndex = -1;
+        // Entry 407 section 6: the last sheet's paper and backing carry to this one, unless the person turned that off.
+        var material = settingsStore.LoadMaterial();
+        bindingTarget = true;
+        paperChoice.SelectedItem = material.Remember ? material.Paper : null;
+        backingChoice.SelectedItem = material.Remember ? material.Backing : null;
+        bindingTarget = false;
+        if (material.Remember && (material.Paper ?? material.Backing) is not null)
+        {
+            session.Load(session.State with { Paper = material.Paper, Backing = material.Backing });
+        }
 
         detectedState = null;
         plotDefinition = null;

@@ -70,8 +70,55 @@ public sealed partial class MainWindow
         if (!bindingTarget)
         {
             session.SetMaterial(paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
+            settingsStore.SaveMaterial(rememberMaterial.IsChecked == true, paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
         }
     }
+
+    private readonly CheckBox rememberMaterial = new() { Content = TargetMaterial.Remember };
+
+    /// <summary>
+    /// Entry 407 section 6: the paper and the backing in a fold at the bottom of the setup, closed at first: what they are for, the two choices,
+    /// and whether they carry to the next sheet.
+    /// </summary>
+    private Control MaterialFold()
+    {
+        var inside = new StackPanel { Spacing = Tokens.Space4, IsVisible = false };
+        inside.Children.Add(new TextBlock { Text = TargetMaterial.FoldLine, TextWrapping = Avalonia.Media.TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        inside.Children.Add(FieldLabel("Paper it was printed on"));
+        inside.Children.Add(paperChoice);
+        inside.Children.Add(FieldLabel("What was behind it"));
+        inside.Children.Add(backingChoice);
+        rememberMaterial.IsChecked = settingsStore.LoadMaterial().Remember;
+        rememberMaterial.IsCheckedChanged += (_, _) =>
+            settingsStore.SaveMaterial(rememberMaterial.IsChecked == true, paperChoice.SelectedItem as string, backingChoice.SelectedItem as string);
+        inside.Children.Add(rememberMaterial);
+        var toggle = new Button { Content = TargetMaterial.FoldTitle + " \u25B8", HorizontalAlignment = HorizontalAlignment.Left, Classes = { AppStyles.Link }, Name = "MaterialFold" };
+        toggle.Click += (_, _) =>
+        {
+            inside.IsVisible = !inside.IsVisible;
+            toggle.Content = TargetMaterial.FoldTitle + (inside.IsVisible ? " \u25BE" : " \u25B8");
+        };
+        materialInside = inside;
+        return new StackPanel { Spacing = Tokens.Space4, Children = { toggle, inside } };
+    }
+
+    private StackPanel? materialInside;
+
+    /// <summary>For the headless tests: whether the fold is open, and opening it.</summary>
+    internal bool MaterialFoldOpen
+    {
+        get => materialInside?.IsVisible == true;
+        set
+        {
+            if (materialInside is not null)
+            {
+                materialInside.IsVisible = value;
+            }
+        }
+    }
+
+    /// <summary>For the headless tests: the two choices and the box.</summary>
+    internal (ComboBox Paper, ComboBox Backing, CheckBox Remember) MaterialControls => (paperChoice, backingChoice, rememberMaterial);
 
     /// <summary>The row of tabs across the top of the window, with the "+" tab at its end.</summary>
     private Control BuildTargetTabs()

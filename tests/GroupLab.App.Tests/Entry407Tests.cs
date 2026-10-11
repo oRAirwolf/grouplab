@@ -42,4 +42,40 @@ public class Entry407Tests
             GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
     }
+
+    /// <summary>
+    /// Section 6 (concept 6A): paper and backing are in a fold at the bottom of the setup, closed at first, and carried to the next sheet while
+    /// "Remember these for my next sheet" is on, which it is at first; turned off, the next sheet starts with neither.
+    /// </summary>
+    [AvaloniaFact]
+    public void PaperAndBackingAreFoldedAwayAndCarriedToTheNextSheetUnlessTurnedOff()
+    {
+        var (window, path, _) = Entry109Tests.Sheet();
+        try
+        {
+            Assert.False(window.MaterialFoldOpen);
+            var (paper, backing, remember) = window.MaterialControls;
+            Assert.True(remember.IsChecked);
+            window.MaterialFoldOpen = true;
+            paper.SelectedItem = "card stock";
+            backing.SelectedItem = "foam board";
+            Settle();
+            Assert.Equal(("card stock", "foam board"), (window.Session.State.Paper, window.Session.State.Backing));
+
+            window.OpenImage(path);
+            Settle();
+            Assert.Equal(("card stock", "foam board"), (window.Session.State.Paper, window.Session.State.Backing));
+
+            remember.IsChecked = false;
+            window.OpenImage(path);
+            Settle();
+            Assert.Null(window.Session.State.Paper);
+            Assert.Null(paper.SelectedItem);
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
+        }
+    }
 }

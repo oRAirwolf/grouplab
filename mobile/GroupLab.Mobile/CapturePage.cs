@@ -36,6 +36,11 @@ public sealed class CapturePage : UserControl
     private readonly CaliberBox calibre = new();
 
     private readonly TextBox distance = Screens.Numeric(new() { MinHeight = Screens.Touch, PlaceholderText = "Distance" }).Id("capture-distance");
+
+    // Entry 407 section 6 (concept 6A): the paper and the backing, recorded only, in a fold under the caliber and distance, closed at first.
+    private readonly ComboBox paper = new() { ItemsSource = TargetMaterial.Papers, PlaceholderText = "not said", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, MinHeight = Screens.Touch };
+    private readonly ComboBox backing = new() { ItemsSource = TargetMaterial.Backings, PlaceholderText = "not said", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, MinHeight = Screens.Touch };
+    private readonly CheckBox rememberMaterial = new() { Content = TargetMaterial.Remember, MinHeight = Screens.Touch };
     private readonly Control start;
 
     /// <summary>The Capture page made last, for a scenario, which types the run's caliber into it (entry 376 item B3).</summary>
@@ -78,7 +83,27 @@ public sealed class CapturePage : UserControl
         distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}";
         distance.Text = inches is { } d ? UnitSettings.DistanceFromInches(d, units.Distance).ToString("0.#", CultureInfo.CurrentCulture) : "";
         // Entry 309 section 1: Home A. The caliber and distance as one row, remembered, with Change opening the two fields beneath it.
-        setupFields = Screens.Card(calibre, distance);
+        var material = Phone.Settings.LoadMaterial();
+        paper.SelectedItem = material.Remember ? material.Paper : null;
+        backing.SelectedItem = material.Remember ? material.Backing : null;
+        rememberMaterial.IsChecked = material.Remember;
+        void Keep() => Phone.Settings.SaveMaterial(rememberMaterial.IsChecked == true, paper.SelectedItem as string, backing.SelectedItem as string);
+        paper.SelectionChanged += (_, _) => Keep();
+        backing.SelectionChanged += (_, _) => Keep();
+        rememberMaterial.IsCheckedChanged += (_, _) => Keep();
+        var materialInside = new StackPanel
+        {
+            Spacing = 6,
+            IsVisible = false,
+            Children = { Screens.Dim(TargetMaterial.FoldLine), Screens.Line("Paper it was printed on"), paper, Screens.Line("What was behind it"), backing, rememberMaterial },
+        };
+        var materialToggle = Screens.Choice(TargetMaterial.FoldTitle + " \u25B8", () => { }).Id("capture-material");
+        materialToggle.Click += (_, _) =>
+        {
+            materialInside.IsVisible = !materialInside.IsVisible;
+            materialToggle.Content = TargetMaterial.FoldTitle + (materialInside.IsVisible ? " \u25BE" : " \u25B8");
+        };
+        setupFields = Screens.Card(calibre, distance, materialToggle, materialInside);
         setupFields.IsVisible = false;
         change.Click += (_, _) =>
         {
@@ -329,7 +354,16 @@ public sealed class CapturePage : UserControl
             ? UnitSettings.DistanceToInches(value, units.Distance)
             : null;
         Phone.Settings.SaveShotSetup(calibre.Text, inches);
-        return new ShotSetup(chosen, inches);
+        var setup = new ShotSetup(chosen, inches, paper.SelectedItem as string, backing.SelectedItem as string);
+
+        // Entry 407 section 6: without "Remember these", the paper and backing are this sheet's only.
+        if (rememberMaterial.IsChecked != true)
+        {
+            paper.SelectedItem = null;
+            backing.SelectedItem = null;
+        }
+
+        return setup;
     }
 
     /// <summary>The last result on this tab, which the Result button returns to (entry 281 section 1.3).</summary>

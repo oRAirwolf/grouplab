@@ -26,4 +26,16 @@ public static class TargetMaterial
 
     /// <inheritdoc cref="Paper(string?)"/>
     public static string? Backing(string? value) => value is not null && Backings.Contains(value) ? value : null;
+
+    // NOTES-FROM-PLANNING.md entry 407 section 6 (concept 6A, Alan's pick): the two choices kept, at the bottom of the setup in a fold closed
+    // at first, saying what they are for, with the last sheet's carried to the next unless the person says not to. The same words on both.
+
+    /// <summary>The fold's title.</summary>
+    public const string FoldTitle = "For the hole size studies";
+
+    /// <summary>The line inside the fold, first.</summary>
+    public const string FoldLine = "Recorded only: it does not change detection. It lets hole sizes be compared later by paper and backing.";
+
+    /// <summary>The box under the two choices, on unless a person turned it off.</summary>
+    public const string Remember = "Remember these for my next sheet";
 }
