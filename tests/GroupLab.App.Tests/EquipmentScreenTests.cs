@@ -76,6 +76,49 @@ public class EquipmentScreenTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 5 (concept 5B): a barrel is added from its rifle's page, comes back to it when saved, is the one on
+    /// now when it is the rifle's first, and another chosen by its radio takes its place; the rifle then carries the barrel's twist, which is
+    /// what the ballistics page reads, and the setup's one list names them together with the barrel on now first.
+    /// </summary>
+    [AvaloniaFact]
+    public void ABarrelIsAddedOnItsRiflesPageAndTheOneOnNowLeadsTheSetupList()
+    {
+        var (window, path, _) = Entry109Tests.Sheet();
+        try
+        {
+            window.Book = RecordBook.Empty.With(new Rifle("Test rifle", 0.25, AngularUnit.Moa));
+            window.ShowEquipment(EquipmentKind.Rifle);
+            window.EditBarrel("Test rifle", null);
+            Settle();
+            window.TypeEquipment("name", "Bartlein");
+            window.TypeEquipment("lengthInches", "26");
+            window.TypeEquipment("twistInches", "8");
+            window.SaveEquipment();
+            Settle();
+            Assert.Equal("Bartlein", window.Book.FindRifle("Test rifle")!.BarrelOn);
+            Assert.Equal(8, window.Book.FindRifle("Test rifle")!.TwistInches);
+
+            window.EditBarrel("Test rifle", null);
+            window.TypeEquipment("name", "Krieger");
+            window.TypeEquipment("twistInches", "7.5");
+            window.SaveEquipment();
+            Settle();
+            Assert.Equal(["Bartlein", "Krieger"], window.BarrelRows("Test rifle"));
+
+            window.PutBarrelOn("Test rifle", "Krieger");
+            Settle();
+            Assert.Equal(["Krieger", "Bartlein"], window.BarrelRows("Test rifle"));
+            Assert.Equal(7.5, window.Book.FindRifle("Test rifle")!.TwistInches);
+            Assert.Equal("Test rifle with its Krieger (on now)", window.Book.Together(window.Book.FindRifle("Test rifle")!, window.Book.FindBarrel("Krieger")));
+            Assert.Equal("Test rifle with its 26 in Bartlein", window.Book.Together(window.Book.FindRifle("Test rifle")!, window.Book.FindBarrel("Bartlein")));
+        }
+        finally
+        {
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
+        }
+    }
+
     /// <summary>A name is the one thing it needs, and the screen says so rather than saving something nothing can refer to.</summary>
     [AvaloniaFact]
     public void ARecordWithNoNameIsRefusedWithAReason()
@@ -144,9 +187,8 @@ public class EquipmentScreenTests
             Settle();
             Assert.Contains("Old rifle", window.EquipmentNames);
 
-            window.ShowEquipment(EquipmentKind.Barrel);
-            Settle();
-            Assert.Contains("Old barrel", window.EquipmentNames);
+            // Entry 407 section 5: a barrel is listed under its rifle now, on the rifle's own page.
+            Assert.Contains("Old barrel", window.BarrelRows("Old rifle"));
             Assert.Equal(1200, window.Book.FindBarrel("Old barrel")!.Rounds);
 
             window.ShowEquipment(EquipmentKind.Load);

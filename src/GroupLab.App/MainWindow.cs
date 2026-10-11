@@ -524,7 +524,6 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private readonly ComboBox rifleChoice = new() { MinWidth = 200 };
 
-    private readonly ComboBox barrelChoice = new() { MinWidth = 200 };
 
     private readonly ComboBox loadChoice = new() { MinWidth = 200 };
 
@@ -862,10 +861,10 @@ public sealed partial class MainWindow : Window
                 ShowNeeded();
             }))));
         setup.Children.Add(FieldLabel("Rifle, barrel and load"));
-        setup.Children.Add(Row(rifleChoice));
-        setup.Children.Add(Row(barrelChoice, Button("Add this sheet's shots", AddSheetToBarrel)));
+        // Entry 407 section 5.3: one list, rifle and barrel together, the barrel on now first and the rifle's other barrels under it.
+        setup.Children.Add(Row(rifleChoice, Button("Add this sheet's shots", AddSheetToBarrel)));
         setup.Children.Add(Row(loadChoice));
-        foreach (var combo in new[] { rifleChoice, barrelChoice, loadChoice })
+        foreach (var combo in new[] { rifleChoice, loadChoice })
         {
             combo.SelectionChanged += (_, _) => EquipmentChosen();
         }
@@ -4717,15 +4716,25 @@ public sealed partial class MainWindow : Window
     /// <summary>The record book's file, beside the settings file.</summary>
     private string RecordsPath => settingsStore.RecordsPath;
 
-    /// <summary>The three pickers, filled from the book and showing what the marking names.</summary>
+    /// <summary>
+    /// Entry 407 section 5.3: the setup's rifle list, each rifle with its barrels, the barrel on now first, "Test rifle with its 26 in
+    /// Bartlein (on now)"; a rifle with no barrel is listed alone.
+    /// </summary>
+    private IReadOnlyList<(Rifle Rifle, Barrel? Barrel)> RiflesWithBarrels() =>
+        [.. book.Rifles.SelectMany(r => book.BarrelsOf(r.Name) is { Count: > 0 } barrels
+            ? barrels.Select(b => (r, (Barrel?)b))
+            : [(r, (Barrel?)null)])];
+
+    /// <summary>The pickers, filled from the book and showing what the marking names.</summary>
     private void ShowEquipment(MarkingState state)
     {
         showingEquipment = true;
-        rifleChoice.ItemsSource = new[] { "No rifle" }.Concat(book.Rifles.Select(r => $"{r.Name}, {r.DescribeClick()}")).ToList();
-        barrelChoice.ItemsSource = new[] { "No barrel" }.Concat(book.Barrels.Select(b => string.Create(CultureInfo.InvariantCulture, $"{b.Name}, {b.Rounds} rounds"))).ToList();
+        var together = RiflesWithBarrels();
+        rifleChoice.ItemsSource = new[] { "No rifle" }.Concat(together.Select(t => book.Together(t.Rifle, t.Barrel))).ToList();
         loadChoice.ItemsSource = new[] { "No load" }.Concat(book.Loads.Select(l => l.Name)).ToList();
-        rifleChoice.SelectedIndex = state.Rifle is { } rifle ? book.Rifles.FindIndex(r => string.Equals(r.Name, rifle.Name, StringComparison.OrdinalIgnoreCase)) + 1 : 0;
-        barrelChoice.SelectedIndex = book.Barrels.FindIndex(b => string.Equals(b.Name, state.Barrel, StringComparison.OrdinalIgnoreCase)) + 1;
+        int at = state.Rifle is { } rifle ? together.ToList().FindIndex(t => string.Equals(t.Rifle.Name, rifle.Name, StringComparison.OrdinalIgnoreCase)
+            && (state.Barrel is null || string.Equals(t.Barrel?.Name, state.Barrel, StringComparison.OrdinalIgnoreCase))) : -1;
+        rifleChoice.SelectedIndex = at + 1;
         loadChoice.SelectedIndex = book.Loads.FindIndex(l => string.Equals(l.Name, state.Load, StringComparison.OrdinalIgnoreCase)) + 1;
         showingEquipment = false;
     }
@@ -4737,10 +4746,10 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        var rifle = rifleChoice.SelectedIndex > 0 ? book.Rifles[rifleChoice.SelectedIndex - 1] : null;
-        var barrel = barrelChoice.SelectedIndex > 0 ? book.Barrels[barrelChoice.SelectedIndex - 1].Name : null;
+        var together = RiflesWithBarrels();
+        var chosen = rifleChoice.SelectedIndex > 0 && rifleChoice.SelectedIndex <= together.Count ? together[rifleChoice.SelectedIndex - 1] : default;
         var load = loadChoice.SelectedIndex > 0 ? book.Loads[loadChoice.SelectedIndex - 1].Name : null;
-        session.SetEquipment(rifle, barrel, load);
+        session.SetEquipment(chosen.Rifle, chosen.Barrel?.Name, load);
     }
 
 

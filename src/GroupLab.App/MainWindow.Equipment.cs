@@ -20,6 +20,11 @@ namespace GroupLab.App;
 /// <b>The forms are generated.</b> Every field comes from <see cref="EquipmentForm"/>, which is also what the autocomplete reads, so a field
 /// added to a record cannot be forgotten on the screen and the two cannot drift. That is the same arrangement the glossary uses.
 /// </para>
+/// <para>
+/// Entry 407 section 5 (concept 5B, Alan's pick): two tabs, Rifles and Loads, and the Barrels tab gone. A rifle's page is "The rifle" and,
+/// under it, "Barrels on this rifle": a table with the barrel on now chosen by a radio, each barrel's length, twist, direction and rounds, an
+/// Edit for each and Add a barrel. A barrel's form opens in the same place and comes back to its rifle when saved.
+/// </para>
 /// </summary>
 public sealed partial class MainWindow
 {
@@ -41,16 +46,19 @@ public sealed partial class MainWindow
     /// <summary>Every field's box, by key, so the form can be read back without hunting through the tree.</summary>
     private readonly Dictionary<string, Control> equipmentFields = [];
 
+    /// <summary>Entry 407 section 5: the rifle a barrel being added or edited is on.</summary>
+    private string? barrelRifle;
+
     private Control BuildEquipment()
     {
         var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space12 };
         column.Children.Add(new TextBlock { Text = "Equipment", Classes = { AppStyles.Title } });
-        column.Children.Add(Line("Your rifles, barrels and loads. A sheet names one of each, and the analysis and the ballistics page take what they need from here. Every field is optional except a name."));
+        column.Children.Add(Line("Your rifles, with the barrels on each, and your loads. A sheet names a rifle with its barrel, and a load, and the analysis and the ballistics page take what they need from here. Every field is optional except a name."));
 
         var tabs = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4 };
-        foreach (var kind in new[] { EquipmentKind.Rifle, EquipmentKind.Barrel, EquipmentKind.Load })
+        foreach (var kind in new[] { EquipmentKind.Rifle, EquipmentKind.Load })
         {
-            var button = new Button { Content = kind switch { EquipmentKind.Rifle => "Rifles", EquipmentKind.Barrel => "Barrels", _ => "Loads" }, Name = "EquipmentTab" + kind };
+            var button = new Button { Content = kind == EquipmentKind.Rifle ? "Rifles" : "Loads", Name = "EquipmentTab" + kind };
             button.Click += (_, _) =>
             {
                 equipmentKind = kind;
@@ -78,18 +86,16 @@ public sealed partial class MainWindow
         equipmentLists.Children.Clear();
         equipmentProblem.Text = "";
 
-        var names = equipmentKind switch
-        {
-            EquipmentKind.Rifle => book.Rifles.Select(r => r.Name).ToList(),
-            EquipmentKind.Barrel => book.Barrels.Select(b => b.Name).ToList(),
-            _ => book.Loads.Select(l => l.Name).ToList(),
-        };
+        // Entry 407 section 5: a barrel is edited on its rifle's page, so the list beside a barrel's form is the rifles.
+        bool rifles = equipmentKind != EquipmentKind.Load;
+        string kindWord = rifles ? "rifle" : "load";
+        var names = rifles ? book.Rifles.Select(r => r.Name).ToList() : book.Loads.Select(l => l.Name).ToList();
 
         equipmentLists.Children.Add(new TextBlock
         {
             Text = names.Count == 0
-                ? $"No {equipmentKind.ToString().ToLowerInvariant()}s yet. Fill the form and press Save."
-                : string.Create(CultureInfo.InvariantCulture, $"{names.Count} {equipmentKind.ToString().ToLowerInvariant()}{(names.Count == 1 ? "" : "s")}."),
+                ? $"No {kindWord}s yet. Fill the form and press Save."
+                : string.Create(CultureInfo.InvariantCulture, $"{names.Count} {kindWord}{(names.Count == 1 ? "" : "s")}."),
             Classes = { AppStyles.Secondary },
             TextWrapping = TextWrapping.Wrap,
         });
@@ -99,6 +105,7 @@ public sealed partial class MainWindow
             var row = new Button { Content = name, Classes = { AppStyles.TableRow }, HorizontalAlignment = HorizontalAlignment.Stretch, Name = "EquipmentRow" };
             row.Click += (_, _) =>
             {
+                equipmentKind = rifles ? EquipmentKind.Rifle : EquipmentKind.Load;
                 equipmentEditing = name;
                 ShowEquipmentScreen();
             };
@@ -107,6 +114,7 @@ public sealed partial class MainWindow
 
         var add = Button("Add another", () =>
         {
+            equipmentKind = rifles ? EquipmentKind.Rifle : EquipmentKind.Load;
             equipmentEditing = null;
             ShowEquipmentScreen();
         });
@@ -123,7 +131,12 @@ public sealed partial class MainWindow
 
         equipmentForm.Children.Add(new TextBlock
         {
-            Text = equipmentEditing is null ? $"New {equipmentKind.ToString().ToLowerInvariant()}" : equipmentEditing,
+            Text = equipmentKind switch
+            {
+                EquipmentKind.Rifle => equipmentEditing is null ? "The rifle: a new one" : "The rifle: " + equipmentEditing,
+                EquipmentKind.Barrel => (equipmentEditing ?? "A new barrel") + (barrelRifle is { } on ? ", on " + on : ""),
+                _ => equipmentEditing ?? "New load",
+            },
             Classes = { AppStyles.Section },
         });
 
@@ -215,10 +228,112 @@ public sealed partial class MainWindow
             Primary("Save", SaveEquipment),
             Button("Cancel", () =>
             {
-                equipmentEditing = null;
+                if (equipmentKind == EquipmentKind.Barrel && barrelRifle is { } back)
+                {
+                    equipmentKind = EquipmentKind.Rifle;
+                    equipmentEditing = back;
+                }
+                else
+                {
+                    equipmentEditing = null;
+                }
+
                 ShowEquipmentScreen();
             })));
+
+        if (equipmentKind == EquipmentKind.Rifle && equipmentEditing is { } rifle && book.FindRifle(rifle) is not null)
+        {
+            equipmentForm.Children.Add(BarrelsOnThisRifle(rifle));
+        }
     }
+
+    /// <summary>
+    /// Entry 407 section 5.2: the rifle's barrels, the one on now chosen by a radio, each with its length, twist, direction and rounds and an
+    /// Edit, and Add a barrel.
+    /// </summary>
+    private Control BarrelsOnThisRifle(string rifle)
+    {
+        var part = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, Tokens.Space16, 0, 0) };
+        part.Children.Add(new TextBlock { Text = "Barrels on this rifle", Classes = { AppStyles.Section } });
+        var barrels = book.BarrelsOf(rifle);
+        if (barrels.Count == 0)
+        {
+            part.Children.Add(Line("No barrel yet. Add one, and its length and twist are what the ballistics page uses for this rifle."));
+        }
+        else
+        {
+            var table = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto,Auto,Auto,Auto") };
+            string[] heads = ["On now", "Name", "Length", "Twist", "Direction", "Rounds", ""];
+            table.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            for (int c = 0; c < heads.Length; c++)
+            {
+                var head = new TextBlock { Text = heads[c], Classes = { AppStyles.Label }, Margin = new Thickness(0, 0, Tokens.Space12, Tokens.Space4) };
+                Grid.SetColumn(head, c);
+                table.Children.Add(head);
+            }
+
+            var on = book.OnNow(rifle);
+            for (int i = 0; i < barrels.Count; i++)
+            {
+                var barrel = barrels[i];
+                table.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                var radio = new RadioButton { GroupName = "barrel-on-" + rifle, IsChecked = on?.Name == barrel.Name, VerticalAlignment = VerticalAlignment.Center };
+                Avalonia.Automation.AutomationProperties.SetName(radio, $"{barrel.Name} is on {rifle} now");
+                string name = barrel.Name;
+                radio.IsCheckedChanged += (_, _) =>
+                {
+                    if (radio.IsChecked == true && book.OnNow(rifle)?.Name != name)
+                    {
+                        PutBarrelOn(rifle, name);
+                    }
+                };
+                Control[] cells =
+                [
+                    radio,
+                    new TextBlock { Text = barrel.Name, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap },
+                    new TextBlock { Text = barrel.LengthInches is { } l ? units.Length(l) : "", VerticalAlignment = VerticalAlignment.Center },
+                    new TextBlock { Text = barrel.TwistInches is { } t ? string.Create(CultureInfo.InvariantCulture, $"1 in {t:0.##} in") : "", VerticalAlignment = VerticalAlignment.Center },
+                    new TextBlock { Text = barrel.TwistDirection is { } d ? (d < 0 ? "left" : "right") : "", VerticalAlignment = VerticalAlignment.Center },
+                    new TextBlock { Text = barrel.Rounds.ToString(CultureInfo.InvariantCulture), VerticalAlignment = VerticalAlignment.Center },
+                    Button("Edit", () => EditBarrel(rifle, name)),
+                ];
+                for (int c = 0; c < cells.Length; c++)
+                {
+                    cells[c].Margin = new Thickness(0, 0, Tokens.Space12, Tokens.Space4);
+                    Grid.SetRow(cells[c], i + 1);
+                    Grid.SetColumn(cells[c], c);
+                    table.Children.Add(cells[c]);
+                }
+            }
+
+            part.Children.Add(table);
+        }
+
+        part.Children.Add(Row(Button("Add a barrel", () => EditBarrel(rifle, null))));
+        return part;
+    }
+
+    /// <summary>Opens a barrel's form on its rifle, or a new barrel's with the rifle already chosen.</summary>
+    internal void EditBarrel(string rifle, string? barrel)
+    {
+        equipmentKind = EquipmentKind.Barrel;
+        equipmentEditing = barrel;
+        barrelRifle = rifle;
+        ShowEquipmentScreen();
+    }
+
+    /// <summary>Entry 407 section 5.2: marks a barrel as the one on its rifle now, which the setup's list puts first.</summary>
+    internal void PutBarrelOn(string rifle, string barrel)
+    {
+        book = book.PutOn(rifle, barrel);
+        SaveBook();
+        toaster.Show(new Confirmation($"{barrel} is on {rifle} now.", null));
+        ShowEquipmentScreen();
+        Refresh();
+    }
+
+    /// <summary>The barrels table's names, the one on now first, for the headless tests.</summary>
+    internal IReadOnlyList<string> BarrelRows(string rifle) => [.. book.BarrelsOf(rifle).Select(b => b.Name)];
 
     /// <summary>The fixed lists, which are choices rather than free text: a scope's units, a twist's hand, a barrel's rifle, a drag model.</summary>
     private List<string>? ChoicesFor(string key) => key switch
@@ -227,6 +342,7 @@ public sealed partial class MainWindow
         "clickUnit" => ["mil", "MOA", "SMOA"],
         "twistDirection" => ["right", "left"],
         "dragModel" => ["G1", "G7"],
+        // Entry 407 section 5.5: a barrel under "Barrels not yet on a rifle" is moved by choosing its rifle here.
         "rifle" => [.. book.Rifles.Select(r => r.Name)],
         _ => null,
     };
@@ -236,7 +352,8 @@ public sealed partial class MainWindow
     {
         if (equipmentEditing is null)
         {
-            return null;
+            // A new barrel's rifle is the rifle whose page it was added from.
+            return equipmentKind == EquipmentKind.Barrel && key == "rifle" ? barrelRifle : null;
         }
 
         return equipmentKind switch
@@ -313,14 +430,19 @@ public sealed partial class MainWindow
                     _ => units.Angular,
                 };
                 double click = Number(Typed("clickValue")) ?? ScopeClicks.Usual(unit).Value;
+
+                // Entry 407 section 5.2: the barrel's length and twist are the barrel's now, and come to the rifle from the one on it, so they
+                // are kept from the rifle as it was rather than read off a form that no longer has them.
+                var was = equipmentEditing is { } editing ? book.FindRifle(editing) : null;
                 book = book.With(new Rifle(name, click, unit)
                 {
+                    BarrelOn = was?.BarrelOn,
                     Firearm = Typed("firearm") is "Pistol" ? FirearmType.Pistol : FirearmType.Rifle,
                     Manufacturer = Blank(Typed("manufacturer")),
                     Cartridge = Blank(Typed("cartridge")),
-                    BarrelLengthInches = Number(Typed("barrelLengthInches")),
-                    TwistInches = Number(Typed("twistInches")),
-                    TwistDirection = Typed("twistDirection") is "left" ? -1 : Typed("twistDirection") is "right" ? 1 : null,
+                    BarrelLengthInches = was?.BarrelLengthInches,
+                    TwistInches = was?.TwistInches,
+                    TwistDirection = was?.TwistDirection,
                     Scope = Blank(Typed("scope")),
                     SightHeightInches = Number(Typed("sightHeightInches")),
                     ZeroDistanceYards = Number(Typed("zeroDistanceYards")),
@@ -338,6 +460,13 @@ public sealed partial class MainWindow
                     Installed = DateOnly.TryParse(Typed("installed"), CultureInfo.InvariantCulture, out var day) ? day : null,
                     Notes = Blank(Typed("notes")),
                 });
+
+                // A rifle's first barrel is the one on it until another is chosen.
+                if (Blank(Typed("rifle")) is { } on && book.OnNow(on) is null)
+                {
+                    book = book.PutOn(on, name);
+                }
+
                 break;
 
             default:
@@ -365,7 +494,19 @@ public sealed partial class MainWindow
 
         SaveBook();
         toaster.Show(new Confirmation($"Saved the {equipmentKind.ToString().ToLowerInvariant()} {name}.", null));
-        equipmentEditing = name;
+
+        // Entry 407 section 5: a barrel saved goes back to its rifle's page, where it is listed.
+        if (equipmentKind == EquipmentKind.Barrel && book.FindBarrel(name)?.Rifle is { } home)
+        {
+            equipmentKind = EquipmentKind.Rifle;
+            equipmentEditing = home;
+            barrelRifle = null;
+        }
+        else
+        {
+            equipmentEditing = name;
+        }
+
         ShowEquipmentScreen();
         Refresh();
     }
@@ -391,11 +532,12 @@ public sealed partial class MainWindow
         }
     }
 
-    /// <summary>Opens the Equipment screen on one of its three lists, for the headless tests.</summary>
+    /// <summary>Opens the Equipment screen on one of its forms, for the headless tests: a rifle, a new barrel, or a load.</summary>
     internal void ShowEquipment(EquipmentKind kind)
     {
         equipmentKind = kind;
         equipmentEditing = null;
+        barrelRifle = null;
         Go(Destination.Equipment);
         ShowEquipmentScreen();
     }

@@ -141,20 +141,10 @@ public sealed partial class SessionStoreTests : IDisposable
     [Fact]
     public void ADatabaseOfTheVersionBeforeIsBroughtUpToThisOne()
     {
-        // Version 1's schema is this one without the column version 2 adds.
+        // Version 1's schema is version 2's without the column version 2 adds.
         string path = Path.Combine(folder, "old.db");
-        using (var db = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={path};Pooling=false"))
-        {
-            db.Open();
-            foreach (string statement in SessionStore.Schema.Select(s => s.Replace(", muzzle_velocity_sd_from TEXT)", ")", StringComparison.Ordinal))
-                .Append("INSERT INTO meta (key, value) VALUES ('schema_version', '1')")
-                .Append("INSERT INTO loads (name, muzzle_velocity_fps) VALUES ('H4350 41.5', 2710)"))
-            {
-                using var command = db.CreateCommand();
-                command.CommandText = statement;
-                command.ExecuteNonQuery();
-            }
-        }
+        Build(path, [.. VersionTwo.Select(s => s.Replace(", muzzle_velocity_sd_from TEXT)", ")", StringComparison.Ordinal)),
+            "INSERT INTO meta (key, value) VALUES ('schema_version', '1')", "INSERT INTO loads (name, muzzle_velocity_fps) VALUES ('H4350 41.5', 2710)"]);
 
         var store = SessionStore.Open(path);
         var load = Assert.Single(store.LoadBook().Loads);
@@ -165,6 +155,91 @@ public sealed partial class SessionStoreTests : IDisposable
         // The new column holds what it is for, and the version is this one now.
         store.SaveBook(RecordBook.Empty.With(load with { MuzzleVelocitySdFps = 9.5, MuzzleVelocitySdFrom = "24 readings, 20 September 2026" }));
         Assert.Equal("24 readings, 20 September 2026", SessionStore.Open(path).LoadBook().Loads.Single().MuzzleVelocitySdFrom);
+    }
+
+    /// <summary>Version 2's schema: this one with the rifles, barrels and loads tables as they were before entry 407 section 5.</summary>
+    private static IEnumerable<string> VersionTwo => SessionStore.Schema.Select(s =>
+        s.StartsWith("CREATE TABLE rifles", StringComparison.Ordinal) ? "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER)"
+        : s.StartsWith("CREATE TABLE barrels", StringComparison.Ordinal) ? "CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL)"
+        : s.StartsWith("CREATE TABLE loads", StringComparison.Ordinal) ? "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT)"
+        : s);
+
+    private static void Build(string path, IEnumerable<string> statements)
+    {
+        using var db = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={path};Pooling=false");
+        db.Open();
+        foreach (string statement in statements)
+        {
+            using var command = db.CreateCommand();
+            command.CommandText = statement;
+            command.ExecuteNonQuery();
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 5.5: a version 2 database is copied beside itself first, then brought up, and every barrel goes
+    /// under a rifle: one named by its sessions under that rifle, one nobody can place under "Barrels not yet on a rifle", and a rifle's own
+    /// length and twist become its first barrel. Every old session still names the same rifle and barrel, and the counts say what moved.
+    /// </summary>
+    [Fact]
+    public void AVersionTwoDatabaseIsCopiedThenEveryBarrelGoesUnderARifle()
+    {
+        string path = Path.Combine(folder, "two.db");
+        Build(path, [.. VersionTwo,
+            "INSERT INTO meta (key, value) VALUES ('schema_version', '2')",
+            "INSERT INTO rifles (name, click_value, click_unit, twist_in, twist_direction) VALUES ('Tikka T3x', 0.25, 'Moa', 8, 1)",
+            "INSERT INTO rifles (name, click_value, click_unit) VALUES ('Old Mauser', 0.1, 'Mrad')",
+            "INSERT INTO barrels (name, rifle, rounds) VALUES ('Bartlein 26', NULL, 412)",
+            "INSERT INTO barrels (name, rifle, rounds) VALUES ('Spare', NULL, 30)",
+            "INSERT INTO sessions (id, created_utc, sheet_name, rifle, barrel, marking_json, shot_count) VALUES (1, '2026-10-01T10:00:00Z', 'Sheet', 'Old Mauser', 'Bartlein 26', '{}', 5)",
+            "INSERT INTO sessions (id, created_utc, sheet_name, rifle, barrel, marking_json, shot_count) VALUES (2, '2026-10-02T10:00:00Z', 'Sheet', 'Old Mauser', 'Bartlein 26', '{}', 5)",
+            "INSERT INTO sessions (id, created_utc, sheet_name, rifle, barrel, marking_json, shot_count) VALUES (3, '2026-10-03T10:00:00Z', 'Sheet', 'Tikka T3x', 'Spare', '{}', 5)",
+            "INSERT INTO sessions (id, created_utc, sheet_name, rifle, barrel, marking_json, shot_count) VALUES (4, '2026-10-04T10:00:00Z', 'Sheet', 'Old Mauser', 'Spare', '{}', 5)"]);
+
+        var store = SessionStore.Open(path);
+        Assert.NotNull(store.PreUpgradeCopy);
+        Assert.True(File.Exists(store.PreUpgradeCopy));
+        Assert.Equal("two.pre-v2.db", Path.GetFileName(store.PreUpgradeCopy));
+        Assert.Equal(SessionStore.Schema.Select(Normal), store.CreatedSchema().Select(Normal));
+
+        var book = store.LoadBook();
+        Assert.Equal("Old Mauser", book.FindBarrel("Bartlein 26")!.Rifle);
+        Assert.Equal(RecordBook.NotYetOnARifle, book.FindBarrel("Spare")!.Rifle);
+        Assert.Equal(412, book.FindBarrel("Bartlein 26")!.Rounds);
+        var first = book.FindBarrel("Tikka T3x barrel")!;
+        Assert.Equal(("Tikka T3x", 8.0, 1), (first.Rifle, first.TwistInches!.Value, first.TwistDirection!.Value));
+        Assert.Equal("Tikka T3x barrel", book.FindRifle("Tikka T3x")!.BarrelOn);
+        Assert.Equal("Bartlein 26", book.FindRifle("Old Mauser")!.BarrelOn);
+        Assert.All(book.Barrels, b => Assert.NotNull(book.FindRifle(b.Rifle)));
+
+        // Every old session names the same rifle and barrel as before.
+        Assert.Equal([("Old Mauser", "Bartlein 26"), ("Old Mauser", "Bartlein 26"), ("Tikka T3x", "Spare"), ("Old Mauser", "Spare")],
+            Enumerable.Range(1, 4).Select(id => store.Get(id)!).Select(s => (s.Rifle, s.Barrel)));
+
+        Assert.Equal(new BarrelMove(2, 3, 2, 3, 2, 0, 1, 1, 1), store.BarrelMove);
+        Assert.StartsWith("rifles 2 to 3, barrels 2 to 3, barrels with no rifle 2 to 0", store.BarrelMoveSaid(), StringComparison.Ordinal);
+
+        // Opening it again moves nothing and copies nothing.
+        var again = SessionStore.Open(path);
+        Assert.Null(again.PreUpgradeCopy);
+        Assert.Null(again.BarrelMove);
+        Assert.Equal(store.LoadBook().Barrels.Count, again.LoadBook().Barrels.Count);
+    }
+
+    /// <summary>Entry 407 section 5: a barrel's length and twist, and the other fields the Equipment screen has, now reach the database.</summary>
+    [Fact]
+    public void EveryEquipmentFieldReachesTheDatabase()
+    {
+        var store = New();
+        var rifle = new Rifle("Tikka T3x", 0.25, AngularUnit.Moa) { Cartridge = "6.5 Creedmoor", Scope = "Vortex", Stock = "KRG", Notes = "zeroed in May", Manufacturer = "Tikka", BarrelOn = "Bartlein 26" };
+        var barrel = new Barrel("Bartlein 26", "Tikka T3x", 412) { LengthInches = 26, TwistInches = 8, TwistDirection = 1, Installed = new DateOnly(2025, 3, 14), Notes = "fluted" };
+        var load = new Load("H4350 41.5", null) { BulletName = "140 ELD-M", Powder = "H4350", PowderChargeGrains = 41.5, Primer = "CCI 200", OverallLengthInches = 2.8, BaseToOgiveInches = 2.2, BrassManufacturer = "Lapua", BrassCartridge = "6.5 CM", Notes = "best" };
+        store.SaveBook(RecordBook.Empty.With(rifle).With(barrel).With(load));
+        var read = SessionStore.Open(store.Path).LoadBook();
+        Assert.Equal(barrel, read.Barrels.Single());
+        Assert.Equal(load, read.Loads.Single());
+        var back = read.Rifles.Single();
+        Assert.Equal(("6.5 Creedmoor", "Vortex", "KRG", "Bartlein 26", 26.0, 8.0), (back.Cartridge, back.Scope, back.Stock, back.BarrelOn, back.BarrelLengthInches!.Value, back.TwistInches!.Value));
     }
 
     [GeneratedRegex(@"\s+")]

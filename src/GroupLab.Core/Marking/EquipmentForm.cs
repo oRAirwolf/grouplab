@@ -54,16 +54,16 @@ public sealed record EquipmentField(string Key, string Label, FieldKind Kind, st
 /// </summary>
 public static class EquipmentForm
 {
-    /// <summary>The rifle's form, entry 131 section 7.2, in the order it is shown.</summary>
+    /// <summary>
+    /// The rifle's form, entry 131 section 7.2, in the order it is shown. Entry 407 section 5.2 (concept 5B): the barrel's length, twist and
+    /// twist direction moved onto the barrel, which is listed under its rifle, and the rifle takes them from the barrel on now.
+    /// </summary>
     public static ImmutableList<EquipmentField> Rifle { get; } =
     [
         new("name", "Name", FieldKind.Words, Required: true),
         new("firearm", "Rifle or pistol", FieldKind.Choice),
         new("manufacturer", "Manufacturer", FieldKind.Words),
         new("cartridge", "Cartridge", FieldKind.Words),
-        new("barrelLengthInches", "Barrel length", FieldKind.Number, "in"),
-        new("twistInches", "Twist", FieldKind.Number, "in a turn"),
-        new("twistDirection", "Twist direction", FieldKind.Choice),
         new("scope", "Scope", FieldKind.Words),
         new("clickUnit", "Scope unit", FieldKind.Choice),
         new("clickValue", "Click value", FieldKind.Number, "in the scope unit: 0.1, 0.05, 0.25, 0.125 or any other"),

@@ -402,6 +402,13 @@ public static class DataExport
             }
         }
 
+        // Entry 407 section 5: a file written before barrels went under their rifle may carry barrels that name none; they are placed now,
+        // with the sessions just added to say whose they are.
+        if (plan.NewBookItems > 0)
+        {
+            store.PlaceBarrels();
+        }
+
         return plan.NewSessions.Count;
     }
 }

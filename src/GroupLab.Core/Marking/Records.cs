@@ -52,6 +52,13 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
     public string? Notes { get; init; }
 
     /// <summary>
+    /// The barrel on this rifle now, by name, or null where none is marked (NOTES-FROM-PLANNING.md entry 407 section 5). Its length, twist and
+    /// twist direction are copied onto <see cref="BarrelLengthInches"/>, <see cref="TwistInches"/> and <see cref="TwistDirection"/>, which is
+    /// what the ballistic solver reads, so the solver needs no change and always has the barrel that is on.
+    /// </summary>
+    public string? BarrelOn { get; init; }
+
+    /// <summary>
     /// How the click reads to a person: "0.25 MOA a click", "0.1 mil a click", in the unit's own symbol. A NATO mil scope was called MOA here
     /// while the residual beside it said NATO mil (found 2026-10-08 on Alan's 6 ARC session, docs/PROOF-CHECKLIST.md row 16).
     /// </summary>
@@ -175,7 +182,64 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
 
     public RecordBook With(Rifle rifle) => this with { Rifles = [.. Rifles.Where(r => !Same(r.Name, rifle.Name)), rifle] };
 
-    public RecordBook With(Barrel barrel) => this with { Barrels = [.. Barrels.Where(b => !Same(b.Name, barrel.Name)), barrel] };
+    public RecordBook With(Barrel barrel)
+    {
+        var next = this with { Barrels = [.. Barrels.Where(b => !Same(b.Name, barrel.Name)), barrel] };
+        return barrel.Rifle is { } rifle && next.FindRifle(rifle) is { } on && Same(on.BarrelOn, barrel.Name) ? next.PutOn(rifle, barrel.Name) : next;
+    }
+
+    /// <summary>
+    /// The name of the rifle that holds barrels whose rifle is not known, NOTES-FROM-PLANNING.md entry 407 section 5.5: made by the move to
+    /// barrels under their rifle for any barrel it could not place, and the person moves each to its rifle.
+    /// </summary>
+    public const string NotYetOnARifle = "Barrels not yet on a rifle";
+
+    /// <summary>The barrels on a rifle, the one on now first, then by name.</summary>
+    public IReadOnlyList<Barrel> BarrelsOf(string? rifle)
+    {
+        var on = FindRifle(rifle)?.BarrelOn;
+        return [.. Barrels.Where(b => Same(b.Rifle, rifle)).OrderBy(b => Same(b.Name, on) ? 0 : 1).ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)];
+    }
+
+    /// <summary>The barrel on a rifle now, or null.</summary>
+    public Barrel? OnNow(string? rifle) => FindRifle(rifle)?.BarrelOn is { } on && FindBarrel(on) is { } barrel && Same(barrel.Rifle, rifle) ? barrel : null;
+
+    /// <summary>
+    /// Marks a barrel as the one on its rifle now, and copies its length and twist onto the rifle, where the ballistic solver reads them. A
+    /// barrel with none of them leaves the rifle's own as they were.
+    /// </summary>
+    public RecordBook PutOn(string rifle, string barrel)
+    {
+        if (FindRifle(rifle) is not { } r || FindBarrel(barrel) is not { } b)
+        {
+            return this;
+        }
+
+        var on = r with
+        {
+            BarrelOn = b.Name,
+            BarrelLengthInches = b.LengthInches ?? r.BarrelLengthInches,
+            TwistInches = b.TwistInches ?? r.TwistInches,
+            TwistDirection = b.TwistDirection ?? r.TwistDirection,
+        };
+        return this with { Rifles = [.. Rifles.Select(x => Same(x.Name, rifle) ? on : x)] };
+    }
+
+    /// <summary>
+    /// What the setup's one list says for a rifle and a barrel together: "Test rifle with its 26 in Bartlein (on now)", or the rifle alone
+    /// where it has no barrels. The length is in the record's inches, as the barrel's form takes it.
+    /// </summary>
+    public string Together(Rifle rifle, Barrel? barrel)
+    {
+        ArgumentNullException.ThrowIfNull(rifle);
+        if (barrel is null)
+        {
+            return rifle.Name;
+        }
+
+        string length = barrel.LengthInches is { } inches ? inches.ToString("0.##", CultureInfo.InvariantCulture) + " in " : "";
+        return $"{rifle.Name} with its {length}{barrel.Name}" + (Same(rifle.BarrelOn, barrel.Name) ? " (on now)" : "");
+    }
 
     public RecordBook With(Load load) => this with { Loads = [.. Loads.Where(l => !Same(l.Name, load.Name)), load] };
 
@@ -216,6 +280,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
             r.Scope,
             r.Stock,
             r.Notes,
+            r.BarrelOn,
         }),
         barrels = Barrels.Select(b => new
         {
@@ -276,6 +341,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
                     Scope = (string?)r["scope"],
                     Stock = (string?)r["stock"],
                     Notes = (string?)r["notes"],
+                    BarrelOn = (string?)r["barrelOn"],
                 })],
                 [.. (root["barrels"] as JsonArray ?? []).Select(b => new Barrel((string)b!["name"]!, (string?)b["rifle"], (int?)b["rounds"] ?? 0)
                 {

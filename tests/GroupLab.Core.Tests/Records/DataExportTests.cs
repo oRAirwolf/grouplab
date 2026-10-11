@@ -164,6 +164,35 @@ public class DataExportTests
         }
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 5: a file written before barrels went under their rifle still reads, and its barrel, which named
+    /// no rifle, goes under the one rifle its sessions name; a file written now carries the barrel on each rifle and comes back with it.
+    /// </summary>
+    [Fact]
+    public void AFileFromBeforeBarrelsWentUnderTheirRiflePlacesThemOnImport()
+    {
+        string folder = Folder();
+        try
+        {
+            const string old = "{\"format\":\"grouplab-data\",\"version\":1,\"book\":{\"rifles\":[{\"name\":\"Tikka\",\"clickValue\":0.1,\"clickUnit\":\"Mrad\"}],"
+                + "\"barrels\":[{\"name\":\"Bartlein\",\"rounds\":40}],\"loads\":[]},\"sessions\":[{\"session\":{\"id\":7,\"createdUtc\":\"2026-09-01T10:00:00Z\","
+                + "\"sheetName\":\"Sheet\",\"rifle\":\"Tikka\",\"barrel\":\"Bartlein\",\"markingJson\":\"{}\",\"shotCount\":5},\"strings\":[],\"velocities\":[]}]}";
+            var store = SessionStore.Open(Path.Combine(folder, "grouplab.db"));
+            DataExport.Apply(DataExport.Plan(DataExport.Read(new MemoryStream(Encoding.UTF8.GetBytes(old))), store, [], []), store);
+            var book = store.LoadBook();
+            Assert.Equal("Tikka", book.FindBarrel("Bartlein")!.Rifle);
+            Assert.Equal("Bartlein", book.FindRifle("Tikka")!.BarrelOn);
+
+            var again = SessionStore.Open(Path.Combine(folder, "again.db"));
+            DataExport.Apply(DataExport.Plan(Read(Export(store)), again, [], []), again);
+            Assert.Equal("Bartlein", again.LoadBook().FindRifle("Tikka")!.BarrelOn);
+        }
+        finally
+        {
+            Delete(folder);
+        }
+    }
+
     [Fact]
     public void AnOlderFileIsReadAndANewerOrDamagedOneIsRefusedPlainly()
     {

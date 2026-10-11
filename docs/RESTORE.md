@@ -29,6 +29,7 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
 | The server's GroupLab files: scripts, units, the nginx include, `.user.ini` | the repository (`website/server/`), and `install.py`'s dated copies | every change | the repository; `/home/ubuntu/grouplab-server/`, `/home/airwolf/backups/grouplab.org/config/` | `sudo python3 install.py --intake`, `--errors`, `--survey`, `--learning --backup <a fresh change backup>` |
 | The server's private folders: `ready`, `incoming`, error reports, survey | nothing waits there for long: each is archived, turned into an issue, or counted and deleted | as the workers run | as each row above | nothing to restore; a lost report is sent again by the application |
+| GroupLab's own database on each device, `grouplab.db`: a new build that changes its schema changes it (entry 407 section 5, version 3, barrels under their rifle) | `grouplab.pre-vN.db` beside it, a whole copy GroupLab makes with SQLite's `VACUUM INTO` before any upgrade, never overwritten or deleted by GroupLab; and the person's own export file (Settings, Your data) | before each upgrade | the same folder as `grouplab.db` (the ··· menu, Open the session's folder) | "GroupLab's database" below |
 | **The server as a whole, pissinhot.com included** | Oracle Cloud boot volume backups, policy `grouplab-daily`: one a day at 09:00 UTC, kept 4 days, so never more than the five Always Free covers (entry 398); restore tested 2026-10-09; and HestiaCP's own user backups, one a user, on the server | daily | Oracle Cloud, off the machine; `/backup` on the server | "The whole server" below |
 
 **The gaps, today:** none. **The schedule** (entry 398 section 6, Alan, 2026-10-09: "Cut to 5 days to stay free."): one backup a
@@ -146,6 +147,11 @@ manifest lists every file with its SHA-256, so a copy can be checked before it i
 `gh release download archive-YYYY-MM -R oRAirwolf/grouplab-submissions-archive -p <name>.zip`.
 
 **The server's GroupLab files.** `install.py` as in the table.
+
+**GroupLab's database** (entry 407 section 5). Close GroupLab. In the folder that holds `grouplab.db` (on the desktop, the ··· menu's
+Open the session's folder), rename `grouplab.db` to `grouplab.after-upgrade.db`, and copy `grouplab.pre-v2.db` to `grouplab.db`. Open the
+older GroupLab that wrote it: a newer GroupLab opens it too, but upgrades it again, making a fresh copy first. Nothing in the copy is newer
+than the moment before the upgrade, so sessions saved after it are in `grouplab.after-upgrade.db`, which GroupLab can export from.
 
 **The whole server** (entries 224 and 225), pissinhot.com included. In the Oracle Cloud console, region US West (San Jose), compartment
 spetsnaz (root):

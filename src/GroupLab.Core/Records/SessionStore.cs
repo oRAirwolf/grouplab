@@ -73,24 +73,52 @@ public sealed record ShotVelocity(long SessionId, int ShotId, long StringId, int
 public sealed class SessionStore
 {
     /// <summary>The schema's version, stored in the meta table and in every export.</summary>
-    public const int SchemaVersion = 2;
+    public const int SchemaVersion = 3;
 
     /// <summary>
     /// What each version before this one needs to become this one, oldest first, NOTES-FROM-PLANNING.md entry 115 section 3. Version 2 adds
     /// where a load's muzzle velocity SD came from, so a figure measured from a chronograph string says so rather than looking typed.
+    /// <para>
+    /// Version 3, NOTES-FROM-PLANNING.md entry 407 section 5: the barrel on each rifle now, and every field the Equipment screen has had since
+    /// entry 131 section 7. Those fields were in the record book's own file and never in the database, so a barrel's length and twist, a
+    /// rifle's cartridge or scope and a load's powder and charge were dropped at every save; this keeps them. Each column is added at the end,
+    /// in the order a new database creates it, so a database brought up from version 2 has the same columns in the same places.
+    /// </para>
     /// </summary>
     public static IReadOnlyList<(int From, string Statement)> Upgrades { get; } =
     [
         (1, "ALTER TABLE loads ADD COLUMN muzzle_velocity_sd_from TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN firearm TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN manufacturer TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN cartridge TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN barrel_length_in REAL"),
+        (2, "ALTER TABLE rifles ADD COLUMN scope TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN stock TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN notes TEXT"),
+        (2, "ALTER TABLE rifles ADD COLUMN barrel_on TEXT"),
+        (2, "ALTER TABLE barrels ADD COLUMN length_in REAL"),
+        (2, "ALTER TABLE barrels ADD COLUMN twist_in REAL"),
+        (2, "ALTER TABLE barrels ADD COLUMN twist_direction INTEGER"),
+        (2, "ALTER TABLE barrels ADD COLUMN installed TEXT"),
+        (2, "ALTER TABLE barrels ADD COLUMN notes TEXT"),
+        (2, "ALTER TABLE loads ADD COLUMN bullet_name TEXT"),
+        (2, "ALTER TABLE loads ADD COLUMN brass_manufacturer TEXT"),
+        (2, "ALTER TABLE loads ADD COLUMN brass_cartridge TEXT"),
+        (2, "ALTER TABLE loads ADD COLUMN powder TEXT"),
+        (2, "ALTER TABLE loads ADD COLUMN powder_charge_gr REAL"),
+        (2, "ALTER TABLE loads ADD COLUMN overall_length_in REAL"),
+        (2, "ALTER TABLE loads ADD COLUMN base_to_ogive_in REAL"),
+        (2, "ALTER TABLE loads ADD COLUMN primer TEXT"),
+        (2, "ALTER TABLE loads ADD COLUMN notes TEXT"),
     ];
 
     /// <summary>Every statement that creates the schema, in order, exactly as docs/SESSION-SCHEMA.md gives them.</summary>
     public static IReadOnlyList<string> Schema { get; } =
     [
         "CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
-        "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER)",
-        "CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL)",
-        "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT)",
+        "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER, firearm TEXT, manufacturer TEXT, cartridge TEXT, barrel_length_in REAL, scope TEXT, stock TEXT, notes TEXT, barrel_on TEXT)",
+        "CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL, length_in REAL, twist_in REAL, twist_direction INTEGER, installed TEXT, notes TEXT)",
+        "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT, bullet_name TEXT, brass_manufacturer TEXT, brass_cartridge TEXT, powder TEXT, powder_charge_gr REAL, overall_length_in REAL, base_to_ogive_in REAL, primer TEXT, notes TEXT)",
         "CREATE TABLE sessions (id INTEGER PRIMARY KEY, created_utc TEXT NOT NULL, shot_date TEXT, sheet_name TEXT NOT NULL, definition_id TEXT, definition_json TEXT, distance_in REAL, rifle TEXT, barrel TEXT, load TEXT, calibre_in REAL, marking_json TEXT NOT NULL, shot_count INTEGER NOT NULL, mean_radius_in REAL, mean_radius_lower_in REAL, mean_radius_upper_in REAL, image_path TEXT, image_sha256 TEXT, proof_image BLOB, proof_image_type TEXT)",
         "CREATE TABLE chronograph_strings (id INTEGER PRIMARY KEY, session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE, source TEXT NOT NULL, recorded_utc TEXT)",
         "CREATE TABLE chronograph_shots (string_id INTEGER NOT NULL REFERENCES chronograph_strings(id) ON DELETE CASCADE, ordinal INTEGER NOT NULL, velocity_fps REAL NOT NULL, PRIMARY KEY (string_id, ordinal))",
@@ -138,6 +166,9 @@ public sealed class SessionStore
         string? version = Scalar(db, "SELECT value FROM meta WHERE key = 'schema_version'") as string;
         if (int.TryParse(version, NumberStyles.Integer, CultureInfo.InvariantCulture, out int had) && had < SchemaVersion)
         {
+            // Entry 407 section 5.5: a copy of the database as it was, beside it, before anything in it is changed. It is never overwritten
+            // and never deleted by GroupLab; docs/RESTORE.md says how to put it back.
+            store.PreUpgradeCopy = BackUp(db, path, had);
             using var upgrade = db.BeginTransaction();
             foreach (var (from, statement) in Upgrades.Where(u => u.From >= had).OrderBy(u => u.From))
             {
@@ -169,7 +200,81 @@ public sealed class SessionStore
             Execute(db, "INSERT INTO meta (key, value) VALUES ('records_migrated', $f)", ("$f", System.IO.Path.GetFileName(backup)));
         }
 
+        // Entry 407 section 5.5: every barrel under a rifle, once, after the copy above.
+        if (Scalar(db, "SELECT value FROM meta WHERE key = 'barrels_on_rifles'") is null)
+        {
+            var (book, move) = BarrelMigration.Run(store.LoadBook(), RiflesAndBarrels(db));
+            using var moving = db.BeginTransaction();
+            WriteBook(db, book);
+            Execute(db, "INSERT INTO meta (key, value) VALUES ('barrels_on_rifles', $m)", ("$m", move.Says()));
+            moving.Commit();
+            store.BarrelMove = move;
+        }
+
         return store;
+    }
+
+    /// <summary>Each saved session's rifle and barrel, as the sessions table holds them.</summary>
+    private static List<(string? Rifle, string? Barrel)> RiflesAndBarrels(SqliteConnection db)
+    {
+        var sessions = new List<(string?, string?)>();
+        using var command = Command(db, "SELECT rifle, barrel FROM sessions", []);
+        using var r = command.ExecuteReader();
+        while (r.Read())
+        {
+            sessions.Add((Text(r, 0), Text(r, 1)));
+        }
+
+        return sessions;
+    }
+
+    /// <summary>
+    /// Puts every barrel under a rifle again, as the first open after the move did (entry 407 section 5.5), for records that arrive later from
+    /// a file written before it: an import adds what it carries, and a barrel from an older file names no rifle.
+    /// </summary>
+    public BarrelMove PlaceBarrels()
+    {
+        using var db = Connect();
+        var before = LoadBook();
+        var (book, move) = BarrelMigration.Run(before, RiflesAndBarrels(db));
+        if (book != before)
+        {
+            using var transaction = db.BeginTransaction();
+            WriteBook(db, book);
+            transaction.Commit();
+        }
+
+        return move;
+    }
+
+    /// <summary>The copy made before this open brought an older database up to this schema, or null where none was needed.</summary>
+    public string? PreUpgradeCopy { get; private set; }
+
+    /// <summary>What this open's move to barrels under their rifle did, or null where it had been done before.</summary>
+    public BarrelMove? BarrelMove { get; private set; }
+
+    /// <summary>What the move to barrels under their rifle did, as the meta table keeps it, or null before it has run.</summary>
+    public string? BarrelMoveSaid()
+    {
+        using var db = Connect();
+        return Scalar(db, "SELECT value FROM meta WHERE key = 'barrels_on_rifles'") as string;
+    }
+
+    /// <summary>
+    /// Copies the whole database, as SQLite's own VACUUM INTO writes it, to <c>name.pre-vN.db</c> beside it, or a dated name where that is taken.
+    /// </summary>
+    private static string BackUp(SqliteConnection db, string path, int version)
+    {
+        string folder = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(path))!;
+        string stem = System.IO.Path.GetFileNameWithoutExtension(path);
+        string copy = System.IO.Path.Combine(folder, string.Create(CultureInfo.InvariantCulture, $"{stem}.pre-v{version}.db"));
+        if (File.Exists(copy))
+        {
+            copy = System.IO.Path.Combine(folder, string.Create(CultureInfo.InvariantCulture, $"{stem}.pre-v{version}-{DateTime.UtcNow:yyyyMMddHHmmss}.db"));
+        }
+
+        Execute(db, "VACUUM INTO $to", ("$to", copy));
+        return copy;
     }
 
     private SqliteConnection Connect()
@@ -218,7 +323,7 @@ public sealed class SessionStore
     {
         using var db = Connect();
         var rifles = new List<Rifle>();
-        using (var command = Command(db, "SELECT name, click_value, click_unit, sight_height_in, zero_distance_yd, twist_in, twist_direction FROM rifles ORDER BY name", []))
+        using (var command = Command(db, "SELECT name, click_value, click_unit, sight_height_in, zero_distance_yd, twist_in, twist_direction, firearm, manufacturer, cartridge, barrel_length_in, scope, stock, notes, barrel_on FROM rifles ORDER BY name", []))
         using (var r = command.ExecuteReader())
         {
             while (r.Read())
@@ -229,22 +334,37 @@ public sealed class SessionStore
                     ZeroDistanceYards = Real(r, 4),
                     TwistInches = Real(r, 5),
                     TwistDirection = Integer(r, 6),
+                    Firearm = Text(r, 7) is { } firearm && Enum.TryParse<FirearmType>(firearm, out var type) ? type : FirearmType.Rifle,
+                    Manufacturer = Text(r, 8),
+                    Cartridge = Text(r, 9),
+                    BarrelLengthInches = Real(r, 10),
+                    Scope = Text(r, 11),
+                    Stock = Text(r, 12),
+                    Notes = Text(r, 13),
+                    BarrelOn = Text(r, 14),
                 });
             }
         }
 
         var barrels = new List<Barrel>();
-        using (var command = Command(db, "SELECT name, rifle, rounds FROM barrels ORDER BY name", []))
+        using (var command = Command(db, "SELECT name, rifle, rounds, length_in, twist_in, twist_direction, installed, notes FROM barrels ORDER BY name", []))
         using (var r = command.ExecuteReader())
         {
             while (r.Read())
             {
-                barrels.Add(new Barrel(r.GetString(0), Text(r, 1), r.GetInt32(2)));
+                barrels.Add(new Barrel(r.GetString(0), Text(r, 1), r.GetInt32(2))
+                {
+                    LengthInches = Real(r, 3),
+                    TwistInches = Real(r, 4),
+                    TwistDirection = Integer(r, 5),
+                    Installed = Text(r, 6) is { } day && DateOnly.TryParse(day, CultureInfo.InvariantCulture, out var date) ? date : null,
+                    Notes = Text(r, 7),
+                });
             }
         }
 
         var loads = new List<Load>();
-        using (var command = Command(db, "SELECT name, components, muzzle_velocity_fps, muzzle_velocity_sd_fps, ballistic_coefficient, drag_model, bc_reference, bullet_weight_gr, bullet_length_in, bullet_diameter_in, muzzle_velocity_sd_from FROM loads ORDER BY name", []))
+        using (var command = Command(db, "SELECT name, components, muzzle_velocity_fps, muzzle_velocity_sd_fps, ballistic_coefficient, drag_model, bc_reference, bullet_weight_gr, bullet_length_in, bullet_diameter_in, muzzle_velocity_sd_from, bullet_name, brass_manufacturer, brass_cartridge, powder, powder_charge_gr, overall_length_in, base_to_ogive_in, primer, notes FROM loads ORDER BY name", []))
         using (var r = command.ExecuteReader())
         {
             while (r.Read())
@@ -260,6 +380,15 @@ public sealed class SessionStore
                     BulletLengthInches = Real(r, 8),
                     BulletDiameterInches = Real(r, 9),
                     MuzzleVelocitySdFrom = Text(r, 10),
+                    BulletName = Text(r, 11),
+                    BrassManufacturer = Text(r, 12),
+                    BrassCartridge = Text(r, 13),
+                    Powder = Text(r, 14),
+                    PowderChargeGrains = Real(r, 15),
+                    OverallLengthInches = Real(r, 16),
+                    BaseToOgiveInches = Real(r, 17),
+                    Primer = Text(r, 18),
+                    Notes = Text(r, 19),
                 });
             }
         }
@@ -284,21 +413,27 @@ public sealed class SessionStore
         Execute(db, "DELETE FROM loads");
         foreach (var rifle in book.Rifles)
         {
-            Execute(db, "INSERT INTO rifles VALUES ($n, $c, $u, $s, $z, $t, $d)", ("$n", rifle.Name), ("$c", rifle.ClickValue), ("$u", rifle.ClickUnit.ToString()),
-                ("$s", rifle.SightHeightInches), ("$z", rifle.ZeroDistanceYards), ("$t", rifle.TwistInches), ("$d", rifle.TwistDirection));
+            Execute(db, "INSERT INTO rifles VALUES ($n, $c, $u, $s, $z, $t, $d, $f, $m, $ca, $bl, $sc, $st, $no, $on)", ("$n", rifle.Name), ("$c", rifle.ClickValue),
+                ("$u", rifle.ClickUnit.ToString()), ("$s", rifle.SightHeightInches), ("$z", rifle.ZeroDistanceYards), ("$t", rifle.TwistInches), ("$d", rifle.TwistDirection),
+                ("$f", rifle.Firearm.ToString()), ("$m", rifle.Manufacturer), ("$ca", rifle.Cartridge), ("$bl", rifle.BarrelLengthInches), ("$sc", rifle.Scope),
+                ("$st", rifle.Stock), ("$no", rifle.Notes), ("$on", rifle.BarrelOn));
         }
 
         foreach (var barrel in book.Barrels)
         {
-            Execute(db, "INSERT INTO barrels VALUES ($n, $r, $k)", ("$n", barrel.Name), ("$r", barrel.Rifle), ("$k", barrel.Rounds));
+            Execute(db, "INSERT INTO barrels VALUES ($n, $r, $k, $l, $t, $d, $i, $no)", ("$n", barrel.Name), ("$r", barrel.Rifle), ("$k", barrel.Rounds),
+                ("$l", barrel.LengthInches), ("$t", barrel.TwistInches), ("$d", barrel.TwistDirection),
+                ("$i", barrel.Installed?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)), ("$no", barrel.Notes));
         }
 
         foreach (var load in book.Loads)
         {
-            Execute(db, "INSERT INTO loads VALUES ($n, $c, $v, $sd, $bc, $m, $ref, $w, $l, $d, $from)", ("$n", load.Name), ("$c", load.Components),
-                ("$v", load.MuzzleVelocityFps), ("$sd", load.MuzzleVelocitySdFps), ("$bc", load.BallisticCoefficient), ("$m", load.DragModel?.ToString()),
-                ("$ref", load.BcReference?.ToString()), ("$w", load.BulletWeightGrains), ("$l", load.BulletLengthInches), ("$d", load.BulletDiameterInches),
-                ("$from", load.MuzzleVelocitySdFrom));
+            Execute(db, "INSERT INTO loads VALUES ($n, $c, $v, $sd, $bc, $m, $ref, $w, $l, $d, $from, $bn, $bm, $bcart, $p, $pc, $oal, $bto, $pr, $no)", ("$n", load.Name),
+                ("$c", load.Components), ("$v", load.MuzzleVelocityFps), ("$sd", load.MuzzleVelocitySdFps), ("$bc", load.BallisticCoefficient),
+                ("$m", load.DragModel?.ToString()), ("$ref", load.BcReference?.ToString()), ("$w", load.BulletWeightGrains), ("$l", load.BulletLengthInches),
+                ("$d", load.BulletDiameterInches), ("$from", load.MuzzleVelocitySdFrom), ("$bn", load.BulletName), ("$bm", load.BrassManufacturer),
+                ("$bcart", load.BrassCartridge), ("$p", load.Powder), ("$pc", load.PowderChargeGrains), ("$oal", load.OverallLengthInches),
+                ("$bto", load.BaseToOgiveInches), ("$pr", load.Primer), ("$no", load.Notes));
         }
     }
 
@@ -504,8 +639,13 @@ public sealed class SessionStore
             {
                 ["name"] = x.Name, ["clickValue"] = x.ClickValue, ["clickUnit"] = x.ClickUnit.ToString(), ["sightHeightInches"] = x.SightHeightInches,
                 ["zeroDistanceYards"] = x.ZeroDistanceYards, ["twistInches"] = x.TwistInches, ["twistDirection"] = x.TwistDirection,
+                ["barrelLengthInches"] = x.BarrelLengthInches, ["barrelOn"] = x.BarrelOn,
             })]),
-            ["barrels"] = new JsonArray([.. book.Barrels.Select(x => (JsonNode)new JsonObject { ["name"] = x.Name, ["rifle"] = x.Rifle, ["rounds"] = x.Rounds })]),
+            ["barrels"] = new JsonArray([.. book.Barrels.Select(x => (JsonNode)new JsonObject
+            {
+                ["name"] = x.Name, ["rifle"] = x.Rifle, ["rounds"] = x.Rounds, ["lengthInches"] = x.LengthInches, ["twistInches"] = x.TwistInches,
+                ["twistDirection"] = x.TwistDirection,
+            })]),
             ["loads"] = new JsonArray([.. book.Loads.Select(x => (JsonNode)new JsonObject
             {
                 ["name"] = x.Name, ["components"] = x.Components, ["muzzleVelocityFps"] = x.MuzzleVelocityFps, ["muzzleVelocitySdFps"] = x.MuzzleVelocitySdFps,
@@ -540,9 +680,11 @@ public sealed class SessionStore
             throw new InvalidDataException("This is not a GroupLab export.");
         }
 
-        if ((int?)root["schemaVersion"] != SchemaVersion)
+        // Entry 407 section 5: an export from version 2 has no barrel on any rifle and barrels that may name none; it reads, and the barrels
+        // are put under their rifles as the move does on opening.
+        if ((int?)root["schemaVersion"] is not (2 or SchemaVersion))
         {
-            throw new InvalidDataException($"This export has schema version {(int?)root["schemaVersion"]}, and this GroupLab reads version {SchemaVersion}.");
+            throw new InvalidDataException($"This export has schema version {(int?)root["schemaVersion"]}, and this GroupLab reads versions 2 to {SchemaVersion}.");
         }
 
         using var db = Connect();
@@ -556,9 +698,12 @@ public sealed class SessionStore
             [.. (root["rifles"] as JsonArray ?? []).Select(x => new Rifle((string)x!["name"]!, (double)x["clickValue"]!, Enum.Parse<AngularUnit>((string)x["clickUnit"]!))
             {
                 SightHeightInches = (double?)x["sightHeightInches"], ZeroDistanceYards = (double?)x["zeroDistanceYards"], TwistInches = (double?)x["twistInches"],
-                TwistDirection = (int?)x["twistDirection"],
+                TwistDirection = (int?)x["twistDirection"], BarrelLengthInches = (double?)x["barrelLengthInches"], BarrelOn = (string?)x["barrelOn"],
             })],
-            [.. (root["barrels"] as JsonArray ?? []).Select(x => new Barrel((string)x!["name"]!, (string?)x["rifle"], (int)x["rounds"]!))],
+            [.. (root["barrels"] as JsonArray ?? []).Select(x => new Barrel((string)x!["name"]!, (string?)x["rifle"], (int)x["rounds"]!)
+            {
+                LengthInches = (double?)x["lengthInches"], TwistInches = (double?)x["twistInches"], TwistDirection = (int?)x["twistDirection"],
+            })],
             [.. (root["loads"] as JsonArray ?? []).Select(x => new Load((string)x!["name"]!, (string?)x["components"])
             {
                 MuzzleVelocityFps = (double?)x["muzzleVelocityFps"], MuzzleVelocitySdFps = (double?)x["muzzleVelocitySdFps"],
@@ -592,6 +737,11 @@ public sealed class SessionStore
         foreach (var x in root["shotVelocities"] as JsonArray ?? [])
         {
             Execute(db, "INSERT INTO shot_velocities VALUES ($s, $shot, $str, $o)", ("$s", (long)x!["sessionId"]!), ("$shot", (int)x["shotId"]!), ("$str", (long)x["stringId"]!), ("$o", (int)x["ordinal"]!));
+        }
+
+        if ((int?)root["schemaVersion"] == 2)
+        {
+            WriteBook(db, BarrelMigration.Run(book, RiflesAndBarrels(db)).Book);
         }
 
         transaction.Commit();
