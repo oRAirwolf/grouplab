@@ -1456,7 +1456,8 @@ public sealed partial class MainWindow : Window
             beneath: inches => Sized(inches, distance).Beneath, conditions: ConditionsForVelocity(state));
         velocityPanel.IsVisible = Velocity is not null;
         velocityPanel.Child = Velocity is { } block
-            ? VelocityBlockView.Build(block, VelocityAction, units.Speed, WhyOpen(VelocityWhyItem), open => RememberOpen(VelocityWhyItem, open))
+            ? VelocityBlockView.Build(block, VelocityAction, units.Speed, WhyOpen(VelocityWhyItem), open => RememberOpen(VelocityWhyItem, open),
+                block.State == VelocityBlockState.NoReadings ? ReadingsHere() : null)
             : null;
         plot.VelocityBand = Velocity?.Band;
         velocityBandBox.IsVisible = plot.VelocityBand is not null;

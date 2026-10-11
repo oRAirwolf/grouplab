@@ -123,6 +123,12 @@ public sealed partial class MainWindow
             return;
         }
 
+        await ImportChronographPath(path);
+    }
+
+    /// <summary>A chronograph file from its path, picked or dropped (entry 407 section 7), read into the section as the picker's is.</summary>
+    internal async Task ImportChronographPath(string path)
+    {
         try
         {
             string source = Path.GetFileNameWithoutExtension(path);

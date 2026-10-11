@@ -22,7 +22,9 @@ internal static class VelocityBlockView
     /// The block. <paramref name="act"/> is what the button of states 3 and 4 does, given the state; <paramref name="whyOpen"/> whether "why"
     /// starts open, and <paramref name="whyChanged"/> hears it opened or closed so the screen can remember it.
     /// </summary>
-    public static StackPanel Build(VelocityBlock block, Action<VelocityBlockState>? act, Func<double, string> speed, bool whyOpen = false, Action<bool>? whyChanged = null)
+    /// <param name="noReadings">Entry 407 section 7: what stands in for the button where there are no readings, the way to enter them here.</param>
+    public static StackPanel Build(VelocityBlock block, Action<VelocityBlockState>? act, Func<double, string> speed, bool whyOpen = false, Action<bool>? whyChanged = null,
+        Control? noReadings = null)
     {
         ArgumentNullException.ThrowIfNull(block);
         ArgumentNullException.ThrowIfNull(speed);
@@ -51,7 +53,11 @@ internal static class VelocityBlockView
         if (!block.HasResult)
         {
             column.Children.Add(new TextBlock { Text = block.Sentence, TextWrapping = TextWrapping.Wrap });
-            if (block.Action is { } words && act is not null)
+            if (block.State == VelocityBlockState.NoReadings && noReadings is not null)
+            {
+                column.Children.Add(noReadings);
+            }
+            else if (block.Action is { } words && act is not null)
             {
                 var button = new Button { Content = words, MinHeight = 44, HorizontalAlignment = HorizontalAlignment.Left };
                 button.Click += (_, _) => act(block.State);

@@ -175,7 +175,19 @@ internal sealed class FiguresView : UserControl
             // Entry 323 section 3, Phone B: the card of its own, full width, directly above All figures.
             if (section.Key == "all" && Velocity is { } velocity)
             {
-                column.Children.Add(Screens.Card(VelocityBlockView.Build(velocity, VelocityAction, units.Speed, velocityWhyOpen, open => velocityWhyOpen = open)).Id("result-velocity"));
+                // Entry 407 section 7: with no readings, the card says what they add and offers the readings page two ways, Import a file
+                // first, from the same place on the result as the desktop's block; the page holds both the import and the box.
+                var noReadings = new StackPanel
+                {
+                    Spacing = 8,
+                    Children =
+                    {
+                        Screens.Dim(VelocityBlock.ReadingsAdd),
+                        Screens.Primary(VelocityBlock.ImportAFile, () => VelocityAction?.Invoke(VelocityBlockState.NoReadings)).Id("velocity-import"),
+                        Screens.Choice(VelocityBlock.TypeThemIn, () => VelocityAction?.Invoke(VelocityBlockState.NoReadings)).Id("velocity-type"),
+                    },
+                };
+                column.Children.Add(Screens.Card(VelocityBlockView.Build(velocity, VelocityAction, units.Speed, velocityWhyOpen, open => velocityWhyOpen = open, noReadings)).Id("result-velocity"));
             }
 
             var rows = new StackPanel { Spacing = 10 };

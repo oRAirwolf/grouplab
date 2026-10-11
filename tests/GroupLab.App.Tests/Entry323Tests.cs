@@ -33,11 +33,14 @@ public class Entry323Tests
             window.Analyse();
             Settle();
 
-            // State 3: no readings yet, the approved sentence and a button to the chronograph entry; no band and no switch for one.
+            // State 3: no readings yet, the approved sentence and, since entry 407 section 7, the readings entered right here: Import a file and
+            // Type them in, and a drop area; no band and no switch for one.
             var block = Assert.IsType<VelocityBlock>(window.Velocity);
             Assert.Equal(VelocityBlockState.NoReadings, block.State);
             Assert.Contains(Words(window), t => t == VelocityBlock.NoReadingsSentence);
-            Assert.Contains(Buttons(window), b => b == "Add readings");
+            Assert.Contains(Buttons(window), b => b == VelocityBlock.ImportAFile);
+            Assert.Contains(Buttons(window), b => b == VelocityBlock.TypeThemIn);
+            Assert.Contains(Words(window), t => t == VelocityBlock.DropHere);
             Assert.False(window.VelocityBandToggle.IsVisible);
             Assert.Null(window.Plot.VelocityBand);
 

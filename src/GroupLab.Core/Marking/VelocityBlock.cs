@@ -83,6 +83,30 @@ public sealed record VelocityBlock(
     /// <summary>State 3's sentence, approved word for word.</summary>
     public const string NoReadingsSentence = "Add this group's chronograph readings to see how much of its vertical comes from velocity.";
 
+    // NOTES-FROM-PLANNING.md entry 407 section 7 (concept 7A, Alan's pick, which answers question 88): the readings entered on the analysis
+    // itself, where the block that needs them is, rather than on Ballistics. The same words on the desktop and the phone.
+
+    /// <summary>Under the sentence: what the readings add.</summary>
+    public const string ReadingsAdd = "Each shot's speed beside where it landed shows how much of the vertical is velocity, and gives the load its velocity SD.";
+
+    /// <summary>The primary button.</summary>
+    public const string ImportAFile = "Import a file";
+
+    /// <summary>The second button, which opens a box for the speeds.</summary>
+    public const string TypeThemIn = "Type them in";
+
+    /// <summary>The drop area, naming only the formats GroupLab reads (<see cref="GroupLab.Core.Records.ChronographFiles"/>).</summary>
+    public const string DropHere = "or drop a Garmin Xero, LabRadar or CSV file here";
+
+    /// <summary>The box's own line.</summary>
+    public const string TypeHow = "The speeds in the order fired, separated by spaces or new lines.";
+
+    /// <summary>The box's button, which pairs the readings with the shots as Ballistics' chronograph section does and keeps them.</summary>
+    public const string MatchToShots = "Match to shots";
+
+    /// <summary>"12 of 23 entered".</summary>
+    public static string Entered(int readings, int shots) => string.Create(CultureInfo.InvariantCulture, $"{readings} of {shots} entered");
+
     /// <summary>State 4's sentence, approved word for word.</summary>
     public const string NeedsSentence = "The solver needs the distance shot and the bullet's BC to work this out.";
 

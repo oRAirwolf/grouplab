@@ -75,8 +75,9 @@ public class Entry323Tests
         Assert.Equal(column.Children.IndexOf(card) + 1, column.Children.ToList().FindIndex(c => c is Expander));
         Assert.DoesNotContain(figures.GetLogicalDescendants().OfType<Button>(), b => Equals(b.Content, "Velocity band"));
 
-        // "Add readings" opens the chronograph entry; the pairing is kept only when pressed for, and the card comes back with a result.
-        card.GetLogicalDescendants().OfType<Button>().Single(b => Equals(b.Content, "Add readings")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        // "Type them in" (entry 407 section 7; "Add readings" before) opens the chronograph entry; the pairing is kept only when pressed for, and
+        // the card comes back with a result.
+        card.GetLogicalDescendants().OfType<Button>().Single(b => AutomationIdOf(b) == "velocity-type").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         Settle();
         var page = (Control)view.Content!;
         int shots = result.State.Shots.Count(s => s.IsShot && s.Exclusion is null);
