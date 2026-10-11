@@ -99,10 +99,12 @@ public sealed partial class MainWindow
             toggle.Content = TargetMaterial.FoldTitle + (inside.IsVisible ? " \u25BE" : " \u25B8");
         };
         materialInside = inside;
+        materialToggle = toggle;
         return new StackPanel { Spacing = Tokens.Space4, Children = { toggle, inside } };
     }
 
     private StackPanel? materialInside;
+    private Button? materialToggle;
 
     /// <summary>For the headless tests: whether the fold is open, and opening it.</summary>
     internal bool MaterialFoldOpen
@@ -110,11 +112,20 @@ public sealed partial class MainWindow
         get => materialInside?.IsVisible == true;
         set
         {
-            if (materialInside is not null)
+            if (materialInside is not null && materialToggle is not null)
             {
                 materialInside.IsVisible = value;
+                materialToggle.Content = TargetMaterial.FoldTitle + (value ? " ▾" : " ▸");
             }
         }
+    }
+
+    /// <summary>For the screenshot walk: the fold scrolled into view from its own title down.</summary>
+    internal void BringMaterialIntoView()
+    {
+        rememberMaterial.BringIntoView();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        (materialInside?.Parent as Panel)?.Children.FirstOrDefault()?.BringIntoView();
     }
 
     /// <summary>For the headless tests: the two choices and the box.</summary>

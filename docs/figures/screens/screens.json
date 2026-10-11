@@ -22,6 +22,7 @@
     "groups": ["src/GroupLab.App/MainWindow.ShotsPerBull.cs", "src/GroupLab.App/MainWindow.Loads.cs", "src/GroupLab.Core/Marking/SheetReading.cs"],
     "shots-open": ["src/GroupLab.Core/Marking/ShotList.cs"],
     "readings-here": ["src/GroupLab.App/MainWindow.ReadingsHere.cs", "src/GroupLab.App/VelocityBlockView.cs"],
+    "paper-fold": ["src/GroupLab.App/MainWindow.Tabs.cs", "src/GroupLab.Core/Marking/TargetMaterial.cs"],
     "velocity": ["src/GroupLab.App/VelocityBlockView.cs", "src/GroupLab.App/CompositePlot.cs", "src/GroupLab.App/MainWindow.Chronograph.cs"],
     "pairing": ["src/GroupLab.App/MainWindow.Chronograph.cs", "src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.Core/Records/ChronographMarks.cs", "src/GroupLab.Core/Records/ChronographProposal.cs", "tests/GroupLab.App.Tests/Entry109Tests.cs"],
     "settings": ["src/GroupLab.App/AppSettings.cs"],

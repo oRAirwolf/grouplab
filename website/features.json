@@ -234,7 +234,7 @@
       "group": "Reading a target",
       "name": "Paper and backing, kept for the next sheet",
       "sentence": "For the hole size studies is a closed section at the bottom of the setup. It records the paper and the backing only, changes no detection, and is remembered for your next sheet unless you turn that off. The phone records them too.",
-      "shot": "marking",
+      "shot": "paper-fold",
       "platforms": [
         "Windows",
         "macOS",

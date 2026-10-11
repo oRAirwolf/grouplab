@@ -389,6 +389,14 @@ public class Entry109Tests
                         window.Canvas.Selected = null;
                         window.RefreshForTests();
 
+                        // Entry 407 section 6: the paper and backing fold opened, at the bottom of the setup.
+                        window.MaterialFoldOpen = true;
+                        Dispatcher.UIThread.RunJobs();
+                        window.BringMaterialIntoView();
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"paper-fold-{name}-{size}");
+                        window.MaterialFoldOpen = false;
+
                         // Entry 274, answering question 66: a target GroupLab did not print, marked by hand as a person would: a plain sample
                         // drawn here, with no markers or codes, its scale set from a ring's known width, its bulls and shots placed by hand.
                         string other = PlainSample();

@@ -277,3 +277,11 @@ source that is not on the list below, or if any test writing into this folder co
 | `readings-here-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `readings-here-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `readings-here-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `paper-fold-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `paper-fold-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `paper-fold-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `paper-fold-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `paper-fold-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `paper-fold-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `paper-fold-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `paper-fold-light-2560x1440.png` | Entry109Tests synthetic sheet |

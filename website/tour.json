@@ -260,6 +260,11 @@
      "shots-open",
      "The Shots list, one shot open with its bull, its place in the firing order, Counted and Delete, not a hole",
      "The Shots list is a short row for each shot: across, up or down, and how far from its own bull. Clicking a row, or the shot on the sheet, opens it: its bull with the nearest first, when it was fired, Counted, where it came from, and Delete, not a hole, which keeps the mark and can be undone."
+    ],
+    [
+     "paper-fold",
+     "The setup's For the hole size studies fold opened: the paper, what was behind it, and Remember these for my next sheet",
+     "At the bottom of the setup, For the hole size studies holds the paper the target was printed on and what was behind it. It opens closed, says these are recorded only and change no detection, and Remember these for my next sheet carries them to the next target."
     ]
    ]
   },
