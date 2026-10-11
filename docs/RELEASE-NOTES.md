@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.186
+
+**2026-10-11**, commit `074866f`. Nightly.
+
+**Under the hood**
+
+- A photographed sheet's codes are read at the same time again rather than one after another, so a phone picture is read a little sooner.
+- The setup's paper and backing section can be pictured on grouplab.org as it looks when opened.
+- Finding the holes on a sheet takes less time, with exactly the same holes found.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.186)
+
+---
+
 ## 0.2.0-nightly.185
 
 **2026-10-11**, commit `3ecf22a`. Nightly.
