@@ -497,7 +497,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - Changing what a chronograph reading goes with is now a row per reading in the order fired, with one mark to tap or click, teal when paired and amber when it needs a look, and the same four choices on the phone and the computer; giving a reading a shot another reading has swaps the two and says so.
 - A chronograph string imported in meters a second now shows its readings in meters a second while you pair them.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.156)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
