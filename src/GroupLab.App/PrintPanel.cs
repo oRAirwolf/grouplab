@@ -838,6 +838,16 @@ public sealed class PrintPanel : UserControl
     private void ShowDots()
     {
         ThermalShown = null;
+
+        // Entry 409 (Quack on the Discord, through Alan): the cut-off warning is this method's own, and it stayed in red after the printer was
+        // switched back to a sheet printer, because the early return below never took it away. It is taken away here, and only it: a
+        // status somebody else wrote since is left as it is.
+        if (cutWarning is not null && status.Text == cutWarning)
+        {
+            SetStatus("", StatusKind.Information);
+        }
+
+        cutWarning = null;
         if (Head is not { } head || shown is null)
         {
             DotsShown?.Invoke(null);
@@ -855,8 +865,12 @@ public sealed class PrintPanel : UserControl
         if (print.CutOff is { } cut)
         {
             SetStatus(cut, StatusKind.Alert);
+            cutWarning = cut;
         }
     }
+
+    /// <summary>The cut-off warning as last shown, so it can be taken away again without touching any other message.</summary>
+    private string? cutWarning;
 
     /// <summary>
     /// One sheet as it prints, words and all (entry 250 section 1), as a bitmap with its longer side near 900 pixels, or null when it has

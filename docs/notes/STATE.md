@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-11, entries 407 and 408 (before them: entries 399 to 406).
+**Last rewritten:** 2026-10-11, entry 409 (before it: entries 399 to 408).
 
 ---
 
@@ -22,10 +22,10 @@ If something here disagrees with the logs, the logs are right and this file is o
   phone. The screenshots workflow re-renders every picture after the push; the site is published by hand after it (it commits with its
   own token, which starts no site build).
 - **Entry 408 done**: request 95 confirmed by Alan on the phone; entry 401's fix holds on real hardware.
+- **Entry 409 done**: the thermal cut-off warning now goes with the thermal printer; Quack thanked in the README.
 - **Entries 399 to 405 done** (2026-10-10 and 11); their details are in PHASE1-RESULTS.md.
 - **Entry 406 done but 1.3**: request 93 installed by Alan (token reaches both), request 96 confirmed on his tablet; a test now
   refuses a paste reading a backup folder without sudo. Left: read 2026-10-11's learning `summary.md` for the token line.
-- **Entry 400, in part**: reading codes at once was taken back after the Mobile suite hung on macOS; it returns behind a test.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
 - **Waiting on Alan:** requests 97 (the intake worker), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.

@@ -660,6 +660,7 @@ To the people who have tested GroupLab and said what they found, by the names th
 - **Unholy** scanned a GroupLab sheet he shot on 2026-09-23, which showed that naming the right caliber could make the reading worse, and then went through the application and wrote down what got in his way: the caliber label, figures at 100 yards, the zeroing grid, setting the scale again, and the caliber box.
 - **Jylee** suggested Shots Needed to Zero, and helped choose the C3 zeroing grid with Unholy.
 - **Fenix** ran GroupLab on a Mac with Apple silicon and found that Command Z did nothing and that there was no pinch zoom.
+- **Quack**, on the GroupLab Discord, found that a red warning about the page being cut off stayed on the Targets screen after switching from a thermal printer back to a sheet printer.
 
 ## License
 

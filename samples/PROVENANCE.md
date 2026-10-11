@@ -278,3 +278,10 @@ of a target, and none of it is published as a target of its own.
 | `docs/notes/entry-362/birchwood-rigid-crosshair.jpg` | 28,776 | `31d9b25a07683d06ce8928d16a62f715c811f9b07ee1194965fe008e2741d8e4` |
 | `docs/notes/entry-362/eze-scorer-bull.jpg` | 33,005 | `a711afea2dde5e7933df10564f55deaadc32d9af6e803792f88741d35dfc6eb4` |
 | `docs/notes/entry-362/eze-scorer-sight-in-grid.jpg` | 38,902 | `e1f0386388b71108dfa9487548f923303310c67d2323b9b87e3e3c442a5b4372` |
+
+## Names in the README's Thanks
+
+A tester is thanked by name only on Alan's word, and the word is kept here.
+
+- **Quack** (a Discord name), for the report in entry 409. Alan, 2026-10-11 02:15 Denver: "Yes Quack can be thanked by name". Nothing
+  else about them is written anywhere.

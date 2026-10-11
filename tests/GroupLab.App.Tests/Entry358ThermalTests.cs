@@ -61,6 +61,42 @@ public class Entry358ThermalTests
 }
 
 /// <summary>
+/// NOTES-FROM-PLANNING.md entry 409, reported by Quack on the Discord: the red "would be cut off" warning stayed after switching from a thermal
+/// printer back to the sheet printer. It goes with the thermal printer now, and only it: another message is left alone. Choosing another
+/// sheet leaves Print on where it was.
+/// </summary>
+public class Entry409CutOffWarningTests
+{
+    [AvaloniaFact]
+    public void TheCutOffWarningGoesWhenTheSheetPrinterIsChosenAgain()
+    {
+        var panel = TargetsScreen.Open();
+        try
+        {
+            panel.Select("GL-CF25-LTR.gltd.json");
+            panel.ChoosePrintOn(1);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains("would be cut off", panel.StatusText, StringComparison.Ordinal);
+
+            panel.ChoosePrintOn(0);
+            Dispatcher.UIThread.RunJobs();
+            Assert.DoesNotContain("would be cut off", panel.StatusText, StringComparison.Ordinal);
+            Assert.Equal(StatusKind.Information, panel.StatusState);
+
+            // Another sheet chosen while the thermal printer is on keeps Print on, and the warning follows the sheet.
+            panel.ChoosePrintOn(1);
+            panel.Select("GL-SCALE-LTR-1.gltd.json");
+            Dispatcher.UIThread.RunJobs();
+            Assert.NotNull(panel.Head);
+        }
+        finally
+        {
+            panel.Close();
+        }
+    }
+}
+
+/// <summary>
 /// NOTES-FROM-PLANNING.md entry 363 section 2a: Save for a printer app writes a picture and a PDF of the sheet at 300 dpi, named so they
 /// cannot be mistaken for an office printer's PDF, and the darkness test page beside it; the Phomemo M834 is a choice of its own.
 /// </summary>
