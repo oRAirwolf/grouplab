@@ -296,6 +296,28 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
    the fade would need creased sheets photographed under known light, which the corpus has one of.
 5. PROOF-CHECKLIST rows 1, 3 and 12 are unchanged: the gate is not met. No Release-note: nothing a shooter sees changed.
 
+## Entry 410 sections 2 to 6: the overnight queue (2026-10-11)
+
+1. **Section 1** is its own section above: the six false marks, investigated, nothing kept.
+2. **Section 2, proof row 16.** The report's zero verdict was already the screen's on generated sessions (entry 170's test); a test now
+   holds it on Alan's dominus-k session too (`RealSessionProofTests.AlansOwnSessionsReportGivesTheScreensZeroVerdict`), run here with
+   the test-data scans and on CI. PROOF-CHECKLIST's paragraph that still said row 16 needed it says it is met.
+3. **Section 3, finding the holes.** Measured warm, the closing and the phase correlations were small; the marks' own moments and split
+   were the cost. Each mark is now summed over the runs of its hull row by row, the same pixels in the same order, and the split's squares
+   are products: 346 holes on fifteen pictures unchanged to six decimals, the generated sheet's holes 261 to 168 ms, the bench gate
+   passed (PERFORMANCE.md). **Reading the codes at once is back** (entry 400), after nightly 185 had published, behind
+   `SheetIdentificationTests.ReadingTheCodesAtOnceFinishesOnEveryPlatform`; CI passed on all three platforms with it, macOS's Mobile suite
+   162 of 162.
+4. **Section 4.** Nightly 185 (from 3ecf22a3) carries entries 407 to 409; its notes read to a shooter and thank Quack; grouplab.org
+   showed it from 6109d181. Every view entry 407 changed has its own Features picture; the last, the paper and backing fold
+   (`paper-fold`), was added, with its tour words, and the guide PDFs were rebuilt. The emulator's sweep now photographs Fix holes, Next
+   unsure hole and How you shot this sheet; run 38136714382 passed, and chores-haiku found the frames drawn right in light and dark, with
+   nothing cut off or blank. On the sample, Fix holes counts 3 unsure holes and names bull 11's line as long for the sheet. **Noticed, not
+   from this entry:** the sweep's largest-text pass sets Android's font scale to 2.0 and GroupLab's text does not grow, so the phone
+   application may not follow the system text size; put to planning as question 96.
+5. **Section 5:** the learning nightly of 2026-10-11 (summary committed 13:55 UTC) says "The learning token reaches the error reports: yes;
+   GroupLab's pull requests: yes." Entry 406 section 1.3 is done; nothing for for-alan.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

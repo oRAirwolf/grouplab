@@ -9,23 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-11, entry 409 (before it: entries 399 to 408).
+**Last rewritten:** 2026-10-11, entry 410 (before it: entries 399 to 409).
 
 ---
 
 ## In flight
 
-- **Entry 407 done** (Alan's canvas picks 1A, 2B, 3A, 4A, 5B, 6A, 7A; question 88 answered 7A): lines to bulls with unsure ones
-  marked and tap a bull to give it holes; the Groups section as "How did you shoot this sheet?" and "Loads on this sheet"; the Shots list
-  as short rows with one open; no reason asked to leave a shot out, the session's folder in the ··· menu; barrels under their rifle
-  (schema version 3, the database copied first); paper and backing in a closed fold; chronograph readings on the analysis. Desktop and
-  phone. The screenshots workflow re-renders every picture after the push; the site is published by hand after it (it commits with its
-  own token, which starts no site build).
-- **Entry 408 done**: request 95 confirmed by Alan on the phone; entry 401's fix holds on real hardware.
+- **Entries 407 and 408 done**: Alan's seven canvas picks built on desktop and phone (question 88 answered 7A), shipped in nightly
+  185; request 95 confirmed by Alan on the phone.
 - **Entry 409 done**: the thermal cut-off warning now goes with the thermal printer; Quack thanked in the README.
-- **Entries 399 to 405 done** (2026-10-10 and 11); their details are in PHASE1-RESULTS.md.
-- **Entry 406 done but 1.3**: request 93 installed by Alan (token reaches both), request 96 confirmed on his tablet; a test now
-  refuses a paste reading a backup folder without sudo. Left: read 2026-10-11's learning `summary.md` for the token line.
+- **Entry 410 done** (the overnight queue): the six false marks investigated, nothing kept (a shading rule lost a real hole on scan 4);
+  row 16 held on Alan's own session; finding the holes faster with identical results; reading the codes at once is back, CI green on
+  macOS; every entry 407 view has its Features picture; the emulator sweep visits the changed phone screens. Question 96: the phone
+  may not follow Android's text size.
+- **Entry 406 done**: request 93 installed by Alan (token reaches both), request 96 confirmed on his tablet; a test now refuses a
+  paste reading a backup folder without sudo. 2026-10-11's learning summary: the token reaches both, yes and yes.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
 - **Waiting on Alan:** requests 97 (the intake worker), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
@@ -51,8 +49,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Whatever the inbox brings; when request 97 comes back, its backup folder goes into RESTORE.md's waiting entry.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
-3. After 13:45 UTC on 2026-10-11, the learning nightly's `summary.md` should end with the token line, yes for both; read it once
-   and say so in that day's report (entry 406 section 1.3).
+3. Nightly 186 carries entry 410 (faster hole finding, the codes read at once): check its notes read well and macOS stays green.
 
 ## Blocked, and on what
 
@@ -66,16 +63,18 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (88 answered 7A and archived 2026-10-11):
+Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (88 answered 7A and archived 2026-10-11):
 
+- **96** whether the phone should follow the system text size (entry 410)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.184 (2026-10-10 12:43 UTC, built from df552245: entries 399 to 403 and the macOS fix); published whole.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched by hand for 184's notes on 2026-10-10. Twelve research articles went live with e79a0dfd.
+- **Last nightly:** 0.2.0-nightly.185 (2026-10-11 10:56 UTC, built from 3ecf22a3: entries 407 to 409); published whole. Main has
+  since gained entry 410: faster hole finding and the codes read at once, for nightly 186.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 6109d181 with nightly 185's notes.
 - Crash reports open: none. Issue 27 (nightly 183, Android: Fix holes blank after a hole was added) fixed in entry 401, closed with nightly 184.
 
 ## The inbox

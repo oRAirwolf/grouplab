@@ -12,6 +12,19 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
+## 2026-10-11, question 96: the phone does not seem to follow Android's text size (entry 410 section 4.3)
+
+Status: open
+
+The emulator's screen sweep runs once at Android's largest font scale (`scripts/android-sweep.sh`, `font_scale 2.0`). In run
+38136714382 the largest-text frames look the same as the plain ones: GroupLab's text did not grow. So the phone application appears not
+to follow the system's text size, which a person who has set larger text would expect it to. Not measured further: whether Avalonia on
+Android reads the font scale at all, and whether the iPhone follows Dynamic Type. **The question:** should GroupLab scale its text with
+the system setting on the phone (a test would hold the sweep's largest-text frames to bigger text than the plain ones), or is the fixed
+size a choice? Nothing waits on it.
+
+---
+
 ## Answered, and moved
 
 These 40 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a

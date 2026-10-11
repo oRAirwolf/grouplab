@@ -25,6 +25,74 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-11, entry 410: an overnight queue that needs nobody (Alan asleep, about 12 hours)
+
+**Status: actioned 2026-10-11; sections 1 to 6 done. Section 1 found the false marks' cause and kept no change: the one rule that removed them lost a real hole on scan 4, so the gate is still unmet (PHASE1-RESULTS.md). Section 3.3 was done after nightly 185 had published, not before, so a macOS hang could not stop it. Section 6's next item (request 83) needs Alan, so the block stopped there.**
+
+From the planning session, 2026-10-11 10:05 UTC. Alan, 04:01 Denver: going to bed, and asked what Code can work on for the next 12 hours.
+Everything below needs nothing from him; anything that turns out to need him goes to for-alan.md and the work moves on. Take the
+sections in order, one commit each where it fits, a report after each.
+
+**Budget for this block:** stop at **35% of the week** (23% at 10:01 UTC), or when the queue is done, whichever comes first, and never in
+the middle of a publish. One worker, no helpers in parallel. Screenshots and chores to chores-haiku, wording checks to docs-sonnet, as
+the standing rules say; detection, statistics and app code on the main model.
+
+## 1. Detection: the false marks that keep the Phase 1 gate unmet
+
+PROOF-CHECKLIST row 3: `grouplab scoreboard --corpus` finds 221 of 223 holes (99.1 percent) but makes **6 false marks**, 5 on the
+crinkled .22 LR diamond sheet and 1 below the codes on the taped 2026-09-26 dominus-k picture; the checklist also says item 3 "needs a
+change to detection rather than more material (197 of 198 holes, 2 false marks)". The gate is at least 99 percent found and **no false
+positives**, matched at 0.15 in.
+
+1. Look at what each false mark is (a crease, a shadow edge, printed artwork, a code's edge) from the scoreboard's own output and the
+   show-your-work images, not by reading GPS or any metadata.
+2. Fix the cause in detection, not by raising a threshold until the six vanish: a change that removes a false mark must not lose a true
+   hole anywhere in the corpus, the rendered sheets or the scans. Report the scoreboard before and after, per picture.
+3. Guard against fitting the nine pictures: say which pictures the change was developed on, and show it holds on the ones it was not
+   (the four 2026-09-29 pictures, the scans, the rendered set). If it cannot be done without that risk, stop, write what was learned in
+   PHASE1-RESULTS and the research log, and move on.
+4. If the gate is met, update PROOF-CHECKLIST rows 1, 3 and 12 as the measurements say. A Release-note only if what a shooter sees
+   changes (fewer marks that are not holes on creased or taped paper is something they see).
+
+## 2. Proof row 16: the report's zero verdict is the screen's
+
+PROOF-CHECKLIST says row 16 "needs its report's zero verdict to be the screen's". Make the session report PDF print exactly the zero
+verdict the analysis screen shows (same sentence, same numbers), with a test that compares them on generated sessions and on Alan's own
+session used by `RealSessionProofTests`. Mark row 16 met if it is.
+
+## 3. Phase 9, the next optimization: finding holes on a photograph
+
+Planning names it, as STATE asked: PERFORMANCE.md says that after entry 400 "finding the holes is next (180 to 540 ms), most of it now
+the closing of the threshold mask and the alignment's phase correlations".
+
+1. Measure first with `grouplab bench`; then speed up those two stages (for example a smaller structuring element done twice, working
+   at the resolution the decision needs, reusing FFT plans or buffers across bulls), one change at a time.
+2. The results must not change: every hole center within 0.0005 in of before on the bench material and the corpus, the same holes found.
+   No figure in `docs/performance-baseline.json` may get slower by more than the gate allows.
+3. Also, as STATE says: if the macOS Mobile suite has passed since entry 400, put "reading the codes all at once" back behind its test.
+4. Record the before and after in PERFORMANCE.md. A Release-note (kind `changed`) only if a person would notice the time.
+
+## 4. After nightly 185 publishes (about 12:45 UTC)
+
+1. Check it carries entries 407 to 409, that its release notes read well to a shooter and name Quack for the thermal warning fix, and
+   that the site shows it.
+2. The tour pages and Features pictures for every screen entry 407 changed (Fix holes and the analysis lines, the setup cards, the
+   Shots list, the ··· menu, Equipment, the paper fold, the Velocity block): each tour sentence still true, each new thing with its own
+   Features picture (entry 256). Fix any that are not.
+3. An emulator walk of the phone's changed screens (chores-haiku): lines to bulls, tapping a bull and its holes, Add a hole, Next unsure
+   hole, the two setup cards, the rifle page with its barrels, the Velocity entry point. Anything broken is a bug for the main model to
+   fix in this block.
+
+## 5. After the learning nightly (13:45 UTC)
+
+Entry 406 section 1.3: read that night's `learning/summary.md` once for the token line and say in the report whether it reads yes for
+both repositories. If it does not, write it into for-alan.md plainly.
+
+## 6. When the queue is empty
+
+Rewrite STATE.md, make sure nothing is left running, and end with the usual status. If budget remains, the next thing is item 2 of
+STATE's "next three" only if it needs nobody; otherwise stop.
+
 ## 2026-10-11, entry 409: the thermal "would be cut off" warning stays after switching back to a sheet printer (Discord report)
 
 **Status: actioned 2026-10-11; sections 1 to 5 done. Section 1's phone part: the phone's Targets screen never shows this warning, so there was nothing to change there.**
@@ -191,7 +259,7 @@ remove (and why), and the migration's before and after counts for section 5.
 
 ## 2026-10-11, entry 406: requests 93 and 96 answered, and the server paste's silent stop
 
-**Status: actioned 2026-10-11; sections 1.1, 1.2, 2 and 3 done. Section 1.3, reading the next learning nightly's token line, waits for that nightly at 13:45 UTC on 2026-10-11. Section 2.2 had nothing to add to: no test holds the download page's guess to sample user agents.**
+**Status: actioned 2026-10-11; every section done. Section 1.3, the token line, was read in entry 410 section 5: yes for both repositories.**
 
 From the planning session, 2026-10-11 00:55 UTC (Alan, 2026-10-10 18:51 Denver). Take it after entry 405.
 
