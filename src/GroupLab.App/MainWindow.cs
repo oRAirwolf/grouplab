@@ -1,3 +1,4 @@
+using ShotRows = GroupLab.Core.Marking.ShotList;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
@@ -1404,13 +1405,18 @@ public sealed partial class MainWindow : Window
 
     /// <summary>
     /// The shots in the order they were fired, where a chronograph string has been mapped to them, with the trend test under it. Entry 141
-    /// section 5.2.3 asks for nothing at all when the order is not known, rather than an order invented from the sheet.
+    /// section 5.2.3 asks for nothing at all when the order is not known, rather than an order invented from the sheet. Entry 407 section 3.2:
+    /// without a chronograph, the places a person gave every counted shot in the Shots list are the order.
     /// </summary>
     private void ShowShotOrder(MarkingState state, IReadOnlyList<MarkedShot> counted)
     {
         var order = currentSession is { } id && sessions is not null
             ? sessions.ShotVelocities(id).OrderBy(v => v.StringId).ThenBy(v => v.Ordinal).Select(v => v.ShotId).ToList()
             : [];
+        if (order.Count == 0 && counted.Count > 0 && counted.All(s => s.Fired is not null))
+        {
+            order = [.. counted.OrderBy(s => s.Fired).Select(s => s.Id)];
+        }
         var byId = counted.ToDictionary(s => s.Id);
         var offsets = GroupAnalysis.CompositeOffsets(state, counted);
         var radius = counted.Select((s, i) => (s.Id, R: Math.Sqrt((offsets[i].X * offsets[i].X) + (offsets[i].Y * offsets[i].Y))))
@@ -3982,9 +3988,15 @@ public sealed partial class MainWindow : Window
     internal IReadOnlySet<int> PlotSelection => plotSelection;
 
     /// <summary>
-    /// Every shot as a row, NOTES-FROM-PLANNING.md entry 39 section 4: its number as the image shows it, its bull, and whether it is
-    /// excluded or not a shot, with where it came from beside it in faint text (entry 46 section 3). A row selects its shot on the image, and carries the exclusion control, so excluding a flyer does not
-    /// wait for the shot to be selected. At twenty-five shots finding one on the image is a hunt; finding it in the list is not.
+    /// Every shot as a row, NOTES-FROM-PLANNING.md entry 39 section 4, in the sheet's order and named by its bull (entry 75). A row selects its
+    /// shot on the image; at twenty-five shots finding one on the image is a hunt, and finding it in the list is not.
+    /// <para>
+    /// Entry 407 section 3 (concept 2B, Alan's pick): short rows, the shot, across, up or down and how far from its own bull, a left-out shot's
+    /// numbers struck through and "left out" beside them. Clicking a row, or the shot on the sheet, opens it in place, one at a time, with its
+    /// bull (the nearest first and marked), its place in the firing order, the Counted box that replaced Exclude and Restore, where it came
+    /// from, and "Delete, not a hole", which replaced the row's "Not a shot" and keeps what it kept: the mark, its provenance and Undo. The tick
+    /// boxes for putting several shots on a bull at once stay (entry 141 section 5.3.3).
+    /// </para>
     /// </summary>
     private void BuildShotList()
     {
@@ -4004,18 +4016,20 @@ public sealed partial class MainWindow : Window
             shotList.Children.Add(AssignTheTicked(state));
         }
 
-        // NOTES-FROM-PLANNING.md entry 75: rows in the sheet's order, each named by its bull, with no per-detection index.
-        foreach (var label in ShotLabels.For(state))
+        var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId);
+        foreach (var listed in ShotRows.Rows(state))
         {
-            var shot = state.Find(label.ShotId)!;
+            var shot = state.Find(listed.ShotId)!;
             int id = shot.Id;
+            var label = labels[id];
+
             // A named shot is its bull's label; a word, unassigned or not a shot, is followed by where the mark is, because the word alone
             // does not say which one; a plain group's shot is named by where it is.
             string name = label.Text is not { } named ? WhereOnTarget(state, shot.Image)
                 : shot.NotAShot || shot.Bull is null ? $"{named}, {WhereOnTarget(state, shot.Image)}"
                 : named;
-
-            string text = string.Create(CultureInfo.InvariantCulture, $"{name}{(shot.Exclusion is { } e ? $", excluded as {e.InSentence()}" : "")}");
+            string text = name + (listed.LeftOut ? ", left out" : "");
+            bool open = id == canvas.Selected;
             var select = new Button
             {
                 Content = new TextBlock
@@ -4023,7 +4037,7 @@ public sealed partial class MainWindow : Window
                     Text = text,
                     FontFamily = Mono,
                     TextTrimming = TextTrimming.CharacterEllipsis,
-                    FontWeight = id == canvas.Selected ? FontWeight.Bold : FontWeight.Normal,
+                    FontWeight = open ? FontWeight.Bold : FontWeight.Normal,
                 },
                 Tag = id,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -4033,27 +4047,91 @@ public sealed partial class MainWindow : Window
             ToolTip.SetTip(select, text);
             select.Click += (_, _) =>
             {
-                canvas.Selected = id;
+                canvas.Selected = canvas.Selected == id ? null : id;
                 Refresh();
             };
 
-            // NOTES-FROM-PLANNING.md entry 73 section 6: the row fits the column, its text giving way first rather than its buttons being cut
-            // off, and a detection that is not a shot can be taken out from here. "Not a shot" keeps the mark and its provenance and can be
-            // undone from the same row; deleting stays in the selection panel.
-            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto,Auto,Auto") };
+            // NOTES-FROM-PLANNING.md entry 73 section 6: the row fits the column, its text giving way first.
+            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto") };
             AddCell(row, Tick(id), 0);
             AddCell(row, select, 1);
-            AddCell(row, BullPicker(state, shot), 2);
-            AddCell(row, new TextBlock { Text = ProvenanceWord(shot.Provenance), VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } }, 3);
-            if (!shot.NotAShot)
-            {
-                AddCell(row, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
-                    session.SetExclusion(id, shot.Exclusion is null ? ChosenReason : null)), 4);
-            }
-
-            AddCell(row, Button(shot.NotAShot ? "It is a shot" : "Not a shot", () => session.SetNotAShot(id, !shot.NotAShot)), 5);
+            AddCell(row, Numbers(listed), 2);
             shotList.Children.Add(row);
+            if (open)
+            {
+                shotList.Children.Add(OpenShot(state, shot));
+            }
         }
+    }
+
+    /// <summary>Entry 407 section 3.1: across, up or down and how far, struck through when the shot is left out.</summary>
+    private TextBlock Numbers(ShotListRow row)
+    {
+        string said = row.NotAHole ? "not a hole"
+            : row.AcrossInches is { } a && row.UpInches is { } u && row.RadiusInches is { } r
+                ? $"{units.Length(Math.Abs(a))} {(a >= 0 ? "R" : "L")}  {units.Length(Math.Abs(u))} {(u >= 0 ? "U" : "D")}  {units.Length(r)}"
+                : "";
+        var numbers = new TextBlock { Text = said, FontFamily = Mono, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Faint } };
+        if (row.LeftOut)
+        {
+            numbers.TextDecorations = TextDecorations.Strikethrough;
+        }
+
+        ToolTip.SetTip(numbers, row.NotAHole ? "Marked as not a hole: kept, and counted in nothing" : "Across, up or down, and how far from its own bull");
+        return numbers;
+    }
+
+    /// <summary>
+    /// Entry 407 section 3.2: the open row, under it. Its bull, nearest first; its place in the firing order; Counted; where it came from; and
+    /// Delete, not a hole. A mark that is not a hole offers only to be a hole again.
+    /// </summary>
+    private Control OpenShot(MarkingState state, MarkedShot shot)
+    {
+        int id = shot.Id;
+        var card = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(Tokens.Space16, Tokens.Space4, 0, Tokens.Space8) };
+        if (shot.NotAShot)
+        {
+            card.Children.Add(Line("Marked as not a hole. The mark and where it came from are kept, and it counts in nothing."));
+            card.Children.Add(Row(Button("It is a hole", () => session.SetNotAShot(id, false))));
+            return new Border { Child = card, Classes = { AppStyles.ResultCard } };
+        }
+
+        if (state.Bulls.Count > 0)
+        {
+            card.Children.Add(Row(new TextBlock { Text = "Bull", VerticalAlignment = VerticalAlignment.Center, MinWidth = 60 }, BullPicker(state, shot)));
+        }
+
+        var fired = new ComboBox { ItemsSource = ShotRows.FiredChoices(state), SelectedIndex = shot.Fired ?? 0, MinWidth = 120 };
+        Avalonia.Automation.AutomationProperties.SetName(fired, $"Place in the firing order for {ShotNameLower(id)}");
+        fired.SelectionChanged += (_, _) =>
+        {
+            int? place = fired.SelectedIndex > 0 ? fired.SelectedIndex : null;
+            if (place != session.State.Find(id)?.Fired)
+            {
+                session.SetFired(id, place);
+            }
+        };
+        card.Children.Add(Row(new TextBlock { Text = "Fired", VerticalAlignment = VerticalAlignment.Center, MinWidth = 60 }, fired));
+
+        // Entry 407 section 4.1: leaving a shot out asks no reason now; one already stored is kept and shown in the Selected shot area.
+        var counted = new CheckBox { Content = "Counted", IsChecked = shot.Exclusion is null };
+        Avalonia.Automation.AutomationProperties.SetName(counted, $"Counted: {ShotNameLower(id)}");
+        counted.IsCheckedChanged += (_, _) =>
+        {
+            bool on = counted.IsChecked == true;
+            if (on != (session.State.Find(id)?.Exclusion is null))
+            {
+                session.SetExclusion(id, on ? null : ExclusionReason.ByShooter);
+            }
+        };
+        card.Children.Add(counted);
+        card.Children.Add(new TextBlock { Text = ShotRows.From(shot), Classes = { AppStyles.Secondary } });
+        card.Children.Add(Row(Button("Delete, not a hole", () =>
+        {
+            session.SetNotAShot(id, true);
+            status.Text = $"{ShotName(id)} marked not a hole. The mark is kept; Undo puts it back.";
+        })));
+        return new Border { Child = card, Classes = { AppStyles.ResultCard } };
     }
 
     /// <summary>
@@ -4154,10 +4232,11 @@ public sealed partial class MainWindow : Window
             return new Border();
         }
 
-        var picker = new ComboBox { Width = BullPickerWidth, FontSize = Tokens.DetailSize, VerticalAlignment = VerticalAlignment.Center };
-        var bulls = state.Bulls.OrderBy(b => b.Index).ToList();
-        picker.ItemsSource = new[] { NoBull }.Concat(bulls.Select(b => b.Label)).ToList();
-        picker.SelectedIndex = shot.Bull is { } on && bulls.FindIndex(b => b.Index == on) is >= 0 and var at ? at + 1 : 0;
+        // Entry 407 section 3.2: the nearest bull first, marked, then the others by distance, then no bull.
+        var picker = new ComboBox { MinWidth = BullPickerWidth, FontSize = Tokens.DetailSize, VerticalAlignment = VerticalAlignment.Center };
+        var options = ShotRows.Bulls(state, shot.Id);
+        picker.ItemsSource = options.Select(o => o.Words).ToList();
+        picker.SelectedIndex = Math.Max(0, options.ToList().FindIndex(o => o.Index == shot.Bull));
         ToolTip.SetTip(picker, $"Which bull {ShotNameLower(shot.Id)} belongs to");
         Avalonia.Automation.AutomationProperties.SetName(picker, $"Bull for {ShotNameLower(shot.Id)}");
 
@@ -4171,7 +4250,7 @@ public sealed partial class MainWindow : Window
 
             was = picker.SelectedIndex;
             canvas.Selected = shot.Id;
-            session.AssignBull(shot.Id, picker.SelectedIndex <= 0 ? null : bulls[picker.SelectedIndex - 1].Index);
+            session.AssignBull(shot.Id, options[Math.Max(0, picker.SelectedIndex)].Index);
         };
 
         return picker;
@@ -4181,9 +4260,9 @@ public sealed partial class MainWindow : Window
     /// What the bull picker calls a shot that belongs to no bull. One word, because entry 73 section 6 holds every shots-list row inside the
     /// right column and the picker has to fit beside the two buttons that were already there.
     /// </summary>
-    internal const string NoBull = "none";
+    internal const string NoBull = ShotRows.NoBull;
 
-    private const double BullPickerWidth = 72;
+    private const double BullPickerWidth = 120;
 
     /// <summary>
     /// The count line, NOTES-FROM-PLANNING.md entry 46 section 3: how many shots, and how many were detected, corrected after detection, or

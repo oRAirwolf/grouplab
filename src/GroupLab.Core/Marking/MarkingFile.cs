@@ -105,6 +105,7 @@ public static class MarkingFile
                 sighter = s.Sighter ? true : (bool?)null,
                 s.ChosenDiameterInches,
                 s.Note,
+                s.Fired,
                 size = s.Size is { } size
                     ? new
                     {
@@ -272,6 +273,7 @@ public static class MarkingFile
             Sighter = (bool?)s["sighter"] ?? false,
             ChosenDiameterInches = (double?)s["chosenDiameterInches"],
             Note = (string?)s["note"],
+            Fired = (int?)s["fired"],
             Proposal = s["proposal"] is JsonObject proposed && Enum.TryParse<GroupLab.Core.Detection.HoleLook>((string?)proposed["look"], out var look)
                 ? new HoleProposal(look, (string?)proposed["doubt"])
                 : null,

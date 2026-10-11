@@ -9,6 +9,7 @@ namespace GroupLab.App.Tests;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 141 section 5.3.3: a bull picker on each shots-list row, the third route to "this shot belongs to that bull".
+/// Entry 407 section 3 put it in the open row, one row open at a time, its nearest bull first and marked "(nearest)".
 /// <para>
 /// <b>Why a third route.</b> The other two, clicking the bull on the image and typing its label, both need the person to have found the hole
 /// on the sheet first. Somebody working down the shots list has the shot's name in front of them and not its position, and on a 25 bull sheet
@@ -30,8 +31,17 @@ public class BullPickerTests
     /// One shot's picker, found by the name it carries for a screen reader. The list is not in the state's order, so counting rows would
     /// find the wrong one and the test would pass or fail for a reason that has nothing to do with the picker.
     /// </summary>
-    private static ComboBox PickerFor(MainWindow window, int id) =>
-        Pickers(window).First(c => Avalonia.Automation.AutomationProperties.GetName(c) == $"Bull for {window.ShotInSentenceFor(id)}");
+    private static ComboBox PickerFor(MainWindow window, int id)
+    {
+        window.Canvas.Selected = id;
+        window.RefreshForTests();
+        Settle();
+        return Pickers(window).First(c => Avalonia.Automation.AutomationProperties.GetName(c) == $"Bull for {window.ShotInSentenceFor(id)}");
+    }
+
+    /// <summary>The picker's item for a bull's label, which carries "(nearest)" on the nearest bull.</summary>
+    private static string Item(ComboBox picker, string label) =>
+        picker.ItemsSource!.Cast<string>().First(i => i == label || i == label + " (nearest)");
 
     [AvaloniaFact]
     public void ChoosingABullOnTheRowMovesTheShotToItAndMarksItChosen()
@@ -44,17 +54,19 @@ public class BullPickerTests
             Assert.NotEmpty(state.Bulls);
 
             var shot = state.Shots.First(s => s.IsShot && s.Bull is not null);
-            var pickers = Pickers(window);
-            Assert.Equal(state.Shots.Count(s => s.IsShot), pickers.Count);
 
-            // Every picker starts on the bull the shot is already on, so nothing reads as unassigned that is not.
-            var bulls = state.Bulls.OrderBy(b => b.Index).ToList();
+            // Entry 407 section 3: one row open at a time, and only it has a picker.
             var picker = PickerFor(window, shot.Id);
-            Assert.Equal(bulls.First(b => b.Index == shot.Bull!.Value).Label, picker.SelectedItem);
+            Assert.Single(Pickers(window), c => (Avalonia.Automation.AutomationProperties.GetName(c) ?? "").StartsWith("Bull for ", StringComparison.Ordinal));
+
+            // The picker starts on the bull the shot is already on, so nothing reads as unassigned that is not, and lists the nearest first.
+            var bulls = state.Bulls.OrderBy(b => b.Index).ToList();
+            Assert.Equal(Item(picker, bulls.First(b => b.Index == shot.Bull!.Value).Label), picker.SelectedItem);
+            Assert.EndsWith(" (nearest)", picker.ItemsSource!.Cast<string>().First(), StringComparison.Ordinal);
 
             // Move it to a different bull.
             var moveTo = bulls.First(b => b.Index != shot.Bull!.Value);
-            picker.SelectedItem = moveTo.Label;
+            picker.SelectedItem = Item(picker, moveTo.Label);
             Settle();
 
             var after = window.Session.State.Find(shot.Id)!;
@@ -108,7 +120,7 @@ public class BullPickerTests
             var bulls = window.Session.State.Bulls.OrderBy(b => b.Index).ToList();
             var picker = PickerFor(window, shot.Id);
 
-            picker.SelectedItem = bulls.First(b => b.Index != was).Label;
+            picker.SelectedItem = Item(picker, bulls.First(b => b.Index != was).Label);
             Settle();
             Assert.NotEqual(was, window.Session.State.Find(shot.Id)!.Bull);
 

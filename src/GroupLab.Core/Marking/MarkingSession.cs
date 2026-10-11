@@ -105,6 +105,12 @@ public sealed record MarkedShot(int Id, PointD Image, ShotProvenance Provenance,
     public string? Note { get; init; }
 
     /// <summary>
+    /// The shot's place in the firing order, counted from 1, as the person gave it in the Shots list's Fired list (NOTES-FROM-PLANNING.md
+    /// entry 407 section 3.2), or null where it was not given. A chronograph string mapped to the shots says the order too, and wins.
+    /// </summary>
+    public int? Fired { get; init; }
+
+    /// <summary>
     /// Where Find holes, the experimental finder for a target GroupLab did not print, proposed this shot (NOTES-FROM-PLANNING.md entry 318
     /// section 2): how the hole looked and, where the finder was unsure, why. Null for every other shot.
     /// </summary>
@@ -614,6 +620,27 @@ public sealed class MarkingSession
     /// correction of the position, so the shot's provenance does not change: the detector still placed it where it is.
     /// </summary>
     public void SetHoleDiameter(int id, double? inches) => Update(id, s => s with { ChosenDiameterInches = inches is > 0 ? inches : null });
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 3.2: a shot's place in the firing order, or null for not known. Two shots cannot share a place,
+    /// so a shot already holding it takes this shot's old place, and the two swap as one step.
+    /// </summary>
+    public void SetFired(int id, int? place)
+    {
+        if (State.Find(id) is not { } shot || shot.Fired == place)
+        {
+            return;
+        }
+
+        var shots = State.Shots;
+        if (place is not null && shots.FirstOrDefault(s => s.Id != id && s.Fired == place) is { } holder)
+        {
+            shots = shots.Replace(holder, holder with { Fired = shot.Fired });
+        }
+
+        shots = shots.Replace(shots.First(s => s.Id == id), shot with { Fired = place });
+        Apply(State with { Shots = shots });
+    }
 
     /// <summary>Puts a note on a shot, or clears it. Blank is null, so a note emptied leaves nothing behind in the file.</summary>
     public void SetNote(int id, string? note) => Update(id, s => s with { Note = string.IsNullOrWhiteSpace(note) ? null : note.Trim() });

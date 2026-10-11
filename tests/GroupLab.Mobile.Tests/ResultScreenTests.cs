@@ -394,6 +394,33 @@ public class ResultScreenTests
         window.Close();
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 3 on the phone: Shots is short rows, a tap opens one as a card under it, and "Delete, not a
+    /// hole" there keeps the mark on the list, at the end, to be put back.
+    /// </summary>
+    [AvaloniaFact]
+    public void ShotsOpensARowAsACardAndDeleteKeepsTheMark()
+    {
+        var window = Started();
+        var result = Analyzed(Turned(0));
+        var view = new ResultView(result, new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { });
+        window.Content = view;
+        Dispatcher.UIThread.RunJobs();
+        var row = view.GetVisualDescendants().OfType<Button>().First(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "result-shots");
+        row.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Dispatcher.UIThread.RunJobs();
+        var page = view.GetVisualDescendants().OfType<ShotsPage>().Single();
+        var shot = result.State.Shots.First(s => s.IsShot);
+        page.Open = shot.Id;
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains(page.GetVisualDescendants().OfType<CheckBox>(), c => c.Content as string == "Counted");
+        Press(page, "Delete, not a hole");
+        Dispatcher.UIThread.RunJobs();
+        var session = PhoneAnalysis.Store().Get(SessionId(view))!;
+        Assert.Equal(24, session.ShotCount);
+        window.Close();
+    }
+
     private static void Press(Control within, string words)
     {
         var button = within.GetVisualDescendants().OfType<Button>().First(b => Words(b) == words);
