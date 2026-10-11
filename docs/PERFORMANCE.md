@@ -68,9 +68,10 @@ Alan's six range scans of 2026-09-20): 346 holes, the same labels, and every cen
 sheet 381 to 289; a phone photograph, finding the holes, 199 to 181; the 600 dpi scan, which has no holes, 491 to 494. Warm, the
 candidate loop on the 600 dpi sample went from about 560 ms to 100, and on a Fold 7 picture from about 90 to 30. The baseline gate passed.
 
-**Not yet put back:** reading the codes all at once (entry 400). The macOS Mobile suite has passed since it was taken back (run
-38128272788, 162 of 162), which is the condition entry 400 set; it goes back after nightly 185 has published, so a hang on macOS cannot
-stop that nightly.
+**Put back after nightly 185:** reading the codes all at once (entry 400). The macOS Mobile suite had passed since it was taken back
+(run 38128272788, 162 of 162), the condition entry 400 set, and it went back once nightly 185 had published, so a hang on macOS could not
+stop that nightly. `SheetIdentificationTests.ReadingTheCodesAtOnceFinishesOnEveryPlatform` reads a photograph and a scan together ten
+times on every platform CI runs, inside three minutes, so a hang names itself.
 
 ## Entry 400: the phone's reading of a photograph, about a tenth sooner, part taken back
 

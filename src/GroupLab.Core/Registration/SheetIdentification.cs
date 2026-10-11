@@ -83,18 +83,22 @@ public static partial class SheetIdentification
         var views = Capture.LiveSheet.CodeViews(image, candidates, backend);
         if (views.Count > 0)
         {
-            // One read for each code: a view of a code already read, from a sheet sharing the layout, is not read again.
+            // One read for each code: a view of a code already read, from a sheet sharing the layout, is not read again. Entry 400: each view
+            // is read by detectors of its own, so the views are read at once, and then taken in their order exactly as before, so the same
+            // views are kept or passed over and the same codes counted; a view passed over was read for nothing, which costs no time.
             var squareOn = new List<byte[]>();
             var readAt = new List<Capture.CodeView>();
-            foreach (var view in views)
+            var readings = new IReadOnlyList<byte[]>[views.Count];
+            AtOnce(views.Count, cancellation, i => readings[i] = backend.ReadCutOut(views[i].Image, 1.0));
+            for (int i = 0; i < views.Count; i++)
             {
-                cancellation.ThrowIfCancellationRequested();
+                var view = views[i];
                 if (readAt.Any(r => r.SameCodeAs(view)))
                 {
                     continue;
                 }
 
-                var found = backend.ReadCutOut(view.Image, 1.0);
+                var found = readings[i];
                 if (found.Count > 0)
                 {
                     squareOn.Add(found[0]);
@@ -200,22 +204,27 @@ public static partial class SheetIdentification
         // Entry 282 section 5: the codes cut out where the sheet's markers put them, and read enlarged. On the Fold 7's pictures a module
         // got about 3.1 pixels and read only at three times, which the whole picture cannot be.
         cancellation.ThrowIfCancellationRequested();
-        var near = new List<byte[]>();
         long cutBegan = System.Diagnostics.Stopwatch.GetTimestamp();
-        foreach (var crop in Capture.LiveSheet.CodeCrops(image, candidates, backend))
+        var crops = Capture.LiveSheet.CodeCrops(image, candidates, backend).ToList();
+
+        // Entry 400: each cut-out is enlarged and read on its own, so the cut-outs are read at once and gathered in their order, which is all
+        // that reads them; each still stops at the first enlargement that reads.
+        var firsts = new byte[]?[crops.Count];
+        AtOnce(crops.Count, cancellation, i =>
         {
             foreach (double scale in CropScales)
             {
                 // Entry 313 section 1.1: checked before each enlargement too, the slowest reading there is.
                 cancellation.ThrowIfCancellationRequested();
-                var found = backend.ReadCutOut(crop, scale);
+                var found = backend.ReadCutOut(crops[i], scale);
                 if (found.Count > 0)
                 {
-                    near.Add(found[0]); // a cut-out holds one code, however often the reader finds it
+                    firsts[i] = found[0]; // a cut-out holds one code, however often the reader finds it
                     break;
                 }
             }
-        }
+        });
+        var near = firsts.OfType<byte[]>().ToList();
 
         read += near.Count;
         var nearFrames = near.Select(p => GltdBinary.Decode([p])).Where(d => d.DefinitionId is not null).ToList();
@@ -245,6 +254,22 @@ public static partial class SheetIdentification
         }
 
         return frames.FirstOrDefault(f => f.DefinitionId == id && f.Definition is not null)?.Definition is { } carried ? (carried, true) : null;
+    }
+
+    /// <summary>
+    /// Entry 400: <paramref name="body"/> for each index at once, each independent of the others, with what one of them throws thrown as itself,
+    /// as the loop it replaces would have thrown it, and a cancellation as a cancellation.
+    /// </summary>
+    private static void AtOnce(int count, CancellationToken cancellation, Action<int> body)
+    {
+        try
+        {
+            Parallel.For(0, count, new ParallelOptions { CancellationToken = cancellation }, body);
+        }
+        catch (AggregateException e) when (e.InnerExceptions.Count > 0)
+        {
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerExceptions[0]).Throw();
+        }
     }
 
     private static string FromCodesWords(bool fromCodes) => fromCodes ? "; no definition here has it, so it was read from the codes themselves" : "";
