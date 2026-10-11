@@ -34,6 +34,36 @@ public class RealSessionProofTests(ITestOutputHelper output)
     }
 
     /// <summary>
+    /// Row 16, NOTES-FROM-PLANNING.md entry 410 section 2: on Alan's dominus-k session the report's zero verdict is the analysis screen's own
+    /// sentence, with the same numbers: the screen's line, or that line with the rounding and the distance joined on (question 91).
+    /// </summary>
+    [AvaloniaFact]
+    public void AlansOwnSessionsReportGivesTheScreensZeroVerdict()
+    {
+        if (Entry109Tests.SuppressorScans() is not { } scans)
+        {
+            Assert.True(true, "skipped: the 2026-09-26 6 ARC scans are not in GROUPLAB_TEST_DATA");
+            return;
+        }
+
+        var (window, path, _) = Entry109Tests.Sheet();
+        try
+        {
+            Entry109Tests.AnalyzeScan(window, scans.Dominus, "6 ARC, Dominus K");
+            Settle();
+            var screen = window.ZeroText.Where(t => t.Length > 0).ToList();
+            string verdict = window.BuildReport().Zero.Verdict;
+            Assert.NotEmpty(screen);
+            Assert.Contains(screen, t => verdict == t || verdict.StartsWith(t.TrimEnd('.') + ",", StringComparison.Ordinal));
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
+        }
+    }
+
+    /// <summary>
     /// Row 15: Alan's dominus-k session, saved by Accept and analyse, reopened after the window has moved to another sheet, exported with
     /// Export all my data and imported on another computer, shows the same figures, cards and zero, line for line, each time.
     /// </summary>
