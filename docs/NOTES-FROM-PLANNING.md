@@ -25,6 +25,121 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-10, entry 405: consistency audit, 2026-10-10
+
+**Status: actioned 2026-10-10; every section done. Section 2: fingerprint now shows its phone picture; analysis-open, compare and ballistics stay unpictured on the phone, with words saying the emulator does not take them yet, rather than adding them to the emulator's walk in this change.**
+
+The scheduled consistency audit (entry 267 section 2b). Read on 2026-10-10 around 16:00 UTC: README.md at 0903c892, the live site
+(home, /download/, /features/, /tour/ and the stops fingerprint, compare, analysis-open, ballistics and capture, /shoot-a-target/,
+/guides/ with both guides, /releases/, /support/, /research/), which serves nightly 184 and commit df55224, website/features.json,
+website/tour.json, website/build.py, docs/RELEASE-NOTES.md (nightlies 182 to 184), STATE.md, for-alan.md and its archive (requests 84
+and 85), PLATFORM-SUPPORT.md, PHONE-PARITY.md, ANDROID.md, USER-GUIDE.md, TESTING-GUIDE.md, PERFORMANCE.md, and the commits since
+2026-10-07. No GitHub issue labelled `consistency` exists, open or closed (the public API returned none), so nothing here repeats one.
+
+Already right: the README, /download/ and /releases/ name nightly 184 and df55224; the Store line says 0.2.182, as external-status.md
+does; nightly 184's notes say "about a tenth sooner", matching the part of entry 400 taken back; nothing says a lawyer is reviewing
+anything; "What GroupLab is not" is gone; Android is offered as GroupLab Dev, the plain APK and the Play internal test; the credits
+name Unholy and Jylee only; the user guide already describes the M220 printing from the phone and the M834 at true size.
+
+Ten findings, the public ones first. Fix them in one change, README, site, guides and CLAIMS.md together, as entry 267 asks.
+
+### 1. The phone pictures are said to be real device screenshots of nightly 115
+
+- **Where:** README.md line 27, "the phone's from nightly 115, retaken at the next device sitting"; website/build.py line 2153 (the
+  tour index, Mobile: "The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are
+  retaken at the next device sitting. The result in them is Alan's own scan of a 25 shot group") and line 2537 (the same on /features/).
+  Both are live on https://grouplab.org/tour/ and https://grouplab.org/features/ with the Mobile switch on.
+- **Should say:** the phone pictures are taken on the Android emulator, sized as a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, after
+  each nightly the emulator runs, now from nightly 183; the result in them is the 600 dpi sample sheet. Better read the nightly from
+  docs/figures/screens/phone/made-from.json so it cannot go stale again.
+- **Evidence:** commit 1b731a65 ("[screens] the phone's screenshots, taken on the Android emulator", question 90 b);
+  docs/figures/screens/phone/made-from.json says nightly 183; docs/figures/screens/phone/SOURCES.md says the emulator's pictures "are
+  sized as the devices but are not taken on them".
+
+### 2. The tour says four phone pictures come "at the next device sitting", and one of them already exists
+
+- **Where:** website/tour.json, `"pending": true` for fingerprint (line 995), analysis-open (406), compare (538) and ballistics (673);
+  the words of each end "The picture of it on the phone comes at the next device sitting." Live on https://grouplab.org/tour/ (Mobile
+  eyebrow "On the phone; its picture comes at the next sitting") and on /tour/fingerprint/ and /tour/compare/.
+- **Should say:** fingerprint should show `fold-fingerprint` (docs/figures/screens/phone/fold-fingerprint-light.png and -dark.png exist
+  since entry 388, and https://grouplab.org/assets/screens/phone/fold-fingerprint-dark.webp answers 200). For the other three, either
+  add them to scripts/android-screens.sh, or change the words: the pictures now come from the emulator, not from a device sitting.
+- **Evidence:** SOURCES.md's table lists fold-fingerprint ("Add a store-bought target at its second step", entry 388).
+
+### 3. The M834's true size is still called unchecked
+
+- **Where:** README.md lines 310 to 311, "a real M834 has printed a whole Letter sheet from it, and its true size is still being
+  checked"; website/features.json `phone-targets` (line 1211), "so GroupLab now draws its M834 pages that much longer along the paper,
+  and whether that makes them true is still being checked" (live on https://grouplab.org/features/).
+- **Should say:** from nightly 181 the pages sent to the M834 are drawn 0.7 percent longer along the paper, and the third check print
+  came out true both ways to 0.05 percent (150.0 by 150.0 mm on the caliper lines). Windows printing to the M834 stays "built and not
+  yet tried" until request 83.
+- **Evidence:** for-alan-archive.md request 85, "Answered 2026-10-10 ... True both ways to 0.05 percent"; commit 00de13ea.
+
+### 4. The M220 scale labels are still called never printed on a real M220
+
+- **Where:** README.md line 322, "scale labels from a label printer such as the Phomemo M220 came in nightly 168 and have not yet been
+  printed on a real one ... on Android two labels print straight to the M220 over Bluetooth (entry 386), not yet tried on a real one";
+  docs/CLAIMS.md line 3584, "Not yet printed on a real M220 by this path" (check line 3976 too).
+- **Should say:** two labels printed from the phone on a real M220 on 2026-10-08 and again for request 84: every code whole, codes
+  59.96 to 59.98 mm apart across (60.0 designed); the pause after each label fixed the second label's shift; each label prints about
+  0.4 to 0.7 mm left of center, which question 94 leaves as it is.
+- **Evidence:** for-alan-archive.md request 84 ("Answered 2026-10-10") and request 82; commit 00de13ea; docs/RELEASE-NOTES.md line 82.
+- **Also:** the Features page `scale-markers` sentence (features.json line 264) never mentions scale labels or the M220, though its
+  notes do. One clause would put it where users look, for example "or scale labels from a label printer such as the Phomemo M220,
+  printed straight from Android".
+
+### 5. Label targets: "No label printer has been tested yet"
+
+- **Where:** website/features.json `label-targets` (line 1146): "No label printer has been tested yet, so until one has printed
+  GroupLab's check page this is \"should work\"." Live on /features/.
+- **Should say:** narrower, so it stays true: no 4x6 label printer has been tested yet (Unholy's model is request 72). The Phomemo
+  M834 has printed GroupLab's printer check page true both ways, and the M220 has printed its scale labels, so "no label printer" reads
+  as wrong to anyone who has followed the Discord.
+- **Evidence:** requests 84 and 85 as above.
+
+### 6. The narrow analysis screen is "being worked on", and was fixed in entry 243
+
+- **Where:** docs/PLATFORM-SUPPORT.md lines 49 to 50, "the analysis screen needs about 1060 units of width; narrower, its right column
+  runs past the window, which is being worked on", copied into README.md line 210 and https://grouplab.org/download/ (What each device
+  needs, Screen).
+- **Should say:** what it does today: below the default width the side columns narrow, and on the narrowest window the figures move
+  under the picture; 1060 wide is the size every desktop window is tested at. Keep the minimum in the table if it is still the right
+  advice, but drop "runs past the window, which is being worked on".
+- **Evidence:** commit e3f24a58 (entry 243, question 58 option A, release note "On a narrow window ... the figures move under the
+  picture instead of running off the edge", tested at 1400, 960 and 683); commit 633c64d0 (entry 342 item 3, DesktopSweepTests: nothing
+  past the right edge at 1060 by 720).
+
+### 7. The testing guide says the mounted photograph gate has one day's material
+
+- **Where:** docs/TESTING-GUIDE.md line 93, "The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and
+  GroupLab could not read about half of them." Live on https://grouplab.org/guides/testing-guide/ and in its PDF.
+- **Should say:** add the second range day: on 4 October GroupLab's own sheets gave 137 of 145 holes found with no false mark
+  (`scoreboard --corpus`), and the gates still wait on request 94's scans and photographs. Rebuild TESTING-GUIDE.pdf with it.
+- **Evidence:** docs/PHASE1-RESULTS.md, entry 374, "The range photographs in the local corpus and the scoreboard (section 1,
+  2026-10-07)"; the same file near line 1490 for request 94.
+
+### 8. The README's mosaic was made from an older phone capture picture
+
+- **Where:** docs/figures/readme/mosaic-light.png and mosaic-dark.png; docs/figures/readme/made-from.json records fold-capture-dark.png
+  as 6c3cded6..., and the file is now 0d9ff17d... (changed by 1b731a65). fold-result-dark.png still matches.
+- **Should say:** rerun scripts/readme-images.py so the README's six screens match the current phone pictures. If the weekly check does
+  not already compare made-from.json with its inputs, it would catch this by itself next time.
+
+### 9. PERFORMANCE.md's heading for entry 400 says "about a third sooner"
+
+- **Where:** docs/PERFORMANCE.md line 51, "## Entry 400: the phone's reading of a photograph, about a third sooner"; the same words in
+  docs/PHASE1-RESULTS.md's heading for entry 400 (near line 1495).
+- **Should say:** "about a tenth sooner, part taken back", as the body (the paragraph "Taken back the same day, in part": 796 ms against
+  893) and nightly 184's release note say.
+
+### 10. Nothing else found
+
+The home page, /download/, /shoot-a-target/, /support/ and the README's download table agree with STATE.md, the release notes and
+external-status.md. The download page's `?why` line (entry 403) is a diagnostic and needs no public mention.
+
+Nothing here needs Alan: no decision, secret or device.
+
 ## 2026-10-10, entry 404: overnight, the last part: bring the server's intake worker up to the repository's
 
 **Status: actioned 2026-10-10 as far as Code can: section 1 done; sections 2 and 3 are request 97, two pastes for Alan, because this session's connection to the server is refused by its permission check, which entry 404 says not to work around.**

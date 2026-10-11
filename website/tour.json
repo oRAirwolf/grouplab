@@ -404,7 +404,7 @@
    ],
    "mobile": {
     "pending": true,
-    "words": "On the phone since nightly 119: every figure the desktop shows, each with a tap on its name to say what it means and what your number of shots can tell. The picture of it on the phone comes at the next device sitting."
+    "words": "On the phone since nightly 119: every figure the desktop shows, each with a tap on its name to say what it means and what your number of shots can tell. The phone's pictures now come from the Android emulator, and this screen is not yet among the ones it takes."
    }
   },
   "sessions": {
@@ -536,7 +536,7 @@
    ],
    "mobile": {
     "pending": true,
-    "words": "On the phone since nightly 119: in Sessions, tick two or more and compare them one figure at a time, with the range each could really be. The picture of it on the phone comes at the next device sitting."
+    "words": "On the phone since nightly 119: in Sessions, tick two or more and compare them one figure at a time, with the range each could really be. The phone's pictures now come from the Android emulator, and this screen is not yet among the ones it takes."
    }
   },
   "equipment": {
@@ -671,7 +671,7 @@
    ],
    "mobile": {
     "pending": true,
-    "words": "On the phone since nightly 119, as a fifth tab: the dope for your rifle and load, the trajectory, and the chance of a hit with a result's group. The picture of it on the phone comes at the next device sitting."
+    "words": "On the phone since nightly 119, as a fifth tab: the dope for your rifle and load, the trajectory, and the chance of a hit with a result's group. The phone's pictures now come from the Android emulator, and this screen is not yet among the ones it takes."
    }
   },
   "settings": {
@@ -992,8 +992,28 @@
     "Type its name and choose Save reference file, then send the file."
    ],
    "mobile": {
-    "pending": true,
-    "words": "On the phone in the same five steps, full screen: a five-part progress bar with Back at the top, one big button at the bottom, and on the last step Save and share the file, through the phone's share sheet. The picture of it on the phone comes at the next device sitting."
+    "shot": "fold-fingerprint",
+    "caption": "Step 2 of 5, How big is this target?, with a 12 by 18 in poster and its size typed.",
+    "words": "On the phone in the same five steps, full screen: a five-part progress bar with Back at the top, one big button at the bottom, and on the last step Save and share the file, through the phone's share sheet.",
+    "parts": [
+     [
+      "The progress bar",
+      "Five parts, with Back at the top; the second is the one you are on."
+     ],
+     [
+      "Its printed size",
+      "The size from the package, typed in inches, which is the fastest way."
+     ],
+     [
+      "The big button",
+      "Next: straighten, at the bottom, once the size is given."
+     ]
+    ],
+    "steps": [
+     "Choose a photo of the blank target, flat and square on.",
+     "Give its printed size, or choose another way to say how big it is.",
+     "Tap Next and carry on to the last step, Save and share the file."
+    ]
    }
   },
   "capture": {

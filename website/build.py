@@ -2123,6 +2123,11 @@ def tour_shot(key: str, alt: str, eager: bool = False) -> str:
     )
 
 
+def phone_nightly() -> int:
+    """The nightly the phone pictures were taken on, from docs/figures/screens/phone/made-from.json, so the words cannot go stale."""
+    return int(json.loads(need(REPO / "docs" / "figures" / "screens" / "phone" / "made-from.json").read_text(encoding="utf-8"))["nightly"])
+
+
 def page_tour_index() -> str:
     data = tour()
     cards = []
@@ -2132,7 +2137,7 @@ def page_tour_index() -> str:
         desktop_thumb = ('<p class="eyebrow">On the phone only</p>' if item.get("platform") == "mobile" else
                          f'<img class="research-thumb" src="/assets/screens/{key}-dark-1400x900.webp" alt="" width="320" height="206" loading="lazy">')
         mobile_thumb = (phone_thumb(mobile["shot"]) if mobile.get("shot")
-                        else '<p class="eyebrow">On the phone; its picture comes at the next sitting</p>' if mobile.get("pending")
+                        else '<p class="eyebrow">On the phone; not yet pictured there</p>' if mobile.get("pending")
                         else '<p class="eyebrow">On the desktop only, for now</p>')
         cards.append(
             f'<a class="panel pad stack tight research-card plain" href="/tour/{key}/">'
@@ -2150,7 +2155,7 @@ def page_tour_index() -> str:
 <div class="note note-teal note-figure"><span class="mono">Your own targets</span><p>GroupLab works on any target you already shoot: photograph or scan it, set the scale once, and mark the holes by hand on the computer's <a href="/tour/marking/">marking screen</a>, as in this sample, or on the phone under a crosshair. A GroupLab sheet is the fast lane, where the scale and every hole are found by themselves; it is not a requirement.</p>{screen_link("marking-other", "A plain sample target marked by hand on the marking screen")}</div>
 {platform_switch()}
 {shown("desktop", '<p class="small faint">The pictures are regenerated every week from the newest build, so what you see here is the version you would install. Every sheet and every result in them is generated: no real target and nobody\'s photographs.</p>')}
-{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, and are retaken at the next device sitting. The result in them is Alan\'s own scan of a 25 shot group, published with his consent.</p>')}
+{shown("mobile", f'<p class="small faint">The pictures are taken on the Android emulator, sized as a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, after each nightly (these are from nightly {phone_nightly()}); the result in them is Alan\'s own 600 dpi scan of a 25 shot group, published with his consent.</p>')}
 <div class="research-grid">{"".join(cards)}</div>
 <div class="panel pad hiw-tour-card"><div><p class="eyebrow">Behind the curtain</p><h2 class="h3">How GroupLab works</h2>
 <p class="small">A map of the parts and what each is built from, how OpenCV is used, how the hole detector was built, and one target followed stage by stage.</p></div>
@@ -2534,7 +2539,7 @@ def page_features() -> str:
 </section>
 {spotlight_section("Newest")}
 {"".join(groups)}
-<section class="wrap stack last">{shown("desktop", '<p class="small faint">The pictures are the desktop application\'s, from the newest build, regenerated every week.</p>')}{shown("mobile", '<p class="small faint">The pictures are real screenshots from a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, of nightly 115, retaken at the next device sitting; the result in them is Alan\'s own scan, published with his consent.</p>')}</section>
+<section class="wrap stack last">{shown("desktop", '<p class="small faint">The pictures are the desktop application\'s, from the newest build, regenerated every week.</p>')}{shown("mobile", f'<p class="small faint">The pictures are taken on the Android emulator, sized as a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, after each nightly (these are from nightly {phone_nightly()}); the result in them is Alan\'s own 600 dpi scan of a 25 shot group, published with his consent.</p>')}</section>
 """
     return shell(FEATURES_PATH, "Features", "Every feature GroupLab has, grouped, each with the build it arrived in and where it is explained.", body, "Features")
 

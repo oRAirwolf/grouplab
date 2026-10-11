@@ -24,7 +24,7 @@ Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows
   <img src="docs/figures/readme/mosaic-light.png" alt="Six screens of GroupLab: any target or a printed GroupLab sheet, photographing it on the phone, every hole found, the honest numbers, comparing loads, and ballistics with the chance of a hit.">
 </picture>
 
-<p align="center">The desktop pictures come from the current build; the phone's from nightly 115, retaken at the next device sitting. <a href="https://grouplab.org/tour/">Take the tour</a>.</p>
+<p align="center">The desktop pictures come from the current build; the phone's are taken on the Android emulator after each nightly. <a href="https://grouplab.org/tour/">Take the tour</a>.</p>
 
 <p align="center"><a href="#download">Download</a> · <a href="https://grouplab.org">Website</a> · <a href="https://grouplab.org/features/">Features</a> · <a href="https://grouplab.org/tour/">Tour</a> · <a href="https://grouplab.org/guides/user-guide/">User guide</a> · <a href="https://grouplab.org/discord">Discord</a></p>
 
@@ -207,8 +207,7 @@ Where the figures come from:
   megapixels, where it peaks at about 370 MB on a Galaxy Z Fold 7.
 - **Disk:** the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred
   sessions take about 22 MB.
-- **Screen:** the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being
-  worked on.
+- **Screen:** the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.
 
 ### What happens once the application settles
 
@@ -306,9 +305,9 @@ What exists and is tested:
 - a PDF renderer, a Targets screen that prints at true size, and a designer for your own sheets
 - label targets for a thermal label printer: 4x6, A6 and 100 x 150 mm labels beside Letter and A4, six of the 5x5 Letter sheets' bulls to a
   label in sets of five that pool like the 300 yard tiles, a printer check label, and a thermal print mode that draws every dot as the
-  printer will make it (no label printer has printed from GroupLab yet)
+  printer will make it (no 4x6 label printer has printed from GroupLab yet; the M834 and M220 have printed its own pages)
 - printing straight to a Phomemo M834 from Android over Bluetooth, spoken to as its own app was recorded doing, with Paper in the M834
-  for a roll or fanfold sheets: a real M834 has printed a whole Letter sheet from it, and its true size is still being checked; Windows
+  for a roll or fanfold sheets: a real M834 has printed a whole Letter sheet from it, and from nightly 181 the pages sent to it are drawn 0.7 percent longer along the paper, so the third check print came out true both ways to 0.05 percent (150.0 by 150.0 mm on the caliper lines); Windows
   sends the same page down the M834's Bluetooth serial port, built and not yet tried on a real M834 from a computer
 - registration from printed sheets, including off-axis photographs and a developable-surface model for paper that is not flat
 - hole detection, validated on synthetic and real images
@@ -319,7 +318,7 @@ What exists and is tested:
   iPad in a public beta through TestFlight
 - <!--count:store-targets-->nine<!--/count--> store-bought targets recognized from a fingerprint, named, their bulls placed and their printed scale offered with a warning
   to check it, and a newer signed list of them reaching every copy with the updates, without a new build (built, not proven)
-- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168 and have not yet been printed on a real one; the Label size loaded is chosen on the computer and, from nightly 175, on the phone; a printer check label measures the label printer and keeps the size with it, and on Android two labels print straight to the M220 over Bluetooth (entry 386), not yet tried on a real one
+- scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168, and two labels printed from the phone on a real M220 (2026-10-08, and again on 2026-10-10) had every code whole, codes 59.96 to 59.98 mm apart across (60.0 designed), each label about 0.4 to 0.7 mm left of center, left as it is; the Label size loaded is chosen on the computer and, from nightly 175, on the phone; a printer check label measures the label printer and keeps the size with it, and on Android two labels print straight to the M220 over Bluetooth (entry 386)
 - chronograph readings from a file (a spreadsheet CSV, a Garmin Xero export, and, Experimental, a LabRadar report or a BulletSeeker
   export), paired with the shots by a proposal a person accepts (built, not proven)
 - shot coordinates from several CSV files put together as one group, shots from many sheets of any kind in one analysis, each

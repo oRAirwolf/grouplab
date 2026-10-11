@@ -46,8 +46,7 @@ Where the figures come from:
   megapixels, where it peaks at about 370 MB on a Galaxy Z Fold 7.
 - **Disk:** the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred
   sessions take about 22 MB.
-- **Screen:** the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being
-  worked on.
+- **Screen:** the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.
 
 ## What happens once the application settles
 

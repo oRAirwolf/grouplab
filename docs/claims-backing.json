@@ -5,6 +5,13 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "Screen: the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {"kind": "decided", "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0; entry 405 section 6"},
+ "No 4x6 label printer has been tested yet, so until one has printed GroupLab&#x27;s check page this is &quot;should work&quot;; the Phomemo M834 has printed GroupLab&#x27;s printer check page true both ways, and the M220 has printed its scale labels.": {"kind": "measured", "where": "docs/notes/for-alan-archive.md requests 84 and 85, answered 2026-10-10 (M834 check print true both ways; M220 scale labels printed); commit 00de13ea; entry 405 section 3"},
+ "The pictures are taken on the Android emulator, sized as a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, after each nightly (these are from nightly 184); the result in them is Alan's own 600 dpi scan of a 25 shot group, published with his consent.": {"kind": "code", "where": "scripts/android-screens.sh and docs/figures/screens/phone/made-from.json (nightly read at build time); commit 1b731a65; entry 405 section 1"},
+ "Step 2 of 5, How big is this target?, with a 12 by 18 in poster and its size typed.": {"kind": "code", "where": "website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405"},
+ "Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {"kind": "code", "where": "website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405"},
+ "- **Screen:** the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {"kind": "decided", "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0 (the side columns narrow and the figures move under the picture); entry 405 section 6"},
+ "The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them; the second range day, 4 October, gave 137 of 145 holes found from GroupLab's own sheets with no false mark, and the gates still wait on more scans and photographs.": {"kind": "measured", "where": "docs/PHASE1-RESULTS.md entry 374 (the 4 October range day: 137 of 145 holes found, no false mark); entry 405 as the deciding entry"},
   "On the tour · In the user guide · The research behind it Which bull each shot belongs to A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ShotLabels.cs ShotLabel.Name; src/GroupLab.App/MarkingCanvas.cs Lit and LightAt; mobile/GroupLab.Mobile/ResultView.cs SheetPicture; src/GroupLab.Core/Marking/ResultFigures.cs BullKey (entry 376 sections A3, A4 and A6)"
@@ -5355,11 +5362,11 @@
   },
   "On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.": {
    "kind": "code",
-   "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync (paired first, a scan from Android 12), mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, printers.json phomemo-m220; entry 386 after question 90. Not yet printed on a real M220 by this path"
+   "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync (paired first, a scan from Android 12), mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, printers.json phomemo-m220; entry 386 after question 90. Printed on a real M220 by this path on 2026-10-08 and 2026-10-10 (for-alan-archive.md requests 84 and 85)"
   },
   "On Android, Print two scale labels on the Phomemo M220 sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first.": {
    "kind": "code",
-   "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync, mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, ScaleLabelCheck and PrinterProfile.LabelSize; entry 386. Not yet printed on a real M220 by this path"
+   "where": "android/GroupLab.Android/AndroidLePrinter.cs OpenAsync, mobile/GroupLab.Mobile/TargetsPage.cs PrintOnM220, ScaleLabelCheck and PrinterProfile.LabelSize; entry 386. Printed on a real M220 by this path on 2026-10-08 and 2026-10-10 (for-alan-archive.md requests 84 and 85)"
   },
   "For a label printer GroupLab does not print to itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page.": {
    "kind": "code",

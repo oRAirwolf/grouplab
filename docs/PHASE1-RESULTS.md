@@ -1492,7 +1492,7 @@ range, photographed and scanned, for row 2) and three main-lens photographs of t
 1 to 4 of `docs/PROOF-CHECKLIST.md` carry the new numbers; RESEARCH.md records the article decision (written, as part of entry 401's
 article on how far off square a photograph can be).
 
-## Entry 400: the phone's reading of a camera photograph, about a third sooner (2026-10-10)
+## Entry 400: the phone's reading of a camera photograph, about a tenth sooner, part taken back (2026-10-10)
 
 The record is `docs/PERFORMANCE.md`, "Entry 400". In short:
 
@@ -1589,6 +1589,28 @@ beside a table of hole results. No figures: each says why in `no_figure`. Claims
    backs up the six installed paths with `grouplab-change-backup.py` and runs `install.py --intake --dry-run`; the second installs, with
    `nginx -t` before any reload and both sites checked after, only if `install.py` says the include changed. panel.md carries both.
 3. Entries 399 to 403 were committed before this; the push and the site check are below in the reports.
+
+## Entry 405: the consistency audit of 2026-10-10, ten findings fixed together (2026-10-10)
+
+1. **Phone pictures.** The README, the tour index and /features/ now say the phone and tablet pictures are taken on the Android
+   emulator after each nightly; the site reads the nightly from `docs/figures/screens/phone/made-from.json` (`phone_nightly()` in
+   `website/build.py`), so the number cannot go stale again.
+2. **The tour's pending phone pictures.** Fingerprint now shows `fold-fingerprint` with its caption, parts and steps. Analysis-open,
+   compare and ballistics stay pending; their words and the eyebrow no longer promise a device sitting.
+3. **M834.** README and the Features page: from nightly 181 pages to the M834 are drawn 0.7 percent longer, and the third check print
+   was true both ways to 0.05 percent. Windows printing to it stays built, not yet tried (request 83).
+4. **M220.** README, the scale markers feature and its claims backing: two labels printed on a real M220, codes 59.96 to 59.98 mm apart
+   (60.0 designed), about 0.4 to 0.7 mm left of center, left as it is (question 94).
+5. **Label targets.** Narrowed to "no 4x6 label printer tested yet".
+6. **Narrow windows.** PLATFORM-SUPPORT.md, README and /download/ describe what entry 243 built instead of "being worked on".
+7. **Testing guide.** The 4 October range day added (137 of 145 holes, no false mark); both guide PDFs rebuilt, the user guide's
+   because its phone pictures had changed since.
+8. **README mosaic.** Remade from the current phone pictures; `android-emulator.yml` now remakes it when the phone pictures it commits
+   have made it stale (`readme-images.py --check`), so it cannot fall behind again.
+9. **PERFORMANCE.md and the entry 400 heading** say "about a tenth sooner, part taken back".
+10. Nothing else. `claims.py --check` passes (every claim backed), `readme.py --check` and the site build pass; the one consistency
+    warning left is the weekly sheet screenshots, which their own workflow refreshes. The wording was done by the docs-sonnet worker
+    and checked here.
 
 ## Decision log
 

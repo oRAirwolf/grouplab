@@ -48,7 +48,7 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
-## Entry 400: the phone's reading of a photograph, about a third sooner
+## Entry 400: the phone's reading of a photograph, about a tenth sooner, part taken back
 
 Planning named it: the phone's whole reading of a camera photograph, from the picture to its result (`PhoneAnalysis.Run`). Measured headless
 on this desktop, Release, nothing else running, as entry 342 did: the 600 dpi sample and the nine Fold 7 pictures of the 2026-09-28 and 29

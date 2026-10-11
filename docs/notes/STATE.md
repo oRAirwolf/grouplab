@@ -9,16 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-10, entry 404 (before it: entries 399 to 403).
+**Last rewritten:** 2026-10-10, entry 405 (before it: entries 399 to 404).
 
 ---
 
 ## In flight
 
-- **The overnight queue** (Alan, 2026-10-10): 399 to 404 done; 404's install is request 97, two pastes for Alan, prepared. Entry 402
-  published articles 34 to 37; entry 403 reads an ARM processor under an x86_64 user agent as Android, with `/download/?why` (request 96).
-- **Entry 401 done**: Fix holes' "Which bull was this hole fired at?" had no bull buttons and closing it left the page blank (phones only);
-  fixed, tested, shipped in nightly 184 and issue 27 closed; request 95 for Alan to confirm.
+- **Entry 405 done**: the consistency audit's ten findings fixed together (phone pictures said to be from nightly 115, the M834 and
+  M220 called unchecked, the narrow window, the testing guide, the README mosaic, which the emulator job now remakes itself).
+- **The overnight queue** (Alan, 2026-10-10): 399 to 404 done; 404's install is request 97; 402 published articles 34
+  to 37; 403 reads ARM under x86_64 as Android (request 96).
+- **Entry 401 done**: Fix holes on phones lost its bull buttons and went blank; fixed in nightly 184, issue 27 closed; request 95.
 - **Entry 400 done, in part**: about a tenth sooner (bend fits at once, markers found once); reading codes at once taken back after the
   Mobile suite hung on macOS, and CI now names a test running fifteen minutes. If macOS passes, it goes back behind a test.
 - **Entry 399 done**: an untagged photograph is now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in, was
@@ -52,7 +53,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings; when requests 93 and 97 come back, their backup folders go into RESTORE.md; close issue 27 with the nightly that ships entry 401; when request 93 comes back, its backup folder goes into RESTORE.md's waiting entry.
+1. Whatever the inbox brings; when requests 93 and 97 come back, their backup folders go into RESTORE.md's waiting entries.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. After request 93, the next nightly's `learning/summary.md` should end with the token line; read it once.
 

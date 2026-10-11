@@ -190,9 +190,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Entry 405 section 8: the README's mosaic is made from two of these pictures, so it is remade with them.
+          python3 -m pip install --quiet pillow
+          # Only when an input changed: another Pillow can write different bytes for the same picture.
+          python3 scripts/readme-images.py --check || python3 scripts/readme-images.py
           # Staged first, so a screen pictured for the first time is a change too: git diff alone does not see a new file.
-          git add docs/figures/screens/phone
-          if git diff --cached --quiet -- docs/figures/screens/phone; then
+          git add docs/figures/screens/phone docs/figures/readme
+          if git diff --cached --quiet -- docs/figures/screens/phone docs/figures/readme; then
             echo "The phone's screenshots are unchanged."
             exit 0
           fi

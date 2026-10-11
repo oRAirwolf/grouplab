@@ -261,7 +261,7 @@
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"
     },
-    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"shot": "fold-scale-markers"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220", "The second of two M220 scale labels"], "guide": "1-print-a-sheet"},
+    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once. Scale labels can also be printed from a label printer such as the Phomemo M220, straight from Android.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"shot": "fold-scale-markers"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220", "The second of two M220 scale labels"], "guide": "1-print-a-sheet"},
     {
       "key": "add-store-target",
       "group": "Reading a target",
@@ -1143,7 +1143,7 @@
       "key": "label-targets",
       "group": "Sheets and printing",
       "name": "Label targets for a thermal printer",
-      "sentence": "Six bulls of the Letter sheets' size on a 4x6, A6 or 100 by 150 mm label, in sets of five that pool into one group, with a printer check label, printed one dot at a time in black only with every code and marker on whole dots. No label printer has been tested yet, so until one has printed GroupLab's check page this is \"should work\". On Windows the computer also prints a sheet straight to a Phomemo M834 paired over Bluetooth, sending the same page the phone sends; that is built and not yet tried on a real M834 from a computer, and on macOS and Linux the choice says it is not available there yet.",
+      "sentence": "Six bulls of the Letter sheets' size on a 4x6, A6 or 100 by 150 mm label, in sets of five that pool into one group, with a printer check label, printed one dot at a time in black only with every code and marker on whole dots. No 4x6 label printer has been tested yet, so until one has printed GroupLab's check page this is \"should work\"; the Phomemo M834 has printed GroupLab's printer check page true both ways, and the M220 has printed its scale labels. On Windows the computer also prints a sheet straight to a Phomemo M834 paired over Bluetooth, sending the same page the phone sends; that is built and not yet tried on a real M834 from a computer, and on macOS and Linux the choice says it is not available there yet.",
       "shot": "targets",
       "sheets": [["x6-4x6", "A six-bull label on 4x6, as it prints"], ["x6-4x6-thermal", "The same label as a 203 dpi thermal printer makes it, one dot to a pixel"]],
       "platforms": ["Windows", "macOS", "Linux"],
@@ -1208,7 +1208,7 @@
       "key": "phone-targets",
       "group": "Sheets and printing",
       "name": "Print a sheet from the phone",
-      "sentence": "The phone has a Targets screen: the whole library and Made for your optic, printed through Android's own print dialog or shared as a PDF. On Android it also prints a sheet straight to a Phomemo M834 over Bluetooth without the Phomemo app, with Paper in the M834 for a roll or fanfold sheets; a real M834 has printed whole Letter sheets from it, true across and 0.7 percent short along the paper over two prints, so GroupLab now draws its M834 pages that much longer along the paper, and whether that makes them true is still being checked.",
+      "sentence": "The phone has a Targets screen: the whole library and Made for your optic, printed through Android's own print dialog or shared as a PDF. On Android it also prints a sheet straight to a Phomemo M834 over Bluetooth without the Phomemo app, with Paper in the M834 for a roll or fanfold sheets; a real M834 has printed whole Letter sheets from it, true across and 0.7 percent short along the paper over two prints, so from nightly 181 GroupLab draws its M834 pages 0.7 percent longer along the paper, and the third check print came out true both ways to 0.05 percent (150.0 by 150.0 mm on the caliper lines).",
       "shot": null,
       "platforms": [
         "Android"
