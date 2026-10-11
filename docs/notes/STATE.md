@@ -49,7 +49,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Whatever the inbox brings; when request 97 comes back, its backup folder goes into RESTORE.md's waiting entry.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
-3. Nightly 186 carries entry 410 (faster hole finding, the codes read at once): check its notes read well and macOS stays green.
+3. Question 96 (the phone and Android's text size) when planning answers it.
 
 ## Blocked, and on what
 
@@ -72,9 +72,9 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (88 answered 7A and archived 2026-
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.185 (2026-10-11 10:56 UTC, built from 3ecf22a3: entries 407 to 409); published whole. Main has
-  since gained entry 410: faster hole finding and the codes read at once, for nightly 186.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; live at 6109d181 with nightly 185's notes.
+- **Last nightly:** 0.2.0-nightly.186 (2026-10-11 15:28 UTC, built from 074866f1: entry 410, faster hole finding and the codes read
+  at once); published whole. 185 (10:56 UTC) carried entries 407 to 409.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched for 186, live at f25b7a68.
 - Crash reports open: none. Issue 27 (nightly 183, Android: Fix holes blank after a hole was added) fixed in entry 401, closed with nightly 184.
 
 ## The inbox
