@@ -661,6 +661,41 @@ public sealed class MarkingSession
     }
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 1.5: a hole taken away from the bull it is on. A person's choice no longer holds it, so it goes
+    /// back to the nearest-bull assignment and the sheet is matched again under its rule, as any shot nobody chose is. Where that puts it
+    /// straight back on the bull it was taken from (it is that bull's nearest hole, and the bull has room), it goes to the next nearest bull
+    /// instead and is held there, because taking it away has to take it away. One undo step. Returns the bull it is on now.
+    /// </summary>
+    public int? TakeFromBull(int id)
+    {
+        if (State.Find(id) is not { } shot)
+        {
+            return null;
+        }
+
+        int? from = shot.Bull;
+        var freed = shot with { BullChosen = false, Bull = NearestBull(State, shot.Image), Provenance = Touched(shot.Provenance) };
+        var next = Rematch(State with { Shots = State.Shots.Replace(shot, freed) });
+        if (from is { } was && next.Find(id)?.Bull == was && NextNearestBull(State, shot.Image, was) is { } other)
+        {
+            var moved = next.Find(id)!;
+            next = Rematch(next with { Shots = next.Shots.Replace(moved, moved with { Bull = other, BullChosen = true }) });
+        }
+
+        Apply(next);
+        return State.Find(id)?.Bull;
+    }
+
+    /// <summary>The bull nearest a point other than <paramref name="not"/>, measured as <see cref="NearestBull(MarkingState, PointD)"/> does.</summary>
+    private static int? NextNearestBull(MarkingState state, PointD image, int not)
+    {
+        PointD Plane(PointD p) => state.Scale is { } scale ? scale.ToTarget(p) : p;
+        var at = Plane(image);
+        return state.Bulls.Where(b => b.Index != not).Select(b => (b.Index, Away: Math.Pow(Plane(b.Image).X - at.X, 2) + Math.Pow(Plane(b.Image).Y - at.Y, 2)))
+            .OrderBy(b => b.Away).Select(b => (int?)b.Index).FirstOrDefault();
+    }
+
+    /// <summary>
     /// Puts a bull in a subgroup, or takes it out of one when the name is null or blank (NOTES-FROM-PLANNING.md entry 94 section 2). Nothing
     /// about the sheet changes: this is the session saying which bulls hold which load.
     /// </summary>

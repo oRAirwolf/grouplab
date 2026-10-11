@@ -194,6 +194,58 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// </summary>
     public int? LitBull { get; set; }
 
+    /// <summary>Entry 407 section 1.1: the lines from each bull to its holes, on unless a person hid them with "Lines to bulls".</summary>
+    public bool LinesToBulls { get; set; } = true;
+
+    /// <summary>
+    /// Entry 407 section 1.3: the bull chosen with a click, whose ring and lines are blue while every other bull dims; a click on a hole then
+    /// gives it to this bull or takes it away. Null while none is.
+    /// </summary>
+    public int? PickingBull { get; private set; }
+
+    /// <summary>Raised when a bull is chosen or the choosing ends, and when a click gives a hole to it or takes one away.</summary>
+    public event EventHandler? PickingChanged;
+
+    /// <summary>Chooses a bull to give holes to, or with null ends the choosing: Done, Escape, or a click on the chosen bull again.</summary>
+    public void Pick(int? bull)
+    {
+        PickingBull = bull;
+        LitBull = bull;
+        if (bull is not null)
+        {
+            Selected = null;
+        }
+
+        PickingChanged?.Invoke(this, EventArgs.Empty);
+        InvalidateVisual();
+    }
+
+    /// <summary>A click while a bull is chosen: on a hole gives or takes it, on the chosen bull ends, on another bull chooses that one.</summary>
+    private bool ClickWhilePicking(MarkingSession session, Point position)
+    {
+        if (PickingBull is not { } bull)
+        {
+            return false;
+        }
+
+        var state = session.State;
+        if (OnBullItself(state, position) is { } onBull)
+        {
+            Pick(onBull == bull ? null : onBull);
+        }
+        else if (state.Shots.Where(x => x.IsShot && Distance(ToControl(x.Image), position) <= ShotReach(state, x)).MinBy(x => Distance(ToControl(x.Image), position)) is { } hole)
+        {
+            Notice?.Invoke(this, BullChoosing.Tap(session, bull, hole.Id));
+            PickingChanged?.Invoke(this, EventArgs.Empty);
+        }
+        else if (BullAt(state, position) is { } other)
+        {
+            Pick(other.Index == bull ? null : other.Index);
+        }
+
+        return true;
+    }
+
     /// <summary>The bull lit now: <see cref="LitBull"/>, or the selected shot's.</summary>
     internal int? Lit(MarkingState state) => LitBull ?? (Selected is { } id ? state.Find(id)?.Bull : null);
 
@@ -222,6 +274,17 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
 
         return state.Bulls.Where(b => Distance(ToControl(b.Image), position) <= 2 * HitRadius).MinBy(b => Distance(ToControl(b.Image), position)) is { } bull ? (null, bull.Index) : null;
+    }
+
+    /// <summary>
+    /// Entry 407 section 1.3: a click on a bull's own center, nearer it than any hole. Every line starts there, so the bull is looked for before
+    /// the lines are, within the reach a bull has always had.
+    /// </summary>
+    private int? OnBullItself(MarkingState state, Point position)
+    {
+        var bull = state.Bulls.Where(b => Distance(ToControl(b.Image), position) <= 2 * HitRadius).MinBy(b => Distance(ToControl(b.Image), position));
+        var hole = state.Shots.Where(x => x.IsShot && Distance(ToControl(x.Image), position) <= ShotReach(state, x)).MinBy(x => Distance(ToControl(x.Image), position));
+        return bull is not null && (hole is null || Distance(ToControl(bull.Image), position) < Distance(ToControl(hole.Image), position)) ? bull.Index : null;
     }
 
     /// <summary>How far a point is from the segment between two others, on screen.</summary>
@@ -611,6 +674,20 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         {
             var c = ToControl(bull.Image);
             // Entry 115 section 2: a chosen bull is ringed, so a row picked for a load can be seen as one; entry 376 section A4, so is the lit one.
+            // Entry 407 section 1.3: the bull chosen to give holes to is ringed in blue, and the others dim.
+            if (PickingBull is { } picking)
+            {
+                bool mine = picking == bull.Index;
+                Marks.Cross(context, mine ? Marks.Chosen : Marks.Dimmed, c, 8);
+                if (mine)
+                {
+                    Marks.Ring(context, Marks.Chosen, c, 13, Tokens.MarkSelectedCoreWidth);
+                }
+
+                Marks.Label(context, bull.Label, mine ? Marks.Chosen : Marks.Dimmed, c + new Vector(8, 6));
+                continue;
+            }
+
             bool chosen = SelectedBulls.Contains(bull.Index) || lit == bull.Index;
             Marks.Cross(context, chosen ? Marks.Selected : Marks.Faint, c, 8);
             if (chosen)
@@ -643,6 +720,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         // NOTES-FROM-PLANNING.md entry 75: a shot carries its bull's number and nothing else, and a doubled bull or a shot with no bull is
         // drawn in the alert colour so it looks as abnormal as it is. A plain group has no printed numbers, and its marks carry none.
         var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId);
+        var lines = BullLines.For(state).ToDictionary(l => l.Shot);
         foreach (var shot in state.Shots)
         {
             var at = dragging == shot.Id ? dragAt : shot.Image;
@@ -662,20 +740,47 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             bool selected = shot.Id == Selected;
-            bool lights = lit is not null && shot.Bull == lit;
-            IBrush colour = selected || lights || Lassoed.Contains(shot.Id) ? Marks.Selected
+            bool lights = PickingBull is null && lit is not null && shot.Bull == lit;
+            bool mine = PickingBull is { } picked && shot.Bull == picked;
+            IBrush colour = mine ? Marks.Chosen
+                : PickingBull is not null ? Marks.Dimmed
+                : selected || lights || Lassoed.Contains(shot.Id) ? Marks.Selected
                 : shot.Exclusion is not null ? Marks.Excluded
                 : NeedsPerson.Contains(shot.Id) ? Marks.NeedsPerson
                 : byHand && shot.Bull is { } own ? ColourOf(state, own)
                 : shot.Provenance == ShotProvenance.Automatic ? Marks.Found
                 : Marks.Placed;
             double radius = ImpactRadius(state, at, shot.MeasuredDiameterInches);
-            if (shot.Bull is { } b && state.Bulls.FirstOrDefault(x => x.Index == b) is { } bull)
+            if (lines.TryGetValue(shot.Id, out var line) && (LinesToBulls || mine))
             {
                 // Entry 376 section A3: a thin line from the bull's centre to each hole given to it, so which bull a shot belongs to is
                 // never a guess; the lit bull's lines in the selection colour (section A4), the one under review in the review colour.
+                // Entry 407 section 1: always on unless "Lines to bulls" hides them; an unsure one dashed in orange with a "?" by its hole,
+                // and while a bull is chosen its lines blue and every other line dimmed.
                 bool now = ReviewShot == shot.Id;
-                Marks.Line(context, now ? Marks.NeedsPerson : lights ? Marks.Selected : Marks.Faint, ToControl(bull.Image), c, now || lights ? Tokens.MarkCoreWidth : 1);
+                var from = ToControl(line.From);
+                var dash = line.Unsure ? Marks.Dashed : null;
+                if (mine)
+                {
+                    Marks.Line(context, Marks.Chosen, from, c, Tokens.MarkSelectedCoreWidth);
+                }
+                else if (PickingBull is not null)
+                {
+                    Marks.Line(context, Marks.Dimmed, from, c, 1, dash);
+                }
+                else if (now || lights)
+                {
+                    Marks.Line(context, now ? Marks.NeedsPerson : Marks.Selected, from, c, Tokens.MarkCoreWidth, dash);
+                }
+                else
+                {
+                    Marks.Line(context, line.Unsure ? Marks.Unsure : Marks.Faint, from, c, line.Unsure ? Tokens.MarkCoreWidth : 1, dash);
+                }
+
+                if (line.Unsure && PickingBull is null)
+                {
+                    Marks.Label(context, "?", Marks.Unsure, c + new Vector(-radius - 14, -radius - 8));
+                }
             }
 
             if (dragging == shot.Id)
@@ -952,6 +1057,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
                 break;
 
+            case MarkingTool.Select when ClickWhilePicking(session, point.Position):
+                break;
+
             case MarkingTool.Select:
                 var hit = session.State.Shots.Where(s => Distance(ToControl(s.Image), point.Position) <= ShotReach(session.State, s)).MinBy(s => Distance(ToControl(s.Image), point.Position));
                 LitBull = null;
@@ -971,6 +1079,12 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                     // Click a hole, then click a bull: DESIGN.md section 13's reassignment.
                     session.AssignBull(selected, bull.Index);
                 }
+                else if (OnBullItself(session.State, point.Position) is { } own)
+                {
+                    // Entry 407 section 1.3: the bull's own center, where every one of its lines starts, chooses the bull.
+                    BullClicked?.Invoke(this, (own, false));
+                    Pick(own);
+                }
                 else if (LightAt(session.State, point.Position) is { Shot: { } byLine } line)
                 {
                     // Entry 376 section A4: a click on the line from a bull to a hole lights them, as a click on either does.
@@ -979,9 +1093,10 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 }
                 else if (BullAt(session.State, point.Position) is { } chosen)
                 {
-                    // A bull with no hole on it and no hole held: chosen on its own, for the load field (entry 115 section 2).
+                    // A bull with no hole on it and no hole held: chosen on its own, for the load field (entry 115 section 2), and chosen to
+                    // give holes to (entry 407 section 1.3).
                     BullClicked?.Invoke(this, (chosen.Index, false));
-                    LitBull = chosen.Index;
+                    Pick(chosen.Index);
                 }
                 else
                 {
@@ -1099,11 +1214,23 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
         if (panPressedAt is { } pressed && Session is { } s && Distance(pressed, e.GetPosition(this)) <= ClickSlop)
         {
-            // Entry 376 section A4: a click on a hole, on the line to its bull, or on the bull lights all three.
-            var lit = LightAt(s.State, pressed);
-            Selected = lit?.Shot;
-            LitBull = lit?.Bull;
-            SelectionChanged?.Invoke(this, EventArgs.Empty);
+            if (!ClickWhilePicking(s, pressed))
+            {
+                // Entry 376 section A4: a click on a hole, on the line to its bull, or on the bull lights all three. Entry 407 section 1.3: a
+                // click on a bull itself, away from its holes and lines, chooses it to give holes to.
+                var lit = LightAt(s.State, pressed);
+                if (OnBullItself(s.State, pressed) is { } bullOnly)
+                {
+                    Pick(bullOnly);
+                }
+                else
+                {
+                    Selected = lit?.Shot;
+                    LitBull = lit?.Bull;
+                }
+
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         dragging = null;

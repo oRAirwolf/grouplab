@@ -14,6 +14,12 @@ namespace GroupLab.Mobile;
 /// changes until a button is pressed: Add a hole where the crosshair is, or with a hole under it, Move it (pick it up, bring the crosshair
 /// to where it belongs, put it down) or Remove it. Every change can be undone. Done takes the changes back to the result, which measures
 /// again; leaving any other way, by Back or Android's back, asks whether to keep them.
+/// <para>
+/// Entry 407 section 1 (concept 4A): a tap on a bull chooses it, ringed in blue with its lines while the others dim, and a tap on a hole then
+/// gives the hole to that bull or takes it away. Tapping the bull again, Done or Android's back ends it. A tap on a hole with no bull chosen
+/// still changes nothing, which is what Alan asked of this page. Under the picture: how many shots the chosen bull has, how many holes are
+/// unsure, and Next unsure hole, which brings the crosshair to each orange line's hole in turn.
+/// </para>
 /// </summary>
 internal sealed class FixHolesPage : UserControl
 {
@@ -32,7 +38,13 @@ internal sealed class FixHolesPage : UserControl
     private readonly Border ask;
     private readonly TextBlock trueSize = Screens.Dim("");
     private readonly UnitSettings units;
+    private readonly TextBlock banner = Screens.Line("").Id("fix-bull-banner");
+    private readonly TextBlock holds = Screens.Line("").Id("fix-bull-holds");
+    private readonly TextBlock unsureSays = Screens.Dim("").Id("fix-unsure-count");
+    private readonly Button nextUnsure = Screens.Choice("Next unsure hole", () => { }).Id("fix-next-unsure");
     private int? under;
+    private int? picking;
+    private int? lastUnsure;
 
     /// <param name="state">The result's marking; it is copied, so nothing reaches the result until Done or a yes to keeping the changes.</param>
     /// <param name="turns">The quarter turns the result shows the picture upright by.</param>
@@ -51,11 +63,14 @@ internal sealed class FixHolesPage : UserControl
             RingInches = state.Calibre?.DiameterInches,
         };
         viewer.Moved += Show;
+        viewer.TappedAt += (_, screen) => Tap(screen);
+        viewer.LinesToBulls = Phone.Settings.LoadLinesToBulls();
+        nextUnsure.Click += (_, _) => NextUnsure();
         main.Click += (_, _) => Press();
         move.Click += (_, _) => Move();
         remove.Click += (_, _) => Remove();
         undo.Click += (_, _) => Undo();
-        done.Click += (_, _) => Finish(session.State);
+        done.Click += (_, _) => DonePressed();
 
         ask = Screens.Card(
             Screens.Heading("Keep the changes you made?"),
@@ -73,8 +88,17 @@ internal sealed class FixHolesPage : UserControl
         column.Children.Add(words);
         column.Children.Add(viewer);
         column.Children.Add(trueSize);
+        column.Children.Add(banner);
+        column.Children.Add(holds);
+        column.Children.Add(unsureSays);
         column.Children.Add(main);
         column.Children.Add(pair);
+        column.Children.Add(nextUnsure);
+        column.Children.Add(ResultView.LinesSwitch(on =>
+        {
+            viewer.LinesToBulls = on;
+            viewer.InvalidateVisual();
+        }));
         column.Children.Add(closing);
         column.Children.Add(ask);
         column.Children.Add(Screens.Choice("Back to the result", Leave).Id("fix-back"));
@@ -105,12 +129,96 @@ internal sealed class FixHolesPage : UserControl
     /// <summary>Whether the question about keeping the changes is showing.</summary>
     internal bool Asking => ask.IsVisible;
 
+    /// <summary>The bull chosen to give holes to, or null.</summary>
+    internal int? Picking => picking;
+
+    /// <summary>For the tests: the words under the picture, the banner first.</summary>
+    internal IReadOnlyList<string> BullWords => [.. new[] { banner, holds, unsureSays }.Where(t => t.IsVisible).Select(t => t.Text ?? "")];
+
+    /// <summary>
+    /// Entry 407 section 1.3: a tap on the picture. With a bull chosen, a hole gives it to that bull or takes it away, the chosen bull ends the
+    /// choosing and another bull is chosen instead; with none, a tap on a bull chooses it, and anything else does nothing. A tap is on whichever
+    /// of a hole and a bull's center is nearer it.
+    /// </summary>
+    internal void Tap(Point screen)
+    {
+        if (viewer.Held is not null)
+        {
+            return;
+        }
+
+        var (onHole, onBull) = viewer.TapTarget(screen, Reach);
+        if (picking is { } bull)
+        {
+            if (onHole is { } hole)
+            {
+                words.Text = BullChoosing.Tap(session, bull, hole);
+                DiagnosticLog.Info("result.fixholes.tap-hole", ("bull", bull));
+                Show(keepWords: true);
+                return;
+            }
+
+            if (onBull is { } other)
+            {
+                picking = other == bull ? null : other;
+            }
+        }
+        else if (onBull is { } chosen)
+        {
+            picking = chosen;
+            DiagnosticLog.Info("result.fixholes.choose-bull", ("bull", chosen));
+        }
+
+        Show();
+    }
+
+    /// <summary>Entry 407 section 1.4: brings the crosshair to the next unsure hole.</summary>
+    internal void NextUnsure()
+    {
+        if (BullLines.NextUnsure(session.State, lastUnsure) is { } next && session.State.Find(next) is { } shot)
+        {
+            lastUnsure = next;
+            picking = null;
+            viewer.Held = null;
+            viewer.CentreOn(shot.Image);
+            var line = BullLines.For(session.State).FirstOrDefault(l => l.Shot == next);
+            words.Text = $"{ShotLabels.Start(ShotName(next))}: {(line is null ? "unsure" : BullLines.Words(line.Doubt))}. Tap its bull, or another, to choose it.";
+            Show(keepWords: true);
+        }
+    }
+
+    private void DonePressed()
+    {
+        if (picking is not null)
+        {
+            picking = null;
+            Show();
+            return;
+        }
+
+        Finish(session.State);
+    }
+
     private int Shots => session.State.Shots.Count(s => s.IsShot);
 
-    private void Show()
+    private void Show() => Show(keepWords: false);
+
+    private void Show(bool keepWords)
     {
+        string kept = words.Text ?? "";
         under = viewer.Held is null ? viewer.MarkUnderCrosshair(Reach) : null;
-        viewer.Lit = (viewer.Held ?? under) is { } near ? session.State.Find(near)?.Bull : null;
+        viewer.Lit = picking ?? ((viewer.Held ?? under) is { } near ? session.State.Find(near)?.Bull : null);
+        viewer.Picking = picking is not null;
+        var state = session.State;
+        var aim = picking is { } chosen ? state.Bulls.FirstOrDefault(b => b.Index == chosen) : null;
+        banner.Text = aim is null ? "" : BullChoosing.Banner(aim.Label);
+        holds.Text = aim is null ? "" : BullChoosing.Holds(state, aim.Index);
+        int unsure = BullLines.Unsure(state).Count;
+        unsureSays.Text = BullChoosing.UnsureCount(unsure);
+        banner.IsVisible = aim is not null;
+        holds.IsVisible = aim is not null;
+        nextUnsure.IsEnabled = unsure > 0;
+        done.Content = Label(aim is null ? "Done" : "Done with bull " + aim.Label);
         // Entry 309 section 3.1: the circles are the bullet's size where the caliber is known; where it is not, a line says what would make them so.
         trueSize.Text = viewer.RingInches is null ? "Set the caliber on the result and each circle is drawn at the bullet's true size." : "";
         trueSize.IsVisible = trueSize.Text.Length > 0;
@@ -137,6 +245,11 @@ internal sealed class FixHolesPage : UserControl
 
         main.IsEnabled = viewer.Held is not null || under is null;
         undo.IsEnabled = session.CanUndo;
+        if (keepWords)
+        {
+            words.Text = kept;
+        }
+
         viewer.InvalidateVisual();
     }
 
@@ -268,6 +381,14 @@ internal sealed class FixHolesPage : UserControl
 
     private bool BackPressed()
     {
+        // Entry 407 section 1.3: Android's back ends the choosing of a bull before it leaves the page.
+        if (picking is not null)
+        {
+            picking = null;
+            Show();
+            return true;
+        }
+
         Leave();
         return true;
     }

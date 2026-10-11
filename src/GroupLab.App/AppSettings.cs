@@ -201,6 +201,14 @@ public sealed class AppSettingsStore(string path)
     public bool SaveMoreFigures(bool open) => Save(file => file["moreFiguresOpen"] = open);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 1.1: whether the lines from each bull to its holes are drawn. On unless a person turned
+    /// "Lines to bulls" off, on the desktop and the phone alike.
+    /// </summary>
+    public bool LoadLinesToBulls() => Read(file => (bool?)file["linesToBulls"]) ?? true;
+
+    public bool SaveLinesToBulls(bool on) => Save(file => file["linesToBulls"] = on);
+
+    /// <summary>
     /// Whether sighters are analysed, NOTES-FROM-PLANNING.md entry 105 section 8: off unless a person turns it on. Off, they are found and
     /// matched and then set aside; on, they are a group of their own with their own zero readout and review items.
     /// </summary>

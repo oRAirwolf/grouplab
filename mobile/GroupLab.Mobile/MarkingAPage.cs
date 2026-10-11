@@ -496,9 +496,55 @@ internal sealed class MarkingAPage : UserControl
             Moved?.Invoke();
         }
 
-        /// <summary>The hole under the crosshair, within <paramref name="reach"/> screen units, if any.</summary>
         /// <summary>Entry 376 section A4: the bull lit with its holes and lines.</summary>
         public int? Lit { get; set; }
+
+        /// <summary>Entry 407 section 1.3: whether <see cref="Lit"/> is a bull chosen to give holes to, which dims every other bull.</summary>
+        public bool Picking { get; set; }
+
+        /// <summary>Entry 407 section 1.1: "Lines to bulls"; off, only the lit bull's lines are drawn.</summary>
+        public bool LinesToBulls { get; set; } = true;
+
+        /// <summary>
+        /// Entry 407 section 1.3: a tap on the picture, a press let go where it began, with the point in image pixels and on screen. A drag
+        /// or a pinch is never a tap, so panning cannot choose a bull or give it a hole.
+        /// </summary>
+        public event Action<PointD, Point>? TappedAt;
+
+        private Point? pressedAt;
+
+        /// <summary>How far a press may move, in screen units, and still be a tap.</summary>
+        private const double TapSlop = 8;
+
+        /// <summary>The hole that is a shot nearest a screen point, within <paramref name="reach"/>.</summary>
+        internal int? ShotNear(Point at, double reach) => session.State.Shots.Where(s => s.IsShot).Select(s => (s.Id, Distance: Point.Distance(ToScreen(s.Image), at)))
+            .Where(s => s.Distance <= reach).OrderBy(s => s.Distance).Select(s => (int?)s.Id).FirstOrDefault();
+
+        /// <summary>The bull whose center is nearest a screen point, within <paramref name="reach"/>.</summary>
+        internal int? BullNear(Point at, double reach) => session.State.Bulls.Select(b => (b.Index, Distance: Point.Distance(ToScreen(b.Image), at)))
+            .Where(b => b.Distance <= reach).OrderBy(b => b.Distance).Select(b => (int?)b.Index).FirstOrDefault();
+
+        /// <summary>
+        /// What a tap at a screen point is on: the hole or the bull center nearest it within <paramref name="reach"/>, whichever is nearer, so
+        /// a bull with its hole beside its center can still be tapped. Both null on nothing.
+        /// </summary>
+        internal (int? Hole, int? Bull) TapTarget(Point at, double reach)
+        {
+            // Issue 25: MinBy over value tuples throws on an empty sequence, so they are nullable here.
+            var hole = session.State.Shots.Where(s => s.IsShot).Select(s => ((int Id, double Distance)?)(s.Id, Point.Distance(ToScreen(s.Image), at)))
+                .Where(s => s!.Value.Distance <= reach).MinBy(s => s!.Value.Distance);
+            var bull = session.State.Bulls.Select(b => ((int Index, double Distance)?)(b.Index, Point.Distance(ToScreen(b.Image), at)))
+                .Where(b => b!.Value.Distance <= reach).MinBy(b => b!.Value.Distance);
+            return hole is { } h && (bull is not { } near || h.Distance <= near.Distance) ? (h.Id, null) : bull is { } b2 ? (null, b2.Index) : (null, null);
+        }
+
+        /// <summary>Where an image point is on screen, for a test to tap it.</summary>
+        internal Point OnScreen(PointD image) => ToScreen(image);
+
+        /// <summary>For the tests: a tap at a screen point, as a finger's is.</summary>
+        internal void TapAt(Point at) => TappedAt?.Invoke(ToImage(at), at);
+
+        /// <summary>The hole under the crosshair, within <paramref name="reach"/> screen units, if any.</summary>
 
         public int? MarkUnderCrosshair(double reach)
         {
@@ -542,6 +588,7 @@ internal sealed class MarkingAPage : UserControl
         {
             base.OnPointerPressed(e);
             last = e.GetPosition(this);
+            pressedAt = last;
             if (KeepsDrags)
             {
                 e.PreventGestureRecognition();
@@ -604,6 +651,12 @@ internal sealed class MarkingAPage : UserControl
         {
             base.OnPointerReleased(e);
             last = null;
+            if (pressedAt is { } from && pinch == 1 && HeldAt is null && Point.Distance(from, e.GetPosition(this)) <= TapSlop)
+            {
+                TapAt(from);
+            }
+
+            pressedAt = null;
             if (e.Pointer.Captured == this)
             {
                 e.Pointer.Capture(null);
@@ -632,16 +685,10 @@ internal sealed class MarkingAPage : UserControl
 
             var blue = new Pen(new SolidColorBrush(Color.FromRgb(90, 160, 240)), 2);
             // Entry 376 sections A3 and A4: a thin line from each bull to every hole given to it, and the lit bull's (the hole under the
-            // crosshair, or the one being moved) in the selection colour with its holes.
-            var lit = new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected);
-            foreach (var shot in session.State.Shots.Where(s => s.IsShot && s.Bull is not null))
-            {
-                if (session.State.Bulls.FirstOrDefault(b => b.Index == shot.Bull) is { } aim)
-                {
-                    var to = shot.Id == Held && HeldAt is { } dragged ? ToScreen(dragged) : ToScreen(shot.Image);
-                    context.DrawLine(shot.Bull == Lit ? new Pen(lit, 3) : new Pen(new SolidColorBrush(Colors.OrangeRed, 0.7), 1.5), ToScreen(aim.Image), to);
-                }
-            }
+            // crosshair, the one being moved, or the bull chosen) blue with its holes. Entry 407 section 1: the unsure ones dashed in orange
+            // with a "?", and while a bull is chosen every other line dims.
+            var lit = BullLineInk.Lit;
+            BullLineInk.Draw(context, session.State, ToScreen, Lit, Picking, LinesToBulls, id => id == Held ? HeldAt : null);
 
             var labels = ShotLabels.For(session.State).ToDictionary(l => l.ShotId, l => l.Text);
             foreach (var bull in session.State.Bulls)
@@ -677,7 +724,7 @@ internal sealed class MarkingAPage : UserControl
 
                 // Entry 318 section 2: a hole Find holes proposed and is unsure of is ringed in amber, as a mark to check is on the result.
                 bool doubted = ReviewQueue.StillDoubted(session.State, shot);
-                context.DrawEllipse(null, shot.Bull is { } own && own == Lit ? new Pen(lit, 3) : byHand ? added : doubted ? new Pen(amber, 2.5) : found, at, radius, radius);
+                context.DrawEllipse(null, shot.Bull is { } own && own == Lit ? new Pen(lit, 3) : Picking ? new Pen(new SolidColorBrush(Colors.Gray, 0.5), 1.5) : byHand ? added : doubted ? new Pen(amber, 2.5) : found, at, radius, radius);
                 if (byHand)
                 {
                     context.DrawEllipse(Brushes.LimeGreen, null, at, 2.5, 2.5);

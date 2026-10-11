@@ -315,6 +315,51 @@ public class ResultScreenTests
     private static long SessionId(ResultView view) =>
         (long)typeof(ResultView).GetField("sessionId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(view)!;
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 1 on the phone: in Fix holes a tap on a bull chooses it, a tap on another bull's hole gives the
+    /// hole to it and a second tap takes it away, Done ends the choosing before it ends the page, and a tap on a hole with no bull chosen changes
+    /// nothing, as Alan asked of this page.
+    /// </summary>
+    [AvaloniaFact]
+    public void InFixHolesATapOnABullChoosesItAndATapOnAHoleGivesItOrTakesItAway()
+    {
+        var window = Started();
+        var result = Analyzed(Turned(0));
+        var view = new ResultView(result, new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { });
+        window.Content = view;
+        Dispatcher.UIThread.RunJobs();
+        Press(view, "Fix holes");
+        var page = view.GetVisualDescendants().OfType<FixHolesPage>().Single();
+        var viewer = page.Picture;
+        viewer.ZoomBy(3);
+        var state = page.State;
+        var bull = state.Bulls.First(b => b.Scoring);
+        var hole = state.Shots.First(s => s.IsShot && s.Bull is { } b && b != bull.Index);
+
+        // A tap on a hole with no bull chosen changes nothing.
+        viewer.CentreOn(hole.Image);
+        viewer.TapAt(viewer.OnScreen(hole.Image));
+        Assert.Null(page.Picking);
+        Assert.False(page.Changed);
+
+        // The bull's center, nearer than its own hole beside it.
+        viewer.CentreOn(bull.Image);
+        page.Tap(viewer.OnScreen(bull.Image));
+        Assert.Equal(bull.Index, page.Picking);
+        Assert.StartsWith($"Bull {bull.Label} chosen.", page.BullWords[0], StringComparison.Ordinal);
+
+        viewer.CentreOn(hole.Image);
+        page.Tap(viewer.OnScreen(hole.Image));
+        Assert.Equal(bull.Index, page.State.Find(hole.Id)!.Bull);
+        page.Tap(viewer.OnScreen(hole.Image));
+        Assert.NotEqual(bull.Index, page.State.Find(hole.Id)!.Bull);
+
+        Press(page, $"Done with bull {bull.Label}");
+        Assert.Null(page.Picking);
+        Assert.NotEmpty(view.GetVisualDescendants().OfType<FixHolesPage>());
+        window.Close();
+    }
+
     private static void Press(Control within, string words)
     {
         var button = within.GetVisualDescendants().OfType<Button>().First(b => Words(b) == words);

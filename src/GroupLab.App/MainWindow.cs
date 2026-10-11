@@ -758,6 +758,7 @@ public sealed partial class MainWindow : Window
 
         // Entry 137: an image dropped on the window or pasted opens exactly as Open does.
         ListenForDropsAndPastes();
+        BuildBullLines(panel);
         panel.Children.Add(Ruled("Selected shot"));
         panel.Children.Add(selection);
         panel.Children.Add(Ruled("Scale"));
@@ -2823,6 +2824,7 @@ public sealed partial class MainWindow : Window
         problem.Text = report.Problem ?? "";
         ShowNeeded();
         ShowReview(state);
+        ShowBullLines(state);
 
         if (!calibreBox.IsKeyboardFocusWithin && (calibreBox.Text ?? "") != (state.Calibre?.Name ?? ""))
         {
@@ -4877,6 +4879,9 @@ public sealed partial class MainWindow : Window
         {
             case Key.Back when bullTyped.Length > 0:
                 bullTyped = bullTyped[..^1];
+                break;
+            case Key.Escape when canvas.PickingBull is not null && bullTyped.Length == 0:
+                canvas.Pick(null);
                 break;
             case Key.Escape when bullTyped.Length > 0:
                 bullTyped = "";

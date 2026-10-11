@@ -338,6 +338,15 @@ public static class Tokens
     public static Color MarkAlert { get; } = Hex(0xe0604a);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 1.7: the chosen bull's ring and lines, and an unsure line. They differ in lightness as well as
+    /// hue (relative luminance about 0.09 and 0.22, so a reader who cannot tell blue from orange still sees two), and each stands at 3 to 1 or
+    /// more on the paper, which is the same in either theme. The canvas's #2f7fe0 and #c46a00 were the same lightness, so the blue is darker.
+    /// </summary>
+    public static Color MarkChosen { get; } = Hex(0x1f4fa8);
+
+    public static Color MarkUnsure { get; } = Hex(0xc46a00);
+
+    /// <summary>
     /// Entry 228 section 1.1: the colours of the bulls placed by hand on a target GroupLab did not print, in order, so a shot on the wrong
     /// bull shows up as the wrong colour. The chart palette's three first, then five more that stay apart from them on a photograph.
     /// </summary>

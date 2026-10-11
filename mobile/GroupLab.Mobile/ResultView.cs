@@ -429,6 +429,8 @@ public sealed class ResultView : UserControl, IOpenTarget
                 }
             }
 
+            picturePane.Marking = () => session.State;
+            picturePane.LinesToBulls = Phone.Settings.LoadLinesToBulls();
             picturePane.LitChanged += SayLit;
             full.BullChosen = bull =>
             {
@@ -455,6 +457,12 @@ public sealed class ResultView : UserControl, IOpenTarget
             picture.Children.Add(Screens.Dim("Move, add or remove a hole under a crosshair, with zoom and undo."));
             picture.Children.Add(picturePane);
             picture.Children.Add(litSays);
+            picture.Children.Add(LinesSwitch(on => picturePane.LinesToBulls = on));
+            int unsure = BullLines.Unsure(session.State).Count;
+            if (unsure > 0)
+            {
+                picture.Children.Add(Screens.Dim(BullChoosing.UnsureCount(unsure) + ", dashed in orange with a question mark: Fix holes steps through them."));
+            }
         }
 
         // Entry 259 screen 6: a sheet of a set from Made for your optic leads to the set, pooled so far, and the sheets still to read.
@@ -1014,6 +1022,19 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// Entry 376 sections A3 and A4: a thin line from each bull's centre to every hole given to it, and a tap on a bull, a hole or a line
     /// lights all three in the selection colour; a tap on nothing puts them out. Taps only: a drag still scrolls the page.
     /// </para>
+    /// <summary>Entry 407 section 1.1: the "Lines to bulls" switch, on by default and remembered, here and in Fix holes alike.</summary>
+    internal static CheckBox LinesSwitch(Action<bool> changed)
+    {
+        var box = new CheckBox { Content = "Lines to bulls", IsChecked = Phone.Settings.LoadLinesToBulls(), MinHeight = Screens.Touch }.Id("lines-to-bulls");
+        box.IsCheckedChanged += (_, _) =>
+        {
+            bool on = box.IsChecked == true;
+            Phone.Settings.SaveLinesToBulls(on);
+            changed(on);
+        };
+        return box;
+    }
+
     internal sealed class SheetPicture(Bitmap image, int turns, Func<IReadOnlyList<MarkedShot>> shots, Func<MarkedShot, IBrush?>? colour = null,
         Func<IReadOnlySet<int>>? flagged = null, Func<IReadOnlyList<BullAim>>? bulls = null) : Control
     {
@@ -1030,6 +1051,20 @@ public sealed class ResultView : UserControl, IOpenTarget
 
         /// <summary>Raised when a tap lights a bull or puts it out.</summary>
         internal event Action<int?>? LitChanged;
+
+        /// <summary>Entry 407 section 1: the marking, so the lines can say which are unsure; without it the lines are drawn plain.</summary>
+        internal Func<MarkingState>? Marking { get; set; }
+
+        /// <summary>Entry 407 section 1.1: "Lines to bulls"; off, only the lit bull's lines are drawn.</summary>
+        internal bool LinesToBulls
+        {
+            get;
+            set
+            {
+                field = value;
+                InvalidateVisual();
+            }
+        } = true;
 
         /// <summary>How near a tap has to be to a hole, a bull or a line to count, in screen units: a fingertip.</summary>
         private const double Reach = 22;
@@ -1122,17 +1157,14 @@ public sealed class ResultView : UserControl, IOpenTarget
             var leftOut = new Pen(Brushes.OrangeRed, 2, new DashStyle([2, 2], 0));
             var check = new Pen(new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected), 3);
             var marked = Flagged;
-            var lit = new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkSelected);
+            var lit = BullLineInk.Lit;
             var aims = bulls?.Invoke() ?? [];
             var all = shots();
-            // Entry 376 section A3: the lines first, under the rings, thin and translucent so the holes stay readable; the lit bull's in the
-            // selection colour and thicker.
-            foreach (var shot in all)
+            // Entry 376 section A3: the lines first, under the rings, thin so the holes stay readable. Entry 407 section 1: the unsure ones
+            // dashed in orange with a "?", the lit bull's blue, and all of them hidden but the lit bull's when "Lines to bulls" is off.
+            if (Marking?.Invoke() is { } marking)
             {
-                if (shot.Bull is { } toward && aims.FirstOrDefault(x => x.Index == toward) is { } aim)
-                {
-                    context.DrawLine(toward == Lit ? new Pen(lit, 3) : new Pen(new SolidColorBrush(Colors.OrangeRed, 0.7), 1.5), ToScreen(aim.Image), ToScreen(shot.Image));
-                }
+                BullLineInk.Draw(context, marking, ToScreen, Lit, picking: false, LinesToBulls);
             }
 
             if (Lit is { } shown && aims.FirstOrDefault(x => x.Index == shown) is { } litAim)

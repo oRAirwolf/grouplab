@@ -261,4 +261,17 @@ public partial class ThemeTests
 
     [GeneratedRegex(@"Brushes\.|Colors\.|Color\.(From|Parse)|new Color\(|""#[0-9A-Fa-f]{3,8}""")]
     private static partial Regex ColourLiteral();
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 407 section 1.7: the chosen bull's blue and an unsure line's orange differ in lightness as well as hue, so
+    /// somebody who cannot tell the two hues apart still sees two, and each stands at 3 to 1 or more on the paper. The paper is not themed:
+    /// the picture is a sheet in either theme, so this one check covers the dark theme too.
+    /// </summary>
+    [Fact]
+    public void TheChosenBlueAndTheUnsureOrangeDifferInLightnessAndStandOutOnThePaper()
+    {
+        Assert.True(Contrast(Tokens.MarkChosen, Tokens.Paper) >= 3, $"blue on paper {Contrast(Tokens.MarkChosen, Tokens.Paper):0.00}");
+        Assert.True(Contrast(Tokens.MarkUnsure, Tokens.Paper) >= 3, $"orange on paper {Contrast(Tokens.MarkUnsure, Tokens.Paper):0.00}");
+        Assert.True(Contrast(Tokens.MarkChosen, Tokens.MarkUnsure) >= 1.5, $"blue against orange {Contrast(Tokens.MarkChosen, Tokens.MarkUnsure):0.00}");
+    }
 }

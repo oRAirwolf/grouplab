@@ -44,6 +44,15 @@ public static class Marks
     /// <summary>A missing marker, and a hole that reads too large for the calibre.</summary>
     public static IBrush Alert { get; } = new SolidColorBrush(Tokens.MarkAlert);
 
+    /// <summary>Entry 407 section 1: the chosen bull, its ring and its lines.</summary>
+    public static IBrush Chosen { get; } = new SolidColorBrush(Tokens.MarkChosen);
+
+    /// <summary>Entry 407 section 1: a line worth a second look, dashed, with a "?" beside its hole.</summary>
+    public static IBrush Unsure { get; } = new SolidColorBrush(Tokens.MarkUnsure);
+
+    /// <summary>The lines and holes of the bulls not chosen while one is, dimmed.</summary>
+    public static IBrush Dimmed { get; } = new SolidColorBrush(Tokens.MarkFaint, 0.45);
+
     public static IDashStyle Dashed { get; } = new DashStyle([3, 2], 0);
 
     /// <summary>The halo's width for a core: 3 pixels at the standard 1.6 pixel core, and as much wider as a heavier core is.</summary>

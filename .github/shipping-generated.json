@@ -43,6 +43,7 @@
     "src/GroupLab.App/LoadGroups.cs",
     "src/GroupLab.App/MainWindow.Ballistics.cs",
     "src/GroupLab.App/MainWindow.BallisticsLayout.cs",
+    "src/GroupLab.App/MainWindow.BullLines.cs",
     "src/GroupLab.App/MainWindow.Chronograph.cs",
     "src/GroupLab.App/MainWindow.Compare.cs",
     "src/GroupLab.App/MainWindow.CsvImport.cs",
