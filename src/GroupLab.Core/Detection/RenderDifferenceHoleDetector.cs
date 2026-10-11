@@ -1206,13 +1206,9 @@ public static partial class RenderDifferenceHoleDetector
         int n = 0;
         for (int y = blob.Top; y < blob.Top + blob.Height; y++)
         {
-            for (int x = blob.Left; x < blob.Left + blob.Width; x++)
+            var (from, to) = RowInside(blob, y);
+            for (int x = from; x <= to; x++)
             {
-                if (!Inside(blob.Hull, x, y))
-                {
-                    continue;
-                }
-
                 int i = (y * width) + x;
                 double weight = residual[i];
                 sw += weight;
@@ -1248,10 +1244,11 @@ public static partial class RenderDifferenceHoleDetector
         var pixels = new List<(int X, int Y, double Weight)>();
         for (int y = blob.Top; y < blob.Top + blob.Height; y++)
         {
-            for (int x = blob.Left; x < blob.Left + blob.Width; x++)
+            var (from, to) = RowInside(blob, y);
+            for (int x = from; x <= to; x++)
             {
                 double weight = residual[(y * width) + x];
-                if (weight != 0 && Inside(blob.Hull, x, y))
+                if (weight != 0)
                 {
                     pixels.Add((x, y, weight));
                 }
@@ -1259,14 +1256,28 @@ public static partial class RenderDifferenceHoleDetector
         }
 
         var centres = new (double X, double Y)[] { (m.X - (m.Major * m.AxisX), m.Y - (m.Major * m.AxisY)), (m.X + (m.Major * m.AxisX), m.Y + (m.Major * m.AxisY)) };
+        // Entry 410 section 3: squares as products rather than Math.Pow, and the pixels in flat arrays; the sums are the same additions in
+        // the same order, and a square written as a product is the correctly rounded one on every platform.
+        int count = pixels.Count;
+        var px = new double[count];
+        var py = new double[count];
+        var pw = new double[count];
+        for (int p = 0; p < count; p++)
+        {
+            (px[p], py[p], pw[p]) = (pixels[p].X, pixels[p].Y, pixels[p].Weight);
+        }
+
         for (int iteration = 0; iteration < 20; iteration++)
         {
             var sw = new double[2];
             var sx = new double[2];
             var sy = new double[2];
-            foreach (var (x, y, weight) in pixels)
+            double ax = centres[0].X, ay = centres[0].Y, bx = centres[1].X, by = centres[1].Y;
+            for (int p = 0; p < count; p++)
             {
-                int k = Math.Pow(x - centres[0].X, 2) + Math.Pow(y - centres[0].Y, 2) <= Math.Pow(x - centres[1].X, 2) + Math.Pow(y - centres[1].Y, 2) ? 0 : 1;
+                double x = px[p], y = py[p], weight = pw[p];
+                double dax = x - ax, day = y - ay, dbx = x - bx, dby = y - by;
+                int k = (dax * dax) + (day * day) <= (dbx * dbx) + (dby * dby) ? 0 : 1;
                 sw[k] += weight;
                 sx[k] += weight * x;
                 sy[k] += weight * y;
@@ -1464,6 +1475,50 @@ public static partial class RenderDifferenceHoleDetector
         }
 
         return closed / 360.0;
+    }
+
+    /// <summary>
+    /// Entry 410 section 3: the pixels of one row of a blob's box that are inside its hull, as the first and last, or an empty run (first after
+    /// last). A hull is convex and <see cref="Inside"/> asks one sign of each edge's cross product, which along a row changes at most once
+    /// per edge, so the pixels it accepts on a row are one run: found from the two ends, they are exactly the pixels testing every one gave,
+    /// in the same order, at a fraction of the tests. A hull of fewer than three points is tested pixel by pixel as before.
+    /// </summary>
+    private static (int From, int To) RowInside(ImageBlob blob, int y)
+    {
+        int first = blob.Left, last = blob.Left + blob.Width - 1;
+        if (blob.Hull.Count < 3)
+        {
+            return (first, last) is var all && Enumerable.Range(first, blob.Width).All(x => Inside(blob.Hull, x, y)) ? all : NotAHullRow(blob, y);
+        }
+
+        while (first <= last && !Inside(blob.Hull, first, y))
+        {
+            first++;
+        }
+
+        while (last >= first && !Inside(blob.Hull, last, y))
+        {
+            last--;
+        }
+
+        return (first, last);
+    }
+
+    /// <summary>A degenerate hull's row: its single run where it has one, or no pixels where its inside pixels are not one run.</summary>
+    private static (int From, int To) NotAHullRow(ImageBlob blob, int y)
+    {
+        var inside = Enumerable.Range(blob.Left, blob.Width).Where(x => Inside(blob.Hull, x, y)).ToList();
+        if (inside.Count == 0)
+        {
+            return (blob.Left, blob.Left - 1);
+        }
+
+        if (inside[^1] - inside[0] + 1 != inside.Count)
+        {
+            throw new InvalidOperationException("a hull of fewer than three points whose inside pixels are not one run");
+        }
+
+        return (inside[0], inside[^1]);
     }
 
     private static bool Inside(IReadOnlyList<PointD> hull, double x, double y)

@@ -48,6 +48,30 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 410 section 3: finding the holes, the marks' own sums
+
+**Measured first, warm, in one process** (`analyze-folder`, the step timings taken inside `RenderDifferenceHoleDetector.Detect` for this
+measurement and removed after): the closing of the threshold mask was 3 to 14 ms and the alignment's phase correlations 22 to 130, not the
+largest steps the note above names; that note was written before entry 392 moved the closing into managed code. The largest step was the
+loop over the candidate marks: 85 to 109 ms on a Fold 7 picture and 550 to 760 ms on the 600 dpi sample, nearly all of it each mark's
+moments (about 200 ms there for 34 marks) and the two-centre split (about 280 ms).
+
+**What changed, and why nothing can move.** Both tested every pixel of a mark's box against its hull, a sign check against each edge.
+A hull is convex, so on any row the pixels it accepts are one run; the run's two ends are now found from the two sides of the row and the
+pixels between are summed in the same order, so the sums are the same additions. The split's squared distances are products rather than
+`Math.Pow`, over flat arrays: a product is the correctly rounded square on every platform.
+
+**Nothing moved.** The old and the new code analysed the same fifteen pictures (the 600 dpi sample, the nine corpus pictures and five of
+Alan's six range scans of 2026-09-20): 346 holes, the same labels, and every centre the same to six decimals of an inch.
+
+**Before and after,** `grouplab bench --runs 5`, median ms, this desktop: the generated sheet, finding the holes, 261 to 168, and the whole
+sheet 381 to 289; a phone photograph, finding the holes, 199 to 181; the 600 dpi scan, which has no holes, 491 to 494. Warm, the
+candidate loop on the 600 dpi sample went from about 560 ms to 100, and on a Fold 7 picture from about 90 to 30. The baseline gate passed.
+
+**Not yet put back:** reading the codes all at once (entry 400). The macOS Mobile suite has passed since it was taken back (run
+38128272788, 162 of 162), which is the condition entry 400 set; it goes back after nightly 185 has published, so a hang on macOS cannot
+stop that nightly.
+
 ## Entry 400: the phone's reading of a photograph, about a tenth sooner, part taken back
 
 Planning named it: the phone's whole reading of a camera photograph, from the picture to its result (`PhoneAnalysis.Run`). Measured headless
