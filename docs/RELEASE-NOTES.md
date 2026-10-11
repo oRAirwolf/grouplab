@@ -12,6 +12,30 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.185
+
+**2026-10-11**, commit `3ecf22a`. Nightly.
+
+**What you will notice**
+
+- With no chronograph readings, the analysis now lets you import a file, drop one on it, or type the speeds right there, and matches them to your shots.
+- Every hole now has a line to the bull it was given, and lines worth a second look are dashed in orange with a question mark; tap a bull, then tap holes to give them to it or take them away.
+- Switching from a thermal printer back to your sheet printer no longer leaves a red warning about the page being cut off. Thanks to Quack on the Discord for the report.
+- A barrel's length and twist, a rifle's cartridge and scope, and a load's powder, charge and primer are now kept when you close GroupLab; before, they were lost.
+- Paper and backing now sit in a closed "For the hole size studies" section at the bottom of the setup, and are remembered for your next sheet unless you turn that off; the phone can record them too.
+- Barrels now sit under their rifle: each rifle lists its barrels with the one on now, the setup names rifle and barrel together, and your existing barrels are moved under their rifles after GroupLab keeps a copy of your data.
+- Leaving a shot out no longer asks why, and the session's folder now opens from the ··· menu at the top right instead of the bottom bar.
+- The Shots list is now short rows; open one to change its bull, say when it was fired, count it or leave it out, or delete it as not a hole, which can still be undone.
+- The Groups section now asks how you shot the sheet in plain words, lets you tap bulls that took two or that you did not fire at, sets loads by row or column, and reads back what GroupLab will make of it.
+
+**Under the hood**
+
+- The banner for a chosen bull names a numbered bull as "bull 7", and the screens for this release's changes are now drawn for grouplab.org from the application itself.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.185)
+
+---
+
 ## 0.2.0-nightly.184
 
 **2026-10-10**, commit `df55224`. Nightly.
