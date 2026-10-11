@@ -9,30 +9,29 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-10, entry 405 (before it: entries 399 to 404).
+**Last rewritten:** 2026-10-11, entry 406 (before it: entries 399 to 405).
 
 ---
 
 ## In flight
 
-- **Entry 405 done**: the consistency audit's ten findings fixed together (phone pictures said to be from nightly 115, the M834 and
-  M220 called unchecked, the narrow window, the testing guide, the README mosaic, which the emulator job now remakes itself).
+- **Entry 406 done but 1.3**: request 93 installed by Alan (token reaches both), request 96 confirmed on his tablet; a test now
+  refuses a paste reading a backup folder without sudo. Left: read 2026-10-11's learning `summary.md` for the token line.
+- **Entry 405 done**: the consistency audit's ten findings fixed; the emulator job now remakes the README mosaic itself.
 - **The overnight queue** (Alan, 2026-10-10): 399 to 404 done; 404's install is request 97; 402 published articles 34
-  to 37; 403 reads ARM under x86_64 as Android (request 96).
+  to 37; 403 reads ARM under x86_64 as Android, confirmed by Alan.
 - **Entry 401 done**: Fix holes on phones lost its bull buttons and went blank; fixed in nightly 184, issue 27 closed; request 95.
 - **Entry 400 done, in part**: about a tenth sooner (bend fits at once, markers found once); reading codes at once taken back after the
   Mobile suite hung on macOS, and CI now names a test running fifteen minutes. If macOS passes, it goes back behind a test.
 - **Entry 399 done**: an untagged photograph is now read through the lens (`SheetMeasurer.UntaggedPhotograph`): 0.0077 to 0.0143 in, was
   0.0155 to 0.0216; row 4's 7 false rings gone; what is left is paper relief (`grouplab photo-parts`). Request 94 for material.
-- **Question 95 (b) built, not yet on the server** (2026-10-10): the nightly checks the learning token (`token_check`); Code's copy to
-  the server was refused by the permission check, so request 93 is Alan's one paste. RESTORE.md lists it as waiting.
 - **Requests 84, 85, 88 and 92 closed, question 94 answered (a)** (2026-10-10): the M220's placement stays; `MeasuredFeed` 99.30.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **Entries 393 to 398 done** (2026-10-09): twelve articles published; the learning loop on the web server (nightly 13:45 UTC);
   every server change backed up first (RESTORE.md rule 5); server backups kept 4 days, so a mistake must be noticed within four.
 - **Concept A, several targets open at once** (Alan, 2026-10-07): the phone's sheet (35e687bb, pictured since entry 388) and the desktop
   tabs (merged 2026-10-07 21:02, 86a8d207). **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 95 (the Fix holes fix on the phone), 96 (the download page on his tablet), 97 (the intake worker), 93 (the token check onto the server, three minutes), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 95 (the Fix holes fix on the phone), 97 (the intake worker), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -53,9 +52,10 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings; when requests 93 and 97 come back, their backup folders go into RESTORE.md's waiting entries.
+1. Whatever the inbox brings; when request 97 comes back, its backup folder goes into RESTORE.md's waiting entry.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
-3. After request 93, the next nightly's `learning/summary.md` should end with the token line; read it once.
+3. After 13:45 UTC on 2026-10-11, the learning nightly's `summary.md` should end with the token line, yes for both; read it once
+   and say so in that day's report (entry 406 section 1.3).
 
 ## Blocked, and on what
 
@@ -63,7 +63,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **27** (95 the Fix holes fix on the phone; 96 the download page on the tablet; 97 the intake worker; 93 one paste putting the token check on the server; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **25** (95 the Fix holes fix on the phone; 97 the intake worker; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

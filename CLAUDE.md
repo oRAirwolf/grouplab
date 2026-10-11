@@ -54,7 +54,9 @@ come back the way everything else does, as an inbox entry.
 
 **The one exception is a command he has to paste into a shell**, because he runs those from the panel. It goes
 in the panel written out in full, with which shell it goes into and what a good result looks like. He works
-inside MobaXterm and does not need the connection commands.
+inside MobaXterm and does not need the connection commands. **No step in a chained paste may fail without printing something** (entry
+406 section 3): a check ends in `|| { echo "STOP: <why>"; false; }`, and anything reading a change backup's folder runs under sudo,
+because the folder is root's only (`ForAlanTests.NoPasteReadsABackupFolderWithoutSudo`).
 
 **Still true, and it is why the file exists:** before starting the body of any entry or queue, read the whole
 of it and find every step that will need him. Prepare all of them up front, write them into

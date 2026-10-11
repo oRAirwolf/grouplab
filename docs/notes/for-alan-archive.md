@@ -3,6 +3,45 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 96. One page on your Samsung tablet, about a minute, whenever suits (entry 403)
+
+**Answered 2026-10-11:** Alan opened the page with `?why` in both browsers on the tablet, and both picked Android, Looks like this device. Firefox and Chrome each send an x86_64 Linux user agent while the browser's own platform says `Linux armv81`, and the page's guess was "android, from an ARM processor under an x86_64 user agent" in both: entry 403's fix is confirmed on real hardware in both browsers (entry 406 section 2).
+
+**Why:** the download page now reads two more things about the device before guessing, so your Galaxy tablet in Firefox should get
+Android rather than Linux. Firefox's own documentation does not say what it reports when it asks for the desktop site, so only your
+tablet can confirm it, and the page can now show what it saw.
+
+**Steps:** on the tablet, in Firefox, open `https://grouplab.org/download/?why`. Under the device buttons there is a short list of lines
+ending in "guess: ...". Note which device button is picked, and take a screenshot of the list (or copy the lines).
+
+**A good answer:** "Android, Looks like this device", with the screenshot or the lines. If it still says Linux, the lines say why, and
+that is what is needed. They hold only what the browser says about itself, nothing personal.
+
+## 93. One paste on the server: the nightly checks the learning token itself, about three minutes, whenever suits (question 95)
+
+**Answered 2026-10-11:** installed in two parts, after Alan checked the `grouplab-daily` backup was current. The first paste stopped silently after the backup: it checked the backup folder without sudo, and the folder is readable only by root (entry 406 section 3). The paste below is corrected to the form that worked. The server printed `learn-worker.new: OK`, the backup folder `/home/ubuntu/grouplab-server/backups/2026-10-11T004851Z-learning-token-check`, `grouplab-learn-worker.py: OK`, `backup holds the old worker`, and "The learning token reaches the error reports: yes; GroupLab's pull requests: yes." The backup is in RESTORE.md.
+
+**Why:** you chose (b) for question 95: every nightly check now asks GitHub with the learning token for one error report and one pull
+request, and writes "the learning token reaches the error reports: yes; GroupLab's pull requests: yes" (or GitHub's answer) into its log
+and into `learning/summary.md`. The change is one file on the server, the learning worker. Code's own copy to the server was refused by
+the session's permission check, so here it is for you. The block backs up the old worker first (RESTORE.md rule 5), fetches the new one
+from GitHub, refuses it unless its fingerprint is the one below, installs it, and then runs the new check once. It never prints the token.
+
+**First,** in the Oracle Cloud console, the newest `grouplab-daily` boot volume backup should be from today. If it is not, stop and say so.
+
+**Then,** in MobaXterm, in your usual bash session on the server, paste this whole block at once:
+
+    cd /home/ubuntu/grouplab-server && curl -fsSL -o learn-worker.new https://raw.githubusercontent.com/oRAirwolf/grouplab/main/website/server/grouplab-learn-worker.py && echo "cdf083f708aea46743f92df0de1c292280b15d3f8369d2cb39a983b73d9db0cf  learn-worker.new" | sha256sum -c - && mv learn-worker.new grouplab-learn-worker.py && B=$(sudo python3 grouplab-change-backup.py --label learning-token-check --file /usr/local/sbin/grouplab-learn-worker.py | sed -n 's/^done: \(.*\), [0-9]* bytes$/\1/p') && echo "backup: $B" && { sudo test -f "$B/files/usr/local/sbin/grouplab-learn-worker.py" && echo "backup holds the old worker" || { echo "STOP: the backup does not hold the old worker"; false; }; } && sudo install -m 755 -o root -g root grouplab-learn-worker.py /usr/local/sbin/grouplab-learn-worker.py && sudo systemd-run --quiet --pipe --wait -p LoadCredential=learning-token:/etc/grouplab/learning-token python3 -c 'import importlib.util as u; s = u.spec_from_file_location("w", "/usr/local/sbin/grouplab-learn-worker.py"); m = u.module_from_spec(s); s.loader.exec_module(m); print(m.token_check())'
+
+**A good answer:** it prints `learn-worker.new: OK`, then `backup: /home/ubuntu/grouplab-server/backups/2026-10-10T...-learning-token-check`,
+then `- The learning token reaches the error reports: yes; GroupLab's pull requests: yes.` Paste the backup line back to the planning
+session so it goes in RESTORE.md. If the fingerprint line says `FAILED`, nothing was installed: say so. If the last line says `no (401)`,
+the token is wrong or expired (make a new one as in request 88, then `sudo grouplab-set-learning-token`).
+
+**To undo it,** if ever needed, with the backup line's folder in place of `<backup>`:
+
+    sudo install -m 755 -o root -g root <backup>/files/usr/local/sbin/grouplab-learn-worker.py /usr/local/sbin/grouplab-learn-worker.py
+
 ## 92. Two lines on the server: does the learning token reach the error reports? About one minute, whenever suits (request 88)
 
 **Answered 2026-10-10:** Alan ran both lines on the server and each printed `200`: the learning token reaches the error reports and GroupLab's pull requests. From question 95 (b), the nightly checks this itself every night.

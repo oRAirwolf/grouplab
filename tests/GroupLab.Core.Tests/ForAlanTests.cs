@@ -32,4 +32,30 @@ public class ForAlanTests
         int applying = Regex.Matches(text, @"(?m)^\*\*Opened [^\n]*Being applied").Count;
         Assert.Equal(int.Parse(said.Groups[1].Value, CultureInfo.InvariantCulture), open.Count + applying);
     }
+
+    /// <summary>
+    /// Entry 406 section 3: <c>grouplab-change-backup.py</c> makes its folder readable by root only, so request 93's plain
+    /// <c>test -f "$B/files/..."</c> failed without a word and its chain stopped after the backup with nothing installed. Every command
+    /// in a paste that reads or copies from a backup folder runs under sudo.
+    /// </summary>
+    [Fact]
+    public void NoPasteReadsABackupFolderWithoutSudo()
+    {
+        var plain = new Regex(@"(?<![\w-])(?<!sudo )(test|\[|ls|cat|stat|head|sha256sum|cmp|diff|cp|install) [^;&|\n`]*(\$B\b|\$\{B\}|grouplab-server/backups/|<backup>)");
+        var found = new List<string>();
+        foreach (string file in new[] { "notes/for-alan.md", "notes/for-alan-archive.md", "RESTORE.md" })
+        {
+            string[] lines = File.ReadAllLines(Repo.PathTo(["docs", .. file.Split('/')]));
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (plain.Match(lines[i]) is { Success: true } m)
+                {
+                    found.Add($"docs/{file}:{i + 1}: {m.Value}");
+                }
+            }
+        }
+
+        Assert.True(found.Count == 0, "These read a backup folder without sudo, which fails silently because the folder is root's only: "
+            + string.Join("; ", found));
+    }
 }

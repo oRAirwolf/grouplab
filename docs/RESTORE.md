@@ -103,12 +103,12 @@ server is limited to GroupLab's own files and its installer.
   file `sudo cp -a` back from `<backup>/files/<its path>`, `sudo systemctl daemon-reload`, and `sudo nginx -t` then a reload if the
   include was put back. Check: the worker's SHA-256 is the manifest's, `nginx -t` passes, both sites answer 200. The backup's folder goes
   here when Alan sends it.
-- **Waiting for Alan (request 93), the nightly's own token check** (question 95 (b), 2026-10-10). Will change:
-  `/usr/local/sbin/grouplab-learn-worker.py` only (the nightly asks GitHub with the learning token for one issue and one pull request and
-  writes the answer into its log and `summary.md`). Backup: `grouplab-change-backup.py --label learning-token-check` of that one file,
-  made by the same paste before the install. Undo: `sudo install -m 755 -o root -g root <backup>/files/usr/local/sbin/grouplab-learn-worker.py
-  /usr/local/sbin/grouplab-learn-worker.py`. Check: the worker's SHA-256 is the backup manifest's, and both sites answer. The backup's
-  folder goes here when Alan sends it.
+- **2026-10-11 00:48 UTC, the nightly's own token check** (question 95 (b), request 93, run by Alan, entry 406). Changed:
+  `/usr/local/sbin/grouplab-learn-worker.py` only, now the repository's copy (SHA-256 `cdf083f7...`), 755 root:root; the nightly asks
+  GitHub with the learning token for one issue and one pull request and writes the answer into its log and `summary.md`. Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-10-11T004851Z-learning-token-check/`, holding the old worker under `files/`. Undo:
+  `sudo install -m 755 -o root -g root <backup>/files/usr/local/sbin/grouplab-learn-worker.py /usr/local/sbin/grouplab-learn-worker.py`.
+  Check: the token reached both repositories when it ran ("yes" for both).
 - **2026-10-09 11:47 UTC, the synthetic board's time limit** (entry 395). Changed: `/usr/local/sbin/grouplab-learn-worker.py` only (a
   synthetic board past its hour no longer stops the night's run). Backup:
   `/home/ubuntu/grouplab-server/backups/2026-10-09T114707Z-learning-worker-synthetic/`, 117,551 bytes. Undo and check: as below.

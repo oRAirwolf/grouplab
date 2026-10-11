@@ -1612,6 +1612,20 @@ beside a table of hole results. No figures: each says why in `no_figure`. Claims
     warning left is the weekly sheet screenshots, which their own workflow refreshes. The wording was done by the docs-sonnet worker
     and checked here.
 
+## Entry 406: requests 93 and 96 answered, and the server paste's silent stop (2026-10-11)
+
+1. **Request 93.** The learning worker on the server is the repository's (SHA-256 `cdf083f7...`), and the token reaches both
+   repositories. RESTORE.md's waiting entry is now a dated change with its backup folder
+   (`2026-10-11T004851Z-learning-token-check`) and its undo; the request is in the archive, answered. Reading the next learning
+   nightly's `summary.md` for the token line waits for 13:45 UTC on 2026-10-11.
+2. **Request 96.** Firefox and Chrome on Alan's tablet both send an x86_64 Linux user agent with the platform `Linux armv81`, and both
+   picked Android with entry 403's reason: the fix holds on real hardware. No test holds the guess to sample user agents (entry 403
+   added none), so there was nothing to add the two to.
+3. **The silent stop.** Request 93's paste read the root-only backup folder without sudo; the only such paste was that one, corrected
+   in the archive to the form that worked. Request 97's pastes already print on every failure. `ForAlanTests.NoPasteReadsABackupFolderWithoutSudo`
+   now fails on any command in `for-alan.md`, its archive or RESTORE.md that reads or copies from a backup folder without sudo, and
+   CLAUDE.md carries the rule that no step in a chained paste fails without printing something.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

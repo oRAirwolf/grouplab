@@ -25,6 +25,67 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-11, entry 406: requests 93 and 96 answered, and the server paste's silent stop
+
+**Status: actioned 2026-10-11; sections 1.1, 1.2, 2 and 3 done. Section 1.3, reading the next learning nightly's token line, waits for that nightly at 13:45 UTC on 2026-10-11. Section 2.2 had nothing to add to: no test holds the download page's guess to sample user agents.**
+
+From the planning session, 2026-10-11 00:55 UTC (Alan, 2026-10-10 18:51 Denver). Take it after entry 405.
+
+## 1. Request 93 done: record it and close it
+
+Alan checked that the Oracle `grouplab-daily` backup was current, then ran request 93 (the learning nightly's own token check) in two
+parts, because the first paste stopped early (section 3). What the server printed, in full:
+
+```
+learn-worker.new: OK
+backup: /home/ubuntu/grouplab-server/backups/2026-10-11T004851Z-learning-token-check
+grouplab-learn-worker.py: OK
+backup holds the old worker
+- The learning token reaches the error reports: yes; GroupLab's pull requests: yes.
+```
+
+So `/usr/local/sbin/grouplab-learn-worker.py` is now the main copy with fingerprint
+`cdf083f708aea46743f92df0de1c292280b15d3f8369d2cb39a983b73d9db0cf`, installed 755 root:root, and the token reaches both repositories.
+
+1. Record the backup in `docs/RESTORE.md` (folder above, the one file it holds, how to undo with it), and take request 93 out of
+   RESTORE.md's waiting list.
+2. Close request 93 in `for-alan.md` with the date, and move it to the archive as usual.
+3. After the next learning nightly (13:45 UTC), read its `learning/summary.md` once for the token line, and say in that day's report
+   whether it read yes for both.
+
+## 2. Request 96 done: the download page on Alan's Samsung tablet
+
+Alan opened `https://grouplab.org/download/?why` in both browsers on the tablet and sent screenshots. Both picked **Android, Looks like
+this device**. What the page printed (no identifiers beyond these):
+
+- Firefox: user agent `Mozilla/5.0 (X11; Linux x86_64; rv:157.0) Gecko/20100101 Firefox/157.0`; platform `Linux armv81`; oscpu
+  `Linux armv81`; userAgentData platform none; maxTouchPoints 5; pointer coarse true; any pointer fine true; hover false;
+  guess `android, from an ARM processor under an x86_64 user agent`.
+- Chrome: user agent `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36`;
+  platform `Linux armv81`; oscpu none; userAgentData platform `Linux`; maxTouchPoints 5; pointer coarse true; any pointer fine true;
+  hover false; guess `android, from an ARM processor under an x86_64 user agent`.
+
+1. Close request 96 with the date and this result. Entry 403's fix is confirmed on real hardware in both browsers.
+2. If a test holds the detection to sample user agents, add these two (the Chrome one is new: entry 403 was found with Firefox).
+
+## 3. The server paste stopped silently: fix the pattern
+
+`grouplab-change-backup.py` makes its folder 0700 root (`os.chmod(folder, 0o700)`), but request 93's paste then checked it as ubuntu with
+plain `test -f "$B/files/..."`. That check cannot see inside the folder, so it failed without printing anything, and the `&&` chain stopped
+after the backup with nothing installed. Alan saw two lines and no error. The second paste used:
+
+```
+{ sudo test -f "$B/files/..." && echo "backup holds the old worker" || { echo "STOP: the backup does not hold the old worker"; false; }; }
+```
+
+1. Find every paste in `for-alan.md`, `docs/`, `website/server/` and `scripts/` that checks a change backup's contents without sudo
+   (`grep -rn 'test -f "\$B'` and similar), and change it to the form above: sudo, plus a line that says when it stops.
+2. If server pastes are generated or checked by a script or test, make it reject a plain `test` (or `ls`, `cat`) on a backup folder
+   path, so this does not come back.
+3. Rule for later pastes: no step in a chain may fail without printing something.
+
+Release-note: none needed for sections 1 and 2 (server and notes only); section 3 changes nothing that ships either.
+
 ## 2026-10-10, entry 405: consistency audit, 2026-10-10
 
 **Status: actioned 2026-10-10; every section done. Section 2: fingerprint now shows its phone picture; analysis-open, compare and ballistics stay unpictured on the phone, with words saying the emulator does not take them yet, rather than adding them to the emulator's walk in this change.**
