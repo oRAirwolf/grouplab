@@ -35,7 +35,6 @@ public sealed partial class MainWindow
             (loadChoice, "Load"),
             (paperChoice, "Paper it was printed on"),
             (backingChoice, "What was behind it"),
-            (exclusionReason, "Why the shot is left out"),
             (sheetChoice, "Which sheet it is"),
             (sheetLabelBox, "This sheet's own label"),
             (cepPercentBox, "CEP at this percent"),

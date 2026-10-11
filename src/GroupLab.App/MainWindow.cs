@@ -443,10 +443,8 @@ public sealed partial class MainWindow : Window
     private readonly StackPanel crashBanner = new() { Spacing = Tokens.Space8, IsVisible = false };
     private readonly StackPanel scaleInputs = new() { Spacing = Tokens.Space8 };
     // Entry 111 section 3: the reasons in words, "Called flyer", not the enum's names; the list is in the enum's order, so its index is the reason.
-    private readonly ComboBox exclusionReason = new() { ItemsSource = Enum.GetValues<ExclusionReason>().Select(r => r.Words()).ToList(), SelectedIndex = 0, MinWidth = 140 };
 
     /// <summary>The reason chosen in the list.</summary>
-    private ExclusionReason ChosenReason => Enum.GetValues<ExclusionReason>()[Math.Max(0, exclusionReason.SelectedIndex)];
     private GrayImage? grey;
     private GrayImage? valueImage;
     private ImageMetadata? metadata;
@@ -731,7 +729,7 @@ public sealed partial class MainWindow : Window
         ShowUndoSteps();
         var hints = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
         // Entry 163 section 2: pan and select sit on neighbouring keys under the left hand, and the strip shows both.
-        foreach (var (key, what) in new[] { ("C", "pan"), ("V", "select"), ("Space", "next item"), ("Enter", "first choice"), ("N", "not a shot"), (CommandKey.Label("Z"), "undo") })
+        foreach (var (key, what) in new[] { ("C", "pan"), ("V", "select"), ("Space", "next item"), ("Enter", "first choice"), ("N", "not a hole"), (CommandKey.Label("Z"), "undo") })
         {
             hints.Children.Add(Keycap(key));
             hints.Children.Add(new TextBlock { Text = what, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space4, 0, Tokens.Space8, 0), Classes = { AppStyles.Secondary } });
@@ -4301,12 +4299,6 @@ public sealed partial class MainWindow : Window
 
     private void BuildSelection()
     {
-        // The reason picker is kept across rebuilds so its choice survives; it must leave its old row before joining a new one.
-        if (exclusionReason.Parent is Panel previous)
-        {
-            previous.Children.Remove(exclusionReason);
-        }
-
         selection.Children.Clear();
         if (canvas.Selected is not { } id || session.State.Find(id) is not { } shot)
         {
@@ -4358,38 +4350,47 @@ public sealed partial class MainWindow : Window
         }
 
         selection.Children.Add(chips);
-        if (shot.Exclusion is { } e)
+
+        // Entry 407 section 4.1 (concept 3A, Alan's pick): no reason is asked any more. A reason a session already carries is kept and shown here,
+        // read only, and reports and exports still print it.
+        if (shot.Exclusion is { } e && e != ExclusionReason.ByShooter)
         {
-            selection.Children.Add(Line($"Excluded as {e.InSentence()}."));
+            selection.Children.Add(Line($"Left out as {e.InSentence()}."));
         }
+
         // Entry 131 section 9: every one of these says what it did and offers the way back. The session's own undo is what Undo runs, so
         // the toast can never disagree with what would happen if the person pressed Ctrl+Z instead.
-        selection.Children.Add(Row(exclusionReason, Button(shot.Exclusion is null ? "Exclude" : "Restore", () =>
+        var counted = new CheckBox { Content = "Counted", IsChecked = shot.Exclusion is null };
+        counted.IsCheckedChanged += (_, _) =>
         {
-            bool excluding = shot.Exclusion is null;
-            session.SetExclusion(id, excluding ? ChosenReason : null);
-            Did(excluding
-                ? $"{ShotName(id)} left out of the figures."
-                : $"{ShotName(id)} back in the figures.");
-        })));
+            bool on = counted.IsChecked == true;
+            if (on == (session.State.Find(id)?.Exclusion is null))
+            {
+                return;
+            }
+
+            session.SetExclusion(id, on ? null : ExclusionReason.ByShooter);
+            Did(on ? $"{ShotName(id)} back in the figures." : $"{ShotName(id)} left out of the figures.");
+        };
+        selection.Children.Add(counted);
         selection.Children.Add(Row(
-            Button(shot.NotAShot ? "It is a shot" : "Not a shot", () =>
+            Button(shot.NotAShot ? "It is a hole" : "Delete, not a hole", () =>
             {
                 bool wasShot = !shot.NotAShot;
                 session.SetNotAShot(id, wasShot);
-                Did(wasShot ? $"Mark {ShotLabel(id)} is not a shot." : $"Mark {ShotLabel(id)} is a shot again.");
+                Did(wasShot ? $"Mark {ShotLabel(id)} is not a hole; it is kept." : $"Mark {ShotLabel(id)} is a hole again.");
             }),
             Button("Unassign", () =>
             {
                 session.AssignBull(id, null);
                 Did($"{ShotName(id)} has no bull.");
             }),
-            Button("Delete", () =>
+            Button("Remove the mark", () =>
             {
                 string label = ShotName(id);
                 session.DeleteShot(id);
                 canvas.Selected = null;
-                Did($"{label} deleted.");
+                Did($"{label} removed.");
             })));
     }
 
@@ -5915,6 +5916,16 @@ public sealed partial class MainWindow : Window
             ("Share a session file\u2026", ShareSessionDialog),
             ("Open a session file\u2026", OpenSessionFileDialog),
             ("Import shots from a CSV\u2026", ImportCsvDialog),
+            // Entry 407 section 4.2: where every session is kept, moved here from the bottom bar's Show in folder.
+            (OpenSessionFolder, () =>
+            {
+                if (settingsStore.DatabasePath is { } path)
+                {
+                    CrashReporter.Reveal(path);
+                }
+
+                return Task.CompletedTask;
+            }),
             ("Report a problem\u2026", () =>
             {
                 OpenReport(null);
@@ -5943,6 +5954,9 @@ public sealed partial class MainWindow : Window
         Avalonia.Automation.AutomationProperties.SetName(button, "More");
         return button;
     }
+
+    /// <summary>Entry 407 section 4.2: the ··· menu's way to the folder that holds grouplab.db.</summary>
+    internal const string OpenSessionFolder = "Open the session's folder";
 
     /// <summary>The empty start screen's lines, for the headless tests.</summary>
     internal IReadOnlyList<string> EmptyCanvasText =>

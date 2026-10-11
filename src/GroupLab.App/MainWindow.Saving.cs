@@ -12,7 +12,7 @@ namespace GroupLab.App;
 /// entry 281 section 2, Alan's choice: A, with a setting for B.
 /// <list type="bullet">
 /// <item>A, the default: the target is saved by itself as soon as it is changed or accepted, and the status bar says "Saved 12 seconds ago in
-/// grouplab.db", "Show in folder" and "safe to close".</item>
+/// grouplab.db" and "safe to close"; the folder itself opens from the ··· menu, "Open the session's folder" (entry 407 section 4.2).</item>
 /// <item>B, in Settings under Saving: a Save button, "Not saved yet" until it is pressed, and the question on leaving a target with
 /// unsaved work, which is the one entry 140 already asks.</item>
 /// </list>
@@ -96,17 +96,10 @@ public sealed partial class MainWindow
             SaveSession();
             ShowSaved();
         });
-        var show = Button("Show in folder", () =>
-        {
-            if (settingsStore.DatabasePath is { } path)
-            {
-                CrashReporter.Reveal(path);
-            }
-        });
-        ToolTip.SetTip(show, "The folder that holds grouplab.db, where every session is kept");
+        // Entry 407 section 4.2: Show in folder went to the ··· menu as "Open the session's folder"; the line keeps "Saved ... · safe to close".
         savedClock = new DispatcherTimer(TimeSpan.FromSeconds(5), DispatcherPriority.Background, (_, _) => ShowSaved());
         savedClock.Start();
-        return new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4, Children = { savedWords, saveNow, show } };
+        return new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4, Children = { savedWords, saveNow } };
     }
 
     /// <summary>After every change: A saves soon by itself once the target has been changed or accepted; B only says it is not saved.</summary>
