@@ -398,6 +398,28 @@ Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, ans
    columns; the bench, window and start-up gates pass. **1.2 The first trajectory:** nothing in the solver is built on first use; the
    100 ms is tiered compilation (113, 110, 70, then 4.3 ms; 14 every time with tiering off). Eight dope tables flown on a lowest-priority
    thread once the window is up make the first table 6.4 ms. **1.3 The CEP table:** 0.4 ms since entry 170; nothing to change.
+   **Found while measuring, and taken back:** reading a sheet's codes at once (entry 410 section 3.3) crashed the Phase 0 gate record's
+   identify sweep on Linux in native code in 3 of 12 runs, never in the 28 reading them one at a time; reverted (aae48796), the sweep
+   the same line for line. PERFORMANCE.md says why.
+2. **A force-stop in the middle of a reading.** It does not reproduce. `scripts/android-force-stop.sh` now runs after every nightly on CI's x86_64 emulator: a control round (stopped while idle, started again: done in 9 s), then GroupLab Dev stopped 2, 5, 9, 14 and 20 seconds into a
+   reading of the 300 dpi sample, its reading running each time (11 to 28 reading lines in the log), and every start after it ran its
+   scenario to the end in 7 or 8 seconds (run 38260940771, nightly 189). Tried first on this computer's emulator under arm64
+   translation, where no scenario starts at all, so that setup cannot answer it. What run 37735635656 most likely saw is the walk of
+   that time, not GroupLab: the first emulator walks pressed Next before the photo arrived and replaced the target showing, and
+   everything after one stuck step failed; its logs were not kept. No fix, so no release note; STATE.md's line is corrected.
+   **Also found:** the emulator's commit of the phone pictures collided with the screenshots job's over the README mosaic; both jobs
+   now commit their pictures, rebase, and only then remake the mosaic. Tonight's eight changed phone pictures are committed by hand
+   from the run's artifact, and entry 413's Features entry has its own picture, `fold-targets-largest-text`.
+3. **Consistency after entries 411 to 413** (docs-sonnet): the README, the site's sources, the three guides, the glossary and the phone
+   documents describe no fixed text and no always-named tabs; nothing to fix. No open `consistency` issue. Its findings otherwise:
+   the guide PDF was older than the guide (rebuilt), /releases/ did not name nightly 188 (published; the first dispatch met an HTTP 500
+   from GitHub), and the screenshots job's last push met "fatal error in commit_refs" from GitHub, so its pictures wait for its next run.
+4. **The proof checklist sorted.** Row 11 proven on a rendered sheet (`DoublesSheetTests`); row 4 half met on a rendered sheet too (the
+   two-shot hole ringed at 1.39 holes' area, a clean torn hole at 1.48); row 29 two of three on an emulator (nightly 188's signed APK
+   and GroupLab Dev installed together, each started). Every unproven row now names exactly what it needs, the range part marked.
+5. **The next range kit** in `C:\Dev\grouplab-local\range-next\`: CHECKLIST.pdf, the load sheet (3), the 5x5 sheet for doubles, the
+   red bulls, and the aim point cards by distance (`cards.py` beside the article: 25, 50 and 100 yards, rings for a 2 MOA dot, a
+   score sheet each). About an hour; the doubles sheet and the aim points if there is time; a Keep paragraph. One line in for-alan.md.
 
 ## Decision log
 

@@ -60,7 +60,6 @@
     "The iPhone and iPad build works again",
     "On the phone, every box, switch and button now has a name a screen reader reads out",
     "Text on Android now grows and shrinks with the phone's own text size setting",
-    "At Android's largest text sizes, the phone's bottom bar now shows its icons alone",
     "On an iPad held upright, typing in a box on a result no longer flips the result",
     "On the phone, going back to the targets list after opening a sheet no longer fails",
     "A chronograph string imported in meters a second now shows its readings in meters a second",
@@ -1477,6 +1476,21 @@
       "guide": "13-on-the-phone",
       "mobile": {
         "shot": "fold-open-targets"
+      }
+    },
+    {
+      "key": "bar-largest-text",
+      "group": "Photos and the phone",
+      "name": "The bottom bar at the largest text sizes",
+      "sentence": "On Android GroupLab's text follows the phone's own text size, and when it is so large that a place's name would not fit under its icon, the bar along the bottom shows its five icons alone, larger, with the place you are in still in its amber pill; your phone still reads each one out by name, a long press shows it, and a wider screen keeps the names for longer.",
+      "platforms": [
+        "Android"
+      ],
+      "since": "0.2.0-nightly.188",
+      "note": "At Android's largest text sizes, the phone's bottom bar now shows its icons alone",
+      "guide": "13-on-the-phone",
+      "mobile": {
+        "shot": "fold-targets-largest-text"
       }
     }
   ]

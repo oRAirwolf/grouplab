@@ -208,19 +208,26 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Entry 405 section 8: the README's mosaic is made from two of these pictures, so it is remade with them.
           python3 -m pip install --quiet pillow
-          # Only when an input changed: another Pillow can write different bytes for the same picture.
-          python3 scripts/readme-images.py --check || python3 scripts/readme-images.py
           # Staged first, so a screen pictured for the first time is a change too: git diff alone does not see a new file.
-          git add docs/figures/screens/phone docs/figures/readme
-          if git diff --cached --quiet -- docs/figures/screens/phone docs/figures/readme; then
+          git add docs/figures/screens/phone
+          if ! git diff --cached --quiet -- docs/figures/screens/phone; then
+            count=$(git diff --cached --name-only -- docs/figures/screens/phone | wc -l)
+            git commit -m "[screens] the phone's screenshots, taken on the Android emulator" -m "Question 90 (b): scripts/android-screens.sh, $count files changed. The marker keeps this out of the test suite and the nightly."
+          fi
+          # Entry 405 section 8: the README's mosaic is made from two of these pictures, so it is remade with them. Entry 414: remade
+          # after the rebase, from main as it now is, because the screenshots job remakes the same mosaic and run 38260940771's two
+          # commits of it could not be put one on the other. Only when an input changed: another Pillow writes different bytes.
+          git pull --rebase origin main
+          python3 scripts/readme-images.py --check || python3 scripts/readme-images.py
+          git add docs/figures/readme
+          if ! git diff --cached --quiet -- docs/figures/readme; then
+            git commit -m "[screens] the README's mosaic, from the phone's new screenshots" -m "Question 90 (b) and entry 405 section 8."
+          fi
+          if [ "$(git rev-list --count origin/main..HEAD)" = 0 ]; then
             echo "The phone's screenshots are unchanged."
             exit 0
           fi
-          count=$(git diff --cached --name-only -- docs/figures/screens/phone | wc -l)
-          git commit -m "[screens] the phone's screenshots, taken on the Android emulator" -m "Question 90 (b): scripts/android-screens.sh, $count files changed. The marker keeps this out of the test suite and the nightly."
-          git pull --rebase origin main
           git push origin main
 
       - name: Summary

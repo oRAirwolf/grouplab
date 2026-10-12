@@ -101,8 +101,14 @@ jobs:
           fi
 
           count=$(git diff --name-only -- docs/figures/screens docs/figures/readme | wc -l)
-          git add docs/figures/screens docs/figures/readme
-          git commit -m "[screens] the website's screenshots catch up with the application" -m "Rendered from main by the weekly job, NOTES-FROM-PLANNING.md entry 144 section 4. $count images changed. The marker keeps this out of the test suite and the nightly: no C# has changed, PublishedRendersTests has already run above, and a build of the application from an image-only commit would be a release of nothing."
+          # Entry 414: the README's mosaic is committed after the rebase, from main as it then is, because the emulator's job remakes
+          # the same mosaic and two commits of one picture cannot be put one on the other (run 38260940771).
+          git checkout -- docs/figures/readme
+          git add docs/figures/screens
+          git diff --cached --quiet -- docs/figures/screens || git commit -m "[screens] the website's screenshots catch up with the application" -m "Rendered from main by the weekly job, NOTES-FROM-PLANNING.md entry 144 section 4. $count images changed. The marker keeps this out of the test suite and the nightly: no C# has changed, PublishedRendersTests has already run above, and a build of the application from an image-only commit would be a release of nothing."
           git pull --rebase origin main
+          python scripts/readme-images.py
+          git add docs/figures/readme
+          git diff --cached --quiet -- docs/figures/readme || git commit -m "[screens] the README's pictures, from the new screenshots" -m "Entry 266."
           git push origin main
           echo "committed $count changed images; the next push that touches the site publishes them"
