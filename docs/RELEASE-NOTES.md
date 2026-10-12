@@ -498,7 +498,7 @@ This build has no change to the application; it behaves exactly as nightly 158 d
 - The automatic Android screen check no longer finds every screen covered by the first-run questions.
 - Each nightly that changes the application now also walks every phone screen on an Android emulator, as it already did on the iPhone simulator, so a page that stops opening on Android is caught before anybody installs the build.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.158)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
