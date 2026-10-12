@@ -96,14 +96,15 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
-- **Waiting for Alan (request 97), the upload intake worker brought up to the repository's** (entry 404, 2026-10-10). Will change, as
-  `install.py --intake` finds them different: `/usr/local/sbin/grouplab-intake-worker.py` (one log line, entry 357), and only if they
-  differ, `grouplab-set-turnstile-secret`, the two `grouplab-intake-worker` units, the site's `.user.ini` and the nginx include
-  `nginx.ssl.conf_grouplab`. Files fetched from GitHub at commit c95280d0 into `/home/ubuntu/grouplab-server-404/` and refused unless
-  their SHA-256 match. Backup: `grouplab-change-backup.py --label intake-worker --units` of those six paths, before the dry run. Undo: each
-  file `sudo cp -a` back from `<backup>/files/<its path>`, `sudo systemctl daemon-reload`, and `sudo nginx -t` then a reload if the
-  include was put back. Check: the worker's SHA-256 is the manifest's, `nginx -t` passes, both sites answer 200. The backup's folder goes
-  here when Alan sends it.
+- **2026-10-12 03:59 UTC, the upload intake worker brought up to the repository's** (entry 404, request 97, run by Alan). Changed:
+  `/usr/local/sbin/grouplab-intake-worker.py` only, now the repository's copy at c95280d0 (one log line, entry 357); `install.py
+  --intake` kept the old one beside it as `/usr/local/sbin/grouplab-intake-worker.py.20261011-215904.bak`. Already current and
+  untouched: `grouplab-set-turnstile-secret`, both `grouplab-intake-worker` units, the site's `.user.ini` and the nginx include, so
+  nginx was not reloaded. `systemctl daemon-reload` and `enable --now` ran and the timer is active. Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-10-12T035824Z-intake-worker/`, 80,941 bytes, holding the six paths under `files/` and the
+  unit lists. Undo: `sudo install -m 755 -o root -g root <backup>/files/usr/local/sbin/grouplab-intake-worker.py
+  /usr/local/sbin/grouplab-intake-worker.py`, then `sudo systemctl daemon-reload`. Check: the worker's SHA-256 is `013a72a4...`, the
+  manifest's; both sites answered 200 afterwards (Code, 2026-10-12).
 - **2026-10-11 00:48 UTC, the nightly's own token check** (question 95 (b), request 93, run by Alan, entry 406). Changed:
   `/usr/local/sbin/grouplab-learn-worker.py` only, now the repository's copy (SHA-256 `cdf083f7...`), 755 root:root; the nightly asks
   GitHub with the learning token for one issue and one pull request and writes the answer into its log and `summary.md`. Backup:

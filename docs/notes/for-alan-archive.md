@@ -3,6 +3,40 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 97. Two pastes on the server: bring the upload intake worker up to date, about ten minutes, whenever suits (entry 404)
+
+**Answered 2026-10-12:** Alan installed it at 03:59 UTC: "done: /home/ubuntu/grouplab-server/backups/2026-10-12T035824Z-intake-worker, 80941 bytes". `install.py --intake` kept the old worker as `/usr/local/sbin/grouplab-intake-worker.py.20261011-215904.bak` and wrote the new one; the secret setter, both units, `.user.ini` and the nginx include were already current; daemon-reload and enable --now ran, the timer is active; nginx needed no reload. Recorded in RESTORE.md rule 5.
+
+**Why:** the server's upload intake worker is older than the repository's. The only difference in the worker is one log line (it says
+which state a "Send everything I open" picture was sent in), but planning asked for it to be installed the usual way, backed up first
+(RESTORE.md rule 5). Code's own connection to the server is refused by its permission check, so here it is for you, in two steps: the
+first changes nothing on the server except a new folder and the backup; the second installs.
+
+**First,** in the Oracle Cloud console, the newest `grouplab-daily` boot volume backup should be from today. If it is not, stop and say so.
+
+**Step 1,** in MobaXterm, in your usual bash session on the server, paste this whole block at once:
+
+    mkdir -p /home/ubuntu/grouplab-server-404 && cd /home/ubuntu/grouplab-server-404 && for f in install.py grouplab-change-backup.py grouplab-intake-worker.py grouplab-set-turnstile-secret grouplab-intake-worker.service grouplab-intake-worker.timer user.ini nginx.ssl.conf_grouplab; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/c95280d0/website/server/$f" || break; done; printf '%s\n' '604238d41e07436b8435735e49e62cd770a2ea85f354e159abf264bfd6202c54  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' '013a72a4d38f1553ffd4dee9ba35e3adfa1cfcdd3ee6571bb6070bbb88a49330  grouplab-intake-worker.py' 'dd44d9f0f9b7f754985413a4a8fe9be30d5df179b241b9e21a35d961ab8d3675  grouplab-set-turnstile-secret' '32cbd478d2ddc36c95c0181f7b92997b183dbe31763d82b141bdbc1a52b94a13  grouplab-intake-worker.service' 'a91a4923ceca4a466d7e8b4313f0e06bac2192e49f643fca5575db34801000ae  grouplab-intake-worker.timer' '6f74a8a1477444fbe745ddbceb411106a6b7d57bb66452fde23babc1ca44c28c  user.ini' 'eb45d237287cd190a752fb2419ba45e38ce03f74c2fdf968a5442d96ce41a04e  nginx.ssl.conf_grouplab' | sha256sum -c - && sudo python3 grouplab-change-backup.py --label intake-worker --units --file /usr/local/sbin/grouplab-intake-worker.py --file /usr/local/sbin/grouplab-set-turnstile-secret --file /etc/systemd/system/grouplab-intake-worker.service --file /etc/systemd/system/grouplab-intake-worker.timer --file /home/airwolf/web/grouplab.org/public_html/.user.ini --file /home/airwolf/conf/web/grouplab.org/nginx.ssl.conf_grouplab && sudo python3 install.py --intake --dry-run
+
+**A good result of step 1:** eight lines ending `OK`, a line `done: /home/ubuntu/grouplab-server/backups/2026-...-intake-worker, ...
+bytes`, then the dry run's list, where each file says either "is already what it should be" or "would replace". Nothing on the server
+has changed yet. If any line says `FAILED`, stop and say so.
+
+**Step 2,** only if step 1 ended well. Paste:
+
+    cd /home/ubuntu/grouplab-server-404 && sudo python3 install.py --intake
+
+If its last lines say "The nginx include was already current", you are done. If instead they list nginx commands, run them one at a
+time exactly as printed: `sudo nginx -t` first, and **only if it says the test is successful**, the reload and the two `curl` lines,
+each of which should print `200`.
+
+**Send back:** the `done:` line from step 1 (it goes in RESTORE.md) and the last ten lines of step 2.
+
+**To undo it,** with the `done:` folder in place of `<backup>`: each file it listed is under `<backup>/files/` at its own path; `sudo cp
+-a` each back over the installed one, then `sudo systemctl daemon-reload`, and if the nginx include was put back, `sudo nginx -t` and
+then `sudo systemctl reload nginx`.
+
+
 ## 95. Check the Fix holes fix on the phone, about two minutes, once the next nightly is installed (entry 401, error report 27)
 
 **Answered 2026-10-11 (entry 408):** Alan, 01:20 Denver: "It looks like request 95 is resolved." On nightly 184 or later, adding a hole in Fix holes asks which bull, and Fix holes comes back with the picture instead of going blank.

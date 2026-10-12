@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-11, entry 410 (before it: entries 399 to 409).
+**Last rewritten:** 2026-10-12, request 97 answered (before it: entry 410).
 
 ---
 
@@ -26,7 +26,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   paste reading a backup folder without sudo. 2026-10-11's learning summary: the token reaches both, yes and yes.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Waiting on Alan:** requests 97 (the intake worker), 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **Request 97 done** (2026-10-12 03:59 UTC): the server's intake worker is the repository's, backed up first; RESTORE.md records it.
+- **Waiting on Alan:** requests 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -47,7 +48,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Whatever the inbox brings; when request 97 comes back, its backup folder goes into RESTORE.md's waiting entry.
+1. Whatever the inbox brings.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. Question 96 (the phone and Android's text size) when planning answers it.
 
@@ -57,7 +58,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24** (97 the intake worker; 94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -75,7 +76,7 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (88 answered 7A and archived 2026-
 - **Last nightly:** 0.2.0-nightly.186 (2026-10-11 15:28 UTC, built from 074866f1: entry 410, faster hole finding and the codes read
   at once); published whole. 185 (10:56 UTC) carried entries 407 to 409.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched for 186, live at f25b7a68.
-- Crash reports open: none. Issue 27 (nightly 183, Android: Fix holes blank after a hole was added) fixed in entry 401, closed with nightly 184.
+- Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
 
@@ -92,7 +93,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   `grouplab.pre-v2.db` beside it, then puts every barrel under a rifle once. Alan's desktop copy: its one barrel goes under "Barrels not
   yet on a rifle". The Equipment screen's extra fields had never reached the database before this.
 
-- **The server's intake worker is older than the repository's** by one log line; request 97 installs it, backed up first.
 - **The emulator's walks run headless first** (`PhoneScreensScenarioTests`, `PhoneSweepScenarioTests`): run 37735635656 left a reading
   running at a force-stop and no later start of GroupLab Dev on that emulator ran anything. Not established whether a phone does the same.
 - **The chronograph store counts readings from 1**, and accepting a pairing used to store them from 0: the first reading paired with a
