@@ -71,9 +71,9 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (96 answered by entry 411 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.186 (2026-10-11 15:28 UTC, built from 074866f1: entry 410, faster hole finding and the codes read
-  at once); published whole. 185 (10:56 UTC) carried entries 407 to 409.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched for 186, live at f25b7a68.
+- **Last nightly:** 0.2.0-nightly.187 (2026-10-12 07:52 UTC, built from 8ab92cc8: entry 411, the phone's text follows Android's
+  text size); published whole, the emulator sweep's `--larger` check passed (16 to 28 on the body). 186 carried entry 410.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched for 187, live at aec2a3df.
 - Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
