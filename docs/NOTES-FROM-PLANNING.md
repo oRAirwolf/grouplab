@@ -25,6 +25,37 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-12, entry 412: no shot targets are left; what Code has is all there is
+
+**Status: actioned 2026-10-12; sections 1 to 3 done. Request 94 closed with Alan's words; entry 411 section 1.2 answered by it. Changed: request 74 (new photos of a blank target on the wood table), 86 (the 26 September aim point card was shot, so a new card comes with the next range kit) and 9 (where its scan is if it has left Downloads). Unchanged on purpose: 54, 58 and 75, which use unshot targets, and every request that prints something new.**
+From the planning session, 2026-10-12 04:12 UTC. Take this after entry 411; it closes what entry 411 left open.
+
+Alan, 22:10 Denver on 2026-10-11: "I do not have any targets that I have shot left. Only the pictures and scans that I have already given
+you. If you have not gotten them, I do not have them."
+
+## 1. Request 94 is closed
+
+1. Step 2 cannot be done either: the 26 September 6 ARC sheet is gone. Close request 94 with Alan's words and the date, and move it to
+   the archive. Entry 411 section 1.2 (waiting for his answer about that sheet) is answered by this.
+2. Entry 399's results say plainly that both comparisons it wanted (a range photo against a flat scan of the same sheet, and the main
+   lens against the ultrawide on the same sheet) wait for new sheets, per entry 411 sections 1.3 and 4.
+
+## 2. Sweep the open requests for anything that assumes a shot sheet or an old photo still exists
+
+1. Read every open request in for-alan.md. Any step that asks Alan to scan, photograph, measure or send a sheet he has already shot, or
+   a photo he took earlier but never sent, is impossible. Rewrite that step to use a new sheet or a new photo (shot at the next range trip
+   and kept, per entry 411 section 1.4), or close it if it only made sense for the old one. Say in each changed request what changed.
+2. Known case: **request 74** asks for "the photos you took of a blank target on the natural wood table". Treat them as gone. Rewrite
+   it to ask for one or two new photos of a blank, unshot target on the wooden table, all four corners in view, into
+   `C:\Dev\grouplab-local\commercial-targets\`. That needs no range trip.
+3. Unshot store-bought targets (request 75's tape measure, request 58, request 54) are not affected; leave them.
+4. The pictures and scans already in `C:\Dev\grouplab-local\` are everything there will ever be from past range trips. If any plan,
+   article draft or research note counts on more of the old material arriving, record that it will not.
+
+## 3. Report
+
+In the five line report, name every request changed or closed.
+
 ## 2026-10-12, entry 411: request 94's 4 October sheets are gone, and question 96 answered (the phone follows Android's text size)
 
 **Status: actioned 2026-10-12; sections 1 to 3 done, section 4 recorded for the next range kit, which has not been made yet. Section 2.3's one layout that needs a real decision (the phone's bottom bar at Android's largest text size) is a DESIGN NEEDED line in for-alan.md and meanwhile draws a name smaller until it fits. Section 2.5: the iPhone does not follow Dynamic Type, question 97. Section 1.4's line was added to the hole size plan's text; its printed PDF was not remade, which the next range kit does.**

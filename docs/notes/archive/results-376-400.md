@@ -794,3 +794,8 @@ range compares with its own scan, now needs a current GroupLab sheet shot mounte
 600 dpi as PNG. It is not a request of its own: it goes in the next range kit (with requests 57, 58 and 86), whose checklist says to
 keep the sheet. Request 94 stays open for the three main-lens photographs of the 26 September sheet (row 1) only.
 
+**Update 2026-10-12 (entry 412 section 1):** the 26 September sheet is gone too, and request 94 is closed. Both comparisons this entry
+wanted, a range photograph against a flat scan of the same sheet (row 2) and the main lens against the ultrawide on the same sheet
+(row 1), wait for new sheets shot at the next range trip and kept (entry 411 sections 1.3 and 4). The photographs and scans already in
+`C:\Dev\grouplab-local\` are all there will be from past trips.
+

@@ -3,6 +3,26 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 94. Three photographs of one sheet, about ten minutes, whenever suits (entries 399 and 411)
+
+**Answered 2026-10-12 (entry 412):** closed, nothing can be done. Alan, 22:10 Denver on 2026-10-11: "I do not have any targets that I have shot left. Only the pictures and scans that I have already given you. If you have not gotten them, I do not have them." The 26 September sheet is gone as well as the three from 4 October. Both comparisons entry 399 wanted wait for new sheets shot at the next range trip and kept.
+
+**Updated 2026-10-12 (entry 411):** the three sheets from 4 October are gone, so their scans are no longer asked for; that was our
+mistake for not saying to keep them. How a sheet mounted at the range compares with its scan now waits for the next range kit, which
+will say which sheet to bring home and keep.
+
+**Why:** entry 399 measured where a photograph's error comes from. What is left on a sheet held flat is the paper's own small waves,
+magnified by the phone's ultrawide lens at close range, and every picture so far was taken that way. Photographs with the main lens say
+how much of it the lens adds.
+
+**Steps:** if you still have the 6 ARC sheet shot with the Dominus K on 26 September, tape it flat on a table and take three photographs
+with the phone's main lens (1x, not the ultrawide), from about 18 inches: square on, then about 20 degrees off, then about 35 degrees off.
+Put them in `C:\Dev\grouplab-local\entry-399\` as they come off the phone.
+
+**Keep:** that sheet, flat, until this request is marked answered; a line here will say when it can go.
+
+**A good answer:** the three files in that folder, or "the sheet is gone".
+
 ## 97. Two pastes on the server: bring the upload intake worker up to date, about ten minutes, whenever suits (entry 404)
 
 **Answered 2026-10-12:** Alan installed it at 03:59 UTC: "done: /home/ubuntu/grouplab-server/backups/2026-10-12T035824Z-intake-worker, 80941 bytes". `install.py --intake` kept the old worker as `/usr/local/sbin/grouplab-intake-worker.py.20261011-215904.bak` and wrote the new one; the secret setter, both units, `.user.ini` and the nginx include were already current; daemon-reload and enable --now ran, the timer is active; nginx needed no reload. Recorded in RESTORE.md rule 5.

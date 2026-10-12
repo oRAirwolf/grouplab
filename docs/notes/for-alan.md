@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **94**, three photographs of the 26 September 6 ARC sheet if you still have it (ten minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 22.** Most urgent today: **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **THE RANGE KIT, SHORTER** (entries 366 to 370, for 4 or 5 October): print from `C:\Dev\grouplab-local\range-2026-10-04\`, starting with `CHECKLIST.pdf`; 7 pages (4 of them load sheets, all at once on the same paper). About an hour of shooting: store-bought targets, one sheet each of .22 LR subsonic, .22 LR high velocity and 6.5 Creedmoor, the C and E bulls. The scale markers wait in `later-at-home\`.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -234,30 +234,14 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
-## 94. Three photographs of one sheet, about ten minutes, whenever suits (entries 399 and 411)
-
-**Updated 2026-10-12 (entry 411):** the three sheets from 4 October are gone, so their scans are no longer asked for; that was our
-mistake for not saying to keep them. How a sheet mounted at the range compares with its scan now waits for the next range kit, which
-will say which sheet to bring home and keep.
-
-**Why:** entry 399 measured where a photograph's error comes from. What is left on a sheet held flat is the paper's own small waves,
-magnified by the phone's ultrawide lens at close range, and every picture so far was taken that way. Photographs with the main lens say
-how much of it the lens adds.
-
-**Steps:** if you still have the 6 ARC sheet shot with the Dominus K on 26 September, tape it flat on a table and take three photographs
-with the phone's main lens (1x, not the ultrawide), from about 18 inches: square on, then about 20 degrees off, then about 35 degrees off.
-Put them in `C:\Dev\grouplab-local\entry-399\` as they come off the phone.
-
-**Keep:** that sheet, flat, until this request is marked answered; a line here will say when it can go.
-
-**A good answer:** the three files in that folder, or "the sheet is gone".
-
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 
 **Why:** the article "Aim points for 1x to high power optics" cannot be finished until the classes not yet shot are in. The high power
 scopes and the PLxC were scored on 26 September; the red dots (ROMEO 5, the two MRS), the SLx prism and the medium power scopes (Venom
 3-15x, NX8 2.5-20x) were not. The article stays a draft until then; nothing else waits on it.
-**Steps,** whenever you are at the range with those optics and the aim point card from 26 September:
+**Changed 2026-10-12 (entry 412):** the aim point card from 26 September was shot and is gone. A fresh card will come with the next range kit; nothing in this request can start before it.
+
+**Steps,** whenever you are at the range with those optics and the new aim point card from the range kit:
 1. The red dots and the prism at 25 and 50 yards, the medium power scopes at 100 yards, at the magnifications on the card.
 2. Score each design the same way as before: 0 cannot see the center, 1 can see but not center confidently, 2 center confidently.
    A second observer if one is with you.
@@ -331,8 +315,9 @@ to about 7 percent and cannot go in the library; and two sheets need their real 
 
 ## 74. One or two photos of a target on your kitchen table, five minutes, whenever suits (entry 362)
 
-**What:** the photos you took of a blank target on the natural wood table, the ones that failed the same way as the counter, sent the
-way the counter photos came (into `C:\Dev\grouplab-local\commercial-targets\`, any folder name).
+**Changed 2026-10-12 (entry 412):** this used to ask for the photos you took earlier of a blank target on the wood table. Those are treated as gone, so it now asks for new ones.
+
+**What:** one or two new photos of a blank, unshot target (any store-bought one) lying on your natural wood table, all four corners in view, sent the way the counter photos came: into `C:\Dev\grouplab-local\commercial-targets\`, any folder name. No range trip needed.
 
 **Why:** the new corner finder was checked on your white counter and on flatbed scans, never on wood. Wood grain is full of straight
 lines, which is exactly what could fool it, so one real wooden photo is worth more than any guess.
@@ -638,7 +623,7 @@ the pinch zoomed", or which of those did not, and the report.
 
 **Opened 2026-09-24. Entry 170 section 4.4. Waiting.**
 
-**What is needed.** On the friend's scan `Scan_20260923.png` (the one in your Downloads folder), in GroupLab: detect, then drag each
+**What is needed.** On the friend's scan `Scan_20260923.png` (the one in your Downloads folder; if it is no longer there, GroupLab's test files keep the same picture, and Code will put a copy wherever you say), in GroupLab: detect, then drag each
 of the ten hole marks to where you judge the centre of the hole to be, at the zoom you would normally use, and save the session. Then
 close it, open the scan fresh, and do the same again without looking at the first session, and save that as a second file. Send the
 two session files the way you send anything else, or put them in `C:\Dev\grouplab-submissions\hand-marked\` and say so.

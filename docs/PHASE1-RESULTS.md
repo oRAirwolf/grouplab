@@ -349,6 +349,20 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 3. **Section 4** is recorded for the next range kit (one current sheet shot mounted and scanned at home, kept), in STATE.md.
 4. **Tests:** Mobile 165 passed, App 534 passed, Core 2994 passed (the one failure the local inbox line, entry 412 waiting).
 
+## Entry 412: no shot sheets left from past trips (2026-10-12)
+
+1. **Request 94 closed** with Alan's words and moved to the archive; the 26 September sheet is gone as well as the three from 4 October.
+   Entry 399's results now say both comparisons it wanted (a range photograph against a flat scan of the same sheet, and the main lens
+   against the ultrawide) wait for new sheets shot at the next range trip and kept; proof checklist row 1 and material item 3 say the
+   same.
+2. **The open requests swept.** Changed: **74** now asks for one or two new photos of a blank, unshot target on the wood table, all four
+   corners in view, no range trip; **86** says the 26 September aim point card was shot and is gone, and a new card comes with the next
+   range kit (no printable copy of it is in the repository or `grouplab-local`, only scans of the shot one); **9** says where its scan
+   is if it has left Downloads (the `test-data` release keeps the same picture). Not changed: 54, 58 and 75 use unshot store-bought
+   targets, and 20, 50, 33, 56, 57, 76 and 77 print or shoot something new. Nothing else in a plan, a draft article or a research note
+   counted on more old material arriving: RESEARCH.md's corner finder line waits on request 74, which now asks for new photos.
+3. Open requests: 22.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
