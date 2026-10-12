@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 186,
+  "afterNightly": 188,
   "screens": {
     "analysis": "3114136ffdb0702688394e5e4532354f26f16b9fd798e931b520dc15a173bd0c",
     "analysis-open": "88f6b6835b237d79ea13fd58ef81749821a2e99ccfdef5d18a4a3ada69320d7f",
@@ -9,7 +9,7 @@
     "bull-lines": "8732c82b1fc776e5453e64c6da8cd6e60038ab5ed54dfb6209c20a02ac6fdf24",
     "compare": "fd9606f4ebef0b7313cf28f1343c72da7dacca3271cda65cc6439adbb3f5e87e",
     "equipment": "14fcdd9f0bc4e255d5316bc371bafbbb1f02170fb1898f108a761a516df29f3f",
-    "fingerprint": "66d369df223301f5ca13253d6dbcab09ca90809c5c3d073f980dcd23d3156cec",
+    "fingerprint": "95594254d48d5d5bdd9e289ed8ef41e4b70426325f3ee12b8a07c7dc9c0d0903",
     "firstrun": "c1be95e2cac3a3d5e210ca3ca52025bcbdf9fa96218c41c4dc061472ebac8cad",
     "groups": "0127ca6e9b2a0c84403fb588b99a4b4d69259b839907dc9b626d8dc33063e5ed",
     "marking": "13d81530e5941bb507763c8de81b19d8e62c4953354ffe0428d898338a5255dc",
