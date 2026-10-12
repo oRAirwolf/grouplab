@@ -71,10 +71,10 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (96 answered by entry 411 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.189 (2026-10-12 14:19 UTC, from 6bd6d7b8): entries 413 and 414 sections 1 and 2 and the take-back
-  of reading codes at once. Sections 4 and 5 and the parity row are in the next one. 188 carried entry 413.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; 188 was dispatched by hand (one HTTP
-  500 from GitHub first); 189 goes with entry 414's last push.
+- **Last nightly:** 0.2.0-nightly.190 (2026-10-12 15:39 UTC, from 0b11c037): entry 414 whole. 189 carried 413 and 414 sections 1
+  and 2 and the take-back of reading codes at once; 188 carried entry 413.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; 188 and 190 were dispatched by hand
+  (one HTTP 500 from GitHub first).
 - Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
