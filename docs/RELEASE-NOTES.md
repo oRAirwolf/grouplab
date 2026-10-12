@@ -494,7 +494,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 
 - On the iPhone, buttons work again while a box is being typed in: Continue on the caliber question, Done, Take a picture, Choose a photo and a suggested caliber each do their job on the first tap.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.160)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
