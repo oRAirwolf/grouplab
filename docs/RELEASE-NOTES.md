@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.189
+
+**2026-10-12**, commit `a710771`. Nightly.
+
+**What you will notice**
+
+- GroupLab reads the square codes on a sheet one at a time again, because reading them all at once could make it close suddenly while reading a picture, on Linux and possibly on Android.
+- A 600 dpi scan now opens sooner, in about four fifths of the time, and the first ballistics tables after starting GroupLab no longer take longer than the rest; every result is the same.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.189)
+
+---
+
 ## 0.2.0-nightly.188
 
 **2026-10-12**, commit `c4f8502`. Nightly.
