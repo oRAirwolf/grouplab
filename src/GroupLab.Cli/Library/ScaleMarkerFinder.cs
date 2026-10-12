@@ -71,8 +71,7 @@ public static class ScaleMarkerFinder
         ImageMetadata metadata;
         try
         {
-            var (g, m) = ImageLoader.Load(path, mostMegapixels);
-            var (v, _) = ImageLoader.LoadMaxChannel(path, mostMegapixels);
+            var (g, v, m) = ImageLoader.LoadGreyAndMax(path, mostMegapixels);
             (grey, value, metadata) = (Upright.Apply(g, m.Orientation), Upright.Apply(v, m.Orientation), m);
         }
         catch (Exception e) when (e is IOException or InvalidDataException or OpenCVException or UnauthorizedAccessException)
@@ -108,8 +107,7 @@ public static class ScaleMarkerFinder
         GrayImage grey, value;
         try
         {
-            (grey, _) = ImageLoader.Load(path);
-            (value, _) = ImageLoader.LoadMaxChannel(path);
+            (grey, value, _) = ImageLoader.LoadGreyAndMax(path);
         }
         catch (Exception e) when (e is IOException or InvalidDataException or OpenCVException or UnauthorizedAccessException)
         {

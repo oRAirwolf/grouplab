@@ -117,8 +117,7 @@ public static class LearnVerb
         }
 
         string path = Path.Combine(folder, picture);
-        var (grey, metadata) = ImageLoader.Load(path);
-        var (value, _) = ImageLoader.LoadMaxChannel(path);
+        var (grey, value, metadata) = ImageLoader.LoadGreyAndMax(path);
         var backend = new OpenCvSharpBackend();
         var identity = SheetIdentification.Identify(grey, SheetIdentification.Candidates([library]), backend, new GroupLab.Core.Trace.TraceRecorder());
         if (identity.Definition is not { } definition)

@@ -82,6 +82,9 @@ public static class Phone
         {
             single.MainView = new Shell();
         }
+
+        // Entry 414 section 1.2: the solver warmed on a thread of the lowest priority, so Ballistics' first tables do not wait for it.
+        GroupLab.Core.Ballistics.SolverUse.WarmInBackground();
 #if GROUPLAB_DEV
 
         // Entry 315 section 1, GroupLab Dev only: the automation bridge on the device's own loopback address, unless turned off.

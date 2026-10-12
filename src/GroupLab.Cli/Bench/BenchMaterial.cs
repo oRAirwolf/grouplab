@@ -91,9 +91,7 @@ public sealed class BenchMaterial : IDisposable
     /// <summary>Loads an image the way the application does: the grey channel and the strongest channel, with the file's own metadata.</summary>
     public static (GrayImage Grey, GrayImage Value, ImageMetadata Metadata) Load(string path)
     {
-        var (grey, metadata) = ImageLoader.Load(path);
-        var (value, _) = ImageLoader.LoadMaxChannel(path);
-        return (grey, value, metadata);
+        return ImageLoader.LoadGreyAndMax(path);
     }
 
     /// <summary>

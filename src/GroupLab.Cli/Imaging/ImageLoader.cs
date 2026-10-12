@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using GroupLab.Core.Imaging;
 using OpenCvSharp;
 
@@ -197,15 +198,40 @@ public static class ImageLoader
         byte[] bytes = Bytes(path);
         var read = ImageMetadataReader.Read(bytes);
         using var mat = Decode(bytes, path, colour: true, read, mostMegapixels);
-        var metadata = Working(read, mat, bytes, mostMegapixels);
+        return (MaxOf(mat), Working(read, mat, bytes, mostMegapixels));
+    }
 
-        var channels = Cv2.Split(mat);
+    /// <summary>
+    /// The grey image and the brightest channel together, the same images <see cref="Load(string, double?)"/> and
+    /// <see cref="LoadMaxChannel(string, double?)"/> give, from one read of the file and, for a PNG kept at full size, one decode (entry
+    /// 414 section 1.1).
+    /// </summary>
+    public static (GrayImage Grey, GrayImage MaxChannel, ImageMetadata Metadata) LoadGreyAndMax(string path, double? mostMegapixels = null)
+    {
+        byte[] bytes = Bytes(path);
+        var read = ImageMetadataReader.Read(bytes);
+        bool fullSize = read.Width is { } w && read.Height is { } h && w > 0 && h > 0 && WorkingSize.Scale(w, h, mostMegapixels) >= 1;
+        if (fullSize && OneDecodeServes(bytes))
+        {
+            using var colour = Decode(bytes, path, colour: true, read, mostMegapixels);
+            return (GreyLikeLibpng(colour), MaxOf(colour), Working(read, colour, bytes, mostMegapixels));
+        }
+
+        using var greyMat = Decode(bytes, path, colour: false, read, mostMegapixels);
+        using var colourMat = Decode(bytes, path, colour: true, read, mostMegapixels);
+        return (OpenCvSharpBackend.Copy(greyMat), MaxOf(colourMat), Working(read, greyMat, bytes, mostMegapixels));
+    }
+
+    /// <summary>max(R, G, B) at each pixel of a colour image.</summary>
+    private static GrayImage MaxOf(Mat colour)
+    {
+        var channels = Cv2.Split(colour);
         try
         {
             using var max = new Mat();
             Cv2.Max(channels[0], channels[1], max);
             Cv2.Max(max, channels[2], max);
-            return (OpenCvSharpBackend.Copy(max), metadata);
+            return OpenCvSharpBackend.Copy(max);
         }
         finally
         {
@@ -214,6 +240,83 @@ public static class ImageLoader
                 channel.Dispose();
             }
         }
+    }
+
+    /// <summary>The grey image of a file whose colour decode is <paramref name="colour"/>: made from it where that is identical, else decoded.</summary>
+    private static GrayImage GreyOf(byte[] bytes, Mat colour, string path)
+    {
+        if (OneDecodeServes(bytes))
+        {
+            return GreyLikeLibpng(colour);
+        }
+
+        using var grey = Cv2.ImDecode(bytes, ImreadModes.Grayscale | ImreadModes.IgnoreOrientation);
+        if (grey.Empty())
+        {
+            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+        }
+
+        return OpenCvSharpBackend.Copy(grey);
+    }
+
+    /// <summary>
+    /// Whether a grey decode of <paramref name="bytes"/> is <see cref="GreyLikeLibpng"/> of its colour decode: an 8 bit PNG with no
+    /// gAMA, sRGB, iCCP or cHRM chunk before its pixels. Any of those can turn on libpng's gamma correction of the grey, which is measured
+    /// to move it (a gAMA of 0.45455 moved 103,817 of 921,600 pixels), so a file carrying one is decoded twice as before.
+    /// </summary>
+    public static bool OneDecodeServes(ReadOnlySpan<byte> bytes)
+    {
+        ReadOnlySpan<byte> signature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+        if (bytes.Length < 33 || !bytes[..8].SequenceEqual(signature) || bytes[24] != 8)
+        {
+            return false;
+        }
+
+        for (long at = 8; at + 8 <= bytes.Length;)
+        {
+            long length = System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(bytes[(int)at..]);
+            string type = System.Text.Encoding.ASCII.GetString(bytes.Slice((int)at + 4, 4));
+            if (type is "IDAT" or "IEND")
+            {
+                return true;
+            }
+
+            if (type is "gAMA" or "sRGB" or "iCCP" or "cHRM")
+            {
+                return false;
+            }
+
+            at += length + 12;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// libpng's conversion of an 8 bit colour pixel to grey with no gamma, as OpenCV asks for it (red 0.299 and green 0.587, which libpng
+    /// keeps as 9797 and 19234 parts of 32768, and blue the 3737 left), truncated as libpng truncates, and a pixel whose three channels are
+    /// equal left as it is. Identical to OpenCV's grey decode at every pixel of the 600 dpi sample, two of Alan's 600 dpi scans, a camera
+    /// PNG and the screen renders, alpha and palette PNGs included (entry 414 section 1.1, held by ImageLoaderSameResultTests).
+    /// </summary>
+    public static GrayImage GreyLikeLibpng(Mat colour)
+    {
+        int width = colour.Width, height = colour.Height;
+        var pixels = new byte[(long)width * height];
+        using var contiguous = colour.IsContinuous() ? null : colour.Clone();
+        IntPtr start = (contiguous ?? colour).Data;
+        Parallel.For(0, height, () => new byte[width * 3], (y, _, row) =>
+        {
+            Marshal.Copy(IntPtr.Add(start, y * width * 3), row, 0, row.Length);
+            long to = (long)y * width;
+            for (int x = 0, i = 0; x < width; x++, i += 3)
+            {
+                int b = row[i], g = row[i + 1], r = row[i + 2];
+                pixels[to + x] = r == g && r == b ? (byte)r : (byte)(((9797 * r) + (19234 * g) + (3737 * b)) >> 15);
+            }
+
+            return row;
+        }, _ => { });
+        return new GrayImage(width, height, pixels);
     }
 
     /// <summary>
@@ -234,6 +337,11 @@ public static class ImageLoader
     /// <para>
     /// So this reads once and decodes twice, where opening an image used to read three times and decode three times.
     /// </para>
+    /// <para>
+    /// <b>Entry 414 section 1.1: a PNG decodes once.</b> OpenCV's grey decode of a PNG is libpng's own conversion, and without a gamma in the
+    /// file that is a fixed sum truncated, which <see cref="GreyLikeLibpng"/> makes from the colour decode identical to the bit. A JPEG,
+    /// a 16 bit PNG and a PNG that names its gamma or colour space are still decoded twice.
+    /// </para>
     /// </summary>
     /// <returns>The grey image, the max(R, G, B) image, the colour image for the screen, and what the file says about itself.</returns>
     public static (GrayImage Grey, GrayImage MaxChannel, Mat Colour, ImageMetadata Metadata) LoadForEditor(string path)
@@ -252,27 +360,7 @@ public static class ImageLoader
         {
             NotTooLarge(colour, path);
 
-            using var grey = Cv2.ImDecode(bytes, ImreadModes.Grayscale | ImreadModes.IgnoreOrientation);
-            if (grey.Empty())
-            {
-                throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
-            }
-
-            var channels = Cv2.Split(colour);
-            try
-            {
-                using var max = new Mat();
-                Cv2.Max(channels[0], channels[1], max);
-                Cv2.Max(max, channels[2], max);
-                return (OpenCvSharpBackend.Copy(grey), OpenCvSharpBackend.Copy(max), colour, metadata);
-            }
-            finally
-            {
-                foreach (var channel in channels)
-                {
-                    channel.Dispose();
-                }
-            }
+            return (GreyOf(bytes, colour, path), MaxOf(colour), colour, metadata);
         }
         catch
         {

@@ -164,8 +164,7 @@ public static class AnalyzeVerb
         {
             try
             {
-                (grey, metadata) = ImageLoader.Load(imagePath, workingMegapixels);
-                (value, _) = ImageLoader.LoadMaxChannel(imagePath, workingMegapixels);
+                (grey, value, metadata) = ImageLoader.LoadGreyAndMax(imagePath, workingMegapixels);
             }
             catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or OpenCvSharp.OpenCVException)
             {

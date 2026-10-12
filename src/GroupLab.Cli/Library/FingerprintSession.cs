@@ -124,8 +124,7 @@ public sealed class FingerprintSession : IDisposable
     {
         try
         {
-            var (g, m) = ImageLoader.Load(path, mostMegapixels);
-            var (v, _) = ImageLoader.LoadMaxChannel(path, mostMegapixels);
+            var (g, v, m) = ImageLoader.LoadGreyAndMax(path, mostMegapixels);
             using var full = Cv2.ImDecode(GroupLab.Cli.Imaging.ImageLoader.Checked(path), ImreadModes.Color | ImreadModes.IgnoreOrientation);
             if (full.Empty())
             {

@@ -8,7 +8,7 @@ namespace GroupLab.Core.Tests.Imaging;
 /// <para>
 /// <b>The optimisation this guards.</b> Opening an image in the application read the file three times and decoded it three times, once
 /// grey and twice in colour. <see cref="ImageLoader.LoadForEditor"/> does it once and converts the colour to grey instead of decoding a
-/// second time.
+/// second time. Entry 414 section 1.1 does the same for a PNG with libpng's own conversion, which is identical where OpenCV's is not.
 /// </para>
 /// <para>
 /// <b>Why that needs proving rather than assuming.</b> OpenCV's grayscale decode and its BGR to grey conversion are documented to use the
@@ -74,5 +74,69 @@ public class ImageLoaderSameResultTests
             Assert.Equal(separateMax.Pixels.Length, max.Pixels.Length);
             Assert.True(separateMax.Pixels.SequenceEqual(max.Pixels), $"{Path.GetFileName(path)}: the max channel differs");
         }
+    }
+
+    /// <summary>
+    /// Entry 414 section 1.1: a PNG is decoded once, its grey made from the colour decode as libpng makes it. The grey and the brightest
+    /// channel from <see cref="ImageLoader.LoadGreyAndMax"/> are the separate loaders' to the bit, on the renders, on the 600 dpi sample,
+    /// and on a render given a gamma chunk, where the grey is decoded on its own as before because libpng then corrects it.
+    /// </summary>
+    [Fact]
+    public void OneDecodeGivesTheSeparateLoadersImagesToTheBit()
+    {
+        string withGamma = Path.Combine(Path.GetTempPath(), $"grouplab-gamma-{Guid.NewGuid():N}.png");
+        try
+        {
+            byte[] render = File.ReadAllBytes(Corpus()[0]);
+            File.WriteAllBytes(withGamma, WithChunk(render, "gAMA", [0, 0, 0xB1, 0x8F]));
+            Assert.True(ImageLoader.OneDecodeServes(render));
+            Assert.False(ImageLoader.OneDecodeServes(File.ReadAllBytes(withGamma)));
+
+            foreach (string path in Corpus().Take(3).Append(Repo.PathTo("samples", "gl-cf25-ltr-d-25-shots-600-dpi.png")).Append(withGamma))
+            {
+                var (grey, max, metadata) = ImageLoader.LoadGreyAndMax(path);
+                var (separateGrey, separateMetadata) = ImageLoader.Load(path);
+                var (separateMax, _) = ImageLoader.LoadMaxChannel(path);
+                Assert.True(grey.Pixels.SequenceEqual(separateGrey.Pixels), $"{Path.GetFileName(path)}: the grey differs");
+                Assert.True(max.Pixels.SequenceEqual(separateMax.Pixels), $"{Path.GetFileName(path)}: the brightest channel differs");
+                Assert.Equal((separateGrey.Width, separateMetadata.Width, separateMetadata.DpiX), (grey.Width, metadata.Width, metadata.DpiX));
+
+                // The editor's own load makes the same grey.
+                var (editorGrey, _, colour, _) = ImageLoader.LoadForEditor(path);
+                using (colour)
+                {
+                    Assert.True(editorGrey.Pixels.SequenceEqual(separateGrey.Pixels), $"{Path.GetFileName(path)}: the editor's grey differs");
+                }
+            }
+        }
+        finally
+        {
+            File.Delete(withGamma);
+        }
+    }
+
+    /// <summary>A PNG with one more chunk straight after its header.</summary>
+    private static byte[] WithChunk(byte[] png, string type, byte[] data)
+    {
+        byte[] typed = [.. System.Text.Encoding.ASCII.GetBytes(type), .. data];
+        uint crc = Crc32(typed);
+        byte[] chunk = [(byte)(data.Length >> 24), (byte)(data.Length >> 16), (byte)(data.Length >> 8), (byte)data.Length, .. typed,
+            (byte)(crc >> 24), (byte)(crc >> 16), (byte)(crc >> 8), (byte)crc];
+        return [.. png[..33], .. chunk, .. png[33..]];
+    }
+
+    private static uint Crc32(byte[] bytes)
+    {
+        uint crc = 0xFFFFFFFF;
+        foreach (byte b in bytes)
+        {
+            crc ^= b;
+            for (int k = 0; k < 8; k++)
+            {
+                crc = (crc & 1) != 0 ? 0xEDB88320 ^ (crc >> 1) : crc >> 1;
+            }
+        }
+
+        return ~crc;
     }
 }

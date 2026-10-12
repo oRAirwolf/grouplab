@@ -178,4 +178,34 @@ public static class SolverUse
         ArgumentNullException.ThrowIfNull(input);
         return BallisticSolver.Solve(input with { CrosswindMph = DopeWindMph }, maxYards, stepYards);
     }
+
+    private static int warming;
+
+    /// <summary>
+    /// Entry 414 section 1.2: the first trajectory a run of GroupLab flies took about a hundred milliseconds and the fourth about four,
+    /// because .NET first runs the solver's loops as quickly compiled code and compiles them properly, from how they were used, only after
+    /// a few flights; nothing in the solver itself is built on first use. Turning that off leaves every flight at about fourteen. So once
+    /// the window is up a few dope tables are flown on a thread of the lowest priority, before anybody opens Ballistics. The arithmetic is
+    /// the same either way, so no figure changes; started once, whoever calls it.
+    /// </summary>
+    public static void WarmInBackground()
+    {
+        if (Interlocked.Exchange(ref warming, 1) == 1)
+        {
+            return;
+        }
+
+        var input = new BallisticInput(0.243, DragModel.G7, 2750, 140, 1.8, 100, 59, null, 0, 50, 10, 0, ReferenceAtmosphere.Icao, 8, 1, 0.264, 1.35);
+        new Thread(() =>
+        {
+            for (int i = 0; i < WarmFlights; i++)
+            {
+                Dope(input, 1000, 25);
+            }
+        })
+        { IsBackground = true, Priority = ThreadPriority.Lowest, Name = "Solver warm-up" }.Start();
+    }
+
+    /// <summary>The dope tables flown to warm the solver: past the point where the measured flights became fast, with some to spare.</summary>
+    internal const int WarmFlights = 8;
 }

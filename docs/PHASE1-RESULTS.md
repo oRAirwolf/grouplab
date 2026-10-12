@@ -388,6 +388,17 @@ Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, ans
    the emulator's screens run on the Fold's cover screen at text size 2.0, on Targets (`fold-targets-largest-text`), from the first
    emulator run after this reaches main; SCREENSHOTS.md names both files as waiting and the layouts test lets exactly those wait.
 
+## Entry 414: the overnight queue (2026-10-12)
+
+1. **Phase 9, three named optimizations** (docs/PERFORMANCE.md, one heading each). **1.1 A scan decoded once:** a PNG's grey decode is
+   libpng's conversion, a fixed sum truncated where the file names no gamma; made from the colour decode that way it is identical at
+   every pixel of every PNG tried, so an 8 bit PNG without a gamma, colour space or profile chunk is decoded once (`LoadGreyAndMax`, the
+   window's open). Loading the 600 dpi scan 645 to 337 ms, the scan stage by stage 1348 to 1034, opening it in the window 1020 to 823.
+   Every scoreboard (four corpus folders and the synthetic board), the corpus counts and the identify sweep identical but for time
+   columns; the bench, window and start-up gates pass. **1.2 The first trajectory:** nothing in the solver is built on first use; the
+   100 ms is tiered compilation (113, 110, 70, then 4.3 ms; 14 every time with tiering off). Eight dope tables flown on a lowest-priority
+   thread once the window is up make the first table 6.4 ms. **1.3 The CEP table:** 0.4 ms since entry 170; nothing to change.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

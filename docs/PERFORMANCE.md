@@ -48,6 +48,48 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 414 section 1.1: a scan decoded once
+
+**Measured first.** A 600 dpi scan was still decoded twice: grey, then in colour for its brightest channel (`Load` then
+`LoadMaxChannel` on the command line, a grey and a colour decode in the window's `LoadForEditor`). Each decode of the 600 dpi sample is
+about 170 ms of the 645 the load took, warm, on this desktop. OpenCV's own BGR to grey conversion does not give the grey decode (entry 130
+found it a level off at about eight percent of pixels), because a PNG's grey decode is libpng's conversion, not OpenCV's.
+
+**What changed.** libpng's conversion, with no gamma in the file, is red, green and blue weighted 9797, 19234 and 3737 parts of 32768 and
+truncated, a pixel whose three channels are equal left as it is. Made from the colour decode that way (`ImageLoader.GreyLikeLibpng`), it is
+the grey decode at every pixel of the 600 dpi sample, two of Alan's 600 dpi scans, a camera PNG, the screen renders, and palette, alpha
+and grey PNGs; OpenCV's conversion and two rounded variants were 8 to 60 percent of pixels off. A gAMA or sRGB chunk turns on libpng's
+gamma correction and moved 103,817 of 921,600 pixels, so a PNG naming its gamma, colour space or profile, a 16 bit PNG, a JPEG and an
+image brought down to a working size are decoded twice as before (`OneDecodeServes`). `LoadGreyAndMax` serves the command line's
+analysis, the fingerprint and scale marker readers and the bench; the window's open uses the same grey.
+`ImageLoaderSameResultTests.OneDecodeGivesTheSeparateLoadersImagesToTheBit` holds it, the gamma file included.
+
+**Nothing moved.** `scoreboard --corpus` on all four local corpus folders, `scoreboard --synthetic`, `corpus counts` and `identify sweep`
+are line for line the same before and after, time columns aside.
+
+**Before and after,** `grouplab bench --runs 5`, median ms, this desktop: loading a 600 dpi Letter scan 645 to 337; the 600 dpi scan,
+stage by stage, 1348 to 1034; one sheet from file to figures 338 to 302; a phone photograph, a JPEG, unchanged (48). In the window,
+`Phase9BaselineTests`, opening a 600 dpi scan 1020 to 823 (the baseline says 965). The three baseline gates passed.
+
+## Entry 414 section 1.2: the first trajectory
+
+**What it is.** Nothing in the solver is built on first use: there is no table or cache to build. It is .NET's tiered compilation. In a
+fresh process the first three trajectories to 1000 yards took 113, 110 and 70 ms and the fourth 6, then 4.3 for every one after: the
+solver's loops run as quickly compiled code until they have been used enough to be compiled properly, from how they were used. With
+tiered compilation turned off every flight is 14 ms, three times slower for good, so that is not the answer.
+
+**What changed.** Once the window is up (the desktop's `Opened`, the phone's start), `SolverUse.WarmInBackground` flies eight dope tables
+on one thread of the lowest priority, once per run. A dope table half a second after start then takes 6.4 ms rather than 114, and the
+first three about 15 rather than 300; the Ballistics screen draws more than one. It costs nothing a person waits for: start-up to a
+usable window was 1112 ms against the baseline's 1081, inside the gate, and the work starts after the window exists. The arithmetic is
+the same whichever way the code was compiled, so no figure changes (`SolverWarmUpTests`).
+
+## Entry 414 section 1.3: the CEP table
+
+**Measured again: 0.4 ms**, not 125. Entry 170 (2026-09-24) found the cost: `GroupStatistics.HoytCdf` doubled its rule until two sums
+agreed to 1e-16, below a double's rounding, and ran to a million points; at 1e-14 the CEPs take about 2 ms with every shown digit the
+same. The 125 ms in the list below was measured on 2026-09-20, before that; the record since 2026-10-01 has said 0.4. Nothing to change.
+
 ## Entry 410 section 3: finding the holes, the marks' own sums
 
 **Measured first, warm, in one process** (`analyze-folder`, the step timings taken inside `RenderDifferenceHoleDetector.Detect` for this
@@ -157,10 +199,10 @@ Entry 117 optimises nothing: each of these is a candidate with its measurement b
 - **Hole detection is the analysis.** On the generated 300 dpi sheet, S5-S8 is 622 ms of an 824 ms analysis; on Alan's 600 dpi scan it is 2103 ms of 3649 ms. Nothing else in the pipeline is close.
 - **Finding the bulls costs four times what registering the page does, and grows faster than the image.** P0 is 158 ms at 300 dpi and 818 ms at 600 dpi, against 42 ms and 79 ms for the markers. The image grows fourfold between those resolutions and this stage grows fivefold.
 - **Identifying the sheet from its codes is 530 ms** on a 2550 by 3300 image, which is more than ten times the marker stage that follows it and reads the same page. Its own spread is wide, 239 ms to 539 ms, which says the cost depends on where in the library the answer is found. Entry 115 section 5 saw the same thing at 600 dpi, where identification was 9.7 to 13.7 s of a 17.7 to 22.8 s analysis.
-- **The CEP table is 125 ms** for two figures, which is twice the whole analysis of a marking that contains it and the only statistic anywhere near the cost of an image. It is a numerical integration.
-- **A 600 dpi image is decoded twice.** Loading is 634 ms, and the pipeline reads the same file again for its strongest channel: one decode could give both.
+- **The CEP table was 125 ms** (0.4 since entry 170; entry 414 section 1.3) for two figures, which is twice the whole analysis of a marking that contains it and the only statistic anywhere near the cost of an image. It is a numerical integration.
+- **A 600 dpi image was decoded twice** (a PNG once since entry 414 section 1.1). Loading is 634 ms, and the pipeline reads the same file again for its strongest channel: one decode could give both.
 - **Saving a session is 65 ms**, almost all of it writing the marking as JSON rather than the database write.
-- **The first trajectory costs about a hundred milliseconds and the next costs four**, so something in the solver is built on first use. A person waiting for a dope table pays it once, on the screen where they are already waiting.
+- **The first trajectory costs about a hundred milliseconds and the next costs four** (tiered compilation, warmed in the background since entry 414 section 1.2), so something in the solver is built on first use. A person waiting for a dope table pays it once, on the screen where they are already waiting.
 - **A batch of ten sheets is ten separate analyses**, 8.7 s for ten copies of a sheet that takes 958 ms alone. Nothing is shared between them, not even the definition's derived layout.
 
 ## The baseline of entry 331, 2026-10-01
@@ -285,7 +327,7 @@ are the same line for line, all but their time columns, and every picture below 
 **What is now slowest, and left.** On a photograph, reading the sheet's codes is again the largest stage (190 to 395 ms), and on the one
 picture read only enlarged it is 7 s of 7.6; skipping its whole-picture reads is the decision entry 342 named, not a speed-up. Finding the
 holes is next (180 to 540 ms), most of it now the closing of the threshold mask and the alignment's phase correlations, both inside
-OpenCV. On the desktop, decoding a 600 dpi PNG (630 ms) is the largest single step left in reading a scan.
+OpenCV. On the desktop, decoding a 600 dpi PNG (630 ms) is the largest single step left in reading a scan; entry 414 section 1.1 decodes it once.
 
 ## The record
 

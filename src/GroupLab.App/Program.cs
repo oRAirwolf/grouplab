@@ -66,6 +66,10 @@ public sealed class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
+
+            // Entry 414 section 1.2: once the window is up, the solver warmed on a thread of the lowest priority, so Ballistics' first
+            // tables do not wait for it.
+            desktop.MainWindow.Opened += (_, _) => GroupLab.Core.Ballistics.SolverUse.WarmInBackground();
         }
 
         base.OnFrameworkInitializationCompleted();
