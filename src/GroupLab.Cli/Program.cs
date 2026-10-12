@@ -147,6 +147,11 @@ static int Render(string input, string[] rest)
             case "--allow-invalid":
                 options = options with { AllowInvalid = true };
                 break;
+            // Entry 414 section 5: the bulls in red or blue, as Print's "Bulls in" draws them, for a range kit's red bull sheet.
+            case "--bulls" when i + 1 < rest.Length && Enum.TryParse<BullColour>(rest[i + 1], ignoreCase: true, out var colour):
+                options = options with { BullColour = colour };
+                i++;
+                break;
             default:
                 Console.Error.WriteLine($"render: unknown option {rest[i]}");
                 return 2;
@@ -530,7 +535,7 @@ static int Usage()
         grouplab decode <frame-hex>...
         grouplab library build <layouts.json> <targets-directory>
         grouplab library verify <layouts.json> <targets-directory>
-        grouplab render <file.gltd.json> [-o <out.pdf>] [--filled] [--tile <n>] [--scale <s>] [--allow-invalid]
+        grouplab render <file.gltd.json> [-o <out.pdf>] [--filled] [--tile <n>] [--scale <s>] [--bulls black|red|blue] [--allow-invalid]
         grouplab selftest [<targets-directory>]
         grouplab intake <submission-directory> <public-directory> [--accept <file>]... [--submissions <directory>]
         grouplab scrub <input-image> <output-image>
