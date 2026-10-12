@@ -1,0 +1,7 @@
+{ "name": "entry 414 section 2: does GroupLab Dev, started again after it was stopped in the middle of a reading, run anything", "stopOnFailure": false,
+  "steps": [
+    { "do": "sleep", "seconds": 2 },
+    { "do": "open", "place": "capture" },
+    { "do": "sleep", "seconds": 1 },
+    { "do": "screenshot", "name": "started-again" }
+  ] }

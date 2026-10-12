@@ -118,4 +118,28 @@ public class AndroidEmulatorSweepTests
         Assert.Empty(published.Except(made));
         Assert.All(made.Except(published), name => Assert.Contains("`" + name + "` waits for the emulator's first run", waiting, StringComparison.Ordinal));
     }
+
+    /// <summary>
+    /// Entry 414 section 2: the emulator stops GroupLab Dev in the middle of a reading and starts it again, after a control round that
+    /// shows the check itself works; the two scenarios it hands GroupLab Dev are there and read as scenarios, every wait in the script is
+    /// bounded, and the workflow keeps what it writes.
+    /// </summary>
+    [Fact]
+    public void TheEmulatorStopsGroupLabInTheMiddleOfAReadingAndStartsItAgain()
+    {
+        string workflow = Text(".github", "workflows", "android-emulator.yml");
+        Assert.Contains("bash scripts/android-force-stop.sh apk/grouplab-dev-x86_64.apk android-force-stop", workflow, StringComparison.Ordinal);
+        Assert.Contains("            android-force-stop\n", workflow, StringComparison.Ordinal);
+        string script = Text("scripts", "android-force-stop.sh");
+        foreach (string name in new[] { "phone-force-stop-read.json", "phone-force-stop-check.json" })
+        {
+            Assert.Contains(name, script, StringComparison.Ordinal);
+            var steps = System.Text.Json.Nodes.JsonNode.Parse(Text("scripts", "scenarios", name))!["steps"]!.AsArray();
+            Assert.NotEmpty(steps);
+        }
+
+        Assert.Contains("control", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("while true", script, StringComparison.Ordinal);
+        Assert.Matches(@"-lt 120 \]", script);
+    }
 }

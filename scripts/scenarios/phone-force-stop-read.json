@@ -1,0 +1,8 @@
+{ "name": "entry 414 section 2: a reading started and left running, for scripts/android-force-stop.sh to stop GroupLab Dev in the middle of", "stopOnFailure": false, "caliber": "6.5 Creedmoor", "distanceInches": 3600,
+  "steps": [
+    { "do": "reset" },
+    { "do": "sleep", "seconds": 2 },
+    { "do": "open", "place": "capture" },
+    { "do": "picture", "file": "sample.png" },
+    { "do": "wait", "screen": "ResultView", "seconds": 600 }
+  ] }

@@ -123,6 +123,24 @@ jobs:
           disable-animations: true
           script: bash scripts/android-touch.sh apk/grouplab-dev-x86_64.apk android-touch
 
+      # Entry 414 section 2: GroupLab Dev stopped by Android in the middle of a reading, five times at different points, and started again
+      # each time; a start that runs nothing fails here with Android's log kept (scripts/android-force-stop.sh).
+      - name: Started again after a stop in the middle of a reading
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 40
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-force-stop.sh apk/grouplab-dev-x86_64.apk android-force-stop
+
       # Question 90 (b): the phone's published screenshots, taken here at each pictured device's size, light and dark, and committed
       # when they changed, with the nightly they were taken on. A push made with this job's token starts no workflow.
       - name: The phone's screenshots
@@ -218,6 +236,7 @@ jobs:
           path: |
             android-sweep
             android-touch
+            android-force-stop
             android-screens
             android-quality
             android-perf
