@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.190
+
+**2026-10-12**, commit `4303b73`. Nightly.
+
+**What you will notice**
+
+- The command line's render can now draw a sheet's bulls in red or blue, as Print does in the application.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.190)
+
+---
+
 ## 0.2.0-nightly.189
 
 **2026-10-12**, commit `a710771`. Nightly.
