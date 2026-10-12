@@ -143,4 +143,22 @@ public class RoundsFiredOnARenderedSheetTests(ITestOutputHelper output)
         session.SetExpectedShots(fired);
         Assert.DoesNotContain(ReviewQueue.For(session.State), i => i.Kind == ReviewKind.Count);
     }
+
+    /// <summary>
+    /// docs/PROOF-CHECKLIST.md row 4, a mark much bigger than the bullet goes to the person, against its proposed gate: every mark holding
+    /// two holes is ringed, and no clean hole is (entry 414 section 4). Half met here, as on the corpus photographs: the ragged hole two
+    /// shots made is ringed (about 1.4 holes' area), and so is one clean hole whose torn rim reads larger still (about 1.5). Size alone
+    /// cannot tell those two apart, which is why the count is what names the mark (the test above), so the half that is not met is held
+    /// as measured: one clean hole ringed, larger than the pair. A detector that tells them apart changes this test on purpose.
+    /// </summary>
+    [Fact]
+    public void TheMarkHoldingTwoShotsIsRingedAndOneTornCleanHoleIsToo()
+    {
+        var (session, pair, _) = Sheet(withPair: true);
+        var ringed = ReviewQueue.For(session.State).Where(i => i.Kind == ReviewKind.Oversized)
+            .Select(i => session.State.Shots.Single(s => s.Id == i.ShotId)).OrderBy(s => Inches(s.Image, pair)).ToList();
+        Assert.Equal(2, ringed.Count);
+        Assert.True(Inches(ringed[0].Image, pair) < 0.05, $"the nearest mark ringed is {Inches(ringed[0].Image, pair):0.000} in from the two shots");
+        Assert.True(ringed[1].Size!.Holes > ringed[0].Size!.Holes, "the clean hole ringed reads smaller than the pair");
+    }
 }
