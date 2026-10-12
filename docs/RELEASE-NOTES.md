@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.188
+
+**2026-10-12**, commit `c4f8502`. Nightly.
+
+**What you will notice**
+
+- At Android's largest text sizes, the phone's bottom bar now shows its icons alone, larger, instead of squeezing the names; your phone still reads each one out by name.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.188)
+
+---
+
 ## 0.2.0-nightly.187
 
 **2026-10-12**, commit `3a64762`. Nightly.
