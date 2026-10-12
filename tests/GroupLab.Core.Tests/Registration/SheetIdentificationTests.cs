@@ -39,30 +39,6 @@ public class SheetIdentificationTests
         Assert.Contains(trace.Records, r => r.Stage == "S0.identify" && r.Status == StageStatus.Ok);
     }
 
-    /// <summary>
-    /// NOTES-FROM-PLANNING.md entries 400 and 410 section 3.3: the codes are read at once, each by OpenCV's QR detectors of its own, which once
-    /// hung the macOS Mobile suite for an hour with no test named. This runs that reading on every platform CI runs, ten times over and two
-    /// pictures together, inside a time limit, so a hang fails here with its reason rather than stopping a suite.
-    /// </summary>
-    [Fact]
-    public async Task ReadingTheCodesAtOnceFinishesOnEveryPlatform()
-    {
-        var (photo, _) = Cli.Imaging.ImageLoader.Load(Repo.PathTo("scans", "phase0", "main_flat1.jpg"));
-        var (scan, _) = Cli.Imaging.ImageLoader.Load(Repo.PathTo("scans", "phase0", "gl-cf25-ltr-1-300-dpi.png"));
-        var work = Task.Run(() =>
-        {
-            for (int round = 0; round < 10; round++)
-            {
-                var both = new[] { photo, scan }.AsParallel().Select(image => SheetIdentification.Identify(image, Library, new OpenCvSharpBackend(), new TraceRecorder())).ToList();
-                Assert.All(both, identity => Assert.Equal("GL-YCSK-DZZ1-R0VJ-4T5Y", identity.DefinitionId));
-            }
-        });
-
-        var finished = await Task.WhenAny(work, Task.Delay(TimeSpan.FromMinutes(3)));
-        Assert.True(finished == work, "reading the codes at once did not finish in three minutes: the hang of entry 400 on macOS is back");
-        await work;
-    }
-
     [Theory]
     [InlineData("GL-CF25-LTR.gltd.json", 0)]
     [InlineData("GL-RF25-A4.gltd.json", 0)]

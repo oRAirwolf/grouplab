@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1636 |
-| measured | 2132 |
+| measured | 2134 |
 | decided | 1401 |
 | unbacked | 0 |
-| **total** | **5169** |
+| **total** | **5171** |
 
-**1533** of them were read one sentence at a time and their backing written against the sentence. The other **3636** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1533** of them were read one sentence at a time and their backing written against the sentence. The other **3638** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1623,8 +1623,10 @@ one that matters.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **Nothing moved.** The old and the new code analysed the same fifteen pictures (the 600 dpi sample, the nine corpus pictures and five of Alan's six range scans of 2026-09-20): 346 holes, the same labels, and every centre the same to six decimals of an inch.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **Before and after,** `grouplab bench --runs 5`, median ms, this desktop: the generated sheet, finding the holes, 261 to 168, and the whole sheet 381 to 289; a phone photograph, finding the holes, 199 to 181; the 600 dpi scan, which has no holes, 491 to 494.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Warm, the candidate loop on the 600 dpi sample went from about 560 ms to 100, and on a Fold 7 picture from about 90 to 30.
-- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **Put back after nightly 185:** reading the codes all at once (entry 400).
-- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): The macOS Mobile suite had passed since it was taken back (run 38128272788, 162 of 162), the condition entry 400 set, and it went back once nightly 185 had published, so a hang on macOS could not stop that nightly.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **Put back after nightly 185, and taken back again in entry 414:** reading the codes all at once (entry 400).
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): It went back once the macOS Mobile suite had passed without it, under a test that read two pictures together ten times inside a time limit.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): The Phase 0 gate record's identify sweep on Linux then crashed in native code three times in twelve runs while the codes were read at once (runs 38041674253, 38148249192 and 38246210673: two segmentation faults and "malloc(): unsorted double linked list corrupted"), and never in the 28 runs while they were read one at a time.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): OpenCV's QR detectors on several threads at once corrupt memory on Linux, which Android is, so the codes are read one at a time on every platform, and the test that read two pictures at once went with it.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): ## Entry 400: the phone's reading of a photograph, about a tenth sooner, part taken back Planning named it: the phone's whole reading of a camera photograph, from the picture to its result (`PhoneAnalysis.Run`).
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Measured headless on this desktop, Release, nothing else running, as entry 342 did: the 600 dpi sample and the nine Fold 7 pictures of the 2026-09-28 and 29 sittings, each stage as the analysis logs it, medians of three rounds before and five after.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Entry 399 had just sent these untagged pictures through the lens fit, which added a new cost on the bent ones: registering them, 95 to 230 ms, nearly all of it the bend's fits with each marker left out in turn.
