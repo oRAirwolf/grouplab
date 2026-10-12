@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.187
+
+**2026-10-12**, commit `3a64762`. Nightly.
+
+**What you will notice**
+
+- Text on Android now grows and shrinks with the phone's own text size setting; at the largest sizes a long button label wraps and a figure's unit can sit under its number.
+
+**Under the hood**
+
+- The setting that makes the phone's text follow Android's text size no longer keeps unused screens in memory.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.187)
+
+---
+
 ## 0.2.0-nightly.186
 
 **2026-10-11**, commit `074866f`. Nightly.
