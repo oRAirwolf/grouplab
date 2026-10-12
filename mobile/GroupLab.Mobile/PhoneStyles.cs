@@ -56,7 +56,7 @@ internal static class PhoneStyles
         AppStyles.Apply(app);
         Restyle(app);
         app.ActualThemeVariantChanged += (_, _) => Restyle(app);
-        TextSize.Changed += () => Restyle(app);
+        TextSize.RestyleOnChange(app, Restyle);
     }
 
     private static void Restyle(Application app)

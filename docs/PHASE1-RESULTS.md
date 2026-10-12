@@ -348,6 +348,11 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
    about text size, and no Features picture changes at the usual size.
 3. **Section 4** is recorded for the next range kit (one current sheet shot mounted and scanned at home, kept), in STATE.md.
 4. **Tests:** Mobile 165 passed, App 534 passed, Core 2994 passed (the one failure the local inbox line, entry 412 waiting).
+5. **A fault found by CI and fixed.** The first version told the styles of a size change through a static event, which held every
+   application it was given. The headless tests start an application for every test, so the desktop suite on Linux held 500 of them
+   and the runner was shut down three times about 12 to 15 minutes in (runs 38206202325 and 38208601401, Windows and macOS passed).
+   `TextSize` now keeps them in a weak table, and `Entry411Tests.AnApplicationIsNotKeptAliveByTheTextSize` holds it. The growth test
+   also failed when it ran first, because it opened a Shell without answering the first run's questions; it answers them now.
 
 ## Entry 412: no shot sheets left from past trips (2026-10-12)
 

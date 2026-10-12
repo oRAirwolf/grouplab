@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -14,18 +15,33 @@ public static class TextSize
 {
     private static Func<double, double> follow = size => size;
 
-    /// <summary>Raised after <see cref="Follow"/> changes the sizes, so the styles are built again at the new ones.</summary>
-    public static event Action? Changed;
+    // Each application's styles, built again when the size followed changes. Held by a weak table, not an event: the headless tests start
+    // an application for every test, and a static event held all of them, so the desktop suite ran the Linux runner out of memory.
+    private static readonly ConditionalWeakTable<Application, List<Action<Application>>> restyles = new();
 
     /// <summary><paramref name="size"/>, a size from <see cref="Tokens"/>, at the system's text size where one is followed.</summary>
     public static double Of(double size) => Math.Round(follow(size), 2);
+
+    /// <summary>Builds <paramref name="app"/>'s styles again with <paramref name="restyle"/> whenever <see cref="Follow"/> changes the sizes.</summary>
+    public static void RestyleOnChange(Application app, Action<Application> restyle)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        ArgumentNullException.ThrowIfNull(restyle);
+        restyles.GetOrCreateValue(app).Add(restyle);
+    }
 
     /// <summary>Follows <paramref name="system"/>, which gives a size at the system's text size, and builds the styles again.</summary>
     public static void Follow(Func<double, double> system)
     {
         ArgumentNullException.ThrowIfNull(system);
         follow = system;
-        Changed?.Invoke();
+        foreach (var (app, actions) in restyles.ToList())
+        {
+            foreach (var restyle in actions.ToList())
+            {
+                restyle(app);
+            }
+        }
     }
 
     /// <summary>A style's setter value: a text size at the followed size, anything else as it is.</summary>

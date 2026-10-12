@@ -20,6 +20,8 @@ public class Entry411Tests
             Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
         }
 
+        // The first run's questions answered, as every phone test does, or the Shell shows them and the page below never reaches the window.
+        GroupLab.Mobile.Dev.Scenario.AnswerFirstRun(Phone.Settings);
         var body = new TextBlock { Text = "body" };
         var heading = new TextBlock { Text = "heading", Classes = { PhoneStyles.Title } };
         var field = new TextBox { Text = "12" };
@@ -58,6 +60,31 @@ public class Entry411Tests
             TextSize.Follow(size => size);
             window.Close();
         }
+    }
+
+    /// <summary>
+    /// The headless tests start an application for every test. A static event that held each one ran the Linux runner out of memory
+    /// three times in the desktop suite (runs 38206202325 and 38208601401), so the text size holds them weakly.
+    /// </summary>
+    [AvaloniaFact]
+    public void AnApplicationIsNotKeptAliveByTheTextSize()
+    {
+        var weak = Registered();
+        for (int i = 0; i < 3; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        Assert.False(weak.TryGetTarget(out _), "the text size kept an application alive");
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference<Avalonia.Application> Registered()
+    {
+        var app = new Avalonia.Application();
+        TextSize.RestyleOnChange(app, a => _ = a.Name ?? app.Name);
+        return new WeakReference<Avalonia.Application>(app);
     }
 
     [AvaloniaFact]
