@@ -25,6 +25,73 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-12, entry 414: an overnight queue that needs nobody (Alan asleep, about 8 to 10 hours)
+
+**Status: actioned 2026-10-12; sections 1 to 6 done. Also taken back: reading a sheet's codes at once (native crashes on Linux). Section 2 did not reproduce, so it has no fix; the check now runs after every nightly.**
+
+From the planning session, 2026-10-12 11:50 UTC. Alan, 05:41 Denver: going to bed, and asked what Code can work on while he sleeps.
+Take entry 413 first (the bottom bar, icons only at large text sizes), then this. Everything below needs nothing from him; anything that
+turns out to need him goes to for-alan.md and the work moves on. Sections in order, one commit each where it fits, a report after each.
+
+**Budget for this block:** stop at **38% of the week** (26% at 11:39 UTC), or when the queue is done, whichever comes first, and never in
+the middle of a publish. One worker, no helpers in parallel. Screenshots and chores to chores-haiku, wording and consistency checks to
+docs-sonnet, as the standing rules say; application code, tests and performance work on the main model.
+
+## 1. Phase 9: the planning session names the next optimizations
+
+PERFORMANCE.md says decoding a 600 dpi PNG (about 630 ms) is now the largest single step left in reading a scan, and its list of things
+found while measuring still names three that cost a person time. Take them in this order, each measured before and after with the same
+method as entries 392, 400 and 410, each kept only if every scoreboard, the identify sweep and the corpus counts are identical but for
+their time columns and the baseline gate passes. A round that cannot keep identical results is taken back and written down; that is a
+result, not a failure.
+
+1. **A scan decoded once.** Check whether a 600 dpi image is still decoded twice (once to load, once again for its strongest channel).
+   If it is, build both images from one decode, identical to the bit. If it is not, measure whether a faster decode path gives identical
+   pixels and is worth it, and record the answer either way.
+2. **The first trajectory.** The first dope table costs about 100 ms and the next about 4, because something in the solver is built on
+   first use. Find what it is. If building it at start-up in the background costs nothing a person waits for, do that; if the answer is
+   that it should stay as it is, say why.
+3. **The CEP table** (about 125 ms for two figures, a numerical integration). Measure it again first; if it still costs that, make it
+   cheaper with identical figures to the digits shown, or record why it cannot be.
+
+Write each into PERFORMANCE.md under its own heading. A Release-note only where a person would notice (opening a scan sooner is
+noticeable); otherwise `internal`.
+
+## 2. The emulator finding: does GroupLab start after a force-stop in the middle of a reading?
+
+STATE.md: run 37735635656 left a reading running at a force-stop, and no later start of GroupLab Dev on that emulator ran anything; not
+established whether a phone does the same. A person whose phone kills GroupLab while it reads a photograph, and who then cannot open it
+again, would have no way out. On the emulator: reproduce it on purpose (start a reading, force-stop, start again, several times). If it
+reproduces, find the cause, fix it on the phone path, and add a test that holds it. If it does not, say what was tried and what the
+original run most likely saw. Either way, record it in PHASE1-RESULTS.md and correct the line in STATE.md. If it is a fix a person would
+notice, a Release-note of kind `fixed`.
+
+## 3. Consistency after entries 411 to 413 (docs-sonnet)
+
+The phone's text now follows Android's text size and the bottom bar changes at large sizes. Check the README, the site, the three
+guides, the Features page and the tour for anything that still describes fixed text or always-named tabs, and fix it in one commit.
+Then look at the open GitHub issue labelled `consistency`, if there is one, and fix the items that need nobody.
+
+## 4. The proof checklist, sorted for the next range trip
+
+For every row of PROOF-CHECKLIST.md still not proven, decide whether a test, the emulator, the headless walks or material already in
+`C:\Dev\grouplab-local\` can prove it now. Prove the ones that can. For the rest, write beside each the exact material it needs (which
+sheet, which optic, which phone, how many shots), so section 5 can put it in one kit.
+
+## 5. The next range kit, prepared and not yet asked for
+
+Build the next range kit as files ready to print, in `C:\Dev\grouplab-local\range-next\`, in the same shape as the 4 October kit
+(a `CHECKLIST.pdf` first): requests 57 (red bulls), 58 (store-bought targets), 86 (aim points through the red dots, the prism and the
+medium power scopes, with a new aim point card, entry 412), the current sheet to be shot mounted and scanned flat at home afterwards
+(entries 411 and 412 section 4), and whatever section 4 found that a range trip can prove. Every sheet that will be needed after the
+shoot carries a **Keep:** line on the checklist (entry 411 section 1.4). Aim for about an hour of shooting; say on the checklist which
+parts can be skipped if time runs short. Add one line to for-alan.md saying the kit is ready whenever he next goes, not a new request
+that needs an answer.
+
+## 6. Report
+
+The five line report per section as usual. If the guard stops the block, the report says which sections were not reached.
+
 ## 2026-10-12, entry 413: the phone's bottom bar at large text sizes, Alan chose B (icons only)
 
 **Status: actioned 2026-10-12; sections 1 to 3 done. The Features picture is taken by the emulator's screens run after this reaches main; SCREENSHOTS.md names it as waiting until then.**

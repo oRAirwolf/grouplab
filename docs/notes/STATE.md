@@ -9,22 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-12, entry 413 (before it: entry 412, entry 411, request 97 answered).
+**Last rewritten:** 2026-10-12, entry 414 (before it: entries 413, 412 and 411).
 
 ---
 
 ## In flight
 
-- **Entry 413 done**: Alan chose B; at text sizes where a name would not fit its fifth of the phone's bottom bar, the bar
-  shows its five icons alone, larger, each still named for TalkBack (`NavBar`). The Features picture `fold-targets-largest-text` is
-  taken by the emulator's screens run after the next nightly; then its Features entry is written. **Entry 414** (overnight queue) next.
-- **Entry 412 done**: no shot sheets are left from past trips (Alan); request 94 closed, 74 asks for new wood table photos, 86
-  waits for a new aim point card in the next range kit, 9 says where its scan is. What is in `grouplab-local` is all there will be.
-- **Entry 411 done**: the phone's text follows Android's text size (question 96 answered), held at Android's largest size by the
-  headless sweeps and by the emulator sweep's `--larger` check. Request 94's 4 October sheets are gone; requests that have a sheet shot and scanned now carry a **Keep:** line.
-- **Entries 406 to 410 done**: shipped by nightly 186. Request 97 installed 2026-10-12 03:59 UTC.
+- **Entry 414 done** (the overnight queue): a 600 dpi PNG decoded once (opening a scan 1020 to 823 ms), the solver warmed in the
+  background; reading the codes at once **taken back** (it crashed Linux in native code, 3 of 12 gate runs); a force-stop in the middle
+  of a reading does not stop the next start (5 of 5 on CI's emulator, checked after every nightly now); proof rows 4, 11, 29 moved;
+  **the next range kit is ready** in `C:\Dev\grouplab-local\range-next\` (for-alan.md says so, no request).
+- **Entry 413 done**: at text sizes where a name would not fit, the phone's bottom bar shows its icons alone (`NavBar`), with its own
+  Features picture, `fold-targets-largest-text`.
+- **Entries 406 to 412 done**: no shot sheets are left from past trips (entry 412); the phone's text follows Android's (411).
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
-- **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
+- **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
+  row names its material (entry 414 section 4).
 - **Waiting on Alan:** requests 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
@@ -48,8 +48,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Whatever the inbox brings.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
-3. The next range kit (requests 57, 58, 86) carries one current sheet to shoot mounted and scan at home, kept, and a new aim point
-   card (entries 411 and 412).
+3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 
 ## Blocked, and on what
 
@@ -72,9 +71,10 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (96 answered by entry 411 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.187 (2026-10-12 07:52 UTC, built from 8ab92cc8: entry 411, the phone's text follows Android's
-  text size); published whole, the emulator sweep's `--larger` check passed (16 to 28 on the body). 186 carried entry 410.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; dispatched for 187, live at aec2a3df.
+- **Last nightly:** 0.2.0-nightly.189 (2026-10-12 14:19 UTC, from 6bd6d7b8): entries 413 and 414 sections 1 and 2 and the take-back
+  of reading codes at once. Sections 4 and 5 and the parity row are in the next one. 188 carried entry 413.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; 188 was dispatched by hand (one HTTP
+  500 from GitHub first); 189 goes with entry 414's last push.
 - Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
@@ -90,20 +90,19 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 - **Text sizes go through `TextSize.Of`** (entry 411): a size set in code on a phone screen that skips it does not follow Android's
   text size. The desktop and the iPhone keep the sizes as they are.
-- **The database is schema version 3** (entry 407 section 5): the first open of a new build copies `grouplab.db` to
-  `grouplab.pre-v2.db` beside it, then puts every barrel under a rifle once. Alan's desktop copy: its one barrel goes under "Barrels not
-  yet on a rifle". The Equipment screen's extra fields had never reached the database before this.
-
-- **The emulator's walks run headless first** (`PhoneScreensScenarioTests`, `PhoneSweepScenarioTests`): run 37735635656 left a reading
-  running at a force-stop and no later start of GroupLab Dev on that emulator ran anything. Not established whether a phone does the same.
-- **The chronograph store counts readings from 1**, and accepting a pairing used to store them from 0: the first reading paired with a
-  shot was refused, and every other pairing was one reading off. Fixed in entry 323 on both platforms.
+- **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
+- **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
+  in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
+- **A force-stop in the middle of a reading is checked after every nightly** (`scripts/android-force-stop.sh`): it did not stop the
+  next start in any of five rounds. Run 37735635656's "nothing ran" was most likely its own walk's faults of that time.
+- **The solver is warmed after start-up** (`SolverUse.WarmInBackground`): the first trajectory's 100 ms was tiered compilation.
+- **A PNG's grey is made from its colour decode as libpng makes it** (`ImageLoader.GreyLikeLibpng`), only where the file names no
+  gamma, colour space or profile; `ImageLoaderSameResultTests` holds it to the bit.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.
-- **A UI dump cannot see the phone's camera screen**: its views are native, inside Avalonia's host. The device check reads the screen's
-  own `camera.layout` log line instead (`scripts/device-capture-check.py`).
+- **A UI dump cannot see the phone's camera screen**; the device check reads its `camera.layout` log line instead.
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **The check page is in the library but is not a target**: it counts as no sheet in the README, and a picture of it opened as a target
