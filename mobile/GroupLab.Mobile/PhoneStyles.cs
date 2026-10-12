@@ -38,6 +38,7 @@ internal static class PhoneStyles
     public const string NavItem = "nav-item";
     public const string NavPill = "nav-pill";
     public const string NavLabel = "nav-label";
+    public const string NavIconsOnly = "nav-icons-only";
     public const string On = "on";
     public const string Row = "row";
     public const string Primary = AppStyles.Primary;
@@ -161,6 +162,9 @@ internal static class PhoneStyles
             (TemplatedControl.ForegroundProperty, Brush(p.Dim)), (TemplatedControl.PaddingProperty, new Thickness(0, Tokens.Space4)), (TemplatedControl.CornerRadiusProperty, new CornerRadius(0))),
         Rule(x => x.OfType<Button>().Class(NavItem).Class(On), (TemplatedControl.ForegroundProperty, Brush(p.Text))),
         Rule(x => x.OfType<Border>().Class(NavPill), (Border.CornerRadiusProperty, new CornerRadius(14)), (Layoutable.WidthProperty, 56.0), (Layoutable.HeightProperty, 28.0)),
+        // Entry 413: the icons alone, at text sizes where a name would not fit, in a larger pill.
+        Rule(x => x.OfType<Button>().Class(NavIconsOnly).Descendant().OfType<Border>().Class(NavPill), (Border.CornerRadiusProperty, new CornerRadius(20)),
+            (Layoutable.WidthProperty, 60.0), (Layoutable.HeightProperty, 40.0)),
         Rule(x => x.OfType<Button>().Class(NavItem).Class(On).Descendant().OfType<Border>().Class(NavPill), (Border.BackgroundProperty, Brush(p.AmberTint)),
             (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(1))),
         Rule(x => x.OfType<Button>().Class(NavItem).Class(On).Descendant().OfType<PathIcon>(), (TemplatedControl.ForegroundProperty, Brush(p.Amber))),

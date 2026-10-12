@@ -256,7 +256,10 @@ stora.sh, Android 17 memory limits guide; support.apple.com, iPhone models compa
   it to its text. Since entry 411 GroupLab does (Alan: "For android, follow the system"): every text size its styles set passes through
   `TextSize`, which the Android head points at Android's own sp conversion, so from Android 14 the larger sizes grow less than the
   smaller ones; a change of the setting while GroupLab is open restyles it. The emulator sweep's largest-text pass is held to larger text
-  than its plain pass (`phone-sweep-check.py --larger`), and the headless sweeps run at Android's largest size.
+  than its plain pass (`phone-sweep-check.py --larger`), and the headless sweeps run at Android's largest size. Entry 413 (Alan chose
+  B): when any one of the bottom bar's names, measured at the size followed, would be wider than its fifth of the bar, the bar shows the
+  five icons alone at 26 px in a 60 by 40 pill (`NavBar`), each tab keeping its name for TalkBack and as a tip on a long press; the
+  sweep's largest-text pass expects icons alone and its plain pass the names.
 - **The composite plot's key** never covers the data (entry 213): beside the plot or below it, whichever leaves the plot the larger
   square, and a small Key button in its own strip where neither fits. On a phone it is the button by default.
 - **Touch.** Targets at least 48 dp. Pinch to zoom and two finger pan on the photograph. One finger moves a shot only when it was

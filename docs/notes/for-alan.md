@@ -57,10 +57,9 @@ Send back: the scans and photos into the same folder, and one line on anything t
 - **Fixed**: panning a zoomed target no longer drags the screen; the "updated" note hides by itself; a selected shot says how far it is
   from its own bull. **Paper and "what was behind it" do not help detection**: they are recorded only, so hole sizes can later be compared
   by paper and backing. Whether to keep them on the setup screen is in the list below.
-- **DESIGN NEEDED** (entry 411): **the phone's bottom bar at Android's largest text size.** GroupLab now follows the phone's text size,
-  and at the largest one the five names under the icons (Capture, Sessions, Ballistics, Targets, Settings) no longer fit a fifth of a
-  small phone each. Meanwhile a name that does not fit is drawn smaller until it does, so it is never cut off. The choices: keep that;
-  show only the icons when the text is that large (each still read out by name); or two rows of names. Not urgent.
+- **DESIGN NEEDED** (entry 411): **the phone's bottom bar at Android's largest text size. Answered 2026-10-12: B, the icons alone
+  (entry 413).** When a name would not fit its fifth of the bar, the bar shows the five icons alone, larger, each still read out by name;
+  built in entry 413.
 - **DESIGN NEEDED**: all decided 2026-10-11 from the open screen decisions canvas (1A, 2B, 3A, 4A, 5B, 6A, 7A) and built in entry
   407; item 1 was built in entries 386 to 388. The canvas's numbers differ from these: canvas 1 is item 2 here, 2 is 3, 3 is 5, 4 is 4,
   5 is 6, 6 is 7, and 7 is question 88.

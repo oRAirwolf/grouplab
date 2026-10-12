@@ -5,6 +5,10 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "Entry 413 (Alan chose B): when any one of the bottom bar's names, measured at the size followed, would be wider than its fifth of the bar, the bar shows the five icons alone at 26 px in a 60 by 40 pill (`NavBar`), each tab keeping its name for TalkBack and as a tip on a long press; the sweep's largest-text pass expects icons alone and its plain pass the names.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/NavBar.cs and Entry413Tests; scripts/phone-sweep-check.py --larger; entry 413"
+  },
  "Since entry 411 GroupLab does (Alan: \"For android, follow the system\"): every text size its styles set passes through `TextSize`, which the Android head points at Android's own sp conversion, so from Android 14 the larger sizes grow less than the smaller ones; a change of the setting while GroupLab is open restyles it.": {"kind": "code", "where": "src/GroupLab.App/Theme/TextSize.cs; android/GroupLab.Android/App.cs SystemTextSize and MainActivity.OnConfigurationChanged; Entry411Tests, QualitySweepTests and MobileSweepTests; NOTES-FROM-PLANNING.md entry 411 section 2"},
  "`scripts/android-sweep.sh` copies the results back over adb and fails on a crash or a step that could not find what it needed, or when a screen's text is no larger in the largest-text pass than in the plain one (entry 411).": {"kind": "code", "where": "scripts/android-sweep.sh calls scripts/phone-sweep-check.py --larger after its three passes; NOTES-FROM-PLANNING.md entry 411 section 2.4"},
  "Screen: the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {"kind": "decided", "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0; entry 405 section 6"},

@@ -25,6 +25,46 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-12, entry 413: the phone's bottom bar at large text sizes, Alan chose B (icons only)
+
+**Status: actioned 2026-10-12; sections 1 to 3 done. The Features picture is taken by the emulator's screens run after this reaches main; SCREENSHOTS.md names it as waiting until then.**
+
+From the planning session, 2026-10-12 11:40 UTC. Answers entry 411's DESIGN NEEDED line (the phone's bottom bar at Android's largest
+text size). Canvas: claude.ai/artifact/Dah5KZd9LvZc6sYfU5P2Kg, five frames on a 360 wide phone in the dark theme: today at the normal
+size, then A (each name drawn smaller until it fits, what entry 411 built), B (icons only), C (two rows of names), D (only the current
+place named). Alan, 05:38 Denver: "Go with B".
+
+## 1. Build B
+
+1. When the text size Android asks for would make any one of the five names (Capture, Sessions, Ballistics, Targets, Settings) too wide
+   for its fifth of the bar, the bar shows icons only, for all five at once, never some named and some not. Below that point the bar is
+   exactly as it is today: icon over name, the current place's icon in the amber pill. Decide by measuring the names at the followed
+   size against the bar's real width, not by a fixed font scale, so a wide phone or the Fold's inner screen keeps its names for longer.
+2. In icons only: each icon 26 px (from 20), the pill 60 by 40 px with a 20 px radius (from 56 by 28), the current place's icon amber in
+   the amber pill as now, the others dim. Each tab stays at least 48 px high and a full fifth wide, so the touch targets do not shrink.
+3. Each tab keeps its name for screen readers (TalkBack reads "Targets", not "button") and as a tooltip on a long press, in both
+   states.
+4. Remove entry 411's shrink-to-fit Viewbox around the names: with B, a name is either full size or not shown.
+5. Switching between the two states happens live when Android's text size changes, without restarting GroupLab, as entry 411's
+   restyle already does for the text.
+6. The iPhone is unchanged (entry 411 section 2.5: Alan answered for Android only).
+
+## 2. Tests
+
+1. A headless test: at the normal size all five names show; at Android's largest size (the sweep's `font_scale 2.0`) none show, every
+   tab still has its name for accessibility, and the current place is still marked.
+2. The emulator sweep's `--larger` check expects icons only on a small phone at the largest size.
+
+## 3. Everything public
+
+1. Mark entry 411's DESIGN NEEDED line answered (B, this entry) in for-alan.md.
+2. Release-note (kind `changed`): at Android's largest text sizes, the bottom bar shows its icons alone, larger, instead of squeezing the
+   names; your phone still reads each one out by name.
+3. The phone guide, and the tour or Features page if one shows the bar at large text, in the same commit (entry 267). Features picture
+   of the bar at the largest size (entry 256) if the emulator sweep can take one; otherwise list it in `docs/figures/SCREENSHOTS.md`.
+
+Main model (UI). One commit. Stop at the usage guard as usual.
+
 ## 2026-10-12, entry 412: no shot targets are left; what Code has is all there is
 
 **Status: actioned 2026-10-12; sections 1 to 3 done. Request 94 closed with Alan's words; entry 411 section 1.2 answered by it. Changed: request 74 (new photos of a blank target on the wood table), 86 (the 26 September aim point card was shot, so a new card comes with the next range kit) and 9 (where its scan is if it has left Downloads). Unchanged on purpose: 54, 58 and 75, which use unshot targets, and every request that prints something new.**

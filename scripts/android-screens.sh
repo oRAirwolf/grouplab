@@ -46,10 +46,12 @@ PY
 
 failed=0
 taken=0
-# device, size, density, rotation, the file name's middle, and which screens that layout publishes. Sideways is the size turned round:
+# device, size, density, rotation, the file name's middle, which screens that layout publishes, and Android's text size (1.0 where none is
+# given; entry 413 pictures the bar along the bottom at the largest, 2.0, where it shows its icons alone). Sideways is the size turned round:
 # the emulator's rotation setting left GroupLab upright (the first full run, 2026-10-07), while a wider screen lays it out sideways.
 # The layouts come in on descriptor 3: adb shell reads standard input, and on the first run it swallowed every layout after the first.
-while read -r device size density rotation middle screens <&3; do
+while read -r device size density rotation middle screens font <&3; do
+  adb shell settings put system font_scale "${font:-1.0}"
   adb shell wm size "$size"
   adb shell wm density "$density"
   adb shell settings put system user_rotation "$rotation"
@@ -91,10 +93,12 @@ while read -r device size density rotation middle screens <&3; do
 done 3<<'LAYOUTS'
 fold 1080x2520 420 0 - firstrun,capture,result,settings,targets,scale-markers,fingerprint,pairing,open-targets
 fold 2520x1080 420 0 landscape result,sessions
+fold 1080x2520 420 0 largest-text targets 2.0
 tab 2960x1848 340 0 landscape result,capture,sessions,targets,settings
 tab 1848x2960 340 0 portrait result
 LAYOUTS
 
+adb shell settings put system font_scale 1.0 || true
 adb shell wm size reset || true
 adb shell wm density reset || true
 adb shell settings put system user_rotation 0 || true

@@ -151,6 +151,10 @@ rows are `fold-pairing`, taken on the emulator (entry 388).
 **Several targets open at once on the phone** (concept A, Alan 2026-10-07) is on the phone only, so it has no desktop picture; its Open
 targets sheet is `fold-open-targets`, taken on the emulator (entry 388).
 
+**The bar along the bottom at Android's largest text size** (entry 413, Alan chose B: the icons alone, larger) is taken by the emulator
+at the Fold's cover screen with Android's text size at 2.0, on Targets: `fold-targets-largest-text-light.png` waits for the emulator's first run,
+and `fold-targets-largest-text-dark.png` waits for the emulator's first run. Its Features entry is written once the run has committed them.
+
 ## Not published
 
 `docs/figures/screens/*.png` (2026-09-14), `before/` and `after/` (entry 247's comparison for Alan) are the record of their day. No

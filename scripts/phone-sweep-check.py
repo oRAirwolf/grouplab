@@ -5,7 +5,8 @@ past the picture check, which shows only when a picture needs a word, and at lea
 own line and exits non-zero, with one ::error:: line saying what was missing, when the pass did not find what it needed.
 
 Entry 411 section 2.4: with --larger, the largest-text pass is held to larger text than the plain pass, screen by screen, from the middle
-text size each screenshot's quality record carries, so GroupLab following Android's text size is seen on the emulator itself.
+text size each screenshot's quality record carries, so GroupLab following Android's text size is seen on the emulator itself. Entry 413
+section 2.2: the bar along the bottom shows its names in the plain pass and its icons alone in the largest-text pass, on the sweep's phone.
 
 Usage: phone-sweep-check.py <results folder> <pass name>
        phone-sweep-check.py --larger <plain results folder> <largest-text results folder>
@@ -55,19 +56,30 @@ def judge(folder: str, name: str) -> tuple[list[str], str | None]:
 LEAST_GROWTH = 1.2
 
 
-def text_sizes(folder: str) -> dict[str, float]:
-    """Each screenshot's middle text size, by its quality record's file name, where it has text."""
-    sizes = {}
+def records(folder: str, field: str) -> dict:
+    """One field of each screenshot's quality record, by the record's file name, where it has one."""
+    found = {}
     for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
         if name.endswith(".quality.json"):
             try:
                 with open(os.path.join(folder, name), encoding="utf-8") as handle:
-                    size = json.load(handle).get("text")
-            except (OSError, ValueError):
+                    value = json.load(handle).get(field)
+            except (OSError, ValueError, AttributeError):
                 continue
-            if isinstance(size, (int, float)) and size > 0:
-                sizes[name] = float(size)
-    return sizes
+            if value is not None:
+                found[name] = value
+    return found
+
+
+def text_sizes(folder: str) -> dict[str, float]:
+    """Each screenshot's middle text size, by its quality record's file name, where it has text."""
+    return {name: float(size) for name, size in records(folder, "text").items()
+            if isinstance(size, (int, float)) and not isinstance(size, bool) and size > 0}
+
+
+def bars(folder: str, expected: str) -> list[str]:
+    """The screens whose bar along the bottom is not drawn the way expected ("names" or "icons")."""
+    return [name[:-len(".quality.json")] for name, bar in records(folder, "bar").items() if bar != expected]
 
 
 def larger(plain: str, large: str) -> tuple[list[str], str | None]:
@@ -80,6 +92,11 @@ def larger(plain: str, large: str) -> tuple[list[str], str | None]:
     flat = [name[:-len(".quality.json")] for name in both if after[name] < before[name] * LEAST_GROWTH]
     if flat:
         return lines, f"GroupLab's text did not grow with Android's largest text size on {', '.join(flat)}"
+    named, iconed = bars(large, "icons"), bars(plain, "names")
+    if named:
+        return lines, f"The bar along the bottom still showed its names at Android's largest text size on {', '.join(named)}"
+    if iconed:
+        return lines, f"The bar along the bottom showed its icons alone at the plain text size on {', '.join(iconed)}"
     return lines, None
 
 
@@ -106,6 +123,13 @@ def self_test() -> int:
         for folder, size in ((plain, 16), (large, 28)):
             with open(os.path.join(folder, "01-capture.quality.json"), "w", encoding="utf-8") as handle:
                 json.dump({"text": size, "findings": []}, handle)
+        assert larger(plain, large)[1] is None
+        for folder, bar in ((plain, "names"), (large, "names")):
+            with open(os.path.join(folder, "02-sessions.quality.json"), "w", encoding="utf-8") as handle:
+                json.dump({"text": 16 if folder == plain else 28, "bar": bar, "findings": []}, handle)
+        assert "still showed its names" in (larger(plain, large)[1] or "")
+        with open(os.path.join(large, "02-sessions.quality.json"), "w", encoding="utf-8") as handle:
+            json.dump({"text": 28, "bar": "icons", "findings": []}, handle)
         assert larger(plain, large)[1] is None
         with open(os.path.join(large, "01-capture.quality.json"), "w", encoding="utf-8") as handle:
             json.dump({"text": 16, "findings": []}, handle)

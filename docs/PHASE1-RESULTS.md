@@ -368,6 +368,26 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
    counted on more old material arriving: RESEARCH.md's corner finder line waits on request 74, which now asks for new photos.
 3. Open requests: 22.
 
+## Entry 413: the phone's bottom bar shows its icons alone at large text sizes (2026-10-12)
+
+Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, answered in for-alan.md).
+
+1. **Built.** `NavBar` (mobile/GroupLab.Mobile/NavBar.cs) replaces the bar's plain grid. In its own measure pass it lays each of the five
+   names, at the size followed and semibold (as the current place's name is drawn, so moving between places never flips the bar), against
+   its fifth of the bar's real width less the tab's padding; when any one is wider, all five names are left off, the icons go from 20 to
+   26 px and the pill from 56 by 28 to 60 by 40 with a 20 px radius (a style on `nav-icons-only`). A name not shown still changes size
+   with the setting, and the bar asks again when it does, so the change is live both ways. Each tab has its place's name as its
+   accessible name and as a tip, opened by a long press; it stays a full fifth wide and 56 high. Entry 411's shrink-to-fit Viewbox is
+   gone. The iPhone follows no text size, so it never reaches the point and is unchanged.
+2. **Held.** `Entry413Tests`: at a 360 wide window all five names show; at Android's largest size (the sweep's `font_scale 2.0`) none show,
+   each tab is still named for TalkBack and as a tip, at least 48 high and a fifth wide, the icons 26 and the pill 60 by 40, Targets still
+   marked, and back at the plain size the names return; a 900 wide window keeps its names at the largest size. The emulator sweep's
+   quality records carry the bar's state (`bar`: names or icons), and `phone-sweep-check.py --larger` fails when the largest-text pass
+   on the sweep's Pixel 6 shows names or the plain pass shows icons alone.
+3. **Public.** The user guide's phone section describes the bar and the text size; ANDROID.md the rule. The Features picture is taken by
+   the emulator's screens run on the Fold's cover screen at text size 2.0, on Targets (`fold-targets-largest-text`), from the first
+   emulator run after this reaches main; SCREENSHOTS.md names both files as waiting and the layouts test lets exactly those wait.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -91,7 +91,8 @@ public class AndroidEmulatorSweepTests
 
     /// <summary>
     /// Question 90 (b): the emulator's run takes the phone's published screenshots, and its layouts make exactly the files the site publishes,
-    /// every one but the launcher icons, which show Android's launcher and are not retaken.
+    /// every one but the launcher icons, which show Android's launcher and are not retaken. A layout added before the emulator has run it
+    /// makes pictures not yet published, and those are named in docs/figures/SCREENSHOTS.md as waiting for it (entry 413).
     /// </summary>
     [Fact]
     public void TheEmulatorTakesEveryPublishedPhoneScreenshotUnderItsOwnName()
@@ -113,6 +114,8 @@ public class AndroidEmulatorSweepTests
         }
 
         var published = Directory.EnumerateFiles(Repo.PathTo("docs", "figures", "screens", "phone"), "*.png").Select(Path.GetFileName).Where(n => !n!.StartsWith("icons-", StringComparison.Ordinal)).ToHashSet(StringComparer.Ordinal);
-        Assert.Equal(published.Order(StringComparer.Ordinal), made.Order(StringComparer.Ordinal));
+        string waiting = Text("docs", "figures", "SCREENSHOTS.md");
+        Assert.Empty(published.Except(made));
+        Assert.All(made.Except(published), name => Assert.Contains("`" + name + "` waits for the emulator's first run", waiting, StringComparison.Ordinal));
     }
 }

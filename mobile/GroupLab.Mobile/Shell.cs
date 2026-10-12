@@ -42,7 +42,7 @@ public sealed class Shell : UserControl
 
     private readonly ContentControl page = new();
     private readonly Dictionary<Place, Button> tabs = [];
-    private readonly UniformGrid bar = new() { Rows = 1 };
+    private readonly NavBar bar = new();
     private readonly DockPanel frame = new();
 
     /// <summary>Entry 273: the note that says what a tap on a number switched, at the bottom, for a few seconds.</summary>
@@ -94,25 +94,17 @@ public sealed class Shell : UserControl
         Keyboard = KeyboardRoom.For(this);
         foreach (var place in Enum.GetValues<Place>())
         {
-            // Entry 246, look B: each place an icon over its name; the current one's icon sits in an amber pill.
+            // Entry 246, look B: each place an icon over its name; the current one's icon sits in an amber pill. Entry 413: at text sizes
+            // where a name would not fit its fifth of the bar, the icons alone, larger (NavBar).
+            var icon = GroupLab.App.Theme.Icons.Draw(Icon(place), NavBar.NamedIcon);
+            var name = new TextBlock { Text = place.ToString(), HorizontalAlignment = HorizontalAlignment.Center, Classes = { PhoneStyles.NavLabel } }; // one line on purpose: a tab's one-word name
             var tab = new Button
             {
                 Content = new StackPanel
                 {
                     Spacing = 2,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    Children =
-                    {
-                        new Border { Child = GroupLab.App.Theme.Icons.Draw(Icon(place), 20), Classes = { PhoneStyles.NavPill } },
-                        // One line on purpose: a tab's one-word name. Entry 411: at the system's largest text sizes a name wider than its
-                        // fifth of the bar is drawn smaller until it fits, rather than cut off (DESIGN NEEDED in for-alan.md for the real answer).
-                        new Viewbox
-                        {
-                            StretchDirection = StretchDirection.DownOnly,
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            Child = new TextBlock { Text = place.ToString(), Classes = { PhoneStyles.NavLabel } }, // one line on purpose
-                        },
-                    },
+                    Children = { new Border { Child = icon, Classes = { PhoneStyles.NavPill } }, name },
                 },
                 MinHeight = 56,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -121,7 +113,7 @@ public sealed class Shell : UserControl
             tab.Id("tab-" + place.ToString().ToLowerInvariant());
             tab.Click += (_, _) => Show(place);
             tabs[place] = tab;
-            bar.Children.Add(tab);
+            bar.Add(tab, icon, name);
         }
 
         nav = new Border { Child = bar, Classes = { PhoneStyles.Nav } };

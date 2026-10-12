@@ -9,19 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-12, entry 412 (before it: entry 411, request 97 answered, entry 410).
+**Last rewritten:** 2026-10-12, entry 413 (before it: entry 412, entry 411, request 97 answered).
 
 ---
 
 ## In flight
 
+- **Entry 413 done**: Alan chose B; at text sizes where a name would not fit its fifth of the phone's bottom bar, the bar
+  shows its five icons alone, larger, each still named for TalkBack (`NavBar`). The Features picture `fold-targets-largest-text` is
+  taken by the emulator's screens run after the next nightly; then its Features entry is written. **Entry 414** (overnight queue) next.
 - **Entry 412 done**: no shot sheets are left from past trips (Alan); request 94 closed, 74 asks for new wood table photos, 86
   waits for a new aim point card in the next range kit, 9 says where its scan is. What is in `grouplab-local` is all there will be.
 - **Entry 411 done**: the phone's text follows Android's text size (question 96 answered), held at Android's largest size by the
-  headless sweeps and, from the next nightly, by the emulator sweep's `--larger` check; the bottom bar at that size is a DESIGN NEEDED
-  line. Request 94's 4 October sheets are gone; requests that have a sheet shot and scanned now carry a **Keep:** line.
-- **Entries 406 to 410 done**: canvas picks built and shipped in nightly 185; the thermal cut-off warning fixed; the overnight queue
-  (false marks investigated, nothing kept; faster hole finding; codes read at once again). Request 97 installed 2026-10-12 03:59 UTC.
+  headless sweeps and by the emulator sweep's `--larger` check. Request 94's 4 October sheets are gone; requests that have a sheet shot and scanned now carry a **Keep:** line.
+- **Entries 406 to 410 done**: shipped by nightly 186. Request 97 installed 2026-10-12 03:59 UTC.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
 - **Waiting on Alan:** requests 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.

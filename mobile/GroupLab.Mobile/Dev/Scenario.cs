@@ -912,6 +912,9 @@ internal static class Scenario
             ["height"] = Math.Round(high),
             ["dark"] = top.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark,
             ["text"] = sizes.Count == 0 ? null : Math.Round(sizes[sizes.Count / 2], 2),
+            // Entry 413 section 2.2: how the bar along the bottom is drawn, where it shows: "names" or "icons" (Alan chose B, icons alone at
+            // text sizes where a name would not fit).
+            ["bar"] = top.GetVisualDescendants().OfType<NavBar>().FirstOrDefault(b => b.IsEffectivelyVisible) is { } bar ? (bar.IconsOnly ? "icons" : "names") : null,
             ["findings"] = findings,
         };
     }
