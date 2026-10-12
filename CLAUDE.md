@@ -64,6 +64,13 @@ of it and find every step that will need him. Prepare all of them up front, writ
 them out one at a time, and do not make him wait through an hour of unrelated work for a command he could have
 had at the start.
 
+**A shot sheet that will be needed afterwards is named on the page that sends him to shoot it** (entry 411 section 1.4: the three
+sheets from 4 October were thrown away because nothing said they were still wanted). A range kit's checklist, and any request that asks
+for a sheet to be shot and then scanned or photographed, says in plain words which sheets to bring home and keep, flat, and until when
+("keep these three sheets flat until GroupLab says it is done with them"); in `for-alan.md` that is a `**Keep:**` line, which
+`ForAlanTests.ARequestThatScansAShotSheetSaysToKeepIt` holds. When the work no longer needs them, `for-alan.md` says in one line that
+they can be thrown away.
+
 ## Alan does not read the panel; the planning session reads the files
 
 NOTES-FROM-PLANNING.md entry 180. Alan: "I rely on cowork to read what it is saying and tell me what needs action from me." The planning

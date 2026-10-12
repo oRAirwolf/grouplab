@@ -318,6 +318,37 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 5. **Section 5:** the learning nightly of 2026-10-11 (summary committed 13:55 UTC) says "The learning token reaches the error reports: yes;
    GroupLab's pull requests: yes." Entry 406 section 1.3 is done; nothing for for-alan.md.
 
+## Entry 411: the 4 October sheets gone, and the phone follows Android's text size (2026-10-12)
+
+1. **Section 1, request 94.** The three 4 October sheets were thrown away, so their scans will never exist; recorded in request 94 and
+   under entry 399's results (`docs/notes/archive/results-376-400.md`) and proof checklist row 2. Request 94 stays open for the three
+   main-lens photographs of the 26 September sheet only. The mounted-sheet question now needs a current sheet shot mounted on a current
+   build and scanned flat afterwards at 600 dpi as PNG; it is not a request of its own and goes in the next range kit (section 4).
+   **So it does not happen again:** CLAUDE.md now says a range kit's checklist and any request that has a sheet shot and then scanned
+   names the sheets to keep, flat, and until when; in `for-alan.md` that is a `**Keep:**` line, which
+   `ForAlanTests.ARequestThatScansAShotSheetSaysToKeepIt` requires. Requests 20, 54, 58 and 94 have one, and the hole size plan's text
+   says to bring the sheets home and keep them (its printed PDF was not remade; the next range kit does that).
+2. **Section 2, the text size.** Question 96 answered and archived. Every text size the styles set now passes through one place,
+   `TextSize` in the shared theme: the size itself on the desktop and the iPhone, and on Android the phone's own sp conversion
+   (`App.SystemTextSize`, `TypedValue.ApplyDimension`), so from Android 14 the larger sizes grow less than the smaller ones as in Android's
+   own apps. The Fluent theme's field and tooltip sizes and the few sizes set in code on phone screens (the ballistics percentage, the
+   printer check's figure, the pairing pause line, the load comparison chart, and the shared velocity, load group and fingerprint views)
+   follow it too; picture labels drawn on the target do not. A change of the setting while GroupLab is open restyles it
+   (`ConfigChanges.FontScale`, `OnConfigurationChanged`). **At Android's largest size (2.0)** the headless sweeps found the bottom bar's
+   five names too wide for a fifth of a small phone, two figure tiles' units past the tile, a checked-print pill cut off, and a Settings
+   button cut off. Fixed: a figure's unit goes under its number when it does not fit, the pill's words wrap, and any button's words wrap
+   when they do not fit (one style rule; words that fit stay on one line). The bottom bar needs a real decision, so for-alan.md has a
+   **DESIGN NEEDED** line and meanwhile a name that does not fit is drawn smaller until it does. **Checks:** `QualitySweepTests` runs the
+   sweep's screens at a small phone's width at Android's largest size with no faults and every frame's text larger; `MobileSweepTests`'
+   large text runs now use Android's largest size rather than a raised base size the phone's styles overrode; `Entry411Tests` holds the
+   body, a heading, a field and a button to growing and coming back. On the emulator each frame's quality record carries its middle
+   text size and `phone-sweep-check.py --larger` fails the sweep when a screen's text is no larger in the largest-text pass than in the
+   plain one; it first runs with the next nightly. **The iPhone** does not follow Dynamic Type (nothing reads it, and Avalonia 12 has no
+   text scale); question 97, unchanged. Release note `changed`; ANDROID.md says how it works; the README, guides and site said nothing
+   about text size, and no Features picture changes at the usual size.
+3. **Section 4** is recorded for the next range kit (one current sheet shot mounted and scanned at home, kept), in STATE.md.
+4. **Tests:** Mobile 165 passed, App 534 passed, Core 2994 passed (the one failure the local inbox line, entry 412 waiting).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

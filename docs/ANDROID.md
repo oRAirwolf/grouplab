@@ -253,7 +253,10 @@ stora.sh, Android 17 memory limits guide; support.apple.com, iPhone models compa
   reads it there and keeps controls off it.
 - **Density.** Avalonia works in density independent units and draws at the screen's real density, which the spike reports as pixels
   a dp. **The system font size is not followed by Avalonia on its own**: Android gives it as a font scale, and the application applies
-  it to its text. The spike shows whether the largest accessibility sizes clip.
+  it to its text. Since entry 411 GroupLab does (Alan: "For android, follow the system"): every text size its styles set passes through
+  `TextSize`, which the Android head points at Android's own sp conversion, so from Android 14 the larger sizes grow less than the
+  smaller ones; a change of the setting while GroupLab is open restyles it. The emulator sweep's largest-text pass is held to larger text
+  than its plain pass (`phone-sweep-check.py --larger`), and the headless sweeps run at Android's largest size.
 - **The composite plot's key** never covers the data (entry 213): beside the plot or below it, whichever leaves the plot the larger
   square, and a small Key button in its own strip where neither fits. On a phone it is the button by default.
 - **Touch.** Targets at least 48 dp. Pinch to zoom and two finger pan on the photograph. One finger moves a shot only when it was
@@ -440,7 +443,8 @@ exist it says so and tests nothing.
 (`-p:GroupLabDev=true -p:GroupLabEmulator=true`, with OpenCV built for x86_64 from the phone's own build script), starts an x86_64
 emulator with hardware acceleration on GitHub's Linux machine, and runs `scripts/scenarios/phone-sweep.json`, the iOS simulator's sweep,
 named by the scenario extra, three times: as set, at the largest text size and dark. `scripts/android-sweep.sh` copies the results back
-over adb and fails on a crash or a step that could not find what it needed. The nightly starts it for every build that changes the
+over adb and fails on a crash or a step that could not find what it needed, or when a screen's text is no larger in the largest-text
+pass than in the plain one (entry 411). The nightly starts it for every build that changes the
 application; a push never does.
 
 **The automation bridge** (entry 315 section 1), in GroupLab Dev only: a small command server on the device's own 127.0.0.1, port 47315,

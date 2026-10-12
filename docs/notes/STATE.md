@@ -9,25 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-12, request 97 answered (before it: entry 410).
+**Last rewritten:** 2026-10-12, entry 411 (before it: request 97 answered, entry 410).
 
 ---
 
 ## In flight
 
-- **Entries 407 and 408 done**: Alan's seven canvas picks built on desktop and phone (question 88 answered 7A), shipped in nightly
-  185; request 95 confirmed by Alan on the phone.
-- **Entry 409 done**: the thermal cut-off warning now goes with the thermal printer; Quack thanked in the README.
-- **Entry 410 done** (the overnight queue): the six false marks investigated, nothing kept (a shading rule lost a real hole on scan 4);
-  row 16 held on Alan's own session; finding the holes faster with identical results; reading the codes at once is back, CI green on
-  macOS; every entry 407 view has its Features picture; the emulator sweep visits the changed phone screens. Question 96: the phone
-  may not follow Android's text size.
-- **Entry 406 done**: request 93 installed by Alan (token reaches both), request 96 confirmed on his tablet; a test now refuses a
-  paste reading a backup folder without sudo. 2026-10-11's learning summary: the token reaches both, yes and yes.
+- **Entry 411 done**: the phone's text follows Android's text size (question 96 answered), held at Android's largest size by the
+  headless sweeps and, from the next nightly, by the emulator sweep's `--larger` check; the bottom bar at that size is a DESIGN NEEDED
+  line. Request 94's 4 October sheets are gone; requests that have a sheet shot and scanned now carry a **Keep:** line.
+- **Entries 406 to 410 done**: canvas picks built and shipped in nightly 185; the thermal cut-off warning fixed; the overnight queue
+  (false marks investigated, nothing kept; faster hole finding; codes read at once again). Request 97 installed 2026-10-12 03:59 UTC.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **The proof checklist**: rows 6, 8, 13, 15, 16, 21 and 23 proven by tests, 31 met (entry 388); the rest need hardware.
-- **Request 97 done** (2026-10-12 03:59 UTC): the server's intake worker is the repository's, backed up first; RESTORE.md records it.
-- **Waiting on Alan:** requests 94 (three scans, three photographs), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 94 (three photographs of the 26 September sheet), 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -50,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Whatever the inbox brings.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
-3. Question 96 (the phone and Android's text size) when planning answers it.
+3. The next range kit (requests 57, 58, 86) carries one current sheet to shoot mounted and scan at home, kept (entry 411 section 4).
 
 ## Blocked, and on what
 
@@ -58,15 +53,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (94 scans and photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (94 three photographs for photo accuracy; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (88 answered 7A and archived 2026-10-11):
+Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (96 answered by entry 411 and archived 2026-10-12):
 
-- **96** whether the phone should follow the system text size (entry 410)
+- **97** whether the iPhone should follow Dynamic Type, as Android now follows its text size (entry 411)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
@@ -89,6 +84,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **Text sizes go through `TextSize.Of`** (entry 411): a size set in code on a phone screen that skips it does not follow Android's
+  text size. The desktop and the iPhone keep the sizes as they are.
 - **The database is schema version 3** (entry 407 section 5): the first open of a new build copies `grouplab.db` to
   `grouplab.pre-v2.db` beside it, then puts every barrel under a rifle once. Alan's desktop copy: its one barrel goes under "Barrels not
   yet on a rifle". The Equipment screen's extra fields had never reached the database before this.

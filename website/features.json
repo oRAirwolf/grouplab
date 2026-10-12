@@ -56,6 +56,7 @@
     "A damaged or very large chronograph file is now refused with a sentence saying why",
     "The iPhone and iPad build works again",
     "On the phone, every box, switch and button now has a name a screen reader reads out",
+    "Text on Android now grows and shrinks with the phone's own text size setting",
     "On an iPad held upright, typing in a box on a result no longer flips the result",
     "On the phone, going back to the targets list after opening a sheet no longer fails",
     "A chronograph string imported in meters a second now shows its readings in meters a second",

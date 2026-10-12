@@ -58,4 +58,27 @@ public class ForAlanTests
         Assert.True(found.Count == 0, "These read a backup folder without sudo, which fails silently because the folder is root's only: "
             + string.Join("; ", found));
     }
+
+    /// <summary>
+    /// Entry 411 section 1.4: the three sheets shot on 4 October were thrown away because nothing said they were still needed. An open
+    /// request that asks for a sheet to be shot and scanned has a <c>**Keep:**</c> line saying which sheets to keep and until when.
+    /// </summary>
+    [Fact]
+    public void ARequestThatScansAShotSheetSaysToKeepIt()
+    {
+        string text = File.ReadAllText(Repo.PathTo("docs", "notes", "for-alan.md")).Replace("\r\n", "\n", StringComparison.Ordinal);
+        var missing = new List<string>();
+        foreach (string request in Regex.Split(text, @"\n(?=## \d+\. )").Skip(1))
+        {
+            string status = Regex.Match(request, @"\n\n(\*\*.*)").Groups[1].Value;
+            bool answered = status.Contains("Answered", StringComparison.OrdinalIgnoreCase);
+            if (!answered && Regex.IsMatch(request, @"\b(shoot|shot)\b", RegexOptions.IgnoreCase) && Regex.IsMatch(request, @"\bscan", RegexOptions.IgnoreCase)
+                && !request.Contains("**Keep:**", StringComparison.Ordinal))
+            {
+                missing.Add(request[..request.IndexOf('\n', StringComparison.Ordinal)]);
+            }
+        }
+
+        Assert.True(missing.Count == 0, "These ask for a shot sheet to be scanned and do not say to keep it: " + string.Join("; ", missing));
+    }
 }

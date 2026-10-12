@@ -24,5 +24,7 @@ Blackout subsonic, .510 Whisper, and whichever of 6 ARC and 6.5 Creedmoor was no
 **Write on each sheet's load block:** the date; 50 yd; the cartridge; the bullet's weight and type; the powder and charge, or the maker if
 factory; the velocity if a chronograph was up; and in the serial box, the sheet's number from the list above.
 
+**Bring every shot sheet home and keep it flat** until every one is scanned and GroupLab says it is done with them.
+
 **Afterwards:** scan every sheet flat on the Brother flatbed at 600 dpi, lid closed, one sheet a scan, and name each file by its sheet
 number. Sheets that are not GroupLab's are photographed instead, square on, in even light.

@@ -4,7 +4,11 @@ The same judgement the iOS simulator's sweep makes in ios-app.yml: every step of
 past the picture check, which shows only when a picture needs a word, and at least eleven screenshots were taken. Prints each step on its
 own line and exits non-zero, with one ::error:: line saying what was missing, when the pass did not find what it needed.
 
+Entry 411 section 2.4: with --larger, the largest-text pass is held to larger text than the plain pass, screen by screen, from the middle
+text size each screenshot's quality record carries, so GroupLab following Android's text size is seen on the emulator itself.
+
 Usage: phone-sweep-check.py <results folder> <pass name>
+       phone-sweep-check.py --larger <plain results folder> <largest-text results folder>
        phone-sweep-check.py --self-test
 """
 
@@ -47,6 +51,38 @@ def judge(folder: str, name: str) -> tuple[list[str], str | None]:
     return lines, None
 
 
+# The least growth that counts as following the system: Android's largest size, 2.0, grows a 16 point body to 28.
+LEAST_GROWTH = 1.2
+
+
+def text_sizes(folder: str) -> dict[str, float]:
+    """Each screenshot's middle text size, by its quality record's file name, where it has text."""
+    sizes = {}
+    for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+        if name.endswith(".quality.json"):
+            try:
+                with open(os.path.join(folder, name), encoding="utf-8") as handle:
+                    size = json.load(handle).get("text")
+            except (OSError, ValueError):
+                continue
+            if isinstance(size, (int, float)) and size > 0:
+                sizes[name] = float(size)
+    return sizes
+
+
+def larger(plain: str, large: str) -> tuple[list[str], str | None]:
+    """The lines to print, and the error, or None where every screen shown in both passes has larger text in the second."""
+    before, after = text_sizes(plain), text_sizes(large)
+    both = sorted(set(before) & set(after))
+    lines = [f"text {name[:-len('.quality.json')]:<34} {before[name]:>6.2f} -> {after[name]:>6.2f}" for name in both]
+    if not both:
+        return lines, "The sweep's plain and largest-text passes have no screen with text in common to compare"
+    flat = [name[:-len(".quality.json")] for name in both if after[name] < before[name] * LEAST_GROWTH]
+    if flat:
+        return lines, f"GroupLab's text did not grow with Android's largest text size on {', '.join(flat)}"
+    return lines, None
+
+
 def self_test() -> int:
     with tempfile.TemporaryDirectory() as folder:
         assert judge(folder, "plain")[1] == "The sweep's plain pass wrote no results"
@@ -65,6 +101,15 @@ def self_test() -> int:
         with open(os.path.join(folder, "results.json"), "w", encoding="utf-8") as handle:
             handle.write("{\"steps\": [")
         assert "could not be read" in (judge(folder, "dark")[1] or "")
+    with tempfile.TemporaryDirectory() as plain, tempfile.TemporaryDirectory() as large:
+        assert "no screen" in (larger(plain, large)[1] or "")
+        for folder, size in ((plain, 16), (large, 28)):
+            with open(os.path.join(folder, "01-capture.quality.json"), "w", encoding="utf-8") as handle:
+                json.dump({"text": size, "findings": []}, handle)
+        assert larger(plain, large)[1] is None
+        with open(os.path.join(large, "01-capture.quality.json"), "w", encoding="utf-8") as handle:
+            json.dump({"text": 16, "findings": []}, handle)
+        assert "did not grow" in (larger(plain, large)[1] or "")
     print("phone-sweep-check self-test passed")
     return 0
 
@@ -72,10 +117,13 @@ def self_test() -> int:
 def main(argv: list[str]) -> int:
     if argv[1:] == ["--self-test"]:
         return self_test()
-    if len(argv) != 3:
+    if len(argv) == 4 and argv[1] == "--larger":
+        lines, error = larger(argv[2], argv[3])
+    elif len(argv) == 3:
+        lines, error = judge(argv[1], argv[2])
+    else:
         print(__doc__)
         return 2
-    lines, error = judge(argv[1], argv[2])
     for line in lines:
         print(line)
     if error:

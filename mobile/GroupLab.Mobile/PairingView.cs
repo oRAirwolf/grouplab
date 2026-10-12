@@ -144,7 +144,7 @@ internal sealed class PairingView : UserControl
                     BorderBrush = new SolidColorBrush(palette.Line),
                     BorderThickness = new Thickness(0, 1, 0, 0),
                     Padding = new Thickness(0, 4),
-                    Child = new TextBlock { Text = pause.Words, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center, FontSize = 12, Classes = { PhoneStyles.Dim } },
+                    Child = new TextBlock { Text = pause.Words, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center, FontSize = TextSize.Of(12), Classes = { PhoneStyles.Dim } },
                 }.Id(string.Create(CultureInfo.InvariantCulture, $"chrono-pause-{i + 1}")));
             }
         }

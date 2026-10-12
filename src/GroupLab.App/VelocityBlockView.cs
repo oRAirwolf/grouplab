@@ -72,7 +72,7 @@ internal static class VelocityBlockView
         lead.Children.Add(new TextBlock
         {
             Text = block.Headline,
-            FontSize = block.State == VelocityBlockState.Result ? Tokens.LeadValueSize : Tokens.ValueSize,
+            FontSize = TextSize.Of(block.State == VelocityBlockState.Result ? Tokens.LeadValueSize : Tokens.ValueSize),
             FontWeight = FontWeight.SemiBold,
             Margin = new Thickness(0, 0, Tokens.Space8, 0),
             VerticalAlignment = VerticalAlignment.Bottom,

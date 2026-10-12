@@ -5,6 +5,17 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-11, question 96: the phone does not seem to follow Android's text size (entry 410 section 4.3)
+
+**Status: answered 2026-10-12 (entry 411 section 2), Alan: "For android, follow the system".** Built in entry 411: the phone's text follows Android's text size; the iPhone is question 97.
+
+The emulator's screen sweep runs once at Android's largest font scale (`scripts/android-sweep.sh`, `font_scale 2.0`). In run
+38136714382 the largest-text frames look the same as the plain ones: GroupLab's text did not grow. So the phone application appears not
+to follow the system's text size, which a person who has set larger text would expect it to. Not measured further: whether Avalonia on
+Android reads the font scale at all, and whether the iPhone follows Dynamic Type. **The question:** should GroupLab scale its text with
+the system setting on the phone (a test would hold the sweep's largest-text frames to bigger text than the plain ones), or is the fixed
+size a choice? Nothing waits on it.
+
 ## 2026-10-07, question 88: DESIGN NEEDED, chronograph readings entered on the analysis itself (entry 384 section 2)
 
 **Status: answered 2026-10-11 (entry 407 section 7, Alan's pick 7A from the open screen decisions canvas): the readings are entered on the analysis itself, under Velocity and the vertical, with Import a file, Type them in and a drop area; built in entry 407.** Earlier: open.

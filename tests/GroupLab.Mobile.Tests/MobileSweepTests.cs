@@ -28,8 +28,8 @@ namespace GroupLab.Mobile.Tests;
 /// <para>
 /// <b>What it cannot check.</b> The headless platform has no real keyboard, camera, photo picker, share sheet or system dialog: the test phone
 /// records them, and the camera's own screen is the platform's, so the buttons that open it are not pressed (<see cref="Platforms"/>). The app
-/// does not follow the system's text size (neither head reads it), so "large text" here is a base size raised to 22 points; text a style sets
-/// to its own size does not grow with it, as it does not on a phone. It does not press what a press opens, only one press deep, and it never
+/// follows Android's text size (entry 411), so "large text" here is Android's largest, every size the styles set grown as the emulator's
+/// sweep grows it (<see cref="AndroidText"/>). It does not press what a press opens, only one press deep, and it never
 /// presses what deletes or sends (<see cref="Lasting"/>). Rotation is the landscape size laid out afresh, not a turn mid-page. Safe areas,
 /// notches and the iOS home indicator are the heads' own and are not here; the simulator layer (the screen sweep in ios-app.yml) sees them.
 /// </para>
@@ -38,9 +38,6 @@ public partial class MobileSweepTests
 {
     /// <summary>The smallest phone, an iPad, and both turned on their sides.</summary>
     public static TheoryData<int, int> Sizes => new() { { 320, 568 }, { 1024, 1366 }, { 568, 320 }, { 1366, 1024 } };
-
-    /// <summary>The base text size the large text runs use, the size entry 323's and 348's narrow tests use.</summary>
-    internal const double LargeText = 22;
 
     /// <summary>Buttons whose press changes something for good or reaches outside the phone, never pressed by the sweep.</summary>
     [GeneratedRegex(@"\b(Delete|Remove|Forget|Clear|Erase|Reset|Start again|Send|Upload|Submit|Install|Update now|Restart|Report a problem|Leave unpaired|Keep this pairing|Keep this distance|Keep|Save|Accept)\b", RegexOptions.IgnoreCase)]
@@ -114,7 +111,7 @@ public partial class MobileSweepTests
         var window = new Window { Width = width, Height = height, Content = shell };
         if (large)
         {
-            window.FontSize = LargeText;
+            AndroidText.LargestUntilClosed(window);
         }
 
         window.Show();
@@ -158,7 +155,8 @@ public partial class MobileSweepTests
         foreach (var t in shown.OfType<TextBlock>().Where(t => !string.IsNullOrEmpty(t.Text) && !Inner(t)))
         {
             string words = t.Text!.Length > 40 ? t.Text[..40] + "..." : t.Text;
-            if (t.TranslatePoint(default, window) is { } at && at.X + t.Bounds.Width > w + 0.5 && !ScrollsAcross(t))
+            // Entry 411: where it is drawn, so a name drawn smaller to fit (the bar's at the largest text size) is measured as drawn.
+            if (t.TransformToVisual(window) is { } to && new Rect(t.Bounds.Size).TransformToAABB(to).Right > w + 0.5 && !ScrollsAcross(t))
             {
                 found.Add($"{where}: '{words}' runs past the window's right edge");
                 continue;

@@ -162,7 +162,7 @@ internal sealed class LoadGroups : UserControl
         }
 
         var column = new StackPanel { Spacing = Tokens.Space8 };
-        column.Children.Add(new TextBlock { Text = "Each load's group", FontSize = Tokens.HeadingSize, FontWeight = FontWeight.SemiBold });
+        column.Children.Add(new TextBlock { Text = "Each load's group", FontSize = TextSize.Of(Tokens.HeadingSize), FontWeight = FontWeight.SemiBold });
         double extent = Extent;
         if (!Stacked)
         {
@@ -178,7 +178,7 @@ internal sealed class LoadGroups : UserControl
                 var figures = new TextBlock
                 {
                     Text = string.Create(CultureInfo.CurrentCulture, $"{groups[i].Offsets.Count} shots, mean radius {size(groups[i].MeanRadius)}"),
-                    FontSize = Tokens.SecondarySize,
+                    FontSize = TextSize.Of(Tokens.SecondarySize),
                     TextWrapping = TextWrapping.Wrap,
                     MaxWidth = cell,
                     Classes = { AppStyles.Secondary },
@@ -189,7 +189,7 @@ internal sealed class LoadGroups : UserControl
             Plots = plots;
             column.Children.Add(row);
             column.Children.Add(Bar(extent, cell));
-            column.Children.Add(new TextBlock { Text = "Each group about its own center, at one scale. Tap a group to stack them on one center.", TextWrapping = TextWrapping.Wrap, FontSize = Tokens.SecondarySize, Classes = { AppStyles.Secondary } });
+            column.Children.Add(new TextBlock { Text = "Each group about its own center, at one scale. Tap a group to stack them on one center.", TextWrapping = TextWrapping.Wrap, FontSize = TextSize.Of(Tokens.SecondarySize), Classes = { AppStyles.Secondary } });
         }
         else
         {
@@ -219,7 +219,7 @@ internal sealed class LoadGroups : UserControl
             }
 
             column.Children.Add(buttons);
-            column.Children.Add(new TextBlock { Text = "Every group on one center. Tap the plot to put them side by side again.", TextWrapping = TextWrapping.Wrap, FontSize = Tokens.SecondarySize, Classes = { AppStyles.Secondary } });
+            column.Children.Add(new TextBlock { Text = "Every group on one center. Tap the plot to put them side by side again.", TextWrapping = TextWrapping.Wrap, FontSize = TextSize.Of(Tokens.SecondarySize), Classes = { AppStyles.Secondary } });
         }
 
         Content = column;
@@ -232,7 +232,7 @@ internal sealed class LoadGroups : UserControl
         double[] steps = [0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5, 10, 20];
         double inches = steps.LastOrDefault(s => s * perInch <= side / 3, steps[0]);
         var line = new Border { Width = inches * perInch, Height = 3, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Divider } };
-        var words = new TextBlock { Text = size(inches), FontSize = Tokens.SecondarySize, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } };
+        var words = new TextBlock { Text = size(inches), FontSize = TextSize.Of(Tokens.SecondarySize), VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } };
         return new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8, Children = { line, words } };
     }
 }

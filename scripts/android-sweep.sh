@@ -120,6 +120,9 @@ for pass in plain largest-text dark; do
   python3 "$HERE/scripts/phone-sweep-check.py" "$OUT/sweep/$pass" "$pass" || failed=1
 done
 
+# Entry 411 section 2.4: GroupLab follows Android's text size, so every screen's text is larger in the largest-text pass than in the plain one.
+python3 "$HERE/scripts/phone-sweep-check.py" --larger "$OUT/sweep/plain" "$OUT/sweep/largest-text" || failed=1
+
 adb shell settings put system font_scale 1.0 || true
 adb shell cmd uimode night no > /dev/null || true
 exit $failed

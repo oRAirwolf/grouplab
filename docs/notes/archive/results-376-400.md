@@ -788,3 +788,9 @@ range, photographed and scanned, for row 2) and three main-lens photographs of t
 1 to 4 of `docs/PROOF-CHECKLIST.md` carry the new numbers; RESEARCH.md records the article decision (written, as part of entry 401's
 article on how far off square a photograph can be).
 
+**Update 2026-10-12 (entry 411 section 1):** the three 4 October sheets were thrown away before request 94 reached them, so the scans to
+compare their range photographs against will never exist; the photographs stay. Row 2's question, how a current sheet mounted at the
+range compares with its own scan, now needs a current GroupLab sheet shot mounted on a current build and scanned flat afterwards at
+600 dpi as PNG. It is not a request of its own: it goes in the next range kit (with requests 57, 58 and 86), whose checklist says to
+keep the sheet. Request 94 stays open for the three main-lens photographs of the 26 September sheet (row 1) only.
+

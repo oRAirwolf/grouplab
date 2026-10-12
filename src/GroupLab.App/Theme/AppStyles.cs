@@ -168,6 +168,7 @@ public static class AppStyles
         ArgumentNullException.ThrowIfNull(app);
         Restyle(app);
         app.ActualThemeVariantChanged += (_, _) => Restyle(app);
+        TextSize.Changed += () => Restyle(app);
     }
 
     private static void Restyle(Application app)
@@ -325,7 +326,7 @@ public static class AppStyles
         var style = new Style(selector);
         foreach (var (property, value) in setters)
         {
-            style.Setters.Add(new Setter(property, value));
+            style.Setters.Add(new Setter(property, TextSize.Scaled(property, value)));
         }
 
         return style;

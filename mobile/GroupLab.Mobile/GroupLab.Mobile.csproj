@@ -78,6 +78,7 @@
     <Compile Include="..\..\src\GroupLab.App\HitGraphs.cs" Link="Shared\HitGraphs.cs" />
     <Compile Include="..\..\src\GroupLab.App\TrajectoryGraph.cs" Link="Shared\TrajectoryGraph.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />
+    <Compile Include="..\..\src\GroupLab.App\Theme\TextSize.cs" Link="Shared\Theme\TextSize.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Marks.cs" Link="Shared\Theme\Marks.cs" />
     <!-- Entry 246, look B: the desktop's styles, icons and faces, so the phone's colors and type come from the same tokens. -->
     <Compile Include="..\..\src\GroupLab.App\Theme\AppStyles.cs" Link="Shared\Theme\AppStyles.cs" />

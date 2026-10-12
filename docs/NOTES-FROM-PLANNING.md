@@ -25,6 +25,56 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-12, entry 411: request 94's 4 October sheets are gone, and question 96 answered (the phone follows Android's text size)
+
+**Status: actioned 2026-10-12; sections 1 to 3 done, section 4 recorded for the next range kit, which has not been made yet. Section 2.3's one layout that needs a real decision (the phone's bottom bar at Android's largest text size) is a DESIGN NEEDED line in for-alan.md and meanwhile draws a name smaller until it fits. Section 2.5: the iPhone does not follow Dynamic Type, question 97. Section 1.4's line was added to the hole size plan's text; its printed PDF was not remade, which the next range kit does.**
+From the planning session, 2026-10-12 04:05 UTC. Alan's words, 22:03 Denver on 2026-10-11, are quoted where they decide something.
+
+## 1. Request 94: the three sheets from 4 October no longer exist
+
+Alan: "I dont have the sheets from Oct 4. I threw them out last night at the gas station because I did not know you still needed them."
+
+1. Request 94 step 1 (scanning the C bull, the E bull and the 6 ARC load sheet shot on 4 October) cannot be done. Record that in the
+   request and in entry 399's results: the range photographs of those sheets stay, the scans to compare them against will never exist.
+2. Step 2 (the 6 ARC sheet shot with the Dominus K on 26 September, three photographs with the main lens) is still open. The planning
+   session has asked Alan whether he still has that sheet; his answer comes back as an inbox entry. Leave request 94 open for step 2
+   only, and reword it so it no longer asks for the 4 October scans.
+3. Write down in PHASE1-RESULTS.md, under entry 399's results, what the mounted-sheet question now needs instead: a sheet shot at the
+   range on a current build and scanned afterwards. Do not make it a new request now. Fold it into the next range kit (section 4).
+4. **So this does not happen again:** from now on, any range kit or request that will need a shot sheet afterwards says so on the
+   checklist itself, in plain words, naming the sheets to bring home and keep, and for how long ("keep these three sheets flat until
+   GroupLab says it is done with them"). When the work no longer needs them, `for-alan.md` says in one line that they can be thrown
+   away. Add that rule to CLAUDE.md under the range kit or for-alan section, and add a check to `ForAlanTests` or the range kit's test
+   if one fits without much work (a request that asks for a shot sheet to be scanned later must say to keep it).
+
+## 2. Question 96 answered: on Android, GroupLab's text follows the system's text size
+
+Alan: "For android, follow the system".
+
+1. Mark question 96 answered with Alan's words and the date.
+2. Make GroupLab on Android scale its text with Android's font size setting.
+3. Nothing may clip, overlap or run off the screen at the largest setting the emulator sweep uses (`font_scale 2.0`). Fix the layouts
+   that break. If a screen cannot fit at the largest size without a real layout decision (a different arrangement, not just wrapping or
+   scrolling), that is a look question: post a "DESIGN NEEDED:" line in for-alan.md with the screen and what breaks, and make it
+   scroll or wrap meanwhile.
+4. The test question 96 described: the sweep's largest-text frames must show bigger text than the plain ones, and a check fails on
+   clipped or overlapping text at that size where it can be detected.
+5. iPhone: Alan answered for Android only. Find out, without changing it, whether the iPhone build follows Dynamic Type, and record
+   what was found as a new question for the planning session. Do not change the iPhone's behaviour in this entry.
+6. Release-note (kind `changed`): text on Android now grows and shrinks with the phone's own text size setting. Update the phone
+   guide, the site and the README wherever they talk about text size or accessibility, in the same commit (entry 267), and the Features
+   or tour page if a screen's picture changes.
+
+## 3. Budget
+
+Main model for section 2 (it is UI). Chores to chores-haiku and wording to docs-sonnet as the standing rules say. Stop at the usage
+guard as usual.
+
+## 4. The next range kit
+
+When the next range kit is made (requests 57, 58 and 86 are the range items), include one current GroupLab sheet to be shot mounted as
+at the range and scanned flat at home afterwards, at 600 dpi as PNG, and say on the checklist to keep it (section 1.4).
+
 ## 2026-10-11, entry 410: an overnight queue that needs nobody (Alan asleep, about 12 hours)
 
 **Status: actioned 2026-10-11; sections 1 to 6 done. Section 1 found the false marks' cause and kept no change: the one rule that removed them lost a real hole on scan 4, so the gate is still unmet (PHASE1-RESULTS.md). Section 3.3 was done after nightly 185 had published, not before, so a macOS hang could not stop it. Section 6's next item (request 83) needs Alan, so the block stopped there.**

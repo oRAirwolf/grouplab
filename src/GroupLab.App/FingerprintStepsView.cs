@@ -454,7 +454,7 @@ public sealed class FingerprintStepsView : UserControl
                     body.Children.Add(card);
                 }
 
-                body.Children.Add(new TextBlock { Text = FingerprintWords.Measured(session.Source), TextWrapping = TextWrapping.Wrap, FontFamily = Tokens.Mono, FontSize = Tokens.SecondarySize, Classes = { AppStyles.Dim } });
+                body.Children.Add(new TextBlock { Text = FingerprintWords.Measured(session.Source), TextWrapping = TextWrapping.Wrap, FontFamily = Tokens.Mono, FontSize = TextSize.Of(Tokens.SecondarySize), Classes = { AppStyles.Dim } });
                 AddUndo();
                 break;
             case FingerprintStep.Straighten:
@@ -560,7 +560,7 @@ public sealed class FingerprintStepsView : UserControl
                     Text = done ? "✓" : (i + 1).ToString(CultureInfo.InvariantCulture),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
-                    FontSize = Tokens.SecondarySize,
+                    FontSize = TextSize.Of(Tokens.SecondarySize),
                     Foreground = new SolidColorBrush(done ? palette.Teal : now ? palette.OnAmber : palette.Faint),
                 },
                 Background = new SolidColorBrush(done ? palette.TealTint : now ? palette.Amber : palette.Bg),

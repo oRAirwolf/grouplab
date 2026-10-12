@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -55,6 +56,7 @@ internal static class PhoneStyles
         AppStyles.Apply(app);
         Restyle(app);
         app.ActualThemeVariantChanged += (_, _) => Restyle(app);
+        TextSize.Changed += () => Restyle(app);
     }
 
     private static void Restyle(Application app)
@@ -65,7 +67,17 @@ internal static class PhoneStyles
         }
 
         app.Styles.Add(Build(Tokens.For(app.ActualThemeVariant)));
+
+        // Entry 411 section 2: what the Fluent theme sizes by its own resources, a field's text above all, follows the system's text size
+        // with the rest. 14 and 12 are the theme's own values for them.
+        foreach (var (key, size) in FluentSizes)
+        {
+            app.Resources[key] = TextSize.Of(size);
+        }
     }
+
+    private static readonly (string Key, double Size)[] FluentSizes =
+        [("ControlContentThemeFontSize", 14), ("ToolTipContentThemeFontSize", 12)];
 
     private static SolidColorBrush Brush(Color c) => new(c);
 
@@ -74,7 +86,7 @@ internal static class PhoneStyles
         var style = new Style(selector);
         foreach (var (property, value) in setters)
         {
-            style.Setters.Add(new Setter(property, value));
+            style.Setters.Add(new Setter(property, TextSize.Scaled(property, value)));
         }
 
         return style;
@@ -106,6 +118,10 @@ internal static class PhoneStyles
             (ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center), (ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center)),
         Rule(x => x.OfType<Button>().Class(Primary), (TemplatedControl.BackgroundProperty, Brush(p.Amber)), (TemplatedControl.ForegroundProperty, Brush(p.OnAmber)),
             (TemplatedControl.BorderBrushProperty, Brush(p.Amber)), (TemplatedControl.FontWeightProperty, FontWeight.SemiBold)),
+
+        // Entry 411: a button's words wrap rather than being cut off when they do not fit, as at the system's largest text size; words that
+        // fit stay on one line, as before.
+        Rule(x => x.OfType<Button>().Template().OfType<ContentPresenter>(), (ContentPresenter.TextWrappingProperty, TextWrapping.Wrap)),
 
         // A row of a list on a card: no button drawn, the whole width, a thumb high.
         Rule(x => x.OfType<Button>().Class(Row), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)),

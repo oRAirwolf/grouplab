@@ -239,7 +239,8 @@ internal sealed class FiguresView : UserControl
         var teal = Color.FromRgb(42, 157, 143);
         var pill = new Button
         {
-            Content = words,
+            // Entry 411: wrapped, so the words stay whole at the system's largest text size.
+            Content = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap },
             MinHeight = Screens.Touch,
             HorizontalAlignment = HorizontalAlignment.Left,
             Foreground = new SolidColorBrush(teal),

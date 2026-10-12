@@ -182,7 +182,7 @@ internal sealed class ComparePage : UserControl
             "CEP 90" when g.Rayleigh.Cep(0.9) is var cep => new IntervalRow(g.Name, cep.Value, cep.Lower, cep.Upper),
             _ => new IntervalRow(g.Name, g.MeanRadius.Value, g.MeanRadius.Lower, g.MeanRadius.Upper),
         }).ToList();
-        var chart = new IntervalChart { Rows = rows, Length = size, TextSize = textSize, Margin = new Thickness(0, 4) };
+        var chart = new IntervalChart { Rows = rows, Length = size, TextSize = GroupLab.App.Theme.TextSize.Of(textSize), Margin = new Thickness(0, 4) };
         chart.Says = LoadComparison.ChartSays(report, figure, chart.HasRanges);
         return chart;
     }

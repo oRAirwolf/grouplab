@@ -104,7 +104,14 @@ public sealed class Shell : UserControl
                     Children =
                     {
                         new Border { Child = GroupLab.App.Theme.Icons.Draw(Icon(place), 20), Classes = { PhoneStyles.NavPill } },
-                        new TextBlock { Text = place.ToString(), HorizontalAlignment = HorizontalAlignment.Center, Classes = { PhoneStyles.NavLabel } }, // one line on purpose: a tab's one-word name
+                        // One line on purpose: a tab's one-word name. Entry 411: at the system's largest text sizes a name wider than its
+                        // fifth of the bar is drawn smaller until it fits, rather than cut off (DESIGN NEEDED in for-alan.md for the real answer).
+                        new Viewbox
+                        {
+                            StretchDirection = StretchDirection.DownOnly,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Child = new TextBlock { Text = place.ToString(), Classes = { PhoneStyles.NavLabel } }, // one line on purpose
+                        },
                     },
                 },
                 MinHeight = 56,
@@ -651,8 +658,10 @@ internal static class Screens
         var grid = new Avalonia.Controls.Primitives.UniformGrid { Columns = 2 };
         foreach (var (label, value, under, headline) in figures)
         {
-            // One line for a figure's number; a figure withheld in words ("not quoted below 5 shots") wraps rather than being cut off.
-            var number = UnitTap.Attach(new TextBlock { Text = value, TextWrapping = value.Any(char.IsDigit) && value.Count(char.IsLetter) <= 4 ? TextWrapping.NoWrap : TextWrapping.Wrap, Classes = { PhoneStyles.TileValue } }, label);
+            // A figure's number on one line, and a figure withheld in words ("not quoted below 5 shots") wrapped. Entry 411: at the system's
+            // largest text sizes a number and its unit no longer fit half a small phone, so the unit goes under the number rather than past
+            // the tile's edge; a number never breaks, since it has no space to break at.
+            var number = UnitTap.Attach(new TextBlock { Text = value, TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.TileValue } }, label);
             var tile = new Border
             {
                 Margin = new Thickness(4),

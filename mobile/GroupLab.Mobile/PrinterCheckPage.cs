@@ -4,6 +4,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GroupLab.App;
+using GroupLab.App.Theme;
 using GroupLab.App.Diagnostics;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Gltd.Derivation;
@@ -246,7 +247,7 @@ internal sealed class PrinterCheckPage : UserControl
     {
         var column = Column(3, profile.Headline);
         var amber = new SolidColorBrush(Color.FromRgb(0xe0, 0x91, 0x2f));
-        TextBlock Big(double v) => new() { Text = string.Create(CultureInfo.InvariantCulture, $"{v * 100:0.0}%"), FontSize = 30, Foreground = amber };
+        TextBlock Big(double v) => new() { Text = string.Create(CultureInfo.InvariantCulture, $"{v * 100:0.0}%"), FontSize = TextSize.Of(30), Foreground = amber };
         var figures = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), RowDefinitions = new RowDefinitions("Auto,Auto") };
         void Add(Control c, int col, int row)
         {

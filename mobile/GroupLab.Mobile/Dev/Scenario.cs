@@ -902,12 +902,16 @@ internal static class Scenario
             }
         }
 
+        // Entry 411 section 2.4: the middle size of the text the frame shows, so the largest-text pass can be held to larger text than the
+        // plain one (scripts/phone-sweep-check.py --larger).
+        var sizes = texts.Select(t => t.Text.FontSize).Order().ToList();
         return new JsonObject
         {
             ["screen"] = name,
             ["width"] = Math.Round(wide),
             ["height"] = Math.Round(high),
             ["dark"] = top.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark,
+            ["text"] = sizes.Count == 0 ? null : Math.Round(sizes[sizes.Count / 2], 2),
             ["findings"] = findings,
         };
     }

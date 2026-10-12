@@ -97,12 +97,21 @@ public class QualitySweepTests
     /// <summary>
     /// The sweep's screens at the small phone's width, as the emulator's quality sweep runs them: nothing under a finger's size, nothing cut
     /// short, nothing past the side and no text over text. The first emulator sweep found the Shots page's switch 32 units tall, fixed here.
+    /// Entry 411 section 2.4: again at Android's largest text size, as the sweep's largest-text pass shows them, where every frame's text is
+    /// larger than the plain run's.
     /// </summary>
-    [AvaloniaFact]
-    public async Task TheSweepsScreensAtASmallPhonesWidthHaveNoFaults()
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TheSweepsScreensAtASmallPhonesWidthHaveNoFaults(bool largest)
     {
         var (window, _) = Open(360);
         window.Height = 640;
+        if (largest)
+        {
+            AndroidText.LargestUntilClosed(window);
+        }
+
         Directory.CreateDirectory(Scenario.Folder);
         File.Copy(Repo.PathTo("samples", "gl-cf25-ltr-d-25-shots-600-dpi.png"), Path.Combine(Scenario.Folder, "sample.png"), overwrite: true);
         try
@@ -114,6 +123,10 @@ public class QualitySweepTests
                 .ToList();
             Assert.True(Directory.EnumerateFiles(Scenario.Results, "*.quality.json").Count() >= 11, "fewer quality files than the sweep takes screenshots");
             Assert.True(faults.Count == 0, string.Join(Environment.NewLine, faults));
+            var text = Directory.EnumerateFiles(Scenario.Results, "*.quality.json")
+                .Select(f => System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(f))!["text"]?.GetValue<double>() ?? 0).Where(t => t > 0).ToList();
+            Assert.NotEmpty(text);
+            Assert.All(text, t => Assert.True(largest ? t > 22.5 : t <= 22, $"a frame's middle text size is {t}"));
         }
         finally
         {

@@ -25,7 +25,8 @@ namespace GroupLab.Android;
     LaunchMode = LaunchMode.SingleTop,
     ScreenOrientation = ScreenOrientation.FullUser,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize
-        | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
+        | ConfigChanges.UiMode | ConfigChanges.Density | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation
+        | ConfigChanges.FontScale)]
 
 // Entry 258: a picture shared into GroupLab from another application, or opened with it, is read as a chosen photograph: the phone's
 // version of dropping a file on the desktop's window. Entry 292 section 1.3: from any app, several at once as a set, and from an app's
@@ -117,6 +118,13 @@ public class MainActivity : AvaloniaMainActivity
 
         AndroidX.Core.App.ActivityCompat.RequestPermissions(activity, [global::Android.Manifest.Permission.Camera], CameraRequest);
         return false;
+    }
+
+    /// <summary>Entry 411 section 2: the phone's text size changed while GroupLab was open; the styles are built again at the new size.</summary>
+    public override void OnConfigurationChanged(global::Android.Content.Res.Configuration newConfig)
+    {
+        base.OnConfigurationChanged(newConfig);
+        GroupLab.App.Theme.TextSize.Follow(App.SystemTextSize);
     }
 
     protected override void OnCreate(Bundle? savedInstanceState)
