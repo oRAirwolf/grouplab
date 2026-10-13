@@ -17,7 +17,9 @@ public class SolverWarmUpTests
         var clock = Stopwatch.StartNew();
         SolverUse.WarmInBackground();
         SolverUse.WarmInBackground();
-        Assert.True(clock.ElapsedMilliseconds < 200, $"warming took {clock.ElapsedMilliseconds} ms on the caller's thread");
+        // Warming here, on the caller's thread, would be eight flights of about 100 ms the first time; starting it in the background is not.
+        // 600 ms tells the two apart, where 200 ms failed on a busy macOS runner at 211 (entry 416's CI) and once on this desktop.
+        Assert.True(clock.ElapsedMilliseconds < 600, $"warming took {clock.ElapsedMilliseconds} ms on the caller's thread");
 
         var during = SolverUse.Dope(input, 1000, 25);
         Assert.Equal(before.Points, during.Points);
