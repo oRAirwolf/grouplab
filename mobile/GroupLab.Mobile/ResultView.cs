@@ -297,7 +297,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         session = new MarkingSession(result.State);
         // Entry 323 section 3: the plot's chips as they were left, the velocity band's among them.
         plot.Shown = Phone.Settings.LoadPlotMarks();
-        full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition, SessionId = result.SessionId, VelocityAction = VelocityAction };
+        full = new FiguresView(result.State, units, plot, ShowShotsToZero) { Definition = result.Definition, SessionId = result.SessionId, VelocityAction = VelocityAction, ConditionsChanged = ConditionsChanged };
         failed = result.Failure is not null;
         var column = new StackPanel { Spacing = 12 };
         // Several targets open at once (Alan, 2026-10-07): the target's name is the way to the others open, and to close one.
@@ -807,6 +807,15 @@ public sealed class ResultView : UserControl, IOpenTarget
                 Shell.Current?.ShowBallistics(session.State, open: "load");
                 break;
         }
+    }
+
+    /// <summary>Entry 416 section 3: the conditions the sheet's Use these gave, into the session, saved, and the result shown again.</summary>
+    private void ConditionsChanged(SessionConditions? conditions)
+    {
+        session.SetConditions(conditions);
+        sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+        full.SessionId = sessionId;
+        Refresh();
     }
 
     private void Refresh()

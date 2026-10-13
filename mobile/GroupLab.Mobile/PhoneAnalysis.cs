@@ -338,6 +338,12 @@ internal static class PhoneAnalysis
 
         // Entry 313 section 1.1: a reading stopped while it ran saves nothing, since nobody will see its result.
         token.ThrowIfCancellationRequested();
+        // Entry 416 section 4: a new sheet of the same day starts with the last sheet's conditions, where Remember is on.
+        if (Phone.Settings.ConditionsForNewSheet(DateOnly.FromDateTime(DateTime.Now)) is { } carried)
+        {
+            session.SetConditions(carried);
+        }
+
         long? id = Save(session.State, definition, units, null);
         return new PhoneResult(session.State, definition, null, id, working, Check: check, Measured: result.Measurement.Scale, Paper: result.Paper);
     }

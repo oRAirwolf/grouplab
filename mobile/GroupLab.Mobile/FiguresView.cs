@@ -47,6 +47,12 @@ internal sealed class FiguresView : UserControl
     /// <summary>Entry 376 section A4: a Bull by bull row tapped, with its bull's index, to light it on the picture.</summary>
     public Action<int>? BullChosen { get; set; }
 
+    /// <summary>Entry 416 section 3: what Use these on the conditions sheet does; the result sets it.</summary>
+    public Action<SessionConditions?>? ConditionsChanged { get; set; }
+
+    /// <summary>The conditions in use as the card last said them, for the tests.</summary>
+    internal VelocityConditions? ConditionsUsed { get; private set; }
+
     /// <summary>The card "Velocity and the vertical" as last built, for the tests.</summary>
     internal VelocityBlock? Velocity { get; private set; }
 
@@ -64,7 +70,9 @@ internal sealed class FiguresView : UserControl
             var book = store.LoadBook();
             var load = book.FindLoad(state.Load) ?? (state.Load is null ? book.Loads.FirstOrDefault() : null);
             var (readings, pairs) = SessionId is { } id ? VelocityBlocks.Readings(store, id) : (null, []);
-            return VelocityBlocks.Build(state, load, readings, pairs, units, size, beneath: beneath);
+            // Entry 416: the session's own conditions; the phone's Ballistics page keeps none of its own to fall back on.
+            ConditionsUsed = VelocityBlocks.Resolve(state.Conditions, null);
+            return VelocityBlocks.Build(state, load, readings, pairs, units, size, beneath: beneath, conditions: ConditionsUsed);
         }
         catch (Microsoft.Data.Sqlite.SqliteException e)
         {
@@ -187,7 +195,14 @@ internal sealed class FiguresView : UserControl
                         Screens.Choice(VelocityBlock.TypeThemIn, () => VelocityAction?.Invoke(VelocityBlockState.NoReadings)).Id("velocity-type"),
                     },
                 };
-                column.Children.Add(Screens.Card(VelocityBlockView.Build(velocity, VelocityAction, units.Speed, velocityWhyOpen, open => velocityWhyOpen = open, noReadings)).Id("result-velocity"));
+                Control card = VelocityBlockView.Build(velocity, VelocityAction, units.Speed, velocityWhyOpen, open => velocityWhyOpen = open, noReadings);
+                if (velocity.State != VelocityBlockState.NoReadings)
+                {
+                    // Entry 416 section 3.1: the Conditions row with the one-line summary, opening the sheet from the bottom.
+                    card = new StackPanel { Spacing = 8, Children = { card, ConditionsRow() } };
+                }
+
+                column.Children.Add(Screens.Card(card).Id("result-velocity"));
             }
 
             var rows = new StackPanel { Spacing = 10 };
@@ -362,6 +377,147 @@ internal sealed class FiguresView : UserControl
         };
         label.Tapped += (_, _) => Explain(figure ?? new ResultFigure(key, words, "", Explanation: ResultFigures.Explain(key)));
         return label;
+    }
+
+    /// <summary>Entry 416 section 3.1: "Conditions" and what is in use, a row a thumb high that opens the sheet.</summary>
+    private Control ConditionsRow()
+    {
+        string summary = ConditionsUsed is null || (ConditionsUsed.StandardAir && ConditionsUsed.AngleDegrees == 0)
+            ? "Standard day"
+            : ConditionsWords.Summary(ConditionsUsed, units).TrimEnd('.');
+        var row = new Button
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            MinHeight = 48,
+            Background = Brushes.Transparent,
+            Content = new DockPanel
+            {
+                Children =
+                {
+                    new TextBlock { Text = "Conditions", VerticalAlignment = VerticalAlignment.Center },
+                    new TextBlock { Text = summary + " ›", TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Right, VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Dim } },
+                },
+            },
+        }.Id("velocity-conditions");
+        Avalonia.Automation.AutomationProperties.SetName(row, "Conditions: " + summary);
+        row.Click += (_, _) => OpenConditions();
+        return row;
+    }
+
+    /// <summary>The conditions sheet as last opened, for the tests.</summary>
+    internal ConditionsSheet? ConditionsOpen { get; private set; }
+
+    /// <summary>
+    /// Entry 416 section 3.2, board "A on the phone": the sheet from the bottom, its title and Cancel, the one-line note, the four fields, the
+    /// station pressure link, the rifle's line, Remember for my next sheet, and Fill from Ballistics and Use these, each a thumb high.
+    /// </summary>
+    internal void OpenConditions(bool byPressure = false)
+    {
+        var own = state.Conditions ?? new SessionConditions();
+        bool pressure = byPressure || (own.PressureInHg is not null && own.AltitudeFt is null);
+        var open = new ConditionsSheet(own, pressure, units);
+        ConditionsOpen = open;
+        var inside = new StackPanel { Spacing = 10 };
+        var cancel = Screens.Choice("Cancel", () => sheet.IsVisible = false).Id("conditions-cancel");
+        DockPanel.SetDock(cancel, Dock.Right);
+        inside.Children.Add(new DockPanel { Children = { cancel, Screens.Heading("Conditions on the day") } });
+        inside.Children.Add(Screens.Dim("Used only for how much of the vertical velocity explains. Leave any blank and GroupLab uses a standard day for it."));
+        foreach (var (label, box, unit) in open.Rows)
+        {
+            var unitText = new TextBlock { Text = unit, Width = 64, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 0, 0) };
+            DockPanel.SetDock(unitText, Dock.Right);
+            DockPanel.SetDock(box, Dock.Right);
+            inside.Children.Add(new DockPanel
+            {
+                MinHeight = 48,
+                Children = { unitText, box, new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center } },
+            });
+        }
+
+        inside.Children.Add(Screens.Choice(pressure ? "Use altitude instead of station pressure" : "Use station pressure instead of altitude", () => OpenConditions(!pressure)).Id("conditions-swap"));
+        inside.Children.Add(Screens.Dim("Sight height and zero come from the rifle."));
+        var remember = new CheckBox { Content = "Remember for my next sheet", IsChecked = Phone.Settings.LoadConditionsMemory().Remember, MinHeight = 44 }.Id("conditions-remember");
+        open.Remember = remember;
+        inside.Children.Add(remember);
+        var fill = Screens.Choice("Fill from Ballistics", () => { }).Id("conditions-fill");
+        fill.IsEnabled = false;
+        inside.Children.Add(Screens.Dim(ConditionsSheet.FillReason));
+        var use = Screens.Primary("Use these", () => UseConditions(open)).Id("conditions-use");
+        var buttons = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 10 };
+        Grid.SetColumn(use, 1);
+        buttons.Children.Add(fill);
+        buttons.Children.Add(use);
+        inside.Children.Add(buttons);
+        sheet.Child = new ScrollViewer { Content = inside, MaxHeight = 640 };
+        sheet.IsVisible = true;
+    }
+
+    /// <summary>Use these: the four into the session, remembered for the next sheet of the day where Remember is ticked.</summary>
+    internal void UseConditions(ConditionsSheet open)
+    {
+        var conditions = open.Read();
+        Phone.Settings.SaveConditionsMemory(open.Remember?.IsChecked == true, DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), conditions);
+        sheet.IsVisible = false;
+        ConditionsChanged?.Invoke(conditions is { IsEmpty: false } ? conditions : null);
+    }
+
+    /// <summary>The sheet's fields, in the person's own units, and what they say in imperial.</summary>
+    internal sealed class ConditionsSheet
+    {
+        /// <summary>Why Fill from Ballistics is greyed on the phone.</summary>
+        internal const string FillReason = "Fill from Ballistics is for the computer: the phone's Ballistics page keeps no conditions of its own for a rifle and load.";
+
+        private readonly UnitSettings units;
+
+        internal ConditionsSheet(SessionConditions own, bool pressure, UnitSettings units)
+        {
+            this.units = units;
+            Temperature = Box(own.TemperatureF, BallisticMeasure.Temperature, "conditions-temperature");
+            Where = pressure ? Box(own.PressureInHg, BallisticMeasure.Pressure, "conditions-pressure") : Box(own.AltitudeFt, BallisticMeasure.Altitude, "conditions-altitude");
+            Humidity = Box(own.HumidityPct, null, "conditions-humidity");
+            Angle = Box(own.AngleDegrees, null, "conditions-angle");
+            Pressure = pressure;
+            Rows =
+            [
+                ("Temperature", Temperature, BallisticMeasures.Symbol(BallisticMeasure.Temperature, units).TrimStart('°')),
+                (pressure ? "Station pressure" : "Altitude", Where, BallisticMeasures.Symbol(pressure ? BallisticMeasure.Pressure : BallisticMeasure.Altitude, units)),
+                ("Humidity", Humidity, "%"),
+                ("Shot angle", Angle, "degrees"),
+            ];
+        }
+
+        internal TextBox Temperature { get; }
+
+        internal TextBox Where { get; }
+
+        internal TextBox Humidity { get; }
+
+        internal TextBox Angle { get; }
+
+        internal bool Pressure { get; }
+
+        internal CheckBox? Remember { get; set; }
+
+        internal IReadOnlyList<(string Label, TextBox Box, string Unit)> Rows { get; }
+
+        private TextBox Box(double? imperial, BallisticMeasure? measure, string id)
+        {
+            string shown = imperial is { } v ? (measure is { } m ? BallisticMeasures.FromImperial(v, m, units) : v).ToString("0.##", CultureInfo.InvariantCulture) : "";
+            return Screens.Numeric(new TextBox { Text = shown, Width = 96, HorizontalContentAlignment = HorizontalAlignment.Right }, signed: true).Id(id);
+        }
+
+        /// <summary>The four, in imperial, each blank one null.</summary>
+        internal SessionConditions Read()
+        {
+            double? Value(TextBox box, BallisticMeasure? measure) =>
+                double.TryParse((box.Text ?? "").Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double v)
+                    ? (measure is { } m ? BallisticMeasures.ToImperial(v, m, units) : v)
+                    : null;
+            double? where = Value(Where, Pressure ? BallisticMeasure.Pressure : BallisticMeasure.Altitude);
+            return new SessionConditions(Value(Temperature, BallisticMeasure.Temperature), Pressure ? null : where, Pressure ? where : null,
+                Value(Humidity, null) is { } h ? Math.Clamp(h, 0, 100) : null, Value(Angle, null));
+        }
     }
 
     /// <summary>The explanation sheet: the name, the value, the plain explanation, what the shots can say, and Close.</summary>

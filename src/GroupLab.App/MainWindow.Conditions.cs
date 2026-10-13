@@ -184,7 +184,7 @@ public partial class MainWindow
                     FromBoxes();
                 }
             };
-            var row = new StackPanel { Spacing = 2 };
+            var row = new StackPanel { Spacing = Tokens.Space4 };
             row.Children.Add(new TextBlock { Text = label, Classes = { AppStyles.Secondary } });
             row.Children.Add(new StackPanel
             {

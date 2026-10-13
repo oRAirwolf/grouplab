@@ -1460,13 +1460,31 @@ public sealed partial class MainWindow : Window
     {
         var (readings, pairs) = sessions is not null && currentSession is { } id ? VelocityBlocks.Readings(sessions, id) : (null, []);
         double? distance = state.ShotDistanceInches;
+        // Entry 416: the session's own conditions first, field by field, then Ballistics' for its rifle and load, then the standard day.
+        var ballistics = ConditionsForVelocity(state);
+        var used = VelocityBlocks.Resolve(state.Conditions, ballistics);
         Velocity = VelocityBlocks.Build(state, book.FindLoad(state.Load), readings, pairs, units, inches => Sized(inches, distance).Value,
-            beneath: inches => Sized(inches, distance).Beneath, conditions: ConditionsForVelocity(state));
+            beneath: inches => Sized(inches, distance).Beneath, conditions: used);
         velocityPanel.IsVisible = Velocity is not null;
-        velocityPanel.Child = Velocity is { } block
-            ? VelocityBlockView.Build(block, VelocityAction, units.Speed, WhyOpen(VelocityWhyItem), open => RememberOpen(VelocityWhyItem, open),
-                block.State == VelocityBlockState.NoReadings ? ReadingsHere() : null)
-            : null;
+        if (Velocity is { } block)
+        {
+            var view = VelocityBlockView.Build(block, VelocityAction, units.Speed, WhyOpen(VelocityWhyItem), open => RememberOpen(VelocityWhyItem, open),
+                block.State == VelocityBlockState.NoReadings ? ReadingsHere() : null);
+            Conditions = null;
+            if (block.State != VelocityBlockState.NoReadings)
+            {
+                // Section 2.3: velocity alone with these against a standard day, from the same group and readings.
+                var standardDay = used is null ? block : VelocityBlocks.Build(state, book.FindLoad(state.Load), readings, pairs, units, inches => Sized(inches, distance).Value,
+                    beneath: inches => Sized(inches, distance).Beneath);
+                view = new StackPanel { Children = { view, BuildConditionsPart(state, ballistics, used, VelocityBlocks.Comparison(block, standardDay, inches => Sized(inches, distance).Value)) } };
+            }
+
+            velocityPanel.Child = view;
+        }
+        else
+        {
+            velocityPanel.Child = null;
+        }
         plot.VelocityBand = Velocity?.Band;
         velocityBandBox.IsVisible = plot.VelocityBand is not null;
     }
@@ -3429,6 +3447,13 @@ public sealed partial class MainWindow : Window
         if (sessions is null || session.State.Shots.Count == 0)
         {
             return;
+        }
+
+        // Entry 416 section 4: a new sheet saved on the same day as the last starts with its conditions, where Remember is on, said to be the
+        // last sheet's until they are changed. The day is this computer's calendar day, so a session that runs past midnight starts blank.
+        if (currentSession is null && session.State.Conditions is null && settingsStore.ConditionsForNewSheet(DateOnly.FromDateTime(DateTime.Now)) is { } carried)
+        {
+            session.SetConditions(carried);
         }
 
         var state = session.State;

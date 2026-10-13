@@ -561,6 +561,34 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
 4. **Pictures:** the pooled view's own Features picture is listed as waiting in docs/figures/SCREENSHOTS.md, for the screenshot walk; the
    guide's pooling paragraph, the tour and the Features sentence say how.
 
+## Entry 416: a session's own conditions for Velocity and the vertical, concept A (2026-10-13)
+
+1. **The session carries its own conditions.** Temperature, altitude or station pressure, humidity and shot angle, each optional
+   (`SessionConditions`), in the marking (`conditions`), so the record, a shared session, an export and the other device all carry them;
+   the database's schema is unchanged, since `marking_json` already holds the marking (SESSION-SCHEMA.md says so). Field by field, as
+   entry 329 set it (`VelocityBlocks.Resolve`): the session's own value, then the Ballistics conditions for its rifle and load, then the
+   standard day; the "why" line and the summary say where each came from ("this sheet, and the rest from Ballistics, for ..."). Sight
+   height and zero stay on the rifle. Nothing is filled from a location or a weather service. **CSV out does not carry them:** the shot
+   CSV is a table whose only header is its row of column names, with no place for them, and reading CSVs back for pooling depends on it.
+2. **The desktop, board "A on the desktop":** Conditions on the day under the block once it has readings, closed by default with one line
+   in the person's own units; open, the four fields, Use station pressure instead of altitude, Fill from Ballistics (greyed, with its
+   reason, where Ballistics has nothing for this rifle and load), Standard day, the rifle's line with Change them on its page, Remember for
+   my next sheet, and "With these, velocity alone is X. On a standard day it would be Y." (shown whenever the conditions are not the
+   standard day, even where the two read alike at a short distance). A value changes the block at once.
+3. **The phone, board "A on the phone", Android and iOS:** the card's Conditions row with the summary opens a sheet from the bottom with
+   the title and Cancel, the note, the four fields, the swap link, the rifle's line, Remember, and Fill from Ballistics and Use these, each
+   a thumb high. Fill from Ballistics is greyed on the phone with its reason: the phone's Ballistics page keeps no conditions of its own.
+   At Android's largest text size and 320 wide every field and button of the sheet is inside the window (`Entry416Tests`).
+4. **Remember for my next sheet:** ticked, the values go to the next sheet saved on the same day, marked "from your last sheet" until
+   changed; not ticked, or the next day, it starts blank. The day is the device's own calendar day when the next sheet is saved, so a session
+   that runs past midnight starts blank after it; that is the simplest honest rule.
+5. **Found while building it, and fixed:** saving a session a second time replaced its row, and the delete under the replace cascaded to
+   its chronograph readings and their pairing with shots, so a sheet accepted again after its readings were added lost them. The row is now
+   updated in place (`SessionStoreTests.SavingASessionAgainKeepsItsReadings`, which fails on the old code).
+6. **Pictures and words:** the Features entries for the desktop's open part and the phone's sheet are listed as waiting in
+   docs/figures/SCREENSHOTS.md (the walk, and the phone's next sitting); the guide's Velocity paragraph, PHONE-PARITY.md, the Features
+   sentence and STATE say where conditions are entered; claims backed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -116,6 +116,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 
 | Entry | Its picture now | What it should show |
 |---|---|---|
+| Conditions on the day (entry 416) | the analysis open | Velocity and the vertical with Conditions on the day open, desktop; the phone's sheet at the next sitting |
 | Pool the sheets of a set (entry 420) | Session records | the pooled set open in its own tab: every shot about its own bull, each sheet in its shade, the key |
 | A GroupLab sheet reads itself | the marking screen | a sheet's codes and markers found |
 | Every hole found | the marking screen | a few holes close up with their rings |

@@ -78,6 +78,10 @@ public static class MarkingFile
             paper = state.Paper,
             sheetLabel = state.SheetLabel,
             setSheet = state.SetSheet,
+            // Entry 416 section 1: the session's own conditions on the day, each only where it was entered.
+            conditions = state.Conditions is { IsEmpty: false } day
+                ? new { temperatureF = day.TemperatureF, altitudeFt = day.AltitudeFt, pressureInHg = day.PressureInHg, humidityPct = day.HumidityPct, angleDegrees = day.AngleDegrees, fromLastSheet = day.FromLastSheet ? true : (bool?)null }
+                : null,
             backing = state.Backing,
             // Entry 113 section 4: how the sheet's shots are read against its bulls, when it is not one a bull.
             assignmentRule = state.Rule is { } rule
@@ -334,6 +338,9 @@ public static class MarkingFile
             Backing: TargetMaterial.Backing((string?)file["backing"]),
             SheetLabel: (string?)file["sheetLabel"],
             SetSheet: (int?)file["setSheet"],
+            Conditions: file["conditions"] is JsonObject day
+                ? new SessionConditions((double?)day["temperatureF"], (double?)day["altitudeFt"], (double?)day["pressureInHg"], (double?)day["humidityPct"], (double?)day["angleDegrees"], (bool?)day["fromLastSheet"] ?? false)
+                : null,
             Subgroups: file["subgroups"] is JsonArray groups && groups.Count > 0
                 ? new SubgroupMap(groups.ToImmutableDictionary(g => (int)g!["bull"]!, g => (string)g!["name"]!))
                 : null,

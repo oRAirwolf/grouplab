@@ -213,4 +213,48 @@ public sealed class VelocityBlockTests
         var block = Build(session.State, Readings(Velocities), InOrder(state));
         Assert.Equal(Velocities.Length - 1, block.Dots.Count);
     }
+
+    /// <summary>
+    /// Entry 416 section 1: a session's own conditions, field by field before the Ballistics conditions and the standard day. The session's
+    /// own values change the height per fps the way the solver says, as entry 329's test does with Ballistics as the source.
+    /// </summary>
+    [Fact]
+    public void ASessionsOwnConditionsComeFirstFieldByField()
+    {
+        double[] up = [0.6, -0.4, 1.0, -0.8, 0.3, -0.2, 0.9, -0.6, 0.4, -0.1];
+        var state = Group(up) with { Conditions = new SessionConditions(TemperatureF: 90, AltitudeFt: 6000) };
+        var conditions = VelocityBlocks.Resolve(state.Conditions, null);
+        Assert.Equal(new AirInput(90, null, 6000, 50), conditions!.Air);
+        Assert.Equal("this sheet, and the rest a standard day", conditions.From);
+
+        var standard = Build(state with { Conditions = null }, Readings(Velocities));
+        var own = VelocityBlocks.Build(state, G7Load, Readings(Velocities), [], UnitSettings.Imperial, Size, conditions: conditions)!;
+        double mean = Velocities.Average();
+        double ratio = Math.Abs(Projection.DropPerFps(new BallisticInput(0.243, DragModel.G7, mean, 175, TemperatureF: 90, AltitudeFt: 6000), Yards)
+            / Projection.DropPerFps(new BallisticInput(0.243, DragModel.G7, mean, 175), Yards));
+        Assert.Equal(ratio, own.Bars[1].Value / standard.Bars[1].Value, 6);
+        Assert.Contains("Conditions: 90 F, 6000 ft of altitude, 50 percent humidity, shot level, from this sheet, and the rest a standard day.", own.Why);
+        Assert.Equal($"With these, velocity alone is {Size(own.PredictedSdInches!.Value)}. On a standard day it would be {Size(standard.PredictedSdInches!.Value)}.",
+            VelocityBlocks.Comparison(own, standard, Size));
+        Assert.Null(VelocityBlocks.Comparison(standard, standard, Size));
+
+        // A blank field falls back on its own: the temperature from Ballistics, the altitude and the angle the session's.
+        var ballistics = new VelocityConditions(new AirInput(40, 29.5, 0, 20), 5, "Ballistics, for the test");
+        var mixed = VelocityBlocks.Resolve(new SessionConditions(AltitudeFt: 5400, AngleDegrees: -3), ballistics)!;
+        Assert.Equal(new AirInput(40, null, 5400, 20), mixed.Air);
+        Assert.Equal(-3, mixed.AngleDegrees);
+        Assert.Equal("this sheet, and the rest from Ballistics, for the test", mixed.From);
+        Assert.Equal(ballistics, VelocityBlocks.Resolve(null, ballistics));
+        Assert.Null(VelocityBlocks.Resolve(new SessionConditions(), null));
+
+        // Station pressure is altitude entered the other way, and wins where both are given; all five from the sheet say so.
+        var pressure = VelocityBlocks.Resolve(new SessionConditions(72, 5400, 24.8, 30, 0), ballistics)!;
+        Assert.Equal(new AirInput(72, 24.8, 5400, 30), pressure.Air);
+        Assert.Equal("this sheet", pressure.From);
+
+        var (back, _) = MarkingFile.Read(MarkingFile.Write(state with { Conditions = new SessionConditions(72, null, 24.8, 30, 2) }));
+        Assert.Equal(new SessionConditions(72, null, 24.8, 30, 2), back.Conditions);
+        var (none, _) = MarkingFile.Read(MarkingFile.Write(state with { Conditions = null }));
+        Assert.Null(none.Conditions);
+    }
 }

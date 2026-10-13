@@ -238,7 +238,8 @@ public sealed record MarkingState(
     string? Backing = null,
     GroupLab.Core.Capture.CaptureRecord? Capture = null,
     string? SheetLabel = null,
-    int? SetSheet = null)
+    int? SetSheet = null,
+    SessionConditions? Conditions = null)
 {
     public static MarkingState Empty { get; } = new(null, null, null, [], [], 1);
 
@@ -765,6 +766,9 @@ public sealed class MarkingSession
     /// Entry 229 section 1: a person's own name for this sheet, such as the letter written in its serial box. The printed codes name the
     /// design, which every copy printed from one PDF shares, so this is what tells three copies apart.
     /// </summary>
+    /// <summary>Entry 416: the session's own conditions on the day; nothing entered is null.</summary>
+    public void SetConditions(SessionConditions? conditions) => Apply(State with { Conditions = conditions is { IsEmpty: false } ? conditions : null });
+
     public void SetSheetLabel(string? label) => Apply(State with { SheetLabel = string.IsNullOrWhiteSpace(label) ? null : label.Trim() });
 
     /// <summary>

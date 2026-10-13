@@ -25,6 +25,72 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-13, entry 416: a session's own conditions for Velocity and the vertical, concept A
+
+**Status: actioned 2026-10-13; sections 1 to 5 done. Not done: the two Features pictures, listed as waiting for the screenshot walk and the phone's next sitting; CSV out does not carry the conditions, having no place for them.**
+
+From the planning session, 2026-10-13 07:10 UTC. Take it after entry 415, inside the same budget (stop at **55% of the week**, never in
+the middle of a publish). Main model: application code, UI and tests. This closes the DESIGN NEEDED that entry 329 left: sessions did not
+carry conditions, so the block used the Ballistics screen's air or a standard day.
+
+Alan, 2026-10-13, on the canvas "Velocity conditions" (claude.ai/artifact/RqegGtu63HTbHtspu4K2hE): **"Go with A"**: the conditions are
+entered where the speeds are, inside the Velocity and the vertical block, after shooting. Boards "A on the desktop" and "A on the phone"
+are the look; read them before building. Its numbers are samples.
+
+## 1. The session carries its own conditions
+
+1. A session stores temperature, altitude or station pressure (whichever was entered), humidity and shot angle, each optional. The
+   session file and the database both carry them; a database change follows entry 407's pattern (a copy beside it before the first open
+   of a new build), and SESSION-SCHEMA.md says so.
+2. Order of preference, field by field, as entry 329 set it: the session's own value, then the Ballistics conditions for that rifle and
+   load, then the standard day. A field left blank falls back on its own; the others still count.
+3. Sight height and zero are **not** in this form. They stay on the rifle, as the board says, with a link to its page.
+4. Values in the person's own units (F or C, ft or m, inHg or hPa, as Settings chooses).
+5. Nothing is ever filled from location or weather services. A photograph's GPS stays unread.
+6. Sharing a session, exporting it and opening it on the other device carry the conditions. CSV out carries them in its header lines if
+   the format has a place for them; if not, say so in the report.
+
+## 2. On the desktop (board "A on the desktop")
+
+1. Inside the Velocity and the vertical block, once it has readings, a part headed **Conditions on the day**, closed by default. Closed,
+   it shows one line: what is in use and where it came from ("Standard day assumed: no temperature or altitude entered.", or "72 F,
+   5400 ft, 30% humidity, shot level, from this sheet.").
+2. Open: Temperature, Altitude, Humidity, Shot angle; the link **Use station pressure instead of altitude** swaps that field; **Fill from
+   Ballistics** (for this rifle and load; greyed with the reason when Ballistics has none); **Standard day** (clears the four);
+   the rifle line with **Change them on its page**; **Remember for my next sheet**, ticked by default.
+3. Under them, the comparison line from the board: "With these, velocity alone is X. On a standard day it would be Y." Both numbers from
+   the same group and readings; the line is gone when the values are the standard day.
+4. Changing a value updates the block at once. "why" names each value's source, as it already does.
+
+## 3. On the phone (board "A on the phone"), Android and iOS
+
+1. The velocity card gets a **Conditions** row with the same one-line summary; tapping it opens a sheet from the bottom.
+2. The sheet: title, Cancel, the one-line note ("Used only for how much of the vertical velocity explains. Leave any blank and GroupLab
+   uses a standard day for it."), the four fields, the station pressure link, the rifle line, Remember for my next sheet, and the two
+   buttons **Fill from Ballistics** and **Use these**. Touch targets as drawn (48 px rows and buttons).
+3. It follows the text size rules of entries 411 and 415; the sweeps that hold the largest size hold this sheet.
+4. iOS gets it in the same change (phone parity).
+
+## 4. Remember for my next sheet
+
+Ticked, the values are offered to the next sheet of the same day, filled and summarized as "from your last sheet", until changed.
+Not ticked, the next sheet starts blank. The next day starts blank either way. If "the same day" turns out to be the wrong edge (for
+example a session crossing midnight), pick the simplest honest rule and write it down.
+
+## 5. Tests, docs and the rest
+
+1. Tests: a session's own values change the height per fps the way the solver says (entry 329's test, now with the session as the
+   source); a blank field falls back alone; Fill from Ballistics copies that rifle and load's values; the values survive closing and
+   reopening the session, a shared session and an export; Remember carries them to the next sheet of the day and not the next day.
+2. The Features page gets its own picture of the open part, desktop and phone (entry 256). The guide's paragraph on Velocity and the
+   vertical, the tour page for the analysis screen if it names the block, PHONE-PARITY.md and the README say where conditions are
+   entered. Claims backing for each new checkable sentence.
+3. STATE.md: remove "a session's own conditions would need a form (DESIGN NEEDED if wanted)".
+4. Release-note kind `new`, in a shooter's words, for example: "You can now enter the day's temperature, altitude, humidity and shot
+   angle under Velocity and the vertical, and GroupLab uses them to work out how much of your vertical came from velocity."
+
+---
+
 ## 2026-10-13, entry 415: four things that need nobody (Alan at 23:37 Denver, no printer near him)
 
 **Status: actioned 2026-10-13; sections 1, 2 and 3.1 done, section 4 for the log only. Not done: section 3.2 (finding the holes), because entry 416, a feature Alan chose, was taken first under the same budget.**

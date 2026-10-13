@@ -794,6 +794,46 @@ public sealed class AppSettingsStore(string path)
         file["materialBacking"] = backing;
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 416 section 4: whether the conditions on the day carry to the next sheet (on unless turned off), the day
+    /// they were entered on, as this device's calendar day, and the conditions. Desktop and phone alike.
+    /// </summary>
+    public (bool Remember, string? Day, SessionConditions? Conditions) LoadConditionsMemory() => Read<(bool, string?, SessionConditions?)?>(file =>
+    {
+        var day = file["conditionsMemory"] as JsonObject;
+        double? Number(string key) => day?[key]?.GetValueKind() == JsonValueKind.Number ? day[key]!.GetValue<double>() : null;
+        var conditions = day is null ? null : new SessionConditions(Number("temperatureF"), Number("altitudeFt"), Number("pressureInHg"), Number("humidityPct"), Number("angleDegrees"));
+        return ((bool?)file["conditionsRemember"] ?? true, (string?)day?["day"], conditions is { IsEmpty: false } ? conditions : null);
+    }) ?? (true, null, null);
+
+    public bool SaveConditionsMemory(bool remember, string? day, SessionConditions? conditions) => Save(file =>
+    {
+        file["conditionsRemember"] = remember;
+        file["conditionsMemory"] = remember && day is not null && conditions is { IsEmpty: false } c
+            ? new JsonObject
+            {
+                ["day"] = day,
+                ["temperatureF"] = c.TemperatureF,
+                ["altitudeFt"] = c.AltitudeFt,
+                ["pressureInHg"] = c.PressureInHg,
+                ["humidityPct"] = c.HumidityPct,
+                ["angleDegrees"] = c.AngleDegrees,
+            }
+            : null;
+    });
+
+    /// <summary>
+    /// Entry 416 section 4: the conditions a new sheet starts with, the last sheet's where they were remembered on this same calendar day,
+    /// marked as carried; null on another day, with nothing remembered, or with Remember turned off.
+    /// </summary>
+    public SessionConditions? ConditionsForNewSheet(DateOnly today)
+    {
+        var (remember, day, conditions) = LoadConditionsMemory();
+        return remember && conditions is not null && day == today.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)
+            ? conditions with { FromLastSheet = true }
+            : null;
+    }
+
     public (string? Calibre, double? DistanceInches) LoadShotSetup() => Read(file =>
         ((string?)file["shotSetup"]?["caliber"], file["shotSetup"]?["distanceInches"]?.GetValueKind() == JsonValueKind.Number ? (double?)file["shotSetup"]!["distanceInches"]!.GetValue<double>() : null));
 

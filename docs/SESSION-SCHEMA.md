@@ -29,7 +29,11 @@ CREATE INDEX sessions_load ON sessions(load);
 - **Barrels under their rifle** (entry 407 section 5): every barrel names its rifle in `barrels.rifle`, and `rifles.barrel_on` names the one on it now. The rifle's `barrel_length_in`, `twist_in` and `twist_direction` are copied from that barrel, which is where the ballistic solver reads them.
 - **`rifles`, `barrels`, `loads`:** the person's records, keyed by name without regard to case, as a person refers to them. `muzzle_velocity_sd_from` is in words, and is set only where GroupLab worked the SD out from a chronograph string. The solver's fields are all optional (`NOTES-FROM-PLANNING.md` entry 112 section 4). A record without them simply cannot use the solver.
 - **`sessions`:** one analysed sheet each (entry 112 section 1), in `DESIGN.md` section 18's three tiers.
-  - **Geometry, always:** `marking_json`, the marking with every edit and exclusion, in the marking file's own format.
+  - **Geometry, always:** `marking_json`, the marking with every edit and exclusion, in the marking file's own format. Since entry 416 the
+    marking also carries the session's own conditions on the day (`conditions`: temperature, altitude or station pressure, humidity and
+    shot angle, each only where entered, and whether they came from the last sheet). They live in the marking rather than in columns of
+    their own, so the schema is unchanged and a session shared, exported or opened on the other device carries them; an older build reading
+    such a marking ignores them. Saving a session again updates its row in place, so its chronograph readings stay.
   - **The figures as computed:** in the marking, with the list's columns `shot_count` and `mean_radius_*` beside it.
   - **The definition:** `definition_json` keeps the sheet the session was analysed against, so a person's sheet deleted later leaves the session readable.
   - **A proof image of about 150 dpi,** by default: `proof_image` and its type.

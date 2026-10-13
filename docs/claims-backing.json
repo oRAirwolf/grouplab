@@ -605,6 +605,14 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/SetPool.cs Composite and SheetOf, and src/GroupLab.App/MainWindow.Compare.cs OpenPooled; held by SetPoolTests.ThePooledSetIsOneMarkingWithThePoolsFigures and PoolSetTests (entry 420)"
   },
+  "On the tour · In the user guide · The research behind it Velocity and the vertical From a group&#x27;s chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off, in the conditions on the day you enter under it.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/VelocityBlock.cs VelocityBlocks.Resolve and SessionConditions, src/GroupLab.App/MainWindow.Conditions.cs; held by VelocityBlockTests.ASessionsOwnConditionsComeFirstFieldByField (entry 416)"
+  },
+  "Since entry 416 the marking also carries the session's own conditions on the day (`conditions`: temperature, altitude or station pressure, humidity and shot angle, each only where entered, and whether they came from the last sheet).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/VelocityBlock.cs VelocityBlocks.Resolve and SessionConditions, src/GroupLab.App/MainWindow.Conditions.cs; held by VelocityBlockTests.ASessionsOwnConditionsComeFirstFieldByField (entry 416)"
+  },
   "About the target Answer what you can be bothered to answer and leave the rest.": {
    "kind": "decided",
    "where": "entry 129 section 5: every question optional"

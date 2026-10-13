@@ -245,8 +245,13 @@ Every edit shows a small message at the bottom of the screen saying what changed
 alone. It needs the session's chronograph readings (Ballistics, Chronograph), the shot distance and the load's BC; without one of them
 it says which, with a button to it. The share is in amber with its range, at the confidence it states, then a meter from none to all of
 it and two bars on one scale: the vertical spread measured on the shots, and the spread velocity alone would make at that distance by
-the solver, flown in the air and shot angle entered on Ballistics when that screen has the session's rifle and load chosen, or the
-standard day where nothing is entered. Where the range reaches all of it, it says the data cannot tell, and more readings and shots
+the solver, flown in the conditions on the day. **Conditions on the day**, under the block once it has readings, holds them: closed,
+one line says what is in use and where it came from; open, the temperature, the altitude (or **Use station pressure instead of
+altitude**), the humidity and the shot angle, in your own units, with **Fill from Ballistics** for this rifle and load, **Standard day** to
+clear them, a link to the rifle's page for its sight height and zero, and **Remember for my next sheet**, which offers them to your next
+sheet of the same day. Each one left blank comes from Ballistics, when that screen has the session's rifle and load chosen, and then from
+the standard day; a line compares velocity alone with these against a standard day. On the phone the card's **Conditions** row opens the
+same as a sheet, with **Use these**. Nothing is ever filled from a location or a weather service. Where the range reaches all of it, it says the data cannot tell, and more readings and shots
 narrow it. Where each reading was paired with its shot when the readings were accepted, a chart of height against velocity draws the
 measured slope and the solver's, and a sentence says whether they agree, and if not, to check the distance, the BC or the order the
 readings were paired in. Its why lists the readings' own spread, the solver's height per 10 fps, both vertical spreads, and that the

@@ -138,9 +138,69 @@ public sealed record VelocityConditions(AirInput Air, double AngleDegrees, strin
     public bool StandardAir => Air.TemperatureF == 59 && Air.PressureInHg is null && Air.AltitudeFt == 0;
 }
 
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 416 section 1, Alan's concept A: the conditions a session carries of its own, entered where the speeds are,
+/// after shooting. Each is optional; a blank one falls back on its own to the Ballistics conditions for the session's rifle and load, then to
+/// the standard day. Altitude and station pressure are one field entered either way; where both are given, the pressure is used. Sight
+/// height and zero stay on the rifle. Nothing here is ever filled from a location or a weather service.
+/// </summary>
+public sealed record SessionConditions(double? TemperatureF = null, double? AltitudeFt = null, double? PressureInHg = null, double? HumidityPct = null,
+    double? AngleDegrees = null, bool FromLastSheet = false)
+{
+    /// <summary>Whether nothing was entered.</summary>
+    public bool IsEmpty => TemperatureF is null && AltitudeFt is null && PressureInHg is null && HumidityPct is null && AngleDegrees is null;
+}
+
 /// <summary>Builds <see cref="VelocityBlock"/> from a marking, its records and the session's chronograph string.</summary>
 public static class VelocityBlocks
 {
+    /// <summary>
+    /// Entry 416 section 1.2: the conditions the solver flies the load in, field by field, as entry 329 set the order: the session's own value,
+    /// then the Ballistics conditions for its rifle and load, then the standard day. Null where neither gives anything, and the block then
+    /// takes the standard day and says so. The words say where each came from.
+    /// </summary>
+    public static VelocityConditions? Resolve(SessionConditions? own, VelocityConditions? ballistics)
+    {
+        if ((own is null || own.IsEmpty) && ballistics is null)
+        {
+            return null;
+        }
+
+        var standard = new AirInput();
+        var from = ballistics?.Air;
+        bool ownWhere = own?.PressureInHg is not null || own?.AltitudeFt is not null;
+        var air = new AirInput(
+            own?.TemperatureF ?? from?.TemperatureF ?? standard.TemperatureF,
+            ownWhere ? own!.PressureInHg : from?.PressureInHg,
+            ownWhere ? own!.AltitudeFt ?? 0 : from?.AltitudeFt ?? standard.AltitudeFt,
+            own?.HumidityPct ?? from?.HumidityPct ?? standard.HumidityPct);
+        double angle = own?.AngleDegrees ?? ballistics?.AngleDegrees ?? 0;
+        bool allOwn = own is { TemperatureF: not null, HumidityPct: not null, AngleDegrees: not null } && ownWhere;
+        // Section 4: values carried from the last sheet of the day are said to be, until they are changed.
+        string sheet = own?.FromLastSheet == true ? "your last sheet" : "this sheet";
+        string words = own is null || own.IsEmpty ? ballistics!.From
+            : allOwn ? sheet
+            : ballistics is not null ? $"{sheet}, and the rest from {ballistics.From}"
+            : $"{sheet}, and the rest a standard day";
+        return new VelocityConditions(air, angle, words);
+    }
+
+    /// <summary>
+    /// Entry 416 section 2.3: the line under the conditions, velocity alone with these against a standard day, both from the same group and
+    /// readings; null where the block is the standard day's own, so the line is gone on a standard day, or either block has no figure. Two
+    /// figures that read alike are still said: at a short distance the air moves velocity's part very little, and that is worth knowing.
+    /// </summary>
+    public static string? Comparison(VelocityBlock? withThese, VelocityBlock? onStandardDay, Func<double, string> size)
+    {
+        ArgumentNullException.ThrowIfNull(size);
+        if (ReferenceEquals(withThese, onStandardDay) || withThese?.PredictedSdInches is not { } these || onStandardDay?.PredictedSdInches is not { } standard)
+        {
+            return null;
+        }
+
+        return $"With these, velocity alone is {size(these)}. On a standard day it would be {size(standard)}.";
+    }
+
     /// <summary>The confidence the block asks for; what it shows is always the confidence the result states.</summary>
     public const double Confidence = 0.90;
 

@@ -9,23 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-13, entry 415 (before it: entries 420, 419, 418 and 417).
+**Last rewritten:** 2026-10-13, entry 416 (before it: entries 415, 420, 419, 418 and 417).
 
 ---
 
 ## In flight
 
-- **Queue of 2026-10-13** (Alan: 417, 418, 419, 420, then 415 and 416; stop at 70% of the week). **Entry 417 done:** a flatbed scan's holes
-  show the white lid, so only a rim is dark; detection now finds them (7, 9 and 8 of 9 on Quack's pages, 4 each before) and centres them on the rim's
-  circle, the snap goes to a light hole's middle, and a chosen bull no longer swallows drags. **Entry 418 done** but section 1 (request
-  99): the upload page sends a set of 30 photos in parts with a progress bar, plain errors and duplicates kept once. **Entry 419 done:**
-  the Discord bug-reports worker is built and tested; it runs once Alan does request 98. **Entry 420 done:** a pooled set opens
-  in its own tab, each sheet in its shade; drops open a tab each; a picture accepted again updates its record. **Entry 415 done**: the
-  iPhone follows Dynamic Type; 6 to 4 false marks; a photograph's codes read 10 to 40 percent sooner; finding the holes (3.2) not done.
+- **The queue of 2026-10-13 is done** (Alan: 417, 418, 419, 420, 415, 416; to 70% of the week). 417: a flatbed scan's light-middled
+  holes found and centred, the snap to their middle, drags with a bull chosen. 418: the upload page sends a set of 30 with progress (section
+  1 waits on request 99). 419: the Discord worker, waiting on request 98. 420: a pooled set opens in its own tab; drops open a tab each; a
+  picture accepted again updates its record. 415: the iPhone follows Dynamic Type; 6 to 4 false marks; codes read sooner (3.2 not done).
+  416: conditions on the day under Velocity and the vertical, both systems; a second Accept no longer loses a session's readings.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
-- **Waiting on Alan:** requests 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 99 and 98 (this queue), 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -36,7 +34,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Chronograph files** (Phase 5): every one of Alan's Xero exports reads, and a timed string proposes its pairing (entry 342);
   checking a proposal needs a sheet shot with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
-  session's own conditions would need a form (DESIGN NEEDED if wanted); the phone's picture waits for request 50's sitting.
+  session's own conditions are entered under the block (entry 416); the phone's picture waits for request 50's sitting.
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
@@ -83,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 416.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

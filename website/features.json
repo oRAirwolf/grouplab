@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Accepting a sheet a second time no longer loses the chronograph readings",
     "Switching from a thermal printer back to your sheet printer no longer leaves a red warning",
     "On the phone, closing the last open target from the Open targets sheet",
     "Clicking an empty part of the marking screen with the hand tool no longer report",
@@ -619,7 +620,7 @@
       "key": "velocity",
       "group": "The numbers",
       "name": "Velocity and the vertical",
-      "sentence": "From a group's chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off. Where each reading is paired with its shot, a chart of height against velocity says whether the shots follow the solver. The readings can be typed in or come from a file, a spreadsheet CSV or a Garmin Xero export (or, Experimental, a LabRadar report or a BulletSeeker export), paired with the shots by a proposal you accept.",
+      "sentence": "From a group's chronograph readings, how much of its up-and-down spread comes from velocity alone, with the range the shots allow and a band on the group picture you can switch off, in the conditions on the day you enter under it. Where each reading is paired with its shot, a chart of height against velocity says whether the shots follow the solver. The readings can be typed in or come from a file, a spreadsheet CSV or a Garmin Xero export (or, Experimental, a LabRadar report or a BulletSeeker export), paired with the shots by a proposal you accept.",
       "shot": "velocity",
       "platforms": [
         "Windows",
@@ -629,7 +630,10 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": "shows how much of a group's up-and-down spread comes from velocity alone",
+      "note": [
+        "shows how much of a group's up-and-down spread comes from velocity alone",
+        "You can now enter the day's temperature, altitude, humidity and shot angle"
+      ],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "mobile": {
