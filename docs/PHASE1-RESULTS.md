@@ -436,6 +436,26 @@ Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, ans
    largest-text pass (xxxLarge), and it showed GroupLab's text unchanged because nothing followed it; it now runs at AX5 and is held to
    larger text and the icons alone by `phone-sweep-check.py --larger`, as the emulator's is, so the parity column says **on iOS**.
 
+2. **Proof checklist row 3: the six false marks, each found.** The scoreboard over the nine corpus photographs read 221 of 223 holes and
+   6 false marks, as the row said. Looked at mark by mark, against the render at the same place: **diamond-22lr, four marks at the
+   middle of a diamond** (bulls in its first two columns, where the sheet was most crinkled): the white window's edge sat up to 0.035 in
+   off the render on one side, softly, and the bands of residue along one or two edges closed into one mark; on two of them the window's
+   one edge moved and the other did not, a stretch of about a tenth across the window. **diamond-22lr, one mark on a diamond's edge**,
+   0.3 in from a real torn hole: a crease's soft shadow along the edge, wider than print can move. **dominus-k, one mark** below the
+   frame, on the edge of the tape that held the corner. **The change, a mechanism and not a setting:** a mark that is not a clean round
+   hole of a bullet's size is refused as "the sheet's own printing, moved or blurred by a crinkle" when one shift of the whole print, of
+   no more than `MovedPrintInches` (0.04 in, the registration's own bent-sheet threshold, not chosen here), with no more blur than the
+   opening already ignores, explains every pixel of its residue. **Taken back first:** letting each pixel move on its own removed all
+   five diamond marks and lost two rendered holes on the zero grids (a crossing and the white centre at .224), so it was not kept; one
+   shift for the whole mark is what a crinkle does. **Result:** 221 of 223 and 4 false marks (2 of the windows' marks gone; the
+   stretched windows, the shadow and the tape stay). No hole lost anywhere: the corpus, the synthetic board (identical to main's but for
+   "far 3 ft", 44 to 45 on main already, so the baseline file is behind), the rendered sheets and zero grids, and the Core suite. **The two
+   missed:** magnus-c-6.5's torn hole refused as not compact (hull solidity 0.42 against 0.55; the torn-hole rescue, which has its
+   calibre, stops at 0.45, `TornHole.LeastSolidity`, and lowering it for one hole is the tuning the entry rules out), and load-sheet-22lr's hole inside printed marker 31, where no hole is looked for; neither
+   cause is clear enough to change for one hole. Nine photographs are too few to tune on, and this change is at that line: it removes
+   two marks on one sheet. The learning loop has 9 of the 50 corrected submissions its held-out share needs, so there is no held-out
+   share yet; its nightly re-score of those 9 runs from the next nightly's tag, so it starts from this code. Row 3 is not met.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

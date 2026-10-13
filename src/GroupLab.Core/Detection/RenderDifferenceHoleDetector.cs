@@ -389,16 +389,25 @@ public static partial class RenderDifferenceHoleDetector
             bool pastThePrint = !tooSmall && options.RefuseMargin && !cleanHole && IsPastThePrint(printed, page);
             string? words = tooSmall || pastThePrint ? null : WordsUnder(printed, blob.Hull, registration);
 
+            // NOTES-FROM-PLANNING.md entry 415 section 2: a mark the sheet's own printing makes where a crinkle moved or blurred an edge. On the
+            // crinkled .22 diamond sheet the windows' edges sat up to 0.035 in off the render on one side, softly, and the bands of residue
+            // along two edges closed into one mark. A mark that is not a clean round hole of a bullet's size, and whose every pixel of residue
+            // the print moved as one piece, by no more than it may move and still be that print, explains, is that print. A hole is not: the
+            // render has no hole in it, and no one shift of the print makes one.
+            bool movedPrint = shape is null && zone is null && !pastThePrint && words is null && nearTheGrid && !cleanHole
+                && ExplainedByMovedPrint(observed, expected, paper, block, binary, width, blob, inkFraction, range, threshold, MovedPrintInches * ppi, open);
+
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
                 : pastThePrint ? PastThePrint
                 : words is not null ? $"the sheet's own printed words, \"{words}\""
                 : !nearTheGrid ? OutsideTheGrid.TooFarOut
+                : movedPrint ? MovedPrint
                 : null);
 
             // Entry 291 section 7 item 4: a mark large enough that it may be a hole joined to what lies beside it is kept aside, whatever its
             // shape made of it, and looked at again once the size of a single hole is known.
-            if (!tooSmall && zone is null && !pastThePrint && words is null && nearTheGrid && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
+            if (!tooSmall && zone is null && !pastThePrint && words is null && nearTheGrid && !movedPrint && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
             {
                 large.Add((blob, hx, hy, ppi, markAreaIn));
             }
@@ -563,6 +572,102 @@ public static partial class RenderDifferenceHoleDetector
         }
 
         return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null);
+    }
+
+    /// <summary>What a mark the sheet's own printing explains, moved or blurred within <see cref="MovedPrintInches"/>, is refused with.</summary>
+    internal const string MovedPrint = "the sheet's own printing, moved or blurred by a crinkle, and not a clean round hole";
+
+    /// <summary>
+    /// Entry 415 section 2: whether the print moved as one piece by no more than <paramref name="reach"/> image pixels, and blurred by no more
+    /// than the opening ignores, explains every pixel of residue in <paramref name="blob"/>: for some one shift, each pixel lies between the
+    /// darkest and the lightest the shifted render has within the opening's radius of it. One shift for the whole mark, because a crinkle moves
+    /// the print, not each pixel on its own; allowed each its own, a hole on a fine grid's crossing was explained away by the lines around it.
+    /// Residue left over that the opening would keep, a disc of its radius, means something the print cannot explain is there.
+    /// </summary>
+    private static bool ExplainedByMovedPrint(GrayImage observed, GrayImage expected, double[] paper, int block, byte[] binary, int width, ImageBlob blob,
+        double inkFraction, double range, double threshold, double reach, int open)
+    {
+        int height = observed.Height, r = Math.Max(1, (int)Math.Ceiling(reach));
+        double least = Math.PI * open * open;
+
+        // The residue's own pixels and their place against the paper.
+        var pixels = new List<(int X, int Y, double N)>();
+        for (int y = blob.Top; y < blob.Top + blob.Height; y++)
+        {
+            for (int x = blob.Left; x < blob.Left + blob.Width; x++)
+            {
+                int i = (y * width) + x;
+                if (binary[i] != 0 && Inside(blob.Hull, x, y))
+                {
+                    pixels.Add((x, y, observed.Pixels[i] / Math.Max(1, PaperAt(paper, block, width, height, x, y))));
+                }
+            }
+        }
+
+        if (pixels.Count < least)
+        {
+            return false;
+        }
+
+        // The render's darkest and lightest within the opening's radius, over the box the shifts can reach.
+        int left = Math.Max(0, blob.Left - r), top = Math.Max(0, blob.Top - r);
+        int right = Math.Min(width - 1, blob.Left + blob.Width - 1 + r), bottom = Math.Min(height - 1, blob.Top + blob.Height - 1 + r);
+        int bw = right - left + 1, bh = bottom - top + 1;
+        var darkest = new byte[bw * bh];
+        var lightest = new byte[bw * bh];
+        for (int y = top; y <= bottom; y++)
+        {
+            for (int x = left; x <= right; x++)
+            {
+                byte lo = 255, hi = 0;
+                for (int v = Math.Max(0, y - open); v <= Math.Min(height - 1, y + open); v++)
+                {
+                    for (int u = Math.Max(0, x - open); u <= Math.Min(width - 1, x + open); u++)
+                    {
+                        if (((u - x) * (u - x)) + ((v - y) * (v - y)) <= open * open)
+                        {
+                            byte e = expected.Pixels[(v * width) + u];
+                            lo = Math.Min(lo, e);
+                            hi = Math.Max(hi, e);
+                        }
+                    }
+                }
+
+                darkest[((y - top) * bw) + (x - left)] = lo;
+                lightest[((y - top) * bw) + (x - left)] = hi;
+            }
+        }
+
+        int step = Math.Max(1, r / 8);
+        for (int dy = -r; dy <= r; dy += step)
+        {
+            for (int dx = -r; dx <= r; dx += step)
+            {
+                if ((dx * dx) + (dy * dy) > r * r)
+                {
+                    continue;
+                }
+
+                int unexplained = 0;
+                foreach (var (x, y, n) in pixels)
+                {
+                    int u = Math.Clamp(x + dx, left, right) - left, v = Math.Clamp(y + dy, top, bottom) - top;
+                    double low = 1 - ((1 - (darkest[(v * bw) + u] / 255.0)) * (1 - inkFraction));
+                    double high = 1 - ((1 - (lightest[(v * bw) + u] / 255.0)) * (1 - inkFraction));
+                    if (255 * Math.Max(0, Math.Max(low - n, n - high)) / range >= threshold && ++unexplained >= least)
+                    {
+                        break;
+                    }
+                }
+
+                if (unexplained < least)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /// <summary>Image pixels per page inch at an image point, from the registration's local area scale.</summary>

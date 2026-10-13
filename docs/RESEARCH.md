@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| The six false hole marks on the corpus, and a crinkle's moved print (entry 415 section 2) | not written | Nine photographs with a hole truth cannot separate the mechanism from the sheet it was found on: two marks removed, both on one crinkled sheet, and the first version of the change lost holes on a zero grid's crossings. PHASE1-RESULTS.md records each mark's cause; worth revisiting when the learning loop's corrected submissions reach the held-out share. |
 | A scan decoded once, the first trajectory, the CEP table (entry 414 section 1) | not written | Ordinary engineering a shooter never sees beyond a faster open; the one finding another developer could use, that OpenCV's grey decode of a PNG is libpng's own truncated sum and not its BGR to grey conversion, is recorded with its measurements in docs/PERFORMANCE.md. |
 | Reading a sheet's codes at once crashing Linux (entry 414) | not written | The data cannot separate a fault in OpenCV's QR detectors from one in how they were called: the crashes were three in twelve runs and left no core to read. docs/PERFORMANCE.md records the runs and why it was taken back. |
 | A force-stop in the middle of a reading (entry 414 section 2) | not written | It did not reproduce in five rounds, so there is nothing for a shooter to do differently; the check runs after every nightly. |
