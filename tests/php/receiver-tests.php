@@ -180,6 +180,62 @@ for ($i = 0; $i < 6; $i++) {
 check('the sixth submission from one address in an hour is refused', ($last['json']['code'] ?? '') === 'rate_limit', $last['raw']);
 
 // ---------------------------------------------------------------------
+// Entry 418 section 3: a whole set in one go, as several requests, stored as one submission
+// ---------------------------------------------------------------------
+
+$setFrom = '198.51.100.20';
+$sheets = [];
+for ($i = 0; $i < 12; $i++) {
+    $sheets[] = make($root, "s$i.jpg", 'jpeg', 2048);
+}
+// Copies taken now, because the receiver moves each file it is sent.
+$copyOfFirst = copy_made($root, $sheets[0]);
+$copyOfFourth = copy_made($root, $sheets[3]);
+$labelled = static fn (array $made) => array_map(static fn ($m) => 'sheet ' . (1 + intdiv((int) substr($m['name'], 1), 4)) . ' of 3, front', $made);
+$setBytes = array_sum(array_column($sheets, 'size'));
+$p1 = request($root, $receiverSource, $good + ['part' => '1', 'parts' => '2', 'set_bytes' => (string) $setBytes, 'labels' => $labelled(array_slice($sheets, 0, 8))],
+    files_array(array_slice($sheets, 0, 8)), ['remote' => $setFrom]);
+$setId = $p1['json']['id'] ?? '';
+check('the first part of a set is taken and given a token for the rest', ($p1['json']['ok'] ?? false) === true && ($p1['json']['set_token'] ?? '') !== '', $p1['raw']);
+check('and is not in quarantine until the set is whole', glob($root . '/private/quarantine/*_' . $setId) === [] && is_file($root . '/private/sets/' . $setId . '/set.json'));
+
+$refused = request($root, $receiverSource, $good + ['part' => '2', 'parts' => '2', 'set_id' => $setId, 'set_token' => 'not-the-token'],
+    files_array([make($root, 'x.jpg', 'jpeg')]), ['remote' => $setFrom]);
+check('a later part without the set\'s token is refused', ($refused['json']['code'] ?? '') === 'set', $refused['raw']);
+$elsewhere = request($root, $receiverSource, $good + ['part' => '2', 'parts' => '2', 'set_id' => $setId, 'set_token' => $p1['json']['set_token'] ?? ''],
+    files_array([make($root, 'x.jpg', 'jpeg')]), ['remote' => '198.51.100.21']);
+check('and so is one from another address', ($elsewhere['json']['code'] ?? '') === 'set', $elsewhere['raw']);
+
+// The last part brings one file the set already has: it is kept once.
+$p2files = array_merge(array_slice($sheets, 8), [['name' => 'again.jpg', 'tmp' => $copyOfFirst, 'size' => $sheets[0]['size']]]);
+$p2 = request($root, $receiverSource, ['part' => '2', 'parts' => '2', 'set_id' => $setId, 'set_token' => $p1['json']['set_token'] ?? '', 'level' => 'publishable', 'labels' => $labelled(array_slice($sheets, 8))],
+    files_array($p2files), ['remote' => $setFrom]);
+check('the last part makes the set one submission', ($p2['json']['ok'] ?? false) === true && ($p2['json']['files'] ?? 0) === 12, $p2['raw']);
+check('and a file sent twice in it is kept once', ($p2['json']['duplicates'] ?? 0) === 1, $p2['raw']);
+$dir = glob($root . '/private/quarantine/*_' . $setId)[0] ?? null;
+$meta = $dir !== null ? json_decode((string) file_get_contents($dir . '/meta.json'), true) : [];
+check('it lands in quarantine whole, with its consent and the first part\'s answers', count($meta['files'] ?? []) === 12 && ($meta['consent']['level'] ?? '') === 'publishable' && ($meta['answers']['caliber'] ?? '') === '0.264');
+check('each file labelled by sheet and view', ($meta['files'][0]['label'] ?? '') === 'sheet 1 of 3, front' && ($meta['files'][11]['label'] ?? '') === 'sheet 3 of 3, front', json_encode($meta['files'][11] ?? []));
+check('and its staging folder is gone', !is_dir($root . '/private/sets/' . $setId));
+
+// The same set sent again: every file is already in, so nothing new is stored and it counts as no submission.
+$before = count(glob($root . '/private/quarantine/*') ?: []);
+$again = request($root, $receiverSource, $good, files_array([['name' => 'resent.jpg', 'tmp' => $copyOfFourth, 'size' => $sheets[3]['size']]]), ['remote' => '198.51.100.22']);
+check('a file sent again within a day is recognised and not stored twice', ($again['json']['ok'] ?? false) === true && ($again['json']['already'] ?? false) === true && ($again['json']['id'] ?? '') === $setId, $again['raw']);
+check('and makes no new submission', count(glob($root . '/private/quarantine/*') ?: []) === $before);
+
+// A set larger than one submission may hold, and a part that says it continues a set without saying which.
+$big = request($root, $receiverSource, $good + ['part' => '1', 'parts' => '4', 'set_bytes' => (string) (401 * 1024 * 1024)], files_array([make($root, 'b.jpg', 'jpeg')]), ['remote' => '198.51.100.23']);
+check('a set declared over the set limit is refused before anything is kept', ($big['json']['code'] ?? '') === 'set_too_large', $big['raw']);
+$orphan = request($root, $receiverSource, $good + ['part' => '2', 'parts' => '2'], files_array([make($root, 'o.jpg', 'jpeg')]), ['remote' => '198.51.100.24']);
+check('a part with no set named is refused', ($orphan['json']['code'] ?? '') === 'set', $orphan['raw']);
+
+// The hour's bytes: a set may not let one address send more than five 90 MB submissions could.
+$heavy = request($root, $receiverSource, $good + ['part' => '1', 'parts' => '5', 'set_bytes' => (string) (400 * 1024 * 1024)], files_array([make($root, 'h.jpg', 'jpeg')]), ['remote' => '198.51.100.25']);
+$heavier = request($root, $receiverSource, $good + ['part' => '1', 'parts' => '2', 'set_bytes' => (string) (60 * 1024 * 1024)], files_array([make($root, 'h2.jpg', 'jpeg')]), ['remote' => '198.51.100.25']);
+check('an address\'s sets in an hour stop at the bytes five submissions could bring', ($heavy['json']['ok'] ?? false) === true && ($heavier['json']['code'] ?? '') === 'rate_limit', $heavier['raw']);
+
+// ---------------------------------------------------------------------
 // The crash receiver, entry 129 section 5. Same shape: its constants are pointed at the temporary
 // tree and each request runs in its own process.
 // ---------------------------------------------------------------------

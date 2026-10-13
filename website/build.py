@@ -1208,6 +1208,8 @@ def limit_problems() -> list:
         ("MAX_FILES", str(limit["maxFiles"])),
         ("MAX_FILE_BYTES", f'{limit["maxFileMegabytes"]} * 1024 * 1024'),
         ("MAX_SUBMISSION_BYTES", f'{limit["maxSubmissionMegabytes"]} * 1024 * 1024'),
+        ("MAX_SET_FILES", str(limit["maxSetFiles"])),
+        ("MAX_SET_BYTES", f'{limit["maxSetMegabytes"]} * 1024 * 1024'),
     ]
     for name, expected in pairs:
         got = constant(name)
@@ -1292,12 +1294,17 @@ def page_send() -> str:
 </section>
 
 <section class="wrap section last">
-<form id="send" class="send-form stack" method="post" action="/api/upload.php" enctype="multipart/form-data">
+<form id="send" class="send-form stack" method="post" action="/api/upload.php" enctype="multipart/form-data" data-max-files="{limit["maxFiles"]}" data-max-file-mb="{limit["maxFileMegabytes"]}" data-max-send-mb="{limit["maxSubmissionMegabytes"]}" data-max-set-files="{limit["maxSetFiles"]}" data-max-set-mb="{limit["maxSetMegabytes"]}">
 <noscript><p class="small warn">Sending needs JavaScript, because of the check that proves you are a person. Reading this page does not.</p></noscript>
 
 <h2 class="h3">The photos</h2>
-<p class="small faint">Up to {limit["maxFiles"]} files, {limit["maxFileMegabytes"]} MB each and {limit["maxSubmissionMegabytes"]} MB in total. {types}. Not {esc(limit["typesRefused"][0])}: it is not a photograph and the rebuild cannot handle it. Send them as they came off the camera, not cropped and not through a messaging app.</p>
+<p class="small faint">Up to {limit["maxSetFiles"]} files, {limit["maxFileMegabytes"]} MB each and {limit["maxSetMegabytes"]} MB in total, so a set shot across several sheets goes in one go: the page sends it in parts of up to {limit["maxFiles"]} files and {limit["maxSubmissionMegabytes"]} MB by itself, and it arrives as one submission. {types}. Not {esc(limit["typesRefused"][0])}: it is not a photograph and the rebuild cannot handle it. Send them as they came off the camera, not cropped and not through a messaging app.</p>
 <input type="file" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
+<div id="setLabels" class="stack tight" hidden>
+<p class="small faint">If these are several sheets of one set, say which sheet and which view each photo is. Leave any you are not sure of.</p>
+<label class="small">How many sheets? <select id="setSheets"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>
+<div id="setRows" class="stack tight"></div>
+</div>
 
 <h2 class="h3">About the target</h2>
 <p class="small faint">Answer what you can be bothered to answer and leave the rest. Every question here is one that cannot be read off the image.</p>
@@ -1329,6 +1336,7 @@ def page_send() -> str:
 <div class="actions">
 <button type="submit" class="btn btn-primary btn-big" id="sendButton"><span>Send the photos</span></button>
 </div>
+<progress id="sendProgress" max="1" value="0" hidden></progress>
 <p id="sendStatus" class="small" role="status" aria-live="polite"></p>
 </form>
 </section>
@@ -3360,17 +3368,129 @@ SEND_JS = """(function () {
   if (!form) { return; }
   var button = document.getElementById('sendButton');
   var status = document.getElementById('sendStatus');
+  var bar = document.getElementById('sendProgress');
+  var photos = document.getElementById('photos');
+  var labels = document.getElementById('setLabels');
+  var sheets = document.getElementById('setSheets');
+  var rows = document.getElementById('setRows');
+  var MB = 1024 * 1024;
+  var limit = {
+    files: +form.getAttribute('data-max-files'),
+    fileMb: +form.getAttribute('data-max-file-mb'),
+    sendMb: +form.getAttribute('data-max-send-mb'),
+    setFiles: +form.getAttribute('data-max-set-files'),
+    setMb: +form.getAttribute('data-max-set-mb')
+  };
+  var VIEWS = ['', 'front', 'from the left', 'from the right', 'scan'];
+  var TYPES = /\.(jpe?g|png|tiff?|heic|heif)$/i;
 
   function say(text, bad) {
     status.textContent = text;
     status.className = 'small ' + (bad ? 'warn' : 'teal');
   }
 
+  function mb(bytes) { return (bytes / MB).toFixed(1); }
+
+  // Entry 418 section 3.1: with several photos, each can say which sheet of the set it shows and from where.
+  function drawRows() {
+    var files = photos.files ? Array.prototype.slice.call(photos.files) : [];
+    rows.innerHTML = '';
+    labels.hidden = files.length < 2;
+    var n = +sheets.value;
+    files.forEach(function (f, i) {
+      var row = document.createElement('div');
+      row.className = 'small';
+      var name = document.createElement('span');
+      name.textContent = f.name + ' ';
+      var sheet = document.createElement('select');
+      sheet.setAttribute('data-sheet', i);
+      sheet.setAttribute('aria-label', 'Which sheet ' + f.name + ' shows');
+      [''].concat(Array.apply(null, Array(n)).map(function (_, k) { return (k + 1) + ' of ' + n; })).concat(n > 1 ? ['all together'] : []).forEach(function (v) {
+        var o = document.createElement('option'); o.value = v; o.textContent = v === '' ? 'sheet?' : 'sheet ' + v; sheet.appendChild(o);
+      });
+      var view = document.createElement('select');
+      view.setAttribute('data-view', i);
+      view.setAttribute('aria-label', 'Which view ' + f.name + ' is');
+      VIEWS.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v === '' ? 'view?' : v; view.appendChild(o); });
+      row.appendChild(name); row.appendChild(sheet); row.appendChild(document.createTextNode(' ')); row.appendChild(view);
+      rows.appendChild(row);
+    });
+  }
+  photos.addEventListener('change', drawRows);
+  sheets.addEventListener('change', drawRows);
+
+  function labelOf(i) {
+    var sheet = rows.querySelector('[data-sheet="' + i + '"]');
+    var view = rows.querySelector('[data-view="' + i + '"]');
+    var parts = [];
+    if (sheet && sheet.value) { parts.push(sheet.value === 'all together' ? 'all sheets together' : 'sheet ' + sheet.value); }
+    if (view && view.value) { parts.push(view.value); }
+    return parts.join(', ');
+  }
+
+  // Section 2.2: everything the receiver would refuse is said before a byte is sent.
+  function problem(files) {
+    if (files.length > limit.setFiles) { return 'That is ' + files.length + ' files, and one set can hold ' + limit.setFiles + '. Please send them as two sets.'; }
+    var total = 0;
+    for (var i = 0; i < files.length; i++) {
+      var f = files[i];
+      if (/\.pdf$/i.test(f.name) || f.type === 'application/pdf') { return f.name + ' is a PDF. This page takes photographs only: save a scan as a JPEG or a PNG and send that.'; }
+      if (!TYPES.test(f.name) && !/^image\//.test(f.type)) { return f.name + ' is not a photo this page can take. JPEG, PNG, HEIC and TIFF are accepted.'; }
+      if (f.size > limit.fileMb * MB) { return f.name + ' is ' + mb(f.size) + ' MB, over the ' + limit.fileMb + ' MB a photo may be. Send it as it came off the camera, or as a JPEG.'; }
+      total += f.size;
+    }
+    if (total > limit.setMb * MB) { return 'These come to ' + mb(total) + ' MB, over the ' + limit.setMb + ' MB one set can hold. Please send them as two sets.'; }
+    return null;
+  }
+
+  // In order, a new part when the next file would pass the files or the megabytes one send may carry.
+  function split(files) {
+    var parts = [], current = [], bytes = 0, room = limit.sendMb * MB - MB;
+    files.forEach(function (f, i) {
+      if (current.length && (current.length >= limit.files || bytes + f.size > room)) { parts.push(current); current = []; bytes = 0; }
+      current.push(i); bytes += f.size;
+    });
+    if (current.length) { parts.push(current); }
+    return parts;
+  }
+
+  // Section 2.3: a reply that is not GroupLab's own says what happened, with its status, and whether anything may have arrived.
+  function notOurs(code, part, parts) {
+    var what = code === 413 ? 'The upload was too large for one send (HTTP 413).'
+      : code === 0 ? 'The connection dropped before the server answered.'
+      : (code === 502 || code === 504 || code === 522 || code === 524) ? 'The server took too long to answer (HTTP ' + code + ').'
+      : 'The server sent a reply this page could not read (HTTP ' + code + ').';
+    var arrived = parts > 1
+      ? ' Nothing is stored as a submission until the last part of a set arrives, so sending the whole set again is safe.'
+      : ' It may have arrived anyway. Sending again is safe: GroupLab recognises photos it already has and keeps each once.';
+    return what + arrived;
+  }
+
+  function send(data, sentBefore, partBytes, total, part, parts) {
+    return new Promise(function (resolve) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', form.action);
+      xhr.upload.onprogress = function (e) {
+        if (!e.lengthComputable) { return; }
+        var done = sentBefore + Math.min(e.loaded, partBytes);
+        bar.value = Math.min(1, done / total);
+        say((parts > 1 ? 'Sending part ' + part + ' of ' + parts + ': ' : 'Sending: ') + mb(Math.min(done, total)) + ' of ' + mb(total) + ' MB.', false);
+      };
+      xhr.upload.onload = function () { say('Received, checking the files.', false); };
+      xhr.onload = function () {
+        var r = null;
+        try { r = JSON.parse(xhr.responseText); } catch (e) { r = null; }
+        resolve(r && typeof r === 'object' ? r : { ok: false, error: notOurs(xhr.status, part, parts) });
+      };
+      xhr.onerror = function () { resolve({ ok: false, error: notOurs(0, part, parts) }); };
+      xhr.send(data);
+    });
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-
-    var photos = document.getElementById('photos');
-    if (!photos.files || photos.files.length === 0) {
+    var files = photos.files ? Array.prototype.slice.call(photos.files) : [];
+    if (files.length === 0) {
       say('Choose at least one photo first.', true);
       return;
     }
@@ -3379,31 +3499,54 @@ SEND_JS = """(function () {
       document.getElementById('level_testing').focus();
       return;
     }
+    var wrong = problem(files);
+    if (wrong) { say(wrong, true); return; }
 
     button.disabled = true;
-    say('Sending. Large photos over a phone connection can take a few minutes, so please leave this page open.', false);
+    bar.hidden = false;
+    bar.value = 0;
+    var parts = split(files);
+    var total = files.reduce(function (t, f) { return t + f.size; }, 0);
+    var base = new FormData(form);
+    base.delete('photos[]');
+    var setId = '', token = '', sentBefore = 0, duplicates = 0;
 
-    var data = new FormData(form);
-    fetch(form.action, { method: 'POST', body: data })
-      .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'The server answered with something this page could not read.' }; }); })
-      .then(function (r) {
-        if (r && r.ok) {
-          form.innerHTML = '<h2 class=\"h3\">Thank you.</h2>' +
-            '<p>Your photos are in. Reference <span class=\"mono\">' + (r.id || '') + '</span>, which you do not need to keep.</p>' +
-            '<p class=\"small faint\">Nothing else happens now: no email, no account, no follow up. ' +
-            '<a href=\"/shoot-a-target/\">Back to shooting a target</a>.</p>';
-          form.scrollIntoView({ block: 'start' });
-          return;
-        }
-        button.disabled = false;
-        say((r && r.error) || 'That did not go through. Please try again.', true);
-        if (window.turnstile) { window.turnstile.reset(); }
-      })
-      .catch(function () {
-        button.disabled = false;
-        say('That did not go through, and it looks like the connection dropped. Your photos are still on your phone; please try again.', true);
-        if (window.turnstile) { window.turnstile.reset(); }
+    function finish(r) {
+      bar.value = 1;
+      var again = r.already ? '<p>These photos were already in: nothing new was stored, and nothing more is needed.</p>'
+        : duplicates > 0 ? '<p class=\"small faint\">' + duplicates + ' of them had arrived before and were kept once.</p>' : '';
+      form.innerHTML = '<h2 class=\"h3\">Thank you.</h2>' +
+        '<p>Your photos are in. Reference <span class=\"mono\">' + (r.id || '') + '</span>, which you do not need to keep.</p>' + again +
+        '<p class=\"small faint\">Nothing else happens now: no email, no account, no follow up. ' +
+        '<a href=\"/shoot-a-target/\">Back to shooting a target</a>.</p>';
+      form.scrollIntoView({ block: 'start' });
+    }
+
+    function failed(r) {
+      button.disabled = false;
+      bar.hidden = true;
+      say((r && r.error) || 'That did not go through. Please try again.', true);
+      if (window.turnstile) { window.turnstile.reset(); }
+    }
+
+    function next(k) {
+      var data = new FormData();
+      base.forEach(function (v, key) { data.append(key, v); });
+      data.append('part', String(k + 1));
+      data.append('parts', String(parts.length));
+      if (parts.length > 1) { data.append('set_bytes', String(total)); }
+      if (k > 0) { data.append('set_id', setId); data.append('set_token', token); }
+      var bytes = 0;
+      parts[k].forEach(function (i) { data.append('photos[]', files[i], files[i].name); data.append('labels[]', labelOf(i)); bytes += files[i].size; });
+      send(data, sentBefore, bytes, total, k + 1, parts.length).then(function (r) {
+        if (!r || !r.ok) { failed(r); return; }
+        duplicates += r.duplicates || 0;
+        sentBefore += bytes;
+        if (k === 0 && parts.length > 1) { setId = r.id || ''; token = r.set_token || ''; }
+        if (k + 1 < parts.length) { next(k + 1); } else { finish(r); }
       });
+    }
+    next(0);
   });
 })();
 """

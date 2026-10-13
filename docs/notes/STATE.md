@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-13, entry 417 (before it: entry 415 sections 1 and 2, and entries 414 and 413).
+**Last rewritten:** 2026-10-13, entry 418 (before it: entry 417, entry 415 sections 1 and 2, and entry 414).
 
 ---
 
@@ -17,9 +17,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Queue of 2026-10-13** (Alan: 417, 418, 419, 420, then 415 and 416; stop at 70% of the week). **Entry 417 done:** a flatbed scan's holes
   show the white lid, so only a rim is dark; detection now finds them (7, 9 and 8 of 9 on Quack's pages, 4 each before) and centres them on the rim's
-  circle, the snap goes to a light hole's middle, and a chosen bull no longer swallows drags. **Entry 415 sections 1 and 2 done** (the
+  circle, the snap goes to a light hole's middle, and a chosen bull no longer swallows drags. **Entry 418 done** but section 1 (request
+  99): the upload page sends a set of 30 photos in parts with a progress bar, plain errors and duplicates kept once. **Entry 415 sections 1 and 2 done** (the
   iPhone follows Dynamic Type, held at Android's largest; 6 to 4 false marks on the corpus); section 3 and the fold wait for their turn.
-- **Entry 414 done** (the overnight queue): a 600 dpi PNG decoded once, the solver warmed; reading codes at once taken back.
 - **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
@@ -54,7 +54,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23** (98 the Discord bot, steps 1 and 2 now; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **24** (99 a read-only log paste for entry 418; 98 the Discord bot, steps 1 and 2 now; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -81,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 415, 416, 418, 419 and 420.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 415, 416, 419 and 420.
 
 ## Things that would surprise somebody who was not here yesterday
 

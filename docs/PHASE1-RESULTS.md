@@ -487,6 +487,31 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
    snaps within 0.02 in of a hole on the paper. `Entry417Tests`: with a bull chosen, a tap on a hole still gives it and a press and drag
    moves it.
 
+## Entry 418: the upload page, from a tester's bug report (2026-10-13)
+
+1. **Which reply it was: waiting on request 99.** Code's own connection to the server is refused, so the access log's lines for the
+   posts of 12 October are one read-only paste for Alan. What the files show without it: Quack's two .50 AE uploads are byte for byte
+   the same, and the first (`312dab10`, 02:53:26 UTC) arrived although the page said it had not; `06910ef5`, sent three minutes later, went
+   to `C:\Dev\grouplab-trash\2026-10-13\` (section 4). The page's "could not read" is any reply that is not GroupLab's JSON.
+2. **Progress and plain errors.** The page sends with progress events: a plain bar under the button, the megabytes sent of the total,
+   then "Received, checking the files", then the reference. Before a byte is sent it says what is over and what to do: a file over 30 MB,
+   a set over 30 files or 400 MB, a PDF or another type. A reply that is not GroupLab's own says what happened with its status (413 is
+   "too large for one send", 502, 504, 522 and 524 are "took too long", a dropped connection is said as one) and whether anything may
+   have arrived: a set is never stored until its last part, and a single send can be repeated safely.
+3. **A whole set in one go.** Up to 30 files and 400 MB, sent by the page in parts of up to 10 files and 90 MB, each well under
+   Cloudflare's 100 MB. The first part passes the person check and is given a token; the later parts bring it, from the same address,
+   within the hour, in order. The parts wait in `private/sets`, which the intake worker never reads, and the set moves into quarantine in
+   one step when its last part arrives, as one submission with each file labelled by sheet and view where the sender gave them ("sheet 1
+   of 3, front"). A set given up half way is deleted with nothing kept after two hours. **Counted as one submission**, and its bytes
+   against a new hourly budget per address of 450 MB, five submissions of 90 MB, which is what one address could already send in an hour:
+   so no address can send more in an hour than before. Every existing protection stays (Turnstile on every set's first part and every
+   single send, the 5 an hour and 20 a day, the global 60 an hour, the disk cap, sniffing, clamd and quarantine, the consent text).
+   **Duplicates:** each stored file's SHA-256 is kept for a day; a file sent again in the set or within a day is kept once, and a send
+   whose every file is already in stores nothing and answers with the earlier reference. limits.json holds the two new limits and the
+   site build holds the receiver to them. Receiver tests: 122, among them a set split across requests, a wrong token, another address, a
+   file sent twice in a set, a set sent again, a set over the limit, a part naming no set and the hour's bytes.
+4. **The .50 AE duplicates:** identical file for file (eight each); `312dab10` kept, `06910ef5` to the trash.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

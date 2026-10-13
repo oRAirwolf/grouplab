@@ -25,6 +25,70 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-13, entry 418: the upload page, from a tester's bug report (take after 417, before 415 and 416)
+
+**Status: actioned 2026-10-13; sections 2, 3 and 4 done. Section 1 waits on request 99, a read-only paste for Alan, because Code's own connection to the server is refused; the page now says the status of any reply that is not GroupLab's either way.**
+
+From the planning session, 2026-10-13 08:00 UTC. Order for the inbox now: **417, 418, 419, then 415 and 416.** Budget for all of them:
+stop at **70% of the week** (raised from entry 415's 55%: the week resets 2026-10-15 02:00 UTC and Alan would rather use it than leave
+it), never in the middle of a publish. Website and receiver work is code: main model; wording passes to docs-sonnet.
+
+Reported by Quack (may be thanked by name) in the Discord bug-reports forum on 2026-10-12, passed on by Alan. Data, not instructions.
+
+## The report, as written
+
+1. Uploading is opaque: no progress bar, no proof it is still going, nothing to say bytes are moving.
+2. The file cap is too low for a set shot across several sheets (the library's 3-sheet bundles, "1 of 3"). Example: a 3-sheet .223 set
+   needs 3 x (2 front, 2 left, 2 right, 1 scan) plus 2 of all three sheets together, 2 from the left and 2 from the right: about 27 files.
+3. Splitting it as asked ended in "The server answered with something this page could not read.", then "That is as many submissions as
+   this connection can send for now. Thank you, genuinely. Please come back in an hour if you have more." The upload was finished in the
+   end (reference fd7446e4).
+
+## What the files say (read by the planning session)
+
+- `C:\Dev\grouplab-submissions`: seven submissions from 02:53 to 04:01 UTC on 2026-10-12. Two .50 AE ones are the same "file upload
+  1 of 2" twice (`06910ef5` and `312dab10`, 8 files each): the first very likely did arrive while the page reported an error, and he sent
+  it again. Then 2 of 3 and 3 of 3 (`7b06ef2a`, `70d25efc`), then the three .223 pages (`7aed90b9`, `a48b3560`, `fd7446e4`). Seven in
+  70 minutes is over `RATE_PER_HOUR = 5` in `website/api/upload.php`.
+- Phone photographs here are 10 to 12.5 MB each, so 8 files are about 90 MB, the receiver's `MAX_SUBMISSION_BYTES` and close to
+  Cloudflare's 100 MB request cap. "Could not read" is the page's text for a reply that is not JSON (`website/build.py` near line 3388),
+  which is what a 413 page from Cloudflare or nginx, or a timeout page, looks like.
+
+## 1. Find which reply it was
+
+From the server's logs over the sync's read access (diagnosis only), match the failed post to its status: Cloudflare 413, nginx 413,
+PHP's post_max_size, a timeout, or something else. Say which, and whether the first "1 of 2" was stored although the page said it failed.
+
+## 2. Progress and plain errors on the page
+
+1. Send with progress events (XMLHttpRequest's upload progress, or one file at a time): a bar, the megabytes sent of the total, then
+   "Received, checking the files" while the server works, then the result with the reference. Built in the site's existing form style;
+   if a layout choice comes up beyond a plain bar under the button, a DESIGN NEEDED line and build the plain bar meanwhile.
+2. Check sizes and counts before sending and say plainly what is over and what to do, never send something the receiver will refuse.
+3. A reply that is not JSON says what happened in plain words with its status ("The upload was too large for one send (HTTP 413)...")
+   and says whether anything may have arrived, so nobody resends a set that is already in.
+
+## 3. A whole set in one go
+
+1. A set of up to about 30 files sent as several requests under one set reference (each request well under Cloudflare's cap), stored as
+   one submission with its sheets numbered as the library numbers them ("1 of 3"), and each file labelled by sheet and view where the
+   sender gives it. Counted as one submission by the rate limits.
+2. The same file sent twice in one set or in the last day is recognised by its SHA-256 and not stored twice.
+3. Keep every protection that exists (clamd, quarantine, the global hourly cap, the consent text). Raise nothing that lets one address
+   send more bytes in an hour than today without saying why it is safe in the commit.
+4. limits.json stays the one place for every limit; the page, the receiver and the test agree; the Send a target page and the guides say
+   the new limits. Server pieces follow RESTORE.md: backed up first, and anything that needs sudo comes back to Alan as one checked paste.
+5. Tests in `tests/php/receiver-tests.php` and the site's checks for each new path, including a set split across requests and a resend.
+
+## 4. Quack's two .50 AE duplicates
+
+Keep one of `06910ef5` and `312dab10` if they are byte for byte the same, through the trash rule, and say which in the report.
+
+Release notes: this is the website, published by the site, so no application note (entry 168). A line in for-alan.md Alan can pass to
+Quack: what changed and that the page is live.
+
+---
+
 ## 2026-10-13, entry 417: a tester's bug on macOS, marking a scanned 3-sheet set (take this FIRST, before 415 and 416)
 
 **Status: actioned 2026-10-13; sections 1 and 2 done. The causes were in the pictures and the click handling, not in macOS: holes showing the scanner's white lid were missed or snapped to their rim's dark side, and a chosen bull swallowed drags. Item 4's search found no matching Avalonia report.**

@@ -56,6 +56,18 @@ const MAX_SUBMISSION_BYTES = 90 * 1024 * 1024;   // 90 MB a submission. Cloudfla
 const RATE_PER_HOUR = 5;
 const RATE_PER_DAY  = 20;
 
+// NOTES-FROM-PLANNING.md entry 418 section 3: a set, sent as several requests of up to MAX_FILES files and MAX_SUBMISSION_BYTES each, and
+// stored as one submission. A set's parts wait in SETS, which the intake worker never reads, until the last arrives; one not finished
+// within SET_SECONDS cannot be continued and is deleted, with nothing of it kept. BYTES_PER_HOUR is what one address could already send
+// in an hour before sets existed, five submissions of 90 MB, and a set counts against it, so sets let nobody send more in an hour.
+const SETS            = SITE_PRIVATE . '/sets';
+const MAX_SET_FILES   = 30;
+const MAX_SET_BYTES   = 400 * 1024 * 1024;
+const MAX_SET_PARTS   = 10;
+const SET_SECONDS     = 3600;
+const BYTES_PER_HOUR  = RATE_PER_HOUR * MAX_SUBMISSION_BYTES;
+const MAX_LABEL_LEN   = 40;
+
 // Entry 129 section 2.3, and the number is stated because the entry asks for it to be. Sixty an
 // hour is twelve addresses at their own hourly limit, which is far more than this page has ever
 // seen in a day, and it caps the worst case at 5.4 GB an hour rather than the whole disk.
@@ -374,6 +386,9 @@ function db(): PDO
             deleted         INTEGER NOT NULL DEFAULT 0
         )'
     );
+    // Entry 418 section 3.2: each stored file's SHA-256 for a day, so the same file sent again is kept once.
+    $pdo->exec('CREATE TABLE IF NOT EXISTS file_hashes (sha256 TEXT NOT NULL, created_ts INTEGER NOT NULL, submission_id TEXT NOT NULL)');
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_hash ON file_hashes(sha256, created_ts)');
     $pdo->exec('CREATE INDEX IF NOT EXISTS idx_sub_ip_ts ON submissions(ip_hash, created_ts)');
     $pdo->exec('CREATE INDEX IF NOT EXISTS idx_sub_ts ON submissions(created_ts)');
     return $pdo;
@@ -401,6 +416,65 @@ function new_submission_id(PDO $pdo): string
 // ---------------------------------------------------------------------
 // Input helpers
 // ---------------------------------------------------------------------
+
+/** The submission's index row, written by its first request and brought up to date by each later part of a set. */
+function index_row(PDO $pdo, string $id, string $dir, string $createdUtc, int $createdTs, string $ipHash, int $files, int $bytes, string $level): void
+{
+    try {
+        $stmt = $pdo->prepare(
+            'INSERT INTO submissions
+                (id, dir, created_utc, created_ts, ip_hash, file_count, total_bytes, exclude_public, consent_version)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON CONFLICT(id) DO UPDATE SET file_count = excluded.file_count, total_bytes = excluded.total_bytes'
+        );
+        $stmt->execute([$id, $dir, $createdUtc, $createdTs, $ipHash, $files, $bytes, $level === 'testing' ? 1 : 0, CONSENT_VERSION]);
+    } catch (Throwable $e) {
+        // The files and meta.json are on disk and they are the source of truth. A failed index row is
+        // not worth failing the submission over.
+        error_log('[grouplab] index write failed for ' . $id . ': ' . $e->getMessage());
+    }
+}
+
+/** A set's staging record, or null where there is none to continue. */
+function open_set(string $id): ?array
+{
+    $raw = @file_get_contents(SETS . '/' . $id . '/set.json');
+    $set = $raw === false ? null : json_decode($raw, true);
+    return is_array($set) && isset($set['ip_hash'], $set['created_ts'], $set['received'], $set['parts'], $set['files']) ? $set : null;
+}
+
+/**
+ * Entry 418: a set not finished within twice SET_SECONDS is deleted with everything in it, and its index row marked deleted, so nothing
+ * half sent waits on the server. And a file's SHA-256 is forgotten after a day.
+ */
+function forget_abandoned_sets(PDO $pdo, int $now): void
+{
+    foreach (glob(SETS . '/*/set.json') ?: [] as $record) {
+        $set = json_decode((string) @file_get_contents($record), true);
+        if (!is_array($set) || $now - (int) ($set['created_ts'] ?? 0) > 2 * SET_SECONDS) {
+            $folder = dirname($record);
+            foreach (glob($folder . '/*') ?: [] as $f) {
+                @unlink($f);
+            }
+            @rmdir($folder);
+            $pdo->prepare('UPDATE submissions SET deleted = 1 WHERE id = ?')->execute([basename($folder)]);
+        }
+    }
+    $pdo->prepare('DELETE FROM file_hashes WHERE created_ts < ?')->execute([$now - 86400]);
+}
+
+/** The form's answers, as the receiver writes them, never taken from inside an image. */
+function answers(): array
+{
+    return [
+        'target_backing'    => field('backing', 60),
+        'attachment_method' => field('attachment', 60),
+        'shot_distance'     => field('shot_distance', 40),
+        'caliber'           => field('caliber', 40),
+        'notes'             => field('notes', 300),
+        'credit_name'       => field('credit_name', 60),
+    ];
+}
 
 function field(string $name, int $maxLen): string
 {
@@ -467,17 +541,31 @@ if (!array_key_exists($level, CONSENT_TEXTS)) {
 
 $ip = client_ip();
 
+// NOTES-FROM-PLANNING.md entry 418 section 3: a set of up to MAX_SET_FILES files is sent as several requests, each under Cloudflare's
+// cap, and stored as one submission. The first part passes the person check and is given a token; the later parts bring the token
+// instead, from the same address, within the hour, in order. A part that says it continues a set but cannot show which one is refused.
+$setId = field('set_id', 16);
+$part  = max(1, (int) field('part', 3));
+$parts = max(1, (int) field('parts', 3));
+$continuing = $part > 1;
+if ($parts > MAX_SET_PARTS || $part > $parts || ($continuing && preg_match('/^[0-9a-f]{8}$/', $setId) !== 1)) {
+    fail(400, 'That part of a set did not say which set it belongs to. Nothing from it was kept; please send the whole set again.', 'set');
+}
+
 // Entry 129 section 2.1: before a single uploaded byte is read beyond what PHP has already
 // buffered. PHP has written the temporary files by the time this script runs, which nothing here
-// can change, but nothing reads or keeps them until the token has passed.
-$turnstileWhy = null;
-if (!turnstile_ok((string) ($_POST['cf-turnstile-response'] ?? ''), $ip, $turnstileWhy)) {
-    $message = match ($turnstileWhy) {
-        'missing' => 'The page could not prove you are a person. Please reload the page and try again.',
-        'unconfigured', 'unreachable' => 'The check that proves you are a person is not answering just now. Please try again in a few minutes.',
-        default => 'That verification did not pass, or it has expired. Please reload the page and try again.',
-    };
-    fail($turnstileWhy === 'unreachable' || $turnstileWhy === 'unconfigured' ? 503 : 403, $message, 'turnstile');
+// can change, but nothing reads or keeps them until the token has passed. A set's later parts
+// present the token the first part was given instead, which only a request that passed can hold.
+if (!$continuing) {
+    $turnstileWhy = null;
+    if (!turnstile_ok((string) ($_POST['cf-turnstile-response'] ?? ''), $ip, $turnstileWhy)) {
+        $message = match ($turnstileWhy) {
+            'missing' => 'The page could not prove you are a person. Please reload the page and try again.',
+            'unconfigured', 'unreachable' => 'The check that proves you are a person is not answering just now. Please try again in a few minutes.',
+            default => 'That verification did not pass, or it has expired. Please reload the page and try again.',
+        };
+        fail($turnstileWhy === 'unreachable' || $turnstileWhy === 'unconfigured' ? 503 : 403, $message, 'turnstile');
+    }
 }
 
 if (!is_dir(QUARANTINE) && !@mkdir(QUARANTINE, 0750, true) && !is_dir(QUARANTINE)) {
@@ -493,23 +581,34 @@ try {
 
 $ipHash = ip_hash($ip);
 $now    = time();
+forget_abandoned_sets($pdo, $now);
 
-$stmt = $pdo->prepare('SELECT COUNT(*) FROM submissions WHERE ip_hash = ? AND created_ts > ?');
-$stmt->execute([$ipHash, $now - 3600]);
-$lastHour = (int) $stmt->fetchColumn();
+$set = null;
+if ($continuing) {
+    $set = open_set($setId);
+    if ($set === null || !hash_equals((string) ($set['token_hash'] ?? ''), hash('sha256', field('set_token', 64)))
+        || $set['ip_hash'] !== $ipHash || $now - (int) $set['created_ts'] > SET_SECONDS) {
+        fail(400, 'That set could not be continued: it has expired or was started elsewhere. Nothing from it was kept; please send the whole set again.', 'set');
+    }
+    if ((int) $set['received'] + 1 !== $part || (int) $set['parts'] !== $parts || $set['level'] !== $level) {
+        fail(400, 'That part of the set arrived out of order. Nothing from the set was kept; please send the whole set again.', 'set');
+    }
+} else {
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM submissions WHERE ip_hash = ? AND created_ts > ?');
+    $stmt->execute([$ipHash, $now - 3600]);
+    $lastHour = (int) $stmt->fetchColumn();
 
-$stmt->execute([$ipHash, $now - 86400]);
-$lastDay = (int) $stmt->fetchColumn();
+    $stmt->execute([$ipHash, $now - 86400]);
+    $lastDay = (int) $stmt->fetchColumn();
 
-if ($lastHour >= RATE_PER_HOUR || $lastDay >= RATE_PER_DAY) {
-    fail(429, 'That is as many submissions as this connection can send for now. Thank you, genuinely. Please come back in an hour if you have more.', 'rate_limit');
-}
+    if ($lastHour >= RATE_PER_HOUR || $lastDay >= RATE_PER_DAY) {
+        fail(429, 'That is as many submissions as this connection can send for now. Thank you, genuinely. Please come back in an hour if you have more.', 'rate_limit');
+    }
 
-// Entry 129 section 2.3: the whole server, not one address. A botnet spread across enough
-// addresses to stay under the per-address limit is exactly what this is for.
-$globalHour = (int) $pdo->query('SELECT COUNT(*) FROM submissions WHERE created_ts > ' . ($now - 3600))->fetchColumn();
-if ($globalHour >= GLOBAL_PER_HOUR) {
-    fail(429, 'This page is taking more photos than it can handle just now. Please try again in an hour, and thank you for bearing with it.', 'busy');
+    $globalHour = (int) $pdo->query('SELECT COUNT(*) FROM submissions WHERE created_ts > ' . ($now - 3600))->fetchColumn();
+    if ($globalHour >= GLOBAL_PER_HOUR) {
+        fail(429, 'This page is taking more photos than it can handle just now. Please try again in an hour, and thank you for bearing with it.', 'busy');
+    }
 }
 
 $free = @disk_free_space(QUARANTINE);
@@ -518,14 +617,12 @@ if (stored_total_bytes($pdo) >= DISK_CAP_BYTES || ($free !== false && $free < DI
 }
 
 // ---------------------------------------------------------------------
-// Collect and validate the files
+// Files
 // ---------------------------------------------------------------------
 
 $incoming = $_FILES['photos'] ?? null;
 
-// NOTES-FROM-PLANNING.md entry 174: PHP builds per-file arrays only when the field is named photos[]. A form that sends one file under
-// the plain name arrives as one file's strings, and that used to be refused as no photos at all. It is made the one-element shape here, so
-// the receiver does not depend on one character in another file.
+// A single file posted under photos rather than photos[] arrives as scalars. Normalise it.
 if (is_array($incoming) && isset($incoming['name']) && !is_array($incoming['name'])) {
     $incoming = array_map(static fn ($value) => [$value], $incoming);
 }
@@ -539,8 +636,12 @@ if ($count === 0) {
     fail(400, 'No photos were attached to that submission.', 'no_files');
 }
 if ($count > MAX_FILES) {
-    fail(400, 'That is more than ' . MAX_FILES . ' files. Please send them in two submissions.', 'too_many');
+    fail(400, 'That is more than ' . MAX_FILES . ' files in one send. The page splits a larger set into parts by itself; please reload it and try again.', 'too_many');
 }
+
+// Entry 418 section 3.1: each file's label, sheet and view, where the sender gave one, in the order of the files.
+$labels = $_POST['labels'] ?? [];
+$labels = is_array($labels) ? array_values($labels) : [];
 
 $candidates = [];
 $total      = 0;
@@ -551,10 +652,6 @@ for ($i = 0; $i < $count; $i++) {
         continue;
     }
 
-    // Anything but UPLOAD_ERR_OK stops the whole submission here, before a directory is created or
-    // a byte is moved. UPLOAD_ERR_PARTIAL is the one that matters: a connection dropped mid post
-    // leaves PHP holding an incomplete temporary file, and a truncated JPEG still sniffs as a
-    // valid JPEG. The error code is the only reliable way to catch it.
     if ($err !== UPLOAD_ERR_OK) {
         fail(400, upload_error_message($err), 'upload_error');
     }
@@ -574,7 +671,7 @@ for ($i = 0; $i < $count; $i++) {
 
     $total += $size;
     if ($total > MAX_SUBMISSION_BYTES) {
-        fail(400, 'That submission is over the 90 MB limit. Please send the rest separately.', 'too_large');
+        fail(400, 'That send is over the 90 MB limit. The page splits a larger set into parts by itself; please reload it and try again.', 'too_large');
     }
 
     $mime = sniff_type($tmp, $sawPdf);
@@ -585,11 +682,14 @@ for ($i = 0; $i < $count; $i++) {
         fail(400, 'One of those files is not a photo this page can take. JPEG, PNG, HEIC and TIFF are accepted.', 'bad_type');
     }
 
+    $label = is_string($labels[$i] ?? null) ? trim((string) preg_replace('/[\x00-\x1F\x7F]/u', '', $labels[$i])) : '';
     $candidates[] = [
         'tmp'      => $tmp,
         'original' => (string) ($incoming['name'][$i] ?? 'image'),
         'size'     => $size,
         'mime'     => $mime,
+        'sha256'   => hash_file('sha256', $tmp),
+        'label'    => mb_substr($label, 0, MAX_LABEL_LEN),
     ];
 }
 
@@ -597,26 +697,67 @@ if ($candidates === []) {
     fail(400, 'No photos were attached to that submission.', 'no_files');
 }
 
-// ---------------------------------------------------------------------
-// Store, into quarantine and nowhere else
-// ---------------------------------------------------------------------
-
-$id      = new_submission_id($pdo);
-$dirName = gmdate('Y-m-d') . '_' . $id;
-$dirPath = QUARANTINE . '/' . $dirName;
-
-if (!@mkdir($dirPath, 0750) && !is_dir($dirPath)) {
-    error_log('[grouplab] could not create ' . $dirPath);
-    fail(500, 'Storage is not available right now. Please try again later.', 'storage');
+// Entry 418 section 3.2: the same file sent twice, in this set or in the last day, is recognised by its SHA-256 and kept once, so a
+// person told something unclear can send again without making a second copy.
+$seen = $set !== null ? array_column($set['files'], 'sha256') : [];
+$fresh = [];
+$duplicates = 0;
+$duplicateOf = null;
+$stmt = $pdo->prepare('SELECT submission_id FROM file_hashes WHERE sha256 = ? AND created_ts > ? LIMIT 1');
+foreach ($candidates as $c) {
+    $stmt->execute([$c['sha256'], $now - 86400]);
+    $earlier = $stmt->fetchColumn();
+    if (in_array($c['sha256'], $seen, true) || $earlier !== false) {
+        $duplicates++;
+        $duplicateOf ??= $earlier !== false ? (string) $earlier : null;
+        continue;
+    }
+    $seen[] = $c['sha256'];
+    $fresh[] = $c;
 }
 
-$excludePublic = $level === 'testing';
-$stamp         = gmdate('Y-m-d\TH:i:s\Z');
+// Entry 418 section 3: what a whole set may hold, and the address's bytes in the hour, which a set may not raise past what five
+// separate submissions of 90 MB could bring before sets existed (BYTES_PER_HOUR). The first part says how large the set will be. Counted after the files already sent are set aside.
+$declared = $set !== null ? (int) $set['declared_bytes'] : ($parts > 1 ? (int) field('set_bytes', 12) : $total);
+$setFiles = ($set !== null ? count($set['files']) : 0) + count($fresh);
+$setBytes = ($set !== null ? (int) $set['bytes'] : 0) + array_sum(array_column($fresh, 'size'));
+if ($setFiles > MAX_SET_FILES || $declared > MAX_SET_BYTES || $setBytes > $declared) {
+    fail(400, 'That set is larger than one submission can hold: up to ' . MAX_SET_FILES . ' files and ' . intdiv(MAX_SET_BYTES, 1024 * 1024) . ' MB. Nothing from it was kept; please send it as two sets.', 'set_too_large');
+}
+if ($set === null) {
+    $stmt = $pdo->prepare('SELECT COALESCE(SUM(total_bytes), 0) FROM submissions WHERE ip_hash = ? AND created_ts > ?');
+    $stmt->execute([$ipHash, $now - 3600]);
+    if ((int) $stmt->fetchColumn() + $declared > BYTES_PER_HOUR) {
+        fail(429, 'That is as many megabytes as this connection can send in an hour. Thank you, genuinely. Please come back in an hour with the rest.', 'rate_limit');
+    }
+}
+
+if ($parts === 1 && $fresh === []) {
+    // Every file is already in: nothing new is stored and no submission is counted, and the answer says where they are.
+    respond(200, ['ok' => true, 'id' => $duplicateOf ?? '', 'files' => 0, 'duplicates' => $duplicates, 'already' => true]);
+}
+
+// ---------------------------------------------------------------------
+// Store, into quarantine and nowhere else, or a set's part into its own staging folder until the set is whole
+// ---------------------------------------------------------------------
+
+$stamp = gmdate('Y-m-d\TH:i:s\Z');
+if ($set === null) {
+    $id      = new_submission_id($pdo);
+    $dirName = gmdate('Y-m-d') . '_' . $id;
+    $dirPath = $parts > 1 ? SETS . '/' . $id : QUARANTINE . '/' . $dirName;
+    if ((!is_dir(dirname($dirPath)) && !@mkdir(dirname($dirPath), 0750, true)) || (!@mkdir($dirPath, 0750) && !is_dir($dirPath))) {
+        error_log('[grouplab] could not create ' . $dirPath);
+        fail(500, 'Storage is not available right now. Please try again later.', 'storage');
+    }
+} else {
+    $id      = $setId;
+    $dirName = (string) $set['dir'];
+    $dirPath = SETS . '/' . $id;
+}
 
 /**
- * A submission is all or nothing. Where any file fails to land, the ones already written go with
- * the directory, so the tree never holds a half stored submission that looks complete from
- * outside, and the worker never sees one.
+ * Removes what this request wrote and the folder if it then stands empty: a failed write leaves nothing half-stored behind it.
  */
 function abandon(string $dirPath, array $written): void
 {
@@ -628,9 +769,9 @@ function abandon(string $dirPath, array $written): void
 
 $stored  = [];
 $written = [];
-$index   = 0;
+$index   = $set !== null ? count($set['files']) : 0;
 
-foreach ($candidates as $c) {
+foreach ($fresh as $c) {
     $index++;
     $storedName = safe_stored_name($index, $c['original'], $c['mime']);
     $dest       = $dirPath . '/' . $storedName;
@@ -640,18 +781,14 @@ foreach ($candidates as $c) {
         abandon($dirPath, $written);
         fail(500, 'One of those files could not be saved. Please try again.', 'storage');
     }
-    @chmod($dest, 0640);
     $written[] = $storedName;
+    @chmod($dest, 0640);
 
-    // The file on disk must be exactly the size PHP reported. A short write would leave a
-    // truncated image that still sniffs as a valid JPEG, which is the quiet corruption this page
-    // exists to avoid.
-    clearstatcache(true, $dest);
-    $onDisk = filesize($dest);
+    $onDisk = @filesize($dest);
     if ($onDisk !== $c['size']) {
         error_log(sprintf('[grouplab] size mismatch for %s: expected %d, on disk %d', $dest, $c['size'], $onDisk === false ? -1 : $onDisk));
         abandon($dirPath, $written);
-        fail(500, 'One of those files did not save completely. Please try again.', 'storage');
+        fail(500, 'One of those files could not be saved. Please try again.', 'storage');
     }
 
     $stored[] = [
@@ -660,9 +797,49 @@ foreach ($candidates as $c) {
         'original_name' => $c['original'],
         'bytes'         => $c['size'],
         'sniffed_type'  => $c['mime'],
-        'sha256'        => hash_file('sha256', $dest),
-    ];
+        'sha256'        => $c['sha256'],
+    ] + ($c['label'] !== '' ? ['label' => $c['label']] : []);
 }
+
+if ($parts > 1 && $part < $parts) {
+    // A part of a set that is not its last: kept in the set's staging folder, out of the worker's reach, and counted against the
+    // address from its first part, so the rate limits see the set as one submission.
+    $record = $set ?? [
+        'dir'            => $dirName,
+        'ip_hash'        => $ipHash,
+        'created_ts'     => $now,
+        'created_utc'    => $stamp,
+        'parts'          => $parts,
+        'level'          => $level,
+        'declared_bytes' => $declared,
+        'bytes'          => 0,
+        'files'          => [],
+        'answers'        => answers(),
+        'user_agent'     => substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500),
+    ];
+    $token = $set === null ? bin2hex(random_bytes(16)) : null;
+    if ($token !== null) {
+        $record['token_hash'] = hash('sha256', $token);
+    }
+    $record['received'] = $part;
+    $record['bytes']    = (int) $record['bytes'] + array_sum(array_column($stored, 'bytes'));
+    $record['files']    = array_merge($record['files'], $stored);
+    file_put_contents($dirPath . '/set.json', json_encode($record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n", LOCK_EX);
+    @chmod($dirPath . '/set.json', 0640);
+    // While the set is unfinished its row holds the size it said it would be, so the hour's bytes count what is still to come.
+    index_row($pdo, $id, $dirName, (string) $record['created_utc'], (int) $record['created_ts'], $ipHash, count($record['files']), max((int) $record['bytes'], (int) $record['declared_bytes']), $level);
+    respond(200, ['ok' => true, 'id' => $id, 'part' => $part, 'parts' => $parts, 'files' => count($stored), 'duplicates' => $duplicates]
+        + ($token !== null ? ['set_token' => $token] : []));
+}
+
+$files = $set !== null ? array_merge($set['files'], $stored) : $stored;
+if ($files === []) {
+    abandon($dirPath, []);
+    fail(400, 'Every file in that set was already sent, so there was nothing new to keep. Thank you; it is already in.', 'already');
+}
+
+$excludePublic = $level === 'testing';
+$created       = $set !== null ? (string) $set['created_utc'] : $stamp;
 
 /**
  * The consent record and the answers are written here, by the receiver, from what the form sent.
@@ -673,7 +850,7 @@ foreach ($candidates as $c) {
 $meta = [
     'schema_version' => 1,
     'submission_id'  => $id,
-    'submitted_utc'  => $stamp,
+    'submitted_utc'  => $created,
 
     // Deliberately the third key, so it is visible the moment anybody opens this. Where it is true
     // the photos are for private testing only and never appear in the published data set.
@@ -686,27 +863,20 @@ $meta = [
         'agreed'        => true,
         'version'       => CONSENT_VERSION,
         'level'         => $level,
-        'agreed_at_utc' => $stamp,
+        'agreed_at_utc' => $created,
         'text'          => CONSENT_TEXTS[$level],
     ],
-    'answers' => [
-        // Camera distance was deliberately dropped from the form: it is recoverable from the
-        // target's apparent size and the focal length, far more accurately than anybody can
-        // estimate it standing there. Every question that survives is one that cannot be read off
-        // the image.
-        'target_backing'    => field('backing', 60),
-        'attachment_method' => field('attachment', 60),
-        'shot_distance'     => field('shot_distance', 40),
-        'caliber'           => field('caliber', 40),
-        'notes'             => field('notes', 300),
-        'credit_name'       => field('credit_name', 60),
-    ],
-    'user_agent' => substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500),
-    'files'      => $stored,
+    // Camera distance was deliberately dropped from the form: it is recoverable from the
+    // target's apparent size and the focal length, far more accurately than anybody can
+    // estimate it standing there. Every question that survives is one that cannot be read off
+    // the image.
+    'answers'    => $set !== null ? $set['answers'] : answers(),
+    'user_agent' => $set !== null ? (string) $set['user_agent'] : substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500),
+    'files'      => $files,
 
     // What has happened to this submission so far. The worker rewrites this file with what it did.
     'stage' => 'quarantine',
-];
+] + ($parts > 1 ? ['set' => ['parts' => $parts]] : []);
 
 $json = json_encode($meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 file_put_contents($dirPath . '/meta.json', $json . "\n", LOCK_EX);
@@ -722,17 +892,22 @@ if ($excludePublic) {
     );
 }
 
-try {
-    $stmt = $pdo->prepare(
-        'INSERT INTO submissions
-            (id, dir, created_utc, created_ts, ip_hash, file_count, total_bytes, exclude_public, consent_version)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    );
-    $stmt->execute([$id, $dirName, $stamp, $now, $ipHash, count($stored), $total, $excludePublic ? 1 : 0, CONSENT_VERSION]);
-} catch (Throwable $e) {
-    // The files and meta.json are on disk and they are the source of truth. A failed index row is
-    // not worth failing the submission over.
-    error_log('[grouplab] index insert failed for ' . $id . ': ' . $e->getMessage());
+if ($parts > 1) {
+    // The set is whole: its staging record goes and the folder moves into quarantine in one step, so the worker never sees part of it.
+    @unlink($dirPath . '/set.json');
+    if (!@rename($dirPath, QUARANTINE . '/' . $dirName)) {
+        error_log('[grouplab] could not move set ' . $id . ' into quarantine');
+        fail(500, 'The set could not be stored. Please try again later.', 'storage');
+    }
 }
 
-respond(200, ['ok' => true, 'id' => $id, 'files' => count($stored)]);
+index_row($pdo, $id, $dirName, $created, $set !== null ? (int) $set['created_ts'] : $now, $ipHash, count($files),
+    array_sum(array_column($files, 'bytes')), $level);
+
+// Remembered only once the submission is whole, so a set given up half way does not make its own files look sent when it is sent again.
+$remember = $pdo->prepare('INSERT INTO file_hashes (sha256, created_ts, submission_id) VALUES (?, ?, ?)');
+foreach ($files as $f) {
+    $remember->execute([$f['sha256'], $now, $id]);
+}
+
+respond(200, ['ok' => true, 'id' => $id, 'files' => count($files), 'duplicates' => $duplicates] + ($parts > 1 ? ['part' => $part, 'parts' => $parts] : []));

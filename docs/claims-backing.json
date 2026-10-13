@@ -593,6 +593,14 @@
    "kind": "code",
    "where": "website/limits.json, which upload.php and the page both read (entry 173)"
   },
+  "The photos Up to 30 files, 30 MB each and 400 MB in total, so a set shot across several sheets goes in one go: the page sends it in parts of up to 10 files and 90 MB by itself, and it arrives as one submission.": {
+   "kind": "code",
+   "where": "website/api/limits.json (maxSetFiles, maxSetMegabytes, maxFiles, maxSubmissionMegabytes), held to upload.php's MAX_SET_FILES, MAX_SET_BYTES, MAX_FILES and MAX_SUBMISSION_BYTES by website/build.py; the parts are joined in upload.php's set staging and tested in tests/php/receiver-tests.php (entry 418)"
+  },
+  "1 2 3 4 5 About the target Answer what you can be bothered to answer and leave the rest.": {
+   "kind": "decided",
+   "where": "entry 129 section 5: every question optional; the numbers before it are the page's choice of how many sheets a set has (entry 418)"
+  },
   "About the target Answer what you can be bothered to answer and leave the rest.": {
    "kind": "decided",
    "where": "entry 129 section 5: every question optional"

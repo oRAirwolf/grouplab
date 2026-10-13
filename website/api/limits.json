@@ -35,12 +35,18 @@
     "sendTargetsPhones does the same for the phone's own sender of targets (question 81 A, entry 363 section 3.5).",
     "",
     "Entry 379: Alan wrote \"forms updated\" on 2026-10-06 (App Privacy and Data safety filled in, recorded in docs/store/), so the",
-    "three phone switches are on."
+    "three phone switches are on.",
+    "",
+    "Entry 418 section 3: a set of photographs of several sheets goes in one go, as several requests of up to maxFiles files and",
+    "maxSubmissionMegabytes each, stored as one submission of up to maxSetFiles files and maxSetMegabytes. A set counts as one submission",
+    "against the hourly limit, and its bytes against the hour's five submissions of 90 MB, so nobody can send more in an hour than before."
   ],
   "open": true,
   "maxFiles": 10,
   "maxFileMegabytes": 30,
   "maxSubmissionMegabytes": 90,
+  "maxSetFiles": 30,
+  "maxSetMegabytes": 400,
   "types": [
     "JPEG",
     "PNG",

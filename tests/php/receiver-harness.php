@@ -95,8 +95,19 @@ function make(string $root, string $name, string $kind, int $bytes = 4096): arra
         default => str_repeat("\x00", 16),
     };
     $path = $root . '/uploads/' . bin2hex(random_bytes(4)) . '-' . $name;
-    file_put_contents($path, $head . str_repeat("\x41", max(0, $bytes - strlen($head))));
+    // Eight random bytes after the header, so two files made alike are two files: the receiver keeps a file it has already had once
+    // (entry 418), and a test that sends "another" file must send one it has not seen.
+    $salt = random_bytes(8);
+    file_put_contents($path, $head . $salt . str_repeat("\x41", max(0, $bytes - strlen($head) - strlen($salt))));
     return ['name' => $name, 'tmp' => $path, 'size' => filesize($path)];
+}
+
+/** A second file with the same bytes as one made, for sending the same photo twice (entry 418). */
+function copy_made(string $root, array $made): string
+{
+    $path = $root . '/uploads/' . bin2hex(random_bytes(4)) . '-copy-' . $made['name'];
+    copy($made['tmp'], $path);
+    return $path;
 }
 
 /** $_FILES as PHP builds it for a multiple file field. */
