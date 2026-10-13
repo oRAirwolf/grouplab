@@ -173,19 +173,20 @@ public static class AppStyles
 
     private static void Restyle(Application app)
     {
-        // The new styles go on before the old come off, so no control is left for a moment with neither: a restyle with windows open, as a
-        // change of text size makes (entry 415), found a brush unset in that moment on macOS and threw.
+        // The resources the styles and the Fluent theme read go in first, then the new styles, and only then do the old come off, so no
+        // control is left for a moment with a brush unset: a restyle with windows open, as a change of text size makes (entry 415), found one
+        // unset on macOS and Linux, where the theme's accent brushes come from these resources rather than the system, and threw.
         var palette = Tokens.For(app.ActualThemeVariant);
+        foreach (var (key, value) in FluentResources(palette))
+        {
+            app.Resources[key] = value;
+        }
+
         var previous = app.Styles.OfType<GroupLabStyles>().ToList();
         app.Styles.Add(Build(palette));
         foreach (var old in previous)
         {
             app.Styles.Remove(old);
-        }
-
-        foreach (var (key, value) in FluentResources(palette))
-        {
-            app.Resources[key] = value;
         }
     }
 
