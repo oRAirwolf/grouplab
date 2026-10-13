@@ -59,6 +59,12 @@ public interface IImagingBackend
     IReadOnlyList<byte[]> ReadCutOut(GrayImage image, double scale) => ReadCodes(image, scale);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 415 section 3: the first payload <see cref="ReadCutOut"/> would give for a cut-out at its own size, or null,
+    /// for a caller that uses only the first. A backend may stop as soon as it has it; the payload is the same.
+    /// </summary>
+    byte[]? ReadFirstInCutOut(GrayImage image) => ReadCutOut(image, 1.0) is { Count: > 0 } found ? found[0] : null;
+
+    /// <summary>
     /// Where QR codes are in the image, read or not, each as its four corners in the image's own pixels: what a GroupLab sheet's codes look
     /// like before they are decoded (NOTES-FROM-PLANNING.md entry 356 section 5). A backend that cannot locate without decoding finds none.
     /// </summary>

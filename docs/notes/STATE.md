@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-13, entry 420 (before it: entries 419, 418 and 417, and entry 415 sections 1 and 2).
+**Last rewritten:** 2026-10-13, entry 415 (before it: entries 420, 419, 418 and 417).
 
 ---
 
@@ -20,8 +20,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   circle, the snap goes to a light hole's middle, and a chosen bull no longer swallows drags. **Entry 418 done** but section 1 (request
   99): the upload page sends a set of 30 photos in parts with a progress bar, plain errors and duplicates kept once. **Entry 419 done:**
   the Discord bug-reports worker is built and tested; it runs once Alan does request 98. **Entry 420 done:** a pooled set opens
-  in its own tab, each sheet in its shade; drops open a tab each; a picture accepted again updates its record. **Entry 415 sections 1 and 2 done** (the
-  iPhone follows Dynamic Type, held at Android's largest; 6 to 4 false marks on the corpus); section 3 and the fold wait for their turn.
+  in its own tab, each sheet in its shade; drops open a tab each; a picture accepted again updates its record. **Entry 415 done**: the
+  iPhone follows Dynamic Type; 6 to 4 false marks; a photograph's codes read 10 to 40 percent sooner; finding the holes (3.2) not done.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
@@ -83,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 415 and 416.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 416.
 
 ## Things that would surprise somebody who was not here yesterday
 

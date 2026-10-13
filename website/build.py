@@ -3462,7 +3462,7 @@ SEND_JS = """(function () {
       : 'The server sent a reply this page could not read (HTTP ' + code + ').';
     var arrived = parts > 1
       ? ' Nothing is stored as a submission until the last part of a set arrives, so sending the whole set again is safe.'
-      : ' It may have arrived anyway. Sending again is safe: GroupLab recognises photos it already has and keeps each once.';
+      : ' It may have arrived anyway. Sending again is safe: GroupLab recognizes photos it already has and keeps each once.';
     return what + arrived;
   }
 

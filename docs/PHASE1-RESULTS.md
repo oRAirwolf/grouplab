@@ -455,6 +455,14 @@ Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, ans
    cause is clear enough to change for one hole. Nine photographs are too few to tune on, and this change is at that line: it removes
    two marks on one sheet. The learning loop has 9 of the 50 corrected submissions its held-out share needs, so there is no held-out
    share yet; its nightly re-score of those 9 runs from the next nightly's tag, so it starts from this code. Row 3 is not met.
+3. **Phase 9: reading a photograph's codes, still on one thread** (PERFORMANCE.md has the tables). A cut-out now stops at its first code,
+   which is the only one the square-on reading uses: 10 to 40 percent off reading the codes of a Fold 7 picture (184 to 383 ms became 167
+   to 283) and of the camera stills (79 to 113 became 64 to 86), and identifying a 600 dpi scan in the bench 171 to 120 ms. Every
+   scoreboard, the corpus counts and the identify sweep are identical but for their time columns, and the baseline gate passed. Keeping
+   the detectors made once a thread gained nothing and was taken back. **Section 3.2, finding the holes, not done:** entry 416, a feature
+   Alan chose, was taken first; its binary closing was already made managed code in entry 392.
+4. **Worth an article?** Section 2 recorded in RESEARCH.md (not written); section 3 not written either: ordinary engineering a shooter
+   sees as a slightly quicker reading.
 
 ## Entry 417: a tester's bug on macOS, marking a scanned 3-sheet set (2026-10-13)
 

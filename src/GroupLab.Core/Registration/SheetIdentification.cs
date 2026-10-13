@@ -94,10 +94,10 @@ public static partial class SheetIdentification
                     continue;
                 }
 
-                var found = backend.ReadCutOut(view.Image, 1.0);
-                if (found.Count > 0)
+                // Entry 415 section 3: only a cut-out's first code was ever used, so the reader stops once it has it.
+                if (backend.ReadFirstInCutOut(view.Image) is { } first)
                 {
-                    squareOn.Add(found[0]);
+                    squareOn.Add(first);
                     readAt.Add(view);
                 }
             }

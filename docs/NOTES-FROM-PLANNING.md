@@ -25,6 +25,75 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-13, entry 415: four things that need nobody (Alan at 23:37 Denver, no printer near him)
+
+**Status: actioned 2026-10-13; sections 1, 2 and 3.1 done, section 4 for the log only. Not done: section 3.2 (finding the holes), because entry 416, a feature Alan chose, was taken first under the same budget.**
+
+From the planning session, 2026-10-13 05:45 UTC. Code was idle and cleared. Alan asked what Code can work on with no printer, no range
+and no phone, and chose all four of the options put to him. Sections 1 to 3 are for Code; section 4 is the planning session's and is here
+only so the log says why.
+
+**Budget for this block:** stop at **55% of the week** (28% at 05:33 UTC; the week resets 2026-10-15 02:00 UTC), or when the queue is
+done, whichever comes first, and never in the middle of a publish. One worker, no helpers in parallel. Screenshots and chores to
+chores-haiku, wording and consistency checks to docs-sonnet; application code, tests, detection and performance on the main model.
+Sections in order, one commit each where it fits, a report after each. Anything that turns out to need Alan goes to for-alan.md and the
+work moves on.
+
+## 1. Question 97 answered: the iPhone follows its text size (Dynamic Type)
+
+Alan, 2026-10-13: yes, the iPhone follows its own text size setting, as Android now does (entry 411).
+
+1. Point `TextSize` at iOS's preferred content size on the iOS head (`UIFontMetrics.DefaultMetrics.GetScaledValue` or whatever the
+   question's own finding says is right), and restyle when the setting changes while GroupLab is open
+   (`UIContentSizeCategory.DidChangeNotification`), so a person does not have to restart.
+2. **Scale:** follow every size through xxxLarge, and the accessibility sizes up to the same largest factor Android allows (entry 411),
+   held there. Record the cap and why in PHASE1-RESULTS.md. Above the cap the text stays at the cap; nothing breaks.
+3. The bottom bar follows entry 413's rule (icons alone where a name would not fit) on the iPhone too; no new look.
+4. The same headless sweeps that hold Android's largest size hold the iPhone's largest. A screen that cannot hold it gets a
+   `DESIGN NEEDED` line in for-alan.md (with which screen and what breaks), and the rest goes ahead.
+5. Close question 97 as answered in QUESTIONS-FOR-PLANNING.md. PHONE-PARITY.md, the README, the guides and the Features page say the
+   phone follows its text size on both systems where they now say Android only. Release-note kind `new`.
+
+## 2. Proof checklist row 3: the false hole marks
+
+PROOF-CHECKLIST.md row 3 is the one detection gate that needs nothing more shot: 221 of 223 holes found on the nine corpus photographs
+with a hole truth, and 6 false marks, 5 on the crinkled .22 LR diamond sheet and 1 below the codes on the taped 2026-09-26 dominus-k
+picture.
+
+1. Find what makes each of the six marks, by looking at the mark and the stage that made it, and write it down per mark.
+2. Change detection only where the cause is a mechanism that would happen on other sheets too (a crease's shadow, tape, paper outside the
+   printed area), never a setting chosen because it removes these six. Nine photographs are too few to tune on; say so where a change is
+   close to that line.
+3. A change is kept only if no hole is lost anywhere: the corpus, the rendered sheets (`RoundsFiredOnARenderedSheetTests` and the rest),
+   the scoreboards, and the learning loop's held-out share. A hole off its bull (a flier) must still be found; a mark is not dropped
+   just for being far from a bull.
+4. The two holes still missed: say what they are. Fix them under the same rule if the cause is clear, otherwise record why not.
+5. Row 3 updated with the new count. If it is now met, say so in the report. Release-note kind `fixed` if a person would see fewer
+   wrong marks; check with the learning loop that its next tuning run starts from the new code.
+6. Worth an article? Record the decision in RESEARCH.md.
+
+## 3. Phase 9: the planning session names the next optimization
+
+PERFORMANCE.md: on a phone photograph, reading the sheet's codes is the largest stage (190 to 395 ms), and finding the holes is next
+(180 to 540 ms, mostly the closing of the threshold mask and the alignment's phase correlations).
+
+1. **Reading the codes on a photograph, still on one thread.** Entry 414 showed OpenCV's QR detectors must not run on several threads;
+   nothing in this section may bring that back. Look at where the time goes (finding where each code should be and cutting it out,
+   then the decode) and make it cheaper with identical reads.
+2. **Then, if the budget allows, finding the holes** (the closing and the phase correlations), same rule.
+3. Each kept only if every scoreboard, the identify sweep and the corpus counts are identical but for their time columns and the
+   baseline gate passes. A round that cannot keep identical results is taken back and written down; that is a result.
+4. Each under its own heading in PERFORMANCE.md. A Release-note only where a person would notice (a photograph read sooner is);
+   otherwise `internal`.
+
+## 4. For the log only: the velocity conditions form
+
+STATE.md: the velocity calculation uses the conditions entered on Ballistics; a session's own temperature, altitude, sight height and
+zero would need a form, a look question. Alan chose (2026-10-13) to have the planning session draw concepts on a Claude Design canvas.
+Nothing for Code until he picks; his choice comes back as its own entry.
+
+---
+
 ## 2026-10-13, entry 420: a pooled set opens like a sheet, from a tester's question
 
 **Status: actioned 2026-10-13; sections 1 to 3 done. The pooled view's own Features picture waits for the screenshot walk (docs/figures/SCREENSHOTS.md).**

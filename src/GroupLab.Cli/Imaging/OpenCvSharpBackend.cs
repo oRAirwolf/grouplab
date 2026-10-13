@@ -542,7 +542,18 @@ public sealed class OpenCvSharpBackend : IImagingBackend
 
     /// <summary>Every code the two detectors find in an image, each decoded by the plain decoder at the corners found; the empty ones left out.</summary>
     /// <summary>Every code both detectors read in the picture; where <paramref name="located"/> is given, where each was found, read or not.</summary>
-    private static List<string> Read(Mat input, List<IReadOnlyList<PointD>>? located = null)
+    /// <summary>
+    /// Entry 415 section 3: the first code <see cref="Read"/> would give for a cut-out at its own size, stopping once the first detector has
+    /// one rather than running the second as well; where the first finds none, both run as before, so the code is the same either way.
+    /// </summary>
+    public byte[]? ReadFirstInCutOut(GrayImage image)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        using var input = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);
+        return Read(input, firstOnly: true) is [var first, ..] ? Payload(first) : null;
+    }
+
+    private static List<string> Read(Mat input, List<IReadOnlyList<PointD>>? located = null, bool firstOnly = false)
     {
         using var locator = new WeChatQRCode("", "", "", "");
         using var decoder = new QRCodeDetector();
@@ -551,6 +562,11 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         foreach (var box in boxes)
         {
             texts.Add(decoder.Decode(input, box) ?? "");
+        }
+
+        if (firstOnly && located is null && texts.FirstOrDefault(t => t.Length > 0) is { } found)
+        {
+            return [found];
         }
 
         bool multi = decoder.DetectMulti(input, out Point2f[] corners);

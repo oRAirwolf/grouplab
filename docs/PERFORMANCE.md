@@ -48,6 +48,37 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 415 section 3: reading a photograph's codes, still on one thread
+
+**Where the time goes.** `SheetIdentification.Identify` on the 600 dpi sample, five Fold 7 pictures of the 2026-09-27 and 28 sittings and
+six camera stills (Alan's, on his computer), median of three runs after one thrown away, this desktop: finding where each code should be
+and cutting it out square on (`LiveSheet.CodeViews`) is 40 to 120 ms; the rest is decoding the cut-outs, 8 to 10 of them on a Letter
+sheet, each through OpenCV's WeChat locator and decoder and then, every time, its multi-code detector and decoder as well.
+
+**Kept: a cut-out stops at its first code.** The square-on reading uses only the first code a cut-out gives, and the multi-code pass only
+ever added codes after it, so the reader now stops once the first detector has one (`IImagingBackend.ReadFirstInCutOut`); where the first
+finds none both run as before. The code is the same either way.
+
+| picture | reading the codes before | after |
+|---|---|---|
+| the 600 dpi sample | 252 ms | 230 ms |
+| five Fold 7 pictures | 184 to 383 ms | 167 to 283 ms |
+| six camera stills | 79 to 113 ms | 64 to 86 ms |
+| the one whose codes read only enlarged | 7285 ms | 7287 ms (its cut-outs read nothing square on, so nothing changes) |
+
+The identify sweep's scans read 10 to 15 percent sooner (293 to 256 ms on scan 1). **Nothing moved:** `scoreboard --corpus` on the four
+local corpus folders, `scoreboard --synthetic`, `corpus counts` and `identify sweep` are line for line the same before and after, the time
+column aside; every picture names the same sheet, tile and number of codes. Still one thread: nothing here reads two codes at once.
+
+**The baseline gate passed** (`grouplab bench --runs 3 --gate docs/performance-baseline.json`): identifying a 600 dpi scan from its codes
+120 ms against the baseline's 171; the bench's phone photograph's identify stage 462 against 463, its codes not read square on.
+
+**Measured and taken back:** making the two detectors once on each thread and keeping them, where each read makes its own, gained nothing
+(within 2 percent either way), so making them is cheap and the change was not kept. **Left, and why:** the decoding itself is what is left,
+and the only way to do less of it is to read fewer codes, which changes how many codes a picture is said to have read; that is a
+decision, not a speed-up. **Section 3.2, finding the holes, not done this round:** its binary closing is already managed code (entry 392),
+what is left is inside OpenCV, and entry 416, a feature Alan chose, was taken first under the same budget.
+
 ## Entry 414 section 1.1: a scan decoded once
 
 **Measured first.** A 600 dpi scan was still decoded twice: grey, then in colour for its brightest channel (`Load` then
