@@ -196,6 +196,10 @@ jobs:
       - name: The error worker, against a stand-in GitHub
         run: python3 tests/python/error-worker-tests.py
 
+      # Entry 419: the Discord worker against a Discord and a GitHub that answer from the test itself, so nothing leaves the runner.
+      - name: The Discord worker, against a stand-in Discord and GitHub
+        run: python3 tests/python/discord-worker-tests.py
+
       # Entries 207 and 208: the survey worker counts reports into an aggregate and publishes nothing smaller than ten.
       - name: The survey worker
         run: python3 tests/python/survey-worker-tests.py

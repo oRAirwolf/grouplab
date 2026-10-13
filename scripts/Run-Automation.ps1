@@ -3,7 +3,8 @@
     What the scheduled tasks run, NOTES-FROM-PLANNING.md entry 222: the nightly backup, and the weekly restore test, cleanup and line.
 
 .DESCRIPTION
-    -Job Nightly: scripts\backup.py, which copies the archive's submissions here, backs up, and prunes old backups.
+    -Job Nightly: scripts\Get-DiscordAttachments.ps1, which copies the Discord worker's kept attachments here (entry 419), then
+                  scripts\backup.py, which copies the archive's submissions here, backs up, and prunes old backups.
     -Job Weekly:  scripts\backup.py --restore-test, scripts\cleanup.py, then scripts\automation-report.py for the line in for-alan.md.
 
     Everything each job prints goes to C:\Dev\grouplab-local\automation.log, the newest thousand lines kept. A failure is also sent as an
@@ -25,9 +26,16 @@ function Step([string] $What, [string[]] $Arguments) {
     Add-Content -Path $log -Encoding utf8 -Value (@("$stamp $Job, $What, exit $($r.ExitCode)") + $r.Output + $r.Errors)
 }
 
+function ScriptStep([string] $What, [string] $Script) {
+    $r = Invoke-Native powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot $Script)
+    $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm')
+    Add-Content -Path $log -Encoding utf8 -Value (@("$stamp $Job, $What, exit $($r.ExitCode)") + $r.Output + $r.Errors)
+}
+
 Push-Location $repo
 try {
     if ($Job -eq 'Nightly') {
+        ScriptStep 'Discord attachments' 'Get-DiscordAttachments.ps1'
         Step 'backup' @('scripts\backup.py')
     } else {
         Step 'restore test' @('scripts\backup.py', '--restore-test')

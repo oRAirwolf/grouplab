@@ -1,0 +1,11 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 419: every five minutes, so a post in the bug-reports forum reaches its issue within minutes.
+Description=File the GroupLab Discord's bug reports as issues, every five minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+Unit=grouplab-discord-worker.service
+
+[Install]
+WantedBy=timers.target

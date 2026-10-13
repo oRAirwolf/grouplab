@@ -70,6 +70,19 @@ ERROR_UNITS = [
 
 ERROR_TOKEN = Path("/etc/grouplab/error-token")
 
+# NOTES-FROM-PLANNING.md entry 419: the Discord worker, its units, and the script its bot token is typed into. It reuses ERROR_TOKEN.
+DISCORD_SCRIPTS = [
+    ("grouplab-discord-worker.py", Path("/usr/local/sbin/grouplab-discord-worker.py"), 0o755),
+    ("grouplab-set-discord-token", Path("/usr/local/sbin/grouplab-set-discord-token"), 0o750),
+]
+
+DISCORD_UNITS = [
+    ("grouplab-discord-worker.service", Path("/etc/systemd/system/grouplab-discord-worker.service"), 0o644),
+    ("grouplab-discord-worker.timer", Path("/etc/systemd/system/grouplab-discord-worker.timer"), 0o644),
+]
+
+DISCORD_TOKEN = Path("/etc/grouplab/discord-token")
+
 # NOTES-FROM-PLANNING.md entries 207 and 208: the hardware survey's worker and its units. It has no network and no secret.
 # The receiver itself, website/api/survey.php, arrives with the site.
 # NOTES-FROM-PLANNING.md entry 222 section 2: the archive worker, its units, and the script its token is typed into.
@@ -472,6 +485,50 @@ def errors(dry_run: bool) -> int:
     return 0
 
 
+def discord(dry_run: bool) -> int:
+    """The Discord bug-reports worker, NOTES-FROM-PLANNING.md entry 419.
+
+    Additive: its folder, the worker and its units, and the script Alan types the bot token into. It installs the timer but does not
+    start it until the bot token is there, so nothing runs half set up. The tokens are looked at only to see that they are there, by
+    their size, never read or printed.
+    """
+    if not SITE.is_dir():
+        say(f"{SITE} is not there, so grouplab.org is not set up on this machine. Nothing was changed.")
+        return 2
+
+    say("the folder the worker keeps its state and the attachments in, outside public_html and never served")
+    make_folders([(SITE / "private", 0o750, "airwolf"), (SITE / "private" / "discord", 0o750, "airwolf"),
+                  (SITE / "private" / "discord" / "attachments", 0o750, "airwolf")], dry_run)
+
+    say("the worker, and the script the bot token is typed into")
+    for item in DISCORD_SCRIPTS:
+        if not put(*item, dry_run):
+            return 2
+
+    say("the worker's systemd units")
+    for unit in DISCORD_UNITS:
+        if not put(*unit, dry_run):
+            return 2
+
+    say("systemd")
+    if run(["systemctl", "daemon-reload"], dry_run) != 0:
+        return 1
+    if run(["systemctl", "enable", "grouplab-discord-worker.timer"], dry_run) != 0:
+        return 1
+
+    if not (ERROR_TOKEN.is_file() and ERROR_TOKEN.stat().st_size > 0):
+        say("The error worker's GitHub token, which this worker shares, is not set; it is set with grouplab-set-error-token.")
+    if DISCORD_TOKEN.is_file() and DISCORD_TOKEN.stat().st_size > 0:
+        say("The bot token is already set. It was not read or printed.")
+        if run(["systemctl", "start", "grouplab-discord-worker.timer"], dry_run) != 0:
+            return 1
+    else:
+        say("The bot token is not set yet: sudo /usr/local/sbin/grouplab-set-discord-token, then sudo systemctl start grouplab-discord-worker.timer")
+    say("")
+    say("done" if not dry_run else "dry run finished, nothing was changed")
+    return 0
+
+
 def archive(dry_run: bool) -> int:
     """The archive worker, entry 222 section 2: its state folder, the worker and its units, and the token script. No nginx change.
 
@@ -700,6 +757,8 @@ def main() -> int:
     parser.add_argument("--learning", action="store_true", help="install the learning worker over entry 397's backup (entries 394 and 395)")
     parser.add_argument("--learning-undo", action="store_true", help="put the server back as the learning worker's backup found it (entry 397)")
     parser.add_argument("--backup", type=Path, help="the backup grouplab-change-backup.py made for this change")
+    parser.add_argument("--discord", action="store_true",
+                        help="install the Discord bug-reports worker instead of the site sync (entry 419)")
     parser.add_argument("--survey", action="store_true",
                         help="install the hardware survey worker instead of the site sync (entries 207 and 208)")
     args = parser.parse_args()
@@ -718,6 +777,9 @@ def main() -> int:
 
     if args.errors:
         return errors(args.dry_run)
+
+    if args.discord:
+        return discord(args.dry_run)
 
     if args.survey:
         return survey(args.dry_run)

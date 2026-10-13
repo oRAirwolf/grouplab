@@ -1,0 +1,55 @@
+[Unit]
+# NOTES-FROM-PLANNING.md entry 419. Files the GroupLab Discord's bug-reports forum as issues in the private repository
+# oRAirwolf/grouplab-crash-reports, labelled discord, and replies once in each thread it files.
+#
+# It needs discord.com and api.github.com, and writes nothing but its state and the attachments it keeps for the daily pull.
+Description=File the GroupLab Discord's bug reports as issues in the private reports repository
+Documentation=https://github.com/oRAirwolf/grouplab/blob/main/docs/WEBSITE.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/grouplab-discord-worker.py
+User=airwolf
+Group=airwolf
+
+# The two tokens, from files only root can read, handed to this service and nothing else. They appear in the service's
+# credentials folder, never in its environment, its arguments or its log. The GitHub token is the error worker's own, for the same
+# repository; the bot token is typed in with grouplab-set-discord-token.
+LoadCredential=discord-token:/etc/grouplab/discord-token
+LoadCredential=github-token:/etc/grouplab/error-token
+
+# Everything read only except its own folder and its log.
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/airwolf/web/grouplab.org/private/discord
+ReadWritePaths=/home/airwolf/logs
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+# The network it needs, and no other kind of socket.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+MemoryMax=200M
+CPUQuota=50%
+# A oneshot service's time limit is TimeoutStartSec; systemd ignores RuntimeMaxSec on one (entry 244's server sitting).
+TimeoutStartSec=240
+TasksMax=16
+
+[Install]
+WantedBy=multi-user.target
