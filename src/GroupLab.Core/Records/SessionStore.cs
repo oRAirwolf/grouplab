@@ -473,6 +473,18 @@ public sealed class SessionStore
         return (long)Scalar(db, "SELECT last_insert_rowid()")!;
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 420 section 3: the session already saved from the same picture of the same design, the first where there
+    /// are several, or null. Accepting a picture opened afresh found no session and made a second record of the same sheet each time.
+    /// </summary>
+    public long? WithImage(string sha256, string? definitionId)
+    {
+        ArgumentNullException.ThrowIfNull(sha256);
+        using var db = Connect();
+        return Scalar(db, "SELECT id FROM sessions WHERE image_sha256 = $hash AND IFNULL(definition_id, '') = IFNULL($defid, '') ORDER BY id LIMIT 1",
+            [("$hash", sha256), ("$defid", definitionId)]) is long id ? id : null;
+    }
+
     /// <summary>One session, with its marking and proof image, or null when there is none with that id.</summary>
     public SessionRecord? Get(long id)
     {

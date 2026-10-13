@@ -530,6 +530,29 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
 2. **For Alan:** request 98, written before the build and completed with the two pastes after it.
 3. **Records:** RESTORE.md (the attachments, the state, `--discord`), CLAUDE.md (a `discord` issue is a bug report a person hit).
 
+## Entry 420: a pooled set opens like a sheet, from a tester's question (2026-10-13)
+
+1. **The pooled set opens in the analysis screen.** Pool the chosen still says which sheets are here and missing, and now also opens the
+   pooled set on the analysis screen in a tab of its own. It is one marking (`SetPool.Composite`): each sheet read, once, laid beside the
+   last on one page, its bulls where they print and each shot at its own offset from its own bull in inches, as its sheet measured it with
+   its own scale; so the plot, every figure and the Shots list are the analysis screen's own, and its figures equal the pool's to the last
+   digit (`SetPoolTests`). A bull is named sheet.bull, so the Shots list says which sheet each shot came from ("2.5" is bull 5 on sheet 2).
+   **Shades:** each sheet's shots in their own colour, the colours Compare gives its loads, with a row a sheet in the plot's key; tapping a
+   row shows that sheet alone, and again shows all; the figures stay the whole set's. Nothing else on the screen changed, so no DESIGN
+   NEEDED line. It is opened as a saved sheet with no picture is, and is not saved as a session of its own. **The phone:** the set's
+   checklist's See the pooled group opens the same plot on the result screen, Android and iOS, with the checklist as its way back.
+2. **Dropping several sheets.** On both systems a drop of several pictures opened only the first and said the others were not opened,
+   which is what Quack saw on his Mac. Each now opens in a tab of its own, the next once the last one's detection is done (at most two
+   minutes each). Once two or more of them are accepted and are sheets of one set, the analysis screen offers **Read these as one set**,
+   which pools them as Pool the chosen does.
+3. **The repeated records.** A second Accept on the same tab already updated its record; the same picture opened again, by Open, a drop or
+   a reopened tab, started with no session, so Accept made another record of the same sheet each time, which is what the identical
+   records were. Now a save with no session first looks for a record of the same picture (its SHA-256) and the same design, updates that
+   one, keeps its date, and says so on the status line (`SessionStore.WithImage`, `Entry420Tests`). A record saved without its picture
+   cannot be matched this way. The 4-shot record from entry 417's bug was left alone.
+4. **Pictures:** the pooled view's own Features picture is listed as waiting in docs/figures/SCREENSHOTS.md, for the screenshot walk; the
+   guide's pooling paragraph, the tour and the Features sentence say how.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

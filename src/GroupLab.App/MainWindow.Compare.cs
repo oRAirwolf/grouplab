@@ -13,6 +13,8 @@ using GroupLab.Core.Statistics;
 using GroupLab.Core.Trace;
 using GroupLab.Core.Reporting;
 
+using GroupLab.Core.Gltd.Model;
+
 namespace GroupLab.App;
 
 /// <summary>
@@ -92,6 +94,41 @@ public sealed partial class MainWindow
             sessionPoolPanel.Children.Add(Line($"Sigma {Inches(figures.Sigma)}"));
             sessionPoolPanel.Children.Add(Line($"Extreme spread {Inches(figures.ExtremeSpread)}"));
         }
+
+        // Entry 420 section 1, Quack's question: the pooled set opens in the analysis screen, in its own tab, as a sheet does.
+        if (pooled.Shots > 0)
+        {
+            OpenPooled(definition, SetPool.Composite(definition, states));
+        }
+    }
+
+    /// <summary>
+    /// Entry 420 section 1: a pooled set in its own tab, on the analysis screen: every shot on one plot about its own bull, each sheet in its
+    /// own shade with a key, every figure, and the Shots list naming each shot sheet.bull. It is opened as a saved sheet with no picture is,
+    /// and is not saved again as a session of its own.
+    /// </summary>
+    internal void OpenPooled(TargetDefinition definition, MarkingState pooled)
+    {
+        if (AddTarget(choose: false) is null)
+        {
+            return;
+        }
+
+        grey = valueImage = artwork = null;
+        metadata = null;
+        canvas.SetImage(null, null);
+        canvas.Artwork = null;
+        plotDefinition = definition;
+        registrationResidual = null;
+        detectedState = null;
+        plot.OnlySheet = null;
+        session.Load(pooled);
+        MarkingIsSaved();
+        currentSession = null;
+        destination = Destination.Analyse;
+        SetAnalysing(true);
+        DiagnosticLog.Info("sessions.pool.open", ("shots", pooled.Shots.Count));
+        status.Text = $"{pooled.SheetLabel}, in its own tab. Each shot is named sheet.bull: 2.5 is bull 5 on sheet 2. Tap a sheet in the plot's key to show it alone.";
     }
 
     /// <summary>What the pooled set says, for the headless tests.</summary>

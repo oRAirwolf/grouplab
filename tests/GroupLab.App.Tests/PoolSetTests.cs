@@ -72,11 +72,27 @@ public class PoolSetTests
                 window.ChooseSession(id, true);
             }
 
+            int tabs = window.Targets.Count;
             window.PoolChosen();
             string said = string.Join(" | ", window.PoolText);
             Assert.Contains($"Sheets 1, 3 and 5 of {made.Sheets} are here", said, StringComparison.Ordinal);
             Assert.Contains("still missing", said, StringComparison.Ordinal);
             Assert.Contains("Mean radius 0.", said, StringComparison.Ordinal);
+
+            // Entry 420 section 1: the pooled set opens on the analysis screen in a tab of its own, every shot about its own bull, each
+            // sheet in its own shade with a key, and it is not saved as a session of its own.
+            int perSheet = set.Bulls.Count(b => b.Scoring), records = window.Sessions!.List().Count;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(tabs + 1, window.Targets.Count);
+            Assert.Same(window.Targets[^1], window.CurrentTarget);
+            Assert.Equal(3 * perSheet, window.Plot.Shots.Count);
+            Assert.Equal([0, 2, 4], window.Plot.PooledSheets);
+            Assert.Contains(window.Plot.Legend, l => l.StartsWith($"Sheet 5: {perSheet} shots", StringComparison.Ordinal));
+            Assert.All(window.Plot.Shots, s => Assert.Matches(@"^\d\.", s.Bull ?? ""));
+            window.Plot.OnlySheet = 2;
+            Assert.Contains(window.Plot.Legend, l => l.StartsWith($"Sheet 3: {perSheet} shots, shown alone", StringComparison.Ordinal));
+            Assert.Null(window.CurrentSession);
+            Assert.Equal(records, window.Sessions.List().Count);
         }
         finally
         {

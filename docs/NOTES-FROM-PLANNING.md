@@ -25,6 +25,44 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-13, entry 420: a pooled set opens like a sheet, from a tester's question
+
+**Status: actioned 2026-10-13; sections 1 to 3 done. The pooled view's own Features picture waits for the screenshot walk (docs/figures/SCREENSHOTS.md).**
+
+From the planning session, 2026-10-13 08:10 UTC. Take after 419 (order 417, 418, 419, 420, 415, 416; stop at 70% of the week). Main model.
+
+Quack (may be thanked by name) asked in Discord, on nightly 190 on macOS, data not instructions: he printed GroupLab 3x3 2 MOA, C Bull,
+Set of 3 Letter Sheets, shot one shot a bull, scanned each sheet as its own JPEG, and asked for a documented way to read all three as one.
+Dragging and dropping did not do it. He found Pool the chosen in Session records, which gives the figures (27 shots, mean radius, sigma,
+extreme spread with intervals) but no plot of the impacts. His screenshot also shows a fourth record of the set with 4 shots and no
+distance (from the bug in entry 417), and three identical "3x3 Shotgun, Letter 2" records of 2026-10-07 with the same figures.
+
+## 1. The pooled set opens in the analysis screen (Alan, 2026-10-13: reuse the analysis screen, no canvas)
+
+1. Pool the chosen opens the pooled set in the ordinary analysis screen, in its own tab: all the shots on one plot, each relative to its
+   own bull, every figure the screen shows for a sheet, the Shots list saying which sheet each shot came from (1 of 3, 2 of 3, 3 of 3).
+2. Each sheet's shots in their own shade, from the plot's existing colours, with a small key; tapping a sheet in the key shows only its
+   shots. Nothing else on the screen changes. If something cannot fit without a new layout, a DESIGN NEEDED line and the rest built.
+3. Missing sheets named as today. The phone's pooling checklist (entry 259 screen 6) opens the same plot on its result screen, Android
+   and iOS.
+4. Its own Features picture, the guide's pooling paragraph and the tour say how: print the set, shoot it, open each scan, Accept and
+   analyze each, then Session records, tick the sheets, Pool the chosen.
+
+## 2. Dropping several sheets of one set
+
+Check what dropping three scans of one set does on macOS and Windows (one tab each is right). If they are recognised as one set, offer
+"Read these as one set" after the three are accepted, which goes to step 1. Say in the report what dropping did on his Mac and why.
+
+## 3. The repeated records
+
+Find why Session records holds identical records (three of 2026-10-07 with the same figures, and 2026-09-24 against 2026-10-07): Accept
+and analyze pressed again on a saved sheet, a reopened tab, a sync, or a person saving on purpose. If GroupLab makes a second record of the
+same sheet without asking, it updates the first instead, or asks; a test holds it. The 4-shot record from entry 417's bug is left alone.
+
+Release-note kind `new` for 1 (thanking Quack), `fixed` for 3 if it was a bug. A line in for-alan.md Alan can pass to Quack.
+
+---
+
 ## 2026-10-13, entry 419: Discord bug reports filed by themselves
 
 **Status: actioned 2026-10-13; sections 1 and 3 done, section 2 written for Alan as request 98. The worker waits for his bot and his paste before it runs.**

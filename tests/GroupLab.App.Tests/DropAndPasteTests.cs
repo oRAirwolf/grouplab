@@ -55,9 +55,12 @@ public class DropAndPasteTests
         }
     }
 
-    /// <summary>Several dropped at once: the first opens and the rest are counted, rather than a dialog in the way of a quick gesture.</summary>
+    /// <summary>
+    /// Several dropped at once: entry 137 opened the first and counted the rest; entry 420 section 2 (Quack, three scans of one set on a Mac)
+    /// opens each in a tab of its own, the first where the drop landed.
+    /// </summary>
     [AvaloniaFact]
-    public void SeveralDroppedOpenTheFirstAndSayHowManyWereNot()
+    public async Task SeveralDroppedOpenOneTabEach()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         string a = Path.Combine(Path.GetDirectoryName(path)!, "a.png");
@@ -66,11 +69,20 @@ public class DropAndPasteTests
         File.Copy(path, b, overwrite: true);
         try
         {
+            int tabs = window.Targets.Count;
             window.OpenDropped([a, b]);
             Discard(window);
+            for (int i = 0; i < 400 && window.Targets.Count < tabs + 1; i++)
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(25);
+            }
 
-            Assert.Equal(a, window.Session.State.ImagePath);
-            Assert.Contains("1 other file was dropped with it and not opened", window.StatusText, StringComparison.Ordinal);
+            await window.Opening;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(tabs + 1, window.Targets.Count);
+            Assert.Equal(b, window.Session.State.ImagePath);
+            Assert.Contains("The 2 pictures dropped together are open, one tab each", window.StatusText, StringComparison.Ordinal);
         }
         finally
         {

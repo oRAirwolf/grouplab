@@ -131,6 +131,9 @@ public sealed partial class MainWindow : Window
 
     private readonly StackPanel analysisActions = new() { Orientation = Orientation.Horizontal, IsVisible = false };
 
+    // Entry 420 section 2: offered on the analysis screen when the pictures dropped together are sheets of one set.
+    private Button readAsOneSet = new();
+
     private readonly Button acceptButton = new() { Content = "Accept and analyze", Margin = new Thickness(2), Classes = { AppStyles.Primary } };
 
     private readonly Button discardButton = new() { Content = "Discard edits", Margin = new Thickness(2) };
@@ -940,6 +943,11 @@ public sealed partial class MainWindow : Window
         {
             toggle.Click += (_, _) => SetShowWork(!workShown);
         }
+        // Entry 420 section 2: pictures dropped together that are sheets of one set, once two or more are accepted, read as one set.
+        readAsOneSet = Button("Read these as one set", ReadDroppedAsOneSet);
+        readAsOneSet.IsVisible = false;
+        ToolTip.SetTip(readAsOneSet, "Pool the sheets of one set you dropped together, as Session records' Pool the chosen does");
+        analysisActions.Children.Add(readAsOneSet);
         // Entry 169 section 4.2: the figures in a window of their own, for a second monitor.
         var ownWindow = Button("Own window", PopOutFigures);
         ToolTip.SetTip(ownWindow, "Open the figures in a window of their own, for a second monitor");
@@ -3271,6 +3279,8 @@ public sealed partial class MainWindow : Window
         loadLines.Children.Add(Readout("Caliber", state.Calibre is null ? "not set"
             : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true));
 
+        readAsOneSet.IsVisible = DroppedSetSessions().Count >= 2;
+
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
         // Entry 219 item A4: the plot fills itself from the marking, the same way on the phone.
         var plotted = plot.Show(state, plotDefinition, units, ShotLabel, BullLabel);
@@ -3424,17 +3434,31 @@ public sealed partial class MainWindow : Window
         var state = session.State;
         string? path = state.ImagePath is { } p && File.Exists(p) ? p : null;
         var (proof, proofType) = ProofImage(path, state.Scale);
-        // A second Accept on the same session updates it and keeps the day it was first saved.
+        // A second Accept on the same session updates it and keeps the day it was first saved. Entry 420 section 3: so does the same picture
+        // of the same design opened again and accepted, which made a second record of the same sheet each time; the person is told.
+        string? hash = path is null ? null : Sha256(path);
         var existing = currentSession is { } saved ? sessions.Get(saved) : null;
-        var record = SessionRecords.Build(state, plotDefinition, units, analyseSighters, existing, path is null ? null : Sha256(path), proof, proofType,
-            DateTime.UtcNow, DateTime.Now);
+        var record = SessionRecords.Build(state, plotDefinition, units, analyseSighters, existing, hash, proof, proofType, DateTime.UtcNow, DateTime.Now);
+        string? sameSheet = null;
+        if (existing is null && hash is not null && sessions.WithImage(hash, record.DefinitionId) is { } earlier && sessions.Get(earlier) is { } before)
+        {
+            record = SessionRecords.Build(state, plotDefinition, units, analyseSighters, before, hash, proof, proofType, DateTime.UtcNow, DateTime.Now);
+            sameSheet = $" This picture was saved before, on {before.ShotDate ?? before.CreatedUtc[..10]}, so that record was brought up to date rather than made twice.";
+        }
+
         try
         {
             currentSession = sessions.Save(record);
             // Entry 140 section 1.4: from here the sheet is in a saved session, so leaving it asks nothing until it is edited again.
             MarkingIsSaved();
             savedAtUtc = DateTime.UtcNow;
-            DiagnosticLog.Info("session.save", ("session", currentSession), ("shots", record.ShotCount), ("proof", proof?.Length ?? 0));
+            DiagnosticLog.Info("session.save", ("session", currentSession), ("shots", record.ShotCount), ("proof", proof?.Length ?? 0), ("same", sameSheet is not null));
+            if (sameSheet is not null)
+            {
+                status.Text += sameSheet;
+            }
+
+            NoteDroppedSaved(path, currentSession);
         }
         catch (Microsoft.Data.Sqlite.SqliteException ex)
         {

@@ -10,6 +10,8 @@ using GroupLab.App.Theme;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Updates;
 
+using GroupLab.Core.Marking;
+
 namespace GroupLab.App;
 
 /// <summary>
@@ -104,14 +106,84 @@ public sealed partial class MainWindow
         }
 
         string first = paths[0];
+        droppedTogether = paths.Count > 1 ? [.. paths] : null;
+        droppedSaved.Clear();
         Leaving(async () =>
         {
-            if (await OpenImageSafely(first).ConfigureAwait(true) && paths.Count > 1)
+            if (!await OpenImageSafely(first).ConfigureAwait(true) || paths.Count == 1)
             {
-                status.Text += string.Create(CultureInfo.InvariantCulture,
-                    $" {paths.Count - 1} other {(paths.Count == 2 ? "file was" : "files were")} dropped with it and not opened.");
+                return;
             }
+
+            // Entry 420 section 2, Quack on macOS: three scans of one set dropped together opened only the first. Each now opens in a tab of
+            // its own, the next once the last one's detection is done, waiting at most two minutes for each.
+            int opened = 1;
+            foreach (string next in paths.Skip(1))
+            {
+                for (int waited = 0; detection is not null && waited < 1200; waited++)
+                {
+                    await Task.Delay(100).ConfigureAwait(true);
+                }
+
+                if (AddTarget(choose: false) is null || !await OpenImageSafely(next).ConfigureAwait(true))
+                {
+                    break;
+                }
+
+                opened++;
+            }
+
+            status.Text += opened == paths.Count
+                ? string.Create(CultureInfo.InvariantCulture, $" The {paths.Count} pictures dropped together are open, one tab each.")
+                : string.Create(CultureInfo.InvariantCulture, $" {opened} of the {paths.Count} pictures dropped together are open, one tab each; the rest could not be opened.");
         });
+    }
+
+    // Entry 420 section 2: the pictures last dropped together, and the session each was saved as once accepted.
+    private List<string>? droppedTogether;
+    private readonly Dictionary<string, long> droppedSaved = new(StringComparer.Ordinal);
+
+    private void NoteDroppedSaved(string? path, long? session)
+    {
+        if (path is not null && session is { } id && droppedTogether?.Contains(path) == true)
+        {
+            droppedSaved[path] = id;
+        }
+    }
+
+    /// <summary>
+    /// Entry 420 section 2: the sessions of the pictures dropped together that are sheets of one set, once two or more have been accepted, so
+    /// the analysis screen can offer to read them as one set; empty otherwise.
+    /// </summary>
+    internal IReadOnlyList<long> DroppedSetSessions()
+    {
+        if (sessions is null || droppedSaved.Count < 2)
+        {
+            return [];
+        }
+
+        var records = droppedSaved.Values.Distinct().Select(id => sessions.Get(id)).OfType<GroupLab.Core.Records.SessionRecord>().ToList();
+        bool oneSet = records.Select(r => r.DefinitionId).Distinct().Count() == 1
+            && records.All(r => MarkingFile.Read(r.MarkingJson).State.SetSheet is not null);
+        return oneSet ? [.. records.Select(r => r.Id)] : [];
+    }
+
+    /// <summary>Entry 420 section 2: "Read these as one set", the dropped sheets chosen and pooled as Session records' Pool the chosen does.</summary>
+    internal void ReadDroppedAsOneSet()
+    {
+        var ids = DroppedSetSessions();
+        if (ids.Count < 2)
+        {
+            return;
+        }
+
+        sessionChosen.Clear();
+        foreach (long id in ids)
+        {
+            sessionChosen.Add(id);
+        }
+
+        PoolChosen();
     }
 
     /// <summary>

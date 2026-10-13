@@ -104,6 +104,9 @@ public sealed class ResultView : UserControl, IOpenTarget
     private UnitSettings units;
     private readonly CompositePlot plot = new() { Height = 360, HorizontalAlignment = HorizontalAlignment.Stretch };
 
+    /// <summary>The plot, for the headless tests (entry 420: a pooled set's sheets in their shades).</summary>
+    internal CompositePlot Plot => plot;
+
     /// <summary>Entry 259 screen 1: the tiles, the plot with its chips, and the sections that open, from the shared figures.</summary>
     private readonly FiguresView full;
     private readonly TextBlock saved = Screens.Line("");

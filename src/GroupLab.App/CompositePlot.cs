@@ -20,6 +20,9 @@ internal sealed record PlotShot(int Id, string Label, string? Bull, PointD Offse
 {
     /// <summary>Entry 376 section A6: the shot as <see cref="ShotLabels"/> names it, "Bull 7" or "Bull 7, shot 2"; null on a plain group.</summary>
     public ShotLabel? Named { get; init; }
+
+    /// <summary>Entry 420: which sheet of a pooled set the shot is on, counting from 0, or null on a single sheet.</summary>
+    public int? Sheet { get; init; }
 }
 
 /// <summary>One disc of the bull's artwork, outermost first, at its diameter in inches, and whether its ink is the paper.</summary>
@@ -110,6 +113,26 @@ internal sealed class CompositePlot : Control
     public IReadOnlyList<PlotDisc> Discs { get; set; } = [];
 
     public IReadOnlyList<PlotShot> Shots { get; set; } = [];
+
+    /// <summary>
+    /// Entry 420 section 1.2: on a pooled set, the one sheet whose shots alone are shown, chosen by tapping it in the key, or null for all.
+    /// The figures are the whole set's either way; this only shows.
+    /// </summary>
+    public int? OnlySheet { get; set; }
+
+    /// <summary>The sheets the shots come from, in order, where they come from more than one: a pooled set.</summary>
+    internal IReadOnlyList<int> PooledSheets => Shots.Select(s => s.Sheet).OfType<int>().Distinct().Order().ToList() is { Count: > 1 } sheets ? sheets : [];
+
+    /// <summary>The shots drawn: all of them, or one sheet's.</summary>
+    private IEnumerable<PlotShot> Visible => OnlySheet is { } only ? Shots.Where(s => s.Sheet == only) : Shots;
+
+    /// <summary>A pooled set's shot in its sheet's colour, the colours Compare gives its loads; null on a single sheet.</summary>
+    private Color? SheetColour(PlotShot shot)
+    {
+        var sheets = PooledSheets;
+        var colours = Tokens.Loads(ActualThemeVariant);
+        return shot.Sheet is { } k && sheets.Count > 0 ? colours[sheets.ToList().IndexOf(k) % colours.Count] : null;
+    }
 
     public double? CalibreInches { get; set; }
 
@@ -242,9 +265,10 @@ internal sealed class CompositePlot : Control
         var offsets = GroupAnalysis.CompositeOffsets(state, shots);
         var named = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         List<PlotShot> plotted = offsets.Count == shots.Count
-            ? [.. shots.Select((s, i) => new PlotShot(s.Id, shotLabel(s.Id), s.Bull is { } b ? bullLabel(b) : null, offsets[i], s.Exclusion is not null) { Named = named.GetValueOrDefault(s.Id) })]
+            ? [.. shots.Select((s, i) => new PlotShot(s.Id, shotLabel(s.Id), s.Bull is { } b ? bullLabel(b) : null, offsets[i], s.Exclusion is not null) { Named = named.GetValueOrDefault(s.Id), Sheet = s.Bull is { } bi ? SetPool.SheetOf(bi) : null })]
             : [];
         Shots = plotted;
+        OnlySheet = OnlySheet is { } only && plotted.Any(p => p.Sheet == only) && PooledSheets.Count > 0 ? only : null;
         CalibreInches = state.Calibre?.DiameterInches;
         Length = inches => units.Length(inches);
         var kept = plotted.Where(p => !p.Excluded).ToList();
@@ -296,6 +320,14 @@ internal sealed class CompositePlot : Control
             if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && KeyLayout() is { Collapsed: true } layout && KeyHit(layout.Key).Contains(e.GetPosition(this)))
             {
                 keyOpen = !keyOpen;
+                InvalidateVisual();
+                e.Handled = true;
+                return;
+            }
+
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && SheetInKeyAt(e.GetPosition(this)) is { } sheet)
+            {
+                OnlySheet = OnlySheet == sheet ? null : sheet;
                 InvalidateVisual();
                 e.Handled = true;
                 return;
@@ -495,7 +527,7 @@ internal sealed class CompositePlot : Control
 
             // The outlines first, all of them, then every dot over them, so no outline covers another shot's centre. A picked shot waits
             // for the top.
-            var unpicked = Shots.Where(s => !Selected.Contains(s.Id)).OrderBy(s => !s.Excluded).ToList();
+            var unpicked = Visible.Where(s => !Selected.Contains(s.Id)).OrderBy(s => !s.Excluded).ToList();
             foreach (var shot in unpicked)
             {
                 DrawOutline(context, shot, scale);
@@ -532,7 +564,7 @@ internal sealed class CompositePlot : Control
                 FullLines(context, new SolidColorBrush(inks.Group), ToScreen(groupCentre), drawn);
             }
 
-            foreach (var shot in Shots.Where(s => Selected.Contains(s.Id)))
+            foreach (var shot in Visible.Where(s => Selected.Contains(s.Id)))
             {
                 DrawOutline(context, shot, scale);
                 DrawShot(context, shot);
@@ -607,7 +639,7 @@ internal sealed class CompositePlot : Control
         }
 
         bool selected = Selected.Contains(shot.Id);
-        var colour = selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink;
+        var colour = selected ? inks.Accent : shot.Excluded ? inks.Ring : SheetColour(shot) ?? inks.Ink;
         var pen = new Pen(new SolidColorBrush(colour, selected || shot.Excluded ? 1 : OutlineOpacity), selected ? 2.5 : Stroke, shot.Excluded ? Marks.Dashed : null);
         double radius = Math.Max(2, calibre * scale / 2);
         context.DrawEllipse(null, pen, ToScreen(shot.Offset), radius, radius);
@@ -622,7 +654,7 @@ internal sealed class CompositePlot : Control
         var at = ToScreen(shot.Offset);
         bool selected = Selected.Contains(shot.Id);
         double opacity = selected || shot.Excluded || CalibreInches is not null ? 1 : OutlineOpacity;
-        IBrush brush = new SolidColorBrush(selected ? inks.Accent : shot.Excluded ? inks.Ring : inks.Ink, opacity);
+        IBrush brush = new SolidColorBrush(selected ? inks.Accent : shot.Excluded ? inks.Ring : SheetColour(shot) ?? inks.Ink, opacity);
         if (shot.Excluded)
         {
             Marks.Ring(context, brush, at, 3.5, selected ? 2.5 : Stroke, Marks.Dashed);
@@ -655,6 +687,16 @@ internal sealed class CompositePlot : Control
                     ? new KeyEntry($"{kept} shots, a dot at each center; the caliber outlines are hidden", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink), p, 3))
                     : new KeyEntry($"{kept} shots, drawn as points: no caliber is set, so there is no hole size to draw", (c, p) => Marks.Dot(c, new SolidColorBrush(inks.Ink, OutlineOpacity), p, 3)),
         };
+        // Entry 420 section 1.2: a pooled set's sheets, each in its colour; tapping one shows its shots alone, and again shows them all.
+        foreach (int sheet in PooledSheets)
+        {
+            var colour = SheetColour(Shots.First(s => s.Sheet == sheet))!.Value;
+            int n = Shots.Count(s => s.Sheet == sheet && !s.Excluded);
+            string shown = OnlySheet == sheet ? ", shown alone: tap for all" : OnlySheet is null ? ", tap to show alone" : "";
+            entries.Add(new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"Sheet {sheet + 1}: {n} shot{(n == 1 ? "" : "s")}{shown}"),
+                (c, p) => Marks.Dot(c, new SolidColorBrush(colour, OnlySheet is null || OnlySheet == sheet ? 1 : OutlineOpacity), p, 4)));
+        }
+
         if (excluded > 0)
         {
             entries.Add(new KeyEntry($"{excluded} excluded, drawn hollow", (c, p) => Marks.Ring(c, new SolidColorBrush(inks.Ring), p, 3.5, Stroke, Marks.Dashed)));
@@ -760,6 +802,42 @@ internal sealed class CompositePlot : Control
     /// <summary>The rectangle the plot itself is drawn in, clear of the key.</summary>
     internal Rect DataRect => KeyLayout().Data;
 
+    /// <summary>The key's box where it is drawn, or null while it is folded away.</summary>
+    private Rect? KeyBox()
+    {
+        if (!ShowKey)
+        {
+            return null;
+        }
+
+        var entries = Key();
+        var (_, place, collapsed) = KeyLayout();
+        if (collapsed && !keyOpen)
+        {
+            return null;
+        }
+
+        var texts = KeyTexts(entries);
+        double width = Math.Min(Math.Max(0, Bounds.Width - (2 * KeyPad)), KeySwatch + texts.Max(t => t.Width) + (2 * KeyPad));
+        return collapsed ? new Rect(KeyPad, KeyStrip + 2, width, (entries.Count * KeyLine) + KeyPad) : place;
+    }
+
+    /// <summary>Entry 420: the pooled set's sheet whose row of the key is at a point, or null.</summary>
+    internal int? SheetInKeyAt(Point at)
+    {
+        var sheets = PooledSheets;
+        if (sheets.Count == 0 || KeyBox() is not { } box || !box.Contains(at))
+        {
+            return null;
+        }
+
+        var texts = Key().Select(k => k.Text).ToList();
+        int row = (int)Math.Floor((at.Y - box.Y - (KeyPad / 2)) / KeyLine);
+        return row >= 0 && row < texts.Count && texts[row].StartsWith("Sheet ", StringComparison.Ordinal)
+            && int.TryParse(texts[row]["Sheet ".Length..texts[row].IndexOf(':', StringComparison.Ordinal)], NumberStyles.Integer, CultureInfo.InvariantCulture, out int k)
+            ? k - 1 : null;
+    }
+
     private void DrawKey(DrawingContext context)
     {
         var entries = Key();
@@ -793,7 +871,7 @@ internal sealed class CompositePlot : Control
     {
         var (scale, _) = Frame(DataRect);
         double reach = Math.Max(8, ShowOutlines ? (CalibreInches ?? 0) * scale / 2 : 0);
-        return Shots
+        return Visible
             .Select(s => (Shot: s, Distance: Distance(ToScreen(s.Offset), at)))
             .Where(x => x.Distance <= reach)
             .OrderBy(x => x.Distance)

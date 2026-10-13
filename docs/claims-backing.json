@@ -601,6 +601,10 @@
    "kind": "decided",
    "where": "entry 129 section 5: every question optional; the numbers before it are the page's choice of how many sheets a set has (entry 418)"
   },
+  "GroupLab says which sheets of the set are still missing and how many shots it has of the bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own: every shot on one plot, measured from its own bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SetPool.cs Composite and SheetOf, and src/GroupLab.App/MainWindow.Compare.cs OpenPooled; held by SetPoolTests.ThePooledSetIsOneMarkingWithThePoolsFigures and PoolSetTests (entry 420)"
+  },
   "About the target Answer what you can be bothered to answer and leave the rest.": {
    "kind": "decided",
    "where": "entry 129 section 5: every question optional"

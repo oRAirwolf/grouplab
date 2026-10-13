@@ -29,6 +29,9 @@ public class SecondSheetSessionTests
             // A second sheet, opened the way Open, drop and paste open one.
             string second = Path.Combine(Path.GetDirectoryName(path)!, "second.png");
             File.Copy(path, second);
+            // Entry 420 section 3: a byte-identical copy is now the same picture, whose record is updated rather than made twice. One byte
+            // after the image's end makes it another file with the same pixels, a second sheet as far as the records can tell.
+            File.AppendAllBytes(second, [0]);
             _ = window.OpenImageSafely(second);
             Assert.True(window.OpenFinished());
             Assert.Null(window.CurrentSession);

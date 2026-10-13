@@ -1118,7 +1118,7 @@
       "key": "pool-set",
       "group": "Sheets and printing",
       "name": "Pool the sheets of a set",
-      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, and GroupLab says which sheets are still missing.",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing.",
       "shot": "sessions",
       "platforms": [
         "Windows",
@@ -1128,7 +1128,10 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": "pool",
+      "note": [
+        "pool",
+        "A pooled set now opens on the analysis screen"
+      ],
       "tour": "sessions",
       "guide": "10-comparing-several-sheets-at-once",
       "mobile": {

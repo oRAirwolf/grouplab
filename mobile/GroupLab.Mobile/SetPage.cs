@@ -85,10 +85,21 @@ internal sealed class SetPage : UserControl
         column.Children.Add(Screens.Card(sheets));
         column.Children.Add(Screens.Dim("Sheets can be photographed in any order. Each one names itself from its code."));
         column.Children.Add(Screens.Primary(pooled.Missing.Count > 0 ? "Photograph the next sheet" : "Photograph another sheet", photograph));
-        var group = new StackPanel { Spacing = 6, IsVisible = false, Children = { Screens.Line(pooled.Said) } };
-        column.Children.Add(Screens.Choice("See the pooled group", () => group.IsVisible = !group.IsVisible));
-        column.Children.Add(group);
+        column.Children.Add(Screens.Line(pooled.Said));
+        // Entry 420 section 1.3: the pooled group opens on the result screen, the same plot as the desktop's, every shot about its own bull
+        // and each sheet in its own shade with a key; its way back is this checklist.
+        var page = Screens.Page(column);
+        if (pooled.Shots > 0)
+        {
+            column.Children.Add(Screens.Choice("See the pooled group", () =>
+            {
+                var composite = SetPool.Composite(definition, states);
+                DiagnosticLog.Info("phone.set.open", ("shots", composite.Shots.Count));
+                Content = new ResultView(new PhoneResult(composite, definition, null, null), new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
+            }).Id("set-pooled-group"));
+        }
+
         column.Children.Add(Screens.Choice("Back to the result", back));
-        Content = Screens.Page(column);
+        Content = page;
     }
 }

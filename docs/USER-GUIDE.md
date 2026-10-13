@@ -418,9 +418,13 @@ updates it.
 ## 10. Comparing several sheets at once
 
 **The sheets of a set pool into one group.** When Made for your optic needs several sheets for your shots, each sheet's codes say which of the
-set it is. Analyze each sheet as usual, in any order, then in **Session records** tick them and choose **Pool the chosen**: GroupLab reads
-them as one group, every shot measured from its own bull, and says which sheets of the set are still missing and how many shots it has of
-the bulls the set holds. A sheet read twice counts once.
+set it is. Print the set, shoot it, open each scan or photograph and choose **Accept and analyze** on each, in any order; then in **Session
+records** tick them and choose **Pool the chosen**. GroupLab says which sheets of the set are still missing and how many shots it has of the
+bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own: every shot on one plot, measured from its own
+bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2). Each sheet's shots are
+in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once. Dropping the scans of a set
+onto the window together opens each in a tab of its own, and once they are accepted the analysis screen offers **Read these as one set**,
+which does the same. On the phone, the set's checklist has **See the pooled group**.
 
 Reading other sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: separate sheets shot at one
 aim point each have their own center, and what a pooled figure means depends on which center you measure from, which is still being decided.

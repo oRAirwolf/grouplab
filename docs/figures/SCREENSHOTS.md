@@ -116,6 +116,7 @@ read off a target, and the three sharing choices (Settings, where they are made)
 
 | Entry | Its picture now | What it should show |
 |---|---|---|
+| Pool the sheets of a set (entry 420) | Session records | the pooled set open in its own tab: every shot about its own bull, each sheet in its shade, the key |
 | A GroupLab sheet reads itself | the marking screen | a sheet's codes and markers found |
 | Every hole found | the marking screen | a few holes close up with their rings |
 | The bulls you aimed at | the marking screen | the bull picker with rows chosen |

@@ -1,5 +1,8 @@
+using System.Collections.Immutable;
 using System.Globalization;
 using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Imaging;
+using GroupLab.Core.Registration;
 
 namespace GroupLab.Core.Marking;
 
@@ -32,6 +35,67 @@ public static class SetPool
         string noun = PageSizes.IsLabel(definition.Page.Size) ? "label" : "sheet";
         return new SetPoolResult(size, found, missing, repeated, bulls, shots, figures, Words(size, found, missing, repeated, bulls, shots, noun));
     }
+
+    /// <summary>How far apart the sheets are laid in <see cref="Composite"/>, page dmm: a page's width and an inch, so no two bulls meet.</summary>
+    private const double SheetGap = 254;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 420 section 1: the pooled set as one marking, so the analysis screen shows it as it shows a sheet. Each
+    /// sheet read (once, as <see cref="Pool"/> counts it) is laid beside the last on one page, its bulls where they print and each shot at
+    /// its own offset from its own bull in inches, as its sheet measured it with that sheet's own scale; so every figure the screen works
+    /// out from the marking is the pooled group's. A bull is named sheet.bull, "2.5" for bull 5 on sheet 2, which is how the Shots list says
+    /// which sheet each shot came from, and <see cref="SheetOf"/> reads the sheet back from a bull's index.
+    /// </summary>
+    public static MarkingState Composite(TargetDefinition definition, IReadOnlyList<MarkingState> sheets)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        ArgumentNullException.ThrowIfNull(sheets);
+        var once = sheets.Where(s => s.SetSheet is not null && s.Scale is not null).GroupBy(s => s.SetSheet!.Value).OrderBy(g => g.Key).Select(g => g.First()).ToList();
+        double across = definition.Page.Width + SheetGap;
+        var bulls = ImmutableList.CreateBuilder<BullAim>();
+        var shots = ImmutableList.CreateBuilder<MarkedShot>();
+        int next = 1;
+        foreach (var sheet in once)
+        {
+            int k = sheet.SetSheet!.Value;
+            var scale = sheet.Scale!;
+            PointD Page(PointD image) => scale.ToTarget(image) is var t ? new PointD((k * across) + (t.X * 254), t.Y * 254) : default;
+            var at = new Dictionary<int, PointD>();
+            foreach (var bull in sheet.Bulls)
+            {
+                at[bull.Index] = Page(bull.Image);
+                bulls.Add(new BullAim(Index(k, bull.Index), string.Create(CultureInfo.InvariantCulture, $"{k + 1}.{bull.Label}"), at[bull.Index], bull.Scoring));
+            }
+
+            var marked = sheet.Shots.Where(s => s.IsShot).ToList();
+            var offsets = GroupAnalysis.CompositeOffsets(sheet, marked);
+            for (int i = 0; i < marked.Count; i++)
+            {
+                var shot = marked[i];
+                var image = shot.Bull is { } b && at.TryGetValue(b, out var origin) && offsets.Count == marked.Count
+                    ? new PointD(origin.X + (offsets[i].X * 254), origin.Y + (offsets[i].Y * 254))
+                    : Page(shot.Image);
+                shots.Add(new MarkedShot(next++, image, shot.Provenance, shot.Exclusion, false, shot.Bull is { } own ? Index(k, own) : null, shot.BullChosen, shot.MeasuredDiameterInches));
+            }
+        }
+
+        // The sheets measured in real inches stay real; one that was not makes the whole set sheet inches, as a sheet's own figures say.
+        bool real = once.Count > 0 && once.All(s => s.Scale is SheetReference { RealInches: true });
+        var identity = new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+        string summary = string.Create(CultureInfo.InvariantCulture, $"{once.Count} sheet{(once.Count == 1 ? "" : "s")} of {definition.Name} pooled, each shot about its own bull with its own sheet's scale");
+        T? Same<T>(Func<MarkingState, T?> of) => once.Select(of).Distinct().ToList() is [var only] ? only : default;
+        return new MarkingState(null, new SheetReference(identity, summary) { PrintScale = real ? 1 : null }, null, bulls.ToImmutable(), shots.ToImmutable(), next,
+            summary, Calibre: once.Select(s => s.Calibre).FirstOrDefault(c => c is not null), ShotDistanceInches: Same(s => s.ShotDistanceInches),
+            Rifle: Same(s => s.Rifle), Barrel: Same(s => s.Barrel), Load: Same(s => s.Load),
+            SheetLabel: string.Create(CultureInfo.InvariantCulture, $"{definition.Name}, {once.Count} of {(definition.Tiling is { } set ? set.Cols * set.Rows : 1)} sheets pooled"));
+    }
+
+    /// <summary>Entry 420: which sheet of the set a bull of <see cref="Composite"/>'s marking is on, from its index, counting from 0.</summary>
+    public static int SheetOf(int bullIndex) => bullIndex / BullsASheet;
+
+    private const int BullsASheet = 10_000;
+
+    private static int Index(int sheet, int bull) => (sheet * BullsASheet) + bull;
 
     private static string Words(int size, IReadOnlyList<int> found, IReadOnlyList<int> missing, IReadOnlyList<int> repeated, int bulls, int shots, string noun)
     {

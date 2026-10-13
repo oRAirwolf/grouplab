@@ -67,6 +67,35 @@ public class SetPoolTests
         Assert.InRange(pooled.Figures!.MeanRadius!.Value, 0.03, 0.30);
     }
 
+    /// <summary>
+    /// Entry 420 section 1: the pooled set as one marking, which the analysis screen shows as it shows a sheet. Its figures are the pool's,
+    /// to the last digit; each shot names its sheet; a sheet read twice counts once; and it survives being written and read.
+    /// </summary>
+    [Fact]
+    public void ThePooledSetIsOneMarkingWithThePoolsFigures()
+    {
+        var set = Set();
+        int perSheet = set.Bulls.Count(b => b.Scoring);
+        var read = new List<MarkingState> { Read(set, 2, 11), Read(set, 0, 12), Read(set, 0, 13) };
+        var pooled = SetPool.Pool(set, read);
+        var composite = SetPool.Composite(set, read);
+
+        Assert.Equal(2 * perSheet, composite.Shots.Count);
+        var figures = GroupAnalysis.Pooled([composite]);
+        Assert.Equal(pooled.Figures!.Shots, figures!.Shots);
+        Assert.Equal(pooled.Figures.MeanRadius!.Value, figures.MeanRadius!.Value, 9);
+        Assert.Equal(pooled.Figures.ExtremeSpread!.Value, figures.ExtremeSpread!.Value, 9);
+        Assert.Equal(pooled.Figures.Sigma!.Value, figures.Sigma!.Value, 9);
+
+        // Each shot's bull says its sheet, and the index gives it back.
+        Assert.All(composite.Shots, s => Assert.Contains(SetPool.SheetOf(s.Bull!.Value), new[] { 0, 2 }));
+        Assert.Equal(new[] { "1", "3" }, composite.Bulls.Select(b => b.Label.Split('.')[0]).Distinct().Order());
+        Assert.Equal(perSheet, composite.Shots.Count(s => SetPool.SheetOf(s.Bull!.Value) == 2));
+
+        var (back, _) = MarkingFile.Read(MarkingFile.Write(composite));
+        Assert.Equal(figures.MeanRadius.Value, GroupAnalysis.Pooled([back])!.MeanRadius!.Value, 9);
+    }
+
     [Fact]
     public void AMarkingKeepsWhichSheetOfTheSetItIs()
     {
