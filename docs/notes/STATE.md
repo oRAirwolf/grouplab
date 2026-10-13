@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-13, entry 418 (before it: entry 417, entry 415 sections 1 and 2, and entry 414).
+**Last rewritten:** 2026-10-13, entry 419 (before it: entries 418 and 417, and entry 415 sections 1 and 2).
 
 ---
 
@@ -18,9 +18,10 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Queue of 2026-10-13** (Alan: 417, 418, 419, 420, then 415 and 416; stop at 70% of the week). **Entry 417 done:** a flatbed scan's holes
   show the white lid, so only a rim is dark; detection now finds them (7, 9 and 8 of 9 on Quack's pages, 4 each before) and centres them on the rim's
   circle, the snap goes to a light hole's middle, and a chosen bull no longer swallows drags. **Entry 418 done** but section 1 (request
-  99): the upload page sends a set of 30 photos in parts with a progress bar, plain errors and duplicates kept once. **Entry 415 sections 1 and 2 done** (the
+  99): the upload page sends a set of 30 photos in parts with a progress bar, plain errors and duplicates kept once. **Entry 419 done:**
+  the Discord bug-reports worker is built and tested; it runs once Alan does request 98. **Entry 415 sections 1 and 2 done** (the
   iPhone follows Dynamic Type, held at Android's largest; 6 to 4 false marks on the corpus); section 3 and the fold wait for their turn.
-- **The usage guard stops at 85% of the new week**, 88% for a finishing block (`scripts/usage-guard.js`); 9% on 2026-10-09 05:49 UTC.
+- **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
 - **Waiting on Alan:** requests 83 (the M834 from the computer), 70, 72, 74 to 77; 86 later.
@@ -81,7 +82,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 415, 416, 419 and 420.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 415, 416 and 420.
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -106,8 +107,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **A UI dump cannot see the phone's camera screen**; the device check reads its `camera.layout` log line instead.
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
-- **The check page is in the library but is not a target**: it counts as no sheet in the README, and a picture of it opened as a target
-  goes to the printer check. A value on screen is tappable exactly when it shows a unit (`UnitTap.KindOf`).
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary
   (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.

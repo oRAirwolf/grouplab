@@ -512,6 +512,24 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
    file sent twice in a set, a set sent again, a set over the limit, a part naming no set and the hour's bytes.
 4. **The .50 AE duplicates:** identical file for file (eight each); `312dab10` kept, `06910ef5` to the trash.
 
+## Entry 419: Discord bug reports filed by themselves (2026-10-13)
+
+1. **The worker** (`website/server/grouplab-discord-worker.py`, e959956a): a systemd timer every five minutes, 240 s at most a run and
+   new threads started only in the first 180 s, reads the bug-reports forum through Discord's REST API and keeps one issue per post in
+   `oRAirwolf/grouplab-crash-reports`, labelled `discord`: the post's title, the first message fenced as untrusted text, the poster's
+   public handle, the time, the thread's link and its attachments listed. Later messages become comments; the state file, keyed by thread
+   and last message, files nothing twice; the first run files every post already there, open and archived. The bot replies once in a
+   thread it files ("Thank you, this is filed for the developer.", no mentions allowed) and posts nothing else; an archived thread cannot
+   be answered and is not tried again. Its own messages are never filed. At signs are broken so nobody is notified, and words that read
+   like an instruction are noted in the issue as data. The server and the forum are found from the token. **Attachments** are kept
+   privately, one folder a message written whole with a SHA-256 manifest, and the nightly job pulls them to `C:\Dev\grouplab-discord`
+   (`scripts/Get-DiscordAttachments.ps1`) and deletes the server's copy once every hash matches; no consent covers them, and each issue
+   says a poster who wants them used can send them through the Send a target page. **Tokens:** both through LoadCredential, the GitHub one
+   the error worker's own for the same repository (it already makes issues and labels there), the bot's typed in with
+   `grouplab-set-discord-token`, which never echoes it. Tested in CI against a stand-in Discord and GitHub, 16 checks.
+2. **For Alan:** request 98, written before the build and completed with the two pastes after it.
+3. **Records:** RESTORE.md (the attachments, the state, `--discord`), CLAUDE.md (a `discord` issue is a bug report a person hit).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
