@@ -10,25 +10,8 @@ namespace GroupLab.Mobile.Tests;
 /// </summary>
 internal static class AndroidText
 {
-    private static readonly double[] Sp = [0, 8, 10, 12, 14, 18, 20, 24, 30, 100];
-    private static readonly double[] Dp = [0, 16, 20, 24, 26, 30, 34, 36, 38, 100];
-
-    /// <summary><paramref name="sp"/> at Android's largest text size, in dp.</summary>
-    public static double Largest(double sp)
-    {
-        if (sp >= Sp[^1])
-        {
-            return sp;
-        }
-
-        int i = 1;
-        while (Sp[i] < sp)
-        {
-            i++;
-        }
-
-        return Dp[i - 1] + ((sp - Sp[i - 1]) / (Sp[i] - Sp[i - 1]) * (Dp[i] - Dp[i - 1]));
-    }
+    /// <summary><paramref name="sp"/> at Android's largest text size, in dp (<see cref="TextSize.AndroidLargest"/>, entry 415).</summary>
+    public static double Largest(double sp) => TextSize.AndroidLargest(sp);
 
     /// <summary>Follows Android's largest text size until <paramref name="window"/> closes, then the sizes as they are again.</summary>
     public static void LargestUntilClosed(Window window)

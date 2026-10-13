@@ -5,7 +5,7 @@ past the picture check, which shows only when a picture needs a word, and at lea
 own line and exits non-zero, with one ::error:: line saying what was missing, when the pass did not find what it needed.
 
 Entry 411 section 2.4: with --larger, the largest-text pass is held to larger text than the plain pass, screen by screen, from the middle
-text size each screenshot's quality record carries, so GroupLab following Android's text size is seen on the emulator itself. Entry 413
+text size each screenshot's quality record carries, so GroupLab following the system's text size is seen on the emulator itself, and since entry 415 on the iOS simulator too. Entry 413
 section 2.2: the bar along the bottom shows its names in the plain pass and its icons alone in the largest-text pass, on the sweep's phone.
 
 Usage: phone-sweep-check.py <results folder> <pass name>
@@ -91,10 +91,10 @@ def larger(plain: str, large: str) -> tuple[list[str], str | None]:
         return lines, "The sweep's plain and largest-text passes have no screen with text in common to compare"
     flat = [name[:-len(".quality.json")] for name in both if after[name] < before[name] * LEAST_GROWTH]
     if flat:
-        return lines, f"GroupLab's text did not grow with Android's largest text size on {', '.join(flat)}"
+        return lines, f"GroupLab's text did not grow with the system's largest text size on {', '.join(flat)}"
     named, iconed = bars(large, "icons"), bars(plain, "names")
     if named:
-        return lines, f"The bar along the bottom still showed its names at Android's largest text size on {', '.join(named)}"
+        return lines, f"The bar along the bottom still showed its names at the system's largest text size on {', '.join(named)}"
     if iconed:
         return lines, f"The bar along the bottom showed its icons alone at the plain text size on {', '.join(iconed)}"
     return lines, None

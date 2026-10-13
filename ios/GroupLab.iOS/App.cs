@@ -9,7 +9,26 @@ namespace GroupLab.iOS;
 /// </summary>
 public sealed class App : Avalonia.Application
 {
-    public override void Initialize() => Phone.Initialize(this);
+    // Entry 415 section 1: the notice that the text size setting changed, held so it is heard for as long as GroupLab runs.
+    private static Foundation.NSObject? textSizeChanged;
+
+    public override void Initialize()
+    {
+        // Entry 415 section 1, Alan: the iPhone follows its own text size, as Android does (entry 411). Set before the styles are built,
+        // so they are built at it, and again whenever Settings changes it while GroupLab is open, so nobody has to restart.
+        GroupLab.App.Theme.TextSize.Follow(SystemTextSize);
+        textSizeChanged ??= UIKit.UIApplication.Notifications.ObserveContentSizeCategoryChanged((_, _) =>
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => GroupLab.App.Theme.TextSize.Follow(SystemTextSize)));
+        Phone.Initialize(this);
+    }
+
+    /// <summary>
+    /// <paramref name="size"/> at the iPhone's text size setting (Dynamic Type): iOS's own factor for body text, which is the same for every
+    /// size, from about 0.82 at the smallest to 1.35 at the largest ordinary size and 3.1 at the largest accessibility size, held at Android's
+    /// largest so the screens the sweeps hold there hold here (<see cref="GroupLab.App.Theme.TextSize.ByFactor"/>). Read each time.
+    /// </summary>
+    internal static double SystemTextSize(double size) =>
+        GroupLab.App.Theme.TextSize.ByFactor((double)UIKit.UIFontMetrics.DefaultMetrics.GetScaledValue(new System.Runtime.InteropServices.NFloat(100)) / 100)(size);
 
 #if GROUPLAB_DEV
     /// <summary>Entry 353: the sheet presented over GroupLab Dev in any window, the photo picker above all; null where none is up.</summary>

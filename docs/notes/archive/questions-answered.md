@@ -5,6 +5,27 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-12, question 97: the iPhone does not follow Dynamic Type either (entry 411 section 2.5)
+
+**Status: answered 2026-10-13 (entry 415 section 1), Alan: yes, the iPhone follows its own text size setting.** Built in entry 415:
+the iPhone follows Dynamic Type, held at Android's largest size by size.
+
+Alan answered question 96 for Android only ("For android, follow the system"), and entry 411 asked what the iPhone does, without changing
+it. **Found:** the iPhone build does not follow Dynamic Type. Nothing in `ios/GroupLab.iOS/` or the shared mobile project reads iOS's
+preferred content size (`UIContentSizeCategory`, `UIFontMetrics` and `preferredFont` appear nowhere), the iOS head starts the same styles
+as Android's (`Phone.Initialize`), and Avalonia 12's own assemblies on this computer have no text scale of any kind (searched
+`Avalonia.Base`, `Avalonia.Controls` and `Avalonia.Android` 12.1.2 for one; `Avalonia.iOS` is fetched only on the macOS runner, so its
+own code was not searched). So on the iPhone GroupLab's text is the same size whatever Settings, Accessibility, Larger Text says.
+
+**What following it would cost:** small. Entry 411 put every text size through one place (`TextSize` in the shared theme) for Android; the
+iOS head would point it at `UIFontMetrics.DefaultMetrics.GetScaledValue` and restyle on `UIContentSizeCategory.DidChangeNotification`,
+and the same headless sweeps that hold Android's largest size would hold iOS's largest (AX5, about 3.1 times the body size, much larger
+than Android's 2.0, so more screens would need a look at that size). **The question:** should the iPhone follow Dynamic Type as Android
+now follows its text size? I would say yes, for the same reason Alan gave for Android, up to the largest non-accessibility size first
+(xxxLarge, about 1.35 times) and the accessibility sizes after a look at the screens. Nothing waits on it.
+
+---
+
 ## 2026-10-11, question 96: the phone does not seem to follow Android's text size (entry 410 section 4.3)
 
 **Status: answered 2026-10-12 (entry 411 section 2), Alan: "For android, follow the system".** Built in entry 411: the phone's text follows Android's text size; the iPhone is question 97.

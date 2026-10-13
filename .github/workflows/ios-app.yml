@@ -653,7 +653,8 @@ jobs:
           failed=0
           for pass in plain largest-text dark; do
             case "$pass" in
-              largest-text) xcrun simctl ui "$UDID" content_size extra-extra-extra-large ;;
+              # Entry 415 section 1: the largest accessibility size, AX5, where GroupLab holds each size at Android's largest.
+              largest-text) xcrun simctl ui "$UDID" content_size accessibility-extra-extra-extra-large ;;
               dark) xcrun simctl ui "$UDID" content_size large; xcrun simctl ui "$UDID" appearance dark ;;
             esac
             xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
@@ -702,6 +703,9 @@ jobs:
               raise SystemExit(f"::error::The sweep's {name} pass did not find what it needed: {'; '.join(bad) or 'too few screenshots'}")
           PY
           done
+          # Entry 415 section 1: the iPhone follows its text size, so the largest-text pass is held to larger text than the plain one, screen
+          # by screen, and its bar to its icons alone, as the emulator's sweep holds Android's.
+          python3 scripts/phone-sweep-check.py --larger sweep/plain sweep/largest-text || failed=1
           xcrun simctl ui "$UDID" appearance light || true
           xcrun simctl ui "$UDID" content_size large || true
           [ "$failed" = 0 ] && echo "### The screen sweep visited every place and its pages on the simulator, plain, at the largest text size and dark." >> "$GITHUB_STEP_SUMMARY"

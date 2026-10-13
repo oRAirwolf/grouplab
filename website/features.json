@@ -1482,12 +1482,16 @@
       "key": "bar-largest-text",
       "group": "Photos and the phone",
       "name": "The bottom bar at the largest text sizes",
-      "sentence": "On Android GroupLab's text follows the phone's own text size, and when it is so large that a place's name would not fit under its icon, the bar along the bottom shows its five icons alone, larger, with the place you are in still in its amber pill; your phone still reads each one out by name, a long press shows it, and a wider screen keeps the names for longer.",
+      "sentence": "GroupLab's text follows the phone's own text size, on Android and on the iPhone, and when it is so large that a place's name would not fit under its icon, the bar along the bottom shows its five icons alone, larger, with the place you are in still in its amber pill; your phone still reads each one out by name, a long press shows it, and a wider screen keeps the names for longer.",
       "platforms": [
-        "Android"
+        "Android",
+        "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.188",
-      "note": "At Android's largest text sizes, the phone's bottom bar now shows its icons alone",
+      "note": [
+        "At Android's largest text sizes, the phone's bottom bar now shows its icons alone",
+        "On the iPhone, GroupLab's text now grows and shrinks with your own text size setting"
+      ],
       "guide": "13-on-the-phone",
       "mobile": {
         "shot": "fold-targets-largest-text"

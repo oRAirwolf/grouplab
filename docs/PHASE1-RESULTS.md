@@ -421,6 +421,21 @@ Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, ans
    red bulls, and the aim point cards by distance (`cards.py` beside the article: 25, 50 and 100 yards, rings for a 2 MOA dot, a
    score sheet each). About an hour; the doubles sheet and the aim points if there is time; a Keep paragraph. One line in for-alan.md.
 
+## Entry 415: four things that need nobody (2026-10-13)
+
+1. **Question 97 answered: the iPhone follows its text size (Dynamic Type).** The iOS head points `TextSize` at iOS's own factor for
+   body text (`UIFontMetrics.DefaultMetrics.GetScaledValue`, read each time) and restyles on `UIContentSizeCategory`'s change notice,
+   so a change in Settings is followed with GroupLab open. **The cap, and why:** iOS grows every size by one factor (about 0.82 at the
+   smallest, 1.35 at xxxLarge, 3.1 at AX5); Android's largest (`font_scale 2.0`, Android 14's table) grows small text 2 times and large
+   text far less (30 to 38, 44 to 50.4). Each size is held at Android's largest for that size (`TextSize.ByFactor`, `AndroidLargest`),
+   so the iPhone's largest is exactly the size the headless sweeps already hold at 360 wide, narrower than any iPhone on iOS 26 (375).
+   Found by the test: at xxxLarge iOS already passes Android's largest for the lead figure (29) and the two large percentages (30 and
+   44), so those three are held from xxxLarge; everything up to a value's size (22) follows iOS exactly through xxxLarge. Above the cap
+   the text stays at it. The bottom bar is the shared `NavBar`, so entry 413's rule holds on the iPhone (`Entry415Tests`, at an iPhone
+   SE's 375 to the largest iPhone's 440). No screen needed a DESIGN NEEDED line. **Found:** `ios-app.yml`'s sweep already had a
+   largest-text pass (xxxLarge), and it showed GroupLab's text unchanged because nothing followed it; it now runs at AX5 and is held to
+   larger text and the icons alone by `phone-sweep-check.py --larger`, as the emulator's is, so the parity column says **on iOS**.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

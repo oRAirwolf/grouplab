@@ -12,32 +12,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-## 2026-10-12, question 97: the iPhone does not follow Dynamic Type either (entry 411 section 2.5)
-
-Status: open
-
-Alan answered question 96 for Android only ("For android, follow the system"), and entry 411 asked what the iPhone does, without changing
-it. **Found:** the iPhone build does not follow Dynamic Type. Nothing in `ios/GroupLab.iOS/` or the shared mobile project reads iOS's
-preferred content size (`UIContentSizeCategory`, `UIFontMetrics` and `preferredFont` appear nowhere), the iOS head starts the same styles
-as Android's (`Phone.Initialize`), and Avalonia 12's own assemblies on this computer have no text scale of any kind (searched
-`Avalonia.Base`, `Avalonia.Controls` and `Avalonia.Android` 12.1.2 for one; `Avalonia.iOS` is fetched only on the macOS runner, so its
-own code was not searched). So on the iPhone GroupLab's text is the same size whatever Settings, Accessibility, Larger Text says.
-
-**What following it would cost:** small. Entry 411 put every text size through one place (`TextSize` in the shared theme) for Android; the
-iOS head would point it at `UIFontMetrics.DefaultMetrics.GetScaledValue` and restyle on `UIContentSizeCategory.DidChangeNotification`,
-and the same headless sweeps that hold Android's largest size would hold iOS's largest (AX5, about 3.1 times the body size, much larger
-than Android's 2.0, so more screens would need a look at that size). **The question:** should the iPhone follow Dynamic Type as Android
-now follows its text size? I would say yes, for the same reason Alan gave for Android, up to the largest non-accessibility size first
-(xxxLarge, about 1.35 times) and the accessibility sizes after a look at the screens. Nothing waits on it.
-
----
-
 ## Answered, and moved
 
-These 41 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 42 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 

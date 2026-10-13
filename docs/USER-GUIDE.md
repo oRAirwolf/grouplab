@@ -465,11 +465,11 @@ Android asks Google Play Protect to scan an app installed from outside the Play 
 own check, takes a few seconds, and is expected. It uses the same engine as the computer, so the same picture gives the same numbers.
 
 **The bar along the bottom** goes to the five places, **Capture**, **Sessions**, **Ballistics**, **Targets** and **Settings**, each an
-icon over its name, the place you are in with its icon in an amber pill. On Android, GroupLab's text follows the phone's own text size
-setting, and changes while it is open when you change the setting. When the text is so large that a name would not fit its share of the
+icon over its name, the place you are in with its icon in an amber pill. GroupLab's text follows the phone's own text size setting, on
+Android and on the iPhone (Larger Text), and changes while it is open when you change the setting. On the iPhone the largest
+accessibility sizes stop at the size Android's largest reaches, so the screens still fit. When the text is so large that a name would not fit its share of the
 bar, the bar shows the five icons alone, larger, and goes back to the names when the text is smaller again; your phone's screen reader
 still reads each one out by name, and a long press shows it. A wider screen, such as a folding phone opened, keeps the names for longer.
-The iPhone keeps its text at GroupLab's own sizes.
 
 **Capture** is the first screen: the GroupLab mark, as wide as the screen allows without the page scrolling, one row with the caliber
 and distance (**Change** types new ones; the distance is remembered from the last target, the caliber never is), **Take a picture**, **Choose a photo** and **Print a target** side by side, with **From another app** and **Paste a
