@@ -372,9 +372,19 @@ public static partial class RenderDifferenceHoleDetector
                 : cells.Min(c => Math.Sqrt(((page.X - c.X) * (page.X - c.X)) + ((page.Y - c.Y) * (page.Y - c.Y)))) / 254.0;
             bool torn = TornHole.Rescues(solidity, options.MinimumSolidity, diameterIn, options.CalibreInches, insideACell, fromCellCentre);
 
+            // NOTES-FROM-PLANNING.md entry 417: a hole seen through to a backing as light as the paper, as a flatbed scan with its white lid
+            // shows one, leaves only its rim in the residual, and where the rim is faint in places the ring has gaps, no outline closes, and
+            // its solidity reads as a scrap's. A round hull of a hole's size whose rim goes round its centre and whose inside reads as paper
+            // is that hole; it is placed at the rim's centre, not at its darkest side.
+            var ring = !tooSmall && !torn && solidity < options.MinimumSolidity && aspect <= CleanHoleAspect ? RimCircle(binary, width, blob) : null;
+            bool rim = ring is { } circle
+                && 2 * circle.Radius / ppi >= smallestHole
+                && 2 * circle.Radius / ppi <= (options.CalibreInches is { } held ? held * TornHole.WidestInCalibres : options.LargestHoleInches)
+                && LightInside(binary, width, height, circle.X, circle.Y, circle.Radius * RimClear)
+                && Closure(binary, width, height, circle.X, circle.Y, circle.Radius * RimReach) >= RimClosure;
             string? shape = tooSmall ? FormattableString.Invariant($"too small, {diameterIn:0.000} in, under {smallestHole:0.000} in")
                 : diameterIn > options.MaximumDiameterInches && !elongated ? FormattableString.Invariant($"too large, {diameterIn:0.000} in")
-                : solidity < options.MinimumSolidity && !torn ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
+                : solidity < options.MinimumSolidity && !torn && !rim ? FormattableString.Invariant($"not compact, hull solidity {solidity:0.00}")
                 : aspect > options.MaximumAspect && !elongated ? FormattableString.Invariant($"elongated, aspect {aspect:0.00}")
                 : null;
 
@@ -417,7 +427,7 @@ public static partial class RenderDifferenceHoleDetector
                 continue;
             }
 
-            double cx = moments.X, cy = moments.Y;
+            double cx = rim ? ring!.Value.X : moments.X, cy = rim ? ring!.Value.Y : moments.Y;
             double closure = Closure(binary, width, height, cx, cy, diameter);
             if (closure < options.MinimumClosure)
             {
@@ -425,7 +435,7 @@ public static partial class RenderDifferenceHoleDetector
                 continue;
             }
 
-            if (elongated)
+            if (elongated && !rim)
             {
                 elongatedBlobs.Add((blob, moments, areaIn, markAreaIn, hx, hy, diameterIn, solidity, closure, calibreHoles));
                 continue;
@@ -572,6 +582,82 @@ public static partial class RenderDifferenceHoleDetector
         }
 
         return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null);
+    }
+
+    /// <summary>
+    /// Entry 417: a light hole's rim, in the radius of the circle fitted through it: looked for out to 1.2 of it from the circle's centre, met
+    /// by half the rays from that centre or more, so the arc goes round more than half of it and fixes the circle, and nothing within a third
+    /// of it of the centre. A ring, in round numbers. On Quack's three scans the faint side of a rim was often missing and the arcs met 0.59
+    /// to 0.79 of the rays.
+    /// </summary>
+    internal const double RimReach = 1.2, RimClosure = 0.5, RimClear = 1.0 / 3;
+
+    /// <summary>Entry 417: the circle through a blob's own pixels, the hole's centre where its rim shows only as an arc; null where they make none.</summary>
+    private static (double X, double Y, double Radius)? RimCircle(byte[] binary, int width, ImageBlob blob)
+    {
+        var points = new List<(double X, double Y)>();
+        for (int y = blob.Top; y < blob.Top + blob.Height; y++)
+        {
+            for (int x = blob.Left; x < blob.Left + blob.Width; x++)
+            {
+                if (binary[(y * width) + x] != 0 && Inside(blob.Hull, x, y))
+                {
+                    points.Add((x, y));
+                }
+            }
+        }
+
+        return FitCircle(points);
+    }
+
+    /// <summary>
+    /// Entry 417: the circle through <paramref name="points"/> by least squares on x squared plus y squared (Kasa's fit), so an arc gives the
+    /// centre of its circle where a hull or a mean would give the arc's own. Null for fewer than ten points or points on no circle.
+    /// </summary>
+    internal static (double X, double Y, double Radius)? FitCircle(IReadOnlyList<(double X, double Y)> points)
+    {
+        ArgumentNullException.ThrowIfNull(points);
+        if (points.Count < 10)
+        {
+            return null;
+        }
+
+        // Centred on the points' mean, so the sums stay small.
+        double mx = points.Average(p => p.X), my = points.Average(p => p.Y);
+        double sxx = 0, syy = 0, sxy = 0, sxz = 0, syz = 0, sz = 0;
+        foreach (var (px, py) in points)
+        {
+            double u = px - mx, v = py - my, z = (u * u) + (v * v);
+            sxx += u * u; syy += v * v; sxy += u * v; sxz += u * z; syz += v * z; sz += z;
+        }
+
+        // u^2 + v^2 = a u + b v + c; with u and v of mean zero the first two normal equations do not involve c.
+        double det = (sxx * syy) - (sxy * sxy);
+        if (Math.Abs(det) < 1e-9)
+        {
+            return null;
+        }
+
+        double a = ((sxz * syy) - (syz * sxy)) / det, b = ((syz * sxx) - (sxz * sxy)) / det, c = sz / points.Count;
+        double radius2 = c + (a * a / 4) + (b * b / 4);
+        return radius2 <= 0 ? null : (mx + (a / 2), my + (b / 2), Math.Sqrt(radius2));
+    }
+
+    /// <summary>Entry 417: whether nothing of the residual lies within <paramref name="radius"/> pixels of the centre, so a hole's inside reads as paper.</summary>
+    private static bool LightInside(byte[] binary, int width, int height, double cx, double cy, double radius)
+    {
+        for (int y = Math.Max(0, (int)(cy - radius)); y <= Math.Min(height - 1, (int)(cy + radius)); y++)
+        {
+            for (int x = Math.Max(0, (int)(cx - radius)); x <= Math.Min(width - 1, (int)(cx + radius)); x++)
+            {
+                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= radius * radius && binary[(y * width) + x] != 0)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /// <summary>What a mark the sheet's own printing explains, moved or blurred within <see cref="MovedPrintInches"/>, is refused with.</summary>

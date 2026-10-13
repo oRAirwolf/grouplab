@@ -1,4 +1,5 @@
-**Open: 22.** Most urgent today: **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **99**, one read-only paste about Quack's upload (two minutes). Then **98**, the Discord bot for the bug-reports forum, steps 1 and 2 now (ten minutes), the paste when it arrives. Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**For Quack** (entry 417, not a request; pass on whenever suits): thank you for the report. On your flatbed scans each hole shows the scanner's white lid, so GroupLab saw only its rim and missed about half the holes; it now finds them and centres them, the Impact tool snaps to a hole's middle instead of the shadowed side of its rim, and holes can be dragged with Select again after a bull has been clicked. It is in the next nightly after 0.2.0-nightly.190.
 **THE NEXT RANGE KIT IS READY, whenever you next go; nothing to answer** (entry 414): print from `C:\Dev\grouplab-local\range-next\`, starting with `CHECKLIST.pdf`; 5 pages for about an hour of shooting (requests 57 and 58, a load sheet shot in order with the Xero, two shots through one hole), and the aim point cards of request 86 if there is time.
 Working from the terminal, 8 October, at 5% of the new week (ccusage: 46 million tokens today, all Opus): error report 25 fixed, and entry 388 (the phone pictures on the emulator, the quality sweep, question 43, the Phase 9 baseline) nothing of which needs you.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
@@ -232,6 +233,36 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 99. Which reply Quack's failed upload got, one read-only paste, two minutes, whenever suits (entry 418)
+
+**Why:** on 12 October the Send a target page told Quack it could not read the server's reply. That sentence means the reply
+was not GroupLab's, most likely a "too large" page from Cloudflare or nginx, or a timeout. Code cannot reach the server's
+logs itself (its connection is refused), and the fix's wording should say what really happened. Nothing waits on this: the new page is
+built either way and says the status it gets.
+**Steps:** paste this into your usual bash session on the server (MobaXterm). It only reads; it prints the time, the request, the status
+and the size of every post to the upload page between 02:00 and 04:59 UTC on 12 October, and no addresses.
+
+```
+sudo sh -c 'n=0; for f in /var/log/nginx/domains/grouplab.org.log* /var/log/apache2/domains/grouplab.org.log*; do [ -e "$f" ] || continue; n=$((n+1)); echo "== $f"; case "$f" in *.gz) zcat "$f";; *) cat "$f";; esac | grep "12/Oct/2026:0[234]" | grep "/api/upload.php" | awk "{print \$4, \$6, \$7, \$9, \$10}"; done; [ "$n" -gt 0 ] || { echo "STOP: no grouplab.org access log was found under /var/log/nginx/domains or /var/log/apache2/domains"; false; }'
+```
+**A good answer:** the lines it printed, pasted back into the planning session. A line with 413 or 499 or 502 beside a POST is the one.
+
+## 98. A Discord bot that files the bug-reports forum by itself, about fifteen minutes, whenever suits (entry 419)
+
+**Why:** you asked for bug reports posted in the GroupLab Discord's bug-reports forum to be filed automatically. A small worker on the
+server will read that forum every five minutes, file each new post as an issue in the private crash-reports repository, and reply once
+in the thread, "Thank you, this is filed for the developer." It needs a bot of its own in Discord, which only you can make.
+**Steps 1 and 2 can be done now; step 3, the paste, is added here when the worker is built.**
+1. Open https://discord.com/developers/applications, choose **New Application**, name it **GroupLab Bug Filer**, and create it. Under
+   **Bot**, turn on **Message Content Intent** and save. Press **Reset Token**, copy the token, and keep it only until step 3; do not
+   paste it anywhere else, not in a chat, a file or the planning session.
+2. Under **OAuth2**, **URL Generator**: tick the scope **bot**, then the permissions **View Channels**, **Read Message History** and
+   **Send Messages in Threads**, nothing else. Open the URL it makes, choose the GroupLab server and authorise. In the bug-reports
+   forum's own permissions, check the bot's role can see the forum.
+3. (Coming with the worker) One paste in MobaXterm that backs up first, installs the worker and its timer, asks for the token with a
+   hidden prompt, runs once and prints the issues it made, or a STOP line saying why not.
+**A good answer:** "bot added" after step 2, and after step 3 the paste's last lines.
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 

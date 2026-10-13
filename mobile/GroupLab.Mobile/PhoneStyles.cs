@@ -62,12 +62,13 @@ internal static class PhoneStyles
 
     private static void Restyle(Application app)
     {
-        foreach (var previous in app.Styles.OfType<Rules>().ToList())
-        {
-            app.Styles.Remove(previous);
-        }
-
+        // New before old, as AppStyles does it, so no control is left with neither for a moment.
+        var previous = app.Styles.OfType<Rules>().ToList();
         app.Styles.Add(Build(Tokens.For(app.ActualThemeVariant)));
+        foreach (var old in previous)
+        {
+            app.Styles.Remove(old);
+        }
 
         // Entry 411 section 2: what the Fluent theme sizes by its own resources, a field's text above all, follows the system's text size
         // with the rest. 14 and 12 are the theme's own values for them.

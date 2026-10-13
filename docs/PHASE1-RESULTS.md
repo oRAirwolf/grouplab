@@ -456,6 +456,37 @@ Alan chose B from the canvas of five frames (entry 411's DESIGN NEEDED line, ans
    two marks on one sheet. The learning loop has 9 of the 50 corrected submissions its held-out share needs, so there is no held-out
    share yet; its nightly re-score of those 9 runs from the next nightly's tag, so it starts from this code. Row 3 is not met.
 
+## Entry 417: a tester's bug on macOS, marking a scanned 3-sheet set (2026-10-13)
+
+Quack's three scans (`GL-CF9-T-C`, nine .223 shots a page, 600 dpi, a flatbed with a white lid), read on Windows through the command line
+and the window's own path. **The causes are in the pictures and the pointer logic, not in macOS:** they happen on every platform, and the
+detection and the snap are shared with the phones. Neither entry 414's single decode (the window shows a PNG made from the same decoded
+pixels it measures) nor the printer's scale (it multiplies sizes and never moves a position in the image) moved anything.
+
+1. **Detection found 4 of 9 holes on each page.** A hole seen through to the lid is as light as the paper (both read 254), so only its
+   rim is residue; where the rim is faint the ring has gaps, no outline closes, and the hole was refused as "not compact" (solidity 0.43 to
+   0.52). Now a refused mark whose pixels make a circle of a hole's size (Kasa's least-squares fit through them), whose arc goes round more
+   than half of it and whose middle is clear is that hole, placed at the circle's centre, not at its darker side. Pages 1, 2 and 3: 4, 4
+   and 4 found before; 7, 9 and 8 now, every mark on a hole. The ones still missed lie on or against a printed marker, where no hole is
+   looked for, or were called residue. The limits (half the rays, a clear third of the radius) are a ring's shape in round numbers and were
+   checked on these eleven rims, so they sit close to what they were checked on. **No hole lost and no mark added elsewhere:** the corpus
+   (and magnus-c-6.5's torn hole, one of the two entry 415 called missed, is now found: 73 of 73 in that folder), the synthetic board
+   identical to the last centre, the zero grids, the rendered sheets.
+2. **The snap went to the rim's darker side.** The Impact tool's snap weighs dark pixels; on a light-middled hole that is the rim's
+   shadowed side. On main's code three presses on one hole landed 15 to 36 px (up to 0.06 in, a quarter of a .224 hole) below its centre,
+   wherever the press was; now all three land within 2 px of the same centre. A hole dark all through keeps its weighed centre. Left as
+   they were: a hole whose rim lies partly on a printed marker (0.05 in off) and light holes on the black diamonds, which the dark-weight
+   snap was never for; detection places both.
+3. **Select stopped dragging.** A click on a bull with no hole marked on it, as each missed hole's bull was, chooses that bull (entry 407),
+   and from then on every press on a hole gave it to that bull or took it away instead of starting a drag, until Done or Escape. Now a
+   press on a hole starts a drag as it always has: let go where it was pressed and it is entry 407's tap; move it and the hole moves.
+4. **Online:** no Avalonia report of a macOS drag or capture fault of this kind was found; the general capture rules are as GroupLab uses
+   them.
+5. **Tests:** `LightHoleTests` reads page 2, reduced to 300 dpi and committed (samples/PROVENANCE.md; 1.4 MB), with a printer chosen, with
+   a calibre and without: every hole within 0.02 in and no mark on anything else (main's code found 4); a press a quarter of a hole off
+   snaps within 0.02 in of a hole on the paper. `Entry417Tests`: with a bull chosen, a tap on a hole still gives it and a press and drag
+   moves it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

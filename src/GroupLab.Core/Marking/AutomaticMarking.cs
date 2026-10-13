@@ -453,6 +453,58 @@ public static class Snapping
             centre = new PointD(sx / sw, sy / sw);
         }
 
-        return centre;
+        return LightMiddle(value, centre, radiusPixels, artwork) ?? centre;
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 417: a hole seen through to a backing as light as the paper, as a flatbed scan with its white lid shows one,
+    /// is a dark rim round a light middle, and the dark weight's centre sits on the rim's darker side, a quarter of a hole off. Where the dark
+    /// pixels near <paramref name="centre"/> make a circle whose middle has none of them and which they go more than half way round, the
+    /// circle's centre is the hole's. A hole dark all through has dark pixels in its middle and keeps its centre as weighed.
+    /// </summary>
+    private static PointD? LightMiddle(GrayImage value, PointD centre, double radiusPixels, GrayImage? artwork)
+    {
+        int x0 = Math.Max(0, (int)(centre.X - radiusPixels)), x1 = Math.Min(value.Width - 1, (int)(centre.X + radiusPixels));
+        int y0 = Math.Max(0, (int)(centre.Y - radiusPixels)), y1 = Math.Min(value.Height - 1, (int)(centre.Y + radiusPixels));
+        if (x1 <= x0 || y1 <= y0)
+        {
+            return null;
+        }
+
+        int paper = PaperLevel(value, x0, x1, y0, y1);
+        var dark = new List<(double X, double Y)>();
+        for (int y = y0; y <= y1; y++)
+        {
+            for (int x = x0; x <= x1; x++)
+            {
+                int i = (y * value.Width) + x;
+                if (((x - centre.X) * (x - centre.X)) + ((y - centre.Y) * (y - centre.Y)) <= radiusPixels * radiusPixels
+                    && paper - value.Pixels[i] - 40 > 0 && (artwork is null || artwork.Pixels[i] >= ArtworkPaper))
+                {
+                    dark.Add((x - centre.X, y - centre.Y));
+                }
+            }
+        }
+
+        if (dark.Count < 10 || Detection.RenderDifferenceHoleDetector.FitCircle(dark) is not { } circle || circle.Radius > radiusPixels)
+        {
+            return null;
+        }
+
+        var middle = new PointD(centre.X + circle.X, centre.Y + circle.Y);
+        double clear = circle.Radius * Detection.RenderDifferenceHoleDetector.RimClear;
+        var round = new bool[360];
+        foreach (var (x, y) in dark)
+        {
+            double dx = x - circle.X, dy = y - circle.Y;
+            if ((dx * dx) + (dy * dy) <= clear * clear)
+            {
+                return null;
+            }
+
+            round[((int)Math.Floor(Math.Atan2(dy, dx) * 180 / Math.PI) + 360) % 360] = true;
+        }
+
+        return round.Count(r => r) >= 360 * Detection.RenderDifferenceHoleDetector.RimClosure ? middle : null;
     }
 }

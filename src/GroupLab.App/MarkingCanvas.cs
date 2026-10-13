@@ -96,6 +96,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     private int turns;
     private Point? panFrom;
     private int? dragging;
+
+    // Entry 417: the hole pressed while a bull is chosen, given or taken on release unless it was dragged.
+    private (int Bull, int Shot)? pickTap;
     private PointD dragAt;
 
     // Entry 228: a bull being dragged, and a lasso being drawn.
@@ -246,7 +249,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     }
 
     /// <summary>A click while a bull is chosen: on a hole gives or takes it, on the chosen bull ends, on another bull chooses that one.</summary>
-    private bool ClickWhilePicking(MarkingSession session, Point position)
+    private bool ClickWhilePicking(MarkingSession session, Point position, PointerPressedEventArgs? press = null)
     {
         if (PickingBull is not { } bull)
         {
@@ -260,8 +263,22 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
         else if (state.Shots.Where(x => x.IsShot && Distance(ToControl(x.Image), position) <= ShotReach(state, x)).MinBy(x => Distance(ToControl(x.Image), position)) is { } hole)
         {
-            Notice?.Invoke(this, BullChoosing.Tap(session, bull, hole.Id));
-            PickingChanged?.Invoke(this, EventArgs.Empty);
+            // NOTES-FROM-PLANNING.md entry 417, Quack: with a bull chosen, a hole could no longer be dragged, and a click on a bull with no hole
+            // marked on it, as a missed hole's bull is, chooses one. So a press on a hole starts a drag as it always has: let go where it was
+            // pressed and it is a tap, which gives the hole to the chosen bull or takes it away; move it and the hole moves.
+            if (press is null)
+            {
+                // A click already let go of, as the hand tool's: nothing to drag.
+                Notice?.Invoke(this, BullChoosing.Tap(session, bull, hole.Id));
+                PickingChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                dragging = hole.Id;
+                dragAt = hole.Image;
+                pickTap = (bull, hole.Id);
+                press.Pointer.Capture(this);
+            }
         }
         else if (BullAt(state, position) is { } other)
         {
@@ -1087,7 +1104,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
                 break;
 
-            case MarkingTool.Select when ClickForBullTaps(session, point.Position) || ClickWhilePicking(session, point.Position):
+            case MarkingTool.Select when ClickForBullTaps(session, point.Position) || ClickWhilePicking(session, point.Position, e):
                 break;
 
             case MarkingTool.Select:
@@ -1208,6 +1225,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 // One move, one undo step, however long the drag.
                 session.MoveShot(id, dragAt);
             }
+            else if (pickTap is { } tap)
+            {
+                // Entry 417: a press on a hole with a bull chosen, let go where it was made: entry 407's tap.
+                Notice?.Invoke(this, BullChoosing.Tap(session, tap.Bull, tap.Shot));
+                PickingChanged?.Invoke(this, EventArgs.Empty);
+            }
+
+            pickTap = null;
 
             if (handle is { } grabbed)
             {

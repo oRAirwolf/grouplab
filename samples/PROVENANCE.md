@@ -279,6 +279,32 @@ of a target, and none of it is published as a target of its own.
 | `docs/notes/entry-362/eze-scorer-bull.jpg` | 33,005 | `a711afea2dde5e7933df10564f55deaadc32d9af6e803792f88741d35dfc6eb4` |
 | `docs/notes/entry-362/eze-scorer-sight-in-grid.jpg` | 38,902 | `e1f0386388b71108dfa9487548f923303310c67d2323b9b87e3e3c442a5b4372` |
 
+# Submission a48b3560, 2026-10-12: page 2 of a 3-sheet .223 set, scanned on a flatbed
+
+The second of three scans sent through the upload page on 2026-10-12, passed on by Alan with the sender's bug report (entry 417). The
+submission is named by its identifier; the sender may be thanked by name (see the Thanks section below).
+
+## Consent
+
+| | |
+|---|---|
+| **Given by** | The sender, on the upload page |
+| **Given on** | 2026-10-12, 04:00 UTC |
+| **Level** | `publishable`, consent version `consent_v2` |
+| **What was agreed** | "I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published." |
+| **Covers** | The scan below: for testing, committed as a test sample |
+| **Licence** | GPL-3.0 |
+
+## The file
+
+The server keeps the upload rebuilt as a PNG, 4958 by 6458 at 600 dpi. Nothing from its metadata was read: it was decoded to grey pixels,
+reduced to half its size by area averaging, and written again as a PNG with no metadata of any kind, small enough to commit.
+
+| Committed file | Bytes | SHA-256 | From | What it is |
+|---|---|---|---|---|
+| `samples/scan-cf9-t-c-tile-2-light-holes-300-dpi.png` | 1,437,942 | `ffd37ac89b3c88be3b5db49ed83605de6bae507aea8700d927f2ce315242575e` | `001_hit10102026_0001.png`, SHA-256 `e8bb0d538cb3cd4ec5295f1b378346196679deec9ea7793a940df62b18b5e2f0` | GroupLab 3x3 2 MOA, C Bull, Set of 3 Letter Sheets, tile 2 of 3 (`GL-CF9-T-C`), nine shots of .223 M193 at 100 yards, scanned on a flatbed with a white lid |
+
+
 ## Names in the README's Thanks
 
 A tester is thanked by name only on Alan's word, and the word is kept here.
