@@ -123,7 +123,8 @@ function post(int $port, string $field, array $files, string $remote): array
     return ['json' => is_array($json) ? $json : null, 'raw' => $text];
 }
 
-$jpeg = static fn (int $bytes) => "\xFF\xD8\xFF\xE0" . str_repeat("\x00", 12) . str_repeat("\x41", $bytes);
+// Eight random bytes after the header, so each photo made here is its own: the receiver keeps a file it has already had once (entry 418).
+$jpeg = static fn (int $bytes) => "\xFF\xD8\xFF\xE0" . str_repeat("\x00", 12) . random_bytes(8) . str_repeat("\x41", $bytes);
 
 $one = post($port, $field, ['target.jpg' => $jpeg(4096)], '203.0.113.21');
 check('one photo through the real form is accepted', ($one['json']['ok'] ?? false) === true, $one['raw'] . ' | ' . @file_get_contents($root . '/server-err.txt'));

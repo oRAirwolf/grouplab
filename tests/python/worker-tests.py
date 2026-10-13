@@ -145,10 +145,13 @@ def main() -> int:
 
     # Entry 183: the consent contract, with the real receiver writing the submissions. The receiver finds its way into quarantine by
     # the same SITE_PRIVATE the worker reads, so nothing is copied between them by hand.
+    # Two different photographs: the receiver keeps a file it has already had once (entry 418), so the same one twice is one submission.
     photo = root / "range-target.jpg"
     Image.new("RGB", (1600, 1200), (235, 235, 230)).save(photo, "JPEG", quality=90)
+    other = root / "range-target-2.jpg"
+    Image.new("RGB", (1600, 1200), (230, 235, 235)).save(other, "JPEG", quality=90)
     opted_out = receive(root, photo, opt_out=True)
-    published = receive(root, photo, opt_out=False)
+    published = receive(root, other, opt_out=False)
     check("the opted out submission carries the marker from the receiver", opted_out is not None and (opted_out / "DO-NOT-PUBLISH").is_file())
     check("and the other does not", published is not None and not (published / "DO-NOT-PUBLISH").exists())
 

@@ -98,6 +98,25 @@ public sealed partial class SessionStoreTests : IDisposable
         Assert.Empty(store.ShotVelocities(session));
     }
 
+    /// <summary>
+    /// Entry 416, found while building it: saving a session again replaced its row, and the delete under the replace took the session's
+    /// chronograph readings and their pairing with shots with it, so a sheet accepted a second time lost its readings. Its row is updated.
+    /// </summary>
+    [Fact]
+    public void SavingASessionAgainKeepsItsReadings()
+    {
+        var store = New();
+        var first = Session("2026-09-20T15:00:00Z", "Tikka T3x", "H4350 41.5", 0.12);
+        long session = store.Save(first);
+        long chronograph = store.AddChronographString(session, "Garmin Xero C1", null, [2705.2, 2711.0]);
+        store.MapShot(new ShotVelocity(session, 7, chronograph, 2));
+
+        Assert.Equal(session, store.Save(first with { Id = session, MeanRadiusInches = 0.2 }));
+        Assert.Equal(0.2, store.Get(session)!.MeanRadiusInches);
+        Assert.Equal([2705.2, 2711.0], store.ChronographStrings(session).Single().VelocitiesFps);
+        Assert.Equal(new ShotVelocity(session, 7, chronograph, 2), store.ShotVelocities(session).Single());
+    }
+
     /// <summary>Full JSON export and import, section 15: an export read into an empty database exports again byte for byte the same.</summary>
     [Fact]
     public void TheExportRoundTripsExactly()

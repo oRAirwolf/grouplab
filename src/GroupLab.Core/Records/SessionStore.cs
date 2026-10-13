@@ -465,7 +465,10 @@ public sealed class SessionStore
         const string parameters = "$created, $date, $sheet, $defid, $def, $distance, $rifle, $barrel, $load, $calibre, $marking, $count, $mr, $mrl, $mru, $image, $hash, $proof, $proofType"; // British on purpose: SQL parameter names.
         if (s.Id > 0)
         {
-            Execute(db, $"INSERT OR REPLACE INTO sessions (id, {columns}) VALUES ($id, {parameters})", [.. values, ("$id", s.Id)]);
+            // Entry 416: updated in place. INSERT OR REPLACE deleted the row before writing it again, and the delete cascaded to the session's
+            // chronograph readings and their pairing with shots, so accepting a sheet a second time lost its readings.
+            string update = string.Join(", ", columns.Split(", ").Select(c => $"{c} = excluded.{c}"));
+            Execute(db, $"INSERT INTO sessions (id, {columns}) VALUES ($id, {parameters}) ON CONFLICT(id) DO UPDATE SET {update}", [.. values, ("$id", s.Id)]);
             return s.Id;
         }
 
