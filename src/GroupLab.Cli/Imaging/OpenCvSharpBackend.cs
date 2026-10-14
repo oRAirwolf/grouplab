@@ -540,8 +540,6 @@ public sealed class OpenCvSharpBackend : IImagingBackend
 
     private static readonly System.Text.UTF8Encoding Utf8Strict = new(false, true);
 
-    /// <summary>Every code the two detectors find in an image, each decoded by the plain decoder at the corners found; the empty ones left out.</summary>
-    /// <summary>Every code both detectors read in the picture; where <paramref name="located"/> is given, where each was found, read or not.</summary>
     /// <summary>
     /// Entry 415 section 3: the first code <see cref="Read"/> would give for a cut-out at its own size, stopping once the first detector has
     /// one rather than running the second as well; where the first finds none, both run as before, so the code is the same either way.
@@ -553,6 +551,7 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         return Read(input, firstOnly: true) is [var first, ..] ? Payload(first) : null;
     }
 
+    /// <summary>Every code both detectors read in the picture; where <paramref name="located"/> is given, where each was found, read or not.</summary>
     private static List<string> Read(Mat input, List<IReadOnlyList<PointD>>? located = null, bool firstOnly = false)
     {
         using var locator = new WeChatQRCode("", "", "", "");
