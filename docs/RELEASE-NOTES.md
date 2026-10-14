@@ -12,6 +12,29 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.191
+
+**2026-10-14**, commit `3b03ab6`. Nightly.
+
+**What you will notice**
+
+- You can now enter the day's temperature, altitude, humidity and shot angle under Velocity and the vertical, on the computer and the phone, and GroupLab uses them to work out how much of your vertical came from velocity.
+- Pool the chosen now opens your pooled set on the analysis screen in its own tab, each sheet's shots in their own shade; dropping several scans opens each in its own tab, and accepting the same picture again updates its record instead of adding another; thank you to Quack for asking.
+- On the iPhone, GroupLab's text now grows and shrinks with your own text size setting (Larger Text), as it does on Android, and follows a change while GroupLab is open.
+- Accepting a sheet a second time no longer loses the chronograph readings you had added to it.
+- On a flatbed scan, GroupLab now finds the holes that show the scanner's white lid through them, centers them, snaps a hand-placed hole to its middle, and lets you drag a hole again after clicking a bull; thank you to Quack for the report.
+- On a crinkled sheet, GroupLab no longer marks a hole where the edge of a printed bull moved with the crease.
+
+**Under the hood**
+
+- Changing the text size while GroupLab is open no longer risks an error on macOS and Linux.
+- Reading a sheet's codes from a photograph takes a little less time.
+- The website's Send a target page now sends a whole set of up to 30 photos in one go, with a progress bar and plain errors.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.191)
+
+---
+
 ## 0.2.0-nightly.190
 
 **2026-10-12**, commit `4303b73`. Nightly.
