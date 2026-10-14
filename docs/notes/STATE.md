@@ -16,7 +16,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## In flight
 
 - **Entry 422 is done** (Jylee): a click on the picture lands the side panel on what it changed, flashes it twice (a steady tint with
-  less motion), and the status line says what it did; on the phone, Bull by bull lands the picture. It ships in nightly 192.
+  less motion), and the status line says what it did; on the phone, Bull by bull lands the picture. In nightly 192.
 - **Entry 421 is done**: the consistency audit; the Features page dates a feature by its newest part. Nightly 191 published
   2026-10-14 after its refused 'centres' note was corrected in docs/release-note-corrections.json.
 - **The queue of 2026-10-13 is done** (417, 418, 419, 420, 415, 416); section 1 of 418 waits on request 99, 419 on request 98,
@@ -69,7 +69,7 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and arc
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.191 (2026-10-14 03:36 UTC, from 3b03ab64): entries 415 to 420. 190 carried entry 414 whole.
+- **Last nightly:** 0.2.0-nightly.192 (2026-10-14 04:57 UTC, from 80f49fd2): entries 421 and 422. 191 carried entries 415 to 420.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
@@ -90,7 +90,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
-- **ios-app.yml's "The iPad and landscape" step fails on every run since 2026-10-11, and "Real taps" on some**; not from entry 415.
+- **ios-app.yml's "The iPad and landscape" step failed on runs since 2026-10-11, and "Real taps" on some** (again on nightly 192's run).
 - **Text sizes go through `TextSize.Of`** (entry 411): a size set in code on a phone screen that skips it does not follow Android's
   text size. The desktop and the iPhone keep the sizes as they are.
 - **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
