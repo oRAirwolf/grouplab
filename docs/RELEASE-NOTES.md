@@ -494,7 +494,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - The test build's real-tap check on the iPhone simulator now waits until the screen has caught up with the keyboard before tapping, as a person's eye does.
 - GroupLab Dev, the test build, now lets the nightly checks on the iPhone simulator and the Android emulator tap the screen as a finger does, so a button that ignores a real tap is caught before a build reaches testers.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.161)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
