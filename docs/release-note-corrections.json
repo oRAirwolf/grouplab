@@ -88,6 +88,15 @@
           "kind": "changed"
         }
       ]
+    },
+    "1392641a77f7413dd39748f48eddcd8f993afebd": {
+      "why": "Entry 417's note spelled centers the British way, and nightly 191 refused it twice.",
+      "notes": [
+        {
+          "note": "On a flatbed scan, GroupLab now finds the holes that show the scanner's white lid through them, centers them, snaps a hand-placed hole to its middle, and lets you drag a hole again after clicking a bull; thank you to Quack for the report. (Entry 417)",
+          "kind": "fixed"
+        }
+      ]
     }
   }
 }
