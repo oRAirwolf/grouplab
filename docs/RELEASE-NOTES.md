@@ -498,7 +498,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - A hole beside one of the sheet's small square markers is no longer counted twice, once for the hole and once for the edge of the marker.
 - The review count now counts shots, so it never says more need review than there are, and when more marks are found than rounds fired the review starts with the marks on the sheet's own printing.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.162)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
