@@ -19,6 +19,8 @@ internal static class Program
     public static int Main(string[] args)
     {
         ArgumentNullException.ThrowIfNull(args);
+        // Entry 422: a section landed on flashes, or holds a steady tint where the computer asks for less motion.
+        Landing.ReducedMotion = SystemMotion.Reduced;
         var settings = AppSettingsStore.Default;
         bool verbose = args.Contains("--verbose", StringComparer.Ordinal) || settings.LoadVerbose();
         var (directory, described) = LogDirectory.Resolve(AppInfo.IsDebugBuild, AppContext.BaseDirectory);

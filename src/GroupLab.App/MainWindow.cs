@@ -665,7 +665,8 @@ public sealed partial class MainWindow : Window
         canvas.SelectionChanged += (_, _) => Refresh();
         canvas.LengthTapped += (_, _) => AskLength();
         canvas.RectangleTapped += (_, _) => AskRectangle();
-        canvas.Notice += (_, note) => status.Text = note;
+        canvas.Notice += (_, note) => ShowNotice(note);
+        canvas.Clicked += (_, did) => OnPictureClick(did);
         Opened += (_, _) =>
         {
             CrashReporter.DisplayScale = RenderScaling;
@@ -909,7 +910,8 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(printScale);
         panel.Children.Add(printerPanel);
         panel.Children.Add(problem);
-        panel.Children.Add(Ruled("Shots"));
+        shotsHeading = Ruled("Shots");
+        panel.Children.Add(shotsHeading);
         panel.Children.Add(shotList);
 
         // Entry 42 section 4: the bar across the top, a right column 372 wide, and a status line, each separated by one pixel of line.
@@ -981,7 +983,7 @@ public sealed partial class MainWindow : Window
         crumbs.Children.Add(crumbTexts);
         var header = new Border { Child = crumbs, Classes = { AppStyles.Breadcrumb } };
         var bar = new Border { Child = toolbar, Classes = { AppStyles.Bar } };
-        var side = new Border { Child = new ScrollViewer { Content = panel }, Classes = { AppStyles.Side } };
+        var side = new Border { Child = SidePanel(panel), Classes = { AppStyles.Side } };
         cancelDetection.Click += (_, _) => CancelDetection();
         var statusLine = new DockPanel();
         var running = new StackPanel { Orientation = Orientation.Horizontal, Children = { detectionProgress, cancelDetection } };

@@ -27,7 +27,8 @@ public sealed partial class MainWindow
 
     private void BuildBullLines(StackPanel panel)
     {
-        panel.Children.Add(Ruled("Which bull each shot belongs to"));
+        bullLinesHeading = Ruled("Which bull each shot belongs to");
+        panel.Children.Add(bullLinesHeading);
         linesToBulls.IsChecked = settingsStore.LoadLinesToBulls();
         canvas.LinesToBulls = linesToBulls.IsChecked == true;
         linesToBulls.IsCheckedChanged += (_, _) =>
@@ -43,7 +44,8 @@ public sealed partial class MainWindow
         panel.Children.Add(bullHolds);
         panel.Children.Add(unsureCount);
         bullDone = Button("Done", () => canvas.Pick(null));
-        panel.Children.Add(Row(Button("Add a hole", () => SetTool(MarkingTool.Impact)), Button("Next unsure hole", NextUnsureHole), bullDone));
+        bullButtons = Row(Button("Add a hole", () => SetTool(MarkingTool.Impact)), Button("Next unsure hole", NextUnsureHole), bullDone);
+        panel.Children.Add(bullButtons);
         canvas.PickingChanged += (_, _) => ShowBullLines(session.State);
     }
 
@@ -90,6 +92,7 @@ public sealed partial class MainWindow
         status.Text = $"{ShotName(next)}: {(line is null ? "unsure" : BullLines.Words(line.Doubt))}.";
         DiagnosticLog.Info("marking.next-unsure", ("left", BullLines.Unsure(state).Count));
         Refresh();
+        LandOnShot(next);
     }
 
     /// <summary>For the screenshot walk: the block scrolled into view.</summary>

@@ -231,6 +231,8 @@ included. A figure's name still explains it when you tap it; only the number swi
 
 In the Shots list each shot is a short row (across, up and down, distance from its own bull). Click a row, or the shot on the sheet, to open it in place: the bull (nearest first), its place in the firing order, **Counted**, and where it came from (Found by GroupLab, moved by you, or added by you). The firing order is what **In the order fired** uses when there is no chronograph string.
 
+A click on the sheet moves the side panel to what it changed and flashes that part twice: a hole opens its row under Shots, a bull goes to **Which bull each shot belongs to**, and Shift or Command on a bull goes to **Loads on this sheet**. The line under the picture says in a sentence what the click did. Where your computer is set to reduce motion, the part is tinted for a moment instead of flashing.
+
 Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are two different decisions, and GroupLab will not quietly make the second one for you because you made the first.
 
 Every edit shows a small message at the bottom of the screen saying what changed, with **Undo** on it. Ctrl+Z and Ctrl+Y work everywhere, Command Z and Shift Command Z on a Mac, and the Undo on the message is the same undo.

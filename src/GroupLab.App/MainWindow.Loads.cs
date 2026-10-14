@@ -34,7 +34,8 @@ public sealed partial class MainWindow
 
     private void BuildBullLoads(StackPanel panel)
     {
-        panel.Children.Add(FieldLabel("Loads on this sheet"));
+        loadsLabel = FieldLabel("Loads on this sheet");
+        panel.Children.Add(loadsLabel);
         var buttons = new WrapPanel();
         foreach (var (layout, words) in SheetReading.Layouts)
         {
@@ -62,10 +63,13 @@ public sealed partial class MainWindow
                 return;
             }
 
-            if (!bullSelection.Add(chosen.Bull))
+            bool added = bullSelection.Add(chosen.Bull);
+            if (!added)
             {
                 bullSelection.Remove(chosen.Bull);
             }
+
+            lastLoadBull = (chosen.Bull, added);
 
             if (layoutChosen != LoadLayout.PickBulls)
             {

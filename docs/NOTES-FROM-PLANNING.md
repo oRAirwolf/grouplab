@@ -25,6 +25,54 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-14, entry 422: a click on the picture says what it did, and the side panel lands on it cleanly (Jylee)
+
+**Status: actioned 2026-10-14; sections 1 to 5 done.**
+
+From the planning session, 2026-10-14 02:55 UTC. Source: Jylee, on the GroupLab Discord, 2026-10-13, passed on by Alan. Jylee is a
+friend of Alan's and may be credited by name. His words, as data: "it isn't immediately clear what's happening when you click on a bull
+or an impact, the side panel also doesn't jump to the right section cleanly and often is just a few lines out of view. I think if you
+were to make it so that the section it scrolls to on the side panel flash once or twice to see what section it's going to when you click
+would be cool." He also said the analysis screen feels like "UI overload". Nothing here needs Alan. Main model (this is UI code).
+
+## 1. Find out what each click does today
+
+On the desktop analysis screen, list every click on the picture that changes the side panel: a plain click on a bull, shift or command
+click on a bull, a click on a hole (with Select and with Impact), a click on a line from a bull to a hole, and Next unsure. For each, say
+in the report which section the side panel moves to, if any, and what is selected. Do the same for the phone result screen, where a tap
+moves the bottom sheet or the list. This is the baseline for sections 2 to 4; do not paste it whole into the report, one line each.
+
+## 2. The section a click goes to lands fully in view
+
+When a click moves the side panel, the section it goes to ends up with its heading and the selected row both fully visible, the heading
+a small margin below the top of the panel, never cut off by a few lines. If the section is taller than the panel, the selected row wins
+and its heading may scroll off. The likely cause of "a few lines out of view" is scrolling before the layout settles (a Shots row that
+opens in place, or a section that expands, changes height after the scroll was worked out); scroll after layout, and check that once.
+Test it headless: after each click from section 1, the target's bounds sit inside the panel's viewport, at three window heights, and
+for the last section in the panel, where there is nothing below to scroll into. The phone gets the same rule wherever a tap moves a list.
+
+## 3. The section landed on flashes, as Jylee suggested
+
+When a click moves the side panel to a section, that section's background flashes twice in the accent color, about a third of a second
+each, then returns to normal, about one second in all. Only the section a click moved to flashes; a click that does not move the panel
+does not flash anything. If the system has animations turned off (Windows "Animation effects", macOS "Reduce motion", the phone's
+equivalents), show a steady tint for about a second and a half instead of flashing. The same on the phone. This is a small visual
+behavior specified here; Alan may still ask for concepts, in which case only this section waits.
+
+## 4. Say in plain words what a click did
+
+After each click from section 1, the status line under the picture says what happened, in one short sentence a new user understands,
+for example "Bull C3 chosen: holes you add now go to C3." or "Shot C3.2 selected; its row is open under Shots." Where the status line
+already says this, leave it. Keep it to one line; this is meant to reduce the overload, not add to it.
+
+## 5. The usual
+
+One commit if it allows. Release-note in a shooter's words, kind changed, thanking Jylee. Check whether the tour and Features pages
+describe clicking on the picture and still match; fix them in the same change. For-alan gets one "For Jylee" line (not a request), like
+the Quack lines, saying what changed and in which nightly.
+
+---
+
 ## 2026-10-13, entry 421: consistency audit
 
 **Status: actioned 2026-10-14; sections 1 to 9 done. Section 9 changed nothing: no submission names the C or E bull sheet. Section 1 keeps the Command Z sentence: no report says it works on a Mac.**

@@ -1368,7 +1368,7 @@
       "key": "shots-table",
       "group": "The numbers",
       "name": "Every shot, and which count",
-      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone.",
+      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did.",
       "shot": "shots-open",
       "platforms": [
         "Windows",
@@ -1378,7 +1378,7 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": ["Shots and clicks", "On the phone, the Counted and Left out switch",
+      "note": ["Shots and clicks", "brings its place in the side panel fully into view", "On the phone, the Counted and Left out switch",
         "The Shots list is now short rows",
         "Leaving a shot out no longer asks why"],
       "tour": "analysis",

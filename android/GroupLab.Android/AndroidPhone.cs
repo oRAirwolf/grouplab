@@ -114,6 +114,9 @@ internal sealed class AndroidPhone : IPhonePlatform
     public Task<(GroupLab.Core.Printing.Labels.IPrinterLink? Link, string? Why)> OpenLePrinterAsync(GroupLab.Core.Printing.Labels.PrinterProfile profile, CancellationToken token) =>
         AndroidLePrinter.OpenAsync(profile, token);
 
+    public bool ReduceMotion() => MainActivity.Current is { } activity
+        && global::Android.Provider.Settings.Global.GetFloat(activity.ContentResolver, global::Android.Provider.Settings.Global.AnimatorDurationScale, 1f) == 0f;
+
     public bool CameraGranted() => MainActivity.Current is { } activity
         && AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.Camera) == global::Android.Content.PM.Permission.Granted;
 

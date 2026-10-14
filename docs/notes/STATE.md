@@ -9,15 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-14, entry 421 (before it: entries 416, 415, 420, 419, 418 and 417).
+**Last rewritten:** 2026-10-14, entry 422 (before it: entries 421, 416, 415, 420, 419, 418 and 417).
 
 ---
 
 ## In flight
 
-- **Entry 421, the consistency audit of 2026-10-13, is done**: two Mac testers, Phase 9 in progress, Report a problem one way, the
-  parity rows, Quack's thanks, the PDFs, and the Features page dating a feature by its newest part. Nightly 191 was refused twice for
-  'centres' in entry 417's note; the corrected note is in docs/release-note-corrections.json (3b03ab64).
+- **Entry 422 is done** (Jylee): a click on the picture lands the side panel on what it changed, flashes it twice (a steady tint with
+  less motion), and the status line says what it did; on the phone, Bull by bull lands the picture. It ships in nightly 192.
+- **Entry 421 is done**: the consistency audit; the Features page dates a feature by its newest part. Nightly 191 published
+  2026-10-14 after its refused 'centres' note was corrected in docs/release-note-corrections.json.
 - **The queue of 2026-10-13 is done** (417, 418, 419, 420, 415, 416); section 1 of 418 waits on request 99, 419 on request 98,
   415 section 3.2 not done. The detail is in PHASE1-RESULTS.md.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
@@ -68,10 +69,8 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and arc
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.190 (2026-10-12 15:39 UTC, from 0b11c037): entry 414 whole. 189 carried 413 and 414 sections 1
-  and 2 and the take-back of reading codes at once; 188 carried entry 413.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; 188 and 190 were dispatched by hand
-  (one HTTP 500 from GitHub first).
+- **Last nightly:** 0.2.0-nightly.191 (2026-10-14 03:36 UTC, from 3b03ab64): entries 415 to 420. 190 carried entry 414 whole.
+- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
@@ -81,10 +80,11 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 422.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **A click on the picture lands the side panel through `Landing`** (entry 422), shared with the phone's result screen.
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 

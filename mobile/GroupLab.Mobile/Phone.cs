@@ -50,6 +50,8 @@ public static class Phone
         ArgumentNullException.ThrowIfNull(platform);
         ArgumentNullException.ThrowIfNull(application);
         Platform = platform;
+        // Entry 422: a part of the page landed on flashes, or holds a steady tint where the phone asks for less motion.
+        GroupLab.App.Landing.ReducedMotion = platform.ReduceMotion;
 
         // Entry 342, the phone sweep: every field and switch named for a screen reader by the words a person reads for it.
         FieldNames.Attach();

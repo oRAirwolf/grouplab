@@ -52,6 +52,9 @@ public interface IPhonePlatform
     /// </summary>
     bool CameraGranted() => false;
 
+    /// <summary>Whether the phone asks for less motion (Android's Remove animations, the iPhone's Reduce Motion): entry 422's flash is then a steady tint.</summary>
+    bool ReduceMotion() => false;
+
     /// <summary>The camera screen: <paramref name="taken"/> hears the picture's path and whether the torch was on.</summary>
     Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null);
 

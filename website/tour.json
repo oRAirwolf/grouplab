@@ -259,7 +259,7 @@
     [
      "shots-open",
      "The Shots list, one shot open with its bull, its place in the firing order, Counted and Delete, not a hole",
-     "The Shots list is a short row for each shot: across, up or down, and how far from its own bull. Clicking a row, or the shot on the sheet, opens it: its bull with the nearest first, when it was fired, Counted, where it came from, and Delete, not a hole, which keeps the mark and can be undone."
+     "The Shots list is a short row for each shot: across, up or down, and how far from its own bull. Clicking a row, or the shot on the sheet, opens it: its bull with the nearest first, when it was fired, Counted, where it came from, and Delete, not a hole, which keeps the mark and can be undone. A click on the sheet brings the open row fully into view and flashes it, and the line under the picture says what the click did."
     ],
     [
      "paper-fold",

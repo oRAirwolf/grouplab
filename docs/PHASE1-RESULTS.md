@@ -618,6 +618,30 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
 
 Wording for sections 1, 2 and 5 to 9 by docs-sonnet; section 3's code, its test and the checks by the main model.
 
+## Entry 422: a click on the picture says what it did, and the side panel lands on it cleanly (Jylee) (2026-10-14)
+
+1. **What each click did before** (the desktop's analysis screen; the default tool and Select alike): a plain click on a bull chose it to
+   give holes to, rewrote "Which bull each shot belongs to" where it stood and moved nothing; Shift or Command on a bull added it to the
+   load's bulls and showed Loads on this sheet where it stood; a click on a hole, or on the line from its bull, selected it and opened its
+   row under Shots in place, the panel not moving; the Impact tool placed a hole, selected and opened the same way; Next unsure hole
+   selected the hole, centered the picture on it and said why on the status line, the panel not moving. **No click scrolled the side
+   panel at all**, so a row opened below the fold stayed out of sight, and the panel's own rebuild could shift what was showing by a few
+   lines. **The phone:** a tap on the result's picture lights the bull and says so under it, moving nothing; a row of Bull by bull lights
+   its bull and scrolled the picture into view with the platform's own rule.
+2. **The section lands in view** (`Landing`, shared by both): its heading a small margin below the top and the row fully visible; where
+   the section is taller than the panel the row wins; the last section goes as far as the panel can. Worked out once the layout has
+   settled and checked once more after the work the click queued. The sums
+   are taken from the scroller's own content, so the panel's margin inside it does not leave the row a few lines short. Held at three window heights for a hole (the last section),
+   a bull and Shift on a bull (`Entry422Tests`), and on the phone at two heights.
+3. **It flashes twice** in the amber tint, about a third of a second each and a second in all; a click that does not move the panel
+   flashes nothing. With the system's animations off (Windows' Animation effects, macOS's Reduce motion, GNOME's animations, Android's
+   Remove animations, the iPhone's Reduce Motion) it holds the tint for a second and a half.
+4. **The status line says what the click did** (`ClickWords`): "Bull C3 chosen: a hole you click now goes to C3.", "Bull C3 added to
+   the bulls for a load; 2 chosen, under Loads on this sheet.", "Shot C3.2 selected; its row is open under Shots.", "Hole added as ...".
+   A notice the click raised itself (a hole not snapped, a hole given to a bull) is left in place; Next unsure hole keeps its own words.
+5. The user guide's Shots paragraph, the tour's Shots list and the Features page's Shots list say it; the guide's PDFs are made again.
+   For Jylee's line is in for-alan.md. A click in the Shots list itself does not flash, because it does not move the panel.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -409,6 +409,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// <summary>Raised when the selection changes.</summary>
     public event EventHandler? SelectionChanged;
 
+    /// <summary>Entry 422: what a click on the picture did, raised after the selection or the choosing has changed.</summary>
+    public event EventHandler<PictureClick>? Clicked;
+
     /// <summary>Raised with a sentence the user should see about the last action, such as a tap not snapped onto printed artwork.</summary>
     public event EventHandler<string>? Notice;
 
@@ -1100,6 +1103,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 if (BullAt(session.State, point.Position) is { } picked)
                 {
                     BullClicked?.Invoke(this, (picked.Index, true));
+                    Clicked?.Invoke(this, PictureClick.BullForLoad);
                 }
 
                 break;
@@ -1110,9 +1114,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             case MarkingTool.Select:
                 var hit = session.State.Shots.Where(s => Distance(ToControl(s.Image), point.Position) <= ShotReach(session.State, s)).MinBy(s => Distance(ToControl(s.Image), point.Position));
                 LitBull = null;
+                PictureClick? did = null;
                 if (hit is not null)
                 {
                     Selected = hit.Id;
+                    did = PictureClick.ShotSelected;
                     dragging = hit.Id;
                     dragAt = hit.Image;
                     e.Pointer.Capture(this);
@@ -1131,12 +1137,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                     // Entry 407 section 1.3: the bull's own center, where every one of its lines starts, chooses the bull.
                     BullClicked?.Invoke(this, (own, false));
                     Pick(own);
+                    did = PictureClick.BullChosen;
                 }
                 else if (LightAt(session.State, point.Position) is { Shot: { } byLine } line)
                 {
                     // Entry 376 section A4: a click on the line from a bull to a hole lights them, as a click on either does.
                     Selected = byLine;
                     LitBull = line.Bull;
+                    did = PictureClick.ShotSelected;
                 }
                 else if (BullAt(session.State, point.Position) is { } chosen)
                 {
@@ -1144,6 +1152,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                     // give holes to (entry 407 section 1.3).
                     BullClicked?.Invoke(this, (chosen.Index, false));
                     Pick(chosen.Index);
+                    did = PictureClick.BullChosen;
                 }
                 else
                 {
@@ -1151,6 +1160,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 }
 
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
+                if (did is { } done)
+                {
+                    Clicked?.Invoke(this, done);
+                }
+
                 break;
         }
 
@@ -1264,6 +1278,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 }
 
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
+                Clicked?.Invoke(this, PictureClick.HoleAdded);
             }
         }
 
@@ -1274,17 +1289,24 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 // Entry 376 section A4: a click on a hole, on the line to its bull, or on the bull lights all three. Entry 407 section 1.3: a
                 // click on a bull itself, away from its holes and lines, chooses it to give holes to.
                 var lit = LightAt(s.State, pressed);
+                PictureClick? did = null;
                 if (OnBullItself(s.State, pressed) is { } bullOnly)
                 {
                     Pick(bullOnly);
+                    did = PictureClick.BullChosen;
                 }
                 else
                 {
                     Selected = lit?.Shot;
                     LitBull = lit?.Bull;
+                    did = lit?.Shot is null ? null : PictureClick.ShotSelected;
                 }
 
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
+                if (did is { } done)
+                {
+                    Clicked?.Invoke(this, done);
+                }
             }
         }
 
@@ -1437,3 +1459,19 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 /// place the view was left, and the sheet's expected artwork and missing markers.
 /// </summary>
 internal sealed record CanvasView(Bitmap? Picture, GrayImage? Value, double Width, double Height, double Zoom, Vector Offset, GrayImage? Artwork, IReadOnlyList<PointD> MissingMarkers);
+
+/// <summary>Entry 422: what a click on the picture did, so the side panel can land on the section it changed and say so.</summary>
+public enum PictureClick
+{
+    /// <summary>A bull chosen to give holes to.</summary>
+    BullChosen,
+
+    /// <summary>A bull added to or taken from the bulls a load is set on (shift or the command key).</summary>
+    BullForLoad,
+
+    /// <summary>A hole selected, by a click on it or on the line from its bull.</summary>
+    ShotSelected,
+
+    /// <summary>A hole placed by the Impact tool.</summary>
+    HoleAdded,
+}

@@ -112,6 +112,16 @@ public sealed class ResultView : UserControl, IOpenTarget
     private readonly TextBlock saved = Screens.Line("");
     private SheetPicture? picturePane;
 
+    /// <summary>Entry 422: the page's scroller, and the landing that brings the picture into view when a bull is chosen in Bull by bull.</summary>
+    private readonly ScrollViewer pageScroll = new() { HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
+
+    private Landing? pageLanding;
+
+    /// <summary>For the headless tests: the page's scroller and what its last landing did.</summary>
+    internal ScrollViewer PageScroll => pageScroll;
+
+    internal Landing? PageLanding => pageLanding;
+
     /// <summary>Entry 318 section 1: the marks to check, a card that follows every change.</summary>
     private readonly StackPanel checks = new() { Spacing = 8 };
     private long? sessionId;
@@ -439,7 +449,15 @@ public sealed class ResultView : UserControl, IOpenTarget
             {
                 picturePane.Lit = bull;
                 SayLit(bull);
-                picturePane.BringIntoView();
+                // Entry 422: the picture lands whole in view once the page has laid out, and flashes so the eye follows it.
+                if (pageLanding is not null)
+                {
+                    pageLanding.On(picture, litSays.IsVisible ? litSays : picturePane, picturePane, picturePane);
+                }
+                else
+                {
+                    picturePane.BringIntoView();
+                }
             };
             picture.Children.Add(checks);
 
@@ -617,11 +635,22 @@ public sealed class ResultView : UserControl, IOpenTarget
         {
             Children =
             {
-                new ScrollViewer { Content = host, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled },
+                PageWithLanding(host),
                 full.Sheet,
             },
         };
         AskWhichBulls();
+    }
+
+    /// <summary>The page in its scroller, with the strip that flashes behind it (entry 422).</summary>
+    private ScrollViewer PageWithLanding(Control host)
+    {
+        var palette = GroupLab.App.Theme.Tokens.For(Avalonia.Application.Current?.ActualThemeVariant);
+        var strip = Landing.Strip(palette.AmberTint, palette.AmberTintBorder);
+        var content = new Grid { Children = { strip, host } };
+        pageScroll.Content = content;
+        pageLanding = new Landing(pageScroll, content, strip);
+        return pageScroll;
     }
 
     /// <summary>Whether the question below has been put for this result already; dismissing it keeps GroupLab's guess.</summary>
