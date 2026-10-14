@@ -9,14 +9,38 @@
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/NavBar.cs and Entry413Tests; scripts/phone-sweep-check.py --larger; entry 413"
   },
- "Since entry 411 GroupLab does (Alan: \"For android, follow the system\"): every text size its styles set passes through `TextSize`, which the Android head points at Android's own sp conversion, so from Android 14 the larger sizes grow less than the smaller ones; a change of the setting while GroupLab is open restyles it.": {"kind": "code", "where": "src/GroupLab.App/Theme/TextSize.cs; android/GroupLab.Android/App.cs SystemTextSize and MainActivity.OnConfigurationChanged; Entry411Tests, QualitySweepTests and MobileSweepTests; NOTES-FROM-PLANNING.md entry 411 section 2"},
- "`scripts/android-sweep.sh` copies the results back over adb and fails on a crash or a step that could not find what it needed, or when a screen's text is no larger in the largest-text pass than in the plain one (entry 411).": {"kind": "code", "where": "scripts/android-sweep.sh calls scripts/phone-sweep-check.py --larger after its three passes; NOTES-FROM-PLANNING.md entry 411 section 2.4"},
- "Screen: the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {"kind": "decided", "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0; entry 405 section 6"},
- "No 4x6 label printer has been tested yet, so until one has printed GroupLab&#x27;s check page this is &quot;should work&quot;; the Phomemo M834 has printed GroupLab&#x27;s printer check page true both ways, and the M220 has printed its scale labels.": {"kind": "measured", "where": "docs/notes/for-alan-archive.md requests 84 and 85, answered 2026-10-10 (M834 check print true both ways; M220 scale labels printed); commit 00de13ea; entry 405 section 3"},
- "Step 2 of 5, How big is this target?, with a 12 by 18 in poster and its size typed.": {"kind": "code", "where": "website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405"},
- "Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {"kind": "code", "where": "website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405"},
- "- **Screen:** the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {"kind": "decided", "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0 (the side columns narrow and the figures move under the picture); entry 405 section 6"},
- "The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them; the second range day, 4 October, gave 137 of 145 holes found from GroupLab's own sheets with no false mark, and the gates still wait on more scans and photographs.": {"kind": "measured", "where": "docs/PHASE1-RESULTS.md entry 374 (the 4 October range day: 137 of 145 holes found, no false mark); entry 405 as the deciding entry"},
+  "Since entry 411 GroupLab does (Alan: \"For android, follow the system\"): every text size its styles set passes through `TextSize`, which the Android head points at Android's own sp conversion, so from Android 14 the larger sizes grow less than the smaller ones; a change of the setting while GroupLab is open restyles it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/Theme/TextSize.cs; android/GroupLab.Android/App.cs SystemTextSize and MainActivity.OnConfigurationChanged; Entry411Tests, QualitySweepTests and MobileSweepTests; NOTES-FROM-PLANNING.md entry 411 section 2"
+  },
+  "`scripts/android-sweep.sh` copies the results back over adb and fails on a crash or a step that could not find what it needed, or when a screen's text is no larger in the largest-text pass than in the plain one (entry 411).": {
+   "kind": "code",
+   "where": "scripts/android-sweep.sh calls scripts/phone-sweep-check.py --larger after its three passes; NOTES-FROM-PLANNING.md entry 411 section 2.4"
+  },
+  "Screen: the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0; entry 405 section 6"
+  },
+  "No 4x6 label printer has been tested yet, so until one has printed GroupLab&#x27;s check page this is &quot;should work&quot;; the Phomemo M834 has printed GroupLab&#x27;s printer check page true both ways, and the M220 has printed its scale labels.": {
+   "kind": "measured",
+   "where": "docs/notes/for-alan-archive.md requests 84 and 85, answered 2026-10-10 (M834 check print true both ways; M220 scale labels printed); commit 00de13ea; entry 405 section 3"
+  },
+  "Step 2 of 5, How big is this target?, with a 12 by 18 in poster and its size typed.": {
+   "kind": "code",
+   "where": "website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405"
+  },
+  "Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {
+   "kind": "code",
+   "where": "website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405"
+  },
+  "- **Screen:** the analysis screen: below the default width the side columns narrow, and on the narrowest window the figures move under the picture; 1060 wide is the size every desktop window is tested at.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md Screen line; commits e3f24a58 and 633c64d0 (the side columns narrow and the figures move under the picture); entry 405 section 6"
+  },
+  "The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab could not read about half of them; the second range day, 4 October, gave 137 of 145 holes found from GroupLab's own sheets with no false mark, and the gates still wait on more scans and photographs.": {
+   "kind": "measured",
+   "where": "docs/PHASE1-RESULTS.md entry 374 (the 4 October range day: 137 of 145 holes found, no false mark); entry 405 as the deciding entry"
+  },
   "On the tour · In the user guide · The research behind it Which bull each shot belongs to A thin line runs from each bull to every hole given to it, a tap or click on a bull, a hole or a line lights all three, Bull by bull does the same from a list, and each shot is named by its bull: Bull 7, or Bull 7, shot 2.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ShotLabels.cs ShotLabel.Name; src/GroupLab.App/MarkingCanvas.cs Lit and LightAt; mobile/GroupLab.Mobile/ResultView.cs SheetPicture; src/GroupLab.Core/Marking/ResultFigures.cs BullKey (entry 376 sections A3, A4 and A6)"
@@ -6785,9 +6809,9 @@
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.ReadingsHere.cs (Type them in, Match to shots); entry 407 section 7"
   },
-  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the \u00b7\u00b7\u00b7 m": {
+  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the ··· m": {
    "kind": "code",
-   "where": "src/GroupLab.App/MainWindow.Saving.cs (the \u00b7\u00b7\u00b7 menu has Open the session's folder); entry 407 section 4"
+   "where": "src/GroupLab.App/MainWindow.Saving.cs (the ··· menu has Open the session's folder); entry 407 section 4"
   },
   "- **Page 2:** the shot table, the exclusions (with their reasons where one is stored), any decisions left unmade, the registration and every \"why\".": {
    "kind": "code",
@@ -6805,7 +6829,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/SheetReading.cs SheetReading (the read-back line and the three ways of shooting a sheet); entry 407 section 2"
   },
-  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the \u00b7\u00b7\u00b7 menu at the top right has **Open the session's folder**.": {
+  "**After that, and after any change, it saves itself**: the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the ··· menu at the top right has **Open the session's folder**.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs (the ... menu has Open the session's folder); entry 407 section 4"
   },
@@ -6813,13 +6837,53 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
   },
-  "After that, and after any change, it saves itself : the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the \u00b7\u00b7\u00b7 menu at the top right has Open the session's folder .": {
+  "After that, and after any change, it saves itself : the status bar says when (\"Saved 12 seconds ago in grouplab.db\"), that it is safe to close, and the ··· menu at the top right has Open the session's folder .": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs (the ... menu has Open the session's folder); entry 407 section 4"
   },
   "Page 2: the shot table, the exclusions (with their reasons where one is stored), any decisions left unmade, the registration and every \"why\".": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
+  },
+  "- **In progress.** Some optimizations have been made and measured: finding the holes on a scan, the phone's reading of a photograph, a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 392, 400, 414 and 415 section 3 (the optimizations and their measurements); docs/RELEASE-NOTES.md nightlies 186 and 189; Phase 9 table row says In progress"
+  },
+  "Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the rim, a report on the upload page led to its progress bar and to sets of up to 30 photographs, and a question about reading a set of three sheets as one led to the pooled set in its own tab.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417, 418 and 420; Quack may be thanked by name (Alan, 2026-10-11)"
+  },
+  "**macOS builds are published, and the Apple silicon build has been run on two Macs.** Two testers have run it.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417 (build 0.2.0-nightly.190, macOS ARM64) and 420 (nightly 190 on macOS), the second tester; first tester entries 147 and 166"
+  },
+  "The first ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417 (build 0.2.0-nightly.190, macOS ARM64) and 420 (nightly 190 on macOS), the second tester; first tester entries 147 and 166"
+  },
+  "The second ran nightly 190 on a Mac with Apple silicon, opened flatbed scans, marked holes with the Impact and Select tools, dropped several scans in at once and pooled sheets in Session records.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417 (build 0.2.0-nightly.190, macOS ARM64) and 420 (nightly 190 on macOS), the second tester; first tester entries 147 and 166"
+  },
+  "Nobody uses Linux day to day, and the Apple silicon Mac build has been run on two Macs with Apple silicon, by two testers; the platform statement on the download page says exactly what has been checked.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, entries 147, 166, 417 and 420: two testers have run the Apple silicon build"
+  },
+  "It opens a window that lists what the report holds before anything is written: GroupLab's log of this run and the one before, the version of GroupLab, the operating system and the display, and, if you write them, a description of up to 500 characters and a way to reach you.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow (Contents, PlannedEntries, Save only, Show me the file, Send shown only with a send address; MaxLength 500) opened by MainWindow.OpenReport from Settings, Diagnostics"
+  },
+  "Two testers, nightlies 93 and 190 Signed, notarized and stapled: opens like any other Mac application Any Mac with Apple silicon (M-series).": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417 and 420 (second tester, nightly 190, macOS ARM64) and entries 147 and 166; download page generated from docs/PLATFORM-SUPPORT.md"
+  },
+  "macOS builds are published, and the Apple silicon build has been run on two Macs.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417 and 420 (second tester, nightly 190, macOS ARM64) and entries 147 and 166; download page generated from docs/PLATFORM-SUPPORT.md"
+  },
+  "What is not done yet 02 Make a report package In GroupLab, open the settings from the gear at the bottom left and choose Report a problem under Diagnostics.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow (Save only writes the zip); opened by MainWindow.OpenReport from Settings, Diagnostics"
   }
  },
  "rules": [
@@ -7092,9 +7156,9 @@
   },
   {
    "surface": "^site:(features/|index\\.html)",
-   "match": "New in (nightly\\.[0-9]+|the next build)|New in GroupLab",
+   "match": "(New|Changed) in (nightly\\.[0-9]+|the next build)|^Coming in the next build |New in GroupLab|Since nightly\\.[0-9]+(, changed in nightly\\.[0-9]+|; its newest part is coming in the next build)?\\.?$",
    "kind": "code",
-   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); the build's name is read from the notes, so it changes when a nightly publishes"
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); a feature's newest part is dated by website/build.py changed(), held by tests/python/site-feature-dates-tests.py (entry 421); the build's name is read from the notes, so it changes when a nightly publishes"
   },
   {
    "surface": "^site:download/",

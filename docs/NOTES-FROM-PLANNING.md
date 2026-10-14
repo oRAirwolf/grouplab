@@ -25,6 +25,110 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-13, entry 421: consistency audit
+
+**Status: actioned 2026-10-14; sections 1 to 9 done. Section 9 changed nothing: no submission names the C or E bull sheet. Section 1 keeps the Command Z sentence: no report says it works on a Mac.**
+
+From the planning session's scheduled consistency audit, 2026-10-13 15:56 UTC (entry 267 section 2b). Read only: README.md, the live
+grouplab.org (home, /download/, /features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/, /targets/),
+website/features.json, docs/RELEASE-NOTES.md, docs/notes/STATE.md, docs/notes/for-alan.md, docs/PLATFORM-SUPPORT.md,
+docs/PHONE-PARITY.md, docs/ANDROID.md, the guides, the inbox and the log to db8beba7. No GitHub issue labelled `consistency` exists,
+open or closed, so nothing here repeats one. Nothing here needs Alan. Fix them together in one change, in the usual way: the source
+file first, then whatever is generated from it (README sections, the site, the PDFs). Wording passes may go to docs-sonnet.
+
+## 1. The Mac has now been run by two testers, not one
+
+- Where: docs/PLATFORM-SUPPORT.md line 24 (and the README copy of it, README.md line 184); README.md line 108 ("**Run on one real
+  Mac**, by one tester"); website/build.py line 982 (the download page's Mac card: "Run on one real Mac. One tester, an M5 Max,
+  nightly 93", live at https://grouplab.org/download/); docs/TESTING-GUIDE.md line 94 ("has been run on one Mac").
+- What it says: the Apple silicon build has been run on one Mac, by one tester, on nightly 93.
+- What it should say: it has been run on two Macs with Apple silicon by two testers: Fenix on nightly 93 (the M5 Max), and Quack on
+  nightly 190 (macOS ARM64), who opened flatbed scans, marked holes with the Impact and Select tools, dropped several scans at once and
+  pooled sheets in Session records. The Intel build is still untried.
+- Evidence: docs/NOTES-FROM-PLANNING.md, entry 417's report ("Build: GroupLab 0.2.0-nightly.190 ... OS: macOS ARM64"), and entry 420
+  ("on nightly 190 on macOS"); commit e823431a (a macOS crash fixed).
+- Also: the sentence "Command shortcuts such as Command Z did not work ... neither fix has been checked on a Mac yet" stays only if
+  nothing in Quack's reports shows those working. Do not guess; if they do not say, leave it as it is.
+
+## 2. Phase 9 says nothing has been optimized
+
+- Where: README.md lines 488 and 490, under Planned, Phase 9.
+- What it says: "**Not started.** Making GroupLab quick ..." and "**Not started.** The gate ... and the optimizations themselves.
+  Nothing has been optimized."
+- What it should say: optimizations have been made and measured (hole finding on a scan, entry 392; the phone's reading of a
+  photograph, entry 400; a 600 dpi scan opening in about four fifths of the time and the solver warmed after start-up, entry 414; a
+  photograph's codes read sooner, entry 415 section 3), each with the same results; the gate itself is still not written. The table row
+  at line 398 already says In progress, so the bullets disagree with their own table.
+- Evidence: docs/RELEASE-NOTES.md, nightly 189 ("A 600 dpi scan now opens sooner, in about four fifths of the time") and nightly 186
+  ("Finding the holes on a sheet takes less time"); docs/notes/STATE.md, "Performance (Phase 9)" line.
+
+## 3. The Features page and the home page describe behavior no download has yet
+
+- Where: https://grouplab.org/features/ and the home page's "New in GroupLab", from website/features.json.
+- What it says: "Pool the sheets of a set ... opens on the analysis screen in a tab of its own with each sheet's shots in their own
+  shade" marked "Since nightly.113"; "Velocity and the vertical ... in the conditions on the day you enter under it" marked "Since
+  nightly.145"; "The bottom bar at the largest text sizes: GroupLab's text follows the phone's own text size, on Android and on the
+  iPhone" shown as "New in nightly.188" on the home page and the Features page.
+- Why it is wrong today: the newest published build is nightly 190 (commit 4303b73). The pooled tab (entry 420, 3aaa008f), the
+  conditions under Velocity (entry 416, 59eb71d0) and the iPhone following its text size (entry 415, 94502fc2) are only on main.
+  Nightly 188's own note says "At Android's largest text sizes" and nothing about the iPhone.
+- What it should say: until a nightly carries them, the new parts are marked as coming in the next nightly (or the sentence keeps the
+  published behavior), and once nightly 191 is out, "New in" and "Since" name 191 for these parts. If the site build cannot tell a
+  changed sentence from an old feature, a small rule for it (a sentence changed on main after the feature's "since" build is flagged)
+  would stop this happening again.
+
+## 4. The user guide's PDF is behind its guide
+
+- Where: docs/USER-GUIDE.pdf, last committed in 8fd7402c (2026-10-12); docs/USER-GUIDE.md changed since in 94502fc2, 3aaa008f and
+  59eb71d0 (2026-10-13). The site serves the old PDF at https://grouplab.org/guides/user-guide.pdf (website/build.py line 260).
+- What the PDF still says: the old pooling paragraph (no tab of its own, no Read these as one set, no See the pooled group on the
+  phone), the old Velocity paragraph (no Conditions on the day), and "The iPhone keeps its text at GroupLab's own sizes."
+- What it should say: what docs/USER-GUIDE.md says now. Run `grouplab user-guide` and commit the PDFs with the guide (the rule in
+  scripts/consistency.py line 78).
+
+## 5. Report a problem is described two ways
+
+- Where: docs/USER-GUIDE.md line 440 ("**Report a problem** is in the settings. It opens the support page, which takes a
+  description ..."); docs/TESTING-GUIDE.md line 98 and https://grouplab.org/support/ step 02 ("**Report a problem** there writes a
+  report package: a zip with the log ...").
+- What the application does: src/GroupLab.App/MainWindow.cs lines 1339 to 1346, OpenReport opens a ReportWindow.
+- What it should say: one description, matching the window as it is, in all three places. Check which is right before choosing.
+
+## 6. The phone parity table: two rows behind
+
+- Where: docs/PHONE-PARITY.md line 79 (`target-tabs`, "left out": "the phone shows one target at a time and moves between them in
+  Sessions"). This contradicts line 63 (`open-targets-phone`, on the phone: every target read stays open and Open targets lists them).
+  It should say the phone keeps several targets open through Open targets (line 63), and only the tab strip and keyboard are left out.
+- Where: docs/PHONE-PARITY.md line 69 (`pool-set`): "the set as a checklist". Since entry 420 the checklist also opens the pooled plot
+  (See the pooled group, docs/USER-GUIDE.md, and mobile/GroupLab.Mobile/SetPage.cs in 3aaa008f). Add that.
+
+## 7. The Thanks section names one of Quack's four reports
+
+- Where: README.md line 662.
+- What it says: Quack found the red cut-off warning that stayed after switching printers.
+- What it should say: also that Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the
+  rim (entry 417), his report on the upload page led to the progress bar and sets of up to 30 photos (entry 418), and his question about
+  reading a set of three sheets as one led to the pooled set in its own tab (entry 420). Quack may be thanked by name (Alan, 2026-10-11);
+  write nothing else about him. Keep the credits rule: Unholy and Jylee by name, Justin by first name only.
+
+## 8. Two README lines that have aged
+
+- README.md line 334: "New on the phone in the latest builds, as entries 258 and 259 bring it level with the desktop:" These are from
+  late September and are no longer the latest. Say "Since the phone was brought level with the desktop (entries 258 and 259):" or move
+  the list under the phone's own paragraph.
+- README.md line 441: "a rough click lands on the dark centroid within a caliber-sized reach". Since entry 417 (1392641a) the snap goes
+  to the hole's middle, fitting a circle through the rim where the hole is as light as the paper (a flatbed with a white lid). Say so.
+
+## 9. The donor page's "most useful" line may be out of date
+
+- Where: website/donor/sheets.json line 3, live on https://grouplab.org/shoot-a-target/: "the E and C bulls, which it has seen from one
+  range day only."
+- Why: Quack shot and sent the 3x3 2 MOA C bull set of three and other sets on 2026-10-12 (entries 417, 418 and 420;
+  C:\Dev\grouplab-submissions). Check which designs those submissions are. If they include C or E bull sheets, the line should say the
+  C bull (or both) has been seen from two shooters, and keep asking for the C3 zeroing grids. If not, leave it.
+
+---
+
 ## 2026-10-13, entry 416: a session's own conditions for Velocity and the vertical, concept A
 
 **Status: actioned 2026-10-13; sections 1 to 5 done. Not done: the two Features pictures, listed as waiting for the screenshot walk and the phone's next sitting; CSV out does not carry the conditions, having no place for them.**

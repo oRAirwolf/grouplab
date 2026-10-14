@@ -589,6 +589,35 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
    docs/figures/SCREENSHOTS.md (the walk, and the phone's next sitting); the guide's Velocity paragraph, PHONE-PARITY.md, the Features
    sentence and STATE say where conditions are entered; claims backed.
 
+## Entry 421: consistency audit of 2026-10-13 (2026-10-14)
+
+1. **The Mac, two testers.** The platform statement (and the README's copy, written from it), the README's table row, the download page's
+   Mac card and the testing guide say the Apple silicon build has been run on two Macs by two testers, nightly 93 and nightly 190; the
+   Intel build is still untried. Nothing in Quack's reports (entries 417 and 420) says Command shortcuts or pinch zoom work on a Mac, so
+   that sentence stays. `MacBuildsTests` holds the new wording, as it held the old.
+2. **Phase 9** in the README says In progress, names the optimizations made and measured (entries 392, 400, 414, 415) and says the gate
+   is not written; the bullets now agree with the table.
+3. **Features dated by their newest part.** `website/build.py changed()` dates each feature by the newest build whose notes say one of
+   its phrases, or "next" while one is in no published build. The Features page says "Since nightly.113; its newest part is coming in
+   the next build" and, once that build is out, "Since nightly.113, changed in nightly.191"; the home page's card says "Coming in the
+   next build", "Changed in" or "New in", and orders by the newest part. The rule asked for: a feature whose sentence differs from the
+   newest nightly's tag fails the site build unless one of its phrases is still to come, or it carries `"reworded"` naming that nightly
+   for a change of words alone. `tests/python/site-feature-dates-tests.py` holds it, run by website.yml. The pooled set's phrase did not
+   match its own note and is corrected; a phrase of the problem dialog's that no build's notes ever said is removed.
+4. **The PDFs** of the user guide and the testing guide are made again from the guides as they stand after this entry.
+5. **Report a problem** is described one way in the user guide, the testing guide and the support page: a window from Diagnostics in
+   the settings that lists what the report holds, takes a description and a way to reach you, saves a zip where you choose, and sends
+   it only where a report address is set (`ReportWindow`).
+6. **Phone parity:** `target-tabs` says the phone keeps several targets open through Open targets and leaves out only the tab strip and
+   the keyboard; `pool-set` says the checklist also opens the pooled plot.
+7. **Thanks:** Quack's flatbed scans, the upload page's report and the question about a set of three are named beside the printer warning.
+8. **Two README lines:** the phone's list is introduced as since entries 258 and 259; the snap goes to the hole's middle, fitting a
+   circle through the rim where the hole is as light as the paper.
+9. **The donor page is unchanged.** Quack's 2026-10-12 submissions name no sheet design in their file names or records; the one design
+   named, in entry 420, is a 3x3 2 MOA grid, not the page's C bull sheet, so "seen from one range day only" is not shown wrong.
+
+Wording for sections 1, 2 and 5 to 9 by docs-sonnet; section 3's code, its test and the checks by the main model.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

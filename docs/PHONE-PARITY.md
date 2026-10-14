@@ -66,7 +66,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Updates that list what you skipped | `updates` | left out | Google Play updates the phone's application; the desktop's update bar has nothing to do there. The sideloaded GroupLab Dev has its own updater, `android-updates` | left out |
 | GroupLab updates itself on Android | `android-updates` | on the phone | entries 288 and 386: the Android updater, in GroupLab Dev's APK and the plain APK, never in the copy for Google Play | left out |
 | Builds for the Mac | `mac` | left out | a platform, not something a phone can do | left out |
-| Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist: the saved sheets of the set's design shot the same day | on iOS |
+| Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist, which since entry 420 also opens the pooled plot (See the pooled group): the saved sheets of the set's design shot the same day | on iOS |
 | The E bull | `e-bull` | on the phone | | on iOS |
 | The C bull | `c-bull` | on the phone | | on iOS |
 | Large format on a home printer | `large-on-letter` | on the phone | | on a device |
@@ -76,7 +76,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame; on iPhone and iPad the panel sits above the preview, not over it (entry 313 section 2) | on a device |
 | Every picture checked | `picture-check` | on the phone | | on iOS |
 | The 2 MOA sheets | `two-moa` | on the phone | entry 289: in the phone's Targets library with the other built-in sheets | on iOS |
-| Several targets open at once | `target-tabs` | left out | the phone shows one target at a time and moves between them in Sessions; the tabs are for the computer's wide window and keyboard | left out |
+| Several targets open at once | `target-tabs` | left out | the phone keeps several targets open through Open targets (`open-targets-phone`); only the tab strip and the keyboard shortcuts are left out, because they are for the computer's wide window and keyboard | left out |
 | Label targets for a thermal printer | `label-targets` | left out | entry 358: the label targets are in the phone's Targets library and the phone shares any sheet for a label printer's own app (entry 363), but the preview of the dots is on the computer's print panel only, and no platform prints to a label printer by itself yet | left out |
 | Every shot, and which count | `shots-table` | on the phone | entry 280 section 2, Shots A: the Shots page from a result; on the computer, Shots and clicks under the shot table | on iOS |
 | Zero from this group | `zero-from` | on the phone | entry 280 section 2, board ZeroFrom: its own page, and the offset handed to Ballistics; a window on the computer | on iOS |

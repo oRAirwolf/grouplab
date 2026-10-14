@@ -48,10 +48,10 @@ public partial class MacBuildsTests
             return;
         }
 
-        // Entry 166 section 4: the Apple silicon build has been run by one tester on one Mac, and the Intel build by nobody. Each card says
+        // Entry 166 section 4, and entry 421 for the second tester: the Apple silicon build has been run by two testers on two Macs, and the Intel build by nobody. Each card says
         // which, and the Intel one still says untested.
         Assert.Contains("Untested on a real Mac", page, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("Run on one real Mac", page, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Run on two real Macs", page, StringComparison.OrdinalIgnoreCase);
 
         // Entry 147's own instruction: a test fails if the section's macOS wording, or the sentence saying nobody has run it on a Mac,
         // disappears while a macOS asset is still published. The wording is Alan's and is not to be reworded, so it is checked literally
@@ -72,7 +72,7 @@ public partial class MacBuildsTests
 
             // Once on each card: what has been run on a Mac and what has not. A single note somewhere down the page is not the same as the
             // words beside the button.
-            int said = Regex.Matches(built, "Untested on a real Mac|Run on one real Mac", RegexOptions.IgnoreCase).Count;
+            int said = Regex.Matches(built, "Untested on a real Mac|Run on two real Macs", RegexOptions.IgnoreCase).Count;
             Assert.True(said >= assets.Count,
                 $"the page offers {assets.Count} Mac builds and says how far each was tested {said} times. It belongs beside each button.");
         }
@@ -208,7 +208,7 @@ public partial class MacBuildsTests
     private static readonly string[] TheStatement =
     [
         "Windows is the supported platform.",
-        "the Apple silicon build has been run on one Mac.",
+        "the Apple silicon build has been run on two Macs.",
         "The Intel build has never been run on a Mac.",
         "The updater does not install them, and the developer still does not own a Mac.",
         "These builds are an experiment rather than a release.",

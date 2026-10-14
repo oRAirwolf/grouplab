@@ -105,7 +105,7 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 | **[Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe)** | `grouplab-setup-win-x64.exe`, installs into your own user account, no administrator rights, with an entry in Add or remove programs. It keeps itself up to date. |
 | **[Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip)** | `grouplab-win-x64.zip`, unzip it anywhere and run `GroupLab.App.exe`. It tells you when there is a newer build and you download it yourself. |
 | **[Linux tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz)** | `grouplab-linux-x64.tar.gz`, self-contained, built on Ubuntu; nobody uses it day to day. |
-| **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with Apple silicon (M-series). **Run on one real Mac**, by one tester; the Intel build has not been. |
+| **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with Apple silicon (M-series). **Run on two real Macs**, by two testers; the Intel build has not been. |
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
 | **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see On Android, below. |
 | **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. |
@@ -186,7 +186,7 @@ Every build's notes are in [docs/RELEASE-NOTES.md](docs/RELEASE-NOTES.md) and at
 
 **Linux builds are published and are worth trying.** The download is a self-contained 64-bit tarball, so it runs on most desktop distributions without anything else being installed alongside it. The test suite runs on Linux on every build. Hands-on testing has not started yet. Linux can be tested here on virtual machines under VMware Workstation, and there is no bare metal Linux machine, but the real reason is that the application is still under heavy development, with features, layouts, appearance and internal workings changing daily. Testing a moving target on a second platform would mostly produce findings that are obsolete a week later.
 
-**macOS builds are published, and the Apple silicon build has been run on one Mac.** One tester ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch of that unsigned build, and a Terminal command cleared it; builds from nightly 135 on are signed and notarized by Apple. Opening, detecting and analyzing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
+**macOS builds are published, and the Apple silicon build has been run on two Macs.** Two testers have run it. The first ran nightly 93 on a MacBook Pro with an M5 Max, under macOS 27, natively rather than under Rosetta. macOS blocked the first launch of that unsigned build, and a Terminal command cleared it; builds from nightly 135 on are signed and notarized by Apple. Opening, detecting and analyzing the published sample, saving a session, printing a target to PDF, quitting with Command Q and sending the diagnostics report all worked, and text was sharp on the Retina display. The second ran nightly 190 on a Mac with Apple silicon, opened flatbed scans, marked holes with the Impact and Select tools, dropped several scans in at once and pooled sheets in Session records. Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after nightly 94, and neither fix has been checked on a Mac yet. **The Intel build has never been run on a Mac.** The tests run on macOS on every build. These builds are an experiment rather than a release. The updater does not install them, and the developer still does not own a Mac.
 
 ### Minimums
 
@@ -336,7 +336,7 @@ What exists and is tested:
 - a caliber box that finds any of more than six hundred cartridges by name as you type, even written loosely, with a setting for
   whether it lists calibers, cartridges or both
 
-New on the phone in the latest builds, as entries 258 and 259 bring it level with the desktop:
+Since the phone was brought level with the desktop (entries 258 and 259):
 
 - On the phone, the result now opens into every figure the desktop shows, and a tap on a figure's name says what it means.
 - On the phone, Shots Needed to Zero has a page of its own.
@@ -443,7 +443,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Done.** The secondary mode of `DESIGN.md` section 3: any target, including a store-bought one or blank paper, marked by hand on a photograph against a reference length or rectangle for scale.
 - **Done.** Sighters found and matched and then set aside unless a person asks for them, and analyzed as a group of their own when they do, never pooled with the scoring shots.
 - **Done.** The caliber entered as a cartridge name, such as 6.5 Creedmoor, or as the bullet's diameter in inches or in millimeters marked mm. A name is offered only where two published sources agree on its diameter (entry 163); a designation typed as a number, such as .38 or 7.62 mm, is still refused, because a caliber's name is usually not its diameter.
-- **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the dark centroid within a caliber-sized reach, with no definition needed.
+- **Done.** Assisted placement in that mode, which is the snap: a rough click lands on the hole's middle within a caliber-sized reach, with no definition needed. Where the hole is as light as the paper, as on a flatbed with a white lid, the snap fits a circle through the rim.
 - **Done.** Move, delete, reassign, leave a shot out, delete a mark as not a hole, and undo throughout.
 - **Done.** The concept screen's appearance: the tool strip as icons, each named with its key, the review's keys as keycaps, the breadcrumb header with its review count, the left rail, the document as a paper sheet on dark chrome, and the accents applied throughout, teal for what the software found, amber for what needs a person.
 - **Done.** A layout and readability pass on both screens: five text styles, one row shape for every figure, the reasoning behind each figure and judgment one click away under "why", a header on one line with the document's actions in a menu, the view controls over the canvas, and the units, theme and log on a settings screen of their own.
@@ -490,9 +490,9 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Submission to the App Store waits for Alan.
 
 **Phase 9. Performance.**
-- **Not started.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. It starts only when the application works as intended, because a fast wrong answer is worthless.
+- **In progress.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. Each change is held to giving the same results as before, because a fast wrong answer is worthless.
 - **Built, not proven.** `grouplab bench`, which measures GroupLab against material it generates itself and needs nothing from anybody, and the interface benchmark that walks every screen and times every control from the click to the moment nothing further is coming. [docs/PERFORMANCE.md](docs/PERFORMANCE.md) holds the first record, the method, and the wasteful things found while measuring.
-- **Not started.** The gate, which is written from that baseline rather than guessed, and the optimizations themselves. Nothing has been optimized.
+- **In progress.** Some optimizations have been made and measured: finding the holes on a scan, the phone's reading of a photograph, a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner. **Not done:** the gate, which is written from that baseline rather than guessed.
 
 </details>
 
@@ -664,7 +664,7 @@ To the people who have tested GroupLab and said what they found, by the names th
 - **Unholy** scanned a GroupLab sheet he shot on 2026-09-23, which showed that naming the right caliber could make the reading worse, and then went through the application and wrote down what got in his way: the caliber label, figures at 100 yards, the zeroing grid, setting the scale again, and the caliber box.
 - **Jylee** suggested Shots Needed to Zero, and helped choose the C3 zeroing grid with Unholy.
 - **Fenix** ran GroupLab on a Mac with Apple silicon and found that Command Z did nothing and that there was no pinch zoom.
-- **Quack**, on the GroupLab Discord, found that a red warning about the page being cut off stayed on the Targets screen after switching from a thermal printer back to a sheet printer.
+- **Quack**, on the GroupLab Discord, found that a red warning about the page being cut off stayed on the Targets screen after switching from a thermal printer back to a sheet printer. Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the rim, a report on the upload page led to its progress bar and to sets of up to 30 photographs, and a question about reading a set of three sheets as one led to the pooled set in its own tab.
 
 ## License
 

@@ -84,6 +84,9 @@ jobs:
       - name: A check holds back only what it is about (entry 387)
         run: python tests/python/site-holdback-tests.py
 
+      - name: A feature widened on main says its newest part is coming (entry 421)
+        run: python tests/python/site-feature-dates-tests.py
+
       - name: Build the site
         # Entry 387: a page a check holds back keeps the copy grouplab.org serves now; every held page is listed in the summary.
         env:

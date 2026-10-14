@@ -320,7 +320,7 @@
       "since": "next",
       "note": [
         "Opening a picture of a target GroupLab did not print is no longer treated as an error",
-        "When a GroupLab sheet's codes cannot be read", "corner squares but its codes cannot be read",
+        "corner squares but its codes cannot be read",
         "Try again, reading harder",
         "Saying a picture is not a GroupLab sheet",
         "a problem that stops your work"
@@ -1134,7 +1134,7 @@
       "since": "next",
       "note": [
         "pool",
-        "A pooled set now opens on the analysis screen"
+        "now opens your pooled set on the analysis screen in its own tab"
       ],
       "tour": "sessions",
       "guide": "10-comparing-several-sheets-at-once",

@@ -979,7 +979,7 @@ def page_download() -> str:
     mac = section("mac", "Mac", newest(
         "macOS, Apple silicon", "grouplab-macos-arm64.tar.gz",
         "For any Mac with Apple silicon. Self-contained, built on macOS, and tested by the suite on every change.",
-        ["<strong>Run on one real Mac.</strong> One tester, an M5 Max, nightly 93",
+        ["<strong>Run on two real Macs.</strong> Two testers, nightlies 93 and 190",
          "Signed, notarized and stapled: opens like any other Mac application",
          "Any Mac with Apple silicon (M-series). Not an Intel Mac"],
         "Download for Apple silicon") + """<div class="panel pad dl-none">
@@ -1388,7 +1388,7 @@ def page_support() -> str:
 </section>
 <section class="wrap grid-3">
 <div class="panel pad stack tight"><span class="mono amber">01</span><h2 class="h3">Check what is not done yet</h2><p>Some things are known to be missing or unproven. The testing guide lists them in one short section.</p><a href="/guides/testing-guide/#what-is-not-done-yet">What is not done yet</a></div>
-<div class="panel pad stack tight"><span class="mono amber">02</span><h2 class="h3">Make a report package</h2><p>In GroupLab, open the settings from the gear at the bottom left and choose <strong>Report a problem</strong>. It writes a zip with the log and what GroupLab was doing: no location data, and no images unless you add them.</p></div>
+<div class="panel pad stack tight"><span class="mono amber">02</span><h2 class="h3">Make a report package</h2><p>In GroupLab, open the settings from the gear at the bottom left and choose <strong>Report a problem</strong> under Diagnostics. A window lists what the report holds; press <strong>Save only</strong> to write it as a zip with the log and the computer's details: no location data and no photographs.</p></div>
 <div class="panel pad stack tight"><span class="mono amber">03</span><h2 class="h3">Send it</h2><p>Open an issue on GitHub, attach the zip, and add a line about what you were doing. Copy the build line from the top of the settings screen into it.</p><a href="{GITHUB}/issues/new">Open an issue on GitHub</a></div>
 </section>
 <section class="wrap section-sm grid-2">
@@ -2299,10 +2299,41 @@ def arrived(f: dict) -> str | None:
     return min(found, key=build_number) if found else None
 
 
+def changed(f: dict) -> str | None:
+    """The build a feature's newest part arrived in, or "next" while one of its phrases is in no published build's notes yet (entry
+    421: a sentence widened on main read as if the build it first arrived in already did it)."""
+    sections = release_sections()
+    builds = [min((v for v, s in sections.items() if n in s), key=build_number, default=None) for n in notes_of(f)]
+    if arrived(f) is None:
+        return None
+    if None in builds:
+        return "next"
+    return max(builds + [arrived(f)], key=build_number)
+
+
+def newest(f: dict) -> int:
+    last = changed(f)
+    return 10**6 if last in (None, "next") else build_number(last)
+
+
 def spotlight(count: int = 3) -> list[dict]:
-    """The newest features, entry 242 section 2.4: by the build they arrived in, and within a build as the file lists them."""
+    """The newest features, entry 242 section 2.4: by the build their newest part arrived in (entry 421), and within a build as the file
+    lists them."""
     items = features()["features"]
-    return sorted(items, key=lambda f: -(build_number(arrived(f)) if arrived(f) else 10**6))[:count]
+    return sorted(items, key=lambda f: -newest(f))[:count]
+
+
+def published_sentences() -> dict[str, str]:
+    """Each feature's sentence as the newest published nightly had it, from that nightly's tag; empty where the tag cannot be read."""
+    versions = sorted(release_sections(), key=build_number)
+    if not versions:
+        return {}
+    try:
+        out = subprocess.run(["git", "show", f"v{versions[-1]}:website/features.json"], cwd=REPO, capture_output=True, text=True,
+                             encoding="utf-8", timeout=30)
+        return {f["key"]: f["sentence"] for f in json.loads(out.stdout)["features"]} if out.returncode == 0 else {}
+    except (OSError, subprocess.SubprocessError, ValueError, KeyError):
+        return {}
 
 
 def feature_problems() -> list[str]:
@@ -2315,6 +2346,7 @@ def feature_problems() -> list[str]:
     articles = {m["slug"] for m in research_articles()} if "research_articles" in globals() else set()
     guide = need(REPO / "docs" / "USER-GUIDE.md").read_text(encoding="utf-8")
     anchors = {slug(h) for h in re.findall(r"^## (.+)$", guide, re.M)}
+    published = published_sentences()
     keys = set()
     for f in data["features"]:
         where = f"website/features.json: {f.get('key')}"
@@ -2357,6 +2389,13 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: the user guide has no section {f['guide']!r}")
         if f.get("article") and articles and f["article"] not in articles:
             found.append(f"{where}: no published article {f['article']!r}")
+        # Entry 421: a sentence changed since the newest nightly describes something that build does not do, unless a note of the
+        # change is still to come; "reworded" names the newest nightly when only the words changed.
+        newest_build = max(sections, key=build_number, default="")
+        before = published.get(f["key"])
+        if before is not None and before != f["sentence"] and changed(f) != "next" and f.get("reworded") != newest_build:
+            found.append(f"{where}: its sentence changed since {newest_build} and none of its notes is still to come; add the change's "
+                         f"note phrase, or \"reworded\": \"{newest_build}\" if only the words changed")
     # From checkedFrom on, every note a reader will notice belongs to a feature or is said not to be one.
     claimed = [n for f in data["features"] for n in notes_of(f)] + data.get("notFeatures", [])
     for version, section in sections.items():
@@ -2520,12 +2559,25 @@ def sheet_pictures(f: dict) -> str:
 
 
 def since_words(f: dict) -> str:
-    version = arrived(f)
-    return "Since " + version.replace("0.2.0-", "") if version else "Coming in the next build"
+    version, last = arrived(f), changed(f)
+    if not version:
+        return "Coming in the next build"
+    words = "Since " + version.replace("0.2.0-", "")
+    if last == "next":
+        return words + "; its newest part is coming in the next build"
+    return words + (", changed in " + last.replace("0.2.0-", "") if build_number(last) > build_number(version) else "")
+
+
+def spotlight_words(f: dict) -> str:
+    """Entry 421: the home page's card names the build its newest part arrived in."""
+    version, last = arrived(f), changed(f)
+    if not version or last == "next":
+        return "Coming in the next build"
+    return ("Changed in " if build_number(last) > build_number(version) else "New in ") + last.replace("0.2.0-", "")
 
 
 def spotlight_section(heading: str) -> str:
-    cards = "".join(f'<a class="panel pad stack tight plain spot" href="{FEATURES_PATH}#{f["key"]}"><p class="eyebrow">{esc(since_words(f).replace("Since", "New in"))}</p>'
+    cards = "".join(f'<a class="panel pad stack tight plain spot" href="{FEATURES_PATH}#{f["key"]}"><p class="eyebrow">{esc(spotlight_words(f))}</p>'
                     f'<h3 class="h4">{esc(f["name"])}</h3><p class="small">{esc(f["sentence"])}</p></a>' for f in spotlight())
     return f'<section class="wrap stack"><h2>{esc(heading)}</h2><div class="grid-3">{cards}</div></section>'
 

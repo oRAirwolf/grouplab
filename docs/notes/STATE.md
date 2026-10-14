@@ -9,17 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-13, entry 416 (before it: entries 415, 420, 419, 418 and 417).
+**Last rewritten:** 2026-10-14, entry 421 (before it: entries 416, 415, 420, 419, 418 and 417).
 
 ---
 
 ## In flight
 
-- **The queue of 2026-10-13 is done** (Alan: 417, 418, 419, 420, 415, 416; to 70% of the week). 417: a flatbed scan's light-middled
-  holes found and centred, the snap to their middle, drags with a bull chosen. 418: the upload page sends a set of 30 with progress (section
-  1 waits on request 99). 419: the Discord worker, waiting on request 98. 420: a pooled set opens in its own tab; drops open a tab each; a
-  picture accepted again updates its record. 415: the iPhone follows Dynamic Type; 6 to 4 false marks; codes read sooner (3.2 not done).
-  416: conditions on the day under Velocity and the vertical, both systems; a second Accept no longer loses a session's readings.
+- **Entry 421, the consistency audit of 2026-10-13, is done**: two Mac testers, Phase 9 in progress, Report a problem one way, the
+  parity rows, Quack's thanks, the PDFs, and the Features page dating a feature by its newest part. Nightly 191 was refused twice for
+  'centres' in entry 417's note; the corrected note is in docs/release-note-corrections.json (3b03ab64).
+- **The queue of 2026-10-13 is done** (417, 418, 419, 420, 415, 416); section 1 of 418 waits on request 99, 419 on request 98,
+  415 section 3.2 not done. The detail is in PHASE1-RESULTS.md.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
@@ -81,14 +81,16 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 422.
 
 ## Things that would surprise somebody who was not here yesterday
+
+- **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
+  come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **ios-app.yml's "The iPad and landscape" step fails on every run since 2026-10-11, and "Real taps" on some**; not from entry 415.
-
 - **Text sizes go through `TextSize.Of`** (entry 411): a size set in code on a phone screen that skips it does not follow Android's
   text size. The desktop and the iPhone keep the sizes as they are.
 - **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
