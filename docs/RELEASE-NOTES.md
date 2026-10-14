@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.192
+
+**2026-10-14**, commit `80f49fd`. Nightly.
+
+**What you will notice**
+
+- A click on a hole or a bull on the picture now brings its place in the side panel fully into view and flashes it twice, the line under the picture says what the click did, and on the phone a bull chosen in Bull by bull brings the picture into view the same way; thank you to Jylee for the idea.
+
+**Under the hood**
+
+- Nothing you can see changes: a description inside the part that reads a sheet's codes is put right, so the Android build completes again.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.192)
+
+---
+
 ## 0.2.0-nightly.191
 
 **2026-10-14**, commit `3b03ab6`. Nightly.
