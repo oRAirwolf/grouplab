@@ -143,7 +143,13 @@ public sealed partial class MainWindow
         };
         ToolTip.SetTip(add, TargetTabWords.Add);
         AutomationProperties.SetName(add, TargetTabWords.Add);
-        add.Click += (_, _) => AddTarget();
+        add.Click += (_, _) =>
+        {
+            if (!SetIsReading())
+            {
+                AddTarget();
+            }
+        };
         var row = new StackPanel { Orientation = Orientation.Horizontal, Children = { tabRow, add } };
         AddHandler(KeyDownEvent, OnTargetKey, RoutingStrategies.Tunnel);
         ShowTabs();
@@ -158,7 +164,7 @@ public sealed partial class MainWindow
     /// <summary>Ctrl+Tab goes to the next tab and Ctrl+Shift+Tab to the one before, round from the end to the start.</summary>
     private void OnTargetKey(object? sender, KeyEventArgs e)
     {
-        if (CommandKey.TabSwitch(e) is not { } backwards || targets.Count < 2 || ProblemOpen)
+        if (CommandKey.TabSwitch(e) is not { } backwards || targets.Count < 2 || ProblemOpen || SetIsReading())
         {
             return;
         }
@@ -195,7 +201,13 @@ public sealed partial class MainWindow
             CornerRadius = new CornerRadius(Tokens.ButtonRadius.TopLeft, Tokens.ButtonRadius.TopRight, 0, 0),
             Margin = new Thickness(0, 0, 0, -1),
         };
-        tab.Click += (_, _) => ShowTarget(target);
+        tab.Click += (_, _) =>
+        {
+            if (!SetIsReading())
+            {
+                ShowTarget(target);
+            }
+        };
         var close = new Button
         {
             Content = Icons.Draw(Icons.Close, 10),
@@ -206,7 +218,13 @@ public sealed partial class MainWindow
         };
         ToolTip.SetTip(close, TargetTabWords.Close);
         AutomationProperties.SetName(close, TargetTabWords.Close);
-        close.Click += (_, _) => CloseTarget(target);
+        close.Click += (_, _) =>
+        {
+            if (!SetIsReading())
+            {
+                CloseTarget(target);
+            }
+        };
         tabControls[target] = (tab, dot, name, state);
         return new StackPanel { Orientation = Orientation.Horizontal, Children = { tab, close } };
     }
@@ -234,7 +252,7 @@ public sealed partial class MainWindow
     {
         var current = targets.Current;
         var state = session.State;
-        current.Name = state.SheetLabel ?? (state.ImagePath is { } path ? Path.GetFileName(path) : plotDefinition?.Name);
+        current.Name = current.Set?.Name ?? state.SheetLabel ?? (state.ImagePath is { } path ? Path.GetFileName(path) : plotDefinition?.Name);
         current.Analysing = analysing;
         current.Unsaved = HasUnsavedWork;
         if (rebuild)
@@ -252,8 +270,16 @@ public sealed partial class MainWindow
             return null;
         }
 
+        // Entry 423 section 0: a new tab that could not be shown, because a question was open in the middle of the window, was kept anyway,
+        // and the picture meant for it opened in the tab showing instead, over the target already there. A tab that cannot be shown goes.
         var tab = targets.Add();
-        ShowTarget(tab);
+        if (!ShowTarget(tab))
+        {
+            targets.Close(tab);
+            ShowTabs();
+            return null;
+        }
+
         DiagnosticLog.Info("target.tab.add", ("tabs", targets.Count));
         if (choose)
         {
@@ -316,6 +342,7 @@ public sealed partial class MainWindow
             }
 
             tab.Parked = null;
+            ForgetSetMembers(tab);
             targets.Close(tab);
             DiagnosticLog.Info("target.tab.close", ("tabs", targets.Count));
             ShowTabs();
@@ -349,6 +376,7 @@ public sealed partial class MainWindow
     {
         LeavePicture(closing: false);
         saveSoon?.Stop();
+        ForgetSetMembers(targets.Current);
         var next = targets.Close(targets.Current);
         canvas.SetImage(null, null);
         DiagnosticLog.Info("target.tab.close", ("tabs", targets.Count));
@@ -373,12 +401,30 @@ public sealed partial class MainWindow
     /// <summary>The target showing is parked with its tab.</summary>
     private void ParkCurrent()
     {
+        // The save waiting is done first, so the tab left says Saved.
+        FlushWaitingSave();
+        UpdateCurrentTab(rebuild: false);
+        targets.Current.Parked = TakeParked();
+    }
+
+    /// <summary>A set's parked pictures go with its tab.</summary>
+    private static void ForgetSetMembers(OpenTarget tab)
+    {
+        foreach (var member in tab.Set?.Members ?? [])
+        {
+            (member.Parked as ParkedTarget)?.View.Picture?.Dispose();
+            member.Parked = null;
+        }
+    }
+
+    /// <summary>Everything the window holds for the target showing, taken to be parked: with its tab, or entry 423, with its set.</summary>
+    private ParkedTarget TakeParked()
+    {
         FlushWaitingSave();
         leavingAsk.IsVisible = false;
         afterLeaving = null;
         discardConfirm.IsVisible = false;
-        UpdateCurrentTab(rebuild: false);
-        targets.Current.Parked = new ParkedTarget
+        return new ParkedTarget
         {
             Session = session,
             View = canvas.TakeView(),
@@ -424,6 +470,12 @@ public sealed partial class MainWindow
         targets.Show(tab);
         var p = tab.Parked as ParkedTarget ?? ParkedTarget.Fresh();
         tab.Parked = null;
+        BindParked(p);
+    }
+
+    /// <summary>Binds parked state into the window, a tab's or entry 423's one picture of a set, exactly as it was parked.</summary>
+    private void BindParked(ParkedTarget p)
+    {
         bindingTarget = true;
         try
         {

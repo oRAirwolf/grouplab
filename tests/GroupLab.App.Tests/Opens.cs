@@ -14,7 +14,8 @@ internal static class Opens
     public static bool OpenFinished(this MainWindow window)
     {
         var clock = Stopwatch.StartNew();
-        while (!window.Opening.IsCompleted && clock.Elapsed < TimeSpan.FromSeconds(120))
+        // Entry 423: a drop finishes after its picture's open, when a picture that would not open takes its new tab away again.
+        while (!(window.Opening.IsCompleted && window.Dropping.IsCompleted) && clock.Elapsed < TimeSpan.FromSeconds(120))
         {
             Dispatcher.UIThread.RunJobs();
             Thread.Sleep(5);

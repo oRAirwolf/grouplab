@@ -642,6 +642,57 @@ Wording for sections 1, 2 and 5 to 9 by docs-sonnet; section 3's code, its test 
 5. The user guide's Shots paragraph, the tour's Shots list and the Features page's Shots list say it; the guide's PDFs are made again.
    For Jylee's line is in for-alan.md. A click in the Shots list itself does not flash, because it does not move the panel.
 
+## Entry 423: several pictures dropped together open in ONE tab, pooled without being asked (Alan, Quack, Jylee) (2026-10-14)
+
+0. **The bug Alan hit.** Found by reading the code on main and nightly 190 (the planning session says he was on nightly 192).
+   **Nightly 190 and earlier:** a drop always opened only the first picture, in the tab dropped on (asking first only where there was
+   unsaved work), and said the rest were not opened; so "only opens 1 image and overwrites the session" was always true there.
+   **Nightlies 191 and 192:** entry 420's drop opened the first in the tab dropped on, then made a tab for each of the rest; but
+   `AddTarget` ignored `ShowTarget` refusing, which it does while a question is open in the middle of the window (a scan whose codes do
+   not read asks "Which target is this?"), so the tab was kept, never shown, and each later picture opened over the same tab. Fixed:
+   a tab that cannot be shown goes again and the drop says so; and a drop or paste onto a tab holding a target (a picture, a marking, a
+   saved session, a pooled set) never replaces it, it opens in a new tab beside it (`TabHoldsATarget`); only an empty tab is filled. A
+   picture that then fails to open closes the empty tab again. **No session record was overwritten by any of these builds:** opening a
+   picture has started a record of its own since entry 243 (nightly 113); before nightly 113 a dropped picture accepted over a saved one
+   saved over its record, and nothing on this machine can bring such a record back (the pre-v2 copy of `grouplab.db` was made later, in
+   entry 407). Said in for-alan.md. Tests: `ADropOntoASavedSheetLeavesItAndItsRecord` (one and three dropped; the tab, its record's
+   marking and the record count unchanged) and `ANewTabThatCannotBeShownIsNotKept`.
+1. **A set opens in one tab** (`MainWindow.SetTab.cs`, `SetTab.cs`). Two or more pictures dropped or pasted together have their codes read
+   first, one after another off the window's thread (never two at once, entry 414), with "Reading the codes of picture 2 of 3".
+   `DropSorting.Of` folds the same picture under two names into one and puts the sheets of each set together. A set's tab is named for
+   it ("GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets"); its sheets are opened and detected in turn inside the tab, the status
+   saying "Reading sheet 2 of 3." before each stage's words; each is saved as its own session record; then the tab shows the pool exactly
+   as Pool the chosen does (every shot about its own bull, a shade and key row per sheet, the figures, the Shots list). No question. The
+   pool is worked out afresh from the sheets each time it is shown. `ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen` holds the two
+   routes to the same shots, CEP 50 (to 1e-9) and mean radius, on three rendered sheets of the 2 MOA set.
+2. **Each sheet checked alone.** A **Check one sheet** menu on a set's analysis screen lists every sheet (its file, its shots, "not
+   counted" where it is out) and opens one alone, its own picture, marking and record, so Fix holes, the bull lines and Accept act on it;
+   **Back to the set** shows the pool with the change in it (saved by itself as it is left, or asked about under saving with a button).
+   Tapping a key row still shows a sheet's shots alone. The layout choice, the menu against a row of sheet switches above the picture,
+   is a DESIGN NEEDED line in for-alan.md. Test: `OneSheetAloneCanBeCheckedAndTheWayBackShowsThePool`. Found on the way: the notice
+   "This looks like another copy of a sheet you have analyzed before" fired for the second sheet of any set, because the sheets of a set
+   share a design; it now counts only earlier records of the same sheet of the set (`SessionStore.MarkingsUsing`).
+3. **Everything else.** Two sets in one drop: a tab per set, a tab of its own for a picture alone, and one status line saying what went
+   where (`TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn`). A missing sheet is named ("2 is still missing") and a later drop onto the
+   set's tab joins it (`AMissingSheetIsNamedAndADropOntoTheTabAddsIt`). The same sheet in two different pictures: neither counts and a
+   centered question asks which does, "Count first-0.png" or "Count second-0.png"; an identical picture twice is one
+   (`TheSameSheetInTwoPicturesIsAskedAboutAndAnIdenticalPictureIsOne`). Pictures with no codes: "Pool these 3 pictures as one group?",
+   **Pool them in one tab** the default and **One tab each**; pooled, they are read without detection (it cannot read them) and the pool
+   names each picture still without a scale (`PicturesWithNoCodesAskOnceAndFollowTheAnswer`, both answers; `SetPool.CompositeOfPictures`).
+   One picture dropped on an empty tab behaves as before. Not covered by the entry and asked as question 98: several pictures of one
+   single-page design (each opens its own tab meanwhile).
+4. **Read these as one set is gone**, with what kept it (`DroppedSetSessions`, the dropped-together bookkeeping); its test went with it,
+   and `DropAndPasteTests` now hold the new rule. The user guide's section 10 and phone paragraph, the Features page's Pool the sheets of a
+   set (its own picture now, `set-tab`, the 2 MOA set's three sheets dropped together) and Open by dropping or pasting, the tour's set
+   text and the phone parity row say it. The tour's screens show no drop of several, so no tour picture changed.
+5. **The phone.** Its pickers chose one picture at a time on Android (the photo picker and From another app) and on iPhone and iPad
+   (Photos and Files); only sharing could hand over several. All four now take several (20 at most). Pictures chosen or shared together are
+   read and saved in turn as before; where every one is a sheet of one set, the set's checklist opens with the pooled group showing
+   (`SetPage.OneSet`, `Entry423PhoneTests`); otherwise the last one's result is shown, as before. **Not done on the phone:** section 3's
+   other cases (a drop of two sets, a sheet twice, pictures with no codes) keep the phone's old behaviour. The iPhone picker change is
+   proved only by ios-app.yml's build.
+6. Tests above; the Release-note thanks Quack and Jylee; their lines are in for-alan.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -130,6 +130,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `sessions-light-1400x900.png` | Alan's own scans, entry 171 |
 | `sessions-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `sessions-light-2560x1440.png` | Alan's own scans, entry 171 |
+| `set-tab-dark-1280x720.png` | built-in library sheet |
+| `set-tab-dark-1400x900.png` | built-in library sheet |
+| `set-tab-dark-1920x1080.png` | built-in library sheet |
+| `set-tab-dark-2560x1440.png` | built-in library sheet |
+| `set-tab-light-1280x720.png` | built-in library sheet |
+| `set-tab-light-1400x900.png` | built-in library sheet |
+| `set-tab-light-1920x1080.png` | built-in library sheet |
+| `set-tab-light-2560x1440.png` | built-in library sheet |
 | `settings-dark-1280x720.png` | no sheet at all |
 | `settings-dark-1400x900.png` | Entry109Tests synthetic sheet |
 | `settings-dark-1920x1080.png` | Entry109Tests synthetic sheet |

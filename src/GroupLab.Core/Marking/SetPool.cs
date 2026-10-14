@@ -51,7 +51,31 @@ public static class SetPool
         ArgumentNullException.ThrowIfNull(definition);
         ArgumentNullException.ThrowIfNull(sheets);
         var once = sheets.Where(s => s.SetSheet is not null && s.Scale is not null).GroupBy(s => s.SetSheet!.Value).OrderBy(g => g.Key).Select(g => g.First()).ToList();
-        double across = definition.Page.Width + SheetGap;
+        int size = definition.Tiling is { } set ? set.Cols * set.Rows : 1;
+        return Composite(definition.Page.Width + SheetGap, once,
+            string.Create(CultureInfo.InvariantCulture, $"{once.Count} sheet{(once.Count == 1 ? "" : "s")} of {definition.Name} pooled, each shot about its own bull with its own sheet's scale"),
+            string.Create(CultureInfo.InvariantCulture, $"{definition.Name}, {once.Count} of {size} sheets pooled"));
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 423 section 3: pictures with no codes to say what they are, a store-bought target or an untagged
+    /// photograph, pooled as one group because the person said so. Each counts as a sheet of its own in the order given, with its own scale;
+    /// a picture with no scale yet adds nothing until it has one.
+    /// </summary>
+    public static MarkingState CompositeOfPictures(IReadOnlyList<MarkingState> pictures)
+    {
+        ArgumentNullException.ThrowIfNull(pictures);
+        var numbered = pictures.Select((p, i) => p with { SetSheet = i }).Where(p => p.Scale is not null).ToList();
+        return Composite(PictureGap, numbered,
+            string.Create(CultureInfo.InvariantCulture, $"{numbered.Count} of {pictures.Count} pictures pooled, each shot about its own aim point with its own picture's scale"),
+            string.Create(CultureInfo.InvariantCulture, $"{pictures.Count} pictures pooled"));
+    }
+
+    /// <summary>How far apart pictures with no page size are laid, page dmm: ten feet, wider than any target photographed whole.</summary>
+    private const double PictureGap = 120 * 254;
+
+    private static MarkingState Composite(double across, IReadOnlyList<MarkingState> once, string summary, string label)
+    {
         var bulls = ImmutableList.CreateBuilder<BullAim>();
         var shots = ImmutableList.CreateBuilder<MarkedShot>();
         int next = 1;
@@ -82,12 +106,10 @@ public static class SetPool
         // The sheets measured in real inches stay real; one that was not makes the whole set sheet inches, as a sheet's own figures say.
         bool real = once.Count > 0 && once.All(s => s.Scale is SheetReference { RealInches: true });
         var identity = new HomographyMapping(new Homography([1, 0, 0, 0, 1, 0, 0, 0, 1]));
-        string summary = string.Create(CultureInfo.InvariantCulture, $"{once.Count} sheet{(once.Count == 1 ? "" : "s")} of {definition.Name} pooled, each shot about its own bull with its own sheet's scale");
         T? Same<T>(Func<MarkingState, T?> of) => once.Select(of).Distinct().ToList() is [var only] ? only : default;
         return new MarkingState(null, new SheetReference(identity, summary) { PrintScale = real ? 1 : null }, null, bulls.ToImmutable(), shots.ToImmutable(), next,
             summary, Calibre: once.Select(s => s.Calibre).FirstOrDefault(c => c is not null), ShotDistanceInches: Same(s => s.ShotDistanceInches),
-            Rifle: Same(s => s.Rifle), Barrel: Same(s => s.Barrel), Load: Same(s => s.Load),
-            SheetLabel: string.Create(CultureInfo.InvariantCulture, $"{definition.Name}, {once.Count} of {(definition.Tiling is { } set ? set.Cols * set.Rows : 1)} sheets pooled"));
+            Rifle: Same(s => s.Rifle), Barrel: Same(s => s.Barrel), Load: Same(s => s.Load), SheetLabel: label);
     }
 
     /// <summary>Entry 420: which sheet of the set a bull of <see cref="Composite"/>'s marking is on, from its index, counting from 0.</summary>

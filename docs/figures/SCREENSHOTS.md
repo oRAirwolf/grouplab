@@ -110,14 +110,13 @@ sheets, MOA and mil at 100 yd and 100 m, credited to Alan with Jylee and Unholy)
 the four Letter sheets), the six-bull label on 4x6 as it prints and as a thermal printer's dots (`sheet-x6-4x6`, `sheet-x6-4x6-thermal`), Shots Needed to Zero (credited to Jylee), Velocity and the vertical (the block and the band, entry 323), Ballistics and hit chances (the Hit probability view), Made for
 your optic, the Targets screen, which bull each shot belongs to (`bull-lines`), how you shot the sheet (`groups`), the Shots list
 (`shots-open`), chronograph readings on the analysis (`readings-here`), paper and backing (`paper-fold`), barrels under their rifle (`equipment`), all entry 407, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
-read off a target, and the three sharing choices (Settings, where they are made).
+read off a target, the three sharing choices (Settings, where they are made), and a set's tab after the 2 MOA set's three sheets were dropped together (`set-tab`, entry 423).
 
 **Gaps: still a general screen**, each to get a crop of the view it names:
 
 | Entry | Its picture now | What it should show |
 |---|---|---|
 | Conditions on the day (entry 416) | the analysis open | Velocity and the vertical with Conditions on the day open, desktop; the phone's sheet at the next sitting |
-| Pool the sheets of a set (entry 420) | Session records | the pooled set open in its own tab: every shot about its own bull, each sheet in its shade, the key |
 | A GroupLab sheet reads itself | the marking screen | a sheet's codes and markers found |
 | Every hole found | the marking screen | a few holes close up with their rings |
 | The bulls you aimed at | the marking screen | the bull picker with rows chosen |
@@ -129,7 +128,6 @@ read off a target, and the three sharing choices (Settings, where they are made)
 | Real inches from a scan | the analysis | the scale line saying the print's own size |
 | Photographs at an angle | the marking screen | the angle and its limit named |
 | Words explained where they appear | the analysis | a word's explanation open |
-| Pool the sheets of a set | Session records | a pooled set with a missing sheet named |
 | Tap a number to switch units | the analysis, with the one-time hint | a figure switched, with the note at the bottom |
 | Every shot, and which count | the analysis, with Shots and clicks | the Shots window with a shot left out |
 | Zero from this group | the analysis, with its button | the Zero from this group window |

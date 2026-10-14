@@ -132,7 +132,6 @@ public sealed partial class MainWindow : Window
     private readonly StackPanel analysisActions = new() { Orientation = Orientation.Horizontal, IsVisible = false };
 
     // Entry 420 section 2: offered on the analysis screen when the pictures dropped together are sheets of one set.
-    private Button readAsOneSet = new();
 
     private readonly Button acceptButton = new() { Content = "Accept and analyze", Margin = new Thickness(2), Classes = { AppStyles.Primary } };
 
@@ -256,7 +255,7 @@ public sealed partial class MainWindow : Window
     /// Entry 229 section 1: three sheets printed from one PDF carry one printed code, which names the design and not the sheet. When the
     /// sessions already hold one from this design, the person is told in plain words, and this sheet is kept as its own session as always.
     /// </summary>
-    private string? CopyOfADesign(string? definitionId)
+    private string? CopyOfADesign(string? definitionId, int? setSheet)
     {
         if (definitionId is null || sessions is null)
         {
@@ -266,9 +265,12 @@ public sealed partial class MainWindow : Window
         int earlier;
         try
         {
-            earlier = sessions.CountUsing(definitionId);
+            // Entry 423: the sheets of a set share one design, so sheet 2 is not a copy of sheet 1; only the same sheet of the set counts.
+            earlier = setSheet is { } k
+                ? sessions.MarkingsUsing(definitionId).Count(m => MarkingFile.Read(m).State.SetSheet == k)
+                : sessions.CountUsing(definitionId);
         }
-        catch (Microsoft.Data.Sqlite.SqliteException)
+        catch (Exception e) when (e is Microsoft.Data.Sqlite.SqliteException or MarkingFileException)
         {
             return null;
         }
@@ -945,11 +947,8 @@ public sealed partial class MainWindow : Window
         {
             toggle.Click += (_, _) => SetShowWork(!workShown);
         }
-        // Entry 420 section 2: pictures dropped together that are sheets of one set, once two or more are accepted, read as one set.
-        readAsOneSet = Button("Read these as one set", ReadDroppedAsOneSet);
-        readAsOneSet.IsVisible = false;
-        ToolTip.SetTip(readAsOneSet, "Pool the sheets of one set you dropped together, as Session records' Pool the chosen does");
-        analysisActions.Children.Add(readAsOneSet);
+        // Entry 423 section 2: in a set's tab, one sheet opened alone to check and fix, and the way back to the pool.
+        analysisActions.Children.Add(BuildSetSheetsButton());
         // Entry 169 section 4.2: the figures in a window of their own, for a second monitor.
         var ownWindow = Button("Own window", PopOutFigures);
         ToolTip.SetTip(ownWindow, "Open the figures in a window of their own, for a second monitor");
@@ -2251,7 +2250,7 @@ public sealed partial class MainWindow : Window
         AddStage(record);
         if (ReferenceEquals(detection, run) && GroupLab.Core.Trace.StageWords.After(record.Stage) is { } next)
         {
-            status.Text = next;
+            status.Text = readingWords + next;
         }
     });
 
@@ -2490,7 +2489,7 @@ public sealed partial class MainWindow : Window
         registrationResidual = result.Measurement.Registration?.RmsResidual / 254;
         session.LoadDetections(result.Scale, result.Bulls, result.Detections, result.Assignment, result.Rejected ?? [], result.Summary, result.Detection, result.Capture, result.SetSheet);
         RememberDetected();
-        CopyOfADesignSeenBefore = CopyOfADesign(result.Definition?.Id);
+        CopyOfADesignSeenBefore = CopyOfADesign(result.Definition?.Id, result.SetSheet);
 
         // Entry 163 section 1: detection used to switch to the select tool, which is how a first user found a drag doing nothing useful.
         // The default tool now pans and selects both, so the tool the person chose stays chosen.
@@ -3299,7 +3298,7 @@ public sealed partial class MainWindow : Window
         loadLines.Children.Add(Readout("Caliber", state.Calibre is null ? "not set"
             : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true));
 
-        readAsOneSet.IsVisible = DroppedSetSessions().Count >= 2;
+        ShowSetSheetsButton();
 
         // The plot: scoring shots only, each from its own bull; excluded ones kept and drawn hollow, marks set to not a shot absent.
         // Entry 219 item A4: the plot fills itself from the marking, the same way on the phone.
@@ -3485,7 +3484,6 @@ public sealed partial class MainWindow : Window
                 status.Text += sameSheet;
             }
 
-            NoteDroppedSaved(path, currentSession);
         }
         catch (Microsoft.Data.Sqlite.SqliteException ex)
         {

@@ -126,8 +126,9 @@ public class Question43Tests
             Assert.Equal("The picture took too long to open", window.ProblemTitle);
             Assert.Contains("GroupLab stopped waiting for second.png after 0 seconds", window.StatusText, StringComparison.Ordinal);
 
-            // With the limit back, the same file opens, off the window's thread.
+            // With the limit back and the refusal closed, the same file opens, off the window's thread, in a tab beside the sheet (entry 423).
             MainWindow.OpenTimeLimit = limit;
+            window.DismissProblem();
             window.OpenDropped([second]);
             if (window.HasUnsavedWork)
             {

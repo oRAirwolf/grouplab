@@ -23,6 +23,9 @@ internal sealed class OpenTarget
     /// <summary>The window's own state for this target while another tab is showing; null while this tab is the one showing.</summary>
     public object? Parked { get; set; }
 
+    /// <summary>Entry 423: the sheets of a set, or pictures pooled, read together in this one tab; null for a tab of one target.</summary>
+    public SetGroup? Set { get; set; }
+
     /// <summary>The name on the tab.</summary>
     public string Label => TargetTabWords.Label(Name);
 

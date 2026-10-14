@@ -539,7 +539,7 @@
       "key": "open-anyhow",
       "group": "Reading a target",
       "name": "Open by dropping or pasting",
-      "sentence": "A target opens by dropping its picture on the window or pasting it, a screenshot or an image copied from a browser included.",
+      "sentence": "A target opens by dropping its picture on the window or pasting it, a screenshot or an image copied from a browser included; dropped onto a tab that already holds a target, it opens in a new tab beside it rather than replacing it.",
       "shot": "marking",
       "platforms": [
         "Windows",
@@ -552,7 +552,10 @@
       "mobile": {
         "noPicture": "sharing a picture into GroupLab and pasting one are photographed at the next sitting with the phone"
       },
-      "note": "You can now open a target by dropping the image on the GroupLab window",
+      "note": [
+        "You can now open a target by dropping the image on the GroupLab window",
+        "opens beside it instead of replacing it"
+      ],
       "tour": "marking",
       "guide": "3-photograph-or-scan-it"
     },
@@ -1122,8 +1125,8 @@
       "key": "pool-set",
       "group": "Sheets and printing",
       "name": "Pool the sheets of a set",
-      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing.",
-      "shot": "sessions",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing.",
+      "shot": "set-tab",
       "platforms": [
         "Windows",
         "macOS",
@@ -1134,7 +1137,8 @@
       "since": "next",
       "note": [
         "pool",
-        "now opens your pooled set on the analysis screen in its own tab"
+        "now opens your pooled set on the analysis screen in its own tab",
+        "open in one tab, pooled"
       ],
       "tour": "sessions",
       "guide": "10-comparing-several-sheets-at-once",
@@ -1352,14 +1356,17 @@
       "key": "any-photo-app",
       "group": "Photos and the phone",
       "name": "Pictures from any photo app",
-      "sentence": "Choose a photograph from Android's photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker's own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files. Or share one or several into GroupLab from any of them; a cloud photo downloads with its progress shown, and a smaller copy is said to be one. On iPhone and iPad, still being built, Photos and Files open from GroupLab, and a Google Photos picture is shared into GroupLab, because iOS lets no app open another app's library.",
+      "sentence": "Choose a photograph from Android's photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker's own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files. Or share one or several into GroupLab from any of them; the pickers take several at once too, and the sheets of one set chosen together open as the set's checklist with the pooled group showing. A cloud photo downloads with its progress shown, and a smaller copy is said to be one. On iPhone and iPad, still being built, Photos and Files open from GroupLab, and a Google Photos picture is shared into GroupLab, because iOS lets no app open another app's library.",
       "shot": null,
       "platforms": [
         "Android"
       ],
       "since": "next",
       "guide": "13-on-the-phone",
-      "note": "from any photo app",
+      "note": [
+        "from any photo app",
+        "choose several photos at once"
+      ],
       "mobile": {
         "noPicture": "the photo picker and the list of apps are Android's own screens, photographed at the next sitting with the phone"
       }

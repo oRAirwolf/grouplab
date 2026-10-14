@@ -20,7 +20,8 @@ namespace GroupLab.Mobile;
 /// </summary>
 internal sealed class SetPage : UserControl
 {
-    public SetPage(TargetDefinition definition, string? shotDate, UnitSettings units, Action photograph, Action back)
+    /// <param name="openPooled">Entry 423 section 5: the sheets of the set were chosen together, so the pooled group opens at once, its way back this checklist.</param>
+    public SetPage(TargetDefinition definition, string? shotDate, UnitSettings units, Action photograph, Action back, bool openPooled = false)
     {
         ArgumentNullException.ThrowIfNull(definition);
         var store = PhoneAnalysis.Store();
@@ -89,17 +90,38 @@ internal sealed class SetPage : UserControl
         // Entry 420 section 1.3: the pooled group opens on the result screen, the same plot as the desktop's, every shot about its own bull
         // and each sheet in its own shade with a key; its way back is this checklist.
         var page = Screens.Page(column);
+        void Pooled()
+        {
+            var composite = SetPool.Composite(definition, states);
+            DiagnosticLog.Info("phone.set.open", ("shots", composite.Shots.Count));
+            Content = new ResultView(new PhoneResult(composite, definition, null, null), new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
+        }
+
         if (pooled.Shots > 0)
         {
-            column.Children.Add(Screens.Choice("See the pooled group", () =>
-            {
-                var composite = SetPool.Composite(definition, states);
-                DiagnosticLog.Info("phone.set.open", ("shots", composite.Shots.Count));
-                Content = new ResultView(new PhoneResult(composite, definition, null, null), new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
-            }).Id("set-pooled-group"));
+            column.Children.Add(Screens.Choice("See the pooled group", Pooled).Id("set-pooled-group"));
         }
 
         column.Children.Add(Screens.Choice("Back to the result", back));
         Content = page;
+        if (openPooled && pooled.Shots > 0)
+        {
+            Pooled();
+        }
+    }
+
+    /// <summary>
+    /// Entry 423 section 5: the set that pictures read together all belong to, where there are two or more and every one is a sheet of the
+    /// same set; null otherwise, and then each is a target of its own as before.
+    /// </summary>
+    internal static TargetDefinition? OneSet(IReadOnlyList<PhoneResult> read)
+    {
+        ArgumentNullException.ThrowIfNull(read);
+        if (read.Count < 2 || read[0].Definition is not { Tiling: { } tiling } first || tiling.Cols * tiling.Rows < 2)
+        {
+            return null;
+        }
+
+        return read.All(r => r.Definition?.Name == first.Name && r.State.SetSheet is not null) ? first : null;
     }
 }

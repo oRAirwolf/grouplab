@@ -477,6 +477,13 @@
     "Press Compare the chosen, or click a row to reopen its analysis."
    ],
    "fits": "Filled by <a href=\"/tour/analysis/\">the analysis</a> every time you accept a sheet. Feeds <a href=\"/tour/compare/\">compare loads</a>.",
+   "moreShots": [
+    [
+     "set-tab",
+     "The three sheets of the 2 MOA set dropped on the window together: one tab named for the set, every shot on one plot about its own bull, each sheet in its own shade with a key row, and Check one sheet",
+     "Dropped together, the sheets of a set open in one tab and are read and pooled there, each saved as its own session in this list. The key's rows show a sheet alone, and Check one sheet opens one to check and fix."
+    ]
+   ],
    "links": [
     [
      "Keeping a range test log",
@@ -949,7 +956,7 @@
     "Enter the distance, the lowest magnification or the red dot's size, and the number of shots, and choose Make the sheet.",
     "Read why it is the size it is, then print it, or save it as your own."
    ],
-   "fits": "Between choosing a sheet and shooting it. Once the set is shot, analyze each sheet in any order and tick them in Session records: Pool the chosen reads them as one group, says which sheets are still missing, and opens the pooled set on the analysis screen in a tab of its own, each sheet's shots in their own shade. Where the {optic:arcminutes} arcminute rule comes from is <a href='/research/can-you-see-the-bull/'>Can you see the bull?</a>",
+   "fits": "Between choosing a sheet and shooting it. Once the set is shot, drop its scans or photographs on the window together: they open in one tab, read one after another and pooled with no question asked, and GroupLab says which sheets are still missing; or analyze each sheet in any order and tick them in Session records, where Pool the chosen does the same. Where the {optic:arcminutes} arcminute rule comes from is <a href='/research/can-you-see-the-bull/'>Can you see the bull?</a>",
    "links": [
     [
      "Can you see the bull? The aim point test",

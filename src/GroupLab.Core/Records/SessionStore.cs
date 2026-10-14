@@ -535,6 +535,24 @@ public sealed class SessionStore
         return Convert.ToInt32(Scalar(db, "SELECT count(*) FROM sessions WHERE definition_id = $d", ("$d", definitionId)), CultureInfo.InvariantCulture);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 423: the markings of the sessions using a definition, so the sheets of a set, which share their design,
+    /// can be told apart by which sheet of the set each one is.
+    /// </summary>
+    public IReadOnlyList<string> MarkingsUsing(string definitionId)
+    {
+        using var db = Connect();
+        using var command = Command(db, "SELECT marking_json FROM sessions WHERE definition_id = $d", [("$d", definitionId)]);
+        using var r = command.ExecuteReader();
+        var found = new List<string>();
+        while (r.Read())
+        {
+            found.Add(r.GetString(0));
+        }
+
+        return found;
+    }
+
     // ---- Chronograph strings: the room section 15 needs, kept apart from the shots.
 
     /// <summary>Adds a chronograph string to a session and returns its id.</summary>

@@ -9,16 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-14, entry 422 (before it: entries 421, 416, 415, 420, 419, 418 and 417).
+**Last rewritten:** 2026-10-14, entry 423 (before it: entries 422, 421, 416, 415, 420, 419, 418 and 417).
 
 ---
 
 ## In flight
 
-- **Entry 422 is done** (Jylee): a click on the picture lands the side panel on what it changed, flashes it twice (a steady tint with
-  less motion), and the status line says what it did; on the phone, Bull by bull lands the picture. In nightly 192.
-- **Entry 421 is done**: the consistency audit; the Features page dates a feature by its newest part. Nightly 191 published
-  2026-10-14 after its refused 'centres' note was corrected in docs/release-note-corrections.json.
+- **Entries 421 and 422 are done** and in nightly 192 (the consistency audit; Jylee's click that lands the side panel).
+- **Entry 423 is done** (Alan, Quack, Jylee): several pictures of one set dropped together open in ONE tab, read in turn and pooled
+  with no question; Check one sheet opens one alone to fix; a drop never replaces a tab holding a target (the bug Alan hit on 191 and
+  192, no record overwritten). The phone's pickers take several, and a set chosen together opens pooled. Question 98 is about copies of
+  a single-page design. Next: entry 424 (the zero correction says why an axis gets no click).
 - **The queue of 2026-10-13 is done** (417, 418, 419, 420, 415, 416); section 1 of 418 waits on request 99, 419 on request 98,
   415 section 3.2 not done. The detail is in PHASE1-RESULTS.md.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
@@ -61,8 +62,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and archived 2026-10-13):
+Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and archived 2026-10-13):
 
+- **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
@@ -80,14 +82,14 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 424.
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **A click on the picture lands the side panel through `Landing`** (entry 422), shared with the phone's result screen.
+- **A tab can hold a set** (entry 423): `OpenTarget.Set` parks each picture of the set as a tab parks a target, and the pool is worked out
+  afresh whenever it is shown; a drop onto a tab holding a target always opens beside it. "Read these as one set" is gone.
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
-
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **ios-app.yml's "The iPad and landscape" step failed on runs since 2026-10-11, and "Real taps" on some** (again on nightly 192's run).
@@ -98,14 +100,12 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
 - **A force-stop in the middle of a reading is checked after every nightly** (`scripts/android-force-stop.sh`): it did not stop the
   next start in any of five rounds. Run 37735635656's "nothing ran" was most likely its own walk's faults of that time.
-- **The solver is warmed after start-up** (`SolverUse.WarmInBackground`): the first trajectory's 100 ms was tiered compilation.
 - **A PNG's grey is made from its colour decode as libpng makes it** (`ImageLoader.GreyLikeLibpng`), only where the file names no
   gamma, colour space or profile; `ImageLoaderSameResultTests` holds it to the bit.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.
-- **A UI dump cannot see the phone's camera screen**; the device check reads its `camera.layout` log line instead.
 - **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.

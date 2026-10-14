@@ -1,4 +1,20 @@
 **Open: 24.** Most urgent today: **99**, one read-only paste about Quack's upload (two minutes). Then **98**, the Discord bot for the bug-reports forum (fifteen minutes, all three steps ready). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On
+nightly 190 and earlier a drop always opened only the first picture, over the tab dropped on. On nightlies 191 and 192 each picture was
+meant to get its own tab, but when a question was showing in the middle of the window (as when a scan's codes do not read), the new tab
+could not be shown and every picture opened over the same tab instead: one picture open, the rest gone. **No saved session record was
+overwritten by either:** since nightly 113 a newly opened picture always starts a record of its own, so your earlier sheet's record is as
+you saved it (only builds before nightly 113 could save a new picture over the record before it). From nightly 193 a drop never replaces
+a tab holding a target: it opens beside it.
+
+**For Quack** (entry 423, not a request; pass on whenever suits): from nightly 193, dropping the scans of a set onto GroupLab together
+opens them in one tab named for the set, reads them one after another and shows them pooled, with no button to press; Check one sheet
+opens any sheet alone to check and fix it, and a missing sheet dropped on the tab later joins the set. Thank you for asking for it.
+
+**For Jylee** (entry 423, not a request; pass on whenever suits): from nightly 193, several pictures of one set dropped on the window
+open in a single tab, pooled, as you asked; pictures of different sets get a tab per set, and pictures with no codes ask once whether to
+pool them. On Android and iPhone the photo pickers now take several at once, and a set's sheets chosen together open pooled. Thank you.
+
 **For Jylee** (entry 422, not a request; pass on whenever suits): a click on a hole or a bull on the picture now brings what it changed fully into view in the side panel (the hole's row under Shots, the bull's block, or Loads on this sheet with Shift or Command) and flashes it twice, or tints it for a moment where the computer is set to reduce motion, and the line under the picture says in one sentence what the click did; on the phone, a bull chosen in Bull by bull brings the picture into view the same way. It comes in nightly 192. Thank you for the idea.
 
 **For Quack** (entry 420, not a request; pass on whenever suits): Pool the chosen in Session records now opens the pooled set on the analysis screen in its own tab, every shot on one plot with each sheet in its own shade (tap a sheet in the key to see it alone); dropping several scans opens each in its own tab and then offers Read these as one set; and accepting the same picture again updates its record instead of adding another. In the next nightly after 0.2.0-nightly.190.
@@ -62,6 +78,10 @@ Send back: the scans and photos into the same folder, and one line on anything t
 - **Fixed**: panning a zoomed target no longer drags the screen; the "updated" note hides by itself; a selected shot says how far it is
   from its own bull. **Paper and "what was behind it" do not help detection**: they are recorded only, so hole sizes can later be compared
   by paper and backing. Whether to keep them on the setup screen is in the list below.
+- **DESIGN NEEDED** (entry 423 section 2): **how to reach one sheet inside a set's tab.** Built for now: tapping a sheet in the plot's key
+  shows it alone (as before), and a **Check one sheet** menu on the analysis screen lists every sheet (with its file and shots) and opens
+  one alone to check and fix, with **Back to the set** to return. The alternative to judge by looking: a row of sheet switches above the
+  picture, always showing. Planning to draw both.
 - **DESIGN NEEDED** (entry 411): **the phone's bottom bar at Android's largest text size. Answered 2026-10-12: B, the icons alone
   (entry 413).** When a name would not fit its fifth of the bar, the bar shows the five icons alone, larger, each still read out by name;
   built in entry 413.

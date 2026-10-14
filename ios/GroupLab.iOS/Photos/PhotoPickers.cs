@@ -45,7 +45,8 @@ internal static class PhotoPickers
         var configuration = new PHPickerConfiguration
         {
             Filter = PHPickerFilter.ImagesFilter,
-            SelectionLimit = 1,
+            // Entry 423 section 5: several at once, so the sheets of a set can be chosen together and open pooled.
+            SelectionLimit = 20,
             PreferredAssetRepresentationMode = PHPickerConfigurationAssetRepresentationMode.Current,
         };
         var picker = new PHPickerViewController(configuration);
@@ -58,7 +59,7 @@ internal static class PhotoPickers
     /// <summary>Section 2.2: Files, for any picture, copied to GroupLab by Files itself, which downloads one kept only in the cloud first.</summary>
     private static UIDocumentPickerViewController FilesPicker(TaskCompletionSource<IReadOnlyList<PhotoHandle>> chosen)
     {
-        var picker = new UIDocumentPickerViewController([UTTypes.Image], true) { AllowsMultipleSelection = false };
+        var picker = new UIDocumentPickerViewController([UTTypes.Image], true) { AllowsMultipleSelection = true };
         var listener = new FilesAnswer(chosen);
         answering = listener;
         picker.Delegate = listener;

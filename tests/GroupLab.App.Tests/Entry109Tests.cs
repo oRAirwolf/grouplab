@@ -748,6 +748,48 @@ public class Entry109Tests
                         GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(velocitySheet)!);
                     }
 
+                    // Entry 423 section 4: the Features page's own picture of a set's tab, the three sheets of the 2 MOA set dropped together
+                    // and pooled in one tab. Each sheet is given its detection through Check one sheet, as a person checking it would see.
+                    string setFolder = Path.Combine(Path.GetTempPath(), $"grouplab-set-{Guid.NewGuid():N}");
+                    Directory.CreateDirectory(setFolder);
+                    try
+                    {
+                        var twoMoa = Entry423Tests.TwoMoaSet();
+                        var sheets = new[] { 0, 1, 2 }.Select(k => Entry423Tests.DetectedSheet(twoMoa, setFolder, k)).ToList();
+                        window.DetectOnOpen = false;
+                        window.OpenDropped([.. sheets.Select(s => s.Path)]);
+                        for (int i = 0; i < 2000 && !window.Dropping.IsCompleted; i++)
+                        {
+                            Dispatcher.UIThread.RunJobs();
+                            System.Threading.Thread.Sleep(10);
+                        }
+
+                        Assert.True(window.Dropping.IsCompleted, "the set's drop did not finish");
+                        for (int k = 0; k < sheets.Count; k++)
+                        {
+                            window.ShowSetSheet(k);
+                            window.ApplyDetection(sheets[k].Result);
+                            window.Session.SetCalibre(Calibre.Of(0.308));
+                            window.Session.SetShotDistance(3600);
+                            window.Session.SetEquipment(rifle, null, "Test load");
+                            window.CalibreAnswered();
+                            window.SaveWaitingNow();
+                            window.BackToSet();
+                        }
+
+                        foreach (var (theme, name) in new[] { (ThemeChoice.Dark, "dark"), (ThemeChoice.Light, "light") })
+                        {
+                            window.SetTheme(theme);
+                            Dispatcher.UIThread.RunJobs();
+                            Assert.Equal([0, 1, 2], window.Plot.PooledSheets);
+                            Save(window, $"set-tab-{name}-{width}x{height}");
+                        }
+                    }
+                    finally
+                    {
+                        GroupLab.Tests.Support.Temp.Delete(setFolder);
+                    }
+
                     window.Close();
                 }
                 finally

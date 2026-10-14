@@ -14,9 +14,9 @@ using OpenCvSharp;
 namespace GroupLab.App.Tests;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 420, from Quack's question on macOS. Section 2: three scans of one set dropped together opened only the first;
-/// each now opens in a tab of its own, and once they are accepted the analysis screen offers to read them as one set, which opens the pooled
-/// tab. Section 3: the same picture opened afresh and accepted again made a second record of the same sheet; it now updates the first.
+/// NOTES-FROM-PLANNING.md entry 420, from Quack's question on macOS. Section 3: the same picture opened afresh and accepted again made a second
+/// record of the same sheet; it now updates the first. Section 2's drop of several pictures, a tab each, was replaced by entry 423: they open
+/// in one tab, pooled (Entry423Tests).
 /// </summary>
 public class Entry420Tests
 {
@@ -52,54 +52,6 @@ public class Entry420Tests
         window.CalibreAnswered();
         window.Analyse();
         Dispatcher.UIThread.RunJobs();
-    }
-
-    [AvaloniaFact]
-    public async Task SheetsDroppedTogetherOpenOneTabEachAndReadAsOneSet()
-    {
-        var set = TargetGenerator.Generate(new GeneratorRequest(100, 4, null, 25, "letter")).Design!.Definition!;
-        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-420-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(folder);
-        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
-        store.SaveUnits(UnitSettings.Imperial);
-        var window = new MainWindow(store) { Width = 1400, Height = 900, DetectOnOpen = false };
-        window.Show();
-        try
-        {
-            var sheets = new[] { 1, 0, 3 }.Select(k => Sheet(set, folder, k)).ToList();
-            int tabs = window.Targets.Count;
-            window.OpenDropped([.. sheets.Select(x => x.Path)]);
-            for (int i = 0; i < 400 && window.Targets.Count < tabs + 2; i++)
-            {
-                Dispatcher.UIThread.RunJobs();
-                await Task.Delay(25);
-            }
-
-            await window.Opening;
-            Dispatcher.UIThread.RunJobs();
-            Assert.Equal(tabs + 2, window.Targets.Count);
-
-            // Each tab holds its own picture; accepted in turn, the third offers to read them as one set.
-            for (int k = 0; k < 3; k++)
-            {
-                window.ShowTarget(window.Targets.Count - 3 + k);
-                Dispatcher.UIThread.RunJobs();
-                Assert.EndsWith($"sheet-{new[] { 1, 0, 3 }[k]}.png", window.Session.State.ImagePath, StringComparison.Ordinal);
-                Accept(window, sheets[k].Result);
-            }
-
-            Assert.Equal(3, window.DroppedSetSessions().Count);
-            int before = window.Targets.Count;
-            window.ReadDroppedAsOneSet();
-            Dispatcher.UIThread.RunJobs();
-            Assert.Equal(before + 1, window.Targets.Count);
-            Assert.Equal([0, 1, 3], window.Plot.PooledSheets);
-        }
-        finally
-        {
-            window.Close();
-            GroupLab.Tests.Support.Temp.Delete(folder);
-        }
     }
 
     [AvaloniaFact]

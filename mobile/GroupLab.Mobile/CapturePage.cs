@@ -617,11 +617,13 @@ public sealed class CapturePage : UserControl
     }
 
     /// <summary>
-    /// Entry 292 section 1.3: several pictures at once are a set, one per sheet. Each is read and saved in turn and the last one's result
-    /// shown, which leads to the set where they are its sheets. A reduced copy is said to be one before it is read (section 1.4).
+    /// Entry 292 section 1.3: several pictures at once, each read and saved in turn. Entry 423 section 5: where every one is a sheet of one
+    /// set, they open together as the set's checklist with the pooled group showing; otherwise the last one's result is shown, as before.
+    /// A reduced copy is said to be one before it is read (section 1.4).
     /// </summary>
     private async Task AnalyzeAll(IReadOnlyList<PickedPhoto> photos, ShotSetup setup)
     {
+        var read = new List<PhoneResult>();
         for (int i = 0; i < photos.Count; i++)
         {
             if (photos[i].Reduced is { } words && !await PhotoPages.UseReduced(this, words))
@@ -631,20 +633,46 @@ public sealed class CapturePage : UserControl
                 return;
             }
 
-            if (i == photos.Count - 1)
+            if (photos.Count == 1)
             {
                 await Analyze(photos[i].Path, setup);
+                return;
             }
-            else if (!await ReadAhead(photos[i].Path, setup, i, photos.Count))
+
+            var (go, result) = await ReadAhead(photos[i].Path, setup, i, photos.Count);
+            if (!go)
             {
                 PhotoPages.Forget(photos.Skip(i + 1));
                 return;
             }
+
+            if (result is not null)
+            {
+                read.Add(result);
+            }
+        }
+
+        var units = Phone.Settings.LoadUnits();
+        if (read.Count == photos.Count && SetPage.OneSet(read) is { } set)
+        {
+            string? date = read[0].SessionId is { } id ? PhoneAnalysis.Store().Get(id)?.ShotDate : null;
+            DiagnosticLog.Info("phone.set.together", ("sheets", read.Count));
+            Content = new SetPage(set, date, units, Camera, ShowStart, openPooled: true);
+            return;
+        }
+
+        if (read.Count > 0)
+        {
+            Present(read[^1], setup, units);
+        }
+        else
+        {
+            ShowStart();
         }
     }
 
     /// <summary>One sheet of several read and saved without showing its result, with its own progress and Cancel; false where canceled.</summary>
-    private async Task<bool> ReadAhead(string photo, ShotSetup setup, int index, int count)
+    private async Task<(bool Go, PhoneResult? Result)> ReadAhead(string photo, ShotSetup setup, int index, int count)
     {
         // Entry 313 section 1: a Cancel that always works and a time limit, as for one picture.
         var reading = new Reading("phone.set.read");
@@ -668,14 +696,14 @@ public sealed class CapturePage : UserControl
         {
             case ReadEnd.Canceled:
                 Content = before;
-                return false;
+                return (false, null);
             case ReadEnd.Done:
                 DiagnosticLog.Info("phone.set.read", ("sheet", index + 1), ("of", count), ("found", outcome.Value!.Definition is not null));
-                return true;
+                return (true, outcome.Value);
             default:
                 // Timed out or failed, which the log has: the set goes on with its next sheet, as it did after an error.
                 DiagnosticLog.Info("phone.set.read", ("sheet", index + 1), ("of", count), ("ended", outcome.End));
-                return true;
+                return (true, null);
         }
     }
 
@@ -860,7 +888,12 @@ public sealed class CapturePage : UserControl
 
         // The photograph itself is never kept: the session keeps its working copy.
         Delete(photo);
+        Present(result, setup, units);
+    }
 
+    /// <summary>A reading's result shown, after the picture's check where it has one; one picture's, or the last of several.</summary>
+    private void Present(PhoneResult result, ShotSetup setup, UnitSettings units)
+    {
         // Entry 260, Feedback B: every picture is checked before its result, taken or chosen; taking it again forgets this one.
         void Show() => ShowResult(new ResultView(result, setup, units, ShowStart));
         DiagnosticLog.Info("camera.shutter", ("step", "analyzed"));

@@ -93,8 +93,9 @@ public sealed partial class MainWindow
         ImageExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Opens what was dropped: the first image, saying how many were ignored. Entry 137 section 1. A drop of several is not a question,
-    /// because the answer is always the first one and asking would put a dialog in the way of a gesture whose whole point is speed.
+    /// Opens what was dropped. NOTES-FROM-PLANNING.md entry 423: one picture opens as it always has, except that a tab already holding a
+    /// target is never replaced by a drop; the picture opens in a new tab beside it. Several pictures are read first, and the sheets of one
+    /// set open together in ONE tab, pooled, with no question asked (<see cref="DropSeveral"/>).
     /// </summary>
     internal void OpenDropped(IReadOnlyList<string> paths)
     {
@@ -105,86 +106,64 @@ public sealed partial class MainWindow
             return;
         }
 
-        string first = paths[0];
-        droppedTogether = paths.Count > 1 ? [.. paths] : null;
-        droppedSaved.Clear();
-        Leaving(async () =>
-        {
-            if (!await OpenImageSafely(first).ConfigureAwait(true) || paths.Count == 1)
-            {
-                return;
-            }
-
-            // Entry 420 section 2, Quack on macOS: three scans of one set dropped together opened only the first. Each now opens in a tab of
-            // its own, the next once the last one's detection is done, waiting at most two minutes for each.
-            int opened = 1;
-            foreach (string next in paths.Skip(1))
-            {
-                for (int waited = 0; detection is not null && waited < 1200; waited++)
-                {
-                    await Task.Delay(100).ConfigureAwait(true);
-                }
-
-                if (AddTarget(choose: false) is null || !await OpenImageSafely(next).ConfigureAwait(true))
-                {
-                    break;
-                }
-
-                opened++;
-            }
-
-            status.Text += opened == paths.Count
-                ? string.Create(CultureInfo.InvariantCulture, $" The {paths.Count} pictures dropped together are open, one tab each.")
-                : string.Create(CultureInfo.InvariantCulture, $" {opened} of the {paths.Count} pictures dropped together are open, one tab each; the rest could not be opened.");
-        });
-    }
-
-    // Entry 420 section 2: the pictures last dropped together, and the session each was saved as once accepted.
-    private List<string>? droppedTogether;
-    private readonly Dictionary<string, long> droppedSaved = new(StringComparer.Ordinal);
-
-    private void NoteDroppedSaved(string? path, long? session)
-    {
-        if (path is not null && session is { } id && droppedTogether?.Contains(path) == true)
-        {
-            droppedSaved[path] = id;
-        }
-    }
-
-    /// <summary>
-    /// Entry 420 section 2: the sessions of the pictures dropped together that are sheets of one set, once two or more have been accepted, so
-    /// the analysis screen can offer to read them as one set; empty otherwise.
-    /// </summary>
-    internal IReadOnlyList<long> DroppedSetSessions()
-    {
-        if (sessions is null || droppedSaved.Count < 2)
-        {
-            return [];
-        }
-
-        var records = droppedSaved.Values.Distinct().Select(id => sessions.Get(id)).OfType<GroupLab.Core.Records.SessionRecord>().ToList();
-        bool oneSet = records.Select(r => r.DefinitionId).Distinct().Count() == 1
-            && records.All(r => MarkingFile.Read(r.MarkingJson).State.SetSheet is not null);
-        return oneSet ? [.. records.Select(r => r.Id)] : [];
-    }
-
-    /// <summary>Entry 420 section 2: "Read these as one set", the dropped sheets chosen and pooled as Session records' Pool the chosen does.</summary>
-    internal void ReadDroppedAsOneSet()
-    {
-        var ids = DroppedSetSessions();
-        if (ids.Count < 2)
+        if (SetIsReading())
         {
             return;
         }
 
-        sessionChosen.Clear();
-        foreach (long id in ids)
+        if (paths.Count > 1 || targets.Current.Set is not null)
         {
-            sessionChosen.Add(id);
+            Dropping = DropSeveral(paths);
+            return;
         }
 
-        PoolChosen();
+        if (!TabHoldsATarget)
+        {
+            Dropping = OpenImageSafely(paths[0]);
+            return;
+        }
+
+        // Entry 423 section 0, Alan: a drop onto a tab holding a sheet cleared that tab and opened the picture in it. It now opens beside it.
+        var from = targets.Current;
+        if (AddTarget(choose: false) is null)
+        {
+            return;
+        }
+
+        Dropping = OpenBeside(paths[0], from);
     }
+
+    /// <summary>A picture opened in a new tab beside the target it was dropped on; where it cannot open, the empty tab goes again.</summary>
+    private async Task OpenBeside(string path, OpenTarget from)
+    {
+        if (await OpenImageSafely(path).ConfigureAwait(true))
+        {
+            status.Text += " " + DroppedBeside;
+            return;
+        }
+
+        if (!TabHoldsATarget && targets.All.Contains(from))
+        {
+            // The refusal stays in the middle of the window and in the status line, over the target that was there.
+            string said = status.Text ?? "";
+            targets.Close(targets.Current);
+            Bind(from);
+            status.Text = said;
+        }
+    }
+
+    /// <summary>What the status line adds when a dropped picture opened in a new tab rather than over the target it was dropped on.</summary>
+    internal const string DroppedBeside = "It opened in a tab of its own; the target it was dropped on is as you left it.";
+
+    /// <summary>The drop under way, which the headless tests wait on.</summary>
+    internal Task Dropping { get; private set; } = Task.CompletedTask;
+
+    /// <summary>
+    /// Whether the tab showing holds a target, which a drop must never replace (entry 423 section 0): a picture, a marking, a saved session,
+    /// a pooled set. Only an empty tab is filled in place.
+    /// </summary>
+    internal bool TabHoldsATarget => targets.Current.Set is not null || grey is not null || currentSession is not null
+        || session.State.ImagePath is not null || session.State.Shots.Count > 0 || session.State.Bulls.Count > 0;
 
     /// <summary>
     /// Ctrl+V, entry 137 section 2: an image file copied in a file manager, or image data with no file behind it, such as a screenshot or an
@@ -219,15 +198,18 @@ public sealed partial class MainWindow
             return;
         }
 
-        Leaving(async () =>
+        // Entry 423 section 0: pasting is the same act as dropping, so a tab holding a target is never replaced by it either.
+        if (SetIsReading() || (TabHoldsATarget && AddTarget(choose: false) is null))
         {
-            if (await OpenImageSafely(into).ConfigureAwait(true))
-            {
-                // Entry 137 section 2: pasted data carries no file name and no metadata, and the one place that costs something is the scale
-                // on a blank sheet, which otherwise comes from the scan's own resolution.
-                status.Text += " It was pasted, so it has no file name and no resolution of its own: set the scale by measuring a known distance.";
-            }
-        });
+            return;
+        }
+
+        if (await OpenImageSafely(into).ConfigureAwait(true))
+        {
+            // Entry 137 section 2: pasted data carries no file name and no metadata, and the one place that costs something is the scale
+            // on a blank sheet, which otherwise comes from the scan's own resolution.
+            status.Text += " It was pasted, so it has no file name and no resolution of its own: set the scale by measuring a known distance.";
+        }
     }
 
     /// <summary>Question 43 (entry 388 section 3): how long opening a picture may take before GroupLab stops waiting for it.</summary>

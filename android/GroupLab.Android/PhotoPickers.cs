@@ -28,8 +28,9 @@ internal static class PhotoPickers
     {
         if (opens == PhotoSource.Photos)
         {
+            // Entry 423 section 5: several at once, so the sheets of a set can be chosen together and open pooled.
             var request = new PickVisualMediaRequest.Builder().SetMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.Instance).Build();
-            return new ActivityResultContracts.PickVisualMedia().CreateIntent(context, request);
+            return new ActivityResultContracts.PickMultipleVisualMedia(MostAtOnce).CreateIntent(context, request);
         }
 
         // Section 1.2: GET_CONTENT, not OPEN_DOCUMENT, is what Google Photos, Samsung Gallery and every maker's gallery answer, and the
@@ -37,8 +38,12 @@ internal static class PhotoPickers
         var content = new Intent(Intent.ActionGetContent);
         content.SetType("image/*");
         content.AddCategory(Intent.CategoryOpenable);
+        content.PutExtra(Intent.ExtraAllowMultiple, true);
         return Intent.CreateChooser(content, "Choose a photograph from")!;
     }
+
+    /// <summary>The most pictures chosen at once: a set's sheets and more, well under the photo picker's own limit of 100.</summary>
+    private const int MostAtOnce = 20;
 
     /// <summary>The pictures a picker handed back: its one address, or each of several.</summary>
     internal static List<Uri> Returned(Intent? data)

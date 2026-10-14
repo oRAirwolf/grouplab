@@ -21,6 +21,24 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-14, question 98: several pictures of one single-page design, dropped together
+
+**Status: open. Nothing waits on it; built meanwhile as below.**
+
+Entry 423 section 1 pools a drop when "every picture is a sheet of the same set (same definition, a set sheet number on each, no sheet
+twice)", and section 3 covers several sets, a missing sheet, a sheet twice and pictures whose codes cannot be read. It does not say what
+three pictures of the same **single-page** design do, for example three copies of the 2 MOA page (GL-CF9-LTR) shot as one group: their
+codes read, so they are not "pictures whose codes cannot be read", and they have no set sheet number, so they are not a set. Alan's words
+("it should recognize that you want all 3 photos to be pooled together") could cover them.
+
+**Built meanwhile:** each opens in a tab of its own, as any picture that is not part of a set does (`DropSorting.Of`), and the status line
+says so. **Options:** (a) keep that; (b) ask the same one question as for untagged pictures, "Pool these 3 pictures as one group?", and
+pool them as the untagged pool does (each its own sheet in order, `SetPool.CompositeOfPictures`), about an hour with tests; (c) pool them
+without asking, as a set is. I would choose (b): copies of one page are as often three loads as one group, so the drop alone does not
+say which, and the question is one click.
+
+---
+
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
 **Status: open, being tested (entry 278 section 3):** Alan chose to test rather than choose. The three pages, A as built, B a hairline on the card's edge and C corner marks, are made; request 53 asks for them printed, scanned and photographed with a card, and the answer comes from measuring those photographs. A stays built until then.

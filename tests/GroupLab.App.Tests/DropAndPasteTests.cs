@@ -24,18 +24,24 @@ public class DropAndPasteTests
     private static RecordedOutsideWorld Outside => TestDefaults.Outside;
 
     /// <summary>
-    /// Entry 140 section 1.4 in the way: a sheet with edits nobody has saved asks before it is replaced, and a drop or a paste is a replacing
-    /// like any other. The tests answer that question rather than working round it, because the asking is the point.
+    /// Entry 423 section 0: a drop or a paste onto a tab holding a target opens beside it, in a new tab, and leaves the tab dropped on exactly
+    /// as it was; the fixture sheet holds one, so every drop here lands in a new tab.
     /// </summary>
-    private static void Discard(MainWindow window)
+    private static async Task Opened(MainWindow window, int tabs)
     {
-        Assert.True(window.HasUnsavedWork, "the fixture sheet had nothing unsaved, so nothing would ask before replacing it");
-        window.AnswerDiscard();
-        window.OpenFinished();
+        for (int i = 0; i < 400 && !window.Dropping.IsCompleted; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(25);
+        }
+
+        await window.Dropping;
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(tabs + 1, window.Targets.Count);
     }
 
     [AvaloniaFact]
-    public void ADroppedImageOpensExactlyAsOpenDoes()
+    public async Task ADroppedImageOpensExactlyAsOpenDoes()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         string second = Path.Combine(Path.GetDirectoryName(path)!, "second.png");
@@ -43,10 +49,11 @@ public class DropAndPasteTests
         try
         {
             window.OpenDropped([second]);
-            Discard(window);
+            await Opened(window, 1);
 
             Assert.Equal(second, window.Session.State.ImagePath);
             Assert.DoesNotContain("not an image", window.StatusText, StringComparison.Ordinal);
+            Assert.Contains(MainWindow.DroppedBeside, window.StatusText, StringComparison.Ordinal);
         }
         finally
         {
@@ -56,8 +63,9 @@ public class DropAndPasteTests
     }
 
     /// <summary>
-    /// Several dropped at once: entry 137 opened the first and counted the rest; entry 420 section 2 (Quack, three scans of one set on a Mac)
-    /// opens each in a tab of its own, the first where the drop landed.
+    /// Several dropped at once: entry 137 opened the first and counted the rest; entry 420 section 2 opened each in a tab of its own; entry 423
+    /// reads their codes first. Two sheets that are not of one set still open a tab each, beside the target dropped on, and the same picture
+    /// under two names is one picture.
     /// </summary>
     [AvaloniaFact]
     public async Task SeveralDroppedOpenOneTabEach()
@@ -65,24 +73,23 @@ public class DropAndPasteTests
         var (window, path, _) = Entry109Tests.Sheet();
         string a = Path.Combine(Path.GetDirectoryName(path)!, "a.png");
         string b = Path.Combine(Path.GetDirectoryName(path)!, "b.png");
+        string same = Path.Combine(Path.GetDirectoryName(path)!, "same-as-a.png");
         File.Copy(path, a, overwrite: true);
-        File.Copy(path, b, overwrite: true);
+        File.Copy(path, same, overwrite: true);
+        using (var mat = OpenCvSharp.Cv2.ImRead(path, OpenCvSharp.ImreadModes.Unchanged))
+        {
+            mat.Set(0, 0, mat.Get<byte>(0, 0) == 0 ? (byte)1 : (byte)0);
+            OpenCvSharp.Cv2.ImWrite(b, mat);
+        }
+
         try
         {
             int tabs = window.Targets.Count;
-            window.OpenDropped([a, b]);
-            Discard(window);
-            for (int i = 0; i < 400 && window.Targets.Count < tabs + 1; i++)
-            {
-                Dispatcher.UIThread.RunJobs();
-                await Task.Delay(25);
-            }
-
-            await window.Opening;
-            Dispatcher.UIThread.RunJobs();
-            Assert.Equal(tabs + 1, window.Targets.Count);
+            window.OpenDropped([a, b, same]);
+            await Opened(window, tabs + 1);
             Assert.Equal(b, window.Session.State.ImagePath);
-            Assert.Contains("The 2 pictures dropped together are open, one tab each", window.StatusText, StringComparison.Ordinal);
+            Assert.Contains("a.png, b.png: a tab each.", window.StatusText, StringComparison.Ordinal);
+            Assert.Contains("1 was the same picture as another", window.StatusText, StringComparison.Ordinal);
         }
         finally
         {
@@ -134,7 +141,7 @@ public class DropAndPasteTests
             Outside.Clipboard = new ClipboardContents([copy], null, null);
 
             await window.PasteImage();
-            Discard(window);
+            await Opened(window, 1);
 
             Assert.Equal(copy, window.Session.State.ImagePath);
             Assert.Contains(Outside.Asked, a => a.What == "clipboard");
@@ -161,7 +168,7 @@ public class DropAndPasteTests
             Outside.Clipboard = new ClipboardContents([], await File.ReadAllBytesAsync(path), ".png");
 
             await window.PasteImage();
-            Discard(window);
+            Assert.Equal(2, window.Targets.Count);
 
             string opened = Assert.IsType<string>(window.Session.State.ImagePath);
             Assert.Equal(MainWindow.PastedFolder, Path.GetDirectoryName(opened));
@@ -208,7 +215,7 @@ public class DropAndPasteTests
     /// sentence and the sheet that was open stays open.
     /// </summary>
     [AvaloniaFact]
-    public void AFileThatIsNotReallyAnImageIsRefusedInWords()
+    public async Task AFileThatIsNotReallyAnImageIsRefusedInWords()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         string liar = Path.Combine(Path.GetDirectoryName(path)!, "not-really.png");
@@ -217,8 +224,11 @@ public class DropAndPasteTests
         {
             string was = window.Session.State.ImagePath!;
             window.OpenDropped([liar]);
-            Discard(window);
+            await window.Dropping;
+            Dispatcher.UIThread.RunJobs();
 
+            // The new tab it would have opened in goes again, and the target it was dropped on is showing as it was.
+            Assert.Single(window.Targets);
             Assert.Equal(was, window.Session.State.ImagePath);
             Assert.Contains("could not be opened as an image", window.StatusText, StringComparison.Ordinal);
         }
@@ -230,11 +240,11 @@ public class DropAndPasteTests
     }
 
     /// <summary>
-    /// A drop is a replacing like any other, so entry 140 section 1.4's question comes first. Cancel leaves the sheet exactly as it was,
-    /// which is the property that makes a careless drop safe.
+    /// Entry 140 section 1.4 asked before a drop replaced unsaved work. Entry 423 section 0 goes further: a drop never replaces a target, so
+    /// nothing is asked; the picture opens beside it and the sheet is exactly as it was, in its own tab.
     /// </summary>
     [AvaloniaFact]
-    public void ADropOntoUnsavedWorkAsksFirstAndCancelKeepsTheSheet()
+    public async Task ADropOntoUnsavedWorkOpensBesideItAndKeepsTheSheet()
     {
         var (window, path, _) = Entry109Tests.Sheet();
         string second = Path.Combine(Path.GetDirectoryName(path)!, "kept.png");
@@ -246,15 +256,15 @@ public class DropAndPasteTests
             Assert.True(window.HasUnsavedWork);
 
             window.OpenDropped([second]);
-            Settle();
+            Assert.False(window.AskingAboutUnsavedWork);
+            await Opened(window, 1);
+            Assert.Equal(second, window.Session.State.ImagePath);
 
-            // It has not opened anything yet: the question is on screen.
-            Assert.Equal(was, window.Session.State.ImagePath);
-
-            window.AnswerCancel();
+            Assert.True(window.ShowTarget(0));
             Settle();
             Assert.Equal(was, window.Session.State.ImagePath);
             Assert.Equal(shots, window.Session.State.Shots.Count);
+            Assert.False(window.AskingAboutUnsavedWork);
         }
         finally
         {

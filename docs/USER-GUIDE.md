@@ -429,9 +429,19 @@ set it is. Print the set, shoot it, open each scan or photograph and choose **Ac
 records** tick them and choose **Pool the chosen**. GroupLab says which sheets of the set are still missing and how many shots it has of the
 bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own: every shot on one plot, measured from its own
 bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2). Each sheet's shots are
-in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once. Dropping the scans of a set
-onto the window together opens each in a tab of its own, and once they are accepted the analysis screen offers **Read these as one set**,
-which does the same. On the phone, the set's checklist has **See the pooled group**.
+in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once.
+
+**Quicker: drop them together.** Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads
+each one's codes first. When they are sheets of one set they open in **one tab**, named for the set ("GroupLab 3x3 2 MOA, Set of 3 Letter
+Sheets, 3 sheets"); the sheets are read one after another while the status line says "Reading sheet 2 of 3", each is saved as its own
+session record, and the tab shows the pooled set, with no question asked. **Check one sheet** on its analysis screen opens one sheet alone
+to check its holes and scale and fix them as on any sheet; **Back to the set** shows the pool again with the change in it. A sheet still
+missing is named, and dropping it onto the set's tab later adds it. Two different pictures of the same sheet are both left out until you
+say which one counts; the same picture twice counts once. Pictures of two sets open a tab for each set, and a picture of anything else a
+tab of its own. Pictures with no codes to read, a target from a shop or a plain photograph, are asked about once: **Pool them in one tab**
+or **One tab each**; pooled, each still needs its own scale. A picture dropped onto a tab that already holds a target never replaces it:
+it opens in a new tab beside it. On the phone, choose the sheets of a set together, or share them into GroupLab together, and the set's
+checklist opens with the pooled group showing; the checklist also has **See the pooled group**.
 
 Reading other sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: separate sheets shot at one
 aim point each have their own center, and what a pooled figure means depends on which center you measure from, which is still being decided.
@@ -517,7 +527,8 @@ and warmth with each step of a reading and each change of instruction.
 those kept only in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone without one
 offers the apps instead. **From another app** lists every app that offers pictures by name: Google Photos, Samsung Gallery, your phone
 maker's own gallery, Drive, OneDrive, Dropbox and Files. A picture shared into GroupLab from any app, or opened or edited with it, is read
-the same way, and several shared at once are read one after another as a set, one per sheet. A photograph kept only in the cloud is
+the same way. **Choose a photo** and **From another app** take several at once, and several chosen or shared together are read one after
+another; when they are all sheets of one set, the set's checklist opens with the pooled group showing. A photograph kept only in the cloud is
 downloaded first, with a line saying which app it is coming from and a **Cancel**; the phone has to be online for that. GroupLab always
 reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
 

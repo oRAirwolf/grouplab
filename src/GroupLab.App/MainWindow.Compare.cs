@@ -114,6 +114,13 @@ public sealed partial class MainWindow
             return;
         }
 
+        ShowPooledHere(definition, pooled);
+        status.Text = $"{pooled.SheetLabel}, in its own tab. Each shot is named sheet.bull: 2.5 is bull 5 on sheet 2. Tap a sheet in the plot's key to show it alone.";
+    }
+
+    /// <summary>A pooled marking shown in the tab showing, as a saved sheet with no picture is: entry 420's own tab, or entry 423's set tab.</summary>
+    private void ShowPooledHere(TargetDefinition? definition, MarkingState pooled)
+    {
         grey = valueImage = artwork = null;
         metadata = null;
         canvas.SetImage(null, null);
@@ -128,7 +135,6 @@ public sealed partial class MainWindow
         destination = Destination.Analyse;
         SetAnalysing(true);
         DiagnosticLog.Info("sessions.pool.open", ("shots", pooled.Shots.Count));
-        status.Text = $"{pooled.SheetLabel}, in its own tab. Each shot is named sheet.bull: 2.5 is bull 5 on sheet 2. Tap a sheet in the plot's key to show it alone.";
     }
 
     /// <summary>What the pooled set says, for the headless tests.</summary>

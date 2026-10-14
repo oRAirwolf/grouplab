@@ -6884,6 +6884,22 @@
   "What is not done yet 02 Make a report package In GroupLab, open the settings from the gear at the bottom left and choose Report a problem under Diagnostics.": {
    "kind": "code",
    "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow (Save only writes the zip); opened by MainWindow.OpenReport from Settings, Diagnostics"
+  },
+  "**Quicker: drop them together.** Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "When they are sheets of one set they open in **one tab**, named for the set (\"GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets\"); the sheets are read one after another while the status line says \"Reading sheet 2 of 3\", each is saved as its own session record, and the tab shows the pooled set, with no question asked.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "When they are sheets of one set they open in one tab , named for the set (\"GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets\"); the sheets are read one after another while the status line says \"Reading sheet 2 of 3\", each is saved as its own session record, and the tab shows the pooled set, with no question asked.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
   }
  },
  "rules": [

@@ -139,6 +139,13 @@ public sealed partial class MainWindow
             return;
         }
 
+        // Entry 423: a set's pool is never a session of its own; its sheets are, each saved as it was read or left.
+        if (targets.Current.Set is { Showing: null } && !HasUnsavedWork)
+        {
+            savedWords.Text = SetTabWords.PoolSaved;
+            return;
+        }
+
         if (HasUnsavedWork || savedAtUtc is null)
         {
             savedWords.Text = SaveByHand ? "Not saved yet" : "Not saved yet: it saves by itself once you change or accept it";

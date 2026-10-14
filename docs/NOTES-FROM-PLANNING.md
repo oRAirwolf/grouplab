@@ -25,6 +25,98 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-14, entry 423: several pictures dropped together open in ONE tab, and a set is pooled without being asked
+
+**Status: actioned 2026-10-14; sections 0 to 4 and 6 done; section 5 done for a set chosen or shared together, not done for section 3's other cases on the phone, which keep its old behaviour; question 98 asks about copies of a single-page design.**
+
+From the planning session, 2026-10-14 05:50 UTC. Alan, 2026-10-13 23:41 Denver: "For the multiple sheet pool, you should be able to
+drag multiple scans or photos into a single tab and it should recognize that you want all 3 photos to be pooled together." This
+replaces entry 420 section 2's behaviour (a tab per picture, then a "Read these as one set" button). Asked for by Quack and Jylee, both
+of whom may be thanked by name. Main model (application code and UI).
+
+## 0. First, the bug Alan hit: a drop onto an open tab replaces it
+
+Alan, 2026-10-13 23:46 Denver: "Right now, if you drag 3 scans onto a single tab, it only opens 1 image and overwrites the session."
+Alan, 23:47: "This was on build 192." So entry 420 section 2's tab-per-picture code is in the build he used and still opened one picture: this is a bug in it, not an old build. Read GroupLab's own log on this computer for tonight's drop (target.tab.add, session.save with its "same" field, marking.*) before guessing, and reproduce it headless. Suspects worth checking first, none confirmed: the wait in OpenDropped giving up or AddTarget returning null because detection had not started or not finished, so the rest stop after the first; currentSession (or anything else held on the window rather than the tab) carried from one tab into the next, so accepting a later sheet updates the earlier sheet's record; and the first picture opening into the tab dropped on.
+
+- Only one of three opened: entry 420 section 2 should open all three since nightly 191. If main still opens one when the drop lands
+  on a tab that already holds a sheet (as opposed to an empty window), that is the bug; find it and fix it.
+- "Overwrites the session": a drop onto a tab that holds a sheet clears that tab and opens the new picture in it (OpenDropped calls
+  OpenImageSafely on the current tab; Leaving only asks when there is unsaved work). From now on a drop onto a tab that holds a sheet
+  never replaces it: the dropped pictures open in a new tab (one per section 1 and 3), and the tab dropped on is left as it was. Only an
+  empty tab is filled in place. Check above all that no session RECORD is ever overwritten: accepting the new picture after such a drop
+  must make or update the new picture's own record, never the one the tab held before. If a record was overwritten by any build, say so
+  plainly in the report and in for-alan.md, with which build and whether the earlier record can be brought back (the pre-v2 copy of
+  grouplab.db, a backup, or the toast that brings back a cleared sheet).
+- A test for each: a drop of three onto a tab holding a saved sheet leaves that tab and its record unchanged; a drop of one onto it
+  does the same.
+
+## 0b. A pooled set says a decision is left unmade, and Review leads to a blank picture
+
+Alan, 2026-10-13 23:49 Denver, nightly 192: "On a pooled session with 3 images put together, it will say there is a decision left
+unmade and when you click on it to review, it goes to a blank image window and asks you to set the number of rounds fired." The pooled
+tab (entry 420 section 1) has no picture of its own, and rounds fired belongs to each sheet, so the pool most likely reports a count
+review (ReviewKind.Count, "Count differs from rounds fired") against a total it never had, and Review opens the pool's empty picture.
+
+- A pooled set's decisions are its sheets' decisions. The amber banner counts only what is really left unmade on the sheets, names the
+  sheet ("Sheet 2: 1 decision left unmade"), and Review opens that sheet (alone, as its key row does, or its own record) at that
+  decision, never a blank picture.
+- Rounds fired for a pool is the sum of the sheets' own; the pool never asks for it. If a sheet has none, the decision is that sheet's.
+- Look for every other place the pooled tab can reach that assumes a picture (the sheet crumb, Fix holes, Show in folder, Accept,
+  export, share) and make each act on the chosen sheet or be hidden in the pool; list in the report what each now does.
+- Tests: a three-sheet pool with every sheet settled shows no banner; one with an unsettled count on sheet 2 names sheet 2 and Review
+  opens sheet 2's picture; no path from a pooled tab shows an empty picture.
+
+## 1. A drop of pictures that are sheets of one set opens one tab, pooled
+
+When two or more pictures are dropped or pasted together (MainWindow.DropAndPaste's OpenDropped is where it starts), read each one's
+codes first. If every picture is a sheet of the same set (same definition, a set sheet number on each, no sheet twice), open ONE tab
+for the set, named for the set (for example "2 MOA diamond, 3 sheets"). Read the sheets one after another inside that tab, with the
+status saying "Reading sheet 2 of 3". When all are read, the tab shows the pooled set exactly as Pool the chosen does since entry 420:
+every shot on one plot, each sheet in its own shade, the key row per sheet that shows that sheet alone, the figures, the Shots list.
+No question is asked; the drop is the answer. Each sheet is still saved as its own session record and the pool as Pool the chosen
+saves it, so Session records looks the same as if it had been done by hand, and a test holds the two routes to the same figures.
+
+## 2. Each sheet can still be checked and fixed from inside the set's tab
+
+A sheet's holes and scale must still be checkable and fixable one sheet at a time (Fix holes, the bull lines, accepting). Reuse what
+exists: tapping a sheet's key row already shows that sheet alone; from there the ordinary tools act on that sheet, and the pool updates
+when it changes. If doing this well needs a layout choice that can be judged by looking (for example a row of sheet switches above the
+picture against the key rows alone), do not choose: build what does not depend on it, write a "DESIGN NEEDED:" line in for-alan.md,
+and the planning session will draw concepts.
+
+## 3. Everything that is not one clean set
+
+- Pictures from two or more sets in one drop: one tab per set of two or more sheets, a tab of its own for any single picture, and the
+  status says in one line what went where.
+- A sheet of the set missing: the tab opens anyway, says by name which sheets are missing (as pooling already does), and dropping the
+  missing sheet onto that tab later adds it to the set and updates the pool.
+- More pictures of the same set dropped onto an open set's tab: added to it, never a new tab.
+- The same sheet in two pictures: the tab keeps both out of the pool for that sheet and asks, in the tab, which one counts (the
+  centered warning style of 2026-10-02, not small status text). An identical picture twice is one picture.
+- Pictures whose codes cannot be read (store-bought targets, untagged photographs, a sheet whose codes failed): one centered question,
+  "Pool these N pictures as one group?", with "Pool them in one tab" as the default button and "One tab each" as the other. Pooled
+  untagged pictures each still need their own scale, as they do today.
+- A single picture dropped behaves exactly as now.
+
+## 4. Remove what this replaces
+
+"Read these as one set" goes, since nothing is left for it to do; keep only what "One tab each" in section 3 still needs. Update the
+tooltip, the guides, the Features page and the tour where they describe dropping several pictures or the button, and the Features page
+gets its own picture of a set's tab after a three-sheet drop (entry 256), using the 2 MOA three-page set.
+
+## 5. The phone
+
+The same on the phone where several pictures can be chosen at once from the gallery or Files: sheets of one set go into one set
+checklist and open pooled; anything else follows section 3. Say in the report if the phone cannot choose several at once anywhere.
+
+## 6. Tests and the usual
+
+Headless tests: three rendered sheets of the 2 MOA three-page set dropped together give one tab and the same figures as Pool the chosen;
+two sets mixed; a missing sheet then added by a second drop; the same sheet twice; three untagged pictures with both answers. One commit
+if it allows. Release-note in a shooter's words, kind changed, thanking Quack and Jylee. One "For Jylee" and one "For Quack" line in
+for-alan.md (not requests) saying what changed and in which nightly.
+
 ## 2026-10-14, entry 422: a click on the picture says what it did, and the side panel lands on it cleanly (Jylee)
 
 **Status: actioned 2026-10-14; sections 1 to 5 done.**
