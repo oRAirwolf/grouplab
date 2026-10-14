@@ -70,6 +70,7 @@ public class BenchCoverageTests
         ["TargetMaterial"] = "Two short lists of words and a check that a value is one of them. Entry 162.",
         ["BullLines"] = "Entry 407 section 1: one line a hole and a distance to each bull, drawn on the picture; the matching that decides the bull is measured.",
         ["BullChoosing"] = "Entry 407 section 1: the words for a chosen bull and one hole given or taken away, which is the matching again, measured already.",
+        ["ZeroWords"] = "Entry 424: the zero correction's sentences, put together from a correction already worked out, which is measured; nothing in it takes time.",
         ["ClickWords"] = "Entry 422: one sentence for what a click on the picture did, a string put together from a name; nothing in it takes time.",
         ["SheetReading"] = "Entry 407 section 2: the Groups section's answers turned into the rule the matching takes, and the read-back line; the matching is measured.",
         ["ShotList"] = "Entry 407 section 3: the Shots list's rows and one shot's bulls by distance, formatting over offsets the analysis already measures.",

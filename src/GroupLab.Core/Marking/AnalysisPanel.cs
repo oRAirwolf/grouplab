@@ -48,7 +48,8 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
     /// <param name="state">The marking.</param>
     /// <param name="units">The units the page is being read in, <see cref="UnitSettings.ForAnalysis"/>.</param>
     /// <param name="sitePublished">Whether grouplab.org is published, which decides where the "More" links point (entry 131 section 4.2).</param>
-    public static AnalysisPanel Build(MarkingState state, UnitSettings units, bool sitePublished = false)
+    /// <param name="insideScatter">Entry 424 section 2: what the zero says of an axis inside the scatter, from Settings.</param>
+    public static AnalysisPanel Build(MarkingState state, UnitSettings units, bool sitePublished = false, InsideScatter insideScatter = InsideScatter.LeaveIt)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
@@ -58,7 +59,7 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
         var report = GroupAnalysis.Analyse(state);
         var blocks = ImmutableList.CreateBuilder<PanelBlock>();
         blocks.Add(Group(report, units, sitePublished));
-        if (Zero(state, units, sitePublished) is { } zero)
+        if (Zero(state, units, sitePublished, insideScatter) is { } zero)
         {
             blocks.Add(zero);
         }
@@ -101,7 +102,7 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
     /// (entry 131 sections 3.1 and 5.2). Null where the marking cannot say where the group sits against where it was aimed, because a
     /// heading with nothing but "needs a point of aim" under it is the busy page section 5 is trying to undo.
     /// </summary>
-    private static PanelBlock? Zero(MarkingState state, UnitSettings units, bool sitePublished)
+    private static PanelBlock? Zero(MarkingState state, UnitSettings units, bool sitePublished, InsideScatter insideScatter)
     {
         if (Zeroing.For(state) is not { } zero || state.ShotDistanceInches is not { } distanceInches)
         {
@@ -113,25 +114,31 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
         string scope = units.Aiming(state.Rifle).Angular == Statistics.AngularUnit.Mrad ? "mil" : "moa";
         string headline = FourUnits.Headline(scope);
         var rows = ImmutableList.CreateBuilder<PanelFigure>();
+        // Entry 424: each axis's words from ZeroWords, the computer's own, elevation first: what to dial, or "leave it" and why.
+        var said = ZeroWords.For(zero, state, units, insideScatter);
+        int line = 0;
 
         foreach (var (axis, label) in new[] { (zero.Elevation, "Elevation"), (zero.Windage, "Windage") })
         {
+            string axisSays = said.Axes[line++];
             var four = FourUnits.Of(
                 Math.Abs(axis.OffsetInches),
                 yards,
                 FourUnits.Clicks(Math.Abs(axis.OffsetInches), yards, scope, state.Rifle?.ClickValue));
 
             // Entry 282 section 7: an axis too close to center to dial showed only "right" above "left", with no number. It gives the
-            // amount and where the group sits, and says it is too small to dial yet, with the shots that would settle it where known.
-            string tooSmall = axis.ShotsToSettle is { } settle
-                ? string.Create(CultureInfo.InvariantCulture, $"too small to dial yet; about {settle} shots would settle it")
-                : "too small to dial at this many shots";
+            // amount and where the group sits; entry 424, it says "leave it" and why, with the shots that would settle it where known.
+            string settles = axis.ShotsToSettle is { } settle
+                ? string.Create(CultureInfo.InvariantCulture, $"; about {settle} shots would settle it")
+                : "";
             rows.Add(new PanelFigure(
                 "zero",
                 label,
                 axis.Distinguishable ? four.Say(headline) : four.Say(headline) + " " + axis.Sits,
                 Unit: null,
-                Interval: !axis.Distinguishable ? tooSmall : four.Clicks is { } clicks ? axis.Dial + ", " + clicks : axis.Dial,
+                Interval: axis.Distinguishable
+                    ? four.Clicks is { } clicks ? axis.Dial + ", " + clicks : axis.Dial
+                    : insideScatter == InsideScatter.ClicksAnyway && axis.Rounded is not null ? axisSays : axisSays + settles,
                 Explanation: FigureExplanations.For("zero")?.Plain,
                 More: FigureExplanations.MoreAbout("zero-correction", sitePublished),
                 Headline: label == "Elevation",
@@ -147,8 +154,7 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
                 More: FigureExplanations.MoreAbout("zero-correction", sitePublished)));
         }
 
-        string note = string.Create(CultureInfo.InvariantCulture,
-            $"From {zero.Shots} shots at {units.DistanceText(distanceInches)}. {(zero.Worth ? "Worth dialling." : "Neither axis is far enough from centre to be worth dialling at this many shots.")}");
+        string note = string.Create(CultureInfo.InvariantCulture, $"From {zero.Shots} shots at {units.DistanceText(distanceInches)}. {said.Verdict}");
         return new PanelBlock("zero", "Zero", rows.ToImmutable(), note);
     }
 

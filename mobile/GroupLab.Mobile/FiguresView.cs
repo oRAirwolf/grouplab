@@ -100,7 +100,7 @@ internal sealed class FiguresView : UserControl
 
     private void Build()
     {
-        var (tiles, sections) = ResultFigures.Build(state, units, angle);
+        var (tiles, sections) = ResultFigures.Build(state, units, angle, Phone.Settings.LoadInsideScatter());
         column.Children.Clear();
         if (tiles.Count == 0)
         {

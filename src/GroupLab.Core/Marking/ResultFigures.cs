@@ -23,7 +23,7 @@ public sealed record ResultSection(string Key, string Heading, bool Open, IReadO
 public static class ResultFigures
 {
     /// <summary>The figures of a marking, sizes in <paramref name="angle"/> where the distance allows and it is given, in the person's length otherwise.</summary>
-    public static (IReadOnlyList<ResultFigure> Tiles, IReadOnlyList<ResultSection> Sections) Build(MarkingState state, UnitSettings units, AngularUnit? angle = null)
+    public static (IReadOnlyList<ResultFigure> Tiles, IReadOnlyList<ResultSection> Sections) Build(MarkingState state, UnitSettings units, AngularUnit? angle = null, InsideScatter insideScatter = InsideScatter.LeaveIt)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
@@ -77,7 +77,7 @@ public static class ResultFigures
             figures.Add(new ResultFigure("meanRadiusRange", "Mean radius range", Range(radius, Size) ?? "not available", Explanation: Explain("meanRadius"), ShotsCanSay: ShotsCanSay(radius, n, Size)));
         }
 
-        var panel = AnalysisPanel.Build(state, units);
+        var panel = AnalysisPanel.Build(state, units, insideScatter: insideScatter);
         foreach (var zero in panel.Blocks.Where(b => b.Key == "zero").SelectMany(b => b.Figures).Where(f => !f.Label.EndsWith("other units", StringComparison.Ordinal)))
         {
             figures.Add(new ResultFigure("zero", "Zero, " + zero.Label.ToLowerInvariant(), zero.Value, Explanation: zero.Explanation, Beneath: zero.Interval));

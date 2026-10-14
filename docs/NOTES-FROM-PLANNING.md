@@ -25,6 +25,54 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-14, entry 424: the zero correction says why an axis gets no click, and a setting gives both clicks always
+
+**Status: actioned 2026-10-14; sections 1 to 4 done; section 3 could not be checked against Alan's own session, which is not on this machine.**
+
+From the planning session, 2026-10-14 06:05 UTC. Alan, 2026-10-13 23:54 Denver, nightly 192, on a pooled three-sheet 2 MOA set (20
+shots): the zero correction said "Dial 1 click left, at 0.1 mil a click." for 0.11 mil right, and nothing for 0.08 mil low, which he
+read as a rounding mistake ("it should be rounding up"). It is not: ZeroCorrection leaves out an axis that is not Distinguishable
+(elevation 0.287 in low against a 95 percent half-width of about 0.41 in from these 20 shots; windage about 0.35 in right against about
+0.26 in). The fault is that the screen leaves the axis out without a word. Alan chose (asked 2026-10-13 23:58 Denver): a setting,
+defaulting to "leave it, and why". Main model (statistics and UI).
+
+## 1. Say "leave it" and why, by default
+
+When one axis is not distinguishable, the verdict names it instead of dropping it, for example: "Dial 1 click left, at 0.1 mil a click.
+Elevation: leave it. 0.08 mil low is within what these 20 shots can tell apart (about 0.11 mil either way)." Both units systems, the
+rifle's own click, and the angle in the unit the click is in. When neither axis is distinguishable, the existing verdict stays but says
+the same for each axis. The phone gets the same words. Check the "why" disclosure under the zero correction still agrees with the new
+line, and that Shots Needed to Zero (which already estimates how many shots would settle it) is pointed to from the line where it helps.
+
+Alan's screenshot of the "why" disclosure on that screen reads: "The group center is known to within give or take 0.225 in 0.06 mil
+across and 0.411 in 0.11 mil up and down, at 95 percent. Rounding left to whole clicks leaves 0.01 mil. each axis on its own, 19 degrees
+of freedom, the group not being circular". It never says that this is why elevation got no click, it runs the inch and mil figures
+together with no separator, and the third line starts lower case and is written for a statistician. Rewrite it in a shooter's words:
+first the reason the axis was left out (or given anyway, with the setting), then the give or take on each axis as "0.225 in (0.06
+mil)", and the method line last, plainly ("worked out on each axis separately from 20 shots, because the group is taller than it is
+wide"). Note its across half-width (0.225 in) also differs from what the Shots list's across column gives (about 0.255 in); section 3
+covers that.
+
+## 2. A setting: always give both clicks
+
+Settings, under the rifle and scope or wherever the zero correction's other choices live: "When an axis is inside the scatter" with
+"Say leave it, and why" (default) and "Give the clicks anyway". With the second, both axes are rounded to whole clicks, the uncertain one
+marked: "Dial 1 click left and 1 click up, at 0.1 mil a click. The up click is within the scatter; more shots would tell whether it is
+needed." An axis whose offset rounds to zero clicks says "no click" either way. Remembered, both platforms.
+
+## 3. Check the pooled windage figure
+
+On the same screen the zero correction and Group say 0.387 in right, while the Shots list's across column for those 20 shots averages
+0.348 in; elevation agrees exactly (0.287 low both ways). Find out which is right for a pooled set (sheet offsets, aim points, or the
+list's own reference) and make the screen agree with itself; say in the report what it was. Add a test that a pool's center from aim
+equals the mean of its Shots list on both axes, or states why it should not.
+
+## 4. The usual
+
+Tests for both settings at the boundary (an offset just inside and just outside the half-width) and for the rounding (0.08 mil at a 0.1
+mil click gives 1 click with the setting on). One commit if it allows; Release-note in a shooter's words, kind changed. The Features
+page and the guides where they describe the zero correction.
+
 ## 2026-10-14, entry 423: several pictures dropped together open in ONE tab, and a set is pooled without being asked
 
 **Status: actioned 2026-10-14; sections 0 to 4 and 6 done; section 5 done for a set chosen or shared together, not done for section 3's other cases on the phone, which keep its old behaviour; question 98 asks about copies of a single-page design.**

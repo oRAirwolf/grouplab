@@ -579,7 +579,7 @@
       "key": "six-figures",
       "group": "The numbers",
       "name": "The figures you read off a target",
-      "sentence": "The analysis leads with the figures a shooter reads off a target and the zero correction on the paper and in your scope's unit, mil or MOA, with the clicks to dial.",
+      "sentence": "The analysis leads with the figures a shooter reads off a target and the zero correction on the paper and in your scope's unit, mil or MOA, with the clicks to dial; an axis too close to the aim to tell from the scatter is named \"leave it\", with why, or given its click anyway if you choose that in Settings.",
       "shot": "analysis",
       "platforms": [
         "Windows",
@@ -589,7 +589,10 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.95",
-      "note": "The analysis screen shows the six figures you read off a target",
+      "note": [
+        "The analysis screen shows the six figures you read off a target",
+        "now says leave it, and why"
+      ],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "article": "mean-radius-or-extreme-spread",
@@ -1375,7 +1378,7 @@
       "key": "shots-table",
       "group": "The numbers",
       "name": "Every shot, and which count",
-      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did.",
+      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did. The list ends with the group's center, the mean of the shots counted, which is the zero correction's figure.",
       "shot": "shots-open",
       "platforms": [
         "Windows",
@@ -1387,7 +1390,8 @@
       "since": "next",
       "note": ["Shots and clicks", "brings its place in the side panel fully into view", "On the phone, the Counted and Left out switch",
         "The Shots list is now short rows",
-        "Leaving a shot out no longer asks why"],
+        "Leaving a shot out no longer asks why",
+        "ends with the group's center"],
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "mobile": {

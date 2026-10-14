@@ -6900,6 +6900,18 @@
   "When they are sheets of one set they open in one tab , named for the set (\"GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets\"); the sheets are read one after another while the status line says \"Reading sheet 2 of 3\", each is saved as its own session record, and the tab shows the pooled set, with no question asked.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "0.08 mil low is within what these 20 shots can tell apart (about 0.11 mil either way).\" When neither axis is, it says so for each and how many shots would settle it, and **Shots Needed to Zero** works the number out.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ZeroWords.cs For, used by MainWindow's zero panel and AnalysisPanel on the phone; held by ZeroWordsTests and ZeroSectionTests.InsideTheScatterTheLineSaysLeaveItOrWithTheSettingGivesTheClick (entry 424)"
+  },
+  "An axis that is not is named and left alone, with why: \"Dial 1 click left, at 0.1 mil a click.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ZeroWords.cs For, used by MainWindow's zero panel and AnalysisPanel on the phone; held by ZeroWordsTests and ZeroSectionTests.InsideTheScatterTheLineSaysLeaveItOrWithTheSettingGivesTheClick (entry 424)"
+  },
+  "0.08 mil low is within what these 20 shots can tell apart (about 0.11 mil either way).\" When neither axis is, it says so for each and how many shots would settle it, and Shots Needed to Zero works the number out.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/ZeroWords.cs For, used by MainWindow's zero panel and AnalysisPanel on the phone; held by ZeroWordsTests and ZeroSectionTests.InsideTheScatterTheLineSaysLeaveItOrWithTheSettingGivesTheClick (entry 424)"
   }
  },
  "rules": [

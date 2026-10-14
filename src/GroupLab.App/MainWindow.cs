@@ -3387,6 +3387,25 @@ public sealed partial class MainWindow : Window
             offsetTable.Children.Add(row);
         }
 
+        // Entry 424 section 3: the list's own center, the mean of the shots it counts, which is the group's center from aim and the zero's
+        // offset to the last digit; a shot struck through is listed and not in it, which is why a plain average of the column can differ.
+        if (centre is { } middle && ordered.Count(p => !p.Excluded) is int kept and > 1)
+        {
+            var shownCentre = AsDisplayed(middle);
+            var texts = new List<string> { "center" };
+            if (bullColumn)
+            {
+                texts.Add("");
+            }
+
+            texts.AddRange([units.Number(shownCentre.X), units.Number(-shownCentre.Y), ""]);
+            var centreRow = Cells(texts, heading: false, dim: true, struck: false);
+            centreRow.Margin = new Thickness(Tokens.Space4, Tokens.Space4, Tokens.Space4, 0);
+            ToolTip.SetTip(centreRow, string.Create(CultureInfo.InvariantCulture,
+                $"The center of the {kept} shots counted, the group's center from aim{(kept < ordered.Count ? "; the struck-through shots are not in it" : "")}"));
+            offsetTable.Children.Add(centreRow);
+        }
+
         ShowThumbnail(state);
         ShowAimPoints(state);
         ShowFullFigures(state);
@@ -5777,6 +5796,27 @@ public sealed partial class MainWindow : Window
         };
         column.Children.Add(paperFirst);
 
+        // Entry 424 section 2, Alan's choice: what the zero correction says of an axis inside the scatter, the same setting as on the phone.
+        column.Children.Add(Ruled("Zero correction"));
+        column.Children.Add(FieldLabel(ZeroWords.SettingLabel));
+        var scatterRule = settingsStore.LoadInsideScatter();
+        foreach (var (rule, words) in new[] { (InsideScatter.LeaveIt, ZeroWords.LeaveItChoice), (InsideScatter.ClicksAnyway, ZeroWords.AnywayChoice) })
+        {
+            var choice = new RadioButton { GroupName = "insideScatter", Content = Wrapped(words), IsChecked = scatterRule == rule };
+            choice.IsCheckedChanged += (_, _) =>
+            {
+                if (choice.IsChecked == true && settingsStore.LoadInsideScatter() != rule)
+                {
+                    settingsStore.SaveInsideScatter(rule);
+                    DiagnosticLog.Info("settings.insideScatter", ("rule", rule.ToString()));
+                    Refresh();
+                }
+            };
+            column.Children.Add(choice);
+        }
+
+        column.Children.Add(Line(ZeroWords.SettingSays));
+
         // Entry 314 section 1: what the caliber box offers, the same setting as on the phone.
         column.Children.Add(Ruled(AppSettingsStore.CaliberListLabel));
         foreach (var list in Enum.GetValues<CaliberList>())
@@ -6405,23 +6445,17 @@ public sealed partial class MainWindow : Window
             Classes = { AppStyles.Secondary },
         });
 
-        var dialAxes = new[] { zero.Windage, zero.Elevation }.Where(a => a.Distinguishable).ToList();
-        string verdictText = dialAxes.Count == 0
-            ? view.Verdict
-            : dialAxes.All(a => a.Clicks is not null) && state.Rifle is { } rifle
-                ? $"Dial {string.Join(" and ", dialAxes.Select(a => a.Clicks!.Describe()))}, at {rifle.DescribeClick()}."
-                : $"Dial {string.Join(" and ", dialAxes.Select(a => a.Dial))} by the figures above." + (state.Rifle is null ? " " + (AskWhichRifle ? ResultWords.WhichRifle : "Choose a rifle to have it in clicks.") : "");
+        // Entry 424: the line and its why from ZeroWords, shared with the phone and the report: an axis inside the scatter is named, "leave
+        // it", with why, or under the setting given its click anyway and marked.
+        var said = ZeroWords.For(zero, state, units, settingsStore.LoadInsideScatter());
+        string verdictText = said.Verdict + (said.Dial && state.Rifle is null ? " " + (AskWhichRifle ? ResultWords.WhichRifle : "Choose a rifle to have it in clicks.") : "");
         var verdict = new TextBlock { Text = verdictText, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, Tokens.Space4) };
-        if (view.Dial)
+        if (said.Dial)
         {
             verdict.Classes.Add(AppStyles.Good);
         }
 
-        var why = new List<string> { "The group center is known to within " + view.Note! + "." };
-        why.AddRange(dialAxes.Where(a => a.Clicks is not null).Select(a => string.Create(CultureInfo.InvariantCulture,
-            $"Rounding {a.Dial} to whole clicks leaves {Math.Abs(a.Clicks!.ResidualAngle):0.00} {UnitSettings.Symbol(a.Clicks.Unit)}.")));
-        why.AddRange(view.Why);
-        zeroPanel.Children.Add(Explained(verdict, item, [.. why]));
+        zeroPanel.Children.Add(Explained(verdict, item, [.. view.Why]));
         if (view.AtZero is { } atZero)
         {
             zeroPanel.Children.Add(new TextBlock { Text = atZero, TextWrapping = TextWrapping.Wrap, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 0, 0, Tokens.Space4) });
@@ -6501,7 +6535,7 @@ public sealed partial class MainWindow : Window
 
         double? distance = state.ShotDistanceInches;
         string Both(double inches) => Aim.AngleText(Math.Abs(inches), distance) is { } angle
-            ? $"{units.Length(Math.Abs(inches))}  {angle}"
+            ? $"{units.Length(Math.Abs(inches))} ({angle})"
             : units.Length(Math.Abs(inches));
 
         var rows = new List<(string, string, string, string)>();
@@ -6517,51 +6551,26 @@ public sealed partial class MainWindow : Window
         // Entry 97 section 2: in clicks where the marking names a rifle and the distance is set, with what rounding leaves, and otherwise in
         // the linear and angular figures, which every turret is marked in one of.
         string Dial(ZeroAxis axis) => axis.Clicks is { } clicks
-            ? clicks.Describe() + string.Create(CultureInfo.InvariantCulture, $" ({Both(axis.OffsetInches)}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {UnitSettings.Symbol(clicks.Unit)})")
+            ? clicks.Describe() + string.Create(CultureInfo.InvariantCulture, $", {Both(axis.OffsetInches)}, leaving {Math.Abs(clicks.ResidualAngle):0.00} {UnitSettings.Symbol(clicks.Unit)}")
             : $"{Both(axis.OffsetInches)} {axis.Dial}";
-        var dial = new List<string>();
-        if (zero.Windage.Distinguishable)
-        {
-            dial.Add(Dial(zero.Windage));
-        }
-
-        if (zero.Elevation.Distinguishable)
-        {
-            dial.Add(Dial(zero.Elevation));
-        }
-
-        string verdict;
+        // Entry 424: the verdict and its reasons from ZeroWords, the words the analysis panel and the phone show. Entry 170 section 1.1: the
+        // report says which distance the correction is for, because a shooter reads it as the correction for his usual zero otherwise.
+        var said = ZeroWords.For(zero, state, units, settingsStore.LoadInsideScatter());
+        // Question 91: the screen's lines joined into one sentence, the clicks with the distance and what rounding leaves; then, entry 424,
+        // what to leave and why. Where nothing is dialled the report says exactly what the screen says.
+        var turned = new[] { zero.Windage, zero.Elevation }.Where(a => a.Rounded is { Count: > 0 } && (a.Distinguishable || settingsStore.LoadInsideScatter() == InsideScatter.ClicksAnyway)).ToList();
+        string verdict = said.Dial && state.Rifle is not null && turned.Count > 0 && distance is { } d
+            ? said.Head.TrimEnd('.') + $", for a zero at {units.DistanceText(d)}, rounding to whole clicks leaving "
+                + string.Join(" and ", turned.Select(a => string.Create(CultureInfo.InvariantCulture, $"{Math.Abs(a.Rounded!.ResidualAngle):0.00} {UnitSettings.Symbol(a.Rounded.Unit)}"))) + "."
+                + (said.Rest.Length > 0 ? " " + said.Rest : "")
+            : said.Verdict;
         var why = new List<string>();
-        if (dial.Count > 0)
-        {
-            // Entry 170 section 1.1: the correction is for the distance shot, and the verdict says which, because a shooter reads it as the
-            // correction for his usual zero otherwise.
-            // Question 91 (planning, 2026-10-08): the screen's wording, its lines joined into one sentence: the clicks and the click they are
-            // counted in, the distance, and what rounding to whole clicks leaves; or the figures to dial by where there are no clicks.
-            var axes = new[] { zero.Windage, zero.Elevation }.Where(a => a.Distinguishable).ToList();
-            string at = distance is { } d ? $", for a zero at {units.DistanceText(d)}" : "";
-            verdict = axes.All(a => a.Clicks is not null) && state.Rifle is { } rifle
-                ? $"Dial {string.Join(" and ", axes.Select(a => a.Clicks!.Describe()))}, at {rifle.DescribeClick()}{at}, rounding to whole clicks leaving "
-                    + string.Join(" and ", axes.Select(a => string.Create(CultureInfo.InvariantCulture, $"{Math.Abs(a.Clicks!.ResidualAngle):0.00} {UnitSettings.Symbol(a.Clicks.Unit)}"))) + "."
-                : $"Dial {string.Join(" and ", axes.Select(a => a.Dial))} by the figures above{at}.";
-        }
-        else
-        {
-            int? settle = zero.Windage.ShotsToSettle is { } w && zero.Elevation.ShotsToSettle is { } e ? Math.Min(w, e) : zero.Windage.ShotsToSettle ?? zero.Elevation.ShotsToSettle;
-            verdict = FormattableString.Invariant($"Not distinguishable from zero at {zero.Shots} shots.")
-                + (settle is { } more ? FormattableString.Invariant($" About {more} shots would settle it.") : " Nothing this rifle can shoot would settle an offset this small.");
-            why.Add(FormattableString.Invariant($"The smallest offset these shots can call is {Both(zero.DetectableInches)}.") + (settle is not null ? " Shoot more before touching the turret." : ""));
-        }
-
-        why.Add(zero.Circular
-            ? $"sigma pooled over both axes on {zero.DegreesOfFreedom} degrees of freedom, the group being circular"
-            : $"each axis on its own, {zero.DegreesOfFreedom} degrees of freedom, the group not being circular");
         why.Add(distance is null
             ? "Angular figures and clicks need the shot distance. It corrects the zero at the distance shot; moving a zero between distances needs the solver."
             : state.Rifle is null
                 ? (AskWhichRifle ? ResultWords.WhichRifle : "Choose a rifle to have this in clicks.") + " It corrects the zero at the distance shot; moving a zero between distances needs the ballistic solver."
                 : $"In clicks of {state.Rifle.Name}'s scope, {state.Rifle.DescribeClick()}, at the distance shot. Moving a zero between distances needs the ballistic solver.");
-        return new ZeroView(null, rows, note, verdict, dial.Count > 0, why)
+        return new ZeroView(null, rows, note, verdict, said.Dial, [.. said.Why, .. why])
         {
             AtZero = AtRifleZero(state, zero),
             Offset = offset,

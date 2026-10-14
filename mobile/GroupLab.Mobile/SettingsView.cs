@@ -70,6 +70,25 @@ public sealed class SettingsView : UserControl
             column.Children.Add(radio);
         }
 
+        // Entry 424 section 2: what the zero correction says of an axis inside the scatter, the same setting as on the desktop.
+        column.Children.Add(Screens.Heading("Zero correction"));
+        column.Children.Add(Screens.Dim(GroupLab.Core.Marking.ZeroWords.SettingLabel));
+        foreach (var (rule, words) in new[] { (GroupLab.Core.Marking.InsideScatter.LeaveIt, GroupLab.Core.Marking.ZeroWords.LeaveItChoice), (GroupLab.Core.Marking.InsideScatter.ClicksAnyway, GroupLab.Core.Marking.ZeroWords.AnywayChoice) })
+        {
+            var radio = Screens.Radio("insideScatter", words, settings.LoadInsideScatter() == rule);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && settings.LoadInsideScatter() != rule)
+                {
+                    settings.SaveInsideScatter(rule);
+                    DiagnosticLog.Info("settings.insideScatter", ("rule", rule.ToString()));
+                }
+            };
+            column.Children.Add(radio);
+        }
+
+        column.Children.Add(Screens.Dim(GroupLab.Core.Marking.ZeroWords.SettingSays));
+
         // Entry 314 section 1: what the caliber box offers, the same setting as on the desktop.
         column.Children.Add(Screens.Heading(AppSettingsStore.CaliberListLabel));
         var offered = settings.LoadCaliberList();

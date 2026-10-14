@@ -357,6 +357,14 @@ public sealed class AppSettingsStore(string path)
     /// </summary>
     public bool LoadSaveByHand() => Read(file => file["saveByHand"]?.GetValueKind() == JsonValueKind.True);
 
+    /// <summary>Entry 424 section 2: what the zero correction says of an axis inside the scatter; leave it, and why, unless chosen otherwise.</summary>
+    public GroupLab.Core.Marking.InsideScatter LoadInsideScatter() =>
+        Read(file => (string?)file["insideScatter"] == nameof(GroupLab.Core.Marking.InsideScatter.ClicksAnyway)
+            ? GroupLab.Core.Marking.InsideScatter.ClicksAnyway
+            : GroupLab.Core.Marking.InsideScatter.LeaveIt);
+
+    public bool SaveInsideScatter(GroupLab.Core.Marking.InsideScatter rule) => Save(file => file["insideScatter"] = rule.ToString());
+
     public bool SaveSaveByHand(bool byHand) => Save(file => file["saveByHand"] = byHand);
 
     /// <summary>Entry 280 section 1: the unit a figure was last switched to by a tap, by its key, or null where it never was.</summary>

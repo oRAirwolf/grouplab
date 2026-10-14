@@ -277,14 +277,20 @@ Ballistics, whose dope then includes it at every range until you stop it.
 
 **The zero correction** gives the group center's offset across and up and down on the paper and in your scope's unit alone, mil or MOA, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
 
-It says what to dial when the group's center is far enough from the aim to be told from chance. When it is not, it says so and how many shots would settle it. Dialing an offset nobody can distinguish from zero only chases noise.
+It says what to dial when the group's center is far enough from the aim to be told from chance. An axis that is not is named and left
+alone, with why: "Dial 1 click left, at 0.1 mil a click. Elevation: leave it. 0.08 mil low is within what these 20 shots can tell apart
+(about 0.11 mil either way)." When neither axis is, it says so for each and how many shots would settle it, and **Shots Needed to Zero**
+works the number out. Dialing an offset nobody can distinguish from zero only chases noise. If you would rather have both clicks always,
+Settings, **Zero correction**, has **When an axis is inside the scatter**: **Say leave it, and why** (the default) or **Give the clicks
+anyway**, which rounds both axes to whole clicks and marks the uncertain one ("The up click is within the scatter; more shots would tell
+whether it is needed"). An axis that rounds to no click says "no click" either way. The same setting is on the phone.
 
 **The two cards,** in Advanced:
 - **Shape** says whether the group is round, as far as its shots can tell. It also says whether it strings vertically, and what that test could have detected. A test on few shots misses most real stringing, so "no evidence" is not evidence of none.
 - **Worst shot** says whether the shot furthest out is further than groups of that size usually put their worst. Even when it is, that makes it worth a look, not a flyer. Whether it was called or pulled is yours to say.
 
 **What each "why" says, in plain words:**
-- **Zero correction:** the smallest offset these shots can call; how the spread was estimated; and that moving a zero between distances needs the ballistics screen.
+- **Zero correction:** first why an axis got no click (or got one anyway); then how well the center is known on each axis, as "0.225 in (0.06 mil)"; what rounding to whole clicks leaves; how it was worked out, on each axis separately when the group is taller than it is wide, or both together when it is round; and that moving a zero between distances needs the ballistics screen.
 - **CEP:** these circles come from the group's sigma, assuming the shots scatter evenly about the center.
 - **Shape:** how often a truly round group would look this far from round, and the shape of the group's error ellipse.
 - **Worst shot:** how far out the worst shot sits in the group's own mean radii, against where simulated round groups put theirs.

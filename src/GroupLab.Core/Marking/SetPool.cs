@@ -99,7 +99,12 @@ public static class SetPool
                 var image = shot.Bull is { } b && at.TryGetValue(b, out var origin) && offsets.Count == marked.Count
                     ? new PointD(origin.X + (offsets[i].X * 254), origin.Y + (offsets[i].Y * 254))
                     : Page(shot.Image);
-                shots.Add(new MarkedShot(next++, image, shot.Provenance, shot.Exclusion, false, shot.Bull is { } own ? Index(k, own) : null, shot.BullChosen, shot.MeasuredDiameterInches));
+                // Entry 424 section 3: a shot marked as a sighter or a flyer stays so in the pool, so the pool counts what its sheet counted.
+                shots.Add(new MarkedShot(next++, image, shot.Provenance, shot.Exclusion, false, shot.Bull is { } own ? Index(k, own) : null, shot.BullChosen, shot.MeasuredDiameterInches)
+                {
+                    Sighter = shot.Sighter,
+                    Flyer = shot.Flyer,
+                });
             }
         }
 

@@ -260,8 +260,8 @@ internal sealed class CompositePlot : Control
     internal IReadOnlyList<PlotShot> Show(MarkingState state, TargetDefinition? definition, UnitSettings units, Func<int, string> shotLabel, Func<int, string> bullLabel)
     {
         ArgumentNullException.ThrowIfNull(state);
-        var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
-        var shots = state.Shots.Where(s => s.IsShot && !(s.Bull is { } b && sighters.Contains(b))).ToList();
+        // Entry 424 section 3: the shots the figures count, so a shot marked as a sighter is left out here as it is from the group's figures.
+        var shots = state.Shots.Where(s => s.IsShot && !GroupAnalysis.OnSighter(state, s)).ToList();
         var offsets = GroupAnalysis.CompositeOffsets(state, shots);
         var named = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         List<PlotShot> plotted = offsets.Count == shots.Count

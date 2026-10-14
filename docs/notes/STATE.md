@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-14, entry 423 (before it: entries 422, 421, 416, 415, 420, 419, 418 and 417).
+**Last rewritten:** 2026-10-14, entry 424 (before it: entries 423, 422, 421, 416, 415, 420, 419, 418 and 417).
 
 ---
 
@@ -19,7 +19,10 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 423 is done** (Alan, Quack, Jylee): several pictures of one set dropped together open in ONE tab, read in turn and pooled
   with no question; Check one sheet opens one alone to fix; a drop never replaces a tab holding a target (the bug Alan hit on 191 and
   192, no record overwritten). The phone's pickers take several, and a set chosen together opens pooled. Question 98 is about copies of
-  a single-page design. Next: entry 424 (the zero correction says why an axis gets no click).
+  a single-page design. Published on the site from 800e1d93.
+- **Entry 424 is done** (Alan on nightly 192): the zero correction names an axis inside the scatter, "leave it", with why, on both
+  platforms and in the report (`ZeroWords`); Settings, Zero correction, "Give the clicks anyway" gives both clicks, marked. The Shots
+  list ends with a center row; a shot marked as a sighter is now out of the zero and the plot as it is out of Group.
 - **The queue of 2026-10-13 is done** (417, 418, 419, 420, 415, 416); section 1 of 418 waits on request 99, 419 on request 98,
   415 section 3.2 not done. The detail is in PHASE1-RESULTS.md.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
@@ -82,10 +85,12 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 424.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **The zero's words are `ZeroWords`** (entry 424), read by the desktop panel, the report and the phone; `ZeroAxis.Rounded` has the
+  clicks on every axis, `Clicks` only on one worth dialling.
 - **A tab can hold a set** (entry 423): `OpenTarget.Set` parks each picture of the set as a tab parks a target, and the pool is worked out
   afresh whenever it is shown; a drop onto a tab holding a target always opens beside it. "Read these as one set" is gone.
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
@@ -93,15 +98,9 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **ios-app.yml's "The iPad and landscape" step failed on runs since 2026-10-11, and "Real taps" on some** (again on nightly 192's run).
-- **Text sizes go through `TextSize.Of`** (entry 411): a size set in code on a phone screen that skips it does not follow Android's
-  text size. The desktop and the iPhone keep the sizes as they are.
 - **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
-- **A force-stop in the middle of a reading is checked after every nightly** (`scripts/android-force-stop.sh`): it did not stop the
-  next start in any of five rounds. Run 37735635656's "nothing ran" was most likely its own walk's faults of that time.
-- **A PNG's grey is made from its colour decode as libpng makes it** (`ImageLoader.GreyLikeLibpng`), only where the file names no
-  gamma, colour space or profile; `ImageLoaderSameResultTests` holds it to the bit.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).

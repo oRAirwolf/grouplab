@@ -89,9 +89,46 @@ public class ZeroSectionTests
         Dispatcher.UIThread.RunJobs();
         var dial = Assert.Single(window.ZeroText, t => t.StartsWith("Dial", StringComparison.Ordinal));
         // Entry 169 section 2.2: the clicks with the click value stated, and what rounding leaves behind the line's "why".
-        Assert.Equal("Dial 5 clicks left, at 0.25 MOA a click.", dial);
+        // Entry 424: the elevation, on the aim, is named rather than left out without a word.
+        Assert.StartsWith("Dial 5 clicks left, at 0.25 MOA a click. Elevation: leave it. It is on the aim", dial, StringComparison.Ordinal);
         Assert.Contains(window.ZeroText, t => t.StartsWith("Rounding left to whole clicks leaves", StringComparison.Ordinal));
         window.Close();
+    }
+
+    /// <summary>
+    /// Entry 424 sections 1 and 2: an offset inside the scatter says "leave it" and why by default; with "Give the clicks anyway" in Settings,
+    /// remembered, the same group is given its click, marked as within the scatter.
+    /// </summary>
+    [AvaloniaFact]
+    public void InsideTheScatterTheLineSaysLeaveItOrWithTheSettingGivesTheClick()
+    {
+        string path = Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json");
+        var store = new AppSettingsStore(path);
+        store.SaveUnits(UnitSettings.Imperial);
+        var window = new MainWindow(store) { Width = 1400, Height = 900 };
+        window.Show();
+        try
+        {
+            Mark(window, offsetInches: 0.15, sigmaInches: 0.27);
+            window.Session.SetShotDistance(3600);
+            window.Session.SetEquipment(new Rifle("Tikka T3x", 0.25, GroupLab.Core.Statistics.AngularUnit.Moa), null, null);
+            Dispatcher.UIThread.RunJobs();
+            var said = Assert.Single(window.ZeroText, t => t.StartsWith("Not distinguishable", StringComparison.Ordinal));
+            Assert.Contains("Windage: leave it. 0.14 MOA right is within what these 10 shots can tell apart", said, StringComparison.Ordinal);
+            Assert.Contains(window.ZeroText, t => t.StartsWith("Windage got no click: ", StringComparison.Ordinal));
+
+            store.SaveInsideScatter(GroupLab.Core.Marking.InsideScatter.ClicksAnyway);
+            Assert.Equal(GroupLab.Core.Marking.InsideScatter.ClicksAnyway, new AppSettingsStore(path).LoadInsideScatter());
+            window.RefreshForTests();
+            Dispatcher.UIThread.RunJobs();
+            var dial = Assert.Single(window.ZeroText, t => t.StartsWith("Dial", StringComparison.Ordinal));
+            Assert.Equal("Dial 1 click left, at 0.25 MOA a click. Elevation: no click. The left click is within the scatter; more shots would tell whether it is needed.", dial);
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.DeleteFile(path);
+        }
     }
 
     /// <summary>

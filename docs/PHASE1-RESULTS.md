@@ -693,6 +693,39 @@ Wording for sections 1, 2 and 5 to 9 by docs-sonnet; section 3's code, its test 
    proved only by ios-app.yml's build.
 6. Tests above; the Release-note thanks Quack and Jylee; their lines are in for-alan.md.
 
+## Entry 424: the zero correction says why an axis gets no click, and a setting gives both clicks always (2026-10-14)
+
+1. **"Leave it", and why** (`ZeroWords`, one class the desktop's zero panel, the session report and the phone's figures all read). An axis
+   inside the scatter is named instead of dropped: "Dial 1 click left, at 0.1 mil a click. Elevation: leave it. 0.08 mil low is within
+   what these 20 shots can tell apart (about 0.11 mil either way)." The angle is in the rifle's scope unit, the unit its click is in, and
+   the size in the length unit chosen. When neither axis is distinguishable the old verdict stays and each axis is named the same way; an
+   axis right on the aim says "it is on the aim, as near as these 20 shots can tell". Where an axis was left and more shots would settle
+   it, the line points to Shots Needed to Zero. The phone's zero rows say the same words under each axis, and its note carries the line.
+   **The why, rewritten** in this order: why the axis got no click (or got one anyway); "The group's center is known to within 0.225 in
+   (0.06 mil) across and 0.411 in (0.11 mil) up and down, at 95 percent."; what rounding to whole clicks leaves; and the method last,
+   "Worked out on each axis separately from 20 shots, because the group is taller than it is wide" (or "both axes together ... about as
+   wide as it is tall"). The report's own "give or take" line separates the figures the same way. Question 91's rule holds: the report's
+   sentence is the screen's, joined with the distance and the rounding, then what to leave and why.
+2. **The setting**: Settings, **Zero correction**, "When an axis is inside the scatter": **Say leave it, and why** (default) or **Give
+   the clicks anyway**, remembered in the settings file on both platforms (`AppSettingsStore.LoadInsideScatter`). With it: "Dial 1 click
+   left and 1 click up, at 0.1 mil a click. The up click is within the scatter; more shots would tell whether it is needed."; an axis that
+   rounds to no click says "no click" either way. Every axis now carries its rounded clicks (`ZeroAxis.Rounded`) whatever the verdict;
+   `Clicks` is still only given for an axis worth dialling, so nothing that read it changes.
+3. **The pooled windage figure.** Every shot's offset in the Shots list and in the zero comes from one calculation
+   (`GroupAnalysis.CompositeOffsets`) on the same pooled marking, so over the shots the figures count the list's mean is the centre to the
+   last digit (`ZeroWordsTests.APoolsCentreIsTheMeanOfItsShotsListOverTheCountedShots`, with a left-out shot in the pool). The list also
+   shows shots left out, struck through, which the centre does not count; Alan's 0.348 against 0.387 with elevation equal fits one such
+   row at about 0.43 in left and 0.29 in low (from his numbers; his session is not on this machine, so it is not confirmed). The screen now
+   agrees with itself: the list ends with a **center** row, the mean of the shots it counts, which is the zero's and Group's figure, with
+   a tip saying struck-through shots are not in it. **Found on the way and fixed:** a shot marked as a sighter on a scoring bull was left
+   out of Group but counted in the zero, the plot and its list; all now leave it out (`GroupAnalysis.OnSighter`), and pooling a set keeps
+   each shot's sighter and flyer marks, which it dropped.
+4. Tests: `ZeroWordsTests` (just inside and just outside the half-width under both settings; 0.08 mil at a 0.1 mil click gives 1 click
+   with the setting on; neither axis; the marked sighter; the pool's centre), `ZeroSectionTests.InsideTheScatterTheLineSaysLeaveItOrWith
+   TheSettingGivesTheClick` (the desktop line, the setting remembered by a fresh store), and the report tests of question 91 kept. The
+   user guide's zero paragraph and its "why" line and the Features page's figures entry say it. Not changed: the Zero from this group
+   window's own per-axis lines, which already say "too little to dial" with the shots that would settle it, do not follow the setting.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

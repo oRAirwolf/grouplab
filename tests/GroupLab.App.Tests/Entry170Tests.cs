@@ -82,8 +82,11 @@ public class Entry170Tests
             string screen = zero.Single(t => t.StartsWith("Dial ", StringComparison.Ordinal));
             Assert.Contains("For a zero at 25.4 yd.", zero);
             string report = window.BuildReport().Zero.Verdict;
-            Assert.StartsWith(screen.TrimEnd('.') + ", for a zero at 25.4 yd, rounding to whole clicks leaving ", report, StringComparison.Ordinal);
-            Assert.EndsWith(" mil.", report, StringComparison.Ordinal);
+            // Entry 424: the screen's line goes on to say what to leave and why, and the report ends with the same words.
+            string head = screen[..(screen.IndexOf("a click.", StringComparison.Ordinal) + "a click".Length)];
+            string rest = screen[(head.Length + 1)..].TrimStart();
+            Assert.StartsWith(head + ", for a zero at 25.4 yd, rounding to whole clicks leaving ", report, StringComparison.Ordinal);
+            Assert.EndsWith(rest.Length > 0 ? " mil. " + rest : " mil.", report, StringComparison.Ordinal);
         }
         finally
         {
