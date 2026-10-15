@@ -3,6 +3,22 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 101. One word in the Claude Code session, so Discord pictures can go on their GitHub issues, one minute (entry 429)
+
+**Answered 2026-10-15 (entry 429):** Alan sent the message in the session, adding that the `grouplab-error-reports` token now has Contents: Read and write on the crash-reports repository. The worker change is commit 5baf3bbf; the six pictures of #29 to #34 are on their issues; the server install is request 102.
+
+**Why:** you said the Discord pictures may go on their GitHub issues, and that consent is now written down. The change that does it
+(the bot saving each picture into the private crash-reports repository and showing it on its issue, and putting the six issues' pictures
+there once) was stopped by Claude Code's own safety check, which treats moving people's posted pictures to another place as personal
+data and wants your word in the session itself, not a note passed on. Nothing was changed on the server or on GitHub.
+
+**Steps:** in the Claude Code session, send the message below. If you would rather the pictures stayed private after all, say that
+instead and the consent will be marked withdrawn.
+
+    Go ahead with entry 429 section 2: put the Discord attachments on their GitHub issues.
+
+**A good answer:** that message. A server paste follows as its own request once the change is on main.
+
 ## 100. The Discord bot's fix, one paste, about five minutes, whenever suits (entry 427)
 
 **Answered 2026-10-15 (entry 428):** Alan ran the paste as written at 08:56 UTC: six `OK`, the backup `/home/ubuntu/grouplab-server/backups/2026-10-15T085633Z-discord-worker-fix`, the install done with the units and token script unchanged and the token "already set, not read or printed", the timer started, and a log with no Traceback. The bot then filed four waiting posts as issues #31 to #34; #31, #32 and #33 were already fixed and are closed. Recorded in `docs/RESTORE.md`.

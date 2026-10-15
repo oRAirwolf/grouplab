@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-15, entry 430 (before it: entries 429, 428, 425, 427, 426, 424, 423, 422 and 421).
+**Last rewritten:** 2026-10-15, entry 429 section 2 (before it: entries 430, 429, 428, 425, 427, 426, 424, 423 and 422).
 
 ---
 
@@ -19,16 +19,16 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entries 427 and 428 are done**: Alan installed the Discord worker's fix (request 100, 08:56 UTC); it then filed #31 to #34.
   #31 (entry 418), #32 (entry 417) and #33 (entry 425) were already fixed and are closed; **#34 is new**: the tab strip's pop-up
   scrollbar covers the tabs' names and close buttons when many are open. Left open for the planning session.
-- **Entry 429 is half done**: Alan's consent for Discord attachments on their GitHub issues is in `samples/PROVENANCE.md`; the worker
-  change was refused by Claude Code's permission check (posters' personal data) and waits on Alan's word in the session (request 101).
-  Its token (`grouplab-error-reports`) was made with Issues only, so it will likely need Contents: Read and write too.
+- **Entry 429 is done but its server paste** (request 102): on Alan's word in the session (request 101), the Discord worker commits
+  each kept attachment to `discord/<thread>/<message>/` in grouplab-crash-reports and shows it on its issue (5baf3bbf); the six pictures
+  of #30 to #34 are on their issues already. The paste installs it and proves the token can write contents.
 - **Entries 425 and 430 are done**: the selected shot is ringed with a crosshair over everything, on the picture, the plot and the
   small sheet, in magenta (#ff3df5 dark, #b0009f light; question 99 answered (b)); its row has an amber bar. Question 100: the
   magenta is 68 from the light theme's fourth sheet and 84 to 93 from two bull marks; kept as Alan chose meanwhile.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
-- **Waiting on Alan:** requests 101 and 99 (this queue), 83, 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 102 and 99 (this queue), 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -59,7 +59,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24** (101 one message in the session for entry 429; 99 a read-only log paste for entry 418; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **24** (102 the Discord bot's server paste for entry 429; 99 a read-only log paste for entry 418; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -86,7 +86,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 431.
 
 ## Things that would surprise somebody who was not here yesterday
 

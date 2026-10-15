@@ -1,4 +1,4 @@
-**Open: 24.** Most urgent today: **101**, one message in the Claude Code session so Discord pictures can go on their issues (one minute). Then **99**, one read-only paste about Quack's upload (two minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **102**, one server paste so the Discord bot puts pictures on their issues (five minutes). Then **99**, one read-only paste about Quack's upload (two minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On
 nightly 190 and earlier a drop always opened only the first picture, over the tab dropped on. On nightlies 191 and 192 each picture was
 meant to get its own tab, but when a question was showing in the middle of the window (as when a scan's codes do not read), the new tab
@@ -258,21 +258,27 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
-## 101. One word in the Claude Code session, so Discord pictures can go on their GitHub issues, one minute (entry 429)
+## 102. The Discord bot puts pictures on their issues, one paste, about five minutes, whenever suits (entry 429)
 
 **Open, 2026-10-15.**
 
-**Why:** you said the Discord pictures may go on their GitHub issues, and that consent is now written down. The change that does it
-(the bot saving each picture into the private crash-reports repository and showing it on its issue, and putting the six issues' pictures
-there once) was stopped by Claude Code's own safety check, which treats moving people's posted pictures to another place as personal
-data and wants your word in the session itself, not a note passed on. Nothing was changed on the server or on GitHub.
+**Why:** with your word, the bot now puts each picture posted with a Discord bug report onto its private GitHub issue, so it can be
+seen there and not only on this computer. The six pictures already filed (issues #30 to #34) are on their issues now. The server
+still runs the old bot, so the next picture posted would only be kept privately. Nothing else on the server changes: only the bot's
+own script, which is backed up first. The paste also proves your token change worked, by saving one small text file into the
+crash-reports repository the way the bot will.
 
-**Steps:** in the Claude Code session, send the message below. If you would rather the pictures stayed private after all, say that
-instead and the consent will be marked withdrawn.
+**Steps:** in MobaXterm, in your usual bash session on the server, one paste. It fetches the files, checks each against the
+repository, backs up the bot's script, installs the new one, checks the token can save files, and runs the bot once:
 
-    Go ahead with entry 429 section 2: put the Discord attachments on their GitHub issues.
+    mkdir -p /home/ubuntu/grouplab-server-429 && cd /home/ubuntu/grouplab-server-429 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/5baf3bbf/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'aad44a75387a1d99c2a71ae763eeb7881450ef2b5599b13d0d0c7789ae683c17  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-attachments --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo python3 -c 'import importlib.util as u; s=u.spec_from_file_location("w","/usr/local/sbin/grouplab-discord-worker.py"); w=u.module_from_spec(s); s.loader.exec_module(w); l,f=w.put_on_issue(open("/etc/grouplab/error-token").read().strip(),"discord/check/entry-429.txt",b"The Discord worker can put attachments on issues (entry 429).\n","Entry 429: the worker token can write contents"); print("OK: the token can put attachments on issues" if l else "STOP: the token cannot put attachments on issues ("+f+")")' && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 20 /home/airwolf/logs/grouplab-discord-worker.log
 
-**A good answer:** that message. A server paste follows as its own request once the change is on main.
+**A good result:** six lines ending `OK`, a line `done:` naming the backup folder, the install's own lines ending `done`, then
+`OK: the token can put attachments on issues`, then the log's last lines with no `Traceback` and no `STOP`. `STOP: the token cannot put
+attachments on issues (GitHub answered 403)` means the token still lacks Contents: Read and write on grouplab-crash-reports; the bot
+still files every post and says on each issue that its picture could not be put there.
+
+**A good answer:** the last lines it printed.
 
 ## 99. Which reply Quack's failed upload got, one read-only paste, two minutes, whenever suits (entry 418)
 
