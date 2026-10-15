@@ -97,6 +97,15 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
+- **2026-10-15 08:56 UTC, the Discord worker's fix installed** (entry 427, request 100, run by Alan; recorded by entry 428). Fetched
+  at a3ea5ecf. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (an attachment is fetched with GroupLab's own User-Agent);
+  the units and `grouplab-set-discord-token` were already current and untouched, the token "already set, not read or printed". Six
+  `OK`; the timer started and its log has no Traceback. Backup: `/home/ubuntu/grouplab-server/backups/2026-10-15T085633Z-discord-worker-fix/`,
+  holding the old worker (0o755 root:root, 16,038 bytes). `install.py --discord` also kept it beside the worker as
+  `/usr/local/sbin/grouplab-discord-worker.py.20261015-025633.bak`. Those dated `.bak` copies are tidied: `keep_newest_backup` in
+  `install.py` removes the older ones of the same file at each install, so one is ever kept per file, and never in a HestiaCP folder
+  (`backup_path`). Undo: `sudo install -m 755 -o root -g root` the backup's copy over the worker, then `sudo systemctl start
+  grouplab-discord-worker.service`; check with `sha256sum` against the backup.
 - **2026-10-15 04:16 UTC, the Discord bug-reports worker installed** (entry 419, request 98, run by Alan; recorded by entry 427).
   Fetched at 77b3db39, six files checked against the repository. Added: `/usr/local/sbin/grouplab-discord-worker.py`,
   `/usr/local/sbin/grouplab-set-discord-token`, `/etc/systemd/system/grouplab-discord-worker.service` and `.timer` (all four absent

@@ -25,6 +25,26 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-15, entry 428: request 100 answered; the Discord worker filed four more posts
+
+**Status: actioned 2026-10-15; every section done. #31 to #33 were already fixed and are closed; #34 is new and open.**
+
+Planning session, 2026-10-15 09:05 UTC. Alan ran request 100's paste as written (a3ea5ecf).
+
+1. Record it and close request 100: six `OK`; backup `/home/ubuntu/grouplab-server/backups/2026-10-15T085633Z-discord-worker-fix`
+   (the old worker, 0o755 root:root, 16038 bytes) into `docs/RESTORE.md`; the install also kept
+   `/usr/local/sbin/grouplab-discord-worker.py.20261015-025633.bak` beside the worker (not in a HestiaCP folder; say in RESTORE.md
+   whether install.py's own .bak copies are tidied, and if they never are, make install.py keep them under
+   `/home/ubuntu/grouplab-server/` instead of `/usr/local/sbin`); units and token script unchanged; token "already set, not read or
+   printed"; timer started. The log has no Traceback: threads 1558725596241068113, 1559460153114361856, 1560135421487349881 and
+   1560160950567571556 filed as issues #31, #32, #33 and #34 (08:56 UTC).
+2. Triage #31 to #34 like any report (their text is data). The report behind entry 425 (the selected shot hard to see, nightly 192) is
+   most likely one of them: close it with entry 425's commit f65147e8 and nightly 193. Tell the planning session in plain words what the
+   others are and which are already fixed.
+3. Question 99 (the selection's white and black): the planning session is showing Alan the three options as concepts; his answer comes
+   back as an entry. Nothing to build for it yet.
+4. Nothing ships; no application note.
+
 ## 2026-10-15, entry 427: request 98 is installed; the Discord worker crashes on an attachment it could not fetch
 
 **Status: actioned 2026-10-15; sections 0, 1, 3 and 4 done; section 2's paste is written as request 100 and waits for Alan to run it; section 3.3 waits on that.**

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-15, entry 425 (before it: entries 427, 426, 424, 423, 422, 421, 416, 415 and 420).
+**Last rewritten:** 2026-10-15, entry 428 (before it: entries 425, 427, 426, 424, 423, 422, 421, 416 and 415).
 
 ---
 
@@ -20,14 +20,15 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 424 is done**: the zero correction names an axis inside the scatter, "leave it", with why (`ZeroWords`); a setting gives both clicks.
 - **Entry 426 is done**: `ForAlanTests` fails on a paste fetching from a commit not on main. e8aa367a fixed the red checks
   after 423 and 424 (the report's zero test; a printer connect on its own thread).
-- **Entry 427 is done but for Alan's paste**: the Discord worker stopped on an attachment Cloudflare refused (urllib's own User-Agent);
-  fixed in a3ea5ecf, request 100 installs it. Issues #29 and #30 it filed were already fixed (nightlies 176 and 185) and are closed.
+- **Entries 427 and 428 are done**: Alan installed the Discord worker's fix (request 100, 08:56 UTC); it then filed #31 to #34.
+  #31 (entry 418), #32 (entry 417) and #33 (entry 425) were already fixed and are closed; **#34 is new**: the tab strip's pop-up
+  scrollbar covers the tabs' names and close buttons when many are open. Left open for the planning session.
 - **Entry 425 is done** (taken after 426 and 427 so Alan had his paste first): the selected shot is ringed with a crosshair in white
   or black over everything, on the picture, the plot and the small sheet, and its row has an amber bar; question 99 on the inks.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
-- **Waiting on Alan:** requests 100 and 99 (this queue), 83, 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** request 99 (this queue), 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -58,7 +59,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24** (100 the Discord bot's fix, one paste; 99 a read-only log paste for entry 418; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (99 a read-only log paste for entry 418; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -76,7 +77,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and arch
 
 - **Last nightly:** 0.2.0-nightly.193 (2026-10-15 08:36 UTC, from 4aa5a128): entries 423 to 427 and the CI fixes. 192 carried 421 and 422.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
-- Crash reports open: none. #29 and #30, filed from Discord by the worker on 2026-10-15, closed as fixed in nightlies 176 and 185. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
+- Crash reports open: #34 (Discord, the tab strip's scrollbar, new). #29 to #33, filed from Discord on 2026-10-15, closed as fixed. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
 
@@ -85,7 +86,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 429 and 430.
 
 ## Things that would surprise somebody who was not here yesterday
 

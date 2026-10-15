@@ -3,6 +3,28 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 100. The Discord bot's fix, one paste, about five minutes, whenever suits (entry 427)
+
+**Answered 2026-10-15 (entry 428):** Alan ran the paste as written at 08:56 UTC: six `OK`, the backup `/home/ubuntu/grouplab-server/backups/2026-10-15T085633Z-discord-worker-fix`, the install done with the units and token script unchanged and the token "already set, not read or printed", the timer started, and a log with no Traceback. The bot then filed four waiting posts as issues #31 to #34; #31, #32 and #33 were already fixed and are closed. Recorded in `docs/RESTORE.md`.
+
+**Why:** request 98 worked: the bot found the forum and filed Quack's two posts as issues #29 and #30. Then it stopped on a picture in
+the second thread that Discord's file store would not hand over, and it stops at the same place every five minutes, so no post after
+it is filed (the report about the selected shot being hard to see is probably one of them). The cause is found and fixed: Discord's
+file store refuses Python's own name for itself, so the bot now fetches pictures under its own name, says in the issue when a picture
+cannot be fetched instead of stopping, and one post that goes wrong never stops the others. Both issues it filed are already fixed and
+closed. Nothing else on the server changes: only the bot's own script, which is backed up first.
+
+**Steps:** in MobaXterm, in your usual bash session on the server, one paste. It fetches the files, checks each against the
+repository, backs up the bot's script, installs the new one and runs it once:
+
+    mkdir -p /home/ubuntu/grouplab-server-427 && cd /home/ubuntu/grouplab-server-427 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/a3ea5ecf/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'a58a6c8709636b544985206a3c767f25b574f665ba59445fbf3dd0537d93c27f  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-fix --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 20 /home/airwolf/logs/grouplab-discord-worker.log
+
+**A good result:** six lines ending `OK`, a line `done:` naming the backup folder, the install's own lines ending `done`, then the
+log's last lines with no `Traceback` and no `STOP`, and a line "thread ...: issue #..." for each post that was waiting. A line
+"thread ...: not filed this run" means that one post went wrong and the rest went on; say which.
+
+**A good answer:** the last lines it printed.
+
 ## 98. A Discord bot that files the bug-reports forum by itself, about fifteen minutes, whenever suits (entry 419)
 
 **Answered 2026-10-15 (entries 426 and 427):** Alan ran steps 1 to 3 on the evening of 14 October with the planning session's pastes at commit 77b3db39, because e959956a, which this paste first named, had been rebased away and GitHub answered 404 for it (the paste below now names 77b3db39; the six files are the same). Six `OK`, the backup `/home/ubuntu/grouplab-server/backups/2026-10-15T041559Z-discord-worker`, a clean dry run, the token written, and the first run filed issues #29 and #30 and then stopped on an attachment it could not fetch. Request 100 installs the fix.

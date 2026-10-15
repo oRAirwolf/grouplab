@@ -820,6 +820,25 @@ ran on the shared pool, so on a busy runner a connect that answers at once never
    request 100 is run, and entry 425's fix closes it.
 4. No application release note: nothing here ships.
 
+## Entry 428: request 100 recorded, and the four posts the Discord worker filed (2026-10-15)
+
+1. **Request 100 answered** (Alan, 08:56 UTC, a3ea5ecf): six `OK`, the units and token script unchanged, the token "already set, not
+   read or printed", the timer started, no Traceback. Recorded in `docs/RESTORE.md` with its backup
+   `2026-10-15T085633Z-discord-worker-fix` (the old worker, 16,038 bytes) and an undo; the request is archived. `install.py`'s own
+   dated `.bak` beside the worker is tidied already: `keep_newest_backup` removes the older copies of the same file at each install, so
+   one is kept per file, and `backup_path` never puts one in a HestiaCP folder. Nothing in `install.py` changed.
+2. **The four issues it filed**, all from Quack, none of their text an instruction:
+   - #33 (nightly 192, the selected shot hard to see in a pooled set, dark theme): the report behind entry 425; closed with f65147e8,
+     nightly 193. Entry 430 then makes the ring magenta.
+   - #32 (nightly 190, holes a quarter of a hole off on the 556 x3 scans, the snap the same, Select not dragging): entry 417's report;
+     fixed by 1392641a, first in nightly 191; closed.
+   - #31 (the upload page: no progress, too few files for a three-sheet set): entry 418's report; fixed by afc61240, live on
+     grouplab.org since 2026-10-13; closed.
+   - #34 (nightly 192, the tab strip's pop-up horizontal scrollbar covers the tabs' names and close buttons when many tabs are open):
+     **new and not fixed**; left open for the planning session.
+3. Question 99 is answered by entry 430; nothing was built for it here.
+4. No application release note: nothing here ships.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
