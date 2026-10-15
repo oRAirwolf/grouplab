@@ -745,6 +745,31 @@ holds this one (passes on the 2026-09-26 6 ARC scans). The Windows failures were
 ran on the shared pool, so on a busy runner a connect that answers at once never started inside its 200 ms; each now has its own thread
 (`PrinterConnect.FirstThatConnects`), and one that finished as the limit fired counts as connected.
 
+## Entry 427: the Discord worker installed, and its crash on an attachment fixed (2026-10-15)
+
+0. **Recorded**: request 98 is answered and archived (entry 426); the install of 2026-10-15 04:16 UTC and its backup
+   `2026-10-15T041559Z-discord-worker` (40,264 bytes, the four installed paths absent before) are in `docs/RESTORE.md` with the undo.
+1. **The cause, measured rather than guessed**: from this machine, Cloudflare in front of Discord's attachment store answered 403 to
+   urllib's own User-Agent for every file, a public default avatar included, and 200 for the avatar with the bot's User-Agent; an
+   attachment link it does not know answered 404. So the worker's attachment fetch was refused, `request(..., raw=True)` returned
+   `(403, None)` and `keep_attachments` wrote None. **The fix** (`website/server/grouplab-discord-worker.py`, a3ea5ecf): attachments
+   are fetched with the bot's User-Agent; a 401, 403, 404 or 410 reads the message again once for fresh signed links and tries again;
+   anything else is "could not be fetched (HTTP <code>)" in the issue; a half-kept `.partial-` folder from an earlier stop is cleared;
+   any other failure inside one thread is logged as "thread <id>: not filed this run (<kind> at line <n>)", never the post's words,
+   and the run takes the next thread. `tests/python/discord-worker-tests.py`: 23 passed, with a 403, a 404, an answer with no body, an
+   expired link refreshed from its message, a thread that throws ahead of one that is still filed, and urllib's own agent refused as
+   Cloudflare does; against the old worker the first run fails as the server's did.
+2. **The paste** is request 100 in `for-alan.md` and at the top of `panel.md`: fetch the six server files at a3ea5ecf (on main), check
+   their SHA-256 (five unchanged from request 98), `grouplab-change-backup.py --label discord-worker-fix --file
+   /usr/local/sbin/grouplab-discord-worker.py`, `install.py --discord`, run the service once, tail the log; every step prints on
+   failure. Waiting for Alan.
+3. **The issues it filed**: #29 (a marking file's absolute photo path, nightly 174) was fixed by 3e59e4b5, entry 383, first in nightly
+   176: the photo is named by file name only, found beside the marking first, and asked for when missing. #30 (the red cut-off text
+   that stayed after switching back to a sheet printer, nightly 174) was fixed by e740a25a, entry 409, first in nightly 185. Both
+   closed with those commits. Nothing in either read as an instruction. The report behind entry 425 is not filed yet; it will be once
+   request 100 is run, and entry 425's fix closes it.
+4. No application release note: nothing here ships.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

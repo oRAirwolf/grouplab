@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **99**, one read-only paste about Quack's upload (two minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **100**, one paste that fixes the Discord bot so the forum is filed again (five minutes). Then **99**, one read-only paste about Quack's upload (two minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On
 nightly 190 and earlier a drop always opened only the first picture, over the tab dropped on. On nightlies 191 and 192 each picture was
 meant to get its own tab, but when a question was showing in the middle of the window (as when a scan's codes do not read), the new tab
@@ -257,6 +257,28 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 100. The Discord bot's fix, one paste, about five minutes, whenever suits (entry 427)
+
+**Open, 2026-10-15.**
+
+**Why:** request 98 worked: the bot found the forum and filed Quack's two posts as issues #29 and #30. Then it stopped on a picture in
+the second thread that Discord's file store would not hand over, and it stops at the same place every five minutes, so no post after
+it is filed (the report about the selected shot being hard to see is probably one of them). The cause is found and fixed: Discord's
+file store refuses Python's own name for itself, so the bot now fetches pictures under its own name, says in the issue when a picture
+cannot be fetched instead of stopping, and one post that goes wrong never stops the others. Both issues it filed are already fixed and
+closed. Nothing else on the server changes: only the bot's own script, which is backed up first.
+
+**Steps:** in MobaXterm, in your usual bash session on the server, one paste. It fetches the files, checks each against the
+repository, backs up the bot's script, installs the new one and runs it once:
+
+    mkdir -p /home/ubuntu/grouplab-server-427 && cd /home/ubuntu/grouplab-server-427 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/a3ea5ecf/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'a58a6c8709636b544985206a3c767f25b574f665ba59445fbf3dd0537d93c27f  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-fix --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 20 /home/airwolf/logs/grouplab-discord-worker.log
+
+**A good result:** six lines ending `OK`, a line `done:` naming the backup folder, the install's own lines ending `done`, then the
+log's last lines with no `Traceback` and no `STOP`, and a line "thread ...: issue #..." for each post that was waiting. A line
+"thread ...: not filed this run" means that one post went wrong and the rest went on; say which.
+
+**A good answer:** the last lines it printed.
 
 ## 99. Which reply Quack's failed upload got, one read-only paste, two minutes, whenever suits (entry 418)
 

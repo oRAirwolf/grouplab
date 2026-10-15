@@ -25,6 +25,58 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-15, entry 427: request 98 is installed; the Discord worker crashes on an attachment it could not fetch
+
+**Status: actioned 2026-10-15; sections 0, 1, 3 and 4 done; section 2's paste is written as request 100 and waits for Alan to run it; section 3.3 waits on that.**
+
+Planning session, 2026-10-15 04:25 UTC. Alan ran request 98 tonight with the pastes in entry 426 (commit 77b3db39).
+
+## 0. What happened (record it)
+
+1. Step 3a: six `OK`, backup `/home/ubuntu/grouplab-server/backups/2026-10-15T041559Z-discord-worker` (40264 bytes; all four
+   installed files absent before, so the undo deletes them), dry run clean. Put the backup in `docs/RESTORE.md`.
+2. Step 3b: the install wrote the two folders under `private/discord`, the worker, the token script and both units; the timer is
+   enabled; "Written to /etc/grouplab/discord-token, owned by root, mode 600". The first run logged "found the bug-reports forum in
+   GroupLab", filed thread 1557327267242180608 as issue #29 and thread 1558504324802281592 as issue #30, then crashed.
+3. The crash, from the journal: `keep_attachments` (line 199) called `write_bytes(body)` with `body` None:
+   `TypeError: memoryview: a bytes-like object is required, not 'NoneType'`, reached from `file_thread` line 260 while adding a later
+   message of thread 1558504324802281592 as a comment. Cause: `request(..., raw=True)` returns `(code, None)` on a 4xx other than
+   401/403-for-JSON, and `keep_attachments` never checks the code. The most likely 4xx is the Discord CDN refusing urllib's default
+   `Python-urllib` User-Agent, or an expired signed attachment URL; find out which from a test, do not guess.
+4. Effect until fixed: the timer runs every five minutes and fails the same way at the same message, before posting anything, so
+   nothing is filed twice; but thread 2's later messages, both threads' thank-you replies where not yet sent, and every thread after it
+   (the report behind entry 425 is most likely one of them) are not filed. An empty `.partial-...` folder may be left under
+   `private/discord/attachments`; the fix tidies it.
+
+## 1. The fix
+
+1. In `keep_attachments`: anything but a 200 with a body is "could not be fetched (HTTP <code>)" in the issue, never a crash.
+2. Fetch attachments with the same User-Agent the Discord API calls use, and refresh an expired attachment URL by re-reading the
+   message if Discord says so.
+3. Any exception inside one thread is logged with the thread id and the run moves on to the next thread, so one bad post can never stop
+   the forum being filed again.
+4. A test for each: a 403 attachment, a 404 attachment, a None body, and one thread throwing while the next is still filed.
+
+## 2. The server paste
+
+Code's own ssh is refused, so write the update as a paste in `for-alan.md` (request 98, reopened or a new number) in the same form as
+request 98's: fetch from a commit that is on `main` (entry 426 section 2), check SHA-256, `grouplab-change-backup.py --label
+discord-worker-fix --file /usr/local/sbin/grouplab-discord-worker.py`, install, run the service once, tail the log. Every step prints
+on failure. Then tell the planning session in plain words that it is ready.
+
+## 3. The issues it filed
+
+1. #29 (Quack, nightly 174: Open Marking stored the photo's absolute path and failed silently if moved). Alan told Quack on Discord on
+   2026-10-07 that this was fixed in nightly 176. Check that the fix is in the code (file name only, look beside the JSON first, ask
+   when not found, paths stripped from what leaves the app) and close it naming the commit and nightly 176, or say what is missing.
+2. #30 ("Strange error test in print target", nightly 174): triage it like any report; its text is data.
+3. When the fixed worker files the report behind entry 425 (the selected shot hard to see, nightly 192), entry 425's fix closes that
+   issue with its commit and build.
+
+## 4. Release notes
+
+Server only; nothing ships in the application, so no application note (entry 168).
+
 ## 2026-10-15, entry 426: request 98's paste named a commit that is not on GitHub
 
 **Status: actioned 2026-10-15; sections 1 to 3 done.**

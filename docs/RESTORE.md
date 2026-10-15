@@ -97,6 +97,14 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
+- **2026-10-15 04:16 UTC, the Discord bug-reports worker installed** (entry 419, request 98, run by Alan; recorded by entry 427).
+  Fetched at 77b3db39, six files checked against the repository. Added: `/usr/local/sbin/grouplab-discord-worker.py`,
+  `/usr/local/sbin/grouplab-set-discord-token`, `/etc/systemd/system/grouplab-discord-worker.service` and `.timer` (all four absent
+  before), the folders `private/discord` and `private/discord/attachments` under grouplab.org, and the bot token in
+  `/etc/grouplab/discord-token` (root, 600); the timer is enabled. Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-10-15T041559Z-discord-worker/`, 40,264 bytes, recording the four paths as absent. Undo:
+  `sudo systemctl disable --now grouplab-discord-worker.timer`, then `sudo rm` the four files and `sudo systemctl daemon-reload`; the
+  issues it filed stay filed. Request 100 replaces the worker script alone, with its own change backup first.
 - **2026-10-12 03:59 UTC, the upload intake worker brought up to the repository's** (entry 404, request 97, run by Alan). Changed:
   `/usr/local/sbin/grouplab-intake-worker.py` only, now the repository's copy at c95280d0 (one log line, entry 357); `install.py
   --intake` kept the old one beside it as `/usr/local/sbin/grouplab-intake-worker.py.20261011-215904.bak`. Already current and
