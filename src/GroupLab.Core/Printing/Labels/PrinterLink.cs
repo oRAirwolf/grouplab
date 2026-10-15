@@ -124,10 +124,12 @@ public static class PrinterConnect
         {
             token.ThrowIfCancellationRequested();
             var clock = System.Diagnostics.Stopwatch.StartNew();
-            var connecting = Task.Run(attempt.Begin, CancellationToken.None);
+            // Each connect blocks until it answers or is aborted, so it gets a thread of its own: on the shared pool a busy device could
+            // spend the whole limit before the connect even started, and a printer that answers at once was reported as timed out.
+            var connecting = Task.Factory.StartNew(attempt.Begin, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
             var limit = Task.Delay(timeout, token);
             var first = await Task.WhenAny(connecting, limit).ConfigureAwait(false);
-            if (first == connecting && connecting.IsCompletedSuccessfully)
+            if (connecting.IsCompletedSuccessfully)
             {
                 said(attempt.Name, "connected", clock.ElapsedMilliseconds);
                 return attempt.Name;

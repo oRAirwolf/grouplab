@@ -35,7 +35,9 @@ public class RealSessionProofTests(ITestOutputHelper output)
 
     /// <summary>
     /// Row 16, NOTES-FROM-PLANNING.md entry 410 section 2: on Alan's dominus-k session the report's zero verdict is the analysis screen's own
-    /// sentence, with the same numbers: the screen's line, or that line with the rounding and the distance joined on (question 91).
+    /// sentence, with the same numbers: the screen's line, or that line with the rounding and the distance joined on (question 91). Since
+    /// entry 424 the screen's line can go on to what to leave and why, and the report joins the distance and rounding to its first sentence
+    /// and keeps the rest as it is.
     /// </summary>
     [AvaloniaFact]
     public void AlansOwnSessionsReportGivesTheScreensZeroVerdict()
@@ -54,13 +56,22 @@ public class RealSessionProofTests(ITestOutputHelper output)
             var screen = window.ZeroText.Where(t => t.Length > 0).ToList();
             string verdict = window.BuildReport().Zero.Verdict;
             Assert.NotEmpty(screen);
-            Assert.Contains(screen, t => verdict == t || verdict.StartsWith(t.TrimEnd('.') + ",", StringComparison.Ordinal));
+            Assert.Contains(screen, t => verdict == t || Joined(t, verdict));
         }
         finally
         {
             window.Close();
             GroupLab.Tests.Support.Temp.Delete(Path.GetDirectoryName(path)!);
         }
+    }
+
+    /// <summary>The report's verdict is the screen's line with the distance and rounding joined to its first sentence, the rest unchanged.</summary>
+    private static bool Joined(string screen, string report)
+    {
+        int end = screen.IndexOf(". ", StringComparison.Ordinal);
+        string head = end < 0 ? screen : screen[..(end + 1)];
+        string rest = end < 0 ? "" : screen[(end + 2)..];
+        return report.StartsWith(head.TrimEnd('.') + ",", StringComparison.Ordinal) && report.EndsWith(rest, StringComparison.Ordinal);
     }
 
     /// <summary>

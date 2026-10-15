@@ -53,7 +53,8 @@ public class PrinterConnectTests
         Assert.Null(connected);
         Assert.Equal(["a timed out", "b timed out"], said);
         // What this holds is that it ends at all: each fake blocks until aborted, so without the timeout it would never return. The bound is
-        // wide because a busy Windows runner, starting pool threads for the blocked connects, took 12 s (runs 38386382784, 38526570152).
+        // wide because a busy Windows runner, starting pool threads for the blocked connects, took 12 s (runs 38386382784, 38526570152);
+        // each connect has had its own thread since run 38533897632, where a connect that answers at once never started inside 200 ms.
         Assert.True(clock.Elapsed < TimeSpan.FromSeconds(60), $"it took {clock.Elapsed}");
     }
 
