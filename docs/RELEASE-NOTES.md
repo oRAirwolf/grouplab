@@ -504,7 +504,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - Error reports that carry GroupLab's log are built but switched off, waiting for the store privacy answers to be confirmed; a report holds what it held before.
 - Sending every picture you open is built but switched off, waiting for the store privacy answers to be confirmed; nothing GroupLab sends has changed.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.164)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
