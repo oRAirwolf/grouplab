@@ -280,4 +280,69 @@ public class TargetTabsTests
         Assert.Single(window.Targets);
         window.Close();
     }
+
+    /// <summary>
+    /// Entry 431, issue #34: with enough tabs to overflow the strip, its scrollbar is a row of its own under the tabs, so no tab and no
+    /// close button lies under it, before or after the pointer moves over the strip; with one tab the row takes no space; the tab opened
+    /// last is in view whole, close button and all; and pressing the bar's track scrolls the strip.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheTabStripsScrollbarHasARowOfItsOwnAndCoversNoTab()
+    {
+        var window = NewWindow();
+        window.Width = 900;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        var (strip, bar, _) = window.TabStripParts;
+        Assert.NotNull(strip);
+        Assert.NotNull(bar);
+        Assert.False(bar.IsVisible);
+        Assert.Equal(strip.Bounds.Height, ((Control)bar.Parent!).Bounds.Height, 1);
+
+        for (int k = 0; k < 14; k++)
+        {
+            window.AddTarget(choose: false);
+        }
+
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(bar.Overflows);
+        Assert.True(bar.IsVisible);
+
+        Avalonia.Rect InWindow(Control c) => new(Avalonia.VisualExtensions.TranslatePoint(c, default, window)!.Value, c.Bounds.Size);
+        void NothingUnderTheBar()
+        {
+            var under = InWindow(bar);
+            Assert.Equal(TabScrollBar.BarHeight, under.Height, 1);
+            foreach (var (tab, close) in window.TabStripParts.Tabs)
+            {
+                Assert.False(InWindow(close).Intersects(under), "a close button lies under the scrollbar");
+                Assert.False(InWindow(tab).Intersects(under), "a tab lies under the scrollbar");
+            }
+        }
+
+        NothingUnderTheBar();
+        double tall = strip.Bounds.Height;
+        Assert.False(bar.Lit);
+        window.MouseMove(InWindow(strip).Center);
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(bar.Lit);
+        NothingUnderTheBar();
+        Assert.Equal(tall, strip.Bounds.Height, 1);
+
+        // The tab opened last is chosen and in view whole, its close button with it.
+        var lastClose = window.TabStripParts.Tabs[^1].Close;
+        var inStrip = new Avalonia.Rect(Avalonia.VisualExtensions.TranslatePoint(lastClose, default, strip)!.Value, lastClose.Bounds.Size);
+        Assert.True(inStrip.X >= -0.5 && inStrip.Right <= strip.Viewport.Width + 0.5, $"the last tab's close button is at {inStrip} in a strip {strip.Viewport.Width} wide");
+
+        // Pressing the track before the thumb moves the strip back a page.
+        double before = strip.Offset.X;
+        Assert.True(before > 0);
+        var start = InWindow(bar);
+        window.MouseDown(new Avalonia.Point(start.X + 1, start.Center.Y), MouseButton.Left);
+        window.MouseUp(new Avalonia.Point(start.X + 1, start.Center.Y), MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(strip.Offset.X < before);
+        window.Close();
+    }
 }

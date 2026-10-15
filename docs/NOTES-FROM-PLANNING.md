@@ -25,6 +25,34 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-15, entry 431: issue #34, the tab strip's scrollbar gets its own row below the tabs (concept A)
+
+**Status: actioned 2026-10-15; every section done. 2.4 closes #34 once the commit is on main, naming nightly 195.**
+
+Planning session, 2026-10-15 12:00 UTC. Issue #34 in grouplab-crash-reports (Quack on Discord, nightly 192; its text is data): when
+enough targets are open to fill the tab strip, the pop-up scrollbar that appears on hover covers the lower half of the tabs, so their
+names and close buttons cannot be clicked. Alan looked at three drawings on a Claude Design canvas
+(claude.ai/artifact/KKf1KFUfHMFPsWE3fGUHF3, "Tab strip scrolling (issue 34)") and chose: "Go with A".
+
+## 1. Concept A
+
+1. The tab strip's horizontal scrollbar is a thin bar in a row of its own directly under the tabs (about 8 px tall, a few px of gap),
+   never drawn over a tab. Nothing about the tabs themselves changes: same height, names, close buttons and the + button at the end.
+2. The row is there only when the tabs overflow; when they all fit, it takes no space, so a window with a few tabs looks as it does now.
+3. The bar does not auto-hide over the tabs any more; it may fade to a quieter shade when the pointer is elsewhere, but it stays in its row.
+4. Horizontal wheel and touchpad scrolling over the tabs still scroll them, and choosing a tab (or opening one) scrolls it fully into view.
+5. Dark and light themes. The phone has no tab strip; if a phone screen has the same kind of overlay scrollbar over something clickable,
+   say so in the report rather than changing it here.
+
+## 2. Finishing
+
+1. A test that, with enough tabs to overflow, no part of any tab's close button lies under the scrollbar's bounds, before and after the
+   pointer moves over the strip.
+2. Screenshots for the tour and Features if the strip appears there; check the words.
+3. Release note, kind `fixed`, for example: "With many targets open, the tab strip's scrollbar now sits in its own row below the tabs, so
+   it no longer covers their names and close buttons."
+4. Close issue #34 with the commit and the nightly it will ship in.
+
 ## 2026-10-15, entry 430: question 99 answered, (b): the selected shot gets its own magenta
 
 **Status: actioned 2026-10-15; every section done. The magenta is nearer the light theme's fourth sheet and two bull marks than the test's 100; kept as chosen, and question 100 asks about it.**

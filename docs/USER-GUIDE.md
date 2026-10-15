@@ -142,7 +142,8 @@ Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sh
 **Several targets open at once.** On the computer, each target has its own tab across the top of the window: its name, **Analysis** or
 **Marking**, with **not saved** while it has marks that are not saved, and a dot, amber when not saved. The **+** tab opens another target
 the way Open image does, and **Ctrl+Tab** goes to the next tab (**Ctrl+Shift+Tab** the one before). Each tab keeps its own target, zoom,
-marks and undo, so switching never loses or mixes anything. A tab's **×** closes it, and asks first when it has marks that are not saved.
+marks and undo, so switching never loses or mixes anything. A tab's **×** closes it, and asks first when it has marks that are not saved. When there are more tabs than fit, a thin bar in a row of its own under them scrolls the row, and the tab you
+choose or open is always brought fully into view.
 
 **When a picture names no sheet.** A picture of a target GroupLab did not print is not a mistake: GroupLab asks **Which target is this?**
 in the middle of the window, with **Mark it by hand** first (one true length: the sheet's size, a ring, or a ruler in the picture),

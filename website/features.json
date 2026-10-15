@@ -571,7 +571,10 @@
         "Linux"
       ],
       "since": "next",
-      "note": "each in its own tab across the top of the window",
+      "note": [
+        "each in its own tab across the top of the window",
+        "the tab strip's scrollbar now sits in its own row below the tabs"
+      ],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue"
     },

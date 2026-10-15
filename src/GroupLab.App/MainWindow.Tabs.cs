@@ -152,14 +152,28 @@ public sealed partial class MainWindow
         };
         var row = new StackPanel { Orientation = Orientation.Horizontal, Children = { tabRow, add } };
         AddHandler(KeyDownEvent, OnTargetKey, RoutingStrategies.Tunnel);
+
+        // Entry 431, issue #34: the strip scrolls with no bar of its own, which Fluent draws over the tabs, and its bar is a row below them.
+        tabStrip = new ScrollViewer { Content = row, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
+        tabScrollBar = new TabScrollBar(tabStrip);
         ShowTabs();
         return new Border
         {
-            Child = new ScrollViewer { Content = row, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto, VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled },
+            Child = new StackPanel { Children = { tabStrip, tabScrollBar } },
             Padding = new Thickness(Tokens.Space8, Tokens.Space4, Tokens.Space8, 0),
             Classes = { AppStyles.Bar },
         };
     }
+
+    private ScrollViewer? tabStrip;
+    private TabScrollBar? tabScrollBar;
+
+    /// <summary>The tab last scrolled into view, so it is done when the chosen tab changes and not on every refresh.</summary>
+    private OpenTarget? tabInView;
+
+    /// <summary>For the headless tests: the strip, its bar, and each tab's own button and close button.</summary>
+    internal (ScrollViewer? Strip, TabScrollBar? Bar, IReadOnlyList<(Button Tab, Button Close)> Tabs) TabStripParts =>
+        (tabStrip, tabScrollBar, [.. targets.All.Where(tabControls.ContainsKey).Select(t => (tabControls[t].Tab, (Button)((Panel)tabControls[t].Tab.Parent!).Children[1]))]);
 
     /// <summary>Ctrl+Tab goes to the next tab and Ctrl+Shift+Tab to the one before, round from the end to the start.</summary>
     private void OnTargetKey(object? sender, KeyEventArgs e)
@@ -243,6 +257,13 @@ public sealed partial class MainWindow
         c.Dot.Classes.Set(AppStyles.Faint, !target.Unsaved);
         ToolTip.SetTip(c.Dot, target.Unsaved ? TargetTabWords.UnsavedDot : TargetTabWords.SavedDot);
         c.Tab.Classes.Set(AppStyles.Chosen, ReferenceEquals(target, targets.Current));
+        if (ReferenceEquals(target, targets.Current) && !ReferenceEquals(target, tabInView))
+        {
+            // Entry 431: a tab chosen or opened is scrolled fully into view, its close button with it, once the row has its new width.
+            tabInView = target;
+            var whole = c.Tab.Parent as Control;
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => whole?.BringIntoView(), Avalonia.Threading.DispatcherPriority.Background);
+        }
         AutomationProperties.SetName(c.Tab, target.Spoken);
         ToolTip.SetTip(c.Tab, target.Spoken);
     }

@@ -896,6 +896,25 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
    reshot by `screenshots.yml`, which this push starts.
 6. Release note, kind `changed`, in the commit.
 
+## Entry 431: the tab strip's scrollbar in a row of its own (issue #34) (2026-10-15)
+
+1. **`TabScrollBar`** (`src/GroupLab.App/TabScrollBar.cs`): an 8 px bar 4 px under the tabs, drawn from the theme's own colours (the
+   track in `Sunk`, the thumb in `Faint`, `Dim` while the pointer is on the strip or the bar or the thumb is held). It is there only
+   while the tabs overflow (`IsVisible` follows the strip's extent and viewport), so a window whose tabs fit looks as it did. Dragging the
+   thumb scrolls the strip; pressing the track beside it moves a page. The strip's own `ScrollViewer` keeps scrolling by wheel and
+   touchpad with its Fluent bar hidden, which is the bar that was drawn over the lower half of the tabs. The tabs are unchanged.
+2. **A tab chosen or opened is scrolled into view whole**, close button and all, once the row has its new width; only when the chosen
+   tab changes, so scrolling by hand to look along the row is not undone by the next refresh.
+3. **The test** `TargetTabsTests.TheTabStripsScrollbarHasARowOfItsOwnAndCoversNoTab` (15 tabs in a 900 px window): no tab and no close
+   button intersects the bar's bounds, before and after the pointer moves over the strip; the strip's height does not change; with one
+   tab the row takes no space; the last tab's close button lies inside the strip's viewport; pressing the track scrolls back. The tab
+   tests (11), the theme, sweep and bench tests (78 in all) and the Features, shipping and guide checks pass.
+4. **The phone** has no tab strip, and none of its screens has a horizontal pop-up bar over something it can be tapped on.
+5. **Screenshots**: the tour's and Features' marking pictures show one tab, so the strip looks as before and nothing is reshot; the
+   tour's words on the tabs are still true. The user guide's paragraph on several targets now says a thin bar under the tabs scrolls
+   them when they do not fit; its PDF follows with the nightly's guide run. `target-tabs` in `website/features.json` claims the note.
+6. Issue #34 is closed with the commit and nightly 195.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
