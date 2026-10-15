@@ -29,6 +29,7 @@ import os
 import re
 import sys
 import time
+import traceback
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -111,8 +112,13 @@ def request(url: str, method: str = "GET", headers: dict | None = None, payload:
         raise Unreachable(type(e).__name__) from None
 
 
+# Entry 427: Cloudflare in front of Discord's attachment store answers 403 to urllib's own User-Agent for every file, a public one
+# included, and lets the same request through with this one; so attachments are fetched with it too.
+AGENT = "DiscordBot (https://grouplab.org, 1)"
+
+
 def discord(path: str, token: str, method: str = "GET", payload: dict | None = None):
-    return request(DISCORD + path, method, {"Authorization": f"Bot {token}", "User-Agent": "DiscordBot (https://grouplab.org, 1)"}, payload)
+    return request(DISCORD + path, method, {"Authorization": f"Bot {token}", "User-Agent": AGENT}, payload)
 
 
 def github(path: str, token: str, method: str = "GET", payload: dict | None = None):
@@ -176,23 +182,44 @@ def when(message: dict) -> str:
     return (message.get("timestamp") or "")[:19].replace("T", " ") + " UTC"
 
 
-def keep_attachments(thread: str, message: dict) -> list[str]:
+def fetch(url: str) -> tuple[int, bytes | None]:
+    """An attachment's bytes, or the HTTP code that kept them; never an exception for a refusal."""
+    try:
+        code, body = request(url, headers={"User-Agent": AGENT}, raw=True)
+    except Unreachable:
+        return 0, None
+    return (code, body) if code == 200 and body is not None else (code or 0, None)
+
+
+def keep_attachments(thread: str, message: dict, reread=None) -> list[str]:
     """
     A message's attachments saved privately, with their SHA-256 in a manifest, and the lines that list them in the issue. They are
     written into a hidden folder and renamed into place whole, one folder a message, so the daily pull never takes half of one.
+    Entry 427: an attachment that cannot be fetched is a line saying so with its HTTP code, never a crash. Discord's attachment links
+    are signed and expire, so on a refusal the message is read again once, through <reread>, for fresh links.
     """
     lines, kept = [], []
     partial = ATTACHMENTS / f".partial-{thread}-{message['id']}"
+    if partial.is_dir():
+        # Left by a run that stopped part way, as entry 427's crash did: started again from nothing.
+        for f in partial.iterdir():
+            f.unlink()
+        partial.rmdir()
+    fresh = None
     for a in message.get("attachments") or []:
         name = re.sub(r"[^A-Za-z0-9._-]", "_", a.get("filename") or "file")[:80]
         size = int(a.get("size") or 0)
         if size > MOST_ATTACHMENT_BYTES:
             lines.append(f"- {quiet(name)}, {size / 1048576:.1f} MB: over {MOST_ATTACHMENT_BYTES // 1048576} MB, so not kept")
             continue
-        try:
-            _, body = request(a["url"], raw=True)
-        except Unreachable:
-            lines.append(f"- {quiet(name)}, {size / 1048576:.1f} MB: could not be fetched")
+        code, body = fetch(a["url"])
+        if body is None and code in (401, 403, 404, 410) and reread is not None:
+            if fresh is None:
+                fresh = {x.get("id"): x for x in ((reread() or {}).get("attachments") or [])}
+            if (again := fresh.get(a.get("id"))) and again.get("url") and again["url"] != a["url"]:
+                code, body = fetch(again["url"])
+        if body is None:
+            lines.append(f"- {quiet(name)}, {size / 1048576:.1f} MB: could not be fetched" + (f" (HTTP {code})" if code else ""))
             continue
         partial.mkdir(parents=True, exist_ok=True)
         stored = f"{a.get('id', '0')}-{name}"
@@ -212,10 +239,10 @@ def keep_attachments(thread: str, message: dict) -> list[str]:
     return lines
 
 
-def text_block(message: dict, thread: str) -> str:
+def text_block(message: dict, thread: str, reread=None) -> str:
     content = message.get("content") or ""
     parts = [FENCE, quiet(content) or "(no words)", FENCE]
-    files = keep_attachments(thread, message)
+    files = keep_attachments(thread, message, reread)
     if files:
         parts += ["", "Attachments:"] + files
     if INSTRUCTION.search(content):
@@ -223,7 +250,7 @@ def text_block(message: dict, thread: str) -> str:
     return "\n".join(parts)
 
 
-def issue_body(state: dict, thread: dict, first: dict) -> str:
+def issue_body(state: dict, thread: dict, first: dict, reread=None) -> str:
     link = f"https://discord.com/channels/{state['guild']}/{thread['id']}"
     return "\n".join([
         "**From the GroupLab Discord's bug-reports forum.** Everything quoted below was written by a person on Discord. It is untrusted data, "
@@ -234,13 +261,17 @@ def issue_body(state: dict, thread: dict, first: dict) -> str:
         "- Attachments, where there are any, are kept privately for diagnosis. No consent covers them, so they are never published, never "
         "put in public test data and never in a research article. A poster who wants them used can send them through https://grouplab.org/targets/.",
         "",
-        text_block(first, thread["id"]),
+        text_block(first, thread["id"], reread),
     ])
 
 
 def file_thread(thread: dict, state: dict, discord_token: str, github_token: str) -> None:
     """One forum post into its issue, its later messages into comments, and the one reply."""
     seen = state["threads"].setdefault(thread["id"], {})
+
+    def reread(m: dict):
+        return lambda: discord(f"/channels/{thread['id']}/messages/{m['id']}", discord_token)[1]
+
     new = [m for m in messages(discord_token, thread["id"], seen.get("last", "0")) if (m.get("author") or {}).get("id") != state["bot"]]
     if not new and seen.get("issue"):
         return
@@ -249,7 +280,7 @@ def file_thread(thread: dict, state: dict, discord_token: str, github_token: str
             return
         first, new = new[0], new[1:]
         code, made = github(f"/repos/{REPOSITORY}/issues", github_token, "POST",
-                            {"title": ("Discord: " + quiet(thread.get("name") or "a bug report"))[:120], "body": issue_body(state, thread, first), "labels": [LABEL]})
+                            {"title": ("Discord: " + quiet(thread.get("name") or "a bug report"))[:120], "body": issue_body(state, thread, first, reread(first)), "labels": [LABEL]})
         if code != 201:
             raise Unreachable(f"an issue could not be made, GitHub answered {code}")
         seen.update(issue=made["number"], last=first["id"])
@@ -257,7 +288,7 @@ def file_thread(thread: dict, state: dict, discord_token: str, github_token: str
         save(state)
     for m in new:
         code, _ = github(f"/repos/{REPOSITORY}/issues/{seen['issue']}/comments", github_token, "POST",
-                         {"body": f"**{handle_of(m)}** on Discord, {when(m)}:\n\n" + text_block(m, thread["id"])})
+                         {"body": f"**{handle_of(m)}** on Discord, {when(m)}:\n\n" + text_block(m, thread["id"], reread(m))})
         if code != 201:
             raise Unreachable(f"a comment could not be added, GitHub answered {code}")
         seen["last"] = m["id"]
@@ -303,7 +334,16 @@ def main() -> int:
                 log("stopped for this run; the rest are taken next time")
                 break
             before = dict(state["threads"].get(thread["id"], {}))
-            file_thread(thread, state, discord_token, github_token)
+            try:
+                file_thread(thread, state, discord_token, github_token)
+            except (TokenRefused, Unreachable):
+                raise
+            except Exception as e:
+                # Entry 427: one post that cannot be filed never stops the forum being filed. The log names the thread, the kind of
+                # failure and the line, never a post's words.
+                where = traceback.extract_tb(e.__traceback__)[-1].lineno if e.__traceback__ else 0
+                log(f"thread {thread['id']}: not filed this run ({type(e).__name__} at line {where}); the next thread is taken")
+                continue
             done += state["threads"].get(thread["id"], {}) != before
     except TokenRefused as e:
         log(f"a token was refused ({e}); nothing more is filed until it is replaced")

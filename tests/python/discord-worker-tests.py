@@ -26,6 +26,10 @@ REPO = Path(__file__).resolve().parents[2]
 WORKER = REPO / "website" / "server" / "grouplab-discord-worker.py"
 PICTURE = b"\x89PNG\r\n\x1a\n" + b"a picture of a bug" * 10
 
+# What the attachment store answers for each file; anything not named is there. An expired link is 404, and reading its message again
+# gives a fresh one, as Discord's signed links do.
+CDN = {"/cdn/forbidden.png": 403, "/cdn/gone.png": 404, "/cdn/expired.png": 404, "/cdn/odd.png": 400}
+
 passed = 0
 failed: list[str] = []
 
@@ -82,7 +86,10 @@ def serve(world: World) -> HTTPServer:
             world.calls.append("GET " + self.path)
             p = self.path
             if p.startswith("/cdn/"):
-                return self.reply(200, raw=PICTURE)
+                # Entry 427: Cloudflare in front of Discord's attachment store answers 403 to urllib's own User-Agent.
+                if (self.headers.get("User-Agent") or "").startswith("Python-urllib"):
+                    return self.reply(403, raw=b"error code: 1010")
+                return self.reply(CDN.get(p, 200), raw=PICTURE if CDN.get(p, 200) == 200 else b"")
             if world.refuse_discord:
                 return self.reply(401, {"message": "401: Unauthorized"})
             if p == "/discord/users/@me":
@@ -95,12 +102,19 @@ def serve(world: World) -> HTTPServer:
                 return self.reply(200, {"threads": world.threads_active})
             if p.startswith("/discord/channels/20/threads/archived/public"):
                 return self.reply(200, {"threads": world.threads_archived, "has_more": False})
+            if p.startswith("/discord/channels/") and "/messages/" in p:
+                # One message read again for fresh attachment links: an expired one comes back signed anew.
+                thread, mid = p.split("/")[3], p.split("/")[5]
+                m = json.loads(json.dumps(next(x for x in world.messages[thread] if x.get("id") == mid)))
+                for a in m["attachments"]:
+                    a["url"] = a["url"].replace("CDN", f"http://127.0.0.1:{world.port[0]}/cdn").replace("expired", "fresh")
+                return self.reply(200, m)
             if p.startswith("/discord/channels/") and "/messages" in p:
                 thread = p.split("/")[3]
                 after = int(p.split("after=")[1]) if "after=" in p else 0
-                out = [m for m in world.messages.get(thread, []) if int(m["id"]) > after]
+                out = [m for m in world.messages.get(thread, []) if int(m.get("id", after + 1)) > after]
                 for m in out:
-                    for a in m["attachments"]:
+                    for a in m.get("attachments", []):
                         a["url"] = a["url"].replace("CDN", f"http://127.0.0.1:{world.port[0]}/cdn")
                 return self.reply(200, list(reversed(out)))
             return self.reply(404, {"message": "unknown"})
@@ -189,6 +203,24 @@ def main() -> int:
               and not any(c.startswith("POST /discord/channels/200/messages") for c in world.calls), str(world.calls))
         r = run(root, port[0])
         check("a run with nothing new files nothing", len(world.issues) == 2 and len(world.comments.get(1, [])) == 1)
+
+        # Entry 427: attachments that cannot be fetched, and a thread that cannot be filed at all ahead of one that can.
+        world.threads_active += [{"id": "350", "parent_id": "20", "name": "Broken post"}, {"id": "400", "parent_id": "20", "name": "Four files"}]
+        world.messages["350"] = [{"author": {"id": "7"}, "content": "a message Discord sent without an id"}]
+        att = [{"id": str(60 + i), "filename": f"{n}.png", "size": len(PICTURE), "url": f"CDN/{n}.png"} for i, n in enumerate(["forbidden", "gone", "expired", "odd"])]
+        world.messages["400"] = [message("400", "7", "Four files", att)]
+        world.calls.clear()
+        r = run(root, port[0])
+        four = next((i for i in world.issues.values() if i["title"] == "Discord: Four files"), {"body": ""})
+        check("a thread that cannot be filed is logged with its id, and the run goes on", r.returncode == 0
+              and "thread 350: not filed this run (KeyError" in r.stdout, r.stdout + r.stderr)
+        check("the thread after it is still filed", four["body"] != "", str([i["title"] for i in world.issues.values()]))
+        check("an attachment refused with 403 is said, not a crash", "forbidden.png, 0.0 MB: could not be fetched (HTTP 403)" in four["body"], four["body"])
+        check("an attachment gone with 404 is said, not a crash", "gone.png, 0.0 MB: could not be fetched (HTTP 404)" in four["body"], four["body"])
+        check("an answer with no body is said, not a crash", "odd.png, 0.0 MB: could not be fetched (HTTP 400)" in four["body"], four["body"])
+        check("an expired link is fetched again from the message read once more", "expired.png, 0.0 MB, kept privately" in four["body"]
+              and sum(c == "GET /discord/channels/400/messages/400" for c in world.calls) == 1, four["body"] + str(world.calls))
+        check("no half-kept folder is left", not any(p.name.startswith(".") for p in (root / "discord" / "attachments").iterdir()))
 
         world.refuse_discord = True
         (root / "discord" / "state.json").unlink()
