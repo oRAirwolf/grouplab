@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.195
+
+**2026-10-15**, commit `92799db`. Nightly.
+
+**What you will notice**
+
+- With many targets open, the tab strip's scrollbar now sits in its own row below the tabs, so it no longer covers their names and close buttons.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.195)
+
+---
+
 ## 0.2.0-nightly.194
 
 **2026-10-15**, commit `95f3e10`. Nightly.
