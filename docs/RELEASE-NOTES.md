@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.194
+
+**2026-10-15**, commit `95f3e10`. Nightly.
+
+**What you will notice**
+
+- The shot you select is now ringed in magenta, a color nothing else in GroupLab uses, so it stands out on a single sheet as well as in a pooled set.
+
+**Under the hood**
+
+- Nothing in the application changes; this records that pictures posted in the GroupLab Discord's bug-reports forum may go on their private bug reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.194)
+
+---
+
 ## 0.2.0-nightly.193
 
 **2026-10-15**, commit `7aaa4ce`. Nightly.
