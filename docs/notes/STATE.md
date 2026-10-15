@@ -74,7 +74,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.192 (2026-10-14 04:57 UTC, from 80f49fd2): entries 421 and 422. 191 carried entries 415 to 420.
+- **Last nightly:** 0.2.0-nightly.193 (2026-10-15 08:36 UTC, from 4aa5a128): entries 423 to 427 and the CI fixes. 192 carried 421 and 422.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. #29 and #30, filed from Discord by the worker on 2026-10-15, closed as fixed in nightlies 176 and 185. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
