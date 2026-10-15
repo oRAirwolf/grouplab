@@ -4,13 +4,15 @@
 No request leaves the machine: the worker is pointed at a local server that plays Discord's REST API, the attachment store and
 GitHub's issues, from recorded replies, and records every call. It checks that each forum post is filed once, later messages become
 comments, the bot replies once and only in a thread it filed, its own message is never filed, nothing in a post notifies anybody, words
-that read like an instruction are noted, attachments are kept with their SHA-256, and a missing or refused token files nothing.
+that read like an instruction are noted, attachments are kept with their SHA-256 and committed to show on their issue (entry 429), an
+upload GitHub refuses is a line and stops nothing, and a missing or refused token files nothing.
 
     python3 tests/python/discord-worker-tests.py
 """
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import os
@@ -29,6 +31,10 @@ PICTURE = b"\x89PNG\r\n\x1a\n" + b"a picture of a bug" * 10
 # What the attachment store answers for each file; anything not named is there. An expired link is 404, and reading its message again
 # gives a fresh one, as Discord's signed links do.
 CDN = {"/cdn/forbidden.png": 403, "/cdn/gone.png": 404, "/cdn/expired.png": 404, "/cdn/odd.png": 400}
+# What GitHub answers when a file named so is committed (entry 429): refused by a token without Contents, and a server error.
+UPLOAD = {"refused.png": 403, "busy.png": 502}
+CONTENTS = "/github/repos/oRAirwolf/grouplab-crash-reports/contents/"
+SHOWN = "https://github.com/oRAirwolf/grouplab-crash-reports/blob/main/"
 
 passed = 0
 failed: list[str] = []
@@ -65,6 +71,7 @@ class World:
             "300": [message("300", "9", "Somewhere else")],
         }
         self.issues: dict[int, dict] = {}
+        self.files: dict[str, bytes] = {}
         self.comments: dict[int, list[str]] = {}
         self.replies: list[tuple[str, dict]] = []
         self.calls: list[str] = []
@@ -90,6 +97,8 @@ def serve(world: World) -> HTTPServer:
                 if (self.headers.get("User-Agent") or "").startswith("Python-urllib"):
                     return self.reply(403, raw=b"error code: 1010")
                 return self.reply(CDN.get(p, 200), raw=PICTURE if CDN.get(p, 200) == 200 else b"")
+            if p.startswith(CONTENTS):
+                return self.reply(200 if p[len(CONTENTS):].split("?")[0] in world.files else 404, {})
             if world.refuse_discord:
                 return self.reply(401, {"message": "401: Unauthorized"})
             if p == "/discord/users/@me":
@@ -142,6 +151,20 @@ def serve(world: World) -> HTTPServer:
                 return self.reply(201, {"id": 1})
             return self.reply(404, {"message": "unknown"})
 
+        def do_PUT(self) -> None:
+            length = int(self.headers.get("Content-Length") or 0)
+            payload = json.loads(self.rfile.read(length) or b"{}")
+            world.calls.append("PUT " + self.path)
+            path = self.path[len(CONTENTS):] if self.path.startswith(CONTENTS) else ""
+            if not path or payload.get("branch") != "main":
+                return self.reply(404, {"message": "unknown"})
+            if (code := next((c for n, c in UPLOAD.items() if path.endswith(n)), 0)):
+                return self.reply(code, {"message": "Resource not accessible by personal access token"})
+            if path in world.files:
+                return self.reply(422, {"message": "sha wasn't supplied"})
+            world.files[path] = base64.b64decode(payload["content"])
+            return self.reply(201, {"content": {"path": path}})
+
     server = HTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return server
@@ -182,7 +205,12 @@ def main() -> int:
         check("words that read like an instruction are noted as data", "read like an instruction" in first["body"])
         old = next(i for i in world.issues.values() if "Old post" in i["title"])
         check("an at sign notifies nobody", "@everyone" not in old["body"] and "@everyone" not in old["title"])
-        check("the attachment is listed and said to be covered by no consent", "screen_shot.png" in first["body"] and "No consent covers them" in first["body"])
+        check("the attachment is committed into the repository whole, in its thread's and message's folder",
+              world.files.get("discord/100/100/5-screen_shot.png") == PICTURE, str(list(world.files)))
+        check("and shown on the issue as a picture", f"- screen_shot.png, 0.0 MB: ![screen_shot.png]({SHOWN}discord/100/100/5-screen_shot.png?raw=true)"
+              in first["body"], first["body"])
+        check("the issue says the attachments are on it and other uses still need the poster's consent",
+              "are on this issue" in first["body"] and "still needs the poster's consent" in first["body"] and "never published" not in first["body"])
         kept = root / "discord" / "attachments" / "100-100"
         manifest = json.loads((kept / "manifest.json").read_text(encoding="utf-8")) if (kept / "manifest.json").is_file() else {"files": []}
         check("the attachment is kept privately with its SHA-256, whole, in its message's own folder", len(manifest["files"]) == 1
@@ -205,10 +233,16 @@ def main() -> int:
         check("a run with nothing new files nothing", len(world.issues) == 2 and len(world.comments.get(1, [])) == 1)
 
         # Entry 427: attachments that cannot be fetched, and a thread that cannot be filed at all ahead of one that can.
-        world.threads_active += [{"id": "350", "parent_id": "20", "name": "Broken post"}, {"id": "400", "parent_id": "20", "name": "Four files"}]
+        world.threads_active += [{"id": "350", "parent_id": "20", "name": "Broken post"}, {"id": "400", "parent_id": "20", "name": "Four files"},
+                                 {"id": "500", "parent_id": "20", "name": "Uploads"}, {"id": "600", "parent_id": "20", "name": "After the uploads"}]
         world.messages["350"] = [{"author": {"id": "7"}, "content": "a message Discord sent without an id"}]
         att = [{"id": str(60 + i), "filename": f"{n}.png", "size": len(PICTURE), "url": f"CDN/{n}.png"} for i, n in enumerate(["forbidden", "gone", "expired", "odd"])]
         world.messages["400"] = [message("400", "7", "Four files", att)]
+        # Entry 429: GitHub refusing a file, failing on one, already holding one from a run that stopped, and a file that is no picture.
+        att = [{"id": str(70 + i), "filename": n, "size": len(PICTURE), "url": f"CDN/{n}"} for i, n in enumerate(["refused.png", "busy.png", "already.png", "log.txt"])]
+        world.messages["500"] = [message("500", "7", "Uploads", att)]
+        world.files["discord/500/500/72-already.png"] = PICTURE
+        world.messages["600"] = [message("600", "7", "After the uploads", [{"id": "80", "filename": "after.png", "size": len(PICTURE), "url": "CDN/after.png"}])]
         world.calls.clear()
         r = run(root, port[0])
         four = next((i for i in world.issues.values() if i["title"] == "Discord: Four files"), {"body": ""})
@@ -218,9 +252,20 @@ def main() -> int:
         check("an attachment refused with 403 is said, not a crash", "forbidden.png, 0.0 MB: could not be fetched (HTTP 403)" in four["body"], four["body"])
         check("an attachment gone with 404 is said, not a crash", "gone.png, 0.0 MB: could not be fetched (HTTP 404)" in four["body"], four["body"])
         check("an answer with no body is said, not a crash", "odd.png, 0.0 MB: could not be fetched (HTTP 400)" in four["body"], four["body"])
-        check("an expired link is fetched again from the message read once more", "expired.png, 0.0 MB, kept privately" in four["body"]
+        check("an expired link is fetched again from the message read once more", "expired.png, 0.0 MB: ![expired.png]" in four["body"]
               and sum(c == "GET /discord/channels/400/messages/400" for c in world.calls) == 1, four["body"] + str(world.calls))
         check("no half-kept folder is left", not any(p.name.startswith(".") for p in (root / "discord" / "attachments").iterdir()))
+        up = next((i for i in world.issues.values() if i["title"] == "Discord: Uploads"), {"body": ""})
+        check("an upload GitHub refuses is a line in the issue, and the file is still kept privately",
+              "- refused.png, 0.0 MB, kept privately for diagnosis; it could not be put on this issue (GitHub answered 403)" in up["body"]
+              and (root / "discord" / "attachments" / "500-500" / "70-refused.png").is_file(), up["body"])
+        check("an upload GitHub fails on is a line in the issue, not a crash",
+              "- busy.png, 0.0 MB, kept privately for diagnosis; it could not be put on this issue (GitHub did not take it" in up["body"], up["body"])
+        check("a file already committed by an earlier run is shown, not refused", f"![already.png]({SHOWN}discord/500/500/72-already.png?raw=true)" in up["body"], up["body"])
+        check("a file that is no picture is a link", f"- log.txt, 0.0 MB: [on this issue]({SHOWN}discord/500/500/73-log.txt?raw=true)" in up["body"]
+              and world.files.get("discord/500/500/73-log.txt") == PICTURE, up["body"])
+        after = next((i for i in world.issues.values() if i["title"] == "Discord: After the uploads"), {"body": ""})
+        check("a refused upload stops no other thread", f"![after.png]({SHOWN}discord/600/600/80-after.png?raw=true)" in after["body"], after["body"])
 
         world.refuse_discord = True
         (root / "discord" / "state.json").unlink()

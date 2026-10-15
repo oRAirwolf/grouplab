@@ -9,8 +9,9 @@
     checks every file against the manifest, and only then removes the folder from the server. A folder whose files do not match stays on
     the server and is named.
 
-    No consent covers these files. They are kept here for diagnosis only: never published, never put in public test data and never in
-    a research article. They are not archived with the submissions, because they are not submissions.
+    Since entry 429 the worker also puts each one on its private GitHub issue, on Alan's word of 2026-10-15 (samples/PROVENANCE.md).
+    That covers the issues only: these copies are for diagnosis, never put on grouplab.org, in public test data or in a research
+    article without the poster's own consent. They are not archived with the submissions, because they are not submissions.
 
 .EXAMPLE
     .\scripts\Get-DiscordAttachments.ps1

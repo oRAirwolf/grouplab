@@ -46,7 +46,7 @@ Planning session, 2026-10-15 09:10 UTC. Alan looked at the three options drawn o
 
 ## 2026-10-15, entry 429: Discord attachments may go on the GitHub issues (Alan's consent)
 
-**Status: actioned 2026-10-15; section 1 done. Section 2 not done: Claude Code's permission check refused the worker change as handling posters' personal data; it waits on Alan's word in the session (request 101). Section 3: nothing ships.**
+**Status: actioned 2026-10-15; every section done but 2.5's server paste, which is written as request 102 and waits for Alan to run it. Section 2 was first refused by Claude Code's permission check (posters' personal data) and done once Alan gave his word in the session (request 101). Section 3: nothing ships.**
 
 Planning session, 2026-10-15 09:05 UTC. Alan, in the planning chat, 2026-10-15 03:01 Denver: "The discord is public and it is fine to
 publish them to github. It does not need additional permission to do that."

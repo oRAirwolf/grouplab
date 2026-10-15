@@ -839,7 +839,7 @@ ran on the shared pool, so on a busy runner a connect that answers at once never
 3. Question 99 is answered by entry 430; nothing was built for it here.
 4. No application release note: nothing here ships.
 
-## Entry 429: the Discord consent recorded; the worker change waits on Alan's word (2026-10-15)
+## Entry 429: Discord attachments on their GitHub issues (2026-10-15)
 
 1. **The consent** is in `samples/PROVENANCE.md` with Alan's words and the date: attachments in the Discord's bug-reports forum may go
    on their GitHub issues in `oRAirwolf/grouplab-crash-reports` without asking the poster; grouplab.org, public test data and research
@@ -852,6 +852,32 @@ ran on the shared pool, so on a busy runner a connect that answers at once never
    added to that token; the worker would say so in its log rather than assume. The pull to this computer has never run, so the six
    issues' kept attachments are still on the server, and a backfill has to run there.
 3. No application release note: nothing ships.
+
+**Section 2, done later the same day** on Alan's word in the session ("Go ahead with entry 429 section 2", request 101 answered), with
+his note that the `grouplab-error-reports` token now has Contents: Read and write on the crash-reports repository.
+
+1. **The worker** (`put_on_issue`, `attachment_line` in `website/server/grouplab-discord-worker.py`): each kept attachment is also
+   committed through the contents API to `discord/<thread>/<message>/<id>-<name>` on `main` and shown on its issue or comment, a picture
+   inline and any other file as a link. A file already there from a run that stopped (422) is read back and counts as on the issue. A
+   refusal, a server error or no answer is a line saying so ("kept privately for diagnosis; it could not be put on this issue (GitHub
+   answered 403)"), never an exception, so it stops no other file and no other thread. The private server copy, its manifest and the pull
+   to `C:\Dev\grouplab-discord` are unchanged.
+2. **The wording**: the issue now says the attachments are on it with a private copy kept, and that grouplab.org, public test data or a
+   research article still needs the poster's consent (`ATTACHMENTS_LINE`); the worker's docstring and `Get-DiscordAttachments.ps1` say
+   the same.
+3. **The backfill** ran once from this computer, not the server: the pull of 15 October had already copied all six kept folders here and
+   removed them from the server. A one-off script imported the worker's own `put_on_issue` and `attachment_line`, checked each file
+   against its manifest's SHA-256, committed it, and replaced its "kept privately" line in place: #30 (one comment), #31 (the post and one
+   comment), #32, #33 and #34, six pictures. All six issues #29 to #34 had their "never published" line replaced. Their text before is in
+   `C:\Dev\grouplab-local\discord-issues-29-34-before-entry-429-2026-10-15.json` (the weekly restore test last failed, so a dated copy
+   came first); today's 09:39 nightly backup also holds it. #34's rendered body shows the picture as an image tag on the issue. The
+   backfill used Alan's own GitHub login on this computer, so the server's token has not yet been shown to write contents.
+4. **Tests** (`tests/python/discord-worker-tests.py`, 30 passed, run in CI): the picture is committed whole in its thread's and
+   message's folder and shown; a 403 and a 502 from GitHub are lines in the issue with the file still kept privately; an already committed
+   file is shown; a text file is a link; and a thread after the failures is still filed.
+5. **The server** is request 102, one paste in request 100's form from this commit on `main`: fetch and check the six files, back up the
+   worker, install, run once, then prove the token can write contents by committing `discord/check/entry-429.txt` (OK or STOP with
+   GitHub's answer). `docs/RESTORE.md`'s rows for the crash-reports files and the Discord copies now name `discord/`.
 
 ## Entry 430: the selected shot in magenta (question 99 answered) (2026-10-15)
 
