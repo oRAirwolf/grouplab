@@ -726,6 +726,25 @@ Wording for sections 1, 2 and 5 to 9 by docs-sonnet; section 3's code, its test 
    user guide's zero paragraph and its "why" line and the Features page's figures entry say it. Not changed: the Zero from this group
    window's own per-axis lines, which already say "too little to dial" with the shots that would settle it, do not follow the setting.
 
+## Entry 426: request 98's paste named a commit that is not on GitHub (2026-10-15)
+
+1. **Request 98** is answered (Alan ran it on 14 October with the planning session's pastes at 77b3db39, entry 427) and moved whole to
+   `docs/notes/for-alan-archive.md`; its paste there now names 77b3db39, the commit Alan ran, instead of e959956a, which is on no branch.
+   Open requests: 23.
+2. **The test**: `ForAlanTests.EveryPasteFetchesFromACommitOnMain` reads every `raw.githubusercontent.com/oRAirwolf/grouplab/<commit>/`
+   in `for-alan.md` and `for-alan-archive.md` and fails on a commit that is not on the history of what is checked out (`git merge-base
+   --is-ancestor`), which on CI is main. CI's test job was a one-commit checkout, so it now fetches main's history first (commits and
+   trees only, no tags, so `ReleaseNotesTests` and `VersionTests` see the checkout as before); a shallow checkout on CI fails the test
+   rather than checking nothing. Before the change e959956a was the only stranded commit; request 97's c95280d0 is on main.
+3. No release note: nothing here ships.
+
+**Just before this entry, not from it (e8aa367a):** build and test was red on 77b3db39 (all three systems) and 800e1d93 (Windows). Entry 424's
+report sentence joins the distance and rounding to the first sentence of the screen's line and keeps "what to leave and why" after it, as
+the entry meant; `RealSessionProofTests.AlansOwnSessionsReportGivesTheScreensZeroVerdict` still held question 91's older form and now
+holds this one (passes on the 2026-09-26 6 ARC scans). The Windows failures were `PrinterConnectTests`: each blocking printer connect
+ran on the shared pool, so on a busy runner a connect that answers at once never started inside its 200 ms; each now has its own thread
+(`PrinterConnect.FirstThatConnects`), and one that finished as the limit fired counts as connected.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

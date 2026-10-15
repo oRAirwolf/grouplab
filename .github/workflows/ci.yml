@@ -38,6 +38,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # Entry 426: ForAlanTests holds every paste's commit to main's history, so the job fetches it: commits and trees only, and no tags,
+      # because ReleaseNotesTests and VersionTests read a checkout without tags as CI's.
+      - name: Main's history, for the pastes' commits
+        run: git fetch --quiet --no-tags --filter=blob:none --unshallow origin
+
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'

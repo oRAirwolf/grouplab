@@ -3,6 +3,38 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 98. A Discord bot that files the bug-reports forum by itself, about fifteen minutes, whenever suits (entry 419)
+
+**Answered 2026-10-15 (entries 426 and 427):** Alan ran steps 1 to 3 on the evening of 14 October with the planning session's pastes at commit 77b3db39, because e959956a, which this paste first named, had been rebased away and GitHub answered 404 for it (the paste below now names 77b3db39; the six files are the same). Six `OK`, the backup `/home/ubuntu/grouplab-server/backups/2026-10-15T041559Z-discord-worker`, a clean dry run, the token written, and the first run filed issues #29 and #30 and then stopped on an attachment it could not fetch. Request 100 installs the fix.
+
+**Why:** you asked for bug reports posted in the GroupLab Discord's bug-reports forum to be filed automatically. A small worker on the
+server will read that forum every five minutes, file each new post as an issue in the private crash-reports repository, and reply once
+in the thread, "Thank you, this is filed for the developer." It needs a bot of its own in Discord, which only you can make.
+**All three steps are ready** (the worker is built and tested, entry 419).
+1. Open https://discord.com/developers/applications, choose **New Application**, name it **GroupLab Bug Filer**, and create it. Under
+   **Bot**, turn on **Message Content Intent** and save. Press **Reset Token**, copy the token, and keep it only until step 3; do not
+   paste it anywhere else, not in a chat, a file or the planning session.
+2. Under **OAuth2**, **URL Generator**: tick the scope **bot**, then the permissions **View Channels**, **Read Message History** and
+   **Send Messages in Threads**, nothing else. Open the URL it makes, choose the GroupLab server and authorise. In the bug-reports
+   forum's own permissions, check the bot's role can see the forum.
+3. **The install, in two pastes**, in MobaXterm, in your usual bash session on the server. **Step 3a** fetches the files, checks each
+   against the repository, backs up what it will change, and shows what it would do; nothing changes yet:
+
+       mkdir -p /home/ubuntu/grouplab-server-419 && cd /home/ubuntu/grouplab-server-419 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/77b3db39/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'c503ffb2f16837690cb2cf95731fde55445ac41c30a1ab263db032d787c29c5f  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker --units --file /usr/local/sbin/grouplab-discord-worker.py --file /usr/local/sbin/grouplab-set-discord-token --file /etc/systemd/system/grouplab-discord-worker.service --file /etc/systemd/system/grouplab-discord-worker.timer || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord --dry-run || { echo "STOP: the dry run failed"; false; }
+
+   **A good result of 3a:** six lines ending `OK`, a line `done:` naming the backup folder, then the dry run's list ending "dry run
+   finished, nothing was changed". If a line says `FAILED` or `STOP`, stop there and say which.
+
+   **Step 3b**, only if 3a ended well. It installs, asks for the bot token from step 1 with nothing shown as you type, starts the
+   worker and runs it once:
+
+       cd /home/ubuntu/grouplab-server-419 && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo /usr/local/sbin/grouplab-set-discord-token || { echo "STOP: the token was not set"; false; } && sudo systemctl start grouplab-discord-worker.timer && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 20 /home/airwolf/logs/grouplab-discord-worker.log
+
+   **A good result of 3b:** "Written to /etc/grouplab/discord-token", then the log's last lines: "found the bug-reports forum in
+   GroupLab" and one "thread ...: issue #..." for each post already in the forum. "can see no forum named bug-reports" means step 2's
+   forum permission is missing; "a token was refused" means the token was copied wrongly, and running 3b again asks for it again.
+**A good answer:** the last lines step 3b printed.
+
 ## 94. Three photographs of one sheet, about ten minutes, whenever suits (entries 399 and 411)
 
 **Answered 2026-10-12 (entry 412):** closed, nothing can be done. Alan, 22:10 Denver on 2026-10-11: "I do not have any targets that I have shot left. Only the pictures and scans that I have already given you. If you have not gotten them, I do not have them." The 26 September sheet is gone as well as the three from 4 October. Both comparisons entry 399 wanted wait for new sheets shot at the next range trip and kept.

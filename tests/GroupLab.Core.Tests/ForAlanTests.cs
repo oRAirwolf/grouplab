@@ -81,4 +81,50 @@ public class ForAlanTests
 
         Assert.True(missing.Count == 0, "These ask for a shot sheet to be scanned and do not say to keep it: " + string.Join("; ", missing));
     }
+
+    /// <summary>
+    /// Entry 426: request 98's paste fetched the server files from commit e959956a, which had been rebased away, so GitHub answered 404
+    /// and the paste would have stopped at its first fetch. Every commit a paste fetches from is on the history of what is checked out,
+    /// which on CI is main. CI's test job fetches main's history for this; a shallow checkout there fails rather than checking nothing.
+    /// </summary>
+    [Fact]
+    public void EveryPasteFetchesFromACommitOnMain()
+    {
+        if (Git("rev-parse --is-shallow-repository").Output == "true")
+        {
+            Assert.True(Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != "true",
+                "The checkout is shallow, so whether a paste's commit is on main cannot be told; ci.yml fetches main's history before the tests.");
+            return;
+        }
+
+        var stranded = new List<string>();
+        foreach (string file in new[] { "for-alan.md", "for-alan-archive.md" })
+        {
+            string text = File.ReadAllText(Repo.PathTo("docs", "notes", file));
+            foreach (string commit in Regex.Matches(text, @"raw\.githubusercontent\.com/oRAirwolf/grouplab/([0-9a-f]{7,40})/").Select(m => m.Groups[1].Value).Distinct())
+            {
+                if (Git($"merge-base --is-ancestor {commit} HEAD").Code != 0)
+                {
+                    stranded.Add($"{file}: {commit}");
+                }
+            }
+        }
+
+        Assert.True(stranded.Count == 0, "These pastes fetch from a commit that is not on main, which GitHub answers with 404: " + string.Join("; ", stranded));
+    }
+
+    private static (int Code, string Output) Git(string arguments)
+    {
+        using var git = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("git", arguments)
+        {
+            WorkingDirectory = Repo.PathTo(),
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+        })!;
+        string output = git.StandardOutput.ReadToEnd().Trim();
+        git.StandardError.ReadToEnd();
+        git.WaitForExit();
+        return (git.ExitCode, output);
+    }
 }

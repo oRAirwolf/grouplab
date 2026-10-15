@@ -9,26 +9,25 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-14, entry 424 (before it: entries 423, 422, 421, 416, 415, 420, 419, 418 and 417).
+**Last rewritten:** 2026-10-15, entry 426 (before it: entries 424, 423, 422, 421, 416, 415, 420, 419 and 418).
 
 ---
 
 ## In flight
 
-- **Entries 421 and 422 are done** and in nightly 192 (the consistency audit; Jylee's click that lands the side panel).
-- **Entry 423 is done** (Alan, Quack, Jylee): several pictures of one set dropped together open in ONE tab, read in turn and pooled
-  with no question; Check one sheet opens one alone to fix; a drop never replaces a tab holding a target (the bug Alan hit on 191 and
-  192, no record overwritten). The phone's pickers take several, and a set chosen together opens pooled. Question 98 is about copies of
-  a single-page design. Published on the site from 800e1d93.
+- **Entries 421 to 423 are done** (423: several pictures of one set dropped together open in one tab, pooled; a drop never
+  replaces a tab holding a target). Of the 2026-10-13 queue, 418 section 1 waits on request 99 and 415 section 3.2 is not done.
 - **Entry 424 is done** (Alan on nightly 192): the zero correction names an axis inside the scatter, "leave it", with why, on both
   platforms and in the report (`ZeroWords`); Settings, Zero correction, "Give the clicks anyway" gives both clicks, marked. The Shots
   list ends with a center row; a shot marked as a sighter is now out of the zero and the plot as it is out of Group.
-- **The queue of 2026-10-13 is done** (417, 418, 419, 420, 415, 416); section 1 of 418 waits on request 99, 419 on request 98,
-  415 section 3.2 not done. The detail is in PHASE1-RESULTS.md.
+- **Entry 426 is done**: request 98 answered and archived with the commit Alan ran (77b3db39); `ForAlanTests` fails on a paste
+  fetching from a commit not on main, and CI's test job fetches main's history for it. Just before it, e8aa367a fixed the red checks
+  after 423 and 424 (the report's zero test; a printer connect on its own thread).
+- **Entries 427 then 425 are next** (427 first: the Discord worker stops on one attachment and files nothing new until Alan pastes).
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
-- **Waiting on Alan:** requests 99 and 98 (this queue), 83, 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** request 99 (this queue), 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -59,7 +58,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24** (99 a read-only log paste for entry 418; 98 the Discord bot, steps 1 and 2 now; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **23** (99 a read-only log paste for entry 418; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -76,7 +75,7 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and arch
 
 - **Last nightly:** 0.2.0-nightly.192 (2026-10-14 04:57 UTC, from 80f49fd2): entries 421 and 422. 191 carried entries 415 to 420.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
-- Crash reports open: none. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
+- Crash reports open: #29 and #30, filed from Discord by the worker on 2026-10-15 (entry 427 section 3). Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
 ## The inbox
 

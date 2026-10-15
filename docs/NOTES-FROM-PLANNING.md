@@ -25,6 +25,21 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-15, entry 426: request 98's paste named a commit that is not on GitHub
+
+**Status: actioned 2026-10-15; sections 1 to 3 done.**
+
+Planning session, 2026-10-15 04:10 UTC.
+
+1. Request 98's step 3a in `docs/notes/for-alan.md` fetched the server files from commit `e959956a`. That commit was rebased away and is
+   on no branch: raw.githubusercontent.com answers 404 for it, so the paste would have stopped at its first fetch. The planning session
+   gave Alan the same paste with `77b3db39` instead, after checking that all six files fetched from GitHub at `77b3db39` match the six
+   SHA-256 lines in the request (they do; `website/server/` is unchanged between the two). Change request 98's text to `77b3db39`, or
+   close it if Alan's answer has come back by then.
+2. Add a test (in `ForAlanTests` or beside it) that fails when a paste in `for-alan.md` fetches from a commit that is not an ancestor of
+   `main`, so a rebase cannot strand a request's paste again. Request 97's paste named `c95280d0`; check that one too.
+3. Under the hood only; no release note for the application (it ships nothing).
+
 ## 2026-10-14, entry 424: the zero correction says why an axis gets no click, and a setting gives both clicks always
 
 **Status: actioned 2026-10-14; sections 1 to 4 done; section 3 could not be checked against Alan's own session, which is not on this machine.**
