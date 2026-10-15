@@ -25,6 +25,25 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-15, entry 430: question 99 answered, (b): the selected shot gets its own magenta
+
+**Status: actioned 2026-10-15; every section done. The magenta is nearer the light theme's fourth sheet and two bull marks than the test's 100; kept as chosen, and question 100 asks about it.**
+
+Planning session, 2026-10-15 09:10 UTC. Alan looked at the three options drawn on a Claude Design canvas (claude.ai/artifact/RecX9913a1yaa8NEzt3254,
+"Selected shot color (question 99)") and chose: "Go with b".
+
+1. `Tokens.Selection`: the ink becomes #ff3df5 in the dark themes and #b0009f in the light, each still edged in the opposite (black on
+   dark, white on light). Ring, crosshair, widths, gap, arm and the small sheet's ring stay exactly as entry 425 built them.
+2. The same on the phone (Android and iPhone), through the shared tokens.
+3. Entry 425 section 4's test now also holds the selection apart from the plot's own ink (white and black, `PlotInks.Ink`) and from
+   `MarkPlaced`, in both themes, and still from every sheet, bull and overlay color. Check the magenta against `BullMarks` (#b24bd6 and
+   #d62a5b are the nearest) with the same distance the test already uses; if it is too close, say so as a question with the numbers and
+   keep #ff3df5 / #b0009f meanwhile.
+4. The selected row's amber bar in the shots table is unchanged (not part of the question).
+5. Close question 99 as answered (b). New screenshots of a selected shot in both themes for the tour and Features; check the tour's words.
+6. Release note, kind `changed`, for example: "The shot you select is now ringed in magenta, a color nothing else in GroupLab uses, so it
+   stands out on a single sheet as well as in a pooled set."
+
 ## 2026-10-15, entry 429: Discord attachments may go on the GitHub issues (Alan's consent)
 
 **Status: actioned 2026-10-15; section 1 done. Section 2 not done: Claude Code's permission check refused the worker change as handling posters' personal data; it waits on Alan's word in the session (request 101). Section 3: nothing ships.**

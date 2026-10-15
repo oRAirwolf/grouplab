@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-15, entry 429 (before it: entries 428, 425, 427, 426, 424, 423, 422, 421 and 416).
+**Last rewritten:** 2026-10-15, entry 430 (before it: entries 429, 428, 425, 427, 426, 424, 423, 422 and 421).
 
 ---
 
@@ -22,8 +22,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 429 is half done**: Alan's consent for Discord attachments on their GitHub issues is in `samples/PROVENANCE.md`; the worker
   change was refused by Claude Code's permission check (posters' personal data) and waits on Alan's word in the session (request 101).
   Its token (`grouplab-error-reports`) was made with Issues only, so it will likely need Contents: Read and write too.
-- **Entry 425 is done** (taken after 426 and 427 so Alan had his paste first): the selected shot is ringed with a crosshair in white
-  or black over everything, on the picture, the plot and the small sheet, and its row has an amber bar; question 99 on the inks.
+- **Entries 425 and 430 are done**: the selected shot is ringed with a crosshair over everything, on the picture, the plot and the
+  small sheet, in magenta (#ff3df5 dark, #b0009f light; question 99 answered (b)); its row has an amber bar. Question 100: the
+  magenta is 68 from the light theme's fourth sheet and 84 to 93 from two bull marks; kept as Alan chose meanwhile.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
@@ -64,9 +65,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and archived 2026-10-13):
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and archived 2026-10-15):
 
-- **99** the selection's white and black are also a single sheet's plot ink and nearly the placed marks' (entry 425)
+- **100** the selection's magenta is near the light theme's fourth sheet and two bull marks (entry 430)
 - **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
@@ -85,7 +86,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 430.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

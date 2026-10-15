@@ -284,7 +284,7 @@
     ],
     [
      "The key, top left",
-     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed, and, where the session has chronograph readings, the amber velocity band. A shot you pick is ringed, with a cross through it, in white on the dark theme and black on the light, over everything else. Toggles beside the plot turn CEP 50, 90 and 95, the extreme spread and the velocity band on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
+     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed, and, where the session has chronograph readings, the amber velocity band. A shot you pick is ringed, with a cross through it, in a magenta nothing else uses, over everything else. Toggles beside the plot turn CEP 50, 90 and 95, the extreme spread and the velocity band on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
     ],
     [
      "Zero correction",

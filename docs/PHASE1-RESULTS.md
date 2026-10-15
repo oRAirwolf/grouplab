@@ -853,6 +853,23 @@ ran on the shared pool, so on a busy runner a connect that answers at once never
    issues' kept attachments are still on the server, and a backfill has to run there.
 3. No application release note: nothing ships.
 
+## Entry 430: the selected shot in magenta (question 99 answered) (2026-10-15)
+
+1. **`Tokens.Selection`** is #ff3df5 edged in black in the dark themes (high contrast included) and #b0009f edged in white in the
+   light; ring, crosshair, widths, gap, arm and the small sheet's ring are unchanged.
+2. **The phone** draws its plot with the same `CompositePlot` and tokens, on Android and the iPhone alike, so it takes the magenta with no
+   change of its own; it has no selected shot to show yet (entry 425), so nothing there looks different today.
+3. **The test** (`Entry425Tests`, 12 passed) now also holds the selection apart from the plot's own ink (`PlotInks.Ink`) and
+   `MarkPlaced` in every theme, still from every sheet, bull and overlay color, and its edge is the opposite of it (at least 6 to 1;
+   7.2 dark, 6.3 light). Too close, as section 3 foresaw: dark #ff3df5 is 84 from bull mark #b24bd6; light #b0009f is 68 from the
+   fourth pooled sheet's plum #9c3f8f, 88 from #d62a5b and 93 from #b24bd6. Kept as Alan chose; question 100 has the numbers and
+   three options, and the test holds the plum pair at 65 and the bull marks at 80 until it is answered.
+4. The selected row's amber bar is unchanged.
+5. **Question 99** is answered (b) and archived. The tour's key line and the user guide now say magenta; the Features entry for the
+   analysis claims the new note. `analysis-dark.png` and `analysis-light.png` already show a picked shot (entry 425's walk) and are
+   reshot by `screenshots.yml`, which this push starts.
+6. Release note, kind `changed`, in the commit.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

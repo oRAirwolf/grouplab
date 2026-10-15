@@ -336,12 +336,14 @@ public static class Tokens
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 425, a person's report passed on by Alan: in a pooled set the selected shot was the same orange as the
     /// first sheet's shots and sat on the red extreme spread line, so it was found by clicking it on and off. It is now drawn in an ink no
-    /// sheet, bull or overlay is given, white in the dark themes and black in the light, edged in the other so it reads on a photograph, a
-    /// dashed line and a sheet's own color alike. <see cref="MarkSelected"/> stays the orange of what is lit, lassoed or waiting for a person.
+    /// sheet, bull or overlay is given, edged in the opposite so it reads on a photograph, a dashed line and a sheet's own color alike.
+    /// Entry 430 (question 99, Alan's answer (b)): that ink is a magenta of its own, #ff3df5 in the dark themes and #b0009f in the light,
+    /// because the white and black of entry 425 were also a single sheet's plot ink. <see cref="MarkSelected"/> stays the orange of what
+    /// is lit, lassoed or waiting for a person.
     /// </summary>
     public static (Color Ink, Color Edge) Selection(ThemeVariant? variant) => variant == ThemeVariant.Light
-        ? (Hex(0x000000), Hex(0xffffff))
-        : (Hex(0xffffff), Hex(0x000000));
+        ? (Hex(0xb0009f), Hex(0xffffff))
+        : (Hex(0xff3df5), Hex(0x000000));
 
     /// <summary>Entry 425: the selection's stroke, its edge on each side, how far its ring stands outside the shot, and how far the crosshair reaches past the ring.</summary>
     public const double SelectionCoreWidth = 2.5;

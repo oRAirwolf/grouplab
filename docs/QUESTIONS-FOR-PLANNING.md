@@ -14,30 +14,39 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 42 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 43 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 99, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 
-## 2026-10-15, question 99: the selection's white and black are already two of the marks' own inks
+## 2026-10-15, question 100: the magenta is nearer the light theme's plum sheet and two bull marks than the test's 100
 
-**Status: open. Nothing waits on it; built as entry 425 describes.**
+**Status: open. Nothing waits on it; built with Alan's colors, #ff3df5 dark and #b0009f light, as entry 430 says.**
 
-Entry 425 section 1.1 gives the selected shot "a color no sheet, bull color or overlay uses: white in the dark theme, black in the light
-theme". Two marks already use those inks: on the plot a single sheet's shots are drawn in the plot's ink, white on the dark theme and
-black on the light (`Tokens.Plot`, `PlotInks.Ink`), and on the picture a shot a person placed or corrected is `MarkPlaced`, #e6e8ea,
-nearly white, in every theme. A pooled set's shots are in the sheets' own colors, so the report's case is clear; on one sheet, or among
-hand-placed shots on the dark theme, the selection differs from its neighbours by its larger ring, the crosshair and its black edge, not by
-its color. Section 4's test holds the selection apart from the sheets, the bull, the extreme spread, CEP, the center and the aim, and it
-passes; it does not include those two inks, because it would fail.
+Entry 430 section 3: "Check the magenta against `BullMarks` (#b24bd6 and #d62a5b are the nearest) with the same distance the test
+already uses; if it is too close, say so as a question with the numbers and keep #ff3df5 / #b0009f meanwhile." The test calls two inks
+near when they are closer than 100 in RGB (`Entry425Tests`). Measured:
 
-**Built meanwhile:** exactly as section 1 says. **Options:** (a) keep it, the shape being what tells the selection apart there; (b) give
-the selection an ink nothing uses, for example a magenta near #ff3df5 on the dark theme and #b0009f on the light, each still edged in the
-opposite, a token change and a test line, about half an hour; (c) keep white and black and draw single-sheet plot shots and placed marks
-in a grey a step down. I would choose (a): the ring stands 6 pixels outside the hole with a crosshair through it, which no other mark has, and
-Alan approved the look as described; (b) if Alan finds it still hard to see on one sheet.
+| Selection | Nearest | Distance |
+|---|---|---|
+| dark #ff3df5 | bull mark #b24bd6 (violet) | 84 |
+| dark #ff3df5 | fourth pooled sheet #b65aa3 | 114 (clear) |
+| light #b0009f | **fourth pooled sheet #9c3f8f (plum)** | **68** |
+| light #b0009f | bull mark #d62a5b (rose) | 88 |
+| light #b0009f | bull mark #b24bd6 (violet) | 93 |
+
+Everything else (the plot's white and black, `MarkPlaced`, the bull, extreme spread, CEP, center, aim, the other sheets) is over 100 in
+both themes. The bull marks color a bull's shots on the picture while marking; the plum is the fourth sheet of a pooled set on the light
+theme, which is where the report came from. The ring, crosshair and edge still set the selection apart; the color alone is what is close.
+The contrast with its edge is 7.2 to 1 dark and 6.3 light (white on black was 21).
+
+**Built meanwhile:** Alan's two colors. The test holds the light plum pair at 65 and the bull marks at 80, so nothing comes nearer while
+this is open. **Options:** (a) keep them; the shape tells the selection apart and Alan chose them by eye; (b) dark #f800f8, a purer
+magenta, 108 from everything, with the light one kept (no magenta on the light theme reaches 100 from all of these: the best is about 89);
+(c) move the light theme's fourth sheet away from magenta, for example toward a brown or teal, which changes a pooled set's colors. I
+would choose (a) unless Alan finds the fourth sheet's shots confusable with the selection on the light theme; then (c).
 
 ---
 

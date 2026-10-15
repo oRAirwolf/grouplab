@@ -39,7 +39,10 @@ public class Entry425Tests
     /// <summary>
     /// Section 4: the selection's ink is not, and is not near, any sheet's color in a pooled set, the bull's, the extreme spread's, the CEP
     /// and group centre's green or the aim's blue, nor the orange it replaces; and its edge is the opposite of it, so one of the two always
-    /// shows. Near is closer than 100 in RGB, about the gap between two of the pooled sheets' own colors.
+    /// shows. Near is closer than 100 in RGB, about the gap between two of the pooled sheets' own colors. Entry 430 section 3 adds the
+    /// plot's own ink, the white or black a single sheet's shots are drawn in, and the light grey of a placed mark, both themes. One pair
+    /// is nearer: the light theme's magenta #b0009f is 68 from the fourth pooled sheet's plum #9c3f8f, and question 100 asks about it;
+    /// until it is answered that pair is held at 65, so it comes no closer.
     /// </summary>
     [Theory]
     [MemberData(nameof(Themes))]
@@ -50,10 +53,28 @@ public class Entry425Tests
         var plot = Tokens.Plot(variant);
         var others = Tokens.Loads(variant).Select((c, i) => ($"sheet {i + 1}", c))
             .Concat([("the bull", plot.Bull), ("the extreme spread", plot.Accent), ("CEP and the group center", plot.Group), ("the aim", plot.Aim),
-                ("the orange of what is lit", Tokens.MarkSelected)]);
-        var near = others.Where(o => Distance(ink, o.Item2) < 100).Select(o => $"{o.Item1} ({Distance(ink, o.Item2):0})").ToList();
+                ("the orange of what is lit", Tokens.MarkSelected), ("a single sheet's plot ink", plot.Ink), ("a placed mark", Tokens.MarkPlaced)]);
+        double Floor(string what) => theme == "light" && what == "sheet 4" ? 65 : 100;
+        var near = others.Where(o => Distance(ink, o.Item2) < Floor(o.Item1)).Select(o => $"{o.Item1} ({Distance(ink, o.Item2):0})").ToList();
         Assert.True(near.Count == 0, $"In the {theme} theme the selection is close to " + string.Join(", ", near));
-        Assert.True(Tokens.ContrastRatio(ink, edge) >= 15, $"the edge is not the opposite of the ink in the {theme} theme");
+        Assert.Equal(theme == "light" ? Colors.White : Colors.Black, edge);
+        // Entry 430: a magenta is not as far from its edge as white from black (21 to 1); about 7 to 1 dark and 6 light, still plain.
+        Assert.True(Tokens.ContrastRatio(ink, edge) >= 6, $"the edge stands only {Tokens.ContrastRatio(ink, edge):0.0} to 1 from the ink in the {theme} theme");
+    }
+
+    /// <summary>
+    /// Entry 430 section 3: the per-bull marks on the picture, measured the same way. The magenta Alan chose is 84 from the violet bull
+    /// mark #b24bd6 in the dark themes, and 93 from it and 88 from the rose #d62a5b in the light, under the 100 the plot's inks keep, so
+    /// question 100 asks the planning session about it. Until it answers, this holds the selection no nearer to any bull mark than 80, so
+    /// nothing drifts closer while the question is open.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Themes))]
+    public void TheSelectionIsNoNearerTheBullMarksThanQuestion100Says(string theme)
+    {
+        var (ink, _) = Tokens.Selection(Variant(theme));
+        var nearest = Tokens.BullMarks.Min(c => Distance(ink, c));
+        Assert.True(nearest >= 80, $"In the {theme} theme the selection is {nearest:0} from a bull mark");
     }
 
     /// <summary>
