@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 193,
+  "afterNightly": 194,
   "screens": {
     "analysis": "843f95b149ba3112bcc0f83d2f2b2451cdd1ce4d70d67a6cafbda7e7207e00f2",
     "analysis-open": "a917d1ea206e879d6817e509b55809ed4b18c7140566b7b02425d3f8012a3f48",
@@ -17,7 +17,7 @@
     "optic": "60411c849364af5e1f702ab2aa46e7984d0673da68cd26cdcce68e6b871d9303",
     "optic-4x": "60411c849364af5e1f702ab2aa46e7984d0673da68cd26cdcce68e6b871d9303",
     "pairing": "0c5dd06eb2c47dd2caba3e307130d2c549a88392fc63b8a08b895f3b255576ef",
-    "paper-fold": "b03f56e9e85810e1b28f619be3b63ed8604771074ff5fea6ab50e5eae489947f",
+    "paper-fold": "76061c7350de207302601089a206a873b41b1d38b4b2737a89796c411ed1005a",
     "problem-dialog": "204e5d2bb086ee708dd190f37f03a4a40fe9b6957f05bbef28a3e0e9807068b2",
     "problem-dismissed": "7bc062a181ddaedeb39339477b75d98ec41f2e95430867a75a44193592e28218",
     "readings-here": "61825ff7c3c61aa048efa1a7872ebe4a4af65748588ab3f8eee1b8438f817bde",
