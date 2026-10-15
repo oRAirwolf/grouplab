@@ -25,6 +25,38 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-15, entry 429: Discord attachments may go on the GitHub issues (Alan's consent)
+
+**Status: actioned 2026-10-15; section 1 done. Section 2 not done: Claude Code's permission check refused the worker change as handling posters' personal data; it waits on Alan's word in the session (request 101). Section 3: nothing ships.**
+
+Planning session, 2026-10-15 09:05 UTC. Alan, in the planning chat, 2026-10-15 03:01 Denver: "The discord is public and it is fine to
+publish them to github. It does not need additional permission to do that."
+
+## 1. The consent
+
+1. Write it into `samples/PROVENANCE.md` with those words and the date: attachments posted in the GroupLab Discord's bug-reports forum may
+   be put on their GitHub issues in oRAirwolf/grouplab-crash-reports without asking the poster.
+2. Its scope is the GitHub issues only. It says nothing about grouplab.org, public test data or a research article: those stay as they
+   are (not without the consent rules already written) unless Alan says otherwise. If that reading looks wrong against anything already in
+   PROVENANCE.md, ask it as a question; do not widen it.
+
+## 2. The worker
+
+1. Each kept attachment also goes onto its issue so it can be seen there: GitHub's REST API has no upload for issue attachments, so commit
+   the file into the crash-reports repository (for example `discord/<thread>/<message>/<file>` through the contents API, with the token the
+   worker already has, if it has write access to contents; check, do not assume) and link it from the issue or comment, an image shown
+   inline. Keep the private server copy and the pull to `C:\Dev\grouplab-discord` as they are, for diagnosis.
+2. The issue text no longer says the attachments are "never published"; say instead that they are on the issue, and that grouplab.org,
+   public test data and articles still need the poster's consent.
+3. Backfill: the attachments of issues #29 to #34 already kept go onto those issues the same way, once.
+4. Tests as entry 427's: an upload refused or failed is a line in the issue, never a crash, and never stops the other threads.
+5. The server update is a paste for Alan in `for-alan.md` in request 100's form, from a commit on `main`, backup first. If the token
+   cannot write contents, say what scope it needs in a plain request instead, and do not ask for a new token in any file.
+
+## 3. Release notes
+
+Server only; nothing ships in the application.
+
 ## 2026-10-15, entry 428: request 100 answered; the Discord worker filed four more posts
 
 **Status: actioned 2026-10-15; every section done. #31 to #33 were already fixed and are closed; #34 is new and open.**

@@ -839,6 +839,20 @@ ran on the shared pool, so on a busy runner a connect that answers at once never
 3. Question 99 is answered by entry 430; nothing was built for it here.
 4. No application release note: nothing here ships.
 
+## Entry 429: the Discord consent recorded; the worker change waits on Alan's word (2026-10-15)
+
+1. **The consent** is in `samples/PROVENANCE.md` with Alan's words and the date: attachments in the Discord's bug-reports forum may go
+   on their GitHub issues in `oRAirwolf/grouplab-crash-reports` without asking the poster; grouplab.org, public test data and research
+   articles are not covered and stay as they were. Nothing already in PROVENANCE.md reads against it, so no question.
+2. **Not done.** The worker change (each kept file committed under `discord/<thread>/<message>/` through the contents API and shown on
+   its issue, a refusal as a line in the issue, a once-only backfill of kept folders, the issue wording, tests) was refused by Claude
+   Code's own permission check as handling posters' personal data, so it was not written; nothing on the server or GitHub changed.
+   Request 101 asks Alan for his word in the session. Found while preparing it: the token the worker uses (`grouplab-error-reports`,
+   entry 194) was specified as Issues: Read and write only, so committing files will very likely also need Contents: Read and write
+   added to that token; the worker would say so in its log rather than assume. The pull to this computer has never run, so the six
+   issues' kept attachments are still on the server, and a backfill has to run there.
+3. No application release note: nothing ships.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

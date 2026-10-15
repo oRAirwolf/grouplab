@@ -1,4 +1,4 @@
-**Open: 23.** Most urgent today: **99**, one read-only paste about Quack's upload (two minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **101**, one message in the Claude Code session so Discord pictures can go on their issues (one minute). Then **99**, one read-only paste about Quack's upload (two minutes). Then **83**, the M834 printing from the computer, now that 85 is done (twenty minutes). Then **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile. Then **50**, the camera test of 33 inside it. **54** the store-bought target whenever suits. **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **46** waits until Sunday 4 October. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On
 nightly 190 and earlier a drop always opened only the first picture, over the tab dropped on. On nightlies 191 and 192 each picture was
 meant to get its own tab, but when a question was showing in the middle of the window (as when a scan's codes do not read), the new tab
@@ -257,6 +257,22 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 101. One word in the Claude Code session, so Discord pictures can go on their GitHub issues, one minute (entry 429)
+
+**Open, 2026-10-15.**
+
+**Why:** you said the Discord pictures may go on their GitHub issues, and that consent is now written down. The change that does it
+(the bot saving each picture into the private crash-reports repository and showing it on its issue, and putting the six issues' pictures
+there once) was stopped by Claude Code's own safety check, which treats moving people's posted pictures to another place as personal
+data and wants your word in the session itself, not a note passed on. Nothing was changed on the server or on GitHub.
+
+**Steps:** in the Claude Code session, send the message below. If you would rather the pictures stayed private after all, say that
+instead and the consent will be marked withdrawn.
+
+    Go ahead with entry 429 section 2: put the Discord attachments on their GitHub issues.
+
+**A good answer:** that message. A server paste follows as its own request once the change is on main.
 
 ## 99. Which reply Quack's failed upload got, one read-only paste, two minutes, whenever suits (entry 418)
 
