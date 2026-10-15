@@ -12,6 +12,28 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.193
+
+**2026-10-15**, commit `7aaa4ce`. Nightly.
+
+**What you will notice**
+
+- The shot you select now stands out with a larger ring and a crosshair over everything else, on the picture, the plot and the small sheet, and its row in the table has an amber bar and bold numbers, even in a pooled set with many shots and in the dark theme.
+- Connecting to a label printer now starts each way of connecting at once, so a busy device no longer counts its own delay against the printer and gives up on one that would have answered.
+- The Shots list ends with the group's center, the figure the zero correction uses, and a shot you mark as a sighter is now left out of the zero correction and the plot as it already was from the group's figures.
+- The zero correction now says leave it, and why, for an axis too close to the aim to tell from the scatter instead of leaving it out without a word, and Settings can give both clicks always instead.
+- Scans or photos of one set dropped onto GroupLab together now open in one tab, pooled, with no button to press, as Quack and Jylee asked, and Check one sheet opens any sheet alone to fix it. A picture dropped onto a tab that already holds a target now opens beside it instead of replacing it.
+- On the phone you can choose several photos at once, and the sheets of one set chosen together open as the set's checklist with the pooled group showing.
+
+**Under the hood**
+
+- A change made earlier today to how GroupLab applies its look after a change of text size is taken back, as the fault it answered was in the checks rather than the application.
+- The ballistic solver's warm-up when GroupLab starts is now checked to run in the background by where it runs, not by how long it took on a busy computer.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.193)
+
+---
+
 ## 0.2.0-nightly.192
 
 **2026-10-14**, commit `80f49fd`. Nightly.
