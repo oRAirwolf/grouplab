@@ -3323,7 +3323,7 @@ public sealed partial class MainWindow : Window
         var ordered = plotted.OrderBy(p => int.TryParse(p.Label, NumberStyles.Integer, CultureInfo.InvariantCulture, out int k) ? k : int.MaxValue).ThenBy(p => p.Label, StringComparer.Ordinal).ToList();
         bool bullColumn = ordered.Any(p => p.Bull is { } b && b != p.Label);
         string columns = bullColumn ? "44,44,*,*,*" : "44,*,*,*";
-        Grid Cells(IEnumerable<string> texts, bool heading, bool dim, bool struck)
+        Grid Cells(IEnumerable<string> texts, bool heading, bool dim, bool struck, bool chosen = false)
         {
             var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(columns) };
             int c = 0;
@@ -3338,7 +3338,7 @@ public sealed partial class MainWindow : Window
                     TextAlignment = TextAlignment.Right,
                     Margin = new Thickness(0, 0, Tokens.Space8, 0),
                     TextDecorations = struck ? TextDecorations.Strikethrough : null,
-                    Classes = { heading || dim ? AppStyles.Dim : AppStyles.Secondary },
+                    Classes = { chosen ? AppStyles.SelectedRow : heading || dim ? AppStyles.Dim : AppStyles.Secondary },
                 };
                 Grid.SetColumn(cell, c++);
                 grid.Children.Add(cell);
@@ -3352,6 +3352,7 @@ public sealed partial class MainWindow : Window
         head.Margin = new Thickness(Tokens.Space4, 0, Tokens.Space4, Tokens.Space4);
         offsetTable.Children.Add(head);
         int index = 0;
+        Button? chosenRow = null;
         foreach (var shot in ordered)
         {
             double r = centre is { } c ? Math.Sqrt(Math.Pow(shot.Offset.X - c.X, 2) + Math.Pow(shot.Offset.Y - c.Y, 2)) : 0;
@@ -3363,12 +3364,12 @@ public sealed partial class MainWindow : Window
             }
 
             texts.AddRange([units.Number(shown.X), units.Number(-shown.Y), units.Number(r)]);
+            bool chosen = plotSelection.Contains(shot.Id);
             var row = new Button
             {
-                Content = Cells(texts, heading: false, dim: shot.Excluded, struck: shot.Excluded),
+                Content = Cells(texts, heading: false, dim: shot.Excluded, struck: shot.Excluded, chosen),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                FontWeight = plotSelection.Contains(shot.Id) ? FontWeight.SemiBold : FontWeight.Normal,
                 Classes = { AppStyles.TableRow },
             };
             if (index++ % 2 == 1)
@@ -3376,9 +3377,11 @@ public sealed partial class MainWindow : Window
                 row.Classes.Add(AppStyles.Shaded);
             }
 
-            if (plotSelection.Contains(shot.Id))
+            // Entry 425 section 2: the selected row is marked so it cannot be missed, not only tinted.
+            if (chosen)
             {
-                row.Classes.Add(AppStyles.Warn);
+                row.Classes.Add(AppStyles.SelectedRow);
+                chosenRow ??= row;
             }
 
             ToolTip.SetTip(row, $"{shot.Named?.Name ?? "Shot " + shot.Label}{(shot.Named is null && shot.Bull is { } bull ? ", bull " + bull : "")}{(shot.Excluded ? ", excluded" : "")}");
@@ -3406,6 +3409,18 @@ public sealed partial class MainWindow : Window
             offsetTable.Children.Add(centreRow);
         }
 
+        // Entry 425 section 2.2: a shot chosen on the plot or the picture brings its row into view, once, when the choice changes, so a
+        // panel scrolled down to read something else is not pulled back on every redraw.
+        int? first = chosenRow is null ? null : plotSelection.FirstOrDefault();
+        if (first != rowBroughtIntoView)
+        {
+            rowBroughtIntoView = first;
+            if (chosenRow is { } bring)
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() => bring.BringIntoView(), Avalonia.Threading.DispatcherPriority.Background);
+            }
+        }
+
         ShowThumbnail(state);
         ShowAimPoints(state);
         ShowFullFigures(state);
@@ -3413,6 +3428,9 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>One scoring bull's discs from the sheet's definition, in inches, outermost first; none for a marking the definition is not known for.</summary>
+    /// <summary>The shot whose row was last brought into view, entry 425 section 2.2; null when none is selected.</summary>
+    private int? rowBroughtIntoView;
+
     /// <summary>A click on the plot or a row of its table: one shot, or the extreme spread's two, picked on the plot and selected on the sheet.</summary>
     internal void PickShots(IReadOnlyList<int> ids)
     {
@@ -4036,6 +4054,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The composite plot, for the headless tests.</summary>
     internal CompositePlot Plot => plot;
+
+    /// <summary>The rows of the Shots table, entry 425, for the tests.</summary>
+    internal IReadOnlyList<Button> OffsetRows => [.. offsetTable.Children.OfType<Button>()];
 
     /// <summary>The composite plot's four mark toggles, CEP 50, CEP 90, CEP 95 and the extreme spread, for the headless tests.</summary>
     internal IReadOnlyList<CheckBox> PlotToggles => [cep50Box, cep90Box, cep95Box, spreadBox];

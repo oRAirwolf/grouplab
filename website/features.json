@@ -590,7 +590,7 @@
       ],
       "since": "0.2.0-nightly.95",
       "note": [
-        "The analysis screen shows the six figures you read off a target",
+        "The analysis screen shows the six figures you read off a target", "The shot you select now stands out",
         "now says leave it, and why"
       ],
       "tour": "analysis",

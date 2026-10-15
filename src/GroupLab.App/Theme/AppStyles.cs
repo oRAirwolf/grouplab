@@ -47,6 +47,12 @@ public static class AppStyles
 
     public const string Shaded = "shaded";
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 425 section 2: the selected row of a table, and its cells: an amber bar down its left edge, a fill clearly
+    /// apart from every other row's, and bold text at full contrast.
+    /// </summary>
+    public const string SelectedRow = "selected-row";
+
     /// <summary>A tool drawn as an icon alone, entry 109 section 2, with a tooltip naming it and its key.</summary>
     public const string IconButton = "icon-button";
 
@@ -253,6 +259,9 @@ public static class AppStyles
         Rule(x => x.OfType<Button>().Class(TableRow), (TemplatedControl.BackgroundProperty, Tokens.Clear), (TemplatedControl.BorderThicknessProperty, new Thickness(0)), (TemplatedControl.CornerRadiusProperty, new CornerRadius(0)), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space4, 2)), (Layoutable.MarginProperty, new Thickness(0)), (TemplatedControl.FontSizeProperty, Tokens.DetailSize)),
         Rule(x => x.OfType<Button>().Class(TableRow).Class(Shaded), (TemplatedControl.BackgroundProperty, Brush(p.Panel2))),
         Rule(x => x.OfType<Button>().Class(TableRow).Class(Warn), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint))),
+        Rule(x => x.OfType<Button>().Class(TableRow).Class(SelectedRow), (TemplatedControl.BackgroundProperty, Brush(Tokens.SelectedRow(p))),
+            (TemplatedControl.BorderBrushProperty, Brush(p.Amber)), (TemplatedControl.BorderThicknessProperty, new Thickness(4, 0, 0, 0))),
+        Rule(x => x.OfType<TextBlock>().Class(SelectedRow), (TextBlock.ForegroundProperty, Brush(p.Text)), (TextBlock.FontWeightProperty, FontWeight.Bold)),
 
         // The Ballistics table's rows, entry 247: clear so a click anywhere on one lands, and the chosen range's row in the tint.
         Rule(x => x.OfType<Border>().Class(TableRow), (Border.BackgroundProperty, Tokens.Clear)),

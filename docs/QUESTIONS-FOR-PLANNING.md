@@ -21,6 +21,26 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-15, question 99: the selection's white and black are already two of the marks' own inks
+
+**Status: open. Nothing waits on it; built as entry 425 describes.**
+
+Entry 425 section 1.1 gives the selected shot "a color no sheet, bull color or overlay uses: white in the dark theme, black in the light
+theme". Two marks already use those inks: on the plot a single sheet's shots are drawn in the plot's ink, white on the dark theme and
+black on the light (`Tokens.Plot`, `PlotInks.Ink`), and on the picture a shot a person placed or corrected is `MarkPlaced`, #e6e8ea,
+nearly white, in every theme. A pooled set's shots are in the sheets' own colors, so the report's case is clear; on one sheet, or among
+hand-placed shots on the dark theme, the selection differs from its neighbours by its larger ring, the crosshair and its black edge, not by
+its color. Section 4's test holds the selection apart from the sheets, the bull, the extreme spread, CEP, the center and the aim, and it
+passes; it does not include those two inks, because it would fail.
+
+**Built meanwhile:** exactly as section 1 says. **Options:** (a) keep it, the shape being what tells the selection apart there; (b) give
+the selection an ink nothing uses, for example a magenta near #ff3df5 on the dark theme and #b0009f on the light, each still edged in the
+opposite, a token change and a test line, about half an hour; (c) keep white and black and draw single-sheet plot shots and placed marks
+in a grey a step down. I would choose (a): the ring stands 6 pixels outside the hole with a crosshair through it, which no other mark has, and
+Alan approved the look as described; (b) if Alan finds it still hard to see on one sheet.
+
+---
+
 ## 2026-10-14, question 98: several pictures of one single-page design, dropped together
 
 **Status: open. Nothing waits on it; built meanwhile as below.**

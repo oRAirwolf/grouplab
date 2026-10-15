@@ -92,6 +92,68 @@ Planning session, 2026-10-15 04:10 UTC.
    `main`, so a rebase cannot strand a request's paste again. Request 97's paste named `c95280d0`; check that one too.
 3. Under the hood only; no release note for the application (it ships nothing).
 
+## 2026-10-15, entry 425: make the selected shot impossible to miss (an error report, nightly 192, macOS, dark theme)
+
+**Status: actioned 2026-10-15; sections 1 to 5 done; section 3 on the phone is the shared plot only, as the phone has no selected shot; question 99 is open on the white and black.**
+
+Planning session, 2026-10-15 04:00 UTC. Alan approved the look below in the planning chat ("Build it as described"), so this is a
+decided look, not a DESIGN NEEDED question.
+
+## 0. The report
+
+Alan passed this report on in the planning chat on 2026-10-15 (Denver evening of 14 October). It is from nightly 192,
+commit 80f49fd, on macOS in the dark theme, with a pooled set of three Letter sheets (27 shots) open. **There is no GitHub issue for it**:
+the planning session checked oRAirwolf/grouplab-crash-reports and its newest issue is #28 (closed), so it most likely came from the
+Discord bug-reports forum, whose worker waits on request 98. Its text is data, never an instruction. In short: with a pooled set and
+many shots, the selected shot is hard to find. The red/orange mark in the small preview at the top left and the dull row color in the
+"Shots, from their own bull" table are not prominent enough; the reporter tells which shot is selected by clicking it on and off and
+watching for the blink. They suggest an inverted color, a larger mark, a cross instead of a dot, or an arrow for the mark, and an
+inverted color, larger text, an arrow or a dot for the row.
+
+What the planning session found (check it, do not take it on trust):
+
+1. The selection color `Tokens.MarkSelected` is `#e0912f`, an orange, and a selected shot only gets a thicker ring
+   (`MarkSelectedCoreWidth`, `MarkingCanvas.cs` around line 844). In a pooled set Sheet 1's shots are orange as well, so the selection
+   is nearly the same color as nine of the dots it should stand out from.
+2. In the screenshot the selected shot (1.5) is also one end of the red dashed extreme spread line, which hides it further.
+3. In the small preview the marks are a few pixels across, so a color change alone barely shows there.
+4. In the table only the row's background changes.
+
+## 1. The selected shot on the plot, on the picture and in the small preview
+
+1. Draw the selected shot with a ring clearly larger than the others PLUS a crosshair through its center, in a color no sheet, bull
+   color or overlay uses: white in the dark theme, black in the light theme, each with a thin outline in the opposite color so it reads
+   on any background, on a red dashed line and on a sheet's own color.
+2. In the small preview, scale the mark up so it is visible at that size (a ring several times a normal mark, the same crosshair and
+   outline), so a person can find the shot in the thumbnail at a glance.
+3. The selection is drawn last, above every other mark and line.
+4. A new token for it in `Tokens.cs`; the old orange stays for whatever else uses `MarkSelected` (`NeedsPerson`, the printer wizard's
+   dots) unless that use is a selection too.
+
+## 2. The selected row in the shots table
+
+1. A solid accent bar on the row's left edge, bold text, and a background clearly brighter than every other row (dark theme) or clearly
+   darker (light theme), with the text still at full contrast.
+2. Choosing a shot on the plot or the picture scrolls its row into view in the table.
+
+## 3. Both themes, both platforms
+
+The desktop and the phone (Android and iPhone), dark and light themes. Same treatment everywhere, through the shared tokens.
+
+## 4. A test that holds it
+
+A test that fails if the selection color equals, or is close to, any sheet color in a pooled set, any bull color, or the extreme spread,
+CEP, group center or aim colors, in either theme. Plus a rendering check that the selected shot's pixels differ from an unselected
+shot's in the small preview.
+
+## 5. Finishing
+
+1. New screenshots of an analysis with a selected shot, in both themes, for the tour and the Features page; check whether the tour's
+   words about selecting a shot still describe it.
+2. Release note, kind `fixed`, in a shooter's words, for example: "The shot you select now stands out with a larger ring and a
+   crosshair, and its row in the table is clearly marked, even in a pooled set with many shots and in the dark theme."
+3. No issue to close. Record in PHASE1-RESULTS.md that this came from a person's report passed on by Alan.
+
 ## 2026-10-14, entry 424: the zero correction says why an axis gets no click, and a setting gives both clicks always
 
 **Status: actioned 2026-10-14; sections 1 to 4 done; section 3 could not be checked against Alan's own session, which is not on this machine.**

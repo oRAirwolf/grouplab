@@ -794,7 +794,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             bool mine = PickingBull is { } picked && shot.Bull == picked;
             IBrush colour = mine ? Marks.Chosen
                 : PickingBull is not null ? Marks.Dimmed
-                : selected || lights || Lassoed.Contains(shot.Id) ? Marks.Selected
+                : lights || Lassoed.Contains(shot.Id) ? Marks.Selected
                 : shot.Exclusion is not null ? Marks.Excluded
                 : NeedsPerson.Contains(shot.Id) ? Marks.NeedsPerson
                 : byHand && shot.Bull is { } own ? ColourOf(state, own)
@@ -875,6 +875,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             Marks.Ring(context, Marks.Selected, snapped, ImpactRadius(state, snap, null), dash: Marks.Dashed);
+        }
+
+        // Entry 425: the selected shot last, above every other mark and line, in its own ink with a crosshair, so it is found at a glance.
+        if (Selected is { } selectedId && state.Shots.FirstOrDefault(s => s.Id == selectedId) is { NotAShot: false } selectedShot)
+        {
+            var at = dragging == selectedShot.Id ? dragAt : selectedShot.Image;
+            double radius = ImpactRadius(state, at, selectedShot.MeasuredDiameterInches);
+            Marks.Selection(context, ActualThemeVariant, ToControl(at), radius + Tokens.SelectionGap, radius + 1);
         }
     }
 

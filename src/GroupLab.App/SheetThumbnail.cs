@@ -114,16 +114,22 @@ internal sealed class SheetThumbnail : Control
 
         foreach (var shot in Shots)
         {
-            bool selected = Selected.Contains(shot.Id);
             var at = ToScreen(shot.At);
             if (shot.Excluded)
             {
-                Marks.Ring(context, selected ? Marks.Selected : Marks.Excluded, at, 2.5, Tokens.MarkCoreWidth, Marks.Dashed);
+                Marks.Ring(context, Marks.Excluded, at, 2.5, Tokens.MarkCoreWidth, Marks.Dashed);
             }
             else
             {
-                Marks.Dot(context, selected ? Marks.Selected : Marks.Impact, at, selected ? 3.2 : 2.4);
+                Marks.Dot(context, Marks.Impact, at, 2.4);
             }
+        }
+
+        // Entry 425: at this size a change of color barely shows, so the selected shots are ringed several times a shot's size, with the
+        // crosshair, after every other shot.
+        foreach (var shot in Shots.Where(s => Selected.Contains(s.Id)))
+        {
+            Marks.Selection(context, ActualThemeVariant, ToScreen(shot.At), Tokens.SelectionThumbnailRing, 3.5);
         }
     }
 }

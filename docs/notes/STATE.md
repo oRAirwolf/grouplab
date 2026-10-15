@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-15, entry 427 (before it: entries 426, 424, 423, 422, 421, 416, 415, 420 and 419).
+**Last rewritten:** 2026-10-15, entry 425 (before it: entries 427, 426, 424, 423, 422, 421, 416, 415 and 420).
 
 ---
 
@@ -17,14 +17,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entries 421 to 423 are done** (423: several pictures of one set dropped together open in one tab, pooled; a drop never
   replaces a tab holding a target). Of the 2026-10-13 queue, 418 section 1 waits on request 99 and 415 section 3.2 is not done.
-- **Entry 424 is done** (Alan on nightly 192): the zero correction names an axis inside the scatter, "leave it", with why, on both
-  platforms and in the report (`ZeroWords`); Settings, Zero correction, "Give the clicks anyway" gives both clicks, marked. The Shots
-  list ends with a center row; a shot marked as a sighter is now out of the zero and the plot as it is out of Group.
+- **Entry 424 is done**: the zero correction names an axis inside the scatter, "leave it", with why (`ZeroWords`); a setting gives both clicks.
 - **Entry 426 is done**: `ForAlanTests` fails on a paste fetching from a commit not on main. e8aa367a fixed the red checks
   after 423 and 424 (the report's zero test; a printer connect on its own thread).
 - **Entry 427 is done but for Alan's paste**: the Discord worker stopped on an attachment Cloudflare refused (urllib's own User-Agent);
   fixed in a3ea5ecf, request 100 installs it. Issues #29 and #30 it filed were already fixed (nightlies 176 and 185) and are closed.
-- **Entry 425 is next** (the selected shot made impossible to miss), taken after 426 and 427 so Alan had his paste first.
+- **Entry 425 is done** (taken after 426 and 427 so Alan had his paste first): the selected shot is ringed with a crosshair in white
+  or black over everything, on the picture, the plot and the small sheet, and its row has an amber bar; question 99 on the inks.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
@@ -65,8 +64,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and archived 2026-10-13):
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (97 answered by entry 415 and archived 2026-10-13):
 
+- **99** the selection's white and black are also a single sheet's plot ink and nearly the placed marks' (entry 425)
 - **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9

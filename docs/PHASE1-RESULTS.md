@@ -726,6 +726,44 @@ Wording for sections 1, 2 and 5 to 9 by docs-sonnet; section 3's code, its test 
    user guide's zero paragraph and its "why" line and the Features page's figures entry say it. Not changed: the Zero from this group
    window's own per-axis lines, which already say "too little to dial" with the shots that would settle it, do not follow the setting.
 
+## Entry 425: the selected shot made impossible to miss (2026-10-15)
+
+From a person's report passed on by Alan in the planning chat (nightly 192, macOS, dark theme, a pooled set of three Letter sheets, 27
+shots); no issue was filed, most likely because the Discord worker was stopped (entry 427). Its text was data; nothing in it read as an
+instruction. The planning session's findings were checked: the selection was `Tokens.MarkSelected`, #e0912f, which is the dark theme's
+first sheet color in a pooled set; on the plot a picked shot was drawn in `PlotInks.Accent`, the extreme spread's own red, so a picked end
+of the spread line vanished into it (the committed `analysis-light` picture shows exactly that); the small sheet grew the dot from 2.4 to
+3.2 pixels; and the table row only took the amber tint.
+
+1. **The mark** (`Marks.Selection`, `Tokens.Selection`): a ring standing 6 pixels outside the shot (outside the caliber outline on the
+   plot) and a crosshair through its centre reaching 8 pixels past the ring, white edged in black on the dark and high contrast themes,
+   black edged in white on the light, drawn after every other mark and line on the picture (`MarkingCanvas`), the plot (`CompositePlot`,
+   after the band labels; the crosshair runs in to the dot) and the small sheet (`SheetThumbnail`, a ring of 9 pixels, several times a
+   2.4 pixel shot). A picked shot keeps its own sheet's or mark's color beneath it. The plot's key adds "the shot you picked, ringed with
+   a cross". `MarkSelected` stays the orange of a lit bull, a lasso, the review queue and the printer wizard's dots, none of them a
+   selection of a shot.
+2. **The row** (`AppStyles.SelectedRow`, `Tokens.SelectedRow`): an amber bar 4 pixels wide down its left edge, a fill a fifth of the way
+   from the shaded row toward the text (brighter on dark, darker on light), and bold cells at full text contrast. A shot chosen on the
+   plot or the picture brings its row into view once, when the choice changes, so a panel scrolled elsewhere is not pulled back on every
+   redraw.
+3. **Both themes, both platforms**: the desktop in dark, light and high contrast. The phone has no selected shot: it draws no selection
+   on its picture (its amber rings are marks to check, which stay orange per section 1.4) and its plot is the shared `CompositePlot`,
+   so a selection there would take the same mark; nothing else on the phone changed.
+4. **Tests** (`Entry425Tests`, 9): the selection's ink is 100 or more in RGB from every pooled sheet color, the bull, the extreme spread,
+   CEP and the center's green, the aim's blue and the old orange, in all three themes, and its edge is the opposite of it; the selected row
+   is brighter (dark) or darker (light) than the background, panel and shaded row by 1.4 to 1 or more with text at 7 to 1 (high contrast
+   at its own ratio); selecting a shot on the small sheet changes 250 or more pixels in each theme; a picked shot marks its row alone,
+   bold, and the key says what the ring is. App 571, Mobile 179, Core cross-cutting 37 passed.
+5. **Finishing**: the screenshot walk now pictures the analysis with one end of the extreme spread picked, so the next screenshot run
+   after the nightly replaces `analysis` and `analysis-open` in both themes (checked locally in `out/screens`). The tour's analysis page
+   said "The widest pair is picked out in bold", which was not true (nothing picks it until its line is clicked); it now describes the
+   picked row and the plot's ring, and the user guide's analysis section says the same. Release note kind `fixed`, claimed on the
+   Features page under the analysis screen. No issue to close: the report will be filed when request 100 runs, and is then closed with
+   this commit.
+
+**Question 99** records that the dark theme's white is also a single sheet's plot ink and nearly the placed marks' #e6e8ea, so there the
+ring and crosshair, not the color, tell the selection apart; built as the entry says meanwhile.
+
 ## Entry 426: request 98's paste named a commit that is not on GitHub (2026-10-15)
 
 1. **Request 98** is answered (Alan ran it on 14 October with the planning session's pastes at 77b3db39, entry 427) and moved whole to

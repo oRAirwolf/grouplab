@@ -333,6 +333,30 @@ public static class Tokens
     public static Color MarkImpact { get; } = Hex(0xc8442f);
     public static Color MarkSelected { get; } = Hex(0xe0912f);
     public static Color MarkExcluded { get; } = Hex(0x9aa1a9);
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 425, a person's report passed on by Alan: in a pooled set the selected shot was the same orange as the
+    /// first sheet's shots and sat on the red extreme spread line, so it was found by clicking it on and off. It is now drawn in an ink no
+    /// sheet, bull or overlay is given, white in the dark themes and black in the light, edged in the other so it reads on a photograph, a
+    /// dashed line and a sheet's own color alike. <see cref="MarkSelected"/> stays the orange of what is lit, lassoed or waiting for a person.
+    /// </summary>
+    public static (Color Ink, Color Edge) Selection(ThemeVariant? variant) => variant == ThemeVariant.Light
+        ? (Hex(0x000000), Hex(0xffffff))
+        : (Hex(0xffffff), Hex(0x000000));
+
+    /// <summary>Entry 425: the selection's stroke, its edge on each side, how far its ring stands outside the shot, and how far the crosshair reaches past the ring.</summary>
+    public const double SelectionCoreWidth = 2.5;
+    public const double SelectionEdgeWidth = 1.5;
+    public const double SelectionGap = 6;
+    public const double SelectionArm = 8;
+
+    /// <summary>Entry 425: the selection's ring on the small sheet, where a shot is a dot 2.4 pixels across, several times its size.</summary>
+    public const double SelectionThumbnailRing = 9;
+
+    /// <summary>
+    /// Entry 425 section 2: the selected row of a table, a fifth of the way from the shaded row toward the text, so it is clearly brighter
+    /// than every other row in the dark themes and clearly darker in the light, and the text on it stays at full contrast.
+    /// </summary>
+    public static Color SelectedRow(Palette p) => Mix(p.Panel2, p.Text, 0.2);
     public static Color MarkTeal { get; } = Hex(0x6fbfa8);
     public static Color MarkFaint { get; } = Hex(0x697079);
     public static Color MarkAlert { get; } = Hex(0xe0604a);

@@ -41,7 +41,7 @@ public class AnalysisStateTests
     }
 
     /// <summary>A marked sheet: the image written to a temporary file, opened, and the shots loaded on their bulls.</summary>
-    private static (MainWindow Window, string Path) Marked()
+    internal static (MainWindow Window, string Path) Marked()
     {
         string path = Path.Combine(Path.GetTempPath(), $"grouplab-analysis-{Guid.NewGuid():N}.png");
         using (var image = new Mat(600, 800, MatType.CV_8UC3, new Scalar(235, 235, 235)))

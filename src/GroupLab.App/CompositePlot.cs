@@ -574,6 +574,14 @@ internal sealed class CompositePlot : Control
             {
                 DrawBandLabels(context, ToScreen(labelCentre).Y, labelled.PredictedSdInches * scale, labelled.MeasuredSdInches * scale, area);
             }
+
+            // Entry 425: the selection last of all, over the extreme spread's line, the centre lines and the band's labels.
+            // The ring stands outside the caliber outline where one is drawn, and the crosshair runs in to the dot itself.
+            foreach (var shot in Visible.Where(s => Selected.Contains(s.Id)))
+            {
+                double own = CalibreInches is { } calibre && ShowOutlines ? Math.Max(SelectedDot, calibre * scale / 2) : SelectedDot;
+                Marks.Selection(context, ActualThemeVariant, ToScreen(shot.Offset), own + Tokens.SelectionGap, SelectedDot + 2);
+            }
         }
 
         if (ShowKey)
@@ -639,7 +647,7 @@ internal sealed class CompositePlot : Control
         }
 
         bool selected = Selected.Contains(shot.Id);
-        var colour = selected ? inks.Accent : shot.Excluded ? inks.Ring : SheetColour(shot) ?? inks.Ink;
+        var colour = shot.Excluded ? inks.Ring : SheetColour(shot) ?? inks.Ink;
         var pen = new Pen(new SolidColorBrush(colour, selected || shot.Excluded ? 1 : OutlineOpacity), selected ? 2.5 : Stroke, shot.Excluded ? Marks.Dashed : null);
         double radius = Math.Max(2, calibre * scale / 2);
         context.DrawEllipse(null, pen, ToScreen(shot.Offset), radius, radius);
@@ -654,16 +662,20 @@ internal sealed class CompositePlot : Control
         var at = ToScreen(shot.Offset);
         bool selected = Selected.Contains(shot.Id);
         double opacity = selected || shot.Excluded || CalibreInches is not null ? 1 : OutlineOpacity;
-        IBrush brush = new SolidColorBrush(selected ? inks.Accent : shot.Excluded ? inks.Ring : SheetColour(shot) ?? inks.Ink, opacity);
+        // Entry 425: a picked shot keeps its sheet's color, the red being the extreme spread's; the selection drawn over it says which it is.
+        IBrush brush = new SolidColorBrush(shot.Excluded ? inks.Ring : SheetColour(shot) ?? inks.Ink, opacity);
         if (shot.Excluded)
         {
             Marks.Ring(context, brush, at, 3.5, selected ? 2.5 : Stroke, Marks.Dashed);
         }
         else
         {
-            Marks.Dot(context, brush, at, selected ? 4.5 : 3);
+            Marks.Dot(context, brush, at, selected ? SelectedDot : 3);
         }
     }
+
+    /// <summary>A picked shot's dot, a little larger than the others' 3 pixels.</summary>
+    private const double SelectedDot = 4.5;
 
     /// <summary>One entry of the key: its words, and how its swatch is drawn at a point.</summary>
     private sealed record KeyEntry(string Text, Action<DrawingContext, Point> Swatch);
@@ -695,6 +707,12 @@ internal sealed class CompositePlot : Control
             string shown = OnlySheet == sheet ? ", shown alone: tap for all" : OnlySheet is null ? ", tap to show alone" : "";
             entries.Add(new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"Sheet {sheet + 1}: {n} shot{(n == 1 ? "" : "s")}{shown}"),
                 (c, p) => Marks.Dot(c, new SolidColorBrush(colour, OnlySheet is null || OnlySheet == sheet ? 1 : OutlineOpacity), p, 4)));
+        }
+
+        if (Selected.Count > 0)
+        {
+            entries.Add(new KeyEntry(Selected.Count == 1 ? "the shot you picked, ringed with a cross" : "the shots you picked, ringed with a cross",
+                (c, p) => Marks.Selection(c, ActualThemeVariant, p, 4, 1.5, arm: 3)));
         }
 
         if (excluded > 0)

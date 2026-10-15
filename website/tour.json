@@ -284,7 +284,7 @@
     ],
     [
      "The key, top left",
-     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed, and, where the session has chronograph readings, the amber velocity band. Toggles beside the plot turn CEP 50, 90 and 95, the extreme spread and the velocity band on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
+     "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed, and, where the session has chronograph readings, the amber velocity band. A shot you pick is ringed, with a cross through it, in white on the dark theme and black on the light, over everything else. Toggles beside the plot turn CEP 50, 90 and 95, the extreme spread and the velocity band on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
     ],
     [
      "Zero correction",
@@ -312,7 +312,7 @@
     ],
     [
      "Shots, from their own bull",
-     "Every shot as numbers, across, up and down, and radius. The widest pair is picked out in bold. Shots and clicks beneath it lists each shot as a short row; open one to change its bull, say its place in the firing order, turn Counted off or choose Delete, not a hole. Share a picture puts a results box and the mean radius circle on the photograph."
+     "Every shot as numbers, across, up and down, and radius. The shot you pick on the plot or the picture has an amber bar down its row, a brighter row and bold numbers, and the table scrolls to it; clicking the red dashed line picks the widest pair. Shots and clicks beneath it lists each shot as a short row; open one to change its bull, say its place in the firing order, turn Counted off or choose Delete, not a hole. Share a picture puts a results box and the mean radius circle on the photograph."
     ],
     [
      "Own window, Show work, Report and Export",

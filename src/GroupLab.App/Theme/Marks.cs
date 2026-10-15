@@ -1,6 +1,7 @@
 using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Styling;
 
 namespace GroupLab.App.Theme;
 
@@ -77,6 +78,28 @@ public static class Marks
     {
         ArgumentNullException.ThrowIfNull(context);
         context.DrawEllipse(brush, new Pen(Halo, HaloWidth(Tokens.MarkCoreWidth) - Tokens.MarkCoreWidth), centre, radius, radius);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 425: the selected shot, impossible to miss. A ring of radius <paramref name="ring"/>, clearly outside the
+    /// shot, and a crosshair through its centre from <paramref name="inner"/> out past the ring, so the hole itself stays uncovered; each
+    /// stroke in the theme's selection ink over an edge in the other, drawn by the caller after every other mark and line.
+    /// </summary>
+    public static void Selection(DrawingContext context, ThemeVariant? variant, Point centre, double ring, double inner, double arm = Tokens.SelectionArm)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        var (ink, edge) = Tokens.Selection(variant);
+        double reach = ring + arm;
+        var arms = new[] { new Vector(1, 0), new Vector(-1, 0), new Vector(0, 1), new Vector(0, -1) };
+        foreach (var (brush, width) in new[] { (new SolidColorBrush(edge), Tokens.SelectionCoreWidth + (2 * Tokens.SelectionEdgeWidth)), (new SolidColorBrush(ink), Tokens.SelectionCoreWidth) })
+        {
+            var pen = new Pen(brush, width);
+            context.DrawEllipse(null, pen, centre, ring, ring);
+            foreach (var way in arms)
+            {
+                context.DrawLine(pen, centre + (way * inner), centre + (way * reach));
+            }
+        }
     }
 
     /// <summary>A plus-shaped cross: the point of aim, which must never read as a shot, and a bull centre.</summary>

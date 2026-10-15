@@ -531,10 +531,17 @@ public class Entry109Tests
 
                         window.CalibreAnswered();
                         window.Analyse();
+                        // Entry 425: the analysis is pictured with a shot picked, one end of the extreme spread, on the red line as in the report.
+                        if (window.Plot.SpreadPair is { } widest)
+                        {
+                            window.PickShots([widest.First]);
+                        }
+
                         window.SetEveryWhy(false);
                         Save(window, $"analysis-{name}-{size}");
                         window.SetEveryWhy(true);
                         Save(window, $"analysis-open-{name}-{size}");
+                        window.PickShots([]);
                         window.SetEveryWhy(null);
 
                         // Entry 407 section 7: no readings yet, and the speeds typed on the analysis itself.
