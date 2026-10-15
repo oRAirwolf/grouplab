@@ -498,7 +498,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - When a picture has a GroupLab sheet's corner squares but its codes cannot be read, GroupLab now says so in the middle of the window with Choose the sheet first, and an amber bar keeps the way back after you close it.
 - Opening a picture of a target GroupLab did not print is no longer treated as an error: GroupLab asks which target it is in the middle of the window, with marking it by hand first.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.163)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
