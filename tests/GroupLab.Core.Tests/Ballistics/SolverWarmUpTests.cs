@@ -14,12 +14,18 @@ public class SolverWarmUpTests
     {
         var input = new BallisticInput(0.308, DragModel.G1, 2650, 175, 1.5, 100, 70, null, 0, 40, 10, 0, ReferenceAtmosphere.Icao, 10, 1, 0.308, 1.24);
         var before = SolverUse.Dope(input, 1000, 25);
+        SolverUse.WarmInBackground();
+        SolverUse.WarmInBackground();
+        // The flights are flown on a thread of their own, never the caller's. A time bound could not say so: 200 ms failed on a busy macOS
+        // runner at 211 (entry 416's CI), and 600 ms on a busy Windows runner at 1033 (entry 425's), which was the thread starting late.
         var clock = Stopwatch.StartNew();
-        SolverUse.WarmInBackground();
-        SolverUse.WarmInBackground();
-        // Warming here, on the caller's thread, would be eight flights of about 100 ms the first time; starting it in the background is not.
-        // 600 ms tells the two apart, where 200 ms failed on a busy macOS runner at 211 (entry 416's CI) and once on this desktop.
-        Assert.True(clock.ElapsedMilliseconds < 600, $"warming took {clock.ElapsedMilliseconds} ms on the caller's thread");
+        while (SolverUse.WarmedOnThread == 0 && clock.Elapsed < TimeSpan.FromSeconds(30))
+        {
+            Thread.Sleep(10);
+        }
+
+        Assert.NotEqual(0, SolverUse.WarmedOnThread);
+        Assert.NotEqual(Environment.CurrentManagedThreadId, SolverUse.WarmedOnThread);
 
         var during = SolverUse.Dope(input, 1000, 25);
         Assert.Equal(before.Points, during.Points);

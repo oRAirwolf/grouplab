@@ -189,10 +189,38 @@ public static class AppStyles
         }
 
         var previous = app.Styles.OfType<GroupLabStyles>().ToList();
-        app.Styles.Add(Build(palette));
+        var next = Build(palette);
+        int attempt = 1;
+        while (!Added(app, next, attempt))
+        {
+            attempt++;
+        }
+
         foreach (var old in previous)
         {
             app.Styles.Remove(old);
+        }
+    }
+
+    /// <summary>
+    /// Adds the new styles. Entry 425's CI, and entry 424's on Windows before it: Avalonia 12.1.2 now and then throws part way through
+    /// re-evaluating every control for added styles, finding a brush unset, at random and never in a run of one test, and the controls past
+    /// that point are left without the new styles, which removing the old ones would then leave with none. So the new ones are taken out
+    /// and added again, re-evaluating every control from the start, up to three times; a change of text size or theme must not close the
+    /// application, nor leave it half at the old size, as it left the test runs that followed. False asks for another try.
+    /// </summary>
+    private static bool Added(Application app, GroupLabStyles next, int attempt)
+    {
+        try
+        {
+            app.Styles.Add(next);
+            return true;
+        }
+        catch (InvalidCastException e) when (attempt < 3 && e.Message.Contains("UnsetValueType", StringComparison.Ordinal))
+        {
+            Diagnostics.DiagnosticLog.Exception(Diagnostics.LogLevel.Warn, "theme.restyle", e, ("attempt", attempt));
+            app.Styles.Remove(next);
+            return false;
         }
     }
 

@@ -1508,7 +1508,7 @@
       "since": "0.2.0-nightly.188",
       "note": [
         "At Android's largest text sizes, the phone's bottom bar now shows its icons alone",
-        "On the iPhone, GroupLab's text now grows and shrinks with your own text size setting"
+        "On the iPhone, GroupLab's text now grows and shrinks with your own text size setting", "Changing your text size or the theme can no longer close GroupLab"
       ],
       "guide": "13-on-the-phone",
       "mobile": {

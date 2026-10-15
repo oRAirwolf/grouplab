@@ -764,6 +764,17 @@ of the spread line vanished into it (the committed `analysis-light` picture show
 **Question 99** records that the dark theme's white is also a single sheet's plot ink and nearly the placed marks' #e6e8ea, so there the
 ring and crosshair, not the color, tell the selection apart; built as the entry says meanwhile.
 
+**After it, its CI (f65147e8):** red on macOS and Windows, neither from the selection. The phone suite on macOS, as Windows' on e8aa367a
+before it: Avalonia 12.1.2 threw "UnsetValueType to IBrush" part way through re-evaluating every control for the styles a change of text
+size adds, and the three tests after it ran at the largest size. It never happened in a run of one test or in three local runs of the
+suite, so the cause inside Avalonia is not found. Found instead, by a test that makes a control throw so: the controls past that point
+are left without the new styles, and removing the old ones then leaves them with none. `AppStyles.Restyle` now takes the new styles out
+and adds them again, every control re-evaluated from the start, up to three times, logged as `theme.restyle`; on a phone the same throw
+during a change of the system's text size would have closed GroupLab (`Entry425Tests.ARestyleThatAvaloniaInterruptsStillFinishes`).
+And `SolverWarmUpTests` failed on Windows at 1033 ms against its 600 ms bound, the warm-up thread starting late on a busy runner; it now
+holds what it meant, that the flights run on a thread that is not the caller's (`SolverUse.WarmedOnThread`), not how long a thread took
+to start.
+
 ## Entry 426: request 98's paste named a commit that is not on GitHub (2026-10-15)
 
 1. **Request 98** is answered (Alan ran it on 14 October with the planning session's pastes at 77b3db39, entry 427) and moved whole to

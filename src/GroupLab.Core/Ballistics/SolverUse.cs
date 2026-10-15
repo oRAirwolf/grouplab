@@ -198,6 +198,7 @@ public static class SolverUse
         var input = new BallisticInput(0.243, DragModel.G7, 2750, 140, 1.8, 100, 59, null, 0, 50, 10, 0, ReferenceAtmosphere.Icao, 8, 1, 0.264, 1.35);
         new Thread(() =>
         {
+            WarmedOnThread = Environment.CurrentManagedThreadId;
             for (int i = 0; i < WarmFlights; i++)
             {
                 Dope(input, 1000, 25);
@@ -205,6 +206,9 @@ public static class SolverUse
         })
         { IsBackground = true, Priority = ThreadPriority.Lowest, Name = "Solver warm-up" }.Start();
     }
+
+    /// <summary>The thread the warming flew on, for the tests: never the caller's (entry 425's CI); 0 until it starts.</summary>
+    internal static volatile int WarmedOnThread;
 
     /// <summary>The dope tables flown to warm the solver: past the point where the measured flights became fast, with some to spare.</summary>
     internal const int WarmFlights = 8;
