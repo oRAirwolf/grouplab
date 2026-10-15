@@ -764,16 +764,17 @@ of the spread line vanished into it (the committed `analysis-light` picture show
 **Question 99** records that the dark theme's white is also a single sheet's plot ink and nearly the placed marks' #e6e8ea, so there the
 ring and crosshair, not the color, tell the selection apart; built as the entry says meanwhile.
 
-**After it, its CI (f65147e8):** red on macOS and Windows, neither from the selection. The phone suite on macOS, as Windows' on e8aa367a
-before it: Avalonia 12.1.2 threw "UnsetValueType to IBrush" part way through re-evaluating every control for the styles a change of text
-size adds, and the three tests after it ran at the largest size. It never happened in a run of one test or in three local runs of the
-suite, so the cause inside Avalonia is not found. Found instead, by a test that makes a control throw so: the controls past that point
-are left without the new styles, and removing the old ones then leaves them with none. `AppStyles.Restyle` now takes the new styles out
-and adds them again, every control re-evaluated from the start, up to three times, logged as `theme.restyle`; on a phone the same throw
-during a change of the system's text size would have closed GroupLab (`Entry425Tests.ARestyleThatAvaloniaInterruptsStillFinishes`).
-And `SolverWarmUpTests` failed on Windows at 1033 ms against its 600 ms bound, the warm-up thread starting late on a busy runner; it now
-holds what it meant, that the flights run on a thread that is not the caller's (`SolverUse.WarmedOnThread`), not how long a thread took
-to start.
+**After it, its CI (f65147e8 and e52cd430):** red on macOS and Windows, neither from the selection. Twice on macOS and once on Windows
+(e8aa367a), a phone test changing the text size stopped inside Avalonia 12.1.2 with "UnsetValueType to IBrush" while it re-evaluated
+every control for the new styles, and the tests after it ran at the largest size. It never happened alone or in four local runs of the
+suite. e52cd430 took the new styles out and added them again on that failure; on its own CI run the removal stopped in the same way, so
+the fault sits on one control and is not passing, and that change is taken back (its release note corrected in
+`docs/release-note-corrections.json`). What the phone tests did leave: nine tests opened windows they never closed, four of them the
+whole phone (`SharedScreensTests`, one after pressing every button on its result), and every later change of text size restyled them
+too. They are closed now (`SharedScreensTests.CloseStarted`, `IosWideScreenTests.CloseOpened`, `Entry295Tests`). Whether that was the
+cause is not proven: it cannot be reproduced here, so the next runs will say. And `SolverWarmUpTests` failed on Windows at 1033 ms
+against its 600 ms bound, the warm-up thread starting late on a busy runner; it now holds what it meant, that the flights run on a
+thread that is not the caller's (`SolverUse.WarmedOnThread`), not how long a thread took to start.
 
 ## Entry 426: request 98's paste named a commit that is not on GitHub (2026-10-15)
 

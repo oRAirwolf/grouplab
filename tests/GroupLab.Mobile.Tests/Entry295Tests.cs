@@ -105,6 +105,7 @@ public class Entry295Tests
         var plain = page.GetLogicalDescendants().OfType<TextBlock>().Single(t => (t.Text ?? "").StartsWith("Each load's spread could really be", StringComparison.Ordinal));
         Assert.NotNull(plain.TextDecorations);
         Assert.DoesNotContain(page.GetLogicalDescendants().OfType<TextBlock>(), t => (t.Text ?? "").StartsWith("The sigma intervals overlap", StringComparison.Ordinal));
+        window.Close();
     }
 
     [AvaloniaFact]
@@ -135,6 +136,7 @@ public class Entry295Tests
         window.Content = new Border { Padding = new Thickness(16), Child = near };
         Dispatcher.UIThread.RunJobs();
         Assert.False(near.Stacked);
+        window.Close();
     }
 
     /// <summary>Every figure on a real result at the narrowest width and a large text size: no label broken inside a word, nothing over anything.</summary>
@@ -169,5 +171,6 @@ public class Entry295Tests
                 Assert.Single(first.TextLayout.TextLines);
             }
         }
+        window.Close();
     }
 }

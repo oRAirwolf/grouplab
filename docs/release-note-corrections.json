@@ -97,6 +97,15 @@
           "kind": "fixed"
         }
       ]
+    },
+    "e52cd430d7056fdf6d23d70a0c80b3e9e20a0f70": {
+      "why": "Entry 425's CI fix said changing the text size or the theme could no longer close GroupLab, but the change behind it was taken back in the next commit: the restyle that failed was most likely made by test windows left open, which are closed now, and the application's own restyle is as it was.",
+      "notes": [
+        {
+          "note": "The ballistic solver's warm-up when GroupLab starts is now checked to run in the background by where it runs, not by how long it took on a busy computer. (Entry 425)",
+          "kind": "internal"
+        }
+      ]
     }
   }
 }

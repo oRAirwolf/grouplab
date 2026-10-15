@@ -18,6 +18,19 @@ public class IosWideScreenTests
 
     private static readonly Thickness OnItsSide = new(62, 0, 62, 20);
 
+    /// <summary>The windows <see cref="Padded"/> opened, closed by each test, so none is left restyled by every test after it (entry 425's CI).</summary>
+    private static readonly List<Window> Opened = [];
+
+    private static void CloseOpened()
+    {
+        foreach (var window in Opened)
+        {
+            window.Close();
+        }
+
+        Opened.Clear();
+    }
+
     private static Shell Padded()
     {
         if (Phone.Platform is null)
@@ -28,6 +41,7 @@ public class IosWideScreenTests
         var shell = new Shell();
         var window = new Window { Width = 956, Height = 440, Content = shell };
         window.Show();
+        Opened.Add(window);
         shell.Padding = OnItsSide;
         Dispatcher.UIThread.RunJobs();
         return shell;
@@ -56,6 +70,7 @@ public class IosWideScreenTests
         finally
         {
             Shell.BarToBottomEdge = before;
+            CloseOpened();
         }
     }
 
@@ -91,6 +106,7 @@ public class IosWideScreenTests
         finally
         {
             Shell.WideByScreen = before;
+            CloseOpened();
         }
     }
 }

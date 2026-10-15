@@ -17,8 +17,25 @@ public class SharedScreensTests
 {
     private static readonly TestPhone ThePhone = new();
 
+    /// <summary>
+    /// The windows <see cref="Started"/> opened, closed at the end of each test (entry 425's CI): a whole phone left open, after every
+    /// button on its result was pressed, was restyled by every later test's change of text size.
+    /// </summary>
+    private static readonly List<Window> StartedWindows = [];
+
+    private static void CloseStarted()
+    {
+        foreach (var window in StartedWindows)
+        {
+            window.Close();
+        }
+
+        StartedWindows.Clear();
+    }
+
     private static Shell Started()
     {
+        CloseStarted();
         if (Phone.Platform is null)
         {
             Phone.Start(ThePhone, Avalonia.Application.Current!, () => "US", null);
@@ -27,6 +44,7 @@ public class SharedScreensTests
         var shell = new Shell();
         var window = new Window { Width = 412, Height = 915, Content = shell };
         window.Show();
+        StartedWindows.Add(window);
         Dispatcher.UIThread.RunJobs();
         return shell;
     }
@@ -41,6 +59,7 @@ public class SharedScreensTests
             Dispatcher.UIThread.RunJobs();
             Assert.Equal(place, shell.Showing);
         }
+        CloseStarted();
     }
 
     [AvaloniaFact]
@@ -57,6 +76,7 @@ public class SharedScreensTests
         Assert.NotNull(result.Definition);
         Assert.Equal(25, result.State.Shots.Count(s => s.IsShot));
         Assert.NotNull(result.SessionId);
+        CloseStarted();
     }
 
     /// <summary>
@@ -102,6 +122,7 @@ public class SharedScreensTests
 
         Assert.Equal(names.Count, pressed.Count);
         window.Content = shell;
+        CloseStarted();
     }
 
     /// <summary>Entry 268 on a head with no native idle screen: black over everything, and Close gives the screen back.</summary>
@@ -121,6 +142,7 @@ public class SharedScreensTests
         idle.GetVisualDescendants().OfType<Button>().Single().RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         Assert.Same(before, shell.Content);
         Assert.NotSame(Avalonia.Media.Brushes.Black, TopLevel.GetTopLevel(shell)!.Background);
+        CloseStarted();
     }
 
     /// <summary>
