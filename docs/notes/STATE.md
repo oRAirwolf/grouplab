@@ -73,7 +73,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.195 (2026-10-15 13:16 UTC, from 92799dbd): entry 431, the tab strip's scrollbar on a row of its own. 194 carried 430.
+- **Last nightly:** 0.2.0-nightly.196 (2026-10-16 11:20 UTC, from 0206b663): entries 432 and 433, the caliber question after a result. 195 carried 431.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. #34 closed by entry 431 (nightly 195); #29 to #33, filed from Discord on 2026-10-15, closed as fixed. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
